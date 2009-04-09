@@ -143,7 +143,7 @@ public class ImportHeredis {
 				 * stream. it returns an empty String if two newlines appear in
 				 * a row.
 				 */
-				while ((line = input.readLine()) != null) {
+				while ((line = input.getNextLine(true)) != null) {
 					if ((input.getLevel() == 1) && input.getTag().equals("REPO")) {
 						if (!hashrepo.containsKey(input.getValue())) {
 							clerepo++;
@@ -185,7 +185,7 @@ public class ImportHeredis {
 			GedcomFileReader input = getReader();
 			try {
 				String line = null; // not declared within while loop
-				while ((line = input.readLine()) != null) {
+				while ((line = input.getNextLine(true)) != null) {
 					if ((input.getLevel() == 1) && input.getTag().equals("REPO")) {
 						if (hashrepo.containsKey(input.getValue())) {
 							output.writeLine(1,"REPO","@" + typerepo
@@ -207,14 +207,14 @@ public class ImportHeredis {
 							if (input.getValue().length() != 0)
 								output.writeln(line);
 							else {
+								String tag=input.getTag();
+								String value = input.getValue();
 								int level = input.getLevel();
-								String temp = input.guessNextLine();
+								String temp = input.getNextLine(false);
 								if ((temp != null) && (input.getLevel() == level+1)) {
-									input.reset();
 									output.writeln(line);
 								} else {
-									input.reset();
-									String result = output.writeLine(input.getLevel(),input.getTag(),"Y");
+									String result = output.writeLine(level,tag,"Y");
 									report.println(line);
 									report.println("==> "+ result);
 								}
@@ -281,7 +281,7 @@ String frenchCalCheck(String in){
 	Matcher matcher = french_cal.matcher(in);
 	if (matcher.matches() && (matcher.groupCount() > 1)) {
 		// C'est un cal republicain, on essaie d'interpreter
-		String date_parameter=matcher.group(3);
+		String date_parameter=matcher.group(2);
 		Matcher m1 = date_range.matcher(date_parameter);
 		if (m1.matches()) {
 			result += m1.group(1) + " @#DFRENCH R@ "
@@ -299,7 +299,7 @@ String frenchCalCheck(String in){
 			return result;
 		}
 		result += "@#DFRENCH R@ "
-			+ convDateFormat(matcher.group(3));
+			+ convDateFormat(matcher.group(2));
 		return result;
 	} else 
 		return null;
@@ -360,11 +360,6 @@ String frenchCalCheck(String in){
 	}
 
 	private class GedcomFileReader extends PropertyReader {
-		  private int saved_level;
-		  private String saved_tag;
-		  private String saved_xref;
-		  private String saved_value;
-		  
 		  private String tags[] = new String[10];
 		  
 		public GedcomFileReader(File filein)
@@ -382,33 +377,14 @@ String frenchCalCheck(String in){
 			return level;
 		}
 
-		public String readLine() throws IOException {
+		public String getNextLine(boolean consume) throws IOException {
 			readLine(false);
 			String result = line;
-			line = null;
+			if (consume) 
+				line = null;
 			return result;
 		}
 
-		public String guessNextLine() throws IOException{
-saved_level = level;
-saved_tag = tag;
-saved_xref = xref;
-saved_value = value;
-			readLine(false);
-			return line;
-		}
-		public boolean readLine(boolean consume) throws IOException {
-			boolean b = super.readLine(consume);
-			tags[level]=tag;
-			return b;
-		}
-
-		public void reset(){
-			level = saved_level;
-			tag = saved_tag;
-			xref = saved_xref;
-			value = saved_value;
-		}
 		
 		void close() throws IOException {
 			in.close();
