@@ -11,6 +11,8 @@
 
 package tools.imports;
 
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import genj.io.PropertyReader;
 import genj.report.Report;
 import genj.util.Resources;
@@ -76,6 +78,8 @@ public class ImportHeredis {
 
 	private static int clerepo;
 	private static Hashtable<String, Integer> hashrepo;
+	private static Hashtable<String, ImportIndi> hashIndis;
+	private static Hashtable<String, ImportFam> hashFams;
 	private static StringBuilder sb;
 
 	/** our calling report */
@@ -105,6 +109,8 @@ public class ImportHeredis {
 		}
 		clerepo = 0;
 		hashrepo = new Hashtable<String, Integer>();
+		hashIndis = new Hashtable<String, ImportIndi>();
+		hashFams = new Hashtable<String, ImportFam>();
 		sb = new StringBuilder();
 
 	}
@@ -153,6 +159,26 @@ public class ImportHeredis {
 							sb.append("1 NAME " + input.getValue() + EOL);
 						}
 					}
+					if (input.getTag().equals("INDI")) {
+						String xref = "@"+input.getXref()+"@";
+						if (!hashIndis.containsKey(xref))
+							hashIndis.put(xref, new ImportIndi());
+						hashIndis.get(xref).seen = true;
+					}
+					if (input.getTag().equals("CHIL")) {
+						if (!hashIndis.containsKey(input.getValue()))
+							hashIndis.put(input.getValue(), new ImportIndi());
+					}
+					if (input.getTag().equals("FAM")) {
+						String xref = "@"+input.getXref()+"@";
+						if (!hashFams.containsKey(xref))
+							hashFams.put(xref, new ImportFam());
+						hashFams.get(xref).seen = true;
+					}
+					if (input.getTag().equals("FAMS")) {
+						if (!hashFams.containsKey(input.getValue()))
+							hashFams.put(input.getValue(), new ImportFam());
+					}
 				}
 			} finally {
 				input.close();
@@ -193,11 +219,6 @@ public class ImportHeredis {
 							report.println(line);
 							report.println("==> "+t.translate("corrected"));
 						}
-						continue;
-					}
-					if (input.getTag().equals("TRLR")) {
-						output.write(sb.toString());
-						output.writeLine(0,"TRLR",null);
 						continue;
 					}
 					// on ajoute des Y si necessaire
@@ -245,6 +266,21 @@ public class ImportHeredis {
 								continue;
 								
 							}
+						}
+						if (input.getTag().equals("TRLR")) {
+							output.write(sb.toString());
+							for (String k : hashIndis.keySet()){
+								if (!hashIndis.get(k).seen){
+									output.writeln("0 "+k+" INDI");
+								}
+							}
+							for (String k : hashFams.keySet()){
+								if (!hashFams.get(k).seen){
+									output.writeln("0 "+k+" FAM");
+								}
+							}
+							output.writeLine(0,"TRLR",null);
+							continue;
 						}
 					output.write(line + EOL);
 				}
@@ -366,11 +402,14 @@ String frenchCalCheck(String in){
 				throws UnsupportedEncodingException, FileNotFoundException {
 			super(new InputStreamReader(new FileInputStream(fileIn), "LATIN1"),
 					null, false);
-			// TODO Auto-generated constructor stub
 		}
 
 		public String getValue() {
 			return value;
+		}
+
+		public String getXref() {
+			return xref;
 		}
 
 		public int getLevel() {
@@ -424,5 +463,14 @@ String frenchCalCheck(String in){
 			write(result+EOL);
 			return result;
 		}
+	}
+	private class ImportIndi {
+		protected boolean seen = false;
+	}
+	private class ImportFam {
+		protected boolean seen = false;
+		protected String husb="";
+		protected String wife="";
+		protected String[] child = new String[10]; 
 	}
 }

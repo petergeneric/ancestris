@@ -1122,7 +1122,10 @@ public class ReportToolBox extends Report {
        log.write(translate("importNotNecessary"));
        }
     else {
-       log.write(translate("importNotAvailableYet", typeStr));
+        ImportHeredis ig = new ImportHeredis(this, file);
+        ig.run();
+        log.write(translate("importingDone", ig.getOutputName()));
+//       log.write(translate("importNotAvailableYet", typeStr));
        }
     log.write(" ");
     log.write(" ");
