@@ -212,6 +212,13 @@ public class ImportHeredis {
 			try {
 				String line = null; // not declared within while loop
 				while ((line = input.getNextLine(true)) != null) {
+					if ((input.getLevel() ==   0 ) && (input.getTag().equals("HEAD"))){
+						output.writeln(line);
+						output.writeLine(1, "NOTE", t.translate("note1",this.getClass().getSimpleName()));
+						output.writeLine(2, "CONT", t.translate("note2"));
+						output.writeLine(2, "CONT", t.translate("note3"));
+						continue;
+					}
 					if ((input.getLevel() == 1) && input.getTag().equals("REPO")) {
 						if (hashrepo.containsKey(input.getValue())) {
 							output.writeLine(1,"REPO","@" + typerepo
