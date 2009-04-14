@@ -2,6 +2,30 @@
 #
 
 
+
+########################################################################
+###                                                                  ###
+###     S C R I P T   P O U R   F G E N J                            ###
+###                                                                  ###
+###                           (Derniere modification  14 avril 2009) ###
+###                                                                  ###
+########################################################################
+
+
+### ---------------------------------------------------------------- ###
+### Differentes variables - Changez les variables ci-dessous pour    ###
+###                  faire correspondre ce script a votre systeme    ###
+### ---------------------------------------------------------------- ###
+
+
+HOME_DIR="/home/fm"
+GENJ_DIR="$HOME_DIR/genj"
+
+REPORTS_DIR="$HOME_DIR/svn/fgenj/dev/trunk/app/src/report"
+
+
+cd `dirname $0`
+
 clear
 
 echo "/**"
@@ -9,14 +33,12 @@ echo " * Compilation de nos petits rapports bien francais"
 echo " * "
 echo " */"
 
-JAR="../lib/genj.jar"
-# SWING="../lib/swing.jar"
-# LIB_ADDED="../report/jfreechart-0.9.6.jar:../report/jcommon-0.7.2.jar:../report/gnujaxp.jar:../report/geotools.jar:../report/support.jar:../report/collections.jar"
+JAR="$GENJ_DIR/lib/genj.jar"
 
-LIB_ADDED_FOR_TOOLS_DIRECTORY="../report/tools/tools.jar"
-LIB_ADDED_FOR_REPORTS_DIRECTORY="../report/ReportEditOptions.jar"
-LIB_ADDED_FOR_GEDART_DIRECTORY="../report/gedart/oro-2.0.8.jar:../report/gedart/commons-lang-2.1.jar:../report/gedart/commons-collections-3.1.jar:../report/gedart/velocity-1.5.jar:../report/gedart/stringtemplate.jar:../report/gedart/velocity-tools-generic-1.3.jar"
-LIB_ADDED_FOR_LIB_DIRECTORY="../lib/junit.jar:../lib/geo.jar:../lib/jump.jar:../lib/jfreechart.jar:../lib/graphj.jar"
+LIB_ADDED_FOR_TOOLS_DIRECTORY="$GENJ_DIR/report/tools/tools.jar"
+LIB_ADDED_FOR_REPORTS_DIRECTORY="$GENJ_DIR/report/ReportEditOptions.jar"
+LIB_ADDED_FOR_GEDART_DIRECTORY="$GENJ_DIR/report/gedart/oro-2.0.8.jar:$GENJ_DIR/report/gedart/commons-lang-2.1.jar:$GENJ_DIR/report/gedart/commons-collections-3.1.jar:$GENJ_DIR/report/gedart/velocity-1.5.jar:$GENJ_DIR/report/gedart/stringtemplate.jar:$GENJ_DIR/report/gedart/velocity-tools-generic-1.3.jar"
+LIB_ADDED_FOR_LIB_DIRECTORY="$GENJ_DIR/lib/junit.jar:$GENJ_DIR/lib/geo.jar:$GENJ_DIR/lib/jump.jar:$GENJ_DIR/lib/jfreechart.jar:$GENJ_DIR/lib/graphj.jar"
 LIB_ADDED=$LIB_ADDED_FOR_TOOLS_DIRECTORY:$LIB_ADDED_FOR_REPORTS_DIRECTORY:$LIB_ADDED_FOR_GEDART_DIRECTORY:$LIB_ADDED_FOR_LIB_DIRECTORY
 
 if [ -e "$JAR" ] ; then
@@ -32,7 +54,7 @@ export CLASSPATH
 
 if [[ $1 = "" ]] ; then
    echo "1 - Compilation des fichiers .java dans le repertoire racine de reports"
-   $JAVA_HOME/bin/javac *.java
+   javac -cp $GENJ_DIR/lib/genj.jar $REPORTS_DIR/tools/*.java $REPORTS_DIR/tools/imports/*.java
    exit 1
 else
    $JAVA_HOME/bin/javac $1
