@@ -2,7 +2,6 @@
 #
 
 
-
 ########################################################################
 ###                                                                  ###
 ###     S C R I P T   P O U R   F G E N J                            ###
@@ -18,7 +17,8 @@
 ### ---------------------------------------------------------------- ###
 
 
-HOME_DIR="/home/fm"
+WHOAMI='whoami'
+HOME_DIR="/home/$WHOAMI"
 GENJ_DIR="$HOME_DIR/genj"
 
 REPORTS_DIR="$HOME_DIR/svn/fgenj/dev/trunk/app/src/report"
