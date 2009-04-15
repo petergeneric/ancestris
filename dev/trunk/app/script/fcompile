@@ -7,7 +7,7 @@
 ###     S C R I P T   P O U R   F G E N J                            ###
 ###                                                                  ###
 ###                           (Derniere modification  15 avril 2009) ###
-###                                                                  ###
+###                           [version 0.01]                         ###
 ########################################################################
 
 
@@ -17,6 +17,7 @@
 ### ---------------------------------------------------------------- ###
 
 
+# On commence par savoir qui on est et ou se site notre home directory
 WHOAMI='whoami'
 HOME_DIR="/home/$WHOAMI"
 GENJ_DIR="$HOME_DIR/genj"
