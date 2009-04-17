@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="fgenj" default="dist" basedir=".">
+
+  <property name="app.name"        value="fgenj"/>
+  <property name="app.version"     value="${app.name}.1.0.0"/>
+  <property name="build.home"      value="${basedir}/build"/>
+  <property name="dist.home"       value="${basedir}/dist"/>
+  <property name="src.home"        value="${basedir}/trunk/app/src"/>
+  <property name="genj.home"       value="../../../genj/lib"/> <!-- 
+                                   a mettre à jour en fonction de son système -->
+  
+  <property name="compile.debug"   value="true"/>
+
+  <path id="compile.classpath">
+    <fileset dir="${genj.home}/">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!--
+   Nettoyage karscher
+   -->
+    <target name="clean"
+    description="On nettoie les vieilles choses et les répertoires">
+      <delete dir="${build.home}"/>
+      <delete dir="${dist.home}"/>
+    </target>
+
+  <!--
+   Distribution
+   -->
+    <target name="dist" depends="clean,compile"
+    description="On crée le fichier de distribution">
+    <mkdir  dir="${dist.home}"/>
+      <zip zipfile="${dist.home}/${app.version}.zip" update="True">
+        <fileset dir="${build.home}"/>
+      </zip>
+    </target>
+
+  <!--
+   Compilation
+   -->
+    <target name="compile" depends="prepare"
+    description="On compile tout ce qui nous faut">
+    <javac srcdir="${src.home}" destdir="${build.home}">
+      <classpath refid="compile.classpath">
+      </classpath>
+    </javac>
+    </target>
+
+  <!--
+   Preparation
+   -->
+    <target name="prepare"
+    description="On prépare tout en créant les répertoires dont on a besoin">
+    <mkdir  dir="${build.home}"/>
+    </target>
+
+</project>
