@@ -1092,6 +1092,7 @@ public class ReportToolBox extends Report {
     final String TYPE_HEREDIS  = "HEREDIS";
     final String TYPE_GENEATIC = "GENEATIC";
     final String TYPE_GENJ     = "GENJ";
+    final String TYPE_GENEALOGIEDOTCOM     = "GENEALOGIE.COM";
 
     // Get the options
     final SettingImportGedcom settings = (SettingImportGedcom)object;
@@ -1106,27 +1107,28 @@ public class ReportToolBox extends Report {
     String typeStr = getImportType(file);
     log.write(translate("importFileType", typeStr));
 
-    // Ask confirmation to user that we got the right detection, abort otherwise
-    if (!getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importConfirm"), OPTION_OKCANCEL)) return false; 
-
+    Importer ig = null;
     // Initiate importing class and execute it depending on header
     if (typeStr.indexOf(TYPE_HEREDIS) > -1) {
-       ImportHeredis ig = new ImportHeredis(this, file);
-       ig.run();
-       log.write(translate("importingDone", ig.getOutputName()));
-       }
-    else if (typeStr.indexOf(TYPE_GENEATIC) > -1) {
-       log.write(translate("importNotAvailableYet", typeStr));
+    	ig = new ImportHeredis(this, file);
        }
     else if (typeStr.indexOf(TYPE_GENJ) > -1) {
-       log.write(translate("importNotNecessary"));
+        getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importNotNecessary"), OPTION_OK);
+        return true;
+    } else if (typeStr.indexOf(TYPE_GENEALOGIEDOTCOM) > -1) {
+    	ig = new ImportGenealogieDotCom(this, file);
+       }else {
+        ig = new ImportGeneric(this, file);
        }
-    else {
-        ImportHeredis ig = new ImportHeredis(this, file);
+    if (ig==null) {
+        getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importNotAvailableYet"), OPTION_OK);
+       	return false; 
+    } else {
+        // Ask confirmation to user that we got the right detection, abort otherwise
+        if (!getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importConfirm",ig.getClass().getSimpleName()), OPTION_OKCANCEL)) return false; 
         ig.run();
         log.write(translate("importingDone", ig.getOutputName()));
-//       log.write(translate("importNotAvailableYet", typeStr));
-       }
+    }
     log.write(" ");
     log.write(" ");
 

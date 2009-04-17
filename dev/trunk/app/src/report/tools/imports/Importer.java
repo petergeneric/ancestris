@@ -90,6 +90,7 @@ public class Importer {
 	protected boolean handleInvalidTag = true;
 	protected boolean handleFrenchRepHeredis = false;
 	protected boolean handleRepo = false;
+	protected boolean handleMissingEntities = true;
 
 	/**
 	 * Constructor
@@ -97,13 +98,6 @@ public class Importer {
 	public Importer(Report report, File fileIn) {
 		this.report = report;
 		this.fileIn = fileIn;
-		fileOut = report.getFileFromUser(t.translate("fileout.dlg.title"),
-				Action2.TXT_OK, true, "ged");
-		if (fileOut == null)
-			return;
-		if (!fileOut.getName().toLowerCase().endsWith(".ged")) {
-			fileOut = new File(fileOut.getAbsolutePath() + ".ged");
-		}
 		clerepo = 0;
 		hashrepo = new Hashtable<String, Integer>();
 		hashIndis = new Hashtable<String, ImportIndi>();
@@ -130,13 +124,20 @@ public class Importer {
 	public boolean run() {
 		// import function
 
+		fileOut = report.getFileFromUser(t.translate("fileout.dlg.title"),
+				Action2.TXT_OK, true, "ged");
+		if (fileOut == null)
+			return false;
+		if (!fileOut.getName().toLowerCase().endsWith(".ged")) {
+			fileOut = new File(fileOut.getAbsolutePath() + ".ged");
+		}
 		if (fileOut == null)
 			return false;
 
 		// on fait une premiere passe sur le fichier pour creer les repos
 		try {
 			EOL = getEOL(fileIn);
-			GedcomFileReader input = getReader();
+			input = getReader();
 			try {
 				/*
 				 * readLine is a bit quirky : it returns the content of a line
@@ -145,35 +146,11 @@ public class Importer {
 				 * a row.
 				 */
 				while ((input.getNextLine(true)) != null) {
-					if ((input.getLevel() == 1)
-							&& input.getTag().equals("REPO")) {
-						if (!hashrepo.containsKey(input.getValue())) {
-							clerepo++;
-							hashrepo.put(input.getValue(), clerepo);
-							sb.append("0 @" + typerepo + clerepo + "@ REPO"
-									+ EOL);
-							sb.append("1 NAME " + input.getValue() + EOL);
-						}
+					if (handleRepo) {
+						firstPassRepo();
 					}
-					if (input.getTag().equals("INDI")) {
-						String xref = "@" + input.getXref() + "@";
-						if (!hashIndis.containsKey(xref))
-							hashIndis.put(xref, new ImportIndi());
-						hashIndis.get(xref).seen = true;
-					}
-					if (input.getTag().equals("CHIL")) {
-						if (!hashIndis.containsKey(input.getValue()))
-							hashIndis.put(input.getValue(), new ImportIndi());
-					}
-					if (input.getTag().equals("FAM")) {
-						String xref = "@" + input.getXref() + "@";
-						if (!hashFams.containsKey(xref))
-							hashFams.put(xref, new ImportFam());
-						hashFams.get(xref).seen = true;
-					}
-					if (input.getTag().equals("FAMS")) {
-						if (!hashFams.containsKey(input.getValue()))
-							hashFams.put(input.getValue(), new ImportFam());
+					if (handleMissingEntities) {
+						firstPassMissingEntities();
 					}
 				}
 			} finally {
@@ -257,7 +234,38 @@ public class Importer {
 	}
 
 	protected void finalise() throws IOException {
-		output.write(sb.toString());
+		if (handleRepo) {
+			finaliseRepo();
+		}
+		if (handleMissingEntities){
+			finaliseMissingEntities();
+		}
+	}
+
+private void firstPassMissingEntities(){
+	if (input.getTag().equals("INDI")) {
+		String xref = "@" + input.getXref() + "@";
+		if (!hashIndis.containsKey(xref))
+			hashIndis.put(xref, new ImportIndi());
+		hashIndis.get(xref).seen = true;
+	}
+	if (input.getTag().equals("CHIL")) {
+		if (!hashIndis.containsKey(input.getValue()))
+			hashIndis.put(input.getValue(), new ImportIndi());
+	}
+	if (input.getTag().equals("FAM")) {
+		String xref = "@" + input.getXref() + "@";
+		if (!hashFams.containsKey(xref))
+			hashFams.put(xref, new ImportFam());
+		hashFams.get(xref).seen = true;
+	}
+	if (input.getTag().equals("FAMS")) {
+		if (!hashFams.containsKey(input.getValue()))
+			hashFams.put(input.getValue(), new ImportFam());
+	}
+
+}
+	private void finaliseMissingEntities() throws IOException{
 		for (String k : hashIndis.keySet()) {
 			if (!hashIndis.get(k).seen) {
 				output.writeln("0 " + k + " INDI");
@@ -271,6 +279,19 @@ public class Importer {
 
 	}
 
+private void firstPassRepo(){
+	if ((input.getLevel() == 1)
+			&& input.getTag().equals("REPO")) {
+		if (!hashrepo.containsKey(input.getValue())) {
+			clerepo++;
+			hashrepo.put(input.getValue(), clerepo);
+			sb.append("0 @" + typerepo + clerepo + "@ REPO"
+					+ EOL);
+			sb.append("1 NAME " + input.getValue() + EOL);
+		}
+	}
+
+}
 	private boolean processRepo() throws IOException {
 		if ((input.getLevel() == 1) && input.getTag().equals("REPO")) {
 			if (hashrepo.containsKey(input.getValue())) {
@@ -283,6 +304,9 @@ public class Importer {
 		}
 		return false;
 
+	}
+	private void finaliseRepo() throws IOException{
+		output.write(sb.toString());
 	}
 
 	public boolean processYesTag() throws IOException {
@@ -374,6 +398,7 @@ public class Importer {
 			return null;
 	}
 
+	@SuppressWarnings("serial")
 	static private String convDateFormat(String from) {
 		final Hashtable<String, String> repmonconvtable = new Hashtable<String, String>() {
 			{
@@ -426,6 +451,7 @@ public class Importer {
 	}
 
 	private class GedcomFileReader extends PropertyReader {
+		private String theLine = "";
 
 		public GedcomFileReader(File filein)
 				throws UnsupportedEncodingException, FileNotFoundException {
@@ -447,10 +473,10 @@ public class Importer {
 
 		public String getNextLine(boolean consume) throws IOException {
 			readLine(false);
-			String result = line;
+			theLine = line;
 			if (consume)
 				line = null;
-			return result;
+			return theLine;
 		}
 
 		void close() throws IOException {
@@ -462,7 +488,7 @@ public class Importer {
 		}
 
 		String getLine() {
-			return "" + level + " " + tag + " " + value;
+			return theLine;
 		}
 	}
 

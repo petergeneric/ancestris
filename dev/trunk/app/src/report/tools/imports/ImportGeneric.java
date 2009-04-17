@@ -18,12 +18,12 @@ import java.io.File;
 /**
  * The import function for Heredis originated Gedcom files
  */
-public class ImportGenealogieDotCom extends Importer{
+public class ImportGeneric extends Importer{
 
 	/**
 	 * Constructor
 	 */
-	public ImportGenealogieDotCom(Report report, File fileIn) {
+	public ImportGeneric(Report report, File fileIn) {
 		super(report,fileIn);
 		handleYesTag = true;
 		handleInvalidTag = true;
