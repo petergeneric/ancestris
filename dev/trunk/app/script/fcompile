@@ -18,8 +18,8 @@
 
 
 # On commence par savoir qui on est et ou se site notre home directory
-WHOAMI='whoami'
-HOME_DIR="/home/$WHOAMI"
+whoami='whoami'
+HOME_DIR="/home/$(whoami)"
 GENJ_DIR="$HOME_DIR/genj"
 
 REPORTS_DIR="$HOME_DIR/svn/fgenj/dev/trunk/app/src/report"
