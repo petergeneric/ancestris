@@ -27,33 +27,40 @@
     </target>
 
   <!--
-   Distribution
-   -->
-    <target name="dist" depends="clean,compile"
-    description="On crée le fichier de distribution">
-    <mkdir  dir="${dist.home}"/>
-      <zip zipfile="${dist.home}/${app.version}.zip" update="True">
-        <fileset dir="${build.home}"/>
-      </zip>
-    </target>
-
-  <!--
-   Compilation
-   -->
-    <target name="compile" depends="prepare"
-    description="On compile tout ce qui nous faut">
-    <javac srcdir="${src.home}" destdir="${build.home}">
-      <classpath refid="compile.classpath">
-      </classpath>
-    </javac>
-    </target>
-
-  <!--
    Preparation
    -->
     <target name="prepare"
     description="On prépare tout en créant les répertoires dont on a besoin">
     <mkdir  dir="${build.home}"/>
+    <mkdir  dir="${dist.home}"/>
+    </target>
+
+  <!--
+   Compilation des rapports
+   -->
+    <target name="compile" depends="prepare"
+    description="On compile tout ce qui nous faut">
+    <mkdir  dir="${build.home}/report"/>
+    <javac srcdir="${src.home}" destdir="${build.home}/report">
+      <classpath refid="compile.classpath">
+      </classpath>
+    </javac>
+    
+    <!-- On copie les properties et images qui nous manquent -->
+    <copy  todir="${build.home}">
+      <fileset dir="${src.home}" excludes="**/*.java"/>
+    </copy>
+    
+    </target>
+
+  <!--
+   Distribution
+   -->
+    <target name="dist" depends="clean,compile"
+    description="On crée le fichier de distribution">
+      <zip zipfile="${dist.home}/${app.version}.zip" update="True">
+        <fileset dir="${build.home}"/>
+      </zip>
     </target>
 
 </project>
