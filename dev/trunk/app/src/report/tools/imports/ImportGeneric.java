@@ -25,11 +25,6 @@ public class ImportGeneric extends Importer{
 	 */
 	public ImportGeneric(Report report, File fileIn) {
 		super(report,fileIn);
-		handleYesTag = true;
-		handleInvalidTag = true;
-		handleFrenchRepHeredis = false;
-		handleRepo = false;
-		handleMissingEntities = true;
 	}
 }
 

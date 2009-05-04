@@ -25,11 +25,6 @@ public class ImportGenealogieDotCom extends Importer{
 	 */
 	public ImportGenealogieDotCom(Report report, File fileIn) {
 		super(report,fileIn);
-		handleYesTag = true;
-		handleInvalidTag = true;
-		handleFrenchRepHeredis = false;
-		handleRepo = false;
-		handleMissingEntities = true;
 	}
 }
 
