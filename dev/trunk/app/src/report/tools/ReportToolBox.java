@@ -1083,7 +1083,7 @@ public class ReportToolBox extends Report {
   /**
   * ### 9 ### Import Gedcom
   *
-  * Supported origins: Hérédis
+  * Supported origins: Heredis
   *
   */
   private boolean importGedcom(Gedcom gedcom, Object object) {
