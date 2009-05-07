@@ -6,7 +6,7 @@
   <property name="build.home"      value="${basedir}/build"/>
   <property name="dist.home"       value="${basedir}/dist"/>
   <property name="src.home"        value="${basedir}/trunk/app/src"/>
-  <property name="genj.home"       value="../../../genj/lib"/> <!-- 
+  <property name="genj.home"       value="../../../CVS/genj/dev/app/build/lib"/> <!-- 
                                    a mettre à jour en fonction de son système -->
   
   <property name="compile.debug"   value="true"/>
