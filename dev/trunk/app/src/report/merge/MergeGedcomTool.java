@@ -6,44 +6,62 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 package merge;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
+
+import genj.report.Report;
+
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
+import genj.gedcom.Entity;
 import genj.gedcom.Indi;
+import genj.gedcom.Fam;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertyVisitor;
-import genj.gedcom.PropertyXRef;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Fam;
+import genj.gedcom.Note;
+import genj.gedcom.Source;
+import genj.gedcom.Repository;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
-import genj.io.GedcomIOException;
+import genj.gedcom.PropertyXRef;
+import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.time.PointInTime;
+import genj.gedcom.PropertyVisitor;
+
+import genj.option.PropertyOption;
+
+import genj.util.swing.Action2;
+import genj.util.Origin;
+
 import genj.io.GedcomReader;
 import genj.io.GedcomWriter;
-import genj.util.Origin;
-import genj.util.swing.Action2;
+import genj.io.GedcomIOException;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Stack;
 import java.util.TreeMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.LinkedList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Stack;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.NumberFormat;
+import javax.swing.ImageIcon;
 
 
 /**
@@ -64,7 +82,7 @@ public class MergeGedcomTool {
   private Gedcom gedcomOutput = null;
   private List confidenceListOutput = null;
   private ProgressStatus progress = null;
-  private boolean debug = true;
+  private boolean debug = false;
   private String[] typeEnt = {
      Gedcom.INDI,
      Gedcom.FAM,
@@ -129,8 +147,10 @@ public class MergeGedcomTool {
     displayOptions(setting_chkdup);
 
     // Create progress window which allows to cancel process as well
-    progress = new ProgressStatus(report.translate("progressTitle"), report.translate("progressMessage")+"...", "", 100, report.translate("progressStop"));
+    progress = new ProgressStatus(report.translate("progressTitle"), report.translate("progressMessage")+"...", "", 100, 
+	report.translate("progressStop"));
 
+/**
     // Check for duplicates in original files
     if (setting_chkdup) {
        log.write(1, 1, "=", LNS, report.translate("logAnalysisDup"));
@@ -149,6 +169,7 @@ public class MergeGedcomTool {
        gedcomOutput = gedcom;
        return true;
        }
+*/
 
     // Merge case. 
     log.write(1, 1, "=", LNS, report.translate("logPrep"));
@@ -167,49 +188,63 @@ public class MergeGedcomTool {
     log.write(" ");
 
     // Open (B) Gedcom file to merge to by asking user to provide location
-    log.write(2, 3, "", 0, report.translate("logOpenB"));
-    log.timeStamp(6, report.translate("logStart")+": ");
-    Gedcom gedcomB = getGedcomFromUser(report.translate("user_AskMergeFile"));
-    if (gedcomB == null) return false;
-    String fileNameB = gedcomB.getOrigin().getFile().getAbsolutePath();
-    log.write(0, 6, "", 0, report.translate("logBfileOpened", fileNameB)+".");
-    log.timeStamp(6, report.translate("logEnd")+": ");
-    log.write(" ");
-
-    // Changing encoding to user chosen "header file"
-    log.write(2, 3, "", 0, report.translate("logAligningCoding"));
-    log.timeStamp(6, report.translate("logStart")+": ");
-    if (report.setting_headerChosen == 0) {
-       gedcomB.setEncoding(gedcomA.getEncoding());
-       log.write(0, 6, "", 0, report.translate("logBAligned")+" "+gedcomA.getEncoding()+".");
-       } else {
-       gedcomA.setEncoding(gedcomB.getEncoding());
-       log.write(0, 6, "", 0, report.translate("logAAligned")+" "+gedcomB.getEncoding()+".");
-       } 
-    log.timeStamp(6, report.translate("logEnd")+": ");
-    log.write(" ");
-
-    // Ensure that no 2 entities have the same id across both files (remap B if needed)
-    log.write(2, 3, "", 0, report.translate("logMakingUnique"));
-    log.timeStamp(6, report.translate("logStart")+": ");
-    if (!makeUniqueIds(gedcomA, gedcomB, idNewOld)) return false;
-    log.timeStamp(6, report.translate("logEnd")+": ");
-    log.write(" ");
-
-    // Interactive matching of header & remap places of entities in the non chosen header
-    log.write(2, 3, "", 0, report.translate("logCheckHeader"));
-    log.timeStamp(6, report.translate("logStart")+": ");
-    log.write(0, 6, "", 0, report.translate("logCheckPlace"));
-    int[] placeMap = mapPlaceFormat(gedcomA, gedcomB, report.setting_headerChosen);
-    if (placeMap == null) { 
-       log.write(0, 6, "", 0, report.translate("logSamePlace"));
+    Gedcom gedcomB = null;
+    String fileNameB = "";
+    if (setting_chkdup) {
+       gedcomB = gedcomA;
+       fileNameB = gedcomB.getOrigin().getFile().getAbsolutePath();
        }
     else {
-       log.write(0, 6, "", 0, report.translate("logRemapPlace"));
-       remapPlaces((report.setting_headerChosen == 0) ? gedcomB.getEntities() : gedcomA.getEntities(), placeMap);
+       log.write(2, 3, "", 0, report.translate("logOpenB"));
+       log.timeStamp(6, report.translate("logStart")+": ");
+       gedcomB = getGedcomFromUser(report.translate("user_AskMergeFile"));
+       if (gedcomB == null) return false;
+       fileNameB = gedcomB.getOrigin().getFile().getAbsolutePath();
+       log.write(0, 6, "", 0, report.translate("logBfileOpened", fileNameB)+".");
+       log.timeStamp(6, report.translate("logEnd")+": ");
+       log.write(" ");
        }
-    log.timeStamp(6, report.translate("logEnd")+": ");
-    log.write(" ");
+
+    // Changing encoding to user chosen "header file"
+    if (!setting_chkdup) {
+       log.write(2, 3, "", 0, report.translate("logAligningCoding"));
+       log.timeStamp(6, report.translate("logStart")+": ");
+       if (report.setting_headerChosen == 0) {
+          gedcomB.setEncoding(gedcomA.getEncoding());
+          log.write(0, 6, "", 0, report.translate("logBAligned")+" "+gedcomA.getEncoding()+".");
+          } else {
+          gedcomA.setEncoding(gedcomB.getEncoding());
+          log.write(0, 6, "", 0, report.translate("logAAligned")+" "+gedcomB.getEncoding()+".");
+          } 
+       log.timeStamp(6, report.translate("logEnd")+": ");
+       log.write(" ");
+       }
+
+    // Ensure that no 2 entities have the same id across both files (remap B if needed)
+    if (!setting_chkdup) {
+       log.write(2, 3, "", 0, report.translate("logMakingUnique"));
+       log.timeStamp(6, report.translate("logStart")+": ");
+       if (!makeUniqueIds(gedcomA, gedcomB, idNewOld)) return false;
+       log.timeStamp(6, report.translate("logEnd")+": ");
+       log.write(" ");
+       }
+
+    // Interactive matching of header & remap places of entities in the non chosen header
+    if (!setting_chkdup) {
+       log.write(2, 3, "", 0, report.translate("logCheckHeader"));
+       log.timeStamp(6, report.translate("logStart")+": ");
+       log.write(0, 6, "", 0, report.translate("logCheckPlace"));
+       int[] placeMap = mapPlaceFormat(gedcomA, gedcomB, report.setting_headerChosen);
+       if (placeMap == null) { 
+          log.write(0, 6, "", 0, report.translate("logSamePlace"));
+          }
+       else {
+          log.write(0, 6, "", 0, report.translate("logRemapPlace"));
+          remapPlaces((report.setting_headerChosen == 0) ? gedcomB.getEntities() : gedcomA.getEntities(), placeMap);
+          }
+       log.timeStamp(6, report.translate("logEnd")+": ");
+       log.write(" ");
+       }
 
     // Prepare set of entities to compare (subset & optimisation)
     log.write(2, 3, "", 0, report.translate("logPrepEntities"));
@@ -225,20 +260,21 @@ public class MergeGedcomTool {
        log.write(1, 1, "=", LNS, report.translate("logFirstAssess"));
        log.write(2, 3, "", 0, report.translate("logAnalysis"));
        log.timeStamp(6, report.translate("logStart")+": ");
-       if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, false, sizes[2], idNewOld))
+       if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, setting_chkdup, sizes[2], idNewOld))
           return false;
+       if (debug) displayConfList(confList);
        log.timeStamp(6, report.translate("logEnd")+": ");
        log.write(0, 6, "", 0, DASHES);
        log.write(0, 6, "", 0, report.translate("logTotalAnalysed") + ": " + NumberFormat.getIntegerInstance().format((int)progress.getSize()));
        log.write(" ");
-       existMatches = displayMatches(confList, overlaps, scoreStats, false);
+       existMatches = displayMatches(confList, overlaps, scoreStats, setting_chkdup);
        log.write(" ");
        }
     else {
        log.write(1, 1, "=", LNS, report.translate("logAddingFiles"));
        log.write(2, 3, "", 0, report.translate("logMarking"));
        log.timeStamp(6, report.translate("logStart")+": ");
-       if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, false, sizes[2], idNewOld))
+       if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, setting_chkdup, sizes[2], idNewOld))
           return false;
        log.timeStamp(6, report.translate("logEnd")+": ");
        log.write(" ");
@@ -257,13 +293,15 @@ public class MergeGedcomTool {
     //   1 => return OK and finished with assessing (assess 1 time after that)
     //   2 => return OK and not finished with assessing (keep assessing)
     if (existMatches) {
-       log.write(1, 1, "=", LNS, report.translate("logInteraction", new String[] { ""+report.setting_askThreshold, ""+report.setting_autoMergingLevel } ));
+       log.write(1, 1, "=", LNS, report.translate("logInteraction", new String[] { 
+			""+report.setting_askThreshold, ""+report.setting_autoMergingLevel } ));
        log.write(2, 3, "", 0, report.translate("logAsking"));
        log.timeStamp(6, report.translate("logStart")+": ");
        int keepMatching = 2;
        while (keepMatching == 2) {
           // Confirm with user for information to keep
           keepMatching = confirmMatchesWithUser(confList);
+          if (debug) displayConfList(confList);
           if (keepMatching == -1)  
              return false;
           if (keepMatching > 0) { 
@@ -271,7 +309,8 @@ public class MergeGedcomTool {
              log.write(" ");
              log.write(2, 3, "", 0, report.translate("logReassessing"));
              log.timeStamp(6, report.translate("logStart")+": ");
-             if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, false, sizes[2], idNewOld))
+             if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, setting_chkdup, 
+		sizes[2], idNewOld))
                 return false;
              log.write(0, 6, "", 0, DASHES);
              log.write(0, 6, "", 0, report.translate("logTotalAnalysed") + ": " + NumberFormat.getIntegerInstance().format((int)progress.getSize()));
@@ -286,11 +325,12 @@ public class MergeGedcomTool {
     log.write(2, 3, "", 0, report.translate("logApplyingRules"));
     log.timeStamp(6, report.translate("logStart")+": ");
     mergeEntities(confList);
+    if (debug) displayConfList(confList);
     log.timeStamp(6, report.translate("logEnd")+": ");
     log.write(" ");
 
     // Display final assessment
-    displayMatches(confList, overlaps, scoreStats, false);
+    displayMatches(confList, overlaps, scoreStats, setting_chkdup);
 
     // Create (C) empty output Gedcom file which will hold merged result
     // (do not creata Adam, do not create submitter, use header from A)
@@ -320,7 +360,7 @@ public class MergeGedcomTool {
     log.timeStamp(6, report.translate("logEnd")+": ");
     log.write(" ");
 
-    gedcomInputB = reRead(gedcomB);
+    gedcomInputB = setting_chkdup ? gedcomA : reRead(gedcomB);
     gedcomOutput = gedcomC;
 
     return true;
@@ -407,7 +447,7 @@ public class MergeGedcomTool {
     }
 
  /**
-  * Re-read Gedcom (case of B file that has been chaged)
+  * Re-read Gedcom (case of B file that has been changed)
   * Reason to re-read is to trace the change back to what B file was (A file is still in memory)
   */
   private Gedcom reRead(Gedcom gedcom) {
@@ -445,7 +485,7 @@ public class MergeGedcomTool {
           Entity entX = (Entity)it.next();
           Entity entY = null;
           entY = gedcomY.createEntity(entX.getTag(), entX.getId());
-          copyEntity(entX, entY);
+          copyCluster(entX, entY);
           i++;
           if (((i/100)*100) == i) {
              progress.increment(100);
@@ -742,7 +782,7 @@ public class MergeGedcomTool {
   */
   private boolean assessMatches(Gedcom gedcomX, Gedcom gedcomY, Map typeEntsX, Map typeEntsY, Map confList, Map overlaps, Map scoreStats, Map idMap, ProgressStatus progress, boolean duplicates, double size, Map idNewOld) {
 
-   // 4 things to do: (only first one for duplicates within same file)
+   // 4 things to do: 
    //   1/ Run algorithms to match entities
    //   2/ Scan entities to match corresponding families
    //   3/ Entities connected to the overlap 
@@ -787,34 +827,34 @@ public class MergeGedcomTool {
 
       progress.terminate();
 
-      if (duplicates) return true;
-
       // Perform second level assessment - ensures entities are matched only once
       // (prefer their best score) and remove toBeMerged flag if pair is de-matched
       // (PERFORM THIS ONLY IF DIFFERENT GEDCOMS)
-      List set1 = new ArrayList();
-      List set2 = new ArrayList();
-      ConfidenceMatch match = null;
-      // Sort by descending confidence levels
-      List valList = new ArrayList(confList.values());
-      Collections.sort(valList, new ConfidenceMatch());
-      for (Iterator it = valList.iterator(); it.hasNext(); ) {
-        match = (ConfidenceMatch)it.next();
-        if ((set1.contains(match.ent1)) || (set2.contains(match.ent2))) {
-           match.confirmed = true;
-           match.toBeMerged = false;
-           match.choice = 0;
-           }
-        else {
-           set1.add(match.ent1);
-           set2.add(match.ent2);
-           }
-        }
+      if (!duplicates) {
+         List set1 = new ArrayList();
+         List set2 = new ArrayList();
+         ConfidenceMatch match = null;
+         // Sort by descending confidence levels
+         List valList = new ArrayList(confList.values());
+         Collections.sort(valList, new ConfidenceMatch());
+         for (Iterator it = valList.iterator(); it.hasNext(); ) {
+            match = (ConfidenceMatch)it.next();
+            if ((set1.contains(match.ent1)) || (set2.contains(match.ent2))) {
+               match.confirmed = true;
+               match.toBeMerged = false;
+               match.choice = 0;
+               }
+            else {
+               set1.add(match.ent1);
+               set2.add(match.ent2);
+               }
+            }
+         }
 
       //
       // 2/ Check impact of merged entities on families and match relevant ones
       //
-      assessFamilies(gedcomX, gedcomY, confList, idNewOld);
+      assessFamilies(gedcomX, gedcomY, duplicates, confList, idNewOld);
       }
 
    //
@@ -877,20 +917,11 @@ public class MergeGedcomTool {
         }
      }
 
-   // Build connected sets
+   // Remove matching entities from the connected set to avoid double counting
    Xconnected.removeAll(Xmatching);
    Yconnected.removeAll(Ymatching);
 
-   // Clean matching for entities that won't make it to Z
-   for (Iterator it = Xmatching.iterator(); it.hasNext(); ) {
-     Entity ent = (Entity)it.next();
-     if (!ZfromX.contains(ent)) it.remove();
-     }  
-   for (Iterator it = Ymatching.iterator(); it.hasNext(); ) {
-     Entity ent = (Entity)it.next();
-     if (!ZfromY.contains(ent)) it.remove();
-     }
-
+   // Deduct the excluded sets
    while (!XtempTrees.isEmpty()) {
       HashSet listEnts = (HashSet)XtempTrees.iterator().next();
       Xexclusive.addAll(listEnts);
@@ -902,11 +933,36 @@ public class MergeGedcomTool {
       YtempTrees.remove(listEnts);
       }
 
+   // Clean for entities that won't make it to Z (that is the entities not kept in each pair matched...)
+   for (Iterator it = Xmatching.iterator(); it.hasNext(); ) {
+     Entity ent = (Entity)it.next();
+     if (!ZfromX.contains(ent)) {
+        it.remove();
+        }
+     }  
+   for (Iterator it = Ymatching.iterator(); it.hasNext(); ) {
+     Entity ent = (Entity)it.next();
+     if (!ZfromY.contains(ent)) {
+        it.remove();
+        }
+     if (duplicates) { // In case of duplicates, need to remove Y matching from X connected and X exclusive in any situation
+        Xconnected.remove(ent);
+        Xexclusive.remove(ent);
+        }
+     }
+   //... and in case of duplicates, the Yconnected and Yexclusive sets
+   if (duplicates) {
+      Yconnected.clear();
+      Yexclusive.clear();
+      }
+
+   // Consolidate
    if (report.setting_keepAecl) ZfromX.addAll(Xexclusive);
    if (report.setting_keepAcon) ZfromX.addAll(Xconnected);
    if (report.setting_keepBcon) ZfromY.addAll(Yconnected);
    if (report.setting_keepBecl) ZfromY.addAll(Yexclusive);
 
+   // Store in overlaps table
    overlaps.put("A1ecl", Xexclusive);
    overlaps.put("A2con", Xconnected);
    overlaps.put("A3mat", Xmatching);
@@ -1130,7 +1186,7 @@ public class MergeGedcomTool {
    log.write(" ");
 
    // Summary of matches
-   if (!duplicates && !confList.isEmpty()) {
+   if (!confList.isEmpty()) {
       log.write(2, 3, "", 0, report.translate("logDispSumRes")+":");
       for (Iterator it = scoreStats.keySet().iterator(); it.hasNext(); ) {
         String key = (String)it.next();
@@ -1141,7 +1197,6 @@ public class MergeGedcomTool {
       }
 
    // Structures of files
-   if (!duplicates) {
       log.write(2, 3, "", 0, report.translate("logDispStruct")+":");
       log.write(" ");
       log.write(0, 6, "", 0, report.translate("logDispEntSet")+":\tTotal\tIndi\tFam\tNote\tSour\tRepo\tSubm");
@@ -1161,6 +1216,12 @@ public class MergeGedcomTool {
            totalVol[i] += entitiesVol[i];
            }
         log.write(0, 6, "", 0, report.translate(key)+" :\t"+lEnts.size()+"\t"+volumes);
+        if (debug) {
+           for (Iterator it2 = lEnts.iterator(); it2.hasNext();) {
+              Entity ent = (Entity)it2.next();
+              log.write(0, 6, "", 0, "   entité: "+ent.getId());
+              }
+           }
         // print totals and reinit them
         if ((key == "A3mat") || (key == "B3ecl") || (key == "ZfB")) {
            volumes = "";
@@ -1182,7 +1243,6 @@ public class MergeGedcomTool {
            }
         }
       log.write(" ");
-      }
 
    // Display list of matches by descending confidence levels (only the first 1000)
    if (!confList.isEmpty()) {
@@ -1193,19 +1253,20 @@ public class MergeGedcomTool {
       for (Iterator it = confList.iterator(); (it.hasNext()) && (i < max); i++) {
         ConfidenceMatch match = (ConfidenceMatch)it.next();
         if (duplicates) {
-           msg = report.translate("logDispConfItemDup", new String[] { ""+match.confLevel, match.ent1.getId(), match.ent2.getId() } );
+           msg = report.translate("logDispConfItemDup", new String[] { ""+match.confLevel, match.ent1.getId(), match.ent2.getId() } ) + " : ";
            }
         else {
            msg = report.translate("logDispConfItem", new String[] { ""+match.confLevel, match.ent1.getId(), match.id2, match.ent2.getId() } ) + " : ";
-           if (match.confirmed) {
-              if (match.toBeMerged) 
-                 msg += report.translate("logDispWbm") + ", "+ (match.choice == 1 ? report.translate("logDispKpFirst") : report.translate("logDispKpSecnd"));
-              else 
-                 msg += report.translate("logDispWnbm");
-              }
-           else {
-              msg += report.translate("logDispPoss")+".";
-              }
+           }
+        if (match.confirmed) {
+           if (match.toBeMerged) 
+              msg += report.translate("logDispWbm") + ", "+ 
+		(match.choice == 1 ? report.translate("logDispKpFirst") : report.translate("logDispKpSecnd"));
+           else 
+              msg += report.translate("logDispWnbm");
+           }
+        else {
+           msg += report.translate("logDispPoss")+".";
            }
         log.write(0, 6, "", 0, msg);
         }
@@ -1319,36 +1380,39 @@ public class MergeGedcomTool {
  /**
   * USER INTERFACE - Confirm property to keep with User
   */
-  private boolean confirmPropertyWithUser(Property propA, Property propB) {
+  private int confirmPropertyWithUser(Property propA, Property propB, String str1, String str2) {
    // For now, very poor UI, much more interactive later
    int
      CHOICE_1 = 0,
-     CHOICE_2 = 1;
+     CHOICE_2 = 1,
+     CHOICE_3 = 2;
    int choice = CHOICE_1;
    String choices[] = {
      report.translate("user_yes_firstProp"),
-     report.translate("user_yes_secondProp")
+     report.translate("user_yes_secondProp"),
+     report.translate("user_yes_bothProp")
    };
 
    String msg = report.translate("user_question_prop");
    EntityView entView = new EntityView(report.translate("user_title_prop"), msg, true);
-   choice = entView.getEntityFromUser(propA, propB, choices, choices[0]);
-   if (choice == -1) 
-      return false;
+   choice = entView.getEntityFromUser(propA, propB, str1, str2, choices, choices[0]);
    if (choice == CHOICE_1) {
-      return true;
+      return 1;
       }
    if (choice == CHOICE_2) {
-      propA.setValue(propB.getValue());
+      return 2;
+      }
+   if (choice == CHOICE_3) {
+      return 3;
       }
 
-   return true;
+   return 0;
    }
 
  /**
   * Merge entities to be merge (information to keep, for automatically merged ones)
   */
-  private boolean assessFamilies(Gedcom gedcomX, Gedcom gedcomY, Map matches, Map idNewOld) {
+  private boolean assessFamilies(Gedcom gedcomX, Gedcom gedcomY, boolean duplicates, Map matches, Map idNewOld) {
    // Need to merge families if husband and wife are respectively merged to the other family spouses (this is the only case we can for sure merge; other scenario can always be explained by re-marriage which we will assume is always possible otherwise user would have merge them manually.
    // If only husband or wife exeist in the marriage, merge family as well is only one spouse individual is merged.
    //if (debug) log.write("Assessing families...");
@@ -1400,8 +1464,11 @@ public class MergeGedcomTool {
         if (((husbandY == matchHusbandX) && (wifeY == matchWifeX)) || ((husbandY == matchWifeX) && (wifeY == matchHusbandX))) {
            // match found!
            //if (debug) log.write("   Loop 2: **** found family="+famY.getId());
+           if (famX.getId().equals(famY.getId())) break;   // do not match same families in case of duplicates
            ConfidenceMatch match = new ConfidenceMatch((Entity)famX, (Entity)famY);
-           match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
+           if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
+           if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
+
            match.confLevel = 100;
            match.confirmed = true;
            match.toBeMerged = true;
@@ -1438,6 +1505,43 @@ public class MergeGedcomTool {
  /**
   * Merge entities' properties
   */
+    //
+    // Principles:
+    // ----------
+    // 1-Use copies of A and B and each time a property has been considered either side, remove it from the tmpB entity to avoid double counting
+    // 2-tmpA will be the new A, so build it progressivly and only update A from tmp A at the end once finished, to cater for interruptions
+    // 3-Some properties in an entity are unique (usually NAME, BIRTH, etc), some are multiple (RESI, GRAD, etc)
+    //   This characteristic only depends on each pair of entities considered each time:
+    //    - UNIQUE if found once on BOTH sides, MULTIPLE otherwise
+    //    - an entity can have several NAME if user wanted to, or several BIRTH
+    //    - no rule is made than NAME should be UNIQUE, we don't care, user is the one who decided since GEDCOM allows it
+    //    - we do not want to impose a grammar here
+    // 4-Only properties of first level are manipulated, by "cluster". So we manipulate clusters of first level, not properties
+    //    - we do not fine tune matching inside clusters, even for UNIQUE properties
+    //    - two clusters are identical if everything inside is the same, there are different otherwise (have to build a algo there)
+    // 5-Merging rule is: UNIQUE clusters are "merged", MULTIPLE ones are simply added, users will fine tune content themselves
+    //
+    // Algorithm:
+    // ----------
+    // 1-Copy entities to temporary ones, tmpA and tmpB
+    // 2-Consider each property on tmpA (actually each cluster), identified by its tagpath
+    //   If it is UNIQUE (i.e. found once on both sides):
+    //    - if cluster tmpA = cluster tmpB, pass and remove it from tmpB
+    //    - else ask user: 
+    //       - if take tmpA, pass and remove it from tmpB
+    //       - if take tmpB, replace cluster tmpA by cluster tmpB and remove it from tmpB
+    //       - if add BOTH, add cluster tmpB to tmpA and remove it from tmpB
+    //       - *not covered*: if "merge both" : not proposed to the user, that is the recurring part we could do later (nice to have)
+    //   If it is NOT UNIQUE:
+    //    - pass (we will need to add those of B to A)
+    //   Continue for all cluster in tmp A
+    // 3-Scan all left clusters in tmpB and copy/add them to tmpA
+    //   (if they are UNIQUE, they do not exist in tmpA so should be copied)
+    //   (if they are NOT UNIQUE, they have been either passed (should be added to A) or do not exist in A (so copy them)
+    // 4-Replace A with tmpA
+    // 5-Delete temporary entities
+    // 6-Conclude
+    //
   private boolean mergeEntity(ConfidenceMatch match, boolean askUser) {
 
     if (!askUser && (report.setting_ruleEntity == ALWAYS_A)) {
@@ -1453,150 +1557,105 @@ public class MergeGedcomTool {
        return true;
        }
 
-    List listPropA = new LinkedList();     // temp list to analyse
-    List listPropB = new LinkedList();     // temp list to analyse
-    List listTemp = new LinkedList();      // very temp list
-    Property[] properties = null;
-
-    // Get comprehensive list of properties from A
-    properties = match.ent1.getProperties();
-    listPropA.addAll(Arrays.asList(properties));
-    listTemp.addAll(Arrays.asList(properties));
-    while (listTemp.size() > 0) {
-       // manages list
-       Property propItem = (Property) ((LinkedList)listTemp).removeFirst();
-       Property[] subProps = propItem.getProperties();
-       listPropA.addAll(Arrays.asList(subProps));
-       listTemp.addAll(Arrays.asList(subProps));
+    // 1-Create copies of A and B (//tmpEntA.copyProperties(match.ent1, true); // not copying well multiple properties actually)
+    String title1 = match.ent1.getTag()+" : "+match.ent1.toString();
+    String title2 = match.ent2.getTag()+" : "+match.ent2.toString();
+    Entity tmpEntA = null;
+    Entity tmpEntB = null;
+    try {
+       tmpEntA = match.ent1.getGedcom().createEntity(match.ent1.getTag());
+       copyCluster(match.ent1, tmpEntA);
+       //printCluster(match.ent1);
+       //printCluster(tmpEntA);
+       tmpEntB = match.ent2.getGedcom().createEntity(match.ent2.getTag());
+       copyCluster(match.ent2, tmpEntB);
+       //printCluster(match.ent2);
+       //printCluster(tmpEntB);
+       } catch (GedcomException e) {
+       log.write(9, 0, "=", LNS, "GedcomException:"+e);
+       return false;
        }
 
-    // Get comprehensive list of properties from B
-    properties = match.ent2.getProperties();
-    listPropB.addAll(Arrays.asList(properties));
-    listTemp.addAll(Arrays.asList(properties));
-    while (listTemp.size() > 0) {
-       // manages list
-       Property propItem = (Property) ((LinkedList)listTemp).removeFirst();
-       Property[] subProps = propItem.getProperties();
-       listPropB.addAll(Arrays.asList(subProps));
-       listTemp.addAll(Arrays.asList(subProps));
+    // 2-Scan properties of level 1 in A
+    //    - store tagpaths of level 1 of A and store those of B
+    List<TagPath> clustersA = new ArrayList();
+    Property[] propertiesA = tmpEntA.getProperties();
+    for (int i = 0; i < propertiesA.length; i++) {
+       clustersA.add(propertiesA[i].getPath());
        }
-
-    // Remove all properties from prop lists that match perfectly between A and B
-    for (Iterator ita = listPropA.iterator(); ita.hasNext();) {
-       Property propItemA = (Property)ita.next();
-       TagPath tagPathA = propItemA.getPath();
-       String valueA = propItemA.getValue().trim();
-       for (Iterator itb = listPropB.iterator(); itb.hasNext();) {
-          Property propItemB = (Property)itb.next();
-          TagPath tagPathB = propItemB.getPath();
-          String valueB = propItemB.getValue().trim();
-          if ((tagPathA.toString().compareTo(tagPathB.toString()) == 0) && ((valueA.compareTo(valueB) == 0))) {
-             ita.remove();
-             itb.remove();
-             break;
-             }
-          }
+    List<TagPath> clustersB = new ArrayList();
+    Property[] propertiesB = tmpEntB.getProperties();
+    for (int i = 0; i < propertiesB.length; i++) {
+       clustersB.add(propertiesB[i].getPath());
        }
+    //    - scan each property of A
+    Property clusterPropA = null;
+    Property clusterPropB = null;
+    TagPath pathA = null;
+    TagPath pathB = null;
+    boolean unique = false;
+    for (int i = 0; i < propertiesA.length; i++) {
+       clusterPropA = propertiesA[i];
+       pathA = clusterPropA.getPath();
+       unique = ( (clustersA.indexOf(pathA) == clustersA.lastIndexOf(pathA)) && 
+                 ((clustersB.indexOf(pathA) != -1) && (clustersB.indexOf(pathA) == clustersB.lastIndexOf(pathA))) 
+                );
+       if (unique) {
+          clusterPropB = tmpEntB.getPropertyByPath(pathA.toString());
 
-    // Traverse remaining properties from A and check whether path is also in B
-    for (Iterator ita = listPropA.iterator(); ita.hasNext();) {
-       Property propItemA = (Property)ita.next();
-       TagPath tagPathA = propItemA.getPath();
-
-       // Get all properties in B with same path
-       Property[] subPropsB = match.ent2.getProperties(tagPathA);
-
-       // If empty, continue (it means propA is not in B)
-       if (subPropsB.length == 0) continue;
-
-       // For each prop in B with that path, consider first remaining one 
-       // (given we know now that all matches have been removed, any B prop will do)
-       for (int i = 0; i < subPropsB.length; i++) {
-
-          // Do not consider properties not in list
-          if (!listPropB.contains(subPropsB[i])) continue;
-
-          // If one property is empty, use the other one (cannot be empty as well)
-          if (subPropsB[i].getValue().trim().length() == 0) {
-             ita.remove();
-             listPropB.remove(subPropsB[i]);
-             break;
-             }
-          if (propItemA.getValue().trim().length() == 0) {
-             ita.remove();
-             listPropB.remove(subPropsB[i]); 
-             propItemA.setValue(subPropsB[i].getValue());
-             break;
+          // If same clusters, remove the one in B and continue
+          String strA = printCluster(clusterPropA);
+          String strB = printCluster(clusterPropB);
+          if (strA.equals(strB)) {
+             tmpEntB.delProperty(clusterPropB); 
+             continue;
              }
 
-          // If property is a reference, default to A
-          if (propItemA.getValue().trim().startsWith("@")) {
-             ita.remove();
-             listPropB.remove(subPropsB[i]);
-             break;
-             }
-
-          // Determine which property to take based on rules
+          // Determine choice of which cluster to keep based on rules
+          int choice = 0;
           if (!askUser && (report.setting_ruleEntity == A_CONFLICT)) {
-             ita.remove();
-             listPropB.remove(subPropsB[i]); 
-             break;
+             choice = 1;
              }
           if (!askUser && (report.setting_ruleEntity == B_CONFLICT)) {
-             ita.remove();
-             listPropB.remove(subPropsB[i]); 
-             propItemA.setValue(subPropsB[i].getValue());  
-             break;
+             choice = 2;
              }
           if (askUser || (report.setting_ruleEntity == ASK_CONFLICT)) {
-             if (confirmPropertyWithUser(propItemA, subPropsB[i])) {
-                ita.remove();
-                listPropB.remove(subPropsB[i]); 
-                break;
-                }
-             else {
-                return false;
-                }
+             choice = confirmPropertyWithUser(clusterPropA, clusterPropB, title1, title2);
              }
-          }
-       }
 
-    // Traverse remaining properties from B and check whether path is also in A
-    List toKeep = new LinkedList();      // temp list of B properties to copy to A
-    for (Iterator itb = listPropB.iterator(); itb.hasNext();) {
-       Property propItemB = (Property)itb.next();
-       TagPath tagPathB = propItemB.getPath();
-       // Get all properties in A with same path
-       Property[] subPropsA = match.ent1.getProperties(tagPathB);
-       // If empty, copy (it means tagB (so propB) is not in A)
-       if (subPropsA.length == 0) {
-          toKeep.add(propItemB);
-          itb.remove();
-          continue;
-          }
-       // Tag B is in A, but if it not in ListPropA, it should be copied
-       for (int i = 0; i < subPropsA.length; i++) {
-          if (!listPropA.contains(subPropsA[i])) {
-             toKeep.add(propItemB);
-             itb.remove();
-             listPropA.remove(subPropsA[i]);
-             break;
+          // Apply choice
+          if (choice == 2) { // keep B
+             tmpEntA.delProperty(clusterPropA); 
+             copyCluster(clusterPropB, tmpEntA.addProperty(clusterPropB.getTag(), clusterPropB.getValue()));  
              }
+          if (choice == 3) { // add A and B
+             copyCluster(clusterPropB, tmpEntA.addProperty(clusterPropB.getTag(), clusterPropB.getValue())); 
+             }
+          tmpEntB.delProperty(clusterPropB); 
           }
        }
-
-    // Copy the properties to A (they should not overwrite themselves so cannot use
-    // ent1.setValue). Have to use addProperty with proper visitor
-    for (Iterator itb = toKeep.iterator(); itb.hasNext();) {
-       Property propItemB = (Property)itb.next();
-       addPropertyByPath(match.ent1, propItemB.getPath(), propItemB.getValue()); 
+   
+    // 3-Scan all left clusters in tmpB and copy/add them to tmpA
+    propertiesB = tmpEntB.getProperties(); // re-load properties !
+    for (int i = 0; i < propertiesB.length; i++) {
+       clusterPropB = propertiesB[i];
+       copyCluster(clusterPropB, tmpEntA.addProperty(clusterPropB.getTag(), clusterPropB.getValue())); 
        }
 
+    // 4-Replace A with tmpA
+    match.ent1.delProperties();
+    copyCluster(tmpEntA, match.ent1);
+
+    // 5-Delete temporary entities
+    match.ent1.getGedcom().deleteEntity(tmpEntA);
+    match.ent2.getGedcom().deleteEntity(tmpEntB);
+
+    // 6-Conclude - Indicate that final entity will be the entity from file A
     match.choice = 1;
 
     return true;
     }
+
 
   /**
    * Add a property at given path
@@ -1647,48 +1706,54 @@ public class MergeGedcomTool {
    } 
  
  /**
-  * Copy entity from one gedcom to another one
+  * Copy properties beneath a property to another property (copy a cluster)
   */
-  private boolean copyEntity(Entity entA, Entity entZ) {
+  private boolean copyCluster(Property propA, Property propB) {
+
+   if (propA == null || propB == null) return false;
+
    List listProp = new LinkedList();
-   Property[] propertiesA = entA.getProperties();
+   Property[] propertiesA = propA.getProperties();
    listProp.addAll(Arrays.asList(propertiesA));
    Property propItemA = null;
-   Property propItemZ = (Property) entZ;
-   Property lastpropItemZ = null;
-   int len = 2;  // holds length of TagPath
+   Property propItemB = (Property) propB;
+   Property lastpropItemB = null;
+   TagPath tagPathA = propA.getPath();
+   int len = tagPathA.length() + 1;
+
    while (listProp.size() > 0) {
       // manages list
       propItemA = (Property) ((LinkedList)listProp).removeFirst();
       Property[] subProps = propItemA.getProperties();
       listProp.addAll(0, Arrays.asList(subProps));
       // workout if we have changed level or tag
-      TagPath tagPathA = propItemA.getPath();
+      tagPathA = propItemA.getPath();
       if (tagPathA.length() > len) {
          // we have moved down one level, move B to last property added
-         propItemZ = lastpropItemZ;
+         propItemB = lastpropItemB;
          len = tagPathA.length();
          }
       while (tagPathA.length() < len) {
          // Otherwise we have moved up, move B to corresponding parent
-         propItemZ = propItemZ.getParent();
+         propItemB = propItemB.getParent();
          len--;
          }
       // copy the property
-      String tag   = propItemA.getTag();
+      String tag = propItemA.getTag();
       if (tag == "XREF") continue;
       // Special treatment of NOTE entities which have text in entity tag rather
       // than as a subtag in Gedcom file although GenJ stores this as a subtag
       if (tagPathA.toString().compareTo("NOTE:NOTE") == 0) {
-         entZ.setValue(propItemA.getValue());
+         propB.setValue(propItemA.getValue());
          }
       else { 
-         lastpropItemZ = propItemZ.addProperty(tag, propItemA.getValue());
+         lastpropItemB = propItemB.addProperty(tag, propItemA.getValue());
          }
       }
 
    return true;
    }
+
 
  /**
   * USER INTERFACE - Get user to map place Format in case they are different
@@ -1848,7 +1913,7 @@ public class MergeGedcomTool {
           Entity entX = (Entity)it.next();
           Entity entZ = null;
           entZ = gedcomZ.createEntity(entX.getTag(), entX.getId());
-          copyEntity(entX, entZ);
+          copyCluster(entX, entZ);
           } // end loop to copy other entities
        } catch (GedcomException e) {
        log.write(9, 0, "=", LNS, "GedcomException:"+e);
@@ -1961,10 +2026,11 @@ public class MergeGedcomTool {
  /**
   * Calculates confidence level of matching between 2 individuals
   */
-  private ConfidenceMatch assessConfidenceIndi(Person p1, Person p2, boolean sameGedcom, Map confList, Map idNewOld) {
+  private ConfidenceMatch assessConfidenceIndi(Person p1, Person p2, boolean duplicates, Map confList, Map idNewOld) {
 
    ConfidenceMatch match = new ConfidenceMatch((Entity) p1.indi, (Entity) p2.indi);
    if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
+   if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
    int score = 0;  // will be from 0 to 100; coefficients below should add up to 100.
 
    if (report.setting_lastidentic && p1.lastNameLength > 0 && p1.lastName.compareTo(p2.lastName) != 0) {
@@ -1997,7 +2063,7 @@ public class MergeGedcomTool {
    //if (debug) log.write("         ");
 
    // manage automerge 
-   if (!sameGedcom && (match.confLevel > report.setting_autoMergingLevel)) {
+   if (match.confLevel > report.setting_autoMergingLevel) {
       match.confirmed = true;
       match.toBeMerged = true;
       match.choice = 3; // information kept is always in A, even if copied from B.
@@ -2011,11 +2077,12 @@ public class MergeGedcomTool {
  /**
   * Calculates confidence level of matching between 2 entities (non individuals)
   */
-  private ConfidenceMatch assessConfidenceInfo(Info i1, Info i2, boolean sameGedcom, Map confList, Map idNewOld) {
+  private ConfidenceMatch assessConfidenceInfo(Info i1, Info i2, boolean duplicates, Map confList, Map idNewOld) {
    // Match calculation depends on entity type
    // Based on a scoring system; result is a percentage point
    ConfidenceMatch match = new ConfidenceMatch((Entity)i1.entity, (Entity)i2.entity);
    if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
+   if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
    int score = 0; // will be from 0 to 100; coefficients below should add up to 100.
    int scoreInfo = 0;
 
@@ -2063,7 +2130,7 @@ public class MergeGedcomTool {
 //log.write("         ");
 
    // manage automerge 
-   if (!sameGedcom && (match.confLevel > report.setting_autoMergingLevel)) {
+   if (match.confLevel > report.setting_autoMergingLevel) {
       match.confirmed = true;
       match.toBeMerged = true;
       match.choice = 3; // information kept is always in A, even if copied from B.
@@ -2302,7 +2369,6 @@ public class MergeGedcomTool {
   * Get Gedcom output
   */ 
   private void displayOptions(boolean isDuplicatesRun) {
-     log.write(1, 1, "=", LNS, isDuplicatesRun?"Execution options for an analysis of duplicates":"Execution options for a merge");
      log.write(0, 3, "", 0, report.translate("setting_action")+" :   "+report.setting_actions[report.setting_action]);
      log.write(0, 3, "", 0, DASHES);
      log.write(0, 3, "", 0, report.translate("setting_askThreshold")+" :   "+report.setting_askThreshold);
@@ -2315,23 +2381,74 @@ public class MergeGedcomTool {
      log.write(0, 3, "", 0, DASHES);
      log.write(0, 3, "", 0, report.translate("setting_logOption")+" :   "+report.setting_logOption);
      log.write(0, 3, "", 0, DASHES);
-     log.write(0, 3, "", 0, isDuplicatesRun?"Following merge options ignored for a duplicates analysis":"Specfic merge options");
      String str = "";
      if (isDuplicatesRun) {
         str = "(ignored)"+" ";
         }
-     log.write(0, 3, "", 0, str+report.translate("setting_autoMergingLevel")+" :   "+report.setting_autoMergingLevel);
-     log.write(0, 3, "", 0, str+report.translate("setting_ruleEntity")+" :   "+report.setting_ruleEntitys[report.setting_ruleEntity]);
+     log.write(0, 3, "", 0, report.translate("setting_autoMergingLevel")+" :   "+report.setting_autoMergingLevel);
+     log.write(0, 3, "", 0, report.translate("setting_ruleEntity")+" :   "+report.setting_ruleEntitys[report.setting_ruleEntity]);
      log.write(0, 3, "", 0, str+report.translate("setting_headerChosen")+" :   "+report.setting_headerChosens[report.setting_headerChosen]);
-     log.write(0, 3, "", 0, str+report.translate("setting_outputFileExt")+" :   "+report.setting_outputFileExt);
-     log.write(0, 3, "", 0, str+report.translate("setting_keepAecl")+" :   "+report.setting_keepAecl);
-     log.write(0, 3, "", 0, str+report.translate("setting_keepAcon")+" :   "+report.setting_keepAcon);
+     log.write(0, 3, "", 0, report.translate("setting_outputFileExt")+" :   "+report.setting_outputFileExt);
+     log.write(0, 3, "", 0, report.translate("setting_keepAecl")+" :   "+report.setting_keepAecl);
+     log.write(0, 3, "", 0, report.translate("setting_keepAcon")+" :   "+report.setting_keepAcon);
      log.write(0, 3, "", 0, str+report.translate("setting_keepBcon")+" :   "+report.setting_keepBcon);
      log.write(0, 3, "", 0, str+report.translate("setting_keepBecl")+" :   "+report.setting_keepBecl);
-     log.write(0, 3, "", 0, str+report.translate("setting_flagChanges")+" :   "+report.setting_flagChanges);
+     log.write(0, 3, "", 0, report.translate("setting_flagChanges")+" :   "+report.setting_flagChanges);
      log.write(" ");
      return;
      }
+
+ /**
+  * For debug purposes, display raw data of confidence list
+  */ 
+  private void displayConfList(Map confList) {
+
+     ConfidenceMatch match = null;
+     log.write(0, 0, "", 0, "key:__x__"+ "\t" + "id1" + "\t" + "id2" + "\t" + "strid2" + "\t" + "lvl" 
+		+ "\t" + "conf" + "\t" + "tbm" + "\t" + "choice" );
+     for (Iterator it = confList.keySet().iterator(); it.hasNext(); ) {
+       String key = (String)it.next();
+       match = (ConfidenceMatch)confList.get(key);
+       log.write(0, 0, "", 0, "key:"+key+ "\t" + match.ent1.getId() + "\t" + match.ent2.getId() + "\t" + match.id2 + "\t" + match.confLevel 
+		+ "\t" + match.confirmed + "\t" + match.toBeMerged + "\t" + match.choice );
+       }
+     return;
+     }
+
+ /**
+  * For debug purposes, get all elements of the entity in a text string 
+  */
+   private String printCluster(Property prop) {
+
+     String text = "";
+     String totalStr = "";
+
+     //log.write(0, 0, "", 0, " ");
+
+     if (!(prop instanceof Entity)) {
+        text += " "+prop.getTag()+": "+prop.toString();
+        totalStr += text;
+        }
+     List listProp = new LinkedList();
+     Property[] properties = prop.getProperties();
+     listProp.addAll(Arrays.asList(properties));
+     Property propItem = null;
+     while (listProp.size() > 0) {
+        propItem = (Property) ((LinkedList)listProp).removeFirst();
+        int indent = (propItem.getPath().length() - 2) * 3 + 1;
+        Property[] subProps = propItem.getProperties();
+        listProp.addAll(0, Arrays.asList(subProps));
+        String value = propItem.toString();
+        if (value.length() > 90) 
+           value = value.substring(0, 90)+"...";
+        text = propItem.getTag()+": "+value;
+        //log.write(0, indent, "", 0, text);
+        totalStr += text;
+        }
+     return totalStr;
+     }
+
+
    
 } // End_of_Report
     
