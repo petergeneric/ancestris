@@ -8,11 +8,16 @@
   <property name="src.home"        value="${basedir}/trunk/app/src"/>
   <property name="genj.home"       value="../../../CVS/genj/dev/app/build/lib"/> <!-- 
                                    a mettre à jour en fonction de son système -->
+  <property name="geo.home"        value="../../../CVS/genj/dev/geo/build/lib"/> <!-- 
+                                   a mettre à jour en fonction de son système -->
   
   <property name="compile.debug"   value="true"/>
 
   <path id="compile.classpath">
     <fileset dir="${genj.home}/">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${geo.home}/">
       <include name="*.jar"/>
     </fileset>
   </path>
