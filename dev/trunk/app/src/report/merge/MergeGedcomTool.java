@@ -1219,7 +1219,7 @@ public class MergeGedcomTool {
         if (debug) {
            for (Iterator it2 = lEnts.iterator(); it2.hasNext();) {
               Entity ent = (Entity)it2.next();
-              log.write(0, 6, "", 0, "   entité: "+ent.getId());
+              log.write(0, 6, "", 0, "   entity: "+ent.getId());
               }
            }
         // print totals and reinit them
