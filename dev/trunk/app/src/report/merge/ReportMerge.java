@@ -6,19 +6,20 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 package merge;
+
 import genj.fo.Document;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
-import genj.gedcom.TagPath;
 import genj.report.Report;
+import genj.gedcom.Gedcom;
+import genj.gedcom.TagPath;
+import genj.gedcom.Entity;
+import genj.gedcom.Property;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
+import javax.swing.ImageIcon;
 import java.util.List;
-
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 
@@ -114,15 +115,8 @@ public class ReportMerge extends Report {
     MergeGedcomTool mergeTool = new MergeGedcomTool(this, log);
     boolean ret = mergeTool.run(gedcom);
 
-    // Produce duplicates results if required
-    if (ret && setting_displayMergeHistory && (setting_action == 0)) {
-       List confidenceListOutput = mergeTool.getConfidenceListOutput();
-       log.write(1, 1, "=", LNS, translate("logProducingDup"));
-       int i = showDuplicatesResults(confidenceListOutput);
-       log.write(0, 6, "", 0, translate("logErrorLineWtn")+": "+i);
-       }
     // Produce Merge History Report if required
-    if (ret && setting_displayMergeHistory && (setting_action != 0)) {
+    if (ret && setting_displayMergeHistory) {
        List confidenceListOutput = mergeTool.getConfidenceListOutput();
        Gedcom gedcomB = mergeTool.getGedcomB();
        Gedcom gedcomOutput = mergeTool.getGedcomOutput();

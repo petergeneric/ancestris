@@ -92,8 +92,15 @@ import java.util.LinkedList;
         
     public int getEntityFromUser(Property prop1, Property prop2, Object[] values, Object valDef) {
        
-       title1.setText(getTitle(prop1.getEntity().getTag()+" : "+prop1.getEntity().toString()));
-       title2.setText(getTitle(prop2.getEntity().getTag()+" : "+prop2.getEntity().toString()));
+       String title1 = getTitle(prop1.getEntity().getTag()+" : "+prop1.getEntity().toString());
+       String title2 = getTitle(prop2.getEntity().getTag()+" : "+prop2.getEntity().toString());
+       return getEntityFromUser(prop1, prop2, title1, title2, values, valDef);
+       }
+      
+    public int getEntityFromUser(Property prop1, Property prop2, String str1, String str2, Object[] values, Object valDef) {
+       
+       title1.setText(str1);
+       title2.setText(str2);
        textArea1.setText(getText(prop1));
        textArea2.setText(getText(prop2));
        
@@ -105,11 +112,14 @@ import java.util.LinkedList;
        }
       
         
-    private String getText(Entity ent) {
+    private String getText(Property prop) {
    
       String text = "";
+      if (!(prop instanceof Entity)) {
+         text += " "+prop.getTag()+": "+prop.toString()+"\n";
+         }
       List listProp = new LinkedList();
-      Property[] properties = ent.getProperties();
+      Property[] properties = prop.getProperties();
       listProp.addAll(Arrays.asList(properties));
       Property propItem = null;
       while (listProp.size() > 0) {
@@ -128,10 +138,6 @@ import java.util.LinkedList;
       return text;
       }
       
-    private String getText(Property prop) {
-      return " "+prop.getTag()+": "+prop.toString();
-      }
-       
     private String getTitle(String str) {
       if (str.length() > TITLESIZE) 
           str = str.substring(0, TITLESIZE)+"...";

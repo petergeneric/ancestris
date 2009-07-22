@@ -8,11 +8,13 @@
 package merge;
 
 import genj.gedcom.Entity;
-import genj.gedcom.Note;
 import genj.gedcom.Property;
-import genj.gedcom.Repository;
+
+import genj.gedcom.Note;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import genj.gedcom.Repository;
+
 import genj.gedcom.TagPath;
 
 import java.util.Comparator;

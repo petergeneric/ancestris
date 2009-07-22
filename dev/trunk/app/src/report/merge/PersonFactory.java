@@ -8,18 +8,19 @@
 package merge;
 
 import genj.gedcom.Entity;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.GedcomException;
 import genj.gedcom.TagPath;
 
-import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.lang.IllegalArgumentException;  
 import java.util.Vector;
+import java.util.Iterator;
 
 
 /**
