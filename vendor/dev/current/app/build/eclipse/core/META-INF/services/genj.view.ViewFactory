@@ -1,0 +1,8 @@
+genj.table.TableViewFactory
+genj.tree.TreeViewFactory
+genj.timeline.TimelineViewFactory
+genj.edit.EditViewFactory
+genj.report.ReportViewFactory
+genj.nav.NavigatorViewFactory
+genj.entity.EntityViewFactory
+genj.search.SearchViewFactory

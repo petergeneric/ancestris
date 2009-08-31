@@ -1,0 +1,82 @@
+<html>
+<body>
+
+<h2>Travailler avec les Chemins d'Etiquettes</h2>
+
+<p>
+ La section relative au format <a href="./gedcom.html">Gedcom</a> a 
+ expliqu&eacute; le type d'information accept&eacute; par GenJ. Les 
+ entit&eacute;s support&eacute;es (ex. les Individus, les Familles, 
+ etc...) sont comme des enregistrements d'informations diverses 
+ tournant autour de valeurs, et agenc&eacute;s d'une fa&ccedil;on 
+ hi&eacute;rarchis&eacute;e. Chaque entit&eacute; est 
+ identifi&eacute;e par une "Id" et GenJ restituera ces 
+ entit&eacute;s dans plusieurs endroits.
+</p>
+
+<p>
+ Si un num&eacute;ro d'identit&eacute; identifie une entit&eacute;, 
+ comment peut-on identifier clairement ses propri&eacute;t&eacute;s ? 
+ La r&eacute;ponse se trouve dans ce que j'appelle les Chemins 
+ d'Etiquettes. Prenons un exemple :
+
+ <blockquote>
+ <pre>
+ 0 INDI @I001@
+   1 NAME Nils /Meier/
+   1 SEX M
+   1 BIRT
+     2 DATE 25 May 1970
+     2 PLAC Rendsburg, Germany
+   1 RESI
+     2 DATE FROM Sep 2001
+     2 ADDR 788 Harrison St
+       3 CITY San Francisco
+       3 POST 94107
+   1 NOTE @N003@
+ </pre>
+ </blockquote>
+
+ Pour identifier une propri&eacute;t&eacute; dans cette 
+ &eacute;num&eacute;ration d'informations, on doit d&eacute;buter &agrave; 
+ partir de la racine, en l'occurence, ici INDI, puis travailler sur un 
+ point d'int&eacute;r&ecirc;t, comme NAME par exemple. Veuillez noter 
+ que chaque point ou noeud d&eacute;bute avec une &eacute;tiquette qui 
+ permet d'identifier le type de propri&eacute;t&eacute; contenu (exemple : 
+ SEX ou DATE). Ces &eacute;tiquettes sont des abbr&eacute;viations 
+ standardis&eacute;es de la norme Gedcom. Si l'on ajoute les 
+ &eacute;tiquettes rencontr&eacute;es en les s&eacute;parant par ":" 
+ et en respectant les niveaux (on associe l'&eacute;tiquette ayant le 
+ num&eacute;ro 0 avec l'&eacute;tiquette ayant le num&eacute;ro 1 puis 
+ avec l'&eacute;tiquette ayant le num&eacute;ro 2 se trouvant juste en 
+ dessous de l'&eacute;tiquette 1), le r&eacute;sultat obtenu est ce 
+ qu'on appelle le Chemin d'Etiquette 
+ (<font color=gray>ex : INDI:BIRT:DATE)</font>.
+</p>
+
+<p>
+ Voici une liste compl&egrave;te des Chemins d'Etiquettes possibles pour 
+ cet Individu :
+ <ul>
+  <li>INDI
+  <li>INDI:NAME
+  <li>INDI:SEX
+  <li><font color="999999">INDI:BIRT</font>
+  <li>INDI:BIRT:DATE
+  <li>INDI:BIRT:PLAC
+  <li><font color="999999">INDI:RESI</font>
+  <li>INDI:RESI:DATE
+  <li><font color="999999">INDI:RESI:ADDR</font>
+  <li>INDI:RESI:ADDR:CITY
+  <li>INDI:RESI:ADDR:POST
+  <li>INDI:NOTE
+ </ul>
+ La plupart du temps, seuls certains de ces chemins seront 
+ utilis&eacute;s, suivant qu'ils pr&eacute;sentent un int&eacute;r&ecirc;t pour la 
+ valeur de la propri&eacute;t&eacute; du dernier noeud. L'endroit le plus facile 
+ &agrave; voir o&ugrave; ces chemins sont utilis&eacute;s c'est vraiment le 
+ <a href="../view/table.html">Tableau des Donn&eacute;es</a>.<Br>
+</p>
+
+</body>
+</html>
