@@ -1,0 +1,29 @@
+<col>
+ <row>
+  <col>
+   <row><label path="FAM"/></row>
+   <row><label path="FAM:MARR"/><bean path="FAM:MARR:NOTE" popup="true"/></row>
+   <row><bean path="FAM:MARR:DATE"/></row>
+   <row><bean path="FAM:MARR:PLAC" wx="0.1"/></row>
+   <row><label path="FAM:NCHI"/><bean path="FAM:NCHI"/></row>
+  </col>
+  <col>
+   <row><label path="FAM:OBJE"/></row>
+   <row><label path="FAM:OBJE:TITL"/><bean path="FAM:OBJE:TITL" wx="1"/></row>
+   <row><bean path="FAM:OBJE:FILE" wx="1" wy="0.5"/></row>
+  </col>
+ </row>
+ <row>
+  <label path="FAM:HUSB"/><label path="FAM:WIFE"/>
+ </row>
+ <row>
+  <bean path="FAM" type="genj.edit.beans.SpousesBean" wx="1"/>
+ </row>
+ <row>
+  <label path="FAM:CHIL" plural="1"/>
+ </row>
+ <row>
+  <bean path="FAM" type="genj.edit.beans.ChildrenBean" wx="1" wy="0.1"/>
+ </row>
+ <row><tabs wx="1" wy="1"/></row>
+</col> 

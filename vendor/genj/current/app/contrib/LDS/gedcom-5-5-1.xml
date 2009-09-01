@@ -1,0 +1,312 @@
+<GEDCOM version="5.5.1">
+ ELEMENT - gedcom element name
+ type - the java type (without package) wrapping that element (defaults to genj.gedcom.PropertySimpleValue)
+ img - the image to use for that wrapped property
+ hide - if element should not be entered by user through "Add Property"
+ singleton - if element should only appear once at maximum
+ xref - determines that a nested property shows up *if* its parent is 
+  0 not a reference
+  1 a reference
+ default - whether that element is created by default
+ super - what 'super element' to inherit properties and nested elements from
+
+ *************************************
+ ************ Individuals ************
+ *************************************
+ <INDI type="Indi" img="Indi" img.male="IndiMale" img.female="IndiFemale">
+  +++++++++++++ Name and Sex +++++++++++++
+  <NAME default="1" type="PropertyName" img="Name">
+   <NPFX type="PropertySimpleValue" img="Name"/>
+   <GIVN type="PropertySimpleValue" img="Name"/>
+   <NICK type="PropertySimpleValue" img="Name"/>
+   <SPFX type="PropertySimpleValue" img="Name"/>
+   <SURN type="PropertySimpleValue" img="Name"/>
+   <NSFX type="PropertySimpleValue" img="Name"/>
+   <SOUR type="PropertySource" img="Source">
+    <PAGE xref="1" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
+    <EVEN xref="1" type="PropertyChoiceValue" img="Blob" cardinality="0:1">
+     <ROLE type="PropertyChoiceValue" img="Blob"/>
+    </EVEN>
+    <DATA xref="1" type="PropertySimpleReadOnly" img="Blob" cardinality="0:1">
+     <DATE type="PropertyDate" img="Date"/>
+     <TEXT type="PropertyMultilineValue" img="Blob"/>
+    </DATA>
+    <QUAY xref="1" type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
+    <OBJE xref="1" type="PropertyMedia" img="Media">
+     <TITL default="1" xref="0" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
+     <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="0:M">
+       <FORM default="1" xref="0" type="PropertyChoiceValue" img="Format" cardinality="1:1"/>
+     </FILE>
+     <NOTE default="1" xref="0" type="PropertyNote" img="Note" cardinality="0:1"/>
+    </OBJE>
+    <TEXT xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+    <NOTE type="PropertyNote" img="Note"/>
+   </SOUR>
+   <NOTE type="PropertyNote" img="Note">
+    <SOUR super="INDI:NAME:SOUR"/>
+   </NOTE>
+  </NAME>
+  <SEX default="1" cardinality="0:1" type="PropertySex" img="Sex" img.male="Male" img.female="Female"/>
+  +++++++++++++ Events +++++++++++++
+  <BIRT default="1" type="PropertyEvent" img="Birth">
+   <TYPE type="PropertyChoiceValue" img="Type"/>
+   <DATE default="1" cardinality="0:1" type="PropertyDate" img="Date"/>
+   <PLAC default="1" cardinality="0:1" type="PropertyPlace" img="Place">
+    <FORM type="PropertySimpleValue" img="Format"/>
+    <SOUR super="INDI:NAME:SOUR"/>
+    <NOTE super="INDI:NAME:NOTE"/>
+   </PLAC>
+   <ADDR type="PropertyMultilineValue" img="Addr">
+    <ADR1 hide="1" type="PropertySimpleValue" img="Addr"/>
+    <ADR2 hide="1" type="PropertySimpleValue" img="Addr"/>
+    <CITY default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
+    <POST default="1" cardinality="0:1" type="PropertyChoiceValue" img="Code"/>
+    <STAE default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
+    <CTRY default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
+   </ADDR>
+   <PHON type="PropertySimpleValue" img="Phone"/>
+   <EMAIL cardinality="0:3" type="PropertySimpleValue" img="Web"/>
+   <FAX cardinality="0:3" type="PropertySimpleValue" img="Phone" />
+   <WWW cardinality="0:3" type="PropertySimpleValue" img="Web"/>
+   <AGE type="PropertyAge" img="Time" cardinality="0:1"/>
+   <AGNC type="PropertySimpleValue" img="Phone"/>
+   <CAUS type="PropertyChoiceValue" img="Cause"/>
+   <NOTE super="INDI:NAME:NOTE"/>
+   <SOUR super="INDI:NAME:SOUR"/>
+   <OBJE super="INDI:NAME:SOUR:OBJE"/>
+   <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam"/>
+  </BIRT>
+  <ADOP cardinality="0:M" super="INDI:BIRT" img="Adoption">
+   <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam">
+    <ADOP type="PropertyChoiceValue" img="Fam"/>
+   </FAMC>
+  </ADOP>
+  <DEAT img="Death" super="INDI:BIRT"/>
+  +++++++++++++ Attributes are not events but have event_details +++++++++++++
+  <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="INDI:BIRT">
+   <PLAC default="0"/>
+   <ADDR default="1"/>
+  </RESI>
+  <OCCU type="PropertyChoiceValue" img="Occupation" super="INDI:BIRT" cardinality="0:M"/>
+  <RELI type="PropertyChoiceValue" img="Religion" super="INDI:BIRT" >
+   <DATE default="0"/>
+   <PLAC default="0"/>
+  </RELI>
+  <CAST type="PropertySimpleValue" img="Caste" super="INDI:RELI" />
+  <DSCR type="PropertyChoiceValue" img="Description" super="INDI:RELI" />
+  <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI"/>
+  <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
+  <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI" />
+  <NCHI type="PropertySimpleValue" img="NumChildren" super="INDI:RELI" />
+  <PROP type="PropertyChoiceValue" img="Property" super="INDI:RELI" />
+  <SSN  type="PropertySimpleValue" img="SSN" super="INDI:RELI" />
+  <TITL type="PropertyChoiceValue" img="Title" super="INDI:RELI"/>
+  <NMR  type="PropertySimpleValue" img="Marriage" super="INDI:RELI" />
+  +++++++++++++ More Events +++++++++++++
+  <GRAD cardinality="0:M" img="Graduation" super="INDI:BIRT"/>
+  <CHR  hide="1" img="Baptism" super="INDI:GRAD">
+   <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam"/>
+  </CHR>
+  <BURI img="Burial" super="INDI:BIRT"/>
+  <CREM img="Cremation" super="INDI:BIRT"/>
+  <BAPM img="Baptism" super="INDI:BIRT"/>
+  <BARM img="Bar" super="INDI:BIRT"/>
+  <BASM img="Bas" super="INDI:BIRT"/>
+  <BLES img="Blessing" super="INDI:BIRT"/>
+  <CHRA hide="1" img="AdultChristening" super="INDI:BIRT"/>
+  <CONF super="INDI:BIRT"/>
+  <FCOM img="FirstCommunion" super="INDI:BIRT"/>
+  <ORDN img="Ordination" super="INDI:BIRT"/>
+  <NATU img="Naturalisation" super="INDI:GRAD"/>
+  <EMIG img="Emmigration" super="INDI:GRAD"/>
+  <IMMI img="Immigration" super="INDI:GRAD"/>
+  <CENS img="Census" super="INDI:GRAD"/>
+  <PROB img="Probate" super="INDI:GRAD"/>
+  <WILL img="Will" super="INDI:GRAD"/>
+  <RETI img="Retirement" super="INDI:GRAD"/>
+  <EVEN img="Event" super="INDI:GRAD">
+   <TYPE default="1"/>
+  </EVEN>
+  ++++++++++++++++ LDS ++++++++++++++++++
+ <BAPL hide="1" img="Baptism" type="PropertySimpleReadOnly">
+   <STAT type="PropertySimpleValue" img="Baptism"/>
+   <DATE super="INDI:BIRT:DATE"/>
+   <TEMP type="PropertySimpleValue" img="Baptism"/>
+   <PLAC super="INDI:BIRT:PLAC"/>
+   <SOUR super="INDI:BIRT:SOUR"/>
+   <NOTE super="INDI:BIRT:NOTE"/>
+  </BAPL>
+  <CONL super="INDI:BAPL"/>
+  <ENDL super="INDI:BAPL"/>
+  <SLGC super="INDI:BAPL">
+   <FAMC hide="1" type="PropertyFamilyChild" img="Fam"/>
+  </SLGC>
+  +++++++++++++ Relationships +++++++++++++
+  <NOTE super="INDI:NAME:NOTE"/>
+  <FAMC hide="1" type="PropertyFamilyChild" img="Fam">
+   <PEDI type="PropertyChoiceValue" img="Type"/>
+   <NOTE super="INDI:NAME:NOTE"/>
+  </FAMC>
+  <FAMS hide="1" type="PropertyFamilySpouse" img="Fam">
+   <NOTE super="INDI:NAME:NOTE"/>
+  </FAMS>
+  <OBJE super="INDI:BIRT:OBJE"/>
+  <SUBM hide="1" type="PropertySubmitter" img="Submitter"/>
+  <ANCI super="INDI:SUBM"/>
+  <DESI super="INDI:SUBM"/>
+  <SOUR super="INDI:NAME:SOUR"/>
+  <ASSO hide="1" type="PropertyAssociation" img="Association">
+   <RELA default="1" cardinality="0:1" type="PropertyRelationship" img="Type"/>
+   <SOUR super="INDI:SOUR"/>
+   <NOTE super="INDI:NAME:NOTE"/>
+  </ASSO>
+  <ALIA hide="1" type="PropertyAlias" img="Indi"/>
+  +++++++++++++ numbers / processing +++++++++++++
+  <RFN type="PropertySimpleValue" img="Code" cardinality="0:1"/>
+  <AFN type="PropertyNumericValue" img="Code"/>
+  <REFN type="PropertySimpleValue" img="Code">
+   <TYPE type="PropertySimpleValue" img="Type"/>
+  </REFN>
+  <RIN type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
+  <RESN type="PropertySimpleReadOnly" img="Description" cardinality="0:1"/>
+  +++++++++++++ change  - it swallows subs DATE|TIME - no need to declare in grammar +++++++++++++
+  <CHAN hide="1" type="PropertyChange" img="Time">
+   <NOTE super="INDI:NAME:NOTE"/>
+  </CHAN>
+ </INDI>
+ 
+ *************************************
+ ************   Families  ************
+ *************************************
+ <FAM type="Fam" img="Fam">
+  <HUSB hide="1" type="PropertyHusband" img="IndiMale"/>
+  <WIFE hide="1" type="PropertyWife" img="IndiFemale"/>
+  <NCHI img="NumChildren" type="PropertySimpleValue"/>
+  <ENGA img="Engagement"  super="INDI:BIRT">
+   <HUSB type="PropertySimpleReadOnly" img="IndiMale" cardinality="0:1">
+    <AGE default="1" type="PropertyAge" img="Time" cardinality="1:1"/>
+   </HUSB>
+   <WIFE type="PropertySimpleReadOnly" img="IndiFemale" cardinality="0:1">
+    <AGE default="1" type="PropertyAge" img="Time" cardinality="1:1"/>
+   </WIFE>
+  </ENGA>
+  <MARB img="MarriageBann" super="FAM:ENGA"/>
+  <MARC img="MarriageContract" super="FAM:ENGA"/>
+  <MARL img="MarriageLicence" super="FAM:ENGA"/>
+  <MARR img="Marriage" super="FAM:ENGA"/>
+  <ANUL img="Annulment" super="FAM:ENGA"/>
+  <MARS img="MarriageSettlement" super="FAM:ENGA"/>
+  <CHIL hide="1" type="PropertyChild" img="Child" img.male="MaleChild" img.female="FemaleChild"/>
+  <DIVF img="DivorceFiled" super="FAM:ENGA"/>
+  <DIV  img="Divorce" super="FAM:ENGA"/>
+  <CENS img="Census" super="FAM:ENGA"/>
+  <EVEN super="FAM:ENGA" cardinality="0:M">
+   <TYPE default="1" super="INDI:EVEN:TYPE"/>
+  </EVEN>
+  <SLGS hide="1" img="Marriage" super="INDI:BAPL"/>
+  <OBJE super="INDI:OBJE"/>
+  <NOTE super="INDI:NOTE"/>
+  <SUBM hide="1" super="INDI:SUBM"/>
+  <SOUR super="INDI:SOUR"/>
+  <REFN super="INDI:REFN"/>
+  <RIN super="INDI:RIN"/>
+  <CHAN hide="1" super="INDI:CHAN"/>
+ </FAM>
+ 
+ *************************************
+ ************    Notes    ************
+ *************************************
+ <NOTE type="Note" img="Note">
+  +++++++++++++ we use inline NOTE to store the entity's content (GEDCOM anomalie) +++++++++++++
+  <NOTE hide="1" type="PropertyMultilineValue" img="Note"/>
+  +++++++++++++ References +++++++++++++
+  <SOUR super="INDI:SOUR"/>
+  <REFN super="INDI:REFN"/>
+  <RIN super="INDI:RIN"/>
+  +++++++++++++ change +++++++++++++
+  <CHAN hide="1" super="INDI:CHAN"/>
+ </NOTE>
+ 
+ *************************************
+ ************    Medias   ************
+ *************************************
+ <OBJE type="Media" img="Media">
+  <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="0:M">
+    <FORM default="1" type="PropertyChoiceValue" img="Format" cardinality="1:1"/>
+    <TITL default="1" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
+  </FILE>
+  +++++++++++++ References +++++++++++++
+  <NOTE super="INDI:NOTE"/>
+  <SOUR super="INDI:SOUR"/>
+  <REFN super="INDI:REFN"/>
+  <RIN super="INDI:RIN"/>
+  +++++++++++++ change +++++++++++++
+  <CHAN hide="1" super="INDI:CHAN"/>
+ </OBJE>
+ 
+ *************************************
+ ************ Repositories ***********
+ *************************************
+ <REPO type="Repository" img="Repository">
+  <NAME default="1" type="PropertySimpleValue" img="Attribute"/>
+  <ADDR default="1" super="INDI:BIRT:ADDR"/>
+  <PHON type="PropertySimpleValue" img="Phone"/>
+  <NOTE type="PropertyMultilineValue" img="Note"/>
+  +++++++++++++ References +++++++++++++
+  <REFN super="INDI:REFN"/>
+  <RIN super="INDI:RIN"/>
+  +++++++++++++ change +++++++++++++
+  <CHAN hide="1" super="INDI:CHAN"/>
+ </REPO>
+ 
+ *************************************
+ ************   Sources   ************
+ *************************************
+ <SOUR type="Source" img="Source">
+  <DATA type="PropertySimpleReadOnly" img="Attribute">
+   <EVEN default="1" type="PropertyChoiceValue" img="Event">
+    <DATE type="PropertySimpleValue" img="Date"/>
+    <PLAC super="INDI:BIRT:PLAC"/>
+   </EVEN>
+   <AGNC type="PropertySimpleValue" img="Attribute"/>
+   <NOTE super="INDI:NOTE"/>
+  </DATA>
+  <AUTH default="1" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+  <TITL default="1" type="PropertyMultilineValue" img="Attribute" cardinality="0:1"/>
+  <ABBR type="PropertySimpleValue" img="Note" cardinality="0:1"/>
+  <PUBL type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+  <TEXT default="1" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+  +++++++++++++ References +++++++++++++
+  <OBJE super="INDI:OBJE"/>
+  <NOTE super="INDI:NOTE"/>
+  <REPO hide="1" type="PropertyRepository" img="Repository">
+   <NOTE xref="1" type="PropertyNote" img="Note"/>
+   <CALN xref="1" type="PropertySimpleValue" img="Attribute">
+    <MEDI type="PropertyChoiceValue" img="Attribute"/>
+   </CALN>
+  </REPO>
+  <REFN super="INDI:REFN"/>
+  <RIN super="INDI:RIN"/>
+  +++++++++++++ change +++++++++++++
+  <CHAN hide="1" super="INDI:CHAN"/>
+ </SOUR>
+ 
+ *************************************
+ ************  Submitters ************
+ *************************************
+ <SUBM type="Submitter" img="Submitter">
+  <NAME default="1" type="PropertySimpleValue" img="Name" cardinality="1:1"/>
+  <ADDR super="INDI:BIRT:ADDR"/>
+  <PHON type="PropertySimpleValue" img="Phone"/>
+  <LANG type="PropertySimpleValue" img="Place"/>
+  +++++++++++++ References +++++++++++++
+  <OBJE super="INDI:OBJE"/>
+  <RFN super="INDI:RFN"/>
+  <RIN super="INDI:RIN"/>
+  +++++++++++++ change +++++++++++++
+  <CHAN hide="1" super="INDI:CHAN"/>
+ </SUBM>
+ 
+ *************************************
+ 
+</GEDCOM>

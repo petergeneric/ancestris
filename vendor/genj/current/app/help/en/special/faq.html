@@ -1,0 +1,144 @@
+<html>
+
+<body>
+
+<h2>Frequently Asked Questions</h2>
+<a name="index">
+<p>
+<ol>
+ <li> <a Href="#1">What is GenJ all about?</a>
+ <li> <a Href="#2">Is there a discussion forum devoted to GenJ ?</a>
+ <li> <a Href="#3">What does Gedcom mean ?</a>
+ <li> <a Href="#4">How do I get pictures to show up in Tree View?</a>
+ <li> <a Href="#5">Can I change the language that GenJ speaks?</a>
+ <li> <a Href="#6">Can I make a centimeter look like one on my screen?</a>
+ <li> <a Href="#7">Can I change the look of GenJ?</a>
+ <li> <a Href="#8">Associating existing records?</a>
+ <li> <a Href="#10">Why do images get rendered at different size?</a>
+ <li> <a Href="#11">How can I capture information about adoptions?</a>
+ <li><a href="#12">How can I get in touch with GenJ users or developers? Where can I get further information about GenJ? </a> </li>
+</ol>
+<Table Width="100%" Border="0">
+  <Tr>
+    <Td Width="60%">
+      &nbsp;<Br>
+    </Td>
+    <Td Width="40%">
+      <p align="left">
+        <Font size="-2">
+          Click on the letter "<Font color="red">Q</Font>" in front
+          of a question to jump back to the question index.<Br>
+        </Font>
+      </p>
+    </Td>
+  </Tr>
+</Table>
+<p>
+
+<Center>
+  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+</Center>
+
+
+<a name = "1"><p>
+  <b><a Href="#index"><Font color="red">Q</Font></a></b> What is GenJ all about?<br>
+  <b>A</b> GenealogyJ (in short GenJ) is a viewer and editor for genealogical data stored in Gedcom format.
+</p>
+
+<a name = "2"><p>
+  <b><a Href="#index"><Font color="red">Q</Font></a></b> Is there a discussion forum devoted to GenJ ?<br>
+  <b>A</b> Yes, in the 
+    <a href="http://genj.sourceforge.net/forum">GenJ Forum</a>
+<p>
+
+<a name = "3"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b> What does Gedcom stand for?<br>
+ <b>A</b><a href="./../concepts/gedcom.html">This</A> document has more information about Gedcom.
+</p>
+
+<a name = "4"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b> How do I get pictures to show up in Tree View?<br>
+ <b>A</b> 
+ To show a picture for every person in the main Tree view add
+ a multimedia property (OBJE) to your individuals. Simply bring
+ up an indivdual in <a href="../view/edit.html">Edit View</a>, choose the topmost
+ property INDI, click on '+' and choose OBJE to be added.
+ Point the sub-property FILE to a file in your computer's 
+ file-system (button '>>') and the images will be picked up by 
+ <a href="../view/tree.html">Tree View</a> (it's looking
+ for INDI:OBJE:FILE automatically).
+</p>
+
+<a name = "5"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b> Can I change the language that GenJ speaks?<br>
+ <b>A</b> 
+  You can download an appropriate language pack (genj_ll-x.y.zip) for GenJ
+  (e.g. genj_fr-2.0.zip) from the 
+    <a target=project href="http://genj.sourceforge.net">project's homepage</a>
+  GenJ will try to use the language of your operating system automatically. 
+  To explicitly switch to a language (the language pack has to been installed 
+  manually) 
+  choose menu-item <em>Help|About</em> and flip to the <em>Look&Feel</em>-Tab.
+  Then select the language of choice.
+</p>
+
+<a name = "6"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></Font></a></b> Can I make a centimeter look like one on my screen?<br>
+ <b>A</b> GenJ uses real-world metrics for various components (e.g. in
+  <a href="../view/tree.html">Tree View</a>). To make lengths of lines and
+  sizes of boxes appear correctly on your screen you'll have to tell GenJ
+  about your display's resolution (which is reported by the operating system
+  but normally doesn't match system's monitor). 
+  To explicitly adjust the resolution 
+  choose menu-item <em>Help|About</em> and flip to the <em>Look&Feel</em>-Tab. 
+  Then use a ruler to match the shown rulers on your screen.
+</p>
+
+<a name = "7"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b> Can I change the look of GenJ?<br>
+ <b>A</b> GenJ uses the Swing Toolkit for presenting information to the
+ user. This is system dependant by default. GenJ allows to change the current 
+ Look&Feel as well. 
+ You can download the Look&Feel pack (genj_lnf-x.y.zip) from the
+    <a target=project href="http://genj.sourceforge.net">project's homepage</a>. 
+  After restarting GenJ you can change the Look&Feel in GenJ's list of Options.
+
+<a name = "8"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b> I have an existing person and I want to make it a child of 
+ another existing person. The only available option I can see is to 
+ add a *new* child/parent to an existing record, but there doesn't seem 
+ to be an option to add an *existing* person as a child/parent. How do 
+ I do this?<br>
+ <b>A</b> You can go to the 'existing' parent (or the parental family 
+ for the 'existing' child). Then choose "Add Child" from context menu 
+ and in the following dialog choose the person of your choice from the 
+ drop-down box at the top.<Br>
+ This way no new person will be created as a child but a relationship to 
+ the 'existing' one is built.
+</p>
+
+<a name = "10"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b>Why do images get rendered at different size?<br>
+ <b>A</b> The blueprints do play a role in the outcome of rendering. 
+ Depending on how much has to be shown in a box the space for an image 
+ can be limited because it will be shrunk to make space for text. 
+ If there's enough space then the image uses as much space as possibly
+ to fit it's real dimensions (determined by size *and* resolution).
+ That's why they can look different.
+</p>
+
+<a name = "11"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b>How can I capture information about adoptions?<br>
+ <b>A</b> Add an ADOPtion event to an individual in Edit View and then add
+ a reference to the Family that adopted the individual (through the context-menu
+ of the ADOPtion event).
+</p>
+
+<a name="12"><p>
+ <b><a Href="#index"><Font color="red">Q</Font></a></b> How can I get in touch with GenJ users or developers? Where can I get further information about GenJ?<br>
+<b>A</b>
+Visit the <a href="http://genj.sourceforge.net">GenJ homepage</a>, the <a href="http://sourceforge.net/projects/genj">GenJ project site</a>, or the IRC channel <b><font color="orange">#genj</font></b> at <b><font color="orange">irc.freenode.net</font></b>.</p>
+<Br>
+
+</body>
+</html>

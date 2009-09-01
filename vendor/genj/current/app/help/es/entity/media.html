@@ -1,0 +1,47 @@
+<HTML>
+
+<BODY>
+<H2><a href="../entities.html">Entidades</a> - Objeto Multimedia</H2>
+
+<P>
+ Las instancas de tipo objeto multimedia pueden almacenar datos binarios
+ como imágenes, documentos escaneados o grabaciones. Un objeto así puede
+ ser instanciado una vez y referenciado por varias otras entidades que
+ tengan el mismo tipo de conexión con los datos contenidos.
+</P>
+
+<P>
+ <font color=red><b>Importante</b></font>: Este tipo de entidadesta
+ incluido en GenJ sólo por compatibilidad con el estandar Gedcom.
+ Se desaconseja crear instancias porque la información binaria se almacena
+ actualmente  <b>dentro</b> del fichero Gedcom (.ged).
+ Esto puede conducir a ficheros <b>exorbitantemente grandes</b> (conteniendo
+ los datos codificados ). Por favor <b>considere usar</b> la propiedad  Multimedia
+ en su lugar que puede ser añadida a través de la barra de herrameintas de la
+ <a href="../view/edit.html#toolbar">Vista Edición</a>.
+ Una propiedad Multimedia se define como subpropiedad (FILE) que puede almacenar
+ el nombre de un fichero en vez del fichero entero.
+</P>
+
+<table>
+ <tr>
+  <td>Entidad</td><td>Objeto Multimedia</td>
+ </tr><tr>
+  <td>Imagen </td><td><img src="../../images/Media.gif"></td>
+ </tr><tr>
+  <td>Etiqueta Gedcom</td><td>OBJE</td>
+ </tr><tr valign=top>
+  <td>Información Gedcom</td><td>Perteneciente a un grupo de atributos usados para
+      describir algo. Usualmente se refiere a datos requeridos para representar objetos multimedia,
+      como audio, video, imagenes, etc.</td>
+ </tr><tr>
+  <td>Sub&nbsp;Etiquetas</td><td>TITL, FORM, BLOB, NOTE</td>
+ </tr><tr valign=top>
+  <td>Referencias&nbsp;a</td><td>
+   <img src="../../images/Note.gif">&nbsp;NOTE <a href="./note.html">Nota</a>              <br>
+  </td>
+ </tr>
+</table>
+
+</BODY>
+</HTML>

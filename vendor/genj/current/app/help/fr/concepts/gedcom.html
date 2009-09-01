@@ -1,0 +1,132 @@
+<html>
+<body>
+
+<h2>
+  Le Format Gedcom
+</h2>
+
+<p>
+Gedcom est une norme dans le monde de l'informatique, permettant 
+l'&eacute;change d'informations g&eacute;n&eacute;alogiques. Cette norme 
+ressemble &agrave; la norme XML dans sa structure. Elle est d&eacute;finie selon 
+un mod&egrave;le arborescent.<br>
+</p>
+
+<p>
+G&eacute;n&eacute;ralement toute information Gedcom est structur&eacute;e de 
+mani&egrave;re hi&eacute;rarchique. Une entit&eacute; (comme un Individu, 
+une Famille, une Note) a plusieurs propri&eacute;t&eacute;s qui, &agrave; leur 
+tour peuvent avoir eux-m&ecirc;mes plusieurs autres propri&eacute;t&eacute;s 
+(ici le mot "propri&eacute;t&eacute;" doit &ecirc;tre pris dans le sens 
+"objet", "&eacute;l&eacute;ment"). Il y a une limitation au nombre de niveaux, 
+c'est 99, donc autant dire que dans la pratique cette limite n'est jamais 
+atteinte. En plus des propri&eacute;t&eacute; standards (Date, Nom, Sexe, 
+etc.) vous pouvez ajouter vos propres&nbsp; propri&eacute;t&eacute;s 
+pour r&eacute;pondre &agrave; vos besoins personnels, cependant, attention, 
+cr&eacute;er des propri&eacute;t&eacute;s propres, va &agrave; l'encontre 
+du format universel. Il est vivement d&eacute;courag&eacute; de faire de la 
+sorte. Si vous devez quand m&ecirc;me cr&eacute;er vos propres balises, vous 
+devez les faire d&eacute;buter par ce qu'on appelle un "underscore", exemple 
+: <i>"_EMAIL"</i> et sa longueur ne doit pas d&eacute;passer 15 caract&egrave;res
+</p>
+
+<p>
+Gedcom ne poss&egrave;de pas la notion d'&eacute;tiquettes (de 
+balises) de fermeture et d'arr&ecirc;t (comme le format XML) au sens strict 
+du terme, il utilise des lignes ayant un d&eacute;coupage diff&eacute;rent. 
+Ce d&eacute;coupage est d&eacute;finie par un nombre entier qui est suivi 
+d'une &eacute;tiquette d&eacute;finissant le type de propri&eacute;t&eacute;. 
+On pourrait dire qu'une ligne commence par un niveau hi&egrave;rarchique, se 
+poursuit par une balise, et se termine par un retour ligne (elle-m&ecirc;me 
+pouvant &ecirc;tre consid&eacute;r&eacute;e comme une balise implicite de 
+fermeture).<br>
+Ci-dessous se trouve un exemple (les sous-propri&eacute;t&eacute;s sont mis 
+en retrait dans la pr&eacute;sentation, seulement pour une meilleure 
+lisibilit&eacute;) :
+</p>
+
+<PRE>
+0 INDI @I001@
+  1 NAME Nils /Meier/
+  1 SEX M
+  1 BIRT
+    2 DATE 25 May 1970
+    2 PLAC Rendsburg, Germany
+  1 GRAD
+    2 DATE 10 Dec 1996 
+    2 PLAC Friedrich Wilhelm University Bonn
+    2 TYPE Diplom Informatiker
+  1 RESI
+    2 DATE FROM Jul 1999 TO DEC 2000
+    2 ADDR 202-1241 Kilborn Place
+      3 CONT Ontario, Canada
+      3 CITY Ottawa
+      3 POST K1H1A5    
+  1 NOTE @N003@
+</PRE>
+
+<p>
+Certaines propri&eacute;t&eacute;s ont un format sp&eacute;cifique du fait des 
+donn&eacute;es qu'elles contiennent (par exemple Nom /Pr&eacute;nom/). 
+D'autres propri&eacute;t&eacute;s renvoient &agrave; d'autres entit&eacute;s 
+- ici la propri&eacute;t&eacute; NOTE renvoie par un lien &agrave; une 
+note dans le m&ecirc;me fichier Gedcom.
+</p>
+
+<p>
+La puissance de GenealogyJ est due au fait qu'il permet d'&eacute;diter 
+des informations organis&eacute;es en "poup&eacute;es russes" avec une 
+vue qu'on pourrait qualifier de hi&eacute;rarchique. De la m&ecirc;me 
+mani&egrave;re toutes les propri&eacute;t&eacute;s connues sont 
+trait&eacute;s de fa&ccedil;on sp&eacute;cifique permettant l'&eacute;dition 
+gr&acirc;ce &agrave; des masques de saisie d&eacute;di&eacute;s. Puisque 
+GenJ connait les attributs qui r&eacute;f&eacute;rencent d'autres 
+entit&eacute;s, il g&egrave;re &eacute;galement l'int&eacute;grit&eacute; 
+r&eacute;f&eacute;rentielle.&nbsp;
+</p>
+
+<p>
+L'utilisateur peut d&eacute;finir de nouvelles propri&eacute;t&eacute;s pour 
+des besoins particuliers. Une grande attention doit cependant &ecirc;tre 
+apport&eacute;e &agrave; leur conception car un &eacute;cart par rapport 
+&agrave; la norme Gedcom peut rendre les donn&eacute;es entr&eacute;es 
+difficile &agrave; interpr&eacute;ter. Comme indiqu&eacute; dans le 
+paragraphe traitant des <a href="view/report.html">Rapports</a> 
+(scripts utilisant les donn&eacute;es contenues dans le fichier Gedcom) 
+elles peuvent (ces propri&eacute;t&eacute;s) &ecirc;tre &eacute;crites par 
+quelqu'un qui poss&eacute;de un SDK (Standard Development Kit) Java &agrave; 
+l'aide de l'infrastructure que GenJ fournit.<br>
+Mais si chaque utilisateur final b&acirc;tit sa propre structure 
+l'information est difficile &agrave; retrouver - par exemple : est-ce que 
+la propri&eacute;t&eacute;-ADDR est une adresse ou quelqu'un a v&eacute;cu 
+un jour, ou est-ce son adresse actuelle ? Gedcom propose 
+l'&eacute;v&eacute;nement RESI &agrave; cette fin : il d&eacute;crit 
+l'&eacute;v&eacute;nement de demeurer &agrave; un certain endroit pendant 
+un certain temps (voir ci-dessus).<br>
+GenJ connait la norme Gedcom et proposera des sous-attributs &agrave; 
+ajouter aux attributs. Nous discuterons ceci plus en d&eacute;tail dans 
+le paragraphe sur les diff&eacute;rentes <a href="entities.html">Entit&eacute;s</a> 
+support&eacute;es.
+</p>
+
+<p>
+Dans le futur on peut s'attendre &agrave; une nouvelle norme (probablement 
+en XML) destin&eacute;e &agrave; g&eacute;rer et conserver les informations 
+g&eacute;n&eacute;alogiques. Mais la mise en place d'une nouvelle norme 
+internationale n'est pas une chose facile. Aussi nous devons essayer de coller 
+le plus pr&egrave;s possible &agrave; la norme Gedcom. Si on veut le dire 
+autrement : le passage &agrave; la nouvelle norme sera plus facile si nous 
+adh&eacute;rons &agrave; une base commune d&egrave;s maintenant.<br>
+</p>
+
+<p>
+La version Gedcom actuellement support&eacute;e par GenJ est la 
+<a href="http://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm">5.5</a>.
+Si vous souhaitez en apprendre plus sur le format Gedcom, vous &ecirc;tes 
+fortement encourag&eacute; &agrave; parcourir les sp&eacute;cifications - 
+C'est un effort continuel de maintenir GenJ aussi proche que possible 
+de ce standard.<Br>
+</p>
+
+</body>
+</html>

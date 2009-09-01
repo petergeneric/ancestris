@@ -1,0 +1,44 @@
+<col>
+ <row>
+  <col>
+   <row><label path="INDI"/></row>
+   <row><bean path="INDI:NAME" wx="0.1"/><bean path="INDI:SEX"/></row>
+   <row><label path="INDI:BIRT"/><bean path="INDI:BIRT:NOTE" popup="true"/></row>
+   <row><bean path="INDI:BIRT:DATE"/></row>
+   <row><bean path="INDI:BIRT:PLAC" wx="0.1"/></row>
+   <row><label path="INDI:DEAT"/><bean path="INDI:DEAT:NOTE" popup="true"/></row>
+   <row><bean path="INDI:DEAT:DATE"/></row>
+   <row><bean path="INDI:DEAT:PLAC" wx="0.1"/> </row>
+  </col>
+  <col>
+   <row><label path="INDI:OBJE"/></row>
+   <row><label path="INDI:OBJE:TITL" ifnot="INDI:OBJE:*"/><bean path="INDI:OBJE:TITL" wx="1" ifnot="INDI:OBJE:*"/></row>
+   <row><bean path="INDI:OBJE:FILE" wx="1" wy="0.5" ifnot="INDI:OBJE:*"/></row>
+   <row><label path="INDI:OBJE:TITL" if ="INDI:OBJE:*:..:FILE:TITL"/><bean path="INDI:OBJE:*:..:FILE:TITL" wx="1" if="INDI:OBJE:*:..:FILE:TITL"/></row>
+   <row><bean path="INDI:OBJE:*:..:FILE" wx="1" wy="0.5" if="INDI:OBJE:*:..:FILE"/></row>
+  </col>
+ </row>
+ <row><label path="INDI:FAMS"/></row>
+ <row><bean path="INDI" type="genj.edit.beans.FamiliesBean" wx="1" wy="0.1"/></row>
+ <row><label path="INDI:FAMC" plural="1"/></row>
+ <row><bean path="INDI" type="genj.edit.beans.ParentsBean" wx="1" wy="0.1"/></row>
+ <row>
+  <tabs wx="1" wy="1">
+   <col>
+    <row><label path="INDI:TITL"/><bean wx="1" path="INDI:TITL"/></row>
+    <row><label path="INDI:EDUC"/><bean wx="1" path="INDI:EDUC"/></row>
+    <row><label path="INDI:NATI"/><bean wx="1" path="INDI:NATI"/></row>
+    <row><label path="INDI:CAST"/><bean wx="1" path="INDI:CAST"/></row>
+    <row><label path="INDI:RELI"/><bean wx="1" path="INDI:RELI"/></row>
+    <row><label path="INDI:NMR"/><bean wx="1" path="INDI:NMR"/></row>
+    <row><label path="INDI:NCHI"/><bean wx="1" path="INDI:NCHI"/></row>
+   </col>
+   <col>
+    <row><label path="INDI:RFN"/><bean wx="1" path="INDI:RFN"/></row>
+    <row><label path="INDI:IDNO"/><bean wx="1" path="INDI:IDNO"/></row>
+    <row><label path="INDI:SSN"/><bean wx="1" path="INDI:SSN"/></row>
+    <row><label path="INDI:AFN"/><bean wx="1" path="INDI:AFN"/></row>
+   </col>
+  </tabs>
+ </row>
+</col>
