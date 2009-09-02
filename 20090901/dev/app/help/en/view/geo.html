@@ -1,0 +1,113 @@
+<html>
+
+<body>
+<h2><a href="../views.html">Views</a> - Geo View</h2>
+
+<p>
+This view shows locations of events on a map.
+</p>
+
+<h3>Installation</h3>
+
+<p>
+GeoView is an extension to the GenJ core and has to be downloaded separately (filename: genj_geo-x.y.zip). The extension contains
+maps and components for representing the geographic information contained in a Gedcom file. To install, unzip the archive into the GenJ
+installation directory while preserving the contained sub-directory structure.
+</p>
+
+<h3>Usage</h3>
+
+<p>
+To open GeoView select the little earth-symbol in Control Centers toolbar (only available after installation - see note above). This will open
+a window containing a map in the main area.
+</p>
+
+<p>
+GenJ will automatically try to find all places and addresses in the respective Gedcom file - resolving them to latitude/longitude. All
+locations are listed on the right. If coordinates were found successfully, those locations are also represented on the clickable map. 
+</p>
+
+<blockquote>
+<b>NOTE:</b>
+GeoView relies on a server-side component for resolving locations to latitude/longitude. Connectivity and service limitations apply! (see below)
+</blockquote>
+
+<p>
+If the name of a location on the right is followed by latitude/longitude as well as a questionmark (?) then more than one matching
+city or town was found. Select the location on the right and click "Change" below to review and pick the desired match.
+</p>
+
+<p>
+If a location is marked as "Unknown" then no respective city or town was found. Again select the location on the right and 
+click "Change" below. Trying different variations/spellings of the city or town provided might resolve to a suitable match. A click
+on "Remember" will remember the latitude/longitude for the current location.
+</p>
+
+<p>The locations can be selected, associated events are grouped below (unfold with '+'). By (double)clicking on events the 
+current focus of other views is updated to show this event accordingly.</p>
+
+<h3>How locations in the Gedcom file are analyzed</h3>
+
+<p>
+GeoView creates a location for every event in the Gedcom file that has an associated place (PLAC) or address (ADDR) - only 
+the first is used. Two locations are considered to be different if the sequence of jurisdictions is different. The following excerpt
+shows Gedcom information that is not treated as the same:
+<pre>
+ 1 BIRT
+ 2 PLAC Rendsburg
+<em> => Rendsburg</em>
+</pre>
+<pre>
+ 1 BIRT
+ 2 PLAC Rendsburg, Schleswig Holstein
+<em> => Rendsburg, Schleswig-Holstein</em>
+</pre>
+<pre>
+ 1 BIRT
+ 2 PLAC Rendsburg, Germany
+<em>  => Rendsburg, Germany</em> 
+</pre>
+<pre>
+ 1 BIRT
+ 2 ADDR
+ 3 CITY Rendsburg
+ 3 CTRY Deutschland
+<em>  => Rendsburg, Deutschland</em> 
+</pre>
+</p>
+
+<h3>Technical Limitations</h3>
+
+<p>
+GeoView talks to a server-side component to resolve locations' latitude/longitude. This requires that the computer is connected to the 
+internet (online) and no firewall restrictions limit outgoing HTTP connections. If the computer is behind a firewall-proxy, open the 
+application options (Control Center|Views|Options) and enter the proxy's hostname:port to use. Check the toolbar for more
+information at runtime.
+</p>
+
+<p>
+Matched locations are cached locally. Select locations individually on the right and click "Change" to re-match already resolved locations.
+</p>
+
+<h3>Toolbar</h3>
+
+<p>
+  <blockquote><img src="../../images/screenshots/geo2.png"></blockquote>
+ <ol>
+  <li>choose currently displayed map
+  <li>zoom to map extend
+  <li>activate zoom tool
+  <li>resolve locations (green - all locations matched, yellow - some locations matched, red - connection problems), hover mouse
+    for more information
+  <li>close view
+ </ol>
+</p>
+
+<h3>More Information regarding Geoview</h3>
+
+<p>More Tips and Tricks regarding getting maps and customizing them can be found in the 
+<a href="http://genj.sourceforge.net/forum/viewforum.php?f=9">User FAQ</a><br>
+The forum also contains valuable information - it can be <a href="http://genj.sourceforge.net/forum/search.php">searched here</a> for keyword "GeoView".</p>
+
+</body>
+</html>
