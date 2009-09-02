@@ -1,0 +1,38 @@
+
+* * * THE TEAM * * *
+
+The people behind GenJ (alphabetically):
+
+    Admins:
+      . Francois Massonneau
+      . Nils Meier 
+
+    Reports:
+      . Daniel Andre
+      . Jan C. Hardenbergh
+      . Thierry Hardy
+      . Jerome Hettich
+      . Frederic Lapeyre
+      . Daniel P. Kionka
+      . Przemek Wiech
+      
+    Contributors :
+      . Stuart Grimshaw
+      . Pere Jover
+      . Bill Kelly
+      . Carsten Muessig
+      . Sean Timm
+
+    Translators :
+      . Alex Evdokimenko (Russian)
+      . Nestor Garcia (Spanish)
+      . Mauricio Girardi (Brazilian Portuguese)
+      . Frantisek Grebenicek (Czech)
+      . Theo Guelcher (Dutch) 
+      . Pere Jover (Spanish)
+      . Francois Massonneau (French)
+      . Carsten Muessig (German) 
+      . Sini Ruohomaa (Finnish)
+      . Marcus Sandberg (German)
+      . Klaus-Peter Schubert (German)
+      . Przemek Wiech (Polish)
