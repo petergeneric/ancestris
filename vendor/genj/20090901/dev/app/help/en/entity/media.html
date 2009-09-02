@@ -1,0 +1,43 @@
+<HTML>
+
+<BODY>
+<H2><a href="../entities.html">Entities</a> - Multimedia Object</H2>
+
+<P>
+ Instances of type Multimedia Object can store binary data like
+ images, scanned documents or recordings. A media object can
+ be instantiated once and referenced by several other entities
+ that have some kind of connection to the contained data.
+</P>
+
+<P>
+ <font color=red><b>Important Note</b></font>: This type of entity, 
+ storing the binary uuencoded information within the Gedcom structure,
+ creates exorbitantly large .ged files and is therefore modelled in 
+ GenJ for compatibility with the Gedcom standard only.  
+ To associate images and other files with your Gedcom information it 
+ is recommended to use the Multimedia Property (which can be added to 
+ an existing property through its context-menu). This property contains
+ a sub-property FILE that stores a filename instead of the file contents.
+</P>
+
+<table>
+ <tr> 
+  <td>Entity</td><td>Multimedia Object</td>
+ </tr><tr>
+  <td>Image </td><td><img src="../../images/Media.gif"></td>
+ </tr><tr>
+  <td>Gedcom Tag</td><td>OBJE</td>
+ </tr><tr valign=top>
+  <td>Gedcom Info</td><td>Pertaining to a grouping of attributes used in describing something. Usually referring to the data required to represent a multimedia object, such an audio recording, a photograph of a person or an image of a document</td>
+ </tr><tr>
+  <td>Sub&nbsp;Tags</td><td>TITL, FORM, BLOB, NOTE</td>
+ </tr><tr valign=top>
+  <td>References&nbsp;to</td><td>
+   <img src="../../images/Note.gif">&nbsp;NOTE <a href="./note.html">Note</a>              <br>
+  </td>
+ </tr>
+</table>
+
+</BODY>
+</HTML>

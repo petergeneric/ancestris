@@ -1,0 +1,65 @@
+<html><head></head>
+<body>
+
+
+<h2>Gedcom</h2>
+
+<p>
+Gedcom (GEnealogical Data COMmunications) ist der <b>Standard</b>  für den Austausch von genealogischen Informationen in elektronischer Form. Er wird von den meisten Genealogieprogrammen mehr oder weniger gut verstanden.  <br>
+GenJ ist direkt auf diesem Standard aufgebaut.
+</p>
+<p>
+Auch für einen reinen Anwender ist es sehr hilfreich, die Konzepte und Begriffe von Gedcom zu kennen. 
+</p>
+<p>
+Eine Gedcom-Datei ist technisch eine einfache Textdatei. 
+Darin werden eine Reihe von Objekten nacheinander beschrieben.  
+</p>
+<p>
+<b>Objektarten</b> (-typen) sind: Person, Familie, Notiz, Quelle, Aufbewahrungsort, Übermittler, Medienobjekt.  <br>
+Jedes <b>Objekt</b> hat eine interne Identifikation (ID) der Form @nnn@. Objekte sind untereinander mit Zeigern auf die interne ID des anderen verknüpft, z.B. die Mitglieder mit ihrer Familie. 
+</p><p>
+Jedes Objekt, z.B. eine Person, wird mit ihren <b>Eigenschaften</b> beschrieben. Für jede Objektart gibt es eine Reihe definierter Eigenschaften, wie
+Name, Geschlecht, Datum usw. Jede Eigenschaft besitzt einen Wert, der von den Genealogieprogrammen ausgewertet werden kann.
+</p>
+
+<p>Jede Eigenschaft und Untereigenschaft steht in einer Zeile.  <br>
+Sie sind hierarchisch geordnet nach der Ebenennummer am Zeilenanfang. Dann folgen ein Kennzeichen (Gedcom tag) für die jeweilige Eigenschaft und dann ihr Wert. 
+</p>
+<p>
+Hier ein Beispiel für einen Datensatz einer Person (die Ebenen
+sind nur hier zur besseren Lesbarkeit eingerückt):
+</p>
+
+<blockquote>
+<pre>0 INDI @I001@
+  1 NAME Nils /Meier/
+  1 SEX M
+  1 BIRT
+    2 DATE 25 May 1970
+    2 PLAC Rendsburg, Germany
+  1 GRAD
+    2 DATE 10 Dec 1996 
+    2 PLAC Friedrich Wilhelm University Bonn
+    2 TYPE Diplom Informatiker
+  1 RESI
+    2 DATE FROM Jul 1999 TO DEC 2000
+    2 ADDR 202-1241 Kilborn Place
+      3 CONT Ontario, Canada
+      3 CITY Ottawa
+      3 POST K1H1A5    
+  1 NOTE @N003@
+</pre>
+</blockquote>
+
+<p>GenealogyJ ist besonders mächtig, alle diese Eigenschaften bequem bearbeiten zu können. Es stellt immer die an der jeweiligen Stelle möglichen Eigenschaften, Werte und Bearbeitungsfunktionen bereit.  <br>
+GenealogyJ hält dabei aber die ganze Datenbank, also eventuell andere verknüpfte Objekte, widerspruchsfrei. Damit wird vor allem die Verknüpfung von Familienmitgliedern, aber auch von Personen mit den anderen Objektarten, wie Notizen, Quellen usw. leicht gemacht.
+
+</p>
+
+<p>
+Der momentan unterstützte Gedcom-Standard ist die <a href="http://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm">Version 5.5</a>.  <br>
+GenJ wird auch weiterhin so eng wie möglich am Gedcom Standard ausgerichtet.
+</p>
+
+</body></html>
