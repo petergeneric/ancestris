@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Geo" default="dist" basedir=".">
+
+  <property file="build.properties"/>
+
+  <path id="project.class.path">
+    <pathelement path="contrib/jump/jump.jar"/>
+    <pathelement path="${dir.app}/build/classes/core"/>
+    <pathelement path="${dir.app}/build/classes/contrib"/>
+    <pathelement path="./build/classes/core"/>
+  </path>
+
+  <!--
+   Initialization
+   -->
+  <target name="init">
+
+    <fail unless="dir.app" message="Please specify dir.app in build.properties"/>
+    <echo level="info">Calling GenJ Application build in ${dir.app}</echo>
+    <ant dir="${dir.app}" target="compile"/>
+
+    <tstamp><format property="now.short" pattern="yyyyMMdd"/></tstamp>
+  	<property name="version" value="${now.short}"/>
+  	<echo level="info">version = ${version}</echo>
+
+    <echo level="info">Creating output directories</echo>
+    <mkdir dir="./build"/>
+    <mkdir dir="./build/lib"/>
+    <mkdir dir="./build/dist"/>
+    
+  </target>
+
+  <!--
+   Compilation
+   -->
+  <target name="compile" depends="init">
+
+    <mkdir dir="./build/classes/core"/>
+    <javac srcdir="src/core" destdir="./build/classes/core"
+           debug="${javac.debug}" optimize="off" deprecation="on" encoding="ASCII">
+      <classpath refid="project.class.path"/>
+    </javac>
+
+    <mkdir dir="./build/classes/report"/>
+    <javac srcdir="src/report" destdir="./build/classes/report"
+           debug="${javac.debug}" optimize="off" deprecation="on" encoding="ASCII">
+      <classpath refid="project.class.path"/>
+    </javac>
+
+  </target>
+
+  <!--
+   Cleaning
+   -->
+  <target name="clean">
+    <echo level="info">Cleaning output directories</echo>
+    <delete includeemptydirs="true" failonerror="false">
+      <fileset dir="./build" excludes="eclipse/**"/>
+   	</delete>
+  </target>
+
+  <!--
+   Distribution
+   -->
+  <target name="dist" depends="compile">
+
+   <!-- create geo.jar -->
+   <delete file="./build/lib/geo.jar"/>
+   <jar jarfile="./build/lib/geo.jar" update="True">
+     <fileset dir="./build/classes/core" includes="**/*.class"/>
+     <fileset dir="./images"/>
+     <fileset dir="./language/en"/>
+     <fileset dir="./language/fr"/>
+     <fileset dir="./src/core" includes="META-INF/**"/>
+    <fileset dir="./src/core" includes="**/*.properties"/>
+   </jar>
+    
+   <!-- copy contrib libraries -->
+   <copy file="./contrib/jump/jump.jar" todir="./build/lib"/>
+
+   <!-- create genj_geo-xyz.zip -->
+   <zip zipfile="./build/dist/genj_geo-${version}.zip" update="True">
+     <zipfileset dir="./build" includes="lib/geo.jar"/>
+     <zipfileset dir="./build" includes="lib/jump.jar"/>
+     <zipfileset dir="./contrib" includes="geo/**"/>
+     <zipfileset dir="." includes="gedcom/*"/>
+     <zipfileset dir="./build/classes" includes="report/**/*.class"/>
+     <zipfileset dir="./src" includes="report/**"/>
+   </zip>
+  	
+  </target>
+
+</project>

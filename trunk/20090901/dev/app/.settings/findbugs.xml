@@ -1,0 +1,15 @@
+<FindBugsFilter>
+	<Match>
+		<Class name="genj.report.Report"/>
+		<Method name="getImage"/>
+		<Bug code="UI"/>
+	</Match>
+	<Match>
+		<Class name="swingx.dnd.tree.AbstractDnDTreeModel"/>
+		<Bug code="ST"/>
+	</Match>
+	<Match>
+		<Class name="swingx.dnd.tree.DefaultDnDTreeModel"/>
+		<Bug code="ST"/>
+	</Match>
+</FindBugsFilter>
