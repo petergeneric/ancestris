@@ -123,7 +123,7 @@ class SettingsWidget extends JPanel implements ItemListener {
       registry.put("sosatag", settingSosaTag.getText());
 
       registry.put("debug", settingDebug.isSelected() ? "1" : "0");
-      registry.persist(); // stores it
+      Registry.persist(); // stores it
     }
   }
 
