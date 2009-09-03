@@ -559,7 +559,7 @@ public class MergeGedcomTool {
     Entity entY = null;
     try {
     for (int i = 0 ; i < typeEnt.length ; i++) {
-        String prefix = gedcomX.getEntityPrefix(typeEnt[i]);
+        String prefix = Gedcom.getEntityPrefix(typeEnt[i]);
         idp = (int[])idParams.get(typeEnt[i]);
         StringBuffer buf = new StringBuffer(idp[1]);
         List listEnt = new ArrayList(gedcomY.getEntities(typeEnt[i]));

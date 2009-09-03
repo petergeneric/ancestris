@@ -593,8 +593,8 @@ if (false) {
     println(translate("exporting", new String[]{ file.getName(), dir.toString() }));
     PrintWriter out = wh.getWriter(file);
 
-    for (int i=0 ; i < wh.defaultStylesheet.length ; i++) {
-      out.println(wh.defaultStylesheet[i]);
+    for (int i=0 ; i < WebHelper.defaultStylesheet.length ; i++) {
+      out.println(WebHelper.defaultStylesheet[i]);
       }
 
     out.close();

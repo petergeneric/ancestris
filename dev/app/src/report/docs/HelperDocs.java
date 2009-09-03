@@ -188,7 +188,7 @@ public class HelperDocs {
           }
        if (ret) {
           winMgr.close("window.docs");
-          registry.persist(); // stores it
+          Registry.persist(); // stores it
           }
        }
 

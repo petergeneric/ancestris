@@ -375,7 +375,7 @@ public class ActPanel extends JPanel implements ItemListener {
    */
   public void saveType() {
      registry.put("type", refTypeAct.isSelected() ? "0" : "1");
-     registry.persist();
+     Registry.persist();
      return;
      }
 
