@@ -8,6 +8,8 @@
     <pathelement path ="./build/classes/contrib"/>
     <pathelement path ="./build/classes/core"/>
     <pathelement path ="./build/classes/tst"/>
+    <pathelement path="${dir.geo}/build/lib/geo.jar"/>
+    <pathelement path="${dir.geo}/build/lib/jump.jar"/>
     <fileset dir=".">
         <include name="**/*.jar"/>
     </fileset>
@@ -16,12 +18,14 @@
     <pathelement path ="./images"/>
   </path>
 
+	
   <property name="project.class.path" refid="project.class.path"/>
 
   <!--
    Initialization
    -->
   <target name="init">
+    <fail unless="dir.geo" message="Please specify dir.geo in build.properties"/>
     <echo level="info">Creating output directories</echo>
     <mkdir dir="./build"/>
     <mkdir dir="./build/run"/>
@@ -106,7 +110,13 @@
   <target name="compile" depends="compile.contrib, compile.core, compile.report, compile.launcher">
   </target>
 
-  <!--
+	  <!--
+	   Compilation except reports
+	   -->
+	<target name="compile.app" depends="compile.contrib, compile.core, compile.launcher">
+	  </target>
+
+	<!--
    Cleaning
    -->
   <target name="clean">
