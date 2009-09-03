@@ -17,7 +17,7 @@
 
     <fail unless="dir.app" message="Please specify dir.app in build.properties"/>
     <echo level="info">Calling GenJ Application build in ${dir.app}</echo>
-    <ant dir="${dir.app}" target="compile"/>
+    <ant dir="${dir.app}" target="compile.app"/>
 
     <tstamp><format property="now.short" pattern="yyyyMMdd"/></tstamp>
   	<property name="version" value="${now.short}"/>
