@@ -53,19 +53,13 @@ public class ReportMerge extends Report {
      translate("setting_filter")
      };
 
-  // Include individuals with no birth information in the analysis
-  public boolean setting_inclNoBirth = false;
+  // Assessment options
+  public boolean setting_default = true;              // true means to default missing information to next best information
+  public boolean setting_approximate = true;          // true means that a non perfect equality is still considered
+  public boolean setting_differencemeansno = true;    // true means that in case of approximation, if the difference is too big, it means it is not a match
 
-  // Ensure entities are compared only if lastnames are identical
-  public boolean setting_lastidentic = true;
 
-  // depth of check between 2 entities
-  public int setting_analysis3 = 0;
-  public String setting_analysis3s[] = { 
-     translate("setting_connections"),
-     translate("setting_entityOnly")
-     };
-
+  // execution options
   public boolean setting_displayMergeHistory = true; 
   public boolean setting_logOption = false;
 
@@ -331,6 +325,11 @@ public class ReportMerge extends Report {
    * Get all elements of the entity in a text string 
    */
     private void addText(Document doc, Entity ent, String color) {
+
+      if (ent == null) {
+         doc.addText("null entity");
+         return;
+         }
 
       String text = ent.toString();
       doc.addText(text);

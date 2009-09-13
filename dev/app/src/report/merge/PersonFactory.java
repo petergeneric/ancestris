@@ -9,6 +9,8 @@ package merge;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Indi;
+import genj.gedcom.Fam;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.GedcomException;
@@ -45,11 +47,15 @@ public class PersonFactory implements Comparator {
       person.sex = indi.getSex();
       person.lastName = indi.getLastName();
       person.lastNameLength = encode(person.lastName.trim(), person.lastNameCode);
+      person.defLastName = person.lastName;
+      person.deflnLength = person.lastNameLength;
       person.firstName = indi.getFirstName();
       person.firstNameLength = encode(person.firstName.trim(), person.firstNameCode);
       
       person.yearMin = -4000;
       person.yearMax = +4000;
+
+      // get birth date
       PropertyDate date = indi.getBirthDate();
       if ((date != null) && date.isValid() && date.getStart().isValid()) {
          person.yearMin = date.getStart().getYear();
@@ -63,7 +69,33 @@ public class PersonFactory implements Comparator {
          if (person.bS > person.bE) person.bE = person.bS;
          person.birthInfo = true;
          }
+
+      // get birth place
+      PropertyPlace place = getBirthPlace(indi); 
+      person.birth = (place == null) ? "" : place.getCity() + getCountry(place);
+      person.birthLength = encode(person.birth.trim(), person.birthCode);
+
+      // if birth date and birth place are null, use christening if it exists
+      if (date == null && place == null) {
+         date = getChristDate(indi);
+         if ((date != null) && date.isValid() && date.getStart().isValid()) {
+            person.yearMin = date.getStart().getYear();
+            person.yearMax = date.isRange() ? date.getEnd().getYear() : person.yearMin;
+            try {
+               person.bS = date.getStart().getJulianDay();
+               person.bE = date.isRange() ? (date.getEnd().getJulianDay()) : person.bS;
+               } catch (GedcomException e) {
+               throw new IllegalArgumentException("Birth date of "+indi.toString()+ "=" + date.toString()+" : "+e.getMessage());
+               }
+            if (person.bS > person.bE) person.bE = person.bS;
+            person.birthInfo = true;
+            }
+         place = getChristPlace(indi); 
+         person.birth = (place == null) ? "" : place.getCity() + getCountry(place);
+         person.birthLength = encode(person.birth.trim(), person.birthCode);
+         }
  
+      // get death date
       date = indi.getDeathDate();
       if ((date != null) && date.isValid() && date.getStart().isValid()) {
          try {
@@ -77,6 +109,25 @@ public class PersonFactory implements Comparator {
             person.yearMin = date.getStart().getYear() - 110;
             }
          }
+
+      // get first marriage date
+      Fam[] fams = indi.getFamiliesWhereSpouse();
+      Fam fam = (fams != null && fams.length > 0) ? fams[0] : null;
+      date = (fam != null ? fam.getMarriageDate() : null);
+      if ((date != null) && date.isValid() && date.getStart().isValid()) {
+         try {
+            person.mS = date.getStart().getJulianDay();
+            person.mE = date.isRange() ? (date.getEnd().getJulianDay()) : person.mS;
+            } catch (GedcomException e) {
+            throw new IllegalArgumentException("Death date of "+indi.toString()+ "=" + date.toString()+" : "+e.getMessage());
+            }
+         if (person.mS > person.mE) person.mE = person.mS;
+         if (person.yearMin == -4000) {
+            person.yearMin = date.getStart().getYear() - 50;
+            }
+         }
+
+      // fix date range
       if (person.yearMin > -4000) {
          person.yearMin -= 5 * ((Math.abs(2050) - person.yearMin) / 100) + 5 ;
          }
@@ -84,33 +135,45 @@ public class PersonFactory implements Comparator {
          person.yearMax += 5 * ((Math.abs(2050) - person.yearMax) / 100) + 5 ;
          }
 
-      PropertyPlace place = getBirthPlace(indi); 
-      person.birthPlace = (place == null) ? "" : place.toString();
-      person.birthPlaceLength = encode(person.birthPlace.trim(), person.birthPlaceCode);
-      person.birthCity = (place == null)? "" : place.getCity();
-      person.birthCityLength = encode(person.birthCity.trim(), person.birthCityCode);
-      
+      // get death place
       place = getDeathPlace(indi); 
-      person.deathPlace = (place == null) ? "" : place.toString();
-      person.deathPlaceLength = encode(person.deathPlace.trim(), person.deathPlaceCode);
-      person.deathCity = (place == null)? "" : place.getCity();
-      person.deathCityLength = encode(person.deathCity.trim(), person.deathCityCode);
+      person.death = (place == null) ? "" : place.getCity() + getCountry(place);
+      person.deathLength = encode(person.death.trim(), person.deathCode);
       
-      person.birthCountry = "";
+      // get first marriage place
+      place = getMarriagePlace(fam); 
+      person.marr = (place == null) ? "" : place.getCity() + getCountry(place);
+      person.marrLength = encode(person.marr.trim(), person.marrCode);
       }
      
    public Person create() {
       return person;
       }
-   
+  
+
+   // Get country
+   public String getCountry(Property prop) {
+     String ctry = "";
+     if (prop instanceof PropertyPlace) {
+        String[] dataBits = prop.toString().split("\\,", -1);
+        ctry = dataBits[dataBits.length-1].trim();
+        }
+     return ctry;
+     }
+
+
+
    static public void getRelatives(Person p, Map indi2Person) {
       Indi indi = null;
       Person person = null;
+
+      // Get parents
       indi = p.indi.getBiologicalFather();
       if (indi != null) p.father = (Person)indi2Person.get(indi);
       indi = p.indi.getBiologicalMother();
       if (indi != null) p.mother = (Person)indi2Person.get(indi);
       
+      // Get partners
       HashSet partners = new HashSet(Arrays.asList(p.indi.getPartners()));
       p.partners = new HashSet();
       for (Iterator it = partners.iterator(); it.hasNext();) {
@@ -120,6 +183,7 @@ public class PersonFactory implements Comparator {
             p.partners.add(person);
          }
       
+      // Get kids
       HashSet kids = new HashSet(Arrays.asList(p.indi.getChildren()));
       p.kids = new HashSet();
       for (Iterator it = kids.iterator(); it.hasNext();) {
@@ -129,6 +193,7 @@ public class PersonFactory implements Comparator {
             p.kids.add(person);
          }
       
+      // Get siblings
       HashSet siblings = new HashSet(Arrays.asList(p.indi.getSiblings(false)));
       p.siblings = new HashSet();
       for (Iterator it = siblings.iterator(); it.hasNext();) {
@@ -136,6 +201,24 @@ public class PersonFactory implements Comparator {
          person = (Person)indi2Person.get((Indi)it.next());
          if (person != null)
             p.siblings.add(person);
+         }
+
+      // Defaults lastname to father, or natural kids (well, first kid for now) or siblings from same father (well, first sibling for now)
+      if (p.deflnLength == 0) {
+         if (p.father != null && p.father.lastName != null) {
+            person.defLastName = p.father.lastName;
+            person.deflnLength = encode(person.defLastName.trim(), person.deflnCode);
+            }
+         else if (p.kids != null && p.kids.iterator() != null && p.kids.iterator().hasNext()) {
+            person.defLastName = ((Person)(p.kids.iterator().next())).lastName;
+            if (person.defLastName == null) person.defLastName = "";
+            person.deflnLength = encode(person.defLastName.trim(), person.deflnCode);
+            }
+         else if (p.siblings != null && p.siblings.iterator() != null && p.siblings.iterator().hasNext()) {
+            person.defLastName = ((Person)(p.siblings.iterator().next())).lastName;
+            if (person.defLastName == null) person.defLastName = "";
+            person.deflnLength = encode(person.defLastName.trim(), person.deflnCode);
+            }
          }
       }
    
@@ -177,8 +260,21 @@ public class PersonFactory implements Comparator {
       return (PropertyPlace)indi.getProperty(new TagPath("INDI:BIRT:PLAC"));
       }
    
+   private PropertyDate getChristDate(Indi indi) {
+      return (PropertyDate)indi.getProperty(new TagPath("INDI:CHR:DATE"));
+      }
+   
+   private PropertyPlace getChristPlace(Indi indi) {
+      return (PropertyPlace)indi.getProperty(new TagPath("INDI:CHR:PLAC"));
+      }
+   
    private PropertyPlace getDeathPlace(Indi indi) {
       return (PropertyPlace)indi.getProperty(new TagPath("INDI:DEAT:PLAC"));
+      }
+      
+   private PropertyPlace getMarriagePlace(Fam fam) {
+      if (fam == null) return null;
+      return (PropertyPlace)fam.getProperty(new TagPath("FAM:MARR:PLAC"));
       }
       
    static public String display(Person p) {
@@ -187,7 +283,7 @@ public class PersonFactory implements Comparator {
       sb.append("indi="+p.indi.toString()+"\n");
       sb.append("merged="+p.merged+"\n");
       sb.append("sex="+p.sex+"\n");
-      sb.append("birthCountry="+p.birthCountry+"\n");
+      sb.append("birth="+p.birth+"\n");
       sb.append("yearMin="+p.yearMin+"\n");
       sb.append("yearMax="+p.yearMax+"\n");
       sb.append("id="+p.id+"\n");
@@ -195,24 +291,17 @@ public class PersonFactory implements Comparator {
       sb.append("firstname="+p.firstName+"\n");
       sb.append("birthStart="+p.bS+"\n");
       sb.append("birthEnd="+p.bE+"\n");
-      sb.append("birthCity="+p.birthCity+"\n");
-      sb.append("birthPlace="+p.birthPlace+"\n");
       sb.append("deathStart="+p.dS+"\n");
       sb.append("deathEnd="+p.dE+"\n");
-      sb.append("deathCity="+p.deathCity+"\n");
-      sb.append("deathPlace="+p.deathPlace+"\n");
+      sb.append("deathCity="+p.death+"\n");
       sb.append("lastNameLength="+p.lastNameLength+"\n");
       sb.append("firstNameLength="+p.firstNameLength+"\n");
-      sb.append("birthCityLength="+p.birthCityLength+"\n");
-      sb.append("birthPlaceLength="+p.birthPlaceLength+"\n");
-      sb.append("deathCityLength="+p.deathCityLength+"\n");
-      sb.append("deathPlaceLength="+p.deathPlaceLength+"\n");
+      sb.append("birthCityLength="+p.birthLength+"\n");
+      sb.append("deathCityLength="+p.deathLength+"\n");
       sb.append("codelast="+codeDisplay(p.lastNameCode)+"\n");
       sb.append("codefirst="+codeDisplay(p.firstNameCode)+"\n");
-      sb.append("codebirthcity="+codeDisplay(p.birthCityCode)+"\n");
-      sb.append("codebirthplace="+codeDisplay(p.birthPlaceCode)+"\n");
-      sb.append("codedeathcity="+codeDisplay(p.deathCityCode)+"\n");
-      sb.append("codedeathplace="+codeDisplay(p.deathPlaceCode)+"\n");
+      sb.append("codebirthcity="+codeDisplay(p.birthCode)+"\n");
+      sb.append("codedeathcity="+codeDisplay(p.deathCode)+"\n");
       sb.append((p.father == null)? "father=null\n" : "father="+p.father.toString()+"\n");
       sb.append((p.mother == null)? "mother=null\n" : "mother="+p.mother.toString()+"\n");
       sb.append("nbPartners="+p.partners.size()+"\n");
