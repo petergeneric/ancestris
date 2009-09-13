@@ -150,27 +150,6 @@ public class MergeGedcomTool {
     progress = new ProgressStatus(report.translate("progressTitle"), report.translate("progressMessage")+"...", "", 100, 
 	report.translate("progressStop"));
 
-/**
-    // Check for duplicates in original files
-    if (setting_chkdup) {
-       log.write(1, 1, "=", LNS, report.translate("logAnalysisDup"));
-       log.timeStamp(6, report.translate("logStart")+": ");
-       prepareSets(gedcom, gedcom, typeEntsA, typeEntsB, sizes);
-       if (!assessMatches(gedcom, gedcom, typeEntsA, typeEntsA, confList, null, null, null, progress, true, sizes[0], null)) return false;
-       log.timeStamp(6, report.translate("logEnd")+": ");
-       log.write(0, 6, "", 0, DASHES);
-       log.write(0, 6, "", 0, report.translate("logTotalAnalysed")+": " + NumberFormat.getIntegerInstance().format((int)progress.getSize()));
-       log.write(" ");
-
-       log.write(1, 1, "=", LNS, report.translate("logResults"));
-       displayMatches(confList, null, null, true);
-       log.write(" ");
-       confList.clear();
-       gedcomOutput = gedcom;
-       return true;
-       }
-*/
-
     // Merge case. 
     log.write(1, 1, "=", LNS, report.translate("logPrep"));
 
@@ -670,11 +649,9 @@ public class MergeGedcomTool {
               Indi indi = (Indi)it.next();
               PersonFactory pf = new PersonFactory(indi);
               Person p = pf.create();
-              if (report.setting_inclNoBirth || p.birthInfo) {
-                 indi2Person.put(indi, p);
-                 listPersons.add(p);
-                 //if (debug) log.write("   adding "+indi.toString());
-                 }
+              indi2Person.put(indi, p);
+              listPersons.add(p);
+              //if (debug) log.write("   adding "+indi.toString());
               }
            // Allocate relatives of each person
            for (Iterator it = listPersons.iterator(); it.hasNext();) {
@@ -1027,7 +1004,7 @@ public class MergeGedcomTool {
          match = (ConfidenceMatch)confList.get(key);
          // if assessment not already there or not confirmed, perform assessment
          if ((match == null) || ((!match.confirmed) && (!match.toBeMerged))) {
-            match = assessConfidenceIndi(p1, p2, setting_chkdup, confList, idNewOld);
+            match = assessConfidenceIndi(p1, p2, setting_chkdup, idNewOld);
             if (match.confLevel >= report.setting_askThreshold) 
                confList.put(key, match);
             }
@@ -1055,7 +1032,7 @@ public class MergeGedcomTool {
          match = (ConfidenceMatch)confList.get(key);
          // if assessment not already there or not confirmed, perform assessment
          if ((match == null) || ((!match.confirmed) && (!match.toBeMerged))) {
-            match = assessConfidenceIndi(p1, p2, setting_chkdup, confList, idNewOld);
+            match = assessConfidenceIndi(p1, p2, setting_chkdup, idNewOld);
             if (match.confLevel >= report.setting_askThreshold) 
                confList.put(key, match); 
             }
@@ -2025,44 +2002,43 @@ public class MergeGedcomTool {
 
  /**
   * Calculates confidence level of matching between 2 individuals
+  *
+  * Principles:
+  * 1/ Find match using only basic information (lastname, firstname, birthdate, birthcity)
+  * 2/ Fill in gaps if this information is incomplete, using other bits of information (if setting_default is set)
+  * 3/ Allow for a match even when information are only similar and not perfectly identical (if setting_approximate is set)
+  * 4/ Beyond a certain difference, consider that entities are definitely not the same (if setting_differencemeansno is set)
+  *
   */
-  private ConfidenceMatch assessConfidenceIndi(Person p1, Person p2, boolean duplicates, Map confList, Map idNewOld) {
+  private ConfidenceMatch assessConfidenceIndi(Person p1, Person p2, boolean duplicates, Map idNewOld) {
 
+   // Prepare match result
    ConfidenceMatch match = new ConfidenceMatch((Entity) p1.indi, (Entity) p2.indi);
+
+   // Take care of the duplicates case
    if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
    if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
-   int score = 0;  // will be from 0 to 100; coefficients below should add up to 100.
 
-   if (report.setting_lastidentic && p1.lastNameLength > 0 && p1.lastName.compareTo(p2.lastName) != 0) {
+   // Assess individuals score based on basic information 
+//if (p1.id.equals("I3546") && p2.id.equals("I3547")) debug=true;
+if (debug) log.write("     --- assess p1 p2= "+p1.id+" "+p2.id);
+   double score = assessIndi(p1, p2);
+   if (score == 0) {
       match.confLevel = 0;
       return match;
       }
 
-   if ((p1 != null) && (p2 != null))
-      score += assessIndi(p1, p2) * 0.35;
-
-   if ((report.setting_analysis3 == ANA3_CONNEC)) {
-      if (((score + 65) >= report.setting_askThreshold) && !p1.partners.isEmpty() && !p2.partners.isEmpty())
-         score += assessIndiTab(p1.partners, p2.partners) * 0.25;
-
-      if (((score + 40) >= report.setting_askThreshold) && !p1.kids.isEmpty() && !p2.kids.isEmpty())
-         score += assessIndiTab(p1.kids, p2.kids) * 0.25;
-
-      if (((score + 15) >= report.setting_askThreshold) && (p1.father != null) && (p2.father != null))
-         score += assessIndi(p1.father, p2.father) * 0.05;
-
-      if (((score + 10) >= report.setting_askThreshold) && (p1.mother != null) && (p2.mother != null))
-         score += assessIndi(p1.mother, p2.mother) * 0.05;
-
-      if (((score + 5) >= report.setting_askThreshold) && !p1.siblings.isEmpty() && !p2.siblings.isEmpty())
-         score += assessIndiTab(p1.siblings, p2.siblings) * 0.05;
+   // If one of the persons if missing key basic information, compensate by comparing relatives instead
+   if (score >= 1 && score <= 100000 && report.setting_default) {
+//log.write("     --- assessRelatives p1 p2= "+p1.id+" "+p2.id);
+      score *= assessRelatives(p1, p2);
       }
 
-   match.confLevel = score;
-   //if (debug) log.write("     score="+match.confLevel);
-   //if (debug) log.write("         ");
+   // Final calculations
+   match.confLevel = getMatchProba(score);
+if (debug) log.write("     --- SCORE= "+match.confLevel);
 
-   // manage automerge 
+   // Manage automerge 
    if (match.confLevel > report.setting_autoMergingLevel) {
       match.confirmed = true;
       match.toBeMerged = true;
@@ -2070,10 +2046,379 @@ public class MergeGedcomTool {
                         // 3 means "1" but merging of properties still to be done.
       }
 
+if (debug) {
+   log.write("   ");
+   log.write("   ");
+   log.write("   ");
+   log.write("   ");
+   log.write("   ");
+   debug = false;
+   }
    return match;
    }
  
+
+ /**
+  * Assess confidence level between 2 individuals based on lastname, firstname, and birth (or death or marriage)
+  * 
+  * Score is either 0=different, 1=could not compare (missing value), then any double between 2/3x and x; x is for instance 20,000 for lastnames, 7,000 for firstnames, 36,000 for places
+  *
+  */
+  private double assessIndi(Person p1, Person p2) {
+
+   double score = 0;
+
+   if (p1 == null || p2 == null) return 0;
+
+   // Get basic scores
+   double scoreLastName = getMatchScore(1, p1, p2); // compares lastnames of persons
+if (debug) log.write("        --- scoreLastName= "+scoreLastName);
+   if (scoreLastName == 0) {
+      return 0;
+      }
+   double scoreFirstName = getMatchScore(2, p1, p2); // compares firstnames of persons 
+if (debug) log.write("        --- scoreFirstName= "+scoreFirstName);
+   if (scoreFirstName == 0) {
+      return 0;
+      }
+
+   double scoreBirth = getMatchScore(3, p1, p2); // Compares birth date of persons
+if (debug) log.write("        --- scoreBirth= "+scoreBirth);
+
+   scoreBirth *= getMatchScore(4, p1, p2); // Place of Person's birth
+if (debug) log.write("        --- scoreBirth= "+scoreBirth);
+
+   double scoreDeath = getMatchScore(5, p1, p2); // Compares death date of persons
+if (debug) log.write("        --- scoreDeath= "+scoreDeath);
+
+   scoreDeath *= getMatchScore(6, p1, p2); // Place of Person's death
+if (debug) log.write("        --- scoreDeath= "+scoreDeath);
+
+   double scoreMarr = getMatchScore(7, p1, p2); // Compares marriage date of persons
+if (debug) log.write("        --- scoreMarr= "+scoreMarr);
+
+   scoreMarr *= getMatchScore(8, p1, p2); // Place of Person's marriage
+if (debug) log.write("        --- scoreMarr= "+scoreMarr);
+
+   double scoreEvent = Math.max(scoreBirth, Math.max(scoreDeath, scoreMarr));
+   if (scoreEvent == 0) {
+      return 0;
+      }
+
+   return scoreLastName * scoreFirstName * scoreEvent;
+   }
+
+
+ /**
+  * Assess confidence level between 2 individuals based on relatives only 
+  */
+  private double assessRelatives(Person p1, Person p2) {
+
+   // Compare Relatives
+   int value = 20000;
+   double score = 0;
+
+   score  = getMatchProba(assessIndi(p1.father, p2.father)) * 0.05;
+   score += getMatchProba(assessIndi(p1.mother, p2.mother)) * 0.05;
+   score += getMatchProba(assessIndiTab(p1.partners, p2.partners)) * 0.25;
+   score += getMatchProba(assessIndiTab(p1.kids, p2.kids)) * 0.25;
+   score += getMatchProba(assessIndiTab(p1.siblings, p2.siblings)) * 0.05;
+if (debug) log.write("     --- assessRelatives - score = "+score);
+   return score * value / 100;
+   }
+
+
+
+ /**
+  * Assess confidence level between 2 arrays of individuals
+  */
+  private int assessIndiTab(HashSet persons1, HashSet persons2) {
+
+   if ((persons1 == null) || (persons2 == null)) return 0;
+
+   // The idea is to assess both sets for the best matching pairs and return this score as the matching score.
+   int scoreMax = 0;
+   int scoreTmp = 0;
+   for (Iterator it1 = persons1.iterator(); it1.hasNext();) {
+      Person p1 = (Person)it1.next();
+      for (Iterator it2 = persons2.iterator(); it2.hasNext();) {
+         Person p2 = (Person)it2.next();
+         scoreTmp = getMatchProba(assessIndi(p1, p2));
+         if (scoreTmp > scoreMax) {
+            scoreMax = scoreTmp;
+            }
+         }
+      }
+   return scoreMax;
+   } 
+
  
+ /**
+  * Get a matching score between one element of 2 persons
+  *
+  *  0          : not a match
+  *  1          : cannot say, one element is missing
+  *  2/ x value : a partial match
+  *  value      : a match
+  */
+  private int getMatchScore(int type, Person p1, Person p2) {
+
+   int score = 0; 
+   int value = 0;
+   int threshold = 70;
+
+   // Compare LastName
+   if (type == 1) {
+      value = 20000;
+      threshold = 80;
+if (debug) log.write("           --- cmpLN= "+p1.deflnLength+" "+p2.deflnLength+" "+p1.defLastName+" "+p2.defLastName);
+      if (p1.deflnLength == 0 || p2.deflnLength == 0) {
+         return 1;
+         }
+      if (p1.defLastName.equals(p2.defLastName)) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchCode(p1.deflnCode, p1.deflnLength, p2.deflnCode, p2.deflnLength);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare FirstName
+   if (type == 2) {
+      value = 7000;
+      threshold = 50;
+if (debug) log.write("           --- cmpFN= "+p1.firstNameLength+" "+p2.firstNameLength+" "+p1.firstName+" "+p2.firstName);
+      if (p1.firstNameLength == 0 || p2.firstNameLength == 0) {
+         return 1;
+         }
+      if (p1.firstName.equals(p2.firstName)) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchCode(p1.firstNameCode, p1.firstNameLength, p2.firstNameCode, p2.firstNameLength);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare BirthDate
+   if (type == 3) {
+      value = 36500;
+      threshold = 10;
+if (debug) log.write("           --- cmpBD= "+p1.bS+" "+p2.bS+" "+p1.bE+" "+p2.bE);
+      if (p1.bS == 0 || p2.bS == 0) {
+         return 1;
+         }
+      if (p1.bS == p2.bS && p1.bE == p2.bE) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchJD(p1.bS, p1.bE, p2.bS, p2.bE);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare BirthCityCtry
+   if (type == 4) {
+      value = 36000;
+      threshold = 80;
+if (debug) log.write("           --- cmpBP= "+p1.birthLength+" "+p2.birthLength+" "+p1.birth+" "+p2.birth);
+      if (p1.birthLength == 0 || p2.birthLength == 0) {
+         return 1;
+         }
+      if (p1.birth.equals(p2.birth)) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchCode(p1.birthCode, p1.birthLength, p2.birthCode, p2.birthLength);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare DeathDate
+   if (type == 5) {
+      value = 36500;
+      threshold = 10;
+if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.dE);
+      if (p1.dS == 0 || p2.dS == 0) {
+         return 1;
+         }
+      if (p1.dS == p2.dS && p1.dE == p2.dE) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchJD(p1.dS, p1.dE, p2.dS, p2.dE);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare DeathCityCtry
+   if (type == 6) {
+      value = 36000;
+      threshold = 80;
+if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+" "+p1.death+" "+p2.death);
+      if (p1.deathLength == 0 || p2.deathLength == 0) {
+         return 1;
+         }
+      if (p1.death.equals(p2.death)) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchCode(p1.deathCode, p1.deathLength, p2.deathCode, p2.deathLength);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare MarriageDate
+   if (type == 7) {
+      value = 36500;
+      threshold = 10;
+if (debug) log.write("           --- cmpMD= "+p1.mS+" "+p2.mS+" "+p1.mE+" "+p2.mE);
+      if (p1.mS == 0 || p2.mS == 0) {
+         return 1;
+         }
+      if (p1.mS == p2.mS && p1.mE == p2.mE) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchJD(p1.mS, p1.mE, p2.mS, p2.mE);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare MarriageCityCtry
+   if (type == 8) {
+      value = 36000;
+      threshold = 80;
+if (debug) log.write("           --- cmpMP= "+p1.marrLength+" "+p2.marrLength+" "+p1.marr+" "+p2.marr);
+      if (p1.marrLength == 0 || p2.marrLength == 0) {
+         return 1;
+         }
+      if (p1.marr.equals(p2.marr)) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchCode(p1.marrCode, p1.marrLength, p2.marrCode, p2.marrLength);
+if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   return 0;
+   }
+
+
+ /**
+  * Match string using a representative code
+  */
+  private int matchCode(int[] c1, int l1, int[] c2, int l2) {
+   if (l1 * l2 == 0) return 0;
+   int sum = 0;
+   for (int i = 0; i < c1.length ; i++) {
+      //log.write("     i, c1 et c2="+i+"-"+c1[i]+"et"+c2[i]+"="+(0+Math.min(c1[i], c2[i]) * 2));
+      sum += Math.min(c1[i], c2[i]) * 2;
+      }
+   return (int) (sum * 90 / (l1+l2));
+   }
+
+ /**
+  * Match date using julian day 
+  */
+  private int matchJD(int s1, int e1, int s2, int e2) {
+
+   int ret = 0;
+   int points = 10;
+   int gap = 10;
+
+   if ((s1 == 0) || (s2 == 0) || (e1 == 0) || (e2 == 0)) return 0;
+
+   if ((s1 == s2) && (e1 == e2)) return 100;
+
+   // Now convert into years
+   s1 = s1 / 365;
+   e1 = e1 / 365;
+   s2 = s2 / 365;
+   e2 = e2 / 365;
+   // General case where both dates are points in time
+   if ((s1 == e1) && (s2 == e2)) {  
+      if      (Math.abs(s1 - s2) <= gap)  ret = points;
+      else ret = 0;
+      }
+   //    s1+-------+e1             s2+-------+e2     
+   else if (e1 < s2){  
+      if      ((s2 - e1) <= gap)  ret = points;
+      else ret = 0;
+      }
+   //                 s2+-------+e2     s1+-------+e1
+   else if (e2 < s1) {  
+      if      ((s1 - e2) <= gap)  ret = points;
+      else ret = 0;
+      }
+   //  s1+------------------+e1 
+   //                 s2+(------------------+)(e2)
+   else if (s2 >= s1) { ret = points; }
+   //                            s1+(----------------+)(e1)
+   //                s2+------------------+e2
+   else { ret = points; }
+
+   return ret;
+   }
+   
+
+ /**
+  * Calculate probability from a score
+  * (formula of my own invention)
+  */
+  private int getMatchProba(double score) {
+
+   if (score <= 0) return 0;
+
+   double proba = 1 - (1 / ( 1.01 + Math.pow((Math.log10(score)/8), 5) ) );
+
+   return (int) (proba * 100);
+   }
+
+ 
+
  /**
   * Calculates confidence level of matching between 2 entities (non individuals)
   */
@@ -2086,7 +2431,7 @@ public class MergeGedcomTool {
    int score = 0; // will be from 0 to 100; coefficients below should add up to 100.
    int scoreInfo = 0;
 
-   if (report.setting_lastidentic && i1.titleLength > 0 && i1.title.compareTo(i2.title) != 0) {
+   if (!report.setting_default && i1.titleLength > 0 && i1.title.compareTo(i2.title) != 0) {
       match.confLevel = 0;
       return match;
       }
@@ -2141,210 +2486,6 @@ public class MergeGedcomTool {
    }
 
  /**
-  * Assess confidence level between 2 individuals
-  */
-  private int assessIndi(Person p1, Person p2) {
-
-   int score = 0; // Will be from 0 to 100; coefficients below should add up to 100
-   int scoreIndi = 0;
-
-   //if (debug) log.write(" ");
-   //if (debug) log.write("AssessIndi "+p1.lastName+" "+p1.firstName+"/"+p2.lastName+" "+p2.firstName);
-
-   if ((p1.sex != p2.sex) && (p1.sex != UNKNOWN) && (p2.sex != UNKNOWN)) return 0;
-
-   // Compare LastName
-   score = 0;
-   if (p1.lastNameLength > 0) {
-      //score = assessStrings(p1.lastName, p2.lastName);    <=== not used (slower for worse result)
-      if (p1.lastName.compareTo(p2.lastName) == 0) score = 100;
-      else score = matchCode(p1.lastNameCode, p1.lastNameLength, p2.lastNameCode, p2.lastNameLength);
-      }
-   scoreIndi += score * 0.15;
-   //if (debug) log.write("lastName "+score);
-
-   // Compare FirstName
-   score = 0;
-   if (p1.firstNameLength > 0) {
-      if (p1.firstName.compareTo(p2.firstName) == 0) score = 100;
-      else score = matchCode(p1.firstNameCode, p1.firstNameLength, p2.firstNameCode, p2.firstNameLength); 
-      }
-   scoreIndi += score * 0.10;
-   //if (debug) log.write("firstName "+score);
-
-   // Compare BirthDate
-   score = 0;
-   if (p1.bS > 0) score = matchJD(p1.bS, p1.bE, p2.bS, p2.bE);
-   scoreIndi += score * 0.25;
-   //if (debug) log.write("birthDate "+score);
-
-   // Compare BirthCity
-   score = 0;
-   if (p1.birthCityLength > 0) {
-      if (p1.birthCity.compareTo(p2.birthCity) == 0) score = 100;
-      else score = matchCode(p1.birthCityCode, p1.birthCityLength, p2.birthCityCode, p2.birthCityLength);
-      }
-   scoreIndi += score * 0.10;
-   //if (debug) log.write("birthCity "+score);
-
-   // Compare BirthPlace
-   score = 0;
-   if (p1.birthPlaceLength > 0) {
-      if (p1.birthPlace.compareTo(p2.birthPlace) == 0) score = 100;
-      else score = matchCode(p1.birthPlaceCode, p1.birthPlaceLength, p2.birthPlaceCode, p2.birthPlaceLength); 
-      }
-   scoreIndi += score * 0.05;
-   //if (debug) log.write("birthPlace "+score);
-
-   // Compare DeathDate
-   score = 0;
-   if (p1.bS > 0) score = matchJD(p1.dS, p1.dE, p2.dS, p2.dE);
-   scoreIndi += score * 0.20;
-   //if (debug) log.write("deathDate "+score);
-
-   // Compare DeathCity
-   score = 0;
-   if (p1.deathCityLength > 0) {
-      if (p1.deathCity.compareTo(p2.deathCity) == 0) score = 100;
-      else score = matchCode(p1.deathCityCode, p1.deathCityLength, p2.deathCityCode, p2.deathCityLength); 
-      }
-   scoreIndi += score * 0.10;
-   //if (debug) log.write("deathCity "+score);
-
-   // Compare DeathPlace
-   score = 0;
-   if (p1.deathPlaceLength > 0) {
-      if (p1.deathPlace.compareTo(p2.deathPlace) == 0) score = 100;
-      else score = matchCode(p1.deathPlaceCode, p1.deathPlaceLength, p2.deathPlaceCode, p2.deathPlaceLength); 
-      }
-   scoreIndi += score * 0.05;
-
-   //if (debug) log.write("deathPlace "+score);
-   //if (debug) log.write("     AssessIndi End ="+scoreIndi+" out of 100");
-   //if (debug) log.write("         ");
-
-   return scoreIndi;
-   }
-
- /**
-  * Assess confidence level between 2 arrays of individuals
-  */
-  private int assessIndiTab(HashSet persons1, HashSet persons2) {
-
-   if ((persons1 == null) || (persons2 == null)) return 0;
-
-   // The idea is to assess both sets for the best matching pairs and return this score as the matching score.
-   int scoreMax = 0;
-   int scoreTmp = 0;
-   for (Iterator it1 = persons1.iterator(); it1.hasNext();) {
-      Person p1 = (Person)it1.next();
-      for (Iterator it2 = persons2.iterator(); it2.hasNext();) {
-         Person p2 = (Person)it2.next();
-         scoreTmp = assessIndi(p1, p2);
-         if (scoreTmp > scoreMax) {
-            scoreMax = scoreTmp;
-            }
-         }
-      }
-   return scoreMax;
-   } 
-
- /**
-  * Match string using a representative code
-  */
-  private int matchCode(int[] c1, int l1, int[] c2, int l2) {
-   if (l1 * l2 == 0) return 0;
-   int sum = 0;
-   for (int i = 0; i < c1.length ; i++) {
-      //log.write("     i, c1 et c2="+i+"-"+c1[i]+"et"+c2[i]+"="+(0+Math.min(c1[i], c2[i]) * 2));
-      sum += Math.min(c1[i], c2[i]) * 2;
-      }
-   return (int) (sum * 90 / (l1+l2));
-   }
-
- /**
-  * (THIS FUNCTION IS NOT USED, PERFORMANCE IS MUCH SLOWER AND RESULTS NOT BETTER THAN MY ALGORITHM)
-  * Assess similarity of 2 short strings using the Levenshtein distance algorithm
-  * A distance of '0' means identical
-  * A distance of 'size of longest string' means most different
-  * So let's define % confidence by: 1 - [ d(a, b) / maxlength(a, b) ]^2
-  * (square to amplify the confidence is nearly ok and lack of confidence if lower)
-  */
-  private int assessStrings(String str1, String str2) {
-   double confidence = 0;
-
-   // Let's limit the string size to 25 characters
-   int la = Math.min(str1.length(), 25);
-   int lb = Math.min(str2.length(), 25);
-
-   // Variables we will need for the algorithm
-   int cost;
-   int[][] d = new int[la+1][lb+1];
-
-   for (int i = 0; i <= la ; i++) d[i][0] = i;
-   for (int j = 0; j <= lb ; j++) d[0][j] = j;
-
-   for (int i = 1; i <= la ; i++) {
-      for (int j = 1; j <= lb ; j++) {
-         cost = (str1.charAt(i-1) == str2.charAt(j-1))? 0 : 1;
-         d[i][j] = Math.min(d[i-1][j] + 1, Math.min(d[i][j-1] + 1, d[i-1][j-1] + cost));
-         }
-      }
-   //confidence = 100*(1 - (Math.pow(d[la][lb], 2) / Math.pow(Math.max(la, lb),2)));
-   confidence = 100*(1 - (d[la][lb] / Math.max(la, lb)));
-
-   return (int) (confidence);
-   }
-
-
- /**
-  * Match date using julian day 
-  */
-  private int matchJD(int s1, int e1, int s2, int e2) {
-
-   int points = 0;
-
-   if ((s1 == 0) || (s2 == 0) || (e1 == 0) || (e2 == 0)) return 0;
-
-   if ((s1 == s2) && (e1 == e2)) return 100;
-
-   // Now convert into years
-   s1 = s1 / 365;
-   e1 = e1 / 365;
-   s2 = s2 / 365;
-   e2 = e2 / 365;
-   // General case where both dates are points in time
-   if ((s1 == e2) && (s2 == e2)) {  
-      if      (Math.abs(s1 - s2) <= 1)  points = 90;
-      else if (Math.abs(s1 - s2) <= 5)  points = 30;
-      else if (Math.abs(s1 - s2) <= 10) points = 5;
-      else points = 0;
-      }
-   //    s1+-------+e1             s2+-------+e2     
-   else if (e1 < s2){  
-      if      ((s2 - e1) <= 1)  points = 80;
-      else if ((s2 - e1) <= 5)  points = 50;
-      else if ((s2 - e1) <= 10) points = 20;
-      else points = 0;
-      }
-   //                 s2+-------+e2     s1+-------+e1
-   else if (e2 < s1) {  
-      if      ((s1 - e2) <= 1)  points = 80;
-      else if ((s1 - e2) <= 5)  points = 50;
-      else if ((s1 - e2) <= 10) points = 20;
-      else points = 0;
-      }
-   //  s1+------------------+e1 
-   //                 s2+(------------------+)(e2)
-   else if (s2 >= s1) { points = 90; }
-   //                            s1+(----------------+)(e1)
-   //                s2+------------------+e2
-   else { points = 90; }
-
-   return points;
-   }
-   
- /**
   * Get Gedcom B
   */ 
   public Gedcom getGedcomB() {
@@ -2373,9 +2514,9 @@ public class MergeGedcomTool {
      log.write(0, 3, "", 0, DASHES);
      log.write(0, 3, "", 0, report.translate("setting_askThreshold")+" :   "+report.setting_askThreshold);
      log.write(0, 3, "", 0, report.translate("setting_analysis1")+" :   "+report.setting_analysis1s[report.setting_analysis1]);
-     log.write(0, 3, "", 0, report.translate("setting_inclNoBirth")+" :   "+report.setting_inclNoBirth);
-     log.write(0, 3, "", 0, report.translate("setting_lastidentic")+" :   "+report.setting_lastidentic);
-     log.write(0, 3, "", 0, report.translate("setting_analysis3")+" :   "+report.setting_analysis3s[report.setting_analysis3]);
+     log.write(0, 3, "", 0, report.translate("setting_default")+" :   "+report.setting_default);
+     log.write(0, 3, "", 0, report.translate("setting_approximate")+" :   "+report.setting_approximate);
+     log.write(0, 3, "", 0, report.translate("setting_differencemeansno")+" :   "+report.setting_differencemeansno);
      log.write(0, 3, "", 0, DASHES);
      log.write(0, 3, "", 0, report.translate("setting_displayMergeHistory")+" :   "+report.setting_displayMergeHistory);
      log.write(0, 3, "", 0, DASHES);
