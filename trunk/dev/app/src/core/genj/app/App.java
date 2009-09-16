@@ -47,6 +47,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import sun.rmi.log.LogHandler;
@@ -104,6 +105,8 @@ public class App {
      * Constructor
      */
     public void run() {
+    	
+    	SplashWindow sw = new SplashWindow("genjfrsplash",new JFrame(),10000);
       
       // Catch anything that might happen
       try {
