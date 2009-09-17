@@ -86,6 +86,9 @@
    Report Compilation
    -->
   <target name="compile.report" depends="init">
+    <ant dir="${dir.geo}" target="dist">
+        <property name="dir.app" value="../app"/>
+    </ant>
     <mkdir dir="./build/classes/report"/>
     <javac srcdir="src/report" destdir="./build/classes/report"
            debug="${javac.debug}" optimize="off" deprecation="on" encoding="UTF-8" >
