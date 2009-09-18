@@ -44,10 +44,10 @@ public class DocReport {
 
 		try {
 			Velocity.setProperty("resource.loader", "file,class");
-			Velocity.setProperty("class.resource.loader.class",
-			"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-			Velocity.setProperty("class.resource.loader.cache","true");
-//TODO:revoir 			Velocity.setProperty("file.resource.loader.path",templateDir);
+//			Velocity.setProperty("class.resource.loader.class",
+//			"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+//			Velocity.setProperty("class.resource.loader.cache","true");
+ 			Velocity.setProperty("file.resource.loader.path","/");
 			Velocity.setProperty("file.resource.loader.cache","true");
 
 			
