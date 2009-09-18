@@ -9,7 +9,6 @@ import java.util.TreeMap;
 class GedartTemplates extends TreeMap<String, String> {
 
 	public GedartTemplates() {
-		put("default", "Par d�faut");
 		File gedartDir = new File(ReportLoader.getReportDirectory(),
 				"gedart/templates");
 		putAll(new GedartTemplates(gedartDir));
@@ -40,7 +39,7 @@ class GedartTemplates extends TreeMap<String, String> {
 					continue;
 				if (!new File(file, "index.vm").exists())
 					continue;
-				put(file.getName(), file.getName());
+				put(file.getName(), file.getAbsolutePath());
 			}
 		}
 	}

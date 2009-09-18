@@ -186,6 +186,7 @@ public class ReportGedart extends Report {
 			if (index > 0) extension = thetemplate.substring(index);
 		}
 
+		thetemplate = gedartTemplates.get(thetemplate);
 		// if only one item, special case
 		File file = null;
 		boolean isOneEntity = ((indis.length + fams.length) <= 1);
