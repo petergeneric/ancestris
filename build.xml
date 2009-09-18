@@ -112,7 +112,8 @@
    -->
 	<target name="dist.all" depends="dist.app, dist.geo, dist.lnf, dist.reportrunner" />
 
-	<target name="dist.arvernes" depends="dist.all">
+	<target name="dist.arvernes" depends="dist.all, dist.arvernes-zip " />
+	<target name="dist.arvernes-zip">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="./build/genjarvernes"/>
 		</delete>
@@ -129,6 +130,9 @@
 		        <include name="genj_lnf-*.zip"/>
 		        <include name="genj-reportrunner-*.zip"/>
 		    </fileset>
+		    <patternset>
+		        <exclude name="**/*.java"/>
+		    </patternset>
 		</unzip>
 		<zip basedir="./build/genjarvernes" zipfile="./build/dist/genj_arvernes.zip" />
 	</target>
