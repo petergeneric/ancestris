@@ -1400,6 +1400,7 @@ public class MergeGedcomTool {
    HashSet entsX = new HashSet();
    HashSet entsY = new HashSet();
    Map xToY = new TreeMap();
+   Map xToConf = new TreeMap();
    List confList = new ArrayList(matches.values());
    boolean skip = true;
    for (Iterator it = confList.iterator(); it.hasNext(); ) {
@@ -1408,6 +1409,7 @@ public class MergeGedcomTool {
         entsX.add(match.ent1);
         entsY.add(match.ent2);
         xToY.put(match.ent1, match.ent2);
+        xToConf.put(match.ent1, (Integer)match.confLevel);
         skip = false;
         //if (debug) log.write("storing indis: "+match.ent1.getId()+"<->"+match.ent2.getId());
         }
@@ -1424,17 +1426,20 @@ public class MergeGedcomTool {
      Entity wifeX = (Entity)famX.getWife();
      Entity matchHusbandX = husbandX;
      Entity matchWifeX = wifeX;
+     int conflevel = 0;
      skip = true;
 
      if (husbandX != null) {
         if (entsX.contains(husbandX)) {
            matchHusbandX = (Entity)xToY.get(husbandX);
+           conflevel = (int)(Integer)xToConf.get(husbandX);
            skip = false;
            }
         }
      if (wifeX != null) {
         if (entsX.contains(wifeX)) { 
            matchWifeX = (Entity)xToY.get(wifeX);
+           conflevel = Math.max(conflevel, (int)(Integer)xToConf.get(wifeX));
            skip = false;
            }
         }
@@ -1456,7 +1461,7 @@ public class MergeGedcomTool {
            ConfidenceMatch match = new ConfidenceMatch((Entity)famX, (Entity)famY);
            if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
            if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
-           match.confLevel = 100;
+           match.confLevel = conflevel-1;
            match.confirmed = true;
            match.toBeMerged = true;
            match.choice = 3;
