@@ -1938,6 +1938,7 @@ public class MergeGedcomTool {
                 }
              else {
                 xref.setValue("@"+newTargetId+"@");
+                refs.add(refi);
                 }
              }
           }
