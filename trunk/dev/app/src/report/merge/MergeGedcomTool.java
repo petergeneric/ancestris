@@ -82,7 +82,7 @@ public class MergeGedcomTool {
   private Gedcom gedcomOutput = null;
   private List confidenceListOutput = null;
   private ProgressStatus progress = null;
-  private boolean debug = false;
+  private boolean debug = true;
   private String[] typeEnt = {
      Gedcom.INDI,
      Gedcom.FAM,
@@ -241,7 +241,7 @@ public class MergeGedcomTool {
        log.timeStamp(6, report.translate("logStart")+": ");
        if (!assessMatches(gedcomA, gedcomB, typeEntsA, typeEntsB, confList, overlaps, scoreStats, idMap, progress, setting_chkdup, sizes[2], idNewOld))
           return false;
-       if (debug) displayConfList(confList);
+       //if (debug) displayConfList(confList);
        log.timeStamp(6, report.translate("logEnd")+": ");
        log.write(0, 6, "", 0, DASHES);
        log.write(0, 6, "", 0, report.translate("logTotalAnalysed") + ": " + NumberFormat.getIntegerInstance().format((int)progress.getSize()));
@@ -280,7 +280,7 @@ public class MergeGedcomTool {
        while (keepMatching == 2) {
           // Confirm with user for information to keep
           keepMatching = confirmMatchesWithUser(confList);
-          if (debug) displayConfList(confList);
+          //if (debug) displayConfList(confList);
           if (keepMatching == -1)  
              return false;
           if (keepMatching > 0) { 
@@ -304,7 +304,7 @@ public class MergeGedcomTool {
     log.write(2, 3, "", 0, report.translate("logApplyingRules"));
     log.timeStamp(6, report.translate("logStart")+": ");
     mergeEntities(confList);
-    if (debug) displayConfList(confList);
+    //if (debug) displayConfList(confList);
     log.timeStamp(6, report.translate("logEnd")+": ");
     log.write(" ");
 
@@ -1193,12 +1193,12 @@ public class MergeGedcomTool {
            totalVol[i] += entitiesVol[i];
            }
         log.write(0, 6, "", 0, report.translate(key)+" :\t"+lEnts.size()+"\t"+volumes);
-        if (debug) {
-           for (Iterator it2 = lEnts.iterator(); it2.hasNext();) {
-              Entity ent = (Entity)it2.next();
-              log.write(0, 6, "", 0, "   entity: "+ent.getId());
-              }
-           }
+        //if (debug) {
+        //   for (Iterator it2 = lEnts.iterator(); it2.hasNext();) {
+        //      Entity ent = (Entity)it2.next();
+        //      log.write(0, 6, "", 0, "   entity: "+ent.getId());
+        //      }
+        //   }
         // print totals and reinit them
         if ((key == "A3mat") || (key == "B3ecl") || (key == "ZfB")) {
            volumes = "";
@@ -1387,65 +1387,75 @@ public class MergeGedcomTool {
    }
 
  /**
-  * Merge entities to be merge (information to keep, for automatically merged ones)
+  * Assess which families need to be merged
+  * 
+  * Need to merge families if husband and wife are identical and the date is the same, once individuals have in principle been merged
+  *   It can be that only one was merged in case of duplicate search, or both in case of different files.
+  *
+  *   If only husband or wife exist in the marriage, merge family as well if only one spouse individual is merged.
   */
   private boolean assessFamilies(Gedcom gedcomX, Gedcom gedcomY, boolean duplicates, Map matches, Map idNewOld) {
-   // Need to merge families if husband and wife are respectively merged to the other family spouses (this is the only case we can for sure merge; other scenario can always be explained by re-marriage which we will assume is always possible otherwise user would have merge them manually.
-   // If only husband or wife exeist in the marriage, merge family as well is only one spouse individual is merged.
-   //if (debug) log.write("Assessing families...");
 
    // Store individuals that are to be merged
    HashSet entsX = new HashSet();
    HashSet entsY = new HashSet();
    Map xToY = new TreeMap();
    List confList = new ArrayList(matches.values());
+   boolean skip = true;
    for (Iterator it = confList.iterator(); it.hasNext(); ) {
      ConfidenceMatch match = (ConfidenceMatch)it.next();
-     //if (debug) log.write("checking indis: "+match.toBeMerged+" ; "+match.choice+" ; "+match.ent1.getId()+"x"+match.ent2.getId());
      if ((match.toBeMerged) && (match.ent1 instanceof Indi)) {    
         entsX.add(match.ent1);
         entsY.add(match.ent2);
         xToY.put(match.ent1, match.ent2);
-        //if (debug) log.write("storing indis: "+match.ent1.getId()+"x"+match.ent2.getId());
+        skip = false;
+        //if (debug) log.write("storing indis: "+match.ent1.getId()+"<->"+match.ent2.getId());
         }
      }
+   if (skip) return true;
 
    // Scan families from X and check whether husband and wife to be merged
    List listFamsX = new ArrayList(gedcomX.getEntities(typeEnt[1]));
    List listFamsY = new ArrayList(gedcomY.getEntities(typeEnt[1]));
    for (Iterator itx = listFamsX.iterator(); itx.hasNext(); ) {
      Fam famX = (Fam)itx.next();
+     if (famX == null) break;
      Entity husbandX = (Entity)famX.getHusband();
      Entity wifeX = (Entity)famX.getWife();
-     Entity matchHusbandX = null;
-     Entity matchWifeX = null;
+     Entity matchHusbandX = husbandX;
+     Entity matchWifeX = wifeX;
+     skip = true;
 
-     //if (debug) log.write("Loop 1: fam="+famX.getId()+"; husbandX="+((husbandX==null)?"null":husbandX.getId())+"; wifeX="+((wifeX==null)?"null":wifeX.getId()));
      if (husbandX != null) {
-        //if (debug) log.write("husband not null");
-        if (entsX.contains(husbandX)) matchHusbandX = (Entity)xToY.get(husbandX);
-        else continue;
+        if (entsX.contains(husbandX)) {
+           matchHusbandX = (Entity)xToY.get(husbandX);
+           skip = false;
+           }
         }
      if (wifeX != null) {
-        //if (debug) log.write("wife not null");
-        if (entsX.contains(wifeX)) matchWifeX = (Entity)xToY.get(wifeX);
-        else continue;
+        if (entsX.contains(wifeX)) { 
+           matchWifeX = (Entity)xToY.get(wifeX);
+           skip = false;
+           }
+        }
+     if (skip) {
+        continue;
         }
 
-     //if (debug) log.write("Loop 1:  matchHusbandX=" + ((matchHusbandX==null)?"null":matchHusbandX.getId()) + "matchWifeX=" + ((matchWifeX==null)?"null":matchWifeX.getId()));
+     // If we get here, famx has either a husband or a wife or both that are to be merged
+     // Check in the *other* famililes if we get the same husband and wife
      for (Iterator ity = listFamsY.iterator(); ity.hasNext(); ) {
         Fam famY = (Fam)ity.next();
+        if (famY == null) break;
+        if (famX.getId().equals(famY.getId())) continue;   // do not match same families
         Entity husbandY = (Entity)famY.getHusband();
         Entity wifeY = (Entity)famY.getWife();
-        //if (debug) log.write("   Loop 2: fam="+famY.getId()+"; husbandY="+((husbandY==null)?"null":husbandY.getId())+"; wifeY="+((wifeY==null)?"null":wifeY.getId()));
         if (((husbandY == matchHusbandX) && (wifeY == matchWifeX)) || ((husbandY == matchWifeX) && (wifeY == matchHusbandX))) {
            // match found!
-           //if (debug) log.write("   Loop 2: **** found family="+famY.getId());
-           if (famX.getId().equals(famY.getId())) break;   // do not match same families in case of duplicates
+           //if (debug) log.write("   found!!!");
            ConfidenceMatch match = new ConfidenceMatch((Entity)famX, (Entity)famY);
            if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
            if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
-
            match.confLevel = 100;
            match.confirmed = true;
            match.toBeMerged = true;
@@ -1471,7 +1481,7 @@ public class MergeGedcomTool {
    for (Iterator it = confList.iterator(); it.hasNext(); ) {
      ConfidenceMatch match = (ConfidenceMatch)it.next();
      if (match.toBeMerged && (match.choice == 3)) {
-        mergeEntity(match, false);
+        mergeEntity(match, true);
         }
      }
 
@@ -1489,7 +1499,7 @@ public class MergeGedcomTool {
     // 2-tmpA will be the new A, so build it progressivly and only update A from tmp A at the end once finished, to cater for interruptions
     // 3-Some properties in an entity are unique (usually NAME, BIRTH, etc), some are multiple (RESI, GRAD, etc)
     //   This characteristic only depends on each pair of entities considered each time:
-    //    - UNIQUE if found once on BOTH sides, MULTIPLE otherwise
+    //    - UNIQUE if found once on BOTH sides, only on one side or MULTIPLE otherwise
     //    - an entity can have several NAME if user wanted to, or several BIRTH
     //    - no rule is made than NAME should be UNIQUE, we don't care, user is the one who decided since GEDCOM allows it
     //    - we do not want to impose a grammar here
@@ -1575,8 +1585,8 @@ public class MergeGedcomTool {
        clusterPropA = propertiesA[i];
        pathA = clusterPropA.getPath();
        unique = ( (clustersA.indexOf(pathA) == clustersA.lastIndexOf(pathA)) && 
-                 ((clustersB.indexOf(pathA) != -1) && (clustersB.indexOf(pathA) == clustersB.lastIndexOf(pathA))) 
-                );
+                 ((clustersB.indexOf(pathA) != -1) && (clustersB.indexOf(pathA) == clustersB.lastIndexOf(pathA))));
+
        if (unique) {
           clusterPropB = tmpEntB.getPropertyByPath(pathA.toString());
 
@@ -2021,7 +2031,7 @@ public class MergeGedcomTool {
 
    // Assess individuals score based on basic information 
 //if (p1.id.equals("I3546") && p2.id.equals("I3547")) debug=true;
-if (debug) log.write("     --- assess p1 p2= "+p1.id+" "+p2.id);
+//if (debug) log.write("     --- assess p1 p2= "+p1.id+" "+p2.id);
    double score = assessIndi(p1, p2);
    if (score == 0) {
       match.confLevel = 0;
@@ -2029,14 +2039,14 @@ if (debug) log.write("     --- assess p1 p2= "+p1.id+" "+p2.id);
       }
 
    // If one of the persons if missing key basic information, compensate by comparing relatives instead
-   if (score >= 1 && score <= 100000 && report.setting_default) {
+   if (score >= 1 && score <= 100000000 && report.setting_default) {
 //log.write("     --- assessRelatives p1 p2= "+p1.id+" "+p2.id);
       score *= assessRelatives(p1, p2);
       }
 
    // Final calculations
    match.confLevel = getMatchProba(score);
-if (debug) log.write("     --- SCORE= "+match.confLevel);
+//if (debug) log.write("     --- SCORE= "+match.confLevel);
 
    // Manage automerge 
    if (match.confLevel > report.setting_autoMergingLevel) {
@@ -2046,14 +2056,6 @@ if (debug) log.write("     --- SCORE= "+match.confLevel);
                         // 3 means "1" but merging of properties still to be done.
       }
 
-if (debug) {
-   log.write("   ");
-   log.write("   ");
-   log.write("   ");
-   log.write("   ");
-   log.write("   ");
-   debug = false;
-   }
    return match;
    }
  
@@ -2072,33 +2074,33 @@ if (debug) {
 
    // Get basic scores
    double scoreLastName = getMatchScore(1, p1, p2); // compares lastnames of persons
-if (debug) log.write("        --- scoreLastName= "+scoreLastName);
+//if (debug) log.write("        --- scoreLastName= "+scoreLastName);
    if (scoreLastName == 0) {
       return 0;
       }
    double scoreFirstName = getMatchScore(2, p1, p2); // compares firstnames of persons 
-if (debug) log.write("        --- scoreFirstName= "+scoreFirstName);
+//if (debug) log.write("        --- scoreFirstName= "+scoreFirstName);
    if (scoreFirstName == 0) {
       return 0;
       }
 
    double scoreBirth = getMatchScore(3, p1, p2); // Compares birth date of persons
-if (debug) log.write("        --- scoreBirth= "+scoreBirth);
+//if (debug) log.write("        --- scoreBirth= "+scoreBirth);
 
    scoreBirth *= getMatchScore(4, p1, p2); // Place of Person's birth
-if (debug) log.write("        --- scoreBirth= "+scoreBirth);
+//if (debug) log.write("        --- scoreBirth= "+scoreBirth);
 
    double scoreDeath = getMatchScore(5, p1, p2); // Compares death date of persons
-if (debug) log.write("        --- scoreDeath= "+scoreDeath);
+//if (debug) log.write("        --- scoreDeath= "+scoreDeath);
 
    scoreDeath *= getMatchScore(6, p1, p2); // Place of Person's death
-if (debug) log.write("        --- scoreDeath= "+scoreDeath);
+//if (debug) log.write("        --- scoreDeath= "+scoreDeath);
 
    double scoreMarr = getMatchScore(7, p1, p2); // Compares marriage date of persons
-if (debug) log.write("        --- scoreMarr= "+scoreMarr);
+//if (debug) log.write("        --- scoreMarr= "+scoreMarr);
 
    scoreMarr *= getMatchScore(8, p1, p2); // Place of Person's marriage
-if (debug) log.write("        --- scoreMarr= "+scoreMarr);
+//if (debug) log.write("        --- scoreMarr= "+scoreMarr);
 
    double scoreEvent = Math.max(scoreBirth, Math.max(scoreDeath, scoreMarr));
    if (scoreEvent == 0) {
@@ -2123,7 +2125,7 @@ if (debug) log.write("        --- scoreMarr= "+scoreMarr);
    score += getMatchProba(assessIndiTab(p1.partners, p2.partners)) * 0.25;
    score += getMatchProba(assessIndiTab(p1.kids, p2.kids)) * 0.25;
    score += getMatchProba(assessIndiTab(p1.siblings, p2.siblings)) * 0.05;
-if (debug) log.write("     --- assessRelatives - score = "+score);
+//if (debug) log.write("     --- assessRelatives - score = "+score);
    return score * value / 100;
    }
 
@@ -2171,7 +2173,7 @@ if (debug) log.write("     --- assessRelatives - score = "+score);
    if (type == 1) {
       value = 20000;
       threshold = 80;
-if (debug) log.write("           --- cmpLN= "+p1.deflnLength+" "+p2.deflnLength+" "+p1.defLastName+" "+p2.defLastName);
+//if (debug) log.write("           --- cmpLN= "+p1.deflnLength+" "+p2.deflnLength+" "+p1.defLastName+" "+p2.defLastName);
       if (p1.deflnLength == 0 || p2.deflnLength == 0) {
          return 1;
          }
@@ -2182,7 +2184,7 @@ if (debug) log.write("           --- cmpLN= "+p1.deflnLength+" "+p2.deflnLength+
          return 0;
          }
       score = matchCode(p1.deflnCode, p1.deflnLength, p2.deflnCode, p2.deflnLength);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2193,7 +2195,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 2) {
       value = 7000;
       threshold = 50;
-if (debug) log.write("           --- cmpFN= "+p1.firstNameLength+" "+p2.firstNameLength+" "+p1.firstName+" "+p2.firstName);
+//if (debug) log.write("           --- cmpFN= "+p1.firstNameLength+" "+p2.firstNameLength+" "+p1.firstName+" "+p2.firstName);
       if (p1.firstNameLength == 0 || p2.firstNameLength == 0) {
          return 1;
          }
@@ -2204,7 +2206,7 @@ if (debug) log.write("           --- cmpFN= "+p1.firstNameLength+" "+p2.firstNam
          return 0;
          }
       score = matchCode(p1.firstNameCode, p1.firstNameLength, p2.firstNameCode, p2.firstNameLength);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2215,7 +2217,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 3) {
       value = 36500;
       threshold = 10;
-if (debug) log.write("           --- cmpBD= "+p1.bS+" "+p2.bS+" "+p1.bE+" "+p2.bE);
+//if (debug) log.write("           --- cmpBD= "+p1.bS+" "+p2.bS+" "+p1.bE+" "+p2.bE);
       if (p1.bS == 0 || p2.bS == 0) {
          return 1;
          }
@@ -2226,7 +2228,7 @@ if (debug) log.write("           --- cmpBD= "+p1.bS+" "+p2.bS+" "+p1.bE+" "+p2.b
          return 0;
          }
       score = matchJD(p1.bS, p1.bE, p2.bS, p2.bE);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2237,7 +2239,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 4) {
       value = 36000;
       threshold = 80;
-if (debug) log.write("           --- cmpBP= "+p1.birthLength+" "+p2.birthLength+" "+p1.birth+" "+p2.birth);
+//if (debug) log.write("           --- cmpBP= "+p1.birthLength+" "+p2.birthLength+" "+p1.birth+" "+p2.birth);
       if (p1.birthLength == 0 || p2.birthLength == 0) {
          return 1;
          }
@@ -2248,7 +2250,7 @@ if (debug) log.write("           --- cmpBP= "+p1.birthLength+" "+p2.birthLength+
          return 0;
          }
       score = matchCode(p1.birthCode, p1.birthLength, p2.birthCode, p2.birthLength);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2259,7 +2261,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 5) {
       value = 36500;
       threshold = 10;
-if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.dE);
+//if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.dE);
       if (p1.dS == 0 || p2.dS == 0) {
          return 1;
          }
@@ -2270,7 +2272,7 @@ if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.d
          return 0;
          }
       score = matchJD(p1.dS, p1.dE, p2.dS, p2.dE);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2281,7 +2283,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 6) {
       value = 36000;
       threshold = 80;
-if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+" "+p1.death+" "+p2.death);
+//if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+" "+p1.death+" "+p2.death);
       if (p1.deathLength == 0 || p2.deathLength == 0) {
          return 1;
          }
@@ -2292,7 +2294,7 @@ if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+
          return 0;
          }
       score = matchCode(p1.deathCode, p1.deathLength, p2.deathCode, p2.deathLength);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2303,7 +2305,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 7) {
       value = 36500;
       threshold = 10;
-if (debug) log.write("           --- cmpMD= "+p1.mS+" "+p2.mS+" "+p1.mE+" "+p2.mE);
+//if (debug) log.write("           --- cmpMD= "+p1.mS+" "+p2.mS+" "+p1.mE+" "+p2.mE);
       if (p1.mS == 0 || p2.mS == 0) {
          return 1;
          }
@@ -2314,7 +2316,7 @@ if (debug) log.write("           --- cmpMD= "+p1.mS+" "+p2.mS+" "+p1.mE+" "+p2.m
          return 0;
          }
       score = matchJD(p1.mS, p1.mE, p2.mS, p2.mE);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2325,7 +2327,7 @@ if (debug) log.write("           --- score= "+score);
    if (type == 8) {
       value = 36000;
       threshold = 80;
-if (debug) log.write("           --- cmpMP= "+p1.marrLength+" "+p2.marrLength+" "+p1.marr+" "+p2.marr);
+//if (debug) log.write("           --- cmpMP= "+p1.marrLength+" "+p2.marrLength+" "+p1.marr+" "+p2.marr);
       if (p1.marrLength == 0 || p2.marrLength == 0) {
          return 1;
          }
@@ -2336,7 +2338,7 @@ if (debug) log.write("           --- cmpMP= "+p1.marrLength+" "+p2.marrLength+" 
          return 0;
          }
       score = matchCode(p1.marrCode, p1.marrLength, p2.marrCode, p2.marrLength);
-if (debug) log.write("           --- score= "+score);
+//if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
