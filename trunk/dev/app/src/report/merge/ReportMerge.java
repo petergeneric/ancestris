@@ -98,7 +98,7 @@ public class ReportMerge extends Report {
 
     // Open log
     log = new Log(this, translate("mergeGedcom"), translate("chooseLog"), setting_logOption);
-    if (log == null) return;
+    if (log == null || log.logFile == null) return;
 
     // Fix settings if out of bound
     setting_autoMergingLevel = Math.min(Math.max(0,setting_autoMergingLevel),100);
@@ -140,56 +140,6 @@ public class ReportMerge extends Report {
        log.write(0, 3, "", 0, translate("logLogFile")+": "+log.getLogName());
        }
   } // end_of_start
-
-  /**
-   * Report for duplicates
-   */
-  public int showDuplicatesResults(List confList) {
-     // 
-     // write main file out
-     Document doc = new Document(getName());
-     doc.startSection(translate("repSecDup"));
-     doc.startTable("genj:csv=true,width=100%"); 
-     doc.addTableColumn("column-width=10%"); 
-     doc.addTableColumn("column-width=45%"); 
-     doc.addTableColumn("column-width=45%"); 
-
-     doc.nextTableRow(FORMAT_CBACKGROUND);
-     doc.addText(translate("reptext_Conf")); 
-     doc.nextTableCell(FORMAT_CBACKGROUND);
-     doc.addText(translate("reptext_EntityA")); 
-     doc.nextTableCell(FORMAT_CBACKGROUND);
-     doc.addText(translate("reptext_EntityA")); 
-
-     // loop on list items
-     int i = 0;
-     for (Iterator it = confList.iterator(); it.hasNext() && i<1000; ) {
-       ConfidenceMatch match = (ConfidenceMatch)it.next();
-       doc.nextTableRow();
-       doc.addText(match.confLevel+"%");
-       doc.nextTableCell();
-       addText(doc, match.ent1, "#000000");
-       doc.nextTableCell();
-       addText(doc, match.ent2, "#000000");
-       doc.nextTableRow();
-       doc.addText("__________");
-       doc.nextTableCell();
-       doc.addText("__________________________________________________");
-       doc.nextTableCell();
-       doc.addText("__________________________________________________");
-       i++;
-       }
-
-     if (i >= 1000) {
-        doc.nextParagraph();
-        doc.addText(translate("logDispOther"));
-
-        }
-     // Done
-     showDocumentToUser(doc);
-
-     return confList.size();
-     }
 
   /**
    * Report for merge

@@ -1411,7 +1411,6 @@ public class MergeGedcomTool {
         xToY.put(match.ent1, match.ent2);
         xToConf.put(match.ent1, (Integer)match.confLevel);
         skip = false;
-        //if (debug) log.write("storing indis: "+match.ent1.getId()+"<->"+match.ent2.getId());
         }
      }
    if (skip) return true;
@@ -1457,7 +1456,6 @@ public class MergeGedcomTool {
         Entity wifeY = (Entity)famY.getWife();
         if (((husbandY == matchHusbandX) && (wifeY == matchWifeX)) || ((husbandY == matchWifeX) && (wifeY == matchHusbandX))) {
            // match found!
-           //if (debug) log.write("   found!!!");
            ConfidenceMatch match = new ConfidenceMatch((Entity)famX, (Entity)famY);
            if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
            if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
@@ -1500,8 +1498,8 @@ public class MergeGedcomTool {
     //
     // Principles:
     // ----------
-    // 1-Use copies of A and B and each time a property has been considered either side, remove it from the tmpB entity to avoid double counting
-    // 2-tmpA will be the new A, so build it progressivly and only update A from tmp A at the end once finished, to cater for interruptions
+    // 1-Use copies of B and each time a property has been considered either side, remove it from the tmpB entity to avoid double counting
+    // 2-No tmpA used because need to clean it which removes the precious links to families
     // 3-Some properties in an entity are unique (usually NAME, BIRTH, etc), some are multiple (RESI, GRAD, etc)
     //   This characteristic only depends on each pair of entities considered each time:
     //    - UNIQUE if found once on BOTH sides, only on one side or MULTIPLE otherwise
@@ -1530,9 +1528,8 @@ public class MergeGedcomTool {
     // 3-Scan all left clusters in tmpB and copy/add them to tmpA
     //   (if they are UNIQUE, they do not exist in tmpA so should be copied)
     //   (if they are NOT UNIQUE, they have been either passed (should be added to A) or do not exist in A (so copy them)
-    // 4-Replace A with tmpA
-    // 5-Delete temporary entities
-    // 6-Conclude
+    // 4-Delete temporary entity
+    // 5-Conclude
     //
   private boolean mergeEntity(ConfidenceMatch match, boolean askUser) {
 
@@ -1549,20 +1546,13 @@ public class MergeGedcomTool {
        return true;
        }
 
-    // 1-Create copies of A and B (//tmpEntA.copyProperties(match.ent1, true); // not copying well multiple properties actually)
+    // 1-Create copies of A and B (
     String title1 = match.ent1.getTag()+" : "+match.ent1.toString();
     String title2 = match.ent2.getTag()+" : "+match.ent2.toString();
-    Entity tmpEntA = null;
     Entity tmpEntB = null;
     try {
-       tmpEntA = match.ent1.getGedcom().createEntity(match.ent1.getTag());
-       copyCluster(match.ent1, tmpEntA);
-       //printCluster(match.ent1);
-       //printCluster(tmpEntA);
        tmpEntB = match.ent2.getGedcom().createEntity(match.ent2.getTag());
        copyCluster(match.ent2, tmpEntB);
-       //printCluster(match.ent2);
-       //printCluster(tmpEntB);
        } catch (GedcomException e) {
        log.write(9, 0, "=", LNS, "GedcomException:"+e);
        return false;
@@ -1571,7 +1561,7 @@ public class MergeGedcomTool {
     // 2-Scan properties of level 1 in A
     //    - store tagpaths of level 1 of A and store those of B
     List<TagPath> clustersA = new ArrayList();
-    Property[] propertiesA = tmpEntA.getProperties();
+    Property[] propertiesA = match.ent1.getProperties();
     for (int i = 0; i < propertiesA.length; i++) {
        clustersA.add(propertiesA[i].getPath());
        }
@@ -1617,11 +1607,11 @@ public class MergeGedcomTool {
 
           // Apply choice
           if (choice == 2) { // keep B
-             tmpEntA.delProperty(clusterPropA); 
-             copyCluster(clusterPropB, tmpEntA.addProperty(clusterPropB.getTag(), clusterPropB.getValue()));  
+             match.ent1.delProperty(clusterPropA);  
+             copyCluster(clusterPropB, match.ent1.addProperty(clusterPropB.getTag(), clusterPropB.getValue()));  
              }
           if (choice == 3) { // add A and B
-             copyCluster(clusterPropB, tmpEntA.addProperty(clusterPropB.getTag(), clusterPropB.getValue())); 
+             copyCluster(clusterPropB, match.ent1.addProperty(clusterPropB.getTag(), clusterPropB.getValue()));  
              }
           tmpEntB.delProperty(clusterPropB); 
           }
@@ -1631,18 +1621,13 @@ public class MergeGedcomTool {
     propertiesB = tmpEntB.getProperties(); // re-load properties !
     for (int i = 0; i < propertiesB.length; i++) {
        clusterPropB = propertiesB[i];
-       copyCluster(clusterPropB, tmpEntA.addProperty(clusterPropB.getTag(), clusterPropB.getValue())); 
+       copyCluster(clusterPropB, match.ent1.addProperty(clusterPropB.getTag(), clusterPropB.getValue()));  
        }
 
-    // 4-Replace A with tmpA
-    match.ent1.delProperties();
-    copyCluster(tmpEntA, match.ent1);
-
-    // 5-Delete temporary entities
-    match.ent1.getGedcom().deleteEntity(tmpEntA);
+    // 4-Delete temporary entity
     match.ent2.getGedcom().deleteEntity(tmpEntB);
 
-    // 6-Conclude - Indicate that final entity will be the entity from file A
+    // 5-Conclude - Indicate that final entity will be the entity from file A
     match.choice = 1;
 
     return true;
@@ -1923,18 +1908,38 @@ public class MergeGedcomTool {
     List entities = gedcom.getEntities();
     for (Iterator it = entities.iterator(); it.hasNext();) {
        Entity ent = (Entity)it.next();
-       // Get all references from this entity
+       // Get all references from this entity and store valid ones
+       HashSet refs = new HashSet();
+       String refi = "";
        List ps = ent.getProperties(PropertyXRef.class);
        for (Iterator itr = ps.iterator(); itr.hasNext();) {
           PropertyXRef xref = (PropertyXRef)itr.next();
           String targetId = (String) xref.getValue();
           targetId = targetId.substring(1,targetId.length()-1);
-          if (gedcom.getEntity(targetId) != null) 
+          refi = xref.getTag()+":"+targetId; // for instance, could be "FAMS:F1095"
+          if (gedcom.getEntity(targetId) != null) {
+             refs.add(refi);
              continue;
+             }
           // Target entity not in Z: it has not been chosen; get new ref through idMap
           String newTargetId = (String)idMap.get(targetId);
-          // it should not be null, but we never know...
-          xref.setValue((newTargetId != null) ? "@"+newTargetId+"@" : "");
+
+          // When swaping the old reference to the new one, we need to make sure that 
+          //    we do not end up with two identical reference
+          //    (for instance, if a person has two families FAMS, if one changes to the other one, remove ref)
+          // So if null or already there, remove ref
+          if (newTargetId == null) {
+             ent.delProperty(xref);
+             }
+          else {
+             refi = xref.getTag()+":"+newTargetId;
+             if (refs.contains(refi)) {
+                ent.delProperty(xref);
+                }
+             else {
+                xref.setValue("@"+newTargetId+"@");
+                }
+             }
           }
        }
     

@@ -26,7 +26,7 @@ public class Log {
   /** option - Log file */
   private Report report;
   public boolean writeFile = false;
-  private File logFile;
+  public File logFile;
   private PrintWriter outFile;
 
   /** Constructor */
