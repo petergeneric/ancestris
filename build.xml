@@ -18,8 +18,12 @@
 			</filterchain>
 		</loadproperties>
 
+		<exec executable="svnversion" failonerror="true" outputproperty="svnversion">
+			<arg value="-n"/>
+		</exec>
+		<property name="buildversion" value="${version}-r${svnversion}" /> 
 		<fail unless="version" message="no version information available - check build.properties"/>
-		<echo level="info">version = ${version}</echo>
+		<echo level="info">version = ${buildversion}</echo>
 
 		<echo level="info">Creating output directories</echo>
 		<mkdir dir="./build"/>
@@ -43,7 +47,7 @@
    -->
 	<target name="dist.app" depends="init">
 		<ant dir="./dev/app" inheritall="false" target="dist">
-			<property name="version" value="${version}"/>
+			<property name="version" value="${buildversion}"/>
 			<property name="dir.geo" value="../geo"/>
 		</ant>
 		<move todir="./build/dist">
@@ -56,7 +60,7 @@
    -->
 	<target name="dist.geo" depends="dist.app">
 		<ant dir="./dev/geo" inheritall="false" target="dist">
-			<property name="version" value="${version}"/>
+			<property name="version" value="${buildversion}"/>
 			<property name="dir.app" value="../app"/>
 		</ant>
 		<move todir="./build/dist">
@@ -70,7 +74,7 @@
 	   -->
 	<target name="dist.console" depends="init">
 		<ant dir="./sandbox/console" inheritall="false" target="dist">
-			<property name="version" value="${version}"/>
+			<property name="version" value="${buildversion}"/>
 			<property name="dir.app" value="../../dev/app"/>
 			<property name="dir.geo" value="../../dev/geo"/>
 		</ant>
@@ -84,7 +88,7 @@
 	   -->
 	<target name="dist.lnf" depends="init">
 		<ant dir="./sandbox/lnf" inheritall="false" target="dist">
-			<property name="version" value="${version}"/>
+			<property name="version" value="${buildversion}"/>
 			<property name="dir.app" value="../../dev/app"/>
 		</ant>
 		<move todir="./build/dist">
@@ -97,7 +101,7 @@
 	   -->
 	<target name="dist.reportrunner" depends="init">
 		<ant dir="./sandbox/reportrunner" inheritall="false" target="dist">
-			<property name="version" value="${version}"/>
+			<property name="version" value="${buildversion}"/>
 			<property name="dir.app" value="../../dev/app"/>
 			<property name="dir.geo" value="../../dev/geo"/>
 		</ant>
