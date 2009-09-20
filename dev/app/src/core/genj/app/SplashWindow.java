@@ -1,5 +1,7 @@
 package genj.app;
 
+// Code from http://www.javaworld.com/javaworld/javatips/jw-javatip104.html
+
 import genj.util.swing.ImageIcon;
 
 import java.awt.BorderLayout;
