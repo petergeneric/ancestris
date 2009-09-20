@@ -86,6 +86,7 @@ public class ReportMerge extends Report {
   public boolean setting_flagChanges = true;
 
   /** other variables */
+  Document doc = null;
   private Log log = null;
   private final static String FORMAT_CBACKGROUND = "background-color=#ffffcc,font-weight=bold,text-align=center";
 
@@ -123,7 +124,6 @@ public class ReportMerge extends Report {
        }
     log.write(" ");
 
-
     // done
     if (ret) {
        log.write(1, 1, "=", LNS, translate("completed"));
@@ -139,7 +139,14 @@ public class ReportMerge extends Report {
        log.close();
        log.write(0, 3, "", 0, translate("logLogFile")+": "+log.getLogName());
        }
+
+    // Done
+    showDocumentToUser(doc);
+
   } // end_of_start
+
+
+
 
   /**
    * Report for merge
@@ -149,12 +156,9 @@ public class ReportMerge extends Report {
      int i = 0; 
 
      // write main file out
-     Document doc = new Document(getName());
+     doc = new Document(getName());
      i = produceMergeResults(doc, confList, gedcomA, gedcomB, gedcomC);
      i += produceMergeHistory(doc, gedcomC);
-
-     // Done
-     showDocumentToUser(doc);
 
      return i;
      }
