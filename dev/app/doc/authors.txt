@@ -1,38 +1,58 @@
 
 * * * THE TEAM * * *
 
-The people behind GenJ (alphabetically):
+Qui se cache derrière GenJ :
 
-    Admins:
-      . Francois Massonneau
-      . Nils Meier 
+    L'auteur :
+      . Nils Meier (Nils est la personne qui a conçu GenJ de A jusqu'à Z).
+      C'est l'auteur, le développeur, la personne qui a tout imaginé.
+      Sans Nils, rien de tout cela n'existerait, ni serait possible.
 
-    Reports:
-      . Daniel Andre
+Maintenant, GenjFr :
+
+    L'initiateur :
+      . Daniel Andre. Daniel a commencé à écrire du code pour GenJ, puis a
+      développé des rapports qui sont devenus des programmes à part entiè-
+      re. Des divergeances de vues et une volonté de donner une autre im-
+      pulsion à GenJ, ont conduit Daniel a envisager GenjFr.
+
+Les contributions diverses et variées :
+
+    Sont regroupés ici tous ceux qui ont oeuvré pour GenJ, qu'il s'agisse
+    de rapports, de traductions, d'aide dans la maintenance de site, dans
+    l'aide apportée aux utilisateurs, etc.
+      . Daniel Durand
+      . Stuart Grimshaw
       . Jan C. Hardenbergh
       . Thierry Hardy
       . Jerome Hettich
-      . Frederic Lapeyre
-      . Daniel P. Kionka
-      . Przemek Wiech
-      
-    Contributors :
-      . Stuart Grimshaw
       . Pere Jover
       . Bill Kelly
+      . Daniel P. Kionka
+      . Frederic Lapeyre. Frédéric mérite une attention toute particulière
+      comme Daniel André, du fait qu'il a fait de très nombreux programmes
+      pour GenJ, notamment des rapports de fusion, de diffusion sur inter-
+      net par le Webbook, l'installateur de GenJ, etc, etc, etc.
+      . François Massonneau
       . Carsten Muessig
       . Sean Timm
+      . Yannick Voyeaud
+      . Przemek Wiech
 
-    Translators :
-      . Alex Evdokimenko (Russian)
-      . Nestor Garcia (Spanish)
-      . Mauricio Girardi (Brazilian Portuguese)
-      . Frantisek Grebenicek (Czech)
-      . Theo Guelcher (Dutch) 
-      . Pere Jover (Spanish)
-      . Francois Massonneau (French)
-      . Carsten Muessig (German) 
-      . Sini Ruohomaa (Finnish)
-      . Marcus Sandberg (German)
-      . Klaus-Peter Schubert (German)
-      . Przemek Wiech (Polish)
+    Traducteurs :
+      . Alex Evdokimenko (Russe)
+      . Nestor Garcia (Espagnol)
+      . Mauricio Girardi (Brésilien)
+      . Frantisek Grebenicek (Tchèque)
+      . Theo Guelcher (Hollandais)
+      . Pere Jover (Espagnol)
+      . Francois Massonneau (Français)
+      . Carsten Muessig (Allemand)
+      . Sini Ruohomaa (Finnois)
+      . Marcus Sandberg (Allemand)
+      . Klaus-Peter Schubert (Allemand)
+      . Przemek Wiech (Polonais)
+
+Il est possible que j'ai oublié du monde. N'hésitez pas à le signaler à 
+Daniel André (spam_daniel.andre@free.fr - enlevez "spam_" pour utiliser
+cette adresse)
