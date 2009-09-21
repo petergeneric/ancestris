@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # GenJ has to be run from inside it's installation directory
 # so change into directory where this script was started
