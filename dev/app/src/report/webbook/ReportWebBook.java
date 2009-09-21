@@ -571,7 +571,7 @@ if (false) {
     out.println("<hr /><br />");
 
     Calendar rightNow = Calendar.getInstance();
-    out.println("<p class=\"legal\">"+translate("text_pages", new String[] { "<a href=\"http://genj.sourceforge.net/\">GenealogyJ</a>&nbsp;<a href=\"http://www.arvernes.com/wiki/index.php/Genj_-_Rapports#Le_livre_Web_sur_Internet_.28WebBook.29\">WebBook</a>", translate("version"), DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM).format(rightNow.getTime()) } )+"</p>");
+    out.println("<p class=\"legal\">"+translate("text_pages", new String[] { "<a href=\"http://www.arvernes.com/wiki/index.php/GenJ/\">GenealogyJ</a>&nbsp;<a href=\"http://www.arvernes.com/wiki/index.php/Genj_-_Rapports_-_WebBook\">WebBook</a>", translate("version"), DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM).format(rightNow.getTime()) } )+"</p>");
     out.println("</div>");
 
     out.println("<div class=\"spacer\">"+SPACE+"</div>");
