@@ -185,6 +185,7 @@ public class ReportWebBook extends Report {
   private final static String msgFile = "msgFile.txt";
   private              String msgFileAbsolute = "";
   private final static String uploadRegisterName = "upreg.xml";
+  private              String uploadRegisterNameAbsolute = "";
   private FTPRegister uploadRegister = null;
 
   /**
@@ -255,7 +256,8 @@ public class ReportWebBook extends Report {
       if (!cleanFTPParams()) { 
          return;
          }
-      uploadRegister = new FTPRegister(wh.getGenjImagesDir() + File.separator + uploadRegisterName, FTPhost, FTPTargetDir, dir, uploadType, resetRegister);
+      uploadRegisterNameAbsolute = getGenjHome() + uploadRegisterName;
+      uploadRegister = new FTPRegister(uploadRegisterNameAbsolute, FTPhost, FTPTargetDir, dir, uploadType, resetRegister);
       wh.setUploadRegister(uploadRegister);
       }
 
@@ -417,6 +419,9 @@ public class ReportWebBook extends Report {
        println(translate("FTP_message"));
        uploadRegister.save();
        new WebUploadBook(FTPhost, FTPuser, FTPpassword, dir, FTPTargetDir, this, uploadRegister);
+       println(translate("indexreg_using",uploadRegisterNameAbsolute));
+       println(" ");
+       println(" ");
        uploadRegister.close();
        }
 
@@ -609,11 +614,11 @@ if (false) {
   }
 
   /**
-   * Get message from user 
+   * Get home webbook folder in .genj directory 
    */
-  private boolean getDynMessage(String msgFile) {
+  private String getGenjHome() {
 
-    String filename = "";
+    String dir = "";
 
     try {
       // create our home directory
@@ -621,7 +626,7 @@ if (false) {
       home.mkdirs();
       if (!home.exists()||!home.isDirectory()) {
          println(translate("indexmsg_errorcreate",home.getAbsolutePath()));
-         return false;
+         return "";
          }
 
       // create our webbook directory
@@ -629,20 +634,37 @@ if (false) {
       homewebbook.mkdirs();
       if (!homewebbook.exists()||!homewebbook.isDirectory()) {
          println(translate("indexmsg_errorcreate",homewebbook.getAbsolutePath()));
-         return false;
+         return "";
         }
 
-      // create our message file
-      File filewebbook = new File(homewebbook.getAbsolutePath()+File.separator+msgFile);
-      filename = filewebbook.getAbsolutePath();
-      msgFileAbsolute = ""+filename;
-      if (!filewebbook.exists()) {
-         println(translate("indexmsg_willcreate",filewebbook.getAbsolutePath()));
-        }
+      // set dir
+      dir = homewebbook.getAbsolutePath()+File.separator;
 
       } catch (Throwable t) {
-         println(translate("indexmsg_errorcreate",filename) + t.toString());
-         return false;
+         println(translate("indexmsg_errorcreate",dir) + t.toString());
+         return "";
+      }
+
+    return dir;
+  }
+
+
+  /**
+   * Get message from user 
+   */
+  private boolean getDynMessage(String msgFile) {
+
+    String filename = "";
+
+    // create our message file
+    File filewebbook = new File(getGenjHome()+msgFile);
+    filename = filewebbook.getAbsolutePath();
+    msgFileAbsolute = ""+filename;
+    if (!filewebbook.exists()) {
+       println(translate("indexmsg_willcreate",msgFileAbsolute));
+      }
+    else {
+       println(translate("indexmsg_using",msgFileAbsolute));
       }
 
     // produce file
