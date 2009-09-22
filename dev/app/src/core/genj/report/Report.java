@@ -965,6 +965,18 @@ public abstract class Report implements Cloneable {
     }
   }
 
+  public void start(Object context, Object parameter) throws Throwable {
+	    try {
+	      getStartMethod(context,parameter).invoke(this, new Object[]{ context , parameter});
+	    } catch (Throwable t) {
+	      String msg = "can't run report on input";
+	      if (t instanceof InvocationTargetException)
+	        throw ((InvocationTargetException)t).getTargetException();
+	      throw t;
+	    }
+	  }
+
+
   /**
    * Tells wether this report doesn't change information in the Gedcom-file
    */
@@ -991,7 +1003,7 @@ public abstract class Report implements Cloneable {
      * </il>
      * @return title of action for given context or null for n/a
      */
-    public String accepts(Object context) {
+    public Object accepts(Object context) {
       return getStartMethod(context)!=null ? getName() : null;
     }
 
@@ -1020,6 +1032,29 @@ public abstract class Report implements Cloneable {
       // n/a
       return null;
     }
+
+    /*package*/ Method getStartMethod(Object context, Object parameter) {
+
+        // check for what this report accepts
+        try {
+          Method[] methods = getClass().getDeclaredMethods();
+          for (int m = 0; m < methods.length; m++) {
+            // needs to be named start
+            if (!methods[m].getName().equals("start")) continue;
+            // make sure its a two-arg
+            Class[] params = methods[m].getParameterTypes();
+            if (params.length!=2) continue;
+            // keep it
+            Class param = params[0];
+            if (param.isAssignableFrom(context.getClass()))
+              return methods[m];
+            // try next
+          }
+        } catch (Throwable t) {
+        }
+        // n/a
+        return null;
+      }
 
     /**
      * Represents the report category.
@@ -1075,5 +1110,6 @@ public abstract class Report implements Cloneable {
             return extension.toUpperCase() + " files";
         }
     }
+
 
 } //Report

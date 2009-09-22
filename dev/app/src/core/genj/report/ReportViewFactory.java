@@ -32,7 +32,10 @@ import genj.view.ViewFactory;
 import genj.view.ViewManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.JComponent;
@@ -103,9 +106,24 @@ public class ReportViewFactory implements ViewFactory, ActionProvider {
     for (int r=0;r<reports.length;r++) {
       Report report = reports[r];
       try {
-        String accept = report.accepts(context); 
-        if (accept!=null)
-          result.add(new ActionRun(accept, context, gedcom, report, manager));
+        Object accept = report.accepts(context); 
+        if (accept!=null) {
+        	if (accept instanceof String)
+                result.add(new ActionRun((String)accept, context, gedcom, report, manager));
+        	if (accept instanceof Map){
+        		Set keys = ((Map) accept).keySet();
+        	    List reportmenu = new ArrayList(10);
+        	    Iterator it = keys.iterator();
+        	    while (it.hasNext()) {
+        	      Object o =  it.next();
+                  reportmenu.add(new ActionRun((String)((Map)accept).get(o).toString(), o, context, gedcom, report, manager));
+        	    }
+                  Action2.Group group = new Action2.Group(report.getName(), report.getImage());
+                  group.addAll(reportmenu); 
+                  result.add(group);
+
+        	}
+        }
       } catch (Throwable t) {
         ReportView.LOG.log(Level.WARNING, "Report "+report.getClass().getName()+" failed in accept()", t);
       }
@@ -140,15 +158,21 @@ public class ReportViewFactory implements ViewFactory, ActionProvider {
     private Gedcom gedcom;
     /** report */
     private Report report;
+    /** parameter **/
+    private Object parameter;
     /** view mgr */
     private ViewManager manager;
     /** constructor */
     private ActionRun(String txt, Object context, Gedcom gedcom, Report report, ViewManager manager) {
+    	this(txt, null, context, gedcom, report, manager);
+    }
+    private ActionRun(String txt, Object parameter, Object context, Gedcom gedcom, Report report, ViewManager manager) {
       // remember
       this.context = context;
       this.gedcom = gedcom;
       this.report = report;
       this.manager = manager;
+      this.parameter = parameter;
       // show
       setImage(report.getImage());
       setText(txt);
@@ -167,7 +191,7 @@ public class ReportViewFactory implements ViewFactory, ActionProvider {
         else 
           view = (ReportView)views[0];
         // run it in view
-        view.run(report, context);
+        view.run(report, context, parameter);
         // we're done ourselves - don't go into execute()
         return false;
       }
@@ -182,12 +206,18 @@ public class ReportViewFactory implements ViewFactory, ActionProvider {
       try{
         
         if (instance.isReadOnly())
-          instance.start(context);
+        	if (parameter == null)
+        		instance.start(context);
+        	else 
+        		instance.start(context,parameter);
         else
           gedcom.doUnitOfWork(new UnitOfWork() {
             public void perform(Gedcom gedcom) {
               try {
-                instance.start(context);
+              	if (parameter == null)
+            		instance.start(context);
+            	else 
+            		instance.start(context,parameter);
               } catch (Throwable t) {
                 throw new RuntimeException(t);
               }
