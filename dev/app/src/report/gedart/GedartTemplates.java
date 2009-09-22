@@ -6,7 +6,7 @@ import genj.util.EnvironmentChecker;
 import java.io.File;
 import java.util.TreeMap;
 
-class GedartTemplates extends TreeMap<String, String> {
+class GedartTemplates extends TreeMap<String, GedartTemplate> {
 
 	public GedartTemplates() {
 		File gedartDir = new File(ReportLoader.getReportDirectory(),
@@ -35,11 +35,10 @@ class GedartTemplates extends TreeMap<String, String> {
 			File[] files = dir.listFiles();
 			for (int b = 0; b < files.length; b++) {
 				File file = files[b];
-				if (!file.isDirectory())
+				GedartTemplate t = GedartTemplate.create(file);
+				if (t == null)
 					continue;
-				if (!new File(file, "index.vm").exists())
-					continue;
-				put(file.getName(), file.getAbsolutePath());
+				put(t.getName(),t);
 			}
 		}
 	}

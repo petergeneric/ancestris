@@ -42,7 +42,6 @@ package gedart;
  * TODO:	ajouter une m�thode pour trier: comme  public Entity[] getEntities(String tag, Comparator comparator) dans Gedcom
  * TODO:	ajouter des methodes 'getancestors getdescendants dans reportIndi
  * TODO:	Ajouter un fichier de properties pour pouvoir demander des options 
- * TODO:	pouvoir installer des templates dans le dossier report
  * 
  */
 import gedart.DocReport;
@@ -73,9 +72,6 @@ import javax.swing.ImageIcon;
  * - options:
  *   - limiter aux todos
  * 
- * Dans le core:
- * - Trouver un moyen pour passer une option aux rapports afin de pouvoir lancer le meme
- *   rapport par clic droit mais avec plusieurs mode de fonctionnement (plusieurs choix de menu)
  */
 public class ReportGedart extends Report {
 	private GedartTemplates gedartTemplates = new GedartTemplates();
@@ -98,13 +94,9 @@ public class ReportGedart extends Report {
 	private DocReport mydoc;
 	private Gedcom theGedcom;
 	
-// TODO: remettre cette modification pour faire un sous menu
-//	public Object accepts(Object context) {
-////		LinkedHashMap<Object, String> theTemplates = new LinkedHashMap<Object, String>();
-////		theTemplates.put(new Integer(0), "choix 1");
-////		theTemplates.put(new Integer(1), "choix 2");
-//		return (gedartTemplates);
-//	}
+	public Object accepts(Object context) {
+		return (gedartTemplates);
+	}
 	/**
 	 * Overriden image - we're using the provided FO image
 	 */
@@ -186,7 +178,7 @@ public class ReportGedart extends Report {
 			if (index > 0) extension = thetemplate.substring(index);
 		}
 
-		thetemplate = gedartTemplates.get(thetemplate);
+		thetemplate = gedartTemplates.get(thetemplate).getPath();
 		// if only one item, special case
 		File file = null;
 		boolean isOneEntity = ((indis.length + fams.length) <= 1);
