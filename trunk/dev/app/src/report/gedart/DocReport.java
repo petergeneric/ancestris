@@ -144,10 +144,6 @@ public class DocReport {
 		}
 	}
 	
-//	public class reportTools {
-//		public int size(Object o)
-//	}
-
 	public class reportIndex {
 		  private Map index2primary2secondary2elements = new TreeMap();
 
@@ -309,7 +305,7 @@ public class DocReport {
 
 		public String getShortValue() { return toString();}
 
-//TODO: � inclure
+//TODO: a inclure
 // N'est utilise que dans Fam.toString ou Indi.toString
 //		private String cleanID(String s) {
 //			if (!showID)
