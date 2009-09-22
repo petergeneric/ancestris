@@ -272,7 +272,7 @@ public class ReportView extends JPanel implements ToolBarSupport {
   /**
    * Runs a specific report
    */
-  /*package*/ void run(Report report, Object context) {
+  /*package*/ void run(Report report, Object context, Object parameter) {
     // not if running
     if (!actionStart.isEnabled()) 
       return;
@@ -282,6 +282,7 @@ public class ReportView extends JPanel implements ToolBarSupport {
     listOfReports.setSelection(report);
     // TODO this is a hack - I want to pass the context over but also use the same ActionStart instance
     actionStart.setContext(context);
+    actionStart.setParameter(parameter);
     actionStart.trigger();
   }
 
@@ -365,6 +366,9 @@ public class ReportView extends JPanel implements ToolBarSupport {
 
     /** context to run on */
     private Object context;
+    
+    /** Parameter to the report */
+    private Object parameter = null;
 
     /** the running report */
     private Report instance;
@@ -381,7 +385,12 @@ public class ReportView extends JPanel implements ToolBarSupport {
       setTip(RESOURCES, "report.start.tip");
     }
     
-    protected void setContext(Object context) {
+    public void setParameter(Object parameter) {
+		this.parameter = parameter;
+		
+	}
+
+	protected void setContext(Object context) {
       this.context = context;
     }
 
@@ -419,8 +428,12 @@ public class ReportView extends JPanel implements ToolBarSupport {
           if (instance.accepts(sample)!=null) {
             
             // give the report a chance to name our dialog
-            String txt = instance.accepts(sample.getClass());
+            String txt = null;
+            Object o = instance.accepts(sample.getClass());
+            if ((o != null) && (o instanceof String))
+            	txt = (String) o;
             if (txt==null) Gedcom.getName(tag);
+            
             
             // ask user for context now
             useContext = instance.getEntityFromUser(txt, gedcom, tag);
@@ -453,12 +466,18 @@ public class ReportView extends JPanel implements ToolBarSupport {
       try{
         
         if (instance.isReadOnly())
-          instance.start(context);
+        	if (parameter == null)
+        		instance.start(context);
+        	else 
+        		instance.start(context,parameter);
         else
           gedcom.doUnitOfWork(new UnitOfWork() {
             public void perform(Gedcom gedcom) {
               try {
-                instance.start(context);
+              	if (parameter == null)
+            		instance.start(context);
+            	else 
+            		instance.start(context,parameter);
               } catch (Throwable t) {
                 throw new RuntimeException(t);
               }
