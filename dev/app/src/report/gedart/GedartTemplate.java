@@ -9,10 +9,19 @@ class GedartTemplate  {
 	private String name ;
 	private String description;
 	private String path;
+	private String format;
+	
 	public GedartTemplate(File dir) {
 		name = dir.getName();
 		description = name;
 		path = dir.getAbsolutePath();
+		int index = name.lastIndexOf('.');
+		if (index > 0){
+			format = name.substring(index+1);
+			description = name.substring(0,index);
+		}
+		if (format != null)
+			description += " ("+format+")";
 	}
 	static GedartTemplate create(File dir) {
 		if (!dir.isDirectory())
@@ -29,6 +38,9 @@ class GedartTemplate  {
 	}
 	public String getPath() {
 		return path;
+	}
+	public String getFormat() {
+		return format;
 	}
 	public String toString(){return getDescription(); }
 }
