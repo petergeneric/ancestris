@@ -25,7 +25,7 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 				"Looking for gedart/contrib-templates"));
 
 		if (!dir.exists()) {
-			dir.mkdir();
+			dir.mkdirs();
 		}
 		putAll(new GedartTemplates(dir));
 
@@ -35,7 +35,7 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 				"Looking for gedart/templates"));
 
 		if (!dir.exists()) {
-			dir.mkdir();
+			dir.mkdirs();
 		}
 		putAll(new GedartTemplates(dir));
 	}
