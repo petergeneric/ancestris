@@ -170,12 +170,13 @@ public class ReportGedart extends Report {
 //			thetemplate = "gedart";
 //			extension="html";
 //		} else {
-			thetemplate = usetemplate;
-			int index = thetemplate.lastIndexOf('.');
-			if (index > 0) extension = thetemplate.substring(index);
+//			thetemplate = usetemplate;
+//			int index = thetemplate.lastIndexOf('.');
+//			if (index > 0) extension = thetemplate.substring(index);
 //		}
 
-		thetemplate = gedartTemplates.get(thetemplate).getPath();
+		thetemplate = gedartTemplates.get(usetemplate).getPath();
+		extension = gedartTemplates.get(usetemplate).getFormat();
 		// if only one item, special case
 		File file = null;
 		boolean isOneEntity = ((indis.length + fams.length) <= 1);
@@ -192,11 +193,14 @@ public class ReportGedart extends Report {
 			try{
 				file = File.createTempFile("GenJ-", "-gedart");
 			}catch (IOException ioe) {file = null;}
-		else
-			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true,extension);
+		else{
+			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, false,extension);
+			if ((file != null) &&  file.getName().indexOf('.') == -1){
+				file = new File(file.getAbsoluteFile()+"."+extension);
+			}
+		}
 
-		if (file == null)
-			return;
+		if (file == null) return;
 
 		// open output stream
 		try {
