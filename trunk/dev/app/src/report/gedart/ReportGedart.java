@@ -114,52 +114,45 @@ public class ReportGedart extends Report {
 	/**
 	 * The report's entry point
 	 */
-	public void start(Gedcom gedcom) {
+	public void start(Gedcom gedcom, String template) {
 		theGedcom=gedcom;
 		process(gedcom.getEntities("INDI", "INDI:NAME"), 
-				gedcom.getEntities("FAM", "FAM:HUSB:*:..:NAME"));
+				gedcom.getEntities("FAM", "FAM:HUSB:*:..:NAME"),
+				template);
 	}
 
 	/**
 	 * The report's entry point - for a single individual
 	 */
-	public void start(Indi indi) {
+	
+	public void start(Indi indi, String template) {
 		theGedcom=indi.getGedcom();
-		process(new Indi[] { indi }, new Fam[] {});
+		process(new Indi[] { indi }, new Fam[] {}, template);
 	}
 	
-	public void start(Indi indi, String _template) {
-		theGedcom=indi.getGedcom();
-		process(new Indi[] { indi }, new Fam[] {}, _template);
-	}
-	
-	public void start(Indi[] indis) {
+	public void start(Indi[] indis, String template) {
 		theGedcom=indis[0].getGedcom();
-		process(indis, new Fam[0]);
+		process(indis, new Fam[0],template);
 	}
 
 	/**
 	 * The report's entry point - for a single family
 	 */
-	public void start(Fam fam) {
+	public void start(Fam fam, String template) {
 		theGedcom=fam.getGedcom();
-		process(new Indi[] {}, new Fam[] { fam });
+		process(new Indi[] {}, new Fam[] { fam },template);
 	}
 
-	public void start(Fam[] fams) {
+	public void start(Fam[] fams, String template) {
 		theGedcom=fams[0].getGedcom();
-		process(new Indi[0], fams);
+		process(new Indi[0], fams,template);
 	}
 
-	/**
-	 * Main logic
-	 * 
-	 * @param indis
-	 * @param fams
-	 */
-	private void process(Entity[] indis, Entity[] fams) {
-		process(indis, fams, templates[template] );
+	public void start(Object context) throws Throwable{
+		start(context,null);
 	}
+	
+
 		/**
 		 * Main logic
 		 * 
@@ -169,7 +162,11 @@ public class ReportGedart extends Report {
 	private void process(Entity[] indis, Entity[] fams, String  usetemplate) {
 		String thetemplate;
 		String extension =null;
-//		if (usetemplate.equals("default")){
+
+		if (usetemplate == null)
+			usetemplate = templates[template];
+		
+		//		if (usetemplate.equals("default")){
 //			thetemplate = "gedart";
 //			extension="html";
 //		} else {
