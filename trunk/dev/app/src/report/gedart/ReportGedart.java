@@ -169,14 +169,14 @@ public class ReportGedart extends Report {
 	private void process(Entity[] indis, Entity[] fams, String  usetemplate) {
 		String thetemplate;
 		String extension =null;
-		if (usetemplate.equals("default")){
-			thetemplate = "gedart";
-			extension="html";
-		} else {
+//		if (usetemplate.equals("default")){
+//			thetemplate = "gedart";
+//			extension="html";
+//		} else {
 			thetemplate = usetemplate;
 			int index = thetemplate.lastIndexOf('.');
 			if (index > 0) extension = thetemplate.substring(index);
-		}
+//		}
 
 		thetemplate = gedartTemplates.get(thetemplate).getPath();
 		// if only one item, special case
