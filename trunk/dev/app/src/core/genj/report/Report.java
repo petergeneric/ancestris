@@ -966,7 +966,12 @@ public abstract class Report implements Cloneable {
   }
 
   public void start(Object context, Object parameter) throws Throwable {
-	    try {
+	  Method startMethod = getStartMethod(context,parameter);
+	  // if start(context,parameter) doesn't exists, try start(context)
+	  if (startMethod == null) 
+		  start(context);
+	  else
+		try {
 	      getStartMethod(context,parameter).invoke(this, new Object[]{ context , parameter});
 	    } catch (Throwable t) {
 	      String msg = "can't run report on input";
@@ -1052,7 +1057,7 @@ public abstract class Report implements Cloneable {
           }
         } catch (Throwable t) {
         }
-        // n/a
+        // n/a:
         return null;
       }
 
