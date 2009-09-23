@@ -18,7 +18,7 @@
 			</filterchain>
 		</loadproperties>
 
-		<exec executable="svnversion" failonerror="true" outputproperty="svnversion">
+		<exec executable="svnversion" failonerror="false" outputproperty="svnversion" errorproperty="svnerror">
 			<arg value="-n"/>
 		</exec>
 		<property name="buildversion" value="${version}-r${svnversion}" /> 
