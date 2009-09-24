@@ -53,18 +53,22 @@ public class GedartResources extends Resources {
 	   * @param values an array of values to replace %1, %2, ... in value with
 	   */
 	  public String translate(String key, Object[] values) {
-
-	    // look it up in language
-	    String result = null;
-	    if (lang!=null)
-	      result = this.getString(key+'.'+lang, values, false);
-
-	    // fallback if necessary
-	    if (result==null)
-	      result = this.getString(key, values, true);
-
-	    // done
-	    return result;
+	    return translate(key, values, true);
 	  }
+
+	  public String translate(String key, Object[] values, boolean notnull) {
+
+		    // look it up in language
+		    String result = null;
+		    if (lang!=null)
+		      result = this.getString(key+'.'+lang, values, false);
+
+		    // fallback if necessary
+		    if (result==null)
+		      result = this.getString(key, values, notnull);
+
+		    // done
+		    return result;
+		  }
 
 }

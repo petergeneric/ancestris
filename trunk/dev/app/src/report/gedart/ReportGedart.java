@@ -99,7 +99,8 @@ public class ReportGedart extends Report {
 	
 	
 	public Object accepts(Object context) {
-		return (gedartTemplates);
+		return (gedartTemplates.toArray(context));
+		
 	}
 	/**
 	 * Overriden image - we're using the provided FO image
