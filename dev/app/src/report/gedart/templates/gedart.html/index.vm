@@ -21,7 +21,7 @@
 #set($isOneEntity = (($list.size($INDIS) + $list.size($FAMS)) < 2))
 #parse("$TEMPLATE/startDoc.vm")
 #if (!$isOneEntity && $options.ShowTOC)
-	#parse("gedart/TOC.vm")
+	#parse("$TEMPLATE/TOC.vm")
 #end
 #if ($showIndis)
 #foreach($INDI in $INDIS)
