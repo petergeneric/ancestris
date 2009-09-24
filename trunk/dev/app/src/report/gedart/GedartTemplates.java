@@ -4,6 +4,7 @@ import genj.report.ReportLoader;
 import genj.util.EnvironmentChecker;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.TreeMap;
 
 class GedartTemplates extends TreeMap<String, GedartTemplate> {
@@ -52,4 +53,11 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 			}
 		}
 	}
+	  /**
+	   * Convert collection of templates into array
+	   */
+	  public GedartTemplate[] toArray() {
+	    return (GedartTemplate[])(values().toArray(new GedartTemplate[0]));
+	  }
+
 }
