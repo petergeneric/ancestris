@@ -142,6 +142,7 @@ public class App {
         System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
 
         // Log is up
+        LOG.info("==================8<================================================================");
         LOG.info("Startup");
         
         // init our data
