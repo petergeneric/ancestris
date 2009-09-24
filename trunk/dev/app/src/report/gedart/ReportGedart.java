@@ -119,7 +119,7 @@ public class ReportGedart extends Report {
 	/**
 	 * The report's entry point
 	 */
-	public void start(Gedcom gedcom, String template) {
+	public void start(Gedcom gedcom, GedartTemplate template) {
 		theGedcom=gedcom;
 		process(gedcom.getEntities("INDI", "INDI:NAME"), 
 				gedcom.getEntities("FAM", "FAM:HUSB:*:..:NAME"),
@@ -130,12 +130,12 @@ public class ReportGedart extends Report {
 	 * The report's entry point - for a single individual
 	 */
 	
-	public void start(Indi indi, String template) {
+	public void start(Indi indi, GedartTemplate template) {
 		theGedcom=indi.getGedcom();
 		process(new Indi[] { indi }, new Fam[] {}, template);
 	}
 	
-	public void start(Indi[] indis, String template) {
+	public void start(Indi[] indis, GedartTemplate template) {
 		theGedcom=indis[0].getGedcom();
 		process(indis, new Fam[0],template);
 	}
@@ -143,12 +143,12 @@ public class ReportGedart extends Report {
 	/**
 	 * The report's entry point - for a single family
 	 */
-	public void start(Fam fam, String template) {
+	public void start(Fam fam, GedartTemplate template) {
 		theGedcom=fam.getGedcom();
 		process(new Indi[] {}, new Fam[] { fam },template);
 	}
 
-	public void start(Fam[] fams, String template) {
+	public void start(Fam[] fams, GedartTemplate template) {
 		theGedcom=fams[0].getGedcom();
 		process(new Indi[0], fams,template);
 	}
@@ -164,12 +164,11 @@ public class ReportGedart extends Report {
 		 * @param indis
 		 * @param fams
 		 */
-	private void process(Entity[] indis, Entity[] fams, String  usetemplate) {
+	private void process(Entity[] indis, Entity[] fams, GedartTemplate  usetemplate) {
 		String thetemplate;
 		String extension =null;
-
 		if (usetemplate == null)
-			usetemplate = gedartTemplatesOption[template].getName();
+			usetemplate = gedartTemplatesOption[template];
 		
 		//		if (usetemplate.equals("default")){
 //			thetemplate = "gedart";
@@ -180,8 +179,8 @@ public class ReportGedart extends Report {
 //			if (index > 0) extension = thetemplate.substring(index);
 //		}
 
-		thetemplate = gedartTemplates.get(usetemplate).getPath();
-		extension = gedartTemplates.get(usetemplate).getFormat();
+		thetemplate = usetemplate.getPath();
+		extension = usetemplate.getFormat();
 		// if only one item, special case
 		File file = null;
 		boolean isOneEntity = ((indis.length + fams.length) <= 1);
