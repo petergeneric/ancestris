@@ -110,14 +110,11 @@ public class ReportViewFactory implements ViewFactory, ActionProvider {
         if (accept!=null) {
         	if (accept instanceof String)
                 result.add(new ActionRun((String)accept, context, gedcom, report, manager));
-        	if (accept instanceof Map){
-        		Set keys = ((Map) accept).keySet();
+        	if (accept instanceof Object[]){
         	    List reportmenu = new ArrayList(10);
-        	    Iterator it = keys.iterator();
-        	    while (it.hasNext()) {
-        	      Object o =  it.next();
-                  reportmenu.add(new ActionRun((String)((Map)accept).get(o).toString(), o, context, gedcom, report, manager));
-        	    }
+        		for (Object o: (Object[])accept) {
+                    reportmenu.add(new ActionRun(o.toString(), o, context, gedcom, report, manager));
+        		}
                   Action2.Group group = new Action2.Group(report.getName(), report.getImage());
                   group.addAll(reportmenu); 
                   result.add(group);

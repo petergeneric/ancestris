@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-class GedartTemplate  {
+class GedartTemplate extends Object implements Cloneable{
 
 	private String name ;
 	private String description;
@@ -37,6 +37,11 @@ class GedartTemplate  {
 		if (resources != null) {
 			String value = resources.translate("name");
 			if (value!=null) description=value;
+			setContext("Indi");
+			setContext("Indi[]");
+			setContext("Fam");
+			setContext("Fam[]");
+			setContext("Gedcom");
 		}
 	}
 	static GedartTemplate create(File dir) {
@@ -52,6 +57,11 @@ class GedartTemplate  {
 	public String getDescription() {
 		return description;
 	}
+	public String getDescription(String ctx) {
+		if (context.isEmpty())
+			return getDescription();
+		return context.get(ctx);
+	}
 	public String getPath() {
 		return path;
 	}
@@ -59,7 +69,7 @@ class GedartTemplate  {
 		return format;
 	}
 	public void setContext(String tag){
-		String value = resources.translate(tag);
+		String value = resources.translate(tag,null,false);
 		if (value != null) context.put(tag, value);
 	}
 	public String toString(){return getDescription(); }
@@ -69,4 +79,6 @@ class GedartTemplate  {
 			descriptions[i] = templates[i].getDescription();
 		return descriptions;
 	}
+	protected GedartTemplate clone()  throws CloneNotSupportedException {return (GedartTemplate) super.clone();}
+	public void setDescription(String description2) {description = description2;} 
 }
