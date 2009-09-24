@@ -1,6 +1,10 @@
 package gedart;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -10,11 +14,13 @@ class GedartTemplate  {
 	private String description;
 	private String path;
 	private String format;
-	
+	GedartResources resources;
+	private TreeMap<String,String> context = new TreeMap<String, String>(); 
 	public GedartTemplate(File dir) {
+		// Default values
 		name = dir.getName();
-		description = name;
 		path = dir.getAbsolutePath();
+
 		int index = name.lastIndexOf('.');
 		if (index > 0){
 			format = name.substring(index+1);
@@ -22,6 +28,16 @@ class GedartTemplate  {
 		}
 		if (format != null)
 			description += " ("+format+")";
+		
+		// May be overriden by .properties file
+		try {
+			resources = new GedartResources(new FileInputStream(new File(dir, "resources.properties")));
+		} catch (FileNotFoundException e) {
+		}
+		if (resources != null) {
+			String value = resources.translate("name");
+			if (value!=null) description=value;
+		}
 	}
 	static GedartTemplate create(File dir) {
 		if (!dir.isDirectory())
@@ -42,5 +58,15 @@ class GedartTemplate  {
 	public String getFormat() {
 		return format;
 	}
+	public void setContext(String tag){
+		String value = resources.translate(tag);
+		if (value != null) context.put(tag, value);
+	}
 	public String toString(){return getDescription(); }
+	public static String[] getDescription(GedartTemplate[] templates) {
+		String[] descriptions = new String[templates.length];
+		for (int i=0; i<templates.length;i++)
+			descriptions[i] = templates[i].getDescription();
+		return descriptions;
+	}
 }

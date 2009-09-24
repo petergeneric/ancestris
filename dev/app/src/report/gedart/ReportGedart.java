@@ -55,6 +55,8 @@ import genj.util.swing.Action2;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 
@@ -75,6 +77,7 @@ import javax.swing.ImageIcon;
  */
 public class ReportGedart extends Report {
 	private GedartTemplates gedartTemplates = new GedartTemplates();
+	private GedartTemplate[] gedartTemplatesOption = gedartTemplates.toArray();
 	private String todoTag = "NOTE"; // TODO: remettre public
 	private String todoStart = "TODO:"; // TODO: remettre public
 	public boolean includeIndi = true;
@@ -89,10 +92,11 @@ public class ReportGedart extends Report {
 //	public boolean showInReportWindow = true;
 	public boolean saveReportToFile = true;
 	public int template;
-	public String[] templates = gedartTemplates.keySet().toArray(new String[0]);
+	public String[] templates = GedartTemplate.getDescription(gedartTemplatesOption);
 	// private PrintWriter out;
 	private DocReport mydoc;
 	private Gedcom theGedcom;
+	
 	
 	public Object accepts(Object context) {
 		return (gedartTemplates);
@@ -164,7 +168,7 @@ public class ReportGedart extends Report {
 		String extension =null;
 
 		if (usetemplate == null)
-			usetemplate = templates[template];
+			usetemplate = gedartTemplatesOption[template].getName();
 		
 		//		if (usetemplate.equals("default")){
 //			thetemplate = "gedart";
