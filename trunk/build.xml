@@ -116,11 +116,19 @@
    -->
 	<target name="dist.all" depends="dist.app, dist.geo, dist.lnf, dist.reportrunner" />
 
-	<target name="dist.arvernes" depends="dist.all, dist.arvernes-zip " />
+	<target name="dist.arvernes" depends="dist.all, dist.arvernes-zip, dist.arvernes.source-zip" />
 	<target name="dist.arvernes-zip">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="./build/genjarvernes"/>
 		</delete>
+		<unzip dest="./build/genjarvernes">
+		    <fileset dir="build/dist">
+		        <include name="genj_app-*.zip"/>
+		    </fileset>
+		    <patternset>
+		        <include name="report/**/*.java"/>
+		    </patternset>
+		</unzip>
 		<unzip dest="./build/genjarvernes">
 		    <fileset dir="build/dist">
 		        <include name="genj_app-*.zip"/>
@@ -135,10 +143,21 @@
 		        <include name="genj-reportrunner-*.zip"/>
 		    </fileset>
 		    <patternset>
-		        <exclude name="**/*.java"/>
+		        <exclude name="**/*.java" unless=""/>
 		    </patternset>
 		</unzip>
 		<zip basedir="./build/genjarvernes" zipfile="./build/dist/genj_arvernes.zip" />
+	</target>
+	<target name="dist.arvernes.source-zip">
+		<copy todir="./build/genjarvernes-source">
+    	  <fileset dir=".">
+    	  	<exclude name="**/build/**"/>
+    	  	<exclude name="**/eclipse/**"/>
+    	  	<exclude name="sandbox/**"/>
+    	  	<exclude name="GraphJ/**"/>
+    	  	</fileset>
+    	</copy>
+		<zip basedir="./build/genjarvernes-source" zipfile="./build/dist/genj_arvernes_source.zip" />
 	</target>
 
 	<target name="dist" depends="dist.arvernes" />
