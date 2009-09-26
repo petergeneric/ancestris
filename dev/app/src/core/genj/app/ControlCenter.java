@@ -31,6 +31,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import genj.gedcom.GedcomDirectory;
+import genj.io.FileAssociation;
 import genj.io.Filter;
 import genj.io.GedcomEncodingException;
 import genj.io.GedcomEncryptionException;
@@ -321,6 +322,7 @@ public class ControlCenter extends JPanel {
     mh.popMenu().createMenu(resources.getString("cc.menu.help"));
 
     mh.createItem(new ActionHelp());
+    mh.createItem(new ActionOnlineHelp());
     mh.createItem(new ActionAbout());
 
     // Done
@@ -384,6 +386,28 @@ public class ControlCenter extends JPanel {
       // done
     }
   } //ActionHelp
+
+  /**
+   * Action - online help
+   */
+  private class ActionOnlineHelp extends Action2 {
+    /** constructor */
+    protected ActionOnlineHelp() {
+      setText(resources, "cc.menu.online");
+      setImage(Images.imgHelp);
+    }
+    /** run */
+    protected void execute() {
+
+try {
+	FileAssociation.open(new URL("http","www.arvernes.com", "/wiki/index.php/GenJ"), null);
+} catch (MalformedURLException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}      
+      // done
+    }
+  } //ActionOnlineHelp
 
   /**
    * Action - exit
