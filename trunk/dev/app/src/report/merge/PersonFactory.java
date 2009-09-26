@@ -46,11 +46,13 @@ public class PersonFactory implements Comparator {
       person.id = indi.getId();
       person.sex = indi.getSex();
       person.lastName = indi.getLastName();
+      person.lastPhonex = getPhonex(person.lastName);
       person.lastNameLength = encode(person.lastName.trim(), person.lastNameCode);
       person.defLastName = person.lastName;
       person.deflnLength = person.lastNameLength;
       person.firstName = indi.getFirstName();
       person.firstNameLength = encode(person.firstName.trim(), person.firstNameCode);
+      person.firstPhonex = getPhonex(person.firstName);
       
       person.yearMin = -4000;
       person.yearMax = +4000;
@@ -110,6 +112,21 @@ public class PersonFactory implements Comparator {
             }
          }
 
+      // get burial date
+      date = getBurialDate(indi);
+      if ((date != null) && date.isValid() && date.getStart().isValid()) {
+         try {
+            person.buS = date.getStart().getJulianDay();
+            person.buE = date.isRange() ? (date.getEnd().getJulianDay()) : person.buS;
+            } catch (GedcomException e) {
+            throw new IllegalArgumentException("Burial date of "+indi.toString()+ "=" + date.toString()+" : "+e.getMessage());
+            }
+         if (person.buS > person.buE) person.buE = person.buS;
+         if (person.yearMin == -4000) {
+            person.yearMin = date.getStart().getYear() - 110;
+            }
+         }
+
       // get first marriage date
       Fam[] fams = indi.getFamiliesWhereSpouse();
       Fam fam = (fams != null && fams.length > 0) ? fams[0] : null;
@@ -139,6 +156,11 @@ public class PersonFactory implements Comparator {
       place = getDeathPlace(indi); 
       person.death = (place == null) ? "" : place.getCity() + getCountry(place);
       person.deathLength = encode(person.death.trim(), person.deathCode);
+      
+      // get burial place
+      place = getBurialPlace(indi); 
+      person.burial = (place == null) ? "" : place.getCity() + getCountry(place);
+      person.burialLength = encode(person.burial.trim(), person.burialCode);
       
       // get first marriage place
       place = getMarriagePlace(fam); 
@@ -272,6 +294,14 @@ public class PersonFactory implements Comparator {
       return (PropertyPlace)indi.getProperty(new TagPath("INDI:DEAT:PLAC"));
       }
       
+   private PropertyDate getBurialDate(Indi indi) {
+      return (PropertyDate)indi.getProperty(new TagPath("INDI:BURI:DATE"));
+      }
+   
+   private PropertyPlace getBurialPlace(Indi indi) {
+      return (PropertyPlace)indi.getProperty(new TagPath("INDI:BURI:PLAC"));
+      }
+      
    private PropertyPlace getMarriagePlace(Fam fam) {
       if (fam == null) return null;
       return (PropertyPlace)fam.getProperty(new TagPath("FAM:MARR:PLAC"));
@@ -294,6 +324,9 @@ public class PersonFactory implements Comparator {
       sb.append("deathStart="+p.dS+"\n");
       sb.append("deathEnd="+p.dE+"\n");
       sb.append("deathCity="+p.death+"\n");
+      sb.append("burialStart="+p.buS+"\n");
+      sb.append("burialEnd="+p.buE+"\n");
+      sb.append("burialCity="+p.burial+"\n");
       sb.append("lastNameLength="+p.lastNameLength+"\n");
       sb.append("firstNameLength="+p.firstNameLength+"\n");
       sb.append("birthCityLength="+p.birthLength+"\n");
@@ -316,6 +349,8 @@ public class PersonFactory implements Comparator {
       for (int i = 0; i < code.length; i++) {
          code[i] = 0;
       }
+      if (str == null) return 0;
+
       char[] c = str.toCharArray();
       StringBuffer sb = new StringBuffer();
       // remove accents
@@ -341,6 +376,25 @@ public class PersonFactory implements Comparator {
       return length;
       }
    
+   static public int encode(String str, HashSet code) {
+
+      if (str == null) return 0;
+
+      // lowercase and remove accents
+      String cleanText = getCleanedString(str.toLowerCase());
+
+      // store words in set
+      String[] words = cleanText.split(" ");
+      for (int i = 0; i < words.length; i++) {
+         if (words[i].length() >= 4) {
+            code.add(words[i]);
+            }
+         }
+
+      // calculate length
+      return code.size();
+      }
+   
    static private String codeDisplay(int[] code) {
       StringBuffer sb = new StringBuffer();
       for (int i = 0; i < code.length; i++) {
@@ -349,6 +403,35 @@ public class PersonFactory implements Comparator {
       return sb.toString();      
       }
    
+
+
+   public static String getCleanedString(String pStringToBeCleaned) {
+
+      Vector map = initMap();      
+      StringBuffer tmp = new StringBuffer();
+      char car;
+        
+      int i=0;
+      while (i < pStringToBeCleaned.length()) {
+          car = pStringToBeCleaned.charAt(i);
+          if (car == ' ') {
+             tmp.append(car);        
+             }  
+          else if (Character.isJavaIdentifierPart(car) && 
+                   Character.getNumericValue(car) >= 0) {
+             tmp.append(car);        
+             } 
+          else if (car > 192 && car < 255) {
+             tmp.append( (String) (map.get(car-192)) );
+             }
+          else {
+             tmp.append(" ");        
+             }
+          i++;
+          }
+      return tmp.toString();
+      }
+ 
    
    private static Vector initMap() {
       Vector vector = new Vector();
@@ -361,8 +444,8 @@ public class PersonFactory implements Comparator {
       vector.add( car );            /* '\u00C3'       alt-0195  */
       vector.add( car );            /* '\u00C4'       alt-0196  */
       vector.add( car );            /* '\u00C5'       alt-0197  */
-      car = "AE";
-      vector.add( car );            /* '\u00C6'       alt-0198  */
+      car = "A";
+      vector.add( car );            /* '\u00C6'       alt-0198  AE*/
       car = "C";
       vector.add( car );            /* '\u00C7'       alt-0199  */
       car = "E";
@@ -407,8 +490,8 @@ public class PersonFactory implements Comparator {
       vector.add( car );            /* '\u00E3'       alt-0227  */
       vector.add( car );            /* '\u00E4'       alt-0228  */
       vector.add( car );            /* '\u00E5'       alt-0229  */
-      car = "ae";
-      vector.add( car );            /* '\u00E6'       alt-0230  */
+      car = "a";
+      vector.add( car );            /* '\u00E6'       alt-0230  ae */
       car = "c";
       vector.add( car );            /* '\u00E7'       alt-0231  */
       car = "e";
@@ -451,5 +534,121 @@ public class PersonFactory implements Comparator {
       return vector;
       }
         
-} // end of object
+
+   /**
+    * Algorithme de Frédéric BROUARD (31/3/99) mis en java par Frédéric Lapeyre (sept 2009)
+    */
+   public static String getPhonex(String str) {
+      
+      String phonex = "";
+      String tempStr = str.toUpperCase();
+
+      //1 remplacer les y par des i
+      tempStr = tempStr.replaceAll("Y","I");
+
+      //2 remplacement du son É:
+      tempStr = tempStr.replaceAll("É","Y");
+      tempStr = tempStr.replaceAll("È","Y");
+      tempStr = tempStr.replaceAll("Ê","Y");
+
+      //3 On enlève les caractères parasites et accentués
+      tempStr = getCleanedString(tempStr);
+      tempStr = tempStr.replaceAll(" ","");
+
+      //4 supprimer les h qui ne sont pas précédées de c ou de s ou de p
+      tempStr = tempStr.replaceAll("([^P|C|S])H","$1");
+
+      //5 remplacement du ph par f
+      tempStr = tempStr.replaceAll("PH","F");
   
+      //6 remplacer les groupes de lettres suivantes :
+      tempStr = tempStr.replaceAll("G(AI?[N|M])","K$1");
+  
+      //7 remplacer les occurrences suivantes, si elles sont suivies par une lettre a, e, i, o, ou u :
+      tempStr = tempStr.replaceAll("[A|E]I[N|M]([A|E|I|O|U])","YN$1");
+    
+      //8 remplacement de groupes de 3 lettres (sons 'o', 'oua', 'ein') :
+      tempStr = tempStr.replaceAll("EAU","O");
+      tempStr = tempStr.replaceAll("OUA","2");
+      tempStr = tempStr.replaceAll("EIN","4");
+      tempStr = tempStr.replaceAll("AIN","4");
+      tempStr = tempStr.replaceAll("EIM","4");
+      tempStr = tempStr.replaceAll("AIM","4");
+  
+      //9 remplacement du reste du son É:
+      tempStr = tempStr.replaceAll("AI","Y");
+      tempStr = tempStr.replaceAll("EI","Y");
+      tempStr = tempStr.replaceAll("ER","YR");
+      tempStr = tempStr.replaceAll("ESS","YS");
+      tempStr = tempStr.replaceAll("ET","YT");
+      tempStr = tempStr.replaceAll("EZ","YZ");
+
+      //10 remplacer les groupes de 2 lettres suivantes (son â..anâ.. et â..inâ..), sauf sâ..il sont suivi par une lettre a, e, i o, u ou un son 1 Ã  4 :
+      tempStr = tempStr.replaceAll("AN([^A|E|I|O|U|1|2|3|4])","1$1");
+      tempStr = tempStr.replaceAll("ON([^A|E|I|O|U|1|2|3|4])","1$1");
+      tempStr = tempStr.replaceAll("AM([^A|E|I|O|U|1|2|3|4])","1$1");
+      tempStr = tempStr.replaceAll("EN([^A|E|I|O|U|1|2|3|4])","1$1");
+      tempStr = tempStr.replaceAll("EM([^A|E|I|O|U|1|2|3|4])","1$1");
+      tempStr = tempStr.replaceAll("IN([^A|E|I|O|U|1|2|3|4])","4$1");
+
+      //11 remplacer les s par des z sâ..ils sont suivi et précédés des lettres a, e, i, o,u ou dâ..un son 1 Ã  4
+      tempStr = tempStr.replaceAll("([A|E|I|O|U|Y|1|2|3|4])S([A|E|I|O|U|Y|1|2|3|4])","$1Z$2");
+
+      //12 remplacer les groupes de 2 lettres suivants :
+      tempStr = tempStr.replaceAll("OE","E");
+      tempStr = tempStr.replaceAll("EU","E");
+      tempStr = tempStr.replaceAll("AU","O");
+      tempStr = tempStr.replaceAll("OI","2");
+      tempStr = tempStr.replaceAll("OY","2");
+      tempStr = tempStr.replaceAll("OU","3");
+
+      //13 remplacer les groupes de lettres suivants
+      tempStr = tempStr.replaceAll("CH","5");
+      tempStr = tempStr.replaceAll("SCH","5");
+      tempStr = tempStr.replaceAll("SH","5");
+      tempStr = tempStr.replaceAll("SS","S");
+      tempStr = tempStr.replaceAll("SC","S");
+
+      //14 remplacer le c par un s s'il est suivi d'un e ou d'un i
+      tempStr = tempStr.replaceAll("C([E|I])","S$1");
+  
+      //15 remplacer les lettres ou groupe de lettres suivants :
+      tempStr = tempStr.replaceAll("Q","K");
+      tempStr = tempStr.replaceAll("QU","K");
+      tempStr = tempStr.replaceAll("GU","K");
+      tempStr = tempStr.replaceAll("GA","KA");
+      tempStr = tempStr.replaceAll("GO","KO");
+      tempStr = tempStr.replaceAll("GY","KY");
+
+      //16 remplacer les lettres suivante :
+      tempStr = tempStr.replaceAll("A","O");
+      tempStr = tempStr.replaceAll("D","T");
+      tempStr = tempStr.replaceAll("P","T");
+      tempStr = tempStr.replaceAll("J","G");
+      tempStr = tempStr.replaceAll("B","F");
+      tempStr = tempStr.replaceAll("V","F");
+      tempStr = tempStr.replaceAll("M","N");
+ 
+      //17 Supprimer les lettres dupliquées
+      char oldc = '#';
+      String newr = "";
+      for (int i = 0; i < tempStr.length(); i++) {
+         int val = 0;
+         if (tempStr.charAt(i) != oldc) {
+            newr = newr + tempStr.charAt(i);
+            }
+         oldc = tempStr.charAt(i);
+         }
+      tempStr = newr;      
+
+      //18 Supprimer les terminaisons suivantes : t, x
+      tempStr = tempStr.replaceAll("(.*)[T|X]$","$1");
+
+      phonex = tempStr;
+      return phonex;
+      }
+ 
+} // end of object
+
+
+

@@ -35,10 +35,12 @@ public class Person {
    public String lastName      = "";
    public int lastNameLength   = 0;
    public int[] lastNameCode   = new int[SIZE];
+   public String lastPhonex    = "";
 
    public String firstName     = "";
    public int firstNameLength  = 0;
    public int[] firstNameCode  = new int[SIZE];
+   public String firstPhonex   = "";
 
    public int bS               = 0;   // birth start day in julian day
    public int bE               = 0;   // end
@@ -60,6 +62,13 @@ public class Person {
    public String marr          = "";
    public int marrLength       = 0;
    public int[] marrCode       = new int[SIZE];
+
+   public int buS              = 0;   // burial start day in julian day
+   public int buE              = 0;   // end
+
+   public String burial        = "";
+   public int burialLength     = 0;
+   public int[] burialCode     = new int[SIZE];
 
    public Person father        = null;
    public Person mother        = null;
