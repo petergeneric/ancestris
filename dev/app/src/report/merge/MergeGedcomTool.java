@@ -303,7 +303,7 @@ public class MergeGedcomTool {
     log.write(1, 1, "=", LNS, report.translate("logMergingReal"));
     log.write(2, 3, "", 0, report.translate("logApplyingRules"));
     log.timeStamp(6, report.translate("logStart")+": ");
-    mergeEntities(confList);
+    if (!mergeEntities(confList)) return false;
     //if (debug) displayConfList(confList);
     log.timeStamp(6, report.translate("logEnd")+": ");
     log.write(" ");
@@ -1484,7 +1484,7 @@ public class MergeGedcomTool {
    for (Iterator it = confList.iterator(); it.hasNext(); ) {
      ConfidenceMatch match = (ConfidenceMatch)it.next();
      if (match.toBeMerged && (match.choice == 3)) {
-        mergeEntity(match, true);
+        if (!mergeEntity(match, true)) return false;
         }
      }
 
@@ -1603,6 +1603,7 @@ public class MergeGedcomTool {
              }
           if (askUser || (report.setting_ruleEntity == ASK_CONFLICT)) {
              choice = confirmPropertyWithUser(clusterPropA, clusterPropB, title1, title2);
+             if (choice == 0) return false;
              }
 
           // Apply choice
@@ -2041,7 +2042,6 @@ public class MergeGedcomTool {
    if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
 
    // Assess individuals score based on basic information 
-//if (p1.id.equals("I3546") && p2.id.equals("I3547")) debug=true;
 //if (debug) log.write("     --- assess p1 p2= "+p1.id+" "+p2.id);
    double score = assessIndi(p1, p2);
    if (score == 0) {
@@ -2084,36 +2084,40 @@ public class MergeGedcomTool {
    if (p1 == null || p2 == null) return 0;
 
    // Get basic scores
-   double scoreLastName = getMatchScore(1, p1, p2); // compares lastnames of persons
-//if (debug) log.write("        --- scoreLastName= "+scoreLastName);
+   double scoreLastName = getMatchScore(1, p1, p2); 		// compares lastnames of persons
    if (scoreLastName == 0) {
       return 0;
       }
-   double scoreFirstName = getMatchScore(2, p1, p2); // compares firstnames of persons 
-//if (debug) log.write("        --- scoreFirstName= "+scoreFirstName);
+   double scoreFirstName = getMatchScore(2, p1, p2); 		// compares firstnames of persons 
    if (scoreFirstName == 0) {
       return 0;
       }
 
-   double scoreBirth = getMatchScore(3, p1, p2); // Compares birth date of persons
-//if (debug) log.write("        --- scoreBirth= "+scoreBirth);
+   double scoreBirth = getMatchScore(3, p1, p2); 		// Compares birth date of persons
+   scoreBirth *= getMatchScore(4, p1, p2);        		// Place of Person's birth
+   if (scoreBirth == 0 && !report.setting_approximate) {	// If no approximation is allowed, different values is not a match
+      return 0;
+      }
 
-   scoreBirth *= getMatchScore(4, p1, p2); // Place of Person's birth
-//if (debug) log.write("        --- scoreBirth= "+scoreBirth);
+   double scoreDeath = getMatchScore(5, p1, p2); 		// Compares death date of persons
+   scoreDeath *= getMatchScore(6, p1, p2); 			// Place of Person's death
+   if (scoreDeath == 0 && !report.setting_approximate) {	// If no approximation is allowed, different values is not a match
+      return 0;
+      }
 
-   double scoreDeath = getMatchScore(5, p1, p2); // Compares death date of persons
-//if (debug) log.write("        --- scoreDeath= "+scoreDeath);
+   double scoreMarr = getMatchScore(7, p1, p2);		 	// Compares marriage date of persons
+   scoreMarr *= getMatchScore(8, p1, p2); 			// Place of Person's marriage
+   if (scoreMarr == 0 && !report.setting_approximate) {		// If no approximation is allowed, different values is not a match
+      return 0;
+      }
 
-   scoreDeath *= getMatchScore(6, p1, p2); // Place of Person's death
-//if (debug) log.write("        --- scoreDeath= "+scoreDeath);
+   double scoreBurial = getMatchScore(9, p1, p2); 		// Compares burial date of persons
+   scoreBurial *= getMatchScore(10, p1, p2); 			// Place of Person's burial
+   if (scoreBurial == 0 && !report.setting_approximate) {	// If no approximation is allowed, different values is not a match
+      return 0;
+      }
 
-   double scoreMarr = getMatchScore(7, p1, p2); // Compares marriage date of persons
-//if (debug) log.write("        --- scoreMarr= "+scoreMarr);
-
-   scoreMarr *= getMatchScore(8, p1, p2); // Place of Person's marriage
-//if (debug) log.write("        --- scoreMarr= "+scoreMarr);
-
-   double scoreEvent = Math.max(scoreBirth, Math.max(scoreDeath, scoreMarr));
+   double scoreEvent = Math.max(scoreBirth, Math.max(scoreDeath, Math.max(scoreBurial, scoreMarr)));
    if (scoreEvent == 0) {
       return 0;
       }
@@ -2184,18 +2188,21 @@ public class MergeGedcomTool {
    if (type == 1) {
       value = 20000;
       threshold = 80;
-//if (debug) log.write("           --- cmpLN= "+p1.deflnLength+" "+p2.deflnLength+" "+p1.defLastName+" "+p2.defLastName);
+      //if (debug) log.write("           --- cmpLN= "+p1.deflnLength+" "+p2.deflnLength+" "+p1.defLastName+" "+p2.defLastName);
       if (p1.deflnLength == 0 || p2.deflnLength == 0) {
          return 1;
          }
       if (p1.defLastName.equals(p2.defLastName)) {
          return value;
          }
+      if (report.setting_phonex && p1.lastPhonex.equals(p2.lastPhonex)) {
+         return value;
+         }
       if (!report.setting_approximate) {
          return 0;
          }
       score = matchCode(p1.deflnCode, p1.deflnLength, p2.deflnCode, p2.deflnLength);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2206,18 +2213,21 @@ public class MergeGedcomTool {
    if (type == 2) {
       value = 7000;
       threshold = 50;
-//if (debug) log.write("           --- cmpFN= "+p1.firstNameLength+" "+p2.firstNameLength+" "+p1.firstName+" "+p2.firstName);
+      //if (debug) log.write("           --- cmpFN= "+p1.firstNameLength+" "+p2.firstNameLength+" "+p1.firstName+" "+p2.firstName);
       if (p1.firstNameLength == 0 || p2.firstNameLength == 0) {
          return 1;
          }
       if (p1.firstName.equals(p2.firstName)) {
          return value;
          }
+      if (report.setting_phonex && p1.firstPhonex.equals(p2.firstPhonex)) {
+         return value;
+         }
       if (!report.setting_approximate) {
          return 0;
          }
       score = matchCode(p1.firstNameCode, p1.firstNameLength, p2.firstNameCode, p2.firstNameLength);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2228,7 +2238,7 @@ public class MergeGedcomTool {
    if (type == 3) {
       value = 36500;
       threshold = 10;
-//if (debug) log.write("           --- cmpBD= "+p1.bS+" "+p2.bS+" "+p1.bE+" "+p2.bE);
+      //if (debug) log.write("           --- cmpBD= "+p1.bS+" "+p2.bS+" "+p1.bE+" "+p2.bE);
       if (p1.bS == 0 || p2.bS == 0) {
          return 1;
          }
@@ -2239,7 +2249,7 @@ public class MergeGedcomTool {
          return 0;
          }
       score = matchJD(p1.bS, p1.bE, p2.bS, p2.bE);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2250,7 +2260,7 @@ public class MergeGedcomTool {
    if (type == 4) {
       value = 36000;
       threshold = 80;
-//if (debug) log.write("           --- cmpBP= "+p1.birthLength+" "+p2.birthLength+" "+p1.birth+" "+p2.birth);
+      //if (debug) log.write("           --- cmpBP= "+p1.birthLength+" "+p2.birthLength+" "+p1.birth+" "+p2.birth);
       if (p1.birthLength == 0 || p2.birthLength == 0) {
          return 1;
          }
@@ -2261,7 +2271,7 @@ public class MergeGedcomTool {
          return 0;
          }
       score = matchCode(p1.birthCode, p1.birthLength, p2.birthCode, p2.birthLength);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2272,7 +2282,7 @@ public class MergeGedcomTool {
    if (type == 5) {
       value = 36500;
       threshold = 10;
-//if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.dE);
+      //if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.dE);
       if (p1.dS == 0 || p2.dS == 0) {
          return 1;
          }
@@ -2283,7 +2293,7 @@ public class MergeGedcomTool {
          return 0;
          }
       score = matchJD(p1.dS, p1.dE, p2.dS, p2.dE);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2294,7 +2304,7 @@ public class MergeGedcomTool {
    if (type == 6) {
       value = 36000;
       threshold = 80;
-//if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+" "+p1.death+" "+p2.death);
+      //if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+" "+p1.death+" "+p2.death);
       if (p1.deathLength == 0 || p2.deathLength == 0) {
          return 1;
          }
@@ -2305,7 +2315,7 @@ public class MergeGedcomTool {
          return 0;
          }
       score = matchCode(p1.deathCode, p1.deathLength, p2.deathCode, p2.deathLength);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2316,7 +2326,7 @@ public class MergeGedcomTool {
    if (type == 7) {
       value = 36500;
       threshold = 10;
-//if (debug) log.write("           --- cmpMD= "+p1.mS+" "+p2.mS+" "+p1.mE+" "+p2.mE);
+      //if (debug) log.write("           --- cmpMD= "+p1.mS+" "+p2.mS+" "+p1.mE+" "+p2.mE);
       if (p1.mS == 0 || p2.mS == 0) {
          return 1;
          }
@@ -2327,7 +2337,7 @@ public class MergeGedcomTool {
          return 0;
          }
       score = matchJD(p1.mS, p1.mE, p2.mS, p2.mE);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
@@ -2338,7 +2348,7 @@ public class MergeGedcomTool {
    if (type == 8) {
       value = 36000;
       threshold = 80;
-//if (debug) log.write("           --- cmpMP= "+p1.marrLength+" "+p2.marrLength+" "+p1.marr+" "+p2.marr);
+      //if (debug) log.write("           --- cmpMP= "+p1.marrLength+" "+p2.marrLength+" "+p1.marr+" "+p2.marr);
       if (p1.marrLength == 0 || p2.marrLength == 0) {
          return 1;
          }
@@ -2349,12 +2359,57 @@ public class MergeGedcomTool {
          return 0;
          }
       score = matchCode(p1.marrCode, p1.marrLength, p2.marrCode, p2.marrLength);
-//if (debug) log.write("           --- score= "+score);
+      //if (debug) log.write("           --- score= "+score);
       if (report.setting_differencemeansno && (score < threshold)) {
          return 0;
          }
       return 10;
       }
+
+   // Compare BurialDate
+   if (type == 9) {
+      value = 36500;
+      threshold = 10;
+      //if (debug) log.write("           --- cmpDD= "+p1.dS+" "+p2.dS+" "+p1.dE+" "+p2.dE);
+      if (p1.dS == 0 || p2.dS == 0) {
+         return 1;
+         }
+      if (p1.dS == p2.dS && p1.dE == p2.dE) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchJD(p1.dS, p1.dE, p2.dS, p2.dE);
+      //if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
+   // Compare BurialCityCtry
+   if (type == 10) {
+      value = 36000;
+      threshold = 80;
+      //if (debug) log.write("           --- cmpDP= "+p1.deathLength+" "+p2.deathLength+" "+p1.death+" "+p2.death);
+      if (p1.deathLength == 0 || p2.deathLength == 0) {
+         return 1;
+         }
+      if (p1.death.equals(p2.death)) {
+         return value;
+         }
+      if (!report.setting_approximate) {
+         return 0;
+         }
+      score = matchCode(p1.deathCode, p1.deathLength, p2.deathCode, p2.deathLength);
+      //if (debug) log.write("           --- score= "+score);
+      if (report.setting_differencemeansno && (score < threshold)) {
+         return 0;
+         }
+      return 10;
+      }
+
 
    return 0;
    }
@@ -2372,6 +2427,7 @@ public class MergeGedcomTool {
       }
    return (int) (sum * 90 / (l1+l2));
    }
+
 
  /**
   * Match date using julian day 
@@ -2425,7 +2481,7 @@ public class MergeGedcomTool {
 
    if (score <= 0) return 0;
 
-   double proba = 1 - (1 / ( 1.01 + Math.pow((Math.log10(score)/8), 5) ) );
+   double proba = 1 - (1 / ( 1.01 + Math.pow((Math.log10(score)/10), 7) ) );
 
    return (int) (proba * 100);
    }
@@ -2434,58 +2490,65 @@ public class MergeGedcomTool {
 
  /**
   * Calculates confidence level of matching between 2 entities (non individuals)
+  *
+  * Match calculation depends on entity type
+  * Based on a scoring system; result is a percentage point
   */
   private ConfidenceMatch assessConfidenceInfo(Info i1, Info i2, boolean duplicates, Map confList, Map idNewOld) {
-   // Match calculation depends on entity type
-   // Based on a scoring system; result is a percentage point
+
    ConfidenceMatch match = new ConfidenceMatch((Entity)i1.entity, (Entity)i2.entity);
    if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
    if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
-   int score = 0; // will be from 0 to 100; coefficients below should add up to 100.
-   int scoreInfo = 0;
+   int score = 0;
+   double scoreInfo = 0;
 
-   if (!report.setting_default && i1.titleLength > 0 && i1.title.compareTo(i2.title) != 0) {
-      match.confLevel = 0;
-      return match;
+   if (!report.setting_approximate) {
+      if ((i1.titleLength > 0 && i2.titleLength > 0 && i1.title.compareTo(i2.title) != 0) ||
+          (i1.authLength > 0 && i2.authLength > 0 && i1.auth.compareTo(i2.auth) != 0) ||
+          (i1.abbrLength > 0 && i2.abbrLength > 0 && i1.abbr.compareTo(i2.abbr) != 0) ||
+          (i1.textLength > 0 && i2.textLength > 0 && i1.text.compareTo(i2.text) != 0))  {
+         match.confLevel = 0;
+         return match;
+         }
       }
 
    // Compare Title
-   score = 0;
-   if (i1.titleLength > 0) {
+   double scoreTitle = 1;
+   if (i1.titleLength > 0 && i2.titleLength > 0) {
       if (i1.title.compareTo(i2.title) == 0) score = 100;
       else score = matchCode(i1.titleCode, i1.titleLength, i2.titleCode, i2.titleLength);
+      if (score < 90) scoreTitle = 1;
+      else scoreTitle = ((double)(score*10))/100;
       }
-   scoreInfo += score * 0.40;
-
-   // Compare Text
-   score = 0;
-   if (i1.textLength > 0) {
-      if (i1.text.compareTo(i2.text) == 0) score = 100;
-      else score = matchCode(i1.textCode, i1.textLength, i2.textCode, i2.textLength); 
-      }
-   scoreInfo += score * 0.45;
 
    // Compare Auth
-   score = 0;
-   if (i1.authLength > 0) {
+   double scoreAuth = 1;
+   if (i1.authLength > 0 && i2.authLength > 0) {
       if (i1.auth.compareTo(i2.auth) == 0) score = 100;
       else score = matchCode(i1.authCode, i1.authLength, i2.authCode, i2.authLength); 
+      if (score < 90) scoreAuth = 1;
+      else scoreAuth = ((double)(score*5))/100;
       }
-   scoreInfo += score * 0.10;
 
    // Compare Abbr
-   score = 0;
-   if (i1.abbrLength > 0) {
+   double scoreAbbr = 1;
+   if (i1.abbrLength > 0 && i2.abbrLength > 0) {
       if (i1.abbr.compareTo(i2.abbr) == 0) score = 100;
       else score = matchCode(i1.abbrCode, i1.abbrLength, i2.abbrCode, i2.abbrLength); 
+      if (score < 90) scoreAbbr = 1;
+      else scoreAbbr = ((double)(score*5))/100;
       }
-   scoreInfo += score * 0.05;
 
-   match.confLevel = scoreInfo * scoreInfo / 100;
-//log.write("     score="+match.confLevel);
-//log.write("     i1="+i1.title);
-//log.write("     i2="+i2.title);
-//log.write("         ");
+   // Compare Text
+   double scoreText = 1;
+   if (i1.textLength > 0 && i2.textLength > 0) {
+      if (i1.text.compareTo(i2.text) == 0) score = 100;
+      else score = matchText(i1.textCode, i2.textCode); 
+      if (score < 70) scoreText = 1;
+      else scoreText = ((double)(score*600))/100;
+      }
+
+   match.confLevel = (int)((1-1/(1+(scoreTitle*scoreAuth*scoreAbbr*scoreText)/1000))*100);
 
    // manage automerge 
    if (match.confLevel > report.setting_autoMergingLevel) {
@@ -2497,6 +2560,26 @@ public class MergeGedcomTool {
 
    return match;
    }
+
+ /**
+  * Match texts using their words
+  */
+  private int matchText(HashSet text1, HashSet text2) {
+
+   int size = text1.size();
+   if (size == 0) return 0;
+
+   int sum = 0;
+   Iterator it = text1.iterator();
+   while (it.hasNext()) {
+      String word = (String)it.next();
+      if (text2.contains(word))   {
+         sum++;
+         }
+      }
+   return sum * 100 /size;
+   }
+
 
  /**
   * Get Gedcom B

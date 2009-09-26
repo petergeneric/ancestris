@@ -41,9 +41,6 @@ public class InfoFactory implements Comparator {
          info.title = ((Source)entity).getTitle();
          info.titleLength = PersonFactory.encode(info.title.trim(), info.titleCode);
          
-         info.text = ((Source)entity).getText();
-         info.textLength = PersonFactory.encode(info.text.trim(), info.textCode);
-         
          Property prop = (Property)entity.getProperty(new TagPath("SOUR:AUTH"));
          info.auth = (prop == null) ? "" : prop.getValue();
          info.authLength = PersonFactory.encode(info.auth.trim(), info.authCode);
@@ -51,24 +48,27 @@ public class InfoFactory implements Comparator {
          prop = (Property)entity.getProperty(new TagPath("SOUR:ABBR"));
          info.abbr = (prop == null) ? "" : prop.getValue();
          info.abbrLength = PersonFactory.encode(info.abbr.trim(), info.abbrCode);
+
+         info.text = ((Source)entity).getText();
+         info.textLength = PersonFactory.encode(info.text.trim(), info.textCode);
          }      
      
       if (entity instanceof Note) {
          Property prop = (Property)entity.getProperty(new TagPath("NOTE"));
-         info.title = (prop == null) ? "" : prop.getValue();
-         info.titleLength = PersonFactory.encode(info.title.trim(), info.titleCode);
+         info.text = (prop == null) ? "" : prop.getValue();
+         info.textLength = PersonFactory.encode(info.text.trim(), info.textCode);
          }      
          
       if (entity instanceof Submitter) {
          Property prop = (Property)entity.getProperty(new TagPath("SUBM:NAME"));
-         info.title = (prop == null) ? "" : prop.getValue();
-         info.titleLength = PersonFactory.encode(info.title.trim(), info.titleCode);
+         info.text = (prop == null) ? "" : prop.getValue();
+         info.textLength = PersonFactory.encode(info.text.trim(), info.textCode);
          }      
          
       if (entity instanceof Repository) {
          Property prop = (Property)entity.getProperty(new TagPath("SUBM:NAME"));
-         info.title = (prop == null) ? "" : prop.getValue();
-         info.titleLength = PersonFactory.encode(info.title.trim(), info.titleCode);
+         info.text = (prop == null) ? "" : prop.getValue();
+         info.textLength = PersonFactory.encode(info.text.trim(), info.textCode);
          }      
       }
      
@@ -94,7 +94,6 @@ public class InfoFactory implements Comparator {
       sb.append("authLength="+i.authLength+"\n");
       sb.append("abbrLength="+i.abbrLength+"\n");
       sb.append("titlecode="+codeDisplay(i.titleCode)+"\n");
-      sb.append("textcode="+codeDisplay(i.textCode)+"\n");
       sb.append("authcode="+codeDisplay(i.authCode)+"\n");
       sb.append("abbrcode="+codeDisplay(i.abbrCode)+"\n");
       return sb.toString();

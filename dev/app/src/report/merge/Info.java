@@ -9,6 +9,8 @@ package merge;
 
 import genj.gedcom.Entity;
 
+import java.util.HashSet;
+
 
 /**
  * GenJ - Tools
@@ -28,19 +30,18 @@ public class Info {
    
    public boolean merged       = false;
    
-   public String title         = "";               // for all non indi/fam entities
-   public String text          = "";               // for sources only
-   public String auth          = "";               // for sources only
-   public String abbr          = "";               // for sources only 
-   public int    titleLength   = 0;                // for sources only
-   public int[]  titleCode     = new int[SIZE];    // for sources only
-   public int    textLength    = 0;                // for sources only
-   public int[]  textCode      = new int[SIZE];    // for sources only
-   public int    authLength    = 0;                // for sources only 
-   public int[]  authCode      = new int[SIZE];    // for sources only
-   public int    abbrLength    = 0;                // for sources only
-   public int[]  abbrCode      = new int[SIZE];    // for sources only
-   
+   public String title         = "";               
+   public String text          = "";               
+   public String auth          = "";               
+   public String abbr          = "";               
+   public int    titleLength   = 0;                
+   public int[]  titleCode     = new int[SIZE];    
+   public int    authLength    = 0;                
+   public int[]  authCode      = new int[SIZE];    
+   public int    abbrLength    = 0;                
+   public int[]  abbrCode      = new int[SIZE];    
+   public int    textLength    = 0;                
+   public HashSet textCode     = new HashSet();    // of strings
   
 } // end of object
   

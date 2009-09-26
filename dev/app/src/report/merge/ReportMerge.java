@@ -57,6 +57,7 @@ public class ReportMerge extends Report {
   public boolean setting_default = true;              // true means to default missing information to next best information
   public boolean setting_approximate = true;          // true means that a non perfect equality is still considered
   public boolean setting_differencemeansno = true;    // true means that in case of approximation, if the difference is too big, it means it is not a match
+  public boolean setting_phonex = true;               // true means that lastnames (or firstnames) of identical phonex will be considered to match
 
 
   // execution options
@@ -141,7 +142,7 @@ public class ReportMerge extends Report {
        }
 
     // Done
-    showDocumentToUser(doc);
+    if (doc != null) showDocumentToUser(doc);
 
   } // end_of_start
 
