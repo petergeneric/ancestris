@@ -22,6 +22,7 @@ package genj.edit.actions;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyFile;
 import genj.io.FileAssociation;
+import genj.util.Resources;
 import genj.util.swing.Action2;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class RunExternal extends Action2 {
   public RunExternal(PropertyFile f) {
     file = f.getFile();
     super.setImage(f.getImage(false));
-    super.setText("Open...");
+    super.setText(Resources.get(RunExternal.class).getString("file.open"));
   }
   
   /**
