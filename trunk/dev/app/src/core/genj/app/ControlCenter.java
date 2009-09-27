@@ -323,6 +323,7 @@ public class ControlCenter extends JPanel {
 
     mh.createItem(new ActionHelp());
     mh.createItem(new ActionOnlineHelp());
+    mh.createSeparator();
     mh.createItem(new ActionAbout());
 
     // Done
@@ -398,13 +399,12 @@ public class ControlCenter extends JPanel {
     }
     /** run */
     protected void execute() {
-
-try {
-	FileAssociation.open(new URL("http","www.arvernes.com", "/wiki/index.php/GenJ"), null);
-} catch (MalformedURLException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}      
+      try {
+        FileAssociation.open(new URL("http","www.arvernes.com", "/wiki/index.php/GenJ"), null);
+      } catch (MalformedURLException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        }
       // done
     }
   } //ActionOnlineHelp
