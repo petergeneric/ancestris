@@ -19,6 +19,7 @@
  */
 package genj.io;
 
+import genj.util.EnvironmentChecker;
 import genj.util.Resources;
 
 import java.awt.Component;
@@ -355,7 +356,34 @@ public class FileAssociation {
       if (fa.suffixes.contains(suffix))
         return fa;
     }
-    // not found - ask for it
+    // ****
+    // new - not found so we're going to try a platform default handler
+    // check for kfmclient, explorer, xdg-open, etc.
+    // ****
+    FileAssociation fa=new FileAssociation();
+    fa.setName("Ouvrir");
+    if ((new File("/usr/bin/xdg-open")).exists()) {
+    	fa.setExecutable("/usr/bin/xdg-open");
+    	return fa;
+    }
+    if ((new File("/usr/bin/gnome-open")).exists()) {
+    	fa.setExecutable("/usr/bin/gnome-open");
+    	return fa;
+    }
+    if ((new File("/usr/bin/kfmclient")).exists()) {
+    	fa.setExecutable("/usr/bin/kfmclient exec");
+    	return fa;
+    }
+    if (EnvironmentChecker.isMac()) {
+    	fa.setExecutable("open");
+    	return fa;
+    }
+    if (EnvironmentChecker.isWindows()){
+    	fa.setExecutable("start");
+    	return fa;
+    }
+        
+     // none found and no platform default figured out either - go ask
     JFileChooser chooser = new JFileChooser();
     chooser.setDialogTitle(Resources.get(FileAssociation.class).getString("assocation.choose", suffixes));
     int rc = chooser.showOpenDialog(owner);
