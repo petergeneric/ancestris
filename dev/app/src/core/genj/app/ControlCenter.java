@@ -400,7 +400,7 @@ public class ControlCenter extends JPanel {
     /** run */
     protected void execute() {
       try {
-        FileAssociation.open(new URL("http","www.arvernes.com", "/wiki/index.php/GenJ"), null);
+        FileAssociation.open(new URL(resources.getString("cc.menu.onlineurl")), null);
       } catch (MalformedURLException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
