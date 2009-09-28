@@ -81,6 +81,7 @@ public class AboutWidget extends JPanel{
     pCenter.addTab(resources.getString("cc.about.dialog.tab1.title"), null, new WelcomePanel());
     pCenter.addTab(resources.getString("cc.about.dialog.tab2.title"), null, new AuthorsPanel());
     pCenter.addTab(resources.getString("cc.about.dialog.tab3.title"), null, new CopyrightPanel());
+    pCenter.addTab(resources.getString("cc.about.dialog.tab4.title"), null, new DevelopmentPanel());
 
     // create the main panel    
     setLayout(new BorderLayout());
@@ -240,6 +241,44 @@ public class AboutWidget extends JPanel{
     }
     
   }
+
+  
+  private class DevelopmentPanel extends JScrollPane {
+
+	    /** 
+	     * Constructor
+	     */  
+	    protected DevelopmentPanel() {
+
+	      // create contained text area
+	      JTextArea text = new JTextArea(DEFAULT_ROWS,DEFAULT_COLS);
+	      text.setLineWrap(false);
+	      text.setWrapStyleWord(true);
+	      text.setEditable(false);
+
+	      String dir = EnvironmentChecker.getProperty(
+	        this,
+	        new String[]{ "user.dir" },
+	        ".",
+	        "get development.txt"
+	      );
+	      
+	      String path = dir + File.separatorChar + "doc" + File.separatorChar + "development.txt";
+	      
+	      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
+
+	      // setup looks
+	      setViewportView(text);      
+	      
+	      setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	      setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+	      // done
+	      
+	    }      
+	  } // DevelopmentPanel
+
+
   
   private class Log extends Action2 {
     Log() {
