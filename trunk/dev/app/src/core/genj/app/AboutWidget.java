@@ -321,7 +321,7 @@ public class AboutWidget extends JPanel{
   
   private class Log extends Action2 {
     Log() {
-      setText("Log");
+      setText(resources, "cc.about.tab1.log.title");
     }
     protected void execute() {
       FileAssociation asso = FileAssociation.get(App.LOGFILE, "GenJ Log", AboutWidget.this);
