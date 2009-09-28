@@ -1,1 +1,12 @@
-mettre les notes de développement
+
+---=== G E N J F r ===------------------ - - -  -  -    -       -
+
+/Version 0.1 r.137 - 28 Sept. 2009
+  . Ajout d'un lien d'Aide en ligne
+  . Ajout d'un onglet dans le menu A Propos
+  . Modification : Options est devenu Préférences
+  . Ouverture automatique du répertoire de GenjFr
+  . Association automatique des logiciels pour la manipulation des fichiers
+  . Corrections, modifications, améliorations diverses de certains rapports.
+/Version 0.1 r.108 - 21 Sept. 2009
+  . Première mouture de GenjFr
