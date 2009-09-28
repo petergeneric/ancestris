@@ -299,7 +299,7 @@ public class AboutWidget extends JPanel{
         "read development.txt"
       );
       
-      String path = dir + File.separatorChar + "doc" + File.separatorChar + "development.txt";
+      String path = dir + File.separatorChar + "doc" + File.separatorChar + "changelog";
       readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
       text.setLineWrap(false);
       text.setEditable(false);
