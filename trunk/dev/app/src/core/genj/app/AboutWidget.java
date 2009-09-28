@@ -243,40 +243,79 @@ public class AboutWidget extends JPanel{
   }
 
   
-  private class DevelopmentPanel extends JScrollPane {
+  
+  
+  
+  
+  
+  /**
+   * Panel - Development
+   */  
+  private class DevelopmentPanel extends JPanel {
 
-	    /** 
-	     * Constructor
-	     */  
-	    protected DevelopmentPanel() {
+    /** 
+     * Constructor
+     */  
+    protected DevelopmentPanel()  {
+      
+      super(new BorderLayout());
+      
+      add(getNorth(), BorderLayout.NORTH);
+      add(getCenter(), BorderLayout.CENTER);
+    
+    }
+    
+    /**
+     * Create the north 
+     */
+    private JComponent getNorth() {
+      
+      JTextArea text = new JTextArea(resources.getString("cc.about.tab4.text1"),3,DEFAULT_COLS);
+      text.setLineWrap(true);
+      text.setWrapStyleWord(true);
+      text.setEditable(false);
+      
+      JPanel panel = new JPanel(new BorderLayout());
+      panel.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createTitledBorder(resources.getString("cc.about.tab4.text1.title")),
+        new EmptyBorder(3, 3, 3, 3)
+      ));
+      panel.add(text, BorderLayout.CENTER);
+      
+      return panel;
+    }
 
-	      // create contained text area
-	      JTextArea text = new JTextArea(DEFAULT_ROWS,DEFAULT_COLS);
-	      text.setLineWrap(false);
-	      text.setWrapStyleWord(true);
-	      text.setEditable(false);
-
-	      String dir = EnvironmentChecker.getProperty(
-	        this,
-	        new String[]{ "user.dir" },
-	        ".",
-	        "get development.txt"
-	      );
-	      
-	      String path = dir + File.separatorChar + "doc" + File.separatorChar + "development.txt";
-	      
-	      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
-
-	      // setup looks
-	      setViewportView(text);      
-	      
-	      setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	      setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-	      // done
-	      
-	    }      
-	  } // DevelopmentPanel
+    /**
+     * Create the center
+     */
+    private JComponent getCenter() {
+          
+      // the text    
+      JTextArea text = new JTextArea(DEFAULT_ROWS,DEFAULT_COLS);
+      String dir = EnvironmentChecker.getProperty(
+        this,
+        new String[]{ "user.dir" },
+        ".",
+        "read development.txt"
+      );
+      
+      String path = dir + File.separatorChar + "doc" + File.separatorChar + "development.txt";
+      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
+      text.setLineWrap(false);
+      text.setEditable(false);
+      text.setBorder(new EmptyBorder(3, 3, 3, 3));
+      
+      // a scroller
+      JScrollPane scroll = new JScrollPane(text);
+      scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+      scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+      scroll.setBorder(BorderFactory.createTitledBorder(resources.getString("cc.about.tab4.text2.title")));
+      
+      // done
+      return scroll;
+    }
+  
+  } // DevelopmentPanel
 
 
   
