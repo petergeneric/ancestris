@@ -379,7 +379,7 @@ public class FileAssociation {
     	return fa;
     }
     if (EnvironmentChecker.isWindows()){
-    	fa.setExecutable("start");
+    	fa.setExecutable("explorer");
     	return fa;
     }
         
