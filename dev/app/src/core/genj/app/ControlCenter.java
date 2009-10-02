@@ -323,6 +323,7 @@ public class ControlCenter extends JPanel {
 
     mh.createItem(new ActionHelp());
     mh.createItem(new ActionOnlineHelp());
+    mh.createItem(new ActionIrc());
     mh.createSeparator();
     mh.createItem(new ActionAbout());
 
@@ -408,6 +409,25 @@ public class ControlCenter extends JPanel {
       // done
     }
   } //ActionOnlineHelp
+
+  /**
+   * Action - Irc Access
+   */
+  private class ActionIrc extends Action2 {
+    /** constructor */
+    protected ActionIrc() {
+      setText(resources, "cc.menu.irc");
+      setImage(Images.imgHelp);
+    }
+    /** run */
+    protected void execute() {
+    	// get default handler
+        FileAssociation fa = FileAssociation.get(null, null, null, null);
+        if (fa!=null)  
+          fa.execute(resources.getString("cc.menu.ircurl"));
+      // done
+    }
+  } //ActionIrc
 
   /**
    * Action - exit

@@ -169,6 +169,14 @@ public class FileAssociation {
     new Thread(new Sequence(file.getAbsolutePath())).start();
   }
   
+  /**
+   * Execute
+   */
+  public void execute(String command) {
+    // go
+    new Thread(new Sequence(command)).start();
+  }
+  
   private class Sequence implements Runnable {
     private String file;
     Sequence(String file) {
