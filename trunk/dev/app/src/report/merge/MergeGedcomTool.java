@@ -1433,6 +1433,8 @@ public class MergeGedcomTool {
            matchHusbandX = (Entity)xToY.get(husbandX);
            conflevel = (int)(Integer)xToConf.get(husbandX);
            skip = false;
+//log.write("famX = "+famX);
+//log.write("scanX husb = "+husbandX+" - matchHusb="+matchHusbandX);
            }
         }
      if (wifeX != null) {
@@ -1440,6 +1442,8 @@ public class MergeGedcomTool {
            matchWifeX = (Entity)xToY.get(wifeX);
            conflevel = Math.max(conflevel, (int)(Integer)xToConf.get(wifeX));
            skip = false;
+//log.write("famX = "+famX);
+//log.write("scanX wife = "+wifeX+" - matchWife="+matchWifeX);
            }
         }
      if (skip) {
@@ -1452,10 +1456,21 @@ public class MergeGedcomTool {
         Fam famY = (Fam)ity.next();
         if (famY == null) break;
         if (famX.getId().equals(famY.getId())) continue;   // do not match same families
+        ConfidenceMatch matchTmp = (ConfidenceMatch)matches.get(famY.getId()+"x"+famX.getId());
+        if (matchTmp != null) continue;   // do not match if reverse already matched
         Entity husbandY = (Entity)famY.getHusband();
         Entity wifeY = (Entity)famY.getWife();
+        if (husbandY != null && entsX.contains(husbandY)) {
+           husbandY = (Entity)xToY.get(husbandY);
+           }
+        if (wifeY != null && entsX.contains(wifeY)) {
+           wifeY = (Entity)xToY.get(wifeY);
+           }
+
         if (((husbandY == matchHusbandX) && (wifeY == matchWifeX)) || ((husbandY == matchWifeX) && (wifeY == matchHusbandX))) {
            // match found!
+//log.write("match found: famX = "+famX);
+//log.write("match found: famY = "+famY);
            ConfidenceMatch match = new ConfidenceMatch((Entity)famX, (Entity)famY);
            if (idNewOld != null) match.id2 = (String)idNewOld.get((String)(match.ent2.getId()));
            if (match.id2 == null && duplicates) match.id2 = (String)(match.ent2.getId());
