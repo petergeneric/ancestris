@@ -41,6 +41,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import java.nio.charset.Charset;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -96,8 +98,9 @@ public class AboutWidget extends JPanel{
    */
   protected void readTextFile(JTextArea ta, String file, String fallback) {
     try {
+      String charSet = "UTF-8";
       FileInputStream fin = new FileInputStream(file);
-      Reader in = new InputStreamReader(fin);
+      Reader in = new InputStreamReader(fin,charSet);
       ta.read(in,null);
       fin.close();
     }
