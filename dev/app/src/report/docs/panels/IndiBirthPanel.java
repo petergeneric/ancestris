@@ -23,30 +23,20 @@ import docs.HelperDocs;
 import docs.DataSet;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
-import genj.gedcom.time.Delta;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
 /**
  * The panel for entering people of a birth document
  */
-public class IndiBirthPanel extends JPanel implements ItemListener, FocusListener {
+public class IndiBirthPanel extends JPanel implements ActionListener, FocusListener {
 
   /** calling panel */
   private DocsListener panel = null;
@@ -107,8 +97,9 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
     JLabel refFATHERL = new JLabel(panel.translate("Bir_Father"));
     JLabel refFINDIL = new JLabel(panel.translate("Bir_FatherRef"));
     refFINDIL.setFont(PF);
-    refFINDID.setValues(indis);
-    refFINDID.addItemListener(this);
+    refFINDID.setValues(dataSet.indisStr);
+    refFINDID.addActionListener(this);
+    refFINDID.setIgnoreCase(true);
     JLabel refFSURNL = new JLabel(panel.translate("Bir_FatherLast"));
     refFSURNL.setFont(PF);
     refFSURND.setFont(BF);
@@ -122,15 +113,18 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
     JLabel refFBPLACL = new JLabel(panel.translate("Bir_FatherBorn"));
     refFBPLACL.setFont(PF);
     refFBPLACD.setValues(dataSet.places);
+    refFBPLACD.setIgnoreCase(true);
     JLabel refFBDATEL = new JLabel(panel.translate("Bir_FatherBornOn"));
     refFBDATEL.setFont(PF);
     refFBDATED.setFont(BF);
     JLabel refFOCCUL = new JLabel(panel.translate("Bir_FatherOccu"));
     refFOCCUL.setFont(PF);
     refFOCCUD.setValues(dataSet.occupations);
+    refFOCCUD.setIgnoreCase(true);
     JLabel refFRESIL = new JLabel(panel.translate("Bir_FatherPlace"));
     refFRESIL.setFont(PF);
     refFRESID.setValues(dataSet.places);
+    refFRESID.setIgnoreCase(true);
 
     JLabel refSEXL = new JLabel(panel.translate("Bir_WasPresented"));
     refMale = new JRadioButton(panel.translate("Bir_Male"));
@@ -148,8 +142,9 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
     JLabel refMOTHERL = new JLabel(panel.translate("Bir_Mother"));
     JLabel refMINDIL = new JLabel(panel.translate("Bir_MotherRef"));
     refMINDIL.setFont(PF);
-    refMINDID.setValues(indis);
-    refMINDID.addItemListener(this);
+    refMINDID.setValues(dataSet.indisStr);
+    refMINDID.addActionListener(this);
+    refMINDID.setIgnoreCase(true);
     JLabel refMSURNL = new JLabel(panel.translate("Bir_MotherLast"));
     refMSURNL.setFont(PF);
     refMSURND.setFont(BF);
@@ -162,15 +157,18 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
     JLabel refMBPLACL = new JLabel(panel.translate("Bir_MotherBorn"));
     refMBPLACL.setFont(PF);
     refMBPLACD.setValues(dataSet.places);
+    refMBPLACD.setIgnoreCase(true);
     JLabel refMBDATEL = new JLabel(panel.translate("Bir_MotherBornOn"));
     refMBDATEL.setFont(PF);
     refMBDATED.setFont(BF);
     JLabel refMOCCUL = new JLabel(panel.translate("Bir_MotherOccu"));
     refMOCCUL.setFont(PF);
     refMOCCUD.setValues(dataSet.occupations);
+    refMOCCUD.setIgnoreCase(true);
     JLabel refMRESIL = new JLabel(panel.translate("Bir_MotherPlace"));
     refMRESIL.setFont(PF);
     refMRESID.setValues(dataSet.places);
+    refMRESID.setIgnoreCase(true);
 
     JLabel refCHILDL = new JLabel(panel.translate("Bir_Child"));
     JLabel refSURNL = new JLabel(panel.translate("Bir_ChildLast"));
@@ -304,24 +302,27 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
    */
   public void setIndi(Indi child, Indi father, Indi mother) {
 
-    // Clear form is null
+    // Clear form if null
     if (child == null) {
-       refFINDID.setSelectedIndex(-1);
-       refMINDID.setSelectedIndex(-1);
+       refFINDID.setText("");
+       refMINDID.setText("");
        populateChild(null);
+       populateFather();
+       populateMother();
        return;
        }
 
     // Get and populate father
     if (father != null) {
-       String str = father.toString();
-       for (int i = 0 ; i < indis.length ; i++) {
+        String str = father.toString();
+        for (int i = 0 ; i < indis.length ; i++) {
           if (indis[i].toString().equals(str)) {
              refFINDID.setSelectedIndex(i);
              refFINDID.getTextEditor().setCaretPosition(0);
              break;
              }
           }
+        populateFather();
        }
 
     // Populate child
@@ -337,23 +338,23 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
              break;
              }
           }
+       populateMother();
        }
 
     return;
     }
 
   /**
-   * Selection list changed performed
-   * --> populate indi: indi to fields
+   * Process action performed
    */
-  public void itemStateChanged(ItemEvent e) {
+  public void actionPerformed(ActionEvent e) {
 
-     if (e.getItemSelectable() == refFINDID) {
-        populateIndi(refFINDID, refFSURND, refFGIVND, refFAGED, refFBPLACD, refFBDATED, refFOCCUD, refFRESID);
-        }
-     if (e.getItemSelectable() == refMINDID) {
-        populateIndi(refMINDID, refMSURND, refMGIVND, refMAGED, refMBPLACD, refMBDATED, refMOCCUD, refMRESID);
-        }
+     if (e.getSource() == refFINDID.getEditor().getEditorComponent()) {
+  	    populateFather();
+     	}
+     if (e.getSource() == refMINDID.getEditor().getEditorComponent()) {
+    	populateMother();
+     	}
      }
 
 
@@ -380,6 +381,23 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
     return (Indi) HelperDocs.getEntity(gedcom, ref);
     }
 
+  
+  /**
+   * Populate father
+   */
+  public void populateFather() {
+	  populateIndi(refFINDID, refFSURND, refFGIVND, refFAGED, refFBPLACD, refFBDATED, refFOCCUD, refFRESID);
+  }
+
+  /**
+   * Populate mother
+   */
+  public void populateMother() {
+	  populateIndi(refMINDID, refMSURND, refMGIVND, refMAGED, refMBPLACD, refMBDATED, refMOCCUD, refMRESID);
+  }
+
+  
+  
   /**
    * Populates fields upon user selecting an individual in one of the list boxes
    *
@@ -392,12 +410,12 @@ public class IndiBirthPanel extends JPanel implements ItemListener, FocusListene
 
      // Surname
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:SURN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getLastName() : "");
      surn.setText(str);
 
      // Given names
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:GIVN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getFirstName() : "");
      givn.setText(str);
 
      // Age depends on the so get it from parent panel

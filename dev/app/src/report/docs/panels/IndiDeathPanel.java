@@ -23,30 +23,20 @@ import docs.HelperDocs;
 import docs.DataSet;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
-import genj.gedcom.time.Delta;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
 /**
  * The panel for entering people of a death document
  */
-public class IndiDeathPanel extends JPanel implements ItemListener {
+public class IndiDeathPanel extends JPanel implements ActionListener {
 
   /** calling panel */
   private DocsListener panel = null;
@@ -125,9 +115,11 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
     JLabel refOCCUL = new JLabel(panel.translate("Dea_Occu"));
     refOCCUL.setFont(PF);
     refOCCUD.setValues(dataSet.occupations);
+    refOCCUD.setIgnoreCase(true);
     JLabel refBPLACL = new JLabel(panel.translate("Dea_BornAt"));
     refBPLACL.setFont(PF);
     refBPLACD.setValues(dataSet.places);
+    refBPLACD.setIgnoreCase(true);
     JLabel refBDATEL = new JLabel(panel.translate("Dea_On"));
     refBDATEL.setFont(PF);
     refBDATED.setFont(BF);
@@ -136,8 +128,9 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
     JLabel refSPOUSEL = new JLabel(panel.translate("Dea_SpouseOf"));
     JLabel refSINDIL = new JLabel(panel.translate("Dea_MaleRef"));
     refSINDIL.setFont(PF);
-    refSINDID.setValues(indis);
-    refSINDID.addItemListener(this);
+    refSINDID.setValues(dataSet.indisStr);
+    refSINDID.addActionListener(this);
+    refSINDID.setIgnoreCase(true);
     JLabel refSSURNL = new JLabel(panel.translate("Dea_Last"));
     refSSURNL.setFont(PF);
     refSSURND.setFont(BF);
@@ -147,21 +140,25 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
     JLabel refSOCCUL = new JLabel(panel.translate("Dea_Occu"));
     refSOCCUL.setFont(PF);
     refSOCCUD.setValues(dataSet.occupations);
+    refSOCCUD.setIgnoreCase(true);
     JLabel refSDPLACL = new JLabel(panel.translate("Dea_DiedAt"));
     refSDPLACL.setFont(PF);
     refSDPLACD.setValues(dataSet.places);
+    refSDPLACD.setIgnoreCase(true);
     JLabel refSDDATEL = new JLabel(panel.translate("Dea_On"));
     refSDDATEL.setFont(PF);
     refSDDATED.setFont(BF);
     JLabel refSRESIL = new JLabel(panel.translate("Dea_Place"));
     refSRESIL.setFont(PF);
     refSRESID.setValues(dataSet.places);
+    refSRESID.setIgnoreCase(true);
 
     JLabel refFATHERL = new JLabel(panel.translate("Dea_SonDauOf"));
     JLabel refFINDIL = new JLabel(panel.translate("Dea_MaleRef"));
     refFINDIL.setFont(PF);
-    refFINDID.setValues(indis);
-    refFINDID.addItemListener(this);
+    refFINDID.setValues(dataSet.indisStr);
+    refFINDID.addActionListener(this);
+    refFINDID.setIgnoreCase(true);
     JLabel refFSURNL = new JLabel(panel.translate("Dea_Last"));
     refFSURNL.setFont(PF);
     refFSURND.setFont(BF);
@@ -172,8 +169,9 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
     JLabel refMOTHERL = new JLabel(panel.translate("Dea_AndOf"));
     JLabel refMINDIL = new JLabel(panel.translate("Dea_FemaleRef"));
     refMINDIL.setFont(PF);
-    refMINDID.setValues(indis);
-    refMINDID.addItemListener(this);
+    refMINDID.setValues(dataSet.indisStr);
+    refMINDID.addActionListener(this);
+    refMINDID.setIgnoreCase(true);
     JLabel refMSURNL = new JLabel(panel.translate("Dea_Last"));
     refMSURNL.setFont(PF);
     refMSURND.setFont(BF);
@@ -188,6 +186,7 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
     JLabel refRESIL = new JLabel(panel.translate("Dea_Lived"));
     refRESIL.setFont(PF);
     refRESID.setValues(dataSet.places);
+    refRESID.setIgnoreCase(true);
 
      // set grid
     this.setLayout(new GridBagLayout());
@@ -325,10 +324,13 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
 
     // Clear form is null
     if (deceased == null) {
-       refSINDID.setSelectedIndex(-1);
-       refFINDID.setSelectedIndex(-1);
-       refMINDID.setSelectedIndex(-1);
+       refSINDID.setText("");
+       refFINDID.setText("");
+       refMINDID.setText("");
        populateDeceased(null);
+       populateSpouse();
+       populateFather();
+       populateMother();
        return;
        }
 
@@ -345,6 +347,7 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
              break;
              }
           }
+       populateSpouse();
        }
 
     // Get and populate father
@@ -357,6 +360,7 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
              break;
              }
           }
+       populateFather();
        }
 
     // Get and populate mother
@@ -369,27 +373,49 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
              break;
              }
           }
+       populateMother();
        }
 
     return;
     }
 
   /**
-   * Selection list changed performed
-   * --> populate indi: indi to fields
+   * Process action performed
    */
-  public void itemStateChanged(ItemEvent e) {
+  public void actionPerformed(ActionEvent e) {
 
-     if (e.getItemSelectable() == refSINDID) {
-        populateIndi(refSINDID, refSSURND, refSGIVND, refSDPLACD, refSDDATED, refSOCCUD, refSRESID);
-        }
-     if (e.getItemSelectable() == refFINDID) {
-        populateIndi(refFINDID, refFSURND, refFGIVND, null, null, null, null);
-        }
-     if (e.getItemSelectable() == refMINDID) {
-        populateIndi(refMINDID, refMSURND, refMGIVND, null, null, null, null);
-        }
+     if (e.getSource() == refSINDID.getEditor().getEditorComponent()) {
+    	 populateSpouse();
+     	}
+     if (e.getSource() == refFINDID.getEditor().getEditorComponent()) {
+    	 populateFather();
+     	}
+     if (e.getSource() == refMINDID.getEditor().getEditorComponent()) {
+    	 populateMother();
+     	}
      }
+
+
+  /**
+   * Populate father
+   */
+  public void populateFather() {
+	  populateIndi(refFINDID, refFSURND, refFGIVND, null, null, null, null);
+  }
+
+  /**
+   * Populate mother
+   */
+  public void populateMother() {
+	  populateIndi(refMINDID, refMSURND, refMGIVND, null, null, null, null);
+  }
+
+  /**
+   * Populate spouse
+   */
+  public void populateSpouse() {
+	  populateIndi(refSINDID, refSSURND, refSGIVND, refSDPLACD, refSDDATED, refSOCCUD, refSRESID);
+  }
 
   /**
    * Get individual represented in the main combobox
@@ -412,12 +438,12 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
 
      // Surname
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:SURN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getLastName() : "");
      surn.setText(str);
 
      // Given names
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:GIVN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getFirstName() : "");
      givn.setText(str);
 
      // Occupation
@@ -466,12 +492,12 @@ public class IndiDeathPanel extends JPanel implements ItemListener {
 
      // Surname
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:SURN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getLastName() : "");
      refSURND.setText(str);
 
      // Given names
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:GIVN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getFirstName() : "");
      refGIVND.setText(str);
 
      // Sex

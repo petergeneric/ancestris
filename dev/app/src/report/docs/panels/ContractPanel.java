@@ -23,17 +23,10 @@ import docs.HelperDocs;
 import docs.DataSet;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -70,6 +63,7 @@ public class ContractPanel extends JPanel {
     JLabel refPLACL = new JLabel(panel.translate("Contract_Place"));
     refPLACL.setFont(PF);
     refPLACD.setValues(dataSet.places);
+    refPLACD.setIgnoreCase(true);
 
      // set grid
     this.setLayout(new GridBagLayout());

@@ -22,24 +22,16 @@ package docs;
 import docs.panels.*;
 import genj.gedcom.*;
 import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
-import javax.swing.event.*;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 
 
 /**
@@ -199,7 +191,7 @@ class BirthDocsEditor extends EditorDocs implements DocsListener {
   public void populatePanel(JPanel panel) {
 
     // define main panels
-    datePanel       = new DatePanel(gedcom, this, dataSet.indis, dataSet, "INDI:BIRT");
+    datePanel       = new DatePanel(gedcom, this, dataSet, "INDI:BIRT");
     indiPanel       = new IndiBirthPanel(gedcom, this, dataSet);
     witnessesPanel  = new WitnessesPanel(gedcom, this, NB_WIT, dataSet, "INDI:BIRT", view.translate("Witnesses"));
     actPanel        = new ActPanel(gedcom, this, dataSet, registry, "INDI:BIRT", getSmallTitle());
@@ -322,7 +314,7 @@ class BirthDocsEditor extends EditorDocs implements DocsListener {
    */
   private class CopiedDocument {
 
-    public List<Entity> listEnt = new ArrayList();
+    public List<Entity> listEnt = new ArrayList<Entity>();
     public boolean valid = false;
 
     public Indi child = null;
@@ -368,7 +360,7 @@ class BirthDocsEditor extends EditorDocs implements DocsListener {
    */
   public void populateAll(Entity ent) {
 
-    if ((ent instanceof Indi) == false) return;
+    if ((ent != null) && (ent instanceof Indi) == false) return;
 
     Indi child = (Indi) ent;
 

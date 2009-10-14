@@ -29,12 +29,9 @@ import java.util.List;
 import java.util.*;
 import genj.window.WindowManager;
 
-import java.io.File;
 import java.text.DecimalFormat;
 
-import javax.swing.JPanel;
 import javax.swing.*;
-import java.awt.Component;
 
 /**
  * The base class for our helpers
@@ -235,7 +232,7 @@ public class HelperDocs {
   static public boolean copyDocument(Registry registry, CopyPanel cPanel) throws GedcomException {
 
    // Copy all entities and link them if necessary
-   Map<String, String> id2id = new TreeMap();
+   Map<String, String> id2id = new TreeMap<String, String>();
    boolean debug = registry.get("debug", "0").equals("1");
    for (int i = 0 ; i < cPanel.matches.length ; i++) {
        if (cPanel.matches[i].refCHKD.isSelected()) {
