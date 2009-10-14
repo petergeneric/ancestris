@@ -22,25 +22,16 @@ package docs;
 import docs.panels.*;
 import genj.gedcom.*;
 import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
-import javax.swing.text.Document;
-import javax.swing.event.*;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 
 
 /**
@@ -271,7 +262,7 @@ class StorageDocsEditor extends EditorDocs implements DocsListener {
    */
   private class CopiedDocument {
 
-    public List<Entity> listEnt = new ArrayList();
+    public List<Entity> listEnt = new ArrayList<Entity>();
     public boolean valid = false;
 
     public Entity source = null;

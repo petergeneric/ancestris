@@ -22,27 +22,16 @@ package docs;
 import docs.panels.*;
 import genj.gedcom.*;
 import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
 
 import java.awt.FlowLayout;
-import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Color;
-import java.awt.event.*;
-import java.awt.Dimension;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
-import javax.swing.event.*;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 
 
 /**
@@ -214,7 +203,7 @@ class MarriageDocsEditor extends EditorDocs implements DocsListener {
   public void populatePanel(JPanel panel) {
 
     // define main panels
-    datePanel       = new DatePanel(gedcom, this, dataSet.families, dataSet, "FAM:MARR");
+    datePanel       = new DatePanel(gedcom, this, dataSet, "FAM:MARR");
     husbPanel       = new IndiMarrPanel(gedcom, this, true, dataSet);
     wifePanel       = new IndiMarrPanel(gedcom, this, false, dataSet);
     contractPanel   = new ContractPanel(this, dataSet);
@@ -456,7 +445,8 @@ class MarriageDocsEditor extends EditorDocs implements DocsListener {
    */
   public void populateAll(Entity ent) {
 
-    if ((ent instanceof Fam) == false) return;
+    if ((ent != null) && (ent instanceof Fam) == false) return;
+
 
     Fam fam = (Fam) ent;
 

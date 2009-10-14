@@ -10,17 +10,12 @@ package docs;
 
 import genj.gedcom.*;
 import genj.report.*;
-import genj.app.*;
 
 import genj.util.Registry;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
 import genj.window.DefaultWindowManager;
 import genj.window.WindowManager;
-
-import javax.swing.JPanel;
-import javax.swing.JOptionPane;
 
 
 /**

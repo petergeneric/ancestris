@@ -23,28 +23,20 @@ import docs.HelperDocs;
 import docs.DataSet;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
 /**
  * The panel for entering a number of witnesses
  */
-public class WitnessesPanel extends JPanel implements ItemListener {
+public class WitnessesPanel extends JPanel implements ActionListener {
 
   /** calling panel */
   private DocsListener panel = null;
@@ -103,8 +95,9 @@ public class WitnessesPanel extends JPanel implements ItemListener {
        lab.setFont(PF);
        this.add(lab, c);
        c.gridx = 1; c.gridy = i*3;
-       witnesses[i].refINDID.setValues(indis);
-       witnesses[i].refINDID.addItemListener(this);
+       witnesses[i].refINDID.setValues(dataSet.indisStr);
+       witnesses[i].refINDID.addActionListener(this);
+       witnesses[i].refINDID.setIgnoreCase(true);
        this.add(witnesses[i].refINDID, c);
        c.gridx = 2; c.gridy = i*3;
        this.add(witnesses[i].refSURNL, c);
@@ -189,14 +182,17 @@ public class WitnessesPanel extends JPanel implements ItemListener {
       refOCCUL.setFont(PF);
       refOCCUD = new ChoiceWidget();
       refOCCUD.setValues(dataSet.occupations);
+      refOCCUD.setIgnoreCase(true);
       refRESIL = new JLabel(panel.translate("Wit_Place"));
       refRESIL.setFont(PF);
       refRESID = new ChoiceWidget();
       refRESID.setValues(dataSet.places);
+      refRESID.setIgnoreCase(true);
       refRELAL = new JLabel(panel.translate("Wit_Relation"));
       refRELAL.setFont(PF);
       refRELAD = new ChoiceWidget();
       refRELAD.setValues(dataSet.relations);
+      refRELAD.setIgnoreCase(true);
       refCREED = new JRadioButton(panel.translate("Wit_AsPerson"));
       refCREED.setFont(PF);
       refNOTED = new JRadioButton(panel.translate("Wit_AsNote"));
@@ -211,7 +207,8 @@ public class WitnessesPanel extends JPanel implements ItemListener {
   public void setWitnesses(Entity ent) {
 
     for (int i = 0 ; i < numberWit ; i++) {
-       witnesses[i].refINDID.setSelectedIndex(-1);
+       witnesses[i].refINDID.setText("");
+       populateIndi(i);
        }
     if (ent == null) return;
 
@@ -255,25 +252,26 @@ public class WitnessesPanel extends JPanel implements ItemListener {
           break;
           }
        }
-
+    populateIndi(iWit);
+    
     return;
     }
 
 
-
   /**
-   * Selection list changed performed
-   * --> populate fields
+   * Process action performed
    */
-  public void itemStateChanged(ItemEvent e) {
+  public void actionPerformed(ActionEvent e) {
 
-    for (int i=0; i < numberWit ; i++) {
-        if (e.getItemSelectable() == witnesses[i].refINDID) {
-           populateIndi(i);
-           }
-       }
+	    for (int i=0; i < numberWit ; i++) {
+	        if (e.getSource() == witnesses[i].refINDID.getEditor().getEditorComponent()) {
+	           populateIndi(i);
+	           }
+	       }
      }
 
+
+ 
 
   /**
    * Populates fields upon user selecting an individual in one of the list boxes
@@ -286,12 +284,12 @@ public class WitnessesPanel extends JPanel implements ItemListener {
 
      // Surname
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:SURN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getLastName() : "");
      witnesses[i].refSURND.setText(str);
 
      // Given names
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:GIVN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getFirstName() : "");
      witnesses[i].refGIVND.setText(str);
 
      // Sex (check box ON if male)

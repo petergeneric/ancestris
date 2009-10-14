@@ -25,29 +25,23 @@ import docs.DataSet;
 
 import genj.gedcom.*;
 import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.io.FileAssociation;
 
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
 /**
  * The panel for entering source documents
  */
-public class ActPanel extends JPanel implements ItemListener {
+public class ActPanel extends JPanel implements ActionListener, ItemListener {
 
   /** calling panel */
   private DocsListener panel = null;
@@ -121,8 +115,9 @@ public class ActPanel extends JPanel implements ItemListener {
     // define elements of panel
     JLabel refSOURL = new JLabel(panel.translate("AlreadyRef"));
     refSOURL.setFont(PF);
-    refSOURD.setValues(sources);
-    refSOURD.addItemListener(this);
+    refSOURD.setValues(dataSet.sourcesStr);
+    refSOURD.addActionListener(this);
+    refSOURD.setIgnoreCase(true);
     JLabel refTypeL = new JLabel(panel.translate("Sour_Type"));
     refTypeL.setFont(PF);
     refTypeAct = new JRadioButton(panel.translate("Sour_Is_Doc"));
@@ -140,6 +135,7 @@ public class ActPanel extends JPanel implements ItemListener {
     JLabel refABBRL = new JLabel(panel.translate("Sour_Abbr"));
     refABBRL.setFont(PF);
     refABBRD.setValues(getAbbr());
+    refABBRD.setIgnoreCase(true);
     JLabel refAUTHL = new JLabel(panel.translate("Sour_Titl"));
     refAUTHL.setFont(PF);
     refAUTHD.setFont(BF);
@@ -174,6 +170,7 @@ public class ActPanel extends JPanel implements ItemListener {
        });
     refQUAYL.setEnabled(eventTag != null);
     refQUAYD.setEnabled(eventTag != null);
+    refQUAYD.setIgnoreCase(true);
     JLabel refFileL = new JLabel(panel.translate("Sour_File"));
     refFileL.setFont(PF);
     refFileD.setFont(BF);
@@ -195,7 +192,8 @@ public class ActPanel extends JPanel implements ItemListener {
     JLabel refREPOL = new JLabel(panel.translate("AlreadyRef"));
     refREPOL.setFont(PF);
     refREPOD.setValues(repos);
-    refREPOD.addItemListener(this);
+    refREPOD.addActionListener(this);
+    refREPOD.setIgnoreCase(true);
     JLabel refNAMEL = new JLabel(panel.translate("Repo_Nom"));
     refNAMEL.setFont(PF);
     refNAMED.setFont(BF);
@@ -386,8 +384,10 @@ public class ActPanel extends JPanel implements ItemListener {
   public void setSource(Entity ent) {
 
     if (ent == null) {
-       refSOURD.setSelectedIndex(-1);
-       refREPOD.setSelectedIndex(-1);
+       refSOURD.setText("");
+       refREPOD.setText("");
+       populateSource();
+       populateRepo();
        return;
        }
 
@@ -401,8 +401,10 @@ public class ActPanel extends JPanel implements ItemListener {
        }
 
     if (!exists(source)) {
-       refSOURD.setSelectedIndex(-1);
-       refREPOD.setSelectedIndex(-1);
+       refSOURD.setText("");
+       refREPOD.setText("");
+       populateSource();
+       populateRepo();
        return;
        }
 
@@ -412,6 +414,8 @@ public class ActPanel extends JPanel implements ItemListener {
           break;
           }
        }
+    populateSource();
+    populateRepo();
     return;
     }
 
@@ -421,16 +425,16 @@ public class ActPanel extends JPanel implements ItemListener {
   public void setRepository(Entity ent) {
 
     if (ent == null) {
-       refSOURD.setSelectedIndex(-1);
-       refREPOD.setSelectedIndex(-1);
+       refREPOD.setText("");
+       populateRepo();
        return;
        }
 
     String repo = ent.toString();
 
     if (!exists(repo)) {
-       refSOURD.setSelectedIndex(-1);
-       refREPOD.setSelectedIndex(-1);
+       refREPOD.setText("");
+       populateRepo();
        return;
        }
 
@@ -440,9 +444,24 @@ public class ActPanel extends JPanel implements ItemListener {
           break;
           }
        }
+    populateRepo();
     return;
     }
 
+
+  /**
+   * Process action performed
+   */
+  public void actionPerformed(ActionEvent e) {
+
+     if (e.getSource() == refSOURD.getEditor().getEditorComponent()) {
+         populateSource();
+         saveType();
+        }
+     if (e.getSource() == refREPOD.getEditor().getEditorComponent()) {
+        populateRepo();
+        }
+     }
 
   /**
    * Selection list changed performed
@@ -450,12 +469,9 @@ public class ActPanel extends JPanel implements ItemListener {
    */
   public void itemStateChanged(ItemEvent e) {
 
-     if (e.getItemSelectable() == refSOURD || e.getItemSelectable() == refTypeAct || e.getItemSelectable() == refTypeReg) {
+     if (e.getItemSelectable() == refTypeAct || e.getItemSelectable() == refTypeReg) {
         populateSource();
         saveType();
-        }
-     if (e.getItemSelectable() == refREPOD) {
-        populateRepo();
         }
      }
 
@@ -464,7 +480,7 @@ public class ActPanel extends JPanel implements ItemListener {
    */
   private String[] getAbbr() {
 
-     java.util.List<String> abbrs = new ArrayList();
+     java.util.List<String> abbrs = new ArrayList<String>();
      for (int i = 0; i < sources.length; i++) {
         Entity ent = (Entity) sources[i];
         Property prop = ent.getPropertyByPath("SOUR:ABBR");
@@ -581,7 +597,7 @@ public class ActPanel extends JPanel implements ItemListener {
      if (ent == null || prop == null) {
         refREPOD.setText("");
         }
-
+     populateRepo();
      }
 
    /**

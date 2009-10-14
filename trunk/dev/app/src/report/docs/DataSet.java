@@ -43,6 +43,11 @@ public class DataSet {
   public Entity[] indis;
   public Entity[] sources;
   public Entity[] repos;
+
+  public String[] familiesStr;
+  public String[] indisStr;
+  public String[] sourcesStr;
+  public String[] reposStr;
   public String[] places;
   public String[] occupations;
   public String[] relations;
@@ -61,12 +66,32 @@ public class DataSet {
    */
   public void initialiseData() {
     families = gedcom.getEntities(Gedcom.FAM, "FAM");
+    familiesStr = toStringList(families);
+
     indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
+    indisStr = toStringList(indis);
+    
     sources = gedcom.getEntities(Gedcom.SOUR, "SOUR");
+    sourcesStr = toStringList(sources);
+
     repos = gedcom.getEntities(Gedcom.REPO, "REPO");
+    reposStr = toStringList(repos);
+
     places = buildList(gedcom, "PLAC");
     occupations = buildList(gedcom, "OCCU");
     relations = buildList(gedcom, "RELA");
+  }
+
+  /**
+   * Convert list of entities into list of its strings
+   */
+  private String[] toStringList(Entity[] entityArray) {
+	  int l = entityArray.length;
+	  String[] listStr = new String[l];
+	  for (int i = 0; i < l; i++) {
+		  listStr[i] = entityArray[i].toString();
+	  }
+	  return listStr;
   }
 
   /**
@@ -75,8 +100,8 @@ public class DataSet {
   private String[] buildList(Gedcom gedcom, String tag) {
 
      Collection entities = gedcom.getEntities();
-     List<Property> props = new ArrayList();
-     List<String> listStr = new ArrayList();
+     List<Property> props = new ArrayList<Property>();
+     List<String> listStr = new ArrayList<String>();
      for (Iterator it = entities.iterator(); it.hasNext();) {
         Entity ent = (Entity) it.next();
         getPropertiesRecursively((Property)ent, props, tag);

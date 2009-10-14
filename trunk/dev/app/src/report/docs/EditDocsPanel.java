@@ -19,13 +19,7 @@
  */
 package docs;
 
-import docs.panels.*;
-
 import genj.report.*;
-import genj.edit.actions.Redo;
-import genj.edit.actions.Undo;
-import genj.edit.beans.BeanFactory;
-import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
@@ -35,51 +29,29 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertyXRef;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ButtonHelper;
-import genj.util.swing.PopupWidget;
-import genj.window.WindowBroadcastListener;
 import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Component;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.Box;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
 import javax.swing.border.EtchedBorder;
 import javax.swing.BoxLayout;
 
-import spin.Spin;
 
 /**
  * Component for editing genealogic entity properties

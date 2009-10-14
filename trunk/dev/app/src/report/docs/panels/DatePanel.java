@@ -23,28 +23,20 @@ import docs.HelperDocs;
 import docs.DataSet;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
 /**
  * The panel for entering an event date and official information
  */
-public class DatePanel extends JPanel implements ItemListener {
+public class DatePanel extends JPanel implements ActionListener {
 
   /** calling panel */
   private DocsListener panel = null;
@@ -74,14 +66,13 @@ public class DatePanel extends JPanel implements ItemListener {
   /**
    * Constructor
    */
-  public DatePanel(Gedcom gedcom, DocsListener panel, Entity[] list, DataSet dataSet, String eventTag) {
+  public DatePanel(Gedcom gedcom, DocsListener panel, DataSet dataSet, String eventTag) {
 
 
     super();
 
     this.gedcom = gedcom;
     this.panel = panel;
-    this.list = list;
     this.eventTag = eventTag;
     this.dataSet = dataSet;
 
@@ -90,8 +81,9 @@ public class DatePanel extends JPanel implements ItemListener {
     // define elements of panel
     JLabel refLISTL = new JLabel(panel.translate("AlreadyRef"));
     refLISTL.setFont(PF);
-    refLISTD.setValues(list);
-    refLISTD.addItemListener(this);
+    refLISTD.setValues(eventTag.equals("FAM:MARR") ? dataSet.familiesStr : dataSet.indisStr);
+    refLISTD.addActionListener(this);
+    refLISTD.setIgnoreCase(true);
     JLabel refDATEL = new JLabel(panel.translate("Date"));
     refDATEL.setFont(PF);
     refDATED.setFont(BF);
@@ -101,6 +93,7 @@ public class DatePanel extends JPanel implements ItemListener {
     JLabel refPLACL = new JLabel(panel.translate("Place"));
     refPLACL.setFont(PF);
     refPLACD.setValues(dataSet.places);
+    refPLACD.setIgnoreCase(true);
 
      // set grid
     this.setLayout(new GridBagLayout());
@@ -120,7 +113,7 @@ public class DatePanel extends JPanel implements ItemListener {
     this.add(refDATED, c);
     c.gridx = 2; c.gridy = 1;
     this.add(refAGNCL, c);
-    c.gridx = 3; c.gridy = 1; c.ipadx = 150; c.gridwidth = GridBagConstraints.REMAINDER;
+    c.gridx = 3; c.gridy = 1; c.ipadx = 100; c.gridwidth = GridBagConstraints.REMAINDER;
     this.add(refAGNCD, c);
 
     c.gridx = 0; c.gridy = 2;
@@ -130,18 +123,16 @@ public class DatePanel extends JPanel implements ItemListener {
 
     }
 
- /**
-   * Selection list changed performed
-   * --> populate fields
+  /**
+   * Process action performed
    */
-  public void itemStateChanged(ItemEvent e) {
+  public void actionPerformed(ActionEvent e) {
 
-     if (e.getItemSelectable() == refLISTD && !busy) {
-        setEntity(getEntity(refLISTD.getText()));
-        refLISTD.hidePopup(); // sometimes popup remains open, not sure why?!?! so close it
-        refDATED.requestFocus(true);
-        }
+     if (e.getSource() == refLISTD.getEditor().getEditorComponent() && !busy) {
+         setEntity(getEntity(refLISTD.getText()));
+     	}
      }
+
 
   /**
    * Populates fields upon user selecting an entity
@@ -149,15 +140,16 @@ public class DatePanel extends JPanel implements ItemListener {
    */
   public void setEntity(Entity ent) {
 
-     if (ent == null) return;
-
      Property prop = null;
      String str = "";
 
      busy = true;
 
      // List box
-     refLISTD.getTextEditor().setText(ent.toString());
+     String existingText = refLISTD.getTextEditor().getText().trim();
+     if (existingText.length() == 0 && ent != null) {
+    	 refLISTD.setText(ent.toString());
+     }
 
      // Date
      if (ent != null) prop = ent.getPropertyByPath(eventTag+":DATE");
@@ -178,6 +170,8 @@ public class DatePanel extends JPanel implements ItemListener {
      if (prop != null) str = prop.toString(); else str = "";
      refPLACD.setText(str);
      refPLACD.getTextEditor().setCaretPosition(0);
+
+     // Propagate
      panel.populateAll(ent);
 
      busy = false;

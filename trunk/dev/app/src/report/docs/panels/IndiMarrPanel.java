@@ -23,30 +23,20 @@ import docs.HelperDocs;
 import docs.DataSet;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
 import genj.gedcom.time.PointInTime;
-import genj.gedcom.time.Delta;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
 /**
  * The panel for entering people of a marriage document
  */
-public class IndiMarrPanel extends JPanel implements ItemListener {
+public class IndiMarrPanel extends JPanel implements ActionListener {
 
   /** calling panel */
   private DocsListener panel = null;
@@ -110,8 +100,9 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
     // define elements of panel
     JLabel refINDIL = new JLabel(male ? panel.translate("mar_MaleRef") : panel.translate("mar_FemaleRef"));
     refINDIL.setFont(PF);
-    refINDID.setValues(indis);
-    refINDID.addItemListener(this);
+    refINDID.setValues(dataSet.indisStr);
+    refINDID.addActionListener(this);
+    refINDID.setIgnoreCase(true);
     JLabel refSURNL = new JLabel(panel.translate("mar_Last"));
     refSURNL.setFont(PF);
     refSURND.setFont(BF);
@@ -124,21 +115,25 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
     JLabel refPLACL = new JLabel(male ? panel.translate("mar_MaleBorn") : panel.translate("mar_FemaleBorn"));
     refPLACL.setFont(PF);
     refPLACD.setValues(dataSet.places);
+    refPLACD.setIgnoreCase(true);
     JLabel refDATEL = new JLabel(panel.translate("mar_On"));
     refDATEL.setFont(PF);
     refDATED.setFont(BF);
     JLabel refOCCUL = new JLabel(panel.translate("mar_Occu"));
     refOCCUL.setFont(PF);
     refOCCUD.setValues(dataSet.occupations);
+    refOCCUD.setIgnoreCase(true);
     JLabel refRESIL = new JLabel(panel.translate("mar_Place"));
     refRESIL.setFont(PF);
     refRESID.setValues(dataSet.places);
+    refRESID.setIgnoreCase(true);
 
     JLabel refFATHERL = new JLabel(male ? panel.translate("mar_SonOf") : panel.translate("mar_DaughterOf"));
     JLabel refFINDIL = new JLabel(panel.translate("mar_MaleRef"));
     refFINDIL.setFont(PF);
-    refFINDID.setValues(indis);
-    refFINDID.addItemListener(this);
+    refFINDID.setValues(dataSet.indisStr);
+    refFINDID.addActionListener(this);
+    refFINDID.setIgnoreCase(true);
     JLabel refFSURNL = new JLabel(panel.translate("mar_Last"));
     refFSURNL.setFont(PF);
     refFSURND.setFont(BF);
@@ -151,18 +146,22 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
     JLabel refFBPLACL = new JLabel(panel.translate("mar_MaleBorn"));
     refFBPLACL.setFont(PF);
     refFBPLACD.setValues(dataSet.places);
+    refFBPLACD.setIgnoreCase(true);
     JLabel refFBDATEL = new JLabel(panel.translate("mar_On"));
     refFBDATEL.setFont(PF);
     refFBDATED.setFont(BF);
     JLabel refFOCCUL = new JLabel(panel.translate("mar_Occu"));
     refFOCCUL.setFont(PF);
     refFOCCUD.setValues(dataSet.occupations);
+    refFOCCUD.setIgnoreCase(true);
     JLabel refFRESIL = new JLabel(panel.translate("mar_Place"));
     refFRESIL.setFont(PF);
     refFRESID.setValues(dataSet.places);
+    refFRESID.setIgnoreCase(true);
     JLabel refFDPLACL = new JLabel(panel.translate("mar_MaleDied"));
     refFDPLACL.setFont(PF);
     refFDPLACD.setValues(dataSet.places);
+    refFDPLACD.setIgnoreCase(true);
     JLabel refFDDATEL = new JLabel(panel.translate("mar_On"));
     refFDDATEL.setFont(PF);
     refFDDATED.setFont(BF);
@@ -170,8 +169,9 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
     JLabel refMOTHERL = new JLabel(panel.translate("mar_AndOf"));
     JLabel refMINDIL = new JLabel(panel.translate("mar_FemaleRef"));
     refMINDIL.setFont(PF);
-    refMINDID.setValues(indis);
-    refMINDID.addItemListener(this);
+    refMINDID.setValues(dataSet.indisStr);
+    refMINDID.addActionListener(this);
+    refMINDID.setIgnoreCase(true);
     JLabel refMSURNL = new JLabel(panel.translate("mar_Last"));
     refMSURNL.setFont(PF);
     refMSURND.setFont(BF);
@@ -184,18 +184,22 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
     JLabel refMBPLACL = new JLabel(panel.translate("mar_FemaleBorn"));
     refMBPLACL.setFont(PF);
     refMBPLACD.setValues(dataSet.places);
+    refMBPLACD.setIgnoreCase(true);
     JLabel refMBDATEL = new JLabel(panel.translate("mar_On"));
     refMBDATEL.setFont(PF);
     refMBDATED.setFont(BF);
     JLabel refMOCCUL = new JLabel(panel.translate("mar_Occu"));
     refMOCCUL.setFont(PF);
     refMOCCUD.setValues(dataSet.occupations);
+    refMOCCUD.setIgnoreCase(true);
     JLabel refMRESIL = new JLabel(panel.translate("mar_Place"));
     refMRESIL.setFont(PF);
     refMRESID.setValues(dataSet.places);
+    refMRESID.setIgnoreCase(true);
     JLabel refMDPLACL = new JLabel(panel.translate("mar_FemaleDied"));
     refMDPLACL.setFont(PF);
     refMDPLACD.setValues(dataSet.places);
+    refMDPLACD.setIgnoreCase(true);
     JLabel refMDDATEL = new JLabel(panel.translate("mar_On"));
     refMDDATEL.setFont(PF);
     refMDDATED.setFont(BF);
@@ -352,7 +356,10 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
   public void setIndi(Indi indi) {
 
     if (indi == null) {
-       refINDID.setSelectedIndex(-1);
+       refINDID.setText("");
+       populateFather();
+       populateMother();
+       populateBrideGroom();
        return;
        }
     String str = indi.toString();
@@ -363,6 +370,7 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
           break;
           }
        }
+    populateBrideGroom();
     return;
     }
 
@@ -387,26 +395,49 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
     }
 
   /**
-   * Selection list changed performed
-   * --> populate indi: indi to fields
+   * Process action performed
    */
-  public void itemStateChanged(ItemEvent e) {
+  public void actionPerformed(ActionEvent e) {
 
-     if (e.getItemSelectable() == refINDID) {
-        populateIndi(refINDID, refSURND, refGIVND, refAGED, refPLACD, refDATED, refOCCUD, refRESID, null, null);
-        refFINDID.setSelectedIndex(getParent(refINDID, true));
-        refFINDID.getTextEditor().setCaretPosition(0);
-        refMINDID.setSelectedIndex(getParent(refINDID, false));
-        refMINDID.getTextEditor().setCaretPosition(0);
-        }
-     if (e.getItemSelectable() == refFINDID) {
-        populateIndi(refFINDID, refFSURND, refFGIVND, refFAGED, refFBPLACD, refFBDATED, refFOCCUD, refFRESID, refFDPLACD, refFDDATED);
-        }
-     if (e.getItemSelectable() == refMINDID) {
-        populateIndi(refMINDID, refMSURND, refMGIVND, refMAGED, refMBPLACD, refMBDATED, refMOCCUD, refMRESID, refMDPLACD, refMDDATED);
-        }
+     if (e.getSource() == refINDID.getEditor().getEditorComponent()) {
+    	 populateBrideGroom();
+     	}
+     if (e.getSource() == refFINDID.getEditor().getEditorComponent()) {
+    	 populateFather();
+     	}
+     if (e.getSource() == refMINDID.getEditor().getEditorComponent()) {
+    	 populateMother();
+     	}
      }
 
+  /**
+   * Populate father
+   */
+  public void populateFather() {
+	  populateIndi(refFINDID, refFSURND, refFGIVND, refFAGED, refFBPLACD, refFBDATED, refFOCCUD, refFRESID, refFDPLACD, refFDDATED);
+  }
+
+  /**
+   * Populate mother
+   */
+  public void populateMother() {
+	  populateIndi(refMINDID, refMSURND, refMGIVND, refMAGED, refMBPLACD, refMBDATED, refMOCCUD, refMRESID, refMDPLACD, refMDDATED);
+  }
+
+  /**
+   * Populate groom/bride
+   */
+  public void populateBrideGroom() {
+      populateIndi(refINDID, refSURND, refGIVND, refAGED, refPLACD, refDATED, refOCCUD, refRESID, null, null);
+      refFINDID.setSelectedIndex(getParent(refINDID, true));
+      refFINDID.getTextEditor().setCaretPosition(0);
+ 	  populateFather();
+      refMINDID.setSelectedIndex(getParent(refINDID, false));
+      refMINDID.getTextEditor().setCaretPosition(0);
+ 	  populateMother();
+  }
+
+  
 
   /**
    * Populates fields upon user selecting an individual in one of the list boxes
@@ -420,12 +451,12 @@ public class IndiMarrPanel extends JPanel implements ItemListener {
 
      // Surname
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:SURN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getLastName() : "");
      surn.setText(str);
 
      // Given names
      if (indi != null) prop = indi.getPropertyByPath("INDI:NAME:GIVN");
-     if (prop != null) str = prop.toString(); else str = "";
+     if (prop != null) str = prop.toString(); else str = (indi != null ? indi.getFirstName() : "");
      givn.setText(str);
 
      // Age depends on the so get it from parent panel

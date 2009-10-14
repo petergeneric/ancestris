@@ -20,28 +20,17 @@
 package docs.panels;
 
 import docs.EditDocsPanel;
-import docs.HelperDocs;
-import docs.ImagesDocs;
 
 import genj.gedcom.*;
-import genj.util.Registry;
-import genj.util.GridBagHelper;
 import genj.util.swing.*;
-import genj.view.ContextProvider;
-import genj.view.ViewContext;
-import genj.io.FileAssociation;
 
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.File;
 import java.util.List;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.EtchedBorder;
 
 
@@ -132,7 +121,7 @@ public class CopyPanel extends JPanel implements ActionListener  {
     // define elements of panel
     matches = new Match[numberEntities];
     int i = 0;
-    for (Iterator it = entities.iterator(); it.hasNext();) {
+    for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
        Entity ent = (Entity) it.next();
        matches[i] = new Match(gedcom1, null, ent);
 
