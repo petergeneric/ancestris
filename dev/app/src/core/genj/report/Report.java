@@ -357,13 +357,21 @@ public abstract class Report implements Cloneable {
 
   /**
    * An implementation of Report can ask the user for a file with this method.
+   */
+  public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension) {
+      return getFileFromUser(title, button, askForOverwrite, extension,false);
+  }
+
+  /**
+   * An implementation of Report can ask the user for a file with this method.
    *
    * @param title  file dialog title
    * @param button  file dialog OK button text
    * @param askForOverwrite  whether to confirm overwriting files
    * @param extension  extension of files to display
+   * @param appendExtension whether to append extension to filename if no extension has been set
    */
-  public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension) {
+  public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension,boolean appendExtension) {
 
     String key = getClass().getName()+".file";
 
@@ -382,6 +390,10 @@ public abstract class Report implements Cloneable {
     if (rc!=JFileChooser.APPROVE_OPTION||result==null)
       return null;
 
+    if (appendExtension && (result.getName().indexOf('.') == -1)){
+		result = new File(result.getAbsoluteFile()+"."+extension);
+	}
+    
     // choose an existing file?
     if (result.exists()&&askForOverwrite) {
       rc = windowManager.openDialog(null, title, WindowManager.WARNING_MESSAGE, ReportView.RESOURCES.getString("report.file.overwrite"), Action2.yesNo(), owner);
