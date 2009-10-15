@@ -44,7 +44,6 @@ package gedart;
  * TODO:	Ajouter un fichier de properties pour pouvoir demander des options 
  * 
  */
-import gedart.DocReport;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -55,8 +54,7 @@ import genj.util.swing.Action2;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 
@@ -96,7 +94,6 @@ public class ReportGedart extends Report {
 	// private PrintWriter out;
 	private DocReport mydoc;
 	private Gedcom theGedcom;
-	
 	
 	public Object accepts(Object context) {
 		return (gedartTemplates.toArray(context));
@@ -170,16 +167,8 @@ public class ReportGedart extends Report {
 		if (usetemplate == null)
 			usetemplate = gedartTemplatesOption[template];
 		
-		//		if (usetemplate.equals("default")){
-//			thetemplate = "gedart";
-//			extension="html";
-//		} else {
-//			thetemplate = usetemplate;
-//			int index = thetemplate.lastIndexOf('.');
-//			if (index > 0) extension = thetemplate.substring(index);
-//		}
-
 		thetemplate = usetemplate.getPath();
+		LOG.log(Level.INFO,"template:"+thetemplate );
 		extension = usetemplate.getFormat();
 		// if only one item, special case
 		File file = null;
@@ -193,19 +182,21 @@ public class ReportGedart extends Report {
 		// TODO: voir mode multifile if (isOneFile){
 		// create an output document
 		// ask for file
+		LOG.log(Level.INFO,"tofile="+saveReportToFile);
 		if (!saveReportToFile)
 			try{
 				file = File.createTempFile("GenJ-", "-gedart");
 			}catch (IOException ioe) {file = null;}
 		else{
-			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, false,extension);
-			if ((file != null) &&  file.getName().indexOf('.') == -1){
-				file = new File(file.getAbsoluteFile()+"."+extension);
-			}
+			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true,extension,true);
 		}
 
-		if (file == null) return;
+		if (file == null){
+			LOG.log(Level.INFO,"file = null");
+			return;
+		}
 
+		LOG.log(Level.INFO,"file="+file);
 		// open output stream
 		try {
 			mydoc = new DocReport(file, gedartTemplates,theGedcom.getEncoding());
@@ -244,6 +235,7 @@ public class ReportGedart extends Report {
 				showFileToUser(file);
 			println("Taille du fichier: "+file.length());
 		}
+		LOG.log(Level.INFO,"taille du fichier={0}",file.length());
 	}
 
 	/**
