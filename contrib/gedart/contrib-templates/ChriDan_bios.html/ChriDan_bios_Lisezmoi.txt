@@ -1,0 +1,34 @@
+FICHE "BIOGRAPHIQUE" ou FICHE "HISTOIRE DES FAMILLES"
+
+La fiche "biographique" ou fiche d'"histoire des familles" affiche automatiquement, pour deux lignées d'ancêtres, un texte sur l'histoire d'une famille dont le nom apparaît dans l'arbre avec l'arrivée d'une nouvelle épouse ainsi qu'une photo relative à leur village.
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.genj/gedart", ouvrez alors votre GenJ, cliquer droit sur un individu, choisir dans la liste des rapports "Fiches de renseignements", puis dans la liste déroulante, choisir "biographie de l'individu ", GenJ vous demande un nom de fichier (il faut auparavant avoir pensé à sélectionner dans "Rapports --> Options --> Montrer le résultat dans un fichier"), sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+
+Ouvrez alors le fichier obtenu dans Firefox.Vous pouvez l'imprimer (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc...". vous pouvez également varier dans les "préférences" de Firefox, avec la taille de la police, pour avoir une mise en page correspondante à vos souhaits. Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussir les option d'impression des en-têtes et divers.
+
+ATTENTION
+
+Pour préparer le rapport, il convient de faire :
+1/ une note rattachée au nom(NAME) (et pas à l'individu) chaque fois, que par un mariage et une épouse, vous introduisez une nouvelle lignée patronymique dans votre base.
+Dans cette note, répondez aux questions suivantes :
+a) apparition du patronyme : Jeanne ... a épousé Michel .... à .... le ......
+b) Ancêtre le plus ancien : Jean .... s'est marié en 16xx à Saint-Truc.
+c) Les .... étaient [leur métier] à .....
+d) Ils habitaient dans cette commune depuis ....ans au hameau de ....
+
+ATTENTION : LONGUEUR MAXIMUM pour une note : 600 caractères pour garder la présentation de la fiche sur une page
+
+2/ d'indiquer la résidence de l'épouse (RESI) et d'y attacher une photo du village ou de l'église ou du hameau ou de la maison avec OBJE (créez le sous TAG titre de la photo - TITL- car il n'est pas créé automatiquement avec OBJE).
+Remplissez l'URL, c'est-à-dire le CHEMIN de votre fichier sur votre disque dur : ex sous Linux, pour l'image "vue_ailleux_domois.jpg" /home/compaq/iMAGES/images/vue_ailleux_domois.jpg
+
+3/ Impression : vous pouvez imprimer directement la sortie html, des sauts de pages sont insérées automatiquement (vérifiez-le avec la fonction "aperçu"). Je vous conseille malgré tout de produire d'abord un fichier PDF (dans Konqueror, choisir "Imprimante --> PDF", sous Windows, installez PDF Créator). Puis vous imprimerez votre PDF à partir de KPDF ou Acrobat Reader. Avantage : vous évitez les différences d'aspect suivant les navigateurs, vous pouvez envoyer sans déformation le fichier à vos "cousins".
+
+REMARQUES COMPLÉMENTAIRES :
+Le but est de sortir des fiches différentes de nos arbres traditionnels pour constituer, en les réunissant, un petit LIVRE DES FAMILLES et patronymes illustré susceptible de plus intéresser nos proches, pour qui nos graphiques sont souvent abscons ou lassants.
+Ppour compter le nombre de caractères de votre note : collez votre texte dans OpenOffice : allez à --> Fichier --> Propriétés --> Statistique ou dans Kword : allez à --> Fichier ---> Statistiques
+Si vous garnissez votre gedcom avec ces notes et ces photos, le rapport Chridanbio vous fera des fiches agréables et vous fera regarder votre généalogie, y compris par vous, avec un nouveau regard..
+
+(texte du 29/09/2009 : Daniel Durand avec les remarques d'Antony Cyk et René Lachaize)
+
+
+
