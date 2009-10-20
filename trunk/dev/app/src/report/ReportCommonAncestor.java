@@ -20,6 +20,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class ReportCommonAncestor extends ComponentReport {
     private static final int SPACE_BEFORE_DATE = 20;
     private static final int SHADOW_SIZE = 3;
     private static final int SPACE_BETWEEN_BORDER_AND_RECTANGLE = 5;
+    private static final int SPACE_BETWEEN_BORDER_AND_TITLE = 25;
     
    
     
@@ -67,12 +69,20 @@ public class ReportCommonAncestor extends ComponentReport {
     private Font titleFontStyle;
     private Font smallFontStyle;
     
+    private final int YEAR_LIMIT_NUMBER = 75;
+    private final int YEAR_LIMIT = Calendar.getInstance().get(Calendar.YEAR)-YEAR_LIMIT_NUMBER;
+    
     
     /** Whether to use colors (or only black and white). */
     public boolean use_colors = true;
     
     /** Whether to display indi and family ids. */
     public boolean display_ids = true;
+    
+    /** Whether to display under 75 year dates. */
+    public boolean displayRecentYears = true;
+    
+   
 	
     public int ufont_name=0;
     public String ufont_names[] = { translate("ufont_name.0"),
@@ -156,39 +166,39 @@ public class ReportCommonAncestor extends ComponentReport {
 	public void start(Indi[] indis) {
 
 		// first and second indis
-		Indi indi = indis[0];
-		Indi other = indis[1];
+		Indi firstSelectedIndi = indis[0];
+		Indi secondSelectedIndi = indis[1];
 
 		// search the common ancestor
 		Indi ancestor = null;
-		if(indi.isAncestorOf(other)){
-			ancestor = indi;
-		}else if (other.isAncestorOf(indi)){
-			ancestor = other;
+		if(firstSelectedIndi.isAncestorOf(secondSelectedIndi)){
+			ancestor = firstSelectedIndi;
+		}else if (secondSelectedIndi.isAncestorOf(firstSelectedIndi)){
+			ancestor = secondSelectedIndi;
 		}else{
-			ancestor = getCommonAncestor(indi, other);
+			ancestor = getCommonAncestor(firstSelectedIndi, secondSelectedIndi);
 		}
 		
 		// if the common ancestor exists
 		if(ancestor!=null){
-			List<Step> indiDirectLinks = new ArrayList<Step>();
-			indiDirectLinks.add(new Step(getLastFamilyWhereSpouse(indi),indi, indi.getSex()));
-			getAncestorListBetween(ancestor, indi, indiDirectLinks);
-			Collections.reverse(indiDirectLinks);
-			LOG.fine("indi's link number : "+indiDirectLinks.size());
+			List<Step> firstIndiDirectLinks = new ArrayList<Step>();
+			firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(firstSelectedIndi),firstSelectedIndi, firstSelectedIndi.getSex()));
+			getAncestorListBetween(ancestor, firstSelectedIndi, firstIndiDirectLinks);
+			Collections.reverse(firstIndiDirectLinks);
+			LOG.fine("indi's link number : "+firstIndiDirectLinks.size());
 			
-			List<Step> otherDirectLinks = new ArrayList<Step>();
+			List<Step> secondIndiDirectLinks = new ArrayList<Step>();
 		
-			otherDirectLinks.add(new Step(getLastFamilyWhereSpouse(other),other, other.getSex()));
-			getAncestorListBetween(ancestor, other, otherDirectLinks);
-			Collections.reverse(otherDirectLinks);
-			LOG.fine("other's link number : "+otherDirectLinks.size());
+			secondIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(secondSelectedIndi),secondSelectedIndi, secondSelectedIndi.getSex()));
+			getAncestorListBetween(ancestor, secondSelectedIndi, secondIndiDirectLinks);
+			Collections.reverse(secondIndiDirectLinks);
+			LOG.fine("other's link number : "+secondIndiDirectLinks.size());
 
 			GraphicsOutput output = outputs.createOutput(this);
 	        if (output == null) // report canceled
 	            return;
 	        try {
-	            output.output(new Renderer(indi, other, indiDirectLinks, otherDirectLinks));
+	            output.output(new Renderer(firstSelectedIndi, secondSelectedIndi, firstIndiDirectLinks, secondIndiDirectLinks));
 	            output.display(this);
 	        } catch (IOException e) {
 	            println("error");
@@ -248,22 +258,22 @@ public class ReportCommonAncestor extends ComponentReport {
 	 * @param other
 	 * @return
 	 */
-	private Indi getCommonAncestor(Indi indi, Indi other) {
+	private Indi getCommonAncestor(Indi firstIndi, Indi secondIndi) {
 		// 
 
-		Indi father = indi.getBiologicalFather();
+		Indi father = firstIndi.getBiologicalFather();
 		if (father != null) {
-			if (father.isAncestorOf(other))
+			if (father.isAncestorOf(secondIndi))
 				return father;
-			Indi ancestor = getCommonAncestor(father, other);
+			Indi ancestor = getCommonAncestor(father, secondIndi);
 			if (ancestor != null)
 				return ancestor;
 		}
-		Indi mother = indi.getBiologicalMother();
+		Indi mother = firstIndi.getBiologicalMother();
 		if (mother != null) {
-			if (mother.isAncestorOf(other))
+			if (mother.isAncestorOf(secondIndi))
 				return mother;
-			Indi ancestor = getCommonAncestor(mother, other);
+			Indi ancestor = getCommonAncestor(mother, secondIndi);
 			if (ancestor != null)
 				return ancestor;
 		}
@@ -395,10 +405,10 @@ public class ReportCommonAncestor extends ComponentReport {
 	 */
 	private class Renderer implements GraphicsRenderer {
 
-	        private Indi indi;
-	        private Indi other;
-	        private List<Step> indiDirectLinks;
-	        private List<Step> otherDirectLinks;
+	        private Indi firstIndi;
+	        private Indi secondIndi;
+	        private List<Step> firstIndiDirectLinks;
+	        private List<Step> secondIndiDirectLinks;
 
 	       
 
@@ -412,22 +422,26 @@ public class ReportCommonAncestor extends ComponentReport {
 	        /* ----------------- */
 	        /**
 	         * renderer's constructor. The entry point to the ouput generation
-	         * @param indi
-	         * @param other
+	         * @param firstIndi
+	         * @param secondIndi
 	         * @param indiDirectLinks
 	         * @param otherDirectLinks
 	         */
-	        public Renderer(Indi indi, Indi other, List<Step> indiDirectLinks, List<Step> otherDirectLinks) {
-	            this.indi = indi;
-	            this.other = other;
-	            this.indiDirectLinks = indiDirectLinks;
-	            this.otherDirectLinks = otherDirectLinks;
+	        public Renderer(Indi firstIndi, Indi secondIndi, List<Step> firstIndiDirectLinks, List<Step> secondIndiDirectLinks) {
+	            this.firstIndi = firstIndi;
+	            this.secondIndi = secondIndi;
+	            this.firstIndiDirectLinks = firstIndiDirectLinks;
+	            this.secondIndiDirectLinks = secondIndiDirectLinks;
 
 //	            int generations = getGenerationCount(indi, max_generations);
 	            width = 3 * FAMILY_WIDTH + FAMILY_WIDTH/2;
-	            height = (Math.max(indiDirectLinks.size(), otherDirectLinks.size())) * FAMILY_HEIGH
-	            		+ (Math.max(indiDirectLinks.size(), otherDirectLinks.size())+3) * SPACE_BETWEEN_RECTANGLES
-	            		+ SPACE_BEFORE_DATE;
+	            height = (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size())) * FAMILY_HEIGH
+	            		+ (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size())+3) * SPACE_BETWEEN_RECTANGLES
+	            		+ SPACE_BEFORE_DATE
+	            		+ SPACE_BETWEEN_TITLE_AND_COMMON_ANCESTOR
+	            		+ SPACE_BETWEEN_BORDER_AND_RECTANGLE
+	            		+ SPACE_BETWEEN_BORDER_AND_TITLE;
+
 	            cx = width / 2;
 	        }
 
@@ -451,22 +465,23 @@ public class ReportCommonAncestor extends ComponentReport {
 	            graphics.setFont(plainFontStyle);
 	            graphics.setStroke(new BasicStroke(2));
 	            defaultTransform = new AffineTransform(graphics.getTransform());
-	            cy += 10;
-	            int nbMaxGen = Math.max(indiDirectLinks.size(), otherDirectLinks.size());
+	            cy += SPACE_BETWEEN_BORDER_AND_RECTANGLE;
+	            int nbMaxGen = Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size());
 	            
 	            // the title
 	            graphics.setFont(titleFontStyle);
-	            centerString(graphics, getTitleLine(indi, other, nbMaxGen), (int)cx, (int)cy+15 );
+	            cy+=SPACE_BETWEEN_BORDER_AND_TITLE;
+	            centerString(graphics, getTitleLine(firstIndi, secondIndi, nbMaxGen), (int)cx, (int)cy );
 	            graphics.setFont(plainFontStyle);
 	            cy+=SPACE_BETWEEN_TITLE_AND_COMMON_ANCESTOR;
 	            
 	            //the common ancestor
-	            render(graphics, indiDirectLinks.get(0),Position.CENTER);
+	            render(graphics, firstIndiDirectLinks.get(0),Position.CENTER);
 	            graphics.drawLine((int)cx, (int)cy+FAMILY_HEIGH, (int)cx, (int)cy+FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES);
-	            if(indiDirectLinks.size()>1){
+	            if(firstIndiDirectLinks.size()>1){
 	            	graphics.drawLine((int)cx-FAMILY_WIDTH, (int)cy+FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES, (int)cx, (int)cy+FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES);
 	            }
-	            if(otherDirectLinks.size()>1){
+	            if(secondIndiDirectLinks.size()>1){
 	            	graphics.drawLine((int)cx, (int)cy+FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES, (int)cx+FAMILY_WIDTH, (int)cy+FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES);
 	            }
 	            
@@ -475,13 +490,13 @@ public class ReportCommonAncestor extends ComponentReport {
 	            // the two branches
 	            for (int i=1;i<nbMaxGen;i++) {
 					cy+=FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES;
-					if(indiDirectLinks.size()>i){
+					if(firstIndiDirectLinks.size()>i){
 						 graphics.drawLine((int)cx-FAMILY_WIDTH, (int)cy-SPACE_BETWEEN_RECTANGLES, (int)cx-FAMILY_WIDTH, (int)cy);
-						render(graphics, indiDirectLinks.get(i),Position.LEFT);
+						render(graphics, firstIndiDirectLinks.get(i),Position.LEFT);
 					}
-					if(otherDirectLinks.size()>i){
+					if(secondIndiDirectLinks.size()>i){
 						 graphics.drawLine((int)cx+FAMILY_WIDTH, (int)cy-SPACE_BETWEEN_RECTANGLES, (int)cx+FAMILY_WIDTH, (int)cy);
-						render(graphics, otherDirectLinks.get(i),Position.RIGHT);
+						render(graphics, secondIndiDirectLinks.get(i),Position.RIGHT);
 					}
 				}
 	            
@@ -576,7 +591,7 @@ public class ReportCommonAncestor extends ComponentReport {
 	        	
 	        	// Marriage if it does exist
 	        	if(step.famWhereSpouse!=null && step.famWhereSpouse.getMarriageDate()!=null){
-	        		centerString(graphics, getMariageLine(step),(int)cxStep, (int)cy + SPACE_BETWEEN_LINES*5);
+	        		centerString(graphics, getMarriageLine(step),(int)cxStep, (int)cy + SPACE_BETWEEN_LINES*5);
 	        	}
 	        }
 	        
@@ -600,32 +615,47 @@ public class ReportCommonAncestor extends ComponentReport {
 	        
 	        /* ----------------- */
 	        /**
-	         * @param indi
-	         * @return
+	         * build the date line for an Indi, (ie) his birth and death dates<br/>
+	         * if the option "do not display recent years" is selected, builds a blank line instead of the dates
+	         * @param indi the indi to build the date line for
+	         * @return the date line formatted as follow : "(birth date - death date)"
 	         */
 	        private String getDateLine(Indi indi){
+	        	StringBuffer sb =  new StringBuffer();
 	        	
-	        	return new StringBuffer("("+indi.getBirthDate(true))
-				        	.append(" - ")
-				        	.append(indi.getDeathDate(true))
-				        	.append(")")
-				        	.toString();
+	        	if(displayRecentYears 
+	        			|| indi.getDeathDate(true).getStart().getYear()<YEAR_LIMIT  
+	        			|| indi.getBirthDate(true).getStart().getYear()<YEAR_LIMIT){
+	        		sb.append("("+indi.getBirthDate(true))
+		        	.append(" - ")
+		        	.append(indi.getDeathDate(true))
+		        	.append(")");
+	        	}
+
+	        	return sb.toString();
 	        }
 	        
 	        /* ----------------- */
 	        /**
-	         * @param step
-	         * @return
+	       * build the marriage line for a step, (ie) the marriage date<br/>
+	         * if the option "do not display recent years" is selected, builds a blank line instead of the whole marriage line
+	         * @param step the couple to build the marriage line for
+	         * @return the marriage line formatted as follow : "marriage on : marriage date [couple ID]")
 	         */
-	        private String getMariageLine(Step step){
-	        	StringBuffer sb = new StringBuffer(translate("marriage.date"))
-							        	.append(" ")
-							        	.append(step.famWhereSpouse.getMarriageDate(true));
+	        private String getMarriageLine(Step step){
+	        	StringBuffer sb = new StringBuffer();
 	        	
-	        	if(display_ids){
-	        		sb.append(" [")
-	        		.append(step.famWhereSpouse.getId())
-	        		.append("]");
+	        	if(displayRecentYears || step.famWhereSpouse.getMarriageDate(true).getStart().getYear()<YEAR_LIMIT){
+
+		        	sb.append(translate("marriage.date"))
+								        	.append(" ")
+								        	.append(step.famWhereSpouse.getMarriageDate(true));
+		        	
+		        	if(display_ids){
+		        		sb.append(" [")
+		        		.append(step.famWhereSpouse.getId())
+		        		.append("]");
+		        	}
 	        	}
 
 				return sb.toString();
