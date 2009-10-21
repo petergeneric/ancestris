@@ -118,7 +118,7 @@ background-color: #ffff99;
 #set ($version="1.01")
 <p><a name="top"></a></p>
 <!----------------------------------- Titre de la page --------------------------->
-<h1> Renseignements sur : <span class="metit"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") ($INDI.Id)</span></h1>
+<h1> Renseignements sur : <span class="metit"> $!INDI.getProperty("NAME") ($INDI.Id)</span></h1>
 <p class="droite">(Cette fiche a &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e le $date.full_date par <A HREF="http://www.arvernes.com/V1/">GenJ, logiciel de g&eacute;n&eacute;alogie libre </A></p>
 <!----------------- Zone de la photo -------------------------------------->
 <h4 class="minicolo">Ascendant Sosa:
@@ -254,9 +254,16 @@ background-color: #ffff99;
 <!---------------------------------- Parents -------------------------------------------->
 <h2 class="foncolo">Parents ($!famc.Id) </h2>
 Les parents de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont
+#set($pere=$!famc.Husband.getProperty("NAME"))
+#if ($pere)
 <h3>P&egrave;re : <span class="megr">$!famc.Husband.getProperty("NAME") ($!famc.Husband.Id) (o $famc.Husband.getProperty("BIRT:DATE") &agrave; $famc.Husband.getProperty("BIRT:PLAC")) -  + $famc.Husband.getProperty("DEAT:DATE") &agrave; $famc.Husband.getProperty("DEAT:PLAC"))</span></h3>
+#end
+#set($mere=$!famc.Husband.getProperty("NAME"))
+#if ($mere)
 <h3>M&egrave;re : <span class="megr">$!famc.Wife.getProperty("NAME") ($!famc.Wife.Id) (o $famc.Wife.getProperty("BIRT:DATE") &agrave; $famc.Wife.getProperty("BIRT:PLAC")) - (+ $famc.Wife.getProperty("DEAT:DATE") &agrave; $famc.Wife.getProperty("DEAT:PLAC"))</span></h3>
+#end
 <h3>Ils se sont mari&eacute;s <span class="megr">#foreach ($fam1 in $famc.Husband.fams)le $!fam1.getProperty("MARR:DATE") &agrave; $!fam1.getProperty("MARR:PLAC") #end </h3>
+
 <!---------------------------------- Grands-Parents -------------------------------------------->
 <h2 class="foncolo">Grands-parents ($!famc.Id) </h2>
 <h4 class="focolo">Les grands-parents paternels de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") sont</h4>
@@ -437,7 +444,7 @@ $!child.getProperty("NAME") ($!child.Id). (o $!child.getProperty("BIRT:DATE") - 
       #end
       </div>
 <!------------------------------------- Associations ------------------->
-<h2 class="foncolo">Pr&eacute;sence dans des &eacute;v&egrave;nements :</h2>
+<h2 class="foncolo">Pr&eacute;sence dans des &eacute;v&eacute;nements :</h2>
       #set($asso_in_life=$INDI.getProperties("ASSO"))
 <p>      #if ($asso_in_life)
 			$INDI.getString("Monsieur","Madame") $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")
