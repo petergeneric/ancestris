@@ -3,6 +3,9 @@
 
 (A=Amélioration; B=Bug; D=Divers; M=Modification)
 
+/Version 0.1 r.170 - 20 Oct. 2009
+  . M: Modifications des modèles pour le rapport Gedart.
+  . M: Modification complête du rapport Ancêtre commun.
   . B: Caractères accentués de l'onglet "Auteurs" incorrectement affichés.
 /Version 0.1 r.137 - 28 Sept. 2009
   . A: Ajout d'un lien "d'Aide en ligne",
