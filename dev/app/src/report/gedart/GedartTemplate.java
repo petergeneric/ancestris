@@ -3,10 +3,7 @@ package gedart;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.TreeMap;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 class GedartTemplate extends Object implements Cloneable{
 
