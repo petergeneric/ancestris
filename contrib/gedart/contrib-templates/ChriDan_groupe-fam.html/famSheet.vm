@@ -132,28 +132,28 @@ marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
 <tr>
 <td>
 </font>#if ($FAM.Husband.Famc.Husband.Famc.Husband)
-            <b> $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</b>  <br />
- #set($grand_mere_lieu_de_naissance=$FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
-             #if ($grand_mere_lieu_de_naissance)
+           G-P&egrave;re : <br>  <b> $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</b>  <br />
+ #set($grand_pere_lieu_de_naissance=$FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
+             #if ($grand_pere_lieu_de_naissance)
 o : $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
 $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
  #else
              $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") <br />
              #end
-#set($grand_mere_lieu_de_deces=$FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
-             #if ($grand_mere_lieu_de_deces)
+#set($grand_pere_lieu_de_deces=$FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC"))
+             #if ($grand_pere_lieu_de_deces)
 + : $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")  </li>
  #else
              $!FAM.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") </li>
              #end
 	     #else
-	     <span class="focolo"> non connu, &agrave; rechercher ?????</span>
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end
 	     
 	    </td>
 	     
 	     <td>#if ($FAM.Husband.Famc.Husband.Famc.Wife)
-            <b> $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("NAME") </b> <br />
+            G-M&egrave;re : <br> <b> $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("NAME") </b> <br />
  #set($grand_mere_lieu_de_naissance=$FAM.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($grand_mere_lieu_de_naissance)
 o : $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -167,12 +167,14 @@ $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")  <br />
  #else
              $!FAM.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") </li>
              #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end</td>
 	     
 	     <td></td>
 	     
 	     <td>#if ($FAM.Husband.Famc.Wife.Famc.Husband)
-<b> $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("NAME") </b> <br />
+G-P&egrave;re : <br><b>  $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("NAME") </b> <br />
 #set($grand_pere2_lieu_de_naissance=$FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($grand_pere2_lieu_de_naissance)
 o : $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -186,10 +188,12 @@ o : $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
 #else
              $!FAM.Husband.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") </li>
  #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end</td>
 	     
 	     <td>#if ($FAM.Husband.Famc.Wife.Famc.Wife)
-<b> $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("NAME") </b> <br />
+ G-M&egrave;re : <br><b> $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("NAME") </b> <br />
 #set($grand_mere2_lieu_de_naissance=$FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($grand_mere2_lieu_de_naissance)
 o : $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -203,6 +207,8 @@ o : $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
 #else
              $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") </li>
  #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end</td></tr>
 
 <!------------------ligne 3------------------------->
@@ -231,7 +237,7 @@ o : $!FAM.Husband.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Husband.Famc.Husband)
-         <b>    $!FAM.Husband.Famc.Husband.getProperty("NAME") </b> <br />
+         P&egrave;re : <br>  <b>  $!FAM.Husband.Famc.Husband.getProperty("NAME") </b> <br />
  #set($pere_du_pere_lieu_de_naissance=$FAM.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($pere_du_pere_lieu_de_naissance)
 o : $!FAM.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -253,7 +259,7 @@ $!FAM.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Husband.Famc.Wife)
-<b> $!FAM.Husband.Famc.Wife.getProperty("NAME") </b> <br />
+M&egrave;re : <br> <b> $!FAM.Husband.Famc.Wife.getProperty("NAME") </b> <br />
 #set($mere_du_pere_lieu_de_naissance=$FAM.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($mere_du_pere_lieu_de_naissance)
 o : $!FAM.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -336,7 +342,7 @@ Enfants :<br> - <b>$!child.getProperty("NAME")</b> o : $!child.getProperty("BIRT
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Wife.Famc.Husband)
-           <b>  $!FAM.Wife.Famc.Husband.getProperty("NAME") </b> <br />
+            P&egrave;re : <br><b> $!FAM.Wife.Famc.Husband.getProperty("NAME") </b> <br />
  #set($pere_de_la_mere_lieu_de_naissance=$FAM.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($pere_de_la_mere_lieu_de_naissance)
 o : $!FAM.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -359,7 +365,7 @@ $!FAM.Wife.Famc.Husband.getProperty("BIRT:PLAC")  <br />
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Wife.Famc.Wife)
-<b> $!FAM.Wife.Famc.Wife.getProperty("NAME") </b>  <br />
+M&egrave;re : <br><b>  $!FAM.Wife.Famc.Wife.getProperty("NAME") </b>  <br />
 #set($mere_de_la_mere_lieu_de_naissance=$FAM.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($mere_de_la_mere_lieu_de_naissance)
 o : $!FAM.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -387,7 +393,7 @@ o : $!FAM.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
 <tr>
 <td>
 <div class="mabordure"></div></font>#if ($FAM.Wife.Famc.Husband.Famc.Husband)
-        <b>     $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("NAME") </b>  <br />
+       G-P&egrave;re : <br>   <b>   $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("NAME") </b>  <br />
  #set($Grand_pere3_lieu_de_naissance=$FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($Grand_pere3_lieu_de_naissance)
 o : $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -401,6 +407,8 @@ $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
  #else
              $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") </li>
              #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end </td>
 </tr>
 </table></td>
@@ -408,7 +416,7 @@ $!FAM.Wife.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC")  <br />
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Wife.Famc.Husband.Famc.Wife)
-       <b>      $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("NAME") </b>  <br />
+         G-M&egrave;re : <br>  <b>  $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("NAME") </b>  <br />
  #set($Grand_mere3_lieu_de_naissance=$FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($Grand_mere3_lieu_de_naissance)
 o : $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -422,6 +430,8 @@ $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")  <br />
  #else
              $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") </li>
              #end
+	     	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end </td>
 </tr>
 </table></td>
@@ -430,7 +440,7 @@ $!FAM.Wife.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC")  <br />
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Wife.Famc.Wife.Famc.Husband)
-<b> $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("NAME") </b>  <br />
+G-P&egrave;re : <br> <b>  $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("NAME") </b>  <br />
 #set($Grand_pere4_lieu_de_naissance=$FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:PLAC"))
              #if ($mGrand_pere4_lieu_de_naissance)
 o : $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
@@ -444,6 +454,8 @@ o : $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
 #else
              $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("DEAT:DATE") </li>
  #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end </td>
 </tr>
 </table></td>
@@ -451,7 +463,7 @@ o : $!FAM.Wife.Famc.Wife.Famc.Husband.getProperty("BIRT:DATE") &agrave;
 <tr>
 <td>
 <div class="mabordure"></div>#if ($FAM.Wife.Famc.Wife.Famc.Wife)
-<b> $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("NAME") </b>  <br />
+G-M&egrave;re : <br> <b> $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("NAME") </b>  <br />
 #set($Grand_mere4_lieu_de_naissance=$FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:PLAC"))
              #if ($Grand_mere4_lieu_de_naissance)
 o : $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
@@ -465,6 +477,8 @@ o : $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("BIRT:DATE") &agrave;
 #else
              $!FAM.Wife.Famc.Wife.Famc.Wife.getProperty("DEAT:DATE") </li>
  #end
+ 	     #else
+	     <span class="focolo"> non connu, &agrave; rechercher</span>
              #end </td>
 </tr>
 </table></td>
