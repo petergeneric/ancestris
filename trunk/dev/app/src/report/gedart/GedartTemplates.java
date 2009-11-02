@@ -5,7 +5,6 @@ import genj.util.EnvironmentChecker;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.TreeMap;
 
 class GedartTemplates extends TreeMap<String, GedartTemplate> {
@@ -15,11 +14,6 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 		File gedartDir = new File(ReportLoader.getReportDirectory(),
 				"gedart/templates");
 		putAll(new GedartTemplates(gedartDir));
-
-//		// second templates in report/gedartcustom/templates
-//		gedartDir = new File(ReportLoader.getReportDirectory(),
-//		"gedartcustom/templates");
-//		putAll(new GedartTemplates(gedartDir));
 
 		// second templates in {user.home.genj}/gedart/contrib-templates
 		File dir = new File(EnvironmentChecker.getProperty(this,
