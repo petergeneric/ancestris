@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Arrays;
 
 /** This GenJ Report exports places for viewing online in Google Maps */
 public class ReportKML extends Report {
@@ -67,9 +66,6 @@ public class ReportKML extends Report {
 
 	public String labelForLocations = translate("locationsDefaultLabel");
 
-	public String indiLink = translate("indiDefaultLink", "{0}");
-	public String famLink = translate("famDefaultLink", "{0}");
-
 	private Writer out;
 	private DetailedPlacemarkWriter detailedPlacemarkWriter;
 
@@ -89,7 +85,7 @@ public class ReportKML extends Report {
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(kml), Charset.forName("UTF8")));
-			detailedPlacemarkWriter = new DetailedPlacemarkWriter(out, showIds, indiLink, famLink);
+			detailedPlacemarkWriter = new DetailedPlacemarkWriter(out, showIds);
 			writeKML(indi);
 			out.close();
 		} catch (IOException e) {

@@ -37,6 +37,20 @@ public class GeometryTest extends TestCase {
   
   private double TwoPi = Math.PI*2;
   
+  public void testInterpolation() {
+    
+    
+    tst( Geometry.getInterpolation(0, r(0,0,1,1), r(10,10,1,1)), r(0,0,1,1) );
+    tst( Geometry.getInterpolation(1, r(0,0,1,1), r(10,10,1,1)), r(10,10,1,1) );
+    
+    tst( Geometry.getInterpolation(0.5, r(0,0,1,1), r(10,10,1,1)), r(5,5,1,1) );
+    
+    Shape s1 = ShapeHelper.createShape(p(1,1), p(1,0), p(0,0), p(0,1));
+    Shape s2 = ShapeHelper.createShape(p(0,0), p(0,1), p(1,1), p(1,0));
+    tst( Geometry.getInterpolation(0.5, s1, s2), r(0.5,0.5,0,0) );
+    
+  }
+  
   public void testAlignment() {
     
     // +-------->

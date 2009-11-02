@@ -19,15 +19,14 @@
  */
 package gj.shell;
 
-import gj.layout.GraphLayout;
-import gj.layout.GraphNotSupportedException;
-import gj.layout.LayoutContext;
-import gj.layout.LayoutException;
+import gj.geom.Geometry;
 import gj.layout.Routing;
 import gj.shell.model.EditableEdge;
 import gj.shell.model.EditableGraph;
 import gj.shell.model.EditableVertex;
 
+import java.awt.Shape;
+import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,44 +40,46 @@ import java.util.List;
   private EditableGraph graph;
   
   /** the moves */
-  private Movement[] moves;
+  private Motion[] motions;
   
   /** the shapes of edges */
   private List<Object> edgesAndShapes;
   
   /** animation status */
   private long 
-    totalTime = 1000    ,
-    frameTime = 1000/60 ,
-    startFrame = 0,
-    lastFrame = 0;
+    totalTime, startFrame;
+  
+  private double START = 0D, END = 1D;
+  
+  /**
+   * Constructor
+   */
+  public Animation(EditableGraph graph) {
+    this(graph, 1000);
+  }
+  public Animation(EditableGraph graph, long totalTime) {
+    this.graph = graph;
+    this.totalTime = totalTime;
+  }
     
   /**
-   * Constructor (before)
+   * marker - before layout
    */
-  public Animation(EditableGraph graph, GraphLayout layout, LayoutContext context) throws LayoutException, GraphNotSupportedException {
+  public void beforeLayout() {
     
-    // something to animate?
-    if (graph.getNumVertices() == 0) 
-      return;
-
-    // keep some data
-    this.graph = graph;
-
     // create movements for vertices ...
-    moves = new Movement[graph.getNumVertices()];
+    motions = new Motion[graph.getNumVertices()];
     Iterator<EditableVertex> vertices = graph.getVertices().iterator();
     for (int m=0;vertices.hasNext();m++) 
-      moves[m] = new Movement(vertices.next());
+      motions[m] = new Motion(vertices.next());
    
-    // run layout
-    context.getLogger().info("Started pre-animation graph layout "+layout.getClass().getSimpleName());
-    layout.apply(graph, context);
-    context.getLogger().info("Finished pre-animation graph layout "+layout.getClass().getSimpleName());
+  }
+  
+  public void afterLayout() {
     
     // take a snapshot of what's there right now
-    for (int m=0;m<moves.length;m++) 
-      moves[m].snapshot();
+    for (int m=0;m<motions.length;m++) 
+      motions[m].afterLayout();
     
     edgesAndShapes = new ArrayList<Object>(graph.getNumEdges());
     for (Iterator<EditableEdge> edges = graph.getEdges().iterator(); edges.hasNext(); ) {
@@ -87,13 +88,6 @@ import java.util.List;
       edgesAndShapes.add(edge.getPath());
     }
     
-    // move back to start
-    animate(0);
-    
-    // setup start
-    startFrame = System.currentTimeMillis(); 
-
-    
     // done for now
   }
   
@@ -101,14 +95,14 @@ import java.util.List;
    * Runs one frame of the animation
    * @return true if animation is done
    */
-  public boolean animate() throws InterruptedException {
+  public boolean animate() {
     
-    // done?
-    if (moves==null)
-      return true;
-
     // check what we're doing now
     long now = System.currentTimeMillis();
+    
+    // first frame?
+    if (startFrame==0)
+      startFrame = now;
       
     // has total passed already?
     if (startFrame+totalTime<now) {
@@ -116,18 +110,11 @@ import java.util.List;
       return true;
     }
 
-    // sleep some?
-    long sleep = (lastFrame+frameTime)-now;
-    if (sleep>0) 
-      Thread.sleep(sleep); 
-        
     // do the move
-    double time = Math.min(1, ((double)now-startFrame)/totalTime);
-    if (animate(time)) 
+    if (animate(Math.min(END, ((double)now-startFrame)/totalTime))) {
       stop();
-        
-    // remember
-    lastFrame = now;
+      return true;
+    }
     
     // done for now
     return false;
@@ -136,10 +123,10 @@ import java.util.List;
   /**
    * Stops the animation by setting it to the last frame
    */
-  public boolean stop() {
+  public void stop() {
+    
     // perform step to final frame
-    if (moves!=null) 
-      animate(1D);
+    animate(END);
     
     // restore edges
     // TODO currently edges are layed out without bends in animation
@@ -148,24 +135,23 @@ import java.util.List;
       ((EditableEdge)it.next()).setPath((Routing)it.next());
     }
     // stop all moves
-    moves=null;
+    motions=null;
+    
     // done
-    return false;
   }
 
   /**
    * Performing one step in the animation
    */
-  private boolean animate( double time) {
+  private boolean animate(double index) {
     
     boolean done = true;
-
     synchronized (graph) {
       // loop moves
-      for (int m=0;m<moves.length;m++) {
-        Movement move = moves[m];
+      for (int m=0;m<motions.length;m++) {
+        Motion motion = motions[m];
         // do the move
-        done &= move.animate(time);
+        done &= motion.animate(index);
       }
     }
         
@@ -174,25 +160,38 @@ import java.util.List;
   }
 
   /**
-   * A movement of a vertex in the animation
+   * A motion in the animation
    */
-  private class Movement {
+  private class Motion {
+    
     private EditableVertex vertex;
-    Movement(EditableVertex set) { 
+    private GeneralPath start, end;
+    
+    Motion(EditableVertex set) { 
       vertex = set; 
+      beforeLayout();
     }
-    void snapshot() { 
-      // FIXME need animation snapshot
+    void beforeLayout() { 
+      start = new GeneralPath(vertex.getShape());
     } 
-    boolean animate(double time) {
-      // done?
-      if (time==1) {
-        // FIXME need animation destination
-        return true;
-      }
-      // FIXME need animation step
-      // done      
+    void afterLayout() { 
+      end = new GeneralPath(vertex.getShape());
+    } 
+    boolean animate(double index) {
+      vertex.setShape(shape(index));
       return false;
+    }
+
+    private Shape shape(double index) {
+
+      // start or end
+      if (index==START)
+        return start;
+      if (index==END)
+        return end;
+
+      // blend shapes
+      return Geometry.getInterpolation(index, start, end);
     }
   }
   

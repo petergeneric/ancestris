@@ -761,7 +761,7 @@ public class Geometry {
    * Calculate the 2D bounds of given iterator
    */
   public static Rectangle2D getBounds(Shape shape) {
-  	return new OpShapeBounds(shape).getResult();
+    return new OpShapeBounds(shape).getResult();
   }
 
   /**
@@ -912,5 +912,39 @@ public class Geometry {
   private static class ConvexHullImpl extends java.awt.geom.Path2D.Double implements ConvexHull {
     
   } //ConvexHullImpl
+  
+  /**
+   * Calculate the blended shape between two given shapes
+   * @param t 0.0 <= frame <= 1.0
+   * @param start starting shape
+   * @param end ending shape
+   */
+  public static Shape getInterpolation(double t, Shape start, Shape end) {
+
+    assert t>=0;
+    assert t<=1.0;
+    
+    if (t==0.0)
+      return start;
+    if (t==1.0)
+      return end;
+    
+    GeneralPath result = new GeneralPath();
+    
+    List<Point2D> s = ShapeHelper.getPoints(start);
+    List<Point2D> e = ShapeHelper.getPoints(end);
+    
+    for (int i=0, n=Math.max(s.size(), e.size()); i<n; i++) {
+      Point2D p = getPoint(i>=s.size() ? s.get(s.size()-1) : s.get(i), i>=e.size() ? e.get(e.size()-1) : e.get(i), t);
+      if (i==0)
+        result.moveTo(p.getX(), p.getY());
+      else
+        result.lineTo(p.getX(), p.getY());
+    }
+    result.closePath();
+    
+    return result;
+    
+  }
 
 } //Geometry

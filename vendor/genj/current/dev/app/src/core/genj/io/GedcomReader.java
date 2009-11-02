@@ -56,18 +56,18 @@ import java.util.logging.Logger;
 public class GedcomReader implements Trackable {
 
   private final static Resources RESOURCES = Resources.get("genj.io");
-  
+
   private static Logger LOG = Logger.getLogger("genj.io");
 
   /** estimated average byte size of one entity */
   private final static int ENTITY_AVG_SIZE = 150;
-  
+
   /** stati the reader goes through */
   private final static int READHEADER = 0, READENTITIES = 1, LINKING = 2;
 
   /** lots of state we keep during reading */
   private Gedcom              gedcom;
-  
+
   private int progress;
   private int entity = 0;
   private int state;
@@ -80,20 +80,20 @@ public class GedcomReader implements Trackable {
   private Object lock = new Object();
   private EntityReader reader;
   private MeteredInputStream meter;
-  
+
   /** encryption */
   private Enigma enigma;
 
   /** collecting warnings */
   private List warnings = new ArrayList(128);
-  
+
   /**
    * Constructor for a reader that reads from stream
    */
   public GedcomReader(InputStream in) throws IOException {
     init(new Gedcom(), in);
   }
-  
+
   /**
    * Constructor for a reader that reads from given origin
    * @param origin source of gedcom stream
@@ -102,7 +102,7 @@ public class GedcomReader implements Trackable {
     LOG.info("Initializing reader for "+origin);
     init(new Gedcom(origin), origin.open());
   }
-  
+
   /**
    * initializer
    */
@@ -114,7 +114,7 @@ public class GedcomReader implements Trackable {
 
     if (sniffer.warning!=null)
       warnings.add(new Warning(0, sniffer.warning, ged));
-    
+
     String charsetName = EnvironmentChecker.getProperty(this, "genj.gedcom.charset", null, "checking for forced charset for read of "+ged.getName());
     if (charsetName!=null) {
       try {
@@ -124,39 +124,39 @@ public class GedcomReader implements Trackable {
         LOG.log(Level.WARNING, "Can't force charset "+charset, t);
       }
     }
-    
+
     // cont
     init(ged, sniffer, charset, encoding);
   }
-  
+
   private void init(Gedcom ged, InputStream in, Charset charset, String encoding) throws IOException {
-    
+
     // init some data
     length = in.available();
-    
+
     gedcom = ged;
     gedcom.setEncoding(encoding);
-    
+
     meter = new MeteredInputStream(in);
     reader = new EntityReader(new InputStreamReader(meter, charset));
 
     // Done
   }
-  
+
   /**
    * Set password to use to decrypt private properties
    * @param password password to use or Gedcom.PASSWORD_UNKNOWN - if the password
    *  doesn't match a GedcomEncryptionException is thrown during read
    */
   public void setPassword(String password) {
-    
+
     // valid argument?
     if (password==null)
       throw new IllegalArgumentException("Password can't be NULL");
-      
+
     // set it on Gedcom
-    gedcom.setPassword(password); 
-    
+    gedcom.setPassword(password);
+
     // done
   }
 
@@ -180,9 +180,9 @@ public class GedcomReader implements Trackable {
    */
   public int getProgress() {
     // reading right now?
-    if (state==READENTITIES&&length>0) 
+    if (state==READENTITIES&&length>0)
         progress = (int)Math.min(100, meter.getCount()*100/length);
-      
+
     // done
     return progress;
   }
@@ -208,7 +208,7 @@ public class GedcomReader implements Trackable {
   public List getWarnings() {
     return warnings;
   }
-  
+
   /**
    * number of lines read
    */
@@ -217,22 +217,22 @@ public class GedcomReader implements Trackable {
   }
 
   /**
-   * Actually writes the gedcom-information 
+   * Actually writes the gedcom-information
    * @exception GedcomIOException reading failed
    * @exception GedcomFormatException reading Gedcom-data brought up wrong format
    * @exception GedcomEncryptionException encountered encrypted property and password didn't match
    */
   public Gedcom read() throws GedcomIOException, GedcomFormatException {
-    
+
     // check state - we pass gedcom only once!
     if (gedcom==null)
       throw new IllegalStateException("can't call read() twice");
-    
+
     // Remember working thread
     synchronized (lock) {
       worker=Thread.currentThread();
     }
-    
+
     // try it
     try {
       readGedcom();
@@ -257,7 +257,7 @@ public class GedcomReader implements Trackable {
 
     // nothing happening here
   }
-  
+
   /**
    * Read Gedcom as a whole
    *
@@ -269,11 +269,11 @@ public class GedcomReader implements Trackable {
     // Read the Header
     readHeader();
     state++;
-    long header =System.currentTimeMillis(); 
+    long header =System.currentTimeMillis();
 
     // Read records after the other
     while (reader.readEntity()!=null);
-    
+
     long records = System.currentTimeMillis();
 
     // Next state
@@ -292,10 +292,10 @@ public class GedcomReader implements Trackable {
     // Link references
     linkReferences();
     long linking = System.currentTimeMillis();
-    
+
     // sort warnings
     Collections.sort(warnings);
-    
+
     long total = System.currentTimeMillis();
     LOG.log(Level.FINE, gedcom.getName()+" loaded in "+(total-start)/1000+"s (header "+(header-start)/1000+"s, records "+(records-header)/1000+"s, linking "+(linking-records)/1000+"s)");
 
@@ -323,7 +323,7 @@ public class GedcomReader implements Trackable {
 
     // done
   }
-  
+
   /**
    * Read Header
    * @exception GedcomIOException reading from <code>BufferedReader</code> failed
@@ -334,7 +334,7 @@ public class GedcomReader implements Trackable {
     Entity header = reader.readEntity();
     if (header==null||!header.getTag().equals("HEAD"))
       throw new GedcomFormatException(RESOURCES.getString("read.error.noheader"),0);
-    
+
     //  0 HEAD
     //  1 SOUR GENJ
     //  2 VERS Version.getInstance().toString()
@@ -351,27 +351,27 @@ public class GedcomReader implements Trackable {
     //  2 FORM Lineage-Linked
     //  1 CHAR encoding
     //  1 LANG language
-    //  1 PLAC 
+    //  1 PLAC
     //  2 FORM place format
     //  1 FILE file
 
     // check 1 SUBM
     tempSubmitter = header.getPropertyValue("SUBM");
 // NM 20080329 - really GenJ doesn't care whether this is set or not - we should really warn before saving but not
-// when reading - the user is not going to add a submitter to everything he opens so we might as well ignore a 
+// when reading - the user is not going to add a submitter to everything he opens so we might as well ignore a
 // missing SUBM
 //    if (tempSubmitter.length()==0)
 //      warnings.add(new Warning(0, RESOURCES.getString("read.warn.nosubmitter"), gedcom));
 
     // check 1 SOUR
     String source = header.getPropertyValue("SOUR");
-// NM 20080329 - same here - GenJ doesn't care and is not going to write this on save anyways    
+// NM 20080329 - same here - GenJ doesn't care and is not going to write this on save anyways
 //    if (source.length()==0)
 //      warnings.add(new Warning(0, RESOURCES.getString("read.warn.nosourceid"), gedcom));
-    
-    // check for 
-    // 1 GEDC 
-    // 2 VERSion and 
+
+    // check for
+    // 1 GEDC
+    // 2 VERSion and
     // 2 FORMat
     Property vers = header.getPropertyByPath("HEAD:GEDC:VERS");
     if (vers==null||header.getPropertyByPath("HEAD:GEDC:FORM")==null)
@@ -387,27 +387,27 @@ public class GedcomReader implements Trackable {
       } else {
         String s = RESOURCES.getString("read.warn.badversion", new String[] { v, gedcom.getGrammar().getVersion() } );
         warnings.add(new Warning(0, RESOURCES.getString("read.warn.badversion", new String[] { v, gedcom.getGrammar().getVersion() } ), gedcom));
-        LOG.warning(s);      
+        LOG.warning(s);
       }
     }
-    
-        
+
+
     // check 1 LANG
     String lang = header.getPropertyValue("LANG");
     if (lang.length()>0) {
       gedcom.setLanguage(lang);
       LOG.info("Found LANG "+lang+" - Locale is "+gedcom.getLocale());
     }
-      
+
     // check 1 CHAR
-    String encoding = header.getPropertyValue("CHAR"); 
+    String encoding = header.getPropertyValue("CHAR");
     if (encoding.length()>0) {
       gedcom.setEncoding(encoding);
       if (encoding.equals("ASCII"))
         warnings.add(new Warning(0, RESOURCES.getString("read.warn.ascii"), gedcom));
-    } 
-    
-    // check 
+    }
+
+    // check
     // 1 PLAC
     // 2 FORM
     Property plac = header.getProperty("PLAC");
@@ -416,7 +416,7 @@ public class GedcomReader implements Trackable {
       gedcom.setPlaceFormat(form);
       LOG.info("Found Place.Format "+form);
     }
-    
+
     // get rid of it for now
     gedcom.deleteEntity(header);
 
@@ -428,29 +428,29 @@ public class GedcomReader implements Trackable {
    * SniffedInputStream
    */
   static class SniffedInputStream extends BufferedInputStream {
-    
+
     static final byte[]
       BOM_UTF8    = { (byte)0xEF, (byte)0xBB, (byte)0xBF },
       BOM_UTF16BE = { (byte)0xFE, (byte)0xFF },
       BOM_UTF16LE = { (byte)0xFF, (byte)0xFE };
-      
+
     private String encoding;
     private Charset charset;
     private String header;
     String warning;
-    
+
     /**
      * Constructor
      */
     private SniffedInputStream(InputStream in) throws IOException {
-      
+
       super(in, 4096);
 
       // fill buffer and reset
-      super.mark(4096); 
+      super.mark(4096);
       super.read();
       super.reset();
-      
+
       // BOM present?
       if (matchPrefix(BOM_UTF8)) {
         LOG.info("Found BOM_UTF8 - trying encoding UTF-8");
@@ -470,70 +470,70 @@ public class GedcomReader implements Trackable {
         encoding = Gedcom.UNICODE;
         return;
       }
-      
+
       // HEADER's CHAR tests
       if (matchCHAR(Gedcom.UTF8)||matchCHAR("UTF8")) {
         LOG.info("Found "+Gedcom.UTF8+" - trying encoding UTF-8");
         charset = Charset.forName("UTF-8");
         encoding = Gedcom.UTF8;
         return;
-      } 
+      }
       if (matchCHAR(Gedcom.UNICODE)) {
         LOG.info("Found single byte "+Gedcom.UNICODE+" - trying encoding UTF-8");
         charset = Charset.forName("UTF-8");
         encoding = Gedcom.UNICODE;
         return;
-      } 
-      
+      }
+
       if (matchCHAR(Gedcom.UNICODE, "UTF-16BE")) {
         LOG.info("Found "+Gedcom.UNICODE+"/big endian - trying encoding UTF-16BE");
         charset = Charset.forName("UTF-16BE");
         encoding = Gedcom.UNICODE;
         return;
-      } 
+      }
       if (matchCHAR(Gedcom.UNICODE, "UTF-16LE")) {
         LOG.info("Found "+Gedcom.UNICODE+"/little endian - trying encoding UTF-16LE");
         charset = Charset.forName("UTF-16LE");
         encoding = Gedcom.UNICODE;
         return;
-      } 
+      }
       if (matchCHAR(Gedcom.ASCII)) {
         // ASCII - 20050705 using Latin1 (ISO-8859-1) from now on to preserve extended ASCII characters
         LOG.info("Found "+Gedcom.ASCII+" - trying encoding ISO-8859-1");
         charset = Charset.forName("ISO-8859-1"); // was ASCII
-        encoding = Gedcom.ASCII; 
+        encoding = Gedcom.ASCII;
         return;
-      } 
+      }
       if (matchCHAR(Gedcom.ANSEL)) {
         LOG.info("Found "+Gedcom.ANSEL+" - trying encoding ANSEL");
         charset = new AnselCharset();
         encoding = Gedcom.ANSEL;
         return;
-      } 
+      }
       if (matchCHAR(Gedcom.ANSI)) {
         LOG.info("Found "+Gedcom.ANSI+" - trying encoding Windows-1252");
         charset = Charset.forName("Windows-1252");
         encoding = Gedcom.ANSI;
         return;
-      } 
+      }
       if (matchCHAR(Gedcom.LATIN1)||matchCHAR("IBMPC")) { // legacy - old style ISO-8859-1/latin1
         LOG.info("Found "+Gedcom.LATIN1+" or IBMPC - trying encoding ISO-8859-1");
         charset = Charset.forName("ISO-8859-1");
         encoding = Gedcom.LATIN1;
         return;
-      } 
+      }
 
       // no clue - will default to Ansel
      warning =  RESOURCES.getString("read.warn.nochar");
       LOG.info("Could not sniff encoding - trying ANSEL");
       charset = new AnselCharset();
       encoding = Gedcom.ANSEL;
-      
+
     }
 
-    
+
     /**
-     * Match a header line 
+     * Match a header line
      */
     private boolean matchCHAR(String line) {
       return matchCHAR(line, null);
@@ -547,7 +547,7 @@ public class GedcomReader implements Trackable {
         return false;
       }
     }
-    
+
     /**
      * Match a prefix byte sequence
      */
@@ -565,30 +565,30 @@ public class GedcomReader implements Trackable {
       // matched!
       return true;
     }
-          
+
     /**
      * result - charset
      */
     /*result*/ Charset getCharset() {
       return charset;
     }
-    
+
     /**
      * result - encoding
      */
     /*result*/ String getEncoding() {
       return encoding;
     }
-    
+
   } //InputStreamSniffer
-  
-  /** 
+
+  /**
    * our entity reader
    */
   private class EntityReader extends PropertyReader {
-    
+
     private boolean warnedAboutPassword = false;
-    
+
     /** constructor */
     EntityReader(Reader in) {
       super(in, null, false);
@@ -596,11 +596,11 @@ public class GedcomReader implements Trackable {
 
     /** read one entity */
     Entity readEntity() throws IOException {
-      
-      if (!readLine(true)) 
+
+      if (!readLine(true))
         throw new GedcomFormatException(RESOURCES.getString("read.error.norecord"),lines);
 
-      if (level!=0) 
+      if (level!=0)
         throw new GedcomFormatException(RESOURCES.getString("read.error.nonumber"), lines);
 
       // Trailer? we're done
@@ -610,27 +610,27 @@ public class GedcomReader implements Trackable {
           throw new GedcomFormatException(RESOURCES.getString("read.error.aftertrlr"), lines);
         return null;
       }
-      
+
       // Create entity and read its properties
       Entity result;
       try {
-        
+
         result = gedcom.createEntity(tag, xref);
-        
+
         // warn about missing xref if it's a well known type
-        if (result.getClass()!=Entity.class&&xref.length()==0) 
+        if (result.getClass()!=Entity.class&&xref.length()==0)
           warnings.add(new Warning(getLines(), RESOURCES.getString("read.warn.recordnoid", Gedcom.getName(tag)), result));
 
         // preserve value for those who care
         result.setValue(value);
-        
+
         // continue into properties
         readProperties(result, 0, 0);
-        
+
       } catch (GedcomException ex) {
         throw new GedcomIOException(ex.getMessage(), lines);
       }
-      
+
       // the trailer?
       if (tag.equals("TRLR"))
 
@@ -638,7 +638,7 @@ public class GedcomReader implements Trackable {
       entity++;
       return result;
     }
-    
+
     /** override read to get a chance to decrypt values */
     protected void readProperties(Property prop, int currentLevel, int pos) throws IOException {
       // let super do its thing
@@ -646,7 +646,7 @@ public class GedcomReader implements Trackable {
       // decrypt lazy
       decryptLazy(prop);
     }
-    
+
     /**
      * Decrypt a value if necessary
      */
@@ -658,15 +658,15 @@ public class GedcomReader implements Trackable {
       // 20060128 a valid date can't need decryption and getValue() is expensive so we try to avoid this
       if ((prop instanceof PropertyDate)&&prop.isValid())
         return;
-      
-      // no need to do anything if not encrypted value 
+
+      // no need to do anything if not encrypted value
       String value = prop.getValue();
       if (!Enigma.isEncrypted(value))
         return;
-        
+
       // set property private
       prop.setPrivate(true, false);
-        
+
       // no need to do anything for unknown password
       String password = gedcom.getPassword();
       if (password==Gedcom.PASSWORD_UNKNOWN) {
@@ -676,11 +676,11 @@ public class GedcomReader implements Trackable {
         }
         return;
       }
-        
+
       // not set password with encrypted value is error
-      if (password==Gedcom.PASSWORD_NOT_SET) 
+      if (password==Gedcom.PASSWORD_NOT_SET)
         throw new GedcomEncryptionException(RESOURCES.getString("crypt.password.required"), lines);
-      
+
       // try to init decryption
       if (enigma==null) {
         enigma = Enigma.getInstance(password);
@@ -694,69 +694,69 @@ public class GedcomReader implements Trackable {
         }
       }
 
-      // try to decrypt    
+      // try to decrypt
       try {
         // set decrypted value
         prop.setValue(enigma.decrypt(value));
       } catch (IOException e) {
         throw new GedcomEncryptionException(RESOURCES.getString("crypt.password.invalid"), lines);
       }
-        
+
       // done
     }
-    
+
     /** keep track of xrefs - we're going to link them lazily afterwards */
     protected void link(PropertyXRef xref, int line) {
       // keep as warning
       lazyLinks.add(new LazyLink(xref, line));
     }
-    
+
     /** keep track of empty lines */
     protected void trackEmptyLine() {
       // care about empty lines before TRLR
       if (!"TRLR".equals(tag))
         warnings.add(new Warning(getLines(), RESOURCES.getString("read.error.emptyline"), gedcom));
     }
-    
+
     /** keep track of bad levels */
     protected void trackBadLevel(int level, Property parent) {
       warnings.add(new Warning(getLines(), RESOURCES.getString("read.warn.badlevel", ""+level), parent));
     }
-    
+
     /** keep track of bad properties */
     protected void trackBadProperty(Property property, String message) {
       warnings.add(new Warning(getLines(), message, property));
     }
-    
+
   } //EntityReader
-  
+
   /**
    * A lazy link
    */
   private static class LazyLink {
-    
+
     private PropertyXRef xref;
     private int line;
-    
+
     LazyLink(PropertyXRef xref, int line) {
       this.xref = xref;
       this.line = line;
     }
   }
-  
+
   /**
-   * A generated warning 
+   * A generated warning
    */
-  private static class Warning extends Context implements Comparable {
-    
+  private static class Warning extends Context {
+
     private int lineNumber;
-    
+
     /** constructor */
     private Warning(int lineNumber, Property property) {
       super(property);
       this.lineNumber = lineNumber;
     }
-    
+
     /** constructor */
     private Warning(int lineNumber, String text, Gedcom gedcom) {
       super(gedcom);
@@ -774,11 +774,12 @@ public class GedcomReader implements Trackable {
     /**
      * compare by line #
      */
-    public int compareTo(Object o) {
+    @Override
+    public int compareTo(Context o) {
       Warning that = (Warning)o;
       return lineNumber - that.lineNumber;
     }
-    
+
     /**
      * @see Annotation#setText(String)
      */
@@ -786,22 +787,22 @@ public class GedcomReader implements Trackable {
       super.setText(RESOURCES.getString("read.warn", new Object[] { Integer.toString(lineNumber), text }));
       return this;
     }
-    
+
   } //Warning
-  
+
   /**
    * A metered input stream
    */
   private static class MeteredInputStream extends InputStream {
-    
+
     private long meter = 0;
     private long marked = -1;
     private InputStream in;
-    
+
     MeteredInputStream(InputStream in) {
       this.in = in;
     }
-    
+
     public long getCount() {
       return meter;
     }
@@ -852,7 +853,7 @@ public class GedcomReader implements Trackable {
       meter+=skipped;
       return skipped;
     }
-    
+
   } //MeteredInputStream
-  
+
 } //GedcomReader

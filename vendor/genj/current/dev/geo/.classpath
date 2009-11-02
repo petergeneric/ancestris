@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="contrib/junit/junit.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GenJ"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="language/fr"/>
+	<classpathentry kind="lib" path="language/nl"/>
 	<classpathentry kind="output" path="build/eclipse"/>
 </classpath>

@@ -35,12 +35,12 @@ public class HorizontalLines implements TreeFilter {
     /**
      * Heights of levels.
      */
-    private Map levelHeight = new HashMap();
+    private Map<Integer, Integer> levelHeight = new HashMap<Integer, Integer>();
 
     /**
      * Y coordinates of levels.
      */
-    private Map levelCoord = new HashMap();
+    private Map<Integer, Integer> levelCoord = new HashMap<Integer, Integer>();
 
     private int spacing;
 
@@ -63,10 +63,10 @@ public class HorizontalLines implements TreeFilter {
         // Assign coordinates to levels
         int yCoord = 0;
         for (int i = levelMin; i <= levelMax; i++) {
-            levelCoord.put(new Integer(i), new Integer(yCoord));
-            yCoord += ((Integer)levelHeight.get(new Integer(i))).intValue();
+            levelCoord.put(i, yCoord);
+            yCoord += levelHeight.get(i);
         }
-        levelCoord.put(new Integer(levelMax + 1), new Integer(yCoord));
+        levelCoord.put(levelMax + 1, yCoord);
 
         // Assign coordinates to boxes
         new AssignCoordinates().filter(indibox);
@@ -76,7 +76,7 @@ public class HorizontalLines implements TreeFilter {
      * Converts the generation level number to image Y coordinate.
      */
     private int getYCoord(int level) {
-        return ((Integer)levelCoord.get(new Integer(level))).intValue();
+        return levelCoord.get(level);
     }
 
     /**
@@ -99,16 +99,14 @@ public class HorizontalLines implements TreeFilter {
             if (level < levelMin)
                 levelMin = level;
 
-            Integer lev = new Integer(level);
-            Integer height = (Integer)levelHeight.get(lev);
-            int heightInt = 0;
-            if (height != null)
-                heightInt = height.intValue();
+            Integer height = (Integer)levelHeight.get(level);
+            if (height == null)
+                height = 0;
             int newHeight = indibox.height + spacing * 2;
             if (indibox.family != null)
                 newHeight += indibox.family.height;
-            if (newHeight > heightInt)
-                levelHeight.put(lev, new Integer(newHeight));
+            if (newHeight > height)
+                levelHeight.put(level, newHeight);
         }
 
         protected void postFilter(IndiBox indibox) {

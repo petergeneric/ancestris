@@ -325,33 +325,37 @@ public class Shell {
         return false;
       // something running?
       cancel(true);
+      // prepare our animation
+      if (isAnimation) {
+        animation = new Animation(graph, 1000);
+        animation.beforeLayout();
+      }
       // restore original vertex shapes
       for (EditableVertex v : graph.getVertices()) 
         graph.setShape(v, v.getOriginalShape());
-      
       // run layout
-      Rectangle bounds = createGraphBounds();
       GraphLayout layout = layoutWidget.getSelectedLayouts();
       debugShapes = isDebug ? new ArrayList<Shape>() : null;
-      LayoutContext context = new DefaultLayoutContext(debugShapes, logger, bounds);
-      if (isAnimation) {
-        animation = new Animation(graph, layout, context);
-        return true;
-      } else {
-        logger.info("Starting graph layout "+layout.getClass().getSimpleName());
-        shape = layout.apply(graph, context);
-        logger.info("Finished graph layout "+layout.getClass().getSimpleName());
-        return false;
-      }
+      LayoutContext context = new DefaultLayoutContext(debugShapes, logger, createGraphBounds());
+      logger.info("Starting graph layout "+layout.getClass().getSimpleName());
+      shape = layout.apply(graph, context);
+      logger.info("Finished graph layout "+layout.getClass().getSimpleName());
+      // finalize our animation setup
+      if (isAnimation)
+        animation.afterLayout();
+      // done - continue into async for animation
+      return isAnimation;
     }
-    /** async execute */
+    /** async animation case */
     @Override
     protected void execute() throws LayoutException {
       try {
         while (true) {
           if (Thread.currentThread().isInterrupted()) break;
-          if (animation.animate()) break;
+          boolean done = animation.animate();
           graphWidget.setGraph2D(graph);
+          if (done) break;
+          Thread.sleep(1000/60);
           shape = null;
         }
       } catch (InterruptedException e) {

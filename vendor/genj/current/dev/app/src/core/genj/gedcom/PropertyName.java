@@ -218,6 +218,9 @@ public class PropertyName extends Property {
    */
   public String getDisplayValue() {
     
+    if (isSecret())
+      return "";
+    
     // n/a
     if (nameAsString!=null)
       return nameAsString;

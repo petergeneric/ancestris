@@ -346,6 +346,13 @@ public class ShapeHelper {
   /**
    * Transform a shape to flattened points
    */
+  public static List<Point2D> getPoints(Shape shape) {
+    return getPoints(shape, new Point2D.Double());
+  }
+  
+  /**
+   * Transform a shape to flattened points
+   */
   public static List<Point2D> getPoints(Shape shape, Point2D pos) {
     return getPoints(shape.getPathIterator(AffineTransform.getTranslateInstance(pos.getX(), pos.getY())));
   }

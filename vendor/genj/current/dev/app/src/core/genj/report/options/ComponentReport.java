@@ -125,11 +125,11 @@ public class ComponentReport extends Report
             // in the same package as the instance - problem is that this
             // won't work with our special way of resolving i18n in reports
             // so we have to do that manually
-            String oname = translate(option.getProperty());
+            String oname = translateOption(option.getProperty());
             if (oname.length() > 0)
                 option.setName(oname);
             String toolTipKey = option.getProperty() + ".tip";
-            String toolTip = translate(toolTipKey);
+            String toolTip = translateOption(toolTipKey);
             if (toolTip.length() > 0 && !toolTip.equals(toolTipKey))
                 option.setToolTip(toolTip);
         }

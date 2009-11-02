@@ -7,24 +7,13 @@
  */
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.report.Report;
-import genj.view.ViewContext;
-
-import java.util.ArrayList;
-import java.util.List;
+import genj.report.AnnotationsReport;
 
 /**
  * Compute the common ancestor of two individuals
  *
  */
-public class ReportCommonAncestor extends Report {
-
-  /**
-   * we're not using the console
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
+public class ReportCommonAncestor extends AnnotationsReport {
 
   /**
    * special treatmen context argument check
@@ -69,18 +58,14 @@ public class ReportCommonAncestor extends Report {
 
     // nothing to show?
     if (ancestor==null) {
-      getOptionFromUser(translate("nocommon"), Report.OPTION_OK);
+      setMessage(translate("nocommon"));
       return;
     }
 
-    // show the result
-    List list = new ArrayList();
-    list.add(new ViewContext(indi).setText(translate("result.first", indi)));
-    list.add(new ViewContext(other).setText(translate("result.second", other)));
-    list.add(new ViewContext(ancestor).setText(translate("result.ancestor", ancestor)));
-
-    showAnnotationsToUser(indi.getGedcom(), getName(), list);
-
+    // prepare the result
+    addAnnotation(indi, translate("result.first", indi));
+    addAnnotation(other, translate("result.second", other));
+    addAnnotation(ancestor, translate("result.ancestor", ancestor));
   }
 
   private Indi getCommonAncestor(Indi indi, Indi other) {
