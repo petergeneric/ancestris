@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/core"/>
+	<classpathentry kind="src" path="src/report"/>
+	<classpathentry kind="src" path="src/import"/>
+	<classpathentry kind="src" path="src/tst"/>
+	<classpathentry exported="true" kind="lib" path="images"/>
+	<classpathentry exported="true" kind="lib" path="language/en"/>
+	<classpathentry exported="true" kind="lib" path="contrib/jump/jump.jar"/>
+	<classpathentry exported="true" kind="lib" path="language/de"/>
+	<classpathentry kind="lib" path="contrib/junit/junit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GenJ"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="language/fr"/>
+	<classpathentry kind="lib" path="language/nl"/>
+	<classpathentry kind="output" path="build/eclipse"/>
+</classpath>

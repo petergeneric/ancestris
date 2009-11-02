@@ -1,0 +1,28 @@
+0 HEAD
+1 SOUR FOO
+2 VERS 1.0
+2 NAME BAR
+2 CORP Foo Bar
+3 ADDR http://www.foo.bar
+1 DEST ANY
+1 DATE 1 JAN 2000
+2 TIME 12:00:00
+1 SUBM @B1@
+1 FILE stress.ged
+1 GEDC
+2 VERS 5.5
+2 FORM Lineage-Linked
+1 CHAR ANSEL
+1 LANG
+0 @I1@ INDI
+1 NAME John /Doe/
+1 SEX M
+1 UNKNOWN tag
+3 BAD indent
+0 @B1@ SUBM
+1 NAME A submitter
+0 UNKNOWN entity
+1 FOO bar
+0 @X1@ UNKNOWN entity
+1 FOO foo
+0 TRLR

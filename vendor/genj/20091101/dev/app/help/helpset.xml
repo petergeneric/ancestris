@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<helpset version="1.0">
+  <title>@title@</title>
+  <maps>
+    <homeID>intro</homeID>
+    <mapref location="./map.xml"/>
+  </maps>
+  <view>
+    <name>TOC</name>
+    <label>@contents@</label>
+    <type>javax.help.TOCView</type>
+    <data>./toc.xml</data>
+  </view>
+</helpset>
