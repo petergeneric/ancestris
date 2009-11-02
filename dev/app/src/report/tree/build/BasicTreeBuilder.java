@@ -84,15 +84,15 @@ public class BasicTreeBuilder implements TreeBuilder {
 		return indibox;
 	}
 
-	private void buildTree(IndiBox indibox, int dir, int genUp, int genDown) {
+	private void buildTree(IndiBox indibox, Direction dir, int genUp, int genDown) {
 		// get all families where spouse
-		List families = new ArrayList(Arrays.asList(indibox.individual.getFamiliesWhereSpouse()));
+		List<Fam> families = new ArrayList<Fam>(Arrays.asList(indibox.individual.getFamiliesWhereSpouse()));
 
         Fam indiboxFamily = null;
 
 		if (!families.isEmpty()) {
 			// if (dir == DIR_PARENT) get all families where spouse is spouse
-			indiboxFamily = (Fam)families.get(0);
+			indiboxFamily = families.get(0);
 			Indi spouse = null;
 			if (dir == Direction.PARENT) {
 				indiboxFamily = indibox.prev.individual.getFamiliesWhereChild()[0];
@@ -115,10 +115,10 @@ public class BasicTreeBuilder implements TreeBuilder {
                 if (last == null)
                     last = indibox;
 
-    			Iterator i = families.iterator();
+    			Iterator<Fam> i = families.iterator();
     			i.next();
     			while (i.hasNext()) {
-    				Fam f = (Fam)i.next();
+    				Fam f = i.next();
     				Indi indi = indibox.individual;
     				if (indibox.individual != f.getHusband() && indibox.individual != f.getWife())
     					indi = spouse;
@@ -143,12 +143,12 @@ public class BasicTreeBuilder implements TreeBuilder {
     			    //   for (all children)-prev buildTree(child, DIR_CHILD)
     			    // else
     			    //   for all children buildTree(child, DIR_CHILD)
-    				List children = new ArrayList(Arrays.asList(last.getFamily().getChildren()));
+    				List<Indi> children = new ArrayList<Indi>(Arrays.asList(last.getFamily().getChildren()));
     				if (last == indibox && dir == Direction.PARENT)
     					children.remove(indibox.prev.individual);
     				last.children = new IndiBox[children.size()];
     				for (int j = 0; j < children.size(); j++) {
-    					last.children[j] = new IndiBox((Indi)children.get(j), last);
+    					last.children[j] = new IndiBox(children.get(j), last);
     					buildTree(last.children[j], Direction.CHILD, genUp, genDown + 1);
     				}
                 }

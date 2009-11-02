@@ -21,18 +21,10 @@ public class IndiBox {
     /**
      * Direction of the previous connected IndiBox.
      */
-    public static class Direction {
-        public static final int NONE = 0;
-        public static final int SPOUSE = 1;
-        public static final int PARENT = 2;
-        public static final int CHILD = 3;
-        public static final int NEXTMARRIAGE = 4;
-    }
-    /* This will wait for Java 5.0 compatibility
-    static enum Direction {
+    public static enum Direction
+    {
         NONE, SPOUSE, PARENT, CHILD, NEXTMARRIAGE
     };
-    */
 
     /**
      * Previous box in the tree.
@@ -121,7 +113,7 @@ public class IndiBox {
     /**
      * Returns the direction of the previous connected IndiBox.
      */
-    public int getDir() {
+    public Direction getDir() {
         if (prev == null)
             return Direction.NONE;
         if (this == prev.spouse)

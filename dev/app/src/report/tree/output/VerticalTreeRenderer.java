@@ -48,15 +48,15 @@ public class VerticalTreeRenderer extends TreeRendererBase {
 
             elements.drawLine(midX, midY, midX, lineY);
 
-            SortedSet xSet = new TreeSet();
-            xSet.add(new Integer(midX));
+            SortedSet<Integer> xSet = new TreeSet<Integer>();
+            xSet.add(midX);
             if (indibox.getDir() == Direction.PARENT)
-                xSet.add(new Integer(baseX - indibox.x + indibox.prev.width / 2));
+                xSet.add(baseX - indibox.x + indibox.prev.width / 2);
             if (indibox.hasChildren())
                 for (int i = 0; i < indibox.children.length; i++)
-                    xSet.add(new Integer(baseX + indibox.children[i].x + indibox.children[i].width / 2));
-            int x1 = ((Integer)xSet.first()).intValue();
-            int x2 = ((Integer)xSet.last()).intValue();
+                    xSet.add(baseX + indibox.children[i].x + indibox.children[i].width / 2);
+            int x1 = xSet.first();
+            int x2 = xSet.last();
 
             elements.drawLine(x1, lineY, x2, lineY);
         }
