@@ -1,0 +1,218 @@
+Index: src/build.xml
+===================================================================
+--- src/build.xml	(revision 1645)
++++ src/build.xml	(working copy)
+@@ -328,7 +328,7 @@
+                 <exclude name="com/izforge/izpack/util/*.class" />
+                 <exclude name="net/n3/nanoxml/*.class" />
+             </zipfileset>
+-            <zipfileset src="lib/ant.jar" />
++<!--            <zipfileset src="lib/ant.jar" /> -->
+             <fileset dir="${basedir}">
+                 <include name="bin/langpacks/flags/*" />
+                 <include name="bin/langpacks/installer/*" />
+@@ -343,7 +343,7 @@
+                 <include name="lib/liquidlnf.jar" />
+                 <include name="lib/metouia.jar" />
+                 <include name="lib/looks.jar" />
+-                <include name="lib/ant.jar" />
++               <!-- <include name="lib/ant.jar" /> -->
+                 <exclude name="**/CVS" />
+             </fileset>
+         </jar>
+Index: src/doc-ng/docbooks/node4.xml
+===================================================================
+--- src/doc-ng/docbooks/node4.xml	(revision 1645)
++++ src/doc-ng/docbooks/node4.xml	(working copy)
+@@ -413,7 +413,7 @@
+ <itemizedlist spacing="compact"><listitem><para><literal>src</literal>: the file location (relative path) - if this is a directory its content will be added recursively</para></listitem><listitem><para><literal>targetdir</literal>: the destination directory, could be something like <literal>$INSTALL_PATH/subdirX</literal></para></listitem><listitem><para><literal>os</literal>: can optionally specify a target operating system (<literal>unix, windows, mac</literal>) - this means that the file will only be installed on its target operating system</para></listitem><listitem><para><literal>override</literal>: if <literal>true</literal> then if the file is already installed, it will be overwritten. Alternative values: <literal>asktrue</literal> and <literal>askfalse</literal> - ask the user what to do and supply
+ default value for non-interactive use. Another possible values is <literal>update</literal>. It means that the new file is only installed if it's modification time is newer than the modification time of the
+ already existing file (note that this is not a reliable mechanism for updates - you cannot detect whether a file was altered after installation this way.) By default it is set to <literal>
+-update</literal>.</para></listitem></itemizedlist>
++update</literal>.</para></listitem><listitem><para><literal>unpack</literal>: if true and the file is an archive then its content will be unpacked and added as individual files</para></listitem></itemizedlist>
+ 
+ <para/><section id="SECTION00438610000000000000"><title><?db2html element="br"?>
+ <literal>&lt;additionaldata&gt;</literal></title>
+Index: src/doc-ng/XHTML/node4.html
+===================================================================
+--- src/doc-ng/XHTML/node4.html	(revision 1645)
++++ src/doc-ng/XHTML/node4.html	(working copy)
+@@ -797,6 +797,9 @@
+ default value for non-interactive use. Another possible values is <tt>update</tt>. It means that the new file is only installed if it's modification time is newer than the modification time of the
+ already existing file (note that this is not a reliable mechanism for updates - you cannot detect whether a file was altered after installation this way.) By default it is set to <tt>
+ update</tt>.</li>
++
++<li><tt>unpack</tt>: if <tt>true</tt> and the file is an archive then its content will be unpacked and added as individual files</li>
++
+ </ul>
+ 
+ <h4><a name="SECTION00438610000000000000"></a><a name="tag:additionaldata"></a><br />
+Index: src/lib/com/izforge/izpack/compiler/Compiler.java
+===================================================================
+--- src/lib/com/izforge/izpack/compiler/Compiler.java	(revision 1645)
++++ src/lib/com/izforge/izpack/compiler/Compiler.java	(working copy)
+@@ -25,6 +25,20 @@
+ 
+ package com.izforge.izpack.compiler;
+ 
++import java.io.File;
++import java.net.MalformedURLException;
++import java.net.URL;
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.HashMap;
++import java.util.Iterator;
++import java.util.List;
++import java.util.Map;
++import java.util.Properties;
++import java.util.Set;
++import java.util.jar.JarInputStream;
++import java.util.zip.ZipEntry;
++
+ import com.izforge.izpack.CustomData;
+ import com.izforge.izpack.GUIPrefs;
+ import com.izforge.izpack.Info;
+@@ -32,14 +46,6 @@
+ import com.izforge.izpack.util.Debug;
+ import com.izforge.izpack.util.VariableSubstitutor;
+ 
+-import java.io.File;
+-import java.io.IOException;
+-import java.net.MalformedURLException;
+-import java.net.URL;
+-import java.util.*;
+-import java.util.jar.JarInputStream;
+-import java.util.zip.ZipEntry;
+-
+ /**
+  * The IzPack compiler class. This is now a java bean style class that can be
+  * configured using the object representations of the install.xml
+@@ -522,37 +528,6 @@
+     }
+ 
+     /**
+-     * Recursive method to add files in a pack.
+-     * 
+-     * @param file The file to add.
+-     * @param targetdir The relative path to the parent.
+-     * @param osList The target OS constraints.
+-     * @param override Overriding behaviour.
+-     * @param pack Pack to be packed into
+-     * @param additionals Map which contains additional data
+-     * @exception FileNotFoundException if the file does not exist
+-     */
+-    protected void addRecursively(File file, String targetdir, List osList, int override,
+-            PackInfo pack, Map additionals) throws IOException
+-    {
+-        String targetfile = targetdir + "/" + file.getName();
+-        if (!file.isDirectory())
+-            pack.addFile(file, targetfile, osList, override, additionals);
+-        else
+-        {
+-            File[] files = file.listFiles();
+-            if (files.length == 0) // The directory is empty so must be added
+-                pack.addFile(file, targetfile, osList, override, additionals);
+-            else
+-            {
+-                // new targetdir = targetfile;
+-                for (int i = 0; i < files.length; i++)
+-                    addRecursively(files[i], targetfile, osList, override, pack, additionals);
+-            }
+-        }
+-    }
+-
+-    /**
+      * Look for an IzPack resource either in the compiler jar, or within IZPACK_HOME. The path must
+      * not be absolute. The path must use '/' as the fileSeparator (it's used to access the jar
+      * file). If the resource is not found, a CompilerException is thrown indicating fault in the
+Index: src/lib/com/izforge/izpack/compiler/CompilerConfig.java
+===================================================================
+--- src/lib/com/izforge/izpack/compiler/CompilerConfig.java	(revision 1645)
++++ src/lib/com/izforge/izpack/compiler/CompilerConfig.java	(working copy)
+@@ -51,6 +51,7 @@
+ import java.util.Vector;
+ import java.util.jar.JarInputStream;
+ import java.util.zip.ZipEntry;
++import java.util.zip.ZipInputStream;
+ 
+ import org.apache.tools.ant.DirectoryScanner;
+ 
+@@ -629,13 +630,17 @@
+                 List osList = OsConstraint.getOsList(f); // TODO: unverified
+                 int override = getOverrideValue(f);
+                 Map additionals = getAdditionals(f);
++                boolean unpack = src.endsWith(".zip") && "true".equalsIgnoreCase(f.getAttribute("unpack"));
+ 
+                 File file = new File(src);
+                 if (!file.isAbsolute()) file = new File(basedir, src);
+ 
+                 try
+                 {
+-                    addRecursively(file, targetdir, osList, override, pack, additionals);
++                    if (unpack)
++                        addArchiveContent(file, targetdir, osList, override, pack, additionals);
++                    else
++                        addRecursively(file, targetdir, osList, override, pack, additionals);
+                 }
+                 catch (Exception x)
+                 {
+@@ -659,7 +664,7 @@
+ 
+                 try
+                 {
+-                    pack.addFile(file, target, osList, override, additionals);
++                     pack.addFile(file, target, osList, override, additionals);
+                 }
+                 catch (FileNotFoundException x)
+                 {
+@@ -947,6 +952,37 @@
+     }
+ 
+     /**
++     * Add files in an archive to a pack
++     * @param archive the archive file to unpack
++     * @parm targetdir the target directory where the content of the archive will be installed
++     * @param osList The target OS constraints.
++     * @param override Overriding behaviour.
++     * @param pack Pack to be packed into
++     * @param additionals Map which contains additional data
++     */
++    protected void addArchiveContent(File archive, String targetdir, List osList, int override, PackInfo pack, Map additionals) throws IOException {
++      
++      FileInputStream fin = new FileInputStream(archive);
++      ZipInputStream zin = new ZipInputStream(fin);
++      while (true) {
++        ZipEntry zentry = zin.getNextEntry();
++        if (zentry==null) break;
++        if (zentry.isDirectory()) continue;
++        
++        File temp = File.createTempFile("izpack", null);
++        temp.deleteOnExit();
++        
++        FileOutputStream out = new FileOutputStream(temp);
++        compiler.getPackager().copyStream(zin, out);
++        out.close();
++        
++        pack.addFile(temp, targetdir + "/" + zentry.getName(), osList, override, additionals);
++        
++      }
++      fin.close();
++    }
++    
++    /**
+      * Recursive method to add files in a pack.
+      * 
+      * @param file The file to add.
+Index: src/lib/com/izforge/izpack/compiler/Packager.java
+===================================================================
+--- src/lib/com/izforge/izpack/compiler/Packager.java	(revision 1645)
++++ src/lib/com/izforge/izpack/compiler/Packager.java	(working copy)
+@@ -731,7 +731,7 @@
+      * @return the total number of bytes copied
+      * @exception IOException if an I/O error occurs
+      */
+-    private long copyStream(InputStream in, OutputStream out) throws IOException
++    protected long copyStream(InputStream in, OutputStream out) throws IOException
+     {
+         byte[] buffer = new byte[5120];
+         long bytesCopied = 0;

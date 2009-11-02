@@ -1,0 +1,101 @@
+<html>
+<body>
+
+<h2><a href="../views.html">Vues</a> - Tableau de Donn&eacute;es</h2>
+
+<p>
+Cette vue pr&eacute;sente toutes les entit&eacute;s (du m&ecirc;me type) 
+sous forme de tableaux (exemple, tous les individus, toutes les familles, 
+etc..), r&eacute;partis en colonnes.<Br>
+Vous pouvez vous d&eacute;placer de haut en bas et 
+vice versa, en utilisant les ascenseurs sur le c&ocirc;t&eacute; et 
+ainsi s&eacute;lectionner des entit&eacute;s. Votre s&eacute;lection 
+sera notifi&eacute;e &agrave; la <a href="edit.html">Fen&ecirc;tre 
+d'Edition</a> qui, alors, pr&eacute;sentera les propri&eacute;t&eacute;s 
+de l'entit&eacute; choisie.<Br>
+En cliquant sur l'une des ent&ecirc;tes 
+de colonnes, la liste compl&egrave;te sera tri&eacute;e suivant le 
+crit&egrave;re de la colonne - en cliquant une nouvelle fois, l'ordre de 
+tri sera invers&eacute;. Un petit marqueur vous indiquera quelle 
+colonne est tri&eacute;e, et la direction de l'ordre de tri.
+  <blockquote>
+    <img src="../images/screenshots/table1.png">
+  </blockquote>
+</p>
+
+<p>
+Comment chaque cellule du tableau est elle faite ? Le tableau 
+montre une entit&eacute; &agrave; la fois, exemple, l'entit&eacute; 
+Individu, l'entit&eacute; Famille ... Les cellules dans chaque colonne 
+donnent les valeurs des propri&eacute;t&eacute;s d'une entit&eacute; 
+identifi&eacute;es par les <a href="../concepts/paths.html">Chemins 
+d'Etiquettes</a>. Si l'on veut comprendre le format gedcom, on 
+peut donner une petite explication ici, ainsi si c'est la date 
+de naissance d'une personne que je veux afficher, en r&eacute;alit&eacute;, 
+le programme va rechercher le chemin d'&eacute;tiquette 
+<em>INDI:BIRT:DATE</em> pour toutes les personnes de mon arbre, mais 
+bien s&ucirc;r il ne vous affichera que les dates de naissance pour 
+plus de facilit&eacute;.<Br>
+Chaque colonne repr&eacute;sente une caract&eacute;ristique d'une 
+propri&eacute;t&eacute; sp&eacute;cifique de l'arbre
+g&eacute;n&eacute;alogique pour cette entit&eacute;. Les ent&ecirc;tes
+de colonnes peuvent &ecirc;tre par exemple le num&eacute;ro d'identification 
+de la personne (ce qu'on appelle l'<b>ID</b>), son <b>nom</b>, 
+ses <b>pr&eacute;noms</b>, sa <b>date de naissance</b>, son <b>lieu 
+de naissance</b>, etc...<br>
+<br>
+De plus, suivant le tri que vous aurez choisi, exemple, vous avez 
+d&eacute;cid&eacute; de trier les gens par leur nom, vous verrez 
+appara&icirc;tre sur la droite de la table des lettres qui vous 
+permettront de sauter rapidement aux personnes dont le nom commence 
+par la lettre que vous aurez cliqu&eacute;. (ex: vous cliquez sur M, 
+automatiquement, la table va se positionner sur la premi&egrave;re 
+personne dont le nom commence par M). Sur l'onglet repr&eacute;sentant 
+les Familles, vous pouvez d&eacute;cider de trier suivant les dates de 
+mariage par exemple, et bien vous verrez appara&icirc;tre sur la 
+droite, le m&ecirc;me type de raccourci, mais cette fois, ce ne 
+sera plus des lettres, mais des dates, ainsi vous pourrez sauter 
+imm&eacute;diatement aux mariages dont la date a eu lieu au moins 
+&agrave; la date que vous aurez choisie. (ex: vous cliquez sur 1685 
+dans la colonne de droite, automatiquement la table va se positionner 
+sur les mariages dont la date est &eacute;gale ou post&eacute;rieure 
+&agrave; 1685).
+</p>
+
+<Br>
+
+<h3><u>Barre d'Outils</u></h3>
+  <blockquote><img src="../../images/screenshots/table2.png"></blockquote>
+ <ol>
+  <li>Affiche les <a href="../entity/indi.html">Individus</a>
+  <li>Affiche les <a href="../entity/fam.html">Familles</a>
+  <li>Affiche les <a href="../entity/media.html">Objets Multim&eacute;dias</a>
+  <li>Affiche les <a href="../entity/note.html">Notes</a>
+  <li>Affiche les <a href="../entity/source.html">Sources</a>
+  <li>Affiche les <a href="../entity/submitter.html">Fournisseurs d'Informations</a>
+  <li>Affiche les <a href="../entity/repository.html">Lieux de Stockage</a>
+  <li>Ouvrir la fen&ecirc;tre des Param&eacute;trages pour cette vue.
+  <li>Ouvrir la fen&ecirc;tre lan&ccedil;ant les impressions.
+  <li>Fermer cette fen&ecirc;tre.
+ </ol>
+
+<h3><u>Param&egrave;trages</u></h3>
+ Les param&egrave;tres pour cette vue sont regroup&eacute;s par type 
+ d'entit&eacute;s.<Br>
+ Pour chaque type d'entit&eacute;s (Individus, Familles, etc...) (que 
+ vous s&eacute;lectionnez dans le menu d&eacute;roulant en haut de la 
+ fen&ecirc;tre), les colonnes devant &ecirc;tre pr&eacute;sent&eacute;es 
+ sont indiqu&eacute;es dans la partie centrale de cette vue (vous 
+ cochez/d&eacute;cochez les noeuds, &eacute;tiquettes par le petit 
+ bouton radio se trouvant juste devant).<Br>
+ Ensuite l'ordre de pr&eacute;sentation des colonnes de la gauche 
+ &agrave; la droite, est d&eacute;termin&eacute; en mettant en 
+ surbrillance une propri&eacute;t&eacute; dans la partie basse de 
+ l'&eacute;cran, et en la faisant se d&eacute;placer vers le haut ou 
+ vers le bas en utilisant les boutons "Haut" / "Bas" se trouvant 
+ &agrave; gauche.
+
+<Br>
+
+</body>
+</html>
