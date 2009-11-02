@@ -7,6 +7,7 @@
  */
 package validate;
 
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -15,7 +16,7 @@ import genj.gedcom.Property;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
-import genj.report.Report;
+import genj.report.AnnotationsReport;
 import genj.util.EnvironmentChecker;
 import genj.util.swing.Action2;
 import genj.view.ViewContext;
@@ -28,11 +29,11 @@ import java.util.List;
  * A report that validates a Gedcom file and displays
  * anomalies and 'standard' compliancy issues
  */
-public class ReportValidate extends Report {
-  
+public class ReportValidate extends AnnotationsReport {
+
   /** whether order of properties counts or not */
   public boolean isOrderDiscretionary = true;
-  
+
   /** whether we consider an empty value to be valid */
   public boolean isEmptyValueValid = true;
 
@@ -47,7 +48,7 @@ public class ReportValidate extends Report {
 
   /** whether we consider extramarital children (before MARR after DIV) to be valid */
   public boolean isExtramaritalValid = false;
-  
+
   /** whether a place format is binding and has to be adhered to */
   public boolean isRelaxedPlaceFormat = false;
 
@@ -104,15 +105,15 @@ public class ReportValidate extends Report {
 
     if (props.length>0) {
       List tests = createTests(props[0].getGedcom());
-  
+
       for (int i=0;i<props.length;i++) {
         TagPath path = props[i].getPath();
         test(props[i], path, props[i].getGedcom().getGrammar().getMeta(path), tests, issues);
       }
     }
-    
+
     // show results
-    results(props[0].getGedcom(), issues);
+    results(issues);
   }
 
   /**
@@ -134,7 +135,7 @@ public class ReportValidate extends Report {
     }
 
     // show results
-    results(gedcom, issues);
+    results(issues);
   }
 
   /**
@@ -174,22 +175,24 @@ public class ReportValidate extends Report {
     }
 
     // show results
-    results(gedcom, issues);
+    results(issues);
   }
-  
+
   /**
    * show validation results
    */
-  private void results(Gedcom gedcom, List issues) {
+private void results(List<Context> issues) {
 
     // any fixes proposed at all?
     if (issues.size()==0) {
-      getOptionFromUser(translate("noissues"), Report.OPTION_OK);
+      setMessage(translate("noissues"));
       return;
     }
 
     // show fixes
-    showAnnotationsToUser(gedcom, translate("issues", Integer.toString(issues.size())), issues);
+    setMessage(translate("issues", Integer.toString(issues.size())));
+    for (Context ctx : issues)
+    	addAnnotation(ctx);
 
     // done
   }
@@ -243,7 +246,7 @@ public class ReportValidate extends Report {
     List result = new ArrayList();
 
     // ******************** SPECIALIZED TESTS *******************************
-    
+
     // singleton properties
     result.add(new TestCardinality());
 
@@ -259,19 +262,19 @@ public class ReportValidate extends Report {
     // non existing files
     if (!isFileNotFoundValid)
       result.add(new TestFile());
-    
+
     result.add(new TestFamilyClone());
-    
+
     result.add(new TestBiologicalChild());
 
     // order of FAMS
     if (!isOrderDiscretionary)
       result.add(new TestOrder("INDI", "FAMS", "FAMS:*:..:MARR:DATE"));
-    
+
     // order of CHILdren
     if (!isOrderDiscretionary)
       result.add(new TestOrder("FAM", "CHIL", "CHIL:*:..:BIRT:DATE"));
-    
+
     // place format
     if (!isRelaxedPlaceFormat)
       result.add(new TestPlace(gedcom));
