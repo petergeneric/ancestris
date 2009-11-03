@@ -5,13 +5,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
-import genj.report.Report;
-import genj.view.ViewContext;
+import genj.report.AnnotationsReport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +20,7 @@ import java.util.StringTokenizer;
 /**
  * A report for displaying relatives of a person
  */
-public class ReportRelatives extends Report {
+public class ReportRelatives extends AnnotationsReport {
 
   private final static int
     UNKNOWN = PropertySex.UNKNOWN,
@@ -87,20 +85,12 @@ public class ReportRelatives extends Report {
   };
 
   /**
-   * no text output necessary
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * Reports main
    */
   public void start(Indi indi) {
 
-    Gedcom gedcom = indi.getGedcom();
-    String title = translate("title", indi);
-    
+    setMessage(translate("title", indi));
+
     // prepare map of relationships
     Map key2relative = new HashMap();
     for (int i=0; i<RELATIVES.length;i++) {
@@ -109,20 +99,16 @@ public class ReportRelatives extends Report {
     }
 
     // Loop over relative descriptions
-    List items= new ArrayList();
-    items.add(new ViewContext(indi));
+    addAnnotation(indi);
     for (int i=0; i<RELATIVES.length; i++) {
       Relative relative = RELATIVES[i];
       List result = find(indi, relative.expression, relative.sex, key2relative);
       for (int j=0;j<result.size();j++) {
         Indi found = (Indi)result.get(j);
         String name = translate(relative.key) + ": " + found;
-        items.add(new ViewContext(found).setText(name));
+        addAnnotation(found, name);
       }
     }
-
-    // show it
-    showAnnotationsToUser(gedcom, title, items);
 
     // done
   }
