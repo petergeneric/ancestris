@@ -29,6 +29,7 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.TagPath;
 import genj.util.Registry;
 import genj.util.Resources;
+import genj.util.WordBuffer;
 import genj.util.swing.Action2;
 import genj.util.swing.PopupWidget;
 
@@ -41,6 +42,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -71,6 +73,7 @@ public class SelectEntityWidget extends JPanel {
   
   /** sorts */
   private Sort sort;
+  private List<Sort> sorts;
   
   private final static String[] SORTS = {
     "INDI:NAME",
@@ -120,9 +123,8 @@ public class SelectEntityWidget extends JPanel {
       list[e] = ent;
     }
 
-    // prepare sorting widget
-    sortWidget = new PopupWidget();
-    ArrayList sorts = new ArrayList();
+    // assemble sorts
+    sorts = new ArrayList<Sort>(SORTS.length);
     for (int i=0;i<SORTS.length;i++) {
       String path = SORTS[i];
       if (!path.startsWith(type))
@@ -131,8 +133,11 @@ public class SelectEntityWidget extends JPanel {
       sorts.add(s);
       if (sort==null||path.equals(registry.get("select.sort."+type, ""))) sort = s;
     }
-    sortWidget.setActions(sorts);
 
+    // prepare sorting widget
+    sortWidget = new PopupWidget();
+    sortWidget.setActions(sorts);
+    
     // prepare list widget    
     listWidget = new JComboBox();
     listWidget.setMaximumRowCount(16); // 20061020 as suggested by Daniel - show more
@@ -242,12 +247,28 @@ public class SelectEntityWidget extends JPanel {
         return e.toString();
       
       Property p = e.getProperty(sort.tagPath);
-      String value;
-      if (p==e)
-        value = e.getId();
+      
+      WordBuffer value = new WordBuffer(", ");
+      
+      // add sorting value first
+      value.append(getString(e.getProperty(sort.tagPath), "?"));
+      
+      // add all other sorts
+      for (Sort other : sorts) {
+        if (other!=sort && other.tagPath.getFirst().equals(sort.tagPath.getFirst())) {
+          value.append(getString(e.getProperty(other.tagPath), ""));
+        }
+      }
+      
+      // done
+      return value.toString(); // + " / " + e.toString();
+    }
+    
+    private String getString(Property p, String fallback) {
+      if (p instanceof Entity)
+        return ((Entity)p).getId();
       else
-        value = p!=null&&p.isValid() ? p.getDisplayValue() : "?";
-      return value + " / " + e.toString();
+        return p!=null&&p.isValid() ? p.getDisplayValue() : fallback;
     }
 
   } //Renderer
