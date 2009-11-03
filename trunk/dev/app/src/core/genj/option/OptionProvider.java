@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import sun.misc.Service;
+import javax.imageio.spi.ServiceRegistry;
 
 /**
  * A service that can provide options
@@ -134,7 +134,7 @@ public abstract class OptionProvider {
     }
     
     // use sun's service stuff
-    return Service.providers(OptionProvider.class);
+    return ServiceRegistry.lookupProviders(OptionProvider.class);
   }
 
 } //OptionProvider

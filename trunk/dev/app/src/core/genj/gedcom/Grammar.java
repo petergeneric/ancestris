@@ -23,6 +23,7 @@ import genj.util.EnvironmentChecker;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -80,7 +81,12 @@ public class Grammar {
       if (in!=null) {
           LOG.info("Loading grammar through classloader");
       } else {
-        in = new FileInputStream(new File(EnvironmentChecker.getProperty(this, "user.dir", ".", "current directory for grammar"),descriptor));
+    	try {
+    		in = new FileInputStream(new File(EnvironmentChecker.getProperty(this, "user.dir", ".", "current directory for grammar"),descriptor));
+    	} catch(FileNotFoundException e) {
+    		/* when executing dev\geo\src\tst\genj\geo\App.java  in Eclipse */
+    		in = new FileInputStream(new File("../app/"+descriptor));
+    	}
       }
 
       // parse it
