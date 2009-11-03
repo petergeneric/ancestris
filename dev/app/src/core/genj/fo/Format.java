@@ -33,12 +33,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.spi.ServiceRegistry;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-
-import sun.misc.Service;
 
 /**
  * A document format
@@ -267,7 +266,7 @@ public abstract class Format {
     List list = new ArrayList(10);
     list.add(DEFAULT);
     
-    Iterator it = Service.providers(Format.class);
+    Iterator it = ServiceRegistry.lookupProviders(Format.class);
     while (it.hasNext()) {
       try {
         Format f = (Format)it.next();

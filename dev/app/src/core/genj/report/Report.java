@@ -17,12 +17,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Revision: 1.135 $ $Author: nmeier $ $Date: 2009/02/14 23:55:32 $
+ * $Revision: 1.136 $ $Author: pewu $ $Date: 2009/10/21 08:40:54 $
  */
 package genj.report;
 
 import genj.chart.Chart;
-import genj.common.ContextListWidget;
 import genj.common.SelectEntityWidget;
 import genj.fo.Document;
 import genj.fo.Format;
@@ -42,7 +41,6 @@ import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.window.WindowManager;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.CharArrayWriter;
 import java.io.File;
@@ -69,8 +67,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 
@@ -122,6 +118,9 @@ public abstract class Report implements Cloneable {
 
   /** language we're trying to use */
   private final static String lang = Locale.getDefault().getLanguage();
+
+  /** translation resources common to all reports */
+  static final Resources COMMON_RESOURCES = Resources.get(Report.class);
 
   /** translation texts */
   private Resources resources;
@@ -222,10 +221,10 @@ public abstract class Report implements Cloneable {
       // in the same package as the instance - problem is that this
       // won't work with our special way of resolving i18n in reports
       // so we have to do that manually
-      String oname = translate(option.getProperty());
+      String oname = translateOption(option.getProperty());
       if (oname.length()>0) option.setName(oname);
       String toolTipKey = option.getProperty() + ".tip";
-      String toolTip = translate(toolTipKey);
+      String toolTip = translateOption(toolTipKey);
       if (toolTip.length() > 0 && !toolTip.equals(toolTipKey))
           option.setToolTip(toolTip);
       // set category
@@ -485,17 +484,7 @@ public abstract class Report implements Cloneable {
 
     // open document
     if (file!=null) {
-
-      // let ReportView show the file or show it in external application
-      if (owner instanceof ReportView && file.getName().endsWith(".html")) {
-        try {
-          log(""+file.toURI().toURL());
-        } catch (MalformedURLException e) {}
-      } else {
-        FileAssociation association = FileAssociation.get(formatter.getFileExtension(), formatter.getFileExtension(), "Open", owner);
-        if (association!=null)
-          association.execute(file);
-      }
+    	showFileToUser(file, formatter.getFileExtension());
     }
 
     // done
@@ -504,11 +493,33 @@ public abstract class Report implements Cloneable {
   /**
    * Show a file if there's a file association for it
    */
-  public void showFileToUser(File file) {
-    FileAssociation association = FileAssociation.get(file, "Open", owner);
-    if (association!=null)
-      association.execute(file);
-  }
+	public void showFileToUser(File file)
+	{
+		showFileToUser(file, null);
+	}
+
+	  /**
+	   * Show a file if there's a file association for it
+	   */
+	public void showFileToUser(File file, String extension)
+	{
+		// let ReportView show the file or show it in external application
+		if (owner instanceof ReportView && ("html".equals(extension) || file.getName().endsWith(".html"))) {
+			try {
+				log("" + file.toURI().toURL());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			FileAssociation association = null;
+			if (extension != null)
+				association = FileAssociation.get(extension, extension, "Open", owner);
+			else
+				association = FileAssociation.get(file, "Open", owner);
+			if (association != null)
+				association.execute(file);
+		}
+	}
 
   /**
    * A sub-class can show a chart to the user with this method
@@ -524,22 +535,6 @@ public abstract class Report implements Cloneable {
 
     // open a non-modal dialog
     windowManager.openNonModalDialog(getClass().getName()+"#component",getName(), WindowManager.INFORMATION_MESSAGE,component,Action2.okOnly(),owner);
-
-    // done
-  }
-
-  /**
-   * Show annotations containing text and references to Gedcom objects
-   */
-  public final void showAnnotationsToUser(Gedcom gedcom, String msg, List annotations) {
-
-    // prepare content
-    JPanel content = new JPanel(new BorderLayout());
-    content.add(BorderLayout.NORTH, new JLabel(msg));
-    content.add(BorderLayout.CENTER, new JScrollPane(new ContextListWidget(gedcom, annotations)));
-
-    // open a non-modal dialog
-    windowManager.openNonModalDialog(getClass().getName()+"#items",getName(),WindowManager.INFORMATION_MESSAGE,content,Action2.okOnly(),owner);
 
     // done
   }
@@ -718,6 +713,24 @@ public abstract class Report implements Cloneable {
   }
 
   /**
+   * Translates the name of a report option. First tries to translate the usual way,
+   * by calling translate(). If this is unsuccessful, tries to use properties file from GenJ report package.
+   * @param key  property name to look up
+   */
+  public String translateOption(String key)
+  {
+	  String result = translate(key);
+	  if (result.equals(key))
+	  {
+		  String optionKey = "option." + key;
+		  String optionName = COMMON_RESOURCES.getString(optionKey);
+		  if (!optionName.equals(optionKey))
+			  result = optionName;
+	  }
+	  return result;
+  }
+
+  /**
    * Sub-classes that are accompanied by a [ReportName].properties file
    * containing simple key=value pairs can lookup internationalized
    * text-values with this method.
@@ -828,7 +841,7 @@ public abstract class Report implements Cloneable {
    * @param spacesPerLevel space character between one level
    * @param prefix String in front of the indented text (can be null)
    */
-    public final String getIndent(int level, int spacesPerLevel, String prefix) {
+    public static String getIndent(int level, int spacesPerLevel, String prefix) {
         String oneLevel = "";
         while(oneLevel.length() != spacesPerLevel)
             oneLevel=oneLevel+" ";
@@ -856,7 +869,7 @@ public abstract class Report implements Cloneable {
    * @param length the length of the result
    * @param alignment one of LEFT,CENTER,RIGHT
    */
-  public final String align(String txt, int length, int alignment) {
+  public static String align(String txt, int length, int alignment) {
 
     // check txt length
     int n = txt.length();
