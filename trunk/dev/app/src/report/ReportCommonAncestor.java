@@ -22,7 +22,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.jfree.util.Log;
 
 import tree.Translator;
 import tree.graphics.GraphicsOutput;
@@ -30,17 +35,19 @@ import tree.graphics.GraphicsOutputFactory;
 import tree.graphics.GraphicsRenderer;
 import tree.output.RendererFactory;
 
-/**
- * Compute the common ancestor of two individuals and show the descendant chains between the common ancestor and the two selected descendants
- * 
- */
+
 //TODO let the user choose which ancestor to display when there are several
+//TODO evaluate the optimal box width based on the name lengths
 //TODO option landscape or portrait
-//TODO write description in .properties
 //TODO rewrite title depending on the relationship between indis (cousins, parents...)
 //TODO shouldn't we take into account the potential other parents (adoption...)?
+//TODO let the user choose the year number limit for the dates to display
+//TODO option : display the generation date or not
+
 
 /**
+ * Computes the common ancestor of two indis and shows the descendant chain between the common ancestor and these two selected indis
+ * @author nmeier
  * @author ylhenoret
  *
  */
@@ -70,7 +77,7 @@ public class ReportCommonAncestor extends ComponentReport {
     private Font smallFontStyle;
     
     private final int YEAR_LIMIT_NUMBER = 75;
-    private final int YEAR_LIMIT = Calendar.getInstance().get(Calendar.YEAR)-YEAR_LIMIT_NUMBER;
+    private final int YEAR_LIMIT = Calendar.getInstance().get(Calendar.YEAR) - YEAR_LIMIT_NUMBER;
     
     
     /** Whether to use colors (or only black and white). */
@@ -82,15 +89,20 @@ public class ReportCommonAncestor extends ComponentReport {
     /** Whether to display under 75 year dates. */
     public boolean displayRecentYears = true;
     
+    /** Whether to display the husband or the wife first in each step bloc. */
+   public int husband_or_wife_first = 0;
+   public String husband_or_wife_firsts[] = { 
+		   translate("wife"),
+		   translate("husband")
+		     };
+
    
-	
+	/** choose font to use*/
     public int ufont_name=0;
-    public String ufont_names[] = { translate("ufont_name.0"),
-				     translate("ufont_name.1"),
-				     translate("ufont_name.2"),
-				     translate("ufont_name.3"),
-				     translate("ufont_name.4"),
-				    translate("ufont_name.5")};
+	public String ufont_names[] = { translate("ufont_name.0"),
+			translate("ufont_name.1"), translate("ufont_name.2"),
+			translate("ufont_name.3"), translate("ufont_name.4"),
+			translate("ufont_name.5") };
     private String font_name = "Helvetica";
     
     
@@ -168,19 +180,39 @@ public class ReportCommonAncestor extends ComponentReport {
 		// first and second indis
 		Indi firstSelectedIndi = indis[0];
 		Indi secondSelectedIndi = indis[1];
-
+		
+		// the list to gather the different ancestors in order to let the user choose which one to display
+		Set<Indi> ancestorList = new LinkedHashSet<Indi>();
+		
 		// search the common ancestor
 		Indi ancestor = null;
-		if(firstSelectedIndi.isAncestorOf(secondSelectedIndi)){
+		if (firstSelectedIndi.isAncestorOf(secondSelectedIndi)){
 			ancestor = firstSelectedIndi;
 		}else if (secondSelectedIndi.isAncestorOf(firstSelectedIndi)){
 			ancestor = secondSelectedIndi;
-		}else{
-			ancestor = getCommonAncestor(firstSelectedIndi, secondSelectedIndi);
+		}else {
+			getCommonAncestor(firstSelectedIndi, secondSelectedIndi, ancestorList);
+			getCommonAncestor(secondSelectedIndi, firstSelectedIndi, ancestorList);
+			ancestorList = filterAncestors(ancestorList);
+//			regroupCoupleMembers(ancestorList);
 		}
 		
+		if (ancestorList.size()==1){
+			ancestor = (Indi) ancestorList.toArray()[0];
+		}
+		// if there is more than one ancestor, let the user choose which one to display
+		else if (ancestorList.size()>1) {
+			for (Indi indi : ancestorList) {
+				Log.info("name : "+indi.getName()+" id : "+indi.getId());
+			}
+			Log.info("----------------------");
+
+			ancestor = (Indi)getValueFromUser(translate("select_ancestor_in_list"), ancestorList.toArray(), (Indi) ancestorList.toArray()[0]);
+		}  
+
+
 		// if the common ancestor exists
-		if(ancestor!=null){
+		if (ancestor != null){
 			List<Step> firstIndiDirectLinks = new ArrayList<Step>();
 			firstIndiDirectLinks.add(new Step(getLastFamilyWhereSpouse(firstSelectedIndi),firstSelectedIndi, firstSelectedIndi.getSex()));
 			getAncestorListBetween(ancestor, firstSelectedIndi, firstIndiDirectLinks);
@@ -223,7 +255,8 @@ public class ReportCommonAncestor extends ComponentReport {
 //
 //		showAnnotationsToUser(indi.getGedcom(), getName(), list);
 	}
-
+	  
+	  
 	 /* ----------------- */
 	/**
 	 * init the styles with the selected font
@@ -239,13 +272,60 @@ public class ReportCommonAncestor extends ComponentReport {
 	}
 	
 	 /* ----------------- */
+	/**
+	 * @param ancestorList
+	 */
+	private List<Object> regroupCoupleMembers(List<Indi> ancestorList){
+		List<Object> results = new ArrayList<Object>();
+		
+			for (Indi ancestor : ancestorList) {
+				Fam[] families = ancestor.getFamiliesWhereSpouse();
+				// for each of the families the ancestor belonged to,
+				// look if one of the other ancestors did not belong to it
+				for (int i = 0; i < families.length; i++) {
+					Indi otherSpouse = families[i].getOtherSpouse(ancestor);
+					for (Indi indi : ancestorList) {
+						if (otherSpouse.equals(indi) 
+								&& !results.contains(families[i])){
+							ancestorList.remove(otherSpouse);
+							results.add(families[i]);
+							break;
+						}
+					}
+				}
+			}
+			return results;
+	}
+	
+	private Set<Indi> filterAncestors(Set<Indi> ancestorList){
+		Set<Indi> filteredList = new LinkedHashSet<Indi>();
+		boolean found = false;
+		for (Indi ancestor : ancestorList) {
+			found = false;
+			Fam[] families = ancestor.getFamiliesWhereSpouse();
+			// for each of the families the ancestor belonged to,
+			// look if one of the other ancestors did not belong to it
+			for (int i = 0; i < families.length; i++) {
+				Indi otherSpouse = families[i].getOtherSpouse(ancestor);
+				if (filteredList.contains(otherSpouse)){
+					found = true;
+				}
+			}
+			if(found == false){
+				filteredList.add(ancestor);
+			}
+		}
+		return filteredList;
+	}
+	
+	 /* ----------------- */
 	/** finds the most recent family of the given Indi
 	 * @param indi the Indi whom family we're looking for
 	 * @return his last family
 	 */
 	private Fam getLastFamilyWhereSpouse(Indi indi){
 		Fam[] fams = indi.getFamiliesWhereSpouse();
-		if(fams==null || fams.length==0){
+		if (fams==null || fams.length==0){
 			return null;
 		}
 		return fams[fams.length-1];
@@ -258,27 +338,29 @@ public class ReportCommonAncestor extends ComponentReport {
 	 * @param other
 	 * @return
 	 */
-	private Indi getCommonAncestor(Indi firstIndi, Indi secondIndi) {
-		// 
+	private void getCommonAncestor(Indi firstIndi, Indi secondIndi, Set<Indi> ancestorList) {
+		//FIXME non symmetrical algorithm :  
 
 		Indi father = firstIndi.getBiologicalFather();
 		if (father != null) {
-			if (father.isAncestorOf(secondIndi))
-				return father;
-			Indi ancestor = getCommonAncestor(father, secondIndi);
-			if (ancestor != null)
-				return ancestor;
+			if (father.isAncestorOf(secondIndi)){
+				ancestorList.add(father);
+			}
+			else{
+				getCommonAncestor(father, secondIndi, ancestorList);
+			}
 		}
+		
 		Indi mother = firstIndi.getBiologicalMother();
 		if (mother != null) {
-			if (mother.isAncestorOf(secondIndi))
-				return mother;
-			Indi ancestor = getCommonAncestor(mother, secondIndi);
-			if (ancestor != null)
-				return ancestor;
+			if (mother.isAncestorOf(secondIndi)){
+				ancestorList.add(mother);
+			} else {
+				getCommonAncestor(mother, secondIndi, ancestorList);
+			}
+			
 		}
-		// none found
-		return null;
+
 	}
 
 	 /* ----------------- */
@@ -361,7 +443,7 @@ public class ReportCommonAncestor extends ComponentReport {
 //			}
 //			else{
 //				Log.info("the link has no determined sex...");
-//				System.out.println("the link has no determined sex...");
+//				Log.info("the link has no determined sex...");
 //				return null;
 //			}
 			return link;
@@ -470,10 +552,10 @@ public class ReportCommonAncestor extends ComponentReport {
 	            
 	            // the title
 	            graphics.setFont(titleFontStyle);
-	            cy+=SPACE_BETWEEN_BORDER_AND_TITLE;
+	            cy += SPACE_BETWEEN_BORDER_AND_TITLE;
 	            centerString(graphics, getTitleLine(firstIndi, secondIndi, nbMaxGen), (int)cx, (int)cy );
 	            graphics.setFont(plainFontStyle);
-	            cy+=SPACE_BETWEEN_TITLE_AND_COMMON_ANCESTOR;
+	            cy += SPACE_BETWEEN_TITLE_AND_COMMON_ANCESTOR;
 	            
 	            //the common ancestor
 	            render(graphics, firstIndiDirectLinks.get(0),Position.CENTER);
@@ -489,7 +571,7 @@ public class ReportCommonAncestor extends ComponentReport {
 	            
 	            // the two branches
 	            for (int i=1;i<nbMaxGen;i++) {
-					cy+=FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES;
+					cy += FAMILY_HEIGH+SPACE_BETWEEN_RECTANGLES;
 					if(firstIndiDirectLinks.size()>i){
 						 graphics.drawLine((int)cx-FAMILY_WIDTH, (int)cy-SPACE_BETWEEN_RECTANGLES, (int)cx-FAMILY_WIDTH, (int)cy);
 						render(graphics, firstIndiDirectLinks.get(i),Position.LEFT);
@@ -530,10 +612,10 @@ public class ReportCommonAncestor extends ComponentReport {
 	         * @param step a link between the common ancestor and a descendant, with its spouse
 	         * @param rightLeft where to position the step
 	         */
-	        private void render(Graphics2D graphics, Step step,Position rightLeft){
+	        private void render(Graphics2D graphics, Step step, Position rightLeft){
 	        	
 	        	graphics.setPaint(Color.BLACK);
-	        	int cxStep=0;
+	        	int cxStep = 0;
 	        	if(rightLeft==Position.LEFT){
 	        		cxStep = (int)cx-FAMILY_WIDTH;
 	        	} else if(rightLeft==Position.RIGHT){
@@ -553,52 +635,82 @@ public class ReportCommonAncestor extends ComponentReport {
 	        	graphics.clearRect(cxStep-FAMILY_WIDTH/2, (int)cy, FAMILY_WIDTH, FAMILY_HEIGH);
 	        	graphics.drawRect(cxStep-FAMILY_WIDTH/2, (int)cy, FAMILY_WIDTH, FAMILY_HEIGH);
 	        	
-	        	// husband
-	        	if(step.getHusband()!=null){
-	        		if(step.linkSex==MALE){
-		        		graphics.setFont(boldFontStyle);
-		        		if(use_colors){
-		        			graphics.setPaint(Color.BLUE);
-		        		}
-		        		centerString(graphics, getNameLine(step.getHusband()), (int)cxStep, (int)cy + SPACE_BETWEEN_LINES);
-		        		graphics.setFont(plainFontStyle);
-		        		graphics.setPaint(Color.BLACK);
-		        	}else{
-		        		centerString(graphics, getNameLine(step.getHusband()), (int)cxStep, (int)cy + SPACE_BETWEEN_LINES);
-		        	}
-	        		graphics.setFont(dateFontStyle);
-		        	 centerString(graphics, getDateLine(step.getHusband()), (int)cxStep, (int)cy+SPACE_BETWEEN_LINES*2);
-		        	 graphics.setFont(plainFontStyle);
+	        	
+	        	if(husband_or_wife_first == 0){
+	        		renderWife(graphics, step, cxStep, (int)cy);
+	        		renderHusband(graphics, step, cxStep, (int)cy + SPACE_BETWEEN_LINES*2);
+	        	} else {
+	        		renderHusband(graphics, step, cxStep, (int)cy);
+	        		renderWife(graphics, step, cxStep, (int)cy + SPACE_BETWEEN_LINES*2);
 	        	}
-	        	 
-	        	 // wife
-	        	if(step.getWife()!=null){
-		        	 if(step.linkSex==FEMALE){
+	        	
+	        	
+	        	// Marriage if it does exist
+	        	if(step.famWhereSpouse != null 
+	        			&& step.famWhereSpouse.getMarriageDate()!=null){
+
+	        		centerString(graphics, getMarriageLine(step),(int)cxStep, (int)cy + SPACE_BETWEEN_LINES*5);
+	        	}
+	        }
+
+	        /* ------------- */
+			/**
+			 * render the wife of a step in a bloc
+			 * @param graphics
+			 * @param step
+			 * @param cxStep
+			 */
+			private void renderWife(Graphics2D graphics, Step step, int cxStep, int cyStep) {
+				if(step.getWife() != null){
+		        	 if(step.linkSex == FEMALE){
 		        		 graphics.setFont(boldFontStyle);
 		        		 if(use_colors){
 		        			 graphics.setPaint(Color.MAGENTA);
 		        		 }
-		        		 centerString(graphics, getNameLine(step.getWife()), (int)cxStep, (int)cy + SPACE_BETWEEN_LINES*3);
+		        		 centerString(graphics, getNameLine(step.getWife()), cxStep, cyStep + SPACE_BETWEEN_LINES);
 			        		graphics.setFont(plainFontStyle);
 			        		graphics.setPaint(Color.BLACK);
 		        	 } else{
-		        		 centerString(graphics, getNameLine(step.getWife()), (int)cxStep, (int)cy + SPACE_BETWEEN_LINES*3);
+		        		 centerString(graphics, getNameLine(step.getWife()), cxStep, cyStep + SPACE_BETWEEN_LINES);
 		        	 }
 		        	 graphics.setFont(dateFontStyle);
-		        	 centerString(graphics, getDateLine(step.getWife()), (int)cxStep, (int)cy + SPACE_BETWEEN_LINES*4);
+		        	 centerString(graphics, getDateLine(step.getWife()), cxStep, cyStep + SPACE_BETWEEN_LINES*2);
 		        	 graphics.setFont(plainFontStyle);
 	        	}
-	        	
-	        	// Marriage if it does exist
-	        	if(step.famWhereSpouse!=null && step.famWhereSpouse.getMarriageDate()!=null){
-	        		centerString(graphics, getMarriageLine(step),(int)cxStep, (int)cy + SPACE_BETWEEN_LINES*5);
+			}
+
+			/* ------------- */
+			/**
+			 * render the husband of a step in a bloc
+			 * @param graphics
+			 * @param step
+			 * @param cxStep
+			 */
+			private void renderHusband(Graphics2D graphics, Step step, int cxStep, int cyStep) {
+				if(step.getHusband() != null){
+	        		if(step.linkSex == MALE){
+		        		graphics.setFont(boldFontStyle);
+		        		if(use_colors){
+		        			graphics.setPaint(Color.BLUE);
+		        		}
+		        		centerString(graphics, getNameLine(step.getHusband()), cxStep, cyStep + SPACE_BETWEEN_LINES);
+		        		graphics.setFont(plainFontStyle);
+		        		graphics.setPaint(Color.BLACK);
+		        	}else{
+		        		centerString(graphics, getNameLine(step.getHusband()), cxStep, cyStep + SPACE_BETWEEN_LINES);
+		        	}
+	        		graphics.setFont(dateFontStyle);
+		        	 centerString(graphics, getDateLine(step.getHusband()), cxStep, cyStep + SPACE_BETWEEN_LINES*2);
+		        	 graphics.setFont(plainFontStyle);
 	        	}
-	        }
+			}
 	        
 	        /* ----------------- */
 	        /**
-	         * @param indi
-	         * @return
+	         * build the name line for an Indi, (ie) his name and id<br/>
+	         * if the option "do not display ids" is selected, only the name is returned
+	         * @param indi the indi to build the name line for
+	         * @return the name line formatted as follow : "name [indi id]"
 	         */
 	        private String getNameLine(Indi indi){
 	        	StringBuffer sb =  new StringBuffer(indi.getFirstName())
