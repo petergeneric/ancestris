@@ -1,0 +1,14 @@
+FICHE "ARBRE PATRONYMIQUE"
+
+La fiche "arbre patronymique" affiche, sur une seule page, un arbre avec 7 générations de vos ancêtres en suivant la filiation patronymique : c'est-à-dire selon le nom du père avec celui de son épouse et leurs renseignements d'état-civil.
+Ex : si votre ancêtre de départ s'appelle Durand, vous aurez ainsi vos sept ancêtres Durand.
+Vous pouvez éditer la fiche suivante en vous positionnant dans GenJ sur le septième ancêtre et en relançant un nouveau rapport.
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.genj/gedart", ouvrez alors votre GenJ, cliquer droit sur un individu, choisir dans la liste des rapports "Fiches de renseignements", puis dans la liste déroulante, choisir "fiche patronymique de l'individu ", GenJ vous demande un nom de fichier (il faut auparavant avoir pensé à sélectionner dans "Rapports --> Options --> Montrer le résultat dans un fichier"), sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox (pour avoir à chaque fois, une ascendance par page, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 9".).Vous pouvez l'imprimer (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc...". Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussir les option d'impression des en-têtes et divers.
+
+NB : 
+Cette fiche est souvent demandée dans les associations généalogiques pour établir des répertoires des noms et patronymes étudiés par les adhérents. Si vous souhaitez faire apparaître le nom du généalogiste créateur du rapport, vous devez créer un fournisseur d'informations (clic-droit sur individu), vous pouvez même indiquer votre n° d'adhérent dans votre cercle généalogique..
+
+(texte du 30/09/2009 : Daniel Durand
+

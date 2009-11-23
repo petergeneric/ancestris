@@ -1,0 +1,95 @@
+<html>
+<body>
+
+<h2>Translating GenJ into another language</h2>
+
+<p>
+A translation doesn't require any programming skills and therefore no source file (*.java) have to be processed. The language data is completely separated from the program and is stored in text files. A complete translation consists of 3 parts:
+
+<blockquote>
+<ol>
+  <li>GenJ program</li>
+  <li>reports</li>
+  <li>help files</li>
+</ol>
+</blockquote>
+
+These parts are independent so that the translation can be done step by step or partial (for example GenJ program and reports without the help files). You should use an <b>existing language as sample</b>, e.g. English. The necessary files (language samples) are stored on the CVS server. The GenJ inter page contains further information how to access this server. Another possibility is to send these files via e-mail. In this case please contact the GenJ team or visit the GenJ forum. The directory structure can be slightly different than the CVS structure which is refered to in the following explanations. In both cases directories contain sub directories with files needed to be processed. The parts are translated in the following way.
+</p>
+
+<h2>GenJ program</h2>
+<p>
+All files are encoded in UTF-8. Please make sure that you also use this format in your text editor. The path is <tt>dev/genj/language/[identifiaction of the language sample, e.g. en=englisch, de=german]/genj/</tt>. Only the *.properties files are relevant, where the texts on the right side of the equal sign have to be translated. <b>Texts on the left side of the equal sign remain unchanged.</b>
+
+<blockquote>
+<img src="../../images/screenshots/translate1.png">
+</blockquote>
+
+<blockquote>
+<b>Example (en => de)</b><br>
+cc.menu.file = File <b>(english sample)</b><br>
+cc.menu.file = Datei <b>(german translation)</b><br>
+cc.menu.file = Fichier <b>(french translation)</b>
+</blockquote>
+
+In case of missing translations English is automatically used as default language. The *.properties files have to be renamed so that the identification of the new language with a leading underscore _ is added to the end of the file name. <b>Note:</b> English language files (default language) have no underscore and no language identifaction in the file name.
+
+<blockquote>
+<b>Example (en => de, fr)</b><br>
+resources.properties<br>
+resources_de.properties (german)<br>
+resources_fr.properties (french)
+</blockquote>
+
+After renaming the directory to the identification of the new language the translation of the program files is ready.
+
+<blockquote>
+<b>Example (en => de, fr)</b><br>
+dev/genj/language/en/genj<br>
+dev/genj/language/de/genj/ (german)<br>
+dev/genj/language/fr/genj/ (french)
+</blockquote>
+</p>
+
+<h2>Reports</h2>
+<p>
+Here are the *.properties files in <tt>dev/genj/src/report</tt> relevant which are also encoded in UTF-8. A new line has to be added for each entry. Existing entries can be used as sample via copy and paste. On the left side of the equal sign in the new entry a dot followed by language identification has to be added or an existing identification has to be changed that way. <b>Note:</b> English entries (default language) have no dot and no language identification.
+
+<blockquote>
+<img src="../../images/screenshots/translate2.png">
+</blockquote>
+
+<blockquote>
+<b>Example (en => de, fr)</b><br>
+name = Gedcom Statistics <br>
+name.de = Gedcom-Statistik (german)<br>
+name.fr = Statistiques des donn&eacute;es Gedcom (french)
+</blockquote>
+
+The text on the right side of the equal sign has to be translated. English as default language is used for missing translations. Text enclosed by <tt>{}</tt> or <tt>@@</tt> is a placeholder for variables and shouldn't be touched. Escape sequences start with <tt>\</tt> like <tt>\n</tt>. Sequences like <tt>\u00ED</tt> is Unicode which is transformed into readable letters during the execution of GenJ.
+
+<blockquote>
+<b>Example (en => de, fr)</b><br>
+females = Females: {0} ({1}%)<Br>
+females.de&nbsp;= Weiblich: {0} ({1}%)<Br>
+females.fr&nbsp;= Femmes : {0} ({1}%)
+</blockquote>
+
+The translation is complete if all entries in all *.properties files haven been processed.
+</p>
+
+<h2>Help files</h2>
+<p>
+The help files are written in the HTML format. Images from <tt>dev/genj/images</tt> are used for demonstration. Relevant *.html files are in <tt>dev/genj/help/[identification of the language sample, e.g. en=english, de=deutsch]</tt>. HTML commands like <tt>&lt;br&gt;</tt> or <tt>&lt;/p&gt;</tt> remain unchanged. Only the text is going to be processed. <font color=red>When updating pictures (screenshots) please note the following:</font>
+<blockquote>
+<ul>
+<li>The translation of the other parts (GenJ program, reports) should be finished to avoid language mixtures.</li>
+<li>When using a different look'n feel or layout (graphical appearance) a different program display may occur. In the worst case all screenshots have to be replaced for a uniform layout of the help files.</li>
+<li>Don't overwrite the existing files in <tt>help/images</tt>, place your screenshots directly in the new <tt>help</tt> directory that you are working on.</li>
+<li>Use PNG as picture format.</li>
+</ul>
+</blockquote>
+
+The translation of the help files is ready after renaming the directory in the new language identification umbenannt (see section GenJ program for an example).
+</body>
+</html>
