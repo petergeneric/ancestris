@@ -26,7 +26,7 @@ import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.window.DefaultWindowManager;
+import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
 
 import java.io.File;
@@ -57,8 +57,9 @@ import sun.rmi.log.LogHandler;
  */
 public class App {
   
-  /*package*/ static Logger LOG;
-  
+  /*package*/ public static Logger LOG;
+    public static WindowManager genjfrWindowManager;
+
   /*package*/ static File LOGFILE; 
   
   private static Startup startup;
@@ -185,7 +186,7 @@ public class App {
         Resources resources = Resources.get(App.class);
   
         // create window manager
-        WindowManager winMgr = new DefaultWindowManager(new Registry(registry, "window"), Gedcom.getImage());
+        WindowManager winMgr = new GenjFrWindowManager(new Registry(registry, "window"), Gedcom.getImage());
         
         // Disclaimer - check version and registry value
         String version = Version.getInstance().getVersionString();

@@ -51,7 +51,7 @@ import javax.swing.table.TableColumnModel;
 /**
  * A component displaying a list of Gedcoms
  */
-/*package*/ class GedcomTableWidget extends JTable implements ContextProvider, WindowBroadcastListener {
+/*package*/ public class GedcomTableWidget extends JTable implements ContextProvider, WindowBroadcastListener {
   
   /** default column widths */
   private static final int defaultWidths[] = {
