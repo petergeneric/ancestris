@@ -53,6 +53,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.spi.ServiceRegistry;
 import javax.swing.FocusManager;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -60,8 +61,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
-
-import sun.misc.Service;
 
 /**
  * A bridge to open/manage Views
@@ -96,7 +95,7 @@ public class ViewManager {
 
     // lookup all factories dynamically
     List factories = new ArrayList();
-    Iterator it = Service.providers(ViewFactory.class);
+    Iterator it = ServiceRegistry.lookupProviders(ViewFactory.class);
     while (it.hasNext()) 
       factories.add(it.next());
 
