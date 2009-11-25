@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: genjfr.app
+OpenIDE-Module-Install: genjfr/app/Installer.class
+OpenIDE-Module-Layer: genjfr/app/layer.xml
+OpenIDE-Module-Localizing-Bundle: genjfr/app/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
