@@ -71,4 +71,16 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-pre-jar">
+        <copy todir="${build.classes.dir}">
+            <fileset dir="images"/>
+            <fileset dir="language/fr"/>
+            <fileset dir="" includes="contrib/**"/>
+        </copy>
+    </target>
+    <target depends="init" name="-do-clean">
+        <delete dir="${build.dir}"/>
+        <delete file="${dist.jar}"/>
+    </target>
+
 </project>
