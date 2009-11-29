@@ -289,7 +289,7 @@ public class ReportWebBook extends Report {
     WebStatsImplex reportPagesStatsImplex = null;
     WebStatsFrequent reportPagesStatsFrequent = null;
     WebRepSosa reportPagesRepSosa = null;
-    WebMap reportPagesMap = null;
+//FIXME: dependance croisee    WebMap reportPagesMap = null;
 
     if (pagesLastnames) {
        reportPagesNames = new WebLastnames(this, gedcom, indiDeCujus, sectionLastnames);
@@ -343,12 +343,13 @@ public class ReportWebBook extends Report {
        println(" ");
        }
 
-    if (pagesMap && displayMap) {
-       reportPagesMap = new WebMap(this, gedcom, indiDeCujus, sectionMap);
-       println(sectionMap.sectionName);
-       reportPagesMap.run(indiDeCujus, reportPagesCitiesDetails, sectionCitiesDetails);
-       println(" ");
-       }
+//FIXME: dependance croisee
+//    if (pagesMap && displayMap) {
+//       reportPagesMap = new WebMap(this, gedcom, indiDeCujus, sectionMap);
+//       println(sectionMap.sectionName);
+//       reportPagesMap.run(indiDeCujus, reportPagesCitiesDetails, sectionCitiesDetails);
+//       println(" ");
+//       }
 
     if (pagesDays) {
        reportPagesDays = new WebDays(this, gedcom, indiDeCujus, sectionDays);
