@@ -164,39 +164,39 @@
         </folder>
         <file name="Versioning_hidden"/>
         <folder name="View">
-            <file name="EntityAction.shadow" url="EntityAction.shadow">
+            <file name="EntityAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-EntityAction.instance"/>
                 <attr name="position" intvalue="-1000"/>
             </file>
-            <file name="TableAction.shadow" url="TableAction.shadow">
+            <file name="TableAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TableAction.instance"/>
                 <attr name="position" intvalue="-900"/>
             </file>
-            <file name="TreeAction.shadow" url="TreeAction.shadow">
+            <file name="TreeAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TreeAction.instance"/>
                 <attr name="position" intvalue="-800"/>
             </file>
-            <file name="TimelineAction.shadow" url="TimelineAction.shadow">
+            <file name="TimelineAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TimelineAction.instance"/>
                 <attr name="position" intvalue="-700"/>
             </file>
-            <file name="Separator1_1_2.instance" url="Separator1_1_2.instance">
+            <file name="Separator1_1_2.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-600"/>
             </file>
-            <file name="EditAction.shadow" url="EditAction.shadow">
+            <file name="EditAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-EditAction.instance"/>
                 <attr name="position" intvalue="-500"/>
             </file>
-            <file name="Separator1_1_1.instance" url="Separator1_1_1.instance">
+            <file name="Separator1_1_1.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-400"/>
             </file>
-            <file name="NavigatorAction.shadow" url="NavigatorAction.shadow">
+            <file name="NavigatorAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-NavigatorAction.instance"/>
                 <attr name="position" intvalue="-300"/>
             </file>
-            <file name="Separator1_1.instance" url="Separator1_1.instance">
+            <file name="Separator1_1.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-200"/>
             </file>
@@ -229,6 +229,27 @@
             <file name="org-netbeans-core-windows-actions-UndockAction.shadow_hidden"/>
         </folder>
 -->
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="GenjPreferenceOptionsCategory">
+            <file name="genjfr-app-GenJAdvancedOption.instance">
+                <attr name="controller" newvalue="genjfr.app.GenJOptionsPanelController"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#AdvancedOption_DisplayName_GenJ"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory"/>
+                <attr name="keywords" bundlevalue="genjfr.app.Bundle#AdvancedOption_Keywords_GenJ"/>
+                <attr name="keywordsCategory" stringvalue="GenjPreferenceOptionsCategory/null"/>
+                <attr name="toolTip" bundlevalue="genjfr.app.Bundle#AdvancedOption_Tooltip_GenJ"/>
+            </file>
+        </folder>
+        <file name="GenjPreferenceOptionsCategory.instance">
+            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/GenjPreferenceOptionsCategory"/>
+            <attr name="categoryName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
+            <attr name="iconBase" stringvalue="genjfr/app/Options.png"/>
+            <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory"/>
+            <attr name="keywords" bundlevalue="genjfr.app.Bundle#OptionsCategory_Keywords_GenjPreference"/>
+            <attr name="keywordsCategory" stringvalue="GenjPreference"/>
+            <attr name="title" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+        </file>
     </folder>
     <folder name="Shortcuts">
         <file name="D-N.shadow">
