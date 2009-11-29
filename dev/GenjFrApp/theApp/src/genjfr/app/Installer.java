@@ -18,5 +18,7 @@ public class Installer extends ModuleInstall {
         // Put your startup code here.
     	App.main(new String[]{});
     }
-
+public void close(){
+    App.shutDown();
+}
 }
