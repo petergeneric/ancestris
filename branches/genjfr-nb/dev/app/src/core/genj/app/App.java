@@ -60,7 +60,7 @@ public class App {
   /*package*/ public static Logger LOG;
     public static WindowManager genjfrWindowManager;
 
-  /*package*/ static File LOGFILE; 
+  /*package*/ public static File LOGFILE;
   
   private static Startup startup;
   
