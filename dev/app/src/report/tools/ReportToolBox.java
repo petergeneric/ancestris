@@ -6,13 +6,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 package tools;
-import tools.Log;
 import tools.imports.*;
 
 import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import genj.option.PropertyOption;
 import genj.util.swing.Action2;
 import genj.io.GedcomReader;
 import genj.io.GedcomWriter;
@@ -22,11 +20,9 @@ import genj.util.Origin;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
-import java.lang.StringBuffer;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 
@@ -1170,9 +1166,13 @@ public class ReportToolBox extends Report {
  /**
   * Set Property position 
   */
-  private int setPropertyPosition(Property prop) {
-    return prop.getPropertyPosition(prop.getProperty("NAME"))+1;
+   private int setPropertyPosition(Property prop) {
+    if (prop == null) return 1;
+    Property pName = prop.getProperty("NAME");
+    if (pName == null) return 1;
+    return prop.getPropertyPosition(pName)+1;
     }
+
 
  /**
   * Updates age tags for an individual
