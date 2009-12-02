@@ -1426,29 +1426,30 @@ public class ControlCenter extends JPanel {
 public Gedcom getSelectedGedcom() { return tGedcoms.getSelectedGedcom();}
 public ViewManager getViewManager() {return viewManager;}
 public WindowManager getWindowManager(){return windowManager;}
+public Stats getStats(){return stats;}
 
-  /**
-   * Action - Options
-   */
-  private class ActionOptions extends Action2 {
-    /** constructor */
-    protected ActionOptions() {
-      setText(resources.getString("cc.menu.options"));
-      setImage(OptionsWidget.IMAGE);
-    }
-    /** run */
-    protected void execute() {
-      // tell options about window manager - curtesy only
-      Options.getInstance().setWindowManager(windowManager);
-      // create widget for options
-      OptionsWidget widget = new OptionsWidget(getText());
-      widget.setOptions(OptionProvider.getAllOptions());
-      // open dialog
-      windowManager.openDialog("options", getText(), WindowManager.INFORMATION_MESSAGE, widget, Action2.okOnly(), ControlCenter.this);
-      // done
-    }
-  } //ActionOptions
-
+//  /**
+//   * Action - Options
+//   */
+//  private class ActionOptions extends Action2 {
+//    /** constructor */
+//    protected ActionOptions() {
+//      setText(resources.getString("cc.menu.options"));
+//      setImage(OptionsWidget.IMAGE);
+//    }
+//    /** run */
+//    protected void execute() {
+//      // tell options about window manager - curtesy only
+//      Options.getInstance().setWindowManager(windowManager);
+//      // create widget for options
+//      OptionsWidget widget = new OptionsWidget(getText());
+//      widget.setOptions(OptionProvider.getAllOptions());
+//      // open dialog
+//      windowManager.openDialog("options", getText(), WindowManager.INFORMATION_MESSAGE, widget, Action2.okOnly(), ControlCenter.this);
+//      // done
+//    }
+//  } //ActionOptions
+//
   /**
    * a little status tracker
    */

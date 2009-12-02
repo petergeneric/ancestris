@@ -15,7 +15,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.windows.TopComponent;
 
-/**
+/** Opens a Genj top component.
  *
  * @author daniel
  */
