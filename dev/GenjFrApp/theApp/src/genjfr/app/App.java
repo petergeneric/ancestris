@@ -98,7 +98,8 @@ public class App {
             }
         }
         center = startup.center;
-        genj.app.App.LOG = LOG; // TODO: horrible hack!
+        genj.app.App.LOG = LOG; // FIXME: horrible hack!
+        genj.app.App.LOGFILE = LOGFILE; // FIXME: horrible hack!
         genj.app.App.genjfrWindowManager = startup.winMgr; // TODO: horrible hack!
 
         if (!x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
