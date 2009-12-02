@@ -38,7 +38,7 @@ import org.openide.awt.Actions;
 //    dtd="-//genjfr.app//ControlCenter//EN",
 //    autostore=false
 //)
-public class GenjViewTopComponent extends TopComponent {
+public class GenjViewTopComponent extends TopComponent implements GenjInterface {
 
 //    static GenjViewTopComponent factory;
     /** path to the icon used by the component and its open action */
@@ -298,6 +298,10 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
     }
     void setToolTipText(){
         setToolTipText(getViewFactory().getTitle(false));
+    }
+
+    public Gedcom getSelectedGedcom() {
+        return App.center.getSelectedGedcom();
     }
 
 }
