@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <attr name="Menu\File\Import\position" intvalue="1600"/>
+    <attr name="Menu\File\ImporterSeparator1.instance\position" intvalue="1700"/>
+    <attr name="Menu\File\Separator2.instance\position" intvalue="1500"/>
+    <attr name="Menu\File\Separator3.instance\position" intvalue="2300"/>
+    <attr name="Menu\File\Separator4.instance\position" intvalue="2700"/>
+    <attr name="Menu\File\SeparatorNew.instance\position" intvalue="500"/>
+    <attr name="Menu\File\SeparatorOpen.instance\position" intvalue="1200"/>
+    <attr name="Menu\File\org-netbeans-core-actions-SystemExit.instance\position" intvalue="2800"/>
+    <attr name="Menu\File\org-netbeans-modules-editor-ExportHtmlAction.instance\position" intvalue="2600"/>
+    <attr name="Menu\File\org-netbeans-modules-openfile-OpenFileAction.shadow\position" intvalue="1000"/>
+    <attr name="Menu\File\org-netbeans-modules-openfile-RecentFileAction.instance\position" intvalue="1100"/>
+    <attr name="Menu\File\org-netbeans-modules-print-action-PageSetupAction.shadow\position" intvalue="2400"/>
+    <attr name="Menu\File\org-netbeans-modules-print-action-PrintAction.shadow\position" intvalue="2500"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-CloseProject.shadow\position" intvalue="900"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-CustomizeProject.shadow\position" intvalue="1400"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-NewFile.shadow\position" intvalue="400"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-NewProject.shadow\position" intvalue="300"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-OpenProject.shadow\position" intvalue="600"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-RecentProjects.shadow\position" intvalue="700"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-groups-GroupsMenu.shadow\position" intvalue="1300"/>
+    <attr name="Menu\File\org-openide-actions-SaveAction.instance\position" intvalue="1850"/>
+    <attr name="Menu\File\org-openide-actions-SaveAllAction.instance\position" intvalue="2200"/>
+    <attr name="Menu\File\org-openide-actions-SaveAsAction.shadow\position" intvalue="2100"/>
     <folder name="Actions">
         <folder name="File">
             <file name="genjfr-app-ActionNew.instance">
@@ -24,6 +47,9 @@
             </file>
             <file name="genjfr-app-ActionSave.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionSave"/>
+            </file>
+            <file name="genjfr-app-ActionSaveAs.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionSaveAs"/>
             </file>
         </folder>
         <folder name="Window">
@@ -119,16 +145,27 @@
         <folder name="File">
             <file name="genjfr-app-ActionNew.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
-                <attr name="position" intvalue="-200"/>
+                <attr name="position" intvalue="100"/>
             </file>
             <file name="genjfr-app-ActionOpen.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
-                <attr name="position" intvalue="-100"/>
+                <attr name="position" intvalue="200"/>
             </file>
             <file name="genjfr-app-ActionClose.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
-                <attr name="position" intvalue="-50"/>
+                <attr name="position" intvalue="800"/>
             </file>
+            <file name="genjfr-app-ActionSave.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
+                <attr name="position" intvalue="1800"/>
+            </file>
+            <file name="genjfr-app-ActionSaveAs.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSaveAs.instance"/>
+                <attr name="position" intvalue="1900"/>
+            </file>
+            <file name="org-openide-actions-SaveAction.instance_hidden"/>
+            <file name="org-openide-actions-SaveAllAction.instance_hidden"/>
+            <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
         </folder>
         <file name="GoTo_hidden"/>
         <folder name="Help">
@@ -274,6 +311,14 @@
             <file name="genjfr-app-ActionOpen.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
                 <attr name="position" intvalue="0"/>
+            </file>
+            <file name="genjfr-app-ActionClose.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
+                <attr name="position" intvalue="10"/>
+            </file>
+            <file name="genjfr-app-ActionSave.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
+                <attr name="position" intvalue="20"/>
             </file>
         </folder>
     </folder>
