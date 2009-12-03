@@ -63,6 +63,9 @@ import java.net.URL;
       // remember gedcom
       this.gedcomBeingSaved = gedcom;
     }
+    public ActionSave(){
+        this(false,true);
+    }
     /**
      * Constructor
      */
