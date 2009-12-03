@@ -129,24 +129,24 @@
                 <package>webbook</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graphj.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/graphj.jar</binary-origin>
+                <runtime-relative-path>ext/lib/graphj.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/lib/graphj.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/GenJ.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/GenJ.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jfreechart-1.0.13.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jfreechart-1.0.13.jar</binary-origin>
+                <runtime-relative-path>ext/lib/jfreechart-1.0.13.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/lib/jfreechart-1.0.13.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jcommon-1.0.16.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jcommon-1.0.16.jar</binary-origin>
+                <runtime-relative-path>ext/lib/jcommon-1.0.16.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/lib/jcommon-1.0.16.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jhbasic.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jhbasic.jar</binary-origin>
+                <runtime-relative-path>ext/lib/jhbasic.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/lib/jhbasic.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
