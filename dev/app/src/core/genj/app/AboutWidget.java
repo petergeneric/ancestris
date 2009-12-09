@@ -38,6 +38,7 @@ import genj.view.ViewManager;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -96,10 +97,27 @@ public class AboutWidget extends JPanel{
   /**
    * Helper to read text from a file
    */
-  protected void readTextFile(JTextArea ta, String file, String fallback) {
+  protected void readTextFileNU(JTextArea ta, String file, String fallback) {
     try {
       String charSet = "UTF-8";
       FileInputStream fin = new FileInputStream(file);
+      Reader in = new InputStreamReader(fin,charSet);
+      ta.read(in,null);
+      fin.close();
+    }
+    catch (Throwable t) {
+      ta.setText(fallback);
+    }
+  }
+
+  /**
+   * Helper to read text from a file
+   */
+  protected void readTextResource(JTextArea ta, String resource, String fallback) {
+    try {
+        String charSet = "UTF-8";
+      InputStream fin = getClass().getResourceAsStream(resource);
+
       Reader in = new InputStreamReader(fin,charSet);
       ta.read(in,null);
       fin.close();
@@ -134,7 +152,8 @@ public class AboutWidget extends JPanel{
       
       String path = dir + File.separatorChar + "doc" + File.separatorChar + "authors.txt";
       
-      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
+//      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
+      readTextResource(text, "/doc/authors.txt", resources.getString("cc.about.file_missing.text") + path);
 
       // setup looks
       setViewportView(text);      
@@ -199,7 +218,7 @@ public class AboutWidget extends JPanel{
       );
       
       String path = dir + File.separatorChar + "doc" + File.separatorChar + "gpl.txt";
-      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
+      readTextResource(text, "/doc/gpl.txt", resources.getString("cc.about.file_missing.text") + path);
       text.setLineWrap(false);
       text.setEditable(false);
       text.setBorder(new EmptyBorder(3, 3, 3, 3));
@@ -303,7 +322,7 @@ public class AboutWidget extends JPanel{
       );
       
       String path = dir + File.separatorChar + "doc" + File.separatorChar + "changelog";
-      readTextFile(text, path, resources.getString("cc.about.file_missing.text") + path);
+      readTextResource(text, "/doc/changelog", resources.getString("cc.about.file_missing.text") + path);
       text.setLineWrap(false);
       text.setEditable(false);
       text.setBorder(new EmptyBorder(3, 3, 3, 3));
