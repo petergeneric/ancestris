@@ -185,6 +185,7 @@
             <file name="org-netbeans-core-actions-AboutAction.instance_hidden"/>
             <file name="org-netbeans-modules-javadoc-search-IndexOverviewAction.shadow_hidden"/>
             <file name="org-netbeans-modules-javadoc-search-SearchDocAction.shadow_hidden"/>
+            <file name="master-help.xml_hidden"/>
         </folder>
         <file name="Profile_hidden"/>
         <file name="Refactoring_hidden"/>
