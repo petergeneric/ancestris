@@ -9,6 +9,9 @@ import genj.app.Images;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.window.WindowManager;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 
 public final class ActionHelp extends Action2 {
       private Resources resources = Resources.get(genj.app.ControlCenter.class);
@@ -20,9 +23,18 @@ public final class ActionHelp extends Action2 {
     }
     /** run */
     protected void execute() {
-      if (windowManager.show("help"))
-        return;
-      windowManager.openWindow("help",resources.getString("cc.menu.help"),Images.imgHelp,new HelpWidget(),null,null);
-      // done
+        String id = "intro";
+Help help = (Help)Lookup.getDefault().lookup(Help.class);
+if (help != null && help.isValidID(id, true).booleanValue()) {
+    help.showHelp(new HelpCtx(id));
+} else {
+//    Toolkit.getDefaultToolkit().beep();
+}
+
+
+//      if (windowManager.show("help"))
+//        return;
+//      windowManager.openWindow("help",resources.getString("cc.menu.help"),Images.imgHelp,new HelpWidget(),null,null);
+//      // done
     }
   } //ActionHelp
