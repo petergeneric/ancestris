@@ -14,5 +14,7 @@ import genj.gedcom.Gedcom;
 public interface GenjInterface {
 
     public Gedcom getSelectedGedcom();
+        public Gedcom getGedcom();
 
+    public boolean close();
 }

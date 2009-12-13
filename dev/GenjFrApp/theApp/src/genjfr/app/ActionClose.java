@@ -69,6 +69,12 @@ import genj.window.WindowManager;
       // Remove it
       GedcomDirectory.getInstance().unregisterGedcom(gedcom);
 
+     for (GenjInterface gjvTc : GenjViewTopComponent.getMyLookup().lookupAll(GenjInterface.class)) {
+          Gedcom ged = gjvTc.getGedcom();
+          if (gedcom.equals(gjvTc.getGedcom()))
+                  gjvTc.close();
+      }
+
       // Done
     }
   } //ActionClose

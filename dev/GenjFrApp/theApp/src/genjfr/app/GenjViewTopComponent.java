@@ -4,19 +4,14 @@
  */
 package genjfr.app;
 
-import genj.edit.EditViewFactory;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomDirectory;
-import genj.util.Origin;
 import genj.view.ViewContainer;
 import genj.view.ViewFactory;
 import genj.view.ViewHandle;
 import genj.view.ViewManager;
 import genj.window.GenjFrWindowManager;
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Action;
@@ -24,12 +19,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
-import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.awt.Actions;
 
 /**
  * Top component which displays something.
@@ -38,6 +33,7 @@ import org.openide.awt.Actions;
 //    dtd="-//genjfr.app//ControlCenter//EN",
 //    autostore=false
 //)
+@ServiceProvider(service=GenjInterface.class)
 public class GenjViewTopComponent extends TopComponent implements GenjInterface {
 
 //    static GenjViewTopComponent factory;
@@ -45,7 +41,16 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "GenjViewTopComponent";
     private static javax.swing.JPanel panel;
+    private static InstanceContent ic = new InstanceContent ();
     Gedcom gedcom = null;
+
+    public Gedcom getGedcom() {
+        return gedcom;
+    }
+
+    public void setGedcom(Gedcom gedcom) {
+        this.gedcom = gedcom;
+    }
 
     public GenjViewTopComponent() {
         super();
@@ -103,8 +108,12 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
 
 //clipse    	setPartName(gedcom.getName());
 
+        ic.add(this);
     }
 
+    static Lookup getMyLookup() {
+        return new AbstractLookup(ic);
+    }
     /**
      * Get the package name of a Factory
      */
