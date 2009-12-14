@@ -287,6 +287,7 @@ public class App {
                 // create window manager
 //        WindowManager
                 winMgr = new GenjFrWindowManager(new Registry(registry, "window"), Gedcom.getImage());
+                WindowManager.setDefaultWm(winMgr);
 
                 // Disclaimer - check version and registry value
 //        String version = Version.getInstance().getVersionString();

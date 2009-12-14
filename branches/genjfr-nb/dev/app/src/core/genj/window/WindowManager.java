@@ -64,7 +64,18 @@ public abstract class WindowManager {
   private final static Object WINDOW_MANAGER_KEY = WindowManager.class;
   
   private static WeakHashMap window2manager = new WeakHashMap();
-  
+
+  // FIXME: to be deleted
+  private static WindowManager defaultWm = null;
+
+    public static WindowManager getDefaultWm() {
+        return defaultWm;
+    }
+
+    public static void setDefaultWm(WindowManager defWm) {
+        defaultWm = defWm;
+    }
+
   /** message types*/
   public static final int  
     ERROR_MESSAGE = JOptionPane.ERROR_MESSAGE,
@@ -261,6 +272,8 @@ public abstract class WindowManager {
         window = window.getParent();
     }
     // look it up
+    if (manager == null)
+            manager = defaultWm;
     return manager;
   }
 
