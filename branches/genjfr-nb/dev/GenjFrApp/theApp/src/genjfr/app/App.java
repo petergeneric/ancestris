@@ -336,7 +336,6 @@ public class App {
                 return null;
             }
             String done = registry.get("optionswizard", "");
- done = "0"; // do not forget to remove this line !
             if (done.equals("1")) {
                 return registry;
             }
