@@ -31,6 +31,7 @@ import genj.util.swing.Action2;
 import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
 
+import genjfr.app.pluginservice.PluginInterface;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,6 +60,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  * Main Class for GenJ Application
@@ -137,7 +139,6 @@ public class App {
      * http://bugs.sun.com/view_bug.do?bug_id=6678385
      * TODO: voir http://www.netbeans.org/issues/show_bug.cgi?id=115606
      */
-
     private static void initX11ErrorHandlerFix() {
         assert EventQueue.isDispatchThread();
 
@@ -245,10 +246,11 @@ public class App {
                 LOG.info("\n\n==================8<================================================================");
                 LOG.info("Startup");
 
-                // init our data
+                // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
                 Registry registry = new Registry("genj");
+                registry = checkOptionsWizard(registry);
 
-                // initialize options first
+                // initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions(registry);
 
                 // Setup File Logging and check environment
@@ -318,6 +320,49 @@ public class App {
             synchronized (this) {
                 notifyAll();
             }
+
+        }
+
+        /**
+         * Launches Wizard for the options if never done and the module exists
+         * 
+         * @param registry
+         * @return
+         */
+        private Registry checkOptionsWizard(Registry registry) {
+
+            // Check if options wizard has ever been run (when it has, there is a property set in genj.properties)
+            if (registry == null) {
+                return null;
+            }
+            String done = registry.get("optionswizard", "");
+ done = "0"; // do not forget to remove this line !
+            if (done.equals("1")) {
+                return registry;
+            }
+
+            // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
+            PluginInterface pi = null;
+            for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+                System.out.println("Plugin " + sInterface.getPluginName() + " loaded successfully.");
+                if (sInterface.getPluginName().equals("OptionsWizard")) {
+                    pi = sInterface;
+                    break;
+                }
+            }
+
+            // Run wizard module when found
+            // Also reload registry because the wizard does save a new set of options
+            if (pi != null) {
+                System.out.println("Launching Wizard...");
+                if (pi.launchModule(registry)) {
+                    registry.put("optionswizard", "1");
+                    Registry.persist();
+                    registry = new Registry("genj");
+                }
+            }
+
+            return registry;
 
         }
     } //Startup
