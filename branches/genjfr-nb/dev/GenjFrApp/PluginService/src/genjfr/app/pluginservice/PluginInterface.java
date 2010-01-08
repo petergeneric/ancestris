@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genjfr.app.pluginservice;
 
 /**
@@ -11,6 +10,7 @@ package genjfr.app.pluginservice;
  */
 public interface PluginInterface {
 
-   public String getPluginName();
-   
+    public String getPluginName();
+
+    public boolean launchModule(Object o);
 }
