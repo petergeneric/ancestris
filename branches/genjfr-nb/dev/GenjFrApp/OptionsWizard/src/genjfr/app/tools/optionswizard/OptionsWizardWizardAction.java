@@ -24,6 +24,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
     private static final String PREFERRED_PLUGIN_NAME = "OptionsWizard";
     private Registry registry;
     private WizardDescriptor.Panel[] panels;
+    private boolean exitFlag = false;
 
     public String getPluginName() {
         return PREFERRED_PLUGIN_NAME;
@@ -34,7 +35,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         System.out.println("======================= DEBUT DU WIZARD =========================");
         this.registry = (Registry) o;
         performAction();
-        return true;
+        return exitFlag;
     }
 
     public void performAction() {
@@ -49,6 +50,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             putRegistryFromSettings(registry);
+            exitFlag = true;
         }
     }
 
