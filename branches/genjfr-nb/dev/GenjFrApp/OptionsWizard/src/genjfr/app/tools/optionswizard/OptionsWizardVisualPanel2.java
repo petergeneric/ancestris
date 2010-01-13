@@ -12,7 +12,7 @@ import org.openide.util.NbBundle;
 public final class OptionsWizardVisualPanel2 extends JPanel {
 
     // Values
-    String[] indis = new String[] { "Johnny Haliday", "Haliday, Johnny" };
+    String[] indis = new String[] { "Charles de Gaulle", "de Gaulle, Charles" };
     String[] dates = new String[] { "25 JAN 1970", "25 Jan 1970", "25 Janvier 1970", "25/01/1970" };
 
     /** Creates new form OptionsWizardVisualPanel2 */
@@ -82,7 +82,6 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "TTT_size_images")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "OptionsWizardVisualPanel2.jLabel6.text")); // NOI18N
-        jLabel6.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "OptionsWizardVisualPanel2.jLabel6.toolTipText")); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "OptionsWizardVisualPanel2.jLabel2.text")); // NOI18N
@@ -168,7 +167,6 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         jSpinner2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "TTT_priv_years")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "OptionsWizardVisualPanel2.jLabel21.text")); // NOI18N
-        jLabel21.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "OptionsWizardVisualPanel2.jLabel21.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel22, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel2.class, "OptionsWizardVisualPanel2.jLabel22.text")); // NOI18N
 
@@ -525,7 +523,10 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         if (str.equals("-1")) {
             str = "0";
         }
-        Integer i = Integer.valueOf(str);
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 0;
+        }
         if (i > 10000) {
             i = 10000;
         }
@@ -544,7 +545,10 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         if (str.equals("-1")) {
             str = "20";
         }
-        Integer i = Integer.valueOf(str);
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 255;
+        }
         if (i > 1000) {
             i = 1000;
         }
@@ -559,7 +563,10 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         if (str.equals("-1")) {
             str = "128";
         }
-        Integer i = Integer.valueOf(str);
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 128;
+        }
         if (i > 16384) {
             i = 16384;
         }
@@ -576,9 +583,12 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         if (str.equals("-1")) {
             str = "0";
         }
-        Integer i = Integer.valueOf(str);
-        if (i > 8) {
-            i = 8;
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 0;
+        }
+        if (i > 1) {
+            i = 1;
         }
         jComboBox4.setSelectedIndex(i);
     }
@@ -591,9 +601,12 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         if (str.equals("-1")) {
             str = "0";
         }
-        Integer i = Integer.valueOf(str);
-        if (i > 8) {
-            i = 8;
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 0;
+        }
+        if (i > 3) {
+            i = 3;
         }
         jComboBox3.setSelectedIndex(i);
     }
@@ -603,6 +616,16 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
 
+    private Integer getIntFromStr(String str) {
+
+        Integer i = 0;
+        try {
+            i = Integer.valueOf(str);
+        } catch (Exception e) {
+            i = -1;
+        }
+        return i;
+    }
 
 }
 

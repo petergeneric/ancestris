@@ -81,7 +81,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
         setPreferredSize(new java.awt.Dimension(662, 496));
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "TTT_subm")); // NOI18N
 
@@ -195,7 +195,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "TTT_encoding")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox19, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jCheckBox19.text")); // NOI18N
-        jCheckBox19.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jCheckBox19.toolTipText")); // NOI18N
+        jCheckBox19.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "TTT_encodingflag")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -206,7 +206,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addContainerGap(478, Short.MAX_VALUE))
+                .addContainerGap(524, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(196, 196, 196)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,9 +230,9 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                                     .addComponent(jLabel8))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField5)
-                                    .addComponent(jTextField7)))
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)))
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(59, 59, 59))
             .addGroup(layout.createSequentialGroup()
