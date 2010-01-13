@@ -385,6 +385,7 @@ public class App {
          */
         public void run() {
             LOG.info("Shutdown");
+            center.nbDoExit();
             // persist options
             OptionProvider.persistAll(registry);
             // Store registry
