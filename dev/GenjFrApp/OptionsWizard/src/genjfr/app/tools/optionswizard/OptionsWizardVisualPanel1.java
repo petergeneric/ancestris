@@ -239,7 +239,10 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         if (str.equals("-1")) {
             str = "0";
         }
-        Integer i = Integer.valueOf(str);
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 2;
+        }
         if (i > 12) {
             i = 12;
         }
@@ -254,7 +257,10 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         if (str.equals("-1")) {
             str = "0";
         }
-        Integer i = Integer.valueOf(str);
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 0;
+        }
         if (i > 8) {
             i = 8;
         }
@@ -285,7 +291,10 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         if (str.equals("-1")) {
             str = "10";
         }
-        Integer i = Integer.valueOf(str);
+        Integer i = getIntFromStr(str);
+        if (i == -1) {
+            i = 10;
+        }
         if (i > 300) {
             i = 300;
         }
@@ -304,7 +313,6 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         return (String) (jCheckBox4.isSelected() ? "true" : "false");
     }
 
-
     void setOpenEditor(String str) {
         jCheckBox2.setSelected(str.equals("true") ? true : false);
     }
@@ -313,4 +321,14 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         return (String) (jCheckBox2.isSelected() ? "true" : "false");
     }
 
+    private Integer getIntFromStr(String str) {
+
+        Integer i = 0;
+        try {
+            i = Integer.valueOf(str);
+        } catch (Exception e) {
+            i = -1;
+        }
+        return i;
+    }
 }
