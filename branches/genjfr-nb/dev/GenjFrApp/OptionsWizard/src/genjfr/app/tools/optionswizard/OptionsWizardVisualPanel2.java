@@ -537,7 +537,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 0;
+            i = 70;
         }
         if (i > 10000) {
             i = 10000;
