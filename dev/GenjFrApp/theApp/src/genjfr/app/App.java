@@ -73,8 +73,9 @@ public class App {
     private static Startup startup;
     public static ControlCenter center;
     public static WindowManager genjWindowManager;
-    private static Shutdown shutDownTask;
+//    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
+    private static Registry REGISTRY = new Registry("genj");
 
     /**
      * GenJ Main Method
@@ -130,8 +131,20 @@ public class App {
 //        }
     }
 
-    public static void shutDown() {
-        shutDownTask.run();
+    public static boolean shutDown() {
+            LOG.info("Shutdown");
+            if (center.nbDoExit()) {
+                // persist options
+                OptionProvider.persistAll(REGISTRY);
+                // Store registry
+                Registry.persist();
+                // done
+                LOG.info("/Shutdown");
+                return true;
+            } else {
+                LOG.info("/Shutdown aborted");
+                return false;
+            }
     }
 
     /**
@@ -247,11 +260,10 @@ public class App {
                 LOG.info("Startup");
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
-                Registry registry = new Registry("genj");
-                registry = checkOptionsWizard(registry);
+                REGISTRY = checkOptionsWizard(REGISTRY);
 
                 // initialize options first (creates a registry view within the above registry only containing the options)
-                OptionProvider.getAllOptions(registry);
+                OptionProvider.getAllOptions(REGISTRY);
 
                 // Setup File Logging and check environment
                 LOGFILE = new File(home, "genj.log");
@@ -288,7 +300,7 @@ public class App {
 
                 // create window manager
 //        WindowManager
-                winMgr = new GenjFrWindowManager(new Registry(registry, "window"), Gedcom.getImage());
+                winMgr = new GenjFrWindowManager(new Registry(REGISTRY, "window"), Gedcom.getImage());
                 WindowManager.setDefaultWm(winMgr);
 
                 // Disclaimer - check version and registry value
@@ -301,8 +313,7 @@ public class App {
 //        }
 
                 // setup control center
-                shutDownTask = new Shutdown(registry);
-                center = new ControlCenter(registry, winMgr, new Shutdown(registry));
+                center = new ControlCenter(REGISTRY, winMgr, new Shutdown(REGISTRY));
 
                 // show it
 //        winMgr.openWindow("cc", resources.getString("app.title"), Gedcom.getImage(), center, center.getMenuBar(), center.getExitAction());
@@ -384,17 +395,7 @@ public class App {
          * do the shutdown
          */
         public void run() {
-            LOG.info("Shutdown");
-            center.nbDoExit();
-            // persist options
-            OptionProvider.persistAll(registry);
-            // Store registry
-            Registry.persist();
-            // done
-            LOG.info("/Shutdown");
-            // let VM do it's thing
-//            System.exit(0);
-            // done
+            shutDown();
         }
     } //Shutdown
 
