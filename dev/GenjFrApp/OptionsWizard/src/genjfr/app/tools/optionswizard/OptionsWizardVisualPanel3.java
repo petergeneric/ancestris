@@ -654,6 +654,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddressSpaces(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox17.setSelected(str.equals("true") ? true : false);
     }
 
@@ -662,6 +663,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setIDFilling(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox18.setSelected(str.equals("true") ? true : false);
     }
 
