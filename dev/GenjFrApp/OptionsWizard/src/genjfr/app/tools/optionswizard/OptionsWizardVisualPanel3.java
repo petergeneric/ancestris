@@ -81,7 +81,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
         setPreferredSize(new java.awt.Dimension(662, 496));
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "TTT_subm")); // NOI18N
 
@@ -206,7 +206,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addContainerGap(524, Short.MAX_VALUE))
+                .addContainerGap(478, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(196, 196, 196)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,9 +230,9 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                                     .addComponent(jLabel8))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)))
+                                    .addComponent(jTextField3)
+                                    .addComponent(jTextField5)
+                                    .addComponent(jTextField7)))
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(59, 59, 59))
             .addGroup(layout.createSequentialGroup()
@@ -506,6 +506,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
 
     void setNamesUppercase(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox1.setSelected(str.equals("true") ? true : false);
     }
     String getNamesUppercase() {
@@ -523,6 +524,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
 
     void setAddress1(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox3.setSelected(str.equals("true") ? true : false);
     }
     String getAddress1() {
@@ -530,6 +532,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddress2(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox4.setSelected(str.equals("true") ? true : false);
     }
     String getAddress2() {
@@ -544,6 +547,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddress4(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox6.setSelected(str.equals("true") ? true : false);
     }
     String getAddress4() {
@@ -551,6 +555,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddress5(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox7.setSelected(str.equals("true") ? true : false);
     }
     String getAddress5() {
@@ -558,6 +563,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddress6(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox8.setSelected(str.equals("true") ? true : false);
     }
     String getAddress6() {
@@ -565,6 +571,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddress7(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox9.setSelected(str.equals("true") ? true : false);
     }
     String getAddress7() {
@@ -579,6 +586,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     void setAddress2Mand(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox11.setSelected(str.equals("true") ? true : false);
     }
     String getAddress2Mand() {
@@ -636,6 +644,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
 
     void setBOM(String str) {
+        if (str.equals("")) str = "true";
         jCheckBox19.setSelected(str.equals("true") ? true : false);
     }
     String getBOM() {
