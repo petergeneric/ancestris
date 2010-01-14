@@ -71,7 +71,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 1000, 1));
+        jSpinner3 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 255, 1));
         jLabel24 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
@@ -414,6 +414,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     // End of variables declaration//GEN-END:variables
 
     void setSymbolBirt(String str) {
+        if (str.equals("")) str = "o";
         jTextField1.setText(str);
     }
 
@@ -422,6 +423,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolBapm(String str) {
+        if (str.equals("")) str = "b.";
         jTextField2.setText(str);
     }
 
@@ -430,6 +432,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolChildOf(String str) {
+        if (str.equals("")) str = "fs.";
         jTextField3.setText(str);
     }
 
@@ -438,6 +441,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolEngm(String str) {
+        if (str.equals("")) str = "(x)";
         jTextField4.setText(str);
     }
 
@@ -446,6 +450,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolMarr(String str) {
+        if (str.equals("")) str = "x";
         jTextField5.setText(str);
     }
 
@@ -454,6 +459,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolDivc(String str) {
+        if (str.equals("")) str = ")(";
         jTextField6.setText(str);
     }
 
@@ -462,6 +468,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolOccu(String str) {
+        if (str.equals("")) str = "=";
         jTextField9.setText(str);
     }
 
@@ -470,6 +477,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolResi(String str) {
+        if (str.equals("")) str = "^";
         jTextField8.setText(str);
     }
 
@@ -478,6 +486,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolDeat(String str) {
+        if (str.equals("")) str = "+";
         jTextField11.setText(str);
     }
 
@@ -486,6 +495,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setSymbolBuri(String str) {
+        if (str.equals("")) str = "(+)";
         jTextField10.setText(str);
     }
 
@@ -496,6 +506,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
 
 
     void setPrivDisplay(String str) {
+        if (str.equals("")) str = "...";
         jTextField12.setText(str);
     }
 
@@ -504,6 +515,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setPrivFlag(String str) {
+        if (str.equals("")) str = "_PRIV";
         jTextField13.setText(str);
     }
 
@@ -511,12 +523,12 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         return jTextField13.getText();
     }
 
-    void setPrivDeceased(String str) {
-        jCheckBox1.setSelected(str.equals("true") ? false : true); // reversed on purpose
+    void setPrivAlive(String str) {
+        jCheckBox1.setSelected(str.equals("true") ? true : false);
     }
 
-    String getPrivDeceased() {
-        return (String) (jCheckBox1.isSelected() ? "false" : "true"); // reversed on purpose
+    String getPrivAlive() {
+        return (String) (jCheckBox1.isSelected() ? "true" : "false");
     }
 
     void setPrivYears(String str) {
@@ -547,10 +559,10 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 255;
+            i = 250;
         }
-        if (i > 1000) {
-            i = 1000;
+        if (i > 255) {
+            i = 255;
         }
         jSpinner3.setValue(i);
     }

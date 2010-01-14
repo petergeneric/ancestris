@@ -92,7 +92,7 @@ public class OptionsWizardWizardPanel2 implements WizardDescriptor.Panel {
      ((OptionsWizardVisualPanel2) getComponent()).setSymbolBuri(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolBuri", ""));
      ((OptionsWizardVisualPanel2) getComponent()).setPrivDisplay(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privDisplay", ""));
      ((OptionsWizardVisualPanel2) getComponent()).setPrivFlag(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privFlag", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setPrivDeceased(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privDeceased", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setPrivAlive(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privAlive", ""));
      ((OptionsWizardVisualPanel2) getComponent()).setPrivYears(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privYears", ""));
      ((OptionsWizardVisualPanel2) getComponent()).setLineBreak(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("txtLineBreak", ""));
      ((OptionsWizardVisualPanel2) getComponent()).setImageSize(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("imageSize", ""));
@@ -114,7 +114,7 @@ public class OptionsWizardWizardPanel2 implements WizardDescriptor.Panel {
      NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolBuri", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBuri());
      NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privDisplay", ((OptionsWizardVisualPanel2) getComponent()).getPrivDisplay());
      NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privFlag", ((OptionsWizardVisualPanel2) getComponent()).getPrivFlag());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privDeceased", ((OptionsWizardVisualPanel2) getComponent()).getPrivDeceased());
+     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privAlive", ((OptionsWizardVisualPanel2) getComponent()).getPrivAlive());
      NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privYears", ((OptionsWizardVisualPanel2) getComponent()).getPrivYears());
      NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("txtLineBreak", ((OptionsWizardVisualPanel2) getComponent()).getLineBreak());
      NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("imageSize", ((OptionsWizardVisualPanel2) getComponent()).getImageSize());

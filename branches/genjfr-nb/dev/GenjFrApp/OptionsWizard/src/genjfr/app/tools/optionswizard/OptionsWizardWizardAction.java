@@ -132,7 +132,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolBuri", registry.get("options.genj.report.Options.burialSymbol", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privDisplay", registry.get("options.genj.gedcom.Options.maskPrivate", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privFlag", registry.get("options.genj.report.Options.privateTag", ""));
-        NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privDeceased", registry.get("options.genj.report.Options.deceasedIsPublic", ""));
+        NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privAlive", registry.get("options.genj.report.Options.deceasedIsPublic", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privYears", registry.get("options.genj.report.Options.yearsEventsArePrivate", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("txtLineBreak", registry.get("options.genj.gedcom.Options.valueLineBreak", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("imageSize", registry.get("options.genj.gedcom.Options.maxImageFileSizeKB", ""));
@@ -202,7 +202,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         registry.put("options.genj.report.Options.burialSymbol", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolBuri", ""));
         registry.put("options.genj.gedcom.Options.maskPrivate", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privDisplay", ""));
         registry.put("options.genj.report.Options.privateTag", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privFlag", ""));
-        registry.put("options.genj.report.Options.deceasedIsPublic", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privDeceased", ""));
+        registry.put("options.genj.report.Options.deceasedIsPublic", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privAlive", ""));
         registry.put("options.genj.report.Options.yearsEventsArePrivate", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privYears", ""));
         registry.put("options.genj.gedcom.Options.valueLineBreak", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("txtLineBreak", ""));
         registry.put("options.genj.gedcom.Options.maxImageFileSizeKB", NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("imageSize", ""));
