@@ -105,6 +105,7 @@ public class OptionsWizardWizardPanel3 implements WizardDescriptor.Panel {
      ((OptionsWizardVisualPanel3) getComponent()).setAddress7Mand(NbPreferences.forModule(OptionsWizardWizardPanel3.class).get("fmt_address7_mand", ""));
      ((OptionsWizardVisualPanel3) getComponent()).setAddressSpaces(NbPreferences.forModule(OptionsWizardWizardPanel3.class).get("address_splitspaces", ""));
      ((OptionsWizardVisualPanel3) getComponent()).setIDFilling(NbPreferences.forModule(OptionsWizardWizardPanel3.class).get("IDFilling", ""));
+     ((OptionsWizardVisualPanel3) getComponent()).setEncoding(NbPreferences.forModule(OptionsWizardWizardPanel3.class).get("encoding", ""));
      ((OptionsWizardVisualPanel3) getComponent()).setBOM(NbPreferences.forModule(OptionsWizardWizardPanel3.class).get("BOM", ""));
 
     }
@@ -135,6 +136,7 @@ public class OptionsWizardWizardPanel3 implements WizardDescriptor.Panel {
      NbPreferences.forModule(OptionsWizardWizardPanel3.class).put("fmt_address7_mand", ((OptionsWizardVisualPanel3) getComponent()).getAddress7Mand());
      NbPreferences.forModule(OptionsWizardWizardPanel3.class).put("address_splitspaces", ((OptionsWizardVisualPanel3) getComponent()).getAddressSpaces());
      NbPreferences.forModule(OptionsWizardWizardPanel3.class).put("IDFilling", ((OptionsWizardVisualPanel3) getComponent()).getIdFilling());
+     NbPreferences.forModule(OptionsWizardWizardPanel3.class).put("encoding", ((OptionsWizardVisualPanel3) getComponent()).getEncoding());
      NbPreferences.forModule(OptionsWizardWizardPanel3.class).put("BOM", ((OptionsWizardVisualPanel3) getComponent()).getBOM());
 
     }
