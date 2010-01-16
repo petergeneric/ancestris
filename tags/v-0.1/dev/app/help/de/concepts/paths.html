@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 2.0  (Win32)">
+	<META NAME="CREATED" CONTENT="20060317;17273860">
+	<META NAME="CHANGEDBY" CONTENT="Klaus-Peter Schubert">
+	<META NAME="CHANGED" CONTENT="20060317;18061802">
+</HEAD>
+<BODY LANG="de-DE" DIR="LTR">
+<H2>Arbeiten mit Kennzeichenpfaden</H2>
+<P>Im Abschnitt &uuml;ber <A HREF="./gedcom.html">Gedcom</A>
+ist das Datenmodell dargestellt, auf dem GenJ arbeitet. Die Objekte,
+z.B. eine Person, sind in Datens&auml;tzen beschrieben, welche die
+Eigenschaften der Objekte in hierarchischer Ordnung enthalten.</P>
+<P>Dazu hier noch einmal ein Beispiel: 
+</P>
+<PRE STYLE="margin-left: 1cm; margin-right: 1cm"> 0 INDI @I001@
+   1 NAME Nils /Meier/
+   1 SEX M
+   1 BIRT
+     2 DATE 25 May 1970
+     2 PLAC Rendsburg, Germany
+   1 RESI
+     2 DATE FROM Sep 2001
+     2 ADDR 788 Harrison St
+       3 CITY San Francisco
+       3 POST 94107
+   1 NOTE @N003@
+ </PRE><P>
+Bei manchen Arbeiten m&ouml;chte man einzelne dieser Eigenschaften
+adressieren,  z.B. in der <A HREF="../view/table.html">Tabellen-Ansicht</A>,
+wenn man ausw&auml;hlt, welche Werte man als Spalte sehen m&ouml;chte,
+oder beim Gestalten von Vorlagen f&uuml;r die grafische Darstellung
+in der Baumansicht.</P>
+<P>Dazu braucht man die Kennzeichenpfade:</P>
+<P>Man startet auf der Ebene 0 und h&auml;ngt die Kennzeichen der
+Eigenschaften und Untereigenschaften (Gedcom tags) getrennt durch ':'
+in ihrer hierarchischen Reihenfolge aneinander.</P>
+<P>Hier ist eine Liste der m&ouml;glichen Kennzeichenpfade f&uuml;r
+eine Person: 
+</P>
+<UL>
+	<LI>INDI 
+	<LI>INDI:NAME 
+	<LI>INDI:SEX 
+	<LI>INDI:BIRT
+	<LI>INDI:BIRT:DATE 
+	<LI>INDI:BIRT:PLAC 
+	<LI>INDI:RESI
+	<LI>INDI:RESI:DATE
+	<LI>INDI:RESI:ADDR 
+	<LI>INDI:RESI:CITY 
+	<LI>INDI:RESI:POST 
+	<LI>INDI:NOTE 
+</UL>
+</BODY>
+</HTML>

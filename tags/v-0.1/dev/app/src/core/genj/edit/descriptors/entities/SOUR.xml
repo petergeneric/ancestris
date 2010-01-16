@@ -1,0 +1,14 @@
+  <col>
+   <row><label path="SOUR"/></row>
+   <row><label path="SOUR:AUTH"/></row>
+   <row><bean path="SOUR:AUTH" wx="0.1" wy="0.1"/></row>
+   <row><label path="SOUR:TITL"/></row>
+   <row><bean path="SOUR:TITL" wx="0.1" wy="0.1"/></row>
+   <row><label path="SOUR:TEXT"/></row>
+   <row><bean path="SOUR:TEXT" wx="0.1" wy="0.1"/></row>
+   <row><label path="SOUR:OBJE"/></row>
+   <row><label path="SOUR:OBJE:TITL"/><bean path="SOUR:OBJE:TITL" wx="0.1"/></row>
+   <row><bean path="SOUR:OBJE:FILE" wx="0.2" wy="0.2"/></row>
+   <row><label path="SOUR:NOTE"/></row>
+   <row><bean path="SOUR:NOTE" wx="0.1" wy="0.1"/></row>
+  </col> 
