@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <attr name="Menu\File\Import\position" intvalue="1600"/>
+    <attr name="Menu\File\ImporterSeparator1.instance\position" intvalue="1700"/>
+    <attr name="Menu\File\Separator2.instance\position" intvalue="1500"/>
+    <attr name="Menu\File\Separator3.instance\position" intvalue="2300"/>
+    <attr name="Menu\File\Separator4.instance\position" intvalue="2700"/>
+    <attr name="Menu\File\SeparatorNew.instance\position" intvalue="500"/>
+    <attr name="Menu\File\SeparatorOpen.instance\position" intvalue="1200"/>
+    <attr name="Menu\File\org-netbeans-core-actions-SystemExit.instance\position" intvalue="2800"/>
+    <attr name="Menu\File\org-netbeans-modules-editor-ExportHtmlAction.instance\position" intvalue="2600"/>
+    <attr name="Menu\File\org-netbeans-modules-openfile-OpenFileAction.shadow\position" intvalue="1000"/>
+    <attr name="Menu\File\org-netbeans-modules-openfile-RecentFileAction.instance\position" intvalue="1100"/>
+    <attr name="Menu\File\org-netbeans-modules-print-action-PageSetupAction.shadow\position" intvalue="2400"/>
+    <attr name="Menu\File\org-netbeans-modules-print-action-PrintAction.shadow\position" intvalue="2500"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-CloseProject.shadow\position" intvalue="900"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-CustomizeProject.shadow\position" intvalue="1400"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-NewFile.shadow\position" intvalue="400"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-NewProject.shadow\position" intvalue="300"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-OpenProject.shadow\position" intvalue="600"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-RecentProjects.shadow\position" intvalue="700"/>
+    <attr name="Menu\File\org-netbeans-modules-project-ui-groups-GroupsMenu.shadow\position" intvalue="1300"/>
+    <attr name="Menu\File\org-openide-actions-SaveAction.instance\position" intvalue="1850"/>
+    <attr name="Menu\File\org-openide-actions-SaveAllAction.instance\position" intvalue="2200"/>
+    <attr name="Menu\File\org-openide-actions-SaveAsAction.shadow\position" intvalue="2100"/>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="genjfr-app-ActionNew.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="delegate" newvalue="genjfr.app.ActionNew"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionNew"/>
+                <attr name="iconBase" stringvalue="genjfr/app/New.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-ActionOpen.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="delegate" newvalue="genjfr.app.ActionOpen"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionOpen"/>
+                <attr name="iconBase" stringvalue="genjfr/app/Open.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-ActionClose.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionClose"/>
+            </file>
+            <file name="genjfr-app-ActionSave.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionSave"/>
+            </file>
+            <file name="genjfr-app-ActionSaveAs.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionSaveAs"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="genjfr-app-ControlCenterAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.ControlCenterTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ControlCenterAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+<!--
+            <file name="genjfr-app-EditAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.EditTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_EditAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+-->
+            <file name="genjfr-app-EditAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.EditTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_EditAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+                <attr name="iconBase" stringvalue="genjfr/app/Help.png"/>
+            </file>
+
+            <file name="genjfr-app-EntityAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.EntityTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_EntityAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+                <attr name="iconBase" stringvalue="genjfr/app/New.png"/>
+            </file>
+            <file name="genjfr-app-NavigatorAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.NavigatorTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_NavigatorAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+            </file>
+            <file name="genjfr-app-ReportAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.ReportTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ReportAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+            </file>
+            <file name="genjfr-app-SearchAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.SearchTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_SearchAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+            </file>
+            <file name="genjfr-app-TableAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.TableTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_TableAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+            </file>
+            <file name="genjfr-app-TimelineAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.TimelineTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_TimelineAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+            </file>
+            <file name="genjfr-app-TreeAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="component" methodvalue="genjfr.app.TreeTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_TreeAction"/>
+                <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
+            </file>
+        </folder>
+        <folder name="Help">
+            <!-- Override the registered action with the new one. This will be
+                 used by code that calls SystemAction.get(...), e.g. the AppleMenu module -->
+            <file name="genjfr-app-ActionAbout.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionAbout"/>
+            </file>
+            <file name="genjfr-app-ActionHelp.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionHelp"/>
+            </file>
+            <file name="genjfr-app-ActionOnlineHelp.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionOnlineHelp"/>
+            </file>
+        </folder>
+    </folder>
+    <file name="BugtrackingOptionsDialog_hidden"/>
+    <file name="DTDs_hidden"/>
+    <file name="Databases_hidden"/>
+    <file name="Debugger_hidden"/>
+    <file name="FormDesignerPalette_hidden"/>
+    <file name="HTTPServer_DUMMY_hidden"/>
+    <file name="Maven2Templates_hidden"/>
+    <folder name="Menu">
+        <file name="BuildProject_hidden"/>
+        <folder name="File">
+            <file name="genjfr-app-ActionNew.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="genjfr-app-ActionOpen.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="genjfr-app-ActionClose.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+            <file name="genjfr-app-ActionSave.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
+                <attr name="position" intvalue="1800"/>
+            </file>
+            <file name="genjfr-app-ActionSaveAs.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSaveAs.instance"/>
+                <attr name="position" intvalue="1900"/>
+            </file>
+            <file name="org-openide-actions-SaveAction.instance_hidden"/>
+            <file name="org-openide-actions-SaveAllAction.instance_hidden"/>
+            <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
+        </folder>
+        <file name="GoTo_hidden"/>
+        <folder name="Help">
+            <file name="Separator1.instance_hidden"/>
+            <file name="genjfr-app-ActionAbout.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAbout.instance"/>
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="genjfr-app-ActionHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionHelp.instance"/>
+                <attr name="position" intvalue="-100"/>
+            </file>
+            <file name="genjfr-app-ActionOnlineHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionOnlineHelp.instance"/>
+                <attr name="position" intvalue="-50"/>
+            </file>
+            <file name="org-netbeans-core-actions-AboutAction.instance_hidden"/>
+            <file name="org-netbeans-modules-javadoc-search-IndexOverviewAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-javadoc-search-SearchDocAction.shadow_hidden"/>
+            <file name="master-help.xml_hidden"/>
+        </folder>
+        <file name="Profile_hidden"/>
+        <file name="Refactoring_hidden"/>
+        <file name="RunProject_hidden"/>
+        <file name="Source_hidden"/>
+        <folder name="Tools">
+            <file name="JavaPlatformsCustomizerAction.instance_hidden"/>
+            <file name="LibrariesCustomizerAction.instance_hidden"/>
+            <file name="PaletteManager_hidden"/>
+            <file name="Separator2.instance_hidden"/>
+            <file name="Separator3.instance_hidden"/>
+            <file name="ServerManagerAction3.instance_hidden"/>
+            <file name="VariablesCustomizerAction.instance_hidden"/>
+            <file name="org-netbeans-modules-apisupport-project-ui-platform-NbPlatformCustomizerAction.instance_hidden"/>
+            <file name="org-netbeans-modules-xml-catalog-CatalogAction.instance_hidden"/>
+        </folder>
+        <file name="Versioning_hidden"/>
+        <folder name="View">
+            <file name="EntityAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-EntityAction.instance"/>
+                <attr name="position" intvalue="-1000"/>
+            </file>
+            <file name="TableAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TableAction.instance"/>
+                <attr name="position" intvalue="-900"/>
+            </file>
+            <file name="TreeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TreeAction.instance"/>
+                <attr name="position" intvalue="-800"/>
+            </file>
+            <file name="TimelineAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TimelineAction.instance"/>
+                <attr name="position" intvalue="-700"/>
+            </file>
+            <file name="Separator1_1_2.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-600"/>
+            </file>
+            <file name="EditAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-EditAction.instance"/>
+                <attr name="position" intvalue="-500"/>
+            </file>
+            <file name="Separator1_1_1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-400"/>
+            </file>
+            <file name="NavigatorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-NavigatorAction.instance"/>
+                <attr name="position" intvalue="-300"/>
+            </file>
+            <file name="Separator1_1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-200"/>
+            </file>
+<!--            <file name="ReportAction.shadow" url="ReportAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ReportAction.instance"/>
+                <attr name="position" intvalue="-100"/>
+            </file>
+-->
+            <file name="SearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-SearchAction.instance"/>
+            </file>
+        </folder>
+        <file name="Window_hidden"/>
+<!--
+        <folder name="Window">
+            <file name="CloneDocumentAction.shadow_hidden"/>
+            <file name="CloseAllButThisAction.shadow_hidden"/>
+            <file name="CloseAllDocumentsAction.shadow_hidden"/>
+            <file name="CloseWindowAction.shadow_hidden"/>
+            <file name="DocumentsAction.shadow_hidden"/>
+
+            <file name="ControlCenterAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ControlCenterAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="MaximizeWindowAction.shadow_hidden"/>
+            <file name="Output_hidden"/>
+            <file name="ProgressListAction.shadow_hidden"/>
+            <file name="Separator3.instance_hidden"/>
+            <file name="Separator4.instance_hidden"/>
+            <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
+            <file name="org-netbeans-core-windows-actions-GlobalPropertiesAction.shadow_hidden"/>
+            <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
+            <file name="org-netbeans-core-windows-actions-UndockAction.shadow_hidden"/>
+        </folder>
+-->
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="GenjPreferenceOptionsCategory">
+            <file name="genjfr-app-GenJAdvancedOption.instance">
+                <attr name="controller" newvalue="genjfr.app.GenJOptionsPanelController"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#AdvancedOption_DisplayName_GenJ"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory"/>
+                <attr name="keywords" bundlevalue="genjfr.app.Bundle#AdvancedOption_Keywords_GenJ"/>
+                <attr name="keywordsCategory" stringvalue="GenjPreferenceOptionsCategory/null"/>
+                <attr name="toolTip" bundlevalue="genjfr.app.Bundle#AdvancedOption_Tooltip_GenJ"/>
+            </file>
+        </folder>
+        <file name="GenjPreferenceOptionsCategory.instance">
+            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/GenjPreferenceOptionsCategory"/>
+            <attr name="categoryName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
+            <attr name="iconBase" stringvalue="genjfr/app/Options.png"/>
+            <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory"/>
+            <attr name="keywords" bundlevalue="genjfr.app.Bundle#OptionsCategory_Keywords_GenjPreference"/>
+            <attr name="keywordsCategory" stringvalue="GenjPreference"/>
+            <attr name="title" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+        </file>
+    </folder>
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="app-helpset.xml" url="app-helpset.xml">
+                <attr name="position" intvalue="3929"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <file name="D-N.shadow">
+            <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+        </file>
+        <file name="D-S.shadow">
+            <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+        </file>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="File">
+            <file name="genjfr-app-ActionNew.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+                <attr name="position" intvalue="-100"/>
+            </file>
+            <file name="genjfr-app-ActionOpen.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="genjfr-app-ActionClose.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
+                <attr name="position" intvalue="10"/>
+            </file>
+            <file name="genjfr-app-ActionSave.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
+                <attr name="position" intvalue="20"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>
+            <file name="EditTopComponent.settings" url="EditTopComponentSettings.xml"/>
+            <file name="EntityTopComponent.settings" url="EntityTopComponentSettings.xml"/>
+            <file name="NavigatorTopComponent.settings" url="NavigatorTopComponentSettings.xml"/>
+            <file name="ReportTopComponent.settings" url="ReportTopComponentSettings.xml"/>
+            <file name="SearchTopComponent.settings" url="SearchTopComponentSettings.xml"/>
+            <file name="TableTopComponent.settings" url="TableTopComponentSettings.xml"/>
+            <file name="TimelineTopComponent.settings" url="TimelineTopComponentSettings.xml"/>
+            <file name="TreeTopComponent.settings" url="TreeTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="explorer">
+                <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="table">
+                <file name="TableTopComponent.wstcref" url="TableTopComponentWstcref.xml"/>
+            </folder>
+
+            <folder name="editor">
+                <file name="EditTopComponent.wstcref" url="EditTopComponentWstcref.xml"/>
+                <file name="EntityTopComponent.wstcref" url="EntityTopComponentWstcref.xml"/>
+                <file name="NavigatorTopComponent.wstcref" url="NavigatorTopComponentWstcref.xml"/>
+                <file name="ReportTopComponent.wstcref" url="ReportTopComponentWstcref.xml"/>
+                <file name="SearchTopComponent.wstcref" url="SearchTopComponentWstcref.xml"/>
+                <file name="TimelineTopComponent.wstcref" url="TimelineTopComponentWstcref.xml"/>
+                <file name="TreeTopComponent.wstcref" url="TreeTopComponentWstcref.xml"/>
+            </folder>
+<!--
+            <file name="ccenter.wsmode" url="outputWsmode.xml"/>
+            <file name="table.wsmode" url="tableWsmode.xml"/>
+-->
+</folder>
+    </folder>
+</filesystem>

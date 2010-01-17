@@ -14,7 +14,7 @@ import genj.report.*;
 import genj.util.Registry;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
-import genj.window.DefaultWindowManager;
+import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
 
 
@@ -66,7 +66,7 @@ public class ReportDocs extends Report {
 
     // create window
     Registry genJregistry = new Registry("genj");
-    final WindowManager winMgr = new DefaultWindowManager(new Registry(genJregistry, "window"), null);
+    final WindowManager winMgr = new GenjFrWindowManager(new Registry(genJregistry, "window"), null);
     final Registry registry = new Registry(genJregistry, REG);
 
     // setup panel

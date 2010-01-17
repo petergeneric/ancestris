@@ -280,22 +280,27 @@ public class EnvironmentChecker {
    * "user.home.genj" the genj application data directory ("C:/Documents and Settings/$USER/Application Data/genj" on windows, "~/.genj" otherwise)
    */
   static {
+      // FIXME: faire autrement (c'est une rapide modif pour pouvoir sauver les options sans toucher au "classique")
+      // Peut-être utiliser InstalledFileLocator
+      File nbuserdir = new File(System.getProperty("netbeans.user"));
 
-    try {
-      File user_home_genj;
-      File home = new File(System.getProperty("user.home"));
-      File dotgenj = new File(home, ".genj");
-      File appdata = new File(home, "Application Data");
-      if (!isWindows() || dotgenj.isDirectory() || !appdata.isDirectory())
-        user_home_genj = dotgenj;
-      else
-        user_home_genj = new File(appdata, "GenJ");
-      
-      setProperty("user.home.genj", user_home_genj.getAbsolutePath());
+      setProperty("user.home.genj", (new File(nbuserdir,"genj")).getAbsolutePath());
 
-    } catch (Throwable t) {
-      // ignore if we can't access system properties
-    }
+//    try {
+//      File user_home_genj;
+//      File home = new File(System.getProperty("user.home"));
+//      File dotgenj = new File(home, ".genj");
+//      File appdata = new File(home, "Application Data");
+//      if (!isWindows() || dotgenj.isDirectory() || !appdata.isDirectory())
+//        user_home_genj = dotgenj;
+//      else
+//        user_home_genj = new File(appdata, "GenJ");
+//
+//      setProperty("user.home.genj", user_home_genj.getAbsolutePath());
+//
+//    } catch (Throwable t) {
+//      // ignore if we can't access system properties
+//    }
     
   }
   

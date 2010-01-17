@@ -40,7 +40,7 @@ import javax.swing.border.EmptyBorder;
 /**
  * A bridge to javax Help System
  */
-class HelpWidget extends JPanel {
+public class HelpWidget extends JPanel {
   
   private final static Resources RESOURCES = Resources.get(HelpWidget.class);
 
