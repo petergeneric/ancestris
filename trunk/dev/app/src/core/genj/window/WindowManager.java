@@ -19,6 +19,7 @@
  */
 package genj.window;
 
+import genj.app.App;
 import genj.util.Registry;
 import genj.util.swing.Action2;
 import genj.util.swing.TextAreaWidget;
@@ -63,7 +64,18 @@ public abstract class WindowManager {
   private final static Object WINDOW_MANAGER_KEY = WindowManager.class;
   
   private static WeakHashMap window2manager = new WeakHashMap();
-  
+
+  // FIXME: to be deleted
+  private static WindowManager defaultWm = null;
+
+    public static WindowManager getDefaultWm() {
+        return defaultWm;
+    }
+
+    public static void setDefaultWm(WindowManager defWm) {
+        defaultWm = defWm;
+    }
+
   /** message types*/
   public static final int  
     ERROR_MESSAGE = JOptionPane.ERROR_MESSAGE,
@@ -210,36 +222,36 @@ public abstract class WindowManager {
     
     // done
   }
-    
+
   /**
-   * Close dialog/frame 
+   * Close dialog/frame
    * @param key the dialog/frame's key
    */
   public abstract void close(String key);
-  
+
   /**
    * Return root components of all heavyweight dialogs/frames
    */
   public abstract List getRootComponents();
-  
+
   /**
-   * Return the content of a dialog/frame 
-   * @param key the dialog/frame's key 
+   * Return the content of a dialog/frame
+   * @param key the dialog/frame's key
    */
   public abstract JComponent getContent(String key);
-  
+
   /**
    * Makes sure the dialog/frame is visible
-   * @param key the dialog/frame's key 
+   * @param key the dialog/frame's key
    * @return success or no valid key supplied
    */
   public abstract boolean show(String key);
-  
+
   /**
    * Sets the title of a top-level window
    */
   public abstract void setTitle(String key, String title);
-  
+
   /**
    * Returns an appropriate WindowManager instance for given component
    * @return manager or null if no appropriate manager could be found
@@ -251,20 +263,26 @@ public abstract class WindowManager {
     return result;
   }
   
-  private static WindowManager getInstanceImpl(Component component) {
+    static WindowManager getInstanceImpl(Component component) {
     // get topmost container
     Component window = component;
-    while (window.getParent()!=null) window = window.getParent();
+    WindowManager manager=(WindowManager)window2manager.get(window);
+    while (window.getParent()!=null) {
+        if (window2manager.get(window) != null) manager = (WindowManager)window2manager.get(window);
+        window = window.getParent();
+    }
     // look it up
-    return (WindowManager)window2manager.get(window);
+    if (manager == null)
+            manager = defaultWm;
+    return manager;
   }
-  
+
   /**
    * Setup a new independant window
    */
   public final String openWindow(String key, String title, ImageIcon image, JComponent content, JMenuBar menu, Action close) {
     // create a key?
-    if (key==null) 
+    if (key==null)
       key = getTemporaryKey();
     // close if already open
     close(key);
@@ -279,17 +297,18 @@ public abstract class WindowManager {
     // done
     return key;
   }
-  
+
   /**
    * Implementation for handling an independant window
    */
   protected abstract Component openWindowImpl(String key, String title, ImageIcon image, JComponent content, JMenuBar menu, Rectangle bounds, boolean maximized, Action onClosing);
-  
+
+// TODO: a modifier
   /**
    * @see genj.window.WindowManager#openDialog(java.lang.String, java.lang.String, javax.swing.Icon, java.lang.String, String[], javax.swing.JComponent)
    */
   public final int openDialog(String key, String title,  int messageType, String txt, Action[] actions, Component owner) {
-    
+
     // analyze the text
     int maxLine = 40;
     int cols = 40, rows = 1;
@@ -305,23 +324,23 @@ public abstract class WindowManager {
       }
     }
     rows = Math.min(10, rows);
-    
+
     // create a textpane for the txt
     TextAreaWidget text = new TextAreaWidget("", rows, cols);
     text.setLineWrap(true);
     text.setWrapStyleWord(true);
     text.setText(txt);
-    text.setEditable(false);    
+    text.setEditable(false);
     text.setCaretPosition(0);
     text.setRequestFocusEnabled(false);
 
     // wrap in reasonable sized scroll
     JScrollPane content = new JScrollPane(text);
-      
+
     // delegate
     return openDialog(key, title, messageType, content, actions, owner);
   }
-  
+
   /**
    * @see genj.window.WindowManager#openDialog(java.lang.String, java.lang.String, javax.swing.Icon, java.awt.Dimension, javax.swing.JComponent[], java.lang.String[], javax.swing.JComponent)
    */
@@ -347,10 +366,10 @@ public abstract class WindowManager {
     // prepare text field and label
     TextFieldWidget tf = new TextFieldWidget(value, 24);
     JLabel lb = new JLabel(txt);
-    
+
     // delegate
     int rc = openDialog(key, title, messageType, new JComponent[]{ lb, tf}, Action2.okCancel(), owner);
-    
+
     // analyze
     return rc==0?tf.getText().trim():null;
   }
@@ -362,10 +381,10 @@ public abstract class WindowManager {
     // set us up
     content.putClientProperty(WINDOW_MANAGER_KEY, this);
     // check options - default to OK
-    if (actions==null) 
+    if (actions==null)
       actions = Action2.okOnly();
     // key is necessary
-    if (key==null) 
+    if (key==null)
       key = getTemporaryKey();
     // close if already open
     close(key);
@@ -374,11 +393,11 @@ public abstract class WindowManager {
     // do it
     Object rc = openDialogImpl(key, title, messageType, content, actions, owner, bounds);
     // analyze - check which action was responsible for close
-    for (int a=0; a<actions.length; a++) 
+    for (int a=0; a<actions.length; a++)
       if (rc==actions[a]) return a;
     return -1;
   }
-  
+
   /**
    * Implementation for core frame handling
    */
@@ -393,7 +412,7 @@ public abstract class WindowManager {
     // check options - none ok
     if (actions==null) actions = new Action[0];
     // key is necessary
-    if (key==null) 
+    if (key==null)
       key = getTemporaryKey();
     // close if already open
     close(key);
@@ -443,12 +462,12 @@ public abstract class WindowManager {
    */
   protected void closeNotify(String key, Rectangle bounds, boolean maximized) {
     // no key - no action
-    if (key==null) 
+    if (key==null)
       return;
     // forget frame/dialog
     key2window.remove(key);
     // temporary key? nothing to stash away
-    if (key.startsWith("_")) 
+    if (key.startsWith("_"))
       return;
     // keep bounds
     if (bounds!=null&&!maximized)
@@ -456,30 +475,30 @@ public abstract class WindowManager {
     registry.put(key+".maximized", maximized);
     // done
   }
-  
+
   /**
    * @see genj.window.WindowManager#closeAll()
    */
   public void closeAll() {
 
-    // loop through keys    
+    // loop through keys
     String[] keys = recallKeys();
     for (int k=0; k<keys.length; k++) {
       close(keys[k]);
     }
-    
+
     // done
   }
-  
+
   /**
    * A patched up JOptionPane
    */
   protected class Content extends JOptionPane {
-    
+
     /** constructor */
     protected Content(int messageType, JComponent content, Action[] actions) {
       super(new JLabel(),messageType, JOptionPane.DEFAULT_OPTION, null, new String[0] );
-      
+
       // wrap content in a JPanel - the OptionPaneUI has some code that
       // depends on this to stretch it :(
       JPanel wrapper = new JPanel(new BorderLayout());
@@ -491,11 +510,11 @@ public abstract class WindowManager {
       for (int i=0;i<actions.length;i++)
         options[i] = new Option(actions[i]);
       setOptions(options);
-      
+
       // set defalut?
-      if (options.length>0) 
+      if (options.length>0)
         setInitialValue(options[0]);
-      
+
       // done
     }
 
@@ -517,24 +536,24 @@ public abstract class WindowManager {
       }
       // checked
     }
-    
+
     /** an option in our option-pane */
     private class Option extends JButton implements ActionListener {
-      
+
       /** constructor */
       private Option(Action action) {
         super(action);
         addActionListener(this);
       }
-      
+
       /** trigger */
       public void actionPerformed(ActionEvent e) {
         // this will actually force the dialog to hide - JOptionPane listens to property changes
         setValue(getAction());
       }
-      
+
     } //Action2Button
-    
-  } // Content 
+
+  } // Content
   
 } //AbstractWindowManager

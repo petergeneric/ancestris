@@ -1,0 +1,111 @@
+<html>
+<body>
+
+<h2><a href="../views.html">Vues</a> - L'Arbre G&eacute;n&eacute;alogique</h2>
+
+<p>
+ Lorsque l'on regarde aux informations contenues dans un fichier 
+ Gedcom, on se rend compte que les relations entre les familles, 
+ les individus, sont la cl&eacute;.<Br>
+ Pour construire un arbre qui soit visualisable, GenJ d&eacute;marre 
+ &agrave; partir de la racine de l'arbre (qui peut &ecirc;tre un 
+ individu ou une famille) et rassemble tous les anc&ecirc;tres 
+ et descendants de cette racine.
+ Une chose &agrave; savoir cependant&nbsp;: seuls les descendants directs 
+ avec leurs conjoints et seuls les anc&ecirc;tres directs avec leurs 
+ conjoints sont visualis&eacute;s. Ainsi, si votre grand-p&egrave;re 
+ a un fr&egrave;re, ce dernier ne sera visible qu'&agrave; la condition 
+ de faire de lui (le fr&egrave;re de votre grand-p&egrave;re) ou de 
+ l'un de ses anc&ecirc;tres, l'origine de l'arbre.
+</p>
+
+<p>
+Vous pouvez parcourir l'arbre en faisant d&eacute;filer et en 
+s&eacute;lectionnant des individus ou des familles. Chaque fois que 
+vous s&eacute;lectionnez une de ces entit&eacute;s, un message est 
+envoy&eacute; &agrave; <a href="edit.html">la Fen&ecirc;tre 
+d'Edition</a>, pour la visualiser. En double-cliquant sur une 
+entit&eacute;, celle-ci devient l'origine de l'arbre. Apr&egrave;s un 
+court calcul, l'arbre s'affiche dans sa nouvelle disposition. 
+Si vous voulez limiter l'information pr&eacute;sent&eacute;e vous 
+pouvez supprimer des arbres secondaires en cliquant sur les petits 
+signes moins(-) / plus(+) attach&eacute;s &agrave; la ligne reliant 
+famille et enfant.
+</p>
+
+</p>
+ Les personnes et les familles sont des noeuds dans l'arbre, 
+ les liens qui les relient, sont des relations entre les 
+ familles des conjoints et les familles des enfants. Seuls 
+ les liens en ligne directe sont visibles. Aussi, pour 
+ qu'une personne soit visible dans ce type de vue, il/elle 
+ doit &ecirc;tre :
+ <ul>
+  <li>ou lui/elle-m&ecirc;me la racine de l'arbre,
+  <li>ou anc&ecirc;tre de la racine (en ligne directe),
+  <li>ou descendant de la racine (en ligne directe),
+  <li>ou conjoint de la racine, ou conjoint des descendants de la 
+  racine (si cette fonction de visualisation des conjoints est 
+  activ&eacute;e).
+ </ul>
+ Voici un exemple (vue d'ensemble) :
+  <blockquote>
+    <img src="../../images/screenshots/tree1.png">
+  </blockquote>
+ L'arbre peut &ecirc;tre parcouru en utilisant les ascenseurs sur 
+ la droite ou en bas (si cela est n&eacute;cessaire bien s&ucirc;r). 
+ En cliquant sur le petit signe de d&eacute;veloppement (signe "-" 
+ ou "+") (dont le positionnement est indiqu&eacute; en vert sur 
+ l'image ci-dessus), des branches de l'arbre peuvent &ecirc;tre 
+ cach&eacute;es ou affich&eacute;es.
+</p>
+
+<p>
+ Pour changer la racine de l'arbre il vous suffit de double-cliquer 
+ sur un quelconque des noeuds que vous pouvez voir. Note : Il 
+ est possible que des individus pr&eacute;c&eacute;demment visibles, 
+ disparaissent si l'une des r&eacute;gles indiqu&eacute;es ci-dessus 
+ n'est plus respect&eacute;es. Vous pouvez mettre des signets sur 
+ un individu ou une famille (vous pouvez en mettre autant que vous 
+ voulez bien s&ucirc;r) par l'interm&eacute;diaire du menu contextuel 
+ (clic droit) pour pouvoir ensuite retourner facilement sur une 
+ racine pr&eacute;c&eacute;demment choisie (qu'elle soit un individu 
+ ou une famille). 
+</p>
+
+<h3><u>Barre d'Outils</u></h3>
+  <blockquote>
+    <img src="../../images/screenshots/tree2.png">
+  </blockquote>
+ <ol>
+  <li>R&eacute;glage du taux de Zoom.
+  <li>Ouverture de la fen&ecirc;tre de Pr&eacute;visualisation en haut 
+  &agrave; gauche de la fen&ecirc;tre de pr&eacute;sentation de 
+  l'arbre (sa taille peut &ecirc;tre r&eacute;duite ou augment&eacute;e).
+  <li>Affichage vertical/horizontal de l'arbre.
+  <li>Afficher/Cacher les familles.
+  <li>Afficher/Cacher les icones permettant l'extension des branches 
+  de l'arbre.
+  <li>Liste des Signets permettant de revenir &agrave; une racine.
+  <li>Ouvrir la fen&ecirc;tre des Param&eacute;trages.
+  <li>Imprimer cette vue.
+  <li>Fermer cette fen&ecirc;tre.
+ </ol>
+
+<h3><u>Param&egrave;trages</u></h3>
+ Les param&eacute;trages pour cette vue sont regroup&eacute;s en quatre 
+sections :
+ <ol>
+  <li>G&eacute;n&eacute;raux - Options g&eacute;n&eacute;rales pour l'affichage 
+  des arbres.
+  <li>Couleurs - Couleurs des structures, des liens entre les Cadres, 
+  etc...
+  <li>Signets - Gestion des Signets.
+  <li>Structures des Cadres - Choix des 
+  <a href="../special/blueprint.html">Calques</a> utilis&eacute;s 
+  pour l'affichage des entit&eacute;s.
+ </ol>
+<Br>
+
+</body>
+</html>

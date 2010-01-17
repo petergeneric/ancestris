@@ -42,7 +42,7 @@ import javax.swing.SwingConstants;
 /**
  * A swing container for a view widget 
  */
-/*package*/ class ViewContainer extends JPanel {
+/*package*/ public class ViewContainer extends JPanel {
   
   private final static String
     ACC_CLOSE = "ctrl W",
@@ -58,7 +58,7 @@ import javax.swing.SwingConstants;
   /** 
    * Constructor
    */
-  /*package*/ ViewContainer(ViewHandle handle) {
+  /*package*/public ViewContainer(ViewHandle handle) {
     
     ViewManager mgr = handle.getManager();
     

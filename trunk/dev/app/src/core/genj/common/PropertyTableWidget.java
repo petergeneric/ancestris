@@ -169,6 +169,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     if (event.isOutbound())
       return true;
 
+    if (table.propertyModel == null) return true;
     // a meaningful event for us?
     ContextSelectionEvent cse = ContextSelectionEvent.narrow(event, table.propertyModel.getGedcom());
     if (cse==null)

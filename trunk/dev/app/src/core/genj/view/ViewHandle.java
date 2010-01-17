@@ -51,7 +51,7 @@ public class ViewHandle {
   private int sequence;
   
   /** constructor */
-  /*package*/ ViewHandle(ViewManager manager, Gedcom gedcom, String title, Registry registry, ViewFactory factory, JComponent view, int sequence) {
+  /*package*/public ViewHandle(ViewManager manager, Gedcom gedcom, String title, Registry registry, ViewFactory factory, JComponent view, int sequence) {
     this.manager = manager;
     this.gedcom = gedcom;
     this.title = title;
@@ -97,7 +97,7 @@ public class ViewHandle {
   }
   
   /** the window key */
-  /*package*/ String getKey() {
+  /*package*/ public String getKey() {
     return gedcom.getName() + "." + manager.getPackage(factory) + "." + sequence;
   }
   

@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<toc version="2.0">
+  <tocitem target="intro"       text="Introduction"    />
+  <tocitem target="concepts"    text="Concepts">
+    <tocitem target="c.gedcom"      text="Gedcom" />
+    <tocitem target="c.paths"       text="Chemin des Etiquettes"  />
+    <tocitem target="c.context"     text="Menus Contextuels"/>
+  </tocitem>
+  <tocitem target="cc"          text="Le Centre de Controle"       />
+  <tocitem target="views"       text="Les Diff&eacute;rentes Visualisations">
+    <tocitem target="v.table"       text="Tableau de Donn&eacute;es"       image="img.Table"    />
+    <tocitem target="v.tree"        text="Arbre G&eacute;n&eacute;alogique"        image="img.Tree"     />
+    <tocitem target="v.timeline"    text="Chronologie des Ev&egrave;nements"    image="img.Timeline" />
+    <tocitem target="v.edit"        text="Edition"        image="img.Edit"     />
+    <tocitem target="v.report"      text="Rapports"      image="img.Report"   />
+    <tocitem target="v.navigator"   text="Navigateur"   image="img.Navigator"/>
+    <tocitem target="v.entity"      text="Entit&eacute;"      image="img.Entity"   />
+    <tocitem target="v.search"      text="Recherche"      image="img.Search"   />
+    <tocitem target="v.geo"         text="Localisation G&eacute;ographique"         image="img.Geo"      />
+  </tocitem>
+  <tocitem target="entities"    text="Les Entit&eacute;s">
+    <tocitem target="e.indi"        text="Individu"          image="img.Indi"        />
+    <tocitem target="e.family"      text="Famille"        image="img.Fam"         />
+    <tocitem target="e.media"       text="M&eacute;dia"         image="img.Media"       />
+    <tocitem target="e.note"        text="Note"          image="img.Note"        />
+    <tocitem target="e.source"      text="Source"        image="img.Source"      />
+    <tocitem target="e.submitter"   text="Fournisseur d'information"     image="img.Submitter"   />
+    <tocitem target="e.repository"  text="Lieux de Stockage"    image="img.Repository"  />
+  </tocitem>
+  <tocitem target="specials"    text="Informations Sp&eacute;cifiques">
+    <tocitem target="x.blueprint"   text="Les Calques"/>
+    <tocitem target="x.report"      text="Ecrire des Rapports"   />
+    <tocitem target="x.translation" text="Traduction"   />
+    <tocitem target="x.faq"         text="Foire Aux Questions"     />
+    <tocitem target="x.shortcuts"   text="Raccourcis Clavier"     />
+  </tocitem>
+</toc>

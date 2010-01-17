@@ -49,7 +49,7 @@ import javax.swing.JTextField;
 /**
  * A widget for setting save options (export)
  */
-/*package*/ class SaveOptionsWidget extends JTabbedPane {
+/*package*/ public class SaveOptionsWidget extends JTabbedPane {
   
   /** components */
   private JCheckBox[] checkEntities = new JCheckBox[Gedcom.ENTITIES.length];
@@ -68,7 +68,7 @@ import javax.swing.JTextField;
   /**
    * Constructor
    */    
-  /*package*/ SaveOptionsWidget(Gedcom gedcom, Filter[] filters) {
+  /*package*/ public  SaveOptionsWidget(Gedcom gedcom, Filter[] filters) {
     
     // Options
     Box options = new Box(BoxLayout.Y_AXIS);

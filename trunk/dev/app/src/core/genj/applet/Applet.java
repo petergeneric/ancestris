@@ -31,7 +31,7 @@ import genj.util.Trackable;
 import genj.util.swing.Action2;
 import genj.util.swing.ProgressWidget;
 import genj.view.ViewManager;
-import genj.window.DefaultWindowManager;
+import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
@@ -250,7 +250,7 @@ public class Applet extends java.applet.Applet {
     protected void postExecute(boolean preExecuteResult) {
 
       // prepare window manager
-      WindowManager winMgr = new DefaultWindowManager(registry, Gedcom.getImage());
+      WindowManager winMgr = new GenjFrWindowManager(registry, Gedcom.getImage());
       
       // check load status      
       if (throwable!=null) {
