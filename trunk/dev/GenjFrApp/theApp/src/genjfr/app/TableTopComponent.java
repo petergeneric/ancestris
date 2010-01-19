@@ -25,13 +25,13 @@ public final class TableTopComponent extends GenjViewTopComponent {
     private static TableTopComponent factory;
     private static ViewFactory viewfactory = new TableViewFactory();
 
-public void open() {
-     Mode m = WindowManager.getDefault().findMode ("output");
-     if (m != null) {
-        m.dockInto(this);
-     }
-     super.open();
-  }
+//public void open() {
+//     Mode m = WindowManager.getDefault().findMode ("output");
+//     if (m != null) {
+//        m.dockInto(this);
+//     }
+//     super.open();
+//  }
 
     ViewFactory getViewFactory() {
         return viewfactory;
