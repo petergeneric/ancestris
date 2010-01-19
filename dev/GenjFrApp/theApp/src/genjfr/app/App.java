@@ -367,6 +367,8 @@ public class App {
                 System.out.println("Launching Wizard...");
                 if (pi.launchModule(registry)) {
                     registry.put("optionswizard", "1");
+                    //FIXME: see bug #74
+                    registry.put("options.genj.app.Options.lookAndFeel","1");
                     Registry.persist();
                     registry = new Registry("genj");
                 }
