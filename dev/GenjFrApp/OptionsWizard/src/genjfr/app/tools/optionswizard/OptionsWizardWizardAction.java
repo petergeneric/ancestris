@@ -52,6 +52,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
             putRegistryFromSettings(registry);
             exitFlag = true;
         }
+        System.out.println("======================= FIN DU WIZARD =========================");
     }
 
     /**
@@ -111,7 +112,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
     }
 
     private void getSettingsFromRegistry(Registry registry) {
-        System.out.println("*****getSettingsFromRegistry : " + registry.get("options.genj.app.Options.language", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("language", registry.get("options.genj.app.Options.language", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("skin", registry.get("options.genj.app.Options.lookAndFeel", ""));
         NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("restoreWindows", registry.get("options.genj.app.Options.isRestoreViews", ""));
