@@ -240,11 +240,11 @@
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-200"/>
             </file>
-<!--            <file name="ReportAction.shadow" url="ReportAction.shadow">
+            <file name="ReportAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ReportAction.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
--->
+
             <file name="SearchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-SearchAction.instance"/>
             </file>
