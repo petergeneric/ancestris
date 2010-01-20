@@ -281,7 +281,7 @@ public class EnvironmentChecker {
    */
   static {
       // FIXME: faire autrement (c'est une rapide modif pour pouvoir sauver les options sans toucher au "classique")
-      // Peut-être utiliser InstalledFileLocator
+      // Peut-etre utiliser InstalledFileLocator
       File nbuserdir = new File(System.getProperty("netbeans.user"));
 
       setProperty("user.home.genj", (new File(nbuserdir,"genj")).getAbsolutePath());
