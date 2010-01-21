@@ -346,6 +346,11 @@ public class App {
             if (registry == null) {
                 return null;
             }
+
+            //FIXME: see bug #74 (should be done regardless of the return code of the wizard and before the return !)
+            registry.put("options.genj.app.Options.lookAndFeel", "1");
+            Registry.persist();
+
             String done = registry.get("optionswizard", "");
             if (done.equals("1")) {
                 return registry;
@@ -371,9 +376,6 @@ public class App {
                     registry = new Registry("genj");
                 }
             }
-
-            //FIXME: see bug #74 (should be done regardless of the return code of the wizard)
-            registry.put("options.genj.app.Options.lookAndFeel", "1");
 
             return registry;
 
