@@ -132,19 +132,19 @@ public class App {
     }
 
     public static boolean shutDown() {
-            LOG.info("Shutdown");
-            if (center.nbDoExit()) {
-                // persist options
-                OptionProvider.persistAll(REGISTRY);
-                // Store registry
-                Registry.persist();
-                // done
-                LOG.info("/Shutdown");
-                return true;
-            } else {
-                LOG.info("/Shutdown aborted");
-                return false;
-            }
+        LOG.info("Shutdown");
+        if (center.nbDoExit()) {
+            // persist options
+            OptionProvider.persistAll(REGISTRY);
+            // Store registry
+            Registry.persist();
+            // done
+            LOG.info("/Shutdown");
+            return true;
+        } else {
+            LOG.info("/Shutdown aborted");
+            return false;
+        }
     }
 
     /**
@@ -367,12 +367,13 @@ public class App {
                 System.out.println("Launching Wizard...");
                 if (pi.launchModule(registry)) {
                     registry.put("optionswizard", "1");
-                    //FIXME: see bug #74
-                    registry.put("options.genj.app.Options.lookAndFeel","1");
                     Registry.persist();
                     registry = new Registry("genj");
                 }
             }
+
+            //FIXME: see bug #74 (should be done regardless of the return code of the wizard)
+            registry.put("options.genj.app.Options.lookAndFeel", "1");
 
             return registry;
 
