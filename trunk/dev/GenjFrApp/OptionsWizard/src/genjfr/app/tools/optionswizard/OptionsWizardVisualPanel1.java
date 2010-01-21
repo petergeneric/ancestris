@@ -239,14 +239,14 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
 
     private void initSkins() {
         skins[0] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.ST");
-        skins[1] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.ME");
-        skins[2] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.KS");
-        skins[3] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.AQ");
-        skins[4] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.XP");
-        skins[5] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.MO");
-        skins[6] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.WH");
-        skins[7] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.AR");
-        skins[8] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.JA");
+        skins[1] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.JA");
+        skins[2] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.ME");
+        skins[3] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.KS");
+        skins[4] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.AQ");
+        skins[5] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.XP");
+        skins[6] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.MO");
+        skins[7] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.WH");
+        skins[8] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.skin.AR");
     }
 
     void setLanguage(String str) {
