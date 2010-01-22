@@ -87,6 +87,13 @@
         <echo message="${zip.platform.clusters.bare}" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
         <echo message="&#10;" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
 
+        <copy todir="build/cluster/report">
+            <fileset dir="report">
+                <include name="*"/>
+            </fileset>
+        </copy>
+
+
     </target>
 
 </project>
