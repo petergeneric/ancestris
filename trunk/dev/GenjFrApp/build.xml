@@ -93,6 +93,14 @@
                 <include name="*"/>
             </fileset>
         </copy>
+        <copy todir="build/cluster/contrib">
+            <fileset dir="contrib" includes="almanac/**"/>
+            <fileset dir="contrib" includes="LDS/**"/>
+            <fileset dir="contrib" includes="blueprints/**"/>
+            <fileset dir="contrib" includes="fop/**"/>
+            <fileset dir="contrib" includes="xslt/**"/>
+            
+        </copy>
 
 
     </target>
