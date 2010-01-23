@@ -99,7 +99,6 @@
             <fileset dir="contrib" includes="blueprints/**"/>
             <fileset dir="contrib" includes="fop/**"/>
             <fileset dir="contrib" includes="xslt/**"/>
-            
         </copy>
 
 
