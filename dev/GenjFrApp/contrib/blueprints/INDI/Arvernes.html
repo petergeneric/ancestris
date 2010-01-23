@@ -1,0 +1,36 @@
+<table width="100%" border="0">
+ <tr>
+  <td valign="top" width="82%">
+   <table border="0">
+    <tr>
+     <td valign="left">
+      <font color="blue"><b><prop path=INDI></b></font> [<prop path=INDI:SEX img=yes txt=no>]
+      <br>
+      <div style="font-size: 9px;">
+      <font color="#ff1200"><b><i18n tag=NAME></b></font>&nbsp;: <prop path=INDI:NAME>
+      </div>
+     </td>
+    </tr>
+    <tr>
+     <td valign="left">
+     <div style="margin-left: 10px;">
+      <b><i18n tag=BIRT></b>&nbsp;: <i><prop path=INDI:BIRT:DATE> (<prop path=INDI:BIRT:PLAC>)</i>
+      <br>
+      <b><i18n tag=DEAT></b>&nbsp;: <i><prop path=INDI:DEAT:DATE> (<prop path=INDI:DEAT:PLAC>)</i>
+     </div>
+     </td>
+    </tr>
+    <tr>
+     <td valign="left">
+      <i18n tag=ADDR>&nbsp;: <font color="#6b6b6b"><prop path=INDI:RESI:ADDR>, <prop path=INDI:RESI:ADDR:CITY></font>
+      <br>
+      <i18n tag=OCCU>&nbsp;: <font color="#6b6b6b"><prop path=INDI:OCCU></font>
+     </td>
+    </tr>
+   </table>
+  </td>
+  <td valign="top" width="18%">
+   <prop path=INDI:OBJE:FILE img=no>
+  </td>
+ </tr>
+</table>
