@@ -64,99 +64,99 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/graphj.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/graphj.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/graphj.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fop.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fop.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/fop.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/GenJ.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/GenJ.jar</binary-origin>
+                <binary-origin>../../app/dist/GenJ.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jfreechart-1.0.13.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jfreechart-1.0.13.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/jfreechart-1.0.13.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-io-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-io-1.0.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/commons-io-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-util.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-util.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-util.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jcommon-1.0.16.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jcommon-1.0.16.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/jcommon-1.0.16.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-css.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-css.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-css.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-lang-2.4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-lang-2.4.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/commons-lang-2.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-dom.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-dom.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-dom.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-svggen.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-svggen.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-svggen.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/velocity-tools-generic-1.4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/velocity-tools-generic-1.4.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/velocity-tools-generic-1.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-gvt.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-gvt.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-gvt.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-ext.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-ext.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-ext.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/oro-2.0.8.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/oro-2.0.8.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/oro-2.0.8.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-collections-3.2.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-collections-3.2.1.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/commons-collections-3.2.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/avalon-framework-4.2.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/avalon-framework-4.2.0.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/avalon-framework-4.2.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/velocity-1.6.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/velocity-1.6.2.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/velocity-1.6.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jhbasic.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jhbasic.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/jhbasic.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-awt-util.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-awt-util.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-awt-util.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-logging-api-1.0.4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/commons-logging-api-1.0.4.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/commons-logging-api-1.0.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-svg-dom.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-svg-dom.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-svg-dom.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-xml.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-xml.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-xml.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-bridge.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/batik-bridge.jar</binary-origin>
+                <binary-origin>../../app/dist/lib/batik-bridge.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
