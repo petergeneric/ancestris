@@ -1,0 +1,229 @@
+<html>
+
+<body>
+<h2><a href="../views.html">Vues</a> - La Fen&ecirc;tre de Recherche</h2>
+
+<div>
+
+Cette fen&ecirc;tre vous permet de rechercher des mots, des 
+expressions, des propri&eacute;t&eacute;s, par la valeur 
+indiqu&eacute;e.<br>
+
+<div>
+Vous disposez de deux champs de saisie&nbsp;:<br>
+<div style="margin-left: 30px;">
+<a href="#_search_first_field_">A</a> - Le premier champ, est 
+obligatoire, sans quoi, aucune recherche ne sera effectu&eacute;e.<br>
+<a href="#_search_second_field_">B</a> - Le second est facultatif.<br>
+</div>
+</div>
+<br>
+
+<div>
+<a name="_search_first_field_"></a>
+<b>A&nbsp;-&nbsp;Dans le premier champ</b>, entrez simplement une 
+valeur, un mot.<br>
+Ne mettez pas une partie de mot accompagn&eacute;e d'une &eacute;toile. 
+Ainsi, ne faites pas quelque chose du genre "<em>bordie*</em>" 
+pour rechercher le mot "<u><em>bordier</em></u>" ; il faut au 
+contraire juste mettre "<em>bordie</em>" et l&agrave;, GenJ 
+vous recherchera tous les mots qui commencent par les lettres 
+"<em>bordie</em>". Si vous ne mettez que "<em>ordie</em>" 
+(toujours sans &eacute;toile bien s&ucirc;r), GenJ vous trouvera 
+l&agrave; encore tous les mots qui commencent par "<em>ordie</em>" 
+mais aussi tous ceux qui comportent ces m&ecirc;mes lettres, et donc 
+il vous trouvera aussi le mot "<em>bordier</em>" dans mon exemple.<br>
+GenJ met en surbrillance rouge le mot que vous recherchiez dans 
+les occurences qu'il trouve.<br>
+<br>
+<u>Les Regex (fonction de recherche avanc&eacute;e)</u> :
+<div style="margin-left: 20px;">
+Ce premier champ, est accompagn&eacute; d'un bouton sur la gauche 
+qui vous autorise &agrave; faire des recherches extr&eacute;mement 
+pointues.<br>
+Son usage me semble vraiment tr&eacute;s complexe, mais voil&agrave; 
+un peu de quoi il retourne&nbsp;:<br>
+En cliquant sur ce bouton, la liste suivante s'affiche&nbsp;:<br>
+<div style="margin-left: 40px;">
+<table width="90%" border="0">
+<tr>
+<td width="20%">
+<font color="#ff0000">
+^<br>
+$<br>
+.<br>
+\s<br>
+X?<br>
+X&#42;<br>
+X&#43;<br>
+X{n}<br>
+X{n,}<br>
+X{n,m}<br>
+</font>
+</td>
+<td width="80%">
+commencement d'une ligne<br>
+fin d'une ligne<br>
+n'importe quel caract&egrave;re<br>
+espace blanc<br>
+X, une fois ou pas du tout<br>
+X, z&eacute;ro fois ou plus<br>
+X, une fois ou plus<br>
+X, exactement n fois<br>
+X, au moins n fois<br>
+X, au moins n max. m fois<br>
+</td>
+</tr>
+</table>
+</div>
+Ces recherches sont bas&eacute;es sur ce qu'on appelle les "regex", 
+qui est une contraction de l'anglais "Regular expression" traduit 
+en fran&ccedil;ais par Expressions r&eacute;guli&egrave;res, mais 
+aussi Expressions rationnelles. Je pense qu'il faut mieux aller 
+vers la premi&egrave;re traduction, &agrave; savoir "Expressions 
+R&eacute;guli&egrave;res".<br>
+Dans un premier temps, il faut savoir ce qu'est une "Expression 
+r&eacute;guli&egrave;re" ? On peut dire qu'il s'agit d'un 
+syst&egrave;me tr&egrave;s &eacute;labor&eacute; et tr&egrave;s 
+puissant, permettant de TROUVER (retrouver ==> coupler ==> assortir) 
+des MOTIFS (pattern ==> profils ==> masques ==> structures) et de 
+TRAITER (r&eacute;cup&eacute;rer ==> extraire ==> remplacer) des 
+&eacute;l&eacute;ments &agrave; l'int&eacute;rieur d'une cha&icirc;ne 
+de caract&egrave;res. En effet, ce syst&egrave;me est con&ccedil;u 
+uniquement pour traiter des cha&icirc;nes de caract&egrave;res.<br>
+Je vous conseille de regarder sur internet un tutorial, vous 
+devriez en trouver quelques uns de tr&eacute;s bien faits. Un petit 
+coup de 
+<a href="http://www.google.fr/search?hl=fr&q=regex&btnG=Recherche+Google&meta=lr%3Dlang_fr">Google, et voil&agrave;</a> 
+.... (le but de cette aide n'&eacute;tant pas 
+de faire un tutorial sur les "regex").<br>
+<br>
+<u>Quelques exemples cependant pour vous faire comprendre</u>&nbsp;:<br>
+Tout d'abord, une n&eacute;cessit&eacute;&nbsp;: Vous devez cocher 
+l'option juste au-dessus dont le label est "Expression Exacte" (mais 
+m&ecirc;me si vous ne le faites pas, GenJ le fera pour vous, d&eacute;s 
+que vous allez utiliser cette fonction bas&eacute;e sur les 
+RegEx).<br>
+Maintenant, vous voulez rechercher les endroits, o&ugrave; dans votre 
+arbre (votre fichier gedcom), on a le nom "Massonneau".<br>
+La mani&egrave;re la plus simple est de mettre "Massonneau" (avec ou 
+sans majuscule, mais alors ne cochez pas l'option "Expression 
+Exacte) dans le premier champ, et de lancer la recherche.<br>
+Cependant, on peut vouloir rechercher par exemple, le mot 
+"Massonneau", mais qui pourrait &ecirc;tre orthographi&eacute; de 
+diff&eacute;rentes mani&egrave;res, on pourrait par exemple vouloir 
+voir s'afficher les endroits o&ugrave; l'on trouve "Massonneau", 
+"Masonneau", "Massoneau", "Masoneau". Comment faire&nbsp;?<br>
+Il faut dans ces conditions utiliser la fonction de recherche 
+bas&eacute;e sur les expressions r&eacute;guli&egrave;res. On va 
+mettre dans le premier champ le mot "Masoneau", cocher l'option 
+"Expression Exacte", et cliquer sur le bouton &agrave; gauche du 
+premier champ. L&agrave; on va choisir parmi les options 
+propos&eacute;es (il y en a plein d'autres, mais l&agrave; regardez 
+comme je vous le disais dans un tutorial), celle qui nous dit "je 
+veux rechercher les cas o&ugrave; j'ai au moins une fois la lettre 
+"s" et au moins une fois la lettre "n", c'est donc le cas 
+"<font color="#ff0000"><b>X+</b></font> <i><font color="#002aff">(X, 
+une fois ou plus)</font></i>". Il va falloir que dans le premier 
+champ, votre recherche soit &eacute;crite comme &ccedil;a&nbsp;: 
+"<b>Mas+on+eau</b>".<br>
+<div style="margin-left: 40px;">
+<u><b>N.B.</b></u>&nbsp;: Dans la liste des "regex" propos&eacute;es, 
+"X" s'applique &agrave; ce qu'on recherche, donc ici, c'est la 
+lettre "s" et la lettre "n". Dans mon exemple ci-dessus, on a 
+utilis&eacute; deux fois cette fonction.<br>
+Si par contre, vous utilisez la fonction de cette 
+mani&egrave;re&nbsp;:<br>
+<b>(bateau){2,}</b> &ccedil;a va vouloir dire que vous recherchez 
+les endroits o&ugrave; le mot "bateau", se retrouve deux fois de 
+suite au moins, c&ocirc;te &agrave; c&ocirc;te, donc quelque chose 
+du genre "bateaubateau".<br>
+Si vous mettez <b>bateau{2,}</b> (vous voyez que je ne mets pas 
+le mot bateau entre parenth&egrave;ses), vous ne rechercherez que 
+les endroits o&ugrave; l'on trouve dans votre fichier gedcom, la 
+lettre "u", au moins deux fois c&ocirc;te &agrave; c&ocirc;te, 
+donc quelque chose comme "uu" ou "uuu" ou "uuuu", etc....<br>
+Ce qui est entre accolades, s'applique uniquement au caract&egrave;re 
+situ&eacute; juste avant. Donc si vous ne mettez pas de 
+parenth&egrave;se on ne recherchera que la lettre. Si au contraire, 
+vous mettez des parenth&egrave;ses, &ccedil;a recherchera tout ce 
+qui est entre parenth&egrave;ses.<br>
+Vous voyez la puissance du truc, d'o&ugrave; l'int&eacute;r&ecirc;t 
+de reprendre un tutorial.<br>
+</div>
+</div>
+<br>
+<a name="_search_second_field_"></a>
+<b>B&nbsp;-&nbsp;Dans le deuxi&egrave;me champ</b>, qui n'est qu'un 
+champ facultatif, vous pouvez en plus, si vous le souhaitez, entrer une 
+s&eacute;lection pour limiter la recherche uniquement dans une partie 
+particuli&egrave;re de votre fichier Gedcom. L&agrave; vous avez deux 
+possibilit&eacute;s&nbsp;:<br>
+<div style="margin-left: 30px;">
+<b>a</b>&nbsp;-&nbsp;Ou bien vous connaissez bien le format gedcom, 
+et ce qu'on appelle le "<a href="./../concepts/paths.html">Chemin des 
+Etiquettes</a>", et vous mettez le chemin que vous voulez, 
+exemple&nbsp;: INDI:RESI:ADDR:CITY, ou INDI:OCCU.<br>
+<b>b</b>&nbsp;-&nbsp;Ou bien vous ne connaissez pas du tout cette 
+structure, et vous utilisez le bouton situ&eacute; &agrave; gauche 
+pour choisir parmi une liste d&eacute;j&agrave; pr&eacute;par&eacute;e, 
+dans laquelle vous aurez&nbsp;:<br>
+<div style="margin-left: 30px;">
+.&nbsp;Individu<br>
+.&nbsp;Nom<br>
+.&nbsp;Naissance<br>
+.&nbsp;Profession<br>
+.&nbsp;Note<br>
+.&nbsp;R&eacute;sidence<br>
+.&nbsp;Famille<br>
+</div>
+Vous remarquerez, que GenJ va compl&eacute;ter le champ avec des 
+chemins d'&eacute;tiquettes, et non pas le mot plus familier que 
+ce chemin signifie, ceci afin de vous familiariser avec cette 
+<a href="./../concepts/paths.html">structure</a>. Vous avez 
+choisi "Profession", GenJ place dans le champ le chemin "INDI:OCCU".<br>
+Parmi la liste qui vous est propos&eacute;e, vous n'avez pas toutes 
+les possibilit&eacute;s, cela va de soi, donc n'h&eacute;sitez pas 
+&agrave; faire des exp&eacute;rimentations, et vous verrez la 
+puissance de la recherche car quelque soit l'indentation de la 
+structure gedcom dans votre arbre g&eacute;n&eacute;alogique, vous 
+pourrez cibler la recherche sur telle ou telle partie tr&eacute;s 
+pr&eacute;cise.<br>
+</div>
+<br>
+<br>
+<u>Exemple de recherche bas&eacute;e sur les deux champs</u>&nbsp;:<br>
+Je veux rechercher le mot "cultivateur", mais uniquement dans les 
+professions. Je vais mettre le mot 
+<font color="#ff9900"><b><i>cultivateur</i></b></font> dans le premier 
+champ, puis dans le deuxi&egrave;me champ, je vais choisir la 
+propri&eacute;t&eacute; 
+<font color="#ff9900"><b><i>profession</i></b></font> par le bouton 
+situ&eacute; &agrave; gauche du deuxi&egrave;me champ, ou alors, je 
+mets directement dans ce deuxi&egrave;me champ la phrase suivante 
+<font color="#ff9900"><b><i>INDI:OCCU</i></b></font>.<br>
+Une fois que votre choix est fait, il vous suffit de cliquer sur le 
+premier bouton dans la barre d'outils (en bas &agrave; gauche) pour 
+d&eacute;marrer la recherche.
+</div>
+
+<p>
+Si vous voulez que la recherche se fasse <b>exactement</b> 
+sur le mot que vous indiquez (ex : vous voulez que la 
+casse soit respect&eacute;e), entrez le mot ou les mots qui 
+vous int&eacute;resse dans le champ de recherche et cochez 
+l'option "Expression exacte".
+</p>
+
+<h3><u>Barre d'Outils</u></h3>
+ Les actions suivantes sont possibles :
+ <ol>
+  <li>D&eacute;marrer la recherche,</li>
+  <li>Stopper la recherche.</li>
+ </ol>
+ 
+<br>
+</div>
+
+</body>
+</html>

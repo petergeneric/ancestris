@@ -1,0 +1,75 @@
+<html>
+<body>
+
+<h2>Trabajando con Menús Contextuales</h2>
+
+<p>
+ Lo más importante cuaado se usa GenJ es activar
+ los menús contextuales. Un clic con el botón derecho del ratón
+ <font size=-1>( su plataforma podría tener una acción de ratón diferente
+ para ello)</font> sobre la información mostrada en pantalla en una
+ de las  <a href="../views.html">vistas</a> revelará las acciones
+ que puede hacer .
+</p>
+
+<p>
+ El menú contextual siempre está estructurado de la misma forma : en primer
+ lugar muestra un submenú para lo que ha selecionado y mas submenús que amplían
+ el contexto.
+</p>
+
+<p>
+ En este ejemplo se muestra el contexto para la propiedad nombre.
+ El primer submenú es para la propiedad en sí misma y las acciones
+ sobre ella, el segundo submenú es para la entidad (aquí un individuo)
+ a que pertenece la propiedad, el tercer submenú es para el fichero (Gedcom)
+ a que pertenece la entidad.
+
+  <blockquote><img src="context1.png"></blockquote>
+ El submenú para el individuo 'I008'  muestra estas acciones:
+ <ul>
+  <li>Añadir Hijo - un hijo ( y familia si es necesario) para I008
+  <li>Añadir Esposo - un esposo/a ( y familia si es necesario ) para I008
+  <li>Añadir Hermano - un hermano (  y familia si es necesario) para I008
+  <li>Añadir Multimedia - un objeto de datos binarios
+  <li>Añadir Nota - una nota describiendo I008
+  <li>Añadir Remisor - la persona que envió los datos sobre I008
+  <li>Añadir Fuente - la fuente de información sobre I008
+  <li>Añadir Asociación - una  asociación con otro individuo
+  <li>Borrar - eliminar la entidad I008
+ </ul>
+</p>
+
+<p>
+ El siguiente ejemplo muestra un menú contextual sobre una propiedad pero
+ esta vez se muestran las acciones para la propiedad en si misma (primer submenú)
+ <blockquote><img src="context3.png"></blockquote>
+ Estas son las acicones ofrecidas:
+ <ul>
+  <li>Añadir Nota - esta nota guarda información específica de este nacimiento
+  <li>Añadir Fuente - esta fuente guarda de donde viene la información sobre el nacimiento
+  <li>Añadir Multimedia  - este objeto guarda  datos binarios sobre el nacimiento
+  <li>Marcar como privado - marca esto como privado (cifrado)
+ </ul>
+</p>
+
+
+<p>
+ En último lugar este ejemplo enfatiza la forma dinámica en que se genera el menú contextual.
+ El proceso lógico que se sigue para construir un menú en una vista de árbol es:
+ <ul>
+  <li>el contexto donde se hace clic no representa una propiedad sino  una entidad
+    (aqui el individuo I001) asi que el primer submenú es para individuos
+  <li>la vista  de menu contextual que se muestra en - <a href="../view/tree.html">Vista de Árbol</a> -
+    tiene una acción especial  <em>Añadir Marcador</em>
+ </ul>
+  <blockquote><img src="context2.png"></blockquote>
+  Las acciones mostradas en los submenús permiten crear nuevas <a href="../entities.html">Entidades</a>
+  en el fichero mifamilia.ged. Es aconsejable sin embargo "hacer crecer la información existente"
+  en lugar de crear entidades aisladas como individuos o familias. Para crear entidades
+  relacionadas use los submenús como se describe antes.
+ 
+</p>
+
+</body>
+</html>

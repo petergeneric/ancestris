@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<registry>
+    <pack name="Application">
+        <!-- -------------------------------------------------------------
+             Register the Gedcom type in HKCU\software\classes\.
+             ------------------------------------------------------------- -->
+        <key root="HKCU" keypath="software\classes\.ged"/>
+        <value root="HKCU" keypath="software\classes\.ged"
+            name="" string="Gedcom File"/>
+        <!-- icon of .ged files in explorer -->
+        <value root="HKCU" keypath="software\classes\.ged\DefaultIcon"
+            name="" string="$INSTALL_PATH\genj.ico,0"/>
+        <key root="HKCU"
+            keypath="software\classes\.ged\shell"/>
+        <key root="HKCU"
+            keypath="software\classes\.ged\shell\GenealogyJ"/>
+        <value root="HKCU"
+            keypath="software\classes\.ged\shell\GenealogyJ\command"
+            name="" string='"$JAVA_HOME\bin\javaw.exe" -Xmx512m -Xms32m -jar "$INSTALL_PATH\run.jar" "%1"'/>
+            
+    </pack>
+</registry> 

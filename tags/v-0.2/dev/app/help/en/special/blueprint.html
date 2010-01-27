@@ -1,0 +1,84 @@
+<html>
+
+<body>
+
+<h2>Blueprints</h2>
+
+<p>
+ Looking at Gedcom information in a structured hierarchical manner like
+ <a href="../view/edit.html">Edit View</a> or <a href="../view/table.html">Table View</a>
+ is one thing. Rendering the information about an entity in a static 2d way 
+ is another. Both <a href="../view/tree.html">Tree View</a> and
+ <a href="../view/entity.html">Entity View</a> do just that. They render
+ individuals and entities in a constrained rectangular space on your screen
+ or paper.
+</p>
+
+<p>
+ The underlying technology used for this by GenJ is HTML. The instructions
+ of how to render an entity is called a Blueprint. It consists of standard
+ HTML with the addition of a new HTML element "prop".
+</p>
+
+<p>
+ Here's an example: 
+ <pre>
+      &lt;b&gt;<b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI</font><b>&gt;</b>&lt;/b&gt;
+      <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:NAME</font><b>&gt;</b>
+      born <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:BIRT:DATE</font><b>&gt;</b>
+      in <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:BIRT:PLAC</font><b>&gt;</b>,
+      lived in <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:RESI:ADDR:CITY</font><b>&gt;</b>
+      and worked as a <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:OCCU</font><b>&gt;</b>. </pre>
+ which looks like this once rendered:
+ <blockquote>
+   <b>I008</b> Meier, Nils born 25 May 1970 in Rendsburg, lived
+   in San Francisco and worked as a Software Engineer.
+ </blockquote>
+<p>
+
+<p>
+ As you can see the "path" argument to "prop" contains a 
+  <a href="../concepts/paths.html">Tag Path</a>
+ identifying what to render into the text-flow. Here the following
+ values of properties are resolved;
+ 
+ <blockquote><table>
+  <tr>
+   <td><font color=blue>path=...</font></td><td>result</td><td>individual's ...</td>
+  </tr><tr>
+   <td>INDI                         </td><td>I008        </td><td>ID</td>
+  </tr><tr>
+   <td>INDI:NAME                    </td><td>Meier, Nils</td><td>name</td>
+  </tr><tr>
+   <td>INDI:BIRT:DATE               </td><td>25 May 1970</td><td>birth date</td>
+  </tr><tr>
+   <td>INDI:BIRT:PLACE              </td><td>Rendsburg  </td><td>birth place</td>
+  </tr><tr>
+   <td>INDI:RESI:ADDR:CITY          </td><td>San Francisco</td><td>city of residence</td>
+  </tr><tr>
+   <td>INDI:OCCU                    </td><td>Software Engineer</td><td>occupation</td>
+  </tr>
+ </table></blockquote>
+ 
+ By using different blueprints the same data can be rendered in various ways, because
+ different sets of information, layouts and colors can be choosen:
+ 
+  <blockquote><img src="../../images/screenshots/blueprint1.png"></blockquote>
+</p>
+
+<p>
+ Views utilizing blueprints will offer to select and edit them through their settings.
+ Predefined blueprints cannot be changed but user-defined blueprints can be changed
+ once created (blueprints are managed globally and not per view).
+</p>
+
+<p>
+ <b><font color=red>Note</font></b>: This is a very advanced feature that won't be necessary
+ to be understood by all users. The default blueprints should be sufficient for
+ 80% of the users.
+</p>
+
+</body>
+</html>
+
+
