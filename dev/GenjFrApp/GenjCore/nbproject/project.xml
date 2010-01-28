@@ -135,10 +135,6 @@
                 <binary-origin>../../app/dist/lib/velocity-1.6.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jhbasic.jar</runtime-relative-path>
-                <binary-origin>../../app/dist/lib/jhbasic.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/batik-awt-util.jar</runtime-relative-path>
                 <binary-origin>../../app/dist/lib/batik-awt-util.jar</binary-origin>
             </class-path-extension>
