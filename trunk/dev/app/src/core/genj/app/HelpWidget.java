@@ -29,8 +29,8 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.logging.Level;
 
-import javax.help.HelpSet;
-import javax.help.JHelp;
+//import javax.help.HelpSet;
+//import javax.help.JHelp;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -86,16 +86,16 @@ public class HelpWidget extends JPanel {
       return null;
     }
 
-    // Load and init through bridge
-    try {
-      // without jumping through these hoops I'm getting java.lang.NoClassDefFoundError: javax/help/JHelp
-      // if HelpWidget.class is loaded :(
-      HelpSet set = (HelpSet)HelpSet.class.getConstructor(new Class[]{ClassLoader.class, URL.class})
-        .newInstance(new Object[]{null,new URL("file","", file)});
-      return (JComponent)JHelp.class.getConstructor(new Class[]{set.getClass()}).newInstance(new Object[]{set});
-    } catch (Throwable t) {
-      App.LOG.log(Level.WARNING, "Problem reading help", t);
-    }
+//    // Load and init through bridge
+//    try {
+//      // without jumping through these hoops I'm getting java.lang.NoClassDefFoundError: javax/help/JHelp
+//      // if HelpWidget.class is loaded :(
+//      HelpSet set = (HelpSet)HelpSet.class.getConstructor(new Class[]{ClassLoader.class, URL.class})
+//        .newInstance(new Object[]{null,new URL("file","", file)});
+//      return (JComponent)JHelp.class.getConstructor(new Class[]{set.getClass()}).newInstance(new Object[]{set});
+//    } catch (Throwable t) {
+//      App.LOG.log(Level.WARNING, "Problem reading help", t);
+//    }
     
     // default - none
     return null;

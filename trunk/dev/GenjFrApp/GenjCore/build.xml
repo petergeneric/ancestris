@@ -20,7 +20,7 @@
     <copy todir="${cluster}/modules/ext"
           file="${original.project.jar}"/>
     <copy todir="${cluster}/modules/ext">
-    <fileset dir="${original.project.dir}/dist/lib"/>
+    <fileset dir="${original.project.dir}/dist/lib" excludes="jhbasic*"/>
     </copy>
 
     <copy todir="${cluster}/report" >
