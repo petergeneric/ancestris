@@ -63,7 +63,7 @@ public final class ReportTopComponent extends GenjViewTopComponent {
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
+        return TopComponent.PERSISTENCE_ONLY_OPENED;
     }
 
     @Override
@@ -80,6 +80,7 @@ public final class ReportTopComponent extends GenjViewTopComponent {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
+        p.setProperty("gedcom",gedcom.getOrigin().toString());
         // TODO store your settings
     }
 
@@ -90,7 +91,6 @@ public final class ReportTopComponent extends GenjViewTopComponent {
         readPropertiesImpl(p);
         return this;
     }
-
 
     @Override
     protected String preferredID() {
