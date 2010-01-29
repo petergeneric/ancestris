@@ -22,7 +22,10 @@ package genj.report;
 import genj.util.EnvironmentChecker;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ClassLoad for Reports
@@ -84,13 +88,20 @@ public class ReportLoader {
    * dir resolver
    */
   public static File getReportDirectory() {
-    
-    // where are the reports 
-    return new File(EnvironmentChecker.getProperty(ReportLoader.class,
-      new String[]{ "genj.report.dir", "user.dir/report"},
-      "report",
-      "find report class-files"
-    ));
+        try {
+            File defaultDir = new File( new URI(ReportLoader.class.getProtectionDomain().getCodeSource().getLocation().getFile()));
+            ReportView.LOG.info("directory:" + defaultDir);
+            defaultDir = new File(defaultDir.getParentFile().getParentFile().getParent(),"report");
+            ReportView.LOG.info("directory:" + defaultDir);
+                    
+            // where are the reports
+//            return new File(EnvironmentChecker.getProperty(ReportLoader.class, new String[]{"genj.report.dir", "user.dir/report"}, defaultDir.getPath(), "find report class-files"));
+            //FIXME: pas de possibilite de personnaliser le repertoire des rapports pour l'instant
+            return defaultDir;
+        } catch (Exception ex) {
+            Logger.getLogger(ReportLoader.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
   }
   
   /**
