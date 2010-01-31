@@ -5,7 +5,7 @@
 <project name="GenjFrApp" basedir=".">
     <description>Builds the module suite GenjFrApp.</description>
     <import file="nbproject/build-impl.xml"/>
-        <target name="build-launchers" depends="-init">
+    <target name="build-launchers" depends="-init">
         <fail unless="app.name">Must have set at least an application name ('app.name')</fail>
 
         <pathconvert property="zip.platform.update.tracking">
@@ -87,6 +87,15 @@
         <echo message="${zip.platform.clusters.bare}" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
         <echo message="&#10;" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
 
+    </target>
+    <target name="build-zip" depends="suite.build-zip">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <zip destfile="${dist.dir}/${app.name}.zip" update="true">
+            <zipfileset dir="res/" includes="GNU ..." prefix="${app.name}"/>
+            <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>
+            <zipfileset dir="res/language/platform11" prefix="${app.name}/platform11"/>
+        </zip>
     </target>
 
 </project>
