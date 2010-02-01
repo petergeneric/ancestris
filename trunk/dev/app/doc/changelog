@@ -2,7 +2,10 @@
 ---=== G E N J F r ===------------------ - - -  -  -    -       -
 
 (A=Amélioration; B=Bug; D=Divers; M=Modification)
-
+/Version 0.2-1 r.295 - 01 Fév. 2010
+  . B: Traduction des menus
+  . B: Correction de la vue rapports
+  . B: Disponibilité de l'aide
 /Version 0.2-0 r.288 - 27 Jan. 2010
   . M: Refonte complète du système de fenêtrage.
   . M: Intégration d'un assistant de configuration au démarrage.
