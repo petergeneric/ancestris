@@ -1,0 +1,129 @@
+<project name="GraphJ" default="run" basedir=".">
+
+  <property file="./build.properties"/>
+	
+  <property name="dir.build" value="./build"/>
+
+  <!--
+   Initialization
+   -->
+  <target name="init">
+    <mkdir dir="./build"/>
+  </target>
+
+  <!--
+   Core Compilation & Build
+   -->
+  <target name="make.core" depends="init">
+  	
+  	<!-- compile -->
+    <mkdir dir="./build/classes/core"/>
+    <javac srcdir="src/core" destdir="./build/classes/core" debug="on" optimize="off" deprecation="off"/>
+  	
+  	<!-- build jar -->
+    <delete file="./build/gj-core.jar"/>
+    <jar jarfile="./build/gj-core.jar" update="True">
+      <fileset dir="./build/classes/core"/>
+    </jar>
+  	
+  </target>
+
+  <!--
+   Layouts Compilation & Build
+   -->
+  <target name="make.layouts" depends="init, make.core">
+  	
+  	<!-- compile -->
+    <mkdir dir="./build/classes/layouts"/>
+    <javac srcdir="src/layouts" destdir="./build/classes/layouts" debug="on" optimize="off" deprecation="off">
+      <classpath path="build/gj-core.jar"/>
+    </javac>
+  	
+  	<!-- build jar -->
+    <delete file="./build/gj-layouts.jar"/>
+    <jar jarfile="./build/gj-layouts.jar" update="True">
+      <fileset dir="./build/classes/layouts"/>
+    </jar>
+  	
+  </target>
+  	
+  <!--
+   UI Compilation & Build
+  -->
+  <target name="make.ui" depends="init, make.core">
+  	
+    <mkdir dir="./build/classes/ui"/>
+    <javac srcdir="src/ui" destdir="./build/classes/ui" debug="on" optimize="off" deprecation="off">
+      <classpath path="build/gj-core.jar"/>
+    </javac>
+  	
+  	<!-- build jar -->
+    <delete file="./build/gj-ui.jar"/>
+    <jar jarfile="./build/gj-ui.jar" update="True">
+      <fileset dir="./build/classes/ui"/>
+    </jar>
+  	
+  </target>
+
+  <!--
+   Shell Compilation & Build
+   -->
+  <target name="make.shell" depends="init, make.core, make.ui">
+  	
+    <mkdir dir="./build/classes/shell"/>
+    <javac srcdir="src/shell" destdir="./build/classes/shell" debug="on" optimize="off" deprecation="off">
+      <classpath path="build/gj-core.jar:build/gj-ui.jar"/>
+    </javac>
+    <copy todir="./build/classes/shell">
+      <fileset dir="./src/shell" includes="**/*.properties"/>
+    </copy>
+  	
+  	<!-- build jar -->
+    <delete file="./build/gj-shell.jar"/>
+    <jar jarfile="./build/gj-shell.jar" update="True">
+      <fileset dir="./build/classes/shell"/>
+    </jar>
+  	
+  </target>
+
+  <!--
+   Compilation
+   -->
+  <target name="make" depends="make.core, make.layouts, make.ui, make.shell">
+  </target>
+
+  <!--
+   Cleaning
+   -->
+  <target name="clean">
+    <delete includeemptydirs="true" failonerror="false">
+      <fileset dir="./build" excludes="eclipse/**"/>
+   	</delete>
+  </target>
+
+  <!--
+   Run
+   -->
+  <target name="run" depends="make">
+    <java classname="gj.shell.Shell" fork="true"> 
+    	 <arg value="./save/tree1.xml"/>
+       <classpath path="./build/gj-core.jar:./build/gj-layouts.jar:./build/gj-ui.jar:./build/gj-shell.jar"/>
+    </java>
+  </target>
+
+  <!--
+   Run
+   -->
+  <target name="example" depends="make">
+  	
+    <mkdir dir="./build/classes/examples"/>
+    <javac srcdir="src/examples" destdir="./build/classes/examples" debug="on" optimize="off" deprecation="off">
+      <classpath path="build/gj-core.jar:./build/gj-layouts.jar:build/gj-ui.jar"/>
+    </javac>
+
+    <java classname="gj.example.Main" fork="true"> 
+       <classpath path="./build/gj-core.jar:./build/gj-layouts.jar:./build/gj-ui.jar:./build/classes/examples"/>
+    </java>
+  </target>
+
+</project>

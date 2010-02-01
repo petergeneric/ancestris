@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <script type="text/javascript">
+    var mapLat = MAPLAT;
+    var mapLon = MAPLON;
+    var mapZoom = 6;
+    var mapXml = "MAPXML";
+  </script>
+  <head>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=MAPKEY" type="text/javascript"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+      function createMarker(lon, lat, text) {
+        var point = new GPoint(parseFloat(lon), parseFloat(lat));
+        var marker = new GMarker(point);
+        GEvent.addListener(marker, 'click', function() {
+          var lines = text;
+          var html = "<div style=white-space:nowrap;>";
+          while (lines.indexOf(';')>=0) {
+            html += lines.substring(0, lines.indexOf(';'));
+            html += "<br>";
+            lines = lines.substring(lines.indexOf(';')+1);
+          }
+          html += lines;
+          html += "</div>";
+          marker.openInfoWindowHtml(html);
+        });
+        return marker;
+      }
+      function load() {
+      
+        if (!GBrowserIsCompatible()) 
+          return
+          
+        var map = new GMap2(document.getElementById("map"));
+        map.setCenter(new GLatLng(mapLat, mapLon), mapZoom, G_HYBRID_MAP );
+        map.addControl(new GSmallMapControl());
+        map.addControl(new GMapTypeControl());
+      
+        // Download location data in xml file - format:
+        // <ls>
+        //   <l x="37.441" y="-122.141">foo</l>
+        //   <l x="37.322" y="-121.213"/>
+        // </ls>
+        var request = GXmlHttp.create();
+        request.open('GET', mapXml, true);
+        request.onreadystatechange = function() {
+          if (request.readyState == 4) {
+            var ls = request.responseXML.documentElement.getElementsByTagName("l");
+            for (var l = 0; l < ls.length; l++) {
+              map.addOverlay(createMarker(ls[l].getAttribute("x"), ls[l].getAttribute("y"), ls[l].firstChild.nodeValue));
+            }
+          }
+        }
+        request.send(null);    
+      }
+    //]]>
+    </script>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>Locations in MAPGED</title>
+  </head>
+  <body onload="load()" onunload="GUnload()">
+  <div id="map" style="width: expression(document.body.clientWidth); height: MAPHEIGHTpx"></div>
+  <p>Generated with <a href="http://genj.sourceforge.net">GenealogyJ</a>, Powered by <a href="http://maps.google.com">Google Maps</a></p>
+  </body>
+</html>
