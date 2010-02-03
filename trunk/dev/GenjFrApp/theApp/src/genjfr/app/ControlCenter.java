@@ -357,7 +357,7 @@ public class ControlCenter extends JPanel {
           if (rc==0) {
             // block exit
             // run save
-            new ActionSave(gedcom) {
+            new ActionSave(gedcom,false){
               // apres save
               protected void postExecute(boolean preExecuteResult) {
                 try {
