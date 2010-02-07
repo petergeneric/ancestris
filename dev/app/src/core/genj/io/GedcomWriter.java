@@ -246,8 +246,8 @@ public class GedcomWriter implements Trackable {
     writeLine( "1 SOUR GENJ");
     writeLine( "2 VERS "+Version.getInstance());
     writeLine( "2 NAME GenealogyJ");
-    writeLine( "2 CORP Nils Meier");
-    writeLine( "3 ADDR http://genj.sourceforge.net");
+    writeLine( "2 CORP GenjFr_Equipe_française");
+    writeLine( "3 ADDR http://www.arvernes.com/wiki/index.php/GenJ");
     writeLine( "1 DEST ANY");
     writeLine( "1 DATE "+date);
     writeLine( "2 TIME "+time);
