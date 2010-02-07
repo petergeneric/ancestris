@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
+import genj.app.App;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
@@ -80,32 +81,32 @@ public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
-     ((OptionsWizardVisualPanel4) getComponent()).setGedcomDir(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("gedcomDir", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setGedcomFile(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("gedcomFile", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setReportDir(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("reportDir", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoTxt(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("assoTxt", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoOffice(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("assoOffice", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoAdobe(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("assoAdobe", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoImages(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("assoImages", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoSound(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("assoSound", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoWeb(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("assoWeb", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setLogSize(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("logSize", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setProxy(NbPreferences.forModule(OptionsWizardWizardPanel4.class).get("proxy", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setGedcomDir(NbPreferences.forModule(App.class).get("gedcomDir", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setGedcomFile(NbPreferences.forModule(App.class).get("gedcomFile", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setReportDir(NbPreferences.forModule(App.class).get("reportDir", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setAssoOffice(NbPreferences.forModule(App.class).get("assoOffice", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setAssoAdobe(NbPreferences.forModule(App.class).get("assoAdobe", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setAssoImages(NbPreferences.forModule(App.class).get("assoImages", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setLogSize(NbPreferences.forModule(App.class).get("logSize", ""));
+     ((OptionsWizardVisualPanel4) getComponent()).setProxy(NbPreferences.forModule(App.class).get("proxy", ""));
 
     }
 
     public void storeSettings(Object settings) {
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("gedcomDir", ((OptionsWizardVisualPanel4) getComponent()).getGedcomDir());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("gedcomFile", ((OptionsWizardVisualPanel4) getComponent()).getGedcomFile());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("reportDir", ((OptionsWizardVisualPanel4) getComponent()).getReportDir());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("assoTxt", ((OptionsWizardVisualPanel4) getComponent()).getAssoTxt());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("assoOffice", ((OptionsWizardVisualPanel4) getComponent()).getAssoOffice());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("assoAdobe", ((OptionsWizardVisualPanel4) getComponent()).getAssoAdobe());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("assoImages", ((OptionsWizardVisualPanel4) getComponent()).getAssoImages());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("assoSound", ((OptionsWizardVisualPanel4) getComponent()).getAssoSound());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("assoWeb", ((OptionsWizardVisualPanel4) getComponent()).getAssoWeb());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("logSize", ((OptionsWizardVisualPanel4) getComponent()).getLogSize());
-     NbPreferences.forModule(OptionsWizardWizardPanel4.class).put("proxy", ((OptionsWizardVisualPanel4) getComponent()).getProxy());
+     NbPreferences.forModule(App.class).put("gedcomDir", ((OptionsWizardVisualPanel4) getComponent()).getGedcomDir());
+     NbPreferences.forModule(App.class).put("gedcomFile", ((OptionsWizardVisualPanel4) getComponent()).getGedcomFile());
+     NbPreferences.forModule(App.class).put("reportDir", ((OptionsWizardVisualPanel4) getComponent()).getReportDir());
+     NbPreferences.forModule(App.class).put("assoTxt", ((OptionsWizardVisualPanel4) getComponent()).getAssoTxt());
+     NbPreferences.forModule(App.class).put("assoOffice", ((OptionsWizardVisualPanel4) getComponent()).getAssoOffice());
+     NbPreferences.forModule(App.class).put("assoAdobe", ((OptionsWizardVisualPanel4) getComponent()).getAssoAdobe());
+     NbPreferences.forModule(App.class).put("assoImages", ((OptionsWizardVisualPanel4) getComponent()).getAssoImages());
+     NbPreferences.forModule(App.class).put("assoSound", ((OptionsWizardVisualPanel4) getComponent()).getAssoSound());
+     NbPreferences.forModule(App.class).put("assoWeb", ((OptionsWizardVisualPanel4) getComponent()).getAssoWeb());
+     NbPreferences.forModule(App.class).put("logSize", ((OptionsWizardVisualPanel4) getComponent()).getLogSize());
+     NbPreferences.forModule(App.class).put("proxy", ((OptionsWizardVisualPanel4) getComponent()).getProxy());
 
     }
 }

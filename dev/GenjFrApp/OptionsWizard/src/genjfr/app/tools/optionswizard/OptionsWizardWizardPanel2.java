@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
+import genj.app.App;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
@@ -80,46 +81,46 @@ public class OptionsWizardWizardPanel2 implements WizardDescriptor.Panel {
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolBirt(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolBirth", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolBapm(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolBapm", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolChildOf(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolChildOf", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolEngm(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolEngm", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolMarr(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolMarr", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolDivc(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolDivc", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolOccu(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolOccu", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolResi(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolResi", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolDeat(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolDeat", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setSymbolBuri(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("symbolBuri", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setPrivDisplay(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privDisplay", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setPrivFlag(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privFlag", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setPrivAlive(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privAlive", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setPrivYears(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("privYears", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setLineBreak(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("txtLineBreak", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setImageSize(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("imageSize", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setDisplayNames(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("displayNames", ""));
-     ((OptionsWizardVisualPanel2) getComponent()).setDisplayDates(NbPreferences.forModule(OptionsWizardWizardPanel2.class).get("displayDates", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolBirt(NbPreferences.forModule(App.class).get("symbolBirth", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolBapm(NbPreferences.forModule(App.class).get("symbolBapm", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolChildOf(NbPreferences.forModule(App.class).get("symbolChildOf", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolEngm(NbPreferences.forModule(App.class).get("symbolEngm", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolMarr(NbPreferences.forModule(App.class).get("symbolMarr", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolDivc(NbPreferences.forModule(App.class).get("symbolDivc", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolOccu(NbPreferences.forModule(App.class).get("symbolOccu", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolResi(NbPreferences.forModule(App.class).get("symbolResi", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolDeat(NbPreferences.forModule(App.class).get("symbolDeat", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setSymbolBuri(NbPreferences.forModule(App.class).get("symbolBuri", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setPrivDisplay(NbPreferences.forModule(App.class).get("privDisplay", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setPrivFlag(NbPreferences.forModule(App.class).get("privFlag", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setPrivAlive(NbPreferences.forModule(App.class).get("privAlive", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setPrivYears(NbPreferences.forModule(App.class).get("privYears", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setLineBreak(NbPreferences.forModule(App.class).get("txtLineBreak", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setImageSize(NbPreferences.forModule(App.class).get("imageSize", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setDisplayNames(NbPreferences.forModule(App.class).get("displayNames", ""));
+     ((OptionsWizardVisualPanel2) getComponent()).setDisplayDates(NbPreferences.forModule(App.class).get("displayDates", ""));
 
     }
 
     public void storeSettings(Object settings) {
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolBirth", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBirt());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolBapm", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBapm());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolChildOf", ((OptionsWizardVisualPanel2) getComponent()).getSymbolChildOf());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolEngm", ((OptionsWizardVisualPanel2) getComponent()).getSymbolEngm());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolMarr", ((OptionsWizardVisualPanel2) getComponent()).getSymbolMarr());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolDivc", ((OptionsWizardVisualPanel2) getComponent()).getSymbolDivc());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolOccu", ((OptionsWizardVisualPanel2) getComponent()).getSymbolOccu());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolResi", ((OptionsWizardVisualPanel2) getComponent()).getSymbolResi());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolDeat", ((OptionsWizardVisualPanel2) getComponent()).getSymbolDeat());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("symbolBuri", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBuri());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privDisplay", ((OptionsWizardVisualPanel2) getComponent()).getPrivDisplay());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privFlag", ((OptionsWizardVisualPanel2) getComponent()).getPrivFlag());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privAlive", ((OptionsWizardVisualPanel2) getComponent()).getPrivAlive());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("privYears", ((OptionsWizardVisualPanel2) getComponent()).getPrivYears());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("txtLineBreak", ((OptionsWizardVisualPanel2) getComponent()).getLineBreak());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("imageSize", ((OptionsWizardVisualPanel2) getComponent()).getImageSize());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("displayNames", ((OptionsWizardVisualPanel2) getComponent()).getDisplayNames());
-     NbPreferences.forModule(OptionsWizardWizardPanel2.class).put("displayDates", ((OptionsWizardVisualPanel2) getComponent()).getDisplayDates());
+     NbPreferences.forModule(App.class).put("symbolBirth", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBirt());
+     NbPreferences.forModule(App.class).put("symbolBapm", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBapm());
+     NbPreferences.forModule(App.class).put("symbolChildOf", ((OptionsWizardVisualPanel2) getComponent()).getSymbolChildOf());
+     NbPreferences.forModule(App.class).put("symbolEngm", ((OptionsWizardVisualPanel2) getComponent()).getSymbolEngm());
+     NbPreferences.forModule(App.class).put("symbolMarr", ((OptionsWizardVisualPanel2) getComponent()).getSymbolMarr());
+     NbPreferences.forModule(App.class).put("symbolDivc", ((OptionsWizardVisualPanel2) getComponent()).getSymbolDivc());
+     NbPreferences.forModule(App.class).put("symbolOccu", ((OptionsWizardVisualPanel2) getComponent()).getSymbolOccu());
+     NbPreferences.forModule(App.class).put("symbolResi", ((OptionsWizardVisualPanel2) getComponent()).getSymbolResi());
+     NbPreferences.forModule(App.class).put("symbolDeat", ((OptionsWizardVisualPanel2) getComponent()).getSymbolDeat());
+     NbPreferences.forModule(App.class).put("symbolBuri", ((OptionsWizardVisualPanel2) getComponent()).getSymbolBuri());
+     NbPreferences.forModule(App.class).put("privDisplay", ((OptionsWizardVisualPanel2) getComponent()).getPrivDisplay());
+     NbPreferences.forModule(App.class).put("privFlag", ((OptionsWizardVisualPanel2) getComponent()).getPrivFlag());
+     NbPreferences.forModule(App.class).put("privAlive", ((OptionsWizardVisualPanel2) getComponent()).getPrivAlive());
+     NbPreferences.forModule(App.class).put("privYears", ((OptionsWizardVisualPanel2) getComponent()).getPrivYears());
+     NbPreferences.forModule(App.class).put("txtLineBreak", ((OptionsWizardVisualPanel2) getComponent()).getLineBreak());
+     NbPreferences.forModule(App.class).put("imageSize", ((OptionsWizardVisualPanel2) getComponent()).getImageSize());
+     NbPreferences.forModule(App.class).put("displayNames", ((OptionsWizardVisualPanel2) getComponent()).getDisplayNames());
+     NbPreferences.forModule(App.class).put("displayDates", ((OptionsWizardVisualPanel2) getComponent()).getDisplayDates());
 
     }
 }
