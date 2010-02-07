@@ -11,27 +11,28 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Submitter;
-import genj.util.EnvironmentChecker;
 import genj.util.Origin;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.window.WindowManager;
+import genjfr.app.pluginservice.PluginInterface;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 
 public final class ActionNew extends Action2 {
 
-      private Resources resources = Resources.get(genj.app.ControlCenter.class);
-      private WindowManager windowManager = App.center.getWindowManager();
-
+    private Resources resources = Resources.get(genj.app.ControlCenter.class);
+    private WindowManager windowManager = App.center.getWindowManager();
 
     /** constructor */
-   public ActionNew() {
+    public ActionNew() {
 //      setAccelerator(ACC_NEW);
-      setText(resources, "cc.menu.new" );
-      setTip(resources, "cc.tip.create_file");
-      setImage(Images.imgNew);
+        setText(resources, "cc.menu.new");
+        setTip(resources, "cc.tip.create_file");
+        setImage(Images.imgNew);
     }
 
     /** execute callback */
@@ -39,40 +40,98 @@ public final class ActionNew extends Action2 {
 
         // let user choose a file
         File file = App.center.chooseFile(resources.getString("cc.create.title"), resources.getString("cc.create.action"), null);
-        if (file == null)
-          return;
-        if (!file.getName().endsWith(".ged"))
-          file = new File(file.getAbsolutePath()+".ged");
-        if (file.exists()) {
-          int rc = windowManager.openDialog(
-            null,
-            resources.getString("cc.create.title"),
-            WindowManager.WARNING_MESSAGE,
-            resources.getString("cc.open.file_exists", file.getName()),
-            Action2.yesNo(),
-            App.center
-          );
-          if (rc!=0)
+        if (file == null) {
             return;
+        }
+        if (!file.getName().endsWith(".ged")) {
+            file = new File(file.getAbsolutePath() + ".ged");
+        }
+        if (file.exists()) {
+            int rc = windowManager.openDialog(
+                    null,
+                    resources.getString("cc.create.title"),
+                    WindowManager.WARNING_MESSAGE,
+                    resources.getString("cc.open.file_exists", file.getName()),
+                    Action2.yesNo(),
+                    App.center);
+            if (rc != 0) {
+                return;
+            }
         }
         // form the origin
         try {
-          Gedcom gedcom  = new Gedcom(Origin.create(new URL("file", "", file.getAbsolutePath())));
-          // create default entities
-          try {
-            Indi adam = (Indi)gedcom.createEntity(Gedcom.INDI);
-            adam.addDefaultProperties();
-            adam.setName("Adam","");
-            adam.setSex(PropertySex.MALE);
-            Submitter submitter = (Submitter)gedcom.createEntity(Gedcom.SUBM);
-            submitter.setName(EnvironmentChecker.getProperty(this, "user.name", "?", "user name used as submitter in new gedcom"));
-          } catch (GedcomException e) {
-          }
-          // remember
-          GedcomDirectory.getInstance().registerGedcom(gedcom);
+            Gedcom gedcom = new Gedcom(Origin.create(new URL("file", "", file.getAbsolutePath())));
+            // create default entities
+            try {
+                // Create submitter
+                Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
+                submitter.setName(NbPreferences.forModule(genj.app.App.class).get("submName", ""));
+                submitter.setCity(NbPreferences.forModule(genj.app.App.class).get("submCity", ""));
+                submitter.setPhone(NbPreferences.forModule(genj.app.App.class).get("submPhone", ""));
+                submitter.setEmail(NbPreferences.forModule(genj.app.App.class).get("submEmail", ""));
+                submitter.setCountry(NbPreferences.forModule(genj.app.App.class).get("submCountry", ""));
+                submitter.setWeb(NbPreferences.forModule(genj.app.App.class).get("submWeb", ""));
+                
+                // Create place format
+                gedcom.setPlaceFormat(getPlaceFormatFromOptions());
+
+                //Create first INDI entity
+                Indi adam = (Indi) gedcom.createEntity(Gedcom.INDI);
+                adam.addDefaultProperties();
+                adam.setName("Adam", "");
+                adam.setSex(PropertySex.MALE);
+            } catch (GedcomException e) {
+            }
+            // remember
+            GedcomDirectory.getInstance().registerGedcom(gedcom);
         } catch (MalformedURLException e) {
         }
 
     }
 
-  } //ActionNew
+    String getPlaceFormatFromOptions() {
+        String format = "";
+        String jur = "";
+        String space = getSpaceFromOptions("address_splitspaces");
+        // go through all jursidictions possible
+        jur = getJurisdictionFromOptions("fmt_address1");
+        if (!jur.isEmpty()) {
+            format += jur;
+        }
+        jur = getJurisdictionFromOptions("fmt_address2");
+        if (!jur.isEmpty()) {
+            format += "," + space + jur;
+        }
+        jur = getJurisdictionFromOptions("fmt_address3");
+        if (!jur.isEmpty()) {
+            format += "," + space + jur;
+        }
+        jur = getJurisdictionFromOptions("fmt_address4");
+        if (!jur.isEmpty()) {
+            format += "," + space + jur;
+        }
+        jur = getJurisdictionFromOptions("fmt_address5");
+        if (!jur.isEmpty()) {
+            format += "," + space + jur;
+        }
+        jur = getJurisdictionFromOptions("fmt_address6");
+        if (!jur.isEmpty()) {
+            format += "," + space + jur;
+        }
+        jur = getJurisdictionFromOptions("fmt_address7");
+        if (!jur.isEmpty()) {
+            format += "," + space + jur;
+        }
+        return format;
+    }
+
+    private String getJurisdictionFromOptions(String string) {
+        return NbPreferences.forModule(genj.app.App.class).get(string, "");
+    }
+
+    private String getSpaceFromOptions(String string) {
+        String option = NbPreferences.forModule(genj.app.App.class).get(string, "");
+        return (option.equals("true")) ? " " : "";
+    }
+
+} //ActionNew

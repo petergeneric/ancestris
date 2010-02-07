@@ -352,7 +352,7 @@ public class App {
             Registry.persist();
 
             String done = registry.get("optionswizard", "");
-            if (done.equals("1")) {
+            if (done.equals("2")) {
                 return registry;
             }
 
@@ -371,7 +371,7 @@ public class App {
             if (pi != null) {
                 System.out.println("Launching Wizard...");
                 if (pi.launchModule(registry)) {
-                    registry.put("optionswizard", "1");
+                    registry.put("optionswizard", "2");
                     Registry.persist();
                     registry = new Registry("genj");
                 }
