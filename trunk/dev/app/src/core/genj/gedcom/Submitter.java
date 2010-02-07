@@ -25,6 +25,12 @@ package genj.gedcom;
 public class Submitter extends Entity {
   
   private final static TagPath PATH_NAME =new TagPath("SUBM:NAME");
+  private final static TagPath PATH_CITY =new TagPath("SUBM:ADDR:CITY");
+  private final static TagPath PATH_PHON =new TagPath("SUBM:PHON");
+  private final static TagPath PATH_POST =new TagPath("SUBM:ADDR:POST");
+  private final static TagPath PATH_EMAI =new TagPath("SUBM:_EMAIL");
+  private final static TagPath PATH_CTRY =new TagPath("SUBM:ADDR:CTRY");
+  private final static TagPath PATH_WEB  =new TagPath("SUBM:_WWW");
 
   /**
    * Name ...
@@ -40,11 +46,74 @@ public class Submitter extends Entity {
     return getValue(PATH_NAME, "");
   }
   
-  /**
-   * Name of Submitter
-   */
   public void setName(String name) {
     setValue(PATH_NAME, name);
   }
   
+  /**
+   * City of Submitter
+   */
+  public String getCity() {
+    return getValue(PATH_CITY, "");
+  }
+
+  public void setCity(String name) {
+    setValue(PATH_CITY, name);
+  }
+
+  /**
+   * Phone of Submitter
+   */
+  public String getPhone() {
+    return getValue(PATH_PHON, "");
+  }
+
+  public void setPhone(String name) {
+    setValue(PATH_PHON, name);
+  }
+
+  /**
+   * Postcode of Submitter
+   */
+  public String getPostcode() {
+    return getValue(PATH_POST, "");
+  }
+
+  public void setPostcode(String name) {
+    setValue(PATH_POST, name);
+  }
+
+  /**
+   * Email of Submitter
+   */
+  public String getEmail() {
+    return getValue(PATH_EMAI, "");
+  }
+
+  public void setEmail(String name) {
+    setValue(PATH_EMAI, name);
+  }
+
+  /**
+   * Country of Submitter
+   */
+  public String getCountry() {
+    return getValue(PATH_CTRY, "");
+  }
+
+  public void setCountry(String name) {
+    setValue(PATH_CTRY, name);
+  }
+
+  /**
+   * Web address of Submitter
+   */
+  public String getWeb() {
+    return getValue(PATH_WEB, "");
+  }
+
+  public void setWeb(String name) {
+    setValue(PATH_WEB, name);
+  }
+
 } //Submitter

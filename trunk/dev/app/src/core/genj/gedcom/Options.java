@@ -40,7 +40,33 @@ public class Options extends OptionProvider {
   
   /** option - whether to use spaces in separating places */
   public boolean isUseSpacedPlaces = true;
-  
+
+  // added after wizard (Frederic)
+  public String fmt_address1 = "";
+  public String fmt_address2 = "";
+  public String fmt_address3 = "";
+  public String fmt_address4 = "";
+  public String fmt_address5 = "";
+  public String fmt_address6 = "";
+  public String fmt_address7 = "";
+  public boolean fmt_address1_mand = false;
+  public boolean fmt_address2_mand = true;
+  public boolean fmt_address3_mand = false;
+  public boolean fmt_address4_mand = false;
+  public boolean fmt_address5_mand = false;
+  public boolean fmt_address6_mand = false;
+  public boolean fmt_address7_mand = false;
+  public String gedcomDir = "";
+  public String gedcomFile = "";
+  public String reportDir = "";
+  public String submName = "";
+  public String submCity = "";
+  public String submCountry = "";
+  public String submPostCode = "";
+  public String submPhone = "";
+  public String submEmail = "";
+  public String submWeb = "";
+
   /** option - whether id-gaps should be filled */
   public boolean isFillGapsInIDs = false;
   
