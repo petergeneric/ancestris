@@ -522,78 +522,90 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
     void setAddress1(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel13.text");
         }
-        jCheckBox3.setSelected(str.equals("true") ? true : false);
+        str = str.trim();
+        jCheckBox3.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress1() {
-        return (String) (jCheckBox3.isSelected() ? "true" : "false");
+        return (String) (jCheckBox3.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel13.text") : "");
     }
 
     void setAddress2(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel14.text");
         }
-        jCheckBox4.setSelected(str.equals("true") ? true : false);
+        str = str.trim();
+        jCheckBox4.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress2() {
-        return (String) (jCheckBox4.isSelected() ? "true" : "false");
+        return (String) (jCheckBox4.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel14.text") : "");
     }
 
     void setAddress3(String str) {
-        jCheckBox5.setSelected(str.equals("true") ? true : false);
+        if (str.equals("")) {
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel15.text");
+        }
+        str = str.trim();
+        jCheckBox5.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress3() {
-        return (String) (jCheckBox5.isSelected() ? "true" : "false");
+        return (String) (jCheckBox5.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel15.text") : "");
     }
 
     void setAddress4(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel16.text");
         }
-        jCheckBox6.setSelected(str.equals("true") ? true : false);
+        str = str.trim();
+        jCheckBox6.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress4() {
-        return (String) (jCheckBox6.isSelected() ? "true" : "false");
+        return (String) (jCheckBox6.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel16.text") : "");
     }
 
     void setAddress5(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel17.text");
         }
-        jCheckBox7.setSelected(str.equals("true") ? true : false);
+        str = str.trim();
+        jCheckBox7.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress5() {
-        return (String) (jCheckBox7.isSelected() ? "true" : "false");
+        return (String) (jCheckBox7.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel17.text") : "");
     }
 
     void setAddress6(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel18.text");
         }
-        jCheckBox8.setSelected(str.equals("true") ? true : false);
+        str = str.trim();
+        jCheckBox8.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress6() {
-        return (String) (jCheckBox8.isSelected() ? "true" : "false");
+        return (String) (jCheckBox8.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel18.text") : "");
     }
 
     void setAddress7(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel19.text");
         }
-        jCheckBox9.setSelected(str.equals("true") ? true : false);
+        str = str.trim();
+        jCheckBox9.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress7() {
-        return (String) (jCheckBox9.isSelected() ? "true" : "false");
+        return (String) (jCheckBox9.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel19.text") : "");
     }
 
+
+    
     void setAddress1Mand(String str) {
         jCheckBox10.setSelected(str.equals("true") ? true : false);
     }

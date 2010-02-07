@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
+import genj.app.App;
 import java.awt.Component;
 import javax.swing.JComboBox;
 import javax.swing.event.ChangeListener;
@@ -81,24 +82,24 @@ public class OptionsWizardWizardPanel1 implements WizardDescriptor.Panel {
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
-        ((OptionsWizardVisualPanel1) getComponent()).setLanguage(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("language", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setSkin(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("skin", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setRestoreWindows(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("restoreWindows", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setAutoCommit(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("autoCommit", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setUndos(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("undos", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setSplitJurisdictions(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("splitJurisdiction", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setOpenEditor(NbPreferences.forModule(OptionsWizardWizardPanel1.class).get("OpenEditor", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setLanguage(NbPreferences.forModule(App.class).get("language", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setSkin(NbPreferences.forModule(App.class).get("skin", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setRestoreWindows(NbPreferences.forModule(App.class).get("restoreWindows", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setAutoCommit(NbPreferences.forModule(App.class).get("autoCommit", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setUndos(NbPreferences.forModule(App.class).get("undos", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setSplitJurisdictions(NbPreferences.forModule(App.class).get("splitJurisdiction", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setOpenEditor(NbPreferences.forModule(App.class).get("OpenEditor", ""));
 
     }
 
     public void storeSettings(Object settings) {
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("language", ((OptionsWizardVisualPanel1) getComponent()).getLanguage());
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("skin", ((OptionsWizardVisualPanel1) getComponent()).getSkin());
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("restoreWindows", ((OptionsWizardVisualPanel1) getComponent()).getRestoreWindows());
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("autoCommit", ((OptionsWizardVisualPanel1) getComponent()).getAutoCommit());
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("undos", ((OptionsWizardVisualPanel1) getComponent()).getUndos());
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("splitJurisdiction", ((OptionsWizardVisualPanel1) getComponent()).getSplitJurisdictions());
-        NbPreferences.forModule(OptionsWizardWizardPanel1.class).put("OpenEditor", ((OptionsWizardVisualPanel1) getComponent()).getOpenEditor());
+        NbPreferences.forModule(App.class).put("language", ((OptionsWizardVisualPanel1) getComponent()).getLanguage());
+        NbPreferences.forModule(App.class).put("skin", ((OptionsWizardVisualPanel1) getComponent()).getSkin());
+        NbPreferences.forModule(App.class).put("restoreWindows", ((OptionsWizardVisualPanel1) getComponent()).getRestoreWindows());
+        NbPreferences.forModule(App.class).put("autoCommit", ((OptionsWizardVisualPanel1) getComponent()).getAutoCommit());
+        NbPreferences.forModule(App.class).put("undos", ((OptionsWizardVisualPanel1) getComponent()).getUndos());
+        NbPreferences.forModule(App.class).put("splitJurisdiction", ((OptionsWizardVisualPanel1) getComponent()).getSplitJurisdictions());
+        NbPreferences.forModule(App.class).put("OpenEditor", ((OptionsWizardVisualPanel1) getComponent()).getOpenEditor());
 
     }
 }
