@@ -616,7 +616,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
     void setAddress2Mand(String str) {
         if (str.equals("")) {
-            str = "true";
+            str = "false";
         }
         jCheckBox11.setSelected(str.equals("true") ? true : false);
     }
