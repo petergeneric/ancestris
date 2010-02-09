@@ -286,6 +286,9 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
     }
 
     void setRestoreWindows(String str) {
+        if (str.equals("")) {
+            str = "true";
+        }
         jCheckBox1.setSelected(str.equals("true") ? true : false);
     }
 
