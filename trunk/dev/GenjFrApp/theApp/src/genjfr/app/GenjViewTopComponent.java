@@ -41,8 +41,9 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "GenjViewTopComponent";
     private static javax.swing.JPanel panel;
-    private static InstanceContent ic = new InstanceContent ();
+    private static InstanceContent ic = new InstanceContent();
     Gedcom gedcom = null;
+    private static AbstractLookup abstractLookup = new AbstractLookup(ic);
 
     public Gedcom getGedcom() {
         return gedcom;
@@ -112,7 +113,7 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
     }
 
     static Lookup getMyLookup() {
-        return new AbstractLookup(ic);
+        return abstractLookup;
     }
     /**
      * Get the package name of a Factory
