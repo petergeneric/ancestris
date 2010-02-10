@@ -34,6 +34,14 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
+            <file name="genjfr-app-ActionOpenDefault.instance">
+                <attr name="type" stringvalue="org.netbeans.api.actions.Openable"/>
+                <attr name="delegate" methodvalue="org.openide.awt.Action.inject"/>
+                <attr name="selectionType" stringvalue="ANY"/>
+                <attr name="injectable" stringvalue="genjfr.app.ActionOpenDefault"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionOpenDefault"/>
+                <attr name="iconBase" stringvalue="genjfr/app/OpenDefault.png"/>
+            </file>
             <file name="genjfr-app-ActionOpen.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="delegate" newvalue="genjfr.app.ActionOpen"/>
@@ -147,6 +155,10 @@
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
+            <file name="genjfr-app-ActionOpenDefault.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpenDefault.instance"/>
+                <attr name="position" intvalue="150"/>
+            </file>
             <file name="genjfr-app-ActionOpen.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
                 <attr name="position" intvalue="200"/>
@@ -157,7 +169,7 @@
             </file>
             <file name="genjfr-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
-                <attr name="position" intvalue="1800"/>
+                <attr name="position" intvalue="1801"/>
             </file>
             <file name="genjfr-app-ActionSaveAs.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSaveAs.instance"/>
@@ -316,6 +328,10 @@
             <file name="genjfr-app-ActionNew.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
                 <attr name="position" intvalue="-100"/>
+            </file>
+            <file name="genjfr-app-ActionOpenDefault.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpenDefault.instance"/>
+                <attr name="position" intvalue="-5"/>
             </file>
             <file name="genjfr-app-ActionOpen.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>

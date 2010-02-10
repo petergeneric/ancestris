@@ -46,6 +46,8 @@ import genj.window.WindowManager;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,7 +63,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -467,15 +468,11 @@ public class ControlCenter extends JPanel {
                 return;
             }
 
-            // by default we offer the user to load example.ged
+            // by default we offer the user to load default gedcom file
             HashSet deflt = new HashSet();
             if (args.length == 0) {
                 try {
-                    String gedcomDir = NbPreferences.forModule(App.class).get("gedcomDir", "");
-                    String gedcomDefaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
-                    String defaultFile = gedcomDir + File.separator + gedcomDefaultFile;
-                    System.out.println("DEBUG - Opening file " + defaultFile);
-                    deflt.add(new File(defaultFile).toURI().toURL());
+                    deflt.add(getDefaultFile());
                 } catch (Throwable t) {
                     // ignored
                 }
@@ -488,40 +485,74 @@ public class ControlCenter extends JPanel {
 
         private ActionAutoOpen(Collection theFiles) {
             files = theFiles;
+            if (files == null || files.isEmpty()) {
+                List list = new ArrayList();
+                String defaultFile = getDefaultFile();
+                if (defaultFile != null) {
+                    list.add(defaultFile);
+                    files = list;
+                } else {
+                    files = null;
+                }
+            }
+        }
+
+        /** getDefaultFile() **/
+        private String getDefaultFile() {
+            String gedcomDir = NbPreferences.forModule(genj.app.App.class).get("gedcomDir", "");
+            if (gedcomDir.isEmpty()) {
+                return null;
+            }
+            String gedcomDefaultFile = NbPreferences.forModule(genj.app.App.class).get("gedcomFile", "");
+            if (gedcomDefaultFile.isEmpty()) {
+                return null;
+            }
+            String defaultFile = gedcomDir + File.separator + gedcomDefaultFile;
+            try {
+                return new File(defaultFile).toURI().toURL().toString();
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return null;
         }
 
         /** run */
+        @Override
         public void execute() {
 
             // Loop over files to open
-            for (Iterator it = files.iterator(); it.hasNext();) {
-                String restore = it.next().toString();
-                if (getOpenedGedcom(restore) != null) {
-                    break;
-                }
-                try {
+            if (files != null && !files.isEmpty()) {
+                for (Iterator it = files.iterator(); it.hasNext();) {
+                    String uriStr = it.next().toString();
+                    if (getOpenedGedcom(uriStr) != null) {
+                        break;
+                    }
+                    try {
+                        DirectAccessTokenizer tokens = new DirectAccessTokenizer(uriStr, ",", false);
+                        String restore = tokens.get(0);
 
-                    // check if it's a local file
-                    File local = new File(restore);
-                    if (local.exists()) {
-                        restore = local.toURI().toURL().toString();
+                        // check if it's a local file
+                        File local = new File(new URI(restore));
+                        if (!local.exists()) {
+                            continue;
+                        }
+
+                        ActionOpen open = new ActionOpen(restore) {
+
+                            @Override
+                            protected void postExecute(boolean b) {
+                                super.postExecute(b);
+                                App.center.isReady(-1);
+                            }
+                        };
+                        App.center.isReady(1);
+                        open.trigger();
+                    } catch (Throwable t) {
+                        App.LOG.log(Level.WARNING, "cannot restore " + uriStr, t);
                     }
 
-                    ActionOpen open = new ActionOpen(restore) {
-
-                        @Override
-                        protected void postExecute(boolean b) {
-                            super.postExecute(b);
-                            App.center.isReady(-1);
-                        }
-                    };
-                    App.center.isReady(1);
-                    open.trigger();
-                } catch (Throwable t) {
-                    App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
+                    // next
                 }
-
-                // next
             }
 
             // done
