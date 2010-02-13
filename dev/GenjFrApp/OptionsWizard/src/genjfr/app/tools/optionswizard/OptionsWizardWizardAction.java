@@ -4,8 +4,8 @@
  */
 package genjfr.app.tools.optionswizard;
 
-import genj.app.App;
 import genj.util.Registry;
+import genjfr.app.App;
 import genjfr.app.pluginservice.PluginInterface;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -50,9 +50,9 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            putRegistryFromSettings(registry);
             exitFlag = true;
         }
+        putRegistryFromSettings(registry);
         System.out.println("======================= FIN DU WIZARD =========================");
     }
 
@@ -113,6 +113,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
     }
 
     private void getSettingsFromRegistry(Registry registry) {
+
         NbPreferences.forModule(App.class).put("language", registry.get("options.genj.app.Options.language", ""));
         NbPreferences.forModule(App.class).put("skin", registry.get("options.genj.app.Options.lookAndFeel", ""));
         NbPreferences.forModule(App.class).put("restoreWindows", registry.get("options.genj.app.Options.isRestoreViews", ""));
@@ -168,7 +169,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         NbPreferences.forModule(App.class).put("encoding", registry.get("options.genj.gedcom.Options.defaultEncoding", ""));
         NbPreferences.forModule(App.class).put("BOM", registry.get("options.genj.app.Options.isWriteBOM", ""));
 
-        NbPreferences.forModule(App.class).put("gedcomDir", registry.get("options.genj.gedcom.Options.gedcomDir", ""));
         NbPreferences.forModule(App.class).put("gedcomFile", registry.get("options.genj.gedcom.Options.gedcomFile", ""));
         NbPreferences.forModule(App.class).put("reportDir", registry.get("options.genj.gedcom.Options.reportDir", ""));
         NbPreferences.forModule(App.class).put("assoTxt", registry.get("options.associations.1", ""));
@@ -178,8 +178,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         NbPreferences.forModule(App.class).put("assoSound", registry.get("options.associations.5", ""));
         NbPreferences.forModule(App.class).put("assoWeb", registry.get("options.associations.6", ""));
         NbPreferences.forModule(App.class).put("logSize", registry.get("options.genj.app.Options.maxLogSizeKB", ""));
-        NbPreferences.forModule(App.class).put("proxy", registry.get("options.genj.app.Options.httpProxy", ""));
-
     }
 
 
@@ -239,7 +237,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         registry.put("options.genj.gedcom.Options.defaultEncoding", NbPreferences.forModule(App.class).get("encoding", ""));
         registry.put("options.genj.app.Options.isWriteBOM", NbPreferences.forModule(App.class).get("BOM", ""));
 
-        registry.put("options.genj.gedcom.Options.gedcomDir", NbPreferences.forModule(App.class).get("gedcomDir", ""));
         registry.put("options.genj.gedcom.Options.gedcomFile", NbPreferences.forModule(App.class).get("gedcomFile", ""));
         registry.put("options.genj.gedcom.Options.reportDir", NbPreferences.forModule(App.class).get("reportDir", ""));
         registry.put("options.associations", NbPreferences.forModule(App.class).get("6", ""));
@@ -250,7 +247,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
         registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
         registry.put("options.genj.app.Options.maxLogSizeKB", NbPreferences.forModule(App.class).get("logSize", ""));
-        registry.put("options.genj.app.Options.httpProxy", NbPreferences.forModule(App.class).get("proxy", ""));
 
         Registry.persist();
 

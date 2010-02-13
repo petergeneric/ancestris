@@ -509,7 +509,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getNamesUppercase() {
-        return (String) (jCheckBox1.isSelected() ? "true" : "false");
+        return jCheckBox1.isSelected() ? "true" : "false";
     }
 
     void setNamesSpouse(String str) {
@@ -517,7 +517,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getNamesSpouse() {
-        return (String) (jCheckBox2.isSelected() ? "true" : "false");
+        return jCheckBox2.isSelected() ? "true" : "false";
     }
 
     void setAddress1(String str) {
@@ -529,7 +529,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress1() {
-        return (String) (jCheckBox3.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel13.text") : "");
+        return jCheckBox3.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel13.text") : "";
     }
 
     void setAddress2(String str) {
@@ -541,7 +541,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress2() {
-        return (String) (jCheckBox4.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel14.text") : "");
+        return jCheckBox4.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel14.text") : "";
     }
 
     void setAddress3(String str) {
@@ -553,7 +553,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress3() {
-        return (String) (jCheckBox5.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel15.text") : "");
+        return jCheckBox5.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel15.text") : "";
     }
 
     void setAddress4(String str) {
@@ -565,7 +565,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress4() {
-        return (String) (jCheckBox6.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel16.text") : "");
+        return jCheckBox6.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel16.text") : "";
     }
 
     void setAddress5(String str) {
@@ -577,7 +577,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress5() {
-        return (String) (jCheckBox7.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel17.text") : "");
+        return jCheckBox7.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel17.text") : "";
     }
 
     void setAddress6(String str) {
@@ -589,7 +589,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress6() {
-        return (String) (jCheckBox8.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel18.text") : "");
+        return jCheckBox8.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel18.text") : "";
     }
 
     void setAddress7(String str) {
@@ -601,7 +601,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress7() {
-        return (String) (jCheckBox9.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel19.text") : "");
+        return jCheckBox9.isSelected() ? NbBundle.getMessage(OptionsWizardWizardAction.class, "OptionsWizardVisualPanel3.jLabel19.text") : "";
     }
 
 
@@ -611,7 +611,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress1Mand() {
-        return (String) (jCheckBox10.isSelected() ? "true" : "false");
+        return jCheckBox10.isSelected() ? "true" : "false";
     }
 
     void setAddress2Mand(String str) {
@@ -622,7 +622,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress2Mand() {
-        return (String) (jCheckBox11.isSelected() ? "true" : "false");
+        return jCheckBox11.isSelected() ? "true" : "false";
     }
 
     void setAddress3Mand(String str) {
@@ -630,7 +630,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress3Mand() {
-        return (String) (jCheckBox12.isSelected() ? "true" : "false");
+        return jCheckBox12.isSelected() ? "true" : "false";
     }
 
     void setAddress4Mand(String str) {
@@ -638,7 +638,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress4Mand() {
-        return (String) (jCheckBox13.isSelected() ? "true" : "false");
+        return jCheckBox13.isSelected() ? "true" : "false";
     }
 
     void setAddress5Mand(String str) {
@@ -646,7 +646,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress5Mand() {
-        return (String) (jCheckBox14.isSelected() ? "true" : "false");
+        return jCheckBox14.isSelected() ? "true" : "false";
     }
 
     void setAddress6Mand(String str) {
@@ -654,7 +654,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress6Mand() {
-        return (String) (jCheckBox15.isSelected() ? "true" : "false");
+        return jCheckBox15.isSelected() ? "true" : "false";
     }
 
     void setAddress7Mand(String str) {
@@ -662,7 +662,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddress7Mand() {
-        return (String) (jCheckBox16.isSelected() ? "true" : "false");
+        return jCheckBox16.isSelected() ? "true" : "false";
     }
 
     void setAddressSpaces(String str) {
@@ -671,7 +671,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getAddressSpaces() {
-        return (String) (jCheckBox17.isSelected() ? "true" : "false");
+        return jCheckBox17.isSelected() ? "true" : "false";
     }
 
     void setIDFilling(String str) {
@@ -680,7 +680,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getIdFilling() {
-        return (String) (jCheckBox18.isSelected() ? "true" : "false");
+        return jCheckBox18.isSelected() ? "true" : "false";
     }
 
     void setEncoding(String str) {
@@ -691,14 +691,14 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         if (i == -1) {
             i = 0;
         }
-        if (i > 3) {
-            i = 3;
+        if (i > encodings.length) {
+            i = encodings.length;
         }
         jComboBox1.setSelectedIndex(i);
     }
 
     String getEncoding() {
-        return (String) (jComboBox1.getSelectedIndex() + "");
+        return jComboBox1.getSelectedIndex() + "";
     }
 
     void setBOM(String str) {
@@ -707,7 +707,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
     }
 
     String getBOM() {
-        return (String) (jCheckBox19.isSelected() ? "true" : "false");
+        return jCheckBox19.isSelected() ? "true" : "false";
     }
 
     private Integer getIntFromStr(String str) {
