@@ -110,6 +110,7 @@ public class ControlCenter extends JPanel {
         // Table of Gedcoms
         tGedcoms = new GedcomTableWidget(viewManager, registry) {
 
+            @Override
             public ViewContext getContext() {
                 ViewContext result = super.getContext();
                 if (result != null) {
@@ -208,7 +209,7 @@ public class ControlCenter extends JPanel {
                 ControlCenter.this, title, action, "ged",
                 EnvironmentChecker.getProperty(ControlCenter.this, new String[]{"genj.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
 
-        String gedcomDir = NbPreferences.forModule(App.class).get("gedcomDir", "");
+        String gedcomDir = getDefaultFile(true);
         if (gedcomDir.trim().isEmpty()) {
             gedcomDir = "user.home";
         }
@@ -268,6 +269,7 @@ public class ControlCenter extends JPanel {
         }
 
         /** run */
+        @Override
         protected void execute() {
             // force a commit
             for (Gedcom gedcom : GedcomDirectory.getInstance().getGedcoms()) {
@@ -376,6 +378,7 @@ public class ControlCenter extends JPanel {
                     new ActionSave(gedcom, false) {
                         // apres save
 
+                        @Override
                         protected void postExecute(boolean preExecuteResult) {
                             try {
                                 // super first
@@ -461,7 +464,6 @@ public class ControlCenter extends JPanel {
 
         /** constructor */
         private ActionAutoOpen(String[] args) {
-
             // if we got files then we don't open old ones
             if (args.length > 0) {
                 files = Arrays.asList(args);
@@ -472,7 +474,7 @@ public class ControlCenter extends JPanel {
             HashSet deflt = new HashSet();
             if (args.length == 0) {
                 try {
-                    deflt.add(getDefaultFile());
+                    deflt.add(getDefaultFile(false));
                 } catch (Throwable t) {
                     // ignored
                 }
@@ -487,7 +489,7 @@ public class ControlCenter extends JPanel {
             files = theFiles;
             if (files == null || files.isEmpty()) {
                 List list = new ArrayList();
-                String defaultFile = getDefaultFile();
+                String defaultFile = getDefaultFile(false);
                 if (defaultFile != null) {
                     list.add(defaultFile);
                     files = list;
@@ -495,25 +497,6 @@ public class ControlCenter extends JPanel {
                     files = null;
                 }
             }
-        }
-
-        /** getDefaultFile() **/
-        private String getDefaultFile() {
-            String gedcomDir = NbPreferences.forModule(genj.app.App.class).get("gedcomDir", "");
-            if (gedcomDir.isEmpty()) {
-                return null;
-            }
-            String gedcomDefaultFile = NbPreferences.forModule(genj.app.App.class).get("gedcomFile", "");
-            if (gedcomDefaultFile.isEmpty()) {
-                return null;
-            }
-            String defaultFile = gedcomDir + File.separator + gedcomDefaultFile;
-            try {
-                return new File(defaultFile).toURI().toURL().toString();
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            return null;
         }
 
         /** run */
@@ -688,5 +671,23 @@ public class ControlCenter extends JPanel {
             gedcom.removeGedcomListener(this);
         }
     } //Stats
+
+    /** getDefaultFile() **/
+    private String getDefaultFile(boolean dirOnly) {
+        String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
+        if (defaultFile.isEmpty()) {
+            return null;
+        }
+        File local = new File(defaultFile);
+        if (dirOnly) {
+            return local.getParent();
+        }
+        try {
+            return new File(defaultFile).toURI().toURL().toString();
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
+    }
 } //ControlCenter
 

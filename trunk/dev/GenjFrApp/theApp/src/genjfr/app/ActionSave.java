@@ -254,6 +254,7 @@ import java.net.URL;
      * (sync) post write
      * @see genj.util.swing.Action2#postExecute(boolean)
      */
+    @Override
     protected void postExecute(boolean preExecuteResult) {
 
       // close progress

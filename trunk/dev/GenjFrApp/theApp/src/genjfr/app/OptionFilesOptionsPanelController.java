@@ -4,19 +4,21 @@
  */
 package genjfr.app;
 
-import genj.option.OptionsWidget;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
 import org.netbeans.spi.options.OptionsPanelController;
-import javax.swing.JPanel;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-public final class GenJOptionsPanelController extends OptionsPanelController {
+@OptionsPanelController.TopLevelRegistration(categoryName = "#OptionsCategory_Name_OptionFiles",
+iconBase = "genjfr/app/OptionFiles.png",
+keywords = "#OptionsCategory_Keywords_OptionFiles",
+keywordsCategory = "OptionFiles",
+position=4)
+public final class OptionFilesOptionsPanelController extends OptionsPanelController {
 
-    private GenJPanel panel;
-//    private GenJPanel panel;
+    private OptionFilesPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -58,9 +60,9 @@ public final class GenJOptionsPanelController extends OptionsPanelController {
         pcs.removePropertyChangeListener(l);
     }
 
-    private GenJPanel getPanel() {
+    private OptionFilesPanel getPanel() {
         if (panel == null) {
-            panel = new GenJPanel(this);
+            panel = new OptionFilesPanel(this);
         }
         return panel;
     }
