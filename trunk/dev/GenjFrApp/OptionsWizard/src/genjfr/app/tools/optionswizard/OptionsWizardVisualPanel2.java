@@ -528,7 +528,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     String getPrivAlive() {
-        return (String) (jCheckBox1.isSelected() ? "true" : "false");
+        return jCheckBox1.isSelected() ? "true" : "false";
     }
 
     void setPrivYears(String str) {
@@ -546,7 +546,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     String getPrivYears() {
-        return (String) (jSpinner2.getValue().toString());
+        return jSpinner2.getValue().toString();
     }
 
 
@@ -568,7 +568,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     String getLineBreak() {
-        return (String) (jSpinner3.getValue().toString());
+        return jSpinner3.getValue().toString();
     }
 
     void setImageSize(String str) {
@@ -586,7 +586,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     String getImageSize() {
-        return (String) (jSpinner1.getValue().toString());
+        return jSpinner1.getValue().toString();
     }
 
 
@@ -606,7 +606,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     String getDisplayNames() {
-        return (String) (jComboBox4.getSelectedIndex() + "");
+        return jComboBox4.getSelectedIndex() + "";
     }
 
     void setDisplayDates(String str) {
@@ -624,7 +624,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     String getDisplayDates() {
-        return (String) (jComboBox3.getSelectedIndex() + "");
+        return jComboBox3.getSelectedIndex() + "";
     }
 
 

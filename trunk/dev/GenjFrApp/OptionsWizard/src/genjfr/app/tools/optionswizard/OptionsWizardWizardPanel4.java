@@ -4,7 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
-import genj.app.App;
+import genjfr.app.App;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
@@ -81,7 +81,6 @@ public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
-     ((OptionsWizardVisualPanel4) getComponent()).setGedcomDir(NbPreferences.forModule(App.class).get("gedcomDir", ""));
      ((OptionsWizardVisualPanel4) getComponent()).setGedcomFile(NbPreferences.forModule(App.class).get("gedcomFile", ""));
      ((OptionsWizardVisualPanel4) getComponent()).setReportDir(NbPreferences.forModule(App.class).get("reportDir", ""));
      ((OptionsWizardVisualPanel4) getComponent()).setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
@@ -91,12 +90,10 @@ public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
      ((OptionsWizardVisualPanel4) getComponent()).setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
      ((OptionsWizardVisualPanel4) getComponent()).setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
      ((OptionsWizardVisualPanel4) getComponent()).setLogSize(NbPreferences.forModule(App.class).get("logSize", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setProxy(NbPreferences.forModule(App.class).get("proxy", ""));
 
     }
 
     public void storeSettings(Object settings) {
-     NbPreferences.forModule(App.class).put("gedcomDir", ((OptionsWizardVisualPanel4) getComponent()).getGedcomDir());
      NbPreferences.forModule(App.class).put("gedcomFile", ((OptionsWizardVisualPanel4) getComponent()).getGedcomFile());
      NbPreferences.forModule(App.class).put("reportDir", ((OptionsWizardVisualPanel4) getComponent()).getReportDir());
      NbPreferences.forModule(App.class).put("assoTxt", ((OptionsWizardVisualPanel4) getComponent()).getAssoTxt());
@@ -106,8 +103,6 @@ public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
      NbPreferences.forModule(App.class).put("assoSound", ((OptionsWizardVisualPanel4) getComponent()).getAssoSound());
      NbPreferences.forModule(App.class).put("assoWeb", ((OptionsWizardVisualPanel4) getComponent()).getAssoWeb());
      NbPreferences.forModule(App.class).put("logSize", ((OptionsWizardVisualPanel4) getComponent()).getLogSize());
-     NbPreferences.forModule(App.class).put("proxy", ((OptionsWizardVisualPanel4) getComponent()).getProxy());
-
     }
 }
 

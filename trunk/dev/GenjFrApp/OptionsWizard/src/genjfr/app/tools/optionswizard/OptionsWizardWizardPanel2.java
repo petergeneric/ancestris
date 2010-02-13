@@ -4,7 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
-import genj.app.App;
+import genjfr.app.App;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;

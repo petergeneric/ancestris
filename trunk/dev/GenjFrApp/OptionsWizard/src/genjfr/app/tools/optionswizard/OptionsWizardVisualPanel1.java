@@ -257,14 +257,14 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         if (i == -1) {
             i = 2;
         }
-        if (i > 12) {
-            i = 12;
+        if (i > languages.length) {
+            i = languages.length;
         }
         jComboBox1.setSelectedIndex(i);
     }
 
     String getLanguage() {
-        return (String) (jComboBox1.getSelectedIndex() + "");
+        return jComboBox1.getSelectedIndex() + "";
     }
 
     void setSkin(String str) {
@@ -275,14 +275,14 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         if (i == -1) {
             i = 0;
         }
-        if (i > 8) {
-            i = 8;
+        if (i > skins.length) {
+            i = skins.length;
         }
         jComboBox2.setSelectedIndex(i);
     }
 
     String getSkin() {
-        return (String) (jComboBox2.getSelectedIndex() + "");
+        return jComboBox2.getSelectedIndex() + "";
     }
 
     void setRestoreWindows(String str) {
@@ -293,7 +293,7 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
     }
 
     String getRestoreWindows() {
-        return (String) (jCheckBox1.isSelected() ? "true" : "false");
+        return jCheckBox1.isSelected() ? "true" : "false";
     }
 
     void setAutoCommit(String str) {
@@ -301,7 +301,7 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
     }
 
     String getAutoCommit() {
-        return (String) (jCheckBox3.isSelected() ? "true" : "false");
+        return jCheckBox3.isSelected() ? "true" : "false";
     }
 
     void setUndos(String str) {
@@ -319,7 +319,7 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
     }
 
     String getUndos() {
-        return (String) (jSpinner1.getValue().toString());
+        return jSpinner1.getValue().toString();
     }
 
     void setSplitJurisdictions(String str) {
@@ -327,7 +327,7 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
     }
 
     String getSplitJurisdictions() {
-        return (String) (jCheckBox4.isSelected() ? "true" : "false");
+        return jCheckBox4.isSelected() ? "true" : "false";
     }
 
     void setOpenEditor(String str) {
@@ -335,7 +335,7 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
     }
 
     String getOpenEditor() {
-        return (String) (jCheckBox2.isSelected() ? "true" : "false");
+        return jCheckBox2.isSelected() ? "true" : "false";
     }
 
     private Integer getIntFromStr(String str) {
