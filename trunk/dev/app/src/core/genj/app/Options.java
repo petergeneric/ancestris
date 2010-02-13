@@ -72,7 +72,7 @@ public class Options extends OptionProvider {
   private Resources resources;
 
   /** maximum log file size */
-  private int maxLogSizeKB = 128;
+  private int maxLogSizeKB = 256;
 
   /** the current looknfeel */
   private int lookAndFeel = -1;
@@ -84,7 +84,7 @@ public class Options extends OptionProvider {
   public boolean isRestoreViews = true;
   
   /** write BOM on save */
-  public boolean isWriteBOM = false;
+  public boolean isWriteBOM = true;
 
   /** all available language codes */
   private static String[] languages;
@@ -220,6 +220,8 @@ public class Options extends OptionProvider {
    * Getter - language
    */
   public int getLanguage() {
+    if (language<0)
+      setLanguage(2);
     return language;
   }
 
@@ -254,7 +256,7 @@ public class Options extends OptionProvider {
    * Setter - maximum log size
    */
   public void setMaxLogSizeKB(int set) {
-    maxLogSizeKB = Math.max(128, set);
+    maxLogSizeKB = Math.max(256, set);
   }
 
   /**
