@@ -60,6 +60,16 @@
                 <attr name="delegate" newvalue="genjfr.app.ActionSaveAs"/>
             </file>
         </folder>
+        <folder name="Tools">
+            <file name="MyOptions.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.options.OptionsWindowAction"/>  <!-- the name of the options menuitem (FL) -->
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+                <attr name="iconBase" stringvalue="genjfr/app/Options.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
         <folder name="Window">
             <file name="genjfr-app-ControlCenterAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
@@ -67,7 +77,7 @@
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ControlCenterAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
-<!--
+            <!--
             <file name="genjfr-app-EditAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.EditTopComponent.findInstance"/>
@@ -205,15 +215,20 @@
         <file name="RunProject_hidden"/>
         <file name="Source_hidden"/>
         <folder name="Tools">
-            <file name="JavaPlatformsCustomizerAction.instance_hidden"/>
-            <file name="LibrariesCustomizerAction.instance_hidden"/>
-            <file name="PaletteManager_hidden"/>
             <file name="Separator2.instance_hidden"/>
             <file name="Separator3.instance_hidden"/>
-            <file name="ServerManagerAction3.instance_hidden"/>
-            <file name="VariablesCustomizerAction.instance_hidden"/>
+            <file name="JavaPlatformsCustomizerAction.instance_hidden"/>
             <file name="org-netbeans-modules-apisupport-project-ui-platform-NbPlatformCustomizerAction.instance_hidden"/>
+            <file name="VariablesCustomizerAction.instance_hidden"/>
+            <file name="LibrariesCustomizerAction.instance_hidden"/>
+            <file name="ServerManagerAction3.instance_hidden"/>
             <file name="org-netbeans-modules-xml-catalog-CatalogAction.instance_hidden"/>
+            <file name="PaletteManager.instance_hidden"/>
+            <file name="org-netbeans-modules-options-OptionsWindowAction.shadow_hidden"/>   <!-- the tag of the options menuitem (FL) -->
+            <file name="MyOptions.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
+                <attr name="position" intvalue="101"/>
+            </file>
         </folder>
         <file name="Versioning_hidden"/>
         <folder name="View">
@@ -263,7 +278,7 @@
             </file>
         </folder>
         <file name="Window_hidden"/>
-<!--
+        <!--
         <folder name="Window">
             <file name="CloneDocumentAction.shadow_hidden"/>
             <file name="CloseAllButThisAction.shadow_hidden"/>
@@ -288,25 +303,9 @@
 -->
     </folder>
     <folder name="OptionsDialog">
-        <folder name="GenjPreferenceOptionsCategory">
-            <file name="genjfr-app-GenJAdvancedOption.instance">
-                <attr name="controller" newvalue="genjfr.app.GenJOptionsPanelController"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#AdvancedOption_DisplayName_GenJ"/>
-                <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory"/>
-                <attr name="keywords" bundlevalue="genjfr.app.Bundle#AdvancedOption_Keywords_GenJ"/>
-                <attr name="keywordsCategory" stringvalue="GenjPreferenceOptionsCategory/null"/>
-                <attr name="toolTip" bundlevalue="genjfr.app.Bundle#AdvancedOption_Tooltip_GenJ"/>
-            </file>
+        <folder name="Advanced">
+            <file name="org-netbeans-core-ui-options-filetypes-FileAssociationsOptionsPanelController.instance_hidden"/>
         </folder>
-        <file name="GenjPreferenceOptionsCategory.instance">
-            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/GenjPreferenceOptionsCategory"/>
-            <attr name="categoryName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
-            <attr name="iconBase" stringvalue="genjfr/app/Options.png"/>
-            <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory"/>
-            <attr name="keywords" bundlevalue="genjfr.app.Bundle#OptionsCategory_Keywords_GenjPreference"/>
-            <attr name="keywordsCategory" stringvalue="GenjPreference"/>
-            <attr name="title" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
-        </file>
     </folder>
     <folder name="Services">
         <folder name="JavaHelp">
@@ -376,10 +375,22 @@
                 <file name="TimelineTopComponent.wstcref" url="TimelineTopComponentWstcref.xml"/>
                 <file name="TreeTopComponent.wstcref" url="TreeTopComponentWstcref.xml"/>
             </folder>
-<!--
+            <!--
             <file name="ccenter.wsmode" url="outputWsmode.xml"/>
             <file name="table.wsmode" url="tableWsmode.xml"/>
--->
-</folder>
+            -->
+        </folder>
     </folder>
+    <folder name="OptionsExport">
+        <folder name="MyCategory">
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+            <file name="option1">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
+                <attr name="include" stringvalue="config/Preferences/genjfr/app.properties"/>
+            </file>
+        </folder>
+        <folder name="General_hidden"/>
+        <folder name="Advanced_hidden"/>
+    </folder>
+
 </filesystem>

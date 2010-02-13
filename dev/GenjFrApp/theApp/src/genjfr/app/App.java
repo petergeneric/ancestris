@@ -27,7 +27,6 @@ import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
 import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
 
@@ -42,7 +41,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -54,12 +52,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.StreamHandler;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**

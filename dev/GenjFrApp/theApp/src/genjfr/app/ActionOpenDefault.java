@@ -47,8 +47,10 @@ public final class ActionOpenDefault extends CookieAction {
 
     @Override
     public String getName() {
-        String name = getGedName().isEmpty() ? "<...>" : getGedName();
-        return NbBundle.getMessage(ActionOpenDefault.class, "CTL_ActionOpenDefault") + " " + name;
+        String name = getDefaultFile(true);
+        String str = "";
+        str = name.isEmpty() ? "<...>" : name;
+        return NbBundle.getMessage(ActionOpenDefault.class, "CTL_ActionOpenDefault") + " " + str;
     }
 
     @Override
@@ -59,7 +61,7 @@ public final class ActionOpenDefault extends CookieAction {
     @Override
     protected boolean enable(Node[] arg0) {
         super.enable(arg0);
-        if (getDefaultFile().isEmpty()) {
+        if (getDefaultFile(false).isEmpty()) {
             return false;
         }
         return true;
@@ -84,16 +86,15 @@ public final class ActionOpenDefault extends CookieAction {
      * Take advantage to initialise fileToOpen
      *
      */
-    private String getDefaultFile() {
-        String gedcomDir = NbPreferences.forModule(genj.app.App.class).get("gedcomDir", "");
-        if (gedcomDir.isEmpty()) {
+    private String getDefaultFile(boolean nameOnly) {
+        String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
+        if (defaultFile.isEmpty()) {
             return "";
         }
-        String gedcomDefaultFile = getGedName();
-        String defaultFile = gedcomDir + File.separator + gedcomDefaultFile;
+        File local = null;
         try {
             // check if it's a local file
-            File local = new File(defaultFile);
+            local = new File(defaultFile);
             fileToOpen = local;
             if (!local.exists()) {
                 return "";
@@ -102,14 +103,10 @@ public final class ActionOpenDefault extends CookieAction {
             return "";
         }
 
-        return gedcomDefaultFile;
+        if (nameOnly) {
+            defaultFile = local.getName();
+        }
+        return defaultFile;
     }
 
-    private String getGedName() {
-        String gedcomDefaultFile = NbPreferences.forModule(genj.app.App.class).get("gedcomFile", "");
-        if (gedcomDefaultFile.isEmpty()) {
-            return "";
-        }
-        return gedcomDefaultFile;
-    }
 }

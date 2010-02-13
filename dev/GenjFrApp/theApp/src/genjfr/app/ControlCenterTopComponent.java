@@ -2,12 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genjfr.app;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -21,39 +18,38 @@ import org.openide.windows.Mode;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(
-    dtd="-//genjfr.app//ControlCenter//EN",
-    autostore=false
-)
+@ConvertAsProperties(dtd = "-//genjfr.app//ControlCenter//EN",
+autostore = false)
 public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
     private static ControlCenterTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-
     private static final String PREFERRED_ID = "ControlCenterTopComponent";
 //    private static JPanel panel = App.center;
     private static ControlCenter panel = App.center;
+    private static boolean isLoaded = false;
 
     public ControlCenterTopComponent() {
         super();
         setPanel(panel);
-        setName(NbBundle.getMessage(ControlCenterTopComponent.class, "CTL_"+PREFERRED_ID));
-        setToolTipText(NbBundle.getMessage(ControlCenterTopComponent.class, "HINT_"+PREFERRED_ID));
-       	putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+        setName(NbBundle.getMessage(ControlCenterTopComponent.class, "CTL_" + PREFERRED_ID));
+        setToolTipText(NbBundle.getMessage(ControlCenterTopComponent.class, "HINT_" + PREFERRED_ID));
+        putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
 //	putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
 //	putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 //	putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
 //	putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
 
     }
-public void open() {
-     Mode m = WindowManager.getDefault().findMode ("explorer");
-     if (m != null) {
-        m.dockInto(this);
-     }
-     super.open();
-  }
+
+    public void open() {
+        Mode m = WindowManager.getDefault().findMode("explorer");
+        if (m != null) {
+            m.dockInto(this);
+        }
+        super.open();
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -86,6 +82,10 @@ public void open() {
         if (instance == null) {
             instance = new ControlCenterTopComponent();
         }
+        if (!isLoaded) {
+            panel.load(new ArrayList());
+            isLoaded = true;
+        }
         return instance;
     }
 
@@ -110,8 +110,8 @@ public void open() {
             return (ControlCenterTopComponent) win;
         }
         Logger.getLogger(ControlCenterTopComponent.class.getName()).warning(
-                "There seem to be multiple components with the '" + PREFERRED_ID +
-                "' ID. That is a potential source of errors and unexpected behavior.");
+                "There seem to be multiple components with the '" + PREFERRED_ID
+                + "' ID. That is a potential source of errors and unexpected behavior.");
         return getDefault();
     }
 
@@ -135,19 +135,24 @@ public void open() {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        nbRegistry.put(p,"gedcoms",panel.getOpenedGedcoms());
+        nbRegistry.put(p, "gedcoms", panel.getOpenedGedcoms());
         // TODO store your settings
     }
 
+    @Override
     Object readProperties(java.util.Properties p) {
         ControlCenterTopComponent singleton = ControlCenterTopComponent.getDefault();
-        singleton.readPropertiesImpl(p);
+        if (!isLoaded) {
+            singleton.readPropertiesImpl(p);
+            isLoaded = true;
+        }
         return singleton;
     }
 
+    @Override
     void readPropertiesImpl(java.util.Properties p) {
         String version = p.getProperty("version");
-        panel.load(nbRegistry.get(p, "gedcoms", (Collection)null));
+        panel.load(nbRegistry.get(p, "gedcoms", (Collection) null));
         // TODO read your settings according to their version
     }
 
@@ -155,5 +160,4 @@ public void open() {
     protected String preferredID() {
         return PREFERRED_ID;
     }
-    
 }

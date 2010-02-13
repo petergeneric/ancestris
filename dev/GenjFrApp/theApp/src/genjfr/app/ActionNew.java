@@ -11,6 +11,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Submitter;
+import genj.gedcom.UnitOfWork;
 import genj.util.Origin;
 import genj.util.Resources;
 import genj.util.swing.Action2;
@@ -19,6 +20,8 @@ import genjfr.app.pluginservice.PluginInterface;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.swing.JOptionPane;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 
@@ -61,30 +64,32 @@ public final class ActionNew extends Action2 {
         // form the origin
         try {
             Gedcom gedcom = new Gedcom(Origin.create(new URL("file", "", file.getAbsolutePath())));
-            // create default entities
-            try {
-                // Create submitter
-                Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
-                submitter.setName(NbPreferences.forModule(genj.app.App.class).get("submName", ""));
-                submitter.setCity(NbPreferences.forModule(genj.app.App.class).get("submCity", ""));
-                submitter.setPhone(NbPreferences.forModule(genj.app.App.class).get("submPhone", ""));
-                submitter.setEmail(NbPreferences.forModule(genj.app.App.class).get("submEmail", ""));
-                submitter.setCountry(NbPreferences.forModule(genj.app.App.class).get("submCountry", ""));
-                submitter.setWeb(NbPreferences.forModule(genj.app.App.class).get("submWeb", ""));
-                
-                // Create place format
-                gedcom.setPlaceFormat(getPlaceFormatFromOptions());
+            gedcom.doUnitOfWork(new UnitOfWork() {
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    
+                    // Create submitter
+                    Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
+                    submitter.setName(NbPreferences.forModule(App.class).get("submName", ""));
+                    submitter.setCity(NbPreferences.forModule(App.class).get("submCity", ""));
+                    submitter.setPhone(NbPreferences.forModule(App.class).get("submPhone", ""));
+                    submitter.setEmail(NbPreferences.forModule(App.class).get("submEmail", ""));
+                    submitter.setCountry(NbPreferences.forModule(App.class).get("submCountry", ""));
+                    submitter.setWeb(NbPreferences.forModule(App.class).get("submWeb", ""));
 
-                //Create first INDI entity
-                Indi adam = (Indi) gedcom.createEntity(Gedcom.INDI);
-                adam.addDefaultProperties();
-                adam.setName("Adam", "");
-                adam.setSex(PropertySex.MALE);
-            } catch (GedcomException e) {
-            }
+                    // Create place format
+                    gedcom.setPlaceFormat(getPlaceFormatFromOptions());
+
+                    //Create first INDI entity
+                    Indi adam = (Indi) gedcom.createEntity(Gedcom.INDI);
+                    adam.addDefaultProperties();
+                    adam.setName("Adam", "");
+                    adam.setSex(PropertySex.MALE);
+                }
+            });
             // remember
             GedcomDirectory.getInstance().registerGedcom(gedcom);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error " + e);
         }
 
     }
@@ -133,5 +138,5 @@ public final class ActionNew extends Action2 {
         String option = NbPreferences.forModule(genj.app.App.class).get(string, "");
         return (option.equals("true")) ? " " : "";
     }
-
 } //ActionNew
+
