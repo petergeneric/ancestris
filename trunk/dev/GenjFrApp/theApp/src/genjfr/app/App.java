@@ -52,10 +52,12 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
  * Main Class for GenJ Application
@@ -337,20 +339,6 @@ public class App {
          */
         private Registry checkOptionsWizard(Registry registry) {
 
-            // Check if options wizard has ever been run (when it has, there is a property set in genj.properties)
-            if (registry == null) {
-                return null;
-            }
-
-            //FIXME: see bug #74 (should be done regardless of the return code of the wizard and before the return !)
-            registry.put("options.genj.app.Options.lookAndFeel", "1");
-            Registry.persist();
-
-            String done = registry.get("optionswizard", "");
-            if (done.equals("2")) {
-                return registry;
-            }
-
             // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
             PluginInterface pi = null;
             for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
@@ -366,10 +354,10 @@ public class App {
             if (pi != null) {
                 System.out.println("Launching Wizard...");
                 if (pi.launchModule(registry)) {
-                    registry.put("optionswizard", "2");
-                    Registry.persist();
                     registry = new Registry("genj");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "Error.noWizard.text"));
             }
 
             return registry;

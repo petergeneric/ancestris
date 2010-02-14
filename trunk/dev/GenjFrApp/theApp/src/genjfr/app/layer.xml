@@ -382,11 +382,32 @@
         </folder>
     </folder>
     <folder name="OptionsExport">
-        <folder name="MyCategory">
+        <folder name="MyCategory1">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+            <attr name="position" intvalue="100"/> 
             <file name="option1">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
-                <attr name="include" stringvalue="config/Preferences/genjfr/app.properties"/>
+                <attr name="include" stringvalue="config/Preferences/genjfr/.*"/>
+            </file>
+            <file name="option2">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WinPreference"/>
+                <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
+            </file>
+            <file name="option3">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WorkPreference"/>
+                <attr name="include" stringvalue="config/Windows2Local/Components/.*"/>
+            </file>
+            <file name="option4">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
+                <attr name="include" stringvalue="genj/.*|genj/[.*]/.*"/>
+            </file>
+        </folder>
+        <folder name="MyCategory2">
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference2"/>
+            <attr name="position" intvalue="200"/>
+            <file name="option5">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_AppPreference"/>
+                <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
             </file>
         </folder>
         <folder name="General_hidden"/>

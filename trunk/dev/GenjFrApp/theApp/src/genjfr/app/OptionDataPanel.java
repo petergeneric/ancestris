@@ -396,8 +396,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        getSettingsFromRegistry();
-
         setSubmName(NbPreferences.forModule(App.class).get("submName", ""));
         setSubmCity(NbPreferences.forModule(App.class).get("submCity", ""));
         setSubmPhone(NbPreferences.forModule(App.class).get("submPhone", ""));
@@ -592,86 +590,86 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     void setAddress1(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel13.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel13.text");
         }
         str = str.trim();
         jCheckBox3.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress1() {
-        return jCheckBox3.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel13.text") : "";
+        return jCheckBox3.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel13.text") : "";
     }
 
     void setAddress2(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel14.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel14.text");
         }
         str = str.trim();
         jCheckBox4.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress2() {
-        return jCheckBox4.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel14.text") : "";
+        return jCheckBox4.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel14.text") : "";
     }
 
     void setAddress3(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel15.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel15.text");
         }
         str = str.trim();
         jCheckBox5.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress3() {
-        return jCheckBox5.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel15.text") : "";
+        return jCheckBox5.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel15.text") : "";
     }
 
     void setAddress4(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel16.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel16.text");
         }
         str = str.trim();
         jCheckBox6.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress4() {
-        return jCheckBox6.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel16.text") : "";
+        return jCheckBox6.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel16.text") : "";
     }
 
     void setAddress5(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel17.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel17.text");
         }
         str = str.trim();
         jCheckBox7.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress5() {
-        return jCheckBox7.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel17.text") : "";
+        return jCheckBox7.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel17.text") : "";
     }
 
     void setAddress6(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel18.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel18.text");
         }
         str = str.trim();
         jCheckBox8.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress6() {
-        return jCheckBox8.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel18.text") : "";
+        return jCheckBox8.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel18.text") : "";
     }
 
     void setAddress7(String str) {
         if (str.equals("")) {
-            str = NbBundle.getMessage(App.class, "OptionData.jLabel19.text");
+            str = NbBundle.getMessage(App.class, "OptionDataPanel.jLabel19.text");
         }
         str = str.trim();
         jCheckBox9.setSelected(!str.isEmpty() ? true : false);
     }
 
     String getAddress7() {
-        return jCheckBox9.isSelected() ? NbBundle.getMessage(App.class, "OptionData.jLabel19.text") : "";
+        return jCheckBox9.isSelected() ? NbBundle.getMessage(App.class, "OptionDataPanel.jLabel19.text") : "";
     }
 
     void setAddress1Mand(String str) {
@@ -793,38 +791,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
             i = -1;
         }
         return i;
-    }
-
-    private void getSettingsFromRegistry() {
-        Registry registry = Registry.lookup("genj", null);
-
-        NbPreferences.forModule(App.class).put("submName", registry.get("options.genj.gedcom.Options.submName", ""));
-        NbPreferences.forModule(App.class).put("submCity", registry.get("options.genj.gedcom.Options.submCity", ""));
-        NbPreferences.forModule(App.class).put("submPhone", registry.get("options.genj.gedcom.Options.submPhone", ""));
-        NbPreferences.forModule(App.class).put("submPostCode", registry.get("options.genj.gedcom.Options.submPostCode", ""));
-        NbPreferences.forModule(App.class).put("submEmail", registry.get("options.genj.gedcom.Options.submEmail", ""));
-        NbPreferences.forModule(App.class).put("submCountry", registry.get("options.genj.gedcom.Options.submCountry", ""));
-        NbPreferences.forModule(App.class).put("submWeb", registry.get("options.genj.gedcom.Options.submWeb", ""));
-        NbPreferences.forModule(App.class).put("NamesUppercase", registry.get("options.genj.gedcom.Options.isUpperCaseNames", ""));
-        NbPreferences.forModule(App.class).put("NamesSpouse", registry.get("options.genj.gedcom.Options.setWifeLastname", ""));
-        NbPreferences.forModule(App.class).put("fmt_address1", registry.get("options.genj.gedcom.Options.fmt_address1", ""));
-        NbPreferences.forModule(App.class).put("fmt_address2", registry.get("options.genj.gedcom.Options.fmt_address2", ""));
-        NbPreferences.forModule(App.class).put("fmt_address3", registry.get("options.genj.gedcom.Options.fmt_address3", ""));
-        NbPreferences.forModule(App.class).put("fmt_address4", registry.get("options.genj.gedcom.Options.fmt_address4", ""));
-        NbPreferences.forModule(App.class).put("fmt_address5", registry.get("options.genj.gedcom.Options.fmt_address5", ""));
-        NbPreferences.forModule(App.class).put("fmt_address6", registry.get("options.genj.gedcom.Options.fmt_address6", ""));
-        NbPreferences.forModule(App.class).put("fmt_address7", registry.get("options.genj.gedcom.Options.fmt_address7", ""));
-        NbPreferences.forModule(App.class).put("fmt_address1_mand", registry.get("options.genj.gedcom.Options.fmt_address1_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address2_mand", registry.get("options.genj.gedcom.Options.fmt_address2_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address3_mand", registry.get("options.genj.gedcom.Options.fmt_address3_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address4_mand", registry.get("options.genj.gedcom.Options.fmt_address4_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address5_mand", registry.get("options.genj.gedcom.Options.fmt_address5_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address6_mand", registry.get("options.genj.gedcom.Options.fmt_address6_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address7_mand", registry.get("options.genj.gedcom.Options.fmt_address7_mand", ""));
-        NbPreferences.forModule(App.class).put("address_splitspaces", registry.get("options.genj.gedcom.Options.isUseSpacedPlaces", ""));
-        NbPreferences.forModule(App.class).put("IDFilling", registry.get("options.genj.gedcom.Options.isFillGapsInIDs", ""));
-        NbPreferences.forModule(App.class).put("encoding", registry.get("options.genj.gedcom.Options.defaultEncoding", ""));
-        NbPreferences.forModule(App.class).put("BOM", registry.get("options.genj.app.Options.isWriteBOM", ""));
     }
 
     private void putRegistryFromSettings() {

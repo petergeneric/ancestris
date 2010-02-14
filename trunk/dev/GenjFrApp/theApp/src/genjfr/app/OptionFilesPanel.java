@@ -336,8 +336,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jButton9ActionPerformed
 
     void load() {
-        getSettingsFromRegistry();
-
         setGedcomFile(NbPreferences.forModule(App.class).get("gedcomFile", ""));
         setReportDir(NbPreferences.forModule(App.class).get("reportDir", ""));
         setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
@@ -514,20 +512,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             i = -1;
         }
         return i;
-    }
-
-    private void getSettingsFromRegistry() {
-        Registry registry = Registry.lookup("genj", null);
-
-        NbPreferences.forModule(App.class).put("gedcomFile", registry.get("options.genj.gedcom.Options.gedcomFile", ""));
-        NbPreferences.forModule(App.class).put("reportDir", registry.get("options.genj.gedcom.Options.reportDir", ""));
-        NbPreferences.forModule(App.class).put("assoTxt", registry.get("options.associations.1", ""));
-        NbPreferences.forModule(App.class).put("assoOffice", registry.get("options.associations.2", ""));
-        NbPreferences.forModule(App.class).put("assoAdobe", registry.get("options.associations.3", ""));
-        NbPreferences.forModule(App.class).put("assoImages", registry.get("options.associations.4", ""));
-        NbPreferences.forModule(App.class).put("assoSound", registry.get("options.associations.5", ""));
-        NbPreferences.forModule(App.class).put("assoWeb", registry.get("options.associations.6", ""));
-        NbPreferences.forModule(App.class).put("logSize", registry.get("options.genj.app.Options.maxLogSizeKB", ""));
     }
 
     private void putRegistryFromSettings() {

@@ -188,8 +188,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {
-        getSettingsFromRegistry();
-
         setLanguage(NbPreferences.forModule(App.class).get("language", ""));
         setSkin(NbPreferences.forModule(App.class).get("skin", ""));
         setRestoreWindows(NbPreferences.forModule(App.class).get("restoreWindows", ""));
@@ -359,18 +357,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             i = -1;
         }
         return i;
-    }
-
-    private void getSettingsFromRegistry() {
-        Registry registry = Registry.lookup("genj", null);
-
-        NbPreferences.forModule(App.class).put("language", registry.get("options.genj.app.Options.language", ""));
-        NbPreferences.forModule(App.class).put("skin", registry.get("options.genj.app.Options.lookAndFeel", ""));
-        NbPreferences.forModule(App.class).put("restoreWindows", registry.get("options.genj.app.Options.isRestoreViews", ""));
-        NbPreferences.forModule(App.class).put("autoCommit", registry.get("options.genj.edit.Options.isAutoCommit", ""));
-        NbPreferences.forModule(App.class).put("undos", registry.get("options.genj.gedcom.Options.numberOfUndos", ""));
-        NbPreferences.forModule(App.class).put("splitJurisdiction", registry.get("options.genj.edit.Options.isSplitJurisdictions", ""));
-        NbPreferences.forModule(App.class).put("OpenEditor", registry.get("options.genj.edit.Options.isOpenEditor", ""));
     }
 
     private void putRegistryFromSettings() {
