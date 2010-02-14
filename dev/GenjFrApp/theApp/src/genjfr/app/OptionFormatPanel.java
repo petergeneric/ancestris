@@ -366,8 +366,6 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        getSettingsFromRegistry();
-        
         setSymbolBirt(NbPreferences.forModule(App.class).get("symbolBirth", ""));
         setSymbolBapm(NbPreferences.forModule(App.class).get("symbolBapm", ""));
         setSymbolChildOf(NbPreferences.forModule(App.class).get("symbolChildOf", ""));
@@ -700,29 +698,6 @@ final class OptionFormatPanel extends javax.swing.JPanel {
             i = -1;
         }
         return i;
-    }
-
-    private void getSettingsFromRegistry() {
-        Registry registry = Registry.lookup("genj", null);
-
-        NbPreferences.forModule(App.class).put("symbolBirth", registry.get("options.genj.report.Options.birthSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolBapm", registry.get("options.genj.report.Options.baptismSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolChildOf", registry.get("options.genj.report.Options.childOfSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolEngm", registry.get("options.genj.report.Options.engagingSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolMarr", registry.get("options.genj.gedcom.Options.txtMarriageSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolDivc", registry.get("options.genj.report.Options.divorceSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolOccu", registry.get("options.genj.report.Options.occuSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolResi", registry.get("options.genj.report.Options.resiSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolDeat", registry.get("options.genj.report.Options.deathSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolBuri", registry.get("options.genj.report.Options.burialSymbol", ""));
-        NbPreferences.forModule(App.class).put("privDisplay", registry.get("options.genj.gedcom.Options.maskPrivate", ""));
-        NbPreferences.forModule(App.class).put("privFlag", registry.get("options.genj.report.Options.privateTag", ""));
-        NbPreferences.forModule(App.class).put("privAlive", registry.get("options.genj.report.Options.deceasedIsPublic", ""));
-        NbPreferences.forModule(App.class).put("privYears", registry.get("options.genj.report.Options.yearsEventsArePrivate", ""));
-        NbPreferences.forModule(App.class).put("txtLineBreak", registry.get("options.genj.gedcom.Options.valueLineBreak", ""));
-        NbPreferences.forModule(App.class).put("imageSize", registry.get("options.genj.gedcom.Options.maxImageFileSizeKB", ""));
-        NbPreferences.forModule(App.class).put("displayNames", registry.get("options.genj.gedcom.Options.nameFormat", ""));
-        NbPreferences.forModule(App.class).put("displayDates", registry.get("options.genj.gedcom.Options.dateFormat", ""));
     }
 
     private void putRegistryFromSettings() {
