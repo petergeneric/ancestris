@@ -33,15 +33,44 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
 
     public boolean launchModule(Object o) {
 
-        System.out.println("======================= DEBUT DU WIZARD =========================");
+        System.out.println("=== DEBUT DU WIZARD ===");
+
         this.registry = (Registry) o;
-        performAction();
+
+        if (toBeLaunched()) {
+            performAction();
+        }
+
+        if (exitFlag = true) {
+            NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as below
+        }
+        
+        if (registry != null) {
+            putRegistryFromSettings(registry);
+        }
+        
+        System.out.println("=== FIN  DU  WIZARD ===");
         return exitFlag;
+    }
+
+    
+    private boolean toBeLaunched() {
+
+        boolean launch = false;
+
+        // Check if wizardflag shows it neesd to be launched
+        String flag = NbPreferences.forModule(App.class).get("optionswizard", "");
+
+        // If number matches, set launch on
+        if (!flag.equals("3")) { // increase number here each time we want to force wizard launch for users at a new release
+            launch = true;
+        }
+
+        return launch;
     }
 
     public void performAction() {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
-        getSettingsFromRegistry(registry);
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
         wizardDescriptor.setTitle(NbBundle.getMessage(OptionsWizardWizardAction.class, "CTL_WizardTitle"));
@@ -52,8 +81,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         if (!cancelled) {
             exitFlag = true;
         }
-        putRegistryFromSettings(registry);
-        System.out.println("======================= FIN DU WIZARD =========================");
     }
 
     /**
@@ -111,75 +138,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
     protected boolean asynchronous() {
         return false;
     }
-
-    private void getSettingsFromRegistry(Registry registry) {
-
-        NbPreferences.forModule(App.class).put("language", registry.get("options.genj.app.Options.language", ""));
-        NbPreferences.forModule(App.class).put("skin", registry.get("options.genj.app.Options.lookAndFeel", ""));
-        NbPreferences.forModule(App.class).put("restoreWindows", registry.get("options.genj.app.Options.isRestoreViews", ""));
-        NbPreferences.forModule(App.class).put("autoCommit", registry.get("options.genj.edit.Options.isAutoCommit", ""));
-        NbPreferences.forModule(App.class).put("undos", registry.get("options.genj.gedcom.Options.numberOfUndos", ""));
-        NbPreferences.forModule(App.class).put("splitJurisdiction", registry.get("options.genj.edit.Options.isSplitJurisdictions", ""));
-        NbPreferences.forModule(App.class).put("OpenEditor", registry.get("options.genj.edit.Options.isOpenEditor", ""));
-
-        NbPreferences.forModule(App.class).put("symbolBirth", registry.get("options.genj.report.Options.birthSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolBapm", registry.get("options.genj.report.Options.baptismSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolChildOf", registry.get("options.genj.report.Options.childOfSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolEngm", registry.get("options.genj.report.Options.engagingSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolMarr", registry.get("options.genj.gedcom.Options.txtMarriageSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolDivc", registry.get("options.genj.report.Options.divorceSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolOccu", registry.get("options.genj.report.Options.occuSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolResi", registry.get("options.genj.report.Options.resiSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolDeat", registry.get("options.genj.report.Options.deathSymbol", ""));
-        NbPreferences.forModule(App.class).put("symbolBuri", registry.get("options.genj.report.Options.burialSymbol", ""));
-        NbPreferences.forModule(App.class).put("privDisplay", registry.get("options.genj.gedcom.Options.maskPrivate", ""));
-        NbPreferences.forModule(App.class).put("privFlag", registry.get("options.genj.report.Options.privateTag", ""));
-        NbPreferences.forModule(App.class).put("privAlive", registry.get("options.genj.report.Options.deceasedIsPublic", ""));
-        NbPreferences.forModule(App.class).put("privYears", registry.get("options.genj.report.Options.yearsEventsArePrivate", ""));
-        NbPreferences.forModule(App.class).put("txtLineBreak", registry.get("options.genj.gedcom.Options.valueLineBreak", ""));
-        NbPreferences.forModule(App.class).put("imageSize", registry.get("options.genj.gedcom.Options.maxImageFileSizeKB", ""));
-        NbPreferences.forModule(App.class).put("displayNames", registry.get("options.genj.gedcom.Options.nameFormat", ""));
-        NbPreferences.forModule(App.class).put("displayDates", registry.get("options.genj.gedcom.Options.dateFormat", ""));
-
-        NbPreferences.forModule(App.class).put("submName", registry.get("options.genj.gedcom.Options.submName", ""));
-        NbPreferences.forModule(App.class).put("submCity", registry.get("options.genj.gedcom.Options.submCity", ""));
-        NbPreferences.forModule(App.class).put("submPhone", registry.get("options.genj.gedcom.Options.submPhone", ""));
-        NbPreferences.forModule(App.class).put("submPostCode", registry.get("options.genj.gedcom.Options.submPostCode", ""));
-        NbPreferences.forModule(App.class).put("submEmail", registry.get("options.genj.gedcom.Options.submEmail", ""));
-        NbPreferences.forModule(App.class).put("submCountry", registry.get("options.genj.gedcom.Options.submCountry", ""));
-        NbPreferences.forModule(App.class).put("submWeb", registry.get("options.genj.gedcom.Options.submWeb", ""));
-        NbPreferences.forModule(App.class).put("NamesUppercase", registry.get("options.genj.gedcom.Options.isUpperCaseNames", ""));
-        NbPreferences.forModule(App.class).put("NamesSpouse", registry.get("options.genj.gedcom.Options.setWifeLastname", ""));
-        NbPreferences.forModule(App.class).put("fmt_address1", registry.get("options.genj.gedcom.Options.fmt_address1", ""));
-        NbPreferences.forModule(App.class).put("fmt_address2", registry.get("options.genj.gedcom.Options.fmt_address2", ""));
-        NbPreferences.forModule(App.class).put("fmt_address3", registry.get("options.genj.gedcom.Options.fmt_address3", ""));
-        NbPreferences.forModule(App.class).put("fmt_address4", registry.get("options.genj.gedcom.Options.fmt_address4", ""));
-        NbPreferences.forModule(App.class).put("fmt_address5", registry.get("options.genj.gedcom.Options.fmt_address5", ""));
-        NbPreferences.forModule(App.class).put("fmt_address6", registry.get("options.genj.gedcom.Options.fmt_address6", ""));
-        NbPreferences.forModule(App.class).put("fmt_address7", registry.get("options.genj.gedcom.Options.fmt_address7", ""));
-        NbPreferences.forModule(App.class).put("fmt_address1_mand", registry.get("options.genj.gedcom.Options.fmt_address1_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address2_mand", registry.get("options.genj.gedcom.Options.fmt_address2_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address3_mand", registry.get("options.genj.gedcom.Options.fmt_address3_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address4_mand", registry.get("options.genj.gedcom.Options.fmt_address4_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address5_mand", registry.get("options.genj.gedcom.Options.fmt_address5_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address6_mand", registry.get("options.genj.gedcom.Options.fmt_address6_mand", ""));
-        NbPreferences.forModule(App.class).put("fmt_address7_mand", registry.get("options.genj.gedcom.Options.fmt_address7_mand", ""));
-        NbPreferences.forModule(App.class).put("address_splitspaces", registry.get("options.genj.gedcom.Options.isUseSpacedPlaces", ""));
-        NbPreferences.forModule(App.class).put("IDFilling", registry.get("options.genj.gedcom.Options.isFillGapsInIDs", ""));
-        NbPreferences.forModule(App.class).put("encoding", registry.get("options.genj.gedcom.Options.defaultEncoding", ""));
-        NbPreferences.forModule(App.class).put("BOM", registry.get("options.genj.app.Options.isWriteBOM", ""));
-
-        NbPreferences.forModule(App.class).put("gedcomFile", registry.get("options.genj.gedcom.Options.gedcomFile", ""));
-        NbPreferences.forModule(App.class).put("reportDir", registry.get("options.genj.gedcom.Options.reportDir", ""));
-        NbPreferences.forModule(App.class).put("assoTxt", registry.get("options.associations.1", ""));
-        NbPreferences.forModule(App.class).put("assoOffice", registry.get("options.associations.2", ""));
-        NbPreferences.forModule(App.class).put("assoAdobe", registry.get("options.associations.3", ""));
-        NbPreferences.forModule(App.class).put("assoImages", registry.get("options.associations.4", ""));
-        NbPreferences.forModule(App.class).put("assoSound", registry.get("options.associations.5", ""));
-        NbPreferences.forModule(App.class).put("assoWeb", registry.get("options.associations.6", ""));
-        NbPreferences.forModule(App.class).put("logSize", registry.get("options.genj.app.Options.maxLogSizeKB", ""));
-    }
-
 
     private void putRegistryFromSettings(Registry registry) {
         registry.put("options.genj.app.Options.language", NbPreferences.forModule(App.class).get("language", ""));
