@@ -128,20 +128,18 @@ public class App {
 //        }
     }
 
-    public static boolean shutDown() {
+    public static boolean closing() {
         LOG.info("Shutdown");
-        if (center.nbDoExit()) {
+        return center.nbDoExit();
+    }
+
+    public static void close() {
             // persist options
             OptionProvider.persistAll(REGISTRY);
             // Store registry
             Registry.persist();
             // done
             LOG.info("/Shutdown");
-            return true;
-        } else {
-            LOG.info("/Shutdown aborted");
-            return false;
-        }
     }
 
     /**
@@ -383,7 +381,7 @@ public class App {
          * do the shutdown
          */
         public void run() {
-            shutDown();
+            close();
         }
     } //Shutdown
 
