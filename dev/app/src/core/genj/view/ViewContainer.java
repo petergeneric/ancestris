@@ -132,7 +132,7 @@ import javax.swing.SwingConstants;
     }
 
     // .. a button for closing the View
-    bh.create(new ActionClose());
+//    bh.create(new ActionClose());
 
     // add it
     add(bar, viewHandle.getRegistry().get("toolbar", BorderLayout.WEST));
