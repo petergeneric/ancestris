@@ -57,6 +57,7 @@ import javax.imageio.spi.ServiceRegistry;
 import javax.swing.FocusManager;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.MenuSelectionManager;
@@ -194,10 +195,13 @@ public class ViewManager {
     if (settings==null) {
       settings = new SettingsWidget(this);
       settings.setView(handle);
-      windowManager.openWindow(
+//      windowManager.openWindow(
+      // FIXME: doit etre fait autrement! retablir le comportement de openwindow
+      // on utilise ici opennonmodal car le openwindow n'affiche pas la frame puisque on utilise un topcomponent
+      windowManager.openNonModalDialog(
         "settings", 
         RESOURCES.getString("view.edit.title"),
-        Images.imgSettings,
+        JOptionPane.QUESTION_MESSAGE,//Images.imgSettings,
         settings,
         null, null
       );
