@@ -21,6 +21,11 @@ public class Installer extends ModuleInstall {
 
     @Override
     public boolean closing(){
-        return App.shutDown();
+        return App.closing();
+    }
+
+    @Override
+    public void close(){
+        App.close();
     }
 }
