@@ -7,6 +7,7 @@ package genjfr.app;
 import genj.util.Registry;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -205,8 +206,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("undos", getUndos());
         NbPreferences.forModule(App.class).put("splitJurisdiction", getSplitJurisdictions());
         NbPreferences.forModule(App.class).put("OpenEditor", getOpenEditor());
+
+        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
         
         putRegistryFromSettings();
+
+        StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
     }
 
     boolean valid() {

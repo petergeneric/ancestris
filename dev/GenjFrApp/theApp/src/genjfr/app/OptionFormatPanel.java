@@ -6,6 +6,7 @@ package genjfr.app;
 
 import genj.util.Registry;
 import javax.swing.SpinnerNumberModel;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbPreferences;
 
 final class OptionFormatPanel extends javax.swing.JPanel {
@@ -406,8 +407,11 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("displayNames", getDisplayNames());
         NbPreferences.forModule(App.class).put("displayDates", getDisplayDates());
         
+        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
+
         putRegistryFromSettings();
 
+        StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionPanel.saved.statustext"));
     }
 
     boolean valid() {
