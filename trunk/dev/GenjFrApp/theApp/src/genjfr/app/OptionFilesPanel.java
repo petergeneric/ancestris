@@ -6,9 +6,15 @@ package genjfr.app;
 
 import genj.util.Registry;
 import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.SpinnerNumberModel;
+import org.netbeans.api.actions.Openable;
+import org.openide.awt.StatusDisplayer;
+import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 final class OptionFilesPanel extends javax.swing.JPanel {
 
@@ -348,6 +354,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }
 
     void store() {
+
         NbPreferences.forModule(App.class).put("gedcomFile", getGedcomFile());
         NbPreferences.forModule(App.class).put("reportDir", getReportDir());
         NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
@@ -357,8 +364,19 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
         NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
         NbPreferences.forModule(App.class).put("logSize", getLogSize());
-        
+
+        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
+
         putRegistryFromSettings();
+
+        StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));
+
+        Collection<? extends Openable> actions;
+        actions = Lookup.getDefault().lookupAll(Openable.class);
+        for (Iterator<? extends Openable> it = actions.iterator(); it.hasNext();) {
+            Openable openable = it.next();
+            openable.open();
+        }
 
     }
 

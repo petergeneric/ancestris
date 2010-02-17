@@ -210,7 +210,7 @@ public class ControlCenter extends JPanel {
                 EnvironmentChecker.getProperty(ControlCenter.this, new String[]{"genj.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
 
         String gedcomDir = getDefaultFile(true);
-        if (gedcomDir.trim().isEmpty()) {
+        if (gedcomDir == null || gedcomDir.trim().isEmpty()) {
             gedcomDir = "user.home";
         }
         chooser.setCurrentDirectory(new File(registry.get("last.dir", gedcomDir)));
@@ -490,7 +490,7 @@ public class ControlCenter extends JPanel {
             if (files == null || files.isEmpty()) {
                 List list = new ArrayList();
                 String defaultFile = getDefaultFile(false);
-                if (defaultFile != null) {
+                if (defaultFile != null && !defaultFile.isEmpty()) {
                     list.add(defaultFile);
                     files = list;
                 } else {
@@ -536,6 +536,17 @@ public class ControlCenter extends JPanel {
 
                     // next
                 }
+            } else { // nothing to open, ask user to open a file
+                ActionOpen open = new ActionOpen() {
+
+                    @Override
+                    protected void postExecute(boolean b) {
+                        super.postExecute(b);
+                        App.center.isReady(-1);
+                    }
+                };
+                App.center.isReady(1);
+                open.trigger();
             }
 
             // done
@@ -676,7 +687,7 @@ public class ControlCenter extends JPanel {
     private String getDefaultFile(boolean dirOnly) {
         String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
         if (defaultFile.isEmpty()) {
-            return null;
+            return "";
         }
         File local = new File(defaultFile);
         if (dirOnly) {
@@ -687,7 +698,7 @@ public class ControlCenter extends JPanel {
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return null;
+        return "";
     }
 } //ControlCenter
 

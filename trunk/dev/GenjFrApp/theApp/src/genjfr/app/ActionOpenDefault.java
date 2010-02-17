@@ -6,16 +6,18 @@ package genjfr.app;
 
 import java.io.File;
 import javax.swing.JMenuItem;
+import org.netbeans.api.actions.Openable;
+import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.actions.CookieAction;
 
-public final class ActionOpenDefault extends CookieAction {
+public final class ActionOpenDefault extends CookieAction implements Openable {
 
     private File fileToOpen = null;
-
+    
     @Override
     protected int mode() {
         return CookieAction.MODE_ANY;
@@ -61,10 +63,7 @@ public final class ActionOpenDefault extends CookieAction {
     @Override
     protected boolean enable(Node[] arg0) {
         super.enable(arg0);
-        if (getDefaultFile(false).isEmpty()) {
-            return false;
-        }
-        return true;
+        return calcState();
     }
 
     @Override
@@ -107,6 +106,19 @@ public final class ActionOpenDefault extends CookieAction {
             defaultFile = local.getName();
         }
         return defaultFile;
+    }
+
+    public boolean calcState() {
+        return !getDefaultFile(false).isEmpty();
+    }
+
+    public void open() {
+        boolean exists = calcState();
+        setEnabled(exists);
+        String statusText = StatusDisplayer.getDefault().getStatusText()
+                + (exists ? "" : " - " + org.openide.util.NbBundle.getMessage(ActionOpenDefault.class, "OptionPanel.notexist.statustext"));
+        StatusDisplayer.getDefault().setStatusText(statusText);
+        System.out.println("DEBUG - statusText="+statusText);
     }
 
 }

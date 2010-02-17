@@ -5,6 +5,7 @@
 package genjfr.app;
 
 import genj.util.Registry;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -453,9 +454,12 @@ final class OptionDataPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("IDFilling", getIdFilling());
         NbPreferences.forModule(App.class).put("encoding", getEncoding());
         NbPreferences.forModule(App.class).put("BOM", getBOM());
-        
+
+        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
+
         putRegistryFromSettings();
 
+        StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
     }
 
     boolean valid() {
