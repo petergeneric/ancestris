@@ -105,8 +105,10 @@ import javax.swing.SwingConstants;
     
     // Fill Toolbar
     ((ToolBarSupport)view).populate(bar);
-    if (EnvironmentChecker.getProperty(this, "genj.view.toolbarproblem", null, "checking for switch to not use glue in toolbar")==null)
+    if (EnvironmentChecker.getProperty(this, "genj.view.toolbarnoproblem", null, "checking for switch to not use glue in toolbar")!=null)
       bar.add(Box.createGlue());
+    else
+        bar.addSeparator();
 
     // add our buttons     
     ButtonHelper bh = new ButtonHelper().setContainer(bar);
