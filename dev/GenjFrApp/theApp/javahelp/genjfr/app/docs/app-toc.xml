@@ -7,6 +7,7 @@ and open the template in the editor.
 <toc version="2.0">
     <tocitem text="GenjFr - Sommaire">
         <tocitem text="Sommaire Général - GenjFr" target="genjfr.app.about"/>
+        <tocitem text="Découverte de GenjFr" target="genjfr.app.discovering"/>
         <tocitem text="Gestion des fenêtres" target="genjfr.app.windows"/>
     </tocitem>
 </toc>
