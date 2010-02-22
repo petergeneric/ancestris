@@ -370,7 +370,9 @@ public final class OptionsWizardVisualPanel4 extends JPanel {
     // End of variables declaration//GEN-END:variables
 
     void setGedcomFile(String str) {
-        if (str.equals("")) str = System.getProperty("user.dir")+File.separator+"maGenealogie.ged";
+        if (str.equals("")) {
+            str = ""; //System.getProperty("user.dir") + File.separator + "maGenealogie.ged";
+        }
         jTextField2.setText(str);
     }
 
