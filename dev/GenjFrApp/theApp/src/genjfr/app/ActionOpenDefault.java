@@ -96,10 +96,10 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
             local = new File(defaultFile);
             fileToOpen = local;
             if (!local.exists()) {
-                return "";
+                return null;
             }
         } catch (Throwable t) {
-            return "";
+            return null;
         }
 
         if (nameOnly) {
@@ -109,16 +109,18 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
     }
 
     public boolean calcState() {
-        return !getDefaultFile(false).isEmpty();
+        String str = getDefaultFile(false);
+        return (str != null && !str.isEmpty());
     }
 
     public void open() {
-        boolean exists = calcState();
-        setEnabled(exists);
+
+        String str = getDefaultFile(false);
+        setEnabled((str != null && !str.isEmpty()));
+
         String statusText = StatusDisplayer.getDefault().getStatusText()
-                + (exists ? "" : " - " + org.openide.util.NbBundle.getMessage(ActionOpenDefault.class, "OptionPanel.notexist.statustext"));
+                + (str != null ? "" : " - " + org.openide.util.NbBundle.getMessage(ActionOpenDefault.class, "OptionPanel.notexist.statustext"));
         StatusDisplayer.getDefault().setStatusText(statusText);
-        System.out.println("DEBUG - statusText="+statusText);
     }
 
 }
