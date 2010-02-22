@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.NbPreferences;
 import org.openide.windows.Mode;
@@ -28,8 +27,8 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "ControlCenterTopComponent";
-//    private static JPanel panel = App.center;
     private static ControlCenter panel = App.center;
+    private static boolean filesToLoad = false;
 
     public ControlCenterTopComponent() {
         super();
@@ -44,6 +43,7 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
     }
 
+    @Override
     public void open() {
         Mode m = WindowManager.getDefault().findMode("explorer");
         if (m != null) {
@@ -82,8 +82,8 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     public static synchronized ControlCenterTopComponent getDefault() {
         if (instance == null) {
             instance = new ControlCenterTopComponent();
+            panel.load(null, filesToLoad); // loads default gedcom
         }
-        panel.load(new ArrayList()); // loads default gedcom
         return instance;
     }
 
@@ -139,6 +139,7 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
     @Override
     Object readProperties(java.util.Properties p) {
+        filesToLoad = !(nbRegistry.get(p, "gedcoms", "0").equals("0"));
         ControlCenterTopComponent singleton = ControlCenterTopComponent.getDefault();
         singleton.readPropertiesImpl(p);
         return singleton;
@@ -151,17 +152,18 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
         String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
         Collection pfiles = nbRegistry.get(p, "gedcoms", (Collection) null);
         for (Iterator it = pfiles.iterator(); it.hasNext();) {
-            String pfile = (String)it.next();
-            if (pfile.indexOf(defaultFile) == -1) {
+            String pfile = (String) it.next();
+            if (defaultFile.isEmpty() || pfile.indexOf(defaultFile) == -1) {
                 files.add(pfile);
             }
         }
-        if (!files.isEmpty()) panel.load(files); // loads gedcoms present at previous close, except defaultfile which should already been loaded
+        if (!files.isEmpty()) {
+            panel.load(files, filesToLoad); // loads gedcoms present at previous close, except defaultfile which should already been loaded
+        }
     }
 
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
     }
-
 }

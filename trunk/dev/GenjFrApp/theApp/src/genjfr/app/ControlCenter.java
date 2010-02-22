@@ -45,7 +45,6 @@ import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ import java.util.logging.Level;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
@@ -81,18 +79,14 @@ public class ControlCenter extends JPanel {
             ACC_NEW = "ctrl N",
             ACC_OPEN = "ctrl O";
     /** members */
-    private JMenuBar menuBar;
     private GedcomTableWidget tGedcoms;
     protected Registry registry;
     private Resources resources = Resources.get(genj.app.ControlCenter.class);
     private WindowManager windowManager;
     private ViewManager viewManager;
     private List gedcomActions = new ArrayList();
-    private List toolbarActions = new ArrayList();
     protected Stats stats = new Stats();
-    private ActionExit exit = new ActionExit();
     private Runnable runOnExit;
-    private Runnable loading;
     private int isLoaded = 1;
     final private Object loadLock = new Object();
 
@@ -135,57 +129,48 @@ public class ControlCenter extends JPanel {
 
         // Layout
         setLayout(new BorderLayout());
-//    add(createToolBar(), BorderLayout.NORTH);
         add(new JScrollPane(tGedcoms), BorderLayout.CENTER);
         add(createStatusBar(), BorderLayout.SOUTH);
 
-        // Init menu bar at this point (so it's ready when the first file is loaded)
-//    menuBar = createMenuBar();
-
-        // Done
     }
 
     /**
-     * loads gedcom files
+     * Loads gedcom files
+     * - if files = null, case of request to load default gedcom
+     *    - if exist, load it
+     *    - otherwise, if no files to load, then ask user
+     * - otherwise load files
+     *
      */
-    public void load(String[] files) {
-        // Load known gedcoms
-//      Runnable r = new ActionAutoOpen(files);
-//    SwingUtilities.invokeLater(r);
-        loading = new ActionAutoOpen(files);
-        try {
-            SwingUtilities.invokeAndWait(loading);
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InvocationTargetException ex) {
-            Exceptions.printStackTrace(ex);
+    public void load(Collection files, boolean filesToLoad) {
+
+        if (files == null) {
+            files = new ArrayList();
+            String defaultFile = getDefaultFile(false);
+            if (defaultFile != null && !defaultFile.isEmpty()) {
+                files.add(defaultFile);
+            } else {
+                if (!filesToLoad) {
+                    Runnable r = new ActionOpen() {
+
+                        @Override
+                        protected void postExecute(boolean b) {
+                            super.postExecute(b);
+                            App.center.isReady(-1);
+                        }
+                    };
+                    App.center.isReady(1);
+                    SwingUtilities.invokeLater(r);
+                }
+            }
+        }
+
+        if (!files.isEmpty()) {
+            Runnable r = new ActionAutoOpen(files);
+            SwingUtilities.invokeLater(r);
         }
     }
 
-//  public void waitLoad() {
-//      loading.
-//  }
-    /**
-     * loads gedcom files
-     */
-    public void load(Collection files) {
-        // Load known gedcoms
-        Runnable r = new ActionAutoOpen(files);
-        SwingUtilities.invokeLater(r);
-    }
-
-    /**
-     * Exit action
-     */
-//  /*package*/ Action2 getExitAction() {
-//    return exit;
-//  }
-    /**
-     * Returns a menu for frame showing this controlcenter
-     */
-//  /*package*/ JMenuBar getMenuBar() {
-//    return menuBar;
-//  }
     /**
      * Returns a status bar for the bottom
      */
@@ -403,57 +388,6 @@ public class ControlCenter extends JPanel {
         return true;
     }
 
-    public Collection getOpenedGedcoms() {
-        // Remember open gedcoms
-        Collection save = new ArrayList();
-        for (Iterator gedcoms = GedcomDirectory.getInstance().getGedcoms().iterator(); gedcoms.hasNext();) {
-            // next gedcom
-            Gedcom gedcom = (Gedcom) gedcoms.next();
-            // remember as being open, password and open views
-            File file = gedcom.getOrigin().getFile();
-            if (file == null || file.exists()) {
-                StringBuffer restore = new StringBuffer();
-                restore.append(gedcom.getOrigin());
-                restore.append(",");
-                if (gedcom.hasPassword()) {
-                    restore.append(gedcom.getPassword());
-                }
-                restore.append(",");
-                ViewHandle[] views = viewManager.getViews(gedcom);
-                for (int i = 0, j = 0; i < views.length; i++) {
-                    if (j++ > 0) {
-                        restore.append(",");
-                    }
-                    restore.append(views[i].persist());
-                }
-                save.add(restore);
-            }
-            // next gedcom
-        }
-        // Done
-        return save;
-    }
-
-    public Gedcom getOpenedGedcom(String gedName) {
-        if (gedName == null) {
-            return null;
-        }
-        // grab "file[, password][, view#x]"
-        DirectAccessTokenizer tokens = new DirectAccessTokenizer(gedName, ",", false);
-        String url = tokens.get(0);
-        if (url == null) {
-            return null;
-        }
-        for (Iterator gedcoms = GedcomDirectory.getInstance().getGedcoms().iterator(); gedcoms.hasNext();) {
-            // next gedcom
-            Gedcom gedcom = (Gedcom) gedcoms.next();
-            if (url.equals(gedcom.getOrigin().toString())) {
-                return gedcom;
-            }
-        }
-        return null;
-    }
-
     /**
      * Action - LoadLastOpen
      */
@@ -463,40 +397,8 @@ public class ControlCenter extends JPanel {
         private Collection files;
 
         /** constructor */
-        private ActionAutoOpen(String[] args) {
-            // if we got files then we don't open old ones
-            if (args.length > 0) {
-                files = Arrays.asList(args);
-                return;
-            }
-
-            // by default we offer the user to load default gedcom file
-            HashSet deflt = new HashSet();
-            if (args.length == 0) {
-                try {
-                    deflt.add(getDefaultFile(false));
-                } catch (Throwable t) {
-                    // ignored
-                }
-            }
-
-            // check registry for the previously opened now
-            files = (Set) registry.get("open", deflt);
-
-        }
-
         private ActionAutoOpen(Collection theFiles) {
             files = theFiles;
-            if (files == null || files.isEmpty()) {
-                List list = new ArrayList();
-                String defaultFile = getDefaultFile(false);
-                if (defaultFile != null && !defaultFile.isEmpty()) {
-                    list.add(defaultFile);
-                    files = list;
-                } else {
-                    files = null;
-                }
-            }
         }
 
         /** run */
@@ -536,17 +438,6 @@ public class ControlCenter extends JPanel {
 
                     // next
                 }
-            } else { // nothing to open, ask user to open a file
-                ActionOpen open = new ActionOpen() {
-
-                    @Override
-                    protected void postExecute(boolean b) {
-                        super.postExecute(b);
-                        App.center.isReady(-1);
-                    }
-                };
-                App.center.isReady(1);
-                open.trigger();
             }
 
             // done
@@ -682,6 +573,57 @@ public class ControlCenter extends JPanel {
             gedcom.removeGedcomListener(this);
         }
     } //Stats
+
+    public Collection getOpenedGedcoms() {
+        // Remember open gedcoms
+        Collection save = new ArrayList();
+        for (Iterator gedcoms = GedcomDirectory.getInstance().getGedcoms().iterator(); gedcoms.hasNext();) {
+            // next gedcom
+            Gedcom gedcom = (Gedcom) gedcoms.next();
+            // remember as being open, password and open views
+            File file = gedcom.getOrigin().getFile();
+            if (file == null || file.exists()) {
+                StringBuffer restore = new StringBuffer();
+                restore.append(gedcom.getOrigin());
+                restore.append(",");
+                if (gedcom.hasPassword()) {
+                    restore.append(gedcom.getPassword());
+                }
+                restore.append(",");
+                ViewHandle[] views = viewManager.getViews(gedcom);
+                for (int i = 0, j = 0; i < views.length; i++) {
+                    if (j++ > 0) {
+                        restore.append(",");
+                    }
+                    restore.append(views[i].persist());
+                }
+                save.add(restore);
+            }
+            // next gedcom
+        }
+        // Done
+        return save;
+    }
+
+    public Gedcom getOpenedGedcom(String gedName) {
+        if (gedName == null) {
+            return null;
+        }
+        // grab "file[, password][, view#x]"
+        DirectAccessTokenizer tokens = new DirectAccessTokenizer(gedName, ",", false);
+        String url = tokens.get(0);
+        if (url == null) {
+            return null;
+        }
+        for (Iterator gedcoms = GedcomDirectory.getInstance().getGedcoms().iterator(); gedcoms.hasNext();) {
+            // next gedcom
+            Gedcom gedcom = (Gedcom) gedcoms.next();
+            if (url.equals(gedcom.getOrigin().toString())) {
+                return gedcom;
+            }
+        }
+        return null;
+    }
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {

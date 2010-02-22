@@ -266,7 +266,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     void setLanguage(String str) {
         if (str.equals("-1")) {
-            str = "0";
+            str = "2";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
@@ -284,11 +284,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     void setSkin(String str) {
         if (str.equals("-1")) {
-            str = "0";
+            str = "1";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 0;
+            i = 1;
         }
         if (i > skins.length) {
             i = skins.length;
