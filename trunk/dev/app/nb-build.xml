@@ -80,10 +80,19 @@
         <copy todir="${build.classes.dir}/doc">
             <fileset dir="doc"/>
         </copy>
+        <!-- Version -->
+        <echo level="info">Generating version number</echo>
+        <mkdir dir="${build.classes.dir}/version/genj"/>
+<exec executable="svnversion" failonerror="false"
+outputproperty="svnversion" errorproperty="svnerror">
+            <arg value="-n"/>
+        </exec>
+        <echo file="${build.classes.dir}/genj/resources.properties">version=0.3-r${svnversion}${line.separator}build=${svnversion}</echo>
 <!--        <copy todir="${build.classes.dir}/help">
             <fileset dir="help-fr"/>
         </copy>
--->    </target>
+-->
+    </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>
         <delete file="${dist.jar}"/>
