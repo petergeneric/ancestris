@@ -251,7 +251,7 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
 
     void setLanguage(String str) {
         if (str.equals("-1")) {
-            str = "0";
+            str = "2";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
@@ -269,11 +269,11 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
 
     void setSkin(String str) {
         if (str.equals("-1")) {
-            str = "0";
+            str = "1";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 0;
+            i = 1;
         }
         if (i > skins.length) {
             i = skins.length;
