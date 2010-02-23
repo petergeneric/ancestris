@@ -150,18 +150,19 @@ public class ControlCenter extends JPanel {
             if (defaultFile != null && !defaultFile.isEmpty()) {
                 files.add(defaultFile);
             } else {
-//                if (!filesToLoad) {
-//                    Runnable r = new ActionOpen() {
-//
-//                        @Override
-//                        protected void postExecute(boolean b) {
-//                            super.postExecute(b);
-//                            App.center.isReady(-1);
-//                        }
-//                    };
-//                    App.center.isReady(1);
-//                    SwingUtilities.invokeLater(r);
-//                }
+                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+                if (!filesToLoad) {
+                    Runnable r = new ActionOpen() {
+
+                        @Override
+                        protected void postExecute(boolean b) {
+                            super.postExecute(b);
+                            App.center.isReady(-1);
+                        }
+                    };
+                    App.center.isReady(1);
+                    SwingUtilities.invokeLater(r);
+                }
             }
         }
 
