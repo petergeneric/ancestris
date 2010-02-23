@@ -72,7 +72,7 @@ public class App {
     public static WindowManager genjWindowManager;
 //    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
-    private static Registry REGISTRY = new Registry("genj");
+    public static Registry REGISTRY = new Registry("genj");
 
     /**
      * GenJ Main Method
@@ -255,7 +255,7 @@ public class App {
                 LOG.info("Startup");
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
-                REGISTRY = checkOptionsWizard(REGISTRY);
+//                REGISTRY = checkOptionsWizard(REGISTRY);
 
                 // initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions(REGISTRY);
