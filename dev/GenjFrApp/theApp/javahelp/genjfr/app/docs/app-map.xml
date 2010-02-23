@@ -9,4 +9,8 @@ and open the template in the editor.
     <mapID target="genjfr.app.about" url="app-about.html"/>
     <mapID target="genjfr.app.discovering" url="./first_steps/decouverte_genjfr.html"/>
     <mapID target="genjfr.app.windows" url="./first_steps/fenetrage.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel4" url="app-about.html"/>
 </map>
