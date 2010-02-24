@@ -58,6 +58,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
  * Main Class for GenJ Application
@@ -256,7 +257,10 @@ public class App {
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
 //                REGISTRY = checkOptionsWizard(REGISTRY);
-
+                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+                    putRegistryFromSettings(REGISTRY);
+                REGISTRY.persist();
+                REGISTRY = new Registry("genj");
                 // initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions(REGISTRY);
 
@@ -522,5 +526,73 @@ public class App {
             }
         }
     }
+    public static void putRegistryFromSettings(Registry registry) {
+        registry.put("options.genj.app.Options.language", NbPreferences.forModule(App.class).get("language", ""));
+        registry.put("options.genj.app.Options.lookAndFeel", NbPreferences.forModule(App.class).get("skin", ""));
+        registry.put("options.genj.app.Options.isRestoreViews", NbPreferences.forModule(App.class).get("restoreWindows", ""));
+        registry.put("options.genj.edit.Options.isAutoCommit", NbPreferences.forModule(App.class).get("autoCommit", ""));
+        registry.put("options.genj.gedcom.Options.numberOfUndos", NbPreferences.forModule(App.class).get("undos", ""));
+        registry.put("options.genj.edit.Options.isSplitJurisdictions", NbPreferences.forModule(App.class).get("splitJurisdiction", ""));
+        registry.put("options.genj.edit.Options.isOpenEditor", NbPreferences.forModule(App.class).get("OpenEditor", ""));
+
+        registry.put("options.genj.report.Options.birthSymbol", NbPreferences.forModule(App.class).get("symbolBirth", ""));
+        registry.put("options.genj.report.Options.baptismSymbol", NbPreferences.forModule(App.class).get("symbolBapm", ""));
+        registry.put("options.genj.report.Options.childOfSymbol", NbPreferences.forModule(App.class).get("symbolChildOf", ""));
+        registry.put("options.genj.report.Options.engagingSymbol", NbPreferences.forModule(App.class).get("symbolEngm", ""));
+        registry.put("options.genj.gedcom.Options.txtMarriageSymbol", NbPreferences.forModule(App.class).get("symbolMarr", ""));
+        registry.put("options.genj.report.Options.divorceSymbol", NbPreferences.forModule(App.class).get("symbolDivc", ""));
+        registry.put("options.genj.report.Options.occuSymbol", NbPreferences.forModule(App.class).get("symbolOccu", ""));
+        registry.put("options.genj.report.Options.resiSymbol", NbPreferences.forModule(App.class).get("symbolResi", ""));
+        registry.put("options.genj.report.Options.deathSymbol", NbPreferences.forModule(App.class).get("symbolDeat", ""));
+        registry.put("options.genj.report.Options.burialSymbol", NbPreferences.forModule(App.class).get("symbolBuri", ""));
+        registry.put("options.genj.gedcom.Options.maskPrivate", NbPreferences.forModule(App.class).get("privDisplay", ""));
+        registry.put("options.genj.report.Options.privateTag", NbPreferences.forModule(App.class).get("privFlag", ""));
+        registry.put("options.genj.report.Options.deceasedIsPublic", NbPreferences.forModule(App.class).get("privAlive", ""));
+        registry.put("options.genj.report.Options.yearsEventsArePrivate", NbPreferences.forModule(App.class).get("privYears", ""));
+        registry.put("options.genj.gedcom.Options.valueLineBreak", NbPreferences.forModule(App.class).get("txtLineBreak", ""));
+        registry.put("options.genj.gedcom.Options.maxImageFileSizeKB", NbPreferences.forModule(App.class).get("imageSize", ""));
+        registry.put("options.genj.gedcom.Options.nameFormat", NbPreferences.forModule(App.class).get("displayNames", ""));
+        registry.put("options.genj.gedcom.Options.dateFormat", NbPreferences.forModule(App.class).get("displayDates", ""));
+
+        registry.put("options.genj.gedcom.Options.submName", NbPreferences.forModule(App.class).get("submName", ""));
+        registry.put("options.genj.gedcom.Options.submCity", NbPreferences.forModule(App.class).get("submCity", ""));
+        registry.put("options.genj.gedcom.Options.submPhone", NbPreferences.forModule(App.class).get("submPhone", ""));
+        registry.put("options.genj.gedcom.Options.submPostCode", NbPreferences.forModule(App.class).get("submPostCode", ""));
+        registry.put("options.genj.gedcom.Options.submEmail", NbPreferences.forModule(App.class).get("submEmail", ""));
+        registry.put("options.genj.gedcom.Options.submCountry", NbPreferences.forModule(App.class).get("submCountry", ""));
+        registry.put("options.genj.gedcom.Options.submWeb", NbPreferences.forModule(App.class).get("submWeb", ""));
+        registry.put("options.genj.gedcom.Options.isUpperCaseNames", NbPreferences.forModule(App.class).get("NamesUppercase", ""));
+        registry.put("options.genj.gedcom.Options.setWifeLastname", NbPreferences.forModule(App.class).get("NamesSpouse", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address1", NbPreferences.forModule(App.class).get("fmt_address1", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address2", NbPreferences.forModule(App.class).get("fmt_address2", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address3", NbPreferences.forModule(App.class).get("fmt_address3", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address4", NbPreferences.forModule(App.class).get("fmt_address4", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address5", NbPreferences.forModule(App.class).get("fmt_address5", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address6", NbPreferences.forModule(App.class).get("fmt_address6", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address7", NbPreferences.forModule(App.class).get("fmt_address7", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address1_mand", NbPreferences.forModule(App.class).get("fmt_address1_mand", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address2_mand", NbPreferences.forModule(App.class).get("fmt_address2_mand", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address3_mand", NbPreferences.forModule(App.class).get("fmt_address3_mand", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address4_mand", NbPreferences.forModule(App.class).get("fmt_address4_mand", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address5_mand", NbPreferences.forModule(App.class).get("fmt_address5_mand", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address6_mand", NbPreferences.forModule(App.class).get("fmt_address6_mand", ""));
+        registry.put("options.genj.gedcom.Options.fmt_address7_mand", NbPreferences.forModule(App.class).get("fmt_address7_mand", ""));
+        registry.put("options.genj.gedcom.Options.isUseSpacedPlaces", NbPreferences.forModule(App.class).get("address_splitspaces", ""));
+        registry.put("options.genj.gedcom.Options.isFillGapsInIDs", NbPreferences.forModule(App.class).get("IDFilling", ""));
+        registry.put("options.genj.gedcom.Options.defaultEncoding", NbPreferences.forModule(App.class).get("encoding", ""));
+        registry.put("options.genj.app.Options.isWriteBOM", NbPreferences.forModule(App.class).get("BOM", ""));
+
+        registry.put("options.genj.gedcom.Options.gedcomFile", NbPreferences.forModule(App.class).get("gedcomFile", ""));
+        registry.put("options.genj.gedcom.Options.reportDir", NbPreferences.forModule(App.class).get("reportDir", ""));
+        registry.put("options.associations", NbPreferences.forModule(App.class).get("6", ""));
+        registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
+        registry.put("options.associations.2", NbPreferences.forModule(App.class).get("assoOffice", ""));
+        registry.put("options.associations.3", NbPreferences.forModule(App.class).get("assoAdobe", ""));
+        registry.put("options.associations.4", NbPreferences.forModule(App.class).get("assoImages", ""));
+        registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
+        registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
+        registry.put("options.genj.app.Options.maxLogSizeKB", NbPreferences.forModule(App.class).get("logSize", ""));
+    }
+
 } //App
 
