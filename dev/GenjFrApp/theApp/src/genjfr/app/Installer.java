@@ -7,9 +7,11 @@ package genjfr.app;
 import genj.util.Registry;
 import genjfr.app.pluginservice.PluginInterface;
 import javax.swing.JOptionPane;
+import org.openide.LifecycleManager;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
 /**
@@ -23,10 +25,14 @@ public class Installer extends ModuleInstall {
         // By default, do nothing.
         // Put your startup code here.
             App.main(new String[]{});
+    if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+
     WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
         public void run() {
             // any code here will be run with the UI is available
                 App.REGISTRY = checkOptionsWizard(App.REGISTRY);
+                LifecycleManager.getDefault().markForRestart();
+                LifecycleManager.getDefault().exit();
         }
        }
     );
