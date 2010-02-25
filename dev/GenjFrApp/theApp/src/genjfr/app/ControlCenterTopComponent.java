@@ -4,11 +4,16 @@
  */
 package genjfr.app;
 
+import genj.util.DirectAccessTokenizer;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -149,12 +154,24 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     void readPropertiesImpl(java.util.Properties p) {
         String version = p.getProperty("version");
         Collection files = new ArrayList();
-        String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
+        String defaultFile = null;
         Collection pfiles = nbRegistry.get(p, "gedcoms", (Collection) null);
+        try {
+            defaultFile = (new File(NbPreferences.forModule(App.class).get("gedcomFile", ""))).getCanonicalPath();
+        } catch (IOException ex) {
+            defaultFile = null;
+        }
         for (Iterator it = pfiles.iterator(); it.hasNext();) {
             String pfile = (String) it.next();
-            if (defaultFile.isEmpty() || pfile.indexOf(defaultFile) == -1) {
-                files.add(pfile);
+            String pfilepath;
+            try {
+                DirectAccessTokenizer tokens = new DirectAccessTokenizer(pfile, ",", false);
+                pfilepath = (new File(new URI(tokens.get(0)))).getCanonicalPath();
+            } catch (Exception ex) {
+                pfilepath = null;
+            }
+            if ((defaultFile == null) || !(defaultFile.equals(pfilepath))) {
+                    files.add(pfile);
             }
         }
         if (!files.isEmpty()) {
