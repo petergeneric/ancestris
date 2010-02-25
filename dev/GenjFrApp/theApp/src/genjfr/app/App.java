@@ -259,6 +259,10 @@ public class App {
 //                REGISTRY = checkOptionsWizard(REGISTRY);
                 if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
                     putRegistryFromSettings(REGISTRY);
+                // Pour le moment il ne faut pas que je lnf soit mis a autre chose que java.
+                // ni pas les options, ni par l'assistant.
+                // On maintient la possibilite de changer mais le lnf reel utilise pas l'appli est java
+                REGISTRY.put("options.genj.app.Options.lookAndFeel","1");
                 REGISTRY.persist();
                 REGISTRY = new Registry("genj");
                 // initialize options first (creates a registry view within the above registry only containing the options)
@@ -316,7 +320,7 @@ public class App {
 
                 // show it
 //        winMgr.openWindow("cc", resources.getString("app.title"), Gedcom.getImage(), center, center.getMenuBar(), center.getExitAction());
-                winMgr.openWindow("cc", resources.getString("app.title"), Gedcom.getImage(), center, null, null);
+//FIXME: ne semble plus servir a rien                winMgr.openWindow("cc", resources.getString("app.title"), Gedcom.getImage(), center, null, null);
 
                 // done
                 LOG.info("/Startup");
