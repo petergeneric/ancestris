@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ReportRunner" default="dist" basedir=".">
+
+  <property file="build.properties"/>
+
+  <path id="project.class.path">
+    <pathelement path="${dir.app}/build/classes/core"/>
+    <pathelement path="./build/classes"/>
+    <fileset dir="lib">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <!--
+   Initialization
+   -->
+  <target name="init">
+
+    <fail unless="dir.app" message="Please specify dir.app in build.properties"/>
+    <echo level="info">Calling GenJ Application build in ${dir.app}</echo>
+    <ant dir="${dir.app}" target="compile.core"/>
+
+    <tstamp><format property="now.short" pattern="yyyyMMdd"/></tstamp>
+  	<property name="version" value="${now.short}"/>
+  	<echo level="info">version = ${version}</echo>
+
+    <echo level="info">Creating output directories</echo>
+    <mkdir dir="./build"/>
+    <mkdir dir="./build/lib"/>
+    <mkdir dir="./build/dist"/>
+
+  </target>
+
+  <!--
+   Compilation
+   -->
+  <target name="compile" depends="init">
+
+    <mkdir dir="./build/classes"/>
+    <javac srcdir="src" destdir="./build/classes"
+           debug="${javac.debug}" deprecation="on" source="1.5" target="1.5">
+      <classpath refid="project.class.path"/>
+    </javac>
+
+  </target>
+
+  <!--
+   Cleaning
+   -->
+  <target name="clean">
+    <echo level="info">Cleaning output directories</echo>
+    <delete includeemptydirs="true" failonerror="false">
+      <fileset dir="./build" excludes="eclipse/**"/>
+   	</delete>
+  </target>
+
+  <!--
+   Distribution
+   -->
+  <target name="dist" depends="compile">
+
+   <!-- create tracker.jar -->
+   <delete file="./build/lib/genj-reportrunner.jar"/>
+   <jar jarfile="./build/lib/genj-reportrunner.jar" update="True" manifest="resources/manifest.mf">
+     <fileset dir="./build/classes" includes="**/*.class"/>
+   </jar>
+
+   <!-- create tracker-xyz.zip -->
+   <zip zipfile="./build/dist/genj-reportrunner-${version}.zip" update="True">
+     <zipfileset dir="build" includes="lib/genj-reportrunner.jar"/>
+  	 <zipfileset dir="resources/scripts" includes="*"/>
+  	 <zipfileset dir="." includes="lib/*.jar"/>
+   </zip>
+
+  </target>
+
+</project>

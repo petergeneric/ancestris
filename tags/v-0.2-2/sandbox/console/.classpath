@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/core"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/genj">
+		<accessrules>
+			<accessrule kind="accessible" pattern="extensions/console/**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/dsadinoff/java-readline-0.8.0/libreadline-java.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

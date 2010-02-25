@@ -1,0 +1,936 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Histoire des familles patronymique</TITLE>
+	<STYLE>
+		<!--
+		BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Nimbus Sans L"; font-size:x-small }
+		 -->
+	</STYLE>
+	<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+lital {
+font-style: italic;
+font-weight: normal;
+font-size: 0.5em;
+}
+h6 {
+font-family: inherit;
+font-size: 4em;
+line-height: 4em;
+font-weight: bold;
+color: #000099;
+text-align: center;
+}
+h1 {
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #ffff66;
+text-align: center;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.6em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+.megr {
+font-style: normal;
+font-weight: normal;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #ffff99;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ffff99;
+}
+</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</HEAD>
+
+<BODY TEXT="#000000">
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($fam1=$famc.Husband.fams)
+#set($fam2=$famc.Husband.famc.Husband.fams)
+#set($fam3=$famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam4=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam5=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam6=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam7=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam11=$famc.Husband.Famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam12=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam13=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam14=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam15=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam16=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam17=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($fam18=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($souche=$famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+#set($conjoint = $fams.getOtherSpouse())
+#set($conjoint2 = $famc.Husband.famc.Husband.famc.Husband.fams.getOtherSpouse())
+#set($conjoint2 = $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams.getOtherSpouse())
+#set($conjoint1 = $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams.getOtherSpouse())
+#set($child=$children)
+#set ($version="2.0")
+<br>
+<br>
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=4 CELLSPACING=0 ALIGN=CENTER>
+
+	<TR>
+		<TD WIDTH=100% HEIGHT=15>
+			<P><h4 class="foncolo">&nbsp;</h4>
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% VALIGN=TOP>
+			<P><h6> <span class="inherit"> Le livret d'histoire familiale <br> des $!INDI.getProperty("NAME:SURN") </span></h6>
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% HEIGHT=15 VALIGN=TOP>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% ALIGN=CENTER VALIGN=TOP>
+			<P>#set($prop=$!INDI.getProperty("PROP"))
+#set($obj=$!prop.getProperty("OBJE"))
+<P><IMG SRC="file:///$!prop.getProperty("OBJE:FILE").AbsolutePath"  width=100% <br>
+<span class="lital">$!prop.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 0px; height: 178px;" align="left"
+ valign="top"><BR>
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% VALIGN=TOP>
+			<P>#set($note=$INDI.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4 class="minicolo">Les $!INDI.getProperty("NAME:SURN") : </h4><span class="inherit">"$!INDI.getProperty("NAME:NOTE")"</span>
+<br>
+<h4 class="minicolo">&nbsp;</h4>
+ #end
+
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% HEIGHT=38 VALIGN=TOP>
+			<P><h2><p align=right>
+Ce livret a &eacute;t&eacute; g&eacute;n&eacute;r&eacute; le $date.full_date </p> </h2>
+<h2><p align=right>par $GEDCOM.Submitter.getProperty("NAME")  </p></h2>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<br>
+<br>
+<br>
+<br>
+
+<!-----------fiches patronymiques ----------------------------------------------->
+
+<DIV style="page-break-before:always"></DIV>.
+<br>
+<br>
+<br>
+<h4 class="foncolo">&nbsp;</h4><br>
+<br>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=4 RULES=NONE BORDER=0>
+	<COLGROUP><COL WIDTH=227><COL WIDTH=113><COL WIDTH=113><COL WIDTH=227></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" WIDTH=227 HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#00FF33"><B><FONT SIZE=4>FICHE PATRONYMIQUE</FONT></B></TD>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom:  5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" WIDTH=227 ALIGN=CENTER VALIGN=TOP BGCOLOR="#00FF33"><B>patronyme :<FONT SIZE=4> $!INDI.getProperty("NAME:SURN")</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam7 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam7.getProperty("MARR:DATE") &agrave; $!fam7.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam6 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam6.getProperty("MARR:DATE") &agrave; $!fam6.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam5 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam5.getProperty("MARR:DATE") &agrave; $!fam5.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam4 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam4.getProperty("MARR:DATE") &agrave; $!fam4.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam3 in $famc.Husband.famc.Husband.famc.Husband.fams)x $!fam3.getProperty("MARR:DATE") &agrave; $!fam3.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam2 in $famc.Husband.famc.Husband.fams)x $!fam2.getProperty("MARR:DATE") &agrave; $!fam2.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!famc.Husband.getProperty("NAME")</h4> o $famc.Husband.getProperty("BIRT:DATE") &agrave; $famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s: #set($deces1=$famc.Husband.getProperty("DEAT"))
+  #if ($deces1) $famc.Husband.getProperty("DEAT:DATE") &agrave; $famc.Husband.getProperty("DEAT:PLAC")</TD> #end
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 1px solid #000000; border-left: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!famc.Wife.getProperty("NAME")</h4> o  $famc.Wife.getProperty("BIRT:DATE") &agrave; $famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s:
+#set($deces2=$famc.Wife.getProperty("DEAT"))
+  #if ($deces2) + $famc.Wife.getProperty("DEAT:DATE") &agrave; $famc.Wife.getProperty("DEAT:PLAC")</TD> #end
+		</TR>
+<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT> #foreach ($fam1 in $famc.Husband.fams)x $!fam1.getProperty("MARR:DATE") &agrave; $!fam1.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT VALIGN=TOP><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.getProperty("NAME")</h4> o $!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC"), + $!INDI.getProperty("DEAT:DATE") &agrave; $!INDI.getProperty("DEAT:PLAC")</TD>
+			<TD ALIGN=LEFT VALIGN=TOP><BR></TD>		</TR>
+	<TR>
+			<TD HEIGHT=38 ALIGN=LEFT VALIGN=TOP>#foreach ($fam in $fams)
+        #if($list.size($fams)>=2)
+<p>Mariage $velocityCount  ($fam.Id) :
+        #else
+<p>Mariage ($fam.Id) :
+        #end
+#set($conjoint = $fam.getOtherSpouse())
+$!conjoint.getProperty("NAME"), o $!conjoint.getProperty("BIRT") $!conjoint.getProperty("BIRT:DATE") &agrave; $!conjoint.getProperty("BIRT:PLAC"), + $!conjoint.getProperty("DEAT") $!conjoint.getProperty("DEAT:DATE") &agrave; $!conjoint.getProperty("DEAT:PLAC") #end </p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT VALIGN=TOP> #foreach ($fam in $fams)x $!fam.getProperty("MARR:DATE") &agrave; $!fam.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ROWSPAN=2 ALIGN=LEFT BGCOLOR="#FFFF99"><h4>G&eacute;n&eacute;alogiste : $GEDCOM.Submitter.getProperty("NAME")</h4>
+
+<BR></TD>
+		</TR>
+	</TBODY>
+</TABLE
+
+<!-- ************************************************************************** -->
+<DIV style="page-break-before:always"></DIV>.
+<br>
+<br>
+<h4 class="foncolo">&nbsp;</h4><br>
+<br>
+<TABLE FRAME=VOID CELLSPACING=0 COLS=4 RULES=NONE BORDER=0>
+	<COLGROUP><COL WIDTH=227><COL WIDTH=113><COL WIDTH=113><COL WIDTH=227></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" WIDTH=227 HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#00FF33"><B><FONT SIZE=4>FICHE PATRONYMIQUE</FONT></B></TD>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom:  5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" WIDTH=227 ALIGN=CENTER VALIGN=TOP BGCOLOR="#00FF33"><B>patronyme :<FONT SIZE=4>  $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME:SURN")</FONT></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam18 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam18.getProperty("MARR:DATE") &agrave; $!fam18.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam17 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam17.getProperty("MARR:DATE") &agrave; $!fam17.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam16 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam16.getProperty("MARR:DATE") &agrave; $!fam16.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam15 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam15.getProperty("MARR:DATE") &agrave; $!fam15.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam14 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam14.getProperty("MARR:DATE") &agrave; $!fam14.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave;
+$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:DATE") &agrave;
+ $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s : $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT>#foreach ($fam13 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam13.getProperty("MARR:DATE") &agrave; $!fam13.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT=38 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Husband.getProperty("BIRT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s: $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD STYLE="border-bottom: 1px solid #000000" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-bottom: 5px double blue; border-left: 5px double blue" ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFCCFF"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Wife.getProperty("NAME")</h4> o  $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Wife.getProperty("BIRT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Wife.getProperty("BIRT:PLAC"), + D&eacute;c&egrave;s: $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Wife.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</TD>
+		</TR>
+<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT> #foreach ($fam11 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.Famc.Husband.fams)x $!fam11.getProperty("MARR:DATE") &agrave; $!fam11.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT VALIGN=TOP><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN=LEFT VALIGN=TOP BGCOLOR="#FFFF66"><h4>$!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("NAME")</h4> o $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("BIRT:PLAC"), + $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.Famc.Husband.getProperty("DEAT:PLAC")</TD>
+			<TD ALIGN=LEFT VALIGN=TOP><BR></TD>		</TR>
+	<TR>
+			<TD HEIGHT=38 ALIGN=LEFT VALIGN=TOP>#foreach ($fam in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+<p>Mariage  :
+#set($conjoint1 = $fam.getOtherSpouse())
+$!conjoint1.getProperty("NAME"), o $!conjoint1.getProperty("BIRT") $!conjoint1.getProperty("BIRT:DATE") &agrave; $!conjoint1.getProperty("BIRT:PLAC"), + $!conjoint1.getProperty("DEAT") $!conjoint1.getProperty("DEAT:DATE") &agrave; $!conjoint1.getProperty("DEAT:PLAC") #end</p></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><BR></TD>
+			<TD STYLE="border-left: 5px double blue" ALIGN=LEFT VALIGN=TOP>
+#foreach ($fam12 in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)
+ x $!fam12.getProperty("MARR:DATE") &agrave; $!fam12.getProperty("MARR:PLAC") #end<BR></TD>
+			<TD ALIGN=LEFT VALIGN=TOP><BR></TD>
+
+
+		</TR>
+		<TR>
+			<TD HEIGHT=38 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000" ROWSPAN=2 ALIGN=LEFT BGCOLOR="#FFFF99"><h4>G&eacute;n&eacute;alogiste : $GEDCOM.Submitter.getProperty("NAME")</h4>
+
+<BR></TD>
+		</TR>
+	</TBODY>
+</TABLE
+
+<!-- ************************************************************************** -->
+<DIV style="page-break-before:always"></DIV>.
+
+<table style="text-align: left; width: 841px; height: 795px;"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+</tr>
+    <tr>
+      <td style="width: 200px; height: 16px;" align="left"
+colspan="5" rowspan="1"
+ valign="top"><h4> <span class="foncolo"> Les patronymes :  $!INDI.getProperty("NAME:SURN"),$!famc.Wife.getProperty("NAME:SURN"), $!famc.Wife.famc.Wife.getProperty("NAME:SURN"), $!famc.Husband.famc.Wife.getProperty("NAME:SURN")  </span></h4></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 25px;" align="right"
+colspan="5" rowspan="1"
+ valign="top"><h1>ARBRE BIOGRAPHIQUE de $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")</h1></td>
+    </tr>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $famc.Husband.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 199px; height: 15px;" border-left: 3px solid #000080; align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Wife.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $famc.Husband.famc.Wife.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 0px; height: 15px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Wife.famc.Husband.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $famc.Wife.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Wife.famc.Wife.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $famc.Wife.famc.Wife.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam2 in $famc.Husband.famc.Husband.fams)x $!fam2.getProperty("MARR:DATE"),  $!fam2.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></td>
+<td
+ style="background-color: rgb(255, 204, 204); width: 199px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></td>
+      <td style="width: 0px; height: 30px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Husband.getProperty("BIRT:DATE"), $!famc.Wife.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam22 in $famc.Wife.famc.Husband.fams)x $!fam22.getProperty("MARR:DATE"),  $!fam22.getProperty("MARR:PLAC") #end<br> +  $!famc.Wife.famc.Husband.getProperty("DEAT:DATE"), $!famc.Wife.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.famc.Wife.getProperty("BIRT:DATE"), $!famc.Wife.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Wife.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Wife.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top">#set($resi=$famc.Husband.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Wife.getProperty("NAME") </span> <br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="180" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span>
+</td>
+      <td style="width: 199px; height: 318px;" align="left"
+ valign="top">#set($note=$famc.Husband.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Wife.getProperty("NAME:SURN") :</h4><span class="inherit">"$!famc.Husband.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+      <td style="width: 0px; height: 318px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top">#set($resi=$famc.Wife.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Wife.famc.Wife.getProperty("NAME") </span><br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="180" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 200px; height: 318px;" align="left"
+ valign="top">#set($note=$famc.Wife.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Wife.famc.Wife.getProperty("NAME:SURN") :</h4><span class="inherit">"$!famc.Wife.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 5px;"  align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>$!famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam1 in $famc.Husband.fams)x $!fam1.getProperty("MARR:DATE"),  $!fam1.getProperty("MARR:PLAC") #end<br>#set($deces1=$famc.Husband.getProperty("DEAT"))
+  #if ($deces1) +  $!famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.getProperty("DEAT:PLAC")</p>#end</td>
+      <td style="width: 0px; height: 27px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>$!famc.Wife.getProperty("NAME")</b><br> o  $!famc.Wife.getProperty("BIRT:DATE"), $!famc.Wife.getProperty("BIRT:PLAC")<br> #set($deces2=$famc.Wife.getProperty("DEAT"))
+  #if ($deces2)+  $!famc.Wife.getProperty("DEAT:DATE"), $!famc.Wife.getProperty("DEAT:PLAC")</p>#end</td>
+    </tr>
+    <tr>
+      <td style="width: 400px; height: 178px;" colspan="2"
+ rowspan="1" align="middle" valign="top"> #set($resi=$famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Wife.getProperty("NAME") </span><br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="350" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 0px; height: 178px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 178px;" colspan="2"
+ rowspan="1" align="left" valign="top">#set($note=$famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Wife.getProperty("NAME:SURN") </h4><span class="inherit">"$!famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 24px;" align="left"
+ valign="top"></td>
+      <td colspan="3" rowspan="1"
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 24px;"
+ align="left" valign="top"><p><b>$!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")</b> o  $!INDI.getProperty("BIRT:DATE") &agrave; $!INDI.getProperty("BIRT:PLAC"), +  $!INDI.getProperty("DEAT:DATE") &agrave; $!INDI.getProperty("DEAT:PLAC") #foreach ($fam in $fams)x $!fam.getProperty("MARR:DATE"),  $!fam.getProperty("MARR:PLAC") #set($conjoint = $fam.getOtherSpouse())
+ avec <b>$!conjoint.getProperty("NAME")</b>, o $!conjoint.getProperty("BIRT"),  $!conjoint.getProperty("BIRT:DATE") &agrave; $!conjoint.getProperty("BIRT:PLAC"), + $!conjoint.getProperty("DEAT") $!conjoint.getProperty("DEAT:DATE") &agrave; $!conjoint.getProperty("DEAT:PLAC")  #end,</p></td>
+      <td style="width: 200px; height: 24px;" align="right"
+ valign="top"><h4 class="minicolo">Ascendant Sosa:
+#foreach ($event in $INDI.getProperties("_SOSA")) $event.Value  </h4> #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 83px;" colspan="5"
+ rowspan="1" align="left" valign="top">#set($note=$conjoint.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!conjoint.getProperty("NAME:SURN") : </h4><span class="inherit">"$!conjoint.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+  </tbody>
+</table>
+<!-- ************************************************************************** -->
+<DIV style="page-break-before:always"></DIV>
+
+<table style="text-align: left; width: 841px; height: 795px;"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+</tr>
+    <tr>
+      <td style="width: 200px; height: 16px;" align="left"
+colspan="5" rowspan="1"
+ valign="top"><h4> <span class="foncolo"> Les patronymes :  $!INDI.getProperty("NAME:SURN"),$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN"), $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:SURN"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN")  </span></h4></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 25px;" align="right"
+colspan="5" rowspan="1"
+ valign="top"><h1>ARBRE BIOGRAPHIQUE de $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:SURN")</h1></td>
+    </tr>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 199px; height: 15px;" border-left: 3px solid #000080; align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 0px; height: 15px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam2 in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam2.getProperty("MARR:DATE"),  $!fam2.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></td>
+<td
+ style="background-color: rgb(255, 204, 204); width: 199px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></td>
+      <td style="width: 0px; height: 30px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam22 in $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams)x $!fam22.getProperty("MARR:DATE"),  $!fam22.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top">#set($resi=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME") </span> <br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="180" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span>
+</td>
+      <td style="width: 199px; height: 318px;" align="left"
+ valign="top">#set($note=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN") :</h4><span class="inherit">"$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+      <td style="width: 0px; height: 318px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top">#set($resi=$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME") </span><br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="180" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 200px; height: 318px;" align="left"
+ valign="top">#set($note=$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:SURN") :</h4><span class="inherit">"$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 5px;"  align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam1 in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam1.getProperty("MARR:DATE"),  $!fam1.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></td>
+      <td style="width: 0px; height: 27px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></td>
+    </tr>
+    <tr>
+      <td style="width: 400px; height: 178px;" colspan="2"
+ rowspan="1" align="middle" valign="top"> #set($resi=$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME") </span><br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="350" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 0px; height: 178px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 178px;" colspan="2"
+ rowspan="1" align="left" valign="top">#set($note=$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN") </h4><span class="inherit">"$!famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 24px;" align="left"
+ valign="top"></td>
+      <td colspan="3" rowspan="1"
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 24px;"
+ align="left" valign="top"><p><b>$!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:SURN")</b> o  $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC"), +  $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC") #foreach ($fam in $famc.Husband.famc.Husband.famc.Husband.fams)x $!fam.getProperty("MARR:DATE"),  $!fam.getProperty("MARR:PLAC") #set($conjoint2 = $fam.getOtherSpouse())
+ avec <b>$!conjoint2.getProperty("NAME")</b>, o $!conjoint2.getProperty("BIRT"),  $!conjoint2.getProperty("BIRT:DATE") &agrave; $!conjoint2.getProperty("BIRT:PLAC"), + $!conjoint2.getProperty("DEAT") $!conjoint2.getProperty("DEAT:DATE") &agrave; $!conjoint2.getProperty("DEAT:PLAC")  #end,</p></td>
+      <td style="width: 200px; height: 24px;" align="right"
+ valign="top"><h4 class="minicolo">Ascendant Sosa:
+#foreach ($event in $INDI.famc.Husband.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value  </h4> #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 83px;" colspan="5"
+ rowspan="1" align="left" valign="top">#set($note=$conjoint2.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!conjoint2.getProperty("NAME:SURN") : </h4><span class="inherit">"$!conjoint2.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+  </tbody>
+</table>
+<!-- ************************************************************************** -->
+<DIV style="page-break-before:always"></DIV>
+
+<table style="text-align: left; width: 841px; height: 795px;"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+</tr>
+    <tr>
+      <td style="width: 200px; height: 16px;" align="left"
+colspan="5" rowspan="1"
+ valign="top"><h4> <span class="foncolo"> Les patronymes :  $!INDI.getProperty("NAME:SURN"),$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:SURN"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN")  </span></h4></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 25px;" align="right"
+colspan="5" rowspan="1"
+ valign="top"><h1>ARBRE BIOGRAPHIQUE de $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:SURN")</h1></td>
+    </tr>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 15px;" align="left"
+$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.
+      <td style="width: 199px; height: 15px;" border-left: 3px solid #000080; align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 0px; height: 15px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperty("NAME") (Sosa : #foreach ($event in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.famc.Husband.getProperties("_SOSA")) $event.Value)  #end</span></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam2 in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!famc.Husband.famc.Husband.famc.Husband.fam2.getProperty("MARR:DATE"),  $!fam2.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></td>
+<td
+ style="background-color: rgb(255, 204, 204); width: 199px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></td>
+      <td style="width: 0px; height: 30px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam22 in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.fams)x $!fam22.getProperty("MARR:DATE"),  $!fam22.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Husband.getProperty("DEAT:PLAC")</p></TD>
+
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:DATE"),  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("DEAT:PLAC")</p></TD>
+
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top">#set($resi=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME") </span> <br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="180" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span>
+</td>
+      <td style="width: 199px; height: 318px;" align="left"
+ valign="top">#set($note=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN") :</h4><span class="inherit">"$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+      <td style="width: 0px; height: 318px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top">#set($resi=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME") </span><br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="180" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 200px; height: 318px;" align="left"
+ valign="top">#set($note=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:SURN") :</h4><span class="inherit">"$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 5px;"  align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC")<br> #foreach ($fam1 in $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam1.getProperty("MARR:DATE"),  $!fam1.getProperty("MARR:PLAC") #end<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE")-  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC")</p></td>
+      <td style="width: 0px; height: 27px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME")</b><br> o  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("BIRT:PLAC")<br> +  $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:DATE"), $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("DEAT:PLAC")</p></td>
+    </tr>
+    <tr>
+      <td style="width: 400px; height: 178px;" colspan="2"
+ rowspan="1" align="middle" valign="top"> #set($resi=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("RESI"))
+#set($obj=$!resi.getProperty("OBJE"))
+<span class="lmegr">Le village de $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME") </span><br>
+    <P><IMG SRC="file:///$!resi.getProperty("OBJE:FILE").AbsolutePath"  width="350" <br>
+<span class="lital">$!resi.getProperty("OBJE:TITL")</span></td>
+      <td style="width: 0px; height: 178px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 178px;" colspan="2"
+ rowspan="1" align="left" valign="top">#set($note=$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:SURN") </h4><span class="inherit">"$!famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Wife.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 24px;" align="left"
+ valign="top"></td>
+      <td colspan="3" rowspan="1"
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 24px;"
+ align="left" valign="top"><p><b>$!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:GIVN") $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("NAME:SURN")</b> o  $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("BIRT:PLAC"), +  $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:DATE") &agrave; $!INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperty("DEAT:PLAC") #foreach ($fam in $famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.fams)x $!fam.getProperty("MARR:DATE"),  $!fam.getProperty("MARR:PLAC") #set($conjoint3 = $fam.getOtherSpouse())
+ avec <b>$!conjoint3.getProperty("NAME")</b>, o $!conjoint3.getProperty("BIRT"),  $!conjoint3.getProperty("BIRT:DATE") &agrave; $!conjoint3.getProperty("BIRT:PLAC"), + $!conjoint3.getProperty("DEAT") $!conjoint3.getProperty("DEAT:DATE") &agrave; $!conjoint3.getProperty("DEAT:PLAC")  #end,</p></td>
+      <td style="width: 200px; height: 24px;" align="right"
+ valign="top"><h4 class="minicolo">Ascendant Sosa:
+#foreach ($event in $INDI.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.famc.Husband.getProperties("_SOSA")) $event.Value  </h4> #end</td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 83px;" colspan="5"
+ rowspan="1" align="left" valign="top">#set($note=$conjoint3.getProperty("NAME:NOTE"))
+  #if ($note)
+      <h4>Les $!conjoint3.getProperty("NAME:SURN") : </h4><span class="inherit">"$!conjoint3.getProperty("NAME:NOTE")"</span>
+ #end</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+ ************************************************************************** <br>
+(Cette fiche a &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e le $date) par <A HREF="http://www.arvernes.com/V1/">GenJ, logiciel de g&eacute;n&eacute;alogie libre </A> - (Mod&egrave;le utilis&eacute;: ChriDan (d'apr&egrave;s Jean Chabaud et VisuGed <A HREF="http://visuged.org">Visuged </A> et ChriDanbio d'apr&egrave;s Daniel Durand [v. $version])
+</body>

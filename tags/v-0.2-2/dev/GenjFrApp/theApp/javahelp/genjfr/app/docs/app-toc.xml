@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+  <tocitem image="toplevelfolder"
+           text="La Généalogie avec GenjFr">
+    <tocitem target="genjfr.app.intro">Introduction à GenjFr </tocitem>
+    <tocitem expand="true" text="GenjFr - Sommaire" target="genjfr.app.about">
+        <tocitem text="Découverte de GenjFr" target="genjfr.app.discovering" />
+        <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
+    </tocitem>
+  </tocitem>
+</toc>

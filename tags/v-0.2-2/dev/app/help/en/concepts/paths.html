@@ -1,0 +1,67 @@
+<html>
+<body>
+
+<h2>Working with Tag Paths</h2>
+
+<p>
+ The section about <a href="./gedcom.html">Gedcom</a> has explained
+ the model of the information handled by GenJ. The supported entities
+ (e.g. Individuals) are like records of information wrapping values
+ in a hierarchical way. Every entity is identified by an id and GenJ
+ will render entities for you in several places.
+</p>
+
+<p>
+ If an id identifies an entity then how can one of its properties be
+ clearly identified? The answer is with Tag Paths. Let's look at an example:
+
+ <blockquote>
+ <pre>
+ 0 INDI @I001@
+   1 NAME Nils /Meier/
+   1 SEX M
+   1 BIRT
+     2 DATE 25 May 1970
+     2 PLAC Rendsburg, Germany
+   1 RESI
+     2 DATE FROM Sep 2001
+     2 ADDR 788 Harrison St
+       3 CITY San Francisco
+       3 POST 94107
+   1 NOTE @N003@
+ </pre>
+ </blockquote>
+
+ To identify one property in this tree of information one has to start
+ at the root INDI and then work to a node of interest like 
+ NAME. Note how every node starts with a tag identifying the
+ type of property contained (e.g. SEX or DATE). These are Gedcom standard
+ abbreviations.
+ If one appends the tags encountered separated by ':' the result is the 
+ Tag Path INDI:NAME.
+</p>
+
+<p>
+ Here is a full list of possible Tag Paths for this Individual:
+ <ul>
+  <li>INDI
+  <li>INDI:NAME
+  <li>INDI:SEX
+  <li><font color=gray>INDI:BIRT</font>
+  <li>INDI:BIRT:DATE
+  <li>INDI:BIRT:PLAC
+  <li><font color=gray>INDI:RESI</font>
+  <li><font color=gray>INDI:RESI:DATE</font>
+  <li>INDI:RESI:ADDR
+  <li>INDI:RESI:CITY
+  <li>INDI:RESI:POST
+  <li>INDI:NOTE
+ </ul>
+ Most of the time only some of these paths will be of use depending
+ on whether there's interest for the property's value of the last
+ node. The easiest case of where these paths come into play is
+ the <a href="../view/table.html">Table View</a>
+</p>
+
+</body>
+</html>

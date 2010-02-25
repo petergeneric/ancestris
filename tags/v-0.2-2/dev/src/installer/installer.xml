@@ -1,0 +1,128 @@
+<installation version="1.0">
+
+ <info>
+  <appname>GenealogyJ</appname>
+  <appversion>@version@</appversion>
+  <url>http://genj.sourceforge.net/</url>
+  <authors>
+   <author name="Nils Meier" email="nmeier@users.sourceforge.net"/>
+   <author name="and" email=""/>
+   <author name="many" email=""/>
+   <author name="other" email=""/>
+   <author name="individual" email=""/>
+   <author name="contributors" email=""/>
+  </authors>
+  <javaversion>1.4</javaversion>
+  </info>
+  
+  <listeners>
+    <listener installer="RegistryInstallerListener" uninstaller="RegistryUninstallerListener" >
+        <os family="windows"/>
+    </listener>
+  </listeners>
+  
+  <guiprefs resizable="yes" width="800" height="480"/>
+
+ <locale> 
+  <langpack iso3="eng"/>
+  <langpack iso3="fra"/>
+  <langpack iso3="deu"/>
+  <langpack iso3="spa"/>
+ </locale>
+ 
+ <native type="izpack" name="ShellLink.dll">
+    <os family="windows"/>
+ </native>
+ <native type="3rdparty" name="COIOSHelper.dll" stage="both">
+    <os family="windows"/>
+ </native>
+ 
+ <resources>
+  <res id="LicencePanel.licence" src="./app/doc/gpl.txt"/>
+  <res id="shortcutSpec.xml" src="./src/installer/shortcuts.xml" />
+  <res id="Unix_shortcutSpec.xml" src="./src/installer/shortcuts-unix.xml" />
+  <res id="Installer.image" src="./src/installer/GenJ.png" />
+  <res src="./src/installer/registry.xml" id="RegistrySpec.xml"/>
+ </resources> 
+
+ <panels>
+  <panel classname="HelloPanel"/>
+  <panel classname="LicencePanel"/>
+  <panel classname="TargetPanel"/>
+  <panel classname="ShortcutPanel"/>
+  <panel classname="PacksPanel"/>
+  <panel classname="InstallPanel"/>
+  <panel classname="FinishPanel"/>
+ </panels>
+
+ <packs>
+
+  <pack name="Application" required="yes">
+    <description>The minimum required for running GenealogyJ</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_app-@version@.zip" unpack="true"/>
+    <file targetdir="$INSTALL_PATH" src="src/installer/genj.ico"/>
+   </pack>
+
+  <pack name="Geography View" required="no" preselected="yes">
+    <description>A view extension that shows events geographically</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_geo-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Czech" required="no" preselected="no">
+   <description>Czech Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_cs-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Dutch" required="no" preselected="no">
+   <description>Dutch Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_nl-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="English" required="no" preselected="yes">
+   <description>English Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_en-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Finnish" required="no" preselected="no">
+   <description>Finnish Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_fi-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="French" required="no" preselected="no">
+   <description>French Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_fr-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="German" required="no" preselected="no">
+   <description>German Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_de-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Hungarian" required="no" preselected="no">
+   <description>Hungarian Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_hu-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Polish" required="no" preselected="no">
+   <description>Polish Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_pl-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Portuguese (Brazilian)" required="no" preselected="no">
+   <description>Portuguese (Brazilian) Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_pt_BR-@version@.zip" unpack="true"/>
+   </pack>
+  
+  <pack name="Russian" required="no" preselected="no">
+   <description>Russian Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_ru-@version@.zip" unpack="true"/>
+   </pack>
+   
+  <pack name="Spanish" required="no" preselected="no">
+   <description>Spanish Resources and Help</description> 
+    <file targetdir="$INSTALL_PATH" src="build/dist/genj_es-@version@.zip" unpack="true"/>
+   </pack>
+      
+  </packs>
+
+</installation>

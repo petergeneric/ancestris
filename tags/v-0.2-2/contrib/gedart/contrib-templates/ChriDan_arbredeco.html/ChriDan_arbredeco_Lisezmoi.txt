@@ -1,0 +1,13 @@
+FICHE "ARBRE DÉCORATIF"
+
+La fiche "arbre décoratif" (précédemment appelée fiche "zouli" affiche, sur une seule page, un arbre vertical avec quatre générations d'ancêtres et leurs renseignements d'état-civil.Cet arbre s'affiche sur une image d'arbre en arrière-plan(par défaut).
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.genj/gedart", ouvrez alors votre GenJ, cliquer droit sur un individu, choisir dans la liste des rapports "Fiches de renseignements", puis dans la liste déroulante, choisir "arbre décoratif de l'individu ", GenJ vous demande un nom de fichier (il faut auparavant avoir pensé à sélectionner dans "Rapports --> Options --> Montrer le résultat dans un fichier"), sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+Ouvrez alors le fichier obtenu dans Firefox (pour avoir à chaque fois, une ascendance par page, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 9".).Vous pouvez l'imprimer (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc...". Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussir les option d'impression des en-têtes et divers.
+
+ATTENTION, n'oubliez pas de joindre l'image de l'arbre en arrière-plan(par défaut) "oaktreeC.jpg" à votre répertoire de fiche. Si vous enregistrez la sortie *.html de votre rapport dans un autre répertoire (Mes Documents, par ex) : il suffit de copier ce fichier image dans ce répertoire, sinon l'arbre n'apparaîtra pas en arrière-plan.
+Vous pouvez modifier l'image d'origine "oaktreeC.jpg" en la remplaçant par une image *.jpg de votre choix, qui aurait les mêmes dimensions que celle par défaut.
+ 
+(texte du 30/09/2009 : Daniel Durand)
+
+
