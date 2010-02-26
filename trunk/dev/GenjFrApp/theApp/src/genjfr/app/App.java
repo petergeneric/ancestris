@@ -56,6 +56,9 @@ import javax.swing.JOptionPane;
 
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -131,16 +134,20 @@ public class App {
 
     public static boolean closing() {
         LOG.info("Shutdown");
+        saveModesIfRestartRequired();
         return center.nbDoExit();
     }
 
     public static void close() {
-            // persist options
-            OptionProvider.persistAll(REGISTRY);
-            // Store registry
-            Registry.persist();
-            // done
-            LOG.info("/Shutdown");
+        // persist options
+        OptionProvider.persistAll(REGISTRY);
+        // Store registry
+        Registry.persist();
+        // Reload modes if restart required
+        loadModesIfRestartRequired();
+        // done
+        LOG.info("/Shutdown");
+
     }
 
     /**
@@ -257,12 +264,13 @@ public class App {
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
 //                REGISTRY = checkOptionsWizard(REGISTRY);
-                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
                     putRegistryFromSettings(REGISTRY);
+                }
                 // Pour le moment il ne faut pas que je lnf soit mis a autre chose que java.
                 // ni pas les options, ni par l'assistant.
                 // On maintient la possibilite de changer mais le lnf reel utilise pas l'appli est java
-                REGISTRY.put("options.genj.app.Options.lookAndFeel","1");
+                REGISTRY.put("options.genj.app.Options.lookAndFeel", "1");
                 REGISTRY.persist();
                 REGISTRY = new Registry("genj");
                 // initialize options first (creates a registry view within the above registry only containing the options)
@@ -337,38 +345,6 @@ public class App {
 
         }
 
-        /**
-         * Launches Wizard for the options if never done and the module exists
-         * 
-         * @param registry
-         * @return
-         */
-        private Registry checkOptionsWizard(Registry registry) {
-
-            // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
-            PluginInterface pi = null;
-            for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
-                System.out.println("Plugin " + sInterface.getPluginName() + " loaded successfully.");
-                if (sInterface.getPluginName().equals("OptionsWizard")) {
-                    pi = sInterface;
-                    break;
-                }
-            }
-
-            // Run wizard module when found
-            // Also reload registry because the wizard does save a new set of options
-            if (pi != null) {
-                System.out.println("Launching Wizard...");
-                if (pi.launchModule(registry)) {
-                    registry = new Registry("genj");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "Error.noWizard.text"));
-            }
-
-            return registry;
-
-        }
     } //Startup
 
     /**
@@ -530,6 +506,7 @@ public class App {
             }
         }
     }
+
     public static void putRegistryFromSettings(Registry registry) {
         registry.put("options.genj.app.Options.language", NbPreferences.forModule(App.class).get("language", ""));
         registry.put("options.genj.app.Options.lookAndFeel", NbPreferences.forModule(App.class).get("skin", ""));
@@ -596,6 +573,72 @@ public class App {
         registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
         registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
         registry.put("options.genj.app.Options.maxLogSizeKB", NbPreferences.forModule(App.class).get("logSize", ""));
+    }
+
+    /**
+     * Exiting the application automatically saves modes stored in memory
+     * In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten
+     * This saves them to a backup directory before they get overwritten
+     */
+    static private void saveModesIfRestartRequired() {
+        if (!isRestartSet()) {
+            return;
+        }
+        // Now copy modes to a backup folder
+        String baseDir = System.getProperty("netbeans.user") + File.separator + "config" + File.separator + "Windows2Local";
+        File dirToSaveFile = new File(baseDir);
+        File dirTempFile = new File(baseDir + "Tmp");
+        try {
+            FileObject dirToSave = FileUtil.createFolder(dirToSaveFile);
+            FileObject dirTemp = FileUtil.createFolder(dirTempFile);
+            copyFolder(dirToSave, dirTemp);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+    }
+
+    /**
+     * Exiting the application automatically saves modes stored in memory
+     * In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten
+     * This reloads them from a backup directory after they have been overwritten so that next start uses the modes that were imported
+     */
+    static private void loadModesIfRestartRequired() {
+        if (!isRestartSet()) {
+            return;
+        }
+        // Now load modes to the backup folder
+        String baseDir = System.getProperty("netbeans.user") + File.separator + "config" + File.separator + "Windows2Local";
+        File dirTempFile = new File(baseDir + "Tmp");
+        File dirToLoadFile = new File(baseDir);
+        try {
+            FileObject dirTemp = FileUtil.createFolder(dirTempFile);
+            FileObject dirToLoad = FileUtil.createFolder(dirToLoadFile);
+            dirToLoad.delete();
+            dirToLoad = FileUtil.createFolder(dirToLoadFile);
+            copyFolder(dirTemp, dirToLoad);
+            dirTemp.delete();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private static boolean isRestartSet() {
+        String restartFlagFileStr = System.getProperty("netbeans.user") + File.separator + "var" + File.separator + "restart";
+        File restartFlagFile = new File(restartFlagFileStr);
+        return (restartFlagFile != null && restartFlagFile.exists());
+    }
+
+    private static void copyFolder(FileObject dirFrom, FileObject dirTo) throws IOException {
+        FileObject[] children = dirFrom.getChildren();
+        for (int i = 0; i < children.length; i++) {
+            FileObject fileObject = children[i];
+            if (fileObject.isFolder()) {
+                copyFolder(fileObject, dirTo.createFolder(fileObject.getNameExt()));
+            } else {
+                FileUtil.copyFile(fileObject, dirTo, fileObject.getName());
+            }
+        }
     }
 
 } //App

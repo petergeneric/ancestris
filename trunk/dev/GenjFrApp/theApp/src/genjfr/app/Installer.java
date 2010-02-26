@@ -20,65 +20,68 @@ import org.openide.windows.WindowManager;
  */
 public class Installer extends ModuleInstall {
 
+    private boolean restart = false;
+
     @Override
     public void restored() {
         // By default, do nothing.
         // Put your startup code here.
-            App.main(new String[]{});
-    if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+        App.main(new String[]{});
+        if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
-    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-        public void run() {
-            // any code here will be run with the UI is available
-                App.REGISTRY = checkOptionsWizard(App.REGISTRY);
-                LifecycleManager.getDefault().markForRestart();
-                LifecycleManager.getDefault().exit();
+                public void run() {
+                    // any code here will be run with the UI is available
+                    App.REGISTRY = checkOptionsWizard(App.REGISTRY);
+                    if (restart) {
+                        JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "WillRestart.text"));
+                        LifecycleManager.getDefault().markForRestart();
+                        LifecycleManager.getDefault().exit();
+                    }
+                }
+            });
         }
-       }
-    );
     }
 
     @Override
-    public boolean closing(){
+    public boolean closing() {
         return App.closing();
     }
 
     @Override
-    public void close(){
+    public void close() {
         App.close();
     }
 
-        /**
-         * Launches Wizard for the options if never done and the module exists
-         *
-         * @param registry
-         * @return
-         */
-        private Registry checkOptionsWizard(Registry registry) {
+    /**
+     * Launches Wizard for the options if never done and the module exists
+     *
+     * @param registry
+     * @return
+     */
+    private Registry checkOptionsWizard(Registry registry) {
 
-            // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
-            PluginInterface pi = null;
-            for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
-                System.out.println("Plugin " + sInterface.getPluginName() + " loaded successfully.");
-                if (sInterface.getPluginName().equals("OptionsWizard")) {
-                    pi = sInterface;
-                    break;
-                }
+        // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
+        PluginInterface pi = null;
+        for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+            System.out.println("Plugin " + sInterface.getPluginName() + " loaded successfully.");
+            if (sInterface.getPluginName().equals("OptionsWizard")) {
+                pi = sInterface;
+                break;
             }
-
-            // Run wizard module when found
-            // Also reload registry because the wizard does save a new set of options
-            if (pi != null) {
-                System.out.println("Launching Wizard...");
-                if (pi.launchModule(registry)) {
-                    registry = new Registry("genj");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "Error.noWizard.text"));
-            }
-
-            return registry;
-
         }
 
+        // Run wizard module when found
+        // Also reload registry because the wizard does save a new set of options
+        if (pi != null) {
+            System.out.println("Launching Wizard...");
+            restart = pi.launchModule(registry);
+            registry = new Registry("genj");
+        } else {
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "Error.noWizard.text"));
+        }
+
+        return registry;
+
+    }
 }
