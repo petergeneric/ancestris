@@ -41,7 +41,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
             performAction();
         }
 
-        if (exitFlag = true) {
+        if (exitFlag == true) {
             NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as below
         }
         
@@ -49,7 +49,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
             putRegistryFromSettings(registry);
         }
         
-        System.out.println("=== FIN  DU  WIZARD ===");
+        System.out.println("=== FIN  DU  WIZARD === ("+exitFlag+")");
         return exitFlag;
     }
 
@@ -77,10 +77,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
-        boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
-        if (!cancelled) {
-            exitFlag = true;
-        }
+        exitFlag = (wizardDescriptor.getValue() == WizardDescriptor.FINISH_OPTION);
     }
 
     /**
