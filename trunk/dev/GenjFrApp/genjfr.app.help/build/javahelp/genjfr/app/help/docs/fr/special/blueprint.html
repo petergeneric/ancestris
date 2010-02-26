@@ -1,0 +1,199 @@
+<html>
+
+<body>
+
+<h2>Les Calques</h2>
+
+<p>
+ Examiner une information Gedcom dans une structure hi&eacute;rarchis&eacute;e 
+ comme dans la <a href="../view/edit.html">Fen&ecirc;tre d'Edition</a> ou le 
+ <a href="../view/table.html">Tableau des Donn&eacute;es</a> est une chose. 
+ Fournir l'information d'une entit&eacute; dans une vue statique en 
+ 2D en est une autre. La visualisation de l'<a href="../view/tree.html">Arbre 
+ G&eacute;n&eacute;alogique</a> et la <a href="../view/entity.html">Visualisation 
+ d'Entit&eacute;</a> le font toutes deux. Elles pr&eacute;sentent les 
+ individus et les entit&eacute;s dans un espace rectangulaire fixe, 
+ sur votre &eacute;cran ou votre papier.
+</p>
+
+<p>
+ La technologie sous jacente utilis&eacute;e pour cela par GenJ est le 
+ langage HTML. Les instructions indiquant comment d&eacute;ployer une 
+ entit&eacute; sont appel&eacute;es un Calque. Il est form&eacute; de 
+ langage HTML standard avec l'ajout d'un nouvel &eacute;l&eacute;ment 
+ HTML "prop" (signifiant "propri&eacute;t&eacute;").
+</p>
+
+<a name="_blueprint_path_explanation_"></a>
+<div>
+ Voici un exemple :
+ <div style="margin-left: 30px;">
+ &lt;b&gt;<b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI</font><b>&gt;</b>&lt;/b&gt;<br>
+ <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:NAME</font><b>&gt;</b><br>
+ n&eacute; le <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:BIRT:DATE</font><b>&gt;</b><br>
+ &agrave; <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:BIRT:PLAC</font><b>&gt;</b>,<br>
+ vivant &agrave; <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:RESI:ADDR:CITY</font><b>&gt;</b><br>
+ et travaillant en tant que <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:OCCU</font><b>&gt;</b>.<br>
+ </div>
+ <br>
+ Ce qui donnera ceci :
+ <div style="margin-left: 30px;">
+ <b>I008</b> Meier, Nils n&eacute; le 25 Mai 1970 &agrave; 
+ Rendsburg, vivant &agrave; San Francisco et travaillant en 
+ tant que Programmeur.
+ </div>
+ <div style="margin-left: 100px;">
+ Donc :<br>
+ &lt;b&gt; ...............&lt;/b&gt; signifie que vous voulez que 
+ l'information repr&eacute;sent&eacute;e entre ces deux &eacute;l&eacute;ments 
+ soit en <b>gras</b> (c'est du langage 
+ html pur et dur - rien de sp&eacute;cifique &agrave; GenJ ici).<br>
+ <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI</font><b>&gt;</b>
+ va donner le num&eacute;ro d'identification de l'entit&eacute;.<br>
+ </div>
+</div>
+
+<p>
+ Comme vous pouvez le voir, l'argument "path" vers "prop" contient 
+ une identification <a href="../concepts/paths.html">Tag Path</a>
+ (Chemin d'Etiquette) indiquant comment redonner le texte 
+ r&eacute;dig&eacute;. Voici comment les valeurs suivantes des 
+ propri&eacute;t&eacute;s sont solutionn&eacute;es&nbsp;:
+ <blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td><font color="blue">path=...</font></td>
+        <td>r&eacute;sultat</td>
+        <td>Crit&egrave;re d'un Individu ...</td>
+      </tr>
+      <tr>
+        <td>INDI </td>
+        <td>I008 </td>
+        <td>ID (num&eacute;ro d'identification)</td>
+      </tr>
+      <tr>
+        <td>INDI:NAME </td>
+        <td>Meier, Nils</td>
+        <td>Nom</td>
+      </tr>
+      <tr>
+        <td>INDI:BIRT:DATE </td>
+        <td>25 Mai 1970</td>
+        <td>Date de naissance</td>
+      </tr>
+      <tr>
+        <td>INDI:BIRT:PLACE </td>
+        <td>Rendsburg </td>
+        <td>Lieu de naissance</td>
+      </tr>
+      <tr>
+        <td>INDI:RESI:ADDR:CITY </td>
+        <td>San Francisco</td>
+        <td>Ville de r&eacute;sidence</td>
+      </tr>
+      <tr>
+        <td>INDI:OCCU </td>
+        <td>Programmeur</td>
+        <td>Profession</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+<br>
+En utilisant diff&eacute;rents calques les m&ecirc;mes
+donn&eacute;es peuvent &ecirc;tre affich&eacute;es de
+diff&eacute;rentes mani&egrave;res, car diff&eacute;rents 
+ensembles d'informations, diff&eacute;rentes mises en page et 
+diff&eacute;rentes couleurs peuvent &ecirc;tre choisies&nbsp;:
+
+<blockquote><img src="../../images/screenshots/blueprint1.png"></blockquote>
+</p>
+
+<p>
+<div>
+ Les vues utilisant des calques offriront de les s&eacute;lectionner 
+ et de les &eacute;diter &agrave; travers leurs options. Les calques 
+ pr&eacute;d&eacute;finis ne peuvent &ecirc;tre chang&eacute;s mais 
+ les calques faits par l'utilisateur peuvent &ecirc;tre chang&eacute;s 
+ une fois cr&eacute;&eacute;s (les calques sont g&eacute;r&eacute;s 
+ globalement et non par vue).<br>
+ Deux types de vues vous permettent d'ouvrir un &eacute;diteur pour 
+ charger un nouveau calque, pour en cr&eacute;er un nouveau.<br>
+ Si vous avez r&eacute;cup&eacute;r&eacute; des calques faits par 
+ quelqu'un d'autre, vous pourrez de la m&ecirc;me mani&egrave;re 
+ le charger, et/ou le modifier comme bon vous semble. Ces deux vues, 
+ comme je le disais ci-dessus, sont&nbsp;:<br>
+ <div style="margin-left: 25px;">
+ - La fen&ecirc;tre Arbre G&eacute;n&eacute;alogique,<br>
+ - La fen&ecirc;tre Entit&eacute;.<br>
+ </div>
+ </div>
+</p>
+<br>
+
+<b><U>ORGANISATION</U></b>
+
+<p>
+ <b><font color="red">Note</font></b>&nbsp;: Les calques sont une 
+ fonctionnalit&eacute; tr&egrave;s avanc&eacute;e qui n'a pas 
+ besoin d'&ecirc;tre assimil&eacute;e par tous. Les calques par 
+ d&eacute;faut seront suffisants pour 80% des utilisateurs.<br>
+ Si cependant vous voulez mieux comprendre comment cr&eacute;er, charger, 
+ &eacute;changer vos calques, voil&agrave; quelques informations.
+</p>
+
+<p>
+  On va supposer que vous ayez r&eacute;ussi &agrave; faire un calque 
+  g&eacute;nial qui vous va &agrave; merveille. Vous avez, peut 
+  &ecirc;tre utilis&eacute; l'&eacute;diteur de GenJ pour le 
+  cr&eacute;er, ou bien vous avez utilis&eacute; un &eacute;diteur 
+  externe &agrave; GenJ, car vous vous y connaissez en mati&egrave;re 
+  de langage HTML. N'oubliez pas cependant 
+  les <a href="#_blueprint_path_explanation_">particularismes</a> qu'il 
+  vous faut respecter.<br>
+  Ce cadre, on va aussi supposer que l'ayez nomm&eacute; "LeNomDeVotreCalque".<br>
+  Et bien sachez que ce cadre va &ecirc;tre enregistr&eacute; dans 
+  un sous r&eacute;pertoire appel&eacute; "<b>blueprints/</b>" qui se 
+  situe sous le r&eacute;pertoire "<b>.genj/</b>". Je vous laisse voir 
+  dans cette aide o&ugrave; il est situ&eacute; chez vous suivant 
+  votre Syst&egrave;me d'Exploitation (Operating System), mais par 
+  exemple, sous Linux, le 
+  r&eacute;pertoire est sous "<b>genj/.genj/blueprints</b>".<br>
+  Sous ce sous-r&eacute;pertoire, vous allez trouver un sous 
+  sous-r&eacute;pertoire par entit&eacute; (un pour INDi, un pour 
+  FAM, etc... ) et &agrave; l'int&eacute;rieur, vous avez votre calque 
+  personnel. Si bien s&ucirc;r, vous n'avez jamais confectionn&eacute; 
+  de calques persos, vous n'aurez rien dedans ;-).<br>
+  Voil&agrave; la structure :<br>
+  <div style="margin-left: 10px; font-style: italic; color: #666666">
+   <li>.genj/
+   <div style="margin-left: 15px;">
+     blueprints/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAM/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INDI/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OBJE/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;REPO/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SOUR/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUBM/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LeNomDeVotreCalque.html<br>
+   </div>
+   </li>
+  </div>
+  <br>
+  Comme vous le voyez, ces fichiers n'&eacute;tant pas 
+  &eacute;cras&eacute;s lors d'une mise &agrave; jour, vous ne risquez 
+  pas de les perdre. Cependant, et je le dis souvent, il est toujours 
+  tr&egrave;s prudent d'en faire des copies de sauvegarde.<br>
+  <br>
+</p>
+
+</body>
+</html>

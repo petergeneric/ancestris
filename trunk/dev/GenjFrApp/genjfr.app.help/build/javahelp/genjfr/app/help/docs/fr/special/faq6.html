@@ -1,0 +1,1701 @@
+<html>
+
+<body>
+
+<h2>Questions fr&eacute;quemment pos&eacute;es</h2>
+
+<a name="_Sommaire_"></a>
+
+<br>
+
+<hr>
+
+<table width="100%" summary="Navigation header">
+ <tr>
+  <th colspan="3" align="center">Chapitre 6.</th>
+ </tr>
+ <tr>
+  <td width="20%" align="left">
+   <a accesskey="p" href="./faq5.html">Pr&eacute;c&eacute;dent</a>
+  </td>
+  <th width="60%" align="center">Installation de Java et de GenJ</th>
+  <td width="20%" align="right">
+   <a accesskey="n" href="./faq7.html">Suivant</a>
+  </td>
+ </tr>
+</table>
+
+<hr>
+
+
+<p>
+
+<u>VI</u> - <u>Installation de Java et de GenJ</u><br>
+<ol>
+
+ <li> <a href="#VI-1">Installation de Java et de GenJ&nbsp;?</a></li>
+</ol>
+
+
+<table width="100%" border="0">
+  <tr>
+    <td width="60%">
+      &nbsp;<br>
+    </td>
+    <td width="40%">
+      <p align="left">
+        <font size="-2">
+          En cliquant sur la lettre "<font color="red">Q</font>" en 
+          rouge situ&eacute;e en face de chaque question, vous pouvez 
+          remonter au sommaire de ces diff&eacute;rentes questions.<br>
+        </font>
+      </p>
+    </td>
+  </tr>
+</table>
+
+</p>
+
+<center>
+  -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+</center>
+
+<br>
+
+<b><u>VI</u> - <u>Installation de Java et de GenJ</u></b>
+
+<ol>
+
+<a name="VI-1"></a>
+<li>
+<p>
+  <b><a href="#_Sommaire_"><font color="ff3333">Q</font></a></b>&nbsp;-&nbsp;<u>L'installation 
+  de Java et de GenJ</u>&nbsp;?<br>
+  <b>R</b>&nbsp;-&nbsp;Voil&agrave; un r&eacute;sum&eacute; de la 
+  mani&egrave;re d'installer le programme Java et GenJ sur votre 
+  machine.<br>
+  <br>
+  
+  <a name="_toc_"></a>
+  
+  <table border="0" width="100%" bgcolor="#ffffcc">
+   <tr>
+    <td width="100%">
+     <font size="+1">
+     <b><u>
+     SOMMAIRE<br>
+     </u></b>
+     </font>
+     <br>
+     <div style="margin-left: 0px;">
+      <font size="+1">
+      <b><a href="#_procedure_installation_java_genj_">
+      Proc&eacute;dure d'installation de Java et GenJ</a> sur votre ordinateur</b>
+      </font>
+      <ul>
+       <b><a href="#_introduction_">Introduction</a></b> - A lire en 
+       premier lieu.
+      </ul>
+      <ul>
+       <b>A - Installation sous <a href="#_windows_">Windows</a></b>
+       <ul>
+        1&deg;) Installation de <a href="#_java_windows_">Java</a><br>
+        2&deg;) Installation de <a href="#_genj_windows_">GenJ</a>
+       </ul>
+       <b>B - Installation sous <a href="#_linux_">Linux</a></b>
+       <ul>
+        1&deg;) Installation de <a href="#_java_linux_">Java</a><br>
+        2&deg;) Installation de <a href="#_genj_linux_">GenJ</a>
+       </ul>
+       <b>C - Installation sous <a href="#_mac_">Mac</a></b>
+       <ul>
+        1&deg;) Installation de <a href="#_java_mac_">Java</a><br>
+        2&deg;) Installation de <a href="#_genj_mac_">GenJ</a>
+       </ul>
+      </ul>
+     </div>
+    </td>
+   </tr>
+  </table>
+
+
+<br>
+<br>
+
+
+<a name="_procedure_installation_java_genj_"></a>
+<font size="+1">
+ <b><u>Proc&eacute;dure d'installation de Java et GenJ</u></b><br>
+</font>
+<br>
+
+<a name="_introduction_"></a>
+
+  <b><u>Introduction</u></b>
+  <p>
+  Tout d'abord, il convient de savoir sous quel Operating System 
+  (Syst&egrave;me d'Exploitation) vous &ecirc;tes. Est-ce Windows, 
+  Linux ou Mac ?<br>
+  Je suis oblig&eacute; de laisser de cot&eacute; OS/2, 
+  peut-&ecirc;tre quelqu'un sous cet environnement pourra t'il 
+  compl&eacute;ter cette page d'Aide.<br>
+  <br>
+  On regardera donc les trois environnements, Windows, Linux et Mac, 
+  mais tout d'abord, il y a un pr&eacute;-requis : installer la 
+  machine virtuelle Java. Si vous ne disposez pas de Java, pas de 
+  salut. Il va falloir vous connecter sur l'Internet sur le site de 
+  <a href="http://java.sun.com">Sun Microsystem</a> pour trouver la 
+  version correspondant &agrave; votre environnement. J'essaierai un 
+  peu plus loin de vous donner des liens mais peut-&ecirc;tre seront-ils 
+  obsol&egrave;tes quand vous lirez ces lignes, si personne n'a 
+  pens&eacute; &agrave; les mettre &agrave; jour. En ce qui concerne 
+  Mac, allez directement &agrave; la section relative &agrave; 
+  l'installation de Java pour voir les sp&eacute;cificit&eacute;s.<br>
+  <u><b>Remarque</b></u> : Souvent dans ce document je vous dit de 
+  reprendre tel et tel fichiers. Vous pouvez faire plus simple en 
+  reprenant un fichier qui comprend tout ce dont vous avez besoin 
+  et qui s'appelle genj_arvernes.zip disponible sur mon site 
+  <a href="#_site_arvernes_">Arvernes</a>. Si cependant vous &ecirc;tes 
+  sous Windows, vous devrez d'abord reprendre le fichier 
+  genj_win-2.4.2.exe, l'installer, et ensuite seulement mettre le 
+  genj_arvernes.zip par dessus.<br>
+  <br>
+ 
+<div style="margin-left: 10px;"> <!-- Debut de la section I sur l'installation de Java et GenJ     -->
+
+ <a name="_windows_"></a>
+ <font size="+1">
+ <b><u>A</u> - <u>Installation sous Windows</u></b><br>
+ </font>
+ 
+ <br>
+ 
+ <!-- Debut de l'installation sous Windows                      -->
+ 
+<a name="_java_windows_"></a>
+  <font size="+1">
+  <b><u>1&deg;)</u> - <u>Premi&egrave;re &eacute;tape : installation 
+  de Java.</u></b><br>
+  </font>
+  <br>
+  Comme nous l'avons dit &eacute;crit plus haut, il vous faut 
+  r&eacute;cup&eacute;rer la derni&egrave;re version de Java sur le 
+  site de Sun Microsystem. Pour cela essayez cette URL : 
+  <a href="http://java.com/fr/download/windows_manual.jsp">
+  JRE pour Windows, version 1.5.0.09</a><br>
+  Reprenez le fichier <b>jre-1_5_0_09-windows-i586-p-s.exe</b> (il fait 
+  16,00 Megas et est d&eacute;nomm&eacute; Windows (Installation hors 
+  ligne) <i>(n'oubliez pas que pour pouvoir le reprendre, 
+  il faut que vous acceptiez au pr&eacute;alable 
+  la licence, donc cochez la case "Accept Licence Agreement", juste 
+  au dessus si cela vous est demand&eacute;)</i>. Je n'ai aucune 
+  exp&eacute;rience windows, mais je pense que c'est ce qui sera le 
+  plus facile &agrave; installer.<br>
+  Une fois que c'est t&eacute;l&eacute;charg&eacute;, vous l'installez. 
+  Je pense que vous savez faire &ccedil;a, dans l'explorateur de 
+  fichier. Si 
+  Windows ne vous propose pas de l'installer &agrave; la fin du 
+  t&eacute;l&eacute;chargement, vous ouvrez l'explorateur de fichiers, 
+  vous retrouvez l'emplacement que Windows a choisi pour mettre le 
+  fichier ci-dessus, et vous cliquez dessus. L'installation du 
+  "Runtime Java" va s'effectuer sans probl&egrave;me.<br>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+  <br>
+  
+<a name="_genj_windows_"></a>
+  <font size="+1">
+  <b><u>2&deg;)</u> - <u>Deuxi&egrave;me &eacute;tape : Installation de GenealogyJ.</u></b><br>
+  </font>
+  <br>
+   <ol>
+   
+    <li>
+     T&eacute;l&eacute;chargez GenJ (~3MB). A l'heure o&ugrave; je 
+     vous parle, vous devriez le trouver l&agrave;&nbsp;:<br>
+     <a href="http://prdownloads.sourceforge.net/genj/genj_win-2.4.2.exe?download">
+     genj_win-2.4.2.exe</a>.<br>
+     Maintenant lancer genj_win-2.4.2.exe.<br>
+     Vous allez voir appara&icirc;tre plusieurs fen&ecirc;tres, il faut 
+     confirmer chaque &eacute;cran par "Next".<br>
+     Ensuite l'installateur vous propose de choisir l'emplacement souhait&eacute;, je vous 
+     conseille de l'installer comme tous les programmes windows, dans 
+     "c:\Program Files\GenealogyJ", c'est l'option par d&eacute;faut, 
+     autant la prendre.<br>
+     La fen&ecirc;tre suivante vous permet de s&eacute;lectionner le 
+     langage ("Select Components"), donc &agrave; priori, vous choisirez 
+     "French Resources" si vous voulez qu'il cause le fran&ccedil;ais 
+     notre petit programme.<br>
+     <br>
+     <center>
+     <img src="../images/screenshots/faq_install_windows1.jpg" alt="image 1 d'installation de GenJ sous Windows">
+     </center>
+     <br>
+     L'&eacute;cran suivant vous permet de s&eacute;lectionner le menu 
+     de GenJ dans --> D&eacute;marrage --> Programmes ("Select Menu folder").<br>
+     Il vous indique ensuite la r&eacute;capitulation de vos 
+     diff&eacute;rents choix pour valider, revenir en arri&egrave;re ou 
+     abandonner. A priori, vous devez cliquer sur "Install".<br>
+     Il installe, donc vous n'avez pas le temps d'aller au petit coin, 
+     ni de prendre un verre, c'est hyper rapide.<br>
+     Logiquement, vous devriez arriver sans probl&egrave;me &agrave; ce 
+     stade&nbsp;:<br>
+     <br>
+     <center>
+     <img src="../images/screenshots/faq_install_windows2.jpg" alt="image 2 d'installation de GenJ sous Windows">
+     </center>
+    </li>
+    
+    <br>
+    
+    <li>
+     Lancez GenealogyJ par l'interm&eacute;diaire du raccourci 
+     &agrave; partir du menu D&eacute;marrer.<br>
+     <br>
+     <center>
+     <img src="../images/screenshots/faq_install_windows3.jpg" alt="image 3 d'installation de GenJ sous Windows">
+     </center>
+    </li>
+    
+    <br>
+    
+    <li>
+     La premi&egrave;re fois que le programme se lance, ou si vous 
+     effectuez une mise &agrave; jour (vous installez une version plus 
+     r&eacute;cente), vous allez voir s'afficher ce qui en anglais 
+     s'appelle "Disclaimer" (Avertissement, comme quoi vous utilisez ce 
+     programme sous votre responsabilit&eacute;, etc... <i>enfin si vous 
+     ou l'un des membres de votre Equipe venait  &agrave; &ecirc;tre 
+     captur&eacute;, le gouvernement nierait toute implication - Mission 
+     Impossible r&eacute;miniscences</i>).<br>
+    </li>
+    
+    <br>
+    
+    <li>
+     Le programme se lance, mais suivant votre syst&egrave;me, 
+     votre pare-feu peut vous demander une autorisation d'ex&eacute;cuter 
+     le programme javaw.exe. Bien s&ucirc;r il faut lui dire oui sans 
+     quoi ben vous resterez avec un joli programme sur votre disque 
+     dur mais, mis &agrave; part le fait qu'il occupera de la place, 
+     vous ne risquerez pas d'en tirer quelque chose.<br>
+     <br>
+     <center>
+     <img src="../images/screenshots/faq_install_windows4.jpg" alt="image 4 d'installation de GenJ sous Windows">
+     </center>
+    </li>
+    
+    <br>
+    
+    <li>
+     Maintenant vous remarquerez que bien que vous ayez 
+     demand&eacute; &agrave; ce que GenJ vous cause en fran&ccedil;ais, 
+     il s'&eacute;vertue &agrave; vous causer dans la langue de 
+     Shakespeare.<br>
+     Pas grave, sur l'&eacute;cran principal de GenJ, vous avez un menu 
+     d&eacute;roulant qui s'appelle Views. Ouvrez-le, et choisissez 
+     la ligne "Options". Dans la fen&ecirc;tre qui s'ouvre vous verrez 
+     une option "Language (After Restart)", prenez bien s&ucirc;r la 
+     langue de Moli&egrave;re. Une fois que c'est fait, vous cliquez sur 
+     "OK" pour valider votre choix, et vous refermez GenJ. Maintenant si 
+     vous le relancez, il vous cause la fran&ccedil;aise mieux que moi ;-).<br>
+    </li>
+    
+    <br>
+    
+<a name="_glossaire_raccourci_windows_"></a>
+    <li>
+     Vous pouvez aussi pour faciliter les choses, cr&eacute;er un 
+     <b>raccourci</b> sur le bureau par "D&eacute;marrer - Programmes - 
+     GenealogyJ - Genealogy2.4" puis clic droit sur le titre du 
+     programme et "Envoyez vers - Bureau (cr&eacute;er un raccourci)".<br>
+    </li>
+    
+    <br>
+    
+<a name="_genj_look_windows_"></a>
+    <li>
+     Maintenant, si vous voulez changer un peu le look de GenJ, 
+     il vous faut t&eacute;l&eacute;charger une archive 
+     suppl&eacute;mentaire que vous trouverez sur mon site 
+     <a href="#_site_arvernes_">Arvernes</a>. Le fichier qu'il 
+     faut prendre s'appelle "<b>genj_lnf-xxxx.zip</b>" (l&agrave; encore, 
+     les xxxx sont &agrave; remplacer par le num&eacute;ro de version 
+     qui sera disponible quand vous reprendrez le fichier).<br>
+     Une fois en votre possession, il vous faudra placer cette 
+     archive dans le r&eacute;pertoire "c:\Program Files\GenealogyJ" et 
+     le d&eacute;compacter dans ce r&eacute;pertoire.<br>
+     Normalement, il devra se cr&eacute;er un sous-r&eacute;pertoire qui 
+     s'appellera "lnf". Ainsi vous aurez quelque chose du genre 
+     "c:\Program Files\GenealogyJ\lnf" 
+     avec dans ce sous-r&eacute;pertoire, des fichiers et autres sous 
+     r&eacute;pertoires.<br>
+     Maintenant qu'il est install&eacute;, vous pouvez l'effacer, car 
+     vous n'en aurez plus besoin.<br>
+     Maintenant, pour changer l'aspect de GenJ, quand vous l'aurez 
+     lanc&eacute;, il vous faudra rentrer dans le menu "Visualisations - 
+     Options", et faire votre choix sur le look que vous 
+     pr&eacute;f&eacute;rez. La ligne qu'il faut regarder est "Aspect 
+     (Choisissez un th&egrave;me)".<br>
+     Il est fort possible que la taille de la fen&ecirc;tre qui s'ouvre 
+     soit insuffisante pour que vous puissiez voir les options et 
+     la mani&egrave;re de les choisir. Pour ce faire, avec votre souris, 
+     il vous faut vous positionner dans le coin droit en bas de 
+     ladite fen&ecirc;tre d'options qui vient de s'ouvrir, et en cliquant 
+     avec le bouton gauche, tout en maintenant le bouton de votre 
+     souris, l'agrandir &agrave; la taille qui vous satisfera.<br>
+     Normalement, vous devriez voir le nouveau look de GenJ en activant 
+     le th&egrave;me de votre choix.<br>
+     <u>Remarque</u> :<br>
+     <ul>
+      Il est possible de cr&eacute;er ses propres 
+      th&egrave;mes, par exemple j'ai cr&eacute;&eacute; le th&egrave;me 
+      <i>Skin(arvernesthemepack.zip)</i>. N'h&eacute;sitez pas &agrave; 
+      voir comment il est fait, et &agrave; r&eacute;aliser quelque 
+      chose de votre cru. Si par la suite vous vouliez en faire profiter 
+      la communaut&eacute; des utilisateurs de GenJ, ce serait sympa, 
+      merci d'avance.<br>
+     </ul>
+    </li>
+    
+    <br>
+    
+<a name="_genj_update_windows_"></a>
+    <li>
+     Il est temps maintenant de mettre &agrave; jour votre version 
+     avec les derniers d&eacute;veloppements de GenJ. Pour cela il va 
+     falloir que vous alliez sur le site 
+     <a href="#_site_arvernes_">Arvernes</a> et que vous 
+     repreniez au moins les fichiers suivants&nbsp;:<br>
+     <ol>
+      <li>
+       genj_app-xxx.zip<br>
+      </li>
+      <li>
+       genj_fr-xxx.zip<br>
+      </li>
+      <li>
+       genj_geo-xxx.zip<br>
+      </li>
+      <li>
+       genj_applet-xxx.zip<br>
+      </li>
+     </ol>
+     Vous devez commencer par fermer GenJ, vu qu'on va &eacute;craser 
+     ses fichiers. Il n'aimerait peut &ecirc;tre pas rester ouvert.<br>
+     Vous allez d&eacute;compacter <b><u>TOUS</u></b> ces fichiers dans le 
+     r&eacute;pertoire de genj, donc dans "c:\Program Files\GenealogyJ".<br>
+     Si Windows vous demande si vous voulez &eacute;craser les fichiers 
+     d&eacute;j&agrave; existants, r&eacute;pondez lui "oui".<br>
+     Une fois que vous avez fini de bien d&eacute;compacter ces fichiers, 
+     vous pouvez les effacer, vous n'en aurez plus besoin.<br>
+    </li>
+    
+    <br>
+    
+    <li>
+     Si vous avez d&eacute;j&agrave; un fichier gedcom, je vous 
+     conseille de le copier dans "c:\Program Files\GenealogyJ\gedcom", 
+     avant de relancer GenJ. Si vous n'en avez pas, on passe cette 
+     &eacute;tape.<br>
+     Maintenant, vous pouvez lancer GenJ.<br>
+     Je suppose que vous ne savez pas quoi faire avec la fen&ecirc;tre 
+     qui appara&icirc;t. Sachez que vous &ecirc;tes devant ce qu'on 
+     appelle le Centre de Contr&ocirc;le.<br>
+     Pour ouvrir un fichier gedcom d&eacute;j&agrave; existant, ou pour 
+     en cr&eacute;er un, il vous faut cliquer sur l'ic&ocirc;ne "Ouvrir", ou 
+     choisir "Ouvrir" dans le menu d&eacute;roulant auquel vous 
+     acc&eacute;dez par l'option "Fichier".<br>
+     Si vous n'avez pas encore de fichier gedcom ou si vous 
+     voulez en cr&eacute;er un nouveau, cliquez sur "Nouveau". Si au 
+     contraire vous avez d&eacute;j&agrave; un fichier gedcom, cliquez 
+     sur "Local".<br>
+     Si vous choisissez de cr&eacute;er un fichier gedcom "Nouveau", 
+     GenJ vous demandera le nom que vous voulez lui donner. Deux choses 
+     sont n&eacute;cessaires :<br>
+     <ul>
+      <li>
+       D'une part, dans la fen&ecirc;tre du navigateur 
+       qui s'ouvre, vous devez d&eacute;placer l'endroit o&ugrave; le fichier 
+       va &ecirc;tre cr&eacute;&eacute;. Placez vous dans 
+       "c:\Programs Files\GenealogyJ\gedcom".<br>
+      </li>
+      <li>
+       Ensuite, vous devez lui attribuer le nom de fichier de votre 
+       choix, GenJ demande "File name". Attribuez-lui le nom que 
+       vous voulez, allons-y pour "jacques_chirac.ged" ou 
+       "bernadette.ged".<br>
+      </li>
+     </ul>
+    </li>
+    
+    <br>
+    
+    <li>
+     Maintenant, au stade o&ugrave; vous en &ecirc;tes, vous devez 
+     consulter le 
+     <a href="#_perfectionnement_toc_">chapitre 
+     sur le perfectionnement</a>, notamment pour agr&eacute;menter la 
+     mani&egrave;re dont GenJ vous pr&eacute;sente vos donn&eacute;es 
+     <i>(paragraphe : Agr&eacute;menter la pr&eacute;sentation selon 
+     vos souhaits)</i>.<br>
+     Je vous conseille de le faire, car vous verrez que vous 
+     pourrez lui changer totalement son aspect et ce qui 
+     vous aura sembl&eacute; quelque chose d'un peu r&eacute;barbatif, 
+     va devenir bien au contraire, tr&eacute;s tr&eacute;s 
+     agr&eacute;able. Bon Vent.<br>
+    </li>
+    
+   </ol>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+  <br>
+  
+  <font size="+1"><b><u>REMARQUE</u> :</b><br></font>Pour bien comprendre comment Windows installe GenJ, voil&agrave; 
+  grosso modo les endroits o&ugrave; vous trouverez vos fichiers.<br>
+  <u>N.B.</u>&nbsp;Il est possible que les informations que je donne ne 
+  soient pas tout &agrave; fait exactes, car je ne fais pas tourner 
+  Windows, mais Linux, et j'ai l'impression que suivant les versions 
+  de Windows, les localisations de ces fichiers sont quelque peu 
+  diff&eacute;rentes (Windows 98, 2000, XP, XP Pro, ....).<br>
+  <i>(J'ai pr&eacute;f&eacute;r&eacute; rajouter cette information 
+  pour les utilisateurs de Windows, car les choses sont totalement 
+  diff&eacute;rentes sous Linux)</i>&nbsp;:<br>
+  
+  <br>
+  
+  <ol>
+  
+   <li>
+    Dans C:\Program Files\GenealogyJ, vous devriez trouver&nbsp;:<br>
+    - un r&eacute;pertoire <font color="#666666">contrib\<br></font>
+    - un r&eacute;pertoire <font color="#666666">doc\<br></font>
+    - un r&eacute;pertoire <font color="#666666">help\<br></font>
+    - un r&eacute;pertoire <font color="#666666">lib\<br></font>
+    - un r&eacute;pertoire <font color="#666666">gedcom\<br></font>
+    - un r&eacute;pertoire <font color="#666666">report\<br></font>
+    - puis, plusieurs fichiers, &agrave; savoir :<br>
+    <ol>
+     <font color="#666666">genj.ico, run.jar, unins000.exe, run.bat, 
+     run.sh, run.cmd, et unins000.dat</font>.<br>
+    </ol>
+    <br>
+    <center>
+    <img src="../images/screenshots/faq_install_windows5.jpg" alt="image 5 d'installation 
+    de GenJ sous Windows">
+    </center>
+    <br>
+    Vous pouvez voir qu'il n'appara&icirc;t pas le sous-r&eacute;pertoire 
+    "lnf" dont je parlais juste au dessus. Tout simplement, parce que 
+    quand cette capture d'&eacute;cran a &eacute;t&eacute; faite, le 
+    fichier en question n'avait pas encore &eacute;t&eacute; 
+    install&eacute;.<br>
+   </li>
+   
+   <br>
+   
+<a name="_localisation_fichiers_windows_2_"></a>
+   <li>
+    Dans C:\Documents and Settings\votre_repertoire\ vous devriez 
+    trouver les &eacute;l&eacute;ments suivants (j'ai 
+    pr&eacute;f&eacute;r&eacute; faire une capture d'&eacute;cran, 
+    plut&ocirc;t qu'un listing, ce sera plus parlant)&nbsp;:<br>
+    <br>
+    <center>
+    <img src="../images/screenshots/faq_install_windows6.jpg" alt="image 6 d'installation 
+    de GenJ sous Windows">
+    </center>
+    <br>
+    Vous voyez qu'il y a au moins deux r&eacute;pertoires 
+    int&eacute;ressants, &agrave; savoir&nbsp;:<br>
+    <ul>
+     <li>
+      .genj\<br>
+      Dedans vous devriez avoir tous les fichiers dont GenJ va avoir 
+      besoin pour conserver les param&egrave;tres de l'application. 
+      Ainsi vous aurez dans ce r&eacute;pertoire&nbsp;:<br>
+      <ol>
+       <li>
+        <b>monfichier.ged.properties</b><br>
+        Ce fichier contient les param&egrave;tres d'affichage de votre 
+        fichier gedcom ; taille des fen&ecirc;tres, signets, etc...
+       </li>
+       <li>
+        <b>genj-reports.properties</b><br>
+        L&agrave;, ce fichier contient les param&egrave;tres que vous 
+        aurez choisis pour les rapports que vous faites tourner.
+       </li>
+<a name="_localisation_fichiers_windows_3_"></a>
+       <li>
+        <b>genj.properties</b><br>
+        Celui-ci est le plus important, car c'est lui qui reprend 
+        tous les param&egrave;tres de l'application, par exemple, 
+        quels sont les fichiers gedcom qui ont &eacute;t&eacute; 
+        ouverts, la taille du Centre de Controle, etc...
+       </li>
+       <li>
+        <b>monfichier.geo.properties</b><br>
+        Ce fichier est celui qui va contenir les donn&eacute;es 
+        g&eacute;ographiques (localisation) des villes, lieudits, etc.... 
+        que vous aurez entr&eacute; manuellement.<br>
+        Regardez un peu plus loin ce qui est mis sur le module 
+        additionnel &agrave; GenJ, le module 
+        <a href="#_genj_install_geo_">Geo</a>".<br>
+        Sous Windows XP Pro, on m'a dit que ce fichier devait 
+        &ecirc;tre sous&nbsp;:<br>
+        C:\Documents&nbsp;and&nbsp;Settings\Utilisateur\Application&nbsp;Data\Genj<br>
+        (Pour rechercher l'endroit o&ugrave; se trouve les fichiers 
+        il faut cocher l'option "rechercher dans les fichiers 
+        et les dossiers cach&eacute;s").
+       </li>
+       <li>
+        <b>genj.log</b><br>
+        Ce fichier est important, car si vous avez des soucis, 
+        c'est lui qu'il faudra envoyer aux d&eacute;veloppeurs, donc 
+        ne l'effacez pas, de toutes fa&ccedil;ons suivant les 
+        param&egrave;tres que vous allez mettre dans les options, sa 
+        taille pourra &ecirc;tre limit&eacute;e &agrave; xxx koctets.
+       </li>
+      </ol>
+     </li>
+     <li>
+      .java\<br>
+      Dedans vous aurez tous vos param&egrave;tres de la machine 
+      virtuelle java.<br>
+     </li>
+    </ul>
+    <br>
+    <b><u>Remarque</u></b> :<br>
+    <ul>
+     Sous les versions de Windows un peu 
+     anciennes, ce qui est mis au dessus reste vrai, donc le 
+     r&eacute;pertoire "<b>.genj</b>" se trouve sous&nbsp;:<br>
+     <ul>
+      c:\Documents and Settings\nom_d_utilisateur\.genj<br>
+     </ul>
+     Ce qu'il faut savoir c'est que si ce r&eacute;pertoire n'existe 
+     pas sur votre syst&egrave;me, l'installation ira se mettre comme 
+     indiqu&eacute;e ci-apr&eacute;s.<br>
+     Pour les versions plus r&eacute;centes de Windows, et si le 
+     r&eacute;pertoire cit&eacute; ci-dessus n'existe pas, vous devriez 
+     trouver ce r&eacute;pertoire sous&nbsp;:<br>
+     <ul>
+      c:\Documents and Settings\nom_d_utilisateur\application data\genj<br>
+     </ul>
+     Vous voyez qu'il ne s'appelle plus ".genj", mais "genj".<br>
+     Le r&eacute;pertoire "<b>geo</b>" lui va se trouver au moins dans deux 
+     endroits&nbsp;:<br>
+     <ol>
+      <li>
+       C:\Program Files\GenealogyJ\geo
+      </li>
+      <li>
+       Et dans l'un de ces trois r&eacute;pertoires&nbsp;:<br>
+       <ul>
+        <li>
+         c:\Documents and Settings\username\.genj\geo
+        </li>
+        <li>
+         c:\Documents and Settings\username\application data\genj\geo
+        </li>
+        <li>
+         c:\Documents and Settings\all users\application data\genj\geo<br>
+         Ce dernier cas concerne les gens qui veulent partager 
+         la m&ecirc;me base de donn&eacute;es pour la fonction de 
+         localisation entre plusieurs utilisateurs sous Windows.
+        </li>
+       </ul>
+      </li>
+     </ol>
+    </ul>
+    je suis d&eacute;sol&eacute; de ne pouvoir &ecirc;tre plus 
+    pr&eacute;cis sous Windows, mais d'une part je n'ai pas de 
+    syst&egrave;me Windows, et d'autre part il semble que Windows 
+    fasse un peu ce qu'il veut lors d'une installation.
+   </li>
+   
+  </ol>
+  
+  <br>
+  
+  Je tiens &agrave; remercier tout particuli&egrave;rement Sined (un 
+  utilisateur de GenJ), qui m'a aid&eacute; &agrave; faire toute cette 
+  aide sous Windows sans lui, j'aurais &eacute;t&eacute; bien incapable 
+  d'en arriver l&agrave;. Toutes les captures d'&eacute;cran sont de lui, 
+  et c'est vraiment sur ses remarques que j'ai r&eacute;dig&eacute; cette 
+  partie. Encore merci.<br>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+ <!-- Fin de l'installation sous Windows                      -->
+ 
+ <br>
+ 
+<a name="_linux_"></a>
+ <font size="+1">
+ <b><u>B</u> - <u>Installation sous Linux</u></b><br>
+ </font>
+ <br>
+ 
+ <ul> <!-- Debut de l'installation sous Linux                        -->
+ 
+<a name="_java_linux_"></a>
+  <font size="+1">
+  <b><u>1&deg;)</u> - <u>Premi&egrave;re &eacute;tape : installation de Java proprement dite.</u></b><br>
+  </font>
+  <br>
+  On l'a dit, il vous faut r&eacute;cup&eacute;rer la derni&egrave;re 
+  version de Java sur le site de Sun Microsystem. Pour cela 
+  essayez cette URL : 
+  <a href="http://java.com/fr/download/linux_manual.jsp">
+  JRE pour Linux, version 1.5.0.06</a><br>
+  Sur ce site je vous conseille de r&eacute;cup&eacute;rer le fichier 
+  <b>jre-1_5_0_06-linux-i586.bin</b> (Linux self-extracting file). 
+  Je sais, ce n'est pas un package RPM, mais vous verrez plus loin 
+  pourquoi je vous conseille de le reprendre <i>(n'oubliez pas que 
+  pour pouvoir le reprendre, il faut que vous confirmiez au 
+  pr&eacute;alable que vous acceptez la licence, donc cochez la case 
+  "Accept Licence Agreement", juste au dessus)</i>. N'oubliez pas de 
+  bien voir o&ugrave; linux place le fichier que vous 
+  t&eacute;l&eacute;chargez. Si vous n'avez de r&eacute;pertoire 
+  temporaire sous votre r&eacute;pertoire personnel, 
+  &eacute;ventuellement, placez-le dans /tmp.<br>
+  <br>
+  Maintenant, on va mettre la main dans le cambouis si j'ose dire.
+  Je vais supposer que vous vous appelez <b><i>Jacques Chirac</i></b>, 
+  que votre mot de passe "root" est "<b><i>mulot</i></b>", que 
+  vous avez votre r&eacute;pertoire personnel sous <b><i>/home/elysee</i></b>, 
+  et que vous avez mis le fichier que vous avez 
+  t&eacute;l&eacute;charg&eacute; dans /tmp<br>
+  Vous ouvrez un terminal <i>(suivant que vous &ecirc;tes sous Kde, ou 
+  Gnome cela peut &ecirc;tre diff&eacute;rent, mais par exemple, sous une 
+  Fedora Core 4 avec KDE, vous cliquez sur le chapeau rouge (sic) 
+  (l'icone qui vous permet de d&eacute;marrer des applications ou 
+  quitter votre bureau), puis "Outils de Syst&egrave;me" et 
+  "Terminal")</i>, et vous tapez&nbsp;:<br>
+  <ol>
+   <li>
+    <font color="#666666">cd /tmp</font> <i>(on se place dans le r&eacute;pertoire tmp)</i><br>
+   </li>
+   <li>
+    <font color="#666666">su</font> <i>(on passe "root")</i><br>
+   </li>
+   <li>
+    <font color="#666666">mulot</font> <i>(on tape le mot de passe pour "root")</i><br>
+   </li>
+   <li>
+    <font color="#666666">chmod 755 jre-1_5_0_06-linux-i586.bin</font> <i>(on rend ex&eacute;cutable le fichier)</i><br>
+   </li>
+   <li>
+    <font color="#666666">cp jre-1_5_0_06-linux-i586.bin /usr/local</font> <i>(on copie le fichier au bon endroit)</i><br>
+   </li>
+   <li>
+    <font color="#666666">rm /tmp/jre-1_5_0_06-linux-i586.bin</font> <i>(on efface le fichier puisqu'on l'a ailleurs)</i><br>
+   </li>
+   <li>
+    <font color="#666666">cd /usr/local</font> <i>(on va l&agrave; o&ugrave; l'on a copi&eacute; le fichier)</i><br>
+   </li>
+   <li>
+    <font color="#666666">./jre-1_5_0_06-linux-i586.bin</font> <i>(on ex&eacute;cute le fichier pour qu'il s'installe)</i><br>
+   </li>
+  </ol>
+  L&agrave; &agrave; chaque page de la licence, il vous affiche "Plus" 
+  en bas de chaque page, tapez sur la barre d'espacement pour passer 
+  &agrave; la page suivante. A la fin du texte de la licence, il va 
+  vous &ecirc;tes demand&eacute; si vous acceptez cette m&ecirc;me 
+  licence "Do you agree to the above licence terms? [yes or no]. Bien 
+  s&ucirc;r vous taperez "yes".<br>
+  Ca y est, le JRE s'installe pile poil o&ugrave; il faut.<br>
+  <br>
+  Il se cr&eacute;e un r&eacute;pertoire jre1.5.0_06, vous pourrez 
+  le voir si vous tapez "<font color="#666666">ls</font>". Dans la liste 
+  qui vous est donn&eacute;e, vous verrez appara&icirc;tre quelque 
+  chose comme &ccedil;a (ne vous &eacute;tonnez pas si vous n'avez pas tout 
+  &agrave; fait les m&ecirc;mes choses, cela d&eacute;pend du 
+  param&egrave;trage de votre syst&egrave;me)&nbsp;:<br>
+  <ol>
+   <font color="#666666">drwxr-xr-x   7 root root   4096 ao&ucirc; 27 03:32 jre1.5.0_06/</font><br>
+  </ol>
+  Vous &ecirc;tes toujours dans le r&eacute;pertoire /usr/local, et 
+  vous &ecirc;tes toujours "root", n'oubliez pas.<br>
+  <ol>
+   <li>
+    <font color="#666666">ln -s jre1.5.0_06 jre</font> <i>(on cr&eacute;e un lien symbolique)</i><br>
+   </li>
+   <li>
+    <font color="#666666">rm -f jre-1_5_0_06-linux-i586.bin</font> <i>(on efface le fichier)</i><br>
+   </li>
+   <li>
+    <font color="#666666">cd /etc</font> <i>(on passe dans le r&eacute;pertoire /etc)</i><br>
+   </li>
+   Maintenant, il faut savoir quel &eacute;diteur vous avez. J'utilise 
+   quant &agrave; moi toujours les deux m&ecirc;mes &eacute;diteurs, 
+   quelque soit la version de Linux que je fais tourner, &agrave; 
+   savoir <a name="_nedit_"></a>
+   "nedit" et "jedit". Dans un premier temps, choisissez vers 
+   "nedit" que vous trouverez ici <a href="http://www.nedit.org">Site 
+   officiel de Nedit</a> section "Download" ou alors, une recherche 
+   sur le site de 
+   <a href="http://fr2.rpmfind.net/linux/rpm2html/search.php?query=nedit&submit=Search+...">RPMFind</a>, 
+   donnera peut &ecirc;tre de meilleurs r&eacute;sultats, c'est plus 
+   facile (si vous ne l'avez pas essayez de le 
+   reprendre quelque part, il en vaut vraiment la peine), mais 
+   si vous avez un autre &eacute;diteur que vous aimez bien, allez-y. 
+   Pour la suite de mon installation, je consid&egrave;re que vous avez 
+   "nedit".<br>
+   Tapez la commande :<br>
+   <li>
+    <font color="#666666">nedit bashrc</font><br>
+   </li>
+  </ol>
+  Le fichier bashrc va s'ouvrir, vous allez &agrave; la fin du texte, 
+  et vous ins&eacute;rez les lignes suivantes (faites un 
+  copier/coller)&nbsp;:<br>
+  <ol>
+   <font color="blue">
+   # Below this line is what I added when I setted the system up<br>
+   export JAVA_HOME=/usr/local/jre<br>
+   export PATH=.:$JAVA_HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH<br>
+   </font>
+  </ol>
+  <br>
+  Vous sauvegardez vos modifications, et vous sortez de l'&eacute;diteur. 
+  Je sais c'est un peu long, mais on est en train de faire 
+  une installation aux petits oignons (je ne veux pas &ecirc;tre 
+  mauvaise langue, mais c'est autre chose comme installation 
+  que sous Windows ;-) non).<br>
+  <br>
+  Logiquement, java est install&eacute;. Le probl&egrave;me est que votre 
+  distribution comporte surement d&eacute;j&agrave; une installation 
+  java mais bien incompl&eacute;te. On va donc faire le n&eacute;cessaire 
+  pour ne laisser que celle qu'on vient d'installer comme installation 
+  active. L'autre on la laissera sur notre ordinateur, mais on 
+  va la rendre inop&eacute;rante.<br>
+  Je suppose que vous &ecirc;tes toujours "root", et que vous &ecirc;tes 
+  dans le r&eacute;pertoire /etc.<br>
+  <ol>
+   <font color="#666666">cd /usr/bin</font> <i>(on va dans le r&eacute;pertoire /usr/bin)</i><br>
+   <font color="#666666">ls java*</font> <i>(on regarde ce qu'on a comme fichiers commen&ccedil;ant par java)</i><br>
+  </ol>
+  Je vais supposer que vous n'avez que deux fichiers, mais si vous 
+  en avez plus, ce sera pareil. Moi ici sous une Fedora Core 4, j'ai&nbsp;:<br>
+  javac qui pointe vers /etc/alternatives/javac<br>
+  et java qui pointe vers /etc/alternatives/java<br>
+  Pour ne pas &ecirc;tre emb&eacute;t&eacute;, je vais les renommer.<br>
+  <ol>
+   <font color="#666666">mv javac javac.original</font><br>
+   <font color="#666666">mv java java.original</font><br>
+  </ol>
+  <br>
+  Maintenant ouvrez un autre terminal (je pr&eacute;cise bien : ouvrez-en 
+  un autre, il ne faut pas utiliser celui qui est d&eacute;j&agrave; 
+  ouvert), et tapez&nbsp;:<br>
+  <ol>
+   <font color="#666666">java -version</font><br>
+  </ol>
+  Vous devriez avoir quelque chose comme &ccedil;a&nbsp;:<br>
+  <ol>
+   <font color="#666666">java version "1.5.0_06"<br>
+   Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_06-b05)<br>
+   Java HotSpot(TM) Client VM (build 1.5.0_06-b05, mixed mode, sharing)<br>
+   </font>
+  </ol>
+  <br>
+  Et voil&agrave;, c'est fini ! Ouf ! ;-)<br>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+  <br>
+  
+<a name="_genj_linux_"></a>
+  <font size="+1">
+  <b><u>2&deg;)</u> - <u>Installation de GenealogyJ.</u></b><br>
+  </font>
+  <br>
+  
+  On va tout se faire &agrave; la mani&egrave;re des pros, &agrave; savoir 
+  "tout &agrave; la main".<br>
+  <br>
+  <ol>
+   <li>
+    T&eacute;l&eacute;chargez (clic droit et Enregistrer Sous)  
+    <a href="http://prdownloads.sourceforge.net/genj/genj_app-2.4.2.zip?download">genj_app-2.4.2.zip</a> (~800KB), 
+    ainsi que tous les autres fichiers qui sont n&eacute;cessaires (voir 
+    un peu plus loin).<br>
+    Vous pouvez aussi aller sur le site Arvernes.com sur lequel 
+    vous trouverez les toutes derni&egrave;res versions vous permettant 
+    d'&ecirc;tre &agrave; la pointe du d&eacute;veloppement de GenJ.<br>
+    Donc allez sur <a href="#_site_arvernes_">http://www.arvernes.com</a>, 
+    allez dans la section <b>T&eacute;l&eacute;chargement</b> et 
+    r&eacute;cup&eacute;rez les fichiers&nbsp;:<br>
+    <ol>
+     -&nbsp;genj_app-xxxx.zip (xxxx est &agrave; remplacer par le 
+     num&eacute;ro 
+     de version que vous trouverez).<br>
+     -&nbsp;genj_fr-xxxx.zip<br>
+     -&nbsp;genj_geo-xxxx.zip<br>
+     -&nbsp;genj_applet-xxxx.zip<br>
+    </ol>
+   </li>
+   
+   <br>
+   
+   <li>
+    D&eacute;compactez les archives dans un r&eacute;pertoire en 
+    vous assurant que l'arborescence reste intacte (par exemple, vous 
+    pouvez mettre genj sous /usr/local/share/genj ou /home/elysee/genj.<br>
+    Comme vous faites tourner un syst&egrave;me Linux, voil&agrave; 
+    comment faire&nbsp;:<br>
+    (On suppose que vous voulez installer GenJ dans votre r&eacute;pertoire 
+    personnel que l'on a appel&eacute;, je vous le rappelle <i>/home/elysee</i>)<br>
+    D'abord ouvrez une console. Je sais qu'on peut faire &ccedil;a 
+    avec son environnement graphique, mais je suis de la vieille 
+    &eacute;cole.<br>
+    <ol>
+     <li>
+      <font color="#666666">cd</font> <i>(Cela permet de se 
+      positionner dans son r&eacute;pertoire personnel donc 
+      /home/elysee/)</i>
+     </li>
+     <li>
+      <font color="#666666">mkdir genj</font> <i>(On cr&eacute;e le sous-r&eacute;pertoire genj)</i>
+     </li>
+     <li>
+      <font color="#666666">cd genj</font> <i>(On se met dans ce sous-r&eacute;pertoire genj)</i>
+     </li>
+     <li>
+      <font color="#666666">mkdir gedcom</font> <i>(On cr&eacute;e 
+      tout de suite le sous r&eacute;pertoire gedcom dans lequel je 
+      vous conseille de mettre et/ou cr&eacute;er vos fichiers 
+      gedcom (dans mon exemple, c'est l&agrave; qu'ira se mettre le 
+      fichier jacques_chirac.ged et bernadette.ged))</i>
+     </li>
+     <li>
+      (L&agrave; vous placez l'archive principale, c'est &agrave; dire 
+      genj_app-xxxx.zip dans ce nouveau r&eacute;pertoire genj). 
+      Donc si le fichier genj_app-xxxx.zip se trouve dans /tmp, vous 
+      aurez &agrave; taper&nbsp;:<br>
+      <font color="#666666">cp /tmp/genj_app-xxxx.zip /home/elysee/genj</font><br>
+      Vous en faites autant pour les trois autres archives, donc 
+      genj_fr-xxxx.zip, genj_geo-xxxx.zip et genj_applet-xxx.zip<br>
+      <font color="#666666">cp /tmp/genj_fr-xxxx.zip /home/elysee/genj</font><br>
+      <font color="#666666">cp /tmp/genj_geo-xxxx.zip /home/elysee/genj</font><br>
+      <font color="#666666">cp /tmp/genj_applet-xxxx.zip /home/elysee/genj</font>
+     </li>
+     <li>
+      <font color="#666666">cd /home/elysee/genj</font> <i>(on se 
+      place dans le r&eacute;pertoire contenant toutes les archives 
+      qu'on vient de copier)</i>
+     </li>
+     <li>
+      <font color="#666666">unzip genj_app-xxxx.zip</font> <i>(On 
+      d&eacute;compacte l'archive principale)</i>
+     </li>
+     <li>
+      <font color="#666666">unzip genj_fr-xxxx.zip</font> <i>(On 
+      d&eacute;compacte l'archive contenant les fichiers d'aide et 
+      les fichiers en langue fran&ccedil;aise)</i>
+     </li>
+     <li>
+      <font color="#666666">unzip genj_geo-xxxx.zip</font> <i>(On 
+      d&eacute;compacte l'archive contenant le module de localisation 
+      g&eacute;ographique)</i>
+     </li>
+     <li>
+      <font color="#666666">unzip genj_applet-xxxx.zip</font> <i>(On 
+      d&eacute;compacte l'archive contenant l'applet permettant une 
+      publication sur internet de sa g&eacute;n&eacute;alogie)</i>
+     </li>
+     <li>
+      Maintenant que avez d&eacute;compact&eacute; toutes ces 
+      archives, il faut les effacer&nbsp;:<br>
+      <font color="#666666">rm -f genj_app-xxxx.zip genj_fr-xxxx.zip genj_geo-xxxx.zip genj_applet-xxxx.zip</font><br>
+     </li>
+     <li>
+      <font color="#666666">cd /home/elysee/genj</font> <i>(je 
+      veux &ecirc;tre s&ucirc;r que vous &ecirc;tes bien dans la 
+      r&eacute;pertoire genj)</i>
+     </li>
+    </ol>
+    Bien s&ucirc;r, si les archives poss&egrave;dent d'un autre nom, vous 
+    agissez en cons&eacute;quence.<br>
+    Les fichiers de d&eacute;marrage vont se mettre dans ce 
+    r&eacute;pertoire racine de genj, et des sous-r&eacute;pertoires vont se 
+    cr&eacute;er en dessous, comme par exemple genj/doc, genj/lib, 
+    genj/report, genj/geo, genj/help, etc...<br>
+   </li>
+   
+   <br>
+   
+<a name="_genj_start_file2_linux_"></a>
+<a name="_localisation_fichiers_linux_2_"></a>
+   <li>
+    Maintenant, je vais vous faire cr&eacute;er un fichier de 
+    d&eacute;marrage diff&eacute;rent de celui fourni avec GenJ. Je pense 
+    que vous serez plus &agrave; l'aise avec lui qu'avec celui 
+    qui est dans l'archive.<br>
+    Donc avec votre &eacute;diteur pr&eacute;f&eacute;r&eacute; (j'imagine 
+    que vous avez enfin repris l'&eacute;diteur "Nedit", dont je parle 
+    un peu plus haut), vous faites (vous &ecirc;tes toujours dans le 
+    terminal qui vous a permis d'installer GenJ et vous &ecirc;tes 
+    toujours dans le r&eacute;pertoire genj, je vous le 
+    rappelle)&nbsp;:<br>
+    <ol>
+     <font color="#666666">nedit run</font><br>
+    </ol>
+    L&agrave; l'&eacute;diteur va vous dire qu'il n'y a aucun fichier ou 
+    r&eacute;pertoire de ce type, vous cliquez sur "New File".<br>
+    Le plus simple maintenant, est de faire un copier/coller du 
+    texte qui suit&nbsp;:<br>
+    <ol>
+     <font color="blue">
+     #!/bin/sh<br>
+     #<br>
+     JAVA_HOME="/usr/local/jre"<br>
+     GENJ_HOME=/home/elysee/genj<br>
+     GENJ_LIB_DIR=$GENJ_HOME/lib<br>
+     GENJ_REPORT_DIR=$GENJ_HOME/report<br>
+     GENJ_HELP_DIR=$GENJ_HOME/help<br>
+     GENJ_GEDCOM_DIR=$GENJ_HOME/gedcom<br>
+     clear<br>
+     cd $GENJ_HOME<br>
+     export CLASSPATH=$CLASSPATH:$GENJ_LIB_DIR/jfreechart.jar<br>
+     $JAVA_HOME/bin/java -Dgenj.debug.file=$GENJ_HOME/genj.log -Dgenj.file.max=100000 -Duser.home=. -Dgenj.gedcom.dir=$GENJ_GEDCOM_DIR -Dgenj.report.dir=$GENJ_REPORT_DIR -Dgenj.help.dir=$GENJ_HELP_DIR -Xms96m -Xmx896m -jar run.jar<br>
+     </font>
+    </ol>
+    <br>
+    Bien s&ucirc;r il est possible que le texte que vous voyez soit 
+    mis sur plusieurs lignes du fait du formatage de ce document. 
+    Mais n'oubliez pas que toutes les lignes, et notamment la 
+    derni&egrave;re commen&ccedil;ant par 
+    <font color="#666666">$JAVA_HOME/bin/java .....</font>, 
+    doivent &ecirc;tre sur <u>une seule ligne</u>.<br>
+    <b><u><font color="red">ATTENTION</font></u> :</b> Avant de quitter 
+    votre &eacute;diteur, vous avez &agrave; 
+    <font color="red">modifier une ligne, celle commen&ccedil;ant par 
+    "GENJ_HOME=...", car bien s&ucirc;r il faut remplacer "elysee", 
+    par le nom de votre r&eacute;pertoire personnel</font>.<br>
+    <br>
+    Ensuite, vous sauvegardez votre nouveau fichier, et en sortant 
+    de l'&eacute;diteur, vous allez le rendre ex&eacute;cutable, donc 
+    tapez&nbsp;:<br>
+    <ol>
+     <font color="#666666">chmod 755 run</font><br>
+    </ol>
+    L'avantage de proc&eacute;der de la sorte, est que l'ensemble 
+    des fichiers log, properties, etc... de GenJ vont aller se 
+    mettre sous le r&eacute;pertoire de genj lui-m&ecirc;me, et non 
+    pas sous votre r&eacute;pertoire personnel. Vous verrez que 
+    dans la maintenance, et/ou la mise &agrave; jour, cette 
+    mani&egrave;re de faire vous facilitera la vie 
+    &eacute;norm&eacute;ment.<br>
+    <ul>
+     <b><u>Remarque</u></b> : Grace &agrave; cette mani&egrave;re de 
+     faire, vous allez voir que va se cr&eacute;er sous ce 
+     r&eacute;pertoire genj, un sous r&eacute;pertoire dont le nom 
+     commence par un "point" (dans un syst&egrave;me Linux, il s'agit 
+     d'un fichier ou r&eacute;pertoire cach&eacute;, et qui s'appelle 
+     "<b>.genj</b>" - donc vous aurez un truc du genre&nbsp;: 
+     <b>/home/elysee/genj/.genj/</b>.<br>
+     Dedans vous pourrez trouver les fichiers suivants par 
+     exemple&nbsp;:<br>
+     <ul>
+      <li>
+       jacques_chirac.ged.properties
+      </li>
+<a name="_localisation_fichiers_linux_3_"></a>
+      <li>
+       genj.properties
+      </li>
+      <li>
+       genj.log
+      </li>
+      <li>
+       genj-reports.properties
+      </li>
+      <li>
+       jacques_chirac.geo.properties<br>
+       Ce fichier est celui qui va contenir les donn&eacute;es 
+       g&eacute;ographiques (localisation) des villes, lieudits, etc.... 
+       que vous aurez entr&eacute; manuellement.<br>
+       Regardez un peu plus loin ce qui est mis sur le module 
+       additionnel &agrave; GenJ, le module 
+       <a href="#_genj_install_geo_">Geo</a>".
+      </li>
+      <li>
+       etc...
+      </li>
+     </ul>
+    </ul>
+   </li>
+   
+   <br>
+   
+   <li>
+    Maintenant, je vous conseille tout de suite, si vous avez 
+    d&eacute;j&agrave; un fichier gedcom (jacques_chirac.ged par 
+    exemple) de le mettre l&agrave; o&ugrave; il le faut.<br>
+    Compte tenu que vous &ecirc;tes sous Linux et avec ce qu'on 
+    a fait ci-dessus, vous allez le copier dans le sous 
+    r&eacute;pertoire "<b>genj/gedcom/</b>" - Dans mon exemple, le 
+    fichier sera positionn&eacute; comme &ccedil;a : 
+    <b>/home/elysee/genj/gedcom/jacques_chirac.ged</b>.<br>
+   </li>
+   
+   <br>
+   
+   <li>
+    Lancez le script de d&eacute;marrage que vous venez de 
+    cr&eacute;er &agrave; savoir "run", donc tapez&nbsp;:<br>
+    <ol>
+     <font color="#666666">./run</font><br>
+    </ol>
+    Je suppose que vous ne savez pas quoi faire avec la fen&ecirc;tre 
+    qui appara&icirc;t. Sachez que vous &ecirc;tes devant ce qu'on 
+    appelle le Centre de Contr&ocirc;le.<br>
+    <br>
+    Tout d'abord, il se peut que GenJ vous cause dans la langue de 
+    Shakespeare, au lieu du fran&ccedil;ais.<br>
+    Pas grave, sur l'&eacute;cran principal de GenJ, vous avez un menu 
+    d&eacute;roulant qui s'appelle Views. Ouvrez-le, et choisissez la 
+    ligne "Options". Dans la fen&ecirc;tre qui s'ouvre vous verrez une 
+    option "Language (After Restart)", prenez bien s&ucirc;r la langue 
+    de Moli&egrave;re. Une fois que c'est fait, vous cliquez sur "OK" 
+    pour valider votre choix, et vous refermez GenJ. Maintenant 
+    si vous le relancez, il vous cause la fran&ccedil;aise mieux que 
+    moi ;-).<br>
+    Ceci &eacute;tant r&eacute;gl&eacute;, passons aux choses 
+    s&eacute;rieuses si j'ose dire. Que fait-on devant cet 
+    &eacute;cran ? Voil&agrave; une question qu'elle est bonne&nbsp;?<br>
+    <br>
+    Pour ouvrir un fichier gedcom d&eacute;j&agrave; existant, ou pour 
+    en cr&eacute;er un, il vous faut cliquer sur l'icone "Ouvrir", ou 
+    choisir "Ouvrir" dans le menu d&eacute;roulant auquel vous 
+    acc&eacute;dez par l'option "Fichier".<br>
+    Si vous n'avez pas encore de fichier gedcom ou si vous 
+    voulez en cr&eacute;er un nouveau, cliquez sur "Nouveau". Si au 
+    contraire vous avez d&eacute;j&agrave; un fichier gedcom, cliquez 
+    sur "Local".<br>
+    Si vous choisissez de cr&eacute;er un fichier gedcom "Nouveau", 
+    GenJ vous demandera le nom que vous voulez lui donner. Deux choses 
+    sont n&eacute;cessaires :<br>
+    <ul>
+     <li>
+      D'une part, il faut que dans la fen&ecirc;tre du navigateur 
+      qui s'ouvre, vous d&eacute;placiez l'endroit o&ugrave; le fichier 
+      va &ecirc;tre cr&eacute;&eacute;. D&eacute;placez vous dans 
+      "genj/gedcom" si vous n'y &ecirc;tes pas d&eacute;j&agrave;.<br>
+     </li>
+     <li>
+      Ensuite, il faut lui mettre le nom du fichier que vous allez 
+      lui donner, GenJ demande "File name". Attribuez-lui le nom que 
+      vous voulez, allons y pour "jacques_chirac.ged" ou 
+      "bernadette.ged".<br>
+     </li>
+    </ul>
+   </li>
+   
+   <br>
+   
+<a name="_genj_look_linux_"></a>
+   <li>
+    Maintenant, si vous voulez changer un peu le look de GenJ, 
+    il vous faut t&eacute;l&eacute;charger une archive 
+    suppl&eacute;mentaire que vous trouverez sur mon site 
+    <a href="#_site_arvernes_">Arvernes</a>. Le fichier qu'il 
+    faut prendre s'appelle "<b>genj_lnf-xxxx.zip</b>" (l&agrave; encore, 
+    les xxxx sont &agrave; remplacer par le num&eacute;ro de version 
+    qui sera disponible quand vous reprendrez le fichier).<br>
+    Une fois en votre possession, vous ferez comme d&eacute;crit plus 
+    haut, et donc vous placerez ce fichier dans le r&eacute;pertoire 
+    de genj, dans mon exemple : /home/elysee/genj. Une fois dans ce 
+    r&eacute;pertoire, vous le d&eacute;compresserez normalement, 
+    &agrave; savoir&nbsp;:<br>
+    <ol>
+     <font color="#666666">unzip genj_lnf-xxxx.zip</font><br>
+    </ol>
+    Il va se cr&eacute;er un sous r&eacute;pertoire sous genj, qui 
+    s'appelera "lnf". Ainsi vous aurez quelque chose du genre 
+    "/home/elysee/genj/lnf" avec dans ce sous-r&eacute;pertoire, 
+    des fichiers et autres sous-r&eacute;pertoires.<br>
+    Maintenant, pour changer l'aspect de GenJ, quand vous l'aurez 
+    lanc&eacute;, il vous faudra rentrer dans le menu Visualisations - 
+    Options, et faire votre choix sur le look que vous 
+    pr&eacute;f&eacute;rez. La ligne qu'il faut regarder est "Aspect 
+    (Choisissez un th&egrave;me)". Apr&egrave;s avoir choisi le th&egrave;me de 
+    votre choix, cliquez avec la souris dans un autre endroit 
+    de l'&eacute;cran, ce qui valide votre choix.<br>
+    Il est fort possible que la taille de la fen&ecirc;tre qui s'ouvre 
+    soit insuffisante pour que vous puissiez voir les options et 
+    la mani&egrave;re de les choisir. Pour ce faire, avec votre souris, 
+    il vous faut vous positionner dans le coin droit en bas de 
+    ladite fen&ecirc;tre d'options qui vient de s'ouvrir, et en cliquant 
+    avec le bouton gauche, tout en maintenant le bouton de votre 
+    souris, l'agrandir &agrave; la taille qui vous satisfera.<br>
+    Normalement, vous devriez voir le nouveau look de GenJ en activant 
+    le th&egrave;me que vous voulez.<br>
+    <u>Remarques</u> :<br>
+    <ul>
+     -&nbsp;Il est possible de cr&eacute;er ses propres 
+     th&egrave;mes, par exemple j'ai cr&eacute;&eacute; le th&egrave;me 
+     <i>Skin(arvernesthemepack.zip)</i>. N'h&eacute;sitez pas &agrave; 
+     voir comment il est fait, et &agrave; r&eacute;aliser quelque 
+     chose de votre cru. Si par la suite vous vouliez en faire profiter 
+     la communaut&eacute; des utilisateurs de GenJ, ce serait sympa, 
+     merci d'avance.<br>
+     -&nbsp;Certains th&egrave;mes plus sp&eacute;cifiques Windows, 
+     n'ont aucun effet sous Linux, donc si vous les choisissez, il n'y 
+     aura aucun changement. Prenez en un autre.<br>
+    </ul>
+   </li>
+   
+   <br>
+   
+   <li>
+    Maintenant, au stade o&ugrave; vous en &ecirc;tes, il vous faut 
+    vous pencher vers le <a href="#_perfectionnement_toc_">chapitre 
+    sur le perfectionnement</a>, notamment pour agr&eacute;menter la 
+    mani&egrave;re dont GenJ vous pr&eacute;sente vos donn&eacute;es 
+    <i>(paragraphe : Agr&eacute;menter la pr&eacute;sentation selon 
+    vos souhaits)</i>.<br>
+    Je vous conseille de le faire, car vous verrez que vous 
+    pourrez lui changer totalement son aspect et ce qui 
+    vous aura sembl&eacute; quelque chose d'un peu r&eacute;barbatif, 
+    va devenir bien au contraire, tr&eacute;s tr&eacute;s 
+    agr&eacute;able. Bon Vent.<br>
+   </li>
+   
+  </ol>
+  
+  <br>
+  
+  Bon, ben, &ccedil;a y est !!<br>
+  Voil&agrave;, vous avez r&eacute;ussi &agrave; acc&eacute;der 
+  &agrave; votre boulot de dans deux ans, en moins de 10 minutes, pas 
+  mauvais non.<br>
+  GenJ et Java sont install&eacute;s, bon travail sur 
+  votre g&eacute;n&eacute;alogie.<br>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+ </ul> <!--  Fin de l'installation sous Linux                        -->
+ 
+ <br>
+ 
+<a name="_mac_"></a>
+ <font size="+1">
+ <b><u>C</u> - <u>Installation sous Mac</u></b><br>
+ </font>
+ <br>
+ Comme pour les environnements Windows et Linux, on va scinder 
+ cette aide en deux parties, d'une part la partie Java proprement 
+ dite, et ensuite GenJ.<br>
+ Juste pour information, mais plus pour ceux qui, utilisant 
+ un autre Operating System, d&eacute;couvriraient Mac en lisant cette 
+ aide, on parle de Jaguar (pour Mac OS 10.2), de Panther (pour 
+ Mac OS 10.3), et de Tiger (pour Mac OS 10.4) la version actuelle 
+ du syst&egrave;me.<br>
+ 
+ <br>
+ 
+ <ul> <!-- Debut de l'installation sous Mac                          -->
+ 
+<a name="_java_mac_"></a>
+  <font size="+1">
+  <b><u>1&deg;)</u> - <u>Installation de Java proprement dite.</u></b><br>
+  </font>
+  <br>
+  Si vous avez une version ant&eacute;rieure &agrave; Mac OS X, vous 
+  ne pourrez pas faire fonctionner GenJ sur votre Mac. GenJ requiert 
+  au moins la version 1.4 de Java, alors que la derni&egrave;re 
+  version de Java pour Mac OS 9 est la 1.1.8.<br>
+  <br>
+  Sur Mac OS X (depuis 10.2 - Jaguar), pas de probl&egrave;me. 
+  Java a &eacute;t&eacute; install&eacute; avec le syst&egrave;me. 
+  V&eacute;rifiez cependant que vous avez mis &agrave; jour votre 
+  syst&egrave;me et que vous avez bien la derni&egrave;re version de
+  Java. Pour cela, apr&egrave;s vous &ecirc;tre connect&eacute; 
+  &agrave; internet, lancez "Mise &agrave; jour de logiciels&#8230;" 
+  depuis le menu pomme. Si vous utilisez Tiger et si vous 
+  pr&eacute;f&eacute;rez rechercher les 
+  mises-&agrave;-jour&nbsp;"manuellement", il est fortement 
+  conseill&eacute; de rechercher et t&eacute;l&eacute;charger 
+  la <a href="http://www.apple.com/fr/support/" 
+  target="_blank">derni&egrave;re version de Java</a> sur le 
+  site d'Apple.<br>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+  <br>
+  
+<a name="_genj_mac_"></a>
+  <font size="+1">
+  <b><u>2&deg;)</u> - <u>Installation de GenealogyJ.</u></b><br>
+  </font>
+  <br>
+  
+  La version Mac de GenJ n'a pas d'installeur, mais ce n'est pas 
+  compliqu&eacute; d'installer ce logiciel sur votre ordinateur.<br>
+  <br>
+  <ol>
+  
+   <li>
+    Allez dans la section <b>T&eacute;l&eacute;chargement - Plateforme 
+    g&eacute;n&eacute;rique</b> de la 
+    <a href="http://genj.sourceforge.net/page/download/fr" 
+    target="_blank">page de t&eacute;l&eacute;chargement de 
+    GenJ</a>. T&eacute;l&eacute;chargez le fichier 
+    <a href="http://prdownloads.sourceforge.net/genj/genj_app-2.4.2.zip?download">genj_app-2.4.2.zip</a> 
+    (~5,3 Mo). Profitez-en pour t&eacute;l&eacute;charger le fichier 
+    "genj_fr-2.4.zip" (944 Ko) qui renferme la localisation, la 
+    contribution et l'aide en fran&ccedil;ais du logiciel.
+   </li>
+   
+   <br>
+   
+   <li>
+    Ouvrez ces fichiers pour les d&eacute;compacter. Vous obtenez 2 
+    dossiers du nom des fichiers t&eacute;l&eacute;charg&eacute;s.<br>
+    <br>
+    <center>
+    <img src="../images/screenshots/faq_install_mac1.jpg" alt="Contenu des 3 archives d&eacute;compact&eacute;es sous Mac">
+    </center>
+   </li>
+   
+   <br>
+   
+   <u>Remarque, pour la lecture de la suite</u> :<br>
+   St&eacute;phane, qui m'a aid&eacute; &agrave; faire cette partie de 
+   l'aide pour Mac OS X, me mettait :<br>
+   Sous Mac OS X, je n'ai pas r&eacute;ussi &agrave; trouver un moyen 
+   identique &agrave; Linux de d&eacute;compacter directement dans 
+   les dossiers de destination indiqu&eacute;s dans l'archive. 
+   Le syst&egrave;me cr&eacute;e &agrave; chaque fois un dossier du 
+   m&ecirc;me nom que l'archive et StuffIt Expander se plaint de ne 
+   trouver aucun dossier de destination indiqu&eacute;, puis plante 
+   lamentablement quand il voit qu'il y a des dossiers qui portent 
+   d&eacute;j&agrave; le m&ecirc;me nom.<br>
+   Je ne vois pas d'autre solution que de tout d&eacute;compresser, 
+   puis de faire glisser-d&eacute;poser "&agrave; la main" les 
+   fichiers dans les bons dossiers, en suivant l'architecture 
+   incluse dans chacune des archives (par ex. ce qui est dans le 
+   dossier "lib" de l'achive "genj-fr" va dans le dossier "lib" de 
+   GenJ, etc). Attention &agrave; ne pas remplacer les dossiers de 
+   m&ecirc;me nom l'un par l'autre.<br>
+   
+   <br>
+   
+   <li>
+    Ouvrez le dossier "genj_fr-2.4.2" :
+    <ul>
+     <li>
+      S&eacute;lectionnez le dossier "contrib" et faites-le glisser 
+      dans le dossier "genj_app-2.4.2".
+     </li>
+     <li>
+      S&eacute;lectionnez le dossier "help" et faites-le glisser dans 
+      le dossier "genj_app-2.4.2".
+     </li>
+     <li>
+      Ouvrez le dossier "lib" et faites glisser les fichiers qu'il 
+      contient dans le dossier "lib" du dossier "genj_app-2.4.2"&nbsp;;
+     </li>
+    </ul>
+   </li>
+   
+   <br>
+   
+   <li>
+    C'est fait ? Il ne vous reste plus qu'&agrave; placer le dossier 
+    "genj_app-2.4.2" (que vous pouvez renommer &eacute;ventuellement 
+    en "GenJ") o&ugrave; vous voulez dans votre dossier Applications. 
+    Oual&agrave; !
+   </li>
+   
+   <br>
+   
+   <li>
+    Pour lancer GenJ, il suffit de double-cliquer sur le fichier 
+    "run.jar". La premi&egrave;re fois que le programme se lance, ou 
+    si c'est une mise &agrave; jour (vous avez mis une version plus 
+    r&eacute;cente), vous allez voir s'afficher ce qui en anglais 
+    s'appelle "Disclaimer" (Avertissement, comme quoi vous utilisez 
+    ce programme sous votre responsabilit&eacute;, etc... 
+    <i>enfin si vous ou l'un des membres de votre Equipe venait &agrave; 
+    &ecirc;tre captur&eacute;, le gouvernement nierait toute 
+    implication - Mission Impossible r&eacute;miniscences</i>).
+   </li>
+   
+   <br>
+   
+   <li>
+    Peut-&ecirc;tre allez-vous remarquer que, bien que vous ayez 
+    demand&eacute; &agrave; ce que GenJ vous cause en fran&ccedil;ais, 
+    il s'&eacute;vertue &agrave; vous causer dans la langue de 
+    Shakespeare.<br>
+    Pas grave, sur l'&eacute;cran principal de GenJ, vous avez un 
+    menu d&eacute;roulant qui s'appelle Views. Ouvrez le, et choisissez 
+    la ligne "Options". Dans la fen&ecirc;tre qui s'ouvre vous verrez 
+    une option "Language (After Restart)", prenez bien s&ucirc;r la 
+    langue de Moli&egrave;re. Une fois que c'est fait, vous cliquez 
+    sur "OK" pour valider votre choix, et vous refermez GenJ. 
+    Maintenant si vous le relancez, il vous cause la fran&ccedil;aise 
+    mieux que moi ;-).
+   </li>
+   
+   <br>
+   
+   <li>
+    Vous pouvez aussi, pour faciliter les choses, placer le fichier 
+    "run.jar" dans le dock, ou bien cr&eacute;er un 
+    <b>raccourci</b> sur le bureau par le menu "Fichier &gt; 
+    Cr&eacute;er un alias". Il suffit de faire glisser le petit 
+    fichier obtenu sur le bureau apr&egrave;s l'avoir renomm&eacute; 
+    en "GenJ".
+   </li>
+   
+   <br>
+   
+<a name="_genj_look_mac_"></a>
+   <li>
+    Maintenant, si vous voulez changer un peu le look de GenJ, il 
+    vous faut t&eacute;l&eacute;charger une archive suppl&eacute;mentaire 
+    que vous trouverez sur mon site 
+    <a href="#_site_arvernes_">Arvernes</a>. 
+    Le fichier qu'il faut prendre s'appelle "<b>genj_lnf-xxxx.zip</b>" 
+    (1,1 Mo) (l&agrave; encore, les xxxx sont &agrave; remplacer par le 
+    num&eacute;ro de version qui sera disponible quand vous reprendrez 
+    le fichier).<br>&nbsp;Une fois en votre possession, il vous faudra 
+    placer cette archive dans le dossier o&ugrave; se trouve GenJ et 
+    le d&eacute;compacter dans ce dossier.<br>&nbsp;Normalement, il 
+    devra se cr&eacute;er un sous-dossier qui s'appelera "lnf". Ainsi 
+    vous aurez quelque chose du genre "MonDisqueDur/Applications/GenJ/lnf" 
+    avec dans ce sous-dossier, des fichiers et autres sous-dossiers.<br>
+    &nbsp;Maintenant qu'il est install&eacute;, vous pouvez&nbsp;effacer 
+    l'archive, car vous n'en aurez plus besoin.<br>
+    &nbsp;Maintenant, pour changer l'aspect de GenJ, quand vous l'aurez 
+    lanc&eacute;, il vous faudra s&eacute;lectionner le menu 
+    "Visualisations" &gt;&nbsp;"Options", et faire votre choix sur le 
+    look que vous pr&eacute;f&eacute;rez. La ligne qu'il faut regarder 
+    est "Aspect (Choisissez un th&egrave;me)".<br>
+    &nbsp;Il est fort possible que la taille de la fen&ecirc;tre qui 
+    s'ouvre soit insuffisante pour que vous puissiez voir les options 
+    et la mani&egrave;re de les choisir.<br>
+    <br>
+    <center>
+    <img src="../images/screenshots/faq_install_mac2.jpg" alt="fen&ecirc;tre standard de GenJ sous Mac"><br>
+    </center>
+    <br>
+    Pour ce faire, avec votre souris, il vous faut cliquer dans le coin 
+    droit en bas de ladite fen&ecirc;tre d'options qui vient de 
+    s'ouvrir, et l'agrandir &agrave; la taille qui vous satisfera.<br>
+    Normalement, vous devriez voir le nouveau look de GenJ en activant 
+    le th&egrave;me que vous voulez.<br>
+    <div style="margin-left: 40px;">
+     <u>Remarque :</u>
+    </div>
+    <div style="margin-left: 80px;">
+     Il est possible de cr&eacute;er ses propres th&egrave;mes, par 
+     exemple j'ai cr&eacute;&eacute; le th&egrave;me&nbsp; 
+     <i>Skin(arvernesthemepack.zip)</i>. Ce fichier est dans le dossier 
+     "skinlf.themes", lui-m&ecirc;me dans le dossier "lnf". 
+     N'h&eacute;sitez pas &agrave; voir comment il est fait, et &agrave; 
+     r&eacute;aliser quelque chose de votre cru. Si par la suite vous 
+     vouliez en faire profiter la communaut&eacute; des utilisateurs de 
+     GenJ, ce serait sympa, merci d'avance.<br>
+    </div>
+   </li>
+   
+   <br>
+   
+<a name="_genj_update_mac_"></a>
+   <li>
+    Il est temps maintenant de mettre &agrave; jour votre version 
+    avec les derniers d&eacute;veloppements de GenJ. Pour cela il va 
+    falloir que vous alliez sur le site 
+    <a href="#_site_arvernes_">Arvernes</a> et que vous 
+    repreniez au moins les fichiers suivants&nbsp;:<br>
+    <div style="margin-left: 40px;">
+     <ul>
+      <li>
+       genj_app-xxx.zip
+      </li>
+      <li>
+       genj_fr-xxx.zip
+      </li>
+      <li>
+       genj_geo-xxx.zip
+      </li>
+      <li>
+       genj_applet-xxx.zip
+      </li>
+     </ul>
+    </div>
+    Vous devez commencer par fermer GenJ, vu qu'on va &eacute;craser 
+    ses fichiers. Il n'aimerait peut &ecirc;tre pas rester ouvert.<br>
+    Vous allez d&eacute;compacter <b><u>TOUS</u></b> ces fichiers dans 
+    le dossier qui contient GenJ, donc dans 
+    "LeNomDeMonDisqueDur/Applications/GenealogyJ". Pour le fichier de 
+    localisation et d'aide, pensez &agrave; refaire la proc&eacute;dure 
+    indiqu&eacute;e en 3.<br>
+    Si Mac OS vous demande si vous voulez &eacute;craser les fichiers 
+    d&eacute;j&agrave; existants, r&eacute;pondez-lui "oui".<br>
+    Une fois que vous avez fini de bien d&eacute;compacter ces fichiers, 
+    vous pouvez effacer l'archive, vous n'en aurez plus besoin.<br>
+   </li>
+   
+   <br>
+   
+   <li>
+    Sous les autres Operating Systems je vous conseillais si vous aviez 
+    d&eacute;j&agrave; un fichier gedcom, de le copier dans un 
+    r&eacute;pertoire particulier (on parle de Dossier sous Mac). 
+    Sous Mac OS, les documents vont dans le dossier "Documents" du 
+    dossier perso (ce dossier perso est celui qui porte l'ic&ocirc;ne 
+    d'une maison). Il n'apparait pas utile de changer cette habitude, 
+    et cela ne correspondant pas &agrave; la philosophie du Mac on va 
+    supprimer cette &eacute;tape.<br>
+    Maintenant, vous pouvez lancer GenJ.<br>
+    Je suppose que vous ne savez pas quoi faire avec la fen&ecirc;tre 
+    qui appara&icirc;t. Sachez que vous &ecirc;tes devant ce qu'on 
+    appelle le Centre de Contr&ocirc;le.<br>
+    Pour ouvrir un fichier gedcom d&eacute;j&agrave; existant, ou pour 
+    en cr&eacute;er un, il vous faut cliquer sur l'ic&ocirc;ne "Ouvrir", 
+    ou choisir "Ouvrir" dans le menu d&eacute;roulant auquel vous 
+    acc&eacute;dez par l'option "Fichier".<br>
+    Si vous n'avez pas encore de fichier gedcom ou si vous 
+    voulez en cr&eacute;er un nouveau, cliquez sur "Nouveau". Si au 
+    contraire vous avez d&eacute;j&agrave; un fichier gedcom, cliquez 
+    sur "Local".<br>
+    Si vous choisissez de cr&eacute;er un fichier gedcom "Nouveau", 
+    GenJ vous demandera le nom que vous voulez lui donner. Deux choses 
+    sont n&eacute;cessaires :<br>
+    <ul>
+     <li>
+      D'une part, il faut que dans la fen&ecirc;tre du navigateur 
+      qui s'ouvre, vous d&eacute;placiez l'endroit o&ugrave; le fichier 
+      va &ecirc;tre cr&eacute;&eacute;. D&eacute;placez-vous dans 
+      "LeNomDeMonDisqueDur/Applications/GenealogyJ/gedcom" ou bien 
+      allez dans le dossier Documents dans votre dossier perso..<br>
+     </li>
+     <li>
+      Ensuite, il faut lui mettre le nom du fichier que vous allez lui 
+      donner, GenJ demande "File name". Mettez lui le nom que vous 
+      voulez, allons y pour "jacques_chirac.ged" ou "bernadette.ged".<br>
+     </li>
+    </ul>
+   </li>
+   
+   <br>
+   
+   <li>
+    Maintenant, au stade o&ugrave; vous en &ecirc;tes, il vous faut 
+    vous pencher vers le Chapitre sur le 
+    <a href="#_perfectionnement_toc_">
+    Perfectionnement</a>, notamment pour agr&eacute;menter la 
+    mani&egrave;re dont GenJ vous pr&eacute;sente vos donn&eacute;es 
+    (Section : <a href="#_genj_management_">Modifier les 
+    param&egrave;trages de GenJ)</a>.<br>
+    Je vous conseille de le faire, car vous verrez que vous pourrez lui 
+    changer totalement son aspect et ce qui vous aura sembl&eacute; 
+    quelque chose d'un peu r&eacute;barbatif, va devenir bien au 
+    contraire, tr&eacute;s tr&eacute;s agr&eacute;able. Bon Vent.<br>
+   </li>
+   
+  </ol>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+  <br>
+  
+<a name="_localisation_fichiers_mac_1_"></a>
+  <font size="+1">
+  <b><u>REMARQUE</u> : O&ugrave; sont les fichiers GenJ ?</b><br>
+  </font>
+  Dans le dossier de l'application que vous avez peut-&ecirc;tre
+  renomm&eacute; "GenealogyJ", voil&agrave; ce que vous trouverez&nbsp;:<br>
+  
+  <br>
+  
+  <ol>
+  
+   <li>
+    Dans&nbsp;LeNomDeMonDisqueDur/Applications/GenealogyJ/, vous 
+    devriez trouver&nbsp;:<br>
+    - un dossier <font color="#666666">/contrib/<br></font>
+    - un dossier <font color="#666666">/doc/<br></font>
+    - un dossier /<font color="#666666">help/<br></font>
+    - un dossier <font color="#666666">/lib/<br></font>
+    - un dossier&nbsp;<font color="#666666">/gedcom/<br></font>
+    - un dossier <font color="#666666">/report/<br></font>
+    - puis, les fichiers :<font color="#666666"> run.jar, run.bat, 
+    run.sh, run.cmd</font>.<br>- Eventuellement les dossiers 
+    <font color="#666666">/lnf/</font> et  <font color="#666666">/geo/</font> 
+    si vous avez install&eacute; ces options.<br>
+   </li>
+   
+   <br>
+   
+<a name="_localisation_fichiers_mac_2_"></a>
+   <li>
+    Au lancement, GenJ installe un dossier invisible (dont le nom 
+    commence par un point) ".genj" dans votre dossier personnel 
+    (repr&eacute;sent&eacute; par une maison). Dedans vous devriez 
+    avoir tous les fichiers dont GenJ va avoir besoin pour conserver 
+    les param&egrave;tres de l'application. Ainsi vous aurez dans ce 
+    dossier&nbsp;:<br>
+    <ol>
+     <li>
+      <b>monfichier.ged.properties</b><br>
+      Ce fichier contient les param&egrave;tres d'affichage de votre 
+      fichier gedcom ; taille des fen&ecirc;tres, signets, etc... Vous 
+      aurez autant de fichiers "monfichier.ged.properties" que de 
+      fichiers gedcoms ayant &eacute;t&eacute; ouverts par GenJ.
+     </li>
+     <li>
+      <b>genj-reports.properties</b><br>
+      L&agrave;, ce fichier contient les param&egrave;tres que vous 
+      aurez choisis pour les rapports que vous faites tourner.
+     </li>
+     <li>
+<a name="_localisation_fichiers_mac_3_"></a>
+      <b>genj.properties</b><br>
+      Celui-ci est le plus important, car c'est lui qui reprend 
+      tous les param&egrave;tres de l'application, par exemple, 
+      quels sont les fichiers gedcom qui ont &eacute;t&eacute; 
+      ouverts, la taille du Centre de Controle, etc...
+     </li>
+     <li>
+      <b>monfichier.geo.properties</b><br>
+      Ce fichier est celui qui va contenir les donn&eacute;es 
+      g&eacute;ographiques (localisation) des villes, lieudits, etc.... 
+      que vous aurez entr&eacute; manuellement.<br>
+      Regardez un peu plus loin ce qui est mis sur le module 
+      additionnel &agrave; GenJ, le module 
+      <a href="#_genj_install_geo_">Geo</a>".
+     </li>
+     <li>
+      <b>genj.log</b><br>
+      Ce fichier est important, car si vous avez des soucis, c'est lui 
+      qu'il faudra envoyer aux d&eacute;veloppeurs, donc ne l'effacez 
+      pas, de toute fa&ccedil;on suivant les param&egrave;tres que vous 
+      allez mettre dans les options, sa taille pourra &ecirc;tre 
+      limit&eacute;e &agrave; xxx koctets.
+     </li>
+    </ol>
+    <br>
+    Toujours dans votre dossier personnel se trouve un autre dossier 
+    invisible appel&eacute; ".java". Il a &eacute;t&eacute; 
+    install&eacute; par le syst&egrave;me et est utile &agrave; GenJ. 
+    Dedans vous aurez tous vos param&egrave;tres de la machine virtuelle 
+    java.<br>
+   </li>
+   
+  </ol>
+  
+  <br>
+  
+  L&agrave; encore, je remercie tr&egrave;s sinc&egrave;rement 
+  St&eacute;phane Lelaure qui utilisateur de GenJ sous Mac, m'a 
+  compl&egrave;tement m&acirc;ch&eacute; le travail puisque c'est lui qui 
+  a &eacute;crit toute la partie sur cet Operating System. Je n'ai 
+  eu qu'une mise en forme &agrave; faire, vu que tout &eacute;tait 
+  fait par lui y compris les captures d'&eacute;cran. Merci 
+  encore St&eacute;phane.<br>
+  
+  <br>
+  <a href="#_toc_">Retour au Sommaire de la Proc&eacute;dure</a>
+  <br>
+  
+ </ul> <!-- Fin de l'installation sous Mac                           -->
+ 
+</div>  <!-- Fin de la section I sur l'installation de Java et GenJ   -->
+
+<br>
+<br>
+<br>
+<a name="_genj_management_"></a>
+<a name="_genj_install_geo_"></a>
+<a name="_site_arvernes_"></a>
+<a name="_perfectionnement_toc_"></a>
+<b><u>Remarques</u> :</b><br>
+<div style="margin-left: 10px;">
+- <u>Chapitre sur le Perfectionnement</u><br>
+<div style="margin-left: 10px;">
+Cet aspect, n'est disponible que sur le Site Arvernes, aussi je 
+vous laisse le soin de vous y reporter. Merci.<br>
+</div>
+- <u>Chapitre sur le Module Geo</u><br>
+<div style="margin-left: 10px;">
+Cet aspect, n'est disponible que sur le Site Arvernes, aussi je 
+vous laisse le soin de vous y reporter. Merci.<br>
+</div>
+- <u>Chapitre sur le Param&egrave;trage de GenJ</u><br>
+<div style="margin-left: 10px;">
+Cet aspect, n'est disponible que sur le Site Arvernes, aussi je 
+vous laisse le soin de vous y reporter. Merci.<br>
+</div>
+- <u>Le site Arvernes</u><br>
+<div style="margin-left: 10px;">
+Ce site est disponible &agrave; l'URL suivante&nbsp;:<br>
+http://www.arvernes.com<br>
+</div>
+</div>
+<br>
+
+</p>
+</li>
+
+<br>
+
+</ol>
+
+
+<hr>
+
+<table width="100%" summary="Navigation footer">
+ <tr>
+  <td width="40%" align="left">
+   <a accesskey="p" href="./faq5.html">Pr&eacute;c&eacute;dent</a>
+  </td>
+  <td width="20%" align="center">
+   <a accesskey="u" href="#_Sommaire_">Haut</a>
+  </td>
+  <td width="40%" align="right">
+   <a accesskey="n" href="./faq7.html">Suivant</a>
+  </td>
+ </tr>
+ <tr>
+  <td width="40%" align="left" valign="top">
+   Conseils
+  </td>
+  <td width="20%" align="center">
+   <a accesskey="h" href="./faq.html">Index</a>
+  </td>
+  <td width="40%" align="right" valign="top">
+   Mes Premiers pas avec GenJ
+  </td>
+ </tr>
+</table>
+
+<br>
+
+</body>
+</html>
+
