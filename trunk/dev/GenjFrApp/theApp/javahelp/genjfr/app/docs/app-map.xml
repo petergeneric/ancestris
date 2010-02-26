@@ -8,6 +8,7 @@ and open the template in the editor.
     <mapID target="genjfr.app.about" url="app-about.html"/>
     <mapID target="genjfr.app.discovering" url="./first_steps/decouverte_genjfr.html"/>
     <mapID target="genjfr.app.intro" url="genjfr.html"/>
+    <mapID target="genjfr.app.nomade" url="./first_steps/genjfr_nomade.html"/>
     <mapID target="genjfr.app.options.menu1" url="./first_steps/menu_options_1.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
