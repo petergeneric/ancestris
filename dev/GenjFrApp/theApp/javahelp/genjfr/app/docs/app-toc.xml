@@ -11,6 +11,7 @@ and open the template in the editor.
     <tocitem expand="true" text="GenjFr - Sommaire" target="genjfr.app.about">
         <tocitem text="Découverte de GenjFr" target="genjfr.app.discovering" />
         <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
+        <tocitem text="GenjFr en mode nomade" target="genjfr.app.nomade" />
     </tocitem>
   </tocitem>
 </toc>

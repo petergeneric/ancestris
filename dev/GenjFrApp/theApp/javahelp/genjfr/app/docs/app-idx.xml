@@ -8,4 +8,5 @@ and open the template in the editor.
     <indexitem text="Sommaire Général" target="genjfr.app.about"/>
     <indexitem text="Découverte de GenjFr" target="genjfr.app.discovering"/>
     <indexitem text="Gestion des fenêtres" target="genjfr.app.windows"/>
+    <indexitem text="Nomadisme et GenjFr" target="genjfr.app.nomade"/>
 </index>
