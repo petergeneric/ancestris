@@ -69,6 +69,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         return launch;
     }
 
+    @SuppressWarnings("unchecked")
     public void performAction() {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
