@@ -4,28 +4,22 @@
  */
 package genjfr.app;
 
-import genj.util.DirectAccessTokenizer;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.util.NbPreferences;
 import org.openide.windows.Mode;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app//ControlCenter//EN",
-autostore = false)
+autostore = true) // leave as "true" to ensure properties are saved at restart
+        
 public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
     private static ControlCenterTopComponent instance;
@@ -33,7 +27,6 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "ControlCenterTopComponent";
     private static ControlCenter panel = App.center;
-    private static boolean filesToLoad = false;
 
     public ControlCenterTopComponent() {
         super();
@@ -87,7 +80,6 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     public static synchronized ControlCenterTopComponent getDefault() {
         if (instance == null) {
             instance = new ControlCenterTopComponent();
-//            panel.load(null, filesToLoad); // loads default gedcom
         }
         return instance;
     }
@@ -139,12 +131,10 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
         nbRegistry.put(p, "gedcoms", panel.getOpenedGedcoms());
-        // TODO store your settings
     }
 
     @Override
     Object readProperties(java.util.Properties p) {
-        filesToLoad = !(nbRegistry.get(p, "gedcoms", "0").equals("0"));
         ControlCenterTopComponent singleton = ControlCenterTopComponent.getDefault();
         singleton.readPropertiesImpl(p);
         return singleton;
@@ -154,30 +144,8 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     void readPropertiesImpl(java.util.Properties p) {
         String version = p.getProperty("version");
         Collection files = new ArrayList();
-        String defaultFile = null;
         Collection pfiles = nbRegistry.get(p, "gedcoms", (Collection) null);
-        panel.load(pfiles, filesToLoad);
-//        try {
-//            defaultFile = (new File(NbPreferences.forModule(App.class).get("gedcomFile", ""))).getCanonicalPath();
-//        } catch (IOException ex) {
-//            defaultFile = null;
-//        }
-//        for (Iterator it = pfiles.iterator(); it.hasNext();) {
-//            String pfile = (String) it.next();
-//            String pfilepath;
-//            try {
-//                DirectAccessTokenizer tokens = new DirectAccessTokenizer(pfile, ",", false);
-//                pfilepath = (new File(new URI(tokens.get(0)))).getCanonicalPath();
-//            } catch (Exception ex) {
-//                pfilepath = null;
-//            }
-//            if ((defaultFile == null) || !(defaultFile.equals(pfilepath))) {
-//                    files.add(pfile);
-//            }
-//        }
-//        if (!files.isEmpty()) {
-//            panel.load(files, filesToLoad); // loads gedcoms present at previous close, except defaultfile which should already been loaded
-//        }
+        panel.load(pfiles);
     }
 
     @Override

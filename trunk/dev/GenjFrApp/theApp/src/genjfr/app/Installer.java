@@ -24,14 +24,15 @@ public class Installer extends ModuleInstall {
 
     @Override
     public void restored() {
-        // By default, do nothing.
-        // Put your startup code here.
+        // Lanches main application
         App.main(new String[]{});
+
+        // Run wizard if necessary
         if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
                 public void run() {
-                    // any code here will be run with the UI is available
+                    // Any code here will be run with the UI is available
                     App.REGISTRY = checkOptionsWizard(App.REGISTRY);
                     if (restart) {
                         JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "WillRestart.text"));

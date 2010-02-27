@@ -46,15 +46,11 @@ import genj.window.WindowManager;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.JComponent;
@@ -143,34 +139,10 @@ public class ControlCenter extends JPanel {
      * - otherwise load files
      *
      */
-    public void load(Collection files, boolean filesToLoad) {
+    public void load(Collection files) {
 
-//        if (files == null) {
-//            files = new ArrayList();
-//            String defaultFile = getDefaultFile(false);
-//            if (defaultFile != null && !defaultFile.isEmpty()) {
-//                files.add(defaultFile);
-//            } else {
-//                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
-//                if (!filesToLoad) {
-//                    Runnable r = new ActionOpen() {
-//
-//                        @Override
-//                        protected void postExecute(boolean b) {
-//                            super.postExecute(b);
-//                            App.center.isReady(-1);
-//                        }
-//                    };
-//                    App.center.isReady(1);
-//                    SwingUtilities.invokeLater(r);
-//                }
-//            }
-//        }
-//
-//        if (!files.isEmpty()) {
             Runnable r = new ActionAutoOpen(files);
             SwingUtilities.invokeLater(r);
-//        }
     }
 
     /**
