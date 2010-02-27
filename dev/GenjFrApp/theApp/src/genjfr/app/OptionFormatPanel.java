@@ -659,11 +659,11 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
     void setDisplayNames(String str) {
         if (str.equals("-1")) {
-            str = "0";
+            str = "1";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 0;
+            i = 1;
         }
         if (i > 1) {
             i = 1;
