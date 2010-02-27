@@ -87,7 +87,7 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     public static synchronized ControlCenterTopComponent getDefault() {
         if (instance == null) {
             instance = new ControlCenterTopComponent();
-            panel.load(null, filesToLoad); // loads default gedcom
+//            panel.load(null, filesToLoad); // loads default gedcom
         }
         return instance;
     }
@@ -156,27 +156,28 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
         Collection files = new ArrayList();
         String defaultFile = null;
         Collection pfiles = nbRegistry.get(p, "gedcoms", (Collection) null);
-        try {
-            defaultFile = (new File(NbPreferences.forModule(App.class).get("gedcomFile", ""))).getCanonicalPath();
-        } catch (IOException ex) {
-            defaultFile = null;
-        }
-        for (Iterator it = pfiles.iterator(); it.hasNext();) {
-            String pfile = (String) it.next();
-            String pfilepath;
-            try {
-                DirectAccessTokenizer tokens = new DirectAccessTokenizer(pfile, ",", false);
-                pfilepath = (new File(new URI(tokens.get(0)))).getCanonicalPath();
-            } catch (Exception ex) {
-                pfilepath = null;
-            }
-            if ((defaultFile == null) || !(defaultFile.equals(pfilepath))) {
-                    files.add(pfile);
-            }
-        }
-        if (!files.isEmpty()) {
-            panel.load(files, filesToLoad); // loads gedcoms present at previous close, except defaultfile which should already been loaded
-        }
+        panel.load(pfiles, filesToLoad);
+//        try {
+//            defaultFile = (new File(NbPreferences.forModule(App.class).get("gedcomFile", ""))).getCanonicalPath();
+//        } catch (IOException ex) {
+//            defaultFile = null;
+//        }
+//        for (Iterator it = pfiles.iterator(); it.hasNext();) {
+//            String pfile = (String) it.next();
+//            String pfilepath;
+//            try {
+//                DirectAccessTokenizer tokens = new DirectAccessTokenizer(pfile, ",", false);
+//                pfilepath = (new File(new URI(tokens.get(0)))).getCanonicalPath();
+//            } catch (Exception ex) {
+//                pfilepath = null;
+//            }
+//            if ((defaultFile == null) || !(defaultFile.equals(pfilepath))) {
+//                    files.add(pfile);
+//            }
+//        }
+//        if (!files.isEmpty()) {
+//            panel.load(files, filesToLoad); // loads gedcoms present at previous close, except defaultfile which should already been loaded
+//        }
     }
 
     @Override

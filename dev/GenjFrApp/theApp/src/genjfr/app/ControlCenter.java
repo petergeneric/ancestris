@@ -47,6 +47,7 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -144,32 +145,32 @@ public class ControlCenter extends JPanel {
      */
     public void load(Collection files, boolean filesToLoad) {
 
-        if (files == null) {
-            files = new ArrayList();
-            String defaultFile = getDefaultFile(false);
-            if (defaultFile != null && !defaultFile.isEmpty()) {
-                files.add(defaultFile);
-            } else {
-                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
-                if (!filesToLoad) {
-                    Runnable r = new ActionOpen() {
-
-                        @Override
-                        protected void postExecute(boolean b) {
-                            super.postExecute(b);
-                            App.center.isReady(-1);
-                        }
-                    };
-                    App.center.isReady(1);
-                    SwingUtilities.invokeLater(r);
-                }
-            }
-        }
-
-        if (!files.isEmpty()) {
+//        if (files == null) {
+//            files = new ArrayList();
+//            String defaultFile = getDefaultFile(false);
+//            if (defaultFile != null && !defaultFile.isEmpty()) {
+//                files.add(defaultFile);
+//            } else {
+//                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+//                if (!filesToLoad) {
+//                    Runnable r = new ActionOpen() {
+//
+//                        @Override
+//                        protected void postExecute(boolean b) {
+//                            super.postExecute(b);
+//                            App.center.isReady(-1);
+//                        }
+//                    };
+//                    App.center.isReady(1);
+//                    SwingUtilities.invokeLater(r);
+//                }
+//            }
+//        }
+//
+//        if (!files.isEmpty()) {
             Runnable r = new ActionAutoOpen(files);
             SwingUtilities.invokeLater(r);
-        }
+//        }
     }
 
     /**
@@ -395,11 +396,56 @@ public class ControlCenter extends JPanel {
     private class ActionAutoOpen extends Action2 {
 
         /** files to load */
-        private Collection files;
+        private Collection files=null;;
 
         /** constructor */
-        private ActionAutoOpen(Collection theFiles) {
-            files = theFiles;
+        private ActionAutoOpen(Collection<String> theFiles) {
+            if (theFiles==null)
+                theFiles = new ArrayList<String>();
+            addDefaultFile(theFiles);
+            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+                if (theFiles.isEmpty()) {
+                    Runnable r = new ActionOpen() {
+
+                        @Override
+                        protected void postExecute(boolean b) {
+                            super.postExecute(b);
+                            App.center.isReady(-1);
+                        }
+                    };
+                    App.center.isReady(1);
+                    SwingUtilities.invokeLater(r);
+                }
+            files=theFiles;
+        }
+
+        private void addDefaultFile(Collection<String> files) {
+            File defaultFile = new File(NbPreferences.forModule(App.class).get("gedcomFile", ""));
+            if (defaultFile == null) return;
+            if (!defaultFile.exists()) return;
+            String defaultFilePath=null;
+            try {
+                defaultFilePath = defaultFile.getCanonicalPath();
+            } catch (Exception ex) {
+                return ;
+            }
+            String filepath=null;
+
+            for (String file : files) {
+                try {
+                    DirectAccessTokenizer tokens = new DirectAccessTokenizer(file, ",", false);
+                    filepath = (new File(new URL(tokens.get(0)).getFile())).getCanonicalPath();;
+                } catch (Exception ex) {
+                    continue;
+                }
+                if (defaultFilePath.equals(filepath))
+                    return;
+            }
+            try {
+                files.add((new URL("file", "", defaultFile.getAbsolutePath())).toString());
+            } catch (Exception ex) {
+
+            }
         }
 
         /** run */
@@ -418,9 +464,9 @@ public class ControlCenter extends JPanel {
                         String restore = tokens.get(0);
 
                         // check if it's a local file
-                        File local = new File(new URI(restore));
-                        if (!local.exists()) {
-                            continue;
+                        File local = new File(restore);
+                        if (local.exists()) {
+                            local.toURI().toURL().toString();
                         }
 
                         ActionOpen open = new ActionOpen(restore) {
@@ -636,8 +682,9 @@ public class ControlCenter extends JPanel {
         if (dirOnly) {
             return local.getParent();
         }
+        if (!local.exists()) return "";
         try {
-            return new File(defaultFile).toURI().toURL().toString();
+            local.toURI().toURL().toString();
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
