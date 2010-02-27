@@ -88,7 +88,7 @@
             <file name="genjfr-app-EditAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.EditTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_EditAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_EditAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
                 <attr name="iconBase" stringvalue="genjfr/app/Help.png"/>
             </file>
@@ -96,44 +96,44 @@
             <file name="genjfr-app-EntityAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.EntityTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_EntityAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_EntityAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
                 <attr name="iconBase" stringvalue="genjfr/app/New.png"/>
             </file>
             <file name="genjfr-app-NavigatorAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.NavigatorTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_NavigatorAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_NavigatorAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-ReportAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.ReportTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ReportAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_ReportAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-SearchAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.SearchTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_SearchAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_SearchAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-TableAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.TableTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_TableAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TableAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-TimelineAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.TimelineTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_TimelineAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TimelineAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-TreeAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.TreeTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_TreeAction"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TreeAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
         </folder>
@@ -264,6 +264,10 @@
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-NavigatorAction.instance"/>
                 <attr name="position" intvalue="-300"/>
             </file>
+            <file name="SearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-SearchAction.instance"/>
+                <attr name="position" intvalue="-250"/>
+            </file>
             <file name="Separator1_1.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-200"/>
@@ -271,10 +275,6 @@
             <file name="ReportAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ReportAction.instance"/>
                 <attr name="position" intvalue="-100"/>
-            </file>
-
-            <file name="SearchAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-SearchAction.instance"/>
             </file>
         </folder>
         <file name="Window_hidden"/>
