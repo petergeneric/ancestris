@@ -30,7 +30,6 @@ import genj.util.Resources;
 import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
 
-import genjfr.app.pluginservice.PluginInterface;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,15 +51,12 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
