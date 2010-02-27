@@ -51,7 +51,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
     public String getName() {
         String name = getDefaultFile(true);
         String str = "";
-        str = name.isEmpty() ? "<...>" : name;
+        str = (name == null || name.isEmpty()) ? "<...>" : name;
         return NbBundle.getMessage(ActionOpenDefault.class, "CTL_ActionOpenDefault") + " " + str;
     }
 
