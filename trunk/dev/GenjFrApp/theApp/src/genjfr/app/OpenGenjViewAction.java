@@ -31,8 +31,8 @@ final class OpenGenjViewAction extends Action2  {
         this.component = component;
         this.map = map;
         setImage(component.getViewFactory().getImage());
-//        setText((String)map.get("displayName"));
-        setText(component.getViewFactory().getTitle(true));
+        setText((String)map.get("displayName"));
+//        setText(component.getViewFactory().getTitle(true));
 //        putValue(Action.NAME,(String)map.get("displayName"));
 //        putValue(Action.SMALL_ICON, component.getViewFactory().getImage());
     }
