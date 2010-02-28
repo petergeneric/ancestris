@@ -140,16 +140,20 @@
         <folder name="Help">
             <!-- Override the registered action with the new one. This will be
                  used by code that calls SystemAction.get(...), e.g. the AppleMenu module -->
-            <file name="genjfr-app-ActionAbout.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionAbout"/>
-            </file>
             <file name="genjfr-app-ActionHelp.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionHelp"/>
             </file>
             <file name="genjfr-app-ActionOnlineHelp.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionOnlineHelp"/>
             </file>
-        </folder>
+            <file name="genjfr-app-ActionAPropos.instance">
+                <attr name="delegate" newvalue="genjfr.app.ActionAPropos"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionAPropos"/>
+                <attr name="iconBase" stringvalue="genjfr/app/ActionAPropos.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            </folder>
     </folder>
     <file name="BugtrackingOptionsDialog_hidden"/>
     <file name="DTDs_hidden"/>
@@ -192,10 +196,6 @@
         <file name="GoTo_hidden"/>
         <folder name="Help">
             <file name="Separator1.instance_hidden"/>
-            <file name="genjfr-app-ActionAbout.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAbout.instance"/>
-                <attr name="position" intvalue="0"/>
-            </file>
             <file name="genjfr-app-ActionHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionHelp.instance"/>
                 <attr name="position" intvalue="-100"/>
@@ -203,6 +203,10 @@
             <file name="genjfr-app-ActionOnlineHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionOnlineHelp.instance"/>
                 <attr name="position" intvalue="-50"/>
+            </file>
+            <file name="genjfr-app-ActionAPropos.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAPropos.instance"/>
+                <attr name="position" intvalue="50"/>
             </file>
             <file name="org-netbeans-core-actions-AboutAction.instance_hidden"/>
             <file name="org-netbeans-core-actions-AboutAction.shadow_hidden"/>
@@ -316,7 +320,7 @@
         <folder name="Hidden">
             <file name="genjfr-app-ActionOpenDefault.instance">
                 <attr name="instanceClass" stringvalue="genjfr.app.ActionOpenDefault"/>
-                <attr name="instanceOf"    stringvalue="org.netbeans.api.actions.Openable"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.api.actions.Openable"/>
                 <attr name="position" intvalue="100"/>
             </file>
         </folder>
