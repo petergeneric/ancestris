@@ -7,6 +7,19 @@ and open the template in the editor.
 <index version="2.0">
     <indexitem text="Sommaire Général" target="genjfr.app.about"/>
     <indexitem text="Découverte de GenjFr" target="genjfr.app.discovering"/>
-    <indexitem text="Gestion des fenêtres" target="genjfr.app.windows"/>
+    <indexitem text="Téléchargement de GenjFr" target="genjfr.app.download"/>
+    <indexitem text="Lieux où parler de GenjFr" target="genjfr.app.external.links"/>
+    <indexitem text="La norme Gedcom" target="genjfr.app.gedcom.standard"/>
     <indexitem text="Nomadisme et GenjFr" target="genjfr.app.nomade"/>
+    <indexitem text="Les Editeurs" target="genjfr.app.view.editors"/>
+    <indexitem text="La vue Entité" target="genjfr.app.view.entity"/>
+    <indexitem text="La visualisation géographique" target="genjfr.app.view.geo"/>
+    <indexitem text="Le Navigateur" target="genjfr.app.view.navigator"/>
+    <indexitem text="La Vue des Rapports" target="genjfr.app.view.reports"/>
+    <indexitem text="La fenêtre de Recherche" target="genjfr.app.view.search"/>
+    <indexitem text="La vue Table" target="genjfr.app.view.table"/>
+    <indexitem text="L'arbre Généalogique" target="genjfr.app.view.tree"/>
+    <indexitem text="Les différentes vues" target="genjfr.app.views"/>
+    <indexitem text="Gestion des fenêtres" target="genjfr.app.windows"/>
+    <indexitem text="Première configuration" target="genjfr.app.wizard"/>
 </index>
