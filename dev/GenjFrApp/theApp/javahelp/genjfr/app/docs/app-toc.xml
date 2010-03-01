@@ -9,9 +9,28 @@ and open the template in the editor.
            text="La Généalogie avec GenjFr">
     <tocitem target="genjfr.app.intro">Introduction à GenjFr </tocitem>
     <tocitem expand="true" text="GenjFr - Sommaire" target="genjfr.app.about">
-        <tocitem text="Découverte de GenjFr" target="genjfr.app.discovering" />
-        <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
-        <tocitem text="GenjFr en mode nomade" target="genjfr.app.nomade" />
+        <tocitem expand="true" text="Découverte de GenjFr" target="genjfr.app.discovering">
+            <tocitem target="genjfr.app.download">Téléchargement de GenjFr </tocitem>
+            <tocitem text="Première configuration" target="genjfr.app.wizard" />
+            <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
+        </tocitem>
+        <tocitem expand="true" text="Les différentes vues" target="genjfr.app.views">
+            <tocitem text="L'Arbre généalogique" target="genjfr.app.view.tree" />
+            <tocitem text="La vue Table" target="genjfr.app.view.table" />
+            <tocitem text="Les Editeurs" target="genjfr.app.view.editors" />
+            <tocitem text="Le Navigateur" target="genjfr.app.view.navigator" />
+            <tocitem text="La vue Entité" target="genjfr.app.view.entity" />
+            <tocitem text="La vue Recherche" target="genjfr.app.view.search" />
+            <tocitem text="La Fenêtre des Rapports" target="genjfr.app.view.reports" />
+            <tocitem text="La visualisation Géographique" target="genjfr.app.view.geo" />
+        </tocitem>
+        <tocitem expand="true" text="Utilisation avancée" target="genjfr.app.about">
+            <tocitem text="GenjFr en mode nomade" target="genjfr.app.nomade" />
+        </tocitem>
+    </tocitem>
+    <tocitem expand="false" text="Divers" target="genjfr.app.about">
+        <tocitem target="genjfr.app.external.links">Liens externes</tocitem>
+        <tocitem target="genjfr.app.gedcom.standard">La norme Gedcom</tocitem>
     </tocitem>
   </tocitem>
 </toc>
