@@ -592,7 +592,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
 
 
     void setDisplayNames(String str) {
-        if (str.equals("-1")) {
+        if ((str.length() == 0) || str.equals("-1")) {
             str = "1";
         }
         Integer i = getIntFromStr(str);
@@ -610,15 +610,15 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
     }
 
     void setDisplayDates(String str) {
-        if (str.equals("-1")) {
-            str = "0";
+        if ((str.length() == 0) || str.equals("-1")) {
+            str = "1";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 0;
+            i = 1;
         }
         if (i > 3) {
-            i = 3;
+            i = 1;
         }
         jComboBox3.setSelectedIndex(i);
     }
