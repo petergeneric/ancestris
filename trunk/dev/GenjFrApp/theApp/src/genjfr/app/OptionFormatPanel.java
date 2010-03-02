@@ -658,7 +658,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }
 
     void setDisplayNames(String str) {
-        if (str.equals("-1")) {
+        if ((str.length() == 0) || str.equals("-1")) {
             str = "1";
         }
         Integer i = getIntFromStr(str);
@@ -676,12 +676,12 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }
 
     void setDisplayDates(String str) {
-        if (str.equals("-1")) {
-            str = "0";
+        if ((str.length() == 0) || str.equals("-1")) {
+            str = "1";
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 0;
+            i = 1;
         }
         if (i > 3) {
             i = 3;
