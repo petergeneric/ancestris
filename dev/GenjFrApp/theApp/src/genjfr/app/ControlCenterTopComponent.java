@@ -41,14 +41,9 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
     }
 
+
     @Override
-    public void open() {
-        Mode m = WindowManager.getDefault().findMode("explorer");
-        if (m != null) {
-            m.dockInto(this);
-        }
-        super.open();
-    }
+    String getDefaultMode() {return "genjfr-explorer";}
 
     /** This method is called from within the constructor to
      * initialize the form.

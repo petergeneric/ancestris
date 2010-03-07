@@ -23,7 +23,9 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 
 /**
@@ -45,6 +47,17 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
     Gedcom gedcom = null;
     private static AbstractLookup abstractLookup = new AbstractLookup(ic);
 
+    String getDefaultMode(){return "genjfr-editor";};
+
+    @Override
+    public void open() {
+     Mode m = WindowManager.getDefault().findMode (getDefaultMode());
+     if (m != null) {
+        m.dockInto(this);
+     }
+     super.open();
+  }
+
     public Gedcom getGedcom() {
         return gedcom;
     }
@@ -55,6 +68,8 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
 
     public GenjViewTopComponent() {
         super();
+        // toutes les fenetres peuvent aller dans tous les modes
+            putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); 
     }
 
     public void setPanel(JPanel jpanel) {

@@ -32,6 +32,9 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         return viewfactory;
     }
 
+
+    @Override
+    String getDefaultMode() {return "genjfr-output";}
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
