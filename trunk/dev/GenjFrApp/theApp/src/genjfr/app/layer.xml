@@ -371,22 +371,34 @@
             <file name="TreeTopComponent.settings" url="TreeTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="explorer">
+            <folder name="genjfr-explorer">
                 <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>
             </folder>
-            <folder name="table">
+            <folder name="genjfr-nav">
+                <file name="NavigatorTopComponent.wstcref" url="NavigatorTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="genjfr-output">
+                <file name="TreeTopComponent.wstcref" url="TreeTopComponentWstcref.xml"/>
+                <file name="ReportTopComponent.wstcref" url="ReportTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="genjfr-properties">
+                <file name="EntityTopComponent.wstcref" url="EntityTopComponentWstcref.xml"/>
+                <file name="SearchTopComponent.wstcref" url="SearchTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="genjfr-table">
                 <file name="TableTopComponent.wstcref" url="TableTopComponentWstcref.xml"/>
+                <file name="TimelineTopComponent.wstcref" url="TimelineTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="genjfr-editor">
+                <file name="EditTopComponent.wstcref" url="EditTopComponentWstcref.xml"/>
             </folder>
 
-            <folder name="editor">
-                <file name="EditTopComponent.wstcref" url="EditTopComponentWstcref.xml"/>
-                <file name="EntityTopComponent.wstcref" url="EntityTopComponentWstcref.xml"/>
-                <file name="NavigatorTopComponent.wstcref" url="NavigatorTopComponentWstcref.xml"/>
-                <file name="ReportTopComponent.wstcref" url="ReportTopComponentWstcref.xml"/>
-                <file name="SearchTopComponent.wstcref" url="SearchTopComponentWstcref.xml"/>
-                <file name="TimelineTopComponent.wstcref" url="TimelineTopComponentWstcref.xml"/>
-                <file name="TreeTopComponent.wstcref" url="TreeTopComponentWstcref.xml"/>
-            </folder>
+            <file name="genjfr-editor.wsmode" url="modes/genjfr-editor.wsmode" />
+            <file name="genjfr-explorer.wsmode" url="modes/genjfr-explorer.wsmode" />
+            <file name="genjfr-nav.wsmode" url="modes/genjfr-nav.wsmode" />
+            <file name="genjfr-output.wsmode" url="modes/genjfr-output.wsmode" />
+            <file name="genjfr-properties.wsmode" url="modes/genjfr-properties.wsmode" />
+            <file name="genjfr-table.wsmode" url="modes/genjfr-table.wsmode" />
             <!--
             <file name="ccenter.wsmode" url="outputWsmode.xml"/>
             <file name="table.wsmode" url="tableWsmode.xml"/>

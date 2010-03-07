@@ -6,9 +6,10 @@ package genjfr.app;
 
 import genj.edit.EditViewFactory;
 import genj.view.ViewFactory;
-import javax.swing.SwingUtilities;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.Mode;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -24,6 +25,9 @@ public final class EditTopComponent extends GenjViewTopComponent {
     ViewFactory getViewFactory() {
         return viewfactory;
     }
+
+    @Override
+    String getDefaultMode() {return "genjfr-editor";}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -91,12 +95,8 @@ public final class EditTopComponent extends GenjViewTopComponent {
         return this;
     }
 
-
-//    @Override
-//    protected String preferredID() {
-////        if (gedcom == null)
-//        return preferredBASEID();
-//        //      return preferredBASEID()+gedcom.getName();
-//    }
-
+    @Override
+    protected String preferredID() {
+        return PREFERRED_ID;
+    }
 }
