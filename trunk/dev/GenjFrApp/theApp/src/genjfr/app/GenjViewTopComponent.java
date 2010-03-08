@@ -46,17 +46,20 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
     private static InstanceContent ic = new InstanceContent();
     Gedcom gedcom = null;
     private static AbstractLookup abstractLookup = new AbstractLookup(ic);
+    private boolean isRestored = false;
 
     String getDefaultMode(){return "genjfr-editor";};
 
     @Override
     public void open() {
-     Mode m = WindowManager.getDefault().findMode (getDefaultMode());
-     if (m != null) {
-        m.dockInto(this);
-     }
-     super.open();
-  }
+        if (!isRestored) {
+             Mode m = WindowManager.getDefault().findMode (getDefaultMode());
+             if (m != null) {
+                m.dockInto(this);
+             }
+        }
+        super.open();
+    }
 
     public Gedcom getGedcom() {
         return gedcom;
@@ -213,6 +216,7 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
         String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
         if (gedName==null) return;
+        isRestored = true;
         waitStartup(gedName);
     }
 
