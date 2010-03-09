@@ -88,6 +88,20 @@ public final class ActionNew extends Action2 {
             });
             // remember
             GedcomDirectory.getInstance().registerGedcom(gedcom);
+      {
+        EditTopComponent editTC = new EditTopComponent();
+        editTC.init();
+        editTC.open();
+        editTC.requestActive();
+        TableTopComponent tableTC = new TableTopComponent();
+        tableTC.init();
+        tableTC.open();
+//        tableTC.requestActive();
+        TreeTopComponent treeTC = new TreeTopComponent();
+        treeTC.init();
+        treeTC.open();
+//        treeTC.requestActive();
+      }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error " + e);
         }
