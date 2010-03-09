@@ -235,7 +235,7 @@ public /*final*/ class ActionOpen extends Action2 {
           );
         }
       }
-      if (!isRestore) {
+      if (!isRestore && preExecuteResult) {
         EditTopComponent editTC = new EditTopComponent();
         editTC.init();
         editTC.open();
