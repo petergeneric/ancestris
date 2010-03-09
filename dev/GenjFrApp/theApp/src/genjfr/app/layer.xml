@@ -312,6 +312,18 @@
         </folder>
     </folder>
     <folder name="Services">
+        <folder name="AutoupdateType">
+            <file name="genjfr_app_update_center.instance">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_app_update_center.instance"/>
+                <attr name="enabled" boolvalue="true"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
+                <attr name="url_key" stringvalue="genjfr_app_update_center"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+<!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
+                <attr name="category" stringvalue="STANDARD"/>
+-->            </file>
+        </folder>
         <folder name="JavaHelp">
             <file name="app-helpset.xml" url="app-helpset.xml">
                 <attr name="position" intvalue="3929"/>
@@ -393,12 +405,12 @@
                 <file name="EditTopComponent.wstcref" url="EditTopComponentWstcref.xml"/>
             </folder>
 
-            <file name="genjfr-editor.wsmode" url="modes/genjfr-editor.wsmode" />
-            <file name="genjfr-explorer.wsmode" url="modes/genjfr-explorer.wsmode" />
-            <file name="genjfr-nav.wsmode" url="modes/genjfr-nav.wsmode" />
-            <file name="genjfr-output.wsmode" url="modes/genjfr-output.wsmode" />
-            <file name="genjfr-properties.wsmode" url="modes/genjfr-properties.wsmode" />
-            <file name="genjfr-table.wsmode" url="modes/genjfr-table.wsmode" />
+            <file name="genjfr-editor.wsmode" url="modes/genjfr-editor.wsmode"/>
+            <file name="genjfr-explorer.wsmode" url="modes/genjfr-explorer.wsmode"/>
+            <file name="genjfr-nav.wsmode" url="modes/genjfr-nav.wsmode"/>
+            <file name="genjfr-output.wsmode" url="modes/genjfr-output.wsmode"/>
+            <file name="genjfr-properties.wsmode" url="modes/genjfr-properties.wsmode"/>
+            <file name="genjfr-table.wsmode" url="modes/genjfr-table.wsmode"/>
             <!--
             <file name="ccenter.wsmode" url="outputWsmode.xml"/>
             <file name="table.wsmode" url="tableWsmode.xml"/>
