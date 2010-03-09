@@ -66,10 +66,13 @@ public /*final*/ class ActionOpen extends Action2 {
     /** views to load */
     private List views2restore = new ArrayList();
 
-    private boolean isRestore = false;
+    private boolean mustOpenDefaultViews = false;
 
     /** constructor - good for reloading */
     public ActionOpen(String restore) throws MalformedURLException {
+        this(restore,false);
+    }
+    public ActionOpen(String restore, boolean mustOpenDefaultViews) throws MalformedURLException {
 
       setAsync(ASYNC_SAME_INSTANCE);
 
@@ -90,7 +93,7 @@ public /*final*/ class ActionOpen extends Action2 {
 //        if (token.length()>0) views2restore.add(tokens.get(i));
 //      }
 
-      isRestore = true;
+      this.mustOpenDefaultViews = mustOpenDefaultViews;
 
       // done
     }
@@ -102,6 +105,7 @@ public /*final*/ class ActionOpen extends Action2 {
       setText(resources, "cc.menu.open");
       setImage(Images.imgOpen);
       setAsync(ASYNC_NEW_INSTANCE);
+      this.mustOpenDefaultViews = true;
     }
 
     /** constructor - good for loading a specific file*/
@@ -235,23 +239,27 @@ public /*final*/ class ActionOpen extends Action2 {
           );
         }
       }
-      if (!isRestore && preExecuteResult) {
-        EditTopComponent editTC = new EditTopComponent();
-        editTC.init();
-        editTC.open();
-        editTC.requestActive();
-        TableTopComponent tableTC = new TableTopComponent();
-        tableTC.init();
-        tableTC.open();
-//        tableTC.requestActive();
-        TreeTopComponent treeTC = new TreeTopComponent();
-        treeTC.init();
-        treeTC.open();
-//        treeTC.requestActive();
+      if (mustOpenDefaultViews && preExecuteResult) {
+          openDefaultViews(gedcomBeingLoaded);
       }
 
       // done
     }
+
+    public static void openDefaultViews(Gedcom ged) {
+        EditTopComponent editTC = new EditTopComponent();
+        editTC.init(ged);
+        editTC.open();
+        editTC.requestActive();
+        TableTopComponent tableTC = new TableTopComponent();
+        tableTC.init(ged);
+        tableTC.open();
+//        tableTC.requestActive();
+        TreeTopComponent treeTC = new TreeTopComponent();
+        treeTC.init(ged);
+        treeTC.open();
+//        treeTC.requestActive();
+      }
 
     /**
      * choose a file
@@ -316,7 +324,7 @@ public /*final*/ class ActionOpen extends Action2 {
 
       // Check if already open
       if (GedcomDirectory.getInstance().getGedcom(origin.getName())!=null) {
-          if (!isRestore)
+          if (!mustOpenDefaultViews)
         windowManager.openDialog(null,origin.getName(),WindowManager.ERROR_MESSAGE,resources.getString("cc.open.already_open", origin.getName()),Action2.okOnly(),App.center);
         return false;
       }
