@@ -374,9 +374,9 @@ public class ControlCenter extends JPanel {
         private ActionAutoOpen(Collection<String> theFiles) {
             if (theFiles==null)
                 theFiles = new ArrayList<String>();
-            addDefaultFile(theFiles);
+//            addDefaultFile(theFiles);
             if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
-                if (theFiles.isEmpty()) {
+                if (theFiles.isEmpty() && getDefaultFile(theFiles) == null) {
                     Runnable r = new ActionOpen() {
 
                         @Override
@@ -391,15 +391,15 @@ public class ControlCenter extends JPanel {
             files=theFiles;
         }
 
-        private void addDefaultFile(Collection<String> files) {
+        private String getDefaultFile(Collection<String> files) {
             File defaultFile = new File(NbPreferences.forModule(App.class).get("gedcomFile", ""));
-            if (defaultFile == null) return;
-            if (!defaultFile.exists()) return;
+            if (defaultFile == null) return null;
+            if (!defaultFile.exists()) return null;
             String defaultFilePath=null;
             try {
                 defaultFilePath = defaultFile.getCanonicalPath();
             } catch (Exception ex) {
-                return ;
+                return null;
             }
             String filepath=null;
 
@@ -411,12 +411,12 @@ public class ControlCenter extends JPanel {
                     continue;
                 }
                 if (defaultFilePath.equals(filepath))
-                    return;
+                    return null;
             }
             try {
-                files.add((new URL("file", "", defaultFile.getAbsolutePath())).toString());
+                return (new URL("file", "", defaultFile.getAbsolutePath())).toString();
             } catch (Exception ex) {
-
+                return null;
             }
         }
 
@@ -458,6 +458,36 @@ public class ControlCenter extends JPanel {
                     // next
                 }
             }
+
+            // open default file if necessary
+            { String restore = getDefaultFile(files);
+                if ( restore != null && getOpenedGedcom(restore) == null) {
+                    try {
+
+                        // check if it's a local file
+                        File local = new File(restore);
+                        if (local.exists()) {
+                            local.toURI().toURL().toString();
+                        }
+
+                        ActionOpen open = new ActionOpen(restore,true) {
+
+                            @Override
+                            protected void postExecute(boolean b) {
+                                super.postExecute(b);
+                                App.center.isReady(-1);
+                            }
+                        };
+                        App.center.isReady(1);
+                        open.trigger();
+                    } catch (Throwable t) {
+                        App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
+                    }
+
+                    // next
+                }
+            }
+
 
             // done
             App.center.isReady(-1);
