@@ -117,7 +117,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     // setup layout
     setLayout(new BorderLayout());
     add(BorderLayout.CENTER, new JScrollPane(table));
-    add(BorderLayout.EAST, panelShortcuts);
+    add(BorderLayout.NORTH, panelShortcuts);
     
     // done
   }
@@ -439,7 +439,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       
       // remove old shortcuts
       panelShortcuts.removeAll();
-      panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.Y_AXIS));
+      panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.X_AXIS));
       panelShortcuts.getInputMap(WHEN_IN_FOCUSED_WINDOW).clear();
       panelShortcuts.getActionMap().clear();
       panelShortcuts.revalidate();
