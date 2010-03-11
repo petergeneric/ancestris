@@ -220,31 +220,32 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Overide standard setValue to check for mandatory jurisdictions
      */
-    @Override
-    public void setValue(String value) {
-        if (value.isEmpty()) {
-            return;
-        }
-        String title = Resources.get(Options.class).getString("error.dateformat.title");
-        boolean isMandatory[] = new boolean[7];
-        isMandatory[0] = Options.getInstance().fmt_address1_mand;
-        isMandatory[1] = Options.getInstance().fmt_address2_mand;
-        isMandatory[2] = Options.getInstance().fmt_address3_mand;
-        isMandatory[3] = Options.getInstance().fmt_address4_mand;
-        isMandatory[4] = Options.getInstance().fmt_address5_mand;
-        isMandatory[5] = Options.getInstance().fmt_address6_mand;
-        isMandatory[6] = Options.getInstance().fmt_address7_mand;
-        String juris[] = toJurisdictions(value);
-        for (int i = 0; i < Math.min(juris.length, 7); i++) {
-            String string = juris[i];
-            if (string.trim().isEmpty() && isMandatory[i]) {
-                JOptionPane.showMessageDialog(null, Resources.get(Options.class).getString("error.dateformat", i+1), title, JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
-        super.setValue(value);
-    }
-
+// FIXME code desactive temporairement
+//    @Override
+//    public void setValue(String value) {
+//        if (value.isEmpty()) {
+//            return;
+//        }
+//        String title = Resources.get(Options.class).getString("error.dateformat.title");
+//        boolean isMandatory[] = new boolean[7];
+//        isMandatory[0] = Options.getInstance().fmt_address1_mand;
+//        isMandatory[1] = Options.getInstance().fmt_address2_mand;
+//        isMandatory[2] = Options.getInstance().fmt_address3_mand;
+//        isMandatory[3] = Options.getInstance().fmt_address4_mand;
+//        isMandatory[4] = Options.getInstance().fmt_address5_mand;
+//        isMandatory[5] = Options.getInstance().fmt_address6_mand;
+//        isMandatory[6] = Options.getInstance().fmt_address7_mand;
+//        String juris[] = toJurisdictions(value);
+//        for (int i = 0; i < Math.min(juris.length, 7); i++) {
+//            String string = juris[i];
+//            if (string.trim().isEmpty() && isMandatory[i]) {
+//                JOptionPane.showMessageDialog(null, Resources.get(Options.class).getString("error.dateformat", i+1), title, JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//        }
+//        super.setValue(value);
+//    }
+//
     /**
      * Accessor - the hierarchy of this place's value (non localized)
      */
