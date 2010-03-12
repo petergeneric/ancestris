@@ -13,7 +13,7 @@ public final class OptionsWizardVisualPanel2 extends JPanel {
 
     // Values
     String[] indis = new String[] { "Charles de Gaulle", "de Gaulle, Charles" };
-    String[] dates = new String[] { "25 JAN 1970", "25 Jan 1970", "25 Janvier 1970", "25/01/1970" };
+    String[] dates = new String[] { "25 FEB 1587 (Format Gedcom)", "25 Fév 1587 (Format local court)", "25 Février 1587 (Format local long)", "25/02/1587 (Format numérique européen)" };
 
     /** Creates new form OptionsWizardVisualPanel2 */
     public OptionsWizardVisualPanel2() {
