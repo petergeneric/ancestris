@@ -29,7 +29,9 @@ and open the template in the editor.
         </tocitem>
         <tocitem expand="true" text="Utilisation avancée" target="genjfr.app.advanced">
             <tocitem text="GenjFr en mode nomade" target="genjfr.app.nomade" />
-            <tocitem text="GenjFr et les plugins" target="genjfr.app.plugins" />
+            <tocitem expand="false" text="GenjFr et les plugins" target="genjfr.app.plugins">
+                <tocitem text="Différents plugins disponibles" target="genjfr.app.plugins.liste" />
+            </tocitem>
         </tocitem>
     </tocitem>
     <tocitem expand="false" text="Divers" target="genjfr.app.misc">

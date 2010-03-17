@@ -17,6 +17,7 @@ and open the template in the editor.
     <mapID target="genjfr.app.nomade" url="./first_steps/genjfr_nomade.html"/>
     <mapID target="genjfr.app.options.menu1" url="./first_steps/menu_options_1.html"/>
     <mapID target="genjfr.app.plugins" url="./first_steps/genjfr_plugins.html"/>
+    <mapID target="genjfr.app.plugins.liste" url="./plugins/plugins_liste.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
