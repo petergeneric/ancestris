@@ -146,7 +146,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel6.text")); // NOI18N
 
-        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel12.text")); // NOI18N
 
         jTextField9.setText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jTextField9.text")); // NOI18N
@@ -193,7 +193,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel14.text")); // NOI18N
 
-        logLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST" }));
+        logLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL" }));
         logLevel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logLevelActionPerformed(evt);
