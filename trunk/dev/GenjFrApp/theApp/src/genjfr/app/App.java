@@ -244,10 +244,6 @@ public class App {
                 System.setOut(new PrintStream(new LogOutputStream(Level.INFO, "System", "out")));
                 System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
 
-                // Log is up
-                LOG.info("\n\n==================8<================================================================");
-                LOG.info("Startup");
-
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
 //                REGISTRY = checkOptionsWizard(REGISTRY);
                 if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
@@ -269,6 +265,10 @@ public class App {
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
                 
+                // Log is up
+                LOG.info("\n\n==================8<================================================================");
+                LOG.info("Startup");
+
                 // Priorite sur le parametre passe en ligne de commande
                 if (System.getProperty("genj.debug.level") != null) {
                     setLogLevel(System.getProperty("genj.debug.level"));
