@@ -30,12 +30,7 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
 
     public void applyChanges() {
         getPanel().store();
-        try {
-            // allow option override of debug level - set non-genj level a tad higher
-            Level level = Level.parse(getPanel().getLogLevel());
-            App.LOG.setLevel(level);
-        } catch (Throwable t) {
-        }
+        App.setLogLevel(getPanel().getLogLevel());
         changed = false;
     }
 

@@ -233,18 +233,8 @@ public class App {
 
                 // prepare some basic logging for now
                 Formatter formatter = new LogFormatter();
-                Logger root = Logger.getLogger("");
+                setLogLevel("INFO");
 
-                try {
-                    // allow command line override of debug level - set non-genj level a tad higher
-                    Level level = Level.parse(System.getProperty("genj.debug.level"));
-                    LOG.setLevel(level);
-                    if (Integer.MAX_VALUE != level.intValue()) {
-                        root.setLevel(new Level("genj.debug.level+1", level.intValue() + 1) {
-                        });
-                    }
-                } catch (Throwable t) {
-                }
 
 //        Handler[] handlers = root.getHandlers();
 //        for (int i=0;i<handlers.length;i++) root.removeHandler(handlers[i]);
@@ -278,11 +268,12 @@ public class App {
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
-                try {
-                    // allow option override of debug level - set non-genj level a tad higher
-                    Level level = Level.parse(NbPreferences.forModule(App.class).get("logLevel",""));
-                    LOG.setLevel(level);
-                } catch (Throwable t) {
+                
+                // Priorite sur le parametre passe en ligne de commande
+                if (System.getProperty("genj.debug.level") != null) {
+                    setLogLevel(System.getProperty("genj.debug.level"));
+                } else {
+                    setLogLevel((NbPreferences.forModule(App.class).get("logLevel","")));
                 }
 
 //        root.removeHandler(bufferedLogHandler);
@@ -372,6 +363,23 @@ public class App {
         }
     } //Shutdown
 
+    public static void setLogLevel(String logLevel) {
+        // prepare some basic logging for now
+        Logger root = Logger.getLogger("");
+        Level level = Level.INFO;
+
+        try {
+            // allow command line override of debug level - set non-genj level a tad higher
+            level = Level.parse(logLevel);
+        } catch (Throwable t) {
+        }
+        LOG.setLevel(level);
+        if (level.intValue() < Level.CONFIG.intValue()) {
+            root.setLevel(Level.CONFIG);
+        } else {
+            root.setLevel(level);
+        }
+    }
     /**
      * a log handler that buffers
      */
