@@ -284,7 +284,8 @@ public class EnvironmentChecker {
       // Peut-etre utiliser InstalledFileLocator
       File nbuserdir = new File(System.getProperty("netbeans.user"));
 
-      setProperty("user.home.genj", (new File(nbuserdir,"genj")).getAbsolutePath());
+//      setProperty("user.home.genj", (new File(nbuserdir,"genj")).getAbsolutePath());
+      setProperty("user.home.genj", (new File(nbuserdir,"genjfr")).getAbsolutePath());  // Maintenant c'est genjfr
 
 //    try {
 //      File user_home_genj;
