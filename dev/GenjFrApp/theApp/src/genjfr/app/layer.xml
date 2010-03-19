@@ -435,7 +435,7 @@
         </file>
         <file name="option4">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
-            <attr name="include" stringvalue="genj/.*|genj/[.*]/.*"/>
+            <attr name="include" stringvalue="genj/.*|genj/[.*]/.*|genjfr/.*|genjfr/[.*]/.*"/>
         </file>
     </folder>
     <folder name="MyCategory2">
