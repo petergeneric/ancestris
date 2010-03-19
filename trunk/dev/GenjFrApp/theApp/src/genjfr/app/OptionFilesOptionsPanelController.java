@@ -6,6 +6,7 @@ package genjfr.app;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.logging.Level;
 import javax.swing.JComponent;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
@@ -29,6 +30,12 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
 
     public void applyChanges() {
         getPanel().store();
+        try {
+            // allow option override of debug level - set non-genj level a tad higher
+            Level level = Level.parse(getPanel().getLogLevel());
+            App.LOG.setLevel(level);
+        } catch (Throwable t) {
+        }
         changed = false;
     }
 
