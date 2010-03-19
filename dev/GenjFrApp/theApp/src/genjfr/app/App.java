@@ -278,6 +278,13 @@ public class App {
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
+                try {
+                    // allow option override of debug level - set non-genj level a tad higher
+                    Level level = Level.parse(NbPreferences.forModule(App.class).get("logLevel",""));
+                    LOG.setLevel(level);
+                } catch (Throwable t) {
+                }
+
 //        root.removeHandler(bufferedLogHandler);
 //        bufferedLogHandler.flush(handler);
 
