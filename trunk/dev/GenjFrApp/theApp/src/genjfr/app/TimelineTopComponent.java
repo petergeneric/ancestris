@@ -32,7 +32,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    String getDefaultMode() {return "genjfr-table";}
+    String getDefaultFactoryMode() {return "genjfr-table";}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -69,11 +69,6 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
-    }
-
-    @Override
     public void componentOpened() {
         // TODO add custom code on component opening
     }
@@ -86,9 +81,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        p.setProperty("gedcom",gedcom.getOrigin().toString());
-        // TODO store your settings
+        super.writeProperties(p);
     }
 
 

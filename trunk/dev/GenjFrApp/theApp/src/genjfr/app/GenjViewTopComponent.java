@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ServiceProvider;
@@ -35,8 +36,8 @@ import org.openide.windows.WindowManager;
 //    dtd="-//genjfr.app//ControlCenter//EN",
 //    autostore=false
 //)
-@ServiceProvider(service=GenjInterface.class)
-public class GenjViewTopComponent extends TopComponent implements GenjInterface {
+@ServiceProvider(service=GenjViewInterface.class)
+public class GenjViewTopComponent extends TopComponent implements GenjViewInterface {
 
 //    static GenjViewTopComponent factory;
     /** path to the icon used by the component and its open action */
@@ -48,7 +49,20 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
     private static AbstractLookup abstractLookup = new AbstractLookup(ic);
     private boolean isRestored = false;
 
-    String getDefaultMode(){return "genjfr-editor";};
+
+    String getDefaultFactoryMode() {return "genjfr-editor";}
+
+    String getDefaultMode(){
+        return NbPreferences.forModule(this.getClass()).get(preferredID()+".dockMode",getDefaultFactoryMode());
+    }
+
+    public void setDefaultMode(String mode) {
+        NbPreferences.forModule(this.getClass()).put(preferredID()+".dockMode", mode);
+    }
+
+    public void setDefaultMode(Mode mode) {
+        setDefaultMode(mode.getName());
+    }
 
     @Override
     public void open() {
@@ -174,16 +188,11 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
 //    static public JPanel getPanel() {
 //        return panel;
 //    }
-    /**
-     * Obtain the prefered ID
-     */
-    static String getPreferredId() {
-        return PREFERRED_ID;
-    }
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ONLY_OPENED;
+//        return TopComponent.PERSISTENCE_ONLY_OPENED;
+        return TopComponent.PERSISTENCE_ALWAYS;
     }
 
     @Override
@@ -200,9 +209,9 @@ public class GenjViewTopComponent extends TopComponent implements GenjInterface 
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
+        p.setProperty("gedcom",gedcom.getOrigin().toString());
         // TODO store your settings
     }
-
 
     Object readProperties(java.util.Properties p) {
 //FIXME        EditTopComponent singleton = EditTopComponent.getDefault();
@@ -333,4 +342,7 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
         return App.center.getSelectedGedcom();
     }
 
+    public Mode getMode() {
+        return WindowManager.getDefault().findMode(this);
+    }
 }

@@ -76,7 +76,7 @@ public class ActionClose extends Action2 {
         // Remove it
         GedcomDirectory.getInstance().unregisterGedcom(gedcom);
 
-        for (GenjInterface gjvTc : GenjViewTopComponent.getMyLookup().lookupAll(GenjInterface.class)) {
+        for (GenjViewInterface gjvTc : GenjViewTopComponent.getMyLookup().lookupAll(GenjViewInterface.class)) {
             Gedcom ged = gjvTc.getGedcom();
             if (gedcom.equals(gjvTc.getGedcom())) {
                 gjvTc.close();
