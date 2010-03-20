@@ -28,10 +28,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 //public final class ActionOpen implements ActionListener {
 //
@@ -247,18 +250,36 @@ public /*final*/ class ActionOpen extends Action2 {
     }
 
     public static void openDefaultViews(Gedcom ged) {
-        EditTopComponent editTC = new EditTopComponent();
-        editTC.init(ged);
-        editTC.open();
-        editTC.requestActive();
-        TableTopComponent tableTC = new TableTopComponent();
-        tableTC.init(ged);
-        tableTC.open();
-//        tableTC.requestActive();
-        TreeTopComponent treeTC = new TreeTopComponent();
-        treeTC.init(ged);
-        treeTC.open();
-//        treeTC.requestActive();
+
+        Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
+        List<String> openedViews = new ArrayList<String>();
+
+
+        for (int i = 0; i<20; i++){
+            String item = prefs.get("openViews" + i, null);
+            if (item == null)
+                break;
+            openedViews.add(item);
+        }
+        if (openedViews.isEmpty()){
+            openedViews.add("genjfr.app.TableTopComponent");
+            openedViews.add("genjfr.app.TreeTopComponent");
+            openedViews.add("genjfr.app.EditTopComponent");
+        }
+
+        GenjViewTopComponent tc = null;
+        for (String className: openedViews){
+            try {
+                tc = (GenjViewTopComponent) Class.forName(className).newInstance();
+                tc.init(ged);
+                tc.open();
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        if (tc != null) {
+            tc.requestActive();
+        }
       }
 
     /**

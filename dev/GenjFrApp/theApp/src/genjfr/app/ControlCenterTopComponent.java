@@ -43,7 +43,7 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    String getDefaultMode() {return "genjfr-explorer";}
+    String getDefaultFactoryMode() {return "genjfr-explorer";}
 
     /** This method is called from within the constructor to
      * initialize the form.
