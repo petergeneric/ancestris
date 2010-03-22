@@ -69,6 +69,14 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
+            <file name="genjfr-app-SaveLayoutAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled" />
+                <attr name="delegate"       newvalue="genjfr.app.ActionSaveLayout" />
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_SaveLayout"/>
+                <attr name="iconBase" stringvalue="genjfr/app/ActionSaveLayout.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
         </folder>
         <folder name="Window">
             <file name="genjfr-app-ControlCenterAction.instance">
@@ -76,12 +84,6 @@
                 <attr name="component" methodvalue="genjfr.app.ControlCenterTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ControlCenterAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
-            </file>
-            <file name="genjfr-app-SaveLayoutAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled" />
-                <attr name="delegate"       newvalue="genjfr.app.ActionSaveLayout" />
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_SaveLayout"/>
             </file>
             <!--
             <file name="genjfr-app-EditAction.instance">
@@ -239,6 +241,10 @@
                 <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
                 <attr name="position" intvalue="101"/>
             </file>
+            <file name="ActionSaveLayout.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/genjfr-app-SaveLayoutAction.instance"/>
+                <attr name="position" intvalue="150"/>
+            </file>
         </folder>
         <file name="Versioning_hidden"/>
         <folder name="View">
@@ -285,9 +291,6 @@
             <file name="ReportAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ReportAction.instance"/>
                 <attr name="position" intvalue="-100"/>
-            </file>
-            <file name="ActionSaveLayout.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-SaveLayoutAction.instance"/>
             </file>
 
         </folder>

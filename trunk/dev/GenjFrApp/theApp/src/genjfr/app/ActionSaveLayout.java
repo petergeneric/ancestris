@@ -10,19 +10,25 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
 
 public final class ActionSaveLayout implements ActionListener {
 
-    private final static java.util.ResourceBundle RESOURCES = java.util.ResourceBundle.getBundle("genjfr/app/Bundle");
-
     public void actionPerformed(ActionEvent e) {
         StringBuilder sb = new StringBuilder("fenetres");
         Gedcom selected = App.center.getSelectedGedcom();
+
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(this.getClass(),"DLG_ActionSaveLayout"),NotifyDescriptor.OK_CANCEL_OPTION);
+        DialogDisplayer.getDefault().notify(nd);
+        if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION))
+            return;
 
         WindowManager wm = WindowManager.getDefault() ;
         List<String> openedViews = new ArrayList<String>();
