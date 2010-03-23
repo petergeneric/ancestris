@@ -1,0 +1,218 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../genjfr.css">
+  </head>
+  <body>
+      <div class="section1">
+
+          <center><h2 class="section1">T&eacute;l&eacute;chargement de GenjFr</h2></center>
+          <br>
+
+          Le téléchargement de GenjFr recoupe deux choses :<br>
+          <ul>
+              <li>Le téléchargement proprement dit,</li>
+              <li>Le téléchargement des mises à jour et des modules additionnels.</li>
+          </ul>
+
+          <br>
+
+          <h3 class="section1">I - Le téléchargement proprement dit</h3>
+          <br>
+
+          Si vous lisez ces lignes, c'est qu'à priori vous avez réussi à
+          télécharger GenjFr.<br>
+          <br>
+          Pour résumé, vous avez plusieurs manière de télécharger une
+          version de GenjFr qui vous convienne.<br>
+          <br>
+          Sur le site internet de GenjFr, à l'adresse suivante :<br>
+          <a href="http://www.arvernes.com/wiki/index.php/GenJ">http://www.arvernes.com/wiki/index.php/GenJ</a>,
+          dans la zone de téléchargement, vous trouverez des
+          fichiers sous plusieurs formats, en fonction de
+          votre système d'exploitation (Windows, Linux, Mac OS).<br>
+          <br>
+          <ol>
+              <li>Vous êtes sous <b>Windows</b> : Un fichier au format .zip contient tout
+                  ce qu'il vous faut pour installer GenjFr.</li>
+              <br>
+              <li>Vous êtes sous <b>Ubuntu</b> - Linux : Un paquet au format debian (.deb) est
+                  disponible. Il vous suffit de le télécharger et de cliquer dessus pour
+                  qu'il s'installe tout seul.</li>
+              <br>
+              <li>Vous êtes sous <b>Fedora, Mandrake, Redhat</b> - Linux : Un paquet au format
+                  RPM (.rpm) est téléchargeable. Ce fichier peut être en retard de
+                  quelques versions intermédiaires, par rapport à
+                  la toute dernière disponible, mais les mises
+                  à jour sont bien suivies en général.</li>
+              <br>
+              <li>Vous êtes sous <b>Linux</b> (d'une manière très générale,
+                  donc même si vous avez un système Ubuntu, Fedora, etc....),
+                  l'archive au format .zip dont il est question pour Windows,
+                  vous permet d'installer GenjFr sur votre ordinateur.</li>
+              <br>
+              <li>Vous êtes sous <b>Mac OS</b>, l'archive .zip est disponible
+                  pour tous ceux sous Mac.</li>
+          </ol>
+          <br>
+
+          <h3 class="section1">II - Les mises à jour</h3>
+          <br>
+          Les mises à jour sont possibles sur le site officiel de
+          <a href="http://www.arvernes.com/wiki/index.php/GenJ">GenjFr</a>.<br>
+          <br>
+          Une autre méthode, bien plus simple, vous est offerte par le logiciel
+          lui-même.<br>
+          Si vous allez dans "Outils" - "Plug-ins" - "Paramètres", vous pouvez
+          demander au logiciel de vérifier pour vous, si des mises à jour
+          sont disponibles. Cette vérification peut être faite
+          suivant l'intervalle que vous allez définir (tous les jours, toutes
+          les semaines, à chaque démarrage, etc...).<br>
+          Si cette option est activée, vous verrez à un moment le logiciel
+          vous signaler qu'il y a x mises à jour de disponibles. Il vous
+          proposera de les télécharger, et de les installer. Lors de cette
+          installation vous devrez accepter la licence et confirmer si
+          le fichier n'est pas signé, son décompactage sur votre ordinateur.
+          Le rédémarrage du logiciel se fera tout seul à la fin de l'installation.<br>
+          <br>
+          Si vous avez utilisé un fichier spécifique à votre système
+          d'exploitation, comme <a href="telechargement_genjfr.html#Ubuntu">Ubuntu</a>, il faut mieux laisser votre ordinateur
+          gérer les mises à jour, et donc désactiver la mise à jour automatique.
+          Rien ne vous empêchera de vérifier de temps en temps si un nouveau
+          plugin est disponible, mais cette question des plugins est
+          traitée ci-après.<br>
+          <br>
+
+          <a name="Ubuntu"></a>
+          <u><b>Ubuntu</b></u><br>
+          Si vous êtes sous Ubuntu, pour que la mise à jour soit gérée
+          automatiquement par votre ordinateur, il vous faut mettre le
+          site Arvernes dans vos dépôts. Voici comment faire :<br>
+          <br>
+          <u>Etape 1</u> : Importation de la clé GPG d'Arvernes.<br>
+          <br>
+          Il faut commencer par télécharger la clé gpg qui valide le paquet
+          que vous allez reprendre. Cela vous assure que le logiciel est bien
+          de moi et qu'il n'a pas été trafiqué par quelqu'un. La méthode la
+          plus simple est de taper dans un terminal :<br>
+          <div class="code_citation">
+          wget -q http://ubuntu.arvernes.dyndns.org/29E67D70.gpg -O- | sudo apt-key add -
+          </div>
+          (Faites un copier-coller de la ligne ci-dessus dans un
+          terminal. Ce sera plus simple. Pour ouvrir un Terminal,
+          vous faites "Applications" puis "Accessoires", puis dans
+          le menu déroulant, vous trouverez "Terminal". Sinon sur
+          <a href="http://doc.ubuntu-fr.org/tutoriel/comment_modifier_sources_maj#gerer_les_cles_d_authentification">
+          le forum d'Ubuntu</a>, on vous explique comment faire).<br>
+          <br>
+          <u>Etape 2</u> : Ajout d'Arvernes dans les dépôts.<br>
+          <br>
+          Ensuite, on va ajouter <b><font color="#666666">Arvernes</font></b> dans le
+          site des dépôts offrant des packages pour Ubuntu, pour cela
+          il vous faut suivre la méthode suivante :<br>
+          <br>
+          1) <u>Variante Gnome (Ubuntu)</u> :<br>
+          <br>
+          <ul>
+          <li>Cliquez sur "<font color="#ffb200">Système</font>",</li>
+          <li>Ensuite "<font color="#ffb200">Administration</font>",</li>
+          <li>Puis "<font color="#ffb200">Source de logiciel</font>",</li>
+          <li>Vous entrez votre <font color="#ffb200">mot de passe</font>,
+          car vous allez faire une opération nécessitant les droits de
+          super utilisateur.</li>
+          <li>Vous allez dans l'onglet "<font color="#ffb200">Autres logiciels</font>",
+          et là vous faites "<font color="#ffb200">Ajouter</font>".</li>
+          <li>Dans le champ "<font color="#ffb200">Ligne APT</font>" qui s'ouvre vous
+          mettez :
+          <div class="code_citation">
+              <font color="#ff0000">deb http://ubuntu.arvernes.dyndns.org hardy main</font>
+          </div>
+          </li>
+          </ul>
+          <br>
+          <ul>
+              <u>N.B.</u> : Même si vous utilisez une version supérieure
+          à Hardy (8.10), ne modifiez pas la ligne ci-dessus la ligne
+          ci-dessus, ça ne risque rien. C'est simplement pour dire à
+          Synaptic qu'il faut qu'il reprenne l'archive dans un répertoire
+          Hardy sur le dépôt. GenjFr est un programme tournant sous Java,
+          donc il ne changera rien sur votre système. Il va s'installer
+          dans son répertoire et c'est tout. Il ne dépend pas de votre
+          version. Si vous mettez Intrepid vous ne pourrez pas reprendre
+          le paquet. Dans l'avenir si j'ai du retour sur ce paquet Ubuntu,
+          je verrais pour faire quelque chose spécifique à Intrepid.
+          </ul>
+          <br>
+          Vous n'avez plus qu'à sauvegarder en cliquant sur
+          <font color="#ffb200">Ajouter une source de mise à jour</font>. Tapez
+          après sur <font color="#ffb200">Fermer</font>. Un écran va apparaître
+          qui va vous dire <font color="#ffb200">Les informations sur les
+              logiciels disponibles sont obsolètes, ...</font> ; là, vous
+              cliquez sur <font color="#ffb200">Actualiser</font>. Si vous ne le faites
+          pas, les packages disponibles sur Arvernes ne figureront pas
+          dans la liste des paquets présents dans Synaptic.<br>
+          <br>
+          2) <u>Variante KDE (Kubuntu)</u> :<br>
+          <br>
+          <ul>
+          <li>Cliquez sur "<font color="#ffb200">Applications</font>",</li>
+          <li>Ensuite "<font color="#ffb200">Système</font>",</li>
+          <li>puis "<font color="#ffb200">Gestionnaire de paquets Synaptic</font>",</li>
+          <li>puis sur "<font color="#ffb200">Configuration</font>",
+              "<font color="#ffb200">Dépôts</font>".</li>
+          <li>Allez dans l'onglet "<font color="#ffb200">Sources de logiciels</font>",
+              faites "<font color="#ffb200">Ajouter</font>",</li>
+          <li>Entrez l'adresse :<br>
+          <div class="code_citation">
+              <font color="#ff0000">deb http://ubuntu.arvernes.dyndns.org hardy main</font>
+          </div>
+          </li>
+          <li>Fermez, rechargez et voilà.</li>
+          </ul>
+          Il y a peut-être plus simple mais j'ai trouvé tout de suite
+          comme cela (N'oubliez pas de mettre à jour la clé publique
+          auparavant.<br>
+          <br>
+          3) <u>Pour toutes les variantes (Ubuntu, Kubuntu)</u> :<br>
+          <br>
+          Si une erreur apparait, du genre :<br>
+          <font color="#00cc00">W: GPG error: http://ubuntu.arvernes.dyndns.org hardy Release:<br>
+          Les signatures suivantes n'ont pas pu être vérifiées car la clé
+          publique n'est pas disponible : NO_PUBKEY EBC74A5629E67D70</font><br>
+          c'est que vous n'avez pas importé la clé publique d'Arvernes.
+          Je vous conseille de refaire l'étape ci-dessus, "Importation
+          de la clé GPG d'Arvernes".<br>
+          <br>
+          <u>Etape 3</u> : Importation de GenjFr proprement dit.<br>
+          <br>
+          Maintenant vous ouvrez Synaptic, donc :<br>
+          <ul>
+          <li>Cliquez sur "<font color="#ffb200">Système</font>",</li>
+          <li>Puis on descend sur "<font color="#ffb200">Administration</font>",</li>
+          <li>Dans le sous-menu qui s'ouvre, on choisit :
+              "<font color="#ffb200">Gestionnaire de paquets Synaptic</font>",</li>
+          <li>On vous demande votre mot de passe car vous allez faire
+              une opération nécessitant les droits de super utilisateur.</li>
+          <li>Dans la fenêtre de Synaptic, vous cliquez sur 
+              "<font color="#ffb200">Rechercher</font>",</li>
+          <li>Pour faire simple, on va simplement taper comme mot
+              recherché "<font color="#ffb200">genjfr</font>",</li>
+          <li>Là, miracle, crac, notre petit GenjFr apparaît. Il suffit de
+              le cocher et de demander à ce qu'il s'installe.</li>
+          </ul>
+          <br>
+          Par la suite, tout sera automatisé. Vous serez automatiquement
+          averti dès qu'une nouvelle version sera disponible sur le site
+          Ubuntu d'Arvernes.<br>
+          <br>
+
+          <br>
+      </div>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
+<map version="2.0">
+    <mapID target="genjfr.app.about" url="app-about.html"/>
+    <mapID target="genjfr.app.advanced" url="./first_steps/advanced_genjfr.html"/>
+    <mapID target="genjfr.app.basic" url="./first_steps/basic_genjfr.html"/>
+    <mapID target="genjfr.app.discovering" url="./first_steps/decouverte_genjfr.html"/>
+    <mapID target="genjfr.app.download" url="./first_steps/telechargement_genjfr.html"/>
+    <mapID target="genjfr.app.external.links" url="./first_steps/external_links_genjfr.html"/>
+    <mapID target="genjfr.app.gedcom.standard" url="./first_steps/gedcom_standard.html"/>
+    <mapID target="genjfr.app.intro" url="genjfr.html"/>
+    <mapID target="genjfr.app.misc" url="./first_steps/misc_genjfr.html"/>
+    <mapID target="genjfr.app.nomade" url="./first_steps/genjfr_nomade.html"/>
+    <mapID target="genjfr.app.options.menu1" url="./first_steps/menu_options_1.html"/>
+    <mapID target="genjfr.app.plugins" url="./first_steps/genjfr_plugins.html"/>
+    <mapID target="genjfr.app.plugins.liste" url="./plugins/plugins_liste.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
+    <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel4" url="app-about.html"/>
+    <mapID target="genjfr.app.view.chrono" url="./first_steps/view_chrono_genjfr.html"/>
+    <mapID target="genjfr.app.view.editors" url="./first_steps/view_editors_genjfr.html"/>
+    <mapID target="genjfr.app.view.entity" url="./first_steps/view_entity_genjfr.html"/>
+    <mapID target="genjfr.app.view.geo" url="./first_steps/view_geo_genjfr.html"/>
+    <mapID target="genjfr.app.view.navigator" url="./first_steps/view_navigator_genjfr.html"/>
+    <mapID target="genjfr.app.view.reports" url="./first_steps/view_reports_genjfr.html"/>
+    <mapID target="genjfr.app.view.search" url="./first_steps/view_search_genjfr.html"/>
+    <mapID target="genjfr.app.view.table" url="./first_steps/view_table_genjfr.html"/>
+    <mapID target="genjfr.app.view.tree" url="./first_steps/view_tree_genjfr.html"/>
+    <mapID target="genjfr.app.views" url="./first_steps/views_genjfr.html"/>
+    <mapID target="genjfr.app.windows" url="./first_steps/fenetrage.html"/>
+    <mapID target="genjfr.app.wizard" url="./first_steps/wizard_genjfr.html"/>
+</map>

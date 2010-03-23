@@ -1,0 +1,44 @@
+Since v24
+  * added mdate  - set marriage date
+
+Since v23
+  * gkid NAME : go to a kid with first name NAME
+  * readline integration 
+  * fixed some i18n bugs
+
+Since v22
+  * fix transaction badness if an exception was thrown while setting.
+
+Since v21
+  * I18N
+
+Since v19:
+   * Implemented UNDO
+
+Since v18:
+   * Reinstated del operator for deleting individuals. 
+   * fixed /absolute/path bug *again*
+   
+
+   
+   
+Since v17:
+   * fixed a bug where you couldn't save /absolute/path
+   * Fixed cson/daughter FNAME
+   
+
+Since v16 
+   * removed doomed delete operator. (for now)
+
+Since v15:
+   * Fixed massive data-corruption bug in cmom and cdad.
+      ...which hilghlited the need for a unittest suite.
+   * Fixed the "dirty data" tracking, which suggests a save if data was written.
+   * set encoding according to the input GEDCOM
+   * Setting the FILE field according to spec (which isn't a terribly good idea, IMHO).
+   * added FNAME as an argument to create commands
+   * added RSIB: relate to existing INDI as a sibling
+   * added Version #
+   * look ID
+   * x is a synonym for look
+   * skeleton of sound support

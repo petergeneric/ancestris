@@ -1,0 +1,39 @@
+
+---=== G E N J F r ===------------------ - - -  -  -    -       -
+
+(A=Amélioration; B=Bug; D=Divers; M=Modification)
+/Version 0.2-4 r.441 - 23 Mars 2010
+  . D: Premier plugin : une calculette et convertisseur de dates,
+  . A: Ajout, modification et correction de l'aide
+  . A: Possibilité de choisir le niveau de détail dans le journal
+  . A: Possibilité de modifier le positionnement des fenêtres par défaut
+/Version 0.2-3 r.410 - 11 Mars 2010
+  . D: Mise en place d'un module de mise à jour automatique du programme,
+  . D: Intégration d'une architecture permettant l'ajout de plugins, ou greffons,
+  . B: Correction de divers bugs.
+/Version 0.2-2 - 25 Fév. 2010
+  . D: Ajout du menu A Propos,
+  . A: Début de rédaction de l'aide,
+  . M: Menu de configuration initial,
+  . B: Corrections de divers bugs.
+/Version 0.2-1 r.295 - 01 Fév. 2010
+  . B: Traduction des menus,
+  . B: Correction de la vue rapports,
+  . B: Disponibilité de l'aide.
+/Version 0.2-0 r.288 - 27 Jan. 2010.
+  . M: Refonte complète du système de fenêtrage,
+  . M: Intégration d'un assistant de configuration au démarrage,
+  . M: Mise en place d'une nouvelle architecture de modules complémentaires.
+/Version 0.1 r.170 - 20 Oct. 2009
+  . M: Modifications des modèles pour le rapport Gedart,
+  . M: Modification complête du rapport Ancêtre commun,
+  . B: Caractères accentués de l'onglet "Auteurs" incorrectement affichés.
+/Version 0.1 r.137 - 28 Sept. 2009
+  . A: Ajout d'un lien "d'Aide en ligne",
+  . A: Ajout d'un onglet dans le menu "A Propos",
+  . A: Ouverture automatique du répertoire de GenjFr,
+  . A: Utilisation des capacités du système d'exploitation pour ouvrir les fichiers,
+  . M: Options est devenu Préférences,
+  . D: Corrections, modifications, améliorations diverses de certains rapports.
+/Version 0.1 r.108 - 21 Sept. 2009
+  . Initiale Diffusion : Première mouture de GenjFr.
