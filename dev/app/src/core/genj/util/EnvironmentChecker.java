@@ -314,7 +314,7 @@ public class EnvironmentChecker {
       if (isWindows()) {
         File app_data = new File(System.getProperty("all.home"), "Application Data");
         if (app_data.isDirectory())
-          setProperty("all.home.genj", new File(app_data, "GenJ").getAbsolutePath());
+          setProperty("all.home.genj", new File(app_data, "GenjFr").getAbsolutePath());
       }
     } catch (Throwable t) {
       // ignore if we can't access system properties
