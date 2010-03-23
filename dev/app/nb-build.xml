@@ -87,7 +87,7 @@
 outputproperty="svnversion" errorproperty="svnerror">
             <arg value="-n"/>
         </exec>
-        <echo file="${build.classes.dir}/genj/resources.properties">version=0.2-3_r${svnversion}${line.separator}build=${svnversion}</echo>
+        <echo file="${build.classes.dir}/genj/resources.properties">version=0.2-4_r${svnversion}${line.separator}build=${svnversion}</echo>
 <!--        <copy todir="${build.classes.dir}/help">
             <fileset dir="help-fr"/>
         </copy>
