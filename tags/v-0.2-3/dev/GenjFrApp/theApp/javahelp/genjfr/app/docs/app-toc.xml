@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+  <tocitem image="toplevelfolder"
+           text="La Généalogie avec GenjFr">
+    <tocitem target="genjfr.app.intro">Introduction à GenjFr </tocitem>
+    <tocitem expand="true" text="GenjFr - Sommaire" target="genjfr.app.about">
+        <tocitem expand="true" text="Découverte de GenjFr" target="genjfr.app.discovering">
+            <tocitem target="genjfr.app.download">Téléchargement de GenjFr </tocitem>
+            <tocitem text="Première configuration" target="genjfr.app.wizard" />
+            <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
+        </tocitem>
+        <tocitem expand="true" text="Les différentes vues" target="genjfr.app.views">
+            <tocitem text="L'Arbre généalogique" target="genjfr.app.view.tree" />
+            <tocitem text="La vue Table" target="genjfr.app.view.table" />
+            <tocitem text="Les Editeurs" target="genjfr.app.view.editors" />
+            <tocitem text="La visualisation Chronologique" target="genjfr.app.view.chrono" />
+            <tocitem text="Le Navigateur" target="genjfr.app.view.navigator" />
+            <tocitem text="La vue Entité" target="genjfr.app.view.entity" />
+            <tocitem text="La vue Recherche" target="genjfr.app.view.search" />
+            <tocitem text="La Fenêtre des Rapports" target="genjfr.app.view.reports" />
+            <tocitem text="La visualisation Géographique" target="genjfr.app.view.geo" />
+        </tocitem>
+        <tocitem expand="true" text="Utilisation de base" target="genjfr.app.basic">
+        </tocitem>
+        <tocitem expand="true" text="Utilisation avancée" target="genjfr.app.advanced">
+            <tocitem text="GenjFr en mode nomade" target="genjfr.app.nomade" />
+        </tocitem>
+    </tocitem>
+    <tocitem expand="false" text="Divers" target="genjfr.app.misc">
+        <tocitem target="genjfr.app.external.links">Liens externes</tocitem>
+        <tocitem target="genjfr.app.gedcom.standard">La norme Gedcom</tocitem>
+    </tocitem>
+  </tocitem>
+</toc>
