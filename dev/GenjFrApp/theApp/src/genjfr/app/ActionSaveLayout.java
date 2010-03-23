@@ -8,10 +8,9 @@ import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.prefs.Preferences;
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
@@ -24,8 +23,15 @@ public final class ActionSaveLayout implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         StringBuilder sb = new StringBuilder("fenetres");
         Gedcom selected = App.center.getSelectedGedcom();
+        Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
+        Object date = prefs.get("openViews.date", null) == null?
+            new String("jamais"):
+            new Date(new Long(prefs.get("openViews.date", "0")));
 
-        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(this.getClass(),"DLG_ActionSaveLayout"),NotifyDescriptor.OK_CANCEL_OPTION);
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
+                NbBundle.getMessage(this.getClass(),"DLG_ActionSaveLayout",date),
+                NbBundle.getMessage(this.getClass(),"TTL_ActionSaveLayout",selected.getName()),
+                NotifyDescriptor.OK_CANCEL_OPTION);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION))
             return;
@@ -42,8 +48,6 @@ public final class ActionSaveLayout implements ActionListener {
             }
         }
 
-        Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
-
         for (int i = 0; i<20; i++){
             if (prefs.get("openViews" + i, null) == null)
                 break;
@@ -53,5 +57,6 @@ public final class ActionSaveLayout implements ActionListener {
             String str = openedViews.get(i);
             prefs.put("openViews" + i, str);
         }
+        prefs.put("openViews.date",System.currentTimeMillis()+"");
     }
 }
