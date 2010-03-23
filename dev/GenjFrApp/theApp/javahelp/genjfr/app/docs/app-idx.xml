@@ -14,8 +14,6 @@ and open the template in the editor.
     <indexitem text="La norme Gedcom" target="genjfr.app.gedcom.standard"/>
     <indexitem text="Divers" target="genjfr.app.misc"/>
     <indexitem text="Nomadisme et GenjFr" target="genjfr.app.nomade"/>
-    <indexitem text="Les plugins" target="genjfr.app.plugins"/>
-    <indexitem text="Liste des plugins" target="genjfr.app.plugins.liste"/>
     <indexitem text="La visualisation chronologique" target="genjfr.app.view.chrono"/>
     <indexitem text="Les Editeurs" target="genjfr.app.view.editors"/>
     <indexitem text="La vue Entité" target="genjfr.app.view.entity"/>

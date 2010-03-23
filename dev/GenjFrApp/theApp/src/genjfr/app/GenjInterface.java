@@ -6,19 +6,15 @@
 package genjfr.app;
 
 import genj.gedcom.Gedcom;
-import org.openide.windows.Mode;
 
 /**
  *
  * @author frederic
  */
-public interface GenjViewInterface {
+public interface GenjInterface {
 
     public Gedcom getSelectedGedcom();
-    public Gedcom getGedcom();
-    public Mode getMode();
-    public void setDefaultMode(String mode);
-    public void setDefaultMode(Mode mode);
+        public Gedcom getGedcom();
 
     public boolean close();
 }

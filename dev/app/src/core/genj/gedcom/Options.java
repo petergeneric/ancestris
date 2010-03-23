@@ -50,7 +50,7 @@ public class Options extends OptionProvider {
   public String fmt_address6 = "";
   public String fmt_address7 = "";
   public boolean fmt_address1_mand = false;
-  public boolean fmt_address2_mand = false;
+  public boolean fmt_address2_mand = true;
   public boolean fmt_address3_mand = false;
   public boolean fmt_address4_mand = false;
   public boolean fmt_address5_mand = false;

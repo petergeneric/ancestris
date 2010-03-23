@@ -89,12 +89,11 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
   
   private final static Logger LOG = Logger.getLogger("genj.common");
   
-  /** shortcuts panel */
-  private JPanel panelShortcuts;
-
   /** table component */
   private Table table;
   
+  /** shortcuts panel */
+  private JPanel panelShortcuts;
   
   /**
    * Constructor
@@ -108,19 +107,17 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
    */
   public PropertyTableWidget(PropertyTableModel propertyModel) {
     
-    // create panel for shortcuts
-    panelShortcuts = new JPanel();
-    panelShortcuts.setMinimumSize(new Dimension());
-    panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.Y_AXIS));
-    
     // create table comp
     table = new Table();
     setModel(propertyModel);
-
+    
+    // create panel for shortcuts
+    panelShortcuts = new JPanel();
+    
     // setup layout
     setLayout(new BorderLayout());
     add(BorderLayout.CENTER, new JScrollPane(table));
-    add(BorderLayout.EAST, panelShortcuts);
+    add(BorderLayout.NORTH, panelShortcuts);
     
     // done
   }
@@ -371,7 +368,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
           if (e.getLastRow()==Integer.MAX_VALUE) createShortcuts();
         }
       });
-      panelShortcuts.addComponentListener(new ComponentAdapter() {
+      addComponentListener(new ComponentAdapter() {
         public void componentResized(ComponentEvent e) {
           createShortcuts();
         }
@@ -381,8 +378,9 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     }
     
     /** create a shortcut */
-    Action2 createShortcut(String txt, final int y) {
-      return new Action2(txt.toUpperCase()) {
+    Action2 createShortcut(String txt, final int y, final Container container) {
+      
+      Action2 shortcut = new Action2(txt.toUpperCase()) {
         protected void execute() {
           int x = 0;
           try { x = ((JViewport)table.getParent()).getViewPosition().x; } catch (Throwable t) {};
@@ -390,20 +388,21 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
         }
       };
       
+      LinkWidget link = new LinkWidget(shortcut);
+      link.setAlignmentX(0.5F);
+      link.setBorder(new EmptyBorder(0,1,0,1));
+      container.add(link);
+      
+      return shortcut;
     }
     
     /** generate */
     void createShortcuts(int col, JComponent container) {
-
-      if (propertyModel==null||container.getHeight()==0)
-        return;
       
       TableModel model = getModel();
       Collator collator = propertyModel.getGedcom().getCollator();
 
-      // loop over rows and create actions
-      List<Action2> actions = new ArrayList<Action2>(26);
-      
+      // loop over rows
       String cursor = "";
       for (int r=0;r<model.getRowCount();r++) {
         Property prop = (Property)model.getValueAt(r, col);
@@ -420,35 +419,14 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
         if (collator.compare(cursor, value)>=0)
           continue;
         cursor = value;
-
-        // action
-        Action2 action = createShortcut(value, table.getCellRect(r, col, true).y);
-        actions.add(action);
         
-        // key binding
+        Action2 shortcut = createShortcut(value, table.getCellRect(r, col, true).y, container);
+      
+        // create key binding
         InputMap imap = container.getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap amap = container.getActionMap();
-        imap.put(KeyStroke.getKeyStroke(value.charAt(0)), action);
-        amap.put(action, action);
-      }
-      
-      // generate buttons
-      if (actions.isEmpty())
-        return;
-      
-      LinkWidget sample = new LinkWidget("Sample", null);
-      int h = sample.getPreferredSize().height;
-      int n = Math.min(actions.size(), (container.getHeight() - h) / h);
-      for (int i=0;i<n;i++) {
-        LinkWidget link = new LinkWidget(actions.get(i*actions.size()/n));
-        link.setAlignmentX(0.5F);
-        container.add(link);
-      }
-      
-      if (n<actions.size()) {
-        LinkWidget link = new LinkWidget(actions.get(actions.size()-1));
-        link.setAlignmentX(0.5F);
-        container.add(link);
+        imap.put(KeyStroke.getKeyStroke(value.charAt(0)), shortcut);
+        amap.put(shortcut, shortcut);
       }
       
       // done
@@ -461,6 +439,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       
       // remove old shortcuts
       panelShortcuts.removeAll();
+      panelShortcuts.setLayout(new BoxLayout(panelShortcuts, BoxLayout.X_AXIS));
       panelShortcuts.getInputMap(WHEN_IN_FOCUSED_WINDOW).clear();
       panelShortcuts.getActionMap().clear();
       panelShortcuts.revalidate();
@@ -469,7 +448,6 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       // anything we can offer? need ascending sorted column and at least 10 rows
       if (!sortableModel.isSorting())
         return;
-      
       SortableTableModel.Directive directive = (SortableTableModel.Directive)sortableModel.getDirectives().get(0);
       if (directive.getDirection()<=0)
         return;

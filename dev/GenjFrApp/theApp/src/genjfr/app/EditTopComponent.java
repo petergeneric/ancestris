@@ -27,7 +27,7 @@ public final class EditTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-editor";}
+    String getDefaultMode() {return "genjfr-editor";}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -64,6 +64,11 @@ public final class EditTopComponent extends GenjViewTopComponent {
     }
 
     @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ONLY_OPENED;
+    }
+
+    @Override
     public void componentOpened() {
         // TODO add custom code on component opening
     }
@@ -76,7 +81,9 @@ public final class EditTopComponent extends GenjViewTopComponent {
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
-        super.writeProperties(p);
+        p.setProperty("version", "1.0");
+        p.setProperty("gedcom",gedcom.getOrigin().toString());
+        // TODO store your settings
     }
 
 

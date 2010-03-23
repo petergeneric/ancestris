@@ -233,8 +233,18 @@ public class App {
 
                 // prepare some basic logging for now
                 Formatter formatter = new LogFormatter();
-                setLogLevel("INFO");
+                Logger root = Logger.getLogger("");
 
+                try {
+                    // allow command line override of debug level - set non-genj level a tad higher
+                    Level level = Level.parse(System.getProperty("genj.debug.level"));
+                    LOG.setLevel(level);
+                    if (Integer.MAX_VALUE != level.intValue()) {
+                        root.setLevel(new Level("genj.debug.level+1", level.intValue() + 1) {
+                        });
+                    }
+                } catch (Throwable t) {
+                }
 
 //        Handler[] handlers = root.getHandlers();
 //        for (int i=0;i<handlers.length;i++) root.removeHandler(handlers[i]);
@@ -243,6 +253,10 @@ public class App {
 //        root.addHandler(new FlushingHandler(new StreamHandler(System.out, formatter)));
                 System.setOut(new PrintStream(new LogOutputStream(Level.INFO, "System", "out")));
                 System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
+
+                // Log is up
+                LOG.info("\n\n==================8<================================================================");
+                LOG.info("Startup");
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
 //                REGISTRY = checkOptionsWizard(REGISTRY);
@@ -259,23 +273,11 @@ public class App {
                 OptionProvider.getAllOptions(REGISTRY);
 
                 // Setup File Logging and check environment
-                LOGFILE = new File(home, "genjfr.log");
+                LOGFILE = new File(home, "genj.log");
                 Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), Options.getInstance().getMaxLogSizeKB() * 1024, 1, true);
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
-                
-                // Log is up
-                LOG.info("\n\n==================8<================================================================");
-                LOG.info("Startup");
-
-                // Priorite sur le parametre passe en ligne de commande
-                if (System.getProperty("genj.debug.level") != null) {
-                    setLogLevel(System.getProperty("genj.debug.level"));
-                } else {
-                    setLogLevel((NbPreferences.forModule(App.class).get("logLevel","")));
-                }
-
 //        root.removeHandler(bufferedLogHandler);
 //        bufferedLogHandler.flush(handler);
 
@@ -363,23 +365,6 @@ public class App {
         }
     } //Shutdown
 
-    public static void setLogLevel(String logLevel) {
-        // prepare some basic logging for now
-        Logger root = Logger.getLogger("");
-        Level level = Level.INFO;
-
-        try {
-            // allow command line override of debug level - set non-genj level a tad higher
-            level = Level.parse(logLevel);
-        } catch (Throwable t) {
-        }
-        LOG.setLevel(level);
-        if (level.intValue() < Level.CONFIG.intValue()) {
-            root.setLevel(Level.CONFIG);
-        } else {
-            root.setLevel(level);
-        }
-    }
     /**
      * a log handler that buffers
      */

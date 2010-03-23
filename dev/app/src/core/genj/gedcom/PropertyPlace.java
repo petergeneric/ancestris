@@ -220,11 +220,9 @@ public class PropertyPlace extends PropertyChoiceValue {
     /**
      * Overide standard setValue to check for mandatory jurisdictions
      */
-    //FIXME voir si cela peut être un plus qu'un simple warning
     @Override
     public void setValue(String value) {
-        if (getEntity() == null || value.isEmpty()) {
-            super.setValue(value);
+        if (value.isEmpty()) {
             return;
         }
         String title = Resources.get(Options.class).getString("error.dateformat.title");
@@ -237,13 +235,11 @@ public class PropertyPlace extends PropertyChoiceValue {
         isMandatory[5] = Options.getInstance().fmt_address6_mand;
         isMandatory[6] = Options.getInstance().fmt_address7_mand;
         String juris[] = toJurisdictions(value);
-        for (int i = 0; i < 7; i++) {
-            if (!isMandatory[i]) {
-                continue;
-            }
-            if ((i >= juris.length) || juris[i].trim().isEmpty()) {
-                System.out.println("WARNING: PLAC control check for entity: " + getEntity() + " - " + toString() + " : " + Resources.get(Options.class).getString("error.dateformat", i + 1));
-                JOptionPane.showMessageDialog(null, Resources.get(Options.class).getString("error.dateformat", i + 1), title, JOptionPane.INFORMATION_MESSAGE);
+        for (int i = 0; i < Math.min(juris.length, 7); i++) {
+            String string = juris[i];
+            if (string.trim().isEmpty() && isMandatory[i]) {
+                JOptionPane.showMessageDialog(null, Resources.get(Options.class).getString("error.dateformat", i+1), title, JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
         super.setValue(value);

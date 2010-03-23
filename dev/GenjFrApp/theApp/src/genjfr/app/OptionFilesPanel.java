@@ -77,8 +77,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         jTextField4 = new javax.swing.JTextField();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
-        jLabel14 = new javax.swing.JLabel();
-        logLevel = new javax.swing.JComboBox();
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
@@ -191,15 +189,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel14.text")); // NOI18N
-
-        logLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL" }));
-        logLevel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logLevelActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -256,14 +245,10 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                     .addComponent(jLabel12)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel14))
+                        .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(logLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))))
-                .addContainerGap(46, Short.MAX_VALUE))
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,11 +305,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(logLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(77, 77, 77))
+                .addGap(52, 52, 52))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -360,10 +341,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         chooseFileDir(jTextField9, false, true);
 }//GEN-LAST:event_jButton9ActionPerformed
 
-    private void logLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logLevelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_logLevelActionPerformed
-
     void load() {
         setGedcomFile(NbPreferences.forModule(App.class).get("gedcomFile", ""));
         setReportDir(NbPreferences.forModule(App.class).get("reportDir", ""));
@@ -374,7 +351,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
         setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
         setLogSize(NbPreferences.forModule(App.class).get("logSize", ""));
-        setLogLevel(NbPreferences.forModule(App.class).get("logLevel", "INFO"));
     }
 
     void store() {
@@ -388,7 +364,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
         NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
         NbPreferences.forModule(App.class).put("logSize", getLogSize());
-        NbPreferences.forModule(App.class).put("logLevel", getLogLevel());
 
         NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
 
@@ -423,7 +398,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -440,7 +414,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
-    private javax.swing.JComboBox logLevel;
     // End of variables declaration//GEN-END:variables
 
     void setGedcomFile(String str) {
@@ -548,14 +521,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         return jSpinner1.getValue().toString();
     }
 
-    String getLogLevel() {
-        return logLevel.getSelectedItem().toString();
-    }
-
-    void setLogLevel(String str) {
-        logLevel.setSelectedItem(str);
-    }
-
     private Integer getIntFromStr(String str) {
 
         Integer i = 0;
@@ -580,7 +545,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
         registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
         registry.put("options.genj.app.Options.maxLogSizeKB", NbPreferences.forModule(App.class).get("logSize", ""));
-        registry.put("options.genj.app.Options.logLevel", NbPreferences.forModule(App.class).get("logLevel", ""));
 
         Registry.persist();
 

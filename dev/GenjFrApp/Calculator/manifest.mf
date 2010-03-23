@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: genjfr.tools.calc
-OpenIDE-Module-Layer: genjfr/tools/calc/layer.xml
-OpenIDE-Module-Localizing-Bundle: genjfr/tools/calc/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0.0.1
-

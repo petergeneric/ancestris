@@ -6,7 +6,6 @@ package genjfr.app;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.logging.Level;
 import javax.swing.JComponent;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
@@ -30,7 +29,6 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
 
     public void applyChanges() {
         getPanel().store();
-        App.setLogLevel(getPanel().getLogLevel());
         changed = false;
     }
 
