@@ -184,7 +184,7 @@ public class Options extends OptionProvider {
     if (language>=0&&language<codes.length) {
       String lang = codes[language];
       if (lang.length()>0) {
-        App.LOG.info("Switching language to "+lang);
+//FIXME: fait planter la fonction!        App.LOG.info("Switching language to "+lang);
         String country = Locale.getDefault().getCountry();
         int i = lang.indexOf('_');
         if (i>0) {
@@ -220,8 +220,6 @@ public class Options extends OptionProvider {
    * Getter - language
    */
   public int getLanguage() {
-    if (language<0)
-      setLanguage(2);
     return language;
   }
 
