@@ -23,9 +23,12 @@ public final class ActionSaveLayout implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         StringBuilder sb = new StringBuilder("fenetres");
         Gedcom selected = App.center.getSelectedGedcom();
+        if (selected == null){
+            return;
+        }
         Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
         Object date = prefs.get("openViews.date", null) == null?
-            new String("jamais"):
+            new String(NbBundle.getMessage(this.getClass(), "TXT_ASL_never")):
             new Date(new Long(prefs.get("openViews.date", "0")));
 
         NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
