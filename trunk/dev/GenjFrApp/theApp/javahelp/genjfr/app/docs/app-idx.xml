@@ -12,6 +12,7 @@ and open the template in the editor.
     <indexitem text="Téléchargement de GenjFr" target="genjfr.app.download"/>
     <indexitem text="Lieux où parler de GenjFr" target="genjfr.app.external.links"/>
     <indexitem text="La norme Gedcom" target="genjfr.app.gedcom.standard"/>
+    <indexitem text="Le gestionnaire de fichiers Gedcom" target="genjfr.app.gedcoms.manager"/>
     <indexitem text="Divers" target="genjfr.app.misc"/>
     <indexitem text="Nomadisme et GenjFr" target="genjfr.app.nomade"/>
     <indexitem text="Les plugins" target="genjfr.app.plugins"/>

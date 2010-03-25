@@ -13,6 +13,7 @@ and open the template in the editor.
             <tocitem target="genjfr.app.download">Téléchargement de GenjFr </tocitem>
             <tocitem text="Première configuration" target="genjfr.app.wizard" />
             <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
+            <tocitem text="Gestionnaire Gedcoms" target="genjfr.app.gedcoms.manager" />
         </tocitem>
         <tocitem expand="true" text="Les différentes vues" target="genjfr.app.views">
             <tocitem text="L'Arbre généalogique" target="genjfr.app.view.tree" />
