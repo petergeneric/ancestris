@@ -12,6 +12,7 @@ and open the template in the editor.
     <mapID target="genjfr.app.download" url="./first_steps/telechargement_genjfr.html"/>
     <mapID target="genjfr.app.external.links" url="./first_steps/external_links_genjfr.html"/>
     <mapID target="genjfr.app.gedcom.standard" url="./first_steps/gedcom_standard.html"/>
+    <mapID target="genjfr.app.gedcoms.manager" url="./first_steps/gedcoms_manager.html"/>
     <mapID target="genjfr.app.intro" url="genjfr.html"/>
     <mapID target="genjfr.app.misc" url="./first_steps/misc_genjfr.html"/>
     <mapID target="genjfr.app.nomade" url="./first_steps/genjfr_nomade.html"/>
