@@ -448,7 +448,8 @@
         </file>
         <file name="option4">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
-            <attr name="include" stringvalue="genj/.*|genj/[.*]/.*|genjfr/.*|genjfr/[.*]/.*"/>
+            <attr name="include" stringvalue="genjfr/.*|genjfr/[.*]/.*"/>
+            <attr name="exclude" stringvalue="genjfr/blueprints/.*"/>
         </file>
     </folder>
     <folder name="MyCategory2">
@@ -459,6 +460,14 @@
             <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
         </file>
     </folder>
+            <folder name="blueprints">
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
+            <file name="blueprint">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
+                <attr name="include" stringvalue="genjfr/blueprints/([^/]*)/.*"/>
+            </file>
+        </folder>
+
     <folder name="General_hidden"/>
     <folder name="Advanced_hidden"/>
     </folder>
