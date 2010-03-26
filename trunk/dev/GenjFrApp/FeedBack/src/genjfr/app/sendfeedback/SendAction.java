@@ -55,7 +55,7 @@ public final class SendAction implements ActionListener {
 	public static String getSystemInfo() {
 		Properties p = System.getProperties();
 		StringBuffer sb = new StringBuffer();
-		sb.append("GenJ ");
+		sb.append("GenjFr ");
 		sb.append(Version.getInstance().getBuildString());
 		sb.append(" (");
 		sb.append(Locale.getDefault());
@@ -99,7 +99,7 @@ public final class SendAction implements ActionListener {
 				URL u = new URL("mailto:" + to); // Create a mailto: URL
                                 // TODO: utiliser MailToURLConnection
 				URLConnection c = u.openConnection(); // Create a
-c.                                					// URLConnection for it
+                                					// URLConnection for it
 				c.setDoInput(false); // Specify no input from this URL
 				c.setDoOutput(true); // Specify we'll do output
 				c.connect(); // Connect to mail host
