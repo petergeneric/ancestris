@@ -1,0 +1,198 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../genjfr.css">
+  </head>
+  <body>
+      <div class="section1">
+
+          <center><h2 class="section1">Mise en oeuvre des calques</h2></center>
+          <br>
+          Les calques sont des fichiers au format html, donc le format que
+          l'on utilise pour cr&eacute;er des sites internet, qui vont vous permettre
+          de donner un tout autre aspect &agrave; certaines des vues de GenjFr.<br>
+          <br>
+          
+          <h3 class="section1">Quelles vues sont concern&eacute;es par les calques?</h3>
+          <br>
+          A tout seigneur, tous honneurs, c'est le <u>fen&ecirc;tre de l'arbre
+          g&eacute;n&eacute;alogique</u>. Gr&acirc;ce &agrave; diff&eacute;rents calques, vous allez pouvoir
+          vous faire un arbre avec un aspect tr&egrave;s d&eacute;pouill&eacute;, en y mettant
+          par exemple que les nom et pr&eacute;noms, dates et lieux de naissance et
+          d&eacute;c&egrave;s. A l'inverse, vous allez &agrave; l'aide d'un autre calque, pouvoir
+          mettre un maximum d'informations pour chaque personne, avec
+          outre les renseignements &eacute;l&eacute;mentaires, mais aussi la profession,
+          les adresses, la date d'un &eacute;ventuel divorce, etc, etc.<br>
+          <br>
+          Autre vue : <u>La vue Entit&eacute;</u>.<br>
+          L&agrave; encore, suivant le calque que vous utilisez, vous allez
+          pouvoir avoir une v&eacute;ritable fiche individuelle ou familiale.<br>
+          <br>
+          La derni&egrave;re vue, et c'est surement la moins connue, c'est
+          <u>l'&eacute;diteur gedcom</u>.<br>
+          Dans la partie basse de l'&eacute;diteur, il est possible d'afficher plus
+          ou moins de choses. Vous le comprendrez mieux en regardant les
+          captures d'&eacute;cran partielles ci-dessous.<br>
+
+          <br>
+
+          <h3 class="section1">Quelques exemples du r&eacute;sultat obtenu</h3>
+          <br>
+          <u>Au niveau de l'arbre g&eacute;n&eacute;alogique</u> :<br>
+
+          <br>
+
+          <u>La vue entit&eacute;</u> :<br>
+
+          <br>
+
+          <u>Avec l'&eacute;diteur gedcom</u> :<br>
+
+          <br>
+
+          <h3 class="section1">Comment changer de calque?</h3>
+          <br>
+          Lorsque GenjFr est lanc&eacute;, vous allez dans la fen&ecirc;tre de
+          l'arbre g&eacute;n&eacute;alogique par exemple, et vous ouvrez le
+          menu des param&egrave;tres de l'arbre (c'est la petite icone &agrave; c&ocirc;t&eacute;
+          de celle repr&eacute;sentant une imprimante).<br>
+          Vous allez dans le dernier onglet d&eacute;nomm&eacute; "Structure des
+          cadres". Dans la fen&ecirc;tre qui appara&icirc;t, vous avez &agrave; gauche
+          chacune des entit&eacute;s (individus, familles, etc) pour laquelle
+          des calques sont possibles. Cliquez sur le petit triangle &agrave;
+          gauche de chacune d'elles et vous allez voir les diff&eacute;rents
+          calques possibles ; choisissez celui que vous voulez, et
+          faites "Appliquer". Vous verrez imm&eacute;diatement le r&eacute;sultat sur
+          votre arbre g&eacute;n&eacute;alogique.<br>
+
+          <br>
+
+          <h3 class="section1">O&ugrave; trouve t'on les calques?</h3>
+          <br>
+          Les calques sont situ&eacute;s dans le r&eacute;pertoire des param&egrave;tres
+          de GenjFr, dans un sous-r&eacute;pertoire d&eacute;nomm&eacute;
+          "blueprints".<br>
+          <br>
+          Sous Windows le r&eacute;pertoire est ici :<br>
+          <i>&agrave; compl&eacute;ter</i>
+          <br>
+          Sous Linux vous trouverez ce sous-r&eacute;pertoire "blueprints" ici :<br>
+          "/home/votre_repertoire/.genjfrapp/dev/genjfr/blueprints"<br>
+          <br>
+          Ce sous-r&eacute;pertoire "blueprints", comporte lui-m&ecirc;me plusieurs
+          sous-r&eacute;pertoires :
+          <ul>
+              <ol>
+                  INDI
+              </ol>
+              <ol>
+                  FAM
+              </ol>
+              <ol>
+                  OBJE
+              </ol>
+              <ol>
+                  NOTE
+              </ol>
+              <ol>
+                  SOUR
+              </ol>
+              <ol>
+                  SUBM
+              </ol>
+              <ol>
+                  REPO
+              </ol>
+          </ul>
+          <br>
+          C'est dans chacun de ces sous-r&eacute;pertoires que l'on va trouver
+          les diff&eacute;rents calques.<br>
+          Dans INDI, par exemple, vous trouverez les calques
+          concernant la repr&eacute;sentation des INDIvidus. Dans le
+          r&eacute;pertoire FAM, vous aurez les calques pour la repr&eacute;santation
+          des familles, etc... OBJE est relatif aux objets multim&eacute;dias,
+          NOTE, concerne les notes, SOUR les sources, SUBM, les personnes
+          ayant fourni des informations, et enfin REPO la repr&eacute;sentation
+          des lieux de d&eacute;p&ocirc;ts.<br>
+          <br>
+          Le calque lui-m&ecirc;me que vous allez trouver dans ces
+          r&eacute;pertoires est un fichier ayant l'extension .html ; ils
+          sont appel&eacute;s en g&eacute;n&eacute;ral du nom de la personne qui l'a fait,
+          suivi de son extension. Exemple : marcel.dupont.html.<br>
+          Les calques &eacute;manant du m&ecirc;me auteur, s'appellent tous de la 
+          m&ecirc;me mani&egrave;re, mais comme ils sont situ&eacute;s chacun dans son 
+          sous-r&eacute;pertoire, il n'y a aucun probl&egrave;me. 
+<pre>
+       INDI
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+       FAM
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+       OBJE
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+       NOTE
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+       SOUR
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+       SUBM
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+       REPO
+          marcel.dupont.html
+          arvernes.html
+          absolute.html
+</pre>
+          Dans cet exemple, pour chacune des entit&eacute;s (INDI, FAM, etc), vous
+          avez trois calques, que vous pourrez choisir &agrave; votre gr&eacute;.<br>
+
+          <br>
+
+          <h3 class="section1">Comment avoir de nouveaux calques?</h3>
+          <br>
+          <u>En les faisant soi-m&ecirc;me</u><br>
+          Plusieurs outils existent sur l'internet pour cr&eacute;er des
+          pages html. Recherchez un &eacute;diteur html, et lancez vous dans
+          la cr&eacute;ation. N'oubliez pas de partager votre r&eacute;sultat avec
+          tous les autres utilisateurs de GenjFr. Le site web de GenjFr
+          vous donne toutes les indications pour transmettre vos calques
+          aux autres.<br>
+          
+          <br>
+
+          <u>En les reprenant sur le site d'&eacute;change</u><br>
+          En allant sur le site de GenjFr, vous allez pouvoir reprendre
+          un paquet reprenant l'ensemble des calques que des utilisateurs
+          ont accept&eacute; de partager avec vous.<br>
+          Une fois le fichier t&eacute;l&eacute;charg&eacute;, vous lancez GenjFr. Vous ouvrez
+          "Outils" - "Pr&eacute;f&eacute;rences", et l&agrave; vous faites "Importer" (c'est
+          le bouton que vous allez trouver en bas &agrave; gauche du menu
+          de configuration). Dans la fen&ecirc;tre qui s'ouvre, vous utilisez
+          le petit navigateur (Source de l'import) en haut pour
+          mettre le nom du fichier que vous venez de t&eacute;l&eacute;charger
+          (blueprints_archive.zip). Ensuite dans "S&eacute;lectionnez les options
+          pour l'import", vous cochez juste "Calques personnalis&eacute;s" et voil&agrave;,
+          tous les blueprints sont cr&eacute;&eacute;s l&agrave; o&ugrave; il faut.<br>
+
+          <br>
+          
+          
+      <br>
+      </div>
+  </body>
+</html>

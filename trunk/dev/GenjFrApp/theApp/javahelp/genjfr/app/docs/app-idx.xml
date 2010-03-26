@@ -8,6 +8,7 @@ and open the template in the editor.
     <indexitem text="Sommaire Général" target="genjfr.app.about"/>
     <indexitem text="Utilisation avancée de GenjFr" target="genjfr.app.advanced"/>
     <indexitem text="Utilisation de base de GenjFr" target="genjfr.app.basic"/>
+    <indexitem text="Fonctionnement des calques" target="genjfr.app.blueprints"/>
     <indexitem text="Découverte de GenjFr" target="genjfr.app.discovering"/>
     <indexitem text="Téléchargement de GenjFr" target="genjfr.app.download"/>
     <indexitem text="Lieux où parler de GenjFr" target="genjfr.app.external.links"/>
