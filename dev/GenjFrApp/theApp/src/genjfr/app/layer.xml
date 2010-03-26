@@ -448,8 +448,7 @@
         </file>
         <file name="option4">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
-            <attr name="include" stringvalue="genjfr/.*|genjfr/[.*]/.*"/>
-            <attr name="exclude" stringvalue="genjfr/blueprints/.*"/>
+            <attr name="include" stringvalue="genjfr/[^/]*|genjfr/gedart/.*"/>
         </file>
     </folder>
     <folder name="MyCategory2">
