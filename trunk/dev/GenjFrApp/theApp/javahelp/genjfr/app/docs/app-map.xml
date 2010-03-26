@@ -6,7 +6,7 @@ and open the template in the editor.
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
     <mapID target="genjfr.app.about" url="app-about.html"/>
-    <mapID target="genjfr.app.advanced" url="./first_steps/advanced_genjfr.html"/>
+    <mapID target="genjfr.app.advanced" url="./advanced/advanced_genjfr.html"/>
     <mapID target="genjfr.app.basic" url="./first_steps/basic_genjfr.html"/>
     <mapID target="genjfr.app.discovering" url="./first_steps/decouverte_genjfr.html"/>
     <mapID target="genjfr.app.download" url="./first_steps/telechargement_genjfr.html"/>
@@ -15,9 +15,9 @@ and open the template in the editor.
     <mapID target="genjfr.app.gedcoms.manager" url="./first_steps/gedcoms_manager.html"/>
     <mapID target="genjfr.app.intro" url="genjfr.html"/>
     <mapID target="genjfr.app.misc" url="./first_steps/misc_genjfr.html"/>
-    <mapID target="genjfr.app.nomade" url="./first_steps/genjfr_nomade.html"/>
+    <mapID target="genjfr.app.nomade" url="./advanced/genjfr_nomade.html"/>
     <mapID target="genjfr.app.options.menu1" url="./first_steps/menu_options_1.html"/>
-    <mapID target="genjfr.app.plugins" url="./first_steps/genjfr_plugins.html"/>
+    <mapID target="genjfr.app.plugins" url="./advanced/genjfr_plugins.html"/>
     <mapID target="genjfr.app.plugins.liste" url="./plugins/plugins_liste.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
     <mapID target="genjfr.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
