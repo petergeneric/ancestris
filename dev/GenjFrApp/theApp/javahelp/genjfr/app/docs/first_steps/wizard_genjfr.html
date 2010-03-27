@@ -105,12 +105,44 @@ Cliquez donc sur &laquo;Suivant&raquo;.<br>
 </map>
 <br>
 <div class="section1">
-    <li>Nous vous demandons &agrave; pr&eacute;sent dans la premi&egrave;re ligne <u>&laquo;fichier Gedcom &agrave; ouvrir&raquo;</u> d'indiquer &agrave; GenjFr le chemin de votre gedcom.<br>
-        Cliquez sur les trois petits points en bout de ligne et rendez vous sur votre Gedcom (fichier *.ged).</li>
-    <li>Laissez par d&eacute;faut la ligne <u>&laquo;R&eacute;pertoire de sortie des rapports&raquo;</u>.</li>
-    <li><u>Associations de fichiers</u> : ici il faut indiquer encore un chemin permettant d'ouvrir vos documents photos, textes, vid&eacute;os et autres dans votre g&eacute;n&eacute;alogie. Chaque logiciel &eacute;tant diff&eacute;rent dans les syst&egrave;mes d'exploitations, il est donc
-        difficile de vous donner une configuration pr&eacute;cise.</li>
-Nous pouvons donc maintenant enregistrer nos premiers param&egrave;tres de configuration. Donc cliquez sur &laquo;Enregistrer&raquo;.<br>
+    <li>Nous vous demandons &agrave; pr&eacute;sent dans la premi&egrave;re 
+        ligne <u>&laquo;fichier Gedcom &agrave; ouvrir&raquo;</u> d'indiquer
+        &agrave; GenjFr le chemin de votre gedcom.<br>
+        Cliquez sur les trois petits points en bout de ligne et rendez vous sur
+        votre Gedcom (fichier *.ged).</li>
+    <li>Laissez par d&eacute;faut la ligne <u>&laquo;R&eacute;pertoire de sortie 
+        des rapports&raquo;</u> sauf si vous voulez que le r&eacute;sultat
+        des rapports (les rapports sont des petits programmes
+        qui peuvent vous donner des statistiques, des graphes,
+        etc) soit mis dans un r&eacute;pertoire particulier de
+        votre ordinateur.</li>
+    <li><u>Associations de fichiers</u> : ici il faut indiquer encore un chemin
+        permettant d'ouvrir vos documents photos, textes, vid&eacute;os et autres
+        dans votre g&eacute;n&eacute;alogie. Chaque logiciel &eacute;tant
+        diff&eacute;rent dans les syst&egrave;mes d'exploitations, il est donc
+        difficile de vous donner une configuration pr&eacute;cise.
+    </li>
+    <li><u>Taille maximale du fichier log</u> : Peut-&ecirc;tre pourriez-vous
+        le mettre tout de suite &agrave; une taille plus importante,
+        disons 1024 ou 2048.
+    </li>
+    <li>
+        <u>Niveau de log</u> : Par d&eacute;faut le degr&eacute; de verbosit&eacute;
+        du log est mis &agrave; INFO. On vous conseille de le mettre
+        &agrave; FINE. Plusieurs niveaux de verbosit&eacute; existent,
+        mais plus vous allez dans les niveaux &eacute;lev&eacute;s (FINE,
+        FINER, FINEST), plus le logiciel va &eacute;crire des choses
+        dans le log. FINE est suffisant. FINER, va ralentir
+        le logiciel au chargement. FINEST c'est encore pire.
+        FINER et FINEST ne doivent &ecirc;tre utilis&eacute;s que si
+        vous avez des probl&egrave;mes et que les d&eacute;veloppeurs vous
+        demandent d'augmenter la verbosit&eacute; du log pour trouver
+        ce qui peut causer ces probl&egrave;mes.
+    </li>
+Nous pouvons donc maintenant enregistrer nos premiers param&egrave;tres de
+configuration. Donc cliquez sur &laquo;Enregistrer&raquo;.<br>
+GenjFr pour prendre en consid&eacute;ration vos param&egrave;tres
+va vous dire qu'il red&eacute;marre.<br>
 </div>
 
 <br>
@@ -119,37 +151,71 @@ Nous pouvons donc maintenant enregistrer nos premiers param&egrave;tres de confi
 <br>
 
 <div class="section1">
-Voil&agrave; enfin GenjFr ou du moins sa carrosserie, celui-vous demande d'aller chercher votre fichier gedcom, cliquez sur &laquo;local&raquo; et suivez le chemin que vous avez d&eacute;fini lors de vos r&eacute;glages pr&eacute;c&eacute;dents.<br>
+Voil&agrave; enfin GenjFr ou du moins sa carrosserie. Celui-ci va vous
+demander d'aller chercher votre fichier gedcom, si vous n'aviez pas
+pr&eacute;cis&eacute; un fichier gedcom par d&eacute;faut lors de la configuration 
+initial. Si tel est le cas,
+cliquez sur &laquo;local&raquo; et suivez le chemin qui vous am&egrave;ne
+vers votre fichier de g&eacute;n&eacute;alogie (fichier gedcom).<br>
 <br>
-Votre Gedcom doit maintenant se lancer, mais pas de trace de fiches, d'arbres ou de classement.<br>
-Nous allons dans &laquo;Affichage&raquo; en haut &agrave; gauche: <br>
+Votre Gedcom doit maintenant se lancer, et trois fen&ecirc;tres par
+d&eacute;faut vont s'ouvrir (la Table, l'Arbre g&eacute;n&eacute;alogique et l'Editeur).<br>
+Si vous voulez ouvrir d'autres fen&ecirc;tres, il vous faudra le faire. A
+l'avenir GenjFr se souviendra des fen&ecirc;tres qui &eacute;taient 
+ouvertes lors de sa fermeture.<br>
+Pour ouvrir de nouvelles fen&ecirc;tres, il vous suffit d'aller
+dans &laquo;Affichage&raquo; en haut &agrave; gauche: <br>
 <ul>
-    - S&eacute;lectionnez &laquo;Editer&raquo;,<br>
-    - Retournez dans &laquo;Affichage&raquo;,<br>
-    - S&eacute;lectionnez &laquo;Table&raquo;,<br>
-    - Retournez dans &laquo;Affichage&raquo;,<br>
-    - S&eacute;lectionnez &laquo;Arbre&raquo;.<br>
+    - Puis de S&eacute;lectionner &laquo;Vue Chronologique&raquo;,<br>
+    - Si vous voulez en ouvrir une autre, vous pouvez retourner
+    dans &laquo;Affichage&raquo;,<br>
+    - Et s&eacute;lectionner &laquo;Fiche entit&eacute;&raquo; par exemple.<br>
 </ul>
-Lors de cette manoeuvre vous avez d&ucirc; vous rendre compte qu'il existe d'autres fen&ecirc;tres possibles que vous pourrez installer par la suite.<br>
+Lors de cette manoeuvre vous avez d&ucirc; vous rendre compte qu'il existe
+d'autres fen&ecirc;tres possibles que vous pourrez ouvrir par la suite.<br>
 <br> 
 
-Actuellement vous avez 4 fen&ecirc;tres, dont trois l'une sur l'autre, nous allons donc les <a href="./fenetrage.html">d&eacute;placer afin d'avoir une vue d'ensemble de notre g&eacute;n&eacute;alogie</a>.<br>
-Nous vous conseillons pour l'instant de commencer par la fen&ecirc;tre &laquo;Editer&raquo;, le petit crayon vert.<br>
+Actuellement vous avez 3 fen&ecirc;tres, en plus du gestionnaire de
+fichiers gedcom.<br>
+Si vous avez envie de <a href="./fenetrage.html">d&eacute;placer une
+ou plusieurs fen&ecirc;tres afin d'avoir une vue d'ensemble de
+votre g&eacute;n&eacute;alogie</a> voil&agrave; comment faire en supposant
+que l'on veuille commencer par la fen&ecirc;tre de &laquo;l'Editeur&raquo;,
+le petit crayon vert.<br>
 <ul>
-    Faites un clic gauche dessus, sans rel&acirc;cher, et d&eacute;placer votre souris, vous allez voir appara&icirc;tre un cadre rouge qui vous indique<br>
-    L'emplacement futur de votre fen&ecirc;tre. D&egrave;s que la position vous semble correcte relachez.<br>
-    Faites de m&ecirc;me pour les autres fen&ecirc;tres.<br>
+    Faire un clic gauche dessus, sans rel&acirc;cher, et d&eacute;placer
+    la souris. On va voir appara&icirc;tre un cadre rouge qui nous indique
+    l'emplacement futur de la fen&ecirc;tre. D&egrave;s que la position
+    semble correcte, il suffit de relacher.<br>
+    On peut faire de m&ecirc;me pour les autres fen&ecirc;tres.<br>
 </ul>
 
-Le positionnement &eacute;tant termin&eacute; vous avez la possibilit&eacute; d'&eacute;largir celle ci en pla&ccedil;ant le pointeur de votre sourie<br>
-Sur les bords de la fen&ecirc;tre, vous verrez appara&icirc;tre une fl&egrave;che surmont&eacute;e d'un trait, cliquez gauche et d&eacute;placez comme bon vous semble.<br>
+Le positionnement &eacute;tant termin&eacute; vous avez la possibilit&eacute;
+d'&eacute;largir celle ci en pla&ccedil;ant le pointeur de votre souris sur
+les bords de la fen&ecirc;tre. Vous verrez alors appara&icirc;tre une
+fl&egrave;che surmont&eacute;e d'un trait. Cliquez gauche et d&eacute;placez
+comme bon vous semble.<br>
 <br>
-&Agrave; ce stade de l'installation vous pouvez v&eacute;rifier que tout va bien &ecirc;tre sauvegard&eacute;. Faites &laquo;Fichier - Quitter&raquo;.<br>
-Ouvrez de nouveau le logiciel et si tout s'est bien pass&eacute; GenjFr doit s'ouvrir sur votre g&eacute;n&eacute;alogie et vos param&egrave;tres de fen&ecirc;tres.<br>
+&Agrave; ce stade de l'installation vous pouvez v&eacute;rifier que tout va
+bien &ecirc;tre sauvegard&eacute;. Faites &laquo;Fichier - Quitter&raquo;.<br>
+Ouvrez de nouveau le logiciel et si tout s'est bien pass&eacute;, GenjFr
+doit s'ouvrir sur votre g&eacute;n&eacute;alogie et vos param&egrave;tres
+de fen&ecirc;tres doivent &ecirc;tre ceux que vous aviez choisis.<br>
 <br>
-Nous vous entendons, d&eacute;j&agrave; nous dire, 'oui mais je n'ai plus la fen&ecirc;tre de configuration!'<br>
-Allez dans &laquo;Outils" en haut &agrave; gauche, &laquo;Pr&eacute;f&eacute;rences&raquo;, vous pouvez &agrave; nouveau param&eacute;trer &agrave; votre gr&eacute;.<br>
+Nous vous entendons, d&eacute;j&agrave; nous dire, 'oui mais je n'ai plus la
+fen&ecirc;tre de configuration!'<br>
+Allez dans &laquo;Outils" en haut &agrave; gauche, &laquo;Pr&eacute;f&eacute;rences&raquo;,
+vous pouvez &agrave; nouveau param&eacute;trer &agrave; votre gr&eacute;.<br>
 <br>
+La configuration initiale de GenjFr est termin&eacute;e. Vous pourrez par la
+suite configurer chaque fen&ecirc;tre de mani&egrave;re ind&eacute;pendante,
+changer l'allure des donn&eacute;es affich&eacute;es dans l'arbre
+g&eacute;n&eacute;alogique, dans la table, etc... Mais c'est une autre
+histoire. Voyons d'abord le "<a href="./gedcoms_manager.html">Gestionnaire des
+fichiers gedcom</a>", c'est lui qui nous permet de choisir le fichier
+g&eacute;n&eacute;alogique sur lequel on veut travailler. De plus il peut
+&ecirc;tre int&eacute;ressant de le configurer avant de s'occuper des
+fen&ecirc;tres, car on va pouvoir gagner de la place sur notre plan de travail.<br>
 
 </div>
 
