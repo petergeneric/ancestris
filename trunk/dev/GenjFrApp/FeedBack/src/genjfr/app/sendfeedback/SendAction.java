@@ -18,37 +18,53 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
 import java.util.Properties;
-import javax.swing.JOptionPane;
+import java.util.prefs.Preferences;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
-import sun.net.www.protocol.mailto.MailToURLConnection;
+import org.openide.util.NbPreferences;
 
 public final class SendAction implements ActionListener {
 
     private final static java.util.ResourceBundle RESOURCES = java.util.ResourceBundle.getBundle("genjfr/app/sendfeedback/Bundle");
-    	private final static String TEXTSEPARATOR = "\n=======================================\n";
-        private final static String SEND = new String(NbBundle.getMessage(SendAction.class, "SEND_BUTTON"));
+    private final static String TEXTSEPARATOR = "\n=======================================\n";
+    private final static String SEND = new String(NbBundle.getMessage(SendAction.class, "SEND_BUTTON"));
+    private Preferences feedbackPrefs = NbPreferences.forModule(FeedbackPanel.class);
 
-        GenjLogFile logFile = new GenjLogFile();
-        FeedbackPanel fbPanel = new FeedbackPanel(logFile.getSize());
+    GenjLogFile logFile = new GenjLogFile();
+    FeedbackPanel fbPanel = new FeedbackPanel(logFile.getSize());
 
+    private void setDefaultValues(FeedbackPanel panel){
+        panel.jtaText.setText(getSystemInfo());
+        panel.jtEmailTo.setText(RESOURCES.getString("fb.mailto.default"));
+        panel.jtMailHost.setText(feedbackPrefs.get("mail.host",System.getProperty("mail.host")));
+        panel.jtName.setText(feedbackPrefs.get("mail.name",""));
+        panel.jtEmail.setText(feedbackPrefs.get("mail.address",""));
+    }
+    private void saveDefaultValues(FeedbackPanel panel){
+        String s = panel.jtMailHost.getText();
+        if (!s.equalsIgnoreCase(System.getProperty("mail.host"))) {
+            feedbackPrefs.put("mail.host", s);
+        }
+
+        feedbackPrefs.put("mail.name", panel.jtName.getText().trim());
+        feedbackPrefs.put("mail.address", panel.jtEmail.getText().trim());
+
+    }
     public void actionPerformed(ActionEvent e) {
-        fbPanel.jtaText.setText(getSystemInfo());
-        fbPanel.jtEmailTo.setText(RESOURCES.getString("fb.mailto.default"));
-        fbPanel.jtEmailTo.setText("daniel.andre@free.fr");
-        fbPanel.jtMailHost.setText((String)System.getProperty("mail.host"));
-
+        setDefaultValues(fbPanel);
 
         DialogDescriptor dd = new DialogDescriptor(fbPanel,NbBundle.getMessage(this.getClass(), "FeedbackPanel.title"));
         dd.setOptions(new Object[]{new String(SEND), DialogDescriptor.CANCEL_OPTION});
         DialogDisplayer.getDefault().createDialog(dd);
         DialogDisplayer.getDefault().notify(dd);
         if (dd.getValue().equals(SEND)){
+            // on sauvegarde qq valeurs par defaut
+            saveDefaultValues(fbPanel);
             System.setProperty("mail.host", fbPanel.jtMailHost.getText());
-			Thread t = new Thread(new SendWorker(), "SendFeedback");
-			t.start();
+            Thread t = new Thread(new SendWorker(), "SendFeedback");
+            t.start();
         }
     }
 
