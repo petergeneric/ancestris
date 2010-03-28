@@ -12,7 +12,7 @@ and open the template in the editor.
         <tocitem expand="true" text="Découverte de GenjFr" target="genjfr.app.discovering">
             <tocitem target="genjfr.app.download">Téléchargement de GenjFr </tocitem>
             <tocitem text="Première configuration" target="genjfr.app.wizard" />
-            <tocitem text="Gestionnaire Gedcoms" target="genjfr.app.gedcoms.manager" />
+            <tocitem text="Gestionnaire des Gedcoms" target="genjfr.app.gedcoms.manager" />
             <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
         </tocitem>
         <tocitem expand="true" text="Les différentes vues" target="genjfr.app.views">
