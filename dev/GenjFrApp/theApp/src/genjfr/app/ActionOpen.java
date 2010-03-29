@@ -13,20 +13,21 @@ import genj.io.GedcomIOException;
 import genj.io.GedcomReader;
 import genj.util.DirectAccessTokenizer;
 import genj.util.Origin;
+import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.ProgressWidget;
 import genj.window.WindowManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
@@ -254,12 +255,23 @@ public /*final*/ class ActionOpen extends Action2 {
         Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
         List<String> openedViews = new ArrayList<String>();
 
+        // try gedcom properties
+        Registry gedcomSettings = App.getRegistry(ged);
+            gedcomSettings = App.getRegistry(ged);
+            for (int i = 0; i<20; i++){
+                String item = gedcomSettings.get("openViews" + i, (String)null);
+                if (item == null)
+                    break;
+                openedViews.add(item);
+            }
 
-        for (int i = 0; i<20; i++){
-            String item = prefs.get("openViews" + i, null);
-            if (item == null)
-                break;
-            openedViews.add(item);
+        if (openedViews.isEmpty()){
+            for (int i = 0; i<20; i++){
+                String item = prefs.get("openViews" + i, null);
+                if (item == null)
+                    break;
+                openedViews.add(item);
+            }
         }
         if (openedViews.isEmpty()){
             openedViews.add("genjfr.app.TableTopComponent");

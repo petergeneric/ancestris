@@ -67,7 +67,9 @@ public class GenjViewTopComponent extends TopComponent implements GenjViewInterf
     @Override
     public void open() {
         if (!isRestored) {
-             Mode m = WindowManager.getDefault().findMode (getDefaultMode());
+            String modeName = App.getRegistry(gedcom).get(preferredID()+".dockMode", getDefaultMode()) ;
+            
+             Mode m = WindowManager.getDefault().findMode (modeName);
              if (m != null) {
                 m.dockInto(this);
              }
