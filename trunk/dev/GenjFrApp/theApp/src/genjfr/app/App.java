@@ -25,6 +25,7 @@ import genj.app.Options;
 import genj.gedcom.Gedcom;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
+import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.window.GenjFrWindowManager;
@@ -651,6 +652,17 @@ public class App {
             }
         }
     }
+
+  /**
+   * Helper that returns registry for gedcom
+   * TODO: mettre ailleurs
+   */
+  public static Registry getRegistry(Gedcom gedcom) {
+    Origin origin = gedcom.getOrigin();
+    String name = origin.getFileName();
+    return Registry.lookup(name, origin);
+  }
+
 
 } //App
 

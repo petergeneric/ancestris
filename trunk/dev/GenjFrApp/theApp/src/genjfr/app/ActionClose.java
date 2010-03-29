@@ -7,9 +7,14 @@ package genjfr.app;
 import genj.app.Images;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomDirectory;
+import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.window.WindowManager;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  *
@@ -73,6 +78,10 @@ public class ActionClose extends Action2 {
             }
         }
 
+        // Save Layout
+        // TODO: must be part of gedcom object?
+        Registry gedcomSettings = App.getRegistry(gedcom);
+        ActionSaveLayout.saveLayout(gedcom);
         // Remove it
         GedcomDirectory.getInstance().unregisterGedcom(gedcom);
 
