@@ -311,7 +311,7 @@ public class ControlCenter extends JPanel {
         }
     } //ActionExit
 
-    public boolean nbDoExit() {
+    public boolean nbDoExit(final Semaphore sem) {
         // force a commit
         for (Gedcom gedcom : GedcomDirectory.getInstance().getGedcoms()) {
             WindowManager.broadcast(new CommitRequestedEvent(gedcom, ControlCenter.this));
@@ -333,12 +333,14 @@ public class ControlCenter extends JPanel {
                 // yes - close'n save it
                 if (rc == 0) {
                     // block exit
+                    sem.acquire();
                     // run save
-                    new ActionSave(gedcom, false) {
+                    new ActionSave(gedcom) {
                         // apres save
 
                         @Override
                         protected void postExecute(boolean preExecuteResult) {
+                            sem.release();
                             try {
                                 // super first
                                 super.postExecute(preExecuteResult);
