@@ -74,7 +74,7 @@ public class ActionClose extends Action2 {
                         }
                     }
                 }.trigger();
-                return;
+//                return;
             }
         }
 

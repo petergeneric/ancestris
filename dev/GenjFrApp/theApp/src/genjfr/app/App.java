@@ -74,6 +74,7 @@ public class App {
 //    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
     public static Registry REGISTRY = new Registry("genj");
+    private static final Semaphore sem = new Semaphore();
 
     /**
      * GenJ Main Method
@@ -132,8 +133,8 @@ public class App {
     public static boolean closing() {
         LOG.info("Shutdown");
         saveModesIfRestartRequired();
-        return center.nbDoExit();
-    }
+        return center.nbDoExit(sem);
+        }
 
     public static void close() {
         // persist options
@@ -143,6 +144,14 @@ public class App {
         // Reload modes if restart required
         loadModesIfRestartRequired();
         // done
+
+        new Thread(new Runnable() {
+            public void run() {
+                while (sem.isBusy())
+                        ;
+                }
+        }).start();
+
         LOG.info("/Shutdown");
 
     }

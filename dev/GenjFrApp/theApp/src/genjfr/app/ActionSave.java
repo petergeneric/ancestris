@@ -49,22 +49,11 @@ import java.net.URL;
     /** password used */
     private String password;
 
-    private boolean openProgress = true;
-
       private Resources resources = Resources.get(genj.app.ControlCenter.class);
       private WindowManager windowManager = App.center.getWindowManager();
   private final static String
     ACC_SAVE = "ctrl S";
 
-    protected ActionSave(Gedcom gedcom,boolean isAsync) {
-        this(gedcom);
-        if (isAsync)
-            setAsync(ASYNC_NEW_INSTANCE);
-        else {
-            setAsync(ASYNC_NOT_APPLICABLE);
-            openProgress = false;
-        }
-    }
     /**
      * Constructor for saving gedcom file without interaction
      */
@@ -197,7 +186,6 @@ import java.net.URL;
       }
 
       // .. open progress dialog
-      if (openProgress)
       progress = windowManager.openNonModalDialog(
         null,
         resources.getString("cc.save.saving", file.getName()),
@@ -258,7 +246,6 @@ import java.net.URL;
     protected void postExecute(boolean preExecuteResult) {
 
       // close progress
-        if (openProgress)
           windowManager.close(progress);
 
       // problem encountered?
