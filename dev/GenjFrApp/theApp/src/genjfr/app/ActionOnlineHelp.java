@@ -12,6 +12,7 @@ import genj.util.swing.Action2;
 import genj.window.WindowManager;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -22,7 +23,7 @@ import java.net.URL;
       private WindowManager windowManager = App.center.getWindowManager();
     /** constructor */
     public ActionOnlineHelp() {
-      setText(resources, "cc.menu.online");
+      setText(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp"));
       setImage(Images.imgHelp);
     }
     /** run */
