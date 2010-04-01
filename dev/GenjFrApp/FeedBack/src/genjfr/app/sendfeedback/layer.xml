@@ -14,8 +14,13 @@
 
     <folder name="Menu">
         <folder name="Help">
+            <file name="SeparatorFeedBack.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="39"/>
+            </file>
             <file name="SendFeedbackAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/genjfr-tools-calc-SendAction.instance"/>
+                <attr name="position" intvalue="40"/>
             </file>
         </folder>
     </folder>

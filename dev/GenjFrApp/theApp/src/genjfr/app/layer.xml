@@ -150,6 +150,10 @@
                  used by code that calls SystemAction.get(...), e.g. the AppleMenu module -->
             <file name="genjfr-app-ActionHelp.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionHelp"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionHelp"/>
+                <attr name="iconBase" stringvalue="genjfr/app/ActionHelp.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="genjfr-app-ActionOnlineHelp.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionOnlineHelp"/>
@@ -211,6 +215,10 @@
             <file name="genjfr-app-ActionOnlineHelp.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionOnlineHelp.instance"/>
                 <attr name="position" intvalue="-50"/>
+            </file>
+            <file name="SeparatorAPropos.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="49"/>
             </file>
             <file name="genjfr-app-ActionAPropos.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAPropos.instance"/>
