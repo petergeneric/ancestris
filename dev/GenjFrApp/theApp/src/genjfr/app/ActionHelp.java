@@ -12,6 +12,7 @@ import genj.window.WindowManager;
 import org.netbeans.api.javahelp.Help;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 public final class ActionHelp extends Action2 {
 
@@ -20,7 +21,7 @@ public final class ActionHelp extends Action2 {
 
     /** constructor */
     public ActionHelp() {
-        setText(resources, "cc.menu.contents");
+        setText(NbBundle.getMessage(this.getClass(), "CTL_ActionHelp"));
         setImage(Images.imgHelp);
     }
 
