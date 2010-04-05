@@ -2,43 +2,34 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genjfr.app;
 
-import org.openide.util.Exceptions;
+import java.awt.EventQueue;
 
 /**
  *
  * @author daniel
  */
 public class Semaphore {
-    int isLoaded = 0;
-   public void acquire(){
-        synchronized (this) {
-            isLoaded ++;
-            this.notifyAll();
-        }
-   }
-   public void release() {
-       synchronized (this) {
-           isLoaded--;
-           this.notifyAll();
-       }
-   }
 
-   public boolean isBusy() {
-       if (isLoaded == 0)
-           return true;
-       synchronized(this) {
-            try {
-                while (isLoaded != 0) {
-                    this.wait();
-                }
-                return true;
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-                return false;
+    int countUsed = 0;
+
+    public synchronized void acquire() {
+        countUsed++;
+        this.notifyAll();
+    }
+
+    public void release() {
+        release(null);
+    }
+
+    public synchronized void release(Runnable runIfCounterReache0) {
+        if (countUsed > 0) {
+            countUsed--;
+            if (countUsed == 0 && runIfCounterReache0 != null) {
+                EventQueue.invokeLater(runIfCounterReache0);
             }
         }
-   }
+        this.notifyAll();
+    }
 }

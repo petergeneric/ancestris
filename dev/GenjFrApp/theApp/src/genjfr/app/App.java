@@ -74,7 +74,6 @@ public class App {
 //    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
     public static Registry REGISTRY = new Registry("genj");
-    private static final Semaphore sem = new Semaphore();
 
     /**
      * GenJ Main Method
@@ -130,10 +129,19 @@ public class App {
 //        }
     }
 
+    /* TODO: sauvegarde des fichiers ouverts fait dans le hook du code exit
+     * car dans le cas de la fermeture de l'application par le bouton fermer de la fenetre
+     * ppale cela ne fonctionne pas.
+     * Ceci est certainement du au fait que dans ce cas le thread eventqueue n'est pas active
+     * avant le retour de la fonction close.
+     * voir si on peut faire autrement:
+     * en fait oui mais en utilisant l'api dataobject de NB et la possibilite de sauvegarder
+     * tous les dataobject ouvert en quittant l'applicatuin
+     */
     public static boolean closing() {
         LOG.info("Shutdown");
         saveModesIfRestartRequired();
-        return center.nbDoExit(sem);
+        return true;
         }
 
     public static void close() {
@@ -144,13 +152,6 @@ public class App {
         // Reload modes if restart required
         loadModesIfRestartRequired();
         // done
-
-        new Thread(new Runnable() {
-            public void run() {
-                while (sem.isBusy())
-                        ;
-                }
-        }).start();
 
         LOG.info("/Shutdown");
 

@@ -44,6 +44,7 @@ import genj.view.ViewManager;
 import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -311,7 +312,9 @@ public class ControlCenter extends JPanel {
         }
     } //ActionExit
 
-    public boolean nbDoExit(final Semaphore sem) {
+    public void nbDoExit(final Runnable postExitCode) {
+        final Semaphore sem = new Semaphore();
+        sem.acquire();
         // force a commit
         for (Gedcom gedcom : GedcomDirectory.getInstance().getGedcoms()) {
             WindowManager.broadcast(new CommitRequestedEvent(gedcom, ControlCenter.this));
@@ -328,7 +331,7 @@ public class ControlCenter extends JPanel {
                         Action2.yesNoCancel(), ControlCenter.this);
                 // cancel - we're done
                 if (rc == 2) {
-                    return false;
+                    return ;
                 }
                 // yes - close'n save it
                 if (rc == 0) {
@@ -340,7 +343,6 @@ public class ControlCenter extends JPanel {
 
                         @Override
                         protected void postExecute(boolean preExecuteResult) {
-                            sem.release();
                             try {
                                 // super first
                                 super.postExecute(preExecuteResult);
@@ -352,6 +354,7 @@ public class ControlCenter extends JPanel {
                                 // unblock exit
                             }
                             // continue with exit
+                            sem.release(postExitCode);
                         }
                     }.trigger();
 //            return;
@@ -361,7 +364,7 @@ public class ControlCenter extends JPanel {
             // next gedcom
         }
         // Done
-        return true;
+        sem.release(postExitCode);
     }
 
     /**
