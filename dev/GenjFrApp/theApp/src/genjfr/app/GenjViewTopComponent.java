@@ -226,7 +226,9 @@ public class GenjViewTopComponent extends TopComponent implements GenjViewInterf
     void readPropertiesImpl(java.util.Properties p) {
         String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
-        if (gedName==null) return;
+//        if (gedName==null) return;
+        if (gedName==null)
+            close();
         isRestored = true;
         waitStartup(gedName);
     }
@@ -323,13 +325,16 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
                         ;
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                    init(App.center.getOpenedGedcom(gedName));
-                    open();
+                    if (App.center.getOpenedGedcom(gedName) == null)
+                        close();
+                    else {
+                        init(App.center.getOpenedGedcom(gedName));
+                        open();
+                    }
                 }
             });
             }
         }).start();
-
     }
 
 
