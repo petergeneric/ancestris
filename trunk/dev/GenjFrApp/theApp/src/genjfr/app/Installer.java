@@ -24,13 +24,12 @@ public class Installer extends ModuleInstall {
 
     @Override
     public void restored() {
-        // Lanches main application
+        // Launches main application
         App.main(new String[]{});
 
         // Run wizard if necessary
         if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-
                 public void run() {
                     // Any code here will be run with the UI is available
                     App.REGISTRY = checkOptionsWizard(App.REGISTRY);
@@ -39,8 +38,8 @@ public class Installer extends ModuleInstall {
                         LifecycleManager.getDefault().markForRestart();
                         LifecycleManager.getDefault().exit();
                     }
-                }
-            });
+            }
+        });
         }
     }
 
