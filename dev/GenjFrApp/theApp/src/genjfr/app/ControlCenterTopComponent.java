@@ -37,10 +37,12 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
 //	putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
 //	putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 //	putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
-	putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
+//	putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
 
     }
 
+    @Override
+    public boolean canClose(){return  false;}
 
     @Override
     String getDefaultFactoryMode() {return "genjfr-explorer";}
