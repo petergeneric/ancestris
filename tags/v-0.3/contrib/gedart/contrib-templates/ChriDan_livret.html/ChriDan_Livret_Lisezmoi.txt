@@ -1,0 +1,41 @@
+MODÈLE "LIVRET D'HISTOIRE FAMILIALE" patronymique.
+
+Le modèle "Livret d'histoire familiale" patronymique combine deux modèles de fiches : le modèle ChriDan_patros et le modèle ChriDan_bios. Il affiche automatiquement une page de garde avec le nom de la lignée familiale, puis deux pages d'arbre patronymique sur quatorze générations, puis trois pages de chacune deux lignées d'ancêtres avec un texte sur l'histoire d'une famille lorsque le nom apparaît dans l'arbre avec l'arrivée d'une nouvelle épouse ainsi qu'une photo relative à leur village. La sortie html produit directement des sauts de page à l'impression...
+
+INSTALLATION : Pour rendre le rapport actif, décompressez-le dans le répertoire "contrib-templates" de "/.genj/gedart", ouvrez alors votre GenJ, cliquer droit sur un individu, choisir dans la liste des rapports "Fiches de renseignements", puis dans la liste déroulante, choisir "Livret de l'individu", GenJ vous demande un nom de fichier (il faut auparavant avoir pensé à sélectionner dans "Rapports --> Options --> Montrer le résultat dans un fichier"), sélectionner le répertoire de destination, taper un nom suivi de l'extension "html", cliquer OK. 
+
+Ouvrez alors le fichier obtenu dans Firefox (pour avoir à chaque fois, une ascendance par page, choisir dans les "Préférences" de Firefox, la police réglée sur "sérif 9".).Vous pouvez l'imprimer (dans les options de l'impression, désactiver l'impression des en-têtes, page, etc...". Pour l'envoyer à  vos correspondants, il est conseillé de le transformer en fichier *.pdf, lisible sans déformation par tous. Pour cela, aller dans "imprimer", choisir "imprimer dans un fichier", indiquer un nom et l'extension *.pdf, désactiver aussir les option d'impression des en-têtes et divers.
+
+ATTENTION
+
+Pour préparer le rapport, il convient de faire :
+1/ une note rattachée au nom(NAME) (et pas à l'individu) chaque fois, que par un mariage et une épouse, vous introduisez une nouvelle lignée patronymique dans votre base.
+Dans cette note, répondez aux questions suivantes :
+a) apparition du patronyme : Jenne ... a épousé Michel .... à .... le ......
+b) Ancêtre le plus ancien : Jean .... s'est marié en 16xx à Saint-Truc.
+c) Les .... étaient [leur métier] à .....
+d) Ils habitaient dans cette commune depuis ....ans au hameau de ....
+
+ATTENTION : LONGUEUR MAXIMUM pour une note : 600 caractères pour garder la présentation de la fiche sur une page
+
+2/ d'indiquer la résidence de l'épouse (RESI) et d'y attacher une photo du village ou de l'église ou du hameau ou de la maison avec OBJE (créez le sous TAG titre de la photo - TITL- car il n'est pas créé automatiquement avec OBJE).
+Remplissez l'URL, c'est-à-dire le CHEMIN de votre fichier sur votre disque dur : ex sous Linux, pour l'image "vue_ailleux_domois.jpg" /home/compaq/iMAGES/images/vue_ailleux_domois.jpg
+ATTENTION : évitez absolument les photos cadrées en hauteur comme les clochers d'églises, sinon, il y aura des décalages.
+
+3/ Pour la page de garde, trouvez une photo présentant le village, le hameau souche de la lignée patronymique (si vous le connaissez). Pour la faire apparaître, il faut, sous l'individu de départ, créer un tag PROP (propriété) avec un lieu, une date et lieu attacher votre OBJE comme pour une photo de résidence....
+
+4/ Impression : vous pouvez imprimer directement la sortie html, des sauts de pages sont insérées automatiquement (vérifiez-le avec la fonction "aperçu"). Je vous conseille malgré tout de produire d'abord un fichier PDF (dans Konqueror, choisir "Imprimante --> PDF", sous Windows, installez PDF Créator). Puis vous imprimerez votre PDF à partir de KPDF ou Acrobat Reader. Avantage : vous évitez les différences d'aspect suivant les navigateurs, vous pouvez envoyer sans déformation le fichier à vos "cousins".
+
+REMARQUES COMPLÉMENTAIRES :
+Le but est d'avoir un livret illustré de six pages présentant un bref aperçu des familles liées directement à la lignée patronymique, susceptible de plus intéresser nos proches, pour qui nos graphiques sont souvent abscons ou lassants.
+Ppour compter le nombre de caractères de votre note : collez votre texte dans OpenOffice : allez à --> Fichier --> Propriétés --> Statistique ou dans Kword : allez à --> Fichier ---> Statistiques
+Si vous garnissez votre gedcom avec ces notes et ces photos, le rapport Chridanbio vous fera des fiches agréables et vous fera regarder votre généalogie, y compris par vous, avec un nouveau regard..
+
+suggestion : pour avoir un livret plus complet, faites un mini-livret de six pages à partir de CHACUN de vos quatre grands-parents. Vous aurez une publication de 24 pages que vous pouvez relier avec une spirale, un transparent en première page et un carton au dos...
+
+(texte du 30/09/2009 : Daniel Durand
+
+
+
+
+

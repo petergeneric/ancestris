@@ -1,0 +1,34 @@
+#!/bin/sh
+
+## This quick script runs a key diff between the English resource files
+## and the Finnish resource files per directory passed as a parameter.
+## Use from the languages/<lang> directory: e.g. './keydiffs app' or
+## 'keydiffs gedcom/time'. Nontranslateable keys have been included in
+## the files as comments, marked with "# <" and a list of excluded keys,
+## in order to not have the script complain about those repeatedly.
+
+LANGUAGE=fi
+
+# For operation, swap to the English resource file directory.
+cd ../en
+
+# Find all resource file directories. Ignore CVS directories and the
+# root genj directory itself. Skip renderer because the html breaks us.
+# Directories appear like "genj/gedcom".
+for directory in $( find * -type d ! -name *CVS* ! -name genj ! -name *renderer*)
+do 
+  file=${directory}/resources.properties
+  file_fi=../${LANGUAGE}/${directory}/resources_${LANGUAGE}.properties
+  echo '***' ${directory}: 
+  for key in $(grep = ${file} | cut -d= -f 1 )
+  do
+    if ! grep -q $key ${file_fi}
+    then
+      echo $key
+    fi
+  done
+done
+
+# Return to the directory we were in.
+echo "Done! (Skipped renderer, since the html makes us cry.)"
+cd -

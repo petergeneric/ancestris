@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="GenjFrApp" basedir=".">
+    <description>Builds the module suite GenjFrApp.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <target name="build-launchers" depends="-init">
+        <fail unless="app.name">Must have set at least an application name ('app.name')</fail>
+
+        <pathconvert property="zip.platform.update.tracking">
+            <pathfileset>
+                <path refid="cluster.path.id"/>
+                <filename name="**/update_tracking/*.xml"/>
+            </pathfileset>
+        </pathconvert>
+
+        <selector id="zip.platform.included.files">
+            <custom classpath="${harness.dir}/tasks.jar" classname="org.netbeans.nbbuild.ModuleSelector">
+                <param name="excludeModules" value="${disabled.modules}"/>
+                <!-- XXX inc/exc clusters -->
+                <param name="includeClusters" value="${enabled.clusters}"/>
+                <param name="excludeClusters" value="${disabled.clusters}"/>
+                <param name="updateTrackingFiles" value="${zip.platform.update.tracking}"/>
+            </custom>
+        </selector>
+
+        <pathconvert property="zip.platform.clusters.duplicates" pathsep="&#10;">
+            <pathfileset>
+                <path refid="cluster.path.id"/>
+                <selector refid="zip.platform.included.files"/>
+            </pathfileset>
+            <chainedmapper>
+                <mapper type="regexp" from="(^.+)[/\\]config[/\\]Modules[/\\]" to="\1"/> <!-- #71849 -->
+                <filtermapper>
+                    <linecontainsregexp negate="true">
+                        <regexp pattern="update[/\\]backup[/\\]netbeans[/\\]?$"/>
+                    </linecontainsregexp>
+                </filtermapper>
+            </chainedmapper>
+        </pathconvert>
+        <tempfile property="zip.platform.clusters.duplicates.file" destdir="${basedir}/build" deleteonexit="true"/>
+        <echo file="${zip.platform.clusters.duplicates.file}" message="${zip.platform.clusters.duplicates}"/>
+
+        <union id="zip.platform.clusters"> <!-- union removes duplicates -->
+            <files includesfile="${zip.platform.clusters.duplicates.file}"/>
+        </union>
+        <pathconvert property="zip.platform.clusters.bare" pathsep="&#10;"> <!-- #71128: \n OK on Win but \r\n bad on Unix -->
+            <resources refid="zip.platform.clusters"/>
+            <chainedmapper>
+                <filtermapper>
+                    <linecontainsregexp negate="true">
+                        <regexp pattern="platform[0-9]*[/\\]?$"/>
+                    </linecontainsregexp>
+                </filtermapper>
+                <mapper type="regexp" from="[/\\]([^/\\]+)[/\\]?$" to="\1"/> <!-- #71849 -->
+            </chainedmapper>
+        </pathconvert>
+
+        <property name="build.launcher.dir" location="build/launcher"/>
+
+        <mkdir dir="${build.launcher.dir}/etc"/>
+        <!-- clean old launchers (platform could be changed) -->
+        <delete dir="${build.launcher.dir}/bin" failonerror="false"/>
+        <mkdir dir="${build.launcher.dir}/bin"/>
+
+        <!-- make sure correct launchers are present - for pre7 platform use old app.exe launchers -->
+        <pathconvert property="nbexec.dll.found" setonempty="false">
+            <pathfileset include="lib/nbexec.dll">
+                <path refid="cluster.path.id"/>
+            </pathfileset>
+        </pathconvert>
+        <condition property="app.exe.prefix" value="" else="pre7_">
+            <isset property="nbexec.dll.found"/>
+        </condition>
+        <copy file="${harness.dir}/launchers/${app.exe.prefix}app.exe" tofile="${build.launcher.dir}/bin/${app.name}.exe" overwrite="true"/>
+        <copy file="${harness.dir}/launchers/${app.exe.prefix}app_w.exe" tofile="${build.launcher.dir}/bin/${app.name}_w.exe" failonerror="false" overwrite="true"/>
+
+        <copy file="${harness.dir}/launchers/app.sh" tofile="${build.launcher.dir}/bin/${app.name}"/>
+        <copy file="nbproject/app.conf" tofile="${build.launcher.dir}/etc/${app.name}.conf">
+            <filterchain>
+                <replacestring from="$${branding.token}" to="${branding.token}"/>
+            </filterchain>
+        </copy>
+        <echo message="${app.name}" file="${build.launcher.dir}/etc/${app.name}.clusters"/>
+        <echo message="&#10;" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
+        <echo message="${zip.platform.clusters.bare}" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
+        <echo message="&#10;" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
+
+    </target>
+    <target name="build-zip" depends="suite.build-zip">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <zip destfile="${dist.dir}/${app.name}.zip" update="true">
+            <zipfileset dir="res/" includes="GNU ..." prefix="${app.name}"/>
+            <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>
+            <zipfileset dir="res/language/platform11" prefix="${app.name}/platform11"/>
+        </zip>
+    </target>
+
+</project>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GenJ" default="cleandist" basedir=".">
+
+	<!--
+   Initialization
+   -->
+	<target name="init">
+
+		<tstamp>
+			<format property="now.short" pattern="yyyyMMdd"/>
+		</tstamp>
+
+		<loadproperties srcfile="./build.properties">
+			<filterchain>
+				<replaceregex pattern="^version[\s]*=[\s]*\$[N][a][m][e]:[\s]+([^\s]+)[\s]*\$$" replace="version=\1-${now.short}" flags="i" byline="true"/>
+				<replaceregex pattern="^version[\s]*=[\s]*\$[N][a][m][e]:[\s]*\$$" replace="version=HEAD-${now.short}" flags="i" byline="true"/>
+				<replaceregex pattern="^version[\s]*=[\s]*$" replace="" flags="i"/>
+			</filterchain>
+		</loadproperties>
+
+		<exec executable="svnversion" failonerror="false" outputproperty="svnversion" errorproperty="svnerror">
+			<arg value="-n"/>
+		</exec>
+		<property name="buildversion" value="${version}-r${svnversion}" /> 
+		<fail unless="version" message="no version information available - check build.properties"/>
+		<echo level="info">version = ${buildversion}</echo>
+
+		<echo level="info">Creating output directories</echo>
+		<mkdir dir="./build"/>
+		<mkdir dir="./build/dist"/>
+	</target>
+
+	<!--
+   Initialization
+   -->
+	<target name="clean" depends="init">
+		<echo level="info">Cleaning output directories</echo>
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="./build" excludes="eclipse/*"/>
+		</delete>
+		<ant dir="./dev/geo" inheritall="false" target="clean"/>
+		<ant dir="./dev/app" inheritall="false" target="clean"/>
+	</target>
+
+	<!--
+   Nested Project - App
+   -->
+	<target name="dist.app" depends="init">
+		<ant dir="./dev/app" inheritall="false" target="dist">
+			<property name="version" value="${buildversion}"/>
+			<property name="dir.geo" value="../geo"/>
+		</ant>
+		<move todir="./build/dist">
+			<fileset dir="./dev/app/build/dist/"/>
+		</move>
+	</target>
+
+	<!--
+   Nested Project - Geo
+   -->
+	<target name="dist.geo" depends="dist.app">
+		<ant dir="./dev/geo" inheritall="false" target="dist">
+			<property name="version" value="${buildversion}"/>
+			<property name="dir.app" value="../app"/>
+		</ant>
+		<move todir="./build/dist">
+			<fileset dir="./dev/geo/build/dist/"/>
+		</move>
+	</target>
+
+
+	<!--
+	   Nested Project - console
+	   -->
+	<target name="dist.console" depends="init">
+		<ant dir="./sandbox/console" inheritall="false" target="dist">
+			<property name="version" value="${buildversion}"/>
+			<property name="dir.app" value="../../dev/app"/>
+			<property name="dir.geo" value="../../dev/geo"/>
+		</ant>
+		<move todir="./build/dist">
+			<fileset dir="./sandbox/console/build/dist/"/>
+		</move>
+	</target>
+
+	<!--
+	   Nested Project - lnf
+	   -->
+	<target name="dist.lnf" depends="init">
+		<ant dir="./sandbox/lnf" inheritall="false" target="dist">
+			<property name="version" value="${buildversion}"/>
+			<property name="dir.app" value="../../dev/app"/>
+		</ant>
+		<move todir="./build/dist">
+			<fileset dir="./sandbox/lnf/build/dist/"/>
+		</move>
+	</target>
+
+	<!--
+	   Nested Project - reportrunner
+	   -->
+	<target name="dist.reportrunner" depends="init">
+		<ant dir="./sandbox/reportrunner" inheritall="false" target="dist">
+			<property name="version" value="${buildversion}"/>
+			<property name="dir.app" value="../../dev/app"/>
+			<property name="dir.geo" value="../../dev/geo"/>
+		</ant>
+		<move todir="./build/dist">
+			<fileset dir="./sandbox/reportrunner/build/dist/"/>
+		</move>
+	</target>
+
+
+	<!--
+   Distribution
+   -->
+	<target name="dist.all" depends="dist.app, dist.geo, dist.lnf, dist.reportrunner" />
+
+	<target name="dist.arvernes" depends="dist.all, dist.arvernes-zip, dist.arvernes.source-zip" />
+	<target name="dist.arvernes-zip">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="./build/genjarvernes"/>
+		</delete>
+		<unzip dest="./build/genjarvernes">
+		    <fileset dir="build/dist">
+		        <include name="genj_app-*.zip"/>
+		    </fileset>
+		    <patternset>
+		        <include name="report/**/*.java"/>
+		    </patternset>
+		</unzip>
+		<unzip dest="./build/genjarvernes">
+		    <fileset dir="build/dist">
+		        <include name="genj_app-*.zip"/>
+		        <include name="genj_applet-*.zip"/>
+		        <include name="genj_fr-*.zip"/>
+		        <include name="genj_en-*.zip"/>
+		        <include name="genj_de-*.zip"/>
+		        <include name="genj_pl-*.zip"/>
+		        <include name="genj_ru-*.zip"/>
+		        <include name="genj_geo-*.zip"/>
+		        <include name="genj_lnf-*.zip"/>
+		        <include name="genj-reportrunner-*.zip"/>
+		    </fileset>
+		    <patternset>
+		        <exclude name="**/*.java" unless=""/>
+		    </patternset>
+		</unzip>
+		<zip basedir="./build/genjarvernes" zipfile="./build/dist/genj_arvernes.zip" />
+	</target>
+	<target name="dist.arvernes.source-zip">
+		<copy todir="./build/genjarvernes-source">
+    	  <fileset dir=".">
+    	  	<exclude name="**/build/**"/>
+    	  	<exclude name="**/eclipse/**"/>
+    	  	<exclude name="sandbox/**"/>
+    	  	<exclude name="GraphJ/**"/>
+    	  	</fileset>
+    	</copy>
+		<zip basedir="./build/genjarvernes-source" zipfile="./build/dist/genj_arvernes_source.zip" />
+	</target>
+
+	<target name="dist" depends="dist.arvernes" />
+	<target name="cleandist" depends="clean,dist.arvernes" />
+</project>

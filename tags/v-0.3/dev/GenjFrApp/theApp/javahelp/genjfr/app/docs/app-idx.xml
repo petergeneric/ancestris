@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
+<index version="2.0">
+    <indexitem text="Sommaire Général" target="genjfr.app.about"/>
+    <indexitem text="Utilisation avancée de GenjFr" target="genjfr.app.advanced"/>
+    <indexitem text="Utilisation de base de GenjFr" target="genjfr.app.basic"/>
+    <indexitem text="Fonctionnement des calques" target="genjfr.app.blueprints"/>
+    <indexitem text="Découverte de GenjFr" target="genjfr.app.discovering"/>
+    <indexitem text="Téléchargement de GenjFr" target="genjfr.app.download"/>
+    <indexitem text="Lieux où parler de GenjFr" target="genjfr.app.external.links"/>
+    <indexitem text="La norme Gedcom" target="genjfr.app.gedcom.standard"/>
+    <indexitem text="Le gestionnaire de fichiers Gedcom" target="genjfr.app.gedcoms.manager"/>
+    <indexitem text="Divers" target="genjfr.app.misc"/>
+    <indexitem text="Nomadisme et GenjFr" target="genjfr.app.nomade"/>
+    <indexitem text="Les plugins" target="genjfr.app.plugins"/>
+    <indexitem text="Liste des plugins" target="genjfr.app.plugins.liste"/>
+    <indexitem text="La visualisation chronologique" target="genjfr.app.view.chrono"/>
+    <indexitem text="Les Editeurs" target="genjfr.app.view.editors"/>
+    <indexitem text="La vue Entité" target="genjfr.app.view.entity"/>
+    <indexitem text="La visualisation géographique" target="genjfr.app.view.geo"/>
+    <indexitem text="Le Navigateur" target="genjfr.app.view.navigator"/>
+    <indexitem text="La Vue des Rapports" target="genjfr.app.view.reports"/>
+    <indexitem text="La fenêtre de Recherche" target="genjfr.app.view.search"/>
+    <indexitem text="La vue Table" target="genjfr.app.view.table"/>
+    <indexitem text="L'arbre Généalogique" target="genjfr.app.view.tree"/>
+    <indexitem text="Les différentes vues" target="genjfr.app.views"/>
+    <indexitem text="Gestion des fenêtres" target="genjfr.app.windows"/>
+    <indexitem text="Première configuration" target="genjfr.app.wizard"/>
+</index>

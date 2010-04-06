@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/></head><body>
+<anchor="I8330"><a NAME="I8330"></a>
+	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="fr-fr">
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Arbre biographique</title>
+  <meta content="Daniel Durand" name="author">
+	<style type="text/css">
+p {
+font-family: times;
+font-weight: normal;
+font-size: 0.7em;
+letter-spacing: -0px
+line-height: 0.8em;
+}
+.lital {
+font-style: italic;
+font-weight: normal;
+font-size: 0.5em;
+}
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+h1 {
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #ffff66;
+text-align: center;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+.lmegr {
+font-style: normal;
+font-weight: bold;
+font-size: 0.75em;
+color: #000099;
+}
+.megr {
+font-style: normal;
+font-weight: bold;
+color: #000099;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #ffff99;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ffff99;}
+	</style><!-- ici finit l'ensemble des indications de presentation de la page web
+</head>
+<body>
+<BODY TEXT="#000000">
+<table style="text-align: left; width: 841px; height: 795px;"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+</tr>
+    <tr>
+      <td style="width: 200px; height: 16px;" align="left"
+colspan="5" rowspan="1"
+ valign="top"><h2> <span class="megr"> Les patronymes :  Durand,Belin, Vial, Chazelle  </span></h2></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 25px;" align="right"
+colspan="5" rowspan="1"
+ valign="top"><h1>ARBRE BIOGRAPHIQUE de Pierre Antoine Durand</h1></td>
+    </tr>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : Durand, Antoine (Sosa :  0256)  </span></td>
+      <td style="width: 199px; height: 15px;" border-left: 3px solid #000080; align="left"
+ valign="top"><span class="lital">&Agrave; suivre : Chazelle, Claude (Sosa :  0258)  </span></td>
+      <td style="width: 0px; height: 15px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : Belin, Antoine (Sosa :  0260)  </span></td>
+      <td style="width: 200px; height: 15px;" align="left"
+ valign="top"><span class="lital">&Agrave; suivre : Vial, Henry (Sosa :  0262)  </span></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>Durand, Pierre</b><br> o  21 Juil 1706, Ailleux, 42002, Fra, Domois<br> x 6 Juin 1730,  Ailleux, 42002, Fra <br> +  24 Fév 1760-  Saint-Julien d'Oddes, 42243, Fra</p></td>
+<td
+ style="background-color: rgb(255, 204, 204); width: 199px; height: 30px;"
+ align="left" valign="top"><p><b>Chazelle, Jeanne</b><br> o  env 1710, Saint-Laurent-en-Solore, 42252, Fra<br> +  6 Août 1771,  Ailleux, 42002, Fra, Domois</p></td>
+      <td style="width: 0px; height: 30px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>Belin, Etienne</b><br> o  11 Fév 1712, Bussy-Albieux, 42030, Fra<br> x 29 Fév 1740,  Bussy-Albieux, 42030, Fra <br> +  13 Avr 1773, Bussy-Albieux, 42030, Fra, Gouttebelin</p></TD>
+			
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 30px;"
+ align="left" valign="top"><p><b>Vial, Marie</b><br> o  20 Sep 1721, Bussy-Albieux, 42030, Fra<br> +  28 Juin 1808,  Bussy-Albieux, 42030, Fra</p></TD>
+
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top"><span class="lmegr">Le village de Chazelle, Jeanne </span> <br>
+    <P><IMG SRC="/home/compaq/Tel/saintlaurent.jpg"  width="180" <br>
+<span class="lital">vue aérienne</span>
+</td>
+      <td style="width: 199px; height: 318px;" align="left"
+ valign="top">        <h4>Les Chazelle :</h4><span class="inherit">" Jeanne Chazelle épouse Pierre Durand le 6 juin 1730 à Ailleux. Elle descend d'une famille de cultivateurs et marchands aisés du hameau de Lijay à Saint-Laurent-en-Solore (Saint-Laurent-Rochefort aujourd'hui).
+Elle reçoit une dot de 800 livres, un pré et le trousseau et meubles habituels. "</span>
+ </td>
+      <td style="width: 0px; height: 318px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 318px;" align="middle"
+ valign="top"><span class="lmegr">Le village de Vial, Marie </span><br>
+    <P><IMG SRC="/home/compaq/Tel/BUSSY2.JPG"  width="180" <br>
+<span class="lital">Église de Bussy</span></td>
+      <td style="width: 200px; height: 318px;" align="left"
+ valign="top">        <h4>Les Vial :</h4><span class="inherit">"Marie Vial épouse Etienne Belin. Elle est originaire de la paroisse d'Albieu (réunie aujourd'hui à celle de Bussy). Les Vial sont des laboureurs anciennement établis et apparentés aux familles connues de la région comme les Patural, les Meynet de saint-Sixte."</span>
+ </td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 5px;"  align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 5px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>Durand, Annet</b><br> o  29 Avr 1736, Ailleux, 42002, Fra, Domois<br> x 10 Fév 1767,  Ailleux, 42002, Fra <br> +  17 Jan 1806-  Ailleux, 42002, Fra, Domois</p></td>
+      <td style="width: 0px; height: 27px;" align="left"
+ valign="top"></td>
+      <td
+ style="background-color: rgb(255, 204, 204); width: 200px; height: 27px;"
+ colspan="2" rowspan="1" align="left" valign="top"><p><b>Belin, Antoinette</b><br> o  13 Jan 1743, Bussy-Albieux, 42030, Fra<br> x 10 Fév 1767,  Ailleux, 42002, Fra <br> +  24 Mar 1817, Ailleux, 42002, Fra, Domois</p></td>
+    </tr>
+    <tr>
+      <td style="width: 400px; height: 178px;" colspan="2"
+ rowspan="1" align="middle" valign="top"> <span class="lmegr">Le village de Belin, Antoinette </span><br>
+    <P><IMG SRC="/home/compaq/Tel/115ailleux_domois.jpg"  width="350" <br>
+<span class="lital">Le hameau de Domois</span></td>
+      <td style="width: 0px; height: 178px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 178px;" colspan="2"
+ rowspan="1" align="left" valign="top">        <h4>Les Belin </h4><span class="inherit">"Antoinette Belin épouse Annet Durand le 10 février 1767 à Ailleux. C'est un mariage entre deux familles aisées. Antoine Chazelle, le notaire royal est présent (sa femme, Jeanne Puy est marraine d'Annet). Antoinette est issue d'une famille de laboureurs du hameau de Goutebelin à Bussy-Albieux, son oncle est curé de Bussy. C'est une vieille famille dans laquelle on trouve même parmi les aieux d'Antoinette, en 1650, un tailleur d'habit et un tanneur !"</span>
+ </td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 199px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 0px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+      <td style="width: 200px; height: 6px;" align="left"
+ valign="top"></td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 24px;" align="left"
+ valign="top"></td>
+      <td colspan="3" rowspan="1"
+ style="background-color: rgb(255, 255, 102); width: 199px; height: 24px;"
+ align="left" valign="top"><p><b>Pierre Antoine Durand</b> o  19 Jan 1775 &agrave; Ailleux, 42002, Fra, +  4 Juil 1860 &agrave; Crémeaux, 42076, Fra x 31 Jan 1804,  Crémeaux, 42076, Fra avec <b>Dauvergne, Jeanne Marie</b>, o ,  25 Juil 1777 &agrave; Crémeaux, 42076, Fra, +  15 Fév 1849 &agrave; Crémeaux, 42076, Fra  ,</p></td>
+      <td style="width: 200px; height: 24px;" align="right"
+ valign="top"><h4 class="minicolo">Ascendant Sosa: 
+ 0032  </h4> </td>
+    </tr>
+    <tr>
+      <td style="width: 200px; height: 83px;" colspan="5"
+ rowspan="1" align="left" valign="top">        <h4>Les Durand : </h4><span class="inherit">"La famille Durand est originaire du hameau de Domois, sur la commune d'Ailleux. On trouve trace d'un Durand dans le terrier Mayensin de 1368 (Petrus Durandis). Les Durand sont des laboureurs aisés dont l'apogée se situe juste vers la veille de la Révolution. Annet Durand possède alors, par héritage de son oncle et parrain, curé de Saint-Julien d'Oddes, outre le domaine familial de Domois, trois domaines importants sur Pommiers (Noaillat, Dague, Ladent). Des difficultés de gestion, la mésentente entre les enfants, les dettes, aboutissent à l'éclatement de ce patrimoine entre 1804 et 1807. Notre branche familiale va s'établir pendant le 19e siècle à Crémeaux, aux hameaux des Mollières et de la Badolle, avant de venir au 20e siècle s'urbaniser progressivement dans la plaine du Roannais à Vernay puis le Coteau."</span>
+ </td>
+    </tr>
+  </tbody>
+</table>
+<p>(Fiche g&eacute;n&eacute;r&eacute;e par <A HREF="http://www.arvernes.com/V1/">GenJ, logiciel de g&eacute;n&eacute;alogie libre </A> le 24 janv. 2008 19:43:02) - (Mod&egrave;le ChriDan_bio </A>  [v. 1.0])</p>
+</body>
+</body></html>
