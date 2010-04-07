@@ -22,6 +22,7 @@ package genj.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -114,6 +115,14 @@ public class EnvironmentChecker {
       LOG.info(msg);
     }
     
+    try {
+        if (!EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
+            BufferedReader in = new BufferedReader(new FileReader("/proc/version"));
+            String linuxVersionDesc = in.readLine();
+            LOG.info("Linux version = "+linuxVersionDesc);
+            in.close();
+        }
+    } catch (Exception e){}
     // check locale specific stuff
     LOG.info("Locale = "+Locale.getDefault());
     LOG.info("DateFormat (short) = "+getDatePattern(DateFormat.SHORT));
