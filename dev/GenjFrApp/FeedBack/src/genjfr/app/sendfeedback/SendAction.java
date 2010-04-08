@@ -16,6 +16,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.prefs.Preferences;
@@ -96,7 +98,9 @@ public final class SendAction implements ActionListener {
 		public void run() {
 //			acSend.setEnabled(false);
 //			acCancel.setEnabled(false);
-			String subject = "["+RESOURCES.getString("fb.tag.subject")+"] "+ fbPanel.jtSubject.getText().trim();
+                    String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
+			String subject = "["+RESOURCES.getString("fb.tag.subject")+" "+TS+"] ";
+                        subject += fbPanel.jtSubject.getText().trim();
 			String name = fbPanel.jtName.getText().trim();
 			String email = fbPanel.jtEmail.getText().trim();
 			String msg = fbPanel.jtaText.getText().trim();
