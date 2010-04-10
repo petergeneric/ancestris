@@ -31,29 +31,37 @@ import genj.view.ViewManager;
  * Factory for the SearchView
  */
 public class SearchViewFactory implements ViewFactory {
-  
-  /** image */
-  /*package*/ static final ImageIcon IMG = new ImageIcon(SearchViewFactory.class, "View"); 
-  
-  /**
-   * @see genj.view.ViewFactory#createView(java.lang.String, genj.gedcom.Gedcom, genj.util.Registry, genj.view.ViewManager)
-   */
-  public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager) {
-    return new SearchView(gedcom, registry, manager);
-  }
+
+    /** image */
+    /*package*/ static final ImageIcon IMG = new ImageIcon(SearchViewFactory.class, "View");
+    private SearchView searchView = null;
+
+    /**
+     * @see genj.view.ViewFactory#createView(java.lang.String, genj.gedcom.Gedcom, genj.util.Registry, genj.view.ViewManager)
+     */
+    public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager) {
+        searchView = new SearchView(gedcom, registry, manager);
+        return searchView;
+    }
 
   /**
-   * @see genj.view.ViewFactory#getImage()
+   * Getter of search View
    */
-  public ImageIcon getImage() {
-    return IMG;
+  public SearchView getEditView() {
+    return searchView;
   }
 
-  /**
-   * @see genj.view.ViewFactory#getTitle(boolean)
-   */
-  public String getTitle(boolean abbreviate) {
-    return SearchView.resources.getString("title" + (abbreviate?".short":""));
-  }
+    /**
+     * @see genj.view.ViewFactory#getImage()
+     */
+    public ImageIcon getImage() {
+        return IMG;
+    }
 
+    /**
+     * @see genj.view.ViewFactory#getTitle(boolean)
+     */
+    public String getTitle(boolean abbreviate) {
+        return SearchView.resources.getString("title" + (abbreviate ? ".short" : ""));
+    }
 } //SearchViewFactory

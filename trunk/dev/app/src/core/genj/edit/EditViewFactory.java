@@ -94,12 +94,21 @@ public class EditViewFactory implements ViewFactory, ActionProvider {
     
   /** a noop is used for separators in returning actions */  
   private final static Action2 aNOOP = Action2.NOOP;
+  private EditView editView = null;
   
   /**
    * @see genj.view.ViewFactory#createView(genj.gedcom.Gedcom, genj.util.Registry, java.awt.Frame)
    */
   public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager) {
-    return new EditView(title, gedcom, registry, manager);
+    editView = new EditView(title, gedcom, registry, manager);
+    return editView;
+  }
+
+  /**
+   * Getter of editor View
+   */
+  public EditView getEditView() {
+    return editView;
   }
 
   /**
