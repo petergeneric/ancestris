@@ -444,7 +444,7 @@
         <attr name="position" intvalue="100"/>
         <file name="option1">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
-            <attr name="include" stringvalue="config/Preferences/genjfr/.*"/>
+            <attr name="include" stringvalue="config/Preferences/genjfr/.*|config/Preferences/genjfr/app/.*"/>
         </file>
         <file name="option2">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WinPreference"/>

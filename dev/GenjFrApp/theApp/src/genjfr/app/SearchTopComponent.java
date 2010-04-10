@@ -5,8 +5,11 @@
 
 package genjfr.app;
 
+import genj.gedcom.Property;
 import genj.search.SearchViewFactory;
 import genj.view.ViewFactory;
+import java.util.ArrayList;
+import java.util.List;
 import org.openide.windows.TopComponent;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -91,4 +94,9 @@ public final class SearchTopComponent extends GenjViewTopComponent {
     protected String preferredID() {
         return PREFERRED_ID;
     }
+
+    public List<Property> getResultProperties() {
+        return ((SearchViewFactory)viewfactory).getEditView().getResults();
+    }
+
 }

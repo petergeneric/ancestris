@@ -5,6 +5,9 @@
 package genjfr.app;
 
 import genj.edit.EditViewFactory;
+import genj.gedcom.Entity;
+import genj.gedcom.Property;
+import genj.view.ViewContext;
 import genj.view.ViewFactory;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -92,4 +95,13 @@ public final class EditTopComponent extends GenjViewTopComponent {
     protected String preferredID() {
         return PREFERRED_ID;
     }
+
+    public Entity getCurrentEntity() {
+        return ((EditViewFactory)viewfactory).getEditView().getEntity();
+    }
+
+    public void setCurrentEntity(Property property) {
+        ((EditViewFactory)viewfactory).getEditView().setContext(new ViewContext(property));
+    }
+
 }
