@@ -357,7 +357,7 @@ public class PropertyPlace extends PropertyChoiceValue {
      * Derive index of city value in the list of jurisdictions in this place
      * @return zero based index or -1 if not determined
      */
-    private int getCityIndex() {
+    public int getCityIndex() {
 
         // try to get a place format
         if (getFormatAsString().length() == 0) {

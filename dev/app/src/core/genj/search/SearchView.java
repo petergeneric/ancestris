@@ -208,7 +208,19 @@ public class SearchView extends JPanel implements ToolBarSupport {
 
     // done
   }
-  
+
+  /**
+   * Return list of results
+   */
+  public List<Property> getResults() {
+      List<Property> props = new ArrayList<Property>();
+      for (Iterator it = results.hits.iterator(); it.hasNext();) {
+          Hit hit = (Hit)it.next();
+          props.add(hit.property);
+      }
+      return props;
+  }
+
   /**
    * @see javax.swing.JComponent#addNotify()
    */
@@ -580,7 +592,7 @@ public class SearchView extends JPanel implements ToolBarSupport {
   private class Results extends AbstractListModel implements GedcomListener {
     
     /** the results */
-    private List hits = new ArrayList(255);
+    public List hits = new ArrayList(255);
     
     /**
      * clear the results (sync to EDT)
