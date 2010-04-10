@@ -286,7 +286,7 @@ public /*final*/ class ActionOpen extends Action2 {
                 tc.init(ged);
                 tc.open();
             } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
+                //Exceptions.printStackTrace(ex);
             }
         }
         if (tc != null) {

@@ -85,6 +85,11 @@ public class GenjViewTopComponent extends TopComponent implements GenjViewInterf
         this.gedcom = gedcom;
     }
 
+    public void addLookup() {
+        ic.add(this);
+    }
+
+
     public GenjViewTopComponent() {
         super();
         // toutes les fenetres peuvent aller dans tous les modes

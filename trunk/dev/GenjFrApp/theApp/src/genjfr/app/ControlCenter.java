@@ -191,7 +191,7 @@ public class ControlCenter extends JPanel {
         return file;
     }
 
-    boolean isReady(int i) {
+    public boolean isReady(int i) {
         if (isLoaded == 0) {
             return true;
         }
