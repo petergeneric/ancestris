@@ -77,6 +77,9 @@ public class GeoFilter {
     public boolean complies(GeoNodeObject node) {
         // Filter on location
         // Reject node if location not included in location's description
+        if (node.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
+            return false;
+        }
         if (!location.isEmpty() && !node.toString().toLowerCase().contains(location.toLowerCase())) {
             return false;
         }
