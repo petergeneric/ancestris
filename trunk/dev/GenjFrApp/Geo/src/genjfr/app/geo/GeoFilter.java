@@ -330,7 +330,11 @@ public class GeoFilter {
         if (end == start) {
             return 0;
         } else {
-            sosaNb = Integer.parseInt(str.substring(start, end));
+            try {
+                sosaNb = Integer.parseInt(str.substring(start, end));
+            } catch (Exception e) {
+                sosaNb = 0;
+            }
         }
         return sosaNb;
     }
