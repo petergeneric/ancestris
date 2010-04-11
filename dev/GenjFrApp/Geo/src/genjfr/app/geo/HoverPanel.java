@@ -13,7 +13,12 @@ package genjfr.app.geo;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -21,17 +26,20 @@ import javax.swing.BorderFactory;
  */
 public class HoverPanel extends javax.swing.JPanel {
 
+    private GeoNodeObject gno;
+
     /** Creates new form HoverPanel */
     public HoverPanel() {
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         initComponents();
+        setMouseListener();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(new Color(0, 0, 0, 150));
-        g.fillRoundRect(10, 0, this.getWidth()-10, this.getHeight(), 20, 20);
+        g.fillRoundRect(10, 0, this.getWidth() - 10, this.getHeight(), 20, 20);
         Polygon triangle = new Polygon();
         triangle.addPoint(0, 35);
         triangle.addPoint(10, 20);
@@ -220,6 +228,8 @@ public class HoverPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setInfo(GeoNodeObject gno) {
+        this.gno = gno;
+
         jLabel2.setText(gno.toString());
         jLabel6.setText("(" + gno.getCoordinates() + ")");
         jLabel4.setText(gno.getPopulation().toString());
@@ -231,5 +241,50 @@ public class HoverPanel extends javax.swing.JPanel {
         jLabel15.setText(info[4]);
         //jTextPane1.setText(gno.getEventsAsText());
         //jTextPane1.setCaretPosition(0);
+    }
+
+    private void setMouseListener() {
+        this.addMouseListener(new MouseListener() {
+
+            public void mouseClicked(MouseEvent e) {
+                if (gno == null || (e.getClickCount() < 2)) {
+                    return;
+                }
+                selectLocation();
+                // boolean right_click_pressed = (e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK;
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+    }
+
+    private void selectLocation() {
+        // get list top component
+        GeoListTopComponent theList = null;
+        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            if (tc instanceof GeoListTopComponent) {
+                GeoListTopComponent gltc = (GeoListTopComponent) tc;
+                if (gltc.getGedcom() == gno.getPlace().getGedcom()) {
+                    theList = gltc;
+                    break;
+                }
+            }
+        }
+        // display geonode on the map
+        if (theList != null) {
+            theList.requestActive();
+            theList.ShowLocation(gno);
+        }
+
     }
 }

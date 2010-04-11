@@ -11,9 +11,11 @@ import genjfr.app.GenjViewTopComponent;
 import genjfr.app.pluginservice.PluginInterface;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
 import java.util.Iterator;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -230,5 +232,29 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
     public boolean launchModule(Object o) {
         init(App.center.getSelectedGedcom());
         return true;
+    }
+
+    void ShowLocation(GeoNodeObject gno) {
+        if (mgr == null || gno == null) {
+            return;
+        }
+        final Node[] selection = new Node[1];
+        Node rootNode = mgr.getRootContext();
+        Node[] kids = rootNode.getChildren().getNodes();
+        for (int i = 0; i < kids.length; i++) {
+            final Node node = kids[i];
+            GeoNodeObject obj = node.getLookup().lookup(GeoNodeObject.class);
+            if (obj == gno) {
+                ((BeanTreeView) jScrollPane1).expandNode(node);
+                selection[0] = node;
+                try {
+                    mgr.setSelectedNodes(selection);
+                } catch (PropertyVetoException ex) {
+                    // nothing
+                }
+                break;
+            }
+        }
+
     }
 }
