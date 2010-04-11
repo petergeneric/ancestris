@@ -87,7 +87,7 @@ class GeoNode extends AbstractNode {
             GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
             if (obj.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
                 return new Action[]{
-                            new GeoAction("ACTION_ShowPlace")};
+                            new GeoAction("ACTION_None")};
 
             } else {
                 return new Action[]{
@@ -115,7 +115,9 @@ class GeoNode extends AbstractNode {
             if (obj == null) {
                 return;
             }
-            if (actionName.equals("ACTION_ShowPlace")) {
+            if (actionName.equals("ACTION_None")) {
+                // nothing
+            } else if (actionName.equals("ACTION_ShowPlace")) {
                 GeoMapTopComponent theMap = getMapTopComponent(obj);
                 if (theMap != null) {
                     theMap.requestActive();
