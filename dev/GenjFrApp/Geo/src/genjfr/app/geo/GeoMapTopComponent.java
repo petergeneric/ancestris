@@ -1130,6 +1130,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     public void CenterMarker(GeoNodeObject geoNodeObject) {
         if (geoNodeObject != null) {
             jXMapKit1.getMainMap().setCenterPosition(geoNodeObject.getGeoPosition());
+            jXMapKit1.getMainMap().setZoom(8);
         }
     }
 
