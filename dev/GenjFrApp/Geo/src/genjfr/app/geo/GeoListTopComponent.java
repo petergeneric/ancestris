@@ -188,7 +188,16 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         buildTree(gedcom);
     }
 
+    /**
+     * Case of node selection
+     * @param pce
+     */
     public void propertyChange(PropertyChangeEvent pce) {
+        // actually do nothing in case of simple click
+        if (true) {
+            return;
+        }
+        // normal code now
         if (mgr != null) {
             Node[] geonodes = mgr.getSelectedNodes();
             if (geonodes.length > 0) {

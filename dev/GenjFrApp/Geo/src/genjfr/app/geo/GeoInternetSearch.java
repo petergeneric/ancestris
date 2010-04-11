@@ -92,7 +92,7 @@ class GeoInternetSearch {
                             listOfCities.put(str, newObj);
                         } else {
                             // else add the event
-                            obj.addEvent(propertyPlace.getParent());
+                            obj.addEvent(propertyPlace.getParent(), propertyPlace);
                         }
                         ph.progress(i);
                         if (Thread.currentThread().isInterrupted()) {

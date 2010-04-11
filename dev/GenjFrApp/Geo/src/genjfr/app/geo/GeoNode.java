@@ -69,7 +69,7 @@ class GeoNode extends AbstractNode {
         if (isLeaf()) {
             return new GeoAction("ACTION_EditEvent");
         } else {
-            return new GeoAction("ACTION_CenterPlace");
+            return new GeoAction("ACTION_ShowPlace");
         }
     }
 
@@ -84,13 +84,19 @@ class GeoNode extends AbstractNode {
             return new Action[]{
                         new GeoAction("ACTION_EditEvent")};
         } else {
-            return new Action[]{
-                        new GeoAction("ACTION_CenterPlace"),
-                        new GeoAction("ACTION_ShowPlace"),
-                        null,
-                        new GeoAction("ACTION_FindPlace"),
-                        null,
-                        new GeoAction("ACTION_EditPlace")};
+            GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
+            if (obj.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
+                return new Action[]{
+                            new GeoAction("ACTION_ShowPlace")};
+
+            } else {
+                return new Action[]{
+                            new GeoAction("ACTION_ShowPlace"),
+                            null,
+                            new GeoAction("ACTION_FindPlace"),
+                            null,
+                            new GeoAction("ACTION_EditPlace")};
+            }
         }
     }
 
@@ -109,16 +115,11 @@ class GeoNode extends AbstractNode {
             if (obj == null) {
                 return;
             }
-            if (actionName.equals("ACTION_CenterPlace")) {
+            if (actionName.equals("ACTION_ShowPlace")) {
                 GeoMapTopComponent theMap = getMapTopComponent(obj);
                 if (theMap != null) {
                     theMap.requestActive();
                     theMap.CenterMarker(obj);
-                }
-            } else if (actionName.equals("ACTION_ShowPlace")) {
-                GeoMapTopComponent theMap = getMapTopComponent(obj);
-                if (theMap != null) {
-                    theMap.requestActive();
                     theMap.ShowMarker(obj);
                 }
             } else if (actionName.equals("ACTION_FindPlace")) {
@@ -131,7 +132,7 @@ class GeoNode extends AbstractNode {
                 editorPanel.requestFocus();
                 DialogDisplayer.getDefault().createDialog(dd).show();
                 if (dd.getValue() == DialogDescriptor.OK_OPTION) {
-                    editorPanel.updateGedcom(obj.getPlace());
+                    editorPanel.updateGedcom();
                 } else {
                     //cancel button was pressed
                 }
