@@ -26,6 +26,7 @@ class GeoPlacesList implements GedcomListener {
     private final Gedcom gedcom;
     private GeoNodeObject[] geoNodes;
     private List listeners = new ArrayList(10);
+    private boolean stopListening = false;
 
     public GeoPlacesList(Gedcom gedcom) {
         this.gedcom = gedcom;
@@ -115,28 +116,23 @@ class GeoPlacesList implements GedcomListener {
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        geoNodes = getPlaces(true);
-        notifyListeners();
+        refreshPlaces();
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        geoNodes = getPlaces(true);
-        notifyListeners();
+        refreshPlaces();
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        geoNodes = getPlaces(true);
-        notifyListeners();
+        refreshPlaces();
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        geoNodes = getPlaces(true);
-        notifyListeners();
+        refreshPlaces();
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        geoNodes = getPlaces(true);
-        notifyListeners();
+        refreshPlaces();
     }
 
     @SuppressWarnings("unchecked")
@@ -149,7 +145,22 @@ class GeoPlacesList implements GedcomListener {
                 System.out.println("exception in geoplaceslist listener " + gpls[l] + t);
             }
         }
-
     }
 
+    public void refreshPlaces() {
+        if (!stopListening) {
+            stopListening = true;
+            geoNodes = getPlaces(true);
+            stopListening = false;
+            notifyListeners();
+        }
+    }
+
+    public void stopListening() {
+        stopListening = true;
+    }
+    
+    public void startListening() {
+        stopListening = false;
+    }
 }

@@ -59,13 +59,14 @@ class GeoNodeObject {
         this.isUnknown = false;
         this.toBeDisplayed = false;
         this.toponym = getToponymFromPlace(place, localOnly);
-        events.add(new GeoNodeObject(place.getParent()));
+        events.add(new GeoNodeObject(place.getParent(), place));
     }
 
-    public GeoNodeObject(Property event) {
+    public GeoNodeObject(Property event, PropertyPlace pp) {
         this.isEvent = true;
         events = null;
         property = event;
+        place = pp;
     }
 
     @SuppressWarnings("deprecation")
@@ -116,6 +117,17 @@ class GeoNodeObject {
             str += "- " + event.toString() + "\n";
         }
         return str;
+    }
+
+    public List<PropertyPlace> getEventsPlaces() {
+        if (events != null) {
+            List<PropertyPlace> propPlaces = new ArrayList<PropertyPlace>();
+            for (GeoNodeObject geoNodeObject : events) {
+                propPlaces.add(geoNodeObject.getPlace());
+            }
+            return propPlaces;
+        }
+        return null;
     }
 
     public List<Indi> getIndis() {
@@ -234,8 +246,8 @@ class GeoNodeObject {
         return str;
     }
 
-    void addEvent(Property parent) {
-        events.add(new GeoNodeObject(parent));
+    void addEvent(Property parent, PropertyPlace pp) {
+        events.add(new GeoNodeObject(parent, pp));
     }
 
     public Toponym getToponym() {
