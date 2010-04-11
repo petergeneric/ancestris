@@ -9,13 +9,14 @@ import genj.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import genjfr.app.GenjViewTopComponent;
 import genjfr.app.pluginservice.PluginInterface;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.Iterator;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -109,7 +110,7 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new BeanTreeView();
+        jScrollPane1 = new MyBeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -238,23 +239,37 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         if (mgr == null || gno == null) {
             return;
         }
-        final Node[] selection = new Node[1];
         Node rootNode = mgr.getRootContext();
         Node[] kids = rootNode.getChildren().getNodes();
         for (int i = 0; i < kids.length; i++) {
             final Node node = kids[i];
+            ((BeanTreeView) jScrollPane1).collapseNode(node);
             GeoNodeObject obj = node.getLookup().lookup(GeoNodeObject.class);
             if (obj == gno) {
-                ((BeanTreeView) jScrollPane1).expandNode(node);
-                selection[0] = node;
+                ((MyBeanTreeView) jScrollPane1).setScrollOnExpand(true);
+                ((MyBeanTreeView) jScrollPane1).expandNode(node);
                 try {
-                    mgr.setSelectedNodes(selection);
+                    mgr.setSelectedNodes(new Node[] { node } );
                 } catch (PropertyVetoException ex) {
                     // nothing
                 }
-                break;
             }
         }
 
     }
+
+    /**
+     * Subclass BeanTreeView to be able to use the setScrollOnExpand function (tree is protected)
+     */
+    private static class MyBeanTreeView extends BeanTreeView {
+        public boolean getScrollOnExpand() {
+            return tree.getScrollsOnExpand();
+}
+
+        public void setScrollOnExpand( boolean scroll ) {
+            this.tree.setScrollsOnExpand( scroll );
+        }
+    }
+
+
 }
