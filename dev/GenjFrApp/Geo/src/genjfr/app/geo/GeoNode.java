@@ -85,6 +85,9 @@ class GeoNode extends AbstractNode {
                         new GeoAction("ACTION_EditEvent")};
         } else {
             GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
+            if (obj == null) {
+                return null;
+            }
             if (obj.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
                 return new Action[]{
                             new GeoAction("ACTION_None")};
