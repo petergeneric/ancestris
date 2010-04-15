@@ -19,20 +19,15 @@
  */
 package genj.report;
 
-import genj.util.EnvironmentChecker;
+import genj.util.PackageUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,7 +39,7 @@ import java.util.logging.Logger;
 public class ReportLoader {
 
   /** reports we have */
-  private List instances = new ArrayList(10);
+  private List<Report> instances = new ArrayList(10);
   
   /** report files */
   private Map file2reportclass = new HashMap(10);
@@ -53,7 +48,7 @@ public class ReportLoader {
   private List classpath = new ArrayList(10);
   
   /** whether reports are in classpath */
-  private boolean isReportsInClasspath = false;
+  private boolean isReportsInClasspath = true;
   
   /** a singleton */
   private static ReportLoader singleton;
@@ -108,38 +103,52 @@ public class ReportLoader {
    * Constructor
    */
   private ReportLoader() {
-
-    File base = getReportDirectory();
-    ReportView.LOG.info("Reading reports from "+base);
-      
-    // parse report directory
-    try {
-      classpath.add(base.toURI().toURL());
-    } catch (MalformedURLException e) {
-      // n/a
-    }
-    parseDir(base, null);
-    
-    // Prepare classloader
-    URLClassLoader cl = new URLClassLoader((URL[])classpath.toArray(new URL[classpath.size()]), getClass().getClassLoader());
-    
-    // Load reports
-    for (Iterator files = file2reportclass.keySet().iterator(); files.hasNext(); ) {
-      File file = (File)files.next();
-      String clazz = (String)file2reportclass.get(file); 
-      try {
-        Report r = (Report)cl.loadClass(clazz).newInstance();
-        r.putFile(file);
-        if (!isReportsInClasspath&&r.getClass().getClassLoader()!=cl) {
-          ReportView.LOG.warning("Reports are in classpath and can't be reloaded");
-          isReportsInClasspath = true;
+        try {
+            //FIXME:daniel    File base = getReportDirectory();
+            //    ReportView.LOG.info("Reading reports from "+base);
+            //
+            //    // parse report directory
+            //    try {
+            //      classpath.add(base.toURI().toURL());
+            //    } catch (MalformedURLException e) {
+            //      // n/a
+            //    }
+            //    parseDir(base, null);
+            //
+            //    // Prepare classloader
+            //    URLClassLoader cl = new URLClassLoader((URL[])classpath.toArray(new URL[classpath.size()]), getClass().getClassLoader());
+            //
+            //    // Load reports
+            //    for (Iterator files = file2reportclass.keySet().iterator(); files.hasNext(); ) {
+            //      File file = (File)files.next();
+            //      String clazz = (String)file2reportclass.get(file);
+            //      try {
+            //        Report r = (Report)cl.loadClass(clazz).newInstance();
+            //        r.putFile(file);
+            //        if (!isReportsInClasspath&&r.getClass().getClassLoader()!=cl) {
+            //          ReportView.LOG.warning("Reports are in classpath and can't be reloaded");
+            //          isReportsInClasspath = true;
+            //        }
+            //        instances.add(r);
+            //      } catch (Throwable t) {
+            //        ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+clazz, t);
+            //      }
+            //    }
+            //
+            for (Class clazz:PackageUtils.getClassesForPackage("genjreports","Report")) {
+                Report r;
+                try{
+                    r= (Report)clazz.newInstance();
+                    //FIXME: mais a quoi ca sert?
+                    r.putFile(new File(clazz.getCanonicalName()));
+                    instances.add(r);
+                } catch (Throwable t) {
+                    ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+clazz, t);
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ReportLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
-        instances.add(r);
-      } catch (Throwable t) {
-        ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+clazz, t);
-      }
-    }
-    
     // sort 'em
     Collections.sort(instances, new Comparator() { 
       public int compare(Object a, Object b) {
