@@ -69,7 +69,7 @@ import javax.swing.text.StyledDocument;
     doc = new DefaultStyledDocument();
     try {
       int offset = 0;
-      String tag = setProp.getTag();
+      String tag = setProp.getPropertyName();
       // indent
       doc.insertString(offset++, " ", null);
       // tag first for values and not IDs
