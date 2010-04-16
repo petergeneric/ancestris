@@ -82,7 +82,7 @@ public class ViewPortOverview extends JPanel {
     renderContent(g, zoom.getX(), zoom.getY());
 
     // frame it
-    g.setColor(new Color(0, 128, 0));
+    g.setColor(new Color(0, 0, 128));
     g.drawRect(0,0,dim.width-1,dim.height-1);
 
     // do we have the zoom
@@ -100,7 +100,7 @@ public class ViewPortOverview extends JPanel {
       // indicate content bounds
      Graphics2D g2d = (Graphics2D)g;
      g.drawRect(last.x, last.y, last.width, last.height);
-     g2d.setColor(new Color(0, 255, 0, 64));
+     g2d.setColor(new Color(0, 164, 255, 64));
      g.fillRect(last.x, last.y, last.width, last.height);
 
    }
