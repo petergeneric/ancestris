@@ -18,19 +18,31 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.datatransfer.Clipboard;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import javax.swing.AbstractAction;
 import javax.swing.JColorChooser;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputListener;
+import org.geonames.Style;
+import org.geonames.Toponym;
+import org.geonames.WebService;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
@@ -47,6 +59,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
 /**
@@ -67,10 +80,10 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     };
     private Gedcom gedcom = null;
     private GeoNodeObject[] markers = null;
-    private Set<Waypoint> waypoints = new HashSet<Waypoint>();
-    private HashMap<Waypoint, GeoNodeObject> pointToNode = new HashMap<Waypoint, GeoNodeObject>();
+    private Set<GeoPoint> geoPoints = new HashSet<GeoPoint>();
     private HoverPanel hoverPanel = null;
     private int markersSizeMax = 50;
+    private MapPopupMenu popupMenu;
     // Settings
     private int mapToDisplay = 0;
     private double mapCenterLat = 47;
@@ -97,6 +110,9 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         ToolTipManager.sharedInstance().setDismissDelay(10000);
         initGedcom(gedParam);
+        if (gedcom == null) {
+            close();
+        }
         String name;
         if ((gedcom != null) && ((name = gedcom.getName()) != null)) {
             setName(name);
@@ -107,13 +123,14 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         initComponents();
         jXMapKit1.setDataProviderCreditShown(true);
         jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
-        hoverPanel = new HoverPanel();
+        hoverPanel = new HoverPanel(this);
         hoverPanel.setVisible(false);
         jXMapKit1.getMainMap().add(hoverPanel);
 
         // Set settings
         customiseFromSettings();
         setMouseListener();
+        setPopuMenu();
 
         // Calculate and display markers
         jButton6.setEnabled(false);
@@ -142,6 +159,10 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
 
     public Gedcom getGedcom() {
         return gedcom;
+    }
+
+    public GeoNodeObject[] getMarkers() {
+        return markers;
     }
 
     /** This method is called from within the constructor to
@@ -619,8 +640,8 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, 1002, Short.MAX_VALUE)
+                .addContainerGap(14, Short.MAX_VALUE))
+            .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -636,7 +657,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 996, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1006, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -865,6 +886,9 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         if (gedcom != null) {
             p.setProperty("gedcom", gedcom.getOrigin().toString());
         }
+        if (jXMapKit1 == null) {
+            return;
+        }
         p.setProperty("mapCenterLat", String.valueOf(jXMapKit1.getCenterPosition().getLatitude()));
         p.setProperty("mapCenterLon", String.valueOf(jXMapKit1.getCenterPosition().getLongitude()));
         p.setProperty("mapZoom", String.valueOf(jXMapKit1.getZoomSlider().getValue()));
@@ -1007,15 +1031,19 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         gpl.addGeoPlacesListener(this);
     }
 
-    public void geoPlacesChanged(GeoPlacesList gpl) {
-        markers = gpl.getPlaces();
-        geoFilter.calculatesIndividuals(gedcom, true); // refresh lists from gedcom changes
+    public void geoPlacesChanged(GeoPlacesList gpl, String change) {
+        if (change.equals("cood")) {
+        } else if (change.equals("name")) {
+        } else if (change.equals("gedcom")) {
+            markers = gpl.getPlaces();
+            geoFilter.calculatesIndividuals(gedcom, true); // refresh lists from gedcom changes
+        }
         applyFilters();
     }
 
     private void applyFilters() {
         isBusyRecalc = true;
-        waypoints.clear();
+        geoPoints.clear();
         if (markers == null) {
             return;
         }
@@ -1023,14 +1051,13 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         for (int i = 0; i < markers.length; i++) {
             GeoNodeObject geoNodeObject = markers[i];
             if (geoFilter.complies(geoNodeObject)) {
-                Waypoint wp = new Waypoint(geoNodeObject.getLatitude(), geoNodeObject.getLongitude());
-                waypoints.add(wp);
-                pointToNode.put(wp, geoNodeObject);
+                GeoPoint wp = new GeoPoint(geoNodeObject);
+                geoPoints.add(wp);
             }
         }
         displayMarkers();
         StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
-        if (waypoints.size() < markers.length) {
+        if (geoPoints.size() < markers.length) {
             String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
             msg += " - ";
             msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + geoFilter.decujusIndi.toString();
@@ -1045,14 +1072,14 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     private void displayMarkers() {
         WaypointPainter painter = new WaypointPainter();
         if (displayMarkers) {
-            painter.setWaypoints(waypoints);
+            painter.setWaypoints(geoPoints);
             if (useNames) {
                 painter.setRenderer(new WaypointRenderer() {
 
                     public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
                         // get name
                         double coex = ((double) markersSize) / 10;
-                        String name = pointToNode.get(wp).getCity();
+                        String name = ((GeoPoint) wp).getGeoNodeObject().getCity();
                         g.setFont(new Font("Dialog", Font.PLAIN, (int) (12 * coex)));
                         double width = (int) g.getFontMetrics().getStringBounds(name, g).getWidth();
                         //draw tab
@@ -1112,7 +1139,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
 
     public void ShowMarker(GeoNodeObject geoNodeObject) {
         if (geoNodeObject != null && !geoNodeObject.isEvent) {
-            hoverPanel.setInfo(geoNodeObject);
+            hoverPanel.setPanel(geoNodeObject, markersColor);
             JXMapViewer map = jXMapKit1.getMainMap();
             GeoPosition gpm = geoNodeObject.getGeoPosition();
             Point2D gp_pt = map.getTileFactory().geoToPixel(gpm, map.getZoom());
@@ -1134,9 +1161,19 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         }
     }
 
+    private void setPopuMenu() {
+        popupMenu = new MapPopupMenu(jXMapKit1.getMainMap());
+        popupMenu.addSubmenu("ACTION_MapSearchNearby");
+        popupMenu.add(new MapPopupAction("ACTION_MapCopyPoint", null, popupMenu));
+    }
+
     private class GeoMouseInputListener implements MouseInputListener {
 
         public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                popupMenu.setPoint(e.getPoint());
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
         }
 
         public void mousePressed(MouseEvent e) {
@@ -1155,26 +1192,26 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         }
 
         public void mouseMoved(MouseEvent e) {
-            if (waypoints == null || isBusyRecalc) {
+            if (geoPoints == null || isBusyRecalc) {
                 return;
             }
             JXMapViewer map = jXMapKit1.getMainMap();
             GeoNodeObject geoNodeObject = null;
             Point converted_gp_pt = null;
-            for (Iterator<Waypoint> it = waypoints.iterator(); it.hasNext();) {
-                Waypoint wp = it.next();
-                GeoPosition gpm = pointToNode.get(wp).getGeoPosition();
+            for (Iterator<GeoPoint> it = geoPoints.iterator(); it.hasNext();) {
+                GeoPoint wp = it.next();
+                GeoPosition gpm = wp.getGeoNodeObject().getGeoPosition();
                 Point2D gp_pt = map.getTileFactory().geoToPixel(gpm, map.getZoom());
                 Rectangle rect = map.getViewportBounds();
                 converted_gp_pt = new Point((int) gp_pt.getX() - rect.x, (int) gp_pt.getY() - rect.y);
                 if (converted_gp_pt.distance(e.getPoint()) < (10 + markersSize)) {
-                    geoNodeObject = pointToNode.get(wp);
+                    geoNodeObject = wp.getGeoNodeObject();
                     break;
                 }
             }
 
             if (geoNodeObject != null) {
-                hoverPanel.setInfo(geoNodeObject);
+                hoverPanel.setPanel(geoNodeObject, markersColor);
                 map.setLayout(null);
                 hoverPanel.setSize(hoverPanel.getPreferredSize());
                 hoverPanel.setLocation(converted_gp_pt.x + markersSize + 5, converted_gp_pt.y - 35);
@@ -1184,4 +1221,122 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
             }
         }
     }
+
+    private class MapPopupMenu extends JPopupMenu {
+
+        private JMenu submenu = null;
+        private JXMapViewer map = null;
+        private Point point = new Point(0, 0);
+
+        public MapPopupMenu(JXMapViewer map) {
+            super();
+            this.map = map;
+        }
+
+        private void addSubmenu(String name) {
+            submenu = new JMenu(NbBundle.getMessage(GeoMapTopComponent.class, name));
+            popupMenu.add(submenu);
+        }
+
+        public void setPoint(Point point) {
+            this.point = point;
+            rebuildSubmenu(getGeoPoint());
+            remove(1);
+            add(new MapPopupAction("ACTION_MapCopyPoint", getCoordinates(), this));
+        }
+
+        public GeoPosition getGeoPoint() {
+            return map.convertPointToGeoPosition(point);
+        }
+
+        public String getCoordinates() {
+            return getCoordinates(getGeoPoint());
+        }
+
+        public String getCoordinates(GeoPosition geoPoint) {
+            Double lat = geoPoint != null ? geoPoint.getLatitude() : 0;
+            Double lon = geoPoint != null ? geoPoint.getLongitude() : 0;
+            char we = 'E', ns = 'N';
+            if (lat < 0) {
+                lat = -lat;
+                ns = 'S';
+            }
+            if (lon < 0) {
+                lon = -lon;
+                we = 'W';
+            }
+            DecimalFormat format = new DecimalFormat("0.00");
+            return ns + format.format(lat) + " " + we + format.format(lon);
+        }
+
+        private void rebuildSubmenu(final GeoPosition localGeoPoint) {
+            final MapPopupMenu localPopupMenu = popupMenu;
+            final JMenu localSubmenu = submenu;
+            submenu.removeAll();
+            new Thread(new Runnable() {
+
+                public void run() {
+                    List<Toponym> topos = getToposNearbyPoint(localGeoPoint);
+                    SortedMap<String, Toponym> uniqueMap = new TreeMap<String, Toponym>(); // use sortedmap to sort locations
+                    for (Iterator<Toponym> it = topos.iterator(); it.hasNext();) {
+                        Toponym toponym = it.next();
+                        String name = toponym.getName() + " [" + getCoordinates(new GeoPosition(toponym.getLatitude(), toponym.getLongitude())) + "]";
+                        uniqueMap.put(name, toponym);
+                    }
+                    for (Iterator<String> it = uniqueMap.keySet().iterator(); it.hasNext();) {
+                        String name = it.next();
+                        localSubmenu.add(new MapPopupAction(name, localPopupMenu.getCoordinates(), localPopupMenu, uniqueMap.get(name)));
+                    }
+                }
+
+                private List<Toponym> getToposNearbyPoint(GeoPosition localGeoPoint) {
+                    if (localGeoPoint == null) {
+                        return null;
+                    }
+                    List<Toponym> topoList = new ArrayList<Toponym>();
+                    try {
+                        topoList = WebService.findNearbyPlaceName(localGeoPoint.getLatitude(), localGeoPoint.getLongitude(),
+                                8, 15, // radius, maxrows
+                                Style.FULL, // style
+                                NbPreferences.forModule(App.class).get("language", "").equals("2") ? "fr" : "en"); // language
+                    } catch (Exception ex) {
+                        return null;
+                    }
+                    return topoList;
+                }
+            }).start();
+        }
+    }
+
+    private class MapPopupAction extends AbstractAction {
+
+        private String actionName = "";
+        private MapPopupMenu mpm = null;
+        private Toponym topo = null;
+
+        public MapPopupAction(String name, Object o, MapPopupMenu mpm) {
+            this.actionName = name;
+            this.mpm = mpm;
+            putValue(NAME, NbBundle.getMessage(GeoMapTopComponent.class, name, o));
+        }
+
+        public MapPopupAction(String name, Object o, MapPopupMenu mpm, Toponym topo) {
+            this.actionName = "location";
+            this.mpm = mpm;
+            this.topo = topo;
+            putValue(NAME, name);
+        }
+
+        @SuppressWarnings("deprecation")
+        public void actionPerformed(ActionEvent e) {
+            if (actionName.equals("ACTION_MapCopyPoint")) {
+                Clipboard clipboard = GeoPlaceEditor.getClipboard();
+                clipboard.setContents(new GeoToken(mpm.getGeoPoint()), null);
+            } else if (topo != null) {
+                Clipboard clipboard = GeoPlaceEditor.getClipboard();
+                clipboard.setContents(new GeoToken(topo), null);
+            }
+        }
+    }
 }
+

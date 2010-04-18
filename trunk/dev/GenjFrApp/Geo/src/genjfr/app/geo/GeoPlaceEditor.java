@@ -16,24 +16,37 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import genjfr.app.App;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.FlavorEvent;
+import java.awt.datatransfer.FlavorListener;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import org.geonames.InsufficientStyleException;
 import org.geonames.Toponym;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.netbeans.api.options.OptionsDisplayer;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.datatransfer.ExClipboard;
 import org.openide.windows.WindowManager;
 
 /**
  *
  * @author frederic
  */
-public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChangeListener {
+public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChangeListener, FlavorListener {
 
     private GeoNodeObject geoObj = null;
     private List<Toponym> list = new ArrayList<Toponym>();
@@ -55,6 +68,8 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         jLabel21.setText("");
         jLabel34.setText("");
         jCheckBox1.setSelected(false);
+        getClipboard().addFlavorListener(this);
+        jButton4.setEnabled(getClipboard().isDataFlavorAvailable(GeoToken.geoPosFlavor));
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
             public void run() {
@@ -118,6 +133,8 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         jTextField5 = new javax.swing.JTextField();
         jTextField10 = new javax.swing.JTextField();
         jCheckBox1 = new javax.swing.JCheckBox();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         jButton5.setText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton5.text")); // NOI18N
         jButton5.setToolTipText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton5.toolTipText")); // NOI18N
@@ -243,6 +260,22 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             }
         });
 
+        jButton3.setText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton3.text")); // NOI18N
+        jButton3.setToolTipText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton3.toolTipText")); // NOI18N
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton4.text")); // NOI18N
+        jButton4.setToolTipText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton4.toolTipText")); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -255,31 +288,32 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                             .addComponent(jLabel2)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel11))
-                                .addGap(34, 34, 34)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-                                    .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel33)
-                                .addGap(57, 57, 57)
-                                .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel3)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel33)
+                                    .addGap(57, 57, 57)
+                                    .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addGap(34, 34, 34)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                                        .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -303,20 +337,25 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                             .addComponent(jLabel35))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField9, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                            .addComponent(jTextField10, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)))
-                    .addComponent(jLabel24)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField9, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField8, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                            .addComponent(jTextField10, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel24)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox1)))
+                        .addComponent(jCheckBox1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -327,7 +366,8 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
-                    .addComponent(jLabel24))
+                    .addComponent(jLabel24)
+                    .addComponent(jCheckBox1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -335,7 +375,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                     .addComponent(jLabel25)
                     .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
@@ -384,12 +424,13 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                             .addComponent(jLabel34)
                             .addComponent(jLabel35)
                             .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton5)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jCheckBox1)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton3)
+                            .addComponent(jButton4)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -399,7 +440,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         list = geoObj.getToponymsFromPlace(jTextField1.getText(), 30);
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        isBusy = false;
         if (list == null) {
             String msg = NbBundle.getMessage(GeoInternetSearch.class, "ERROR_cannotFindPlace");
             JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), msg, NbBundle.getMessage(GeoInternetSearch.class, "ERROR_Title"), JOptionPane.ERROR_MESSAGE);
@@ -408,6 +448,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             return;
         }
         jList1.setListData(list.toArray());
+        isBusy = false;
         if (!list.isEmpty()) {
             jList1.setSelectedIndex(0);
         }
@@ -417,8 +458,8 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         if (isBusy) {
             return;
         }
+        Toponym topo = (Toponym) jList1.getSelectedValue();
         try {
-            Toponym topo = (Toponym) jList1.getSelectedValue();
             jLabel14.setText(topo.getName());
             jLabel15.setText(topo.getPostcode());
             jLabel16.setText(topo.getAdminCode4());
@@ -429,7 +470,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             jLabel34.setText(Double.toString(topo.getLongitude()));
         } catch (InsufficientStyleException ex) {
         }
-
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -451,9 +491,51 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         enableAddressFields();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (geoObj == null) {
+            return;
+        }
+        JTextField placeFormat = new JTextField(geoObj.getGedcom().getPlaceFormat());
+        String title = NbBundle.getMessage(GeoInternetSearch.class, "TXT_placeFormat") + " " + geoObj.getGedcom().getName();
+        placeFormat.setPreferredSize(new Dimension(500, 30));
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(placeFormat, title, NotifyDescriptor.OK_CANCEL_OPTION);
+        if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION) {
+            updateGedcomPlaceFormat(geoObj.getGedcom(), geoObj.getPlace(), placeFormat.getText());
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Clipboard clipboard = getClipboard();
+        try {
+            GeoPosition geoPos = (GeoPosition) clipboard.getData(GeoToken.geoPosFlavor);
+            if (geoPos != null) {
+                jTextField5.setText(Double.toString(geoPos.getLatitude()));
+                jTextField10.setText(Double.toString(geoPos.getLongitude()));
+                return;
+            }
+            Toponym topo = (Toponym) clipboard.getData(GeoToken.topoFlavor);
+            if (topo != null) {
+                jTextField6.setText("");
+                jTextField7.setText(topo.getName());
+                jTextField8.setText(topo.getPostcode());
+                jTextField9.setText(topo.getAdminCode4());
+                jTextField2.setText(topo.getAdminName2());
+                jTextField3.setText(topo.getAdminName1());
+                jTextField4.setText(topo.getCountryName());
+                jTextField5.setText(Double.toString(topo.getLatitude()));
+                jTextField10.setText(Double.toString(topo.getLongitude()));
+            }
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+    }//GEN-LAST:event_jButton4ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
@@ -499,72 +581,79 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 
-    private void fillPlaceFromGeoNode(GeoNodeObject geoObj) {
-        int cityIndex = geoObj.getPlace().getCityIndex();
-        int max = geoObj.getPlace().getJurisdictions().length - 1;
+    private void fillPlaceFromTopo(Toponym topo) {
+    }
 
-        // fill in most logical ones
-        jTextField7.setText(NbPreferences.forModule(App.class).get("fmt_address2", "").equals("none") ? "" : geoObj.getPlace().getCity());
-        if ((cityIndex != max) && (max > 0)) {
-            jTextField4.setText(NbPreferences.forModule(App.class).get("fmt_address7", "").equals("none") ? "" : geoObj.getPlace().getJurisdiction(max));
-        }
-        if ((cityIndex != (max - 1)) && ((max - 1) > 0)) {
-            jTextField3.setText(NbPreferences.forModule(App.class).get("fmt_address6", "").equals("none") ? "" : geoObj.getPlace().getJurisdiction(max - 1));
-        }
+    private void fillPlaceFromGeoNode(GeoNodeObject geoObj) {
+        String str = "";
+        str = NbPreferences.forModule(App.class).get("fmt_address1", "");
+        jTextField6.setText(
+                (!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        str = NbPreferences.forModule(App.class).get("fmt_address2", "");
+
+        jTextField7.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        str = NbPreferences.forModule(App.class).get("fmt_address3", "");
+
+        jTextField8.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        str = NbPreferences.forModule(App.class).get("fmt_address4", "");
+
+        jTextField9.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        str = NbPreferences.forModule(App.class).get("fmt_address5", "");
+
+        jTextField2.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        str = NbPreferences.forModule(App.class).get("fmt_address6", "");
+
+        jTextField3.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        str = NbPreferences.forModule(App.class).get("fmt_address7", "");
+
+        jTextField4.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
         jTextField5.setText(Double.toString(geoObj.getLatitude()));
         jTextField10.setText(Double.toString(geoObj.getLongitude()));
+    }
 
-        // fill in the remaining others until we reach max-1 which is already used
-        int i = 0;
-        if (!geoObj.getPlace().getJurisdiction(0).equals(geoObj.getPlace().getCity())) {
-            jTextField6.setText(NbPreferences.forModule(App.class).get("fmt_address1", "").equals("none") ? "" : geoObj.getPlace().getJurisdiction(i++));
-        } else {
-            i++;
-        }
-        if (i == cityIndex || cityIndex == -1) {
-            i++;
-        }
-        if (i == (max - 1) || (i == max)) {
-            return;
-        }
-        jTextField8.setText(NbPreferences.forModule(App.class).get("fmt_address3", "").equals("none") ? "" : geoObj.getPlace().getJurisdiction(i++));
-        if (i == cityIndex) {
-            i++;
-        }
-        if (i == (max - 1) || (i == max)) {
-            return;
-        }
-        jTextField9.setText(NbPreferences.forModule(App.class).get("fmt_address4", "").equals("none") ? "" : geoObj.getPlace().getJurisdiction(i++));
-        if (i == cityIndex) {
-            i++;
-        }
-        if (i == (max - 1) || (i == max)) {
-            return;
-        }
-        jTextField2.setText(NbPreferences.forModule(App.class).get("fmt_address5", "").equals("none") ? "" : geoObj.getPlace().getJurisdiction(i));
+    public static boolean isNumeric(String inputData) {
+        return inputData.matches("\\d+(.\\d+)?");
+
+
+
+
     }
 
     private void enableAddressFields() {
-        jLabel25.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address1", "").equals("none") && !jCheckBox1.isSelected());
-        jLabel26.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address2", "").equals("none") && !jCheckBox1.isSelected());
-        jLabel27.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address3", "").equals("none") && !jCheckBox1.isSelected());
-        jLabel28.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address4", "").equals("none") && !jCheckBox1.isSelected());
-        jLabel29.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address5", "").equals("none") && !jCheckBox1.isSelected());
-        jLabel30.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address6", "").equals("none") && !jCheckBox1.isSelected());
-        jLabel31.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address7", "").equals("none") && !jCheckBox1.isSelected());
+        jLabel25.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address1", "").equals("0") && !jCheckBox1.isSelected());
+        jLabel26.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address2", "").equals("0") && !jCheckBox1.isSelected());
+        jLabel27.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address3", "").equals("0") && !jCheckBox1.isSelected());
+        jLabel28.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address4", "").equals("0") && !jCheckBox1.isSelected());
+        jLabel29.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address5", "").equals("0") && !jCheckBox1.isSelected());
+        jLabel30.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address6", "").equals("0") && !jCheckBox1.isSelected());
+        jLabel31.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address7", "").equals("0") && !jCheckBox1.isSelected());
 
-        jTextField6.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address1", "").equals("none") && !jCheckBox1.isSelected());
-        jTextField7.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address2", "").equals("none") && !jCheckBox1.isSelected());
-        jTextField8.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address3", "").equals("none") && !jCheckBox1.isSelected());
-        jTextField9.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address4", "").equals("none") && !jCheckBox1.isSelected());
-        jTextField2.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address5", "").equals("none") && !jCheckBox1.isSelected());
-        jTextField3.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address6", "").equals("none") && !jCheckBox1.isSelected());
-        jTextField4.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address7", "").equals("none") && !jCheckBox1.isSelected());
+        jTextField6.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address1", "").equals("0") && !jCheckBox1.isSelected());
+        jTextField7.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address2", "").equals("0") && !jCheckBox1.isSelected());
+        jTextField8.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address3", "").equals("0") && !jCheckBox1.isSelected());
+        jTextField9.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address4", "").equals("0") && !jCheckBox1.isSelected());
+        jTextField2.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address5", "").equals("0") && !jCheckBox1.isSelected());
+        jTextField3.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address6", "").equals("0") && !jCheckBox1.isSelected());
+        jTextField4.setEnabled(
+                !NbPreferences.forModule(App.class).get("fmt_address7", "").equals("0") && !jCheckBox1.isSelected());
 
         NbPreferences.forModule(App.class).addPreferenceChangeListener(this);
     }
 
     public void preferenceChange(PreferenceChangeEvent pce) {
+        fillPlaceFromGeoNode(geoObj);
         enableAddressFields();
     }
 
@@ -605,10 +694,10 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         if (!jCheckBox1.isSelected()) {
             final String place = (endsComma ? str.substring(0, str.lastIndexOf(",")) : str);
             try {
+                GeoPlacesList.getInstance(gedcom).stopListening();
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        GeoPlacesList.getInstance(gedcom).stopListening();
 
                         // update all places in gedcom
                         String pswithCity = null;
@@ -616,7 +705,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                         for (PropertyPlace pp : propPlaces) {
                             pp.setValue(place);
                             if (pswithCity == null) {
-                                pswithCity = pp.getValueStartingWithCity();
+                                pswithCity = pp.getCityAndAllOtherJurisdictions(true);
                             }
                         }
 
@@ -625,11 +714,11 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                         updateTopoFromDialog(topo);
                         geoObj.setToponym(topo);
                         NbPreferences.forModule(GeoPlacesList.class).put(pswithCity, geoObj.Toponym2Code(topo));
-                        
-                        GeoPlacesList.getInstance(gedcom).startListening();
-                        GeoPlacesList.getInstance(gedcom).refreshPlaces();
+
+                        GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                     }
                 });
+                GeoPlacesList.getInstance(gedcom).startListening();
             } catch (Exception e) {
                 String msg = NbBundle.getMessage(GeoPlaceEditor.class, "ERROR_cannotUpdatePlace");
                 JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), msg, NbBundle.getMessage(GeoPlaceEditor.class, "ERROR_Title"), JOptionPane.ERROR_MESSAGE);
@@ -640,10 +729,32 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
             Toponym topo = geoObj.getToponym();
             updateTopoFromDialog(topo);
             geoObj.setToponym(topo);
-            NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlace().getValueStartingWithCity(), geoObj.Toponym2Code(topo));
-            GeoPlacesList.getInstance(gedcom).refreshPlaces();
+            NbPreferences.forModule(GeoPlacesList.class).put(geoObj.getPlace().getCityAndAllOtherJurisdictions(true), geoObj.Toponym2Code(topo));
+            GeoPlacesList.getInstance(gedcom).refreshPlaceCoord();
         }
 
+
+    }
+
+    private void updateGedcomPlaceFormat(Gedcom gedcom, final PropertyPlace propPlace, final String text) {
+        // form the origin
+        try {
+            GeoPlacesList.getInstance(gedcom).stopListening();
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                public void perform(Gedcom gedcom) throws GedcomException {
+
+                    // Create place format
+                    //gedcom.setPlaceFormat(text);
+                    propPlace.setFormatAsString(true, text);
+                }
+            });
+            GeoPlacesList.getInstance(gedcom).startListening();
+        } catch (Exception e) {
+            String msg = NbBundle.getMessage(GeoPlaceEditor.class, "ERROR_cannotUpdatePlace");
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), msg, NbBundle.getMessage(GeoPlaceEditor.class, "ERROR_Title"), JOptionPane.ERROR_MESSAGE);
+            System.out.println(msg + "\n" + e);
+        }
 
     }
 
@@ -661,5 +772,17 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         } catch (Throwable t) {
         }
         return;
+    }
+
+    static public Clipboard getClipboard() {
+        Clipboard c = Lookup.getDefault().lookup(ExClipboard.class);
+        if (c == null) {
+            c = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+        return c;
+    }
+
+    public void flavorsChanged(FlavorEvent fe) {
+        jButton4.setEnabled(getClipboard().isDataFlavorAvailable(GeoToken.geoPosFlavor) || getClipboard().isDataFlavorAvailable(GeoToken.topoFlavor));
     }
 }

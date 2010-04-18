@@ -119,7 +119,7 @@ class GeoInternetSearch {
                 ph.finish();
                 result = ret.toArray(new GeoNodeObject[ret.size()]);
                 owner.setPlaces(result);
-                owner.notifyListeners();
+                owner.notifyListeners("gedcom");
             }
         });
 

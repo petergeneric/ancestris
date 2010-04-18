@@ -506,6 +506,38 @@ public class WebService {
 		return places;
 	}
 
+	public static List<Toponym> findNearbyPlaceName(double latitude,
+			double longitude, double radius, int maxRows, Style style, String lang) throws IOException,
+			Exception {
+		List<Toponym> places = new ArrayList<Toponym>();
+
+		String url = "/findNearbyPlaceName?";
+
+		url = url + "&lat=" + latitude;
+		url = url + "&lng=" + longitude;
+		if (radius > 0) {
+			url = url + "&radius=" + radius;
+		}
+		if (maxRows > 0) {
+			url = url + "&maxRows=" + maxRows;
+		}
+		url = addUserName(url);
+		url = url + "&style=" + style;
+                url = url + "&lang=" + lang;
+
+		SAXBuilder parser = new SAXBuilder();
+		Document doc = parser.build(connect(url));
+
+		Element root = doc.getRootElement();
+		for (Object obj : root.getChildren("geoname")) {
+			Element toponymElement = (Element) obj;
+			Toponym toponym = getToponymFromElement(toponymElement);
+			places.add(toponym);
+		}
+
+		return places;
+	}
+
 	public static List<Toponym> findNearby(double latitude, double longitude,
 			FeatureClass featureClass, String[] featureCodes)
 			throws IOException, Exception {

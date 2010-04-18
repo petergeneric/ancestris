@@ -15,12 +15,15 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
 import genjfr.app.App;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
@@ -52,13 +55,14 @@ class GeoNodeObject {
     public boolean toBeDisplayed;
     private Toponym toponym = defaultToponym();
     public boolean isInError = false;
+    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
 
     public GeoNodeObject(PropertyPlace place, boolean localOnly) {
         this.place = place;
         this.isEvent = false;
-        this.isUnknown = false;
         this.toBeDisplayed = false;
         this.toponym = getToponymFromPlace(place, localOnly);
+        this.isUnknown = calcUnknown(this.toponym);
         events.add(new GeoNodeObject(place.getParent(), place));
     }
 
@@ -83,9 +87,31 @@ class GeoNodeObject {
         if (isEvent) {
             str = property.getPropertyName() + " - " + property.getEntity().toString();
         } else {
-            str = (place == null || place.toString().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.toString();
+            str = (place == null || place.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.getCityAndAllOtherJurisdictions(false);
         }
         return str;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        listeners.add(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        listeners.remove(pcl);
+    }
+
+    public void setToponym(Toponym topo) {
+        this.toponym = topo;
+        Toponym oldTopo = this.toponym;
+        fire("topo", oldTopo, topo);
+    }
+
+    private void fire(String propertyName, Object old, Object nue) {
+        //Passing 0 below on purpose, so you only synchronize for one atomic call:
+        PropertyChangeListener[] pcls = listeners.toArray(new PropertyChangeListener[0]);
+        for (int i = 0; i < pcls.length; i++) {
+            pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
+        }
     }
 
     public Gedcom getGedcom() {
@@ -155,7 +181,8 @@ class GeoNodeObject {
     }
 
     public String[] getEventsInfo() {
-        String[] str = {"nb individus", "patronyme le plus fréquent", "nb events", "date min", "date max"};
+
+        String[] str = {"nb individus", "patronyme le plus fréquent", "nb events", "births", "marriages", "deaths", "other events", "date min", "date max"};
         HashSet<String> indiv = new HashSet<String>();
         SortedMap<String, Integer> pat = new TreeMap<String, Integer>();
         int dateMin = +99999;
@@ -164,9 +191,25 @@ class GeoNodeObject {
         if (gno == null) {
             return null;
         }
+        int eBirths = 0, eMarriages = 0, eDeaths = 0, eOther = 0;
+
+        // loop on all events
         for (int i = 0; i < gno.length; i++) {
             Property prop = gno[i].property;
             Entity ent = prop.getEntity();
+
+            // increments events
+            String tag = prop.getTag();
+            if (tag.equals("BIRT") || tag.equals("CHR")) {
+                eBirths++;
+            } else if (tag.equals("MARR") || tag.equals("ENGA") || tag.equals("MARB") || tag.equals("MARC")) {
+                eMarriages++;
+            } else if (tag.equals("DEAT") || tag.equals("BURI") || tag.equals("CREM")) {
+                eDeaths++;
+            } else {
+                eOther++;
+            }
+            
             // counts patronyms, for individuals or families
             String patronym = "";
             if (ent instanceof Indi) {
@@ -202,6 +245,7 @@ class GeoNodeObject {
                     indiv.add(indi.toString());
                 }
             }
+
             // Gets min and max dates
             Property dateProp = prop.getProperty("DATE");
             if (dateProp != null && dateProp instanceof PropertyDate) {
@@ -225,6 +269,7 @@ class GeoNodeObject {
                 }
             }
         }
+
         // Calculates frequency
         Iterator<String> it = pat.keySet().iterator();
         Integer max = 0;
@@ -237,12 +282,18 @@ class GeoNodeObject {
                 patMax = key;
             }
         }
+
+
         // Build info
         str[0] = "" + indiv.size();
         str[1] = "" + patMax + " (" + max + ")";
         str[2] = "" + events.size();
-        str[3] = "" + (dateMin == +99999 ? "-" : dateMin);
-        str[4] = "" + (dateMax == -99999 ? "-" : dateMax);
+        str[3] = "" + eBirths;
+        str[4] = "" + eMarriages;
+        str[5] = "" + eDeaths;
+        str[6] = "" + eOther;
+        str[7] = "" + (dateMin == +99999 ? "-" : dateMin);
+        str[8] = "" + (dateMax == -99999 ? "-" : dateMax);
         return str;
     }
 
@@ -254,16 +305,12 @@ class GeoNodeObject {
         return toponym;
     }
 
-    public void setToponym(Toponym topo) {
-        this.toponym = topo;
-    }
-
     public String getPlaceAsString() {
-        return place != null ? place.toString() : "";
+        return place != null ? place.getCityAndAllOtherJurisdictions(false) : "";
     }
 
     public String getCity() {
-        return (place == null || place.toString().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.getCity().toString();
+        return (place == null || place.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.getCity().toString();
     }
 
     public String getCoordinates(Toponym topo) {
@@ -324,19 +371,20 @@ class GeoNodeObject {
 
     public Toponym getToponymFromPlace(PropertyPlace place, boolean localOnly) {
 
-        Toponym topo = null;
+        Toponym topo = defaultToponym();
 
         // go back if place is null
         if (place == null || place.toString().trim().isEmpty()) {
-            return defaultToponym();
+            return topo;
         }
 
         // search locally first
-        topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(place.getValueStartingWithCity(), null));
+        topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(place.getCityAndAllOtherJurisdictions(true), null));
         boolean foundLocally = topo != null;
 
         // search on the internet
-        if (topo == null && !localOnly) {
+        if (!foundLocally && !localOnly) {
+            topo = null;
             ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
             searchCriteria.setMaxRows(1);
             searchCriteria.setLanguage(NbPreferences.forModule(App.class).get("language", "").equals("2") ? "fr" : "en");
@@ -344,11 +392,24 @@ class GeoNodeObject {
             ToponymSearchResult searchResult;
             //
             try {
-                searchCriteria.setQ(place.toString());
+                // try search with full name to be more precise
+                searchCriteria.setQ(place.getCityAndAllOtherJurisdictions(true));
                 searchResult = WebService.search(searchCriteria);
                 for (Toponym iTopo : searchResult.getToponyms()) {
                     topo = iTopo; // take the first one
                     break;
+                }
+                if (topo == null) { // try with only city and country if not found
+                    String[] jurisdictions = place.getJurisdictions();
+                    searchCriteria.setQ(place.getCity() + " " + jurisdictions[jurisdictions.length - 1]);
+                    searchResult = WebService.search(searchCriteria);
+                    for (Toponym iTopo : searchResult.getToponyms()) {
+                        topo = iTopo; // take the first one
+                        break;
+                    }
+                }
+                if (topo == null) { // if still not found, default topo
+                    topo = defaultToponym();
                 }
             } catch (Exception e) {
                 isInError = true;
@@ -356,9 +417,9 @@ class GeoNodeObject {
             }
         }
 
-        // remember for next time
-        if (!foundLocally && topo != null && !topo.getName().isEmpty()) {
-            NbPreferences.forModule(GeoPlacesList.class).put(place.getValueStartingWithCity(), Toponym2Code(topo));
+        // remember for next time, even if was not found
+        if (!foundLocally && topo != null) {
+            NbPreferences.forModule(GeoPlacesList.class).put(place.getCityAndAllOtherJurisdictions(true), Toponym2Code(topo));
         }
 
         // return first found
@@ -395,6 +456,15 @@ class GeoNodeObject {
         topo.setPopulation(Long.getLong("0"));
         return topo;
 
+    }
+
+    private boolean calcUnknown(Toponym toponym) {
+        Toponym topo = defaultToponym();
+        return (toponym.getLatitude() == topo.getLatitude() && toponym.getLongitude() == topo.getLongitude());
+    }
+
+    private boolean isUnknown(Toponym toponym) {
+        return isUnknown;
     }
 
     public HashSet<String> getEventTypes() {
@@ -462,9 +532,13 @@ class GeoNodeObject {
         String sep = "\n";
         StringBuilder str = new StringBuilder();
         try {
+            String timezone = dispName("");
+            if (topo.getTimezone() != null) {
+                timezone = topo.getTimezone().getTimezoneId() + " (" + topo.getTimezone().getGmtOffset() + ")";
+            }
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Name") + spa + topo.getName() + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Coord") + spa + getCoordinates(topo) + sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Time") + spa + topo.getTimezone().getTimezoneId() + " (" + topo.getTimezone().getGmtOffset() + ")" + sep);
+            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Time") + spa + timezone + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Cntry") + spa + dispName(topo.getCountryName()) + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Region") + spa + dispName(topo.getAdminName1()) + " (" + dispName(topo.getAdminCode1()) + ")" + sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Dept") + spa + dispName(topo.getAdminName2()) + " (" + dispName(topo.getAdminCode2()) + ")" + sep);
@@ -596,4 +670,6 @@ class GeoNodeObject {
             return obj1.toString().compareTo(obj2.toString());
         }
     };
+
+
 }
