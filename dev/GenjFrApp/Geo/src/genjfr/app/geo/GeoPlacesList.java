@@ -37,6 +37,9 @@ class GeoPlacesList implements GedcomListener {
         if (instances == null) {
             instances = new TreeMap<Gedcom, GeoPlacesList>();
         }
+        if (gedcom == null) {
+            return null;
+        }
         GeoPlacesList gpl = instances.get(gedcom);
         if (gpl == null) {
             gpl = new GeoPlacesList(gedcom);
@@ -116,50 +119,58 @@ class GeoPlacesList implements GedcomListener {
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        refreshPlaces();
+        reloadPlaces();
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        refreshPlaces();
+        reloadPlaces();
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        refreshPlaces();
+        reloadPlaces();
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        refreshPlaces();
+        reloadPlaces();
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        refreshPlaces();
+        reloadPlaces();
     }
 
     @SuppressWarnings("unchecked")
-    public void notifyListeners() {
+    public void notifyListeners(String change) {
         GeoPlacesListener[] gpls = (GeoPlacesListener[]) listeners.toArray(new GeoPlacesListener[listeners.size()]);
         for (int l = 0; l < gpls.length; l++) {
             try {
-                gpls[l].geoPlacesChanged(this);
+                gpls[l].geoPlacesChanged(this, change);
             } catch (Throwable t) {
                 System.out.println("exception in geoplaceslist listener " + gpls[l] + t);
             }
         }
     }
 
-    public void refreshPlaces() {
+    public void refreshPlaceCoord() {
+        notifyListeners("coord");
+    }
+
+    public void refreshPlaceName() {
+        notifyListeners("name");
+    }
+
+    public void reloadPlaces() {
         if (!stopListening) {
             stopListening = true;
             geoNodes = getPlaces(true);
             stopListening = false;
-            notifyListeners();
+            notifyListeners("gedcom");
         }
     }
 
     public void stopListening() {
         stopListening = true;
     }
-    
+
     public void startListening() {
         stopListening = false;
     }

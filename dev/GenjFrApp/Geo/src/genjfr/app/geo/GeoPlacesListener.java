@@ -11,5 +11,13 @@ package genjfr.app.geo;
  */
 public interface GeoPlacesListener {
 
-  public void geoPlacesChanged(GeoPlacesList gpl);
+    /**
+     *
+     * @param gpl
+     * @param change
+     *  - coord  : change of coordinates of one location point
+     *  - name   : change of name of one location point
+     *  - gedcom : change of some properties in the gedcom
+     */
+  public void geoPlacesChanged(GeoPlacesList gpl, String change);
 }

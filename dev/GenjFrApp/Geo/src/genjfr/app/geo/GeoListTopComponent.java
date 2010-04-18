@@ -9,8 +9,6 @@ import genj.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import genjfr.app.GenjViewTopComponent;
 import genjfr.app.pluginservice.PluginInterface;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -40,22 +38,27 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
     private final ExplorerManager mgr = new ExplorerManager();
     //
     private Gedcom gedcom = null;
+    private GeoPlacesList gpl = null;
     private boolean isInitialised = false;
 
     public GeoListTopComponent() {
         super();
-        super.setDefaultMode("anonymousMode_7");
+        //super.setDefaultMode("anonymousMode_7");
     }
 
     public void init(Gedcom gedParam) {
         // Init gedcom
         initGedcom(gedParam);
+        if (gedcom == null) {
+            close();
+        }
 
         // TopComponent window parameters
         initComponents();
 
-        // Set mono selection
+        // Set mono selection and allow substring quick search (requires nodes to have a valid getName())
         ((BeanTreeView) jScrollPane1).setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        ((MyBeanTreeView) jScrollPane1).setUseSubstringInQuickSearch(true);
 
         // TopComponent name and tooltip
         setName(NbBundle.getMessage(GeoListTopComponent.class, "CTL_GeoListTopComponent"));
@@ -68,6 +71,8 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
         // Build tree
+        gpl = GeoPlacesList.getInstance(gedcom);
+        gpl.addGeoPlacesListener(this);
         buildTree(gedcom);
     }
 
@@ -91,14 +96,17 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
 
     private void buildTree(Gedcom gedcom) {
         if (gedcom != null) {
-            GeoPlacesList gpl = GeoPlacesList.getInstance(gedcom);
             nodes = gpl.getPlaces();
             mgr.setRootContext(new GeoNode(gpl));
             ((BeanTreeView) jScrollPane1).setRootVisible(false);
-            gpl.addGeoPlacesListener(this);
         }
         jScrollPane1.repaint();
-        jScrollPane1.updateUI();
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+
+            public void run() {
+                jScrollPane1.updateUI();
+            }
+        });
         isInitialised = true;
     }
 
@@ -187,8 +195,12 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         return gedcom;
     }
 
-    public void geoPlacesChanged(GeoPlacesList gpl) {
-        buildTree(gedcom);
+    public void geoPlacesChanged(GeoPlacesList gpl, String change) {
+        if (change.equals("cood")) {
+        } else if (change.equals("name")) {
+        } else if (change.equals("gedcom")) {
+            buildTree(gedcom);
+        }
     }
 
     /**
@@ -249,27 +261,25 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
                 ((MyBeanTreeView) jScrollPane1).setScrollOnExpand(true);
                 ((MyBeanTreeView) jScrollPane1).expandNode(node);
                 try {
-                    mgr.setSelectedNodes(new Node[] { node } );
+                    mgr.setSelectedNodes(new Node[]{node});
                 } catch (PropertyVetoException ex) {
                     // nothing
                 }
             }
         }
-
     }
 
     /**
      * Subclass BeanTreeView to be able to use the setScrollOnExpand function (tree is protected)
      */
     private static class MyBeanTreeView extends BeanTreeView {
+
         public boolean getScrollOnExpand() {
             return tree.getScrollsOnExpand();
-}
+        }
 
-        public void setScrollOnExpand( boolean scroll ) {
-            this.tree.setScrollsOnExpand( scroll );
+        public void setScrollOnExpand(boolean scroll) {
+            this.tree.setScrollsOnExpand(scroll);
         }
     }
-
-
 }

@@ -7,6 +7,9 @@ package genjfr.app.geo;
 import genjfr.app.EditTopComponent;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -17,6 +20,7 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -25,7 +29,7 @@ import org.openide.windows.WindowManager;
  *
  * @author frederic
  */
-class GeoNode extends AbstractNode {
+class GeoNode extends AbstractNode implements PropertyChangeListener {
 
     public GeoNode(GeoPlacesList gpl) {
         super(new GeoChildrenNodes(gpl));
@@ -34,6 +38,10 @@ class GeoNode extends AbstractNode {
 
     public GeoNode(GeoNodeObject obj) {
         super(obj != null && !obj.isEvent ? new GeoChildrenNodes(obj) : Children.LEAF, Lookups.singleton(obj));
+        if (obj != null) {
+            setDisplayName(obj.toString());
+            obj.addPropertyChangeListener(WeakListeners.propertyChange(this, obj));
+        }
     }
 
     @Override
@@ -45,7 +53,6 @@ class GeoNode extends AbstractNode {
         } else {
             return null;
         }
-
     }
 
     @Override
@@ -103,6 +110,12 @@ class GeoNode extends AbstractNode {
         }
     }
 
+    public void propertyChange(PropertyChangeEvent pce) {
+        if ("topo".equals(pce.getPropertyName())) {
+            this.fireDisplayNameChange(null, getDisplayName());
+        }
+    }
+
     private class GeoAction extends AbstractAction {
 
         private String actionName = "";
@@ -121,26 +134,33 @@ class GeoNode extends AbstractNode {
             if (actionName.equals("ACTION_None")) {
                 // nothing
             } else if (actionName.equals("ACTION_ShowPlace")) {
+                // display place on map
                 GeoMapTopComponent theMap = getMapTopComponent(obj);
                 if (theMap != null) {
                     theMap.requestActive();
                     theMap.CenterMarker(obj);
                     theMap.ShowMarker(obj);
                 }
+
             } else if (actionName.equals("ACTION_FindPlace")) {
+                // display place details
                 String info = obj.displayToponym(obj.getToponymFromPlace(obj.getPlace(), false));
                 JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
                         new ImageIcon(Utilities.loadImage("genjfr/app/geo/geoicon.png")));
+
             } else if (actionName.equals("ACTION_EditPlace")) {
-                GeoPlaceEditor editorPanel = new GeoPlaceEditor(obj);
-                DialogDescriptor dd = new DialogDescriptor(editorPanel, "Edition d'un lieu", true, null);
+                // popup editor
+                final GeoPlaceEditor editorPanel = new GeoPlaceEditor(obj);
+                DialogDescriptor dd = new DialogDescriptor(editorPanel, "Edition d'un lieu", false, new ActionListener() {
+
+                    public void actionPerformed(ActionEvent ae) {
+                        if (ae.getSource().equals(DialogDescriptor.OK_OPTION)) {
+                            editorPanel.updateGedcom();
+                        }
+                    }
+                });
                 editorPanel.requestFocus();
                 DialogDisplayer.getDefault().createDialog(dd).show();
-                if (dd.getValue() == DialogDescriptor.OK_OPTION) {
-                    editorPanel.updateGedcom();
-                } else {
-                    //cancel button was pressed
-                }
 
             } else if (actionName.equals("ACTION_EditEvent")) {
                 EditTopComponent etc = getEditTopComponent(obj);
