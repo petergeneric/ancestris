@@ -42,7 +42,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         }
 
         if (exitFlag == true) {
-            NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as below
+            NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as below
         }
         
         if (registry != null) {
@@ -58,11 +58,11 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
 
         boolean launch = false;
 
-        // Check if wizardflag shows it neesd to be launched
+        // Check if wizardflag shows it needs to be launched
         String flag = NbPreferences.forModule(App.class).get("optionswizard", "");
 
         // If number matches, set launch on
-        if (!flag.equals("3")) { // increase number here each time we want to force wizard launch for users at a new release
+        if (!flag.equals("4")) { // increase number here each time we want to force wizard launch for users at a new release
             launch = true;
         }
 
