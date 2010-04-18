@@ -28,7 +28,7 @@ public class Installer extends ModuleInstall {
         App.main(new String[]{});
 
         // Run wizard if necessary
-        if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
+        if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 public void run() {
                     // Any code here will be run with the UI is available

@@ -380,7 +380,7 @@ public class ControlCenter extends JPanel {
             if (theFiles==null)
                 theFiles = new ArrayList<String>();
 //            addDefaultFile(theFiles);
-            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3"))
+            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4"))
                 if (theFiles.isEmpty() && getDefaultFile(theFiles) == null) {
                     Runnable r = new ActionOpen() {
 
