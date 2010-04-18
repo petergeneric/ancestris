@@ -407,7 +407,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("displayNames", getDisplayNames());
         NbPreferences.forModule(App.class).put("displayDates", getDisplayDates());
         
-        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
+//        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
 
         putRegistryFromSettings();
 

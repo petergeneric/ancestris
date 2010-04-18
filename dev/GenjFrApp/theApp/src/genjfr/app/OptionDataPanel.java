@@ -500,7 +500,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("encoding", getEncoding());
         NbPreferences.forModule(App.class).put("BOM", getBOM());
 
-        NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as in the wizard
+//        NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as in the wizard
 
         putRegistryFromSettings();
 
