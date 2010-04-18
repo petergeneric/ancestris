@@ -174,7 +174,7 @@ public class PropertyPlace extends PropertyChoiceValue {
                 result = ged.getPlaceFormat();
             }
         }
-        if (result.isEmpty()) {
+        if (result.trim().isEmpty()) {
             result = getPlaceFormatFromOptions();
         }
         // done
@@ -187,32 +187,32 @@ public class PropertyPlace extends PropertyChoiceValue {
         String space = USE_SPACES ? " " : "";
         // go through all jursidictions
         jur = Options.getInstance().fmt_address1;
-        if (!jur.isEmpty()) {
-            format += jur;
+        if (!jur.equals("0")) {
+            format += "Lieudit";
         }
         jur = Options.getInstance().fmt_address2;
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        if (!jur.equals("0")) {
+            format += "," + space + "Commune";
         }
         jur = Options.getInstance().fmt_address3;
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        if (!jur.equals("0")) {
+            format += "," + space + "CodeINSEE";
         }
         jur = Options.getInstance().fmt_address4;
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        if (!jur.equals("0")) {
+            format += "," + space + "CodePostal";
         }
         jur = Options.getInstance().fmt_address5;
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        if (!jur.equals("0")) {
+            format += "," + space + "Departement";
         }
         jur = Options.getInstance().fmt_address6;
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        if (!jur.equals("0")) {
+            format += "," + space + "Region";
         }
         jur = Options.getInstance().fmt_address7;
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        if (!jur.equals("0")) {
+            format += "," + space + "Pays";
         }
         return format;
     }
@@ -368,13 +368,43 @@ public class PropertyPlace extends PropertyChoiceValue {
         Set cityKeys = Options.getInstance().placeHierarchyCityKeys;
         String[] format = getFormat();
         for (int i = 0; i < format.length; i++) {
-            if (cityKeys.contains(format[i].toLowerCase())) {
+            if (cityKeys.contains(format[i].toLowerCase().trim())) {
                 return i;
             }
         }
 
         // don't know
         return -1;
+    }
+
+    /**
+     * Accessor - city first, then all the others in ascending order of hierarchy level
+     */
+    public String getCityAndAllOtherJurisdictions(boolean compress) {
+        // grab result
+        String result = trim(getValue());
+        // check city index - we assume it start with the first if n/a
+        int cityIndex = getCityIndex();
+        if (cityIndex <= 0) {
+            return result;
+        }
+        // grab sub
+        StringBuffer buf = new StringBuffer(result.length());
+        buf.append(getCity());
+        for (int i = 0; i < 10; i++) {
+            if (i != getCityIndex()) {
+                String jurisdiction = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR).get(i, true);
+                if (jurisdiction == null) {
+                    break;
+                }
+                buf.append(JURISDICTION_SEPARATOR);
+                if (USE_SPACES && !compress) {
+                    buf.append(' ');
+                }
+                buf.append(jurisdiction);
+            }
+        }
+        return buf.toString().intern();
     }
 } //PropertyPlace
 
