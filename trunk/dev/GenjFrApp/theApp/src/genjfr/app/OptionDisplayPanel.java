@@ -207,7 +207,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         NbPreferences.forModule(App.class).put("splitJurisdiction", getSplitJurisdictions());
         NbPreferences.forModule(App.class).put("OpenEditor", getOpenEditor());
 
-        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
+//        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
         
         putRegistryFromSettings();
 
