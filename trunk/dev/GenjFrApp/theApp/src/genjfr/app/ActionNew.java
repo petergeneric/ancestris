@@ -23,12 +23,14 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 public final class ActionNew extends Action2 {
 
     private Resources resources = Resources.get(genj.app.ControlCenter.class);
     private WindowManager windowManager = App.center.getWindowManager();
+    private final static boolean USE_SPACES = NbPreferences.forModule(App.class).get("address_splitspaces", "").equals("true");
 
     /** constructor */
     public ActionNew() {
@@ -98,38 +100,39 @@ public final class ActionNew extends Action2 {
     String getPlaceFormatFromOptions() {
         String format = "";
         String jur = "";
-        String space = getSpaceFromOptions("address_splitspaces");
-        // go through all jursidictions possible
-        jur = getJurisdictionFromOptions("fmt_address1");
-        if (!jur.isEmpty()) {
-            format += jur;
+        String space = USE_SPACES ? " " : "";
+        // go through all jursidictions
+        jur = NbPreferences.forModule(App.class).get("fmt_address1", "");
+        if (!jur.equals("0")) {
+            format += NbBundle.getMessage(App.class, "OptionDataPanel.jLabel13.text");
         }
-        jur = getJurisdictionFromOptions("fmt_address2");
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        jur = NbPreferences.forModule(App.class).get("fmt_address2", "");
+        if (!jur.equals("0")) {
+            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel14.text");
         }
-        jur = getJurisdictionFromOptions("fmt_address3");
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        jur = NbPreferences.forModule(App.class).get("fmt_address3", "");
+        if (!jur.equals("0")) {
+            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel15.text");
         }
-        jur = getJurisdictionFromOptions("fmt_address4");
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        jur = NbPreferences.forModule(App.class).get("fmt_address4", "");
+        if (!jur.equals("0")) {
+            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel16.text");
         }
-        jur = getJurisdictionFromOptions("fmt_address5");
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        jur = NbPreferences.forModule(App.class).get("fmt_address5", "");
+        if (!jur.equals("0")) {
+            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel17.text");
         }
-        jur = getJurisdictionFromOptions("fmt_address6");
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        jur = NbPreferences.forModule(App.class).get("fmt_address6", "");
+        if (!jur.equals("0")) {
+            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel18.text");
         }
-        jur = getJurisdictionFromOptions("fmt_address7");
-        if (!jur.isEmpty()) {
-            format += "," + space + jur;
+        jur = NbPreferences.forModule(App.class).get("fmt_address7", "");
+        if (!jur.equals("0")) {
+            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel19.text");
         }
         return format;
     }
+
 
     private String getJurisdictionFromOptions(String string) {
         return NbPreferences.forModule(genj.app.App.class).get(string, "");

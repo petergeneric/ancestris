@@ -257,7 +257,7 @@ public class App {
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
 //                REGISTRY = checkOptionsWizard(REGISTRY);
-                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("3")) {
+                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
                     putRegistryFromSettings(REGISTRY);
                 }
                 // Pour le moment il ne faut pas que je lnf soit mis a autre chose que java.
