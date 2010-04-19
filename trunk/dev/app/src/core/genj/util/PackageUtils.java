@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -31,7 +32,20 @@ public static List<Class> getClassesForPackage(String pckgname,String startWith)
         // This will hold a list of directories matching the pckgname.
         //There may be more than one if a package is split over multiple jars/paths
         List<Class> classes = new ArrayList<Class>();
+        List<String> resPaths = findInPackage(pckgname,  Pattern.compile((".*/"+(startWith==null?"":startWith)+"[^/]*").concat("\\.class")));
+        for (String resPath:resPaths) {
+            classes.add(Class.forName(resPath.substring(0, resPath.length() - 6)));
+        }
+        return classes;
+    }
+
+public static List<String> findInPackage(String pckgname,Pattern pattern)
+                                                throws ClassNotFoundException {
+        // This will hold a list of directories matching the pckgname.
+        //There may be more than one if a package is split over multiple jars/paths
+        List<String> resPath = new ArrayList<String>();
         ArrayList<File> directories = new ArrayList<File>();
+        String packagePath = pckgname.replace('.', '/');
         try {
             ClassLoader cld = Thread.currentThread().getContextClassLoader();
             if (cld == null) {
@@ -46,13 +60,12 @@ public static List<Class> getClassesForPackage(String pckgname,String startWith)
                     JarFile jar = conn.getJarFile();
                     for (JarEntry e:Collections.list(jar.entries())){
 
-                        if (e.getName().startsWith(pckgname.replace('.', '/'))
-                            && e.getName().endsWith(".class") && !e.getName().contains("$")
-                            && e.getName().matches(".*/"+(startWith==null?"":startWith)+"[^/]*\\.class")){
+                        if (e.getName().startsWith(packagePath)
+                            && !e.getName().contains("$")
+                            && pattern.matcher(e.getName().substring(packagePath.length())).matches()){
                             String className =
-                                    e.getName().replace("/",".").substring(0,e.getName().length() - 6);
-                            System.out.println(className);
-                            classes.add(Class.forName(className));
+                                    e.getName().replace("/",".");
+                            resPath.add(className);
                         }
                     }
                 }else
@@ -76,10 +89,9 @@ public static List<Class> getClassesForPackage(String pckgname,String startWith)
                 String[] files = directory.list();
                 for (String file : files) {
                     // we are only interested in .class files
-                    if (file.endsWith(".class")) {
+                    if (pattern.matcher(file).matches()) {
                         // removes the .class extension
-                        classes.add(Class.forName(pckgname + '.'
-                                + file.substring(0, file.length() - 6)));
+                        resPath.add(pckgname + '.'+file);
                     }
                 }
             } else {
@@ -87,40 +99,7 @@ public static List<Class> getClassesForPackage(String pckgname,String startWith)
                                     ") does not appear to be a valid package");
             }
         }
-        return classes;
+        return resPath;
     }
 
-
-//    public static List<Class> getClassessOfInterface(String thePackage, Class theInterface) {
-//        List<Class> classList = new ArrayList<Class>();
-//        try {
-//            for (Class discovered : getClassesForPackage(thePackage)) {
-//                if (Arrays.asList(discovered.getInterfaces()).contains(theInterface)) {
-//                    classList.add(discovered);
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(ClassDiscover.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        return classList;
-//    }
-//
-    public static void main(String[] args) {
-		try {
-			// test getting classes
-			List<Class> ddd = getClassesForPackage("genjreports");
-			for (Class c:ddd) {
-				System.out.println(c.getCanonicalName());
-			}
-
-//			// test getting packages
-//			ArrayList<String> packs = getPackageNames("genj");
-//			for (String s:packs) {
-//				System.out.println(s);
-//			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
 }
