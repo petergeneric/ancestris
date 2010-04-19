@@ -381,16 +381,14 @@ public class PropertyPlace extends PropertyChoiceValue {
      * Accessor - city first, then all the others in ascending order of hierarchy level
      */
     public String getCityAndAllOtherJurisdictions(boolean compress) {
-        // grab result
-        String result = trim(getValue());
-        // check city index - we assume it start with the first if n/a
+
+        String result = "";
+
+        StringBuffer buf = new StringBuffer(100);
         int cityIndex = getCityIndex();
-        if (cityIndex <= 0) {
-            return result;
+        if (cityIndex != -1) {
+            buf.append(getCity());
         }
-        // grab sub
-        StringBuffer buf = new StringBuffer(result.length());
-        buf.append(getCity());
         for (int i = 0; i < 10; i++) {
             if (i != getCityIndex()) {
                 String jurisdiction = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR).get(i, true);
@@ -401,7 +399,7 @@ public class PropertyPlace extends PropertyChoiceValue {
                 if (USE_SPACES && !compress) {
                     buf.append(' ');
                 }
-                buf.append(jurisdiction);
+                buf.append(jurisdiction.trim());
             }
         }
         return buf.toString().intern();
