@@ -48,8 +48,10 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     public String getHtmlDisplayName() {
         GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
         if (obj != null) {
+            String color = obj.isUnknown ? "color='#ff2300'" : "color='#03a60d'"; // color='!textText'"; "color='!controlShadow'"
             return obj.isEvent ? "<font color='!textText'>" + obj.toString() + " </font>&nbsp;"
-                    : "<font color='!textText'>" + obj.toString() + "</font><font color='!controlShadow'> [" + obj.getCoordinates() + "]" + " <i>(" + obj.getNbOfEvents() + ")" + "</i></font>&nbsp;";
+                    : "<font color='!textText'>" + obj.toString() + "</font><font "+ color +"> [" + obj.getCoordinates() + "]" + 
+                      " <i></font><font color='!textText'>(" + obj.getNbOfEvents() + ")" + "</i></font>&nbsp;";
         } else {
             return null;
         }

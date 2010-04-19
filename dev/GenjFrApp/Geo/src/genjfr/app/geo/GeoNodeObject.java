@@ -209,7 +209,7 @@ class GeoNodeObject {
             } else {
                 eOther++;
             }
-            
+
             // counts patronyms, for individuals or families
             String patronym = "";
             if (ent instanceof Indi) {
@@ -393,7 +393,7 @@ class GeoNodeObject {
             //
             try {
                 // try search with full name to be more precise
-                searchCriteria.setQ(place.getValueStartingWithCity());
+                searchCriteria.setQ(getPlaceLong(place));
                 searchResult = WebService.search(searchCriteria);
                 for (Toponym iTopo : searchResult.getToponyms()) {
                     topo = iTopo; // take the first one
@@ -401,7 +401,7 @@ class GeoNodeObject {
                 }
                 if (topo == null) { // try with only city and country if not found
                     String[] jurisdictions = place.getJurisdictions();
-                    searchCriteria.setQ(place.getCity() + " " + jurisdictions[jurisdictions.length - 1]);
+                    searchCriteria.setQ(getPlaceShort(place));
                     searchResult = WebService.search(searchCriteria);
                     for (Toponym iTopo : searchResult.getToponyms()) {
                         topo = iTopo; // take the first one
@@ -460,6 +460,9 @@ class GeoNodeObject {
 
     private boolean calcUnknown(Toponym toponym) {
         Toponym topo = defaultToponym();
+        if (toponym == null) {
+            return false;
+        }
         return (toponym.getLatitude() == topo.getLatitude() && toponym.getLongitude() == topo.getLongitude());
     }
 
@@ -671,5 +674,57 @@ class GeoNodeObject {
         }
     };
 
+    private String getPlaceLong(PropertyPlace place) {
+        String result = "", jur = "", bit = "";
 
+        jur = NbPreferences.forModule(App.class).get("fmt_address2", "");  // commune
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit + "," : "");
+        }
+
+        jur = NbPreferences.forModule(App.class).get("fmt_address3", "");  // code insee
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit + "," : "");
+        }
+
+        jur = NbPreferences.forModule(App.class).get("fmt_address5", "");  // dept
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit + "," : "");
+        }
+
+        jur = NbPreferences.forModule(App.class).get("fmt_address6", "");  // region
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit + "," : "");
+        }
+
+        jur = NbPreferences.forModule(App.class).get("fmt_address7", "");  // pays
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit : "");
+        }
+
+        return result;
+    }
+
+    private String getPlaceShort(PropertyPlace place) {
+        String result = "", jur = "", bit = "";
+
+        jur = NbPreferences.forModule(App.class).get("fmt_address2", "");  // commune
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit + "," : "");
+        }
+
+        jur = NbPreferences.forModule(App.class).get("fmt_address7", "");  // pays
+        if (!jur.equals("0")) {
+            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
+            result += (bit != null ? bit : "");
+        }
+
+        return result;
+    }
 }
