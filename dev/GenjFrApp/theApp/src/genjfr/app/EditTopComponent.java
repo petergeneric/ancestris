@@ -9,10 +9,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.view.ViewContext;
 import genj.view.ViewFactory;
-import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.windows.Mode;
-import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -23,7 +20,7 @@ public final class EditTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "EditTopComponent";
     private static EditTopComponent factory;
-    private static ViewFactory viewfactory = new EditViewFactory();
+    private ViewFactory viewfactory = new EditViewFactory();  // should not be static
 
     ViewFactory getViewFactory() {
         return viewfactory;
@@ -101,7 +98,8 @@ public final class EditTopComponent extends GenjViewTopComponent {
     }
 
     public void setCurrentEntity(Property property) {
-        ((EditViewFactory)viewfactory).getEditView().setContext(new ViewContext(property));
+        ViewContext vc = new ViewContext(property);
+        ((EditViewFactory)viewfactory).getEditView().setContext(vc); // requires viewFactory not to be static
     }
 
 }
