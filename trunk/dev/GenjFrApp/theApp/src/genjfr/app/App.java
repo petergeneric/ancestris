@@ -275,7 +275,7 @@ public class App {
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
-                
+
                 // Log is up
                 LOG.info("\n\n==================8<================================================================");
                 LOG.info("Startup");
