@@ -30,7 +30,7 @@ class GeoPlacesList implements GedcomListener {
 
     public GeoPlacesList(Gedcom gedcom) {
         this.gedcom = gedcom;
-        this.geoNodes = getPlaces();
+        this.geoNodes = null;
     }
 
     public static synchronized GeoPlacesList getInstance(Gedcom gedcom) {
@@ -54,20 +54,14 @@ class GeoPlacesList implements GedcomListener {
     }
 
     /**
-     * Return list of cities of Gedcom file
+     * Launch places search over the net for the list of cities of Gedcom file
      */
     public GeoNodeObject[] getPlaces() {
-        return getPlaces(false);
+        return geoNodes;
     }
 
     @SuppressWarnings("unchecked")
-    public GeoNodeObject[] getPlaces(boolean force) {
-        // Return already calculated nodes
-        if (!force && geoNodes != null) {
-            return geoNodes;
-        }
-
-        // Else recalculate : find all property places
+    public synchronized void launchPlacesSearch() {
         Collection entities = gedcom.getEntities();
         List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
         for (Iterator it = entities.iterator(); it.hasNext();) {
@@ -76,12 +70,14 @@ class GeoPlacesList implements GedcomListener {
         }
 
         // search the geo objects locally and else on internet
-        new GeoInternetSearch(this, placesProps).executeSearch();
-        return geoNodes;
+        new GeoInternetSearch(this, placesProps).executeSearch(gedcom);
+        return;
     }
 
     public void setPlaces(GeoNodeObject[] result) {
         geoNodes = result;
+        notifyListeners("gedcom");
+        startListening();
     }
 
     @SuppressWarnings("unchecked")
@@ -160,10 +156,8 @@ class GeoPlacesList implements GedcomListener {
 
     public void reloadPlaces() {
         if (!stopListening) {
-            stopListening = true;
-            geoNodes = getPlaces(true);
-            stopListening = false;
-            notifyListeners("gedcom");
+            stopListening();
+            launchPlacesSearch();
         }
     }
 

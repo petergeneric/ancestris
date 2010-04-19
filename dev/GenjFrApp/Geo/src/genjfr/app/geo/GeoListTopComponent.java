@@ -35,7 +35,7 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
     static final String ICON_PATH = "genjfr/app/geo/list.png";
     private static final String PREFERRED_ID = "GeoListTopComponent";
     private GeoNodeObject[] nodes = null;
-    private final ExplorerManager mgr = new ExplorerManager();
+    private ExplorerManager mgr = new ExplorerManager();
     //
     private Gedcom gedcom = null;
     private GeoPlacesList gpl = null;
@@ -70,10 +70,9 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         }
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
-        // Build tree
-        gpl = GeoPlacesList.getInstance(gedcom);
-        gpl.addGeoPlacesListener(this);
-        buildTree(gedcom);
+        // Init tree
+        initTree();
+        isInitialised = true;
     }
 
     private void initGedcom(Gedcom gedParam) {
@@ -94,20 +93,15 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         super.addLookup();
     }
 
-    private void buildTree(Gedcom gedcom) {
-        if (gedcom != null) {
-            nodes = gpl.getPlaces();
-            mgr.setRootContext(new GeoNode(gpl));
-            ((BeanTreeView) jScrollPane1).setRootVisible(false);
+    private void initTree() {
+        // Launch search for locations and set listener
+        gpl = GeoPlacesList.getInstance(gedcom);
+        if (gpl.getPlaces() == null) {
+            gpl.launchPlacesSearch();
+        } else {
+            geoPlacesChanged(gpl, "gedcom");
         }
-        jScrollPane1.repaint();
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-
-            public void run() {
-                jScrollPane1.updateUI();
-            }
-        });
-        isInitialised = true;
+        gpl.addGeoPlacesListener(this);
     }
 
     /** This method is called from within the constructor to
@@ -199,7 +193,17 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         if (change.equals("cood")) {
         } else if (change.equals("name")) {
         } else if (change.equals("gedcom")) {
-            buildTree(gedcom);
+            nodes = gpl.getPlaces();
+            mgr.setRootContext(new GeoNode(gpl));
+            ((BeanTreeView) jScrollPane1).setRootVisible(false);
+            jScrollPane1.repaint();
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+
+                public void run() {
+                    jScrollPane1.updateUI();
+                }
+            });
+
         }
     }
 

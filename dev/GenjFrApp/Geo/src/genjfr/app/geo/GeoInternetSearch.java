@@ -4,10 +4,13 @@
  */
 package genjfr.app.geo;
 
+import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -30,12 +33,14 @@ import org.openide.windows.WindowManager;
  */
 class GeoInternetSearch {
 
+    private static boolean isBusy = false;
+    private static Set<Gedcom> gedcomSearchingList = new HashSet<Gedcom>();
+    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+
     private GeoPlacesList owner;
     private List<PropertyPlace> placesProps;
     private GeoNodeObject[] result;
-    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
     private RequestProcessor.Task theTask = null;
-    private static boolean isBusy = false;
 
     public GeoInternetSearch(GeoPlacesList owner, List<PropertyPlace> placesProps) {
         this.owner = owner;
@@ -43,11 +48,18 @@ class GeoInternetSearch {
     }
 
     @SuppressWarnings("unchecked")
-    public void executeSearch() {
+    public synchronized void executeSearch(Gedcom gedcom) {
+        //public void executeSearch() {
         if (isBusy) {
-            return;
+            for (Iterator<Gedcom> it = gedcomSearchingList.iterator(); it.hasNext();) {
+                Gedcom gedcomObject = it.next();
+            }
+            if (gedcomSearchingList.contains(gedcom))  {
+                return;
+            }
         }
         isBusy = true;
+        gedcomSearchingList.add(gedcom);
         final SortedSet<GeoNodeObject> ret = new TreeSet<GeoNodeObject>(sortPlaces);
         final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces"), new Cancellable() {
 
@@ -60,7 +72,7 @@ class GeoInternetSearch {
 
             private final int NUM = placesProps.size();
 
-            public void run() {
+            public synchronized void run() {
                 try {
                     StatusDisplayer.getDefault().setStatusText("");
                     SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>();
@@ -115,11 +127,11 @@ class GeoInternetSearch {
         theTask.addTaskListener(new TaskListener() {
 
             public void taskFinished(Task task) {
-                isBusy = false;
                 ph.finish();
                 result = ret.toArray(new GeoNodeObject[ret.size()]);
                 owner.setPlaces(result);
-                owner.notifyListeners("gedcom");
+                gedcomSearchingList.remove(placesProps.get(0).getGedcom());
+                isBusy = false;
             }
         });
 
@@ -135,7 +147,6 @@ class GeoInternetSearch {
         }
         return theTask.cancel();
     }
-
     /**
      * Comparator to sort Lastnames
      */

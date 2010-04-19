@@ -20,8 +20,6 @@ import java.awt.Dimension;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.FlavorEvent;
 import java.awt.datatransfer.FlavorListener;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
