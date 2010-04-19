@@ -23,12 +23,12 @@
     <fileset dir="${original.project.dir}/dist/lib" excludes="jhbasic*"/>
     </copy>
 
-    <copy todir="${cluster}/report" >
+<!--    <copy todir="${cluster}/report" >
     <fileset dir="${original.project.dir}/nbbuild/classes"
         excludes="META-INF/**,contrib/**,doc/**,genj/**,launcher/**,spin/**,swingx/**"
         />
     </copy>
-</target>
+--></target>
 
 
 <target name="clean" depends="projectized-common.clean">
