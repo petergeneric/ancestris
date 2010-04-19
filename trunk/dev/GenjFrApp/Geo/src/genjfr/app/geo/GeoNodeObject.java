@@ -393,7 +393,7 @@ class GeoNodeObject {
             //
             try {
                 // try search with full name to be more precise
-                searchCriteria.setQ(place.getCityAndAllOtherJurisdictions(true));
+                searchCriteria.setQ(place.getValueStartingWithCity());
                 searchResult = WebService.search(searchCriteria);
                 for (Toponym iTopo : searchResult.getToponyms()) {
                     topo = iTopo; // take the first one

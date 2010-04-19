@@ -199,7 +199,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
             if (tc instanceof EditTopComponent) {
                 EditTopComponent gmtc = (EditTopComponent) tc;
-                if (gmtc.getCurrentEntity().getGedcom() == obj.getGedcom()) {
+                if (gmtc.getGedcom() == obj.getGedcom()) {
                     theEditor = gmtc;
                     break;
                 }

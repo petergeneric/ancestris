@@ -79,6 +79,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         NbBundle.getMessage(GeoMapTopComponent.class, "maps.cassini")
     };
     private Gedcom gedcom = null;
+    private GeoPlacesList gpl = null;
     private GeoNodeObject[] markers = null;
     private Set<GeoPoint> geoPoints = new HashSet<GeoPoint>();
     private HoverPanel hoverPanel = null;
@@ -104,15 +105,17 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     }
 
     public void init(Gedcom gedParam) {
+        // Init gedcom
+        initGedcom(gedParam);
+        if (gedcom == null) {
+            close();
+        }
+
         // TopComponent name, tooltip and Gedcom
         setName(NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
         setToolTipText(NbBundle.getMessage(GeoMapTopComponent.class, "HINT_GeoMapTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         ToolTipManager.sharedInstance().setDismissDelay(10000);
-        initGedcom(gedParam);
-        if (gedcom == null) {
-            close();
-        }
         String name;
         if ((gedcom != null) && ((name = gedcom.getName()) != null)) {
             setName(name);
@@ -134,7 +137,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
 
         // Calculate and display markers
         jButton6.setEnabled(false);
-        calculateMarkers(false);
+        initMarkersList();
         applyFilters();
     }
 
@@ -155,6 +158,23 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         }
         super.setGedcom(gedcom);
         super.addLookup();
+    }
+
+    private void initMarkersList() {
+        // Check we get a gedcom
+        if (gedcom == null) {
+            // TODO resolve when tc is null, should be provided by Control Center
+            JOptionPane.showMessageDialog(null, "Vous devez d'abord ouvrir un fichier gedcom pour lancer le module Géographique");
+            return;
+        }
+        // Launch search for markers and set listener
+        gpl = GeoPlacesList.getInstance(gedcom);
+        if (gpl.getPlaces() == null) {
+            gpl.launchPlacesSearch();
+        } else {
+            geoPlacesChanged(gpl, "gedcom");
+        }
+        gpl.addGeoPlacesListener(this);
     }
 
     public Gedcom getGedcom() {
@@ -828,7 +848,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jButton6.setEnabled(false);
-        markers = GeoPlacesList.getInstance(gedcom).getPlaces(true);
+        GeoPlacesList.getInstance(gedcom).launchPlacesSearch();
     }//GEN-LAST:event_jButton6ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -1018,19 +1038,6 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         jCheckBox11.setSelected(geoFilter.otherEvents);
     }
 
-    private void calculateMarkers(boolean force) {
-        // Check we get a gedcom
-        if (gedcom == null) {
-            // TODO resolve when tc is null, should be provided by Control Center
-            JOptionPane.showMessageDialog(null, "Vous devez d'abord ouvrir un fichier gedcom pour lancer le module Géographique");
-            return;
-        }
-        // Get markers
-        GeoPlacesList gpl = GeoPlacesList.getInstance(gedcom);
-        markers = gpl.getPlaces(force);
-        gpl.addGeoPlacesListener(this);
-    }
-
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
         if (change.equals("cood")) {
         } else if (change.equals("name")) {
@@ -1044,27 +1051,26 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     private void applyFilters() {
         isBusyRecalc = true;
         geoPoints.clear();
-        if (markers == null) {
-            return;
-        }
-        geoFilter.calculatesIndividuals(gedcom, false); // refresh lists from selections being made in the editor or the list, not from gedcom changes
-        for (int i = 0; i < markers.length; i++) {
-            GeoNodeObject geoNodeObject = markers[i];
-            if (geoFilter.complies(geoNodeObject)) {
-                GeoPoint wp = new GeoPoint(geoNodeObject);
-                geoPoints.add(wp);
+        if (markers != null) {
+            geoFilter.calculatesIndividuals(gedcom, false); // refresh lists from selections being made in the editor or the list, not from gedcom changes
+            for (int i = 0; i < markers.length; i++) {
+                GeoNodeObject geoNodeObject = markers[i];
+                if (geoFilter.complies(geoNodeObject)) {
+                    GeoPoint wp = new GeoPoint(geoNodeObject);
+                    geoPoints.add(wp);
+                }
+            }
+            displayMarkers();
+            StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
+            if (geoPoints.size() < markers.length) {
+                String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
+                msg += " - ";
+                msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + geoFilter.decujusIndi.toString();
+                StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             }
         }
-        displayMarkers();
-        StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
-        if (geoPoints.size() < markers.length) {
-            String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
-            msg += " - ";
-            msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + geoFilter.decujusIndi.toString();
-            StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
-        }
-        jButton6.setEnabled(true);
         hoverPanel.setVisible(false);
+        jButton6.setEnabled(true);
         isBusyRecalc = false;
     }
 

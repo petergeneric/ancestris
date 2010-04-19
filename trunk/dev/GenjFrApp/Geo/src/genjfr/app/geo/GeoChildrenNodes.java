@@ -13,13 +13,13 @@ import org.openide.nodes.Node;
  */
 class GeoChildrenNodes extends Children.Keys {
 
-    static private GeoPlacesList geoPlacesList = null;
+    private GeoPlacesList geoPlacesList = null;
     private boolean isPlace = false;
     private boolean isEvent = false;
     private GeoNodeObject parent = null;
 
     public GeoChildrenNodes(GeoPlacesList gpl) {
-        GeoChildrenNodes.geoPlacesList = gpl;
+        geoPlacesList = gpl;
         isPlace = true;
     }
 
