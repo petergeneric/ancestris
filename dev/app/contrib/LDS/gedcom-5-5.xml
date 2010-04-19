@@ -101,7 +101,7 @@
   <NMR  type="PropertySimpleValue" img="Marriage" super="INDI:RELI"/>
   +++++++++++++ More Events +++++++++++++
   <GRAD cardinality="0:M" img="Graduation" super="INDI:BIRT"/>
-  <CHR  hide="1" img="Baptism" super="INDI:GRAD">
+  <CHR  img="Baptism" super="INDI:GRAD">
    <FAMC inherit="0" hide="1" type="PropertyFamilyChild" img="Fam"/>
   </CHR>
   <BURI img="Burial" super="INDI:BIRT"/>
