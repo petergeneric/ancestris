@@ -18,7 +18,11 @@ import org.openide.windows.Mode;
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app//ControlCenter//EN",
-autostore = true) // leave as "true" to ensure properties are saved at restart
+autostore = false)
+// leave autostore = "false" otherwise writeproperties gets called at launch and overwries properties before controlcenter is ready, so missing long-to-open gedcom files
+// resulting in these files not being restarted at restart.
+// FL - j'avais mis autostart = "true" pour que les properties soient sauvegardées avant le restart, mais cela n'a plus l'air d'être la peine (je crois que c'était
+//        pour le restart après wizard ou pour les options, mais du temps ou le wizard etait avant le lancement de l'appli, pas après...)
         
 public final class ControlCenterTopComponent extends GenjViewTopComponent {
 
