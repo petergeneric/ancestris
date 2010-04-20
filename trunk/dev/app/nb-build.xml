@@ -75,7 +75,7 @@
         <copy todir="${build.classes.dir}">
             <fileset dir="images"/>
             <fileset dir="language/fr"/>
-            <fileset dir="" includes="contrib/**" excludes="contrib/fop/** contrib/apache/**"/>
+            <fileset dir="" includes="contrib/**" excludes="contrib/fop/** contrib/apache/** contrib/ant/**"/>
         </copy>
         <copy todir="${build.classes.dir}/doc">
             <fileset dir="doc"/>
