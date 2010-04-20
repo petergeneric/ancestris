@@ -44,7 +44,6 @@ import genj.view.ViewManager;
 import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -142,8 +141,8 @@ public class ControlCenter extends JPanel {
      */
     public void load(Collection files) {
 
-            Runnable r = new ActionAutoOpen(files);
-            SwingUtilities.invokeLater(r);
+        Runnable r = new ActionAutoOpen(files);
+        SwingUtilities.invokeLater(r);
     }
 
     /**
@@ -331,7 +330,7 @@ public class ControlCenter extends JPanel {
                         Action2.yesNoCancel(), ControlCenter.this);
                 // cancel - we're done
                 if (rc == 2) {
-                    return ;
+                    return;
                 }
                 // yes - close'n save it
                 if (rc == 0) {
@@ -373,14 +372,17 @@ public class ControlCenter extends JPanel {
     private class ActionAutoOpen extends Action2 {
 
         /** files to load */
-        private Collection files=null;;
+        private Collection files = null;
+
+        ;
 
         /** constructor */
         private ActionAutoOpen(Collection<String> theFiles) {
-            if (theFiles==null)
+            if (theFiles == null) {
                 theFiles = new ArrayList<String>();
+            }
 //            addDefaultFile(theFiles);
-            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4"))
+            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
                 if (theFiles.isEmpty() && getDefaultFile(theFiles) == null) {
                     Runnable r = new ActionOpen() {
 
@@ -393,30 +395,36 @@ public class ControlCenter extends JPanel {
                     App.center.isReady(1);
                     SwingUtilities.invokeLater(r);
                 }
-            files=theFiles;
+            }
+            files = theFiles;
         }
 
         private String getDefaultFile(Collection<String> files) {
             File defaultFile = new File(NbPreferences.forModule(App.class).get("gedcomFile", ""));
-            if (defaultFile == null) return null;
-            if (!defaultFile.exists()) return null;
-            String defaultFilePath=null;
+            if (defaultFile == null) {
+                return null;
+            }
+            if (!defaultFile.exists()) {
+                return null;
+            }
+            String defaultFilePath = null;
             try {
                 defaultFilePath = defaultFile.getCanonicalPath();
             } catch (Exception ex) {
                 return null;
             }
-            String filepath=null;
+            String filepath = null;
 
             for (String file : files) {
                 try {
                     DirectAccessTokenizer tokens = new DirectAccessTokenizer(file, ",", false);
-                    filepath = (new File(new URL(tokens.get(0)).getFile())).getCanonicalPath();;
+                    filepath = (new File(new URL(tokens.get(0)).getFile())).getCanonicalPath();
                 } catch (Exception ex) {
                     continue;
                 }
-                if (defaultFilePath.equals(filepath))
+                if (defaultFilePath.equals(filepath)) {
                     return null;
+                }
             }
             try {
                 return (new URL("file", "", defaultFile.getAbsolutePath())).toString();
@@ -465,8 +473,9 @@ public class ControlCenter extends JPanel {
             }
 
             // open default file if necessary
-            { String restore = getDefaultFile(files);
-                if ( restore != null && getOpenedGedcom(restore) == null) {
+            {
+                String restore = getDefaultFile(files);
+                if (restore != null && getOpenedGedcom(restore) == null) {
                     try {
 
                         // check if it's a local file
@@ -475,7 +484,7 @@ public class ControlCenter extends JPanel {
                             local.toURI().toURL().toString();
                         }
 
-                        ActionOpen open = new ActionOpen(restore,true) {
+                        ActionOpen open = new ActionOpen(restore, true) {
 
                             @Override
                             protected void postExecute(boolean b) {
@@ -689,7 +698,9 @@ public class ControlCenter extends JPanel {
         if (dirOnly) {
             return local.getParent();
         }
-        if (!local.exists()) return "";
+        if (!local.exists()) {
+            return "";
+        }
         try {
             local.toURI().toURL().toString();
         } catch (MalformedURLException ex) {
