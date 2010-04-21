@@ -101,7 +101,10 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jtSubject.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jtSubject.text")); // NOI18N
 
         jtaText.setColumns(20);
+        jtaText.setLineWrap(true);
         jtaText.setRows(5);
+        jtaText.setWrapStyleWord(true);
+        jtaText.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane2.setViewportView(jtaText);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
