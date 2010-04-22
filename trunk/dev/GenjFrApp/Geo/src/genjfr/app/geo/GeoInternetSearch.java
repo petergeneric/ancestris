@@ -161,7 +161,7 @@ class GeoInternetSearch {
             if (obj2 == null) {
                 return -1;
             }
-            return obj1.getPlaceAsString().toLowerCase().compareTo(obj2.getPlaceAsString().toLowerCase());
+            return obj1.getPlaceAsLongString().toLowerCase().compareTo(obj2.getPlaceAsLongString().toLowerCase());
         }
     };
 }
