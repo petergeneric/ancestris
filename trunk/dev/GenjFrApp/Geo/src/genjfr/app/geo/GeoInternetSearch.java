@@ -6,6 +6,7 @@ package genjfr.app.geo;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
+import java.text.Collator;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -148,7 +149,7 @@ class GeoInternetSearch {
         return theTask.cancel();
     }
     /**
-     * Comparator to sort Lastnames
+     * Comparator to sort places
      */
     public Comparator sortPlaces = new Comparator() {
 
@@ -161,7 +162,10 @@ class GeoInternetSearch {
             if (obj2 == null) {
                 return -1;
             }
-            return obj1.getPlaceAsLongString().toLowerCase().compareTo(obj2.getPlaceAsLongString().toLowerCase());
+            Collator myCollator = Collator.getInstance();
+            myCollator.setStrength(Collator.PRIMARY);
+            myCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+            return myCollator.compare(obj1.getPlaceAsLongString().toLowerCase(), obj2.getPlaceAsLongString().toLowerCase());
         }
     };
 }
