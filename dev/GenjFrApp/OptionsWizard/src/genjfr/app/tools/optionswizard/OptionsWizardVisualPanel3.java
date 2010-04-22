@@ -145,11 +145,15 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox18, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jCheckBox18.text")); // NOI18N
         jCheckBox18.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jCheckBox18.toolTipText")); // NOI18N
 
-        jComboBox8.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox8.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox8.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox8.setPreferredSize(new java.awt.Dimension(51, 23));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel2.text")); // NOI18N
 
-        jComboBox7.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox7.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox7.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox7.setPreferredSize(new java.awt.Dimension(51, 23));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel19, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel19.text")); // NOI18N
 
@@ -188,15 +192,25 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         jTextField1.setText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jTextField1.text")); // NOI18N
         jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jTextField1.toolTipText")); // NOI18N
 
-        jComboBox3.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox3.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox3.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox3.setPreferredSize(new java.awt.Dimension(51, 23));
 
-        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox4.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox4.setPreferredSize(new java.awt.Dimension(51, 23));
 
-        jComboBox5.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox5.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox5.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox5.setPreferredSize(new java.awt.Dimension(51, 23));
 
-        jComboBox6.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox6.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox6.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox6.setPreferredSize(new java.awt.Dimension(51, 23));
 
-        jComboBox2.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox2.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox2.setMinimumSize(new java.awt.Dimension(69, 23));
+        jComboBox2.setPreferredSize(new java.awt.Dimension(51, 23));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -254,10 +268,10 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                                             .addComponent(jLabel8))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)))
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)))
+                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -266,35 +280,35 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                                         .addComponent(jLabel14))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jCheckBox10))
                                         .addGap(12, 12, 12)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jCheckBox11)
-                                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(9, 9, 9)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel15)
                                     .addComponent(jCheckBox12))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel16)
                                     .addComponent(jCheckBox13))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel17)
                                     .addComponent(jCheckBox14))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel18)
                                     .addComponent(jCheckBox15))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel19)
                                     .addComponent(jCheckBox16))))
                         .addGap(5, 5, 5)))
@@ -348,14 +362,14 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel11)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jCheckBox10)
