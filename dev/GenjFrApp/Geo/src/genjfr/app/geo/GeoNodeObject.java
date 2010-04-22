@@ -390,13 +390,12 @@ class GeoNodeObject {
             //
             try {
                 // try search with full name to be more precise
-                System.out.println("DEBUG getPlaceAsLongString="+getPlaceAsLongString(place, false, false).replaceAll(",", "").replaceAll(" +", " "));
                 searchCriteria.setQ(getPlaceAsLongString(place, false, false).replaceAll(",", "").replaceAll(" +", " "));
-//                searchResult = WebService.search(searchCriteria);
-//                for (Toponym iTopo : searchResult.getToponyms()) {
-//                    topo = iTopo; // take the first one
-//                    break;
-//                }
+                searchResult = WebService.search(searchCriteria);
+                for (Toponym iTopo : searchResult.getToponyms()) {
+                    topo = iTopo; // take the first one
+                    break;
+                }
                 if (topo == null) { // try with only city and country if not found
                     String[] jurisdictions = place.getJurisdictions();
                     searchCriteria.setQ(getPlaceAsShortString(place));
