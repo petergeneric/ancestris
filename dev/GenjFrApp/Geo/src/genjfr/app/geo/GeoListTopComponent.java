@@ -15,6 +15,7 @@ import java.beans.PropertyVetoException;
 import java.util.Iterator;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -193,9 +194,11 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
         if (change.equals("cood")) {
         } else if (change.equals("name")) {
         } else if (change.equals("gedcom")) {
+            String selectedNode = getSelectedNode();
             nodes = gpl.getPlaces();
             mgr.setRootContext(new GeoNode(gpl));
             ((BeanTreeView) jScrollPane1).setRootVisible(false);
+            selectNode(selectedNode);
             jScrollPane1.repaint();
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
@@ -271,6 +274,37 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
                 }
             }
         }
+    }
+
+    private String getSelectedNode() {
+
+        // Get selected node
+        Node[] geonodes = mgr.getSelectedNodes();
+        if (geonodes.length == 0) {
+            return "";
+        }
+        GeoNodeObject obj = geonodes[0].getLookup().lookup(GeoNodeObject.class);
+        return (obj != null) ? obj.getPlaceAsLongString() : "";
+    }
+
+    private void selectNode(String selectedNode) {
+        // scan nodes to find the one
+        if (selectedNode.isEmpty()) {
+            return;
+        }
+        Node[] scannedNodes = mgr.getRootContext().getChildren().getNodes();
+        for (int i = 0; i < scannedNodes.length; i++) {
+            Node node = scannedNodes[i];
+            GeoNodeObject obj = node.getLookup().lookup(GeoNodeObject.class);
+            if (obj.getPlaceAsLongString().equals(selectedNode)) {
+                try {
+                    mgr.setSelectedNodes(new Node[]{node});
+                } catch (PropertyVetoException ex) {
+                    // nothing
+                }
+            }
+        }
+
     }
 
     /**

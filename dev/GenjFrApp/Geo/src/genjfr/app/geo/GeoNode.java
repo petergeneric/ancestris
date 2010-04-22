@@ -104,10 +104,11 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             } else {
                 return new Action[]{
                             new GeoAction("ACTION_ShowPlace"),
-                            null,
                             new GeoAction("ACTION_FindPlace"),
                             null,
-                            new GeoAction("ACTION_EditPlace")};
+                            new GeoAction("ACTION_EditPlace"),
+                            null,
+                            new GeoAction("ACTION_UpdateList")};
             }
         }
     }
@@ -163,6 +164,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 });
                 editorPanel.requestFocus();
                 DialogDisplayer.getDefault().createDialog(dd).show();
+
+            } else if (actionName.equals("ACTION_UpdateList")) {
+                GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
 
             } else if (actionName.equals("ACTION_EditEvent")) {
                 EditTopComponent etc = getEditTopComponent(obj);
