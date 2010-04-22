@@ -87,7 +87,7 @@ class GeoNodeObject {
         if (isEvent) {
             str = property.getPropertyName() + " - " + property.getEntity().toString();
         } else {
-            str = (place == null || place.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.getCityAndAllOtherJurisdictions(false);
+            str = (place == null || place.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : getPlaceAsLongString(place, false, true);
         }
         return str;
     }
@@ -102,6 +102,7 @@ class GeoNodeObject {
 
     public void setToponym(Toponym topo) {
         this.toponym = topo;
+        this.isUnknown = calcUnknown(this.toponym);
         Toponym oldTopo = this.toponym;
         fire("topo", oldTopo, topo);
     }
@@ -305,10 +306,6 @@ class GeoNodeObject {
         return toponym;
     }
 
-    public String getPlaceAsString() {
-        return place != null ? place.getCityAndAllOtherJurisdictions(false) : "";
-    }
-
     public String getCity() {
         return (place == null || place.toString().trim().isEmpty()) ? NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty") : place.getCity().toString();
     }
@@ -379,7 +376,7 @@ class GeoNodeObject {
         }
 
         // search locally first
-        topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(place.getCityAndAllOtherJurisdictions(true), null));
+        topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(getPlaceAsLongString(place, true, true), null));
         boolean foundLocally = topo != null;
 
         // search on the internet
@@ -393,15 +390,16 @@ class GeoNodeObject {
             //
             try {
                 // try search with full name to be more precise
-                searchCriteria.setQ(getPlaceLong(place));
-                searchResult = WebService.search(searchCriteria);
-                for (Toponym iTopo : searchResult.getToponyms()) {
-                    topo = iTopo; // take the first one
-                    break;
-                }
+                System.out.println("DEBUG getPlaceAsLongString="+getPlaceAsLongString(place, false, false).replaceAll(",", "").replaceAll(" +", " "));
+                searchCriteria.setQ(getPlaceAsLongString(place, false, false).replaceAll(",", "").replaceAll(" +", " "));
+//                searchResult = WebService.search(searchCriteria);
+//                for (Toponym iTopo : searchResult.getToponyms()) {
+//                    topo = iTopo; // take the first one
+//                    break;
+//                }
                 if (topo == null) { // try with only city and country if not found
                     String[] jurisdictions = place.getJurisdictions();
-                    searchCriteria.setQ(getPlaceShort(place));
+                    searchCriteria.setQ(getPlaceAsShortString(place));
                     searchResult = WebService.search(searchCriteria);
                     for (Toponym iTopo : searchResult.getToponyms()) {
                         topo = iTopo; // take the first one
@@ -419,7 +417,7 @@ class GeoNodeObject {
 
         // remember for next time, even if was not found
         if (!foundLocally && topo != null) {
-            NbPreferences.forModule(GeoPlacesList.class).put(place.getCityAndAllOtherJurisdictions(true), Toponym2Code(topo));
+            NbPreferences.forModule(GeoPlacesList.class).put(getPlaceAsLongString(place, true, true), Toponym2Code(topo));
         }
 
         // return first found
@@ -589,7 +587,6 @@ class GeoNodeObject {
     }
 
     /**
-     * Celle;52.6166667;10.0833333;Europe/Berlin;1.0;Allemagne;Basse-Saxe;06;;;-;-;-;-;71010
      * @param code
      * @return
      */
@@ -674,57 +671,49 @@ class GeoNodeObject {
         }
     };
 
-    private String getPlaceLong(PropertyPlace place) {
-        String result = "", jur = "", bit = "";
+    private String getBit(PropertyPlace place, String jur, String str) {
+        String bit = "";
 
-        jur = NbPreferences.forModule(App.class).get("fmt_address2", "");  // commune
         if (!jur.equals("0")) {
             bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit + "," : "");
+            return (bit != null ? bit + str : "");
         }
+        return "";
+    }
 
-        jur = NbPreferences.forModule(App.class).get("fmt_address3", "");  // code insee
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit + "," : "");
+    public String getPlaceAsLongString() {
+        return getPlaceAsLongString(this.getPlace(), true, true);
+    }
+
+    public String getPlaceAsLongString(PropertyPlace place, boolean compress, boolean complete) {
+        String result = "";
+        String str = "," + (compress ? "" : " ");
+
+        if (place == null) {
+            return "";
         }
-
-        jur = NbPreferences.forModule(App.class).get("fmt_address5", "");  // dept
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit + "," : "");
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address2", ""), str);  // commune
+        if (complete) {
+            result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address1", ""), str);  // lieudit
         }
-
-        jur = NbPreferences.forModule(App.class).get("fmt_address6", "");  // region
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit + "," : "");
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address3", ""), str);  // code insee
+        if (complete) {
+            result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address4", ""), str);  // code postal
         }
-
-        jur = NbPreferences.forModule(App.class).get("fmt_address7", "");  // pays
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit : "");
-        }
-
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address5", ""), str);  // dept
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address6", ""), str);  // region
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address7", ""), "");  // region
         return result;
     }
 
-    private String getPlaceShort(PropertyPlace place) {
-        String result = "", jur = "", bit = "";
+    private String getPlaceAsShortString(PropertyPlace place) {
+        String result = "";
 
-        jur = NbPreferences.forModule(App.class).get("fmt_address2", "");  // commune
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit + "," : "");
+        if (place == null) {
+            return "";
         }
-
-        jur = NbPreferences.forModule(App.class).get("fmt_address7", "");  // pays
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            result += (bit != null ? bit : "");
-        }
-
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address2", ""), " ");  // commune
+        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address7", ""), "");  // region
         return result;
     }
 }
