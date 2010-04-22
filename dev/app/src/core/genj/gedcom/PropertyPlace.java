@@ -377,32 +377,5 @@ public class PropertyPlace extends PropertyChoiceValue {
         return -1;
     }
 
-    /**
-     * Accessor - city first, then all the others in ascending order of hierarchy level
-     */
-    public String getCityAndAllOtherJurisdictions(boolean compress) {
-
-        String result = "";
-
-        StringBuffer buf = new StringBuffer(100);
-        int cityIndex = getCityIndex();
-        if (cityIndex != -1) {
-            buf.append(getCity());
-        }
-        for (int i = 0; i < 10; i++) {
-            if (i != getCityIndex()) {
-                String jurisdiction = new DirectAccessTokenizer(getValue(), JURISDICTION_SEPARATOR).get(i, true);
-                if (jurisdiction == null) {
-                    break;
-                }
-                buf.append(JURISDICTION_SEPARATOR);
-                if (USE_SPACES && !compress) {
-                    buf.append(' ');
-                }
-                buf.append(jurisdiction.trim());
-            }
-        }
-        return buf.toString().intern();
-    }
 } //PropertyPlace
 
