@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: genjfr.app.geo
 OpenIDE-Module-Layer: genjfr/app/geo/layer.xml
 OpenIDE-Module-Localizing-Bundle: genjfr/app/geo/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 1.0.0.3.0
 
