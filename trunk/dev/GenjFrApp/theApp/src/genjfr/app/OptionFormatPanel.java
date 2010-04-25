@@ -711,7 +711,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         registry.put("options.genj.report.Options.baptismSymbol", NbPreferences.forModule(App.class).get("symbolBapm", ""));
         registry.put("options.genj.report.Options.childOfSymbol", NbPreferences.forModule(App.class).get("symbolChildOf", ""));
         registry.put("options.genj.report.Options.engagingSymbol", NbPreferences.forModule(App.class).get("symbolEngm", ""));
-        registry.put("options.genj.gedcom.Options.txtMarriageSymbol", NbPreferences.forModule(App.class).get("symbolMarr", ""));
+        registry.put("options.genj.report.Options.marriageSymbol", NbPreferences.forModule(App.class).get("symbolMarr", ""));
         registry.put("options.genj.report.Options.divorceSymbol", NbPreferences.forModule(App.class).get("symbolDivc", ""));
         registry.put("options.genj.report.Options.occuSymbol", NbPreferences.forModule(App.class).get("symbolOccu", ""));
         registry.put("options.genj.report.Options.resiSymbol", NbPreferences.forModule(App.class).get("symbolResi", ""));
