@@ -1,0 +1,92 @@
+<html>
+
+<body>
+
+<h2>Vorlagen</h2>
+
+<p>
+Gedcom-Daten in der <a href="../view/edit.html">Editier-Ansicht</a> oder <a href="../view/table.html">Tabellen-Ansicht</a> in einer strukturierten und hierarchischen Form zu betrachten ist eine Sache. Daten-Darstellung eines Objekts in einer statischen 2-dimensionalen Form eine andere. Beide, sowohl die <a href="../view/tree.html">Baum-Ansicht</a> als auch die <a
+href="../view/entity.html">Objekt-Ansicht</a> tun dieses. Sie erzeugen die Darstellung von Objekten in einem begrenztem rechteckigen Raum auf Ihrem Bildschirm oder Papierausdruck.
+</p>
+
+<p>
+Die zugrundeliegende Technologie, die GenJ hierf&uuml;r benutzt, ist HTML. Die Anweisungen, wie ein Objekt darzustellen ist, werden durch die sogenannten Vorlagen bestimmt. Sie bestehen aus Standard-HTML erg&auml;nzt um das neue HTML Element &quot;prop&quot;.
+</p>
+
+<p>
+ Hier ein Beispiel:
+ <pre>
+      &lt;b&gt;<b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI</font><b>&gt;</b>&lt;/b&gt;
+      <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:NAME</font><b>&gt;</b>
+      born <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:BIRT:DATE</font><b>&gt;</b>
+      in <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:BIRT:PLAC</font><b>&gt;</b>,
+      lived in <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:RESI:ADDR:CITY</font><b>&gt;</b>
+      and worked as a <b>&lt;</b><font color=green>prop</font> <font color=blue>path=INDI:OCCU</font><b>&gt;</b>. </pre>
+ welches folgende Darstellung ergibt:
+
+<blockquote> Meier, Nils born 25 May 1970 in Rendsburg,
+lived in San Francisco and worked as a Software Engineer. </blockquote>
+
+<p>
+Wie Sie sehen k&ouml;nnen, enth&auml;lt das &quot;path&quot;-Argument von &quot;prop&quot; einen <a href="../concepts/paths.html">Kennzeichenpfad</a>,
+der bestimmt was innerhalb des Textflusses darzustellen ist. Bei diesem
+Beispiel werden die Werte der Eigenschaften wie folgt aufgel&ouml;st;
+
+ <blockquote><table>
+  <tr>
+   <td><font color=blue>Pfad=...</font></td>
+  <td>Ergebnis</td>
+  <td>... der Person</td>
+ </tr>
+ <tr>
+  <td>INDI</td>
+  <td>I008</td>
+  <td>ID</td>
+ </tr>
+ <tr>
+  <td>INDI:NAME</td>
+  <td>Meier, Nils</td>
+  <td>Name</td>
+ </tr>
+ <tr>
+  <td>INDI:BIRT:DATE</td>
+  <td>25 May 1970</td>
+  <td>Geburtstag</td>
+ </tr>
+ <tr>
+  <td>INDI:BIRT:PLACE</td>
+  <td>Rendsburg</td>
+  <td>Geburtsort</td>
+ </tr>
+ <tr>
+  <td>INDI:RESI:ADDR:CITY</td>
+  <td>San Francisco</td>
+  <td>Wohnort</td>
+ </tr>
+ <tr>
+  <td>INDI:OCCU</td>
+  <td>Software Engineer</td>
+  <td>Besch&auml;ftigung</td>
+ </tr>
+</table>
+</blockquote>
+
+Durch die Verwendung von verschiedenen Vorlagen kann die
+gleiche Information auf verschiedene Weise dargestellt werden, da
+unterschiedliche Informationsmengen, Layouts und Farben ausgew&auml;hlt
+werden k&ouml;nnen:
+
+<blockquote><img src="../../images/screenshots/blueprint1.png"></blockquote>
+</p>
+
+<p>
+In Ansichten, die Vorlagen verwenden, k&ouml;nnen Vorlagen &uuml;ber die Eigenschaften ausgew&auml;hlt und bearbeitet werden. Vordefinierte Vorlagen k&ouml;nnen nicht ver&auml;ndert werden, jedoch k&ouml;nnen benutzerdefinierte Vorlagen nach den Anlegen ver&auml;ndert werden (Vorlagen werden zentral und nicht auf Ebene einzelner Ansichten verwaltet).
+</p>
+
+<p>
+<b><font color=red>Bitte beachten Sie:</font></b> Dies ist eine Funktion f&uuml;r fortgeschrittene Benutzer, die Sie nicht unbedingt erlernen m&uuml;ssen. Die Standardvorlagen sind normalerweise f&uuml;r 80% der Benutzer ausreichend.
+</p>
+
+</body>
+
+</html>

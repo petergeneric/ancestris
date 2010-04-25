@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Header: /cvsroot/genj/sandbox/console/build.xml,v 1.11 2007/03/08 21:51:44 nmeier Exp $ -->
+<!-- This is the ant buildfile for GenJ:Textmode -->
+
+<project name="GenJ" default="dist" basedir=".">
+	
+  <property file="build.properties"/>
+  	
+  <path id="project.class.path">
+    <pathelement path="./build/classes/core"/>
+    <pathelement path="${dir.app}/build/classes/core"/>
+    <pathelement path="${readline.path}"/>
+  </path>
+
+  <!--
+   Initialization
+   -->
+  <target name="init">
+  	
+    <fail unless="dir.app" message="Please specify dir.app in build.properties"/>
+
+    <tstamp><format property="now.short" pattern="yyyyMMdd"/></tstamp>
+  	<property name="version" value="${now.short}"/>
+  	<echo level="info">version = ${version}</echo>
+  	
+    <echo level="info">Creating output directories</echo>
+    <mkdir dir="./build"/>
+    <mkdir dir="./build/lib"/>
+    <mkdir dir="./build/dist"/>
+    
+    <echo level="info">Compiling GenJ</echo>
+    <ant dir="${dir.app}" target="compile.core"/>
+    <echo level="info">GenJ is compiled</echo>
+    
+  </target>
+
+  <!--
+   Compilation
+   -->
+  <target name="compile" depends="init">
+    <mkdir dir="./build/classes/core"/>
+    <javac srcdir="src/core" destdir="./build/classes/core"
+           debug="on" optimize="off" deprecation="on"
+           encoding="ASCII" source="1.5" target="1.5">
+      <classpath refid="project.class.path"/>
+    </javac>
+  </target>
+
+  <!--
+   Cleaning
+   -->
+  <target name="clean">
+    <echo level="info">Cleaning output directories</echo>
+    <delete dir="./build"/>
+    <delete dir="./build/dist"/>
+  </target>
+
+  <!--
+   Distribution
+   -->
+  <target name="dist" depends="compile">
+
+   <!-- create console.jar -->
+   <delete file="./build/lib/console.jar"/>
+   <jar jarfile="./build/lib/console.jar" update="True">   	
+    <fileset dir="./build/classes/core" includes="**/*.class"/>
+<!--    <fileset dir="src/core" includes="**/*.properties"/> -->
+<!--     <fileset dir="./images"/>
+     <fileset dir="./language/en"/>
+     <fileset dir="./language/fr"/>
+-->
+   	<fileset dir="./src/core" includes="META-INF/**"/>
+    <fileset dir="./src/core" includes="**/*.properties"/>
+   </jar>
+    
+   <!-- copy contrib libraries -->
+   <!-- consider adding getopt... -->
+<!--      <copy file="trib/jump/jump.jar" todir="./build/lib"/> -->
+    <copy file="${readline.path}" todir="./build/lib"/>
+  	
+   <!-- create genj_console-xyz.zip -->
+   <zip zipfile="./build/dist/genj_console-${version}.zip" update="True">
+     <zipfileset dir="./build" includes="lib/*.jar"/>
+     <zipfileset dir="doc" includes="README"/>
+    <zipfileset dir="script"/> 	
+    <zipfileset dir="." includes="KNOWN_BUGS"/> 	
+    <zipfileset dir="." includes="TODO"/> 	
+    <zipfileset dir="." includes="NEWS"/> 	
+<!--     <zipfileset dir="./contrib" includes="console/**"/> -->
+   </zip>
+  	
+   <!-- report -->
+   <echo level="info">You can find genj_console-${version}.zip in ./build/dist</echo>
+  </target>
+
+</project>

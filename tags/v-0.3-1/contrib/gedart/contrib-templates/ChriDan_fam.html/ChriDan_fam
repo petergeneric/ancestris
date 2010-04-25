@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/></head><body>
+<anchor="F3469"><a NAME="F3469"></a>
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr-fr"><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" /><title>Fiche individu et famille</title>
+
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 0.75em;
+line-height: 1.2em;
+}
+h1 {
+font-family: inherit;
+font-size: 1.5em;
+line-height: 3em;
+font-weight: bold;
+background-color: #ffff66;
+text-align: center;
+}
+h2 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.2em;
+line-height: 1.8em;
+padding-left: 0.5em;
+}
+h3 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1.1em;
+line-height: 1em;
+}
+h4 {
+font-family: inherit;
+font-weight: bold;
+font-size: 1em;
+line-height: 1em;
+}
+h5 {
+font-family: inherit;
+font-weight: normal;
+font-size: 1em;
+line-height: 1em;
+}
+.megr {
+font-style: normal;
+font-weight: normal;
+}
+.metit {
+color: #000099;
+text-decoration: underline;
+}
+.droite {
+text-align: right;
+}
+.cent {
+text-align: center;
+}
+.conteneur {
+padding: 0px;
+width: 100%;
+margin-left: 0em;
+margin-top: 0;
+margin-bottom: 0;
+}
+.spacer {
+clear: both;
+margin-top: 0;
+margin-bottom: 0;
+height: 0px;
+}
+.column1 {
+float: left;
+text-align: left;
+width: 45%;
+margin-left: 0.5em;
+margin-right: 0;
+margin-top: 0;
+}
+.column2 {
+float: right;
+text-align: left;
+width: 45%;
+margin-left: 0;
+margin-right: 0.5em;
+margin-top: 0;
+}
+.foncolo {
+border-style: hidden hidden double;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ccffff;
+}
+.focolo {
+background-color: #ffff99;
+}
+.minicolo {
+border-style: hidden hidden simple;
+border-color: black;
+border-top: 0px hidden black;
+background-color: #ffff99;
+}
+</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</head>
+<body>
+
+<p><a name="top" ;="" id="top"></a></p>
+<!-- ----------------- Titre de la page------------ -->
+<h1> Renseignements sur la famille : <span class="metit"> Pierre Antoine Durand (I8330) 
+   x 
+   Jeanne Marie Dauvergne (I4936)</span></h1>
+<p class="droite">(Cette fiche a &eacute;t&eacute; g&eacute;n&eacute;r&eacute;e le 24 janv. 2008 22:14:26)</p>
+<!-------------------------------- Zone de la photo --------------------------------------->
+<p class="ident"><img src="" alt="Photo de $INDI.getProperty("NAME")" /></p>
+
+<h2 class="foncolo">Renseignements sur les deux conjoints</h2>
+<!-- ----------------- dÃ©but de prÃ©sentation sur deux colonnes ------------ -->
+<div class="conteneur"><!-- ----------------- premiÃ¨re colonne (Homme)------------ -->
+<div class="column1">
+<h2 class="cent">Homme</h2>
+<h3>Nom : <span class="megr"> Durand, Pierre Antoine</span>&nbsp;--&nbsp;Sexe
+: <span class="megr">Masculin</span></h3>
+		<h3>Naissance : <span class="megr">19 Jan 1775</span></h3>
+<h3>Lieu de naissance : <span class="megr">Ailleux, 42002, Fra</span></h3>
+   		<h3>Bapt&ecirc;me : <span class="megr">20 Jan 1775</span></h3>
+<h3>Lieu du Bapt&ecirc;me : <span class="megr"> Ailleux, 42002, Fra</span></h3>
+		          
+                       
+                              <h3>D&eacute;c&egrave;s : <span class="megr">4 Juil 1860</span></h3>
+<h3>Lieu du D&eacute;c&egrave;s : <span class="megr">Crémeaux, 42076, Fra</span></h3>
+          
+<h2 class="minicolo">Les ascendances</h2>
+<!-- ----------------- les parents de l'homme ------------ -->
+<h3>Parents de : <span class="megr">Durand, Pierre Antoine</span></h3>
+<ul>
+<li>P&egrave;re :                Durand, Annet (I6540) <br />
+              Naissance : 29 Avr 1736 &agrave;
+Ailleux, 42002, Fra, Domois  <br />
+              D&eacute;c&egrave;s : 17 Jan 1806 &agrave; Ailleux, 42002, Fra, Domois  </li>
+              
+<li>M&egrave;re : Belin, Antoinette (I1315)  <br />
+             Naissance : 13 Jan 1743 &agrave; 
+ Bussy-Albieux, 42030, Fra <br />
+             D&eacute;c&egrave;s : 24 Mar 1817 &agrave; Ailleux, 42002, Fra, Domois </li>
+             </ul>
+
+</div>
+<!-- ----------------- deuxiÃ¨me colonne (Femme)------------ -->
+<div class="column2">
+<h2 class="cent">Femme</h2>
+<h3>Nom : <span class="megr"> Dauvergne, Jeanne Marie</span>&nbsp;--&nbsp;Sexe
+: <span class="megr">Féminin</span></h3>
+		<h3>Naissance : <span class="megr">25 Juil 1777</span></h3>
+<h3>Lieu de naissance : <span class="megr">Crémeaux, 42076, Fra</span></h3>
+   		<h3>Bapt&ecirc;me : <span class="megr">25 Juil 1777</span></h3>
+<h3>Lieu du Bapt&ecirc;me : <span class="megr"> Crémeaux, 42076, Fra</span></h3>
+	                    <h3>D&eacute;c&egrave;s : <span class="megr">4 Juil 1860</span></h3>
+<h3>Lieu du D&eacute;c&egrave;s : <span class="megr">Crémeaux, 42076, Fra</span></h3>
+          <!-- ----------------- les parents de la femme ------------ -->
+<h2 class="minicolo">Les ascendances</h2>
+<h3>Parents de : <span class="megr">Dauvergne, Jeanne Marie</span></h3>
+<ul>
+<li>P&egrave;re :                Dauvergne, Claude (I4932) <br />
+              Naissance : cal 1734 &agrave;
+  <br />
+              D&eacute;c&egrave;s : ava 1804 &agrave;   </li>
+              
+<li>M&egrave;re : Belin, Antoinette (I1315)  <br />
+             Naissance : 13 Jan 1743 &agrave; 
+ Bussy-Albieux, 42030, Fra <br />
+             D&eacute;c&egrave;s : 24 Mar 1817 &agrave; Ailleux, 42002, Fra, Domois </li>
+             </ul>
+
+</div>
+</div>
+<div class="spacer"></div>
+</div>
+<!-- ----------------- Fin de prÃ©sentation sur deux colonnes ------------ -->
+
+<!-- ----------------- le mariage----------------------------------------- -->
+<h2 class="foncolo">Union (F3469)</h2>
+<!-- ----------------- dÃ©but de prÃ©sentation sur deux colonnes ------------ -->
+<div class="conteneur"><!-- ----------------- premiÃ¨re colonne (le mariage)------------ -->
+<div class="column1">
+<h3>Date du Mariage : <span class="megr">31 Jan 1804</span></h3>
+<h3>Lieu du Mariage : <span class="megr">Crémeaux, 42076, Fra</span></h3>
+            </div>
+<!-- ----------------- deuxiÃ¨me colonne (les tÃ©moins)--------------------- -->
+<div class="column2">
+<h3>Pr&eacute;sents au mariage :</h3>
+ <ul>
+<li>Témoin: Lafond, Jean Antonin (I19796)</li>
+</ul>
+ <ul>
+<li>Témoin: Chartre, Jean Marie (I19797)</li>
+</ul>
+ <ul>
+<li>Témoin: Labouré, Antoine (I19798)</li>
+</ul>
+ <ul>
+<li>Témoin: Goutorbe, Pierre (I19799)</li>
+</ul>
+ <ul>
+<li>Officier de l'état-civil: Chartre, Claude Marie (I19800)</li>
+</ul>
+ </div>
+<div class="spacer"></div>
+</div>
+<!-- ----------------- les enfants ----------------------------------------- -->
+<h2 class="foncolo">Enfants</h2>
+<ol>
+    <li><h5 class="focolo">Durand, Marguerite (I7912) -- Naissance : 30 Mai 1806 -- D&eacute;c&egrave;s : 20 Mar 1809</h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Jean-Marie (I7643) -- Naissance : 24 Nov 1808 -- D&eacute;c&egrave;s : </h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Claude (I6970) -- Naissance : 18 Mar 1810 -- D&eacute;c&egrave;s : 19 Jan 1882</h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Pierre Antoine (I8331) -- Naissance : 13 Jan 1813 -- D&eacute;c&egrave;s : 13 Déc 1867</h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Claude (I6979) -- Naissance : 21 Août 1814 -- D&eacute;c&egrave;s : 29 Oct 1836</h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Jean (I7576) -- Naissance : 1 Mai 1816 -- D&eacute;c&egrave;s : 1 Juin 1816</h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Marguerite (I7913) -- Naissance : 3 Déc 1817 -- D&eacute;c&egrave;s : 31 Déc 1817</h5>
+ </li>
+<P> 	 <li><h5 class="focolo">Durand, Antoine (I6643) -- Naissance : 18 Juil 1819 -- D&eacute;c&egrave;s : 5 Juin 1852</h5>
+ </li>
+<P> 	 </P>
+</ol>
+
+<!-------------------------- notes mariage ----------------------------------->
+<h2 class="foncolo">Notes de mariage :</h2>
+  
+<p>&nbsp;</p>
+<!-- Merci de laisser le nom du modele et le numero de version  -->
+<p class="droite">(Mod&egrave;le utilis&eacute;: Island modifi&eacute; par ChriDan [v. 1.6]) <br />
+Vous avez modifi&eacute; cet enregistrement pour la derni&egrave;re fois le 16 Jan 2008,07:57:19 </p>
+
+</body>
+</html></body></html>
