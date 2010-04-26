@@ -98,4 +98,14 @@
         </zip>
     </target>
 
+    <target name="build-mac" depends="suite.build-mac">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <copy todir="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}">
+            <fileset dir="res/" includes="GNU ..."/>
+            <fileset dir="res/language/" includes="etc/**"/>
+            <fileset dir="res/language/" includes="platform11/**"/>
+        </copy>
+    </target>
+
 </project>
