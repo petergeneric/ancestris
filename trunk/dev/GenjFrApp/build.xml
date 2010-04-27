@@ -108,7 +108,7 @@
         </copy>
         <exec executable="zip">
             <arg value="-yrq"/>
-            <arg value="${dist.dir}/${app.name}.zip"/>
+            <arg value="${dist.dir}/${app.name}-osx.zip"/>
             <arg value="${dist.dir}/${app.name}.app"/>
         </exec>
     </target>
