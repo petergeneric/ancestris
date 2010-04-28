@@ -162,7 +162,11 @@ public class EntityView extends JPanel implements WindowBroadcastListener, ToolB
 
     // stop listening to Gedcom    
     gedcom.removeGedcomListener((GedcomListener)Spin.over(callback));
+
+    saveRegistry();
+  }
     
+  protected void saveRegistry(){
     // store settings in registry
     for (int t=0;t<Gedcom.ENTITIES.length;t++) {
       String tag = Gedcom.ENTITIES[t];
@@ -261,7 +265,8 @@ public class EntityView extends JPanel implements WindowBroadcastListener, ToolB
   }
   
   /**
-   * Sets isAntialiasing   */
+   * Sets isAntialiasing
+   */
   public void setAntialiasing(boolean set) {
     isAntialiasing = set;
     repaint();

@@ -101,6 +101,7 @@ public class EntityViewSettings extends JTabbedPane implements Settings {
   public void apply() {
     entityView.setAntialiasing(checkAntialiasing.isSelected());
     entityView.setBlueprints(blueprintList.getSelection());
+    entityView.saveRegistry();
   }
 
   /**
