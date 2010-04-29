@@ -30,6 +30,7 @@ import genj.util.swing.ImageIcon;
 import genj.view.ActionProvider;
 import genj.view.ViewFactory;
 import genj.view.ViewManager;
+import genj.window.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -183,9 +184,12 @@ public class ReportViewFactory implements ViewFactory, ActionProvider {
         // get handle of a ReportView 
         Object[] views = manager.getViews(ReportView.class, gedcom);
         ReportView view;
-        if (views.length==0)
-          view = (ReportView)manager.openView(ReportViewFactory.class, gedcom).getView();
-        else 
+        if (views.length==0){
+            WindowManager.getInstance(getTarget()).openDialog(null, "title", WindowManager.WARNING_MESSAGE, "Aucune vue rapport ouverte, vous devez ouvrir cette vue avant d'utiliser un rapport", Action2.okOnly(), null);
+//
+//            view = (ReportView)manager.openView(ReportViewFactory.class, gedcom).getView();
+            return false;
+        } else
           view = (ReportView)views[0];
         // run it in view
         view.run(report, context, parameter);
