@@ -191,7 +191,9 @@ public class ViewManager {
   /*package*/ void openSettings(ViewHandle handle) {
     
     // Frame already open?
-    SettingsWidget settings = (SettingsWidget)windowManager.getContent("settings");
+      if (windowManager.getContent("settings")!= null)
+          return;
+    SettingsWidget settings=null;// = (SettingsWidget)windowManager.getContent("settings");
     if (settings==null) {
       settings = new SettingsWidget(this);
       settings.setView(handle);
@@ -356,7 +358,7 @@ public class ViewManager {
     };
     
     // open frame
-    windowManager.openWindow(handle.getKey(), title, factory.getImage(), container, null,  close);
+//    windowManager.openWindow(handle.getKey(), title, factory.getImage(), container, null,  close);
         
     // done
     return handle;

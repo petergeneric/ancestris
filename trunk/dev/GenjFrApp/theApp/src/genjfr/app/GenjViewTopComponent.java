@@ -128,21 +128,21 @@ public class GenjViewTopComponent extends TopComponent implements GenjViewInterf
             return;
         }
 
-        ViewHandle handle = App.center.getViewManager().openView(gedcom, factory);
+        ViewHandle vhandle = App.center.getViewManager().openView(gedcom, factory);
 
-        // get a registry
-
-        genj.util.Registry registry = new genj.util.Registry(ViewManager.getRegistry(gedcom), getPackage(factory)/*+"."+sequence*/);
-
-        // title
-        String title = gedcom.getName() + " - " + factory.getTitle(false) + " (" + registry.getViewSuffix() + ")";
-
-        // create the view
-        final JComponent view = factory.createView(title, gedcom, registry, App.center.getViewManager());
-        final ViewHandle vhandle = new ViewHandle(App.center.getViewManager(), gedcom, title, registry, factory, view, 1/*sequence*/);
+//        // get a registry
+//
+//        genj.util.Registry registry = new genj.util.Registry(ViewManager.getRegistry(gedcom), getPackage(factory)/*+"."+sequence*/);
+//
+//        // title
+//        String title = gedcom.getName() + " - " + factory.getTitle(false) + " (" + registry.getViewSuffix() + ")";
+//
+//        // create the view
+//        final JComponent view = factory.createView(title, gedcom, registry, App.center.getViewManager());
+//        final ViewHandle vhandle = new ViewHandle(App.center.getViewManager(), gedcom, title, registry, factory, view, 1/*sequence*/);
         final ViewContainer container = new ViewContainer(vhandle);
         genj.window.WindowManager wm = App.center.getWindowManager();
-        setPanel((JPanel) ((GenjFrWindowManager) wm).getFrame(wm.openWindow(vhandle.getKey(), title, factory.getImage(), container, null, null)));
+        setPanel((JPanel) ((GenjFrWindowManager) wm).getFrame(wm.openWindow(vhandle.getKey(), "title", factory.getImage(), container, null, null)));
 
 //        setPanel((JPanel)handle.getView());
 //    setPanel((JPanel) factory.createView(title, gedcom, registry, App.center.getViewManager()));
