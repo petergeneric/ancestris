@@ -325,7 +325,7 @@ public class ViewManager {
     }
     
     // get a registry 
-    Registry registry = new Registry( getRegistry(gedcom), getPackage(factory)+"."+sequence) ;
+    Registry registry = new Registry( getRegistry(gedcom), getPackage(factory)/*+"."+sequence*/) ;
 
     // title 
     String title = gedcom.getName()+" - "+factory.getTitle(false)+" ("+registry.getViewSuffix()+")";
