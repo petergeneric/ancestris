@@ -23,7 +23,9 @@ import genj.util.EnvironmentChecker;
 import genj.util.Resources;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -60,6 +62,9 @@ public class FileAssociation {
   
   /** external app */
   private String executable = "";
+
+  /** use desktop default */
+  private boolean usedesktop = false;
   
   /**
    * Constructor
@@ -113,7 +118,15 @@ public class FileAssociation {
   public String getName() {
     return name;
   }
+
+  public void useDesktop(boolean use) {
+      usedesktop = use;
+  }
   
+  public boolean useDesktop() {
+      return usedesktop;
+  }
+
   /**
    * setter
    */
@@ -187,6 +200,14 @@ public class FileAssociation {
     }
     
     private void runCommands() {
+        if (useDesktop()){
+                try {
+                    Desktop.getDesktop().open(new File(file));
+                } catch (IOException ex) {
+                    Logger.getLogger(FileAssociation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            return;
+        }
       // loop over commands
       StringTokenizer cmds =  new StringTokenizer(getExecutable(), "&");
       while (cmds.hasMoreTokens()) 
@@ -289,7 +310,8 @@ public class FileAssociation {
   }
 
   /**
-   * Gets associations   */
+   * Gets associations
+   */
   public static List getAll(String suffix) {
     List result = new ArrayList();
     Iterator it = associations.iterator();
@@ -368,44 +390,47 @@ public class FileAssociation {
     // new - not found so we're going to try a platform default handler
     // check for kfmclient, explorer, xdg-open, etc.
     // ****
+    // FIXME: utiliser         Desktop.getDesktop().open(App.LOGFILE);
     FileAssociation fa=new FileAssociation();
     fa.setName("Ouvrir");
-    if ((new File("/usr/bin/xdg-open")).exists()) {
-    	fa.setExecutable("/usr/bin/xdg-open");
-    	return fa;
-    }
-    if ((new File("/usr/bin/gnome-open")).exists()) {
-    	fa.setExecutable("/usr/bin/gnome-open");
-    	return fa;
-    }
-    if ((new File("/usr/bin/kfmclient")).exists()) {
-    	fa.setExecutable("/usr/bin/kfmclient exec");
-    	return fa;
-    }
-    if (EnvironmentChecker.isMac()) {
-    	fa.setExecutable("open");
-    	return fa;
-    }
-    if (EnvironmentChecker.isWindows()){
-    	fa.setExecutable("explorer");
-    	return fa;
-    }
-        
-     // none found and no platform default figured out either - go ask
-    JFileChooser chooser = new JFileChooser();
-    chooser.setDialogTitle(Resources.get(FileAssociation.class).getString("assocation.choose", suffixes));
-    int rc = chooser.showOpenDialog(owner);
-    File file = chooser.getSelectedFile(); 
-    if (rc!=JFileChooser.APPROVE_OPTION||file==null||!file.exists())
-      return null;
-    // find out path
-    String executable =  file.getAbsolutePath();
-    if (executable.indexOf(' ')>=0) executable = "\"" +executable + "\"";
-    // keep it
-    FileAssociation association = new FileAssociation(suffixes, name, executable);
-    add(association);
-    // done
-    return association;
+    fa.useDesktop(true);
+    return fa;
+//    if ((new File("/usr/bin/xdg-open")).exists()) {
+//    	fa.setExecutable("/usr/bin/xdg-open");
+//    	return fa;
+//    }
+//    if ((new File("/usr/bin/gnome-open")).exists()) {
+//    	fa.setExecutable("/usr/bin/gnome-open");
+//    	return fa;
+//    }
+//    if ((new File("/usr/bin/kfmclient")).exists()) {
+//    	fa.setExecutable("/usr/bin/kfmclient exec");
+//    	return fa;
+//    }
+//    if (EnvironmentChecker.isMac()) {
+//    	fa.setExecutable("open");
+//    	return fa;
+//    }
+//    if (EnvironmentChecker.isWindows()){
+//    	fa.setExecutable("explorer");
+//    	return fa;
+//    }
+//
+//     // none found and no platform default figured out either - go ask
+//    JFileChooser chooser = new JFileChooser();
+//    chooser.setDialogTitle(Resources.get(FileAssociation.class).getString("assocation.choose", suffixes));
+//    int rc = chooser.showOpenDialog(owner);
+//    File file = chooser.getSelectedFile();
+//    if (rc!=JFileChooser.APPROVE_OPTION||file==null||!file.exists())
+//      return null;
+//    // find out path
+//    String executable =  file.getAbsolutePath();
+//    if (executable.indexOf(' ')>=0) executable = "\"" +executable + "\"";
+//    // keep it
+//    FileAssociation association = new FileAssociation(suffixes, name, executable);
+//    add(association);
+//    // done
+//    return association;
   }
   
   /**
@@ -416,7 +441,8 @@ public class FileAssociation {
   }
 
   /**
-   * Add an association   */
+   * Add an association
+   */
   public static FileAssociation add(FileAssociation fa) {
     if (!associations.contains(fa))
       associations.add(fa);
