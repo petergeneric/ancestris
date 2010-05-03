@@ -587,7 +587,7 @@ public class App {
 
         registry.put("options.genj.gedcom.Options.gedcomFile", NbPreferences.forModule(App.class).get("gedcomFile", ""));
         registry.put("options.genj.gedcom.Options.reportDir", NbPreferences.forModule(App.class).get("reportDir", ""));
-        registry.put("options.associations", NbPreferences.forModule(App.class).get("6", ""));
+        registry.put("options.associations", "6");
         registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
         registry.put("options.associations.2", NbPreferences.forModule(App.class).get("assoOffice", ""));
         registry.put("options.associations.3", NbPreferences.forModule(App.class).get("assoAdobe", ""));
