@@ -183,31 +183,31 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jTextField7.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField7.toolTipText")); // NOI18N
 
         jComboBox2.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
-        jComboBox2.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox2.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
             }
         });
 
-        jComboBox3.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
-        jComboBox3.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox3.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox3.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox3ActionPerformed(evt);
             }
         });
 
-        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
-        jComboBox4.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox4.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox4ActionPerformed(evt);
             }
         });
 
-        jComboBox5.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
-        jComboBox5.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox5.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
+        jComboBox5.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox5ActionPerformed(evt);
@@ -215,7 +215,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         });
 
         jComboBox6.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
-        jComboBox6.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox6.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox6ActionPerformed(evt);
@@ -223,7 +223,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         });
 
         jComboBox7.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
-        jComboBox7.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox7.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox7ActionPerformed(evt);
@@ -231,7 +231,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         });
 
         jComboBox8.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
-        jComboBox8.setPreferredSize(new java.awt.Dimension(55, 23));
+        jComboBox8.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox8ActionPerformed(evt);
@@ -274,9 +274,9 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                                    .addComponent(jTextField4)
-                                    .addComponent(jTextField6))
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
@@ -284,9 +284,9 @@ final class OptionDataPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel8))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)))
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)))
                             .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)))
                     .addComponent(jCheckBox1)
                     .addGroup(layout.createSequentialGroup()
