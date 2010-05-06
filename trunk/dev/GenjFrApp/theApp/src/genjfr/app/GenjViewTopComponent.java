@@ -8,14 +8,16 @@ import genj.gedcom.Gedcom;
 import genj.view.ViewContainer;
 import genj.view.ViewFactory;
 import genj.view.ViewHandle;
-import genj.view.ViewManager;
 import genj.window.GenjFrWindowManager;
+import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Action;
-import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
@@ -321,6 +323,22 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
             setToolTipText(getToolTipText() + ": " + gedcomName);
         }
         setIcon(getViewFactory().getImage().getImage());
+        // Modification du titre de la fenetre si undockee
+        // voir ici: http://old.nabble.com/Look-and-feel-issues-td21583766.html
+        this.addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentShown(ComponentEvent evt) {
+                Window w = SwingUtilities.getWindowAncestor(GenjViewTopComponent.this);
+                if(w!=null && w instanceof JFrame && ! (w.equals(WindowManager.getDefault().getMainWindow()))){
+//                if(w!=null && w instanceof JFrame){
+                    ((JFrame)w).setTitle(getName());
+                    ((JFrame)w).setIconImage(getIcon());
+                }
+            }
+
+        });
+
     }
 
     //FIXME: revoir la synchro avec le CC
