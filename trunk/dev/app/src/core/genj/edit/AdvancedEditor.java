@@ -33,6 +33,7 @@ import genj.io.PropertyReader;
 import genj.io.PropertyTransferable;
 import genj.util.Registry;
 import genj.util.Resources;
+import genj.util.WordBuffer;
 import genj.util.swing.Action2;
 import genj.util.swing.ButtonHelper;
 import genj.util.swing.NestedBlockLayout;
@@ -57,9 +58,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.Action;
@@ -74,8 +77,11 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
 /**
@@ -92,6 +98,8 @@ import javax.swing.tree.TreePath;
   private final static Clipboard clipboard = initClipboard();
   
   private boolean ignoreSelection = false;
+  
+  private Set<TagPath> expands = new HashSet<TagPath>();
 
   /**
    * Initialize clipboard - trying system falling back to private
@@ -133,7 +141,7 @@ import javax.swing.tree.TreePath;
   private Registry registry;
   
   /** interaction callback */
-  private InteractionListener callback;
+  private Callback callback;
 
   /**
    * Initialize
@@ -147,8 +155,9 @@ import javax.swing.tree.TreePath;
     
     // TREE Component's 
     tree = new Tree();
-    callback = new InteractionListener();
+    callback = new Callback();
     tree.addTreeSelectionListener(callback);
+    tree.addTreeWillExpandListener(callback);
     
     JScrollPane treePane = new JScrollPane(tree);
     treePane.setMinimumSize  (new Dimension(160, 128));
@@ -175,12 +184,29 @@ import javax.swing.tree.TreePath;
     setFocusTraversalPolicy(new FocusPolicy());
     setFocusCycleRoot(true);
     
-    // shortcuts
-    new Cut().install(tree, JComponent.WHEN_FOCUSED);
-    new Copy().install(tree, JComponent.WHEN_FOCUSED);
-    new Paste().install(tree, JComponent.WHEN_FOCUSED);
+    // re-read expand settings
+    String paths = registry.get("expand", "INDI:BIRT,INDI:RESI,INDI:OBJE,FAM:MARR");
+    for (String path : paths.split(",")) {
+      try {
+        expands.add(new TagPath(path));
+      } catch (IllegalArgumentException iae) {
+        // ignored
+      }
+    }
     
     // done    
+  }
+  
+  @Override
+  public void removeNotify() {
+    // store some settings on remove
+    WordBuffer paths = new WordBuffer(",");
+    for (TagPath path : expands) 
+      paths.append(path);
+    registry.put("expand", paths.toString());
+    // continue
+    registry.put("divider",splitPane.getDividerLocation());
+    super.removeNotify();
   }
   
   /**
@@ -194,12 +220,12 @@ import javax.swing.tree.TreePath;
    * Component callback event in case removed from parent. Used
    * for storing current state.
    */
-  public void removeNotify() {
-    // remember
-    registry.put("divider",splitPane.getDividerLocation());
-    // continue
-    super.removeNotify();
-  }
+//  public void removeNotify() {
+//    // remember
+//    registry.put("divider",splitPane.getDividerLocation());
+//    // continue
+//    super.removeNotify();
+//  }
 
   /**
    * Accessor - current context 
@@ -216,8 +242,11 @@ import javax.swing.tree.TreePath;
 
     // change root if necessary
     Entity entity = context.getEntity();
-    if (entity!=tree.getRoot())
+    if (entity!=tree.getRoot()) {
       tree.setRoot(entity);
+      for (TagPath path : expands)
+        expand(path);
+    }
 
     // set selection
     Property[] props = context.getProperties();
@@ -231,6 +260,13 @@ import javax.swing.tree.TreePath;
     
   
     // Done
+  }
+
+  /**
+   * Expand a path
+   */
+  public void expand(TagPath path) {
+    tree.expand(path);
   }
   
   @Override
@@ -646,7 +682,7 @@ import javax.swing.tree.TreePath;
   /**
    * Handling selection of properties
    */
-  private class InteractionListener implements TreeSelectionListener, ChangeListener {
+  private class Callback implements TreeSelectionListener, TreeWillExpandListener, ChangeListener {
     
     /**
      * callback - selection in tree has changed
@@ -729,6 +765,28 @@ import javax.swing.tree.TreePath;
     public void stateChanged(ChangeEvent e) {
       ok.setEnabled(true);
       cancel.setEnabled(true);
+    }
+
+    public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+      TreePath path = event.getPath();
+      int len = path.getPathCount();
+      if (len==1)
+        throw new ExpandVetoException(event);
+      String[] tags = new String[len];
+      for (int i=0;i<len;i++) 
+        tags[i] = ((Property)path.getPathComponent(i)).getTag();
+      expands.remove(new TagPath(tags, null));
+    }
+
+    public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+      TreePath path = event.getPath();
+      int len = path.getPathCount();
+      if (len==1)
+        return;
+      String[] tags = new String[len];
+      for (int i=0;i<len;i++) 
+        tags[i] = ((Property)path.getPathComponent(i)).getTag();
+      expands.add(new TagPath(tags, null));
     }
   
   } //InteractionListener

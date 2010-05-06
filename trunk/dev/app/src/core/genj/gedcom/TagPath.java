@@ -19,9 +19,9 @@
  */
 package genj.gedcom;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Stack;
-import java.util.StringTokenizer;
 
 /**
  * Class for encapsulating a path of tags that describe the way throug
@@ -61,20 +61,13 @@ public class TagPath {
     this(path, null);
   }
   
-  /**
-   * Constructor for TagPath
-   * @param path path as colon separated string value a:b:c
-   * @exception IllegalArgumentException in case format isn't o.k.
-   */
-  public TagPath(String path, String name) throws IllegalArgumentException {
-    
+  public TagPath(String[] path, String name) throws IllegalArgumentException {
     // keep name
     this.name = name;
 
     // Parse path
-    StringTokenizer tokens = new StringTokenizer(path,SEPARATOR_STRING,false);
-    len = tokens.countTokens();
-    if (len==0||path.charAt(0)==SEPARATOR||path.charAt(path.length()-1)==SEPARATOR)
+    len = path.length;
+    if (len==0)
       throw new IllegalArgumentException("No valid path '"+path+"'");
 
     // ... setup data
@@ -83,9 +76,9 @@ public class TagPath {
     for (int i=0;i<len;i++) {
       
       // next token
-      String tag = tokens.nextToken().trim();
+      String tag = path[i];
       if (tag.length()==0) 
-        throw new IllegalArgumentException("Empty tag in '"+path+"' is not valid");
+        throw new IllegalArgumentException("Empty tag in '"+Arrays.toString(path)+"' is not valid");
 
       // remember
       set(i, tag);
@@ -93,6 +86,15 @@ public class TagPath {
     }
     
     // Done
+  }
+  
+  /**
+   * Constructor for TagPath
+   * @param path path as colon separated string value a:b:c
+   * @exception IllegalArgumentException in case format isn't o.k.
+   */
+  public TagPath(String path, String name) throws IllegalArgumentException {
+    this(path.split(SEPARATOR_STRING), name);
   }
   
   private void set(int pos, String tag) {
