@@ -245,6 +245,14 @@
             <file name="org-netbeans-modules-xml-catalog-CatalogAction.instance_hidden"/>
             <file name="PaletteManager.instance_hidden"/>
             <file name="org-netbeans-modules-options-OptionsWindowAction.shadow_hidden"/>   <!-- the tag of the options menuitem (FL) -->
+            <file name="SeparatorMaxiTools.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="79"/>
+            </file>
+            <file name="SeparatorMiniTools.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="100"/>
+            </file>
             <file name="MyOptions.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
                 <attr name="position" intvalue="101"/>
