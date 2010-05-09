@@ -15,6 +15,7 @@
         <folder name="Tools">
             <file name="CalcAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-tools-calc-CalcAction.instance"/>
+                <attr name="position" intvalue="80"/>
             </file>
         </folder>
     </folder>
