@@ -58,11 +58,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import javax.swing.Action;
@@ -99,7 +99,7 @@ import javax.swing.tree.TreePath;
   
   private boolean ignoreSelection = false;
   
-  private Set<TagPath> expands = new HashSet<TagPath>();
+  private Set<TagPath> expands = new TreeSet<TagPath>();
 
   /**
    * Initialize clipboard - trying system falling back to private
