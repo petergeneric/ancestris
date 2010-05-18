@@ -6,6 +6,8 @@
     <description>Builds the module suite GenjFrApp.</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="build-launchers" depends="-init">
+        <echo message=" "/>
+        <echo message="BUILDING GENJFR DISTRIBUTION..." />
         <fail unless="app.name">Must have set at least an application name ('app.name')</fail>
 
         <pathconvert property="zip.platform.update.tracking">
@@ -96,6 +98,61 @@
             <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>
             <zipfileset dir="res/language/platform11" prefix="${app.name}/platform11"/>
         </zip>
+        <echo message=" "/>
+        <echo message=" "/>
+        <echo message="BUILDING INSTALLER FOR WINDOWS..." />
+        <exec executable="svnversion" failonerror="false"
+              outputproperty="svnversion" errorproperty="svnerror">
+            <arg value="-n"/>
+        </exec>
+        <property name="inst.version" value="0.3-1_r${svnversion}"/>
+        <echo message="version = ${inst.version}" />
+        <property name="nbdist.dir" value="dist"/>
+        <property name="nbdist-app.dir" value="${nbdist.dir}/${app.name}"/>
+        <property name="izpack.dir" value="${dist.dir}/../../../../izpack"/>
+        <property name="izpack2exe.dir" value="${izpack.dir}/izpack2exe"/>
+        <property name="izpack-installer" value="install.jar"/>
+        <property name="nbdist-app-installer" value="install-${app.name}.exe"/>
+        <taskdef name="izpack" classpath="${izpack.dir}/lib/compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
+
+        <echo message="unzipping..." />
+        <unzip src="${nbdist.dir}/${app.name}.zip" dest="${nbdist.dir}"/>
+
+        <echo message="Copying..." />
+        <copy todir="${nbdist-app.dir}">
+            <fileset dir="installer/izpack" />
+        </copy>
+
+        <echo message="Setting variable names..." />
+        <replace file="${nbdist-app.dir}/izpack-install-script.xml">
+            <replacefilter token="$APP-NAME" value="GenjFr" />
+            <replacefilter token="$APP-VERSION" value="${inst.version}" />
+            <replacefilter token="$APP-PATH" value="${app.title}-${inst.version}" />
+        </replace>
+        <replace file="${nbdist-app.dir}/shortcutSpec.xml">
+            <replacefilter token="$APP-VERSION" value="${inst.version}" />
+        </replace>
+
+        <echo message="Compiling installer using IzPack..."/>
+        <izpack input="${basedir}/${nbdist-app.dir}/izpack-install-script.xml"
+                output="${basedir}/${nbdist-app.dir}/${izpack-installer}"
+                installerType="standard"
+                basedir="${basedir}/${nbdist-app.dir}"
+                izPackDir="${izpack.dir}/"/>
+
+        <echo message="Creating the release ${nbdist-app-installer} ..."/>
+        <exec dir="${izpack2exe.dir}" executable="python" >
+            <arg value="izpack2exe.py"/>
+            <arg value="--file=../../genjfr-nb/dev/GenjFrApp/${nbdist-app.dir}/${izpack-installer}"/>
+            <arg value="--output=../../genjfr-nb/dev/GenjFrApp/${nbdist.dir}/${nbdist-app-installer}"/>
+            <arg value="--no-upx"/>
+        </exec>
+
+        <echo message="Cleaning and finalizing release..." />
+        <delete dir="${nbdist-app.dir}"/>
+
+        <echo message=" "/>
+        <echo message="Release IzPack of GenjFr for Windows is ready: ${nbdist-app-installer}" />
     </target>
 
     <target name="build-mac" depends="suite.build-mac">
