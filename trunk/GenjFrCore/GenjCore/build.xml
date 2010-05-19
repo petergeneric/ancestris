@@ -6,7 +6,7 @@
     <description>Builds, tests, and runs the project genjfr.genjcore.</description>
     <import file="nbproject/build-impl.xml"/>
 
-   <property name="original.project.dir" value="../../app"/>
+   <property name="original.project.dir" value="../../genj-dev/app"/>
 <property name="original.project.jar"
           value="${original.project.dir}/dist/GenJ.jar"/>
 
