@@ -98,6 +98,9 @@
             <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>
             <zipfileset dir="res/language/platform11" prefix="${app.name}/platform11"/>
         </zip>
+    </target>
+
+    <target name="build-win-installer" depends="build-zip">
         <echo message=" "/>
         <echo message=" "/>
         <echo message="BUILDING INSTALLER FOR WINDOWS..." />
@@ -109,7 +112,7 @@
         <echo message="version = ${inst.version}" />
         <property name="nbdist.dir" value="dist"/>
         <property name="nbdist-app.dir" value="${nbdist.dir}/${app.name}"/>
-        <property name="izpack.dir" value="${dist.dir}/../../../../izpack"/>
+        <property name="izpack.dir" value="${dist.dir}/../../contrib-build/izpack"/>
         <property name="izpack2exe.dir" value="${izpack.dir}/izpack2exe"/>
         <property name="izpack-installer" value="install.jar"/>
         <property name="nbdist-app-installer" value="install-${app.name}.exe"/>
@@ -143,8 +146,8 @@
         <echo message="Creating the release ${nbdist-app-installer} ..."/>
         <exec dir="${izpack2exe.dir}" executable="python" >
             <arg value="izpack2exe.py"/>
-            <arg value="--file=../../genjfr-nb/dev/GenjFrApp/${nbdist-app.dir}/${izpack-installer}"/>
-            <arg value="--output=../../genjfr-nb/dev/GenjFrApp/${nbdist.dir}/${nbdist-app-installer}"/>
+            <arg value="--file=../../../GenjFrCore/${nbdist-app.dir}/${izpack-installer}"/>
+            <arg value="--output=../../../GenjFrCore/${nbdist.dir}/${nbdist-app-installer}"/>
             <arg value="--no-upx"/>
         </exec>
 
