@@ -6,6 +6,7 @@ package genjfr.app.tools.optionswizard;
 
 import genj.util.Registry;
 import genjfr.app.App;
+import genjfr.app.pluginservice.PluginHelper;
 import genjfr.app.pluginservice.PluginInterface;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -141,6 +142,10 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
         App.putRegistryFromSettings(registry);
         Registry.persist();
 
+    }
+
+    public String getPluginVersion() {
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
     }
 }
 

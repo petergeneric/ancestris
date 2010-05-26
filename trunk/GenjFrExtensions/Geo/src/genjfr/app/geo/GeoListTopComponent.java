@@ -8,6 +8,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import genjfr.app.GenjViewTopComponent;
+import genjfr.app.pluginservice.PluginHelper;
 import genjfr.app.pluginservice.PluginInterface;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,7 +16,6 @@ import java.beans.PropertyVetoException;
 import java.util.Iterator;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -305,6 +305,10 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
             }
         }
 
+    }
+
+    public String getPluginVersion() {
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
     }
 
     /**

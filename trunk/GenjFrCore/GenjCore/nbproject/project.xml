@@ -5,12 +5,33 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>genjfr.genjcore</code-name-base>
             <suite-component/>
-            <module-dependencies/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>genjfr.app.pluginservice</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0.0.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.13.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.31.2.1</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
             <public-packages>
-                <package>docs</package>
-                <package>docs.panels</package>
-                <package>gedart</package>
-                <package>geneanet</package>
                 <package>genj</package>
                 <package>genj.almanac</package>
                 <package>genj.app</package>
@@ -41,6 +62,7 @@
                 <package>genj.util.swing</package>
                 <package>genj.view</package>
                 <package>genj.window</package>
+                <package>genjfr.genjcore</package>
                 <package>gj.awt.geom</package>
                 <package>gj.layout</package>
                 <package>gj.layout.tree</package>
@@ -48,19 +70,6 @@
                 <package>gj.util</package>
                 <package>launcher</package>
                 <package>launcher.ipc</package>
-                <package>merge</package>
-                <package>narrative</package>
-                <package>phonetics</package>
-                <package>tools</package>
-                <package>tools.imports</package>
-                <package>tree</package>
-                <package>tree.arrange</package>
-                <package>tree.build</package>
-                <package>tree.filter</package>
-                <package>tree.graphics</package>
-                <package>tree.output</package>
-                <package>validate</package>
-                <package>webbook</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/graphj.jar</runtime-relative-path>

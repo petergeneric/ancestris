@@ -16,13 +16,9 @@ import genj.util.Origin;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.window.WindowManager;
-import genjfr.app.pluginservice.PluginInterface;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.JOptionPane;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 

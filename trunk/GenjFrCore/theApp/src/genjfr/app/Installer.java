@@ -65,7 +65,7 @@ public class Installer extends ModuleInstall {
         PluginInterface pi = null;
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
             System.out.println("Plugin " + sInterface.getPluginName() + " loaded successfully.");
-            if (sInterface.getPluginName().equals("OptionsWizard")) {
+            if ("OptionsWizard".equals(sInterface.getPluginName())) {
                 pi = sInterface;
                 break;
             }

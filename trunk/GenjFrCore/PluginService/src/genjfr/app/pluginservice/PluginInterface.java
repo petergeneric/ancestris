@@ -11,6 +11,7 @@ package genjfr.app.pluginservice;
 public interface PluginInterface {
 
     public String getPluginName();
+    public String getPluginVersion();
 
     public boolean launchModule(Object o);
 }

@@ -8,6 +8,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import genjfr.app.GenjViewTopComponent;
+import genjfr.app.pluginservice.PluginHelper;
 import genjfr.app.pluginservice.PluginInterface;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -1171,6 +1172,10 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         popupMenu = new MapPopupMenu(jXMapKit1.getMainMap());
         popupMenu.addSubmenu("ACTION_MapSearchNearby");
         popupMenu.add(new MapPopupAction("ACTION_MapCopyPoint", null, popupMenu));
+    }
+
+    public String getPluginVersion() {
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
     }
 
     private class GeoMouseInputListener implements MouseInputListener {

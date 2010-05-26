@@ -10,6 +10,7 @@
  */
 package genjfr.app;
 
+import genjfr.app.pluginservice.PluginInterface;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -17,9 +18,9 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.Timer;
-import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
@@ -86,6 +87,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         jLabel7.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel7.text")); // NOI18N
 
@@ -178,7 +180,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         jLabel4.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel4.text")); // NOI18N
 
-        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel12.text")); // NOI18N
         jLabel12.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -220,6 +222,14 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButton4.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton4.text")); // NOI18N
+        jButton4.setPreferredSize(new java.awt.Dimension(120, 29));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -239,7 +249,9 @@ public class ActionAPropos extends JDialog implements ActionListener {
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -283,7 +295,8 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -310,10 +323,16 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         displayLicence();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        displayVersions();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -362,6 +381,27 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private void displayLicence() {
         String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceTitle");
         String text  = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title,  NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+        DialogDisplayer.getDefault().notify(d);
+    }
+
+    private void displayVersions() {
+        String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle");
+//        String text  = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
+        String text = "<html>";
+        for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+            try{
+                text += "<b>" + sInterface.getPluginName() + " :</b>" ;
+                try {
+                    text += sInterface.getPluginVersion() + "<p>";
+                } catch (Exception e){
+                    text += "non disponible" + "<p>";
+                    App.LOG.info(e.toString());
+                }
+            }catch (Exception e){
+            }
+        }
+        text += "</html>";
         NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title,  NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
     }

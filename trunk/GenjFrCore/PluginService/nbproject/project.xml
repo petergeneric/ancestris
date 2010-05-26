@@ -5,7 +5,16 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>genjfr.app.pluginservice</code-name-base>
             <suite-component/>
-            <module-dependencies/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.31.2.1</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
             <public-packages>
                 <package>genjfr.app.pluginservice</package>
             </public-packages>
