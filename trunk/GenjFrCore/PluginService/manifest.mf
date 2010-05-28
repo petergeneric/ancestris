@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: genjfr.app.pluginservice
 OpenIDE-Module-Localizing-Bundle: genjfr/app/pluginservice/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0.0.1
+OpenIDE-Module-Specification-Version: 1.0.0.3.0
 
