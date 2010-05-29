@@ -29,9 +29,16 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
     private boolean exitFlag = false;
 
     public String getPluginName() {
-        return PREFERRED_PLUGIN_NAME;
+        String name = NbBundle.getMessage(this.getClass(), "OpenIDE-Module-Name");
+        if (name != null) {
+            return name;
+        }
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
     }
 
+    public String getPluginVersion() {
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
+    }
     public boolean launchModule(Object o) {
 
         System.out.println("=== DEBUT DU WIZARD ===");
@@ -144,9 +151,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction implem
 
     }
 
-    public String getPluginVersion() {
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
-    }
 }
 
 
