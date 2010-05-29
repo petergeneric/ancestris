@@ -327,7 +327,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         displayVersions();
     }//GEN-LAST:event_jButton4ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -380,29 +379,31 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
     private void displayLicence() {
         String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceTitle");
-        String text  = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title,  NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+        String text = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
     }
 
     private void displayVersions() {
-        String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle");
-//        String text  = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
-        String text = "<html>";
+        String title = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton4.text");
+        String text = "<html><br><b>" + NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel2.text") + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>" + version;
+        text += "<br><br><br><b>" + NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle") + "&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</b><br>";
+        text += "<table border='0'>";
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
-            try{
-                text += "<b>" + sInterface.getPluginName() + " :</b>" ;
+            try {
+                text += "<tr><td><b>&nbsp;&middot;&nbsp;" + sInterface.getPluginName() + " :</b></td>";
                 try {
-                    text += sInterface.getPluginVersion() + "<p>";
-                } catch (Exception e){
-                    text += "non disponible" + "<p>";
+                    text += "<td>" + sInterface.getPluginVersion() + "</td>";
+                } catch (Exception e) {
+                    text += "<td>" + "non disponible" + "</td>";
                     App.LOG.info(e.toString());
                 }
-            }catch (Exception e){
+                text += "</tr>";
+            } catch (Exception e) {
             }
         }
-        text += "</html>";
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title,  NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+        text += "</table><br></html>";
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
     }
 }
