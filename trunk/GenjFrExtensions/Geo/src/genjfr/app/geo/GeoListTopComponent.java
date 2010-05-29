@@ -30,7 +30,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoList//EN",
 autostore = false)
-public final class GeoListTopComponent extends GenjViewTopComponent implements PluginInterface, ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
+public final class GeoListTopComponent extends GenjViewTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
 
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/geo/list.png";
@@ -243,23 +243,6 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements P
                 }
             }
         }
-    }
-
-    public String getPluginName() {
-        String name = NbBundle.getMessage(this.getClass(), "OpenIDE-Module-Name");
-        if (name != null) {
-            return name;
-        }
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
-    }
-
-    public String getPluginVersion() {
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
-    }
-
-    public boolean launchModule(Object o) {
-        init(App.center.getSelectedGedcom());
-        return true;
     }
 
     void ShowLocation(GeoNodeObject gno) {

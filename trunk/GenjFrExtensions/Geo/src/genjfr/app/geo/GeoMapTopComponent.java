@@ -68,7 +68,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoMap//EN",
 autostore = false)
-public final class GeoMapTopComponent extends GenjViewTopComponent implements PluginInterface, GeoPlacesListener {
+public final class GeoMapTopComponent extends GenjViewTopComponent implements GeoPlacesListener {
 
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/geo/geo.png";
@@ -992,23 +992,6 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
-    }
-
-    public String getPluginName() {
-        String name = NbBundle.getMessage(this.getClass(), "OpenIDE-Module-Name");
-        if (name != null) {
-            return name;
-        }
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
-    }
-
-    public String getPluginVersion() {
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
-    }
-
-    public boolean launchModule(Object o) {
-        init(App.center.getSelectedGedcom());
-        return true;
     }
 
     public void getHelp() {
