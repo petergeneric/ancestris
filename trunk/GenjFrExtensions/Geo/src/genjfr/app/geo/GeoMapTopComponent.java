@@ -995,7 +995,15 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
     }
 
     public String getPluginName() {
-        return PREFERRED_ID;
+        String name = NbBundle.getMessage(this.getClass(), "OpenIDE-Module-Name");
+        if (name != null) {
+            return name;
+        }
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
+    }
+
+    public String getPluginVersion() {
+        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
     }
 
     public boolean launchModule(Object o) {
@@ -1172,10 +1180,6 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Pl
         popupMenu = new MapPopupMenu(jXMapKit1.getMainMap());
         popupMenu.addSubmenu("ACTION_MapSearchNearby");
         popupMenu.add(new MapPopupAction("ACTION_MapCopyPoint", null, popupMenu));
-    }
-
-    public String getPluginVersion() {
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
     }
 
     private class GeoMouseInputListener implements MouseInputListener {
