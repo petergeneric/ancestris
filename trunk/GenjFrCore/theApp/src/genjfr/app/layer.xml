@@ -251,7 +251,7 @@
             </file>
             <file name="SeparatorMiniTools.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="100"/>
+                <attr name="position" intvalue="99"/>
             </file>
             <file name="MyOptions.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
