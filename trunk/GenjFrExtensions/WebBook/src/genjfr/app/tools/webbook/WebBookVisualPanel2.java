@@ -4,10 +4,34 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Indi;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel2 extends JPanel {
+
+    private Indi[] indis = new Indi[10];
+
+//        private void initGedcom(Gedcom gedParam) {
+//        if (gedcom == null) {
+//            if (gedParam == null) {
+//                gedcom = App.center.getSelectedGedcom(); // get selected gedcom
+//                if (gedcom == null) { // if none selected, take first one
+//                    Iterator it = GedcomDirectory.getInstance().getGedcoms().iterator();
+//                    if (it.hasNext()) { // well, apparently no gedcom exist in the list
+//                        gedcom = (Gedcom) it.next();
+//                    }
+//                }
+//            } else {
+//                gedcom = gedParam;
+//            }
+//            geoFilter.setGedcom(gedcom);
+//        }
+//        super.setGedcom(gedcom);
+//        super.addLookup();
+//    }
+//
+
 
     /** Creates new form WebBookVisualPanel2 */
     public WebBookVisualPanel2() {
@@ -28,7 +52,7 @@ public final class WebBookVisualPanel2 extends JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox(indis);
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -42,27 +66,35 @@ public final class WebBookVisualPanel2 extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jLabel1.text")); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_decujus")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jLabel2.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jTextField1.text")); // NOI18N
+        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_Unknown")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jLabel3.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplayFamily")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox2.text")); // NOI18N
+        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplayKids")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox3, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox3.text")); // NOI18N
+        jCheckBox3.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplaySiblings")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox4.text")); // NOI18N
+        jCheckBox4.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplayRel")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox5, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox5.text")); // NOI18N
+        jCheckBox5.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplayNotes")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox6, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox6.text")); // NOI18N
+        jCheckBox6.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplayId")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox7, org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "WebBookVisualPanel2.jCheckBox7.text")); // NOI18N
+        jCheckBox7.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel2.class, "TTT_DisplayEmail")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -83,8 +115,8 @@ public final class WebBookVisualPanel2 extends JPanel {
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox2)
                     .addComponent(jCheckBox1)
-                    .addComponent(jTextField1)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, 233, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

@@ -9,9 +9,17 @@ import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel6 extends JPanel {
 
+    String[] transferTypes = new String[] {
+        NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type1"),
+        NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type2"),
+        NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type3")
+    };
+
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel6() {
         initComponents();
+        setEnabled();
+
     }
 
     @Override
@@ -42,7 +50,7 @@ public final class WebBookVisualPanel6 extends JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox(transferTypes);
         jCheckBox2 = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -55,48 +63,62 @@ public final class WebBookVisualPanel6 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_UploadBook")); // NOI18N
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel2.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jTextField1.text")); // NOI18N
+        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPAddress")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel3.text")); // NOI18N
 
         jTextField2.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jTextField2.text")); // NOI18N
+        jTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPDir")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel4.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel5.text")); // NOI18N
 
         jTextField3.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jTextField3.text")); // NOI18N
+        jTextField3.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPUser")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel6.text")); // NOI18N
 
         jTextField4.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jTextField4.text")); // NOI18N
+        jTextField4.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPPassword")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel7.text")); // NOI18N
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(2);
+        jTextArea1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_SiteDesc")); // NOI18N
         jScrollPane1.setViewportView(jTextArea1);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel9.text")); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPTransferType")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jCheckBox2.text")); // NOI18N
+        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPEraseHistory")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel10.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel11.text")); // NOI18N
 
         jTextField5.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jTextField5.text")); // NOI18N
+        jTextField5.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_PostExec")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jButton1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel12.text")); // NOI18N
 
         jTextField6.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jTextField6.text")); // NOI18N
+        jTextField6.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPLogFile")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jButton2.text")); // NOI18N
 
@@ -193,6 +215,10 @@ public final class WebBookVisualPanel6 extends JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        setEnabled();
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -219,5 +245,20 @@ public final class WebBookVisualPanel6 extends JPanel {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
+
+    private void setEnabled() {
+        jTextField1.setEnabled(jCheckBox1.isSelected());
+        jTextField2.setEnabled(jCheckBox1.isSelected());
+        jTextField3.setEnabled(jCheckBox1.isSelected());
+        jTextField4.setEnabled(jCheckBox1.isSelected());
+        jTextField5.setEnabled(jCheckBox1.isSelected());
+        jTextField6.setEnabled(jCheckBox1.isSelected());
+        jTextArea1.setEnabled(jCheckBox1.isSelected());
+        jComboBox1.setEnabled(jCheckBox1.isSelected());
+        jCheckBox2.setEnabled(jCheckBox1.isSelected());
+        jButton1.setEnabled(jCheckBox1.isSelected());
+        jButton2.setEnabled(jCheckBox1.isSelected());
+
+    }
 }
 

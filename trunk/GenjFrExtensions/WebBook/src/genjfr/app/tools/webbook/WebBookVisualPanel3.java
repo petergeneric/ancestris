@@ -9,9 +9,21 @@ import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel3 extends JPanel {
 
+    String[] sourcesType = new String[] {
+        NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1"),
+        NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type2"),
+        NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")
+    };
+
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel3() {
         initComponents();
+        jComboBox1.setEnabled(jCheckBox1.isSelected());
+        jCheckBox2.setEnabled(jCheckBox1.isSelected());
+        jCheckBox4.setEnabled(jCheckBox3.isSelected());
+        jCheckBox6.setEnabled(jCheckBox5.isSelected());
+        jTextField1.setEnabled(jCheckBox5.isSelected());
+
     }
 
     @Override
@@ -29,7 +41,7 @@ public final class WebBookVisualPanel3 extends JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox(sourcesType);
         jCheckBox2 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
         jCheckBox3 = new javax.swing.JCheckBox();
@@ -43,26 +55,48 @@ public final class WebBookVisualPanel3 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jLabel1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_DisplaySources")); // NOI18N
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_TypeOfSources")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox2.text")); // NOI18N
+        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_SourceCopies")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jLabel2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox3, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox3.text")); // NOI18N
+        jCheckBox3.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_DisplayMedia")); // NOI18N
+        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox3ActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox4.text")); // NOI18N
+        jCheckBox4.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_MediaCopies")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jLabel3.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox5, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox5.text")); // NOI18N
+        jCheckBox5.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_DisplayMap")); // NOI18N
+        jCheckBox5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox5ActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox6, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox6.text")); // NOI18N
+        jCheckBox6.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_DisplayEmptyLoc")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jLabel4.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jTextField1.text")); // NOI18N
+        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_GoogleKey")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -79,13 +113,13 @@ public final class WebBookVisualPanel3 extends JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
                     .addComponent(jCheckBox6)
                     .addComponent(jCheckBox5)
                     .addComponent(jCheckBox4)
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox2)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, 259, Short.MAX_VALUE)
                     .addComponent(jCheckBox1))
                 .addContainerGap())
         );
@@ -119,6 +153,22 @@ public final class WebBookVisualPanel3 extends JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        jComboBox1.setEnabled(jCheckBox1.isSelected());
+        jCheckBox2.setEnabled(jCheckBox1.isSelected());
+
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+        jCheckBox4.setEnabled(jCheckBox3.isSelected());
+
+    }//GEN-LAST:event_jCheckBox3ActionPerformed
+
+    private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
+        jCheckBox6.setEnabled(jCheckBox5.isSelected());
+        jTextField1.setEnabled(jCheckBox5.isSelected());
+    }//GEN-LAST:event_jCheckBox5ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;

@@ -5,13 +5,23 @@
 package genjfr.app.tools.webbook;
 
 import javax.swing.JPanel;
+import javax.swing.SpinnerNumberModel;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel4 extends JPanel {
 
+    String[] sourcesAncestorType = new String[] {
+        NbBundle.getMessage(WebBookVisualPanel4.class, "sourceTypeAncestor.type1"),
+        NbBundle.getMessage(WebBookVisualPanel4.class, "sourceTypeAncestor.type2"),
+        NbBundle.getMessage(WebBookVisualPanel4.class, "sourceTypeAncestor.type3")
+    };
+
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel4() {
         initComponents();
+        jSpinner1.setEnabled(jCheckBox1.isSelected());
+        jSpinner2.setEnabled(jCheckBox1.isSelected());
+        jComboBox1.setEnabled(jCheckBox1.isSelected());
     }
 
     @Override
@@ -30,23 +40,33 @@ public final class WebBookVisualPanel4 extends JPanel {
         jLabel1 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 255, 1));
         jLabel3 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
+        jSpinner2 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 255, 1));
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox(sourcesAncestorType);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "WebBookVisualPanel4.jLabel1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "WebBookVisualPanel4.jCheckBox1.text")); // NOI18N
+        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "TTT_DisplayAncetorReport")); // NOI18N
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "WebBookVisualPanel4.jLabel2.text")); // NOI18N
 
+        jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "TTT_AncetorGenMin")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "WebBookVisualPanel4.jLabel3.text")); // NOI18N
+
+        jSpinner2.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "TTT_AncetorGenMax")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "WebBookVisualPanel4.jLabel4.text")); // NOI18N
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel4.class, "TTT_TypeOfAncestorsSources")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -97,6 +117,13 @@ public final class WebBookVisualPanel4 extends JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        jSpinner1.setEnabled(jCheckBox1.isSelected());
+        jSpinner2.setEnabled(jCheckBox1.isSelected());
+        jComboBox1.setEnabled(jCheckBox1.isSelected());
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox1;

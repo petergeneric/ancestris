@@ -41,6 +41,7 @@ public final class WebBookVisualPanel5 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "WebBookVisualPanel5.jLabel2.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "WebBookVisualPanel5.jTextField1.text")); // NOI18N
+        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "TTT_LocalDir")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "WebBookVisualPanel5.jButton1.text")); // NOI18N
 
@@ -49,6 +50,7 @@ public final class WebBookVisualPanel5 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "WebBookVisualPanel5.jLabel4.text")); // NOI18N
 
         jTextField2.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "WebBookVisualPanel5.jTextField2.text")); // NOI18N
+        jTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "TTT_LogFile")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel5.class, "WebBookVisualPanel5.jButton2.text")); // NOI18N
 
@@ -66,7 +68,7 @@ public final class WebBookVisualPanel5 extends JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jTextField1)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(5, 5, 5)))))
@@ -79,7 +81,7 @@ public final class WebBookVisualPanel5 extends JPanel {
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jTextField2)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel4))))
