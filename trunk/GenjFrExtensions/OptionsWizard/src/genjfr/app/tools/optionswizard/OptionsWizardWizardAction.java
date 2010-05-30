@@ -21,24 +21,30 @@ import org.openide.util.actions.CallableSystemAction;
 
 // An example action demonstrating how the wizard could be called from within
 // your code. You can copy-paste the code below wherever you need.
-public final class OptionsWizardWizardAction extends CallableSystemAction implements PluginInterface {
+public final class OptionsWizardWizardAction extends CallableSystemAction /*implements PluginInterface */{
 
-    private static final String PREFERRED_PLUGIN_NAME = "OptionsWizard";
     private Registry registry;
     private WizardDescriptor.Panel[] panels;
     private boolean exitFlag = false;
+    private static OptionsWizardWizardAction instance = null;
 
-    public String getPluginName() {
-        String name = NbBundle.getMessage(this.getClass(), "OpenIDE-Module-Name");
-        if (name != null) {
-            return name;
+    public static OptionsWizardWizardAction getDefault(){
+        if (instance == null){
+            instance = new OptionsWizardWizardAction();
         }
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
+        return instance;
     }
-
-    public String getPluginVersion() {
-        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
-    }
+//    public String getPluginName() {
+//        String name = NbBundle.getMessage(this.getClass(), "OpenIDE-Module-Name");
+//        if (name != null) {
+//            return name;
+//        }
+//        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
+//    }
+//
+//    public String getPluginVersion() {
+//        return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
+//    }
     public boolean launchModule(Object o) {
 
         System.out.println("=== DEBUT DU WIZARD ===");

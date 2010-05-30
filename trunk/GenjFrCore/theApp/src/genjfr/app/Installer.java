@@ -64,7 +64,7 @@ public class Installer extends ModuleInstall {
         // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
         PluginInterface pi = null;
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
-            if ("OptionsWizard".equals(sInterface.getPluginName())) {
+            if ("genjfr.app.tools.optionswizard".equals(sInterface.getPluginName())) {
                 pi = sInterface;
                 break;
             }

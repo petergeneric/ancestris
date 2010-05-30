@@ -30,6 +30,7 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.window.GenjFrWindowManager;
 import genj.window.WindowManager;
+import genjfr.app.pluginservice.GenjFrPlugin;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -74,6 +75,16 @@ public class App {
 //    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
     public static Registry REGISTRY = new Registry("genj");
+
+    private static AppPlugin appplugin = new AppPlugin();
+
+    public static String getPluginVersion() {
+        return appplugin.getPluginVersion();
+    }
+
+    public static String getPluginShortDescription() {
+        return appplugin.getPluginShortDescription();
+    }
 
     /**
      * GenJ Main Method
@@ -673,6 +684,8 @@ public class App {
     return Registry.lookup(name, origin);
   }
 
+  private static class AppPlugin extends GenjFrPlugin{
+  }
 
 } //App
 

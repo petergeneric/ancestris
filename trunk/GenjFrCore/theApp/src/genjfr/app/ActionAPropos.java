@@ -386,19 +386,23 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
     private void displayVersions() {
         String title = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton4.text");
-        String text = "<html><br><b>" + NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel2.text") + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>" + version;
+        String text = "<html><br><b>" + 
+                App.getPluginShortDescription() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>" +
+                App.getPluginVersion();
         text += "<br><br><br><b>" + NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle") + "&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</b><br>";
         text += "<table border='0'>";
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
             try {
-                text += "<tr><td><b>&nbsp;&middot;&nbsp;" + sInterface.getPluginName() + " :</b></td>";
-                try {
-                    text += "<td>" + sInterface.getPluginVersion() + "</td>";
-                } catch (Exception e) {
-                    text += "<td>" + "non disponible" + "</td>";
-                    App.LOG.info(e.toString());
+                if (sInterface.getPluginDisplayName() != null) {
+                    text += "<tr><td><b>&nbsp;&middot;&nbsp;" + sInterface.getPluginDisplayName() + " :</b></td>";
+                    try {
+                        text += "<td>" + sInterface.getPluginVersion() + "</td>";
+                    } catch (Exception e) {
+                        text += "<td>" + "non disponible" + "</td>";
+                        App.LOG.info(e.toString());
+                    }
+                    text += "</tr>";
                 }
-                text += "</tr>";
             } catch (Exception e) {
             }
         }

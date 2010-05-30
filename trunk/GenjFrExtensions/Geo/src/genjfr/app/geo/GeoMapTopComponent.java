@@ -8,8 +8,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import genjfr.app.GenjViewTopComponent;
-import genjfr.app.pluginservice.PluginHelper;
-import genjfr.app.pluginservice.PluginInterface;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
