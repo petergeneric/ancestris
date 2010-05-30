@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -23,7 +23,7 @@ public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescri
     // create only those which really need to be visible.
     public Component getComponent() {
         if (component == null) {
-            component = new WebBookVisualPanel2();
+            component = new WebBookVisualPanel6();
         }
         return component;
     }

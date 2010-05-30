@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
 
@@ -25,7 +26,7 @@ public final class WebBookWizardAction extends CallableSystemAction {
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle("Your wizard dialog title here");
+        wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle"));
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
@@ -44,7 +45,10 @@ public final class WebBookWizardAction extends CallableSystemAction {
             panels = new WizardDescriptor.Panel[]{
                         new WebBookWizardPanel1(),
                         new WebBookWizardPanel2(),
-                        new WebBookWizardPanel3()
+                        new WebBookWizardPanel3(),
+                        new WebBookWizardPanel4(),
+                        new WebBookWizardPanel5(),
+                        new WebBookWizardPanel6()
                     };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
@@ -66,8 +70,10 @@ public final class WebBookWizardAction extends CallableSystemAction {
                     jc.putClientProperty("WizardPanel_contentDisplayed", Boolean.TRUE);
                     // Turn on numbering of all steps
                     jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
+                    // Set background image
+                    jc.putClientProperty("WizardPanel_image", ImageUtilities.loadImage(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookBckImage")));
                     // Turn on an help  tab
-                    jc.putClientProperty("WizardPanel_helpDisplayed", Boolean.TRUE);
+                    //jc.putClientProperty("WizardPanel_helpDisplayed", Boolean.TRUE);
                 }
             }
         }

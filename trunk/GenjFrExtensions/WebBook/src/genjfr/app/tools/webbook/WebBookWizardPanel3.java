@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class WebBookWizardPanel3 implements WizardDescriptor.Panel {
+public class WebBookWizardPanel3 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -82,6 +82,13 @@ public class WebBookWizardPanel3 implements WizardDescriptor.Panel {
     }
 
     public void storeSettings(Object settings) {
+    }
+
+    /*
+     * Allow the finish button for this panel
+     */
+    public boolean isFinishPanel() {
+        return true;
     }
 }
 
