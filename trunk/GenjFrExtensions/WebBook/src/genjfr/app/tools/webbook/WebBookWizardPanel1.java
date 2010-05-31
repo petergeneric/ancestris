@@ -79,9 +79,11 @@ public class WebBookWizardPanel1 implements WizardDescriptor.Panel, WizardDescri
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
+        System.out.println("Votre nom est : "+(String) ((WizardDescriptor)settings).getProperty("WebBook.title"));
     }
 
     public void storeSettings(Object settings) {
+        ((WizardDescriptor)settings).putProperty("WebBook.title", "MaGénéalogie");
     }
 
     /*

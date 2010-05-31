@@ -12,6 +12,7 @@ public final class WebBookVisualPanel1 extends JPanel {
     /** Creates new form WebBookVisualPanel1 */
     public WebBookVisualPanel1() {
         initComponents();
+        initDefault();
         jTextArea1.setEnabled(jCheckBox1.isSelected());
     }
 
@@ -176,7 +177,6 @@ public final class WebBookVisualPanel1 extends JPanel {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         jTextArea1.setEnabled(jCheckBox1.isSelected());
     }//GEN-LAST:event_jCheckBox1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
@@ -196,5 +196,12 @@ public final class WebBookVisualPanel1 extends JPanel {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    private void initDefault() {
+        jCheckBox1.setSelected(true);
+        jCheckBox2.setSelected(true);
+        jCheckBox3.setSelected(true);
+
+    }
 }
 

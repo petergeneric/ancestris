@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.webbook;
 
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -15,6 +16,9 @@ public final class WebBookVisualPanel6 extends JPanel {
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type3")
     };
 
+    //Create a file chooser
+    private JFileChooser fc = null;
+
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel6() {
         initComponents();
@@ -25,6 +29,18 @@ public final class WebBookVisualPanel6 extends JPanel {
     @Override
     public String getName() {
         return NbBundle.getMessage(WebBookWizardAction.class, "CTL_Step_6");
+    }
+
+    private void chooseFileDir(javax.swing.JTextField jTF, boolean dirOnly) {
+        String str = jTF.getText();
+        fc = new JFileChooser(str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "");
+        if (dirOnly) {
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        }
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            jTF.setText(fc.getSelectedFile().getAbsolutePath());
+        }
     }
 
     /** This method is called from within the constructor to
@@ -114,6 +130,11 @@ public final class WebBookVisualPanel6 extends JPanel {
         jTextField5.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_PostExec")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jLabel12.text")); // NOI18N
 
@@ -121,6 +142,11 @@ public final class WebBookVisualPanel6 extends JPanel {
         jTextField6.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "TTT_FTPLogFile")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(WebBookVisualPanel6.class, "WebBookVisualPanel6.jButton2.text")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -219,6 +245,15 @@ public final class WebBookVisualPanel6 extends JPanel {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         setEnabled();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        chooseFileDir(jTextField5, false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        chooseFileDir(jTextField6, false);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
