@@ -4,37 +4,19 @@
  */
 package genjfr.app.tools.webbook;
 
-import genj.gedcom.Indi;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel2 extends JPanel {
 
-    private Indi[] indis = new Indi[10];
-
-//        private void initGedcom(Gedcom gedParam) {
-//        if (gedcom == null) {
-//            if (gedParam == null) {
-//                gedcom = App.center.getSelectedGedcom(); // get selected gedcom
-//                if (gedcom == null) { // if none selected, take first one
-//                    Iterator it = GedcomDirectory.getInstance().getGedcoms().iterator();
-//                    if (it.hasNext()) { // well, apparently no gedcom exist in the list
-//                        gedcom = (Gedcom) it.next();
-//                    }
-//                }
-//            } else {
-//                gedcom = gedParam;
-//            }
-//            geoFilter.setGedcom(gedcom);
-//        }
-//        super.setGedcom(gedcom);
-//        super.addLookup();
-//    }
-//
-
+    private Entity[] indis = null;
 
     /** Creates new form WebBookVisualPanel2 */
     public WebBookVisualPanel2() {
+        Gedcom gedcom = WebBookWizardAction.getGedcom();
+        indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         initComponents();
     }
 

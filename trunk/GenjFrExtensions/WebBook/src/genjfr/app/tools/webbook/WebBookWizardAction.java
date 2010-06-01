@@ -4,11 +4,16 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomDirectory;
+import genjfr.app.App;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -72,7 +77,7 @@ public final class WebBookWizardAction extends CallableSystemAction {
                     jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
                     // Set background image
                     jc.putClientProperty("WizardPanel_image", ImageUtilities.loadImage(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookBckImage")));
-                    // Turn on an help  tab
+                    // Turn on an help tab
                     //jc.putClientProperty("WizardPanel_helpDisplayed", Boolean.TRUE);
                 }
             }
@@ -96,5 +101,19 @@ public final class WebBookWizardAction extends CallableSystemAction {
     @Override
     protected boolean asynchronous() {
         return false;
+    }
+
+    public static Gedcom getGedcom() {
+        Gedcom gedcom = null;
+        if (gedcom == null) {
+            gedcom = App.center.getSelectedGedcom(); // get selected gedcom
+            if (gedcom == null) { // if none selected, take first one
+                Iterator it = GedcomDirectory.getInstance().getGedcoms().iterator();
+                if (it.hasNext()) { // well, apparently no gedcom exist in the list
+                    gedcom = (Gedcom) it.next();
+                }
+            }
+        }
+        return gedcom;
     }
 }
