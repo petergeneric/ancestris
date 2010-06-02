@@ -5,4 +5,16 @@
 <project name="genjfr.app" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project genjfr.app.</description>
     <import file="nbproject/build-impl.xml"/>
+    <target name="-pre-jar-prep">
+        <exec executable="svn" failonerror="false" 
+              outputproperty="buildversion" errorproperty="svnerror">
+                  <arg value="info"/>
+            <arg value="--xml"/>
+        </exec>
+        <xmlproperty>
+            <propertyresource name="buildversion"/>
+        </xmlproperty>
+        <property name="buildnumber" value="${info.entry.commit(revision)}" />
+    </target>
+    <target name="jar-prep" depends="-pre-jar-prep,projectized-common.jar-prep"></target>
 </project>
