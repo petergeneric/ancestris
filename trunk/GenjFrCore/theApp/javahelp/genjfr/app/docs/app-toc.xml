@@ -6,39 +6,39 @@ and open the template in the editor.
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
   <tocitem image="toplevelfolder"
-           text="La Généalogie avec GenjFr">
-    <tocitem target="genjfr.app.intro">Introduction à GenjFr </tocitem>
-    <tocitem expand="true" text="GenjFr - Sommaire" target="genjfr.app.about">
-        <tocitem expand="true" text="Découverte de GenjFr" target="genjfr.app.discovering">
-            <tocitem target="genjfr.app.download">Téléchargement de GenjFr </tocitem>
-            <tocitem text="Première configuration" target="genjfr.app.wizard" />
-            <tocitem text="Gestionnaire des Gedcoms" target="genjfr.app.gedcoms.manager" />
-            <tocitem text="Gestion des fenêtres" target="genjfr.app.windows" />
+           text="La Généalogie avec Ancestris">
+    <tocitem target="ancestris.app.intro">Introduction à GenjFr </tocitem>
+    <tocitem expand="true" text="Ancestris - Sommaire" target="ancestris.app.about">
+        <tocitem expand="true" text="Découverte d'Ancestris" target="ancestris.app.discovering">
+            <tocitem target="ancestris.app.download">Téléchargement d'Ancestris </tocitem>
+            <tocitem text="Première configuration" target="ancestris.app.wizard" />
+            <tocitem text="Gestionnaire des Gedcoms" target="ancestris.app.gedcoms.manager" />
+            <tocitem text="Gestion des fenêtres" target="ancestris.app.windows" />
         </tocitem>
-        <tocitem expand="true" text="Les différentes vues" target="genjfr.app.views">
-            <tocitem text="L'Arbre généalogique" target="genjfr.app.view.tree" />
-            <tocitem text="La vue Table" target="genjfr.app.view.table" />
-            <tocitem text="Les Editeurs" target="genjfr.app.view.editors" />
-            <tocitem text="La visualisation Chronologique" target="genjfr.app.view.chrono" />
-            <tocitem text="Le Navigateur" target="genjfr.app.view.navigator" />
-            <tocitem text="La vue Entité" target="genjfr.app.view.entity" />
-            <tocitem text="La vue Recherche" target="genjfr.app.view.search" />
-            <tocitem text="La Fenêtre des Rapports" target="genjfr.app.view.reports" />
-            <tocitem text="La visualisation Géographique" target="genjfr.app.view.geo" />
+        <tocitem expand="true" text="Les différentes vues" target="ancestris.app.views">
+            <tocitem text="L'Arbre généalogique" target="ancestris.app.view.tree" />
+            <tocitem text="La vue Table" target="ancestris.app.view.table" />
+            <tocitem text="Les Editeurs" target="ancestris.app.view.editors" />
+            <tocitem text="La visualisation Chronologique" target="ancestris.app.view.chrono" />
+            <tocitem text="Le Navigateur" target="ancestris.app.view.navigator" />
+            <tocitem text="La vue Entité" target="ancestris.app.view.entity" />
+            <tocitem text="La vue Recherche" target="ancestris.app.view.search" />
+            <tocitem text="La Fenêtre des Rapports" target="ancestris.app.view.reports" />
+            <tocitem text="La visualisation Géographique" target="ancestris.app.view.geo" />
         </tocitem>
-        <tocitem expand="true" text="Utilisation de base" target="genjfr.app.basic">
+        <tocitem expand="true" text="Utilisation de base" target="ancestris.app.basic">
         </tocitem>
-        <tocitem expand="true" text="Utilisation avancée" target="genjfr.app.advanced">
-            <tocitem text="Les Calques" target="genjfr.app.blueprints" />
-            <tocitem expand="false" text="GenjFr et les plugins" target="genjfr.app.plugins">
-                <tocitem text="Différents plugins disponibles" target="genjfr.app.plugins.liste" />
+        <tocitem expand="true" text="Utilisation avancée" target="ancestris.app.advanced">
+            <tocitem text="Les Calques" target="ancestris.app.blueprints" />
+            <tocitem expand="false" text="Ancestris et les plugins" target="ancestris.app.plugins">
+                <tocitem text="Différents plugins disponibles" target="ancestris.app.plugins.liste" />
             </tocitem>
-            <tocitem text="GenjFr en mode nomade" target="genjfr.app.nomade" />
+            <tocitem text="Ancestris en mode nomade" target="ancestris.app.nomade" />
         </tocitem>
     </tocitem>
-    <tocitem expand="false" text="Divers" target="genjfr.app.misc">
-        <tocitem target="genjfr.app.external.links">Liens externes</tocitem>
-        <tocitem target="genjfr.app.gedcom.standard">La norme Gedcom</tocitem>
+    <tocitem expand="false" text="Divers" target="ancestris.app.misc">
+        <tocitem target="ancestris.app.external.links">Liens externes</tocitem>
+        <tocitem target="ancestris.app.gedcom.standard">La norme Gedcom</tocitem>
     </tocitem>
   </tocitem>
 </toc>
