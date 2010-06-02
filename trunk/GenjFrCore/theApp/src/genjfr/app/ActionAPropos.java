@@ -398,11 +398,12 @@ public class ActionAPropos extends JDialog implements ActionListener {
                         text += "<td>" + sInterface.getPluginVersion() + "</td>";
                     } catch (Throwable e) {
                         text += "<td>" + "non disponible" + "</td>";
-                        App.LOG.info(e.toString());
+                        App.LOG.info(e.getMessage());
                     }
                     text += "</tr>";
                 }
             } catch (Throwable e) {
+                        App.LOG.info(e.getMessage());
             }
         }
         text += "</table><br></html>";
