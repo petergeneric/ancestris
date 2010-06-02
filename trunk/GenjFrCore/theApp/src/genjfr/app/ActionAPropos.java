@@ -396,13 +396,13 @@ public class ActionAPropos extends JDialog implements ActionListener {
                     text += "<tr><td><b>&nbsp;&middot;&nbsp;" + sInterface.getPluginDisplayName() + " :</b></td>";
                     try {
                         text += "<td>" + sInterface.getPluginVersion() + "</td>";
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         text += "<td>" + "non disponible" + "</td>";
                         App.LOG.info(e.toString());
                     }
                     text += "</tr>";
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
             }
         }
         text += "</table><br></html>";
