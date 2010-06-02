@@ -30,7 +30,6 @@ import org.openide.windows.WindowManager;
  */
 public class ActionAPropos extends JDialog implements ActionListener {
 
-    private String version = genj.Version.getInstance().getVersionString();
     private String java = System.getProperty("java.runtime.version") + " - " + System.getProperty("java.home");
     private String systeme = System.getProperty("os.name") + " - " + System.getProperty("os.version") + " - " + System.getProperty("user.name");
     private String userdir = getUserDir();
@@ -111,10 +110,10 @@ public class ActionAPropos extends JDialog implements ActionListener {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11));
-        jLabel3.setText(version);
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11)); // NOI18N
+        jLabel3.setText(App.getPluginVersion());
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel2.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel2.text")); // NOI18N
 
         jLabel1.setBackground(new java.awt.Color(240, 176, 111));
@@ -258,7 +257,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

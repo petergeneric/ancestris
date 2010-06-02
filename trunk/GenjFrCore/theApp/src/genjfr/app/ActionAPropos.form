@@ -64,7 +64,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel3" pref="236" max="32767" attributes="0"/>
+                              <Component id="jLabel3" pref="228" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
@@ -144,7 +144,7 @@
           <Font name="DejaVu Sans" size="11" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="version" type="code"/>
+          <Connection code="App.getPluginVersion()" type="code"/>
         </Property>
       </Properties>
     </Component>
