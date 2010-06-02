@@ -7,7 +7,7 @@ and open the template in the editor.
 <toc version="2.0">
   <tocitem image="toplevelfolder"
            text="La Généalogie avec Ancestris">
-    <tocitem target="ancestris.app.intro">Introduction à GenjFr </tocitem>
+    <tocitem target="ancestris.app.intro">Introduction à Ancestris </tocitem>
     <tocitem expand="true" text="Ancestris - Sommaire" target="ancestris.app.about">
         <tocitem expand="true" text="Découverte d'Ancestris" target="ancestris.app.discovering">
             <tocitem target="ancestris.app.download">Téléchargement d'Ancestris </tocitem>
