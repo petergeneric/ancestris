@@ -27,7 +27,7 @@ public final class ActionHelp extends Action2 {
 
     /** run */
     protected void execute() {
-        String id = "genjfr.app.about";
+        String id = "ancestris.app.about";
         Help help = (Help) Lookup.getDefault().lookup(Help.class);
         if (help != null && help.isValidID(id, true).booleanValue()) {
             help.showHelp(new HelpCtx(id));
