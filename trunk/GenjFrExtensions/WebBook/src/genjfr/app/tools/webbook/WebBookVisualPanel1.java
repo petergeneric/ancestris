@@ -4,7 +4,10 @@
  */
 package genjfr.app.tools.webbook;
 
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel1 extends JPanel {
@@ -203,5 +206,96 @@ public final class WebBookVisualPanel1 extends JPanel {
         jCheckBox3.setSelected(true);
 
     }
+
+    public String getPref01() {
+        return jTextField1.getText();
+    }
+    public void setPref01(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultTitle");
+        }
+        jTextField1.setText(str);
+    }
+
+    public String getPref02() {
+        return jTextField2.getText();
+    }
+    public void setPref02(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultAuthor");
+        }
+        jTextField2.setText(str);
+    }
+
+    public String getPref03() {
+        return jTextField3.getText();
+    }
+    public void setPref03(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultAddress");
+        }
+        jTextField3.setText(str);
+    }
+
+    public String getPref04() {
+        return jTextField4.getText();
+    }
+    public void setPref04(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultPhone");
+        }
+        jTextField4.setText(str);
+    }
+
+    public String getPref05() {
+        return jTextField5.getText();
+    }
+    public void setPref05(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultEmail");
+        }
+        jTextField5.setText(str);
+    }
+
+    public String getPref06() {
+        return jCheckBox1.isSelected() ? "1" : "0";
+    }
+    public void setPref06(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispMsg");
+        }
+        jCheckBox1.setSelected(str.equals("1"));
+    }
+
+    public String getPref07() {
+        return jCheckBox2.isSelected() ? "1" : "0";
+    }
+    public void setPref07(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispStatAncestor");
+        }
+        jCheckBox2.setSelected(str.equals("1"));
+    }
+
+    public String getPref08() {
+        return jCheckBox3.isSelected() ? "1" : "0";
+    }
+    public void setPref08(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispStatLoc");
+        }
+        jCheckBox3.setSelected(str.equals("1"));
+    }
+
+    public String getPref09() {
+        return jTextArea1.getText();
+    }
+    public void setPref09(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultMessage");
+        }
+        jTextArea1.setText(str);
+    }
+
 }
 

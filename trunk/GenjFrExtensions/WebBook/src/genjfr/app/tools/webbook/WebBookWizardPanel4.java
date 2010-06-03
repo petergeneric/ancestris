@@ -4,12 +4,17 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel4 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+
+    // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
+    private Gedcom gedcom = WebBookWizardAction.getGedcom();
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -79,9 +84,25 @@ public class WebBookWizardPanel4 implements WizardDescriptor.Panel, WizardDescri
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        ((WebBookVisualPanel4) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".dispAncestors", ""));
+        ((WebBookVisualPanel4) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorMinGen", ""));
+        ((WebBookVisualPanel4) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorMaxGen", ""));
+        ((WebBookVisualPanel4) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorSource", ""));
     }
 
     public void storeSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".dispAncestors", ((WebBookVisualPanel4) getComponent()).getPref01());
+        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".ancestorMinGen", ((WebBookVisualPanel4) getComponent()).getPref02());
+        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".ancestorMaxGen", ((WebBookVisualPanel4) getComponent()).getPref03());
+        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".ancestorSource", ((WebBookVisualPanel4) getComponent()).getPref04());
     }
 
     /*

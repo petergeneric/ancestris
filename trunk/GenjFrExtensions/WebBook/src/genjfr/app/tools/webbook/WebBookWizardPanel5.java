@@ -4,12 +4,17 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel5 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+
+    // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
+    private Gedcom gedcom = WebBookWizardAction.getGedcom();
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -79,9 +84,21 @@ public class WebBookWizardPanel5 implements WizardDescriptor.Panel, WizardDescri
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        ((WebBookVisualPanel5) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName+".localWebDir", ""));
+        ((WebBookVisualPanel5) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName+".logFile", ""));
     }
 
     public void storeSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName+".localWebDir", ((WebBookVisualPanel5) getComponent()).getPref01());
+        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName+".logFile", ((WebBookVisualPanel5) getComponent()).getPref02());
     }
 
     /*

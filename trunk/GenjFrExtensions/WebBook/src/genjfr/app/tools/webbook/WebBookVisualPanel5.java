@@ -154,5 +154,28 @@ public final class WebBookVisualPanel5 extends JPanel {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+    public String getPref01() {
+        return jTextField1.getText();
+    }
+
+    public void setPref01(String str) {
+//        if (str.isEmpty()) {
+//            str = "";
+//        }
+        jTextField1.setText(str);
+    }
+
+    public String getPref02() {
+        return jTextField2.getText();
+    }
+
+    public void setPref02(String str) {
+//        if (str.isEmpty()) {
+//            str = "";
+//        }
+        jTextField2.setText(str);
+    }
+
 }
 

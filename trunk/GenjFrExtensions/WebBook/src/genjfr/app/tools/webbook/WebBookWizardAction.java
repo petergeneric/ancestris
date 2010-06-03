@@ -37,7 +37,10 @@ public final class WebBookWizardAction extends CallableSystemAction {
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            // do something
+            System.out.println("DEBUG - user pressed ok");
+        } else {
+            System.out.println("DEBUG - user pressed annuler");
+
         }
     }
 

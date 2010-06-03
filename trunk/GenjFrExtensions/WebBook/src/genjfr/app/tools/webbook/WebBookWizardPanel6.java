@@ -4,12 +4,17 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+
+    // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
+    private Gedcom gedcom = WebBookWizardAction.getGedcom();
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -79,9 +84,37 @@ public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescri
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        ((WebBookVisualPanel6) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_upload", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_site", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_dir", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_user", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_password", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_siteDesc", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_transfertType", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_resetHistory", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_exec", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref10(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName+".FTP_log", ""));
     }
 
     public void storeSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_upload", ((WebBookVisualPanel6) getComponent()).getPref01());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_site", ((WebBookVisualPanel6) getComponent()).getPref02());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_dir", ((WebBookVisualPanel6) getComponent()).getPref03());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_user", ((WebBookVisualPanel6) getComponent()).getPref04());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_password", ((WebBookVisualPanel6) getComponent()).getPref05());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_siteDesc", ((WebBookVisualPanel6) getComponent()).getPref06());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_transfertType", ((WebBookVisualPanel6) getComponent()).getPref07());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_resetHistory", ((WebBookVisualPanel6) getComponent()).getPref08());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_exec", ((WebBookVisualPanel6) getComponent()).getPref09());
+        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_log", ((WebBookVisualPanel6) getComponent()).getPref10());
     }
 
     /*

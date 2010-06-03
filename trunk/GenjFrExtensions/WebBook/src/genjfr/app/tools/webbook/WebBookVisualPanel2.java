@@ -6,16 +6,21 @@ package genjfr.app.tools.webbook;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import java.util.Collection;
+import java.util.Iterator;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel2 extends JPanel {
 
     private Entity[] indis = null;
+    private Gedcom gedcom = null;
 
     /** Creates new form WebBookVisualPanel2 */
     public WebBookVisualPanel2() {
-        Gedcom gedcom = WebBookWizardAction.getGedcom();
+        gedcom = WebBookWizardAction.getGedcom();
         indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         initComponents();
     }
@@ -145,5 +150,177 @@ public final class WebBookVisualPanel2 extends JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Get root indi using SOSA if available
+     * @param gedcom
+     * @return
+     */
+    private Indi getRootIndi(Gedcom gedcom) {
+        if (gedcom == null) {
+            return null;
+        }
+        // Get all individuals and stop when sosa 1 is found
+        Collection entities = gedcom.getEntities(Gedcom.INDI);
+        Property[] props = null;
+        String sosaStr = "";
+        for (Iterator it = entities.iterator(); it.hasNext();) {
+            Indi indi = (Indi) it.next();
+            props = indi.getProperties("_SOSA");
+            if (props == null) {
+                continue;
+            }
+            for (int i = 0; i < props.length; i++) {
+                Property prop = props[i];
+                sosaStr = prop.toString();
+                if (getNb(sosaStr) == 1) {
+                    return indi;
+                }
+            }
+        }
+
+        // If we are here, no sosa was found, take first element
+        return (Indi) entities.iterator().next();
+    }
+
+    /**
+     * Get nb from string removing left and right letters
+     */
+    private int getNb(String str) {
+
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+        int sosaNb = 0;
+
+        int start = 0, end = 0;
+        while (start <= end && !Character.isDigit(str.charAt(start))) {
+            start++;
+        }
+        end = start;
+        while ((end <= str.length() - 1) && Character.isDigit(str.charAt(end))) {
+            end++;
+        }
+        if (end == start) {
+            return 0;
+        } else {
+            try {
+                sosaNb = Integer.parseInt(str.substring(start, end));
+            } catch (Exception e) {
+                sosaNb = 0;
+            }
+        }
+        return sosaNb;
+    }
+
+
+
+    
+    public String getPref01() {
+        return jComboBox1.getSelectedItem().toString();
+    }
+
+    public void setPref01(String str) {
+        if (str.isEmpty()) {
+            str = getRootIndi(gedcom).toString();
+        }
+        if (indis == null) {
+            return;
+        }
+        for (int i = 0; i < indis.length; i++) {
+            Indi indi = (Indi)indis[i];
+            if (indi.toString().equals(str)) {
+                jComboBox1.setSelectedIndex(i);
+            }
+        }
+    }
+
+    public String getPref02() {
+        return jTextField1.getText();
+    }
+
+    public void setPref02(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultUnknown");
+        }
+        jTextField1.setText(str);
+    }
+
+    public String getPref03() {
+        return jCheckBox1.isSelected() ? "1" : "0";
+    }
+
+    public void setPref03(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispSpouse");
+        }
+        jCheckBox1.setSelected(str.equals("1"));
+    }
+
+    public String getPref04() {
+        return jCheckBox2.isSelected() ? "1" : "0";
+    }
+
+    public void setPref04(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispKids");
+        }
+        jCheckBox2.setSelected(str.equals("1"));
+    }
+
+    public String getPref05() {
+        return jCheckBox3.isSelected() ? "1" : "0";
+    }
+
+    public void setPref05(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispSiblings");
+        }
+        jCheckBox3.setSelected(str.equals("1"));
+    }
+
+    public String getPref06() {
+        return jCheckBox4.isSelected() ? "1" : "0";
+    }
+
+    public void setPref06(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispRelations");
+        }
+        jCheckBox4.setSelected(str.equals("1"));
+    }
+
+    public String getPref07() {
+        return jCheckBox5.isSelected() ? "1" : "0";
+    }
+
+    public void setPref07(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispNotes");
+        }
+        jCheckBox5.setSelected(str.equals("1"));
+    }
+
+    public String getPref08() {
+        return jCheckBox6.isSelected() ? "1" : "0";
+    }
+
+    public void setPref08(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispId");
+        }
+        jCheckBox6.setSelected(str.equals("1"));
+    }
+
+    public String getPref09() {
+        return jCheckBox7.isSelected() ? "1" : "0";
+    }
+
+    public void setPref09(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispEmailButton");
+        }
+        jCheckBox7.setSelected(str.equals("1"));
+    }
 }
 

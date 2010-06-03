@@ -4,12 +4,17 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+
+    // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
+    private Gedcom gedcom = WebBookWizardAction.getGedcom();
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -79,9 +84,35 @@ public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescri
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        ((WebBookVisualPanel2) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".decujus", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".unknown", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispSpouse", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispKids", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispSiblings", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispRelations", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispNotes", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispId", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName+".dispEmailButton", ""));
     }
 
     public void storeSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".decujus", ((WebBookVisualPanel2) getComponent()).getPref01());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".unknown", ((WebBookVisualPanel2) getComponent()).getPref02());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispSpouse", ((WebBookVisualPanel2) getComponent()).getPref03());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispKids", ((WebBookVisualPanel2) getComponent()).getPref04());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispSiblings", ((WebBookVisualPanel2) getComponent()).getPref05());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispRelations", ((WebBookVisualPanel2) getComponent()).getPref06());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispNotes", ((WebBookVisualPanel2) getComponent()).getPref07());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispId", ((WebBookVisualPanel2) getComponent()).getPref08());
+        NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispEmailButton", ((WebBookVisualPanel2) getComponent()).getPref09());
     }
 
     /*

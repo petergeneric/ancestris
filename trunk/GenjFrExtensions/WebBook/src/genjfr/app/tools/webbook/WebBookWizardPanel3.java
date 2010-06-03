@@ -4,12 +4,17 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel3 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+
+    // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
+    private Gedcom gedcom = WebBookWizardAction.getGedcom();
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -79,9 +84,33 @@ public class WebBookWizardPanel3 implements WizardDescriptor.Panel, WizardDescri
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        ((WebBookVisualPanel3) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GeneSources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_DisplaySources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_CopySources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GeneMedia", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_CopyMedia", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GeneMap", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_DispUnknownLoc", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GoogleKey", ""));
     }
 
     public void storeSettings(Object settings) {
+        if (gedcom == null) {
+            return;
+        }
+        String gedName = gedcom.getName();
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GeneSources", ((WebBookVisualPanel3) getComponent()).getPref01());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_DisplaySources", ((WebBookVisualPanel3) getComponent()).getPref02());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_CopySources", ((WebBookVisualPanel3) getComponent()).getPref03());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GeneMedia", ((WebBookVisualPanel3) getComponent()).getPref04());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_CopyMedia", ((WebBookVisualPanel3) getComponent()).getPref05());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GeneMap", ((WebBookVisualPanel3) getComponent()).getPref06());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_DispUnknownLoc", ((WebBookVisualPanel3) getComponent()).getPref07());
+        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GoogleKey", ((WebBookVisualPanel3) getComponent()).getPref08());
     }
 
     /*

@@ -9,7 +9,7 @@ import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel3 extends JPanel {
 
-    String[] sourcesType = new String[] {
+    String[] sourcesType = new String[]{
         NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1"),
         NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type2"),
         NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")
@@ -183,5 +183,98 @@ public final class WebBookVisualPanel3 extends JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    public String getPref01() {
+        return jCheckBox1.isSelected() ? "1" : "0";
+    }
+
+    public void setPref01(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGeneSources");
+        }
+        jCheckBox1.setSelected(str.equals("1"));
+    }
+
+    public String getPref02() {
+        return jComboBox1.getSelectedItem().toString();
+    }
+
+    public void setPref02(String str) {
+        if (str.isEmpty()) {
+            str = "0";
+        }
+        for (int i = 0; i < sourcesType.length; i++) {
+            String type = (String) sourcesType[i];
+            if (type.equals(str)) {
+                jComboBox1.setSelectedIndex(i);
+            }
+        }
+    }
+
+    public String getPref03() {
+        return jCheckBox2.isSelected() ? "1" : "0";
+    }
+
+    public void setPref03(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultCopySources");
+        }
+        jCheckBox2.setSelected(str.equals("1"));
+    }
+
+    public String getPref04() {
+        return jCheckBox3.isSelected() ? "1" : "0";
+    }
+
+    public void setPref04(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGeneMedia");
+        }
+        jCheckBox3.setSelected(str.equals("1"));
+    }
+
+    public String getPref05() {
+        return jCheckBox4.isSelected() ? "1" : "0";
+    }
+
+    public void setPref05(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultCopyMedia");
+        }
+        jCheckBox4.setSelected(str.equals("1"));
+    }
+
+    public String getPref06() {
+        return jCheckBox5.isSelected() ? "1" : "0";
+    }
+
+    public void setPref06(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGeneMap");
+        }
+        jCheckBox5.setSelected(str.equals("1"));
+    }
+
+    public String getPref07() {
+        return jCheckBox6.isSelected() ? "1" : "0";
+    }
+
+    public void setPref07(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispUnknownLoc");
+        }
+        jCheckBox6.setSelected(str.equals("1"));
+    }
+
+    public String getPref08() {
+        return jTextField1.getText();
+    }
+
+    public void setPref08(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGoogleKey");
+        }
+        jTextField1.setText(str);
+    }
 }
 

@@ -40,9 +40,9 @@ public final class WebBookVisualPanel4 extends JPanel {
         jLabel1 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 255, 1));
+        jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         jLabel3 = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 255, 1));
+        jSpinner2 = new javax.swing.JSpinner(new SpinnerNumberModel(10, 0, 100, 1));
         jLabel4 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox(sourcesAncestorType);
 
@@ -78,21 +78,16 @@ public final class WebBookVisualPanel4 extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jComboBox1, 0, 275, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addComponent(jCheckBox1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jSpinner2)
-                                    .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSpinner2)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))))
                 .addGap(5, 5, 5))
         );
         layout.setVerticalGroup(
@@ -134,5 +129,56 @@ public final class WebBookVisualPanel4 extends JPanel {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
     // End of variables declaration//GEN-END:variables
+
+    public String getPref01() {
+        return jCheckBox1.isSelected() ? "1" : "0";
+    }
+
+    public void setPref01(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultDispAncestors");
+        }
+        jCheckBox1.setSelected(str.equals("1"));
+    }
+
+    public String getPref02() {
+        return jSpinner1.getValue().toString();
+    }
+
+    public void setPref02(String str) {
+        if (str.isEmpty()) {
+            str = "0";
+        }
+        jSpinner1.setValue(Integer.valueOf(str));
+    }
+
+    public String getPref03() {
+        return jSpinner2.getValue().toString();
+    }
+
+    public void setPref03(String str) {
+        if (str.isEmpty()) {
+            str = "10";
+        }
+        jSpinner2.setValue(Integer.valueOf(str));
+    }
+
+    public String getPref04() {
+        return jComboBox1.getSelectedItem().toString();
+    }
+
+    public void setPref04(String str) {
+        if (str.isEmpty()) {
+            str = "0";
+        }
+        for (int i = 0; i < sourcesAncestorType.length; i++) {
+            String type = (String)sourcesAncestorType[i];
+            if (type.equals(str)) {
+                jComboBox1.setSelectedIndex(i);
+            }
+        }
+    }
+
+
 }
 

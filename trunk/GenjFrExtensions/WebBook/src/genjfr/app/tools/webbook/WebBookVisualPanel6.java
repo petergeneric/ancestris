@@ -10,12 +10,11 @@ import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel6 extends JPanel {
 
-    String[] transferTypes = new String[] {
+    String[] transferTypes = new String[]{
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type1"),
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type2"),
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type3")
     };
-
     //Create a file chooser
     private JFileChooser fc = null;
 
@@ -253,7 +252,6 @@ public final class WebBookVisualPanel6 extends JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         chooseFileDir(jTextField6, false);
     }//GEN-LAST:event_jButton2ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -295,5 +293,121 @@ public final class WebBookVisualPanel6 extends JPanel {
         jButton2.setEnabled(jCheckBox1.isSelected());
 
     }
+
+    public String getPref01() {
+        return jCheckBox1.isSelected() ? "1" : "0";
+    }
+
+    public void setPref01(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultUpload");
+        }
+        jCheckBox1.setSelected(str.equals("1"));
+    }
+
+    public String getPref02() {
+        return jTextField1.getText();
+    }
+
+    public void setPref02(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPSite");
+        }
+        jTextField1.setText(str);
+    }
+
+    public String getPref03() {
+        return jTextField2.getText();
+    }
+
+    public void setPref03(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPDir");
+        }
+        jTextField2.setText(str);
+    }
+
+    public String getPref04() {
+        return jTextField3.getText();
+    }
+
+    public void setPref04(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPUser");
+        }
+        jTextField3.setText(str);
+    }
+
+    public String getPref05() {
+        return jTextField4.getText();
+    }
+
+    public void setPref05(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultFTPPassword");
+        }
+        jTextField4.setText(str);
+    }
+
+    public String getPref06() {
+        return jTextArea1.getText();
+    }
+
+    public void setPref06(String str) {
+        if (str.isEmpty()) {
+            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultSiteDesc");
+        }
+        jTextArea1.setText(str);
+    }
+
+    public String getPref07() {
+        return jComboBox1.getSelectedItem().toString();
+    }
+
+    public void setPref07(String str) {
+        if (str.isEmpty()) {
+            str = "0";
+        }
+        for (int i = 0; i < transferTypes.length; i++) {
+            String type = (String)transferTypes[i];
+            if (type.equals(str)) {
+                jComboBox1.setSelectedIndex(i);
+            }
+        }
+    }
+
+    public String getPref08() {
+        return jCheckBox2.isSelected() ? "1" : "0";
+    }
+
+    public void setPref08(String str) {
+        if (str.isEmpty()) {
+            str = "0";
+        }
+        jCheckBox2.setSelected(str.equals("1"));
+    }
+
+    public String getPref09() {
+        return jTextField5.getText();
+    }
+
+    public void setPref09(String str) {
+//        if (str.isEmpty()) {
+//            str = "";
+//        }
+        jTextField5.setText(str);
+    }
+
+    public String getPref10() {
+        return jTextField6.getText();
+    }
+
+    public void setPref10(String str) {
+//        if (str.isEmpty()) {
+//            str = "";
+//        }
+        jTextField6.setText(str);
+    }
+
 }
 
