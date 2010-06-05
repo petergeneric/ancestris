@@ -21,8 +21,21 @@ public final class WebBookVisualPanel6 extends JPanel {
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel6() {
         initComponents();
-        setEnabled();
+        setComponents();
+    }
 
+    public void setComponents() {
+        jTextField1.setEnabled(jCheckBox1.isSelected());
+        jTextField2.setEnabled(jCheckBox1.isSelected());
+        jTextField3.setEnabled(jCheckBox1.isSelected());
+        jTextField4.setEnabled(jCheckBox1.isSelected());
+        jTextField5.setEnabled(jCheckBox1.isSelected());
+        jTextField6.setEnabled(jCheckBox1.isSelected());
+        jTextArea1.setEnabled(jCheckBox1.isSelected());
+        jComboBox1.setEnabled(jCheckBox1.isSelected());
+        jCheckBox2.setEnabled(jCheckBox1.isSelected());
+        jButton1.setEnabled(jCheckBox1.isSelected());
+        jButton2.setEnabled(jCheckBox1.isSelected());
     }
 
     @Override
@@ -242,7 +255,7 @@ public final class WebBookVisualPanel6 extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        setEnabled();
+        setComponents();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -278,21 +291,6 @@ public final class WebBookVisualPanel6 extends JPanel {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
-
-    private void setEnabled() {
-        jTextField1.setEnabled(jCheckBox1.isSelected());
-        jTextField2.setEnabled(jCheckBox1.isSelected());
-        jTextField3.setEnabled(jCheckBox1.isSelected());
-        jTextField4.setEnabled(jCheckBox1.isSelected());
-        jTextField5.setEnabled(jCheckBox1.isSelected());
-        jTextField6.setEnabled(jCheckBox1.isSelected());
-        jTextArea1.setEnabled(jCheckBox1.isSelected());
-        jComboBox1.setEnabled(jCheckBox1.isSelected());
-        jCheckBox2.setEnabled(jCheckBox1.isSelected());
-        jButton1.setEnabled(jCheckBox1.isSelected());
-        jButton2.setEnabled(jCheckBox1.isSelected());
-
-    }
 
     public String getPref01() {
         return jCheckBox1.isSelected() ? "1" : "0";
@@ -369,7 +367,7 @@ public final class WebBookVisualPanel6 extends JPanel {
             str = "0";
         }
         for (int i = 0; i < transferTypes.length; i++) {
-            String type = (String)transferTypes[i];
+            String type = transferTypes[i];
             if (type.equals(str)) {
                 jComboBox1.setSelectedIndex(i);
             }

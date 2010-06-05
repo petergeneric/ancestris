@@ -4,10 +4,7 @@
  */
 package genjfr.app.tools.webbook;
 
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel1 extends JPanel {
@@ -15,7 +12,13 @@ public final class WebBookVisualPanel1 extends JPanel {
     /** Creates new form WebBookVisualPanel1 */
     public WebBookVisualPanel1() {
         initComponents();
-        initDefault();
+        setComponents();
+    }
+
+    public void setComponents() {
+        jCheckBox1.setSelected(true);
+        jCheckBox2.setSelected(true);
+        jCheckBox3.setSelected(true);
         jTextArea1.setEnabled(jCheckBox1.isSelected());
     }
 
@@ -199,13 +202,6 @@ public final class WebBookVisualPanel1 extends JPanel {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
-
-    private void initDefault() {
-        jCheckBox1.setSelected(true);
-        jCheckBox2.setSelected(true);
-        jCheckBox3.setSelected(true);
-
-    }
 
     public String getPref01() {
         return jTextField1.getText();

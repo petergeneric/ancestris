@@ -8,10 +8,12 @@ import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
-public class WebBookWizardPanel5 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
     private Gedcom gedcom = WebBookWizardAction.getGedcom();
@@ -20,7 +22,7 @@ public class WebBookWizardPanel5 implements WizardDescriptor.Panel, WizardDescri
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private WebBookVisualPanel5 component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -90,6 +92,7 @@ public class WebBookWizardPanel5 implements WizardDescriptor.Panel, WizardDescri
         String gedName = gedcom.getName();
         ((WebBookVisualPanel5) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName+".localWebDir", ""));
         ((WebBookVisualPanel5) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName+".logFile", ""));
+        component.setComponents();
     }
 
     public void storeSettings(Object settings) {
@@ -106,6 +109,13 @@ public class WebBookWizardPanel5 implements WizardDescriptor.Panel, WizardDescri
      */
     public boolean isFinishPanel() {
         return true;
+    }
+
+    public void validate() throws WizardValidationException {
+        String name = component.getPref01();
+        if (name.equals("")) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_LocalWebDir"), null);
+        }
     }
 }
 

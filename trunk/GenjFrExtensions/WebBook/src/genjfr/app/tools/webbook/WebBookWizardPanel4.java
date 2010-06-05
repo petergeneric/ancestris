@@ -8,10 +8,12 @@ import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
-public class WebBookWizardPanel4 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+public class WebBookWizardPanel4 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
     private Gedcom gedcom = WebBookWizardAction.getGedcom();
@@ -20,7 +22,7 @@ public class WebBookWizardPanel4 implements WizardDescriptor.Panel, WizardDescri
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private WebBookVisualPanel4 component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -92,6 +94,7 @@ public class WebBookWizardPanel4 implements WizardDescriptor.Panel, WizardDescri
         ((WebBookVisualPanel4) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorMinGen", ""));
         ((WebBookVisualPanel4) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorMaxGen", ""));
         ((WebBookVisualPanel4) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorSource", ""));
+        component.setComponents();
     }
 
     public void storeSettings(Object settings) {
@@ -110,6 +113,14 @@ public class WebBookWizardPanel4 implements WizardDescriptor.Panel, WizardDescri
      */
     public boolean isFinishPanel() {
         return true;
+    }
+
+    public void validate() throws WizardValidationException {
+        String genMinStr = component.getPref02();
+        String genMaxStr = component.getPref03();
+        if (Integer.valueOf(genMinStr) > Integer.valueOf(genMaxStr)) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_MinMax"), null);
+        }
     }
 }
 

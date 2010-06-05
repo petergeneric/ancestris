@@ -19,6 +19,10 @@ public final class WebBookVisualPanel4 extends JPanel {
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel4() {
         initComponents();
+        setComponents();
+    }
+
+    public void setComponents() {
         jSpinner1.setEnabled(jCheckBox1.isSelected());
         jSpinner2.setEnabled(jCheckBox1.isSelected());
         jComboBox1.setEnabled(jCheckBox1.isSelected());
@@ -172,7 +176,7 @@ public final class WebBookVisualPanel4 extends JPanel {
             str = "0";
         }
         for (int i = 0; i < sourcesAncestorType.length; i++) {
-            String type = (String)sourcesAncestorType[i];
+            String type = sourcesAncestorType[i];
             if (type.equals(str)) {
                 jComboBox1.setSelectedIndex(i);
             }

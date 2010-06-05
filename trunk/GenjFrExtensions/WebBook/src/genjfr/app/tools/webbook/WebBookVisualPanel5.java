@@ -16,6 +16,10 @@ public final class WebBookVisualPanel5 extends JPanel {
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel5() {
         initComponents();
+        setComponents();
+    }
+
+    public void setComponents() {
     }
 
     @Override

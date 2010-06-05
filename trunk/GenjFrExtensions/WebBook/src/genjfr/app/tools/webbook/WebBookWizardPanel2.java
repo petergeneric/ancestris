@@ -8,10 +8,12 @@ import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
-public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
     private Gedcom gedcom = WebBookWizardAction.getGedcom();
@@ -20,7 +22,7 @@ public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescri
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private WebBookVisualPanel2 component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -113,13 +115,25 @@ public class WebBookWizardPanel2 implements WizardDescriptor.Panel, WizardDescri
         NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispNotes", ((WebBookVisualPanel2) getComponent()).getPref07());
         NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispId", ((WebBookVisualPanel2) getComponent()).getPref08());
         NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispEmailButton", ((WebBookVisualPanel2) getComponent()).getPref09());
-    }
+        component.setComponents();
+}
 
     /*
      * Allow the finish button for this panel
      */
     public boolean isFinishPanel() {
         return true;
+    }
+
+    public void validate() throws WizardValidationException {
+        String name = component.getPref01();
+        if (name.trim().isEmpty()) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_Decujus"), null);
+        }
+        name = component.getPref02();
+        if (name.trim().isEmpty()) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_Unknown"), null);
+        }
     }
 }
 

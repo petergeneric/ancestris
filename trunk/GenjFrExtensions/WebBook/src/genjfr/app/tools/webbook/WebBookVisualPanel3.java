@@ -18,6 +18,10 @@ public final class WebBookVisualPanel3 extends JPanel {
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel3() {
         initComponents();
+        setComponents();
+    }
+
+    public void setComponents() {
         jComboBox1.setEnabled(jCheckBox1.isSelected());
         jCheckBox2.setEnabled(jCheckBox1.isSelected());
         jCheckBox4.setEnabled(jCheckBox3.isSelected());
@@ -25,7 +29,6 @@ public final class WebBookVisualPanel3 extends JPanel {
         jTextField1.setEnabled(jCheckBox5.isSelected());
 
     }
-
     @Override
     public String getName() {
         return NbBundle.getMessage(WebBookWizardAction.class, "CTL_Step_3");
@@ -204,7 +207,7 @@ public final class WebBookVisualPanel3 extends JPanel {
             str = "0";
         }
         for (int i = 0; i < sourcesType.length; i++) {
-            String type = (String) sourcesType[i];
+            String type = sourcesType[i];
             if (type.equals(str)) {
                 jComboBox1.setSelectedIndex(i);
             }
@@ -276,5 +279,6 @@ public final class WebBookVisualPanel3 extends JPanel {
         }
         jTextField1.setText(str);
     }
+
 }
 

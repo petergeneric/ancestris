@@ -8,10 +8,12 @@ import genj.gedcom.Gedcom;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
-public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel {
+public class WebBookWizardPanel6 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
     private Gedcom gedcom = WebBookWizardAction.getGedcom();
@@ -20,7 +22,7 @@ public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescri
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private WebBookVisualPanel6 component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -115,6 +117,7 @@ public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescri
         NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_resetHistory", ((WebBookVisualPanel6) getComponent()).getPref08());
         NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_exec", ((WebBookVisualPanel6) getComponent()).getPref09());
         NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName+".FTP_log", ((WebBookVisualPanel6) getComponent()).getPref10());
+        component.setComponents();
     }
 
     /*
@@ -122,6 +125,13 @@ public class WebBookWizardPanel6 implements WizardDescriptor.Panel, WizardDescri
      */
     public boolean isFinishPanel() {
         return true;
+    }
+
+    public void validate() throws WizardValidationException {
+        String name = "xxx";
+        if (name.equals("")) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_Title"), null);
+        }
     }
 }
 
