@@ -243,11 +243,11 @@ public class GedcomWriter implements Trackable {
     
     // Header
     writeLine( "0 HEAD");
-    writeLine( "1 SOUR GENJ");
+    writeLine( "1 SOUR ANCESTRIS");
     writeLine( "2 VERS "+Version.getInstance());
-    writeLine( "2 NAME GenjFr");
-    writeLine( "2 CORP GenjFr_Equipe_française");
-    writeLine( "3 ADDR http://www.arvernes.com/wiki/index.php/GenJ");
+    writeLine( "2 NAME Ancestris");
+    writeLine( "2 CORP Ancestris_Equipe_française");
+    writeLine( "3 ADDR http://www.ancestris.com");
     writeLine( "1 DEST ANY");
     writeLine( "1 DATE "+date);
     writeLine( "2 TIME "+time);
