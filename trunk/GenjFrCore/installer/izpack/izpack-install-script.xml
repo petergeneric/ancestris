@@ -16,7 +16,7 @@
     <info>
         <appname>$APP-NAME</appname>
         <appversion>$APP-VERSION</appversion>
-        <url>http://www.arvernes.com/wiki/index.php/GenJ</url>
+        <url>http://www.arvernes.com/wiki/index.php/Ancestris</url>
         <uninstaller>yes</uninstaller>
         <javaversion>1.5</javaversion>
     </info>
