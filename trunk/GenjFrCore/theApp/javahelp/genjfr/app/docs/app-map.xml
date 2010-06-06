@@ -36,4 +36,11 @@ and open the template in the editor.
     <mapID target="ancestris.app.views" url="./first_steps/views_ancestris.html"/>
     <mapID target="ancestris.app.windows" url="./first_steps/fenetrage.html"/>
     <mapID target="ancestris.app.wizard" url="./first_steps/wizard_ancestris.html"/>
+    <mapID target="ancestris.app.tools" url="./tools/tools.html"/>
+    <mapID target="ancestris.app.tools.webbook.step1" url="./tools/webbook_step1.html"/>
+    <mapID target="ancestris.app.tools.webbook.step2" url="./tools/webbook_step2.html"/>
+    <mapID target="ancestris.app.tools.webbook.step3" url="./tools/webbook_step3.html"/>
+    <mapID target="ancestris.app.tools.webbook.step4" url="./tools/webbook_step4.html"/>
+    <mapID target="ancestris.app.tools.webbook.step5" url="./tools/webbook_step5.html"/>
+    <mapID target="ancestris.app.tools.webbook.step6" url="./tools/webbook_step6.html"/>
 </map>

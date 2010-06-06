@@ -26,6 +26,9 @@ and open the template in the editor.
             <tocitem text="La Fenêtre des Rapports" target="ancestris.app.view.reports" />
             <tocitem text="La visualisation Géographique" target="ancestris.app.view.geo" />
         </tocitem>
+        <tocitem expand="true" text="Les outils" target="ancestris.app.tools">
+            <tocitem text="Le livre Web" target="ancestris.app.tools.webbook.step1" />
+        </tocitem>
         <tocitem expand="true" text="Utilisation de base" target="ancestris.app.basic">
         </tocitem>
         <tocitem expand="true" text="Utilisation avancée" target="ancestris.app.advanced">
