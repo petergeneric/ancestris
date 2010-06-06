@@ -18,9 +18,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
-import org.openide.windows.OutputWriter;
 
 // An example action demonstrating how the wizard could be called from within
 // your code. You can copy-paste the code below wherever you need.
@@ -40,7 +37,8 @@ public final class WebBookWizardAction extends CallableSystemAction {
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             // user pressed ok
-            runWebBook(getGedcom());
+            WebBookStarter wbs = new WebBookStarter(getGedcom());
+            wbs.start();
         } else {
             // user pressed annuler
         }
@@ -122,8 +120,4 @@ public final class WebBookWizardAction extends CallableSystemAction {
         return gedcom;
     }
 
-    private synchronized void runWebBook(Gedcom gedcom) {
-        WebBookStarter wbs = new WebBookStarter(gedcom);
-        wbs.start();
-    }
 }

@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.webbook;
 
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 
 /**
@@ -23,8 +24,9 @@ public class WebBook {
     }
 
     private void run() throws InterruptedException {
+        Entity[] ents = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         for (int i = 0; i < 20; i++) {
-            log.write("" + i + "/20");
+            log.write("" + i + "/20 " + ents[i]);
             Thread.sleep(1000);
         }
     }

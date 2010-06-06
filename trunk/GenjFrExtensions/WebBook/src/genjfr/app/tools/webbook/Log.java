@@ -83,6 +83,14 @@ public class Log {
     }
 
 
+    /**
+     * Error hadnling
+     */
+    void printStackTrace(Exception ex) {
+        ex.printStackTrace(outFile);
+        ex.printStackTrace(io.getErr());
+    }
+
 
     /**
      * Extra methods, not sure if will be usefull

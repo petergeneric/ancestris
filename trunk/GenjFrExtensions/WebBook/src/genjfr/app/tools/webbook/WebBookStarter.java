@@ -8,15 +8,11 @@ import genj.gedcom.Gedcom;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
-import org.openide.windows.OutputWriter;
 
 /**
  *
@@ -58,6 +54,9 @@ public class WebBookStarter {
                     new WebBook(gedcom, log);
                     log.write(log.NORMAL, NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecutionSuccess"));
                 } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                } catch (Exception ex) {
+                    log.printStackTrace(ex);
                     //Exceptions.printStackTrace(ex);
                     Thread.currentThread().interrupt();
                 }
