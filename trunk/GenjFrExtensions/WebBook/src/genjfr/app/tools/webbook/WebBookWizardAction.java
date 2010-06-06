@@ -13,12 +13,14 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
+import org.openide.windows.OutputWriter;
 
 // An example action demonstrating how the wizard could be called from within
 // your code. You can copy-paste the code below wherever you need.
@@ -37,10 +39,10 @@ public final class WebBookWizardAction extends CallableSystemAction {
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
-            System.out.println("DEBUG - user pressed ok");
+            // user pressed ok
+            runWebBook(getGedcom());
         } else {
-            System.out.println("DEBUG - user pressed annuler");
-
+            // user pressed annuler
         }
     }
 
@@ -118,5 +120,15 @@ public final class WebBookWizardAction extends CallableSystemAction {
             }
         }
         return gedcom;
+    }
+
+    private void runWebBook(Gedcom gedcom) {
+        InputOutput io = IOProvider.getDefault().getIO("WebBook "+gedcom.getName(), true);
+        io.select();
+        OutputWriter w;
+        w = io.getOut();
+        w.println("Execution du WebBook");
+        w = io.getErr();
+        w.println("Succès !");
     }
 }

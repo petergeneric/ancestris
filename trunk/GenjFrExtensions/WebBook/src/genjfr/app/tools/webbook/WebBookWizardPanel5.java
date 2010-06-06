@@ -6,6 +6,7 @@ package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
 import java.awt.Component;
+import java.io.File;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -17,7 +18,6 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
     private Gedcom gedcom = WebBookWizardAction.getGedcom();
-
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
@@ -37,9 +37,9 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
 
     public HelpCtx getHelp() {
         // Show no Help button for this panel:
-        return HelpCtx.DEFAULT_HELP;
+        //return HelpCtx.DEFAULT_HELP;
         // If you have context help:
-        // return new HelpCtx(SampleWizardPanel1.class);
+        return new HelpCtx("ancestris.app.tools.webbook.step5");
     }
 
     public boolean isValid() {
@@ -90,8 +90,8 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
             return;
         }
         String gedName = gedcom.getName();
-        ((WebBookVisualPanel5) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName+".localWebDir", ""));
-        ((WebBookVisualPanel5) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName+".logFile", ""));
+        ((WebBookVisualPanel5) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName + ".localWebDir", ""));
+        ((WebBookVisualPanel5) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName + ".logFile", ""));
         component.setComponents();
     }
 
@@ -100,21 +100,32 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
             return;
         }
         String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName+".localWebDir", ((WebBookVisualPanel5) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName+".logFile", ((WebBookVisualPanel5) getComponent()).getPref02());
+        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName + ".localWebDir", ((WebBookVisualPanel5) getComponent()).getPref01());
+        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName + ".logFile", ((WebBookVisualPanel5) getComponent()).getPref02());
     }
 
     /*
      * Allow the finish button for this panel
      */
     public boolean isFinishPanel() {
-        return true;
+        return false;
     }
 
     public void validate() throws WizardValidationException {
         String name = component.getPref01();
-        if (name.equals("")) {
+        if (name.trim().isEmpty()) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_LocalWebDir"), null);
+        }
+        File file = new File(name);
+        if (!file.exists()) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Invalid_LocalWebDir"), null);
+        }
+        name = component.getPref02();
+        if (!name.trim().isEmpty()) {
+            file = new File(name);
+            if (!file.getParentFile().exists()) {
+                throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Invalid_LogDir"), null);
+            }
         }
     }
 }

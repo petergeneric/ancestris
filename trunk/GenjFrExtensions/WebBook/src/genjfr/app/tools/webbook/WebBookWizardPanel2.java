@@ -37,9 +37,9 @@ public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, Wi
 
     public HelpCtx getHelp() {
         // Show no Help button for this panel:
-        return HelpCtx.DEFAULT_HELP;
+        //return HelpCtx.DEFAULT_HELP;
         // If you have context help:
-        // return new HelpCtx(SampleWizardPanel1.class);
+        return new HelpCtx("ancestris.app.tools.webbook.step2");
     }
 
     public boolean isValid() {
@@ -122,7 +122,7 @@ public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, Wi
      * Allow the finish button for this panel
      */
     public boolean isFinishPanel() {
-        return true;
+        return false;
     }
 
     public void validate() throws WizardValidationException {
