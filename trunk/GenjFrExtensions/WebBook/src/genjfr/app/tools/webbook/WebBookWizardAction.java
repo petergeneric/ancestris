@@ -122,13 +122,8 @@ public final class WebBookWizardAction extends CallableSystemAction {
         return gedcom;
     }
 
-    private void runWebBook(Gedcom gedcom) {
-        InputOutput io = IOProvider.getDefault().getIO("WebBook "+gedcom.getName(), true);
-        io.select();
-        OutputWriter w;
-        w = io.getOut();
-        w.println("Execution du WebBook");
-        w = io.getErr();
-        w.println("Succès !");
+    private synchronized void runWebBook(Gedcom gedcom) {
+        WebBookStarter wbs = new WebBookStarter(gedcom);
+        wbs.start();
     }
 }
