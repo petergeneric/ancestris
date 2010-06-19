@@ -365,7 +365,7 @@
         </folder>
         <folder name="JavaHelp">
             <file name="app-helpset.xml" url="app-helpset.xml">
-                <attr name="position" intvalue="3929"/>
+                <attr name="position" intvalue="3000"/>
             </file>
         </folder>
         <folder name="Hidden">
