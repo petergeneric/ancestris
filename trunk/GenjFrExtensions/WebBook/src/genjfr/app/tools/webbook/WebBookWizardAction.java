@@ -56,7 +56,8 @@ public final class WebBookWizardAction extends CallableSystemAction {
                         new WebBookWizardPanel3(),
                         new WebBookWizardPanel4(),
                         new WebBookWizardPanel5(),
-                        new WebBookWizardPanel6()
+                        new WebBookWizardPanel6(),
+                        new WebBookWizardPanel7()
                     };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {

@@ -124,7 +124,7 @@ public class WebBookWizardPanel6 implements WizardDescriptor.ValidatingPanel, Wi
      * Allow the finish button for this panel
      */
     public boolean isFinishPanel() {
-        return true;
+        return false;
     }
 
     public void validate() throws WizardValidationException {
