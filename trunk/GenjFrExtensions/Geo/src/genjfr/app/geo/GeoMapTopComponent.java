@@ -993,7 +993,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
     }
 
     public void getHelp() {
-        String id = "genjfr.app.view.geo";
+        String id = "ancestris.app.view.geo";
         Help help = Lookup.getDefault().lookup(Help.class);
         if (help != null && help.isValidID(id, true).booleanValue()) {
             help.showHelp(new HelpCtx(id));
