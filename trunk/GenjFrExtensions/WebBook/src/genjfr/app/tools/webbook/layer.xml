@@ -20,4 +20,11 @@
             </file>
         </folder>
     </folder>
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="webbook-helpset.xml" url="webbook-helpset.xml">
+                <attr name="position" intvalue="5000"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>
