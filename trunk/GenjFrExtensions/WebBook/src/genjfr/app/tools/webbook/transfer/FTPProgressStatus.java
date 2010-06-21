@@ -127,7 +127,7 @@ import java.beans.PropertyChangeEvent;
        }
 
     public void interruption() {
-       String str = wbHandle.trs("upload_userCancelled");
+       String str = wbHandle.log.trs("upload_userCancelled");
        setStatus(str);
        //wbHandle.log.write(str);
        log.write(str);

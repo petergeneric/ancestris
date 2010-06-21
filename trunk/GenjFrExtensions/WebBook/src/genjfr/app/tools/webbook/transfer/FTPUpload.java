@@ -139,10 +139,10 @@ public class FTPUpload extends Thread {
 
        closeServerConnection();
        if (cpt < totalToTransfer || moreThanOneLoop) {
-          log.write(wbHandle.trs("upload_error"), true);
+          log.write(wbHandle.log.trs("upload_error"), true);
           }
        if (cpt == totalToTransfer) {
-          log.write(wbHandle.trs("upload_alldone"), true);
+          log.write(wbHandle.log.trs("upload_alldone"), true);
           }
        progress.close();
        }
@@ -190,7 +190,7 @@ public class FTPUpload extends Thread {
           }
 
        catch(Exception e) {
-          log.write(wbHandle.trs("upload_errorConn", e));
+          log.write(wbHandle.log.trs("upload_errorConn", e));
           timeOutError = isTimeout(e);
           return false;
           }
@@ -250,7 +250,7 @@ public class FTPUpload extends Thread {
         Timer timer = new Timer(120000, new ActionListener() {
            public void actionPerformed(ActionEvent e) {
               try {
-                 logEvent(wbHandle.trs("upload_error_timeout"));
+                 logEvent(wbHandle.log.trs("upload_error_timeout"));
                  abort();
                  timeOutError = true;
                  dataOutput.close(); // this will generate a socket closed error in the dataOutput.write statement below
@@ -282,7 +282,7 @@ public class FTPUpload extends Thread {
             byte b[] = new byte[16384];
             int amount;
             RandomAccessFile file = new RandomAccessFile(fileToTransfer, "r");
-            debugMsg(wbHandle.trs("upload_uponefile"));
+            debugMsg(wbHandle.log.trs("upload_uponefile"));
             dataTransferred = 0;
             while((amount = file.read(b)) > 0) {
                dataOutput.write(b, 0, amount);
@@ -296,14 +296,14 @@ public class FTPUpload extends Thread {
             timer.stop();
 
             //Close connection
-            debugMsg(wbHandle.trs("upload_storefile"));
+            debugMsg(wbHandle.log.trs("upload_storefile"));
             dataOutput.close();
             FTPdata.close();
 
             //Get response for successful file transfer
             getResponse();
             if (cmdResponseCode == TRANSFER_OK) {
-               debugMsg(wbHandle.trs("upload_success"));
+               debugMsg(wbHandle.log.trs("upload_success"));
             }
 
             dataBusy = false; //Set data channel vacant
@@ -312,7 +312,7 @@ public class FTPUpload extends Thread {
             dataBusy = false;
             timer.stop();
             timeOutError = isTimeout(e);
-            return exceptionMsg(e, wbHandle.trs("upload_errorPut", e));
+            return exceptionMsg(e, wbHandle.log.trs("upload_errorPut", e));
         }
         return true;
     }
@@ -342,7 +342,7 @@ public class FTPUpload extends Thread {
        }
        catch(Exception e) {
            timeOutError = isTimeout(e);
-           return exceptionMsg(e, wbHandle.trs("upload_errorPut", e));
+           return exceptionMsg(e, wbHandle.log.trs("upload_errorPut", e));
        }
        return true;
     }
@@ -446,7 +446,7 @@ public class FTPUpload extends Thread {
             try {
                 command("QUIT");
                } catch(IOException e) {
-                log.write(wbHandle.trs("upload_errorClose", e));
+                log.write(wbHandle.log.trs("upload_errorClose", e));
                }
            }
 
@@ -462,7 +462,7 @@ public class FTPUpload extends Thread {
                }
            }
            catch(IOException e) {
-              log.write(wbHandle.trs("upload_errorClose", e));
+              log.write(wbHandle.log.trs("upload_errorClose", e));
            }
 
         return (FTPcmd == null);
@@ -482,17 +482,17 @@ public class FTPUpload extends Thread {
 
        // Calculates which files to remove on the server if necessary
        try  {
-          logEventTitle(wbHandle.trs("upload_check"));
-          uploadRegister.calculate(wbHandle.param_FTP_transfertType);
+          logEventTitle(wbHandle.log.trs("upload_check"));
+          uploadRegister.calculate(wbHandle.wp.param_FTP_transfertType);
           uploadRegister.save();
           if (!moreThanOneLoop) {
              totalToTransfer = uploadRegister.getNbFilesToTransfer();
              }
-          logEventTitle(wbHandle.trs("upload_foundlocal", localFiles.size()));
-          logEventTitle(wbHandle.trs("upload_foundwbHandle.trsf", totalToTransfer));
+          logEventTitle(wbHandle.log.trs("upload_foundlocal", localFiles.size()));
+          logEventTitle(wbHandle.log.trs("upload_foundwbHandle.log.trsf", totalToTransfer));
           }
        catch (Exception e) {
-          exceptionMsg(e, wbHandle.trs("upload_error_check", e));
+          exceptionMsg(e, wbHandle.log.trs("upload_error_check", e));
           return false;
           }
        return true; 
@@ -509,7 +509,7 @@ public class FTPUpload extends Thread {
 
        // UPLOAD - Send files across
        progress.setTotal(totalToTransfer);
-       logEventTitle(wbHandle.trs("upload_starting"));
+       logEventTitle(wbHandle.log.trs("upload_starting"));
        try  {
             for (Iterator it = localFiles.iterator(); it.hasNext();) {
                File file = (File) it.next();
@@ -518,7 +518,7 @@ public class FTPUpload extends Thread {
                // Do not upload file if not need to be
                if (!uploadRegister.isToTransfer(file)) {
                   if (!moreThanOneLoop) {
-                     log.write(wbHandle.trs("upload_noneed", new String[] { currentLocalDir, file.getName() } ));
+                     log.write(wbHandle.log.trs("upload_noneed", new String[] { currentLocalDir, file.getName() } ));
                      }
                   continue;
                   }
@@ -527,12 +527,12 @@ public class FTPUpload extends Thread {
                if (currentLocalDir.compareTo(currentRemoteDir) != 0) {
                  logEvent("cd "+remoteRoot);
                  if (!cd(remoteRoot)) { 
-                    logEvent(wbHandle.trs("upload_dirnotthere"));
+                    logEvent(wbHandle.log.trs("upload_dirnotthere"));
                     logEvent("mkdir "+remoteRoot);
                     mkdir(remoteRoot);
                     logEvent("cd "+remoteRoot);
                     if (!cd(remoteRoot)) { 
-                       logEvent(wbHandle.trs("upload_error_ftp_cd", cmdResponse));
+                       logEvent(wbHandle.log.trs("upload_error_ftp_cd", cmdResponse));
                        return false;
                        }
                     }
@@ -544,7 +544,7 @@ public class FTPUpload extends Thread {
                         }
                      logEvent("cd "+ dir);
                      if (!cd(dir)) { 
-                        logEvent(wbHandle.trs("upload_dirnotthere"));
+                        logEvent(wbHandle.log.trs("upload_dirnotthere"));
                         logEvent("mkdir "+dir);
                         mkdir(dir);
                         logEvent("cd "+dir);
@@ -558,14 +558,14 @@ public class FTPUpload extends Thread {
                String storeName = remoteRoot + ((currentRemoteDir.length() == 0) ? "" : currentRemoteDir+"/") + file.getName();
                logEvent("put "+storeName);
                if (!put(file, storeName)) { 
-                  logEvent(wbHandle.trs("upload_error_ftp_put", "PUT"));
+                  logEvent(wbHandle.log.trs("upload_error_ftp_put", "PUT"));
                   return false; 
                   }
                cpt++;
                uploadRegister.setFileTransferred(file);
                totalSize += (dataTransferred / 1024);
-               log.write(wbHandle.trs("upload_transferred", new String[] { currentLocalDir, file.getName(), String.valueOf(dataTransferred) } ));
-               logEventTitle(wbHandle.trs("upload_donesofar", new String[] { String.valueOf(cpt), String.valueOf(totalToTransfer), String.valueOf(totalSize) } ));
+               log.write(wbHandle.log.trs("upload_transferred", new String[] { currentLocalDir, file.getName(), String.valueOf(dataTransferred) } ));
+               logEventTitle(wbHandle.log.trs("upload_donesofar", new String[] { String.valueOf(cpt), String.valueOf(totalToTransfer), String.valueOf(totalSize) } ));
                progress.increment(1);
                log.write(" ");
                if (!progress.isActive()) {
@@ -573,11 +573,11 @@ public class FTPUpload extends Thread {
                   }
                uploadRegister.save(); // save after each transfer - will help in case of error to restart where it stopped.
                }
-          logEvent(wbHandle.trs("upload_wbHandle.trsfComplete"));
+          logEvent(wbHandle.log.trs("upload_wbHandle.log.trsfComplete"));
           uploadRegister.save();
 
           } catch(IOException e) {
-             exceptionMsg(e, wbHandle.trs("upload_errorLoop", e));
+             exceptionMsg(e, wbHandle.log.trs("upload_errorLoop", e));
              return false;
           }
 
@@ -600,19 +600,19 @@ public class FTPUpload extends Thread {
 
        List<String> listToRemove = uploadRegister.getListToRemove();
        totalToRemove = uploadRegister.getNbFilesToRemove();
-       logEventTitle(wbHandle.trs("upload_remove", totalToRemove));
+       logEventTitle(wbHandle.log.trs("upload_remove", totalToRemove));
        String FTP_SYNCHRONISE =  NbBundle.getMessage(WebBook.class, "transferType.type3");
        if (totalToRemove == 0) {
-          logEventTitle(wbHandle.trs("upload_noremove"));
+          logEventTitle(wbHandle.log.trs("upload_noremove"));
           return false;
           }
-       if (!wbHandle.param_FTP_transfertType.equals(FTP_SYNCHRONISE)) {
-          logEventTitle(wbHandle.trs("upload_usernoremove"));
+       if (!wbHandle.wp.param_FTP_transfertType.equals(FTP_SYNCHRONISE)) {
+          logEventTitle(wbHandle.log.trs("upload_usernoremove"));
           return false;
           }
 
        progress.setTotal(totalToRemove);
-       logEventTitle(wbHandle.trs("upload_startingrm"));
+       logEventTitle(wbHandle.log.trs("upload_startingrm"));
        try  {
             Collections.sort(listToRemove);
             String remoteDir = "";
@@ -628,7 +628,7 @@ public class FTPUpload extends Thread {
                  cd(remoteRoot);
                  logEvent("cd "+remoteDir);
                  if (!cd(remoteDir)) { 
-                    logEvent(wbHandle.trs("upload_nodir"));
+                    logEvent(wbHandle.log.trs("upload_nodir"));
                     uploadRegister.setFileRemoved(key);
                     progress.increment(1);
                     continue;
@@ -636,20 +636,20 @@ public class FTPUpload extends Thread {
                  }
                logEvent("rm "+ file);
                if (!rm(file)) { 
-                  logEvent(wbHandle.trs("upload_cannotrm", file));
+                  logEvent(wbHandle.log.trs("upload_cannotrm", file));
                   }
                else {
-                  logEvent(wbHandle.trs("upload_removed", file));
+                  logEvent(wbHandle.log.trs("upload_removed", file));
                   }
                uploadRegister.setFileRemoved(key);
                progress.increment(1);
             }
 
-          logEvent(wbHandle.trs("upload_rmComplete"));
+          logEvent(wbHandle.log.trs("upload_rmComplete"));
           uploadRegister.save();
 
           } catch(IOException e) {
-             exceptionMsg(e, wbHandle.trs("upload_errorrm", e));
+             exceptionMsg(e, wbHandle.log.trs("upload_errorrm", e));
              return false;
           }
 
@@ -707,7 +707,7 @@ public class FTPUpload extends Thread {
      */
     private boolean exceptionMsg(Exception exception, String msg) {
         logEvent(msg);
-        progress.setButton(wbHandle.trs("upload_button_term"));
+        progress.setButton(wbHandle.log.trs("upload_button_term"));
         exception.printStackTrace(log.getOutput());
         System.out.println(msg);
         return false;

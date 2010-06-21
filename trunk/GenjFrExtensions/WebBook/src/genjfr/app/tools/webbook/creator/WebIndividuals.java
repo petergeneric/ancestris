@@ -3,6 +3,8 @@ package genjfr.app.tools.webbook.creator;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.TagPath;
+import genjfr.app.tools.webbook.WebBook;
+import genjfr.app.tools.webbook.WebBookParams;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -23,12 +25,12 @@ public class WebIndividuals extends WebSection {
     /**
      * Constructor
      */
-    public WebIndividuals(boolean generate) {
-        super(generate);
+    public WebIndividuals(boolean generate, WebBook wb, WebBookParams wp, WebHelper wh) {
+        super(generate, wb, wp, wh);
     }
 
-    public void init(WebHelper wh) {
-        init(wh, trs("TXT_Individualslist"), "persons", "persons_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection * 2);
+    public void init() {
+        init(trs("TXT_Individualslist"), "persons", "persons_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection * 2);
 
     }
 
@@ -70,7 +72,7 @@ public class WebIndividuals extends WebSection {
 
         int cpt = 0;
         int iNames = 0,
-                nbNames = wh.getLastNames().size();
+                nbNames = wh.getLastNames(DEFCHAR, sortLastnames).size();
         int previousPage = 0,
                 currentPage = 0,
                 nextPage = 0,
@@ -83,14 +85,14 @@ public class WebIndividuals extends WebSection {
             cpt++;
 
             // Check if need to increment lastname
-            String lastName = wh.getLastName(indi);
+            String lastName = wh.getLastName(indi, DEFCHAR);
             if (lastName.compareTo(previousLastName) != 0) {
                 previousLastName = lastName;
                 iNames++;
             }
 
             // Check if need to write anchor letter
-            String anchorLastName = wh.htmlAnchorText(lastName);
+            String anchorLastName = htmlAnchorText(lastName);
             char cLetter = anchorLastName.charAt(0);
             if (cLetter != previousLetter) {
                 previousLetter = cLetter;
@@ -115,14 +117,14 @@ public class WebIndividuals extends WebSection {
                 if (out != null) {
                     out.println("</p>");
                     exportLinks(out, sectionPrefix + String.format(formatNbrs, currentPage - 1) + sectionSuffix, Math.max(1, previousPage - 1), currentPage == lastPage ? lastPage : nextPage - 1, lastPage);
-                    wh.printCloseHTML(out);
+                    printCloseHTML(out);
                     wh.log.write(previousListFile + " - Done.");
                     out.close();
                 }
                 previousListFile = listfile;
                 file = wh.getFileForName(dir, listfile);
-                out = wh.getWriter(file);
-                wh.printOpenHTML(out, "TXT_Individualslist", this);
+                out = wh.getWriter(file, UTF8);
+                printOpenHTML(out, "TXT_Individualslist", this);
                 out.println("<p class=\"letters\">");
                 out.println("<br /><br />");
                 for (Letters l : Letters.values()) {
@@ -144,7 +146,7 @@ public class WebIndividuals extends WebSection {
                 }
             }
 
-            String personfile = wh.buildLink(this, sectionList, cpt);
+            String personfile = buildLink(this, sectionList, cpt);
             if (writeLetter) {
                 if (!first) {
                     out.println("</p>");
@@ -165,7 +167,7 @@ public class WebIndividuals extends WebSection {
         if (out != null) {
             out.println("</p>");
             exportLinks(out, listfile, previousPage, nextPage, lastPage);
-            wh.printCloseHTML(out);
+            printCloseHTML(out);
             wh.log.write(previousListFile + " - Done.");
         }
 
@@ -197,7 +199,7 @@ public class WebIndividuals extends WebSection {
         if (birthDateProp == null) {
             birthDateString = NODATE;
         } else {
-            birthDateString = wh.htmlText(birthDateProp.toString());
+            birthDateString = htmlText(birthDateProp.toString());
         }
 
         PropertyDate deathDateProp = (PropertyDate) indi.getProperty(new TagPath("INDI:DEAT:DATE"));
@@ -205,15 +207,15 @@ public class WebIndividuals extends WebSection {
         if (deathDateProp == null) {
             deathDateString = NODATE;
         } else {
-            deathDateString = wh.htmlText(deathDateProp.toString());
+            deathDateString = htmlText(deathDateProp.toString());
         }
 
-        String name = wh.getLastName(indi);
+        String name = wh.getLastName(indi, DEFCHAR);
         String first = indi.getFirstName();
         String anchor = indi.getId();
 
         if (writeAnchor) {
-            out.println("<a name=\"" + wh.htmlAnchorText(name) + "\"></a>");
+            out.println("<a name=\"" + htmlAnchorText(name) + "\"></a>");
         }
 
         if (wh.isPrivate(indi)) {
@@ -225,7 +227,7 @@ public class WebIndividuals extends WebSection {
 
         out.println(sexString + SPACE);
         out.print("<a href=\"" + personfile + '#' + anchor + "\">");
-        out.println(wh.htmlText(name + ", " + first));
+        out.println(htmlText(name + ", " + first));
         out.print("</a>");
         out.println(SPACE + "(" + SPACE + birthDateString + SPACE + "-" + SPACE + deathDateString + SPACE + ")");
         out.println("<br />");
@@ -251,8 +253,8 @@ public class WebIndividuals extends WebSection {
         String listfile = "";
         for (Iterator it = indis.iterator(); it.hasNext();) {
             Indi indi = (Indi) it.next();
-            String lastname = wh.getLastName(indi);
-            String str = wh.htmlAnchorText(lastname);
+            String lastname = wh.getLastName(indi, DEFCHAR);
+            String str = htmlAnchorText(lastname);
             if (str == null) {
                 continue;
             }
@@ -293,7 +295,7 @@ public class WebIndividuals extends WebSection {
      * Exports page links
      */
     private void exportLinks(PrintWriter out, String pagename, int previous, int next, int last) {
-        wh.printLinks(out, pagename,
+        printLinks(out, pagename,
                 sectionPrefix + String.format(formatNbrs, 1) + sectionSuffix, // start
                 sectionPrefix + String.format(formatNbrs, previous) + sectionSuffix, // previous
                 sectionPrefix + String.format(formatNbrs, next) + sectionSuffix, // next

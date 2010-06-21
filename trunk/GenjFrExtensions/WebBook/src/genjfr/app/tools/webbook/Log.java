@@ -140,5 +140,19 @@ public class Log {
         return;
     }
 
+    /**
+     * Translators methods to make it quicker to code
+     */
+    public String trs(String string) {
+        return NbBundle.getMessage(WebBook.class, string);
+    }
+
+    public String trs(String string, Object param1) {
+        return NbBundle.getMessage(WebBook.class, string, param1);
+    }
+
+    public String trs(String string, Object[] arr) {
+        return NbBundle.getMessage(WebBook.class, string, arr);
+    }
 } 
   

@@ -8,6 +8,8 @@
 package genjfr.app.tools.webbook.creator;
 
 
+import genjfr.app.tools.webbook.WebBook;
+import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -25,12 +27,12 @@ public class WebLastnames extends WebSection {
     /**
      * Constructor
      */
-    public WebLastnames(boolean generate) {
-        super(generate);
+    public WebLastnames(boolean generate, WebBook wb, WebBookParams wp, WebHelper wh) {
+        super(generate, wb, wp, wh);
     }
 
-    public void init(WebHelper wh) {
-        init(wh, trs("TXT_Lastnames"), "names", "names", "", ".html", 1, 0);
+    public void init() {
+        init(trs("TXT_Lastnames"), "names", "names", "", ".html", 1, 0);
     }
 
 
@@ -42,11 +44,11 @@ public class WebLastnames extends WebSection {
 
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + ((sectionDir.length() == 0) ? "" : File.separator + sectionDir), true);
         File file = wh.getFileForName(dir, sectionPrefix + sectionSuffix);
-        PrintWriter out = wh.getWriter(file);
-        sectionList = wh.wbHandle.sectionIndividuals;
+        PrintWriter out = wh.getWriter(file, UTF8);
+        sectionList = wb.sectionIndividuals;
 
         // HEAD
-        wh.printOpenHTML(out, "TXT_Lastnames", this);
+        printOpenHTML(out, "TXT_Lastnames", this);
 
         // START OF PAGE ------------------
         calcLetters();
@@ -54,8 +56,8 @@ public class WebLastnames extends WebSection {
         // END OF PAGE ------------------
 
         // TAIL
-        wh.printLinks(out, sectionPrefix + sectionSuffix, this);
-        wh.printCloseHTML(out);
+        printLinks(out, sectionPrefix + sectionSuffix, this);
+        printCloseHTML(out);
 
         // done
         out.close();
@@ -82,17 +84,17 @@ public class WebLastnames extends WebSection {
             out.println(DEFCHAR + SPACE + SPACE);
         }
         out.println("</p>");
-        wh.printLinks(out, sectionPrefix + sectionSuffix, this);
+        printLinks(out, sectionPrefix + sectionSuffix, this);
 
         // Create link for each last name
-        Iterator it = wh.getLastNames().iterator();
+        Iterator it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
         char last = ' ';
         int cpt = 1, iNames = 1;
         out.println("<p class=\"nameblock\">");
         while (it.hasNext()) {
             // create new name class (first char) if necessary
             String name = it.next().toString();
-            String anchor = wh.htmlAnchorText(name);
+            String anchor = htmlAnchorText(name);
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
                 String l = String.valueOf(last);
@@ -104,10 +106,10 @@ public class WebLastnames extends WebSection {
                 out.println("<p class=\"nameblock\">");
             }
             // create link to name file
-            String listfile = wh.buildLink(this, sectionList, iNames);
+            String listfile = buildLink(this, sectionList, iNames);
             out.print("<span class=\"name\">");
-            out.print("<a href=\"" + listfile + '#' + anchor + "\">" + wh.htmlText(name) + "</a>" + SPACE);
-            out.print("<span class=\"occu\">(" + wh.getLastNameCount(name) + ")</span>");
+            out.print("<a href=\"" + listfile + '#' + anchor + "\">" + htmlText(name) + "</a>" + SPACE);
+            out.print("<span class=\"occu\">(" + wh.getLastNameCount(name, DEFCHAR) + ")</span>");
             out.print("</span>" + SPACE + SPACE + SPACE);
             cpt++;
             iNames++;
@@ -131,7 +133,7 @@ public class WebLastnames extends WebSection {
             linkForLetter.put(l.toString(), "0");
         }
 
-        Iterator it = wh.getLastNames().iterator();
+        Iterator it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
         while (it.hasNext()) {
             String name = it.next().toString();
             String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase() : DEFCHAR;
