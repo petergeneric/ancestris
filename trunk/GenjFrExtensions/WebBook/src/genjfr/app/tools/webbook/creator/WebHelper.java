@@ -30,6 +30,7 @@ import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
 import java.nio.charset.Charset;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.NbPreferences;
 
 /**
@@ -37,8 +38,6 @@ import org.openide.util.NbPreferences;
  *
  * Tools for WebBook:
  * - file and directory manipulation
- * - web pages writing
- * - style sheet writing
  * - gedcom sets
  * - misc
  *
@@ -151,8 +150,7 @@ public class WebHelper {
 
         } catch (IOException e) {
             //e.printStackTrace();
-            log.write("Error in WebHelper-getWriter: " + e.getMessage());
-            log.write(e.toString());
+            log.write(log.ERROR, "getWriter - " + e.getMessage());
         }
         return pw;
     }
@@ -175,14 +173,6 @@ public class WebHelper {
             return dir.delete();
         }
         return true;
-    }
-
-    /**
-     * Get directory where images are located for male and female icons.
-     */
-    public String getGenjImagesDir() {
-        String fullname = (new File("report" + File.separator + "webbook")).getAbsolutePath();
-        return fullname;
     }
 
     /**
@@ -359,19 +349,22 @@ public class WebHelper {
     }
 
     /**
-     * The static method that actually performs the file copy.
-     * Before copying the file, however, it performs a lot of tests to make
-     * sure everything is as it should be.
-     * Filenames need to be aboslute path
+     * Copy method for resource copy
      */
     public void copy(String from_name, String to_name) throws IOException {
-        copy(from_name, to_name, false, true);
+        FileUtil.copy(wp.getClass().getResourceAsStream(from_name), new FileOutputStream(new File(to_name)));
     }
 
+    /**
+     * Copy method for file to file copy
+     */
     public void copy(String from_name, String to_name, boolean linkOnly) throws IOException {
         copy(from_name, to_name, linkOnly, true);
     }
 
+    /**
+     * Copy method for file to file copy
+     */
     public void copy(String from_name, String to_name, boolean linkOnly, boolean force) throws IOException {
 
         File from_file = new File(from_name);  // Get File objects from Strings
@@ -473,7 +466,7 @@ public class WebHelper {
                             from.close();
                         } catch (IOException e) {
                             //e.printStackTrace();
-                            log.write(e.toString());
+                            log.write(log.ERROR, "copy (from) - " + e.getMessage());
                         }
                     }
                     if (to != null) {
@@ -481,14 +474,14 @@ public class WebHelper {
                             to.close();
                         } catch (IOException e) {
                             //e.printStackTrace();
-                            log.write(e.toString());
+                            log.write(log.ERROR, "copy (to) - " + e.getMessage());
                         }
                     }
                 }
             }
         } catch (Exception e) {
             //e.printStackTrace();
-            log.write(e.toString());
+            log.write(log.ERROR, "copy - " + e.getMessage());
         }
 
         // Update register
@@ -501,7 +494,7 @@ public class WebHelper {
 
     /** A convenience method to throw an exception */
     private void abort(String msg) throws IOException {
-        log.write(msg.toString());
+        log.write(log.ERROR, "abort - " + msg);
         throw new IOException(msg);
     }
 
@@ -537,7 +530,7 @@ public class WebHelper {
             mediaTracker.waitForID(0);
         } catch (Exception e) {
             //e.printStackTrace();
-            log.write(e.toString());
+            log.write(log.ERROR, "scaleImage (mediaTracker) - " + e.getMessage());
         }
 
         // determine thumbnail size from WIDTH and HEIGHT
@@ -587,13 +580,13 @@ public class WebHelper {
             result = true;
         } catch (Exception e) {
             // e.printStackTrace();
-            log.write(e.toString());
+            log.write(log.ERROR, "scaleImage (encoding) - " + e.getMessage());
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
-                    ;
+                    log.write(log.ERROR, "scaleImage (out) - " + e.getMessage());
                 }
             }
         }
@@ -632,13 +625,14 @@ public class WebHelper {
             }
             sb.append(new String(data, "UTF8"));
         } catch (IOException e) {
-            log.write(e.toString());
+            log.write(log.ERROR, "readFile (read) - " + e.getMessage());
         } finally {
             try {
                 if (in != null) {
                     in.close();
                 }
             } catch (IOException e) {
+                log.write(log.ERROR, "readFile (finally) - " + e.getMessage());
             }
         }
 
@@ -657,7 +651,7 @@ public class WebHelper {
             out.write(text);
             out.close();
         } catch (IOException e) {
-            log.write(e.toString());
+            log.write(log.ERROR, "writeFile - " + e.getMessage());
             return false;
         }
         return true;
@@ -1018,7 +1012,7 @@ public class WebHelper {
             return String.format("%02d", pit.getMonth() + 1) + String.format("%02d", pit.getDay() + 1);
         } catch (GedcomException e) {
             // e.printStackTrace();
-            log.write(e.toString());
+            log.write(log.ERROR, e.getMessage());
         }
         return null;
     }
@@ -1053,6 +1047,7 @@ public class WebHelper {
                 try {
                     startSosa = Integer.parseInt(sosaProp.getValue(), 10);
                 } catch (NumberFormatException e) {
+                    log.write(log.ERROR, e.getMessage());
                 }
             }
         }

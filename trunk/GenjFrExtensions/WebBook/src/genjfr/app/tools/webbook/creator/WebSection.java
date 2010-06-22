@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -48,8 +49,9 @@ public class WebSection {
     private String siteDesc = "";
     private String author = "";
     private String keywords = "";
-    private String language = "fr";
+    private String language = Locale.getDefault().getLanguage();
     public String themeDir = "theme";
+    public String indexFile = "index.html";
     public String styleFile = "style.css";
     public String css = themeDir + SEP + styleFile;
     //
@@ -115,8 +117,6 @@ public class WebSection {
         return wb.log.trs(string, arr);
     }
 
-
-
     /**
      * Helper - Writes HTML header and body information
      */
@@ -128,6 +128,7 @@ public class WebSection {
         printOpenHTML(out, title, null);
     }
     //USED
+
     public void printOpenHTML(PrintWriter out, String title, WebSection section) {
         printOpenHTMLHead(out, title, section);
         printOpenHTMLBody(out, title, section);
@@ -432,7 +433,6 @@ public class WebSection {
         out.println("</body></html>");
         out.close();
     }
-
     /**
      * Comparator to sort Lastnames
      */
@@ -458,10 +458,10 @@ public class WebSection {
             return name1.compareTo(name2);
         }
     };
-
     /**
      * Comparator to sort Individuals
      */
+    @SuppressWarnings("unchecked")
     private Comparator sortIndividuals = new Comparator() {
 
         public int compare(Object o1, Object o2) {
@@ -479,6 +479,7 @@ public class WebSection {
     /**
      * Set keywords for meta tag
      */
+    @SuppressWarnings("unchecked")
     public void setKeywords() {
         String kw = "";
         List<String> listnames = wh.getLastNames(DEFCHAR, sortLastnames);
@@ -509,7 +510,6 @@ public class WebSection {
         this.keywords = kw;
     }
 
-
     /**
      * Convert string into html compatible text
      */
@@ -525,6 +525,7 @@ public class WebSection {
         return htmlText(o.toString());
     }
     //USED
+
     public String htmlText(String text) {
         return htmlText(text, true);
     }
@@ -978,10 +979,6 @@ public class WebSection {
         }
         return strOutput.toString();
     }
-
-
-
-
 } // End_of_Class
 
 

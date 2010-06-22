@@ -26,6 +26,7 @@ public class Log {
     private PrintWriter outFile;
     public boolean NORMAL = true;
     public boolean ERROR = false;
+    public boolean endSuccessful = true;
 
     /** Constructor */
     public Log(String logname, String title) {
@@ -70,6 +71,7 @@ public class Log {
             io.getOut().println(text);
         } else {
             io.getErr().println(text);
+            endSuccessful = false;
         }
         outFile.println(text);
     }
@@ -84,11 +86,12 @@ public class Log {
 
 
     /**
-     * Error hadnling
+     * Error handling
      */
-    void printStackTrace(Exception ex) {
+    public void printStackTrace(Exception ex) {
         ex.printStackTrace(outFile);
         ex.printStackTrace(io.getErr());
+        endSuccessful = false;
     }
 
 

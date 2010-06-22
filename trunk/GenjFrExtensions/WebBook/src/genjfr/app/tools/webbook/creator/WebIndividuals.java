@@ -168,7 +168,7 @@ public class WebIndividuals extends WebSection {
             out.println("</p>");
             exportLinks(out, listfile, previousPage, nextPage, lastPage);
             printCloseHTML(out);
-            wh.log.write(previousListFile + " - Done.");
+            wh.log.write(previousListFile + trs("EXEC_DONE"));
         }
 
         // done

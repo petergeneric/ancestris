@@ -52,7 +52,11 @@ public class WebBookStarter {
                 log.write(NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecutionStart"));
                 try {
                     new WebBook(gedcom, log);
-                    log.write(log.NORMAL, NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecutionSuccess"));
+                    if (log.endSuccessful) {
+                        log.write(log.NORMAL, NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecutionSuccess"));
+                    } else {
+                        log.write(log.ERROR, NbBundle.getMessage(WebBookStarter.class, "TASK_WebBookExecutionFailed"));
+                    }
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 } catch (Exception ex) {

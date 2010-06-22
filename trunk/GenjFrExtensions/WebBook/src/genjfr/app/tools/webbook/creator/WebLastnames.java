@@ -61,7 +61,7 @@ public class WebLastnames extends WebSection {
 
         // done
         out.close();
-        wh.log.write(sectionPrefix + sectionSuffix + " - Done.");
+        wh.log.write(sectionPrefix + sectionSuffix + trs("EXEC_DONE"));
     }
 
     /**

@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.webbook;
 
+import genjfr.app.tools.webbook.creator.WebHome;
 import genj.gedcom.Gedcom;
 import genjfr.app.tools.webbook.creator.WebHelper;
 import genjfr.app.tools.webbook.creator.WebIndividuals;
@@ -53,14 +54,15 @@ public class WebBook {
 
     private Gedcom gedcom;
     public  Log log;
-    public WebBookParams wp = new WebBookParams(gedcom.getName());
-    private WebHelper wh = new WebHelper(gedcom, log, wp);
+    public WebBookParams wp;
+    private WebHelper wh;
     //
     // WebBook sections definition
     //
-    public WebTheme sectionTheme = new WebTheme(true, this, wp, wh);
-    public WebLastnames sectionLastnames = new WebLastnames(true, this, wp, wh);
-    public WebIndividuals sectionIndividuals = new WebIndividuals(true, this, wp, wh);
+    public WebTheme sectionTheme;
+    public WebHome sectionHome;
+    public WebLastnames sectionLastnames;
+    public WebIndividuals sectionIndividuals;
     //
 
     /**
@@ -72,6 +74,12 @@ public class WebBook {
     public WebBook(Gedcom gedcom, Log log) throws InterruptedException {
         this.gedcom = gedcom;
         this.log = log;
+        wp = new WebBookParams(gedcom.getName());
+        wh = new WebHelper(gedcom, log, wp);
+        sectionTheme = new WebTheme(true, this, wp, wh);
+        sectionHome = new WebHome(true, this, wp, wh);
+        sectionLastnames = new WebLastnames(true, this, wp, wh);
+        sectionIndividuals = new WebIndividuals(true, this, wp, wh);
         run();
     }
 
@@ -127,7 +135,7 @@ public class WebBook {
         /**
          * Create home page
          */
-        //createHomePage();
+        sectionHome.create();
 
 
 
