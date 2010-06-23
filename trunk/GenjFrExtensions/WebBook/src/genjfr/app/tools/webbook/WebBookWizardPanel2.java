@@ -115,7 +115,6 @@ public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, Wi
         NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispNotes", ((WebBookVisualPanel2) getComponent()).getPref07());
         NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispId", ((WebBookVisualPanel2) getComponent()).getPref08());
         NbPreferences.forModule(WebBookWizardPanel2.class).put(gedName+".dispEmailButton", ((WebBookVisualPanel2) getComponent()).getPref09());
-        component.setComponents();
 }
 
     /*

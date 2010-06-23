@@ -23,10 +23,6 @@ public final class WebBookVisualPanel2 extends JPanel {
         gedcom = WebBookWizardAction.getGedcom();
         indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         initComponents();
-        setComponents();
-    }
-
-    public void setComponents() {
     }
 
     @Override

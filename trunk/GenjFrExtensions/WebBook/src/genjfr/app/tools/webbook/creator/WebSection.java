@@ -28,8 +28,6 @@ public class WebSection {
     public WebBookParams wp = null;
     public WebHelper wh = null;
     //
-    public Indi indiDeCujus = null;
-    //
     public int sizeIndiSection = 50;
     //
     public String sectionName;         // e.g. "Individuals of my genealogy"
@@ -48,7 +46,7 @@ public class WebSection {
     private String index = "";
     private String siteDesc = "";
     private String author = "";
-    private String keywords = "";
+    private String keywords = null;
     private String language = Locale.getDefault().getLanguage();
     public String themeDir = "theme";
     public String indexFile = "index.html";
@@ -87,6 +85,7 @@ public class WebSection {
         this.sectionSuffix = sectionSuffix;
         this.nbPerPage = nbPerPage;
         this.sectionLink = sectionDir + SEP + sectionPrefix + ((formatNbrs.length() == 0) ? "" : String.format(formatNbrs, firstPage)) + sectionSuffix;
+        keywords = getKeywords();
         return;
     }
 
@@ -480,7 +479,10 @@ public class WebSection {
      * Set keywords for meta tag
      */
     @SuppressWarnings("unchecked")
-    public void setKeywords() {
+    public String getKeywords() {
+        if (keywords != null) {
+            return keywords;
+        }
         String kw = "";
         List<String> listnames = wh.getLastNames(DEFCHAR, sortLastnames);
         SortedMap<Integer, String> volumePerName = new TreeMap<Integer, String>(new Comparator() {
@@ -508,6 +510,7 @@ public class WebSection {
             }
         }
         this.keywords = kw;
+        return keywords;
     }
 
     /**

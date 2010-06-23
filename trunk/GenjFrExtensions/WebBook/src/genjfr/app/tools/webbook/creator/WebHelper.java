@@ -50,12 +50,16 @@ public class WebHelper {
     public Gedcom gedcom;
     public Log log;
     public WebBookParams wp;
+    //
+    public Indi indiDeCujus = null;
+    //
     /**
      * Variables
      */
     //
     //
     public final String SOSA_TAG = "_SOSA";
+    public final String DEFCHAR = "-";
     //
     private MediaTracker mediaTracker = new MediaTracker(new Container());
 
@@ -678,6 +682,25 @@ public class WebHelper {
     /**
      * Get sosa if available
      */
+    Indi getIndiDeCujus(String str) {
+        //
+        if (indiDeCujus != null) {
+            return indiDeCujus;
+        }
+        Entity[] indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
+        for (int i = 0; i < indis.length; i++) {
+            Indi indi = (Indi)indis[i];
+            if (indi.toString().equals(str)) {
+                indiDeCujus = indi;
+                break;
+            }
+        }
+        return indiDeCujus;
+    }
+
+    /**
+     * Get sosa if available
+     */
     public String getSosa(Indi indi) {
         if (indi == null) {
             return "";
@@ -704,6 +727,19 @@ public class WebHelper {
         }
         return (List) new ArrayList((Collection) listOfLastnames.keySet());
     }
+
+    public int getTotalNamesCount() {
+        if (!initLastname) {
+            initLastname = buildLastnamesList(gedcom, DEFCHAR, new Comparator() {
+
+                public int compare(Object t1, Object t2) {
+                    return ((String)t1).compareTo(((String)t2));
+                }
+            });
+        }
+        return listOfLastnames.size();
+    }
+
     //USED
     public int getLastNameCount(String lastname, String defchar) {
         String str = lastname;
@@ -747,7 +783,16 @@ public class WebHelper {
      * Return sorted list of individuals (Indi) of Gedcom file
      * Lastnames are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
      */
-    public List getIndividuals(Gedcom gedcom, Comparator sortIndividuals) {
+    public List getIndividuals(Gedcom gedcom, Comparator sort) {
+        Comparator sortIndividuals = sort;
+        if (sortIndividuals == null) {
+            sortIndividuals = new Comparator() {
+
+                public int compare(Object t1, Object t2) {
+                    return ((Indi)t1).compareTo(((Indi)t2));
+                }
+            };
+        }
         List indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
         Collections.sort(indis, sortIndividuals);
         return indis;
@@ -837,6 +882,18 @@ public class WebHelper {
             initCity = buildCitiesList(gedcom, sortStrings);
         }
         return (List) new ArrayList((Collection) listOfCities.keySet());
+    }
+
+    public int getTotalCitiesCount() {
+        if (!initCity) {
+            initCity = buildCitiesList(gedcom, new Comparator() {
+
+                public int compare(Object t1, Object t2) {
+                    return ((String)t1).compareTo(((String)t2));
+                }
+            });
+        }
+        return listOfCities.size();
     }
 
     public int getCitiesCount(String city) {
