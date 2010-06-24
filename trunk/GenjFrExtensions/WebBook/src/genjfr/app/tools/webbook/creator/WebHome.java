@@ -42,7 +42,6 @@ public class WebHome extends WebSection {
         printOpenHTML(out, "", this);
 
         // START OF PAGE ------------------
-        trs("exporting", new String[]{file.getName(), dir.toString()});
         exportIndex(out, stats);
         // END OF PAGE ------------------
 
@@ -65,62 +64,81 @@ public class WebHome extends WebSection {
         //
         // MENU side of the index page
         //
-        out.println("<div class=\"menu\">");           /* ***new section*** */
+        out.println("<div class=\"menu\">");
+
 
         // Individuals
-        out.println("<p>" + trs("menu_individuals") + "</p><ul>");
+        out.println("<p>" + trs("menu_individuals") + "</p>");
+        out.println("<ul>");
         if (wb.sectionLastnames.toBeGenerated) {
             out.println("<li><a href=\"" + wb.sectionLastnames.sectionLink + "\">" + htmlText(wb.sectionLastnames.sectionName) + "</a></li>");
         }
         if (wb.sectionIndividuals.toBeGenerated) {
             out.println("<li><a href=\"" + wb.sectionIndividuals.sectionLink + "\">" + htmlText(wb.sectionIndividuals.sectionName) + "</a></li>");
         }
-
 //        if (wb.sectionIndividualsDetails) {
 //            out.println("<li><a href=\"" + wb.sectionIndividualsDetails.sectionLink + "\">" + htmlText(wb.sectionIndividualsDetails.sectionName) + "</a></li>");
 //        }
+        out.println("</ul>");
+
 
         // Documents
-//        if (displaySourceSec || displayMediaSec) {
-//            out.println("</ul><p>" + trs("menu_documents") + "</p><ul>");
-//        }
+        if (wp.param_media_GeneSources.equals("1") || wp.param_media_GeneMedia.equals("1")) {
+            out.println("<p>" + trs("menu_documents") + "</p>");
+            out.println("<ul>");
 //        if (pagesSources && displaySourceSec) {
 //            out.println("<li><a href=\"" + sectionSources.sectionLink + "\">" + htmlText(sectionSources.sectionName) + "</a></li>");
 //        }
 //        if (pagesMedia && displayMediaSec) {
 //            out.println("<li><a href=\"" + sectionMedia.sectionLink + "\">" + htmlText(sectionMedia.sectionName) + "</a></li>");
 //        }
+            out.println("</ul>");
+        }
 
         // Locations
-//        out.println("</ul><p>" + htmlText(trs("menu_locations")) + "</p><ul>");
+        if (wp.param_media_GeneMap.equals("1")) {
+            out.println("<p>" + htmlText(trs("menu_locations")) + "</p>");
+            out.println("<ul>");
 //        out.println("<li><a href=\"" + sectionMap.sectionLink + "\">" + htmlText(sectionMap.sectionName) + "</a></li>");
 //        out.println("<li><a href=\"" + sectionCities.sectionLink + "\">" + htmlText(sectionCities.sectionName) + "</a></li>");
 //        out.println("<li><a href=\"" + sectionCitiesDetails.sectionLink + "\">" + htmlText(sectionCitiesDetails.sectionName) + "</a></li>");
+            out.println("</ul>");
+        }
 
         // Dates
-//        out.println("</ul><p>" + htmlText(trs("menu_days")) + "</p><ul>");
+        out.println("<p>" + htmlText(trs("menu_days")) + "</p>");
+        out.println("<ul>");
 //        out.println("<li><a href=\"" + sectionDays.sectionLink + "\">" + htmlText(sectionDays.sectionName) + "</a></li>");
 //        out.println("<li><a href=\"" + sectionDaysDetails.sectionLink + "\">" + htmlText(sectionDaysDetails.sectionName) + "</a></li>");
+        out.println("</ul>");
 
         // Statistics
-//        out.println("</ul><p>" + htmlText(trs("menu_statistics")) + "</p><ul>");
+        if (true) {
+            out.println("<p>" + htmlText(trs("menu_statistics")) + "</p>");
+            out.println("<ul>");
 //        if (pagesStatsFrequent) {
 //            out.println("<li><a href=\"" + sectionStatsFrequent.sectionLink + "\">" + htmlText(sectionStatsFrequent.sectionName) + "</a></li>");
 //        }
 //        if (pagesStatsImplex) {
 //            out.println("<li><a href=\"" + sectionStatsImplex.sectionLink + "\">" + htmlText(sectionStatsImplex.sectionName) + "</a></li>");
 //        }
+            out.println("</ul>");
+        }
 
         // Structured lists
-//        if (displayRepSosa) {
-//            out.println("</ul><p>" + htmlText(trs("menu_structuredlist")) + "</p><ul>");
+        if (wp.param_dispAncestors.equals("1")) {
+            out.println("<p>" + htmlText(trs("menu_structuredlist")) + "</p>");
+            out.println("<ul>");
 //        }
 //        if (pagesRepSosa && displayRepSosa) {
 //            out.println("<li><a href=\"" + sectionRepSosa.sectionLink + "\">" + htmlText(sectionRepSosa.sectionName) + "</a></li>");
 //        }
+            out.println("</ul>");
+        }
 
         // Tools
-        out.println("</ul><p>" + htmlText(trs("menu_tools")) + "</p><ul>");
+        out.println("<p>" + htmlText(trs("menu_tools")) + "</p>");
+        out.println("<ul>");
 //        if (pagesSearch) {
 //            out.println("<li><a href=\"" + sectionSearch.sectionLink + "\">" + htmlText(sectionSearch.sectionName) + "</a></li>");
 //        }
@@ -144,9 +162,10 @@ public class WebHome extends WebSection {
                     + getNameShort(stats.indiDeCujus) + "</a>", String.valueOf(stats.nbAncestors), String.valueOf(stats.nbGen)}) + "<br />");
 
         out.println(trs("text_old", new String[]{"<a href=\"" + getLink(stats.indiOlder) + "\">"
-                    + getName(stats.indiOlder) + "</a>", stats.olderBirthDate == null ? trs("") : stats.olderBirthDate}) + "<br />");
+                    + getName(stats.indiOlder) + "</a>", stats.olderBirthDate == null ? trs("text_unknown_date") : stats.olderBirthDate}) + "<br />");
 
         if (wp.param_dispStatAncestor.equals("1")) {
+            stats.calcLonguestLine(stats.indiDeCujus);
             out.println("<br />");
             if (stats.indiDeCujus == stats.longIndiG) {
                 if (stats.indiDeCujus == stats.longIndiA) {
@@ -180,16 +199,18 @@ public class WebHome extends WebSection {
         out.println(trs("text_family", new String[]{String.valueOf(stats.nbFams), String.valueOf(stats.nbFamsWithKids), String.valueOf(stats.avgKids)}) + "<br />");
         out.println("<br /><hr /><br />");
 
-        out.println(trs("idxAuthor") + ":" + SPACE + wp.param_author + "<br />");
-        out.println(trs("idxAddress") + ":" + SPACE + wp.param_address + "<br />" + trs("idxTel") + ":" + SPACE + wp.param_phone + "<br />");
+        out.println(trs("WebBookVisualPanel1.jLabel3.text") + ":" + SPACE + wp.param_author + "<br />");
+        out.println(trs("WebBookVisualPanel1.jLabel4.text") + ":" + SPACE + wp.param_address + "<br />" + trs("WebBookVisualPanel1.jLabel5.text") + ":" + SPACE + wp.param_phone + "<br />");
         //
         if (wp.param_dispEmailButton.equals("1")) {
-            out.println("<a href=\"mailto:" + wp.param_email + "?subject=" + trs("idx_email_subject") + "&amp;body=" + trs("idx_email_dear") + "%20" + wp.param_author + ",%0a%0a" + trs("idx_email_body") + " \">" + trs("idx_email_link") + "</a><br />");
+            out.println("<a href=\"mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "&amp;body=" + trs("TXT_idx_email_dear")
+                    + "%20" + wp.param_author + ",%0a%0a" + trs("TXT_idx_email_body") + " \">" + trs("TXT_idx_email_link") + "</a><br />");
         }
         out.println("<hr /><br />");
         //
         Calendar rightNow = Calendar.getInstance();
-        out.println("<p class=\"legal\">" + trs("text_pages", new String[]{"<a href=\"http://www.arvernes.com/wiki/index.php/GenJ\">GenealogyJ</a>&nbsp;<a href=\"http://www.arvernes.com/wiki/index.php/Genj_-_Rapports_-_WebBook\">WebBook</a>", trs("version"), DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM).format(rightNow.getTime())}) + "</p>");
+        out.println("<p class=\"legal\">" + trs("text_pages", new String[]{"<a href=\"http://www.ancestris.com\">Ancestris WebBook</a>",
+                    DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM).format(rightNow.getTime())}) + "</p>");
         out.println("</div>");
 
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
