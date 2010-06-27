@@ -80,7 +80,7 @@ public class WebTheme extends WebSection {
             wh.copy(genjImagesDir + "mail.gif", toFile +"mail.gif");
         } catch (IOException e) {
             //e.printStackTrace();
-            wb.log.write(wb.log.ERROR, "createIcons - "+e.getMessage());
+            wb.log.write(wb.log.ERROR, "createIcons - " + e.getMessage());
         }
     }
 

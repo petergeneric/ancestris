@@ -15,6 +15,7 @@ import genjfr.app.tools.webbook.creator.WebIndividuals;
 import genjfr.app.tools.webbook.creator.WebIndividualsDetails;
 import genjfr.app.tools.webbook.creator.WebLastnames;
 import genjfr.app.tools.webbook.creator.WebMedia;
+import genjfr.app.tools.webbook.creator.WebSearch;
 import genjfr.app.tools.webbook.creator.WebSources;
 import genjfr.app.tools.webbook.creator.WebTheme;
 
@@ -77,6 +78,7 @@ public class WebBook {
     public WebCitiesDetails sectionCitiesDetails;
     public WebDays sectionDays;
     public WebDaysDetails sectionDaysDetails;
+    public WebSearch sectionSearch;
     //
 
     /**
@@ -101,6 +103,7 @@ public class WebBook {
         sectionCitiesDetails = new WebCitiesDetails(true, this, wp, wh);
         sectionDays = new WebDays(true, this, wp, wh);
         sectionDaysDetails = new WebDaysDetails(true, this, wp, wh);
+        sectionSearch = new WebSearch(true, this, wp, wh);
         run();
     }
 
@@ -140,6 +143,7 @@ public class WebBook {
         sectionCitiesDetails.init();
         sectionDays.init();
         sectionDaysDetails.init();
+        sectionSearch.init();
         //...etc...
 
 
@@ -169,6 +173,7 @@ public class WebBook {
         sectionCitiesDetails.create();
         sectionDays.create();
         sectionDaysDetails.create();
+        sectionSearch.create();
         //...etc...
 
         /**

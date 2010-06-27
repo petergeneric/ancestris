@@ -355,10 +355,20 @@ public class WebHelper {
     }
 
     /**
-     * Copy method for resource copy
+     * Copy method for resource copy to file given by string
      */
     public void copy(String from_name, String to_name) throws IOException {
         FileUtil.copy(wp.getClass().getResourceAsStream(from_name), new FileOutputStream(new File(to_name)));
+    }
+
+    /**
+     * ReadStream method from resource to string
+     */
+    public String readStream(String from_name) throws IOException {
+        InputStream is = wp.getClass().getResourceAsStream(from_name);
+        byte[] bytes = new byte[is.available()];
+        is.read(bytes);
+        return new String(bytes, "UTF8");
     }
 
     /**

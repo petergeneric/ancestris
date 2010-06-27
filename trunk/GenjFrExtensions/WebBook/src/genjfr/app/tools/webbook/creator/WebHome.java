@@ -138,9 +138,9 @@ public class WebHome extends WebSection {
         // Tools
         out.println("<p>" + htmlText(trs("TXT_menu_tools")) + "</p>");
         out.println("<ul>");
-//        if (pagesSearch) {
-//            out.println("<li><a href=\"" + sectionSearch.sectionLink + "\">" + htmlText(sectionSearch.sectionName) + "</a></li>");
-//        }
+        if (wb.sectionSearch.toBeGenerated) {
+            out.println("<li><a href=\"" + wb.sectionSearch.sectionLink + "\">" + htmlText(wb.sectionSearch.sectionName) + "</a></li>");
+        }
         out.println("</ul></div>");
 
 
