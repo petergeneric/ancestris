@@ -43,7 +43,6 @@ public class WebSection {
     public final String SEP = "/";
     public final String DEFCHAR = "-";
     //
-    private String index = "";
     private String siteDesc = "";
     private String author = "";
     private String keywords = null;
@@ -110,6 +109,18 @@ public class WebSection {
 
     public String trs(String string, Object param1) {
         return wb.log.trs(string, param1);
+    }
+
+    public String trs(String string, Object param1, Object param2) {
+        return wb.log.trs(string, param1, param2);
+    }
+
+    public String trs(String string, Object param1, Object param2, Object param3) {
+        return wb.log.trs(string, param1, param2, param3);
+    }
+
+    public String trs(String string, Object param1, Object param2, Object param3, Object param4) {
+        return wb.log.trs(string, param1, param2, param3, param4);
     }
 
     public String trs(String string, Object[] arr) {
@@ -190,7 +201,7 @@ public class WebSection {
     public void printLinks(PrintWriter out, String here, String s, String p, String n, String e, WebSection wsFrom) {
 
         String theme = (wsFrom == null) ? (themeDir + SEP) : buildLinkTheme(wsFrom, themeDir);
-        String home = ((wsFrom == null) ? index : ((wsFrom.sectionDir.length() == 0) ? "" : (".." + SEP)) + index);
+        String home = ((wsFrom == null) ? indexFile : ((wsFrom.sectionDir.length() == 0) ? "" : (".." + SEP)) + indexFile);
 
         out.println("<p class=\"footer\">");
         out.println("<br /><br />");
@@ -217,7 +228,7 @@ public class WebSection {
     public void printHomeLink(PrintWriter out, WebSection wsFrom) {
 
         String theme = (wsFrom == null) ? (themeDir + SEP) : buildLinkTheme(wsFrom, themeDir);
-        String home = ((wsFrom == null) ? index : ((wsFrom.sectionDir.length() == 0) ? "" : (".." + SEP)) + index);
+        String home = ((wsFrom == null) ? indexFile : ((wsFrom.sectionDir.length() == 0) ? "" : (".." + SEP)) + indexFile);
 
         out.println("<p class=\"footer\">");
         out.println("<br /><br />");
@@ -227,7 +238,7 @@ public class WebSection {
 
     public String getHomeLink(WebSection wsFrom) {
 
-        String home = ((wsFrom == null) ? index : ((wsFrom.sectionDir.length() == 0) ? "" : (".." + SEP)) + index);
+        String home = ((wsFrom == null) ? indexFile : ((wsFrom.sectionDir.length() == 0) ? "" : (".." + SEP)) + indexFile);
         return home + "#top";
     }
 
@@ -417,7 +428,7 @@ public class WebSection {
         out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_form")) + "</span></p>");
         out.println("<p class=\"description\">");
         out.println("  <script language='javascript'>");
-        out.println("  document.write( \"<form class='description' action='mailto:" + wp.param_email + "?subject=" + trs("TXTidx_email_subject") + "\" + person + \"' method='post' enctype='text/plain' >\" );");
+        out.println("  document.write( \"<form class='description' action='mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "\" + person + \"' method='post' enctype='text/plain' >\" );");
         out.println("  </script>");
         out.println("  " + htmlText(trs("TXT_emailform_name")) + ":&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
         out.println("  " + htmlText(trs("TXT_emailform_reason")) + ":&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_reason")) + "\"><br /><br />");
@@ -461,7 +472,7 @@ public class WebSection {
      * Comparator to sort Individuals
      */
     @SuppressWarnings("unchecked")
-    private Comparator sortIndividuals = new Comparator() {
+    public Comparator sortIndividuals = new Comparator() {
 
         public int compare(Object o1, Object o2) {
             Indi indi1 = (Indi) o1;

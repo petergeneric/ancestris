@@ -8,7 +8,9 @@ import genjfr.app.tools.webbook.creator.WebHome;
 import genj.gedcom.Gedcom;
 import genjfr.app.tools.webbook.creator.WebHelper;
 import genjfr.app.tools.webbook.creator.WebIndividuals;
+import genjfr.app.tools.webbook.creator.WebIndividualsDetails;
 import genjfr.app.tools.webbook.creator.WebLastnames;
+import genjfr.app.tools.webbook.creator.WebSources;
 import genjfr.app.tools.webbook.creator.WebTheme;
 
 /**
@@ -63,6 +65,8 @@ public class WebBook {
     public WebHome sectionHome;
     public WebLastnames sectionLastnames;
     public WebIndividuals sectionIndividuals;
+    public WebIndividualsDetails sectionIndividualsDetails;
+    public WebSources sectionSources;
     //
 
     /**
@@ -80,6 +84,7 @@ public class WebBook {
         sectionHome = new WebHome(true, this, wp, wh);
         sectionLastnames = new WebLastnames(true, this, wp, wh);
         sectionIndividuals = new WebIndividuals(true, this, wp, wh);
+        sectionIndividualsDetails = new WebIndividualsDetails(true, this, wp, wh);
         run();
     }
 
@@ -110,6 +115,7 @@ public class WebBook {
          */
         sectionLastnames.init();
         sectionIndividuals.init();
+        sectionIndividualsDetails.init();
         //...etc...
 
 
@@ -130,6 +136,7 @@ public class WebBook {
          */
         sectionLastnames.create();
         sectionIndividuals.create();
+        sectionIndividualsDetails.create();
         //...etc...
 
         /**

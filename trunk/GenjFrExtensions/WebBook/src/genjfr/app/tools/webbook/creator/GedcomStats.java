@@ -55,12 +55,12 @@ class GedcomStats {
     // private variables
     private int nbGenTemp = 0;
     private int nbAncestorsTemp = 0;
-    private Map gens = null;
+    private Map<Indi, Integer> gens = null;
 
     // constructor
     public GedcomStats(WebBookParams wp, WebHelper wh) {
-        indiDeCujus = wh.getIndiDeCujus(wp.param_decujus);
         this.wh = wh;
+        indiDeCujus = wh.getIndiDeCujus(wp.param_decujus);
         update(wh.gedcom, wp.param_dispStatAncestor.equals("1"));
     }
 
@@ -69,7 +69,7 @@ class GedcomStats {
         // number of generations and ancestors
         nbGenTemp = 0;
         nbAncestorsTemp = 0;
-        gens = new TreeMap();          // will map generation to indis
+        gens = new TreeMap<Indi, Integer>();          // will map generation to indis
         calcGenAncestors(indiDeCujus); // calculates nbGenTemp and nbAncestorsTemp
         nbGen = nbGenTemp;
         nbAncestors = nbAncestorsTemp;
@@ -83,7 +83,7 @@ class GedcomStats {
         }
         for (Iterator it = gens.keySet().iterator(); it.hasNext();) {
             Indi indi = (Indi) it.next();
-            Integer calcGens = (Integer) gens.get(indi);
+            Integer calcGens = gens.get(indi);
             if (calcGens == nbGen) {
                 PropertyDate propDate = indi.getBirthDate();
                 if (propDate == null) {
@@ -112,7 +112,7 @@ class GedcomStats {
 
         //  number of places, main locations
         Collection entities = gedcom.getEntities();
-        List placesProps = new ArrayList();
+        List<Property> placesProps = new ArrayList<Property>();
         for (Iterator it = entities.iterator(); it.hasNext();) {
             Entity ent = (Entity) it.next();
             wh.getPropertiesRecursively((Property) ent, placesProps, "PLAC");
@@ -123,7 +123,7 @@ class GedcomStats {
         String placeMax = "";
         Integer val = 0;
         String juridic = "";
-        Map placeTop = new TreeMap();
+        Map<String, Integer> placeTop = new TreeMap<String, Integer>();
         for (Iterator it = placesProps.iterator(); it.hasNext();) {
             Property prop = (Property) it.next();
             if (prop instanceof PropertyPlace) {
@@ -134,7 +134,7 @@ class GedcomStats {
             if (juridic != null && juridic.length() > 0) {
                 val = 1;
                 if (placeTop.get(juridic) != null) {
-                    val = (Integer) placeTop.get(juridic) + 1;
+                    val = placeTop.get(juridic) + 1;
                 }
                 placeTop.put(juridic, val);
                 if (val > max) {
@@ -173,17 +173,17 @@ class GedcomStats {
         nbGenTemp = 1;
         Fam famc;
         Indi indi = null, indiOther = null;
-        List sosaList = new ArrayList();
-        Set hs = new HashSet();
+        List<Indi> sosaList = new ArrayList<Indi>();
+        Set<Indi> hs = new HashSet<Indi>();
         sosaList.add(indiStart);
         gens.clear();
         gens.put(indiStart, calcGens);
-        for (ListIterator listIter = sosaList.listIterator(); listIter.hasNext();) {
-            indi = (Indi) listIter.next();
+        for (ListIterator<Indi> listIter = sosaList.listIterator(); listIter.hasNext();) {
+            indi = listIter.next();
             if (!hs.contains(indi)) {
                 hs.add(indi);
             }
-            calcGens = (Integer) gens.get(indi);
+            calcGens = gens.get(indi);
             if (calcGens == null) {
                 calcGens = 1;
             }
@@ -222,7 +222,7 @@ class GedcomStats {
             Indi indi = (Indi) it.next();
             nbGenTemp = 0;
             nbAncestorsTemp = 0;
-            gens = new TreeMap();
+            gens = new TreeMap<Indi,Integer>();
             calcGenAncestors(indi);
             if (nbGenTemp > nbG1) {
                 nbG1 = nbGenTemp;

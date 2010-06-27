@@ -19,8 +19,8 @@ public final class WebBookVisualPanel2 extends JPanel {
     private Gedcom gedcom = null;
 
     /** Creates new form WebBookVisualPanel2 */
-    public WebBookVisualPanel2() {
-        gedcom = WebBookWizardAction.getGedcom();
+    public WebBookVisualPanel2(Gedcom gedcom) {
+        this.gedcom = gedcom;
         indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         initComponents();
     }

@@ -19,9 +19,6 @@ import java.util.List;
  */
 public class WebIndividuals extends WebSection {
 
-    private WebSection sectionList = null;
-    private String themeDir = "";
-
     /**
      * Constructor
      */
@@ -31,7 +28,6 @@ public class WebIndividuals extends WebSection {
 
     public void init() {
         init(trs("TXT_Individualslist"), "persons", "persons_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection * 2);
-
     }
 
     /**
@@ -40,13 +36,10 @@ public class WebIndividuals extends WebSection {
     @Override
     public void create() {
 
+        calcLetters(wh.getIndividuals(wh.gedcom, sortIndividuals));
+
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
-        //sectionList = wh.wbHandle.report.getSection("Individualsdetails");
-
-        //themeDir = wh.buildLinkTheme(this, report.getThemeDir());
-
-        //calcLetters(wh.getIndividuals());
-        //exportData(dir, wh.getIndividuals());
+        exportData(dir, wh.getIndividuals(wh.gedcom, sortIndividuals));
 
     }
 
@@ -118,7 +111,7 @@ public class WebIndividuals extends WebSection {
                     out.println("</p>");
                     exportLinks(out, sectionPrefix + String.format(formatNbrs, currentPage - 1) + sectionSuffix, Math.max(1, previousPage - 1), currentPage == lastPage ? lastPage : nextPage - 1, lastPage);
                     printCloseHTML(out);
-                    wh.log.write(previousListFile + " - Done.");
+                    wh.log.write(previousListFile + trs("EXEC_DONE"));
                     out.close();
                 }
                 previousListFile = listfile;
@@ -146,7 +139,7 @@ public class WebIndividuals extends WebSection {
                 }
             }
 
-            String personfile = buildLink(this, sectionList, cpt);
+            String personfile = buildLink(this, wb.sectionIndividualsDetails, cpt);
             if (writeLetter) {
                 if (!first) {
                     out.println("</p>");
@@ -186,12 +179,14 @@ public class WebIndividuals extends WebSection {
         String NODATE = SPACE;
 
         String sexString = DEFCHAR + SPACE;
+        String themeDirLink = buildLinkTheme(this, themeDir);
+
         if (indi.getSex() == 1) {
-            sexString = "<img src=\"" + themeDir + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
+            sexString = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
         } else if (indi.getSex() == 2) {
-            sexString = "<img src=\"" + themeDir + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
+            sexString = "<img src=\"" + themeDirLink + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
         } else {
-            sexString = "<img src=\"" + themeDir + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
+            sexString = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
         }
 
         PropertyDate birthDateProp = (PropertyDate) indi.getProperty(new TagPath("INDI:BIRT:DATE"));

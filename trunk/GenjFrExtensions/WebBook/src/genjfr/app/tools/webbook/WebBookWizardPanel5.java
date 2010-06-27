@@ -17,12 +17,20 @@ import org.openide.util.NbPreferences;
 public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
-    private Gedcom gedcom = WebBookWizardAction.getGedcom();
+    private Gedcom gedcom;
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
     private WebBookVisualPanel5 component;
+
+    /**
+     * Constructor
+     * @param gedcom
+     */
+    WebBookWizardPanel5(Gedcom gedcom) {
+        this.gedcom = gedcom;
+    }
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -121,7 +129,9 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Invalid_LocalWebDir"), null);
         }
         name = component.getPref02();
-        if (!name.trim().isEmpty()) {
+        if (name.trim().isEmpty()) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_LogFile"), null);
+        } else {
             file = new File(name);
             if (!file.getParentFile().exists()) {
                 throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Invalid_LogDir"), null);

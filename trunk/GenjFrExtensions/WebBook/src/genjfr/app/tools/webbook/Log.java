@@ -53,8 +53,10 @@ public class Log {
      * Closing log file
      */
     public void close() {
-        outFile.flush();
-        outFile.close();
+        if (outFile != null) {
+            outFile.flush();
+            outFile.close();
+        }
         return;
     }
 
@@ -84,7 +86,6 @@ public class Log {
         return;
     }
 
-
     /**
      * Error handling
      */
@@ -93,7 +94,6 @@ public class Log {
         ex.printStackTrace(io.getErr());
         endSuccessful = false;
     }
-
 
     /**
      * Extra methods, not sure if will be usefull
@@ -152,6 +152,18 @@ public class Log {
 
     public String trs(String string, Object param1) {
         return NbBundle.getMessage(WebBook.class, string, param1);
+    }
+
+    public String trs(String string, Object param1, Object param2) {
+        return NbBundle.getMessage(WebBook.class, string, param1, param2);
+    }
+
+    public String trs(String string, Object param1, Object param2, Object param3) {
+        return NbBundle.getMessage(WebBook.class, string, param1, param2, param3);
+    }
+
+    public String trs(String string, Object param1, Object param2, Object param3, Object param4) {
+        return NbBundle.getMessage(WebBook.class, string, param1, param2, param3, param4);
     }
 
     public String trs(String string, Object[] arr) {

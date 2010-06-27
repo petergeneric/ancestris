@@ -27,37 +27,39 @@ public final class WebBookWizardAction extends CallableSystemAction {
 
     @SuppressWarnings("unchecked")
     public void performAction() {
-        WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
+        Gedcom gedcom = getGedcom();
+        WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels(gedcom));
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle"));
+        wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getName());
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             // user pressed ok
-            WebBookStarter wbs = new WebBookStarter(getGedcom());
+            WebBookStarter wbs = new WebBookStarter(gedcom);
             wbs.start();
         } else {
             // user pressed annuler
         }
+        panels = null;
     }
 
     /**
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private WizardDescriptor.Panel[] getPanels() {
+    private WizardDescriptor.Panel[] getPanels(Gedcom gedcom) {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                        new WebBookWizardPanel1(),
-                        new WebBookWizardPanel2(),
-                        new WebBookWizardPanel3(),
-                        new WebBookWizardPanel4(),
-                        new WebBookWizardPanel5(),
-                        new WebBookWizardPanel6(),
-                        new WebBookWizardPanel7()
+                        new WebBookWizardPanel1(gedcom),
+                        new WebBookWizardPanel2(gedcom),
+                        new WebBookWizardPanel3(gedcom),
+                        new WebBookWizardPanel4(gedcom),
+                        new WebBookWizardPanel5(gedcom),
+                        new WebBookWizardPanel6(gedcom),
+                        new WebBookWizardPanel7(gedcom)
                     };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
@@ -107,18 +109,14 @@ public final class WebBookWizardAction extends CallableSystemAction {
         return false;
     }
 
-    public static Gedcom getGedcom() {
-        Gedcom gedcom = null;
-        if (gedcom == null) {
-            gedcom = App.center.getSelectedGedcom(); // get selected gedcom
-            if (gedcom == null) { // if none selected, take first one
-                Iterator it = GedcomDirectory.getInstance().getGedcoms().iterator();
-                if (it.hasNext()) { // well, apparently no gedcom exist in the list
-                    gedcom = (Gedcom) it.next();
-                }
+    public Gedcom getGedcom() {
+        Gedcom gedcom = App.center.getSelectedGedcom(); // get selected gedcom
+        if (gedcom == null) { // if none selected, take first one
+            Iterator it = GedcomDirectory.getInstance().getGedcoms().iterator();
+            if (it.hasNext()) { // well, apparently no gedcom exist in the list
+                gedcom = (Gedcom) it.next();
             }
         }
         return gedcom;
     }
-
 }

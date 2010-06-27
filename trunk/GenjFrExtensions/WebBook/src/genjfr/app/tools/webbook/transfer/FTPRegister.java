@@ -95,7 +95,7 @@ public class FTPRegister {
 
   public boolean calculate(String uploadType) {
 
-    List<String> toBeRemoved = new ArrayList();
+    List<String> toBeRemoved = new ArrayList<String>();
     nbFilesToTransfer = 0;
     for (Iterator it = properties.keySet().iterator(); it.hasNext(); ) {
       String key = (String)it.next();
@@ -178,7 +178,7 @@ public class FTPRegister {
   public List<String> getListToRemove() {
 
     nbFilesToRemove = 0;
-    List<String> listRet = new ArrayList();
+    List<String> listRet = new ArrayList<String>();
     for (Iterator it = properties.keySet().iterator(); it.hasNext(); ) {
       String key = (String)it.next();
 

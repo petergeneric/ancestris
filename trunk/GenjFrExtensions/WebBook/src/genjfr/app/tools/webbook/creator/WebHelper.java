@@ -52,6 +52,7 @@ public class WebHelper {
     public WebBookParams wp;
     //
     public Indi indiDeCujus = null;
+    public PrivacyPolicy privacyPolicy = null;
     //
     /**
      * Variables
@@ -66,7 +67,7 @@ public class WebHelper {
     private class Info {
 
         Integer counter = 0;
-        List props = null;
+        List<Property> props = null;
     }
     private SortedMap<String, Integer> listOfLastnames = null;
     private boolean initLastname = false;
@@ -668,6 +669,12 @@ public class WebHelper {
 
 
 
+
+
+
+    
+
+
     /***************************************************************************
      * TOOLS FOR GEDCOM SETS
      */
@@ -699,6 +706,19 @@ public class WebHelper {
     }
 
     /**
+     * Privacy policy
+     */
+    public PrivacyPolicy getPrivacyPolicy() {
+        if (privacyPolicy == null) {
+            privacyPolicy = new PrivacyPolicy(
+                NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
+                new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
+                NbPreferences.forModule(App.class).get("privFlag", ""));
+        }
+        return privacyPolicy;
+    }
+
+    /**
      * Get sosa if available
      */
     public String getSosa(Indi indi) {
@@ -720,7 +740,8 @@ public class WebHelper {
      * Return sorted list of lastnames of Gedcom file
      * Do NOT use getLastNames() function of genj because it returns all lastnames found and we only want one last name per person here
      * (Genj itself only accesses individuals using the first lastname found for them)
-     *///USED
+     */
+    @SuppressWarnings("unchecked")
     public List<String> getLastNames(String defchar, Comparator sortLastnames) {
         if (!initLastname) {
             initLastname = buildLastnamesList(gedcom, defchar, sortLastnames);
@@ -752,6 +773,7 @@ public class WebHelper {
         return (int) listOfLastnames.get(str);
     }
 
+    @SuppressWarnings("unchecked")
     private boolean buildLastnamesList(Gedcom gedcom, String defchar, Comparator sortLastnames) {
         listOfLastnames = new TreeMap<String, Integer>(sortLastnames);
         List indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
@@ -783,7 +805,8 @@ public class WebHelper {
      * Return sorted list of individuals (Indi) of Gedcom file
      * Lastnames are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
      */
-    public List getIndividuals(Gedcom gedcom, Comparator sort) {
+    @SuppressWarnings("unchecked")
+    public List<Indi> getIndividuals(Gedcom gedcom, Comparator sort) {
         Comparator sortIndividuals = sort;
         if (sortIndividuals == null) {
             sortIndividuals = new Comparator() {
@@ -793,7 +816,7 @@ public class WebHelper {
                 }
             };
         }
-        List indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
+        List<Indi> indis = new ArrayList<Indi>(gedcom.getEntities(Gedcom.INDI));
         Collections.sort(indis, sortIndividuals);
         return indis;
     }
@@ -802,8 +825,9 @@ public class WebHelper {
      * Return sorted list of sources of Gedcom file
      * Sources are sorted by codes
      */
-    public List getSources(Gedcom gedcom) {
-        List sources = new ArrayList(gedcom.getEntities(Gedcom.SOUR));
+    @SuppressWarnings("unchecked")
+    public List<Entity> getSources(Gedcom gedcom) {
+        List<Entity> sources = new ArrayList(gedcom.getEntities(Gedcom.SOUR));
         Collections.sort(sources, sortSources);
         return sources;
     }
@@ -812,9 +836,10 @@ public class WebHelper {
      * Return sorted list of sources of entity
      * Sources are sorted by codes
      */
-    public List getSources(Indi indi) {
+    @SuppressWarnings("unchecked")
+    public List<Source> getSources(Indi indi) {
         // get sources of individual
-        List sources = new ArrayList();
+        List<Property> sources = new ArrayList<Property>();
         getPropertiesRecursively((Property) indi, sources, "SOUR");
 
         // get sources of the associated families
@@ -824,9 +849,9 @@ public class WebHelper {
             getPropertiesRecursively((Property) family, sources, "SOUR");
         }
 
-        List sourcesOutput = new ArrayList();
-        for (Iterator s = sources.iterator(); s.hasNext();) {
-            Property propSrc = (Property) s.next();
+        List<Source> sourcesOutput = new ArrayList<Source>();
+        for (Iterator<Property> s = sources.iterator(); s.hasNext();) {
+            Property propSrc = s.next();
             if (propSrc instanceof PropertySource) {
                 PropertySource pSource = (PropertySource) propSrc;
                 if (pSource != null && pSource.getTargetEntity() != null) {
@@ -877,6 +902,7 @@ public class WebHelper {
      * Return sorted list of cities of Gedcom file
      * Cities are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
      */
+    @SuppressWarnings("unchecked")
     public List<String> getCities(Gedcom gedcom, Comparator sortStrings) {
         if (!initCity) {
             initCity = buildCitiesList(gedcom, sortStrings);
@@ -904,14 +930,16 @@ public class WebHelper {
         return (int) infoCity.counter;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Property> getCitiesProps(String city) {
         if (listOfCities.get(city) == null) {
             return null;
         }
         Info infoCity = listOfCities.get(city);
-        return (List<Property>) infoCity.props;
+        return infoCity.props;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean buildCitiesList(Gedcom gedcom, Comparator sortStrings) {
 
         listOfCities = new TreeMap<String, Info>(sortStrings);
@@ -956,7 +984,7 @@ public class WebHelper {
         return true;
     }
 
-    public void getPropertiesRecursively(Property parent, List props, String tag) {
+    public void getPropertiesRecursively(Property parent, List<Property> props, String tag) {
         Property[] children = parent.getProperties();
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];
@@ -990,11 +1018,12 @@ public class WebHelper {
      * Return sorted list of days in the year for Gedcom file
      * Days are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
      */
+    @SuppressWarnings("unchecked")
     public List<String> getDays(Gedcom gedcom) {
         if (!initDay) {
             initDay = buildDaysList(gedcom);
         }
-        return (List) new ArrayList((Collection) listOfDays.keySet());
+        return (List<String>) new ArrayList((Collection) listOfDays.keySet());
     }
 
     public int getDaysCount(String day) {
@@ -1010,14 +1039,14 @@ public class WebHelper {
             return null;
         }
         Info infoDay = listOfDays.get(day);
-        return (List<Property>) infoDay.props;
+        return infoDay.props;
     }
 
     private boolean buildDaysList(Gedcom gedcom) {
 
         listOfDays = new TreeMap<String, Info>();
         Collection entities = gedcom.getEntities();
-        List datesProps = new ArrayList();
+        List<Property> datesProps = new ArrayList<Property>();
         for (Iterator it = entities.iterator(); it.hasNext();) {
             Entity ent = (Entity) it.next();
             getPropertiesRecursively((Property) ent, datesProps, "DATE");
@@ -1069,7 +1098,7 @@ public class WebHelper {
             return String.format("%02d", pit.getMonth() + 1) + String.format("%02d", pit.getDay() + 1);
         } catch (GedcomException e) {
             // e.printStackTrace();
-            log.write(log.ERROR, e.getMessage());
+            log.write(log.ERROR, "getDay - " + e.getMessage());
         }
         return null;
     }
@@ -1077,16 +1106,9 @@ public class WebHelper {
     /**
      * Get Ancestors
      */
-    public List<Ancestor> getAncestors(Indi rootIndi, int startSosa) {
-        if (!initAncestors) {
-            initAncestors = buildAncestors(rootIndi, startSosa);
-        }
-        return listOfAncestors;
-    }
-
     public Set<Indi> getAncestors(Indi rootIndi) {
         if (!initAncestors) {
-            initAncestors = buildAncestors(rootIndi, 0);
+            initAncestors = buildAncestors(rootIndi);
         }
         Set<Indi> list = new HashSet<Indi>();
         for (Iterator it = listOfAncestors.iterator(); it.hasNext();) {
@@ -1096,22 +1118,10 @@ public class WebHelper {
         return list;
     }
 
-    private boolean buildAncestors(Indi rootIndi, int startSosa) {
+    @SuppressWarnings("unchecked")
+    private boolean buildAncestors(Indi rootIndi) {
         // Depending on option, start at sosa number 1 or if option says 0, the one of the individual selected
-        if (startSosa == 0) {
-            Property sosaProp = rootIndi.getProperty(SOSA_TAG);
-            if (sosaProp != null) {
-                try {
-                    startSosa = Integer.parseInt(sosaProp.getValue(), 10);
-                } catch (NumberFormatException e) {
-                    log.write(log.ERROR, e.getMessage());
-                }
-            }
-        }
-        // Start at 1 in case something has gone wrong
-        if (startSosa == 0) {
-            startSosa = 1;
-        }
+        int startSosa = 1;
 
         // Run recursion
         List list = new ArrayList(3);
@@ -1134,6 +1144,7 @@ public class WebHelper {
      * @param generation the current generation (sosa,indi,fam) - the list of all individuals in that generation
      * @param gen the current generation
      */
+    @SuppressWarnings("unchecked")
     void recursion(List generation, int gen) {
 
         // Build mext generation (scan individuals in that generation and build next one)
@@ -1199,6 +1210,7 @@ public class WebHelper {
         return listOfCousins;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean buildCousins(Indi rootIndi) {
         // declarations
         List indis = new ArrayList(rootIndi.getGedcom().getEntities(Gedcom.INDI));
@@ -1242,11 +1254,7 @@ public class WebHelper {
      * Check if individual or entity
      */
     public boolean isPrivate(Indi indi) {
-        PrivacyPolicy privacyPolicy = new PrivacyPolicy(
-                NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
-                new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
-                NbPreferences.forModule(App.class).get("privFlag", ""));
-        return ((indi != null) && (indi.getBirthDate() != null) && (privacyPolicy.isPrivate(indi)));
+        return ((indi != null) && (indi.getBirthDate() != null) && (getPrivacyPolicy().isPrivate(indi)));
     }
 
     public boolean isPrivate(Entity ent) {

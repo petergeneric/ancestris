@@ -16,7 +16,7 @@ import org.openide.util.NbPreferences;
 public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
-    private Gedcom gedcom = WebBookWizardAction.getGedcom();
+    private Gedcom gedcom;
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -24,13 +24,21 @@ public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, Wi
      */
     private WebBookVisualPanel2 component;
 
+    /**
+     * Constructor
+     * @param gedcom
+     */
+    WebBookWizardPanel2(Gedcom gedcom) {
+        this.gedcom = gedcom;
+    }
+
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
     public Component getComponent() {
         if (component == null) {
-            component = new WebBookVisualPanel2();
+            component = new WebBookVisualPanel2(gedcom);
         }
         return component;
     }
