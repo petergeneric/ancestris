@@ -109,7 +109,7 @@ public class WebIndividuals extends WebSection {
             if (previousListFile.compareTo(listfile) != 0) {
                 if (out != null) {
                     out.println("</p>");
-                    exportLinks(out, sectionPrefix + String.format(formatNbrs, currentPage - 1) + sectionSuffix, Math.max(1, previousPage - 1), currentPage == lastPage ? lastPage : nextPage - 1, lastPage);
+                    exportLinks(out, sectionPrefix + String.format(formatNbrs, currentPage - 1) + sectionSuffix, 1, Math.max(1, previousPage - 1), currentPage == lastPage ? lastPage : nextPage - 1, lastPage);
                     printCloseHTML(out);
                     wh.log.write(previousListFile + trs("EXEC_DONE"));
                     out.close();
@@ -134,7 +134,7 @@ public class WebIndividuals extends WebSection {
                 }
                 out.println("<br /><br /></p>");
                 if (!writeLetter) {
-                    exportLinks(out, listfile, previousPage, nextPage, lastPage);
+                    exportLinks(out, listfile, 1, previousPage, nextPage, lastPage);
                     out.println("<p>");
                 }
             }
@@ -145,7 +145,7 @@ public class WebIndividuals extends WebSection {
                     out.println("</p>");
                 }
                 first = false;
-                exportLinks(out, listfile, previousPage, nextPage, lastPage);
+                exportLinks(out, listfile, 1, previousPage, nextPage, lastPage);
                 String ancLet = String.valueOf(previousLetter);
                 if (!(ancLet.matches("[a-zA-Z]"))) {
                     ancLet = DEFCHAR;
@@ -159,7 +159,7 @@ public class WebIndividuals extends WebSection {
 
         if (out != null) {
             out.println("</p>");
-            exportLinks(out, listfile, previousPage, nextPage, lastPage);
+            exportLinks(out, listfile, 1, previousPage, nextPage, lastPage);
             printCloseHTML(out);
             wh.log.write(previousListFile + trs("EXEC_DONE"));
         }
@@ -286,16 +286,5 @@ public class WebIndividuals extends WebSection {
         return true;
     }
 
-    /**
-     * Exports page links
-     */
-    private void exportLinks(PrintWriter out, String pagename, int previous, int next, int last) {
-        printLinks(out, pagename,
-                sectionPrefix + String.format(formatNbrs, 1) + sectionSuffix, // start
-                sectionPrefix + String.format(formatNbrs, previous) + sectionSuffix, // previous
-                sectionPrefix + String.format(formatNbrs, next) + sectionSuffix, // next
-                sectionPrefix + String.format(formatNbrs, last) + sectionSuffix, // end
-                this);
-    }
 } // End_of_Report
 

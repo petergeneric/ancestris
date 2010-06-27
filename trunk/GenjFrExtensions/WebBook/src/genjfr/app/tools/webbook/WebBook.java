@@ -85,6 +85,7 @@ public class WebBook {
         sectionLastnames = new WebLastnames(true, this, wp, wh);
         sectionIndividuals = new WebIndividuals(true, this, wp, wh);
         sectionIndividualsDetails = new WebIndividualsDetails(true, this, wp, wh);
+        sectionSources = new WebSources(true, this, wp, wh);
         run();
     }
 
@@ -116,6 +117,7 @@ public class WebBook {
         sectionLastnames.init();
         sectionIndividuals.init();
         sectionIndividualsDetails.init();
+        sectionSources.init();
         //...etc...
 
 
@@ -137,6 +139,7 @@ public class WebBook {
         sectionLastnames.create();
         sectionIndividuals.create();
         sectionIndividualsDetails.create();
+        sectionSources.create();
         //...etc...
 
         /**

@@ -46,9 +46,6 @@ public class WebIndividualsDetails extends WebSection {
     private final static TagPath INDI2IMAGES = new TagPath("INDI:OBJE:FILE");
     private final static TagPath FAM2IMAGES = new TagPath("FAM:OBJE:FILE");
     private int WIDTH_PICTURES = 150;
-    private Map<String, String> personPage = new TreeMap<String, String>();
-    private Map<String, String> sourcePage = new TreeMap<String, String>();
-    private WebSources reportSource = null;
     private String indi2srcDir = "";
     private String[] events = null;
     private String[] evSymbols = null;
@@ -97,15 +94,17 @@ public class WebIndividualsDetails extends WebSection {
 
         initEvents();
 
-//        reportSource = wb.sectionSources;
-//        if (reportSource != null) {
-//            sourcePage = reportSource.getPagesMap();
-//            indi2srcDir = buildLinkShort(this, reportSource);
-//        }
+        // Preliminary build of sources link for links from details to sources
+        if (wb.sectionSources != null) {
+            sourcePage = wb.sectionSources.getPagesMap();
+            indi2srcDir = buildLinkShort(this, wb.sectionSources);
+        }
 
+        // Generate detail pages
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
         exportData(dir);
 
+        // Generate email popup
         if (wp.param_dispEmailButton.equals("1")) {
             createPopupEmail(wh.getFileForName(dir, POPUP));
             wh.log.write(POPUP + trs("EXEC_DONE"));
@@ -175,7 +174,7 @@ public class WebIndividualsDetails extends WebSection {
             personfile = sectionPrefix + String.format(formatNbrs, currentPage) + sectionSuffix;
             if (fileStr.compareTo(personfile) != 0) {
                 if (out != null) {
-                    exportLinks(out, sectionPrefix + String.format(formatNbrs, currentPage - 1) + sectionSuffix, Math.max(1, previousPage - 1), currentPage == lastPage ? lastPage : nextPage - 1, lastPage);
+                    exportLinks(out, sectionPrefix + String.format(formatNbrs, currentPage - 1) + sectionSuffix, 1, Math.max(1, previousPage - 1), currentPage == lastPage ? lastPage : nextPage - 1, lastPage);
                     printCloseHTML(out);
                     out.close();
                     wh.log.write(fileStr + trs("EXEC_DONE"));
@@ -186,12 +185,12 @@ public class WebIndividualsDetails extends WebSection {
                 printOpenHTML(out, "TXT_Individualsdetails", this);
                 writeScript(out);
             }
-            exportLinks(out, personfile, previousPage, nextPage, lastPage);
+            exportLinks(out, personfile, 1, previousPage, nextPage, lastPage);
             exportIndividualDetails(out, indi, dir, personfile);
             // .. next individual
         }
         if (out != null) {
-            exportLinks(out, personfile, previousPage, nextPage, lastPage);
+            exportLinks(out, personfile, 1, previousPage, nextPage, lastPage);
             printCloseHTML(out);
             wh.log.write(fileStr + trs("EXEC_DONE"));
         }
@@ -714,55 +713,6 @@ public class WebIndividualsDetails extends WebSection {
     }
 
     /**
-     * Print name with link
-     */
-    private void wrapName(PrintWriter out, Indi indi) {
-        //
-        String id = (indi == null) ? "" : indi.getId();
-        String name = (indi == null) ? wp.param_unknown : (wh.getLastName(indi, DEFCHAR) + ", " + indi.getFirstName()).trim();
-        String personFile = (indi == null) ? "" : personPage.get(id);
-        if (indi != null) {
-            out.print("<a href=\"" + personFile + '#' + id + "\">");
-        }
-        if (wh.isPrivate(indi)) {
-            name = "..., ...";
-        }
-        if (name.compareTo(",") == 0) {
-            name = "";
-        }
-        out.print(htmlText(name));
-        String sosa = wh.getSosa(indi);
-        if (sosa != null && sosa.length() != 0) {
-            out.println(SPACE + "(" + sosa + ")");
-        }
-        if (wp.param_dispId.equals("1") && id != null && id.length() != 0) {
-            out.println(SPACE + "(" + id + ")");
-        }
-        if (indi != null) {
-            out.print("</a>");
-        }
-    }
-
-    /**
-     * Print dates of individual
-     */
-    private void wrapDate(PrintWriter out, Indi indi, boolean parenthesis) {
-        //
-        String id = (indi == null) ? "" : indi.getId();
-        PropertyDate bdate = (indi == null) ? null : indi.getBirthDate();
-        PropertyDate ddate = (indi == null) ? null : indi.getDeathDate();
-        String birthdate = (indi == null) || (bdate == null) ? "." : bdate.toString();
-        String deathdate = (indi == null) || (ddate == null) ? "" : " - " + ddate.toString();
-        String date = (birthdate + deathdate).trim();
-        if (wh.isPrivate(indi)) {
-            date = ". - .";
-        }
-        if (date.compareTo(".") != 0) {
-            out.print(SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : ""));
-        }
-    }
-
-    /**
      * Calculate pages for individual details
      */
     private void calcPages() {
@@ -879,20 +829,8 @@ public class WebIndividualsDetails extends WebSection {
     /**
      * Provide links map to outside caller
      */
-    public Map getPagesMap() {
+    public Map<String, String> getPagesMap() {
         return personPage;
-    }
-
-    /**
-     * Exports page links
-     */
-    private void exportLinks(PrintWriter out, String pagename, int previous, int next, int last) {
-        printLinks(out, pagename,
-                sectionPrefix + String.format(formatNbrs, 1) + sectionSuffix, // start
-                sectionPrefix + String.format(formatNbrs, previous) + sectionSuffix, // previous
-                sectionPrefix + String.format(formatNbrs, next) + sectionSuffix, // next
-                sectionPrefix + String.format(formatNbrs, last) + sectionSuffix, // end
-                this);
     }
 
     /**

@@ -3,6 +3,7 @@ package genjfr.app.tools.webbook.creator;
 import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
@@ -52,6 +53,7 @@ public class WebSection {
     public String styleFile = "style.css";
     public String css = themeDir + SEP + styleFile;
     //
+    public String prefixPersonDetailsDir = "";
     //
     //
     public static final int NB_WORDS = 7;
@@ -63,8 +65,10 @@ public class WebSection {
 
         A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
     }
-    public Map<String, String> linkForLetter = new TreeMap<String, String>();
+    public Map<String, String> linkForLetter = new TreeMap<String, String>();       // map is : letter to link
     public Map<String, String> namePage = new TreeMap<String, String>();            // map is : lastname to link
+    public Map<String, String> personPage = new TreeMap<String, String>();          // map is : individualdetails to link
+    public Map<String, String> sourcePage = new TreeMap<String, String>();          // map is : source to link
 
     /**
      * Constructor
@@ -190,6 +194,19 @@ public class WebSection {
         }
         // done
     }
+
+    /**
+     * Exports page links
+     */
+    public void exportLinks(PrintWriter out, String pagename, int start, int previous, int next, int last) {
+        printLinks(out, pagename,
+                sectionPrefix + String.format(formatNbrs, start) + sectionSuffix, // start
+                sectionPrefix + String.format(formatNbrs, previous) + sectionSuffix, // previous
+                sectionPrefix + String.format(formatNbrs, next) + sectionSuffix, // next
+                sectionPrefix + String.format(formatNbrs, last) + sectionSuffix, // end
+                this);
+    }
+
 
     /**
      * Helper - Writes HTML end header and end body information
@@ -443,6 +460,57 @@ public class WebSection {
         out.println("</body></html>");
         out.close();
     }
+
+    /**
+     * Print name with link
+     */
+    public void wrapName(PrintWriter out, Indi indi) {
+        //
+        String id = (indi == null) ? "" : indi.getId();
+        String name = (indi == null) ? wp.param_unknown : (wh.getLastName(indi, DEFCHAR) + ", " + indi.getFirstName()).trim();
+        String personFile = (indi == null) ? "" : personPage.get(id);
+        if (indi != null) {
+            out.print("<a href=\"" + prefixPersonDetailsDir + personFile + '#' + id + "\">");
+        }
+        if (wh.isPrivate(indi)) {
+            name = "..., ...";
+        }
+        if (name.compareTo(",") == 0) {
+            name = "";
+        }
+        out.print(htmlText(name));
+        String sosa = wh.getSosa(indi);
+        if (sosa != null && sosa.length() != 0) {
+            out.println(SPACE + "(" + sosa + ")");
+        }
+        if (wp.param_dispId.equals("1") && id != null && id.length() != 0) {
+            out.println(SPACE + "(" + id + ")");
+        }
+        if (indi != null) {
+            out.print("</a>");
+        }
+    }
+
+    /**
+     * Print dates of individual
+     */
+    public void wrapDate(PrintWriter out, Indi indi, boolean parenthesis) {
+        //
+        String id = (indi == null) ? "" : indi.getId();
+        PropertyDate bdate = (indi == null) ? null : indi.getBirthDate();
+        PropertyDate ddate = (indi == null) ? null : indi.getDeathDate();
+        String birthdate = (indi == null) || (bdate == null) ? "." : bdate.toString();
+        String deathdate = (indi == null) || (ddate == null) ? "" : " - " + ddate.toString();
+        String date = (birthdate + deathdate).trim();
+        if (wh.isPrivate(indi)) {
+            date = ". - .";
+        }
+        if (date.compareTo(".") != 0) {
+            out.print(SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : ""));
+        }
+    }
+
+
     /**
      * Comparator to sort Lastnames
      */

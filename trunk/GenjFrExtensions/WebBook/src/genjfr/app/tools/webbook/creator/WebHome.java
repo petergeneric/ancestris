@@ -85,9 +85,9 @@ public class WebHome extends WebSection {
         if (wp.param_media_GeneSources.equals("1") || wp.param_media_GeneMedia.equals("1")) {
             out.println("<p>" + trs("TXT_menu_documents") + "</p>");
             out.println("<ul>");
-//        if (pagesSources && displaySourceSec) {
-//            out.println("<li><a href=\"" + sectionSources.sectionLink + "\">" + htmlText(sectionSources.sectionName) + "</a></li>");
-//        }
+        if (wb.sectionSources.toBeGenerated && wp.param_media_GeneSources.equals("1")) {
+            out.println("<li><a href=\"" + wb.sectionSources.sectionLink + "\">" + htmlText(wb.sectionSources.sectionName) + "</a></li>");
+        }
 //        if (pagesMedia && displayMediaSec) {
 //            out.println("<li><a href=\"" + sectionMedia.sectionLink + "\">" + htmlText(sectionMedia.sectionName) + "</a></li>");
 //        }

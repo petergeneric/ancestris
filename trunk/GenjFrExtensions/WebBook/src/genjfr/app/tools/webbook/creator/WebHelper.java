@@ -52,6 +52,8 @@ public class WebHelper {
     public WebBookParams wp;
     //
     public Indi indiDeCujus = null;
+    private List individualsList = null;
+    private List sourcesList = null;
     public PrivacyPolicy privacyPolicy = null;
     //
     /**
@@ -80,7 +82,6 @@ public class WebHelper {
     private Set<Indi> listOfCousins = new HashSet<Indi>();
     private boolean initCousins = false;
     private FTPRegister uploadRegister = null;
-
 
     /***************************************************************************
      * CONSTRUCTOR
@@ -662,19 +663,6 @@ public class WebHelper {
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
-    
-
-
     /***************************************************************************
      * TOOLS FOR GEDCOM SETS
      */
@@ -696,7 +684,7 @@ public class WebHelper {
         }
         Entity[] indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         for (int i = 0; i < indis.length; i++) {
-            Indi indi = (Indi)indis[i];
+            Indi indi = (Indi) indis[i];
             if (indi.toString().equals(str)) {
                 indiDeCujus = indi;
                 break;
@@ -711,9 +699,9 @@ public class WebHelper {
     public PrivacyPolicy getPrivacyPolicy() {
         if (privacyPolicy == null) {
             privacyPolicy = new PrivacyPolicy(
-                NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
-                new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
-                NbPreferences.forModule(App.class).get("privFlag", ""));
+                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
+                    new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
+                    NbPreferences.forModule(App.class).get("privFlag", ""));
         }
         return privacyPolicy;
     }
@@ -754,7 +742,7 @@ public class WebHelper {
             initLastname = buildLastnamesList(gedcom, DEFCHAR, new Comparator() {
 
                 public int compare(Object t1, Object t2) {
-                    return ((String)t1).compareTo(((String)t2));
+                    return ((String) t1).compareTo(((String) t2));
                 }
             });
         }
@@ -799,8 +787,6 @@ public class WebHelper {
         return (str == null ? defchar : str.length() == 0 ? defchar : str);
     }
 
-
-
     /**
      * Return sorted list of individuals (Indi) of Gedcom file
      * Lastnames are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
@@ -812,13 +798,15 @@ public class WebHelper {
             sortIndividuals = new Comparator() {
 
                 public int compare(Object t1, Object t2) {
-                    return ((Indi)t1).compareTo(((Indi)t2));
+                    return ((Indi) t1).compareTo(((Indi) t2));
                 }
             };
         }
-        List<Indi> indis = new ArrayList<Indi>(gedcom.getEntities(Gedcom.INDI));
-        Collections.sort(indis, sortIndividuals);
-        return indis;
+        if (individualsList == null) {
+            individualsList = new ArrayList<Indi>(gedcom.getEntities(Gedcom.INDI));
+            Collections.sort(individualsList, sortIndividuals);
+        }
+        return individualsList;
     }
 
     /**
@@ -827,9 +815,11 @@ public class WebHelper {
      */
     @SuppressWarnings("unchecked")
     public List<Entity> getSources(Gedcom gedcom) {
-        List<Entity> sources = new ArrayList(gedcom.getEntities(Gedcom.SOUR));
-        Collections.sort(sources, sortSources);
-        return sources;
+        if (sourcesList == null) {
+            sourcesList = new ArrayList(gedcom.getEntities(Gedcom.SOUR));
+            Collections.sort(sourcesList, sortSources);
+        }
+        return sourcesList;
     }
 
     /**
@@ -915,7 +905,7 @@ public class WebHelper {
             initCity = buildCitiesList(gedcom, new Comparator() {
 
                 public int compare(Object t1, Object t2) {
-                    return ((String)t1).compareTo(((String)t2));
+                    return ((String) t1).compareTo(((String) t2));
                 }
             });
         }
@@ -1270,16 +1260,6 @@ public class WebHelper {
         return false;
     }
 
-
-
-
-
-
-
-
-
-
-
     /***************************************************************************
      * MISCELLANEOUS
      */
@@ -1294,9 +1274,6 @@ public class WebHelper {
     public FTPRegister getUploadRegister() {
         return uploadRegister;
     }
-
-
-
 } // End_of_Report
 
 
