@@ -893,9 +893,14 @@ public class WebHelper {
      * Cities are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
      */
     @SuppressWarnings("unchecked")
-    public List<String> getCities(Gedcom gedcom, Comparator sortStrings) {
+    public List<String> getCities(Gedcom gedcom) {
         if (!initCity) {
-            initCity = buildCitiesList(gedcom, sortStrings);
+            initCity = buildCitiesList(gedcom, new Comparator() {
+
+                public int compare(Object t1, Object t2) {
+                    return ((String) t1).compareTo(((String) t2));
+                }
+            });
         }
         return (List) new ArrayList((Collection) listOfCities.keySet());
     }
@@ -1088,7 +1093,7 @@ public class WebHelper {
             return String.format("%02d", pit.getMonth() + 1) + String.format("%02d", pit.getDay() + 1);
         } catch (GedcomException e) {
             // e.printStackTrace();
-            log.write(log.ERROR, "getDay - " + e.getMessage());
+            //log.write(log.ERROR, "getDay - " + e.getMessage());
         }
         return null;
     }

@@ -65,10 +65,16 @@ public class WebSection {
 
         A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
     }
+    //
     public Map<String, String> linkForLetter = new TreeMap<String, String>();       // map is : letter to link
     public Map<String, String> namePage = new TreeMap<String, String>();            // map is : lastname to link
     public Map<String, String> personPage = new TreeMap<String, String>();          // map is : individualdetails to link
     public Map<String, String> sourcePage = new TreeMap<String, String>();          // map is : source to link
+    public Map<Integer, String> mediaPage = new TreeMap<Integer, String>();         // map is : media to link
+    public Map<String, String> cityPage = new TreeMap<String, String>();            // map is : city to link
+    public Map<String, String> dayPage = new TreeMap<String, String>();             // map is : days to link
+    //
+    public String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     /**
      * Constructor
@@ -89,6 +95,7 @@ public class WebSection {
         this.nbPerPage = nbPerPage;
         this.sectionLink = sectionDir + SEP + sectionPrefix + ((formatNbrs.length() == 0) ? "" : String.format(formatNbrs, firstPage)) + sectionSuffix;
         keywords = getKeywords();
+        wh.log.write(sectionName);
         return;
     }
 
@@ -206,7 +213,6 @@ public class WebSection {
                 sectionPrefix + String.format(formatNbrs, last) + sectionSuffix, // end
                 this);
     }
-
 
     /**
      * Helper - Writes HTML end header and end body information
@@ -509,8 +515,6 @@ public class WebSection {
             out.print(SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : ""));
         }
     }
-
-
     /**
      * Comparator to sort Lastnames
      */

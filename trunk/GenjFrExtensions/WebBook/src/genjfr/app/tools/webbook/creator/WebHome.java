@@ -88,9 +88,9 @@ public class WebHome extends WebSection {
         if (wb.sectionSources.toBeGenerated && wp.param_media_GeneSources.equals("1")) {
             out.println("<li><a href=\"" + wb.sectionSources.sectionLink + "\">" + htmlText(wb.sectionSources.sectionName) + "</a></li>");
         }
-//        if (pagesMedia && displayMediaSec) {
-//            out.println("<li><a href=\"" + sectionMedia.sectionLink + "\">" + htmlText(sectionMedia.sectionName) + "</a></li>");
-//        }
+        if (wb.sectionMedia.toBeGenerated && wp.param_media_GeneMedia.equals("1")) {
+            out.println("<li><a href=\"" + wb.sectionMedia.sectionLink + "\">" + htmlText(wb.sectionMedia.sectionName) + "</a></li>");
+        }
             out.println("</ul>");
         }
 
@@ -99,16 +99,16 @@ public class WebHome extends WebSection {
             out.println("<p>" + htmlText(trs("TXT_menu_locations")) + "</p>");
             out.println("<ul>");
 //        out.println("<li><a href=\"" + sectionMap.sectionLink + "\">" + htmlText(sectionMap.sectionName) + "</a></li>");
-//        out.println("<li><a href=\"" + sectionCities.sectionLink + "\">" + htmlText(sectionCities.sectionName) + "</a></li>");
-//        out.println("<li><a href=\"" + sectionCitiesDetails.sectionLink + "\">" + htmlText(sectionCitiesDetails.sectionName) + "</a></li>");
+        out.println("<li><a href=\"" + wb.sectionCities.sectionLink + "\">" + htmlText(wb.sectionCities.sectionName) + "</a></li>");
+        out.println("<li><a href=\"" + wb.sectionCitiesDetails.sectionLink + "\">" + htmlText(wb.sectionCitiesDetails.sectionName) + "</a></li>");
             out.println("</ul>");
         }
 
         // Dates
         out.println("<p>" + htmlText(trs("TXT_menu_days")) + "</p>");
         out.println("<ul>");
-//        out.println("<li><a href=\"" + sectionDays.sectionLink + "\">" + htmlText(sectionDays.sectionName) + "</a></li>");
-//        out.println("<li><a href=\"" + sectionDaysDetails.sectionLink + "\">" + htmlText(sectionDaysDetails.sectionName) + "</a></li>");
+        out.println("<li><a href=\"" + wb.sectionDays.sectionLink + "\">" + htmlText(wb.sectionDays.sectionName) + "</a></li>");
+        out.println("<li><a href=\"" + wb.sectionDaysDetails.sectionLink + "\">" + htmlText(wb.sectionDaysDetails.sectionName) + "</a></li>");
         out.println("</ul>");
 
         // Statistics

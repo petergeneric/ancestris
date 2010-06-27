@@ -31,7 +31,7 @@ import java.util.Map;
 import org.openide.util.NbBundle;
 
 /**
- * GenJ - Report creating a web Book or reports
+ * Ancestris
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 0.1
  */

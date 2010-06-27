@@ -6,10 +6,15 @@ package genjfr.app.tools.webbook;
 
 import genjfr.app.tools.webbook.creator.WebHome;
 import genj.gedcom.Gedcom;
+import genjfr.app.tools.webbook.creator.WebCities;
+import genjfr.app.tools.webbook.creator.WebCitiesDetails;
+import genjfr.app.tools.webbook.creator.WebDays;
+import genjfr.app.tools.webbook.creator.WebDaysDetails;
 import genjfr.app.tools.webbook.creator.WebHelper;
 import genjfr.app.tools.webbook.creator.WebIndividuals;
 import genjfr.app.tools.webbook.creator.WebIndividualsDetails;
 import genjfr.app.tools.webbook.creator.WebLastnames;
+import genjfr.app.tools.webbook.creator.WebMedia;
 import genjfr.app.tools.webbook.creator.WebSources;
 import genjfr.app.tools.webbook.creator.WebTheme;
 
@@ -67,6 +72,11 @@ public class WebBook {
     public WebIndividuals sectionIndividuals;
     public WebIndividualsDetails sectionIndividualsDetails;
     public WebSources sectionSources;
+    public WebMedia sectionMedia;
+    public WebCities sectionCities;
+    public WebCitiesDetails sectionCitiesDetails;
+    public WebDays sectionDays;
+    public WebDaysDetails sectionDaysDetails;
     //
 
     /**
@@ -86,6 +96,11 @@ public class WebBook {
         sectionIndividuals = new WebIndividuals(true, this, wp, wh);
         sectionIndividualsDetails = new WebIndividualsDetails(true, this, wp, wh);
         sectionSources = new WebSources(true, this, wp, wh);
+        sectionMedia = new WebMedia(true, this, wp, wh);
+        sectionCities = new WebCities(true, this, wp, wh);
+        sectionCitiesDetails = new WebCitiesDetails(true, this, wp, wh);
+        sectionDays = new WebDays(true, this, wp, wh);
+        sectionDaysDetails = new WebDaysDetails(true, this, wp, wh);
         run();
     }
 
@@ -114,10 +129,17 @@ public class WebBook {
         /**
          * Initiate all sections together as they use eachother
          */
+        log.write(" ");
+        log.write("----------- " + log.trs("EXEC_init") + " -----------");
         sectionLastnames.init();
         sectionIndividuals.init();
         sectionIndividualsDetails.init();
         sectionSources.init();
+        sectionMedia.init();
+        sectionCities.init();
+        sectionCitiesDetails.init();
+        sectionDays.init();
+        sectionDaysDetails.init();
         //...etc...
 
 
@@ -127,6 +149,8 @@ public class WebBook {
          * - theme : style sheet and images
          * - includes : PHP code in the case of PHP support
          */
+        log.write(" ");
+        log.write("----------- " + log.trs("EXEC_create") + " -----------");
         sectionTheme.create();
         //wh.createIncludes();
 
@@ -140,6 +164,11 @@ public class WebBook {
         sectionIndividuals.create();
         sectionIndividualsDetails.create();
         sectionSources.create();
+        sectionMedia.create();
+        sectionCities.create();
+        sectionCitiesDetails.create();
+        sectionDays.create();
+        sectionDaysDetails.create();
         //...etc...
 
         /**
@@ -150,7 +179,7 @@ public class WebBook {
 
 
         /**
-         * Create home page
+         * Update web site pages
          */
         //uploadPages();
 
