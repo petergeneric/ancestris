@@ -115,12 +115,12 @@ public class WebHome extends WebSection {
         if (true) {
             out.println("<p>" + htmlText(trs("TXT_menu_statistics")) + "</p>");
             out.println("<ul>");
-//        if (pagesStatsFrequent) {
-//            out.println("<li><a href=\"" + sectionStatsFrequent.sectionLink + "\">" + htmlText(sectionStatsFrequent.sectionName) + "</a></li>");
-//        }
-//        if (pagesStatsImplex) {
-//            out.println("<li><a href=\"" + sectionStatsImplex.sectionLink + "\">" + htmlText(sectionStatsImplex.sectionName) + "</a></li>");
-//        }
+        if (wb.sectionStatsFrequent.toBeGenerated) {
+            out.println("<li><a href=\"" + wb.sectionStatsFrequent.sectionLink + "\">" + htmlText(wb.sectionStatsFrequent.sectionName) + "</a></li>");
+        }
+        if (wb.sectionStatsImplex.toBeGenerated) {
+            out.println("<li><a href=\"" + wb.sectionStatsImplex.sectionLink + "\">" + htmlText(wb.sectionStatsImplex.sectionName) + "</a></li>");
+        }
             out.println("</ul>");
         }
 
