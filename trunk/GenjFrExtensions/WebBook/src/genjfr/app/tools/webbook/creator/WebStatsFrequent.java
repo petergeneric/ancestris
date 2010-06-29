@@ -62,9 +62,9 @@ public class WebStatsFrequent extends WebSection {
     public void create() {
 
         // Generate links to the 3 sections below
-        if (wb.sectionIndividualsDetails != null) {
-            namePage = wb.sectionIndividualsDetails.getPagesMap();
-            here2indiDir = buildLinkShort(this, wb.sectionIndividualsDetails);
+        if (wb.sectionIndividuals != null) {
+            namePage = wb.sectionIndividuals.getPagesMap();
+            here2indiDir = buildLinkShort(this, wb.sectionIndividuals);
         }
 
         if (wb.sectionCitiesDetails != null) {

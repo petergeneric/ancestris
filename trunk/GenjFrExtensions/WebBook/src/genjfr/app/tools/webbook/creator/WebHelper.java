@@ -1111,6 +1111,13 @@ public class WebHelper {
     /**
      * Get Ancestors
      */
+  public List<Ancestor> getAncestorsList(Indi rootIndi) {
+     if (!initAncestors) {
+        initAncestors = buildAncestors(rootIndi);
+        }
+     return listOfAncestors;
+     }
+
     public Set<Indi> getAncestors(Indi rootIndi) {
         if (!initAncestors) {
             initAncestors = buildAncestors(rootIndi);

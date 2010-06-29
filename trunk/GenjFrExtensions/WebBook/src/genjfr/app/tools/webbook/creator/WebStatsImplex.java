@@ -31,24 +31,6 @@ import java.util.Vector;
  */
 public class WebStatsImplex extends WebSection {
 
-//  private ReportWebBook report = null;
-//  private Gedcom gedcom = null;
-//  private Indi indiDeCujus = null;
-//  private WebHelper wh = null;
-//  private WebSection section = null;
-//
-//  private WebSection sectionList = null;
-//
-//  private final static Charset UTF8 = Charset.forName("UTF-8");
-//  private final static String SPACE = "&nbsp;";
-//  private final static String SEP = "/";
-//
-//  private String themeDir = "";
-//  private Map<String, String> personPage = new TreeMap<String, String>();
-//  private WebIndividualsDetails reportIndi = null;
-//  private String here2indiDir = "";
-
-
     private static final boolean DEBUG = false;
     private static final String STACK_SEPARATOR = "\n";
     private double dImplexFactor;
@@ -133,7 +115,7 @@ public class WebStatsImplex extends WebSection {
         clearStats();
 
         // Compute the implex factor
-        computeImplexFactor(wh.indiDeCujus);
+        computeImplexFactor(wh.getIndiDeCujus(wp.param_decujus));
 
         // Compute the consanguinity factor
         computeConsanguinityFactor(wh.indiDeCujus);

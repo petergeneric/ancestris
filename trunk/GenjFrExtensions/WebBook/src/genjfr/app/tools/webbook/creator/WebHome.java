@@ -128,10 +128,9 @@ public class WebHome extends WebSection {
         if (wp.param_dispAncestors.equals("1")) {
             out.println("<p>" + htmlText(trs("TXT_menu_structuredlist")) + "</p>");
             out.println("<ul>");
-//        }
-//        if (pagesRepSosa && displayRepSosa) {
-//            out.println("<li><a href=\"" + sectionRepSosa.sectionLink + "\">" + htmlText(sectionRepSosa.sectionName) + "</a></li>");
-//        }
+            if (wb.sectionRepSosa.toBeGenerated) {
+                out.println("<li><a href=\"" + wb.sectionRepSosa.sectionLink + "\">" + htmlText(wb.sectionRepSosa.sectionName) + "</a></li>");
+            }
             out.println("</ul>");
         }
 

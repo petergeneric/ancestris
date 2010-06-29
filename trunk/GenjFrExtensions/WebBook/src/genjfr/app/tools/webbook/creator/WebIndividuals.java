@@ -39,15 +39,16 @@ public class WebIndividuals extends WebSection {
         calcLetters(wh.getIndividuals(wh.gedcom, sortIndividuals));
 
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
-        exportData(dir, wh.getIndividuals(wh.gedcom, sortIndividuals));
+        exportData(dir);
 
     }
 
     /**
      * Exports data for page
      */
-    private void exportData(File dir, List<Indi> indis) {
+    private void exportData(File dir) {
 
+        List<Indi> indis = wh.getIndividuals(wh.gedcom, sortIndividuals);
         // cpt counts the individuals to generate the links to the individuals details pages
         // iNames counts the different lastnames (not individuals) to be consistent with lastname page links
         // We have a change of letter every time the lastname anchored converted string changes

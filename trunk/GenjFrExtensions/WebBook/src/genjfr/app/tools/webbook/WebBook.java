@@ -15,6 +15,7 @@ import genjfr.app.tools.webbook.creator.WebIndividuals;
 import genjfr.app.tools.webbook.creator.WebIndividualsDetails;
 import genjfr.app.tools.webbook.creator.WebLastnames;
 import genjfr.app.tools.webbook.creator.WebMedia;
+import genjfr.app.tools.webbook.creator.WebRepSosa;
 import genjfr.app.tools.webbook.creator.WebSearch;
 import genjfr.app.tools.webbook.creator.WebSources;
 import genjfr.app.tools.webbook.creator.WebStatsFrequent;
@@ -82,6 +83,7 @@ public class WebBook {
     public WebDaysDetails sectionDaysDetails;
     public WebStatsFrequent sectionStatsFrequent;
     public WebStatsImplex sectionStatsImplex;
+    public WebRepSosa sectionRepSosa;
     public WebSearch sectionSearch;
     //
 
@@ -109,6 +111,7 @@ public class WebBook {
         sectionDaysDetails = new WebDaysDetails(true, this, wp, wh);
         sectionStatsImplex = new WebStatsImplex(true, this, wp, wh);
         sectionStatsFrequent = new WebStatsFrequent(true, this, wp, wh);
+        sectionRepSosa = new WebRepSosa(true, this, wp, wh);
         sectionSearch = new WebSearch(true, this, wp, wh);
         run();
     }
@@ -151,6 +154,7 @@ public class WebBook {
         sectionDaysDetails.init();
         sectionStatsImplex.init();
         sectionStatsFrequent.init();
+        sectionRepSosa.init();
         sectionSearch.init();
         //...etc...
 
@@ -183,6 +187,7 @@ public class WebBook {
         sectionDaysDetails.create();
         sectionStatsFrequent.create();
         sectionStatsImplex.create();
+        sectionRepSosa.create();
         sectionSearch.create();
         //...etc...
 

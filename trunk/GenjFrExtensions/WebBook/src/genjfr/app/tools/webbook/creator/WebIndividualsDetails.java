@@ -31,7 +31,6 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map;
 import org.openide.util.NbPreferences;
 
