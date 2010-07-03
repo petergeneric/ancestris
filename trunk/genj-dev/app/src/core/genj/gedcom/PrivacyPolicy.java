@@ -19,8 +19,6 @@
  */
 package genj.gedcom;
 
-import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 
 /**
