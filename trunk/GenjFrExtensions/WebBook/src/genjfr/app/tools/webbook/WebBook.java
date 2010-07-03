@@ -14,6 +14,7 @@ import genjfr.app.tools.webbook.creator.WebHelper;
 import genjfr.app.tools.webbook.creator.WebIndividuals;
 import genjfr.app.tools.webbook.creator.WebIndividualsDetails;
 import genjfr.app.tools.webbook.creator.WebLastnames;
+import genjfr.app.tools.webbook.creator.WebMap;
 import genjfr.app.tools.webbook.creator.WebMedia;
 import genjfr.app.tools.webbook.creator.WebRepSosa;
 import genjfr.app.tools.webbook.creator.WebSearch;
@@ -85,6 +86,7 @@ public class WebBook {
     public WebStatsImplex sectionStatsImplex;
     public WebRepSosa sectionRepSosa;
     public WebSearch sectionSearch;
+    public WebMap sectionMap;
     //
 
     /**
@@ -113,6 +115,7 @@ public class WebBook {
         sectionStatsFrequent = new WebStatsFrequent(true, this, wp, wh);
         sectionRepSosa = new WebRepSosa(true, this, wp, wh);
         sectionSearch = new WebSearch(true, this, wp, wh);
+        sectionMap = new WebMap(true, this, wp, wh);
         run();
     }
 
@@ -156,7 +159,9 @@ public class WebBook {
         sectionStatsFrequent.init();
         sectionRepSosa.init();
         sectionSearch.init();
-        //...etc...
+        sectionMap.init();
+        //
+        sectionHome.init();
 
 
 
@@ -189,7 +194,7 @@ public class WebBook {
         sectionStatsImplex.create();
         sectionRepSosa.create();
         sectionSearch.create();
-        //...etc...
+        sectionMap.create();
 
         /**
          * Create home page

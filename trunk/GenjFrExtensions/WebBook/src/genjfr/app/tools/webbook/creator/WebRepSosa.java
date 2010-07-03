@@ -293,7 +293,9 @@ public class WebRepSosa extends WebSection {
      * Exports gen links bar
      */
     private void exportGenLinks(PrintWriter out) {
-        out.println("<p class=\"letters\"><br /><br />");
+        out.println("<p class=\"letters\"><br />");
+        out.println(htmlText(trs("RepSosaOptions.generations")));
+        out.println("<br /><br />");
         for (Iterator it = linkForGen.keySet().iterator(); it.hasNext();) {
             Integer gen = (Integer) it.next();
             out.println("<a href=\"" + linkForGen.get(gen) + "#gen-" + gen + "\">" + gen + "</a>" + SPACE + SPACE);

@@ -100,7 +100,7 @@ public class WebCitiesDetails extends WebSection {
                 printOpenHTML(out, "TXT_Citiesdetails", this);
             }
             exportLinks(out, cityfile, 1, previousPage, nextPage, lastPage);
-            exportCityDetails(out, city, dir, cityfile);
+            exportCityDetails(out, city);
             // .. next city
         }
         if (out != null) {
@@ -119,7 +119,7 @@ public class WebCitiesDetails extends WebSection {
      * Exports individual details
      */
     @SuppressWarnings("unchecked")
-    private void exportCityDetails(PrintWriter out, String city, File dir, String cityfile) {
+    private void exportCityDetails(PrintWriter out, String city) {
 
         // City name
         out.println("<h2 class=\"unk\"><a name=\"" + htmlAnchorText(city) + "\"></a>" + htmlText(city) + "</h2>");
@@ -152,9 +152,7 @@ public class WebCitiesDetails extends WebSection {
                 first = false;
                 if (prop instanceof PropertyPlace) {
                     displayPlace(out, city, prop);
-                } else {
-                    displayAddr(out, city, prop);
-                }
+                } 
                 displayHeader(out);
             }
             displayEvent(out, prop);
@@ -226,42 +224,14 @@ public class WebCitiesDetails extends WebSection {
      * Get fullname of place
      */
     public String getFullname(Property prop) {
-        String fullname = "";
-        if (prop instanceof PropertyPlace) {
-            fullname = prop.toString();
-        } else {
-            Property addr = prop.getParent();
-            Property stae = null, post = null, country = null;
-            if (addr != null) {
-                stae = addr.getProperty("STAE");
-                post = addr.getProperty("POST");
-                country = addr.getProperty("CTRY");
-            }
-            fullname = prop.toString();
-            if (stae != null) {
-                fullname += "," + stae.toString();
-            }
-            if (post != null) {
-                fullname += "," + post.toString();
-            }
-            if (country != null) {
-                fullname += "," + country.toString();
-            }
-        }
-        return fullname;
+        return (prop instanceof PropertyPlace) ? prop.toString().trim() : "";
     }
 
     /**
      * Get city
      */
     public String getCity(Property prop) {
-        String city = "";
-        if (prop instanceof PropertyPlace) {
-            city = ((PropertyPlace) prop).getCity().trim();
-        } else {
-            city = prop.getValue().trim();
-        }
-        return city;
+        return (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity().trim() : "";
     }
 
     /**
@@ -272,16 +242,7 @@ public class WebCitiesDetails extends WebSection {
         if (prop instanceof PropertyPlace) {
             String[] dataBits = prop.toString().split("\\,", -1);
             ctry = dataBits[dataBits.length - 1].trim();
-        } else {
-            Property addr = prop.getParent();
-            Property country = null;
-            if (addr != null) {
-                country = addr.getProperty("CTRY");
-            }
-            if (country != null) {
-                ctry = country.toString().trim();
-            }
-        }
+        } 
         return ctry;
     }
 
@@ -335,39 +296,11 @@ public class WebCitiesDetails extends WebSection {
     }
 
     /**
-     * Display formatted address
-     */
-    private void displayAddr(PrintWriter out, String city, Property prop) {
-        out.println("<p class=\"cityloc\"><span class=\"gras\">" + htmlText(trs("place_loc")) + "</span></p>");
-        out.println("<span class=\"cityloc1\">");
-        out.println(htmlText(prop.getValue()));
-        displayLink2Map(out, prop, city);
-        out.println("<br />");
-        Property addr = prop.getParent();
-        Property stae = null, post = null, country = null;
-        if (addr != null) {
-            stae = addr.getProperty("STAE");
-            post = addr.getProperty("POST");
-            country = addr.getProperty("CTRY");
-        }
-        if (stae != null && stae.getValue().length() != 0) {
-            out.println(htmlText(stae.getValue()) + "<br />");
-        }
-        if (post != null && post.getValue().length() != 0) {
-            out.println(htmlText(post.getValue()) + "<br />");
-        }
-        if (country != null && country.getValue().length() != 0) {
-            out.println(htmlText(country.getValue()) + "<br />");
-        }
-        out.println("</span></div>");
-    }
-
-    /**
      * Display link to map if needed
      */
     private void displayLink2Map(PrintWriter out, Property prop, String city) {
         if (wp.param_media_GeneMap.equals("1")) {
-            out.println(SPACE + SPACE + "<a href=\"../map/map.html?" + htmlAnchorText(getFullname(prop)) + "\"><img src=\"" + themeDir + "map.gif\" alt=\"" + htmlText(city) + "\" title=\"" + htmlText(trs("map_of", city)) + "\"/></a>");
+            out.println(SPACE + SPACE + "<a href=\"../map/map.html?" + htmlAnchorText(getFullname(prop)) + "\"><img src=\"../" + themeDir + "/map.gif\" alt=\"" + htmlText(city) + "\" title=\"" + htmlText(trs("map_of", city)) + "\"/></a>");
         }
     }
 

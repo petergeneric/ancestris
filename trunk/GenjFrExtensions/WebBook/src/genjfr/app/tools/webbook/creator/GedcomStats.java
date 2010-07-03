@@ -115,7 +115,7 @@ class GedcomStats {
         List<Property> placesProps = new ArrayList<Property>();
         for (Iterator it = entities.iterator(); it.hasNext();) {
             Entity ent = (Entity) it.next();
-            wh.getPropertiesRecursively((Property) ent, placesProps, "PLAC");
+            wh.getPropertiesRecursively((Property) ent, placesProps, PropertyPlace.class);
         }
         nbPlaces = wh.getTotalCitiesCount();
 
@@ -127,10 +127,8 @@ class GedcomStats {
         for (Iterator it = placesProps.iterator(); it.hasNext();) {
             Property prop = (Property) it.next();
             if (prop instanceof PropertyPlace) {
-                juridic = wh.getPlace((PropertyPlace) prop, 1);
-            } else {
-                juridic = prop.getValue();
-            }
+                juridic = ((PropertyPlace)prop).getCity().trim();
+            } 
             if (juridic != null && juridic.length() > 0) {
                 val = 1;
                 if (placeTop.get(juridic) != null) {

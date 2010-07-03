@@ -840,13 +840,13 @@ public class WebHelper {
     public List<Source> getSources(Indi indi) {
         // get sources of individual
         List<Property> sources = new ArrayList<Property>();
-        getPropertiesRecursively((Property) indi, sources, "SOUR");
+        getPropertiesRecursively((Property) indi, sources, PropertySource.class);
 
         // get sources of the associated families
         Fam[] families = indi.getFamiliesWhereSpouse();
         for (int i = 0; families != null && i < families.length; i++) {
             Fam family = families[i];
-            getPropertiesRecursively((Property) family, sources, "SOUR");
+            getPropertiesRecursively((Property) family, sources, PropertySource.class);
         }
 
         List<Source> sourcesOutput = new ArrayList<Source>();
@@ -947,25 +947,21 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     private boolean buildCitiesList(Gedcom gedcom, Comparator sortStrings) {
 
-        listOfCities = new TreeMap<String, Info>(sortStrings);
         Collection entities = gedcom.getEntities();
-        List placesProps = new ArrayList();
+        List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
         for (Iterator it = entities.iterator(); it.hasNext();) {
             Entity ent = (Entity) it.next();
-            getPropertiesRecursively((Property) ent, placesProps, "PLAC");
-        }
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Entity ent = (Entity) it.next();
-            getPropertiesRecursively((Property) ent, placesProps, "CITY");
+            getPropertiesRecursively((Property) ent, placesProps, PropertyPlace.class);
         }
 
+        listOfCities = new TreeMap<String, Info>(sortStrings);
         String juridic = "";
         for (Iterator it = placesProps.iterator(); it.hasNext();) {
             Property prop = (Property) it.next();
             if (prop instanceof PropertyPlace) {
-                juridic = getPlace((PropertyPlace) prop);
+                juridic = ((PropertyPlace)prop).getCity().trim();
             } else {
-                juridic = prop.getValue().trim();
+                break;
             }
             if (juridic != null && juridic.length() > 0) {
                 Integer val = null;
@@ -989,34 +985,14 @@ public class WebHelper {
         return true;
     }
 
-    public void getPropertiesRecursively(Property parent, List<Property> props, String tag) {
+    @SuppressWarnings("unchecked")
+    public void getPropertiesRecursively(Property parent, List props, Class clazz) {
         Property[] children = parent.getProperties();
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];
-            if (child.getTag().compareTo(tag) == 0) {
-                props.add(child);
-            }
-            getPropertiesRecursively(child, props, tag);
+            props.addAll(child.getProperties(clazz));
+            getPropertiesRecursively(child, props, clazz);
         }
-    }
-
-    public String getPlace(PropertyPlace prop) {
-        return prop.getCity().trim();
-    }
-
-    public String getPlace(PropertyPlace prop, int level) {
-        String place = "";
-        int i = level;
-        String str = prop.getJurisdiction(i);
-        while (str != null && str.length() != 0) {
-            if (i > level) {
-                place += ", ";
-            }
-            place += str;
-            i++;
-            str = prop.getJurisdiction(i);
-        }
-        return place;
     }
 
     /**
@@ -1054,7 +1030,7 @@ public class WebHelper {
         List<Property> datesProps = new ArrayList<Property>();
         for (Iterator it = entities.iterator(); it.hasNext();) {
             Entity ent = (Entity) it.next();
-            getPropertiesRecursively((Property) ent, datesProps, "DATE");
+            getPropertiesRecursively((Property) ent, datesProps, PropertyDate.class);
         }
 
         String day = "";

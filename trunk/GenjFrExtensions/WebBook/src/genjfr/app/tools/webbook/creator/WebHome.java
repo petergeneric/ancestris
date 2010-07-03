@@ -24,6 +24,10 @@ public class WebHome extends WebSection {
         super(generate, wb, wp, wh);
     }
 
+    public void init() {
+        init("", "", "", "", "", 0, 0);
+    }
+
     /**
      * Section's entry point
      */
@@ -98,7 +102,7 @@ public class WebHome extends WebSection {
         if (wp.param_media_GeneMap.equals("1")) {
             out.println("<p>" + htmlText(trs("TXT_menu_locations")) + "</p>");
             out.println("<ul>");
-//        out.println("<li><a href=\"" + sectionMap.sectionLink + "\">" + htmlText(sectionMap.sectionName) + "</a></li>");
+        out.println("<li><a href=\"" + wb.sectionMap.sectionLink + "\">" + htmlText(wb.sectionMap.sectionName) + "</a></li>");
         out.println("<li><a href=\"" + wb.sectionCities.sectionLink + "\">" + htmlText(wb.sectionCities.sectionName) + "</a></li>");
         out.println("<li><a href=\"" + wb.sectionCitiesDetails.sectionLink + "\">" + htmlText(wb.sectionCitiesDetails.sectionName) + "</a></li>");
             out.println("</ul>");

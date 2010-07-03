@@ -44,10 +44,15 @@ public class WebSection {
     public final String SEP = "/";
     public final String DEFCHAR = "-";
     //
-    private String siteDesc = "";
+    //Meta tags
+    private String htmlTitle = "";
+    private String owner = "";
     private String author = "";
-    private String keywords = null;
-    private String language = Locale.getDefault().getLanguage();
+    private String replyto = "";
+    private String keywords = "";
+    private String siteDesc = "";
+    private String language = "";
+    //
     public String themeDir = "theme";
     public String indexFile = "index.html";
     public String styleFile = "style.css";
@@ -94,7 +99,15 @@ public class WebSection {
         this.sectionSuffix = sectionSuffix;
         this.nbPerPage = nbPerPage;
         this.sectionLink = sectionDir + SEP + sectionPrefix + ((formatNbrs.length() == 0) ? "" : String.format(formatNbrs, firstPage)) + sectionSuffix;
+        // init meta tags
+        htmlTitle = htmlText(wp.param_title);
+        siteDesc = ""; // not used for now
+        owner = htmlText(wp.param_author);
+        author = htmlText(wp.param_author);
+        replyto = wp.param_email;
         keywords = getKeywords();
+        language = Locale.getDefault().getLanguage();
+        //
         wh.log.write(sectionName);
         return;
     }
@@ -158,7 +171,6 @@ public class WebSection {
     public void printOpenHTMLHead(PrintWriter out, String title, WebSection section) {
 
         // HEAD
-        String htmlTitle = htmlText(wp.param_title);
         if (title != null && title.length() != 0) {
             htmlTitle += SPACE + "-" + SPACE + htmlText(trs(title));
         }
@@ -177,8 +189,8 @@ public class WebSection {
         out.println("<meta name=\"author\" content=\"" + author + "\" />");
         out.println("<meta name=\"generator\" content=\"Ancestris\" />");
         out.println("<meta name=\"robots\" content=\"all\" />");
-        out.println("<meta name=\"reply-to\" content=\"\" />");
-        out.println("<meta name=\"owner\" content=\"" + language + "\" />");
+        out.println("<meta name=\"reply-to\" content=\""+ replyto +"\" />");
+        out.println("<meta name=\"owner\" content=\"" + owner + "\" />");
         if (css.length() > 0) {
             String parent = (path == null) || (path.length() == 0) ? "" : path + SEP;
             out.println("<link rel=\"StyleSheet\" href=\"" + parent + css + "\" type=\"text/css\"/>");
@@ -563,7 +575,7 @@ public class WebSection {
      */
     @SuppressWarnings("unchecked")
     public String getKeywords() {
-        if (keywords != null) {
+        if (!keywords.isEmpty()) {
             return keywords;
         }
         String kw = "";
