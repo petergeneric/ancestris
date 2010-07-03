@@ -78,6 +78,9 @@ class GeoNodeObject {
         if (isEvent) {
             return property.getImage(true).getImage();
         }
+        if (isUnknown) {
+            return Utilities.loadImage("genjfr/app/geo/geo_red.png");
+        }
         return Utilities.loadImage("genjfr/app/geo/geo.png");
     }
 
