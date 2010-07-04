@@ -39,6 +39,7 @@ public class WebRepSosa extends WebSection {
 
     private String indi2srcDir = "";
     private Map<Integer, String> linkForGen = new TreeMap<Integer, String>();
+    private boolean maxGenReached = false;
     String[] events = {"BIRT", "CHR", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
     String[] symbols = new String[7];
 
@@ -50,7 +51,7 @@ public class WebRepSosa extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_RepSosa"), "repsosa", "repsosa_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection);
+        init(trs("TXT_RepSosa"), "repsosa", "repsosa_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection/2);
     }
 
     /**
@@ -107,8 +108,12 @@ public class WebRepSosa extends WebSection {
         linkForGen.clear();
         for (Iterator it = ancestors.iterator(); it.hasNext();) {
             Ancestor ancestor = (Ancestor) it.next();
-            if (ancestor.gen < Integer.valueOf(wp.param_ancestorMinGen) || ancestor.gen > Integer.valueOf(wp.param_ancestorMaxGen)) {
+            if (ancestor.gen < Integer.valueOf(wp.param_ancestorMinGen)) {
                 continue;
+            }
+            if (ancestor.gen > Integer.valueOf(wp.param_ancestorMaxGen)) {
+                maxGenReached = true;
+                break;
             }
             cptIndi++;
             if (ancestor.gen != gen) {
@@ -198,7 +203,7 @@ public class WebRepSosa extends WebSection {
         printOpenHTML(doc, null, this);
         doc.println("<h1>" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(trs("RepSosaOptions.title", rootIndi.getName())) + "</h1>");
         exportGenLinks(doc);
-        exportLinks(doc, sectionPrefix + String.format(formatNbrs, Math.min(cptPage + 1, maxPage)) + sectionSuffix, 1, Math.max(1, cptPage - 1), cptPage, maxPage);
+        exportLinks(doc, sectionPrefix + String.format(formatNbrs, Math.min(cptPage + 1, maxPage)) + sectionSuffix, 1, Math.max(1, cptPage - 1), cptPage == maxPage ? maxPage : cptPage + 1, maxPage);
         return doc;
     }
 
@@ -294,8 +299,12 @@ public class WebRepSosa extends WebSection {
      */
     private void exportGenLinks(PrintWriter out) {
         out.println("<p class=\"letters\"><br />");
-        out.println(htmlText(trs("RepSosaOptions.generations")));
-        out.println("<br /><br />");
+        out.println(htmlText(trs("RepSosaOptions.generations")) + "<br />");
+        if (maxGenReached) {
+            out.println("<small>" + htmlText(trs("RepSosaOptions.limited", wp.param_ancestorMaxGen)) + "</small><br />");
+        } else {
+            out.println("<small>" + htmlText(trs("RepSosaOptions.unlimited")) + "</small><br />");
+        }
         for (Iterator it = linkForGen.keySet().iterator(); it.hasNext();) {
             Integer gen = (Integer) it.next();
             out.println("<a href=\"" + linkForGen.get(gen) + "#gen-" + gen + "\">" + gen + "</a>" + SPACE + SPACE);

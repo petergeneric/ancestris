@@ -162,7 +162,7 @@ public final class WebBookVisualPanel4 extends JPanel {
 
     public void setPref03(String str) {
         if (str.isEmpty()) {
-            str = "10";
+            str = "50";
         }
         jSpinner2.setValue(Integer.valueOf(str));
     }

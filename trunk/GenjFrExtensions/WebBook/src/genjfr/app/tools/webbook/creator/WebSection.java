@@ -184,7 +184,7 @@ public class WebSection {
         out.println("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />");
         out.println("<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />");
         out.println("<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" />");
-        out.println("<meta name=\"keywords\" content=\"" + "fredwebbook " + keywords + "\" />");
+        out.println("<meta name=\"keywords\" content=\"" + keywords + "\" />");
         out.println("<meta http-equiv=\"Content-language\" content=\"" + language + "\" />");
         out.println("<meta name=\"author\" content=\"" + author + "\" />");
         out.println("<meta name=\"generator\" content=\"Ancestris\" />");
@@ -578,7 +578,7 @@ public class WebSection {
         if (!keywords.isEmpty()) {
             return keywords;
         }
-        String kw = "";
+        String kw = "Généalogie, Genealogy, ancestors, ancêtres, descendance, famille, family tree";
         List<String> listnames = wh.getLastNames(DEFCHAR, sortLastnames);
         SortedMap<Integer, String> volumePerName = new TreeMap<Integer, String>(new Comparator() {
 
@@ -598,12 +598,13 @@ public class WebSection {
         int cpt = 0;
         for (it = volumePerName.keySet().iterator(); it.hasNext();) {
             Integer k = (Integer) it.next();
-            kw += volumePerName.get(k) + " ";
+            kw += ", " + volumePerName.get(k);
             cpt++;
             if (cpt > 50) {
                 break;
             }
         }
+        kw +=  ", fredwebbook";
         this.keywords = kw;
         return keywords;
     }
