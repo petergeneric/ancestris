@@ -57,6 +57,7 @@ public class WebSection {
     public String indexFile = "index.html";
     public String styleFile = "style.css";
     public String css = themeDir + SEP + styleFile;
+    public String POPUP = "popup.htm";
     //
     public String prefixPersonDetailsDir = "";
     //
@@ -478,6 +479,21 @@ public class WebSection {
         out.println("</body></html>");
         out.close();
     }
+
+    /**
+     * Include Popup script
+     */
+    public void includePopupScript(PrintWriter out) {
+        out.println("<script type=\"text/javascript\">");
+        out.println("<!--");
+        out.println("function popup(sPicURL)");
+        out.println("{");
+        out.println("window.open( \"" + POPUP + "?\"+sPicURL, '', 'HEIGHT=100,WIDTH=100,scrollbars=yes,toolbar=0,status=0,resizable=0,menubar=0');");
+        out.println("}");
+        out.println("//-->");
+        out.println("</script>");
+    }
+
 
     /**
      * Print name with link

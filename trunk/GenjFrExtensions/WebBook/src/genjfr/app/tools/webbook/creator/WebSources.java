@@ -37,7 +37,6 @@ import org.openide.util.NbBundle;
  */
 public class WebSources extends WebSection {
 
-    private final static String POPUP = "popup.htm";
     private final static TagPath PATH2ABBR = new TagPath("SOUR:ABBR");
     private final static TagPath PATH2AUTH = new TagPath("SOUR:AUTH");
     private final static TagPath PATH2TEXT = new TagPath("SOUR:TEXT");
@@ -163,7 +162,7 @@ public class WebSources extends WebSection {
                 file = wh.getFileForName(dir, sourcefile);
                 out = wh.getWriter(file, UTF8);
                 printOpenHTML(out, "TXT_Sources", this);
-                openBody(out);
+                includePopupScript(out);
             }
             if ((cpt == 1) || ((cpt / 5) * 5) == cpt) {
                 exportLinks(out, sourcefile, 0, previousPage, nextPage, lastPage);
@@ -373,25 +372,6 @@ public class WebSources extends WebSection {
     }
 
     /**
-     * Open body
-     */
-    private void openBody(PrintWriter out) {
-        out.println("<script type=\"text/javascript\">");
-        out.println("<!--");
-        out.println("function popup(sPicURL)");
-        out.println("{");
-        out.println("window.open( \"" + POPUP + "?\"+sPicURL, '', 'HEIGHT=100,WIDTH=100,scrollbars=0,toolbar=0,status=0,resizable=0,menubar=0');");
-        out.println("}");
-        out.println("function popup2(sPicURL)");
-        out.println("{");
-        out.println("media = window.open( sPicURL, '', 'WIDTH=500,HEIGHT=400,scrollbars=0,toolbar=0,status=0,resizable=0,menubar=0');");
-        out.println("media.moveTo(self.screen.width/2-250, self.screen.height/2-200);");
-        out.println("}");
-        out.println("//-->");
-        out.println("</script>");
-    }
-
-    /**
      * Print media
      */
     private void wrapMedia(PrintWriter out, File dir, PropertyFile file) {
@@ -419,7 +399,7 @@ public class WebSources extends WebSection {
         String thumbPic = "mini_" + origFile;    // this is the miniature picture
         if (!wh.isImage(file.getFile().getAbsolutePath())) {
             thumbPic = buildLinkTheme(this, themeDir) + "mednopic.png";
-            link = "<a href=\"javascript:popup2('" + origFile + "')\">";
+            link = "<a href=\"javascript:popup('" + origFile + "')\">";
             if (dispMin) {
                 link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
             } else {

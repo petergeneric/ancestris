@@ -65,7 +65,7 @@ import genjfr.app.tools.webbook.creator.WebTheme;
 public class WebBook {
 
     private Gedcom gedcom;
-    public  Log log;
+    public Log log;
     public WebBookParams wp;
     private WebHelper wh;
     //
@@ -130,7 +130,7 @@ public class WebBook {
         log.timeStamp();
         log.write(" ");
 
-        
+
         /**
          * Write parameters values in the log.
          */
@@ -206,15 +206,14 @@ public class WebBook {
         /**
          * Update web site pages
          */
-        //uploadPages();
+        uploadPages();
 
 
 
         /**
          * Run final user exec
          */
-        //runUserShell();
-
+        runUserShell();
 
 
         /**
@@ -226,4 +225,30 @@ public class WebBook {
 
     }
 
+    private void uploadPages() {
+        if (wp.param_FTP_upload.equals("1")) {
+//            String uploadRegisterNameAbsolute = getGenjHome() + uploadRegisterName;
+//            FTPRegister uploadRegister = new FTPRegister(uploadRegisterNameAbsolute, FTPhost, FTPTargetDir, dir, uploadType, resetRegister);
+//            wh.setUploadRegister(uploadRegister);
+//            println(translate("FTP_message"));
+//            uploadRegister.save();
+//            new WebUploadBook(FTPhost, FTPuser, FTPpassword, dir, FTPTargetDir, this, uploadRegister);
+//            println(trs("indexreg_using", uploadRegisterNameAbsolute));
+//            uploadRegister.close();
+        }
+    }
+
+    private void runUserShell() {
+        String shell = wp.param_FTP_exec;
+        if (!shell.isEmpty()) {
+//            try {
+//                println(translate("shell_launch", shell));
+//                Process process = Runtime.getRuntime().exec(shell);
+//                println(translate("shell_cannotwait"));
+//            } catch (IOException e) {
+//                println(translate("error_shell", new String[]{shell, e.getMessage()}));
+//            }
+        }
+
+    }
 }

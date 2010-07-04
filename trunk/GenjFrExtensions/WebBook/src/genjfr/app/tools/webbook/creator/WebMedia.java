@@ -208,19 +208,7 @@ public class WebMedia extends WebSection {
      * Open table
      */
     private void openTable(PrintWriter out) {
-        out.println("<script type=\"text/javascript\">");
-        out.println("<!--");
-        out.println("function popup(sPicURL)");
-        out.println("{");
-        out.println("window.open( \"" + POPUP + "?\"+sPicURL, '', 'HEIGHT=100,WIDTH=100,scrollbars=0,toolbar=0,status=0,resizable=0,menubar=0');");
-        out.println("}");
-        out.println("function popup2(sPicURL)");
-        out.println("{");
-        out.println("media = window.open( sPicURL, '', 'WIDTH=500,HEIGHT=400,scrollbars=0,toolbar=0,status=0,resizable=0,menubar=0');");
-        out.println("media.moveTo(self.screen.width/2-250, self.screen.height/2-200);");
-        out.println("}");
-        out.println("//-->");
-        out.println("</script>");
+        includePopupScript(out);
         out.println("<div><br />");
         out.println("<table class=\"maintable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" >");
         out.println("<tr style=\"height:30px\">");
@@ -288,7 +276,7 @@ public class WebMedia extends WebSection {
             thumbPic = prefixPersonDetailsDir + origFile;    // this is the miniature picture
             if (!wh.isImage(media.getFile().getAbsolutePath())) {
                 thumbPic = themeDir + "mednopic.png";
-                link = "<a href=\"javascript:popup2('" + origFile + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
+                link = "<a href=\"javascript:popup('" + origFile + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             } else {
                 if (media.getPath().toString().compareTo("INDI:OBJE:FILE") != 0 && media.getPath().toString().compareTo("FAM:OBJE:FILE") != 0) {
                     thumbPic = "mini_" + origFile;
