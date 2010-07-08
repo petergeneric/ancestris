@@ -85,8 +85,6 @@ public class WebMedia extends WebSection {
         calcPages(medias);
         exportData(dir, medias);
 
-        // Generate photo popup
-        createPopup(wh.getFileForName(dir, POPUP));
         wh.log.write(POPUP + trs("EXEC_DONE"));
 
     }
@@ -276,13 +274,13 @@ public class WebMedia extends WebSection {
             thumbPic = prefixPersonDetailsDir + origFile;    // this is the miniature picture
             if (!wh.isImage(media.getFile().getAbsolutePath())) {
                 thumbPic = themeDir + "mednopic.png";
-                link = "<a href=\"javascript:popup('" + origFile + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
+                link = "<a href=\"javascript:popup('" + origFile + "','100','100')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             } else {
                 if (media.getPath().toString().compareTo("INDI:OBJE:FILE") != 0 && media.getPath().toString().compareTo("FAM:OBJE:FILE") != 0) {
                     thumbPic = "mini_" + origFile;
                     wh.scaleImage(media.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + thumbPic, WIDTH_PICTURES, 0, 100, false);
                 }
-                link = "<a href=\"javascript:popup('" + origFile + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
+                link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(media.getFile().getAbsolutePath()) + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             }
         } else if (wh.isPrivate(target)) {
             link = "<img alt=\"" + htmlText(trs("med_priv")) + "\" title=\"" + htmlText(trs("med_priv")) + "\" src=\"" + themeDir + "medpriv.png\" /><br />";

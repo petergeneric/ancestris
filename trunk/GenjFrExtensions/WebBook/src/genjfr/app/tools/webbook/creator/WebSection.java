@@ -419,28 +419,6 @@ public class WebSection {
     }
 
     /**
-     * Create popup html file
-     */
-    public void createPopup(File file) {
-        PrintWriter out = wh.getWriter(file, UTF8);
-        out.println("<html><head><title>" + trs("popup_title") + "</title>");
-        out.println("<script language='javascript'>");
-        out.println("var arrTemp=self.location.href.split(\"?\");");
-        out.println("var picUrl = (arrTemp.length>0)?arrTemp[1]:\"\";");
-        out.println("function setup() {");
-        out.println("w = document.images[0].width; h = document.images[0].height+20;");
-        out.println("window.resizeTo(w, h); window.moveTo(self.screen.width/2-w/2, self.screen.height/2-h/2);");
-        out.println("}");
-        out.println("</script>");
-        out.println("</head><body  onload='setup();'  onclick='self.close();' bgcolor=\"#ffffff\" topmargin=\"0\" marginheight=\"0\" leftmargin=\"0\" marginwidth=\"0\">");
-        out.println("<script language='javascript'>");
-        out.println("document.write( \"<img src='\" + picUrl + \"' border=0>\" );");
-        out.println("</script>");
-        out.println("</body></html>");
-        out.close();
-    }
-
-    /**
      * Create popup email form html file
      */
     public void createPopupEmail(File file) {
@@ -486,9 +464,11 @@ public class WebSection {
     public void includePopupScript(PrintWriter out) {
         out.println("<script type=\"text/javascript\">");
         out.println("<!--");
-        out.println("function popup(sPicURL)");
+        out.println("function popup(sPicURL, w, h)");
         out.println("{");
-        out.println("window.open( \"" + POPUP + "?\"+sPicURL, '', 'HEIGHT=100,WIDTH=100,scrollbars=yes,toolbar=0,status=0,resizable=0,menubar=0');");
+        out.println("l=screen.width/2-w/2;");
+        out.println("t=screen.height/2-h/2;");
+        out.println("window.open( sPicURL, '', 'width='+w+', height='+h+', left='+l+', top='+t+', position=0,scrollbars=yes,toolbar=0,status=0,resizable=0,menubar=0');");
         out.println("}");
         out.println("//-->");
         out.println("</script>");

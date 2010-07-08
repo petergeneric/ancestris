@@ -522,6 +522,25 @@ public class WebHelper {
         return (infile.toLowerCase().endsWith(".jpg") || infile.toLowerCase().endsWith(".png") || infile.toLowerCase().endsWith(".gif"));
     }
 
+    /** Get image size */
+    String getImageSize(String absoluteFile) {
+        Image image = Toolkit.getDefaultToolkit().getImage(absoluteFile);
+        mediaTracker.addImage(image, 0);
+
+        try {
+            mediaTracker.waitForID(0);
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return "100','100";
+        }
+
+        int imageHeight = image.getHeight(null);
+        int imageWidth = image.getWidth(null);
+        mediaTracker.removeImage(image);
+        image.flush();
+        return "" + imageWidth + "','" + imageHeight;
+    }
+
     /** Scale image */
     public boolean scaleImage(String infile, String outfile, int width, int height, int quality) {
         return scaleImage(infile, outfile, width, height, quality, true);
