@@ -176,6 +176,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
         gpl.addGeoPlacesListener(this);
     }
 
+    @Override
     public Gedcom getGedcom() {
         return gedcom;
     }
@@ -706,14 +707,14 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        int i = jComboBox1.getSelectedIndex();
-        if (i == 0) {
+        mapToDisplay = jComboBox1.getSelectedIndex();
+        if (mapToDisplay == 0) {
             jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
-        } else if (i == 1) {
+        } else if (mapToDisplay == 1) {
             NotifyDescriptor d = new NotifyDescriptor.Confirmation("Les fonds de carte Google ne sont pas encore disponibles dans cette version", "Cartes à utiliser", NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(d);
             jComboBox1.setSelectedIndex(0);
-        } else if (i == 2) {
+        } else if (mapToDisplay == 2) {
             NotifyDescriptor d = new NotifyDescriptor.Confirmation("Les cartes de Cassini ne sont pas encore disponible dans cette version", "Cartes à utiliser", NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(d);
             jComboBox1.setSelectedIndex(0);
@@ -721,12 +722,14 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        jXMapKit1.setZoomSliderVisible(jRadioButton1.isSelected());
-        jXMapKit1.setZoomButtonsVisible(jRadioButton1.isSelected());
+        displayZoom = jRadioButton1.isSelected();
+        jXMapKit1.setZoomSliderVisible(displayZoom);
+        jXMapKit1.setZoomButtonsVisible(displayZoom);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        jXMapKit1.setMiniMapVisible(jRadioButton2.isSelected());
+        displayMiniMap = jRadioButton2.isSelected();
+        jXMapKit1.setMiniMapVisible(displayMiniMap);
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
@@ -961,7 +964,6 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
         geoFilter.marriages = Boolean.valueOf(p.getProperty("geoFilter.marriages", "true"));
         geoFilter.deaths = Boolean.valueOf(p.getProperty("geoFilter.deaths", "true"));
         geoFilter.otherEvents = Boolean.valueOf(p.getProperty("geoFilter.otherEvents", "true"));
-
         // start
         if (gedName == null) {
             return;
@@ -1007,11 +1009,23 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
         jComboBox1.setSelectedIndex(mapToDisplay);
         jXMapKit1.setCenterPosition(new GeoPosition(mapCenterLat, mapCenterLon));
         jXMapKit1.setZoom(mapZoom);
+
         jRadioButton1.setSelected(displayZoom);
+        jXMapKit1.setZoomSliderVisible(displayZoom);
+        jXMapKit1.setZoomButtonsVisible(displayZoom);
+
         jRadioButton2.setSelected(displayMiniMap);
+        jXMapKit1.setMiniMapVisible(displayMiniMap);
+
         jRadioButton4.setSelected(displayMarkers);
+        jSpinner1.setEnabled(displayMarkers);
+        jButton4.setEnabled(displayMarkers);
+        jRadioButton7.setEnabled(displayMarkers);
+
         jRadioButton7.setSelected(useNames);
+
         jSpinner1.setValue(markersSize);
+
         jTextField1.setText(geoFilter.location);
         jCheckBox1.setSelected(geoFilter.ascendants);
         jCheckBox2.setSelected(geoFilter.cousins);
