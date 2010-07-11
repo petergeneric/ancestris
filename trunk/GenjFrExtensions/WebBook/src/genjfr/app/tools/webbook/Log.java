@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2006 Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * Copyright (C) 2010 Frederic Lapeyre <frederic@lapeyre-frederic.com>
  *
  * This report is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of

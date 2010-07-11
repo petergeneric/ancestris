@@ -55,7 +55,7 @@ public class WebHelper {
     private List individualsList = null;
     private List sourcesList = null;
     public PrivacyPolicy privacyPolicy = null;
-    //
+    private FTPRegister uploadRegister = null;
     /**
      * Variables
      */
@@ -81,7 +81,6 @@ public class WebHelper {
     private boolean initAncestors = false;
     private Set<Indi> listOfCousins = new HashSet<Indi>();
     private boolean initCousins = false;
-    private FTPRegister uploadRegister = null;
 
     /***************************************************************************
      * CONSTRUCTOR
@@ -96,9 +95,13 @@ public class WebHelper {
      * TOOLS FOR FILE MANIPULATION
      */
     //
+    public void setUploadRegister(FTPRegister ulReg) {
+        uploadRegister = ulReg;
+    }
+
     /**
      * Returns local home directory
-     *///USED
+     */
     public File getDir() {
         return new File(wp.param_localWebDir);
     }
@@ -148,7 +151,6 @@ public class WebHelper {
 
         try {
             pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), cs));
-
             // Update register
             if (uploadRegister != null) {
                 uploadRegister.update(file);
@@ -358,7 +360,11 @@ public class WebHelper {
      * Copy method for resource copy to file given by string
      */
     public void copy(String from_name, String to_name) throws IOException {
-        FileUtil.copy(wp.getClass().getResourceAsStream(from_name), new FileOutputStream(new File(to_name)));
+        File to_file = new File(to_name);
+        FileUtil.copy(wp.getClass().getResourceAsStream(from_name), new FileOutputStream(to_file));
+        if (uploadRegister != null) {
+            uploadRegister.update(to_file);
+        }
     }
 
     /**
@@ -978,7 +984,7 @@ public class WebHelper {
         for (Iterator it = placesProps.iterator(); it.hasNext();) {
             Property prop = (Property) it.next();
             if (prop instanceof PropertyPlace) {
-                juridic = ((PropertyPlace)prop).getCity().trim();
+                juridic = ((PropertyPlace) prop).getCity().trim();
             } else {
                 break;
             }
@@ -1106,12 +1112,12 @@ public class WebHelper {
     /**
      * Get Ancestors
      */
-  public List<Ancestor> getAncestorsList(Indi rootIndi) {
-     if (!initAncestors) {
-        initAncestors = buildAncestors(rootIndi);
+    public List<Ancestor> getAncestorsList(Indi rootIndi) {
+        if (!initAncestors) {
+            initAncestors = buildAncestors(rootIndi);
         }
-     return listOfAncestors;
-     }
+        return listOfAncestors;
+    }
 
     public Set<Indi> getAncestors(Indi rootIndi) {
         if (!initAncestors) {
@@ -1275,21 +1281,6 @@ public class WebHelper {
             return isPrivate(husband) || isPrivate(wife);
         }
         return false;
-    }
-
-    /***************************************************************************
-     * MISCELLANEOUS
-     */
-    //
-    /**
-     * Uploade register for all other modules
-     */
-    public void setUploadRegister(FTPRegister uploadRegister) {
-        this.uploadRegister = uploadRegister;
-    }
-
-    public FTPRegister getUploadRegister() {
-        return uploadRegister;
     }
 } // End_of_Report
 

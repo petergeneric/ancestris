@@ -22,6 +22,8 @@ import genjfr.app.tools.webbook.creator.WebSources;
 import genjfr.app.tools.webbook.creator.WebStatsFrequent;
 import genjfr.app.tools.webbook.creator.WebStatsImplex;
 import genjfr.app.tools.webbook.creator.WebTheme;
+import genjfr.app.tools.webbook.transfer.FTPRegister;
+import genjfr.app.tools.webbook.transfer.FTPLoader;
 
 /**
  * Ancestris WebBook
@@ -88,6 +90,8 @@ public class WebBook {
     public WebSearch sectionSearch;
     public WebMap sectionMap;
     //
+    private FTPRegister uploadRegister;
+    //
 
     /**
      * Constructor
@@ -100,6 +104,9 @@ public class WebBook {
         this.log = log;
         wp = new WebBookParams(gedcom.getName());
         wh = new WebHelper(gedcom, log, wp);
+        // Opens up the register that stores which files have been changed locally and uploaded
+        uploadRegister = new FTPRegister(wp, wh);
+        // Now initialises all sections
         sectionTheme = new WebTheme(true, this, wp, wh);
         sectionHome = new WebHome(true, this, wp, wh);
         sectionLastnames = new WebLastnames(true, this, wp, wh);
@@ -164,7 +171,6 @@ public class WebBook {
         sectionHome.init();
 
 
-
         /**
          * Create site structure
          * - theme : style sheet and images
@@ -206,6 +212,8 @@ public class WebBook {
         /**
          * Update web site pages
          */
+        log.write(" ");
+        log.write("----------- " + log.trs("EXEC_upload") + " -----------");
         uploadPages();
 
 
@@ -213,6 +221,8 @@ public class WebBook {
         /**
          * Run final user exec
          */
+        log.write(" ");
+        log.write("----------- " + log.trs("EXEC_runsShell") + " -----------");
         runUserShell();
 
 
@@ -227,14 +237,7 @@ public class WebBook {
 
     private void uploadPages() {
         if (wp.param_FTP_upload.equals("1")) {
-//            String uploadRegisterNameAbsolute = getGenjHome() + uploadRegisterName;
-//            FTPRegister uploadRegister = new FTPRegister(uploadRegisterNameAbsolute, FTPhost, FTPTargetDir, dir, uploadType, resetRegister);
-//            wh.setUploadRegister(uploadRegister);
-//            println(translate("FTP_message"));
-//            uploadRegister.save();
-//            new WebUploadBook(FTPhost, FTPuser, FTPpassword, dir, FTPTargetDir, this, uploadRegister);
-//            println(trs("indexreg_using", uploadRegisterNameAbsolute));
-//            uploadRegister.close();
+            new FTPLoader(wp, wh, uploadRegister).run();
         }
     }
 
