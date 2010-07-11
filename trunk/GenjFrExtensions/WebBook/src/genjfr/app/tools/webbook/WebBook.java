@@ -24,6 +24,7 @@ import genjfr.app.tools.webbook.creator.WebStatsImplex;
 import genjfr.app.tools.webbook.creator.WebTheme;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
 import genjfr.app.tools.webbook.transfer.FTPLoader;
+import java.io.IOException;
 
 /**
  * Ancestris WebBook
@@ -244,13 +245,13 @@ public class WebBook {
     private void runUserShell() {
         String shell = wp.param_FTP_exec;
         if (!shell.isEmpty()) {
-//            try {
-//                println(translate("shell_launch", shell));
-//                Process process = Runtime.getRuntime().exec(shell);
-//                println(translate("shell_cannotwait"));
-//            } catch (IOException e) {
-//                println(translate("error_shell", new String[]{shell, e.getMessage()}));
-//            }
+            try {
+                log.write(log.trs("shell_launch", shell));
+                Runtime.getRuntime().exec(shell);
+                log.write(log.trs("shell_cannotwait"));
+            } catch (IOException e) {
+                log.write(log.trs("error_shell", new String[]{shell, e.getMessage()}));
+            }
         }
 
     }
