@@ -472,6 +472,7 @@ public class WebIndividualsDetails extends WebSection {
         // (note: will need xref for the relations of the weddings XREF later so better do it here)
         List xrefList = indi.getProperties(PropertyXRef.class);
         Fam[] families = indi.getFamiliesWhereSpouse();
+        Arrays.sort(families, new PropertyComparator("FAM:MARR:DATE"));
         if (!wp.param_dispSpouse.equals("1")) {
             families = null;            // so that families are not displayed by skipping the loop which follows
         }

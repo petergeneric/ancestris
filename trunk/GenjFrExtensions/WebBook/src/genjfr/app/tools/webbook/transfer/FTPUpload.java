@@ -190,10 +190,14 @@ public class FTPUpload {
 
         try {
             // Opens connection with server
+            debugMsg("Opening socket");
             FTPcmd = new Socket(host, 21);
+            debugMsg("FTPcmd="+FTPcmd);
             FTPcmd.setSoTimeout(timeout);
             cmdInput = new BufferedReader(new InputStreamReader(FTPcmd.getInputStream()));
+            debugMsg("cmdInput="+cmdInput);
             cmdOutput = new PrintStream(FTPcmd.getOutputStream());
+            debugMsg("cmdOutput="+cmdOutput);
 
             //Check if the connection went fine
             getResponse();
@@ -227,6 +231,8 @@ public class FTPUpload {
             log.write(log.ERROR, e.getMessage());
             timeOutError = isTimeout(e);
             return false;
+        } finally {
+            closeServerConnection();
         }
 
         return true;
@@ -268,7 +274,7 @@ public class FTPUpload {
                         mkdir(remoteRoot);
                         logEvent("cd " + remoteRoot);
                         if (!cd(remoteRoot)) {
-                            logEvent(trs("upload_error_ftp_cd", cmdResponse));
+                            logEvent(trs("upload_error_ftp_cd"));
                             return false;
                         }
                     }
@@ -294,7 +300,7 @@ public class FTPUpload {
                 String storeName = remoteRoot + ((currentRemoteDir.length() == 0) ? "" : currentRemoteDir + "/") + file.getName();
                 logEvent("put " + storeName);
                 if (!put(file, storeName)) {
-                    log.write(trs("upload_error_ftp_put", "PUT"));
+                    log.write(trs("upload_error_ftp_put"));
                     return false;
                 }
                 cpt++;

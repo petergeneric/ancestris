@@ -113,6 +113,8 @@ public class FTPRegister {
             }
 
             String[] fields = readKey(key);
+            fields[REG_TOBETRSF] = NO;
+            fields[REG_TOBEREMOVD] = NO;
 
             // if generated this time then get MD5 and store it
             if (equals(fields[REG_GENLASTRUN], YES)) {
@@ -120,9 +122,7 @@ public class FTPRegister {
             }
 
             // if option = 1 or (option =2 ou 3, md5 local <> md5 remote and generated this time, then set toBeTransferred flag to 1
-            fields[REG_TOBETRSF] = NO;
-            fields[REG_TOBEREMOVD] = NO;
-            if (uploadType.equals(FTP_SYSTEMATIC)) {
+            if (uploadType.equals(FTP_SYSTEMATIC) && (equals(fields[REG_GENLASTRUN], YES))) {
                 fields[REG_TOBETRSF] = YES;
                 nbFilesToTransfer++;
             }
@@ -287,11 +287,12 @@ public class FTPRegister {
 
     private String getMD5(String filename) {
 
+        FileInputStream in = null;
         try {
             // Obtain a message digest object.
             MessageDigest md = MessageDigest.getInstance("MD5");
             // Calculate the digest for the given file.
-            FileInputStream in = new FileInputStream(filename);
+            in = new FileInputStream(filename);
             byte[] buffer = new byte[8192];
             int length;
             while ((length = in.read(buffer)) != -1) {
@@ -300,6 +301,13 @@ public class FTPRegister {
             byte[] raw = md.digest();
             return asHex(raw);
         } catch (Exception e) {
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                }
+            }
         }
         return "ABCDEFG";
     }

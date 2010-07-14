@@ -36,7 +36,8 @@ public class FTPLoader {
     private File localdir = null;
     private String targetdir = "";
     private FTPRegister uploadRegister = null;
-    
+    private String shell = "";
+
     public FTPLoader(WebBookParams wp, WebHelper wh, FTPRegister uploadRegister) {
         this.host = wp.param_FTP_site;
         this.user = wp.param_FTP_user;
@@ -44,7 +45,8 @@ public class FTPLoader {
         this.localdir = wh.getDir();
         this.targetdir = wp.param_FTP_dir;
         this.uploadRegister = uploadRegister;
-        log = new Log(wp.param_FTP_log, NbBundle.getMessage(WebBookStarter.class, "OpenIDE-Module-Name") 
+        this.shell = wp.param_FTP_exec;
+        log = new Log(wp.param_FTP_log, NbBundle.getMessage(WebBookStarter.class, "OpenIDE-Module-Name")
                 + "_" + NbBundle.getMessage(FTPLoader.class, "EXEC_uploading") + " " + wh.gedcom.getName());
     }
 
@@ -61,6 +63,7 @@ public class FTPLoader {
 
             public synchronized void run() {
                 // Collect all files to send across
+                log.timeStamp();
                 log.write(NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStart"));
                 List<File> localFiles = getFilesRecursively(localdir);
                 Collections.sort(localFiles);
@@ -68,6 +71,10 @@ public class FTPLoader {
 
                 // Put bulk of files giving the log and the progress window id as reference
                 new FTPUpload(host, user, password, localFiles, localdir.getAbsolutePath(), targetdir, log, uploadRegister, ph).run();
+                if (log.endSuccessful) {
+                    runUserShell();
+                }
+                log.timeStamp();
                 if (log.endSuccessful) {
                     log.write(log.NORMAL, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionSuccess"));
                 } else {
@@ -121,6 +128,23 @@ public class FTPLoader {
         return filesRet;
     }
 
+    private void runUserShell() {
+        if (!shell.isEmpty()) {
+            try {
+                log.write(" ");
+                log.write(" ");
+                log.write(" ");
+                log.write(NbBundle.getMessage(FTPLoader.class, "shell_launch", shell));
+                Runtime.getRuntime().exec(shell);
+                log.write(NbBundle.getMessage(FTPLoader.class, "shell_cannotwait"));
+            } catch (IOException e) {
+                log.write(NbBundle.getMessage(FTPLoader.class, "shell_error", new String[]{shell, e.getMessage()}));
+            }
+        } else {
+            log.write(NbBundle.getMessage(FTPLoader.class, "shell_none"));
+        }
+
+    }
 }
 
 

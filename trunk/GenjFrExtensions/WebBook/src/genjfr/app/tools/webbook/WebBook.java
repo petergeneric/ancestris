@@ -215,16 +215,12 @@ public class WebBook {
          */
         log.write(" ");
         log.write("----------- " + log.trs("EXEC_upload") + " -----------");
-        uploadPages();
-
-
-
-        /**
-         * Run final user exec
-         */
-        log.write(" ");
-        log.write("----------- " + log.trs("EXEC_runsShell") + " -----------");
-        runUserShell();
+        if (wp.param_FTP_upload.equals("1")) {
+            log.write(log.trs("upload_yes"));
+            new FTPLoader(wp, wh, uploadRegister).run();
+        } else {
+            log.write(log.trs("upload_none"));
+        }
 
 
         /**
@@ -236,23 +232,4 @@ public class WebBook {
 
     }
 
-    private void uploadPages() {
-        if (wp.param_FTP_upload.equals("1")) {
-            new FTPLoader(wp, wh, uploadRegister).run();
-        }
-    }
-
-    private void runUserShell() {
-        String shell = wp.param_FTP_exec;
-        if (!shell.isEmpty()) {
-            try {
-                log.write(log.trs("shell_launch", shell));
-                Runtime.getRuntime().exec(shell);
-                log.write(log.trs("shell_cannotwait"));
-            } catch (IOException e) {
-                log.write(log.trs("error_shell", new String[]{shell, e.getMessage()}));
-            }
-        }
-
-    }
 }

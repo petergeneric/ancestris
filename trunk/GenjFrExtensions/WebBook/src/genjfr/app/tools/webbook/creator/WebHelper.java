@@ -361,10 +361,12 @@ public class WebHelper {
      */
     public void copy(String from_name, String to_name) throws IOException {
         File to_file = new File(to_name);
-        FileUtil.copy(wp.getClass().getResourceAsStream(from_name), new FileOutputStream(to_file));
+        FileOutputStream fos = new FileOutputStream(to_file);
+        FileUtil.copy(wp.getClass().getResourceAsStream(from_name), fos);
         if (uploadRegister != null) {
             uploadRegister.update(to_file);
         }
+        fos.close();
     }
 
     /**
@@ -374,6 +376,7 @@ public class WebHelper {
         InputStream is = wp.getClass().getResourceAsStream(from_name);
         byte[] bytes = new byte[is.available()];
         is.read(bytes);
+        is.close();
         return new String(bytes, "UTF8");
     }
 
