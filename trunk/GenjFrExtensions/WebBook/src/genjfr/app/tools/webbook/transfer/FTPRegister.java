@@ -78,7 +78,7 @@ public class FTPRegister {
         String[] keys = readKeys();
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            if (key.indexOf(host + targetdir) < 0) {
+            if (!isValid(key)) {
                 continue;
             }
             String[] fields = readKey(key);
@@ -108,7 +108,7 @@ public class FTPRegister {
             String key = keys[i];
 
             // loop on files generated this time with server and base dir that match
-            if (key.indexOf(host + targetdir) < 0) {
+            if (!isValid(key)) {
                 continue;
             }
 
@@ -193,7 +193,7 @@ public class FTPRegister {
             String key = keys[i];
 
             // loop on files generated this time with server and base dir that match
-            if (key.indexOf(host + targetdir) < 0) {
+            if (!isValid(key)) {
                 continue;
             }
 
@@ -275,7 +275,7 @@ public class FTPRegister {
         String[] keys = readKeys();
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
-            if (key.indexOf(host + targetdir) != -1) {
+            if (isValid(key)) {
                 String[] fields = readKey(key);
                 if (equals(fields[REG_LOCALPATH], path)) {
                     return key;
@@ -343,5 +343,9 @@ public class FTPRegister {
 
     private void removeKey(String key) {
         NbPreferences.forModule(FTPRegister.class).node(node).remove(key);
+    }
+
+    private boolean isValid(String key) {
+        return key.indexOf(host + targetdir) == 0;
     }
 }
