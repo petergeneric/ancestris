@@ -89,12 +89,12 @@ public class WebHome extends WebSection {
         if (wp.param_media_GeneSources.equals("1") || wp.param_media_GeneMedia.equals("1")) {
             out.println("<p>" + trs("TXT_menu_documents") + "</p>");
             out.println("<ul>");
-        if (wb.sectionSources.toBeGenerated && wp.param_media_GeneSources.equals("1")) {
-            out.println("<li><a href=\"" + wb.sectionSources.sectionLink + "\">" + htmlText(wb.sectionSources.sectionName) + "</a></li>");
-        }
-        if (wb.sectionMedia.toBeGenerated && wp.param_media_GeneMedia.equals("1")) {
-            out.println("<li><a href=\"" + wb.sectionMedia.sectionLink + "\">" + htmlText(wb.sectionMedia.sectionName) + "</a></li>");
-        }
+            if (wb.sectionSources.toBeGenerated && wp.param_media_GeneSources.equals("1")) {
+                out.println("<li><a href=\"" + wb.sectionSources.sectionLink + "\">" + htmlText(wb.sectionSources.sectionName) + "</a></li>");
+            }
+            if (wb.sectionMedia.toBeGenerated && wp.param_media_GeneMedia.equals("1")) {
+                out.println("<li><a href=\"" + wb.sectionMedia.sectionLink + "\">" + htmlText(wb.sectionMedia.sectionName) + "</a></li>");
+            }
             out.println("</ul>");
         }
 
@@ -102,9 +102,9 @@ public class WebHome extends WebSection {
         if (wp.param_media_GeneMap.equals("1")) {
             out.println("<p>" + htmlText(trs("TXT_menu_locations")) + "</p>");
             out.println("<ul>");
-        out.println("<li><a href=\"" + wb.sectionMap.sectionLink + "\">" + htmlText(wb.sectionMap.sectionName) + "</a></li>");
-        out.println("<li><a href=\"" + wb.sectionCities.sectionLink + "\">" + htmlText(wb.sectionCities.sectionName) + "</a></li>");
-        out.println("<li><a href=\"" + wb.sectionCitiesDetails.sectionLink + "\">" + htmlText(wb.sectionCitiesDetails.sectionName) + "</a></li>");
+            out.println("<li><a href=\"" + wb.sectionMap.sectionLink + "\">" + htmlText(wb.sectionMap.sectionName) + "</a></li>");
+            out.println("<li><a href=\"" + wb.sectionCities.sectionLink + "\">" + htmlText(wb.sectionCities.sectionName) + "</a></li>");
+            out.println("<li><a href=\"" + wb.sectionCitiesDetails.sectionLink + "\">" + htmlText(wb.sectionCitiesDetails.sectionName) + "</a></li>");
             out.println("</ul>");
         }
 
@@ -119,12 +119,12 @@ public class WebHome extends WebSection {
         if (true) {
             out.println("<p>" + htmlText(trs("TXT_menu_statistics")) + "</p>");
             out.println("<ul>");
-        if (wb.sectionStatsFrequent.toBeGenerated) {
-            out.println("<li><a href=\"" + wb.sectionStatsFrequent.sectionLink + "\">" + htmlText(wb.sectionStatsFrequent.sectionName) + "</a></li>");
-        }
-        if (wb.sectionStatsImplex.toBeGenerated) {
-            out.println("<li><a href=\"" + wb.sectionStatsImplex.sectionLink + "\">" + htmlText(wb.sectionStatsImplex.sectionName) + "</a></li>");
-        }
+            if (wb.sectionStatsFrequent.toBeGenerated) {
+                out.println("<li><a href=\"" + wb.sectionStatsFrequent.sectionLink + "\">" + htmlText(wb.sectionStatsFrequent.sectionName) + "</a></li>");
+            }
+            if (wb.sectionStatsImplex.toBeGenerated) {
+                out.println("<li><a href=\"" + wb.sectionStatsImplex.sectionLink + "\">" + htmlText(wb.sectionStatsImplex.sectionName) + "</a></li>");
+            }
             out.println("</ul>");
         }
 
@@ -162,7 +162,7 @@ public class WebHome extends WebSection {
         // Static message
         out.println(trs("TXT_text_sosa", " <a href=\"" + getLink(stats.indiDeCujus) + "\">" + getNameShort(stats.indiDeCujus) + "</a>", stats.nbAncestors, stats.nbGen) + "<br />");
 
-        out.println(trs("TXT_text_old", "<a href=\"" + getLink(stats.indiOlder) + "\">" + getName(stats.indiOlder) + "</a>", 
+        out.println(trs("TXT_text_old", "<a href=\"" + getLink(stats.indiOlder) + "\">" + getName(stats.indiOlder) + "</a>",
                 stats.olderBirthDate == null ? trs("TXT_text_unknown_date") : stats.olderBirthDate) + "<br />");
 
         if (wp.param_dispStatAncestor.equals("1")) {
@@ -202,12 +202,17 @@ public class WebHome extends WebSection {
 
         // Author
         out.println(trs("WebBookVisualPanel1.jLabel3.text") + ":" + SPACE + wp.param_author + "<br />");
-        out.println(trs("WebBookVisualPanel1.jLabel4.text") + ":" + SPACE + wp.param_address + "<br />" + trs("WebBookVisualPanel1.jLabel5.text") + ":" + SPACE + wp.param_phone + "<br />");
-        if (wp.param_dispEmailButton.equals("1")) {
-            out.println("<a href=\"mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "&amp;body=" + trs("TXT_idx_email_dear")
-                    + "%20" + wp.param_author + ",%0a%0a" + trs("TXT_idx_email_body") + " \">" + trs("TXT_idx_email_link") + "</a><br /><br />");
+        if (!wp.param_address.equals("-")) {
+            out.println(trs("WebBookVisualPanel1.jLabel4.text") + ":" + SPACE + wp.param_address + "<br />");
         }
-        out.println("<hr /><br />");
+        if (!wp.param_phone.equals("-")) {
+            out.println(trs("WebBookVisualPanel1.jLabel5.text") + ":" + SPACE + wp.param_phone + "<br />");
+        }
+        if (!wp.param_email.equals("-")) {
+            out.println("<a href=\"mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "&amp;body=" + trs("TXT_idx_email_dear")
+                    + "%20" + wp.param_author + ",%0a%0a" + trs("TXT_idx_email_body") + " \">" + trs("TXT_idx_email_link") + "</a><br />");
+        }
+        out.println("<br /><hr /><br />");
 
         // Footer
         out.println("<p class=\"legal\">" + trs("TXT_text_pages", "<a href=\"http://www.ancestris.com\">Ancestris WebBook</a>", new Date()) + "</p>");
