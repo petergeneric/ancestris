@@ -230,9 +230,8 @@ public class FTPUpload {
             log.write(log.ERROR, trs("upload_errorConn"));
             log.write(log.ERROR, e.getMessage());
             timeOutError = isTimeout(e);
-            return false;
-        } finally {
             closeServerConnection();
+            return false;
         }
 
         return true;
@@ -274,7 +273,7 @@ public class FTPUpload {
                         mkdir(remoteRoot);
                         logEvent("cd " + remoteRoot);
                         if (!cd(remoteRoot)) {
-                            logEvent(trs("upload_error_ftp_cd"));
+                            logEvent(trs("upload_error_ftp_cd"), true);
                             return false;
                         }
                     }
@@ -300,7 +299,7 @@ public class FTPUpload {
                 String storeName = remoteRoot + ((currentRemoteDir.length() == 0) ? "" : currentRemoteDir + "/") + file.getName();
                 logEvent("put " + storeName);
                 if (!put(file, storeName)) {
-                    log.write(trs("upload_error_ftp_put"));
+                    logEvent(trs("upload_error_ftp_put"), true);
                     return false;
                 }
                 cpt++;
@@ -677,9 +676,13 @@ public class FTPUpload {
     /**
      * Log events
      */
-    private void logEvent(String str) {
+    private void logEvent(String str, boolean err) {
         progress.setDisplayName(str);
-        log.write(str);
+        log.write(err ? log.ERROR : log.NORMAL, str);
+    }
+
+    private void logEvent(String str) {
+        logEvent(str, false);
     }
 
     /**

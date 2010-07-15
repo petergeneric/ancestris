@@ -74,6 +74,9 @@ public class FTPLoader {
                 if (log.endSuccessful) {
                     runUserShell();
                 }
+                log.write(" ");
+                log.write(" ");
+                log.write(" ");
                 log.timeStamp();
                 if (log.endSuccessful) {
                     log.write(log.NORMAL, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionSuccess"));
@@ -102,7 +105,7 @@ public class FTPLoader {
         if (null == theTask) {
             return false;
         }
-        log.write(log.ERROR, NbBundle.getMessage(WebBookStarter.class, "TASK_UploadExecutionStopped"));
+        log.write(log.ERROR, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStopped"));
         return theTask.cancel();
 
     }
@@ -129,11 +132,11 @@ public class FTPLoader {
     }
 
     private void runUserShell() {
+        log.write("   ");
+        log.write("===========================");
+        log.write(NbBundle.getMessage(FTPLoader.class, "upload_shell"));
         if (!shell.isEmpty()) {
             try {
-                log.write(" ");
-                log.write(" ");
-                log.write(" ");
                 log.write(NbBundle.getMessage(FTPLoader.class, "shell_launch", shell));
                 Runtime.getRuntime().exec(shell);
                 log.write(NbBundle.getMessage(FTPLoader.class, "shell_cannotwait"));
