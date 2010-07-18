@@ -11,7 +11,6 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Source;
 
-import genjfr.app.App;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.WebBookVisualPanel4;
@@ -28,7 +27,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -249,9 +247,8 @@ public class WebRepSosa extends WebSection {
         for (Iterator s = listEvents.iterator(); s.hasNext();) {
             String event = (String) s.next();   // date . description . source id
             String[] eventBits = event.split("\\|", -1);
-            String link = wrapSource(eventBits[2]);
             if (eventBits[2].length() != 0 && wp.param_media_GeneSources.equals("1")) {
-                doc.println(eventBits[1].trim() + SPACE + SPACE + "<a href=\"" + link + "\"><img src=\"" + themeDir + "src.gif\" alt=\"" + eventBits[2] + "\" title=\"" + eventBits[2] + "\"/>" + SPACE + "(" + eventBits[2] + ")</a><br />");
+                doc.println(eventBits[1].trim() + SPACE + SPACE + eventBits[2] + "<br />");
             } else {
                 doc.println(eventBits[1].trim() + "<br />");
             }
