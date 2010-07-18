@@ -54,7 +54,7 @@ public class WebSources extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Sources"), "sources", "sources_", formatFromSize(wh.getNbIndis()), ".html", 0, sizeIndiSection / 2);
+        init(trs("TXT_Sources"), "sources", "sources_", formatFromSize(wh.getNbIndis()), ".html", 0, 15);
         calcPages();
     }
 
