@@ -397,7 +397,7 @@ public class WebSources extends WebSection {
         String thumbPic = "mini_" + origFile;    // this is the miniature picture
         if (!wh.isImage(file.getFile().getAbsolutePath())) {
             thumbPic = buildLinkTheme(this, themeDir) + "mednopic.png";
-            link = "<a href=\"javascript:popup('" + origFile + "','100','100')\">";
+            link = "<a href=\"javascript:popup('" + origFile + "','100','100')\" >";
             if (dispMin) {
                 link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
             } else {
@@ -406,7 +406,7 @@ public class WebSources extends WebSection {
             link += "</a><br />";
         } else {
             thumbPic = "mini_" + origFile;
-            link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\"";
+            link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\" >";
             if (dispMin) {
                 wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + thumbPic, WIDTH_PICTURES, 0, 100, false);
                 link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
