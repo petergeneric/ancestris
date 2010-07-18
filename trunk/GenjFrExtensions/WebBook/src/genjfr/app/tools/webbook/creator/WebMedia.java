@@ -35,6 +35,8 @@ public class WebMedia extends WebSection {
     private final static String POPUP = "popup.htm";
     private int WIDTH_PICTURES = 200;
     private int nbPhotoPerRow = 3;
+    //
+    List<Property> medias = null;
 
     /**
      * Constructor
@@ -43,28 +45,14 @@ public class WebMedia extends WebSection {
         super(generate, wb, wp, wh);
     }
 
+    @SuppressWarnings("unchecked")
     public void init() {
         init(trs("TXT_Media"), "media", "media_", formatFromSize(wh.getNbIndis()), ".html", 0, 30);
-    }
-
-    /**
-     * Section's entry point
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void create() {
-
-        // Preliminary build of individualsdetails link for links from sources to details
-        if (wb.sectionIndividualsDetails != null) {
-            personPage = wb.sectionIndividualsDetails.getPagesMap();
-            prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
-        }
-
         // Build list of media, for medias of INDI and FAM but that are not under a SOUR.
         List<Entity> entities = new ArrayList<Entity>();
         entities.addAll(wh.gedcom.getEntities(Gedcom.INDI));
         entities.addAll(wh.gedcom.getEntities(Gedcom.FAM));
-        List<Property> medias = new ArrayList<Property>();
+        medias = new ArrayList<Property>();
         List<Property> mediasOfEntity = new ArrayList<Property>();
         for (Iterator ite = entities.iterator(); ite.hasNext();) {
             Entity ent = (Entity) ite.next();
@@ -78,11 +66,24 @@ public class WebMedia extends WebSection {
             mediasOfEntity.clear();
         }
         Collections.sort(medias, sortEntities);
+        calcLetters(medias);
+        calcPages(medias);
+    }
+
+    /**
+     * Section's entry point
+     */
+    @Override
+    public void create() {
+
+        // Preliminary build of individualsdetails link for links from sources to details
+        if (wb.sectionIndividualsDetails != null) {
+            personPage = wb.sectionIndividualsDetails.getPagesMap();
+            prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
+        }
 
         // Generate detail pages
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
-        calcLetters(medias);
-        calcPages(medias);
         exportData(dir, medias);
 
         wh.log.write(POPUP + trs("EXEC_DONE"));
@@ -317,7 +318,6 @@ public class WebMedia extends WebSection {
 
         // End of export section details ----------------------------------------------
     }
-
     /**
      * Comparator to sort entities
      */
@@ -357,7 +357,7 @@ public class WebMedia extends WebSection {
      * Calculate pages for section details
      */
     private void calcPages(List medias) {
-        String mediafile = "", fileStr = "";
+        String mediafile = "";
         int cpt = 0;
         for (Iterator it = medias.iterator(); it.hasNext();) {
             PropertyFile media = (PropertyFile) it.next();

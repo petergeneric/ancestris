@@ -173,7 +173,7 @@ public class WebSection {
 
         // HEAD
         if (title != null && title.length() != 0) {
-            htmlTitle += SPACE + "-" + SPACE + htmlText(trs(title));
+            htmlTitle = htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs(title));
         }
         String path = (section == null || section.sectionDir == null) ? "" : ((section.sectionDir.length() == 0) ? "" : "..");
 
@@ -190,7 +190,7 @@ public class WebSection {
         out.println("<meta name=\"author\" content=\"" + author + "\" />");
         out.println("<meta name=\"generator\" content=\"Ancestris\" />");
         out.println("<meta name=\"robots\" content=\"all\" />");
-        out.println("<meta name=\"reply-to\" content=\""+ replyto +"\" />");
+        out.println("<meta name=\"reply-to\" content=\"" + replyto + "\" />");
         out.println("<meta name=\"owner\" content=\"" + owner + "\" />");
         if (css.length() > 0) {
             String parent = (path == null) || (path.length() == 0) ? "" : path + SEP;
@@ -353,6 +353,19 @@ public class WebSection {
     }
 
     /**
+     * Home
+     * Indi => prénom nom
+     * Indi => prénom Nom (sosa)
+     *
+     * Individuals
+     * Indi => Nom, Prénom (birth - death)
+     *
+     * IndividualsDetails
+     * Indi:
+     * Sex, Nom, Prénom (sosa)
+     *
+     */
+    /**
      * Helper - Writes HTML table cell information
      */
     public void printCell(PrintWriter out, Object content) {
@@ -474,7 +487,6 @@ public class WebSection {
         out.println("</script>");
     }
 
-
     /**
      * Print name with link
      */
@@ -522,6 +534,17 @@ public class WebSection {
         if (date.compareTo(".") != 0) {
             out.print(SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : ""));
         }
+    }
+
+    /**
+     * Print name with link
+     */
+    public String getSexIcon(Indi indi) {
+        //
+        if (indi == null) {
+            return "u.gif";
+        }
+        return (indi.getSex() == 1 ? "m" : indi.getSex() == 2 ? "f" : "u") + ".gif";
     }
     /**
      * Comparator to sort Lastnames
@@ -600,7 +623,7 @@ public class WebSection {
                 break;
             }
         }
-        kw +=  ", fredwebbook";
+        kw += ", fredwebbook";
         this.keywords = kw;
         return keywords;
     }

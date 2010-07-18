@@ -20,7 +20,6 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyComparator;
-import genjfr.app.App;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 
@@ -30,9 +29,9 @@ import java.util.Arrays;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import org.openide.util.NbPreferences;
 
 /**
  * GenJ - Report creating a web Book or reports
@@ -46,14 +45,13 @@ public class WebIndividualsDetails extends WebSection {
     private final static TagPath FAM2IMAGES = new TagPath("FAM:OBJE:FILE");
     private int WIDTH_PICTURES = 150;
     private String indi2srcDir = "";
+    private String indi2mediaDir = "";
     private String[] events = null;
-    private String[] evSymbols = null;
     private String[] eventsMarr = null;
-    private String[] evSymbolsMarr = null;
     private boolean showDate = true;
     private boolean showPlace = true;
-    private boolean showSymbols = false;
     private boolean showAllPlaceJurisdictions = true;
+    private String fam_chronologie = "";
     private String fam_grandparents = "";
     private String fam_siblings = "";
     private String fam_family = "";
@@ -98,6 +96,9 @@ public class WebIndividualsDetails extends WebSection {
             sourcePage = wb.sectionSources.getPagesMap();
             indi2srcDir = buildLinkShort(this, wb.sectionSources);
         }
+        if (wb.sectionMedia != null) {
+            indi2mediaDir = buildLinkShort(this, wb.sectionMedia);
+        }
 
         // Generate detail pages
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
@@ -115,18 +116,28 @@ public class WebIndividualsDetails extends WebSection {
      * Init events
      */
     private void initEvents() {
-        events = new String[]{"BIRT", "CHR", "DEAT", "BURI", "OCCU", "RESI"};
-        evSymbols = new String[]{
-                    NbPreferences.forModule(App.class).get("symbolBirth", ""),
-                    NbPreferences.forModule(App.class).get("symbolBapm", ""),
-                    NbPreferences.forModule(App.class).get("symbolDeat", ""),
-                    NbPreferences.forModule(App.class).get("symbolBuri", ""),
-                    NbPreferences.forModule(App.class).get("symbolOccu", ""),
-                    NbPreferences.forModule(App.class).get("symbolResi", "")};
+        events = new String[]{// Events
+                    "BIRT", "CHR",
+                    "DEAT", "BURI", "CREM",
+                    "ADOP",
+                    "BAPM", "BARM", "BASM", "BLES",
+                    "CHRA", "CONF", "FCOM", "ORDN",
+                    "NATU", "EMIG", "IMMI",
+                    "CENS", "PROB", "WILL",
+                    "GRAD", "RETI",
+                    "EVEN",
+                    // Attributes
+                    "CAST", "DSCR", "EDUC", "IDNO", "NATI", "NCHI", "NMR", "OCCU", "PROP", "RELI", "RESI", "SSN", "TITL"
+                };
 
-        eventsMarr = new String[]{"MARR"};
-        evSymbolsMarr = new String[]{NbPreferences.forModule(App.class).get("symbolMarr", "")};
+        eventsMarr = new String[]{// Events
+                    "ANUL", "CENS", "DIV", "DIVF",
+                    "ENGA", "MARR", "MARB", "MARC",
+                    "MARL", "MARS",
+                    "EVEN"
+                };
 
+        fam_chronologie = htmlText(trs("fam_chronologie"));
         fam_grandparents = htmlText(trs("fam_grandparents"));
         fam_siblings = htmlText(trs("fam_siblings"));
         fam_family = htmlText(trs("fam_family"));
@@ -256,23 +267,41 @@ public class WebIndividualsDetails extends WebSection {
         }
         out.println(sexStyle2);
 
-        // Events of the individual
+        // First container
         out.println("<div class=\"conteneur\">");
-        out.println("<p class=\"parentm\">");
+
+        // Email button
         if (wp.param_dispEmailButton.equals("1") && !wh.isPrivate(indi)) {
-            String str = trs("TXT_mail_comment");
-            out.println("<a href=\"javascript:popup('" + indi.toString() + "')\"><img src=\"" + themeDirLink + "mail.gif\" alt=\"" + str + "\" title=\"" + str + "\"/></a><br />");
+            String str = htmlText(trs("TXT_mail_comment"));
+            out.println("<a href=\"javascript:popup('" + indi.toString() + "')\"><img src=\"" + themeDirLink + "mail.gif\" alt=\"" + str + "\" title=\"" + str + "\"/></a><br /><br />");
         }
-        List<String> listEvents = getNameDetails(indi, events, evSymbols);
+
+        // Events of the individual
+        // Format is: eventIcon, eventname, date, description, [source link], [note link], [media link]
+        out.println("<p class=\"decal\"><span class=\"gras\">" + fam_chronologie + "</span></p>");
+        out.println("<p class=\"parentm\">");
+        List<String> listEvents = getNameDetails(indi);
         for (Iterator s = listEvents.iterator(); s.hasNext();) {
-            String event = (String) s.next();   // date . description . source id
+            String event = (String) s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
             String[] eventBits = event.split("\\|", -1);
-            String link = wrapSource(eventBits[2]);
-            if (eventBits[2].length() != 0 && wp.param_media_GeneSources.equals("1")) {
-                out.println(eventBits[1].trim() + SPACE + SPACE + "<a href=\"" + link + "\"><img src=\"" + themeDirLink + "src.gif\" alt=\"" + eventBits[2] + "\" title=\"" + eventBits[2] + "\"/></a><br />");
-            } else {
-                out.println(eventBits[1].trim() + "<br />");
+            // eventIcon
+            out.println("<img src=\"" + themeDirLink + "ev_" + eventBits[3] + ".png" + "\" alt=\"\"");
+            // eventname : date description
+            out.println(eventBits[1].trim());
+            // [source link]
+            if (wp.param_media_GeneSources.equals("1") && eventBits[2].length() != 0) {
+                out.println(eventBits[2].trim());
             }
+            // [media link]
+            if (wp.param_media_GeneMedia.equals("1") && eventBits[4].length() != 0) {
+                out.println(eventBits[4]);
+            }
+            // [note link]
+            if (eventBits[5].length() != 0) {
+                out.println(eventBits[5]);
+            }
+            // 
+            out.println("<br />");
         }
         out.println("<br />");
         out.println("</p>");
@@ -289,24 +318,26 @@ public class WebIndividualsDetails extends WebSection {
             }
             if (!files.isEmpty()) {
                 out.println("<p class=\"image\">");
-            }
-            for (Iterator it = files.iterator(); it.hasNext();) {
-                PropertyFile file = (PropertyFile) it.next();
-                if ((file == null) || (file.getFile() == null)) {
-                    break;
+                for (Iterator it = files.iterator(); it.hasNext();) {
+                    PropertyFile file = (PropertyFile) it.next();
+                    if ((file == null) || (file.getFile() == null)) {
+                        continue;
+                    }
+                    // get file name
+                    String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
+                    if (wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
+                        out.println(wrapMedia(origFile, name, file));
+                    }
+
                 }
-                String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-                if (wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
-                    out.println("<img src=\"" + origFile + "\" alt=\"" + htmlText(name) + "\" />");
-                }
-            }
-            if (!files.isEmpty()) {
                 out.println("</p>");
             }
         }
         // end of container
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
         out.println("</div>");
+
+
 
         // Grand Parents
         out.println("<div class=\"conteneur\">");
@@ -485,27 +516,41 @@ public class WebIndividualsDetails extends WebSection {
             }
             out.println("<div class=\"conteneur\">");
             out.println("<p class=\"decal\"><span class=\"gras\">" + fam_family + (families.length > 1 ? " (" + (i + 1) + ")" : "") + "</span></p>");
-            out.println("<p class=\"parentf\"><span class=\"gras\">" + fam_spouse + "</span>:&nbsp;");
+            out.println("<p class=\"parentf\"><img src=\"" + themeDirLink + getSexIcon(spouse) + "\" />");
+            out.println("<span class=\"gras\">" + fam_spouse + "</span>:&nbsp;");
             wrapName(out, spouse);
             wrapDate(out, spouse, true);
             out.println("<br />");
-            listEvents = getNameDetails(family, eventsMarr, evSymbolsMarr);
+            listEvents = getNameDetails(family);
             for (Iterator s = listEvents.iterator(); s.hasNext();) {
-                String event = (String) s.next();   // date . description . source id
+                String event = (String) s.next();     // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
                 String[] eventBits = event.split("\\|", -1);
-                String link = wrapSource(eventBits[2]);
-                if (eventBits[2].length() != 0 && wp.param_media_GeneSources.equals("1")) {
-                    out.println(eventBits[1].trim() + SPACE + SPACE + "<a href=\"" + link + "\"><img src=\"" + themeDirLink + "src.gif\" alt=\"" + eventBits[2] + "\" title=\"" + eventBits[2] + "\"/></a><br />");
-                } else {
-                    out.println(eventBits[1].trim() + "<br />");
+                // eventIcon
+                out.println("<img src=\"" + themeDirLink + "ev_" + eventBits[3] + ".png" + "\" alt=\"\"");
+                // eventname : date description
+                out.println(eventBits[1].trim());
+                // [source link]
+                if (wp.param_media_GeneSources.equals("1") && eventBits[2].length() != 0) {
+                    out.println(eventBits[2].trim());
                 }
+                // [media link]
+                if (wp.param_media_GeneMedia.equals("1") && eventBits[4].length() != 0) {
+                    out.println(eventBits[4]);
+                }
+                // [note link]
+                if (eventBits[5].length() != 0) {
+                    out.println(eventBits[5]);
+                }
+                //
+                out.println("<br />");
             }
-
             out.println("</p>");
             Indi[] children = family.getChildren();
             Arrays.sort(children, new PropertyComparator("INDI:BIRT:DATE"));
             if (wp.param_dispKids.equals("1") && children.length > 0) {
-                out.println("<p class=\"parentf\"><span class=\"gras\">" + fam_kids + "</span>:<br /></p>");
+                out.println("<p class=\"parentf\">");
+                out.println("<p class=\"parentf\"><img src=\"" + themeDirLink + "chld.png\" />");
+                out.println("<span class=\"gras\">" + fam_kids + "</span>:<br /></p>");
                 out.println("<p class=\"parentfc\">");
                 for (int j = 0; j < children.length; j++) {
                     Indi child = children[j];
@@ -632,7 +677,7 @@ public class WebIndividualsDetails extends WebSection {
         // Note
         boolean displayNote = false;
         if (wp.param_dispNotes.equals("1") && !wh.isPrivate(indi)) {
-            List notes = getNotes(indi);
+            HashSet notes = getNotes(indi);
             if (notes.size() > 0) {
                 for (Iterator it = notes.iterator(); it.hasNext();) {
                     Property note = (Property) it.next();
@@ -668,15 +713,17 @@ public class WebIndividualsDetails extends WebSection {
     /**
      * Returns this indi's notes
      */
-    public List<Property> getNotes(Indi indi) {
-        List<Property> notes = new ArrayList<Property>(100);
-        getPropertiesRecursively((Property) indi, notes);
+    public HashSet<Property> getNotes(Indi indi) {
+        HashSet<Property> notes = new HashSet<Property>();
+        //getPropertiesRecursively((Property) indi, notes);
+        notes.addAll(Arrays.asList(indi.getProperties("NOTE")));
 
         if (indi != null) {
             Fam[] families = indi.getFamiliesWhereSpouse();
             for (int i = 0; i < families.length; i++) {
                 Fam family = families[i];
-                getPropertiesRecursively((Property) family, notes);
+                //getPropertiesRecursively((Property) family, notes);
+                notes.addAll(Arrays.asList(indi.getProperties("NOTE")));
             }
         }
         return notes;
@@ -732,30 +779,41 @@ public class WebIndividualsDetails extends WebSection {
     /**
      * Get individual details
      */
-    public List<String> getNameDetails(Entity entity, String ev[], String evS[]) {
+    public List<String> getNameDetails(Entity entity) {
+
+        String ev[] = null;
+        if (entity == null) {
+            return null;
+        }
+        if (entity instanceof Indi) {
+            ev = events;
+        } else if (entity instanceof Fam) {
+            ev = eventsMarr;
+        } else {
+            return null;
+        }
         List<String> list = new ArrayList<String>();
         String description = "";
         String date = "";
         for (int i = 0; i < ev.length; i++) {
             Property[] props = entity.getProperties(ev[i]);
             for (int j = 0; j < props.length; j++) {
-                // date?
+                // date? (used to sort only)
                 Property p = props[j].getProperty("DATE");
                 PropertyDate pDate = (p instanceof PropertyDate ? (PropertyDate) p : null);
 
-                //events = new String[] { "BIRT", "CHR", "DEAT", "BURI", "OCCU", "RESI" };
                 if (ev[i].equals("BIRT")) {
                     date = "0-";
                 } else if (ev[i].equals("DEAT")) {
                     date = "8-";
-                } else if (ev[i].equals("BURI")) {
+                } else if (ev[i].equals("BURI") || ev[i].equals("CREM")) {
                     date = "9-";
                 } else {
                     date = "5-";
                 }
 
                 if (pDate == null) {
-                    date += "";
+                    date += "-";
                 } else {
                     PointInTime pit = null;
                     try {
@@ -773,50 +831,127 @@ public class WebIndividualsDetails extends WebSection {
                     }
                 }
                 // description?
-                String format1 = "<span class=\"gras\">" + (showSymbols ? evS[i] : "") + "{ $T}:" + "</span>";
-                String format2 = "{ $V}";
+                //   {$t} property tag (doesn't count as matched)
+                //   {$T} property name(doesn't count as matched)
+                //   {$D} date as fully localized string
+                //   {$y} year
+                //   {$p} place (city)
+                //   {$P} place (all jurisdictions)
+                //   {$v} value
+                //   {$V} display value
+                // format 1 : event name
+                String format1 = "<span class=\"gras\"> { $T}: </span>";
+                // format 2 : date
+                String format2 = (showDate ? "{ $D}" : "");
+                // format 3 : description
+                String format3 = "{ $V}";
+                if (showPlace) {
+                    String format = (showAllPlaceJurisdictions ? "{ $P}" : "{ $p}");
+                    String juridic = props[j].format(format, wh.getPrivacyPolicy()).trim();
+                    if (juridic != null) {
+                        format3 += " " + juridic.replaceAll(",", " ");
+                    }
+                }
                 if ("RESI".compareTo(ev[i]) == 0) {
                     Property city = props[j].getProperty(new TagPath(".:ADDR:CITY"));
                     Property ctry = props[j].getProperty(new TagPath(".:ADDR:CTRY"));
-                    format2 = " " + ((city == null) ? "" : city.toString() + ", ") + ((ctry == null) ? "" : ctry.toString());
+                    format3 = " " + ((city == null) ? "" : city.toString() + ", ") + ((ctry == null) ? "" : ctry.toString());
                 }
-                String format3 = (showDate ? "{ $D}" : "");
-                String format = format1 + format2 + format3;
+                String format = format1 + format2 + " : " + format3;
                 description = props[j].format(format, wh.getPrivacyPolicy()).trim();
-                if (showPlace) {
-                    format = (showAllPlaceJurisdictions ? "{ $P}" : "{ $p}");
-                    String juridic = props[j].format(format, wh.getPrivacyPolicy()).trim();
-                    if (juridic != null) {
-                        description += " " + juridic.replaceAll(",", " ");
-                    }
-                }
+
                 // source?
                 String source = "";
-                Property pSourceProp = props[j].getProperty("SOUR");
-                if (pSourceProp instanceof PropertySource) {
-                    PropertySource pSource = (PropertySource) pSourceProp;
-                    if (pSource != null && pSource.getTargetEntity() != null) {
-                        source = pSource.getTargetEntity().getId();
+                Property[] pSources = props[j].getProperties("SOUR");
+                if (pSources != null && pSources.length > 0) {
+                    for (int k = 0; k < pSources.length; k++) {
+                        PropertySource pSource = (PropertySource) pSources[k];
+                        source += wrapSource(buildLinkTheme(this, themeDir) + "src.gif", pSource);
                     }
                 }
-                list.add(date + "|" + description + "|" + source);
+                // event tag in lowercase (will be used for image associated with event for instance)
+                String event_tag = props[j].getTag().toLowerCase();
+
+                // media?
+                String media = "";
+                Property[] pMedias = props[j].getProperties("OBJE");
+                if (pMedias != null && pMedias.length > 0) {
+                    for (int k = 0; k < pMedias.length; k++) {
+                        PropertyFile pFile = (PropertyFile) pMedias[k].getProperty("FILE");
+                        media += wrapMedia(buildLinkTheme(this, themeDir) + "media.png", "", pFile);
+                    }
+                }
+                // note?
+                String note = "";
+                Property[] pNotes = props[j].getProperties("NOTE");
+                if (pNotes != null && pNotes.length > 0) {
+                    for (int k = 0; k < pNotes.length; k++) {
+                        Property pNote = pNotes[k];
+                        note += wrapNote(buildLinkTheme(this, themeDir) + "note.png", pNote);
+                    }
+                }
+
+                // write data (date is used to sort only, description includes the date of the event
+                list.add(date + "|" + description + "|" + source + "|" + event_tag + "|" + media + "|" + note);
             }
         }
+
         Collections.sort(list);
         return list;
     }
 
     /**
-     * Print name with link
+     * Buld source bloc (assuming link to a source entity)
      */
-    private String wrapSource(String src) {
+    private String wrapSource(String origFile, PropertySource source) {
         //
-        String link = "";
-        String sourceFile = (src == null) ? "" : ((sourcePage == null) ? "" : sourcePage.get(src));
-        if (src != null) {
-            link = indi2srcDir + sourceFile + '#' + src;
+        String id = "";
+        if (source != null && source.getTargetEntity() != null) {
+            id = source.getTargetEntity().getId();
         }
-        return link;
+        String link = "";
+        String sourceFile = (id == null) ? "" : ((sourcePage == null) ? "" : sourcePage.get(id));
+        if (id != null) {
+            link = indi2srcDir + sourceFile + '#' + id;
+        }
+        // display image
+        String ret = "<a class=tooltip href=\"" + link + "\">";
+        ret += "<img src=\"" + origFile + "\" alt=\"" + id + "\" />";
+        ret += "<span>" + htmlText(trs("TXT_src_comment")) + "&nbsp;" + id + "</span></a>";
+        return ret;
+
+    }
+
+    /**
+     * Buld media bloc (assuming media record included in property)
+     */
+    private String wrapMedia(String origFile, String name, PropertyFile file) {
+        // build title from TITL and NOTE
+        Property pProp = file.getParent().getProperty("TITL");
+        String title = "<b>" + ((pProp == null || pProp.getValue().trim().isEmpty()) ? htmlText(name) : htmlText(pProp.getValue())) + "</b>";
+        pProp = file.getParent().getProperty("NOTE");
+        title += (pProp == null || pProp.getValue().trim().isEmpty()) ? "" : ((!title.isEmpty() ? "<br>" : "") + "<i>" + htmlText(pProp.getPropertyName()) + " : " + htmlText(pProp.getValue()) + "</i>");
+        if (title.trim().isEmpty()) {
+            title = file.getValue();
+        }
+        // display image
+        String ret = "<a class=tooltip href=\"" + indi2mediaDir + wb.sectionMedia.getPageForMedia(file) + "\">";
+        ret += "<img src=\"" + origFile + "\" alt=\"" + name + "\" />";
+        ret += "<span>" + title + "</span></a>";
+        return ret;
+    }
+
+    /**
+     * Buld note bloc (assuming note record included in property)
+     */
+    private String wrapNote(String origFile, Property note) {
+        // Get text
+        String noteText = "<i>" + ((note == null || note.getValue().trim().isEmpty()) ? "" : htmlText(note.getValue())) + "</i>";
+        // display note
+        String ret = "<a class=tooltip \">";
+        ret += "<img src=\"" + origFile + "\" />";
+        ret += "<span>" + noteText + "</span></a>";
+        return ret;
     }
 
     /**
@@ -845,6 +980,7 @@ public class WebIndividualsDetails extends WebSection {
         out.println("}");
         out.println("//-->");
         out.println("</script>");
+
     }
 } // End_of_Report
 

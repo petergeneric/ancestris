@@ -19,6 +19,9 @@ public final class WebBookVisualPanel7 extends JPanel {
     public void setComponents() {
         jTextField1.setEnabled(jCheckBox1.isSelected());
         jCheckBox2.setEnabled(jCheckBox1.isSelected());
+        if (!jCheckBox1.isSelected()) {
+            jCheckBox2.setSelected(false);
+        }
         jTextField5.setEnabled(jCheckBox1.isSelected() && jCheckBox2.isSelected());
         jTextField6.setEnabled(jCheckBox1.isSelected() && jCheckBox2.isSelected());
         jTextField7.setEnabled(jCheckBox1.isSelected() && jCheckBox2.isSelected());

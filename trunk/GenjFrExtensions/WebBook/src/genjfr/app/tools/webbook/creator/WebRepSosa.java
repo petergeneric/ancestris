@@ -41,7 +41,6 @@ public class WebRepSosa extends WebSection {
     private Map<Integer, String> linkForGen = new TreeMap<Integer, String>();
     private boolean maxGenReached = false;
     String[] events = {"BIRT", "CHR", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
-    String[] symbols = new String[7];
 
     /**
      * Constructor
@@ -73,23 +72,9 @@ public class WebRepSosa extends WebSection {
             indi2srcDir = buildLinkShort(this, wb.sectionSources);
         }
 
-        initVariables();
         Indi indi = wh.getIndiDeCujus(wp.param_decujus);
         exportData(indi, dir, wh.getAncestorsList(indi));
 
-    }
-
-    /** Initialises variables  */
-    void initVariables() {
-        // Assign symbols (used only if parameter showSymbols is changed to true in individualDetails
-        symbols = new String[]{
-                    NbPreferences.forModule(App.class).get("symbolBirth", ""),
-                    NbPreferences.forModule(App.class).get("symbolBapm", ""),
-                    NbPreferences.forModule(App.class).get("symbolMarr", ""),
-                    NbPreferences.forModule(App.class).get("symbolDeat", ""),
-                    NbPreferences.forModule(App.class).get("symbolBuri", ""),
-                    NbPreferences.forModule(App.class).get("symbolOccu", ""),
-                    NbPreferences.forModule(App.class).get("symbolResi", "")};
     }
 
     /**
@@ -220,7 +205,7 @@ public class WebRepSosa extends WebSection {
         doc.println("</p>");
         // Get and write properies
         doc.println("<div class=\"sosacolumn2\">");
-        writeEvents(indi, events, symbols, doc);
+        writeEvents(indi, events, doc);
         doc.println(SPACE + "</div>");
     }
 
@@ -247,16 +232,16 @@ public class WebRepSosa extends WebSection {
     /**
      * writeEvents
      */
-    void writeEvents(Indi indi, String events[], String evSymbols[], PrintWriter doc) {
+    void writeEvents(Indi indi, String events[], PrintWriter doc) {
 
         // Get list of events for that individual
-        List<String> listEvents = wb.sectionIndividualsDetails.getNameDetails(indi, events, evSymbols);
+        List<String> listEvents = wb.sectionIndividualsDetails.getNameDetails(indi);
 
         // Get list of events for all his/her families
         Fam[] families = indi.getFamiliesWhereSpouse();
         for (int i = 0; families != null && i < families.length; i++) {
             Fam family = families[i];
-            listEvents.addAll(wb.sectionIndividualsDetails.getNameDetails(family, events, evSymbols));
+            listEvents.addAll(wb.sectionIndividualsDetails.getNameDetails(family));
         }
         Collections.sort(listEvents);
 

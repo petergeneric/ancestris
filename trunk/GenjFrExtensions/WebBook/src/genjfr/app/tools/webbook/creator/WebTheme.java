@@ -8,6 +8,15 @@ import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -41,47 +50,45 @@ public class WebTheme extends WebSection {
         wh.log.write(themeDir + trs("EXEC_DONE"));
     }
 
-
-
-   /**
+    /**
      * Helper - Create icons
      */
     public void createFiles(File dir) {
 
         // Get male and female icons in the dierctory
-        String genjImagesDir = "img/";
+        String genjImagesDir = "genjfr/app/tools/webbook/img/";
         String toFile = dir.getAbsolutePath() + File.separator;
 
         try {
-            wh.copy(genjImagesDir + styleFile, toFile + styleFile);
-            wh.copy(genjImagesDir + "m.gif", toFile + "m.gif");
-            wh.copy(genjImagesDir + "f.gif", toFile +"f.gif");
-            wh.copy(genjImagesDir + "u.gif", toFile +"u.gif");
-            wh.copy(genjImagesDir + "s.gif", toFile +"s.gif");
-            wh.copy(genjImagesDir + "p.gif", toFile +"p.gif");
-            wh.copy(genjImagesDir + "t.gif", toFile +"t.gif");
-            wh.copy(genjImagesDir + "h.gif", toFile +"h.gif");
-            wh.copy(genjImagesDir + "b.gif", toFile +"b.gif");
-            wh.copy(genjImagesDir + "n.gif", toFile +"n.gif");
-            wh.copy(genjImagesDir + "e.gif", toFile +"e.gif");
-            wh.copy(genjImagesDir + "src.gif", toFile +"src.gif");
-            wh.copy(genjImagesDir + "downbar.png", toFile +"downbar.png");
-            wh.copy(genjImagesDir + "downleft.png", toFile +"downleft.png");
-            wh.copy(genjImagesDir + "downright.png", toFile +"downright.png");
-            wh.copy(genjImagesDir + "leftbar.png", toFile +"leftbar.png");
-            wh.copy(genjImagesDir + "rightbar.png", toFile +"rightbar.png");
-            wh.copy(genjImagesDir + "upbar.png", toFile +"upbar.png");
-            wh.copy(genjImagesDir + "upleft.png", toFile +"upleft.png");
-            wh.copy(genjImagesDir + "upright.png", toFile +"upright.png");
-            wh.copy(genjImagesDir + "medno.png", toFile +"medno.png");
-            wh.copy(genjImagesDir + "mednopic.png", toFile +"mednopic.png");
-            wh.copy(genjImagesDir + "medpriv.png", toFile +"medpriv.png");
-            wh.copy(genjImagesDir + "map.gif", toFile +"map.gif");
-            wh.copy(genjImagesDir + "mail.gif", toFile +"mail.gif");
-        } catch (IOException e) {
+            // get resource directory where images are
+            URL dirURL = wp.getClass().getClassLoader().getResource(wp.getClass().getName().replace(".", "/") + ".class");
+            if (dirURL.getProtocol().equals("jar")) {
+                /* A JAR path */
+                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
+                JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+                Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+                while (entries.hasMoreElements()) {
+                    String name = entries.nextElement().getName();
+                    if (name.startsWith(genjImagesDir)) { //filter according to the path
+                        String entry = name.substring(genjImagesDir.length());
+                        int checkSubdir = entry.indexOf("/");
+                        if (checkSubdir < 0 && !entry.trim().isEmpty()) {
+                            // if it is NOT a subdirectory, it must be an image so copy it
+                            result.add(entry);
+                        }
+                    }
+                }
+
+                String[] list = result.toArray(new String[result.size()]);
+                for (int i = 0; i < list.length; i++) {
+                    String fileName = list[i];
+                    wh.copy("img/" + fileName, toFile + fileName);
+                }
+            }
+        } catch (Exception e) {
             //e.printStackTrace();
             wb.log.write(wb.log.ERROR, "createIcons - " + e.getMessage());
         }
     }
-
 }
