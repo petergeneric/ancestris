@@ -150,6 +150,15 @@ public class WebBook {
 
 
         /**
+         * Empties local directory of all previous generations
+         */
+        log.write(" ");
+        log.write("----------- " + log.trs("EXEC_clean") + " -----------");
+        wh.cleanLocalDir();
+
+
+
+        /**
          * Initiate all sections together as they use eachother
          */
         log.write(" ");

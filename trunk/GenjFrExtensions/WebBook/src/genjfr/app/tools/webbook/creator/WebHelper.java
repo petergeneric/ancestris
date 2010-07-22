@@ -107,8 +107,35 @@ public class WebHelper {
     }
 
     /**
+     * Clean Dir
+     **/
+    public void cleanLocalDir() {
+         emptyDir(new File(wp.param_localWebDir), false);
+    }
+
+    /**
+     * Empty Dir
+     **/
+    public boolean emptyDir(File dir, boolean removeDir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = emptyDir(new File(dir, children[i]), true);
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // The directory is now empty so delete it
+        if (removeDir) {
+            return dir.delete();
+        }
+        return true;
+    }
+
+    /**
      * Create Dir
-     **///USED
+     **/
     public File createDir(String outfile, boolean create) {
 
         String parent = (new File(outfile)).getAbsoluteFile().getParent();
@@ -161,26 +188,6 @@ public class WebHelper {
             log.write(log.ERROR, "getWriter - " + e.getMessage());
         }
         return pw;
-    }
-
-    /**
-     * Empty Dir
-     **/
-    public boolean emptyDir(File dir, boolean removeDir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = emptyDir(new File(dir, children[i]), true);
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        // The directory is now empty so delete it
-        if (removeDir) {
-            return dir.delete();
-        }
-        return true;
     }
 
     /**

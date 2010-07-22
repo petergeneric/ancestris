@@ -168,11 +168,11 @@ a.tooltip:hover span{ /*the span will display just on :hover state*/
   border-width: thin; 
 }
 .srcitems0 {
-  float: left; width: 80%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 18%;
+  float: left; width: 80%; text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 18%;
   border-width: thin; 
 }
 .srcitems1 {
-  float: left; width: 18%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  float: left; clear: left; width: 18%;  text-align:left; margin-top: 5px; margin-bottom: 0; margin-right: 0; margin-left: 0;
   border-width: thin; font-weight: bold; 
 }
 .srcitems2 {
@@ -188,7 +188,7 @@ a.tooltip:hover span{ /*the span will display just on :hover state*/
   border-width: thin; vertical-align: bottom;            
 }
 .srcimage0 {
-  float: left; width: 80%;  text-align: left; margin-right: 0; margin-top: 0; margin-bottom: 1em;  margin-left: 18%;
+  float: left; width: 76%;  text-align: left; margin-right: 0; margin-top: 0; margin-bottom: 1em;  margin-left: 22%;
   border-width: thin; vertical-align: bottom;            
 }
 .srcimage1 {

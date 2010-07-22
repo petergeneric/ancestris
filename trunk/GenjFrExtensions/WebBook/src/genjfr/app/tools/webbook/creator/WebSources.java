@@ -256,13 +256,13 @@ public class WebSources extends WebSection {
         prop = src.getProperty(PATH2ABBR);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            out.println("<span class=\"spacer\">" + SPACE + "</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2AUTH);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            out.println("<span class=\"spacer\">" + SPACE + "</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2EVEN);
@@ -279,25 +279,25 @@ public class WebSources extends WebSection {
             }
             String description = prop.getValue().replaceAll("BIRT", trs("src_BIRT")).replaceAll("MARR", trs("src_MARR")).replaceAll("DEAT", trs("src_DEAT"));
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + description + "," + SPACE + htmlText(date) + "," + SPACE + htmlText(place) + "</span><br />");
-            out.println("<span class=\"spacer\">" + SPACE + "</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2REPO);
         if ((prop != null) && (prop.toString().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.toString()) + "</span><br />");
-            out.println("<span class=\"spacer\">" + SPACE + "</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2TEXT);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems3\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            out.println("<span class=\"spacer\">" + SPACE + "</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2NOTE);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            out.println("<span class=\"spacer\">" + SPACE + "</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         // Print pictures of SOUR entity
@@ -309,7 +309,8 @@ public class WebSources extends WebSection {
                 wrapMedia(out, dir, file);
                 out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
             }
-            out.println("</span><br /><span class=\"spacer\">" + SPACE + "</span>");
+            out.println("</span>");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
             files.clear();
         }
 
@@ -352,13 +353,15 @@ public class WebSources extends WebSection {
                             wrapMedia(out, dir, file, (wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3"))));
                             out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
                         }
-                        out.println("</span><br /><span class=\"spacer\">" + SPACE + "</span>");
+                        out.println("</span><br />");
+                        //out.println("<span class=\"spacer\">" + SPACE + "</span>");
                         files.clear();
                         out.println("<span class =\"srcitems0\">");
                     }
                 }
             }
-            out.println("</span><br /><span class=\"spacer\">" + SPACE + "</span>");
+            out.println("</span><br />");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         // Closes the block
