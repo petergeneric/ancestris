@@ -94,8 +94,6 @@ public class WebMap extends WebSection {
         exportPage(dir);
 
         exportXMLData(dir, wh.getIndiDeCujus(wp.param_decujus));
-
-        exportIcons(dir);
     }
 
     /**
@@ -183,45 +181,6 @@ public class WebMap extends WebSection {
         wh.log.write(fileStr + trs("EXEC_DONE"));
         out.close();
 
-    }
-
-    /**
-     * Exports icons
-     */
-    private void exportIcons(File dir) {
-        String genjImagesDir = "img/";
-        String toFile = dir.getAbsolutePath() + File.separator;
-        try {
-            wh.copy(genjImagesDir + "m.gif", toFile + "m.gif");
-            wh.copy(genjImagesDir + "cbd.png", toFile + "cbd.png");
-            wh.copy(genjImagesDir + "cbmd.png", toFile + "cbmd.png");
-            wh.copy(genjImagesDir + "cbm.png", toFile + "cbm.png");
-            wh.copy(genjImagesDir + "cx.png", toFile + "cx.png");
-            wh.copy(genjImagesDir + "cb.png", toFile + "cb.png");
-            wh.copy(genjImagesDir + "cd.png", toFile + "cd.png");
-            wh.copy(genjImagesDir + "cmd.png", toFile + "cmd.png");
-            wh.copy(genjImagesDir + "cm.png", toFile + "cm.png");
-            wh.copy(genjImagesDir + "obd.png", toFile + "obd.png");
-            wh.copy(genjImagesDir + "obmd.png", toFile + "obmd.png");
-            wh.copy(genjImagesDir + "obm.png", toFile + "obm.png");
-            wh.copy(genjImagesDir + "ob.png", toFile + "ob.png");
-            wh.copy(genjImagesDir + "od.png", toFile + "od.png");
-            wh.copy(genjImagesDir + "omd.png", toFile + "omd.png");
-            wh.copy(genjImagesDir + "om.png", toFile + "om.png");
-            wh.copy(genjImagesDir + "ox.png", toFile + "ox.png");
-            wh.copy(genjImagesDir + "sbd.png", toFile + "sbd.png");
-            wh.copy(genjImagesDir + "sbmd.png", toFile + "sbmd.png");
-            wh.copy(genjImagesDir + "sbm.png", toFile + "sbm.png");
-            wh.copy(genjImagesDir + "sb.png", toFile + "sb.png");
-            wh.copy(genjImagesDir + "sd.png", toFile + "sd.png");
-            wh.copy(genjImagesDir + "smd.png", toFile + "smd.png");
-            wh.copy(genjImagesDir + "sm.png", toFile + "sm.png");
-            wh.copy(genjImagesDir + "sx.png", toFile + "sx.png");
-            wh.copy(genjImagesDir + "z.png", toFile + "z.png");
-        } catch (IOException e) {
-            //e.printStackTrace();
-            wb.log.write(wb.log.ERROR, "exportIcons - " + e.getMessage());
-        }
     }
 
     /**

@@ -40,6 +40,7 @@ public class WebSources extends WebSection {
     private final static TagPath PATH2ABBR = new TagPath("SOUR:ABBR");
     private final static TagPath PATH2AUTH = new TagPath("SOUR:AUTH");
     private final static TagPath PATH2TEXT = new TagPath("SOUR:TEXT");
+    private final static TagPath PATH2DATATEXT = new TagPath("SOUR:DATA:TEXT");
     private final static TagPath PATH2REPO = new TagPath("SOUR:REPO");
     private final static TagPath PATH2EVEN = new TagPath("SOUR:DATA:EVEN");
     private final static TagPath PATH2NOTE = new TagPath("SOUR:NOTE");
@@ -294,6 +295,12 @@ public class WebSources extends WebSection {
             //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
+        prop = src.getProperty(PATH2DATATEXT);
+        if ((prop != null) && (prop.getValue().length() > 0)) {
+            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems3\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
+            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
+        }
+
         prop = src.getProperty(PATH2NOTE);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
@@ -335,7 +342,7 @@ public class WebSources extends WebSection {
                     wrapName(out, wife);
                     wrapDate(out, wife, true);
                 }
-                out.println("<br />");
+                out.println("<br /><br />");
                 if (!sourceIsPrivate && !(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
                     mediasOfEntity.addAll(target.getProperties(PropertyFile.class));
                     for (Iterator itm = mediasOfEntity.iterator(); itm.hasNext();) {

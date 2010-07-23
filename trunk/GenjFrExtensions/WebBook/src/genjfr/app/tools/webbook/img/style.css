@@ -172,15 +172,15 @@ a.tooltip:hover span{ /*the span will display just on :hover state*/
   border-width: thin; 
 }
 .srcitems1 {
-  float: left; clear: left; width: 18%;  text-align:left; margin-top: 5px; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  float: left; clear: left; width: 18%;  text-align:left; margin-top: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;
   border-width: thin; font-weight: bold; 
 }
 .srcitems2 {
-  float: left; width: 82%;  text-align:left; margin-top: 5px; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  float: left; width: 82%;  text-align:left; margin-top: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;
   border-width: thin;     
 }
 .srcitems3 {
-  float: left; width: 82%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  float: left; width: 82%;  text-align:left; margin-top: 10px; margin-bottom: 0; margin-right: 0; margin-left: 0;
   border-width: thin; font-style: italic;
 }
 .srcimage {
@@ -192,15 +192,15 @@ a.tooltip:hover span{ /*the span will display just on :hover state*/
   border-width: thin; vertical-align: bottom;            
 }
 .srcimage1 {
-  float: left; width: 200px;  text-align: center; margin-right: 0; margin-top: 0; margin-bottom: 0;  margin-left: 0;
+  float: left; width: 200px;  text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
   border-width: thin; border-style: outset; background: #fdff6b;
 }
 .srcimage1:hover {
-  float: left; width: 200px;  text-align: center; margin-right: 0; margin-top: 0; margin-bottom: 0;  margin-left: 0;
+  float: left; width: 200px;  text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
   border-width: thin; border-style: outset; background: #ffba00;
 }
 .srcimage2 {
-  float: left; text-align: center; margin-right: 0; margin-top: 0; margin-bottom: 0;  margin-left: 0;
+  float: left; text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
   border-width: thin; 
 }
 /*

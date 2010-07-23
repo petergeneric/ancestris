@@ -865,8 +865,10 @@ public class WebIndividualsDetails extends WebSection {
                 Property[] pSources = props[j].getProperties("SOUR");
                 if (pSources != null && pSources.length > 0) {
                     for (int k = 0; k < pSources.length; k++) {
-                        PropertySource pSource = (PropertySource) pSources[k];
-                        source += wrapSource(buildLinkTheme(this, themeDir) + "src.gif", pSource);
+                        if (pSources[k] instanceof PropertySource) {
+                            PropertySource pSource = (PropertySource) pSources[k];
+                            source += wrapSource(buildLinkTheme(this, themeDir) + "src.gif", pSource);
+                        }
                     }
                 }
                 // event tag in lowercase (will be used for image associated with event for instance)
