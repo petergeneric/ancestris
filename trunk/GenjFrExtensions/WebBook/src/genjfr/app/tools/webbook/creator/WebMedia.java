@@ -32,7 +32,7 @@ import java.util.Comparator;
  */
 public class WebMedia extends WebSection {
 
-    private final static String POPUP = "popup.htm";
+    private final static String POPUPTAG = "popup.htm";
     private int WIDTH_PICTURES = 200;
     private int nbPhotoPerRow = 3;
     //
@@ -81,12 +81,13 @@ public class WebMedia extends WebSection {
             personPage = wb.sectionIndividualsDetails.getPagesMap();
             prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
         }
+        themeDir = buildLinkTheme(this, themeDir);
 
         // Generate detail pages
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
         exportData(dir, medias);
 
-        wh.log.write(POPUP + trs("EXEC_DONE"));
+        wh.log.write(POPUPTAG + trs("EXEC_DONE"));
 
     }
 
@@ -275,7 +276,7 @@ public class WebMedia extends WebSection {
             thumbPic = prefixPersonDetailsDir + origFile;    // this is the miniature picture
             if (!wh.isImage(media.getFile().getAbsolutePath())) {
                 thumbPic = themeDir + "mednopic.png";
-                link = "<a href=\"javascript:popup('" + origFile + "','100','100')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
+                link = "<a href=\"javascript:popup('" + origFile + "','400','500')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             } else {
                 if (media.getPath().toString().compareTo("INDI:OBJE:FILE") != 0 && media.getPath().toString().compareTo("FAM:OBJE:FILE") != 0) {
                     thumbPic = "mini_" + origFile;

@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class WebIndividualsDetails extends WebSection {
 
-    private final static String POPUP = "popupemail.htm";
+    private final static String POPUPTAG = "popupemail.htm";
     private final static TagPath INDI2IMAGES = new TagPath("INDI:OBJE:FILE");
     private final static TagPath FAM2IMAGES = new TagPath("FAM:OBJE:FILE");
     private int WIDTH_PICTURES = 150;
@@ -106,8 +106,8 @@ public class WebIndividualsDetails extends WebSection {
 
         // Generate email popup
         if (wp.param_dispEmailButton.equals("1")) {
-            createPopupEmail(wh.getFileForName(dir, POPUP));
-            wh.log.write(POPUP + trs("EXEC_DONE"));
+            createPopupEmail(wh.getFileForName(dir, POPUPTAG));
+            wh.log.write(POPUPTAG + trs("EXEC_DONE"));
         }
 
     }
@@ -325,7 +325,10 @@ public class WebIndividualsDetails extends WebSection {
                     }
                     // get file name
                     String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-                    if (wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
+                    if (wh.isImage(origFile) && wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
+                        out.println(wrapMedia(origFile, name, file));
+                    }
+                    if (!wh.isImage(origFile)) {
                         out.println(wrapMedia(origFile, name, file));
                     }
 
@@ -938,7 +941,7 @@ public class WebIndividualsDetails extends WebSection {
         }
         // display image
         String ret = "<a class=tooltip href=\"" + indi2mediaDir + wb.sectionMedia.getPageForMedia(file) + "\">";
-        ret += "<img src=\"" + origFile + "\" alt=\"" + name + "\" />";
+        ret += "<img src=\"" + wh.getImage(origFile, buildLinkTheme(this, themeDir)) + "\" alt=\"" + name + "\" />";
         ret += "<span>" + title + "</span></a>";
         return ret;
     }
@@ -978,7 +981,7 @@ public class WebIndividualsDetails extends WebSection {
         out.println("<!--");
         out.println("function popup(sText)");
         out.println("{");
-        out.println("window.open( \"" + POPUP + "?\"+sText, '', 'HEIGHT=650,WIDTH=620,toolbar=0,status=0,menubar=0');");
+        out.println("window.open( \"" + POPUPTAG + "?\"+sText, '', 'HEIGHT=650,WIDTH=620,toolbar=0,status=0,menubar=0');");
         out.println("}");
         out.println("//-->");
         out.println("</script>");

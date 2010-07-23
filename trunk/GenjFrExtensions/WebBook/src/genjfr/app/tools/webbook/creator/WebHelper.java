@@ -110,7 +110,7 @@ public class WebHelper {
      * Clean Dir
      **/
     public void cleanLocalDir() {
-         emptyDir(new File(wp.param_localWebDir), false);
+        emptyDir(new File(wp.param_localWebDir), false);
     }
 
     /**
@@ -535,7 +535,21 @@ public class WebHelper {
         if (infile == null) {
             return false;
         }
-        return (infile.toLowerCase().endsWith(".jpg") || infile.toLowerCase().endsWith(".png") || infile.toLowerCase().endsWith(".gif"));
+        return (infile.toLowerCase().endsWith(".jpg") || 
+                infile.toLowerCase().endsWith(".png") ||
+                infile.toLowerCase().endsWith(".bmp") ||
+                infile.toLowerCase().endsWith(".gif"));
+    }
+
+    /** Replace mini image depending on media type */
+    public String getImage(String infile, String themeDir) {
+        if (infile == null) {
+            return "";
+        }
+        if (isImage(infile))  {
+            return infile;
+        }
+        return themeDir + "mednopic.png";
     }
 
     /** Get image size */
