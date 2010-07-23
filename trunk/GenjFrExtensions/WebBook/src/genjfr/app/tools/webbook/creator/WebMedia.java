@@ -81,7 +81,6 @@ public class WebMedia extends WebSection {
             personPage = wb.sectionIndividualsDetails.getPagesMap();
             prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
         }
-        themeDir = buildLinkTheme(this, themeDir);
 
         // Generate detail pages
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
@@ -208,16 +207,17 @@ public class WebMedia extends WebSection {
      * Open table
      */
     private void openTable(PrintWriter out) {
+        String themeDirMedia = buildLinkTheme(this, themeDir);
         includePopupScript(out);
         out.println("<div><br />");
         out.println("<table class=\"maintable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" >");
         out.println("<tr style=\"height:30px\">");
-        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDir + "upleft.png') no-repeat right bottom\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
-        out.println("<td style=\"background:url('" + themeDir + "upbar.png') repeat-x left bottom\"></td>");
-        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDir + "upright.png') no-repeat left bottom\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
+        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDirMedia + "upleft.png') no-repeat right bottom\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
+        out.println("<td style=\"background:url('" + themeDirMedia + "upbar.png') repeat-x left bottom\"></td>");
+        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDirMedia + "upright.png') no-repeat left bottom\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
         out.println("</tr>");
         out.println("<tr>");
-        out.println("<td style=\"background:url('" + themeDir + "leftbar.png') repeat-y right bottom\">" + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
+        out.println("<td style=\"background:url('" + themeDirMedia + "leftbar.png') repeat-y right bottom\">" + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
         out.println("<td>");
         out.println("<table border=\"0\" class=\"thumbnail-table\">");
     }
@@ -226,15 +226,16 @@ public class WebMedia extends WebSection {
      * Close table
      */
     private void closeTable(PrintWriter out) {
+        String themeDirMedia = buildLinkTheme(this, themeDir);
         out.println("</tr>");
         out.println("</table>");
         out.println("</td>");
-        out.println("<td style=\"background:url('" + themeDir + "rightbar.png') repeat-y left\">" + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
+        out.println("<td style=\"background:url('" + themeDirMedia + "rightbar.png') repeat-y left\">" + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
         out.println("</tr>");
         out.println("<tr style=\"height:30px\">");
-        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDir + "downleft.png') repeat-x right top\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
-        out.println("<td style=\"background:url('" + themeDir + "downbar.png') repeat-x top\"></td>");
-        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDir + "downright.png') repeat-x left top\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
+        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDirMedia + "downleft.png') repeat-x right top\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
+        out.println("<td style=\"background:url('" + themeDirMedia + "downbar.png') repeat-x top\"></td>");
+        out.println("<td style=\"width:30px; height:30px; background:url('" + themeDirMedia + "downright.png') repeat-x left top\">" + SPACE + SPACE + SPACE + SPACE + SPACE + "</td>");
         out.println("</tr>");
         out.println("</table>");
         out.println("<br /></div>");
@@ -261,6 +262,7 @@ public class WebMedia extends WebSection {
         String thumbPic = "smallpic";
         String origFile = "origFile";
         String link = SPACE;
+        String themeDirMedia = buildLinkTheme(this, themeDir);
 
         if ((media != null) && (media.getFile() != null) && (!wh.isPrivate(target))) {    // file tag is filled in
 
@@ -275,7 +277,7 @@ public class WebMedia extends WebSection {
 
             thumbPic = prefixPersonDetailsDir + origFile;    // this is the miniature picture
             if (!wh.isImage(media.getFile().getAbsolutePath())) {
-                thumbPic = themeDir + "mednopic.png";
+                thumbPic = themeDirMedia + "mednopic.png";
                 link = "<a href=\"javascript:popup('" + origFile + "','400','500')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             } else {
                 if (media.getPath().toString().compareTo("INDI:OBJE:FILE") != 0 && media.getPath().toString().compareTo("FAM:OBJE:FILE") != 0) {
@@ -285,9 +287,9 @@ public class WebMedia extends WebSection {
                 link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(media.getFile().getAbsolutePath()) + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             }
         } else if (wh.isPrivate(target)) {
-            link = "<img alt=\"" + htmlText(trs("med_priv")) + "\" title=\"" + htmlText(trs("med_priv")) + "\" src=\"" + themeDir + "medpriv.png\" /><br />";
+            link = "<img alt=\"" + htmlText(trs("med_priv")) + "\" title=\"" + htmlText(trs("med_priv")) + "\" src=\"" + themeDirMedia + "medpriv.png\" /><br />";
         } else {
-            link = "<img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(trs("med_none")) + "\" src=\"" + themeDir + "medno.png\" /><br />";
+            link = "<img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(trs("med_none")) + "\" src=\"" + themeDirMedia + "medno.png\" /><br />";
         }
         out.println("<td class=\"thumbnail-col\" ><a name=\"" + media.hashCode() + "\"></a>" + link);
         if (title != null && title.length() != 0) {
