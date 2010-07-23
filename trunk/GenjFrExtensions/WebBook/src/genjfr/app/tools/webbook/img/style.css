@@ -176,7 +176,7 @@ a.tooltip:hover span{ /*the span will display just on :hover state*/
   border-width: thin; font-weight: bold; 
 }
 .srcitems2 {
-  float: left; width: 82%;  text-align:left; margin-top: 0; margin-bottom: 0; margin-right: 0; margin-left: 0;
+  float: left; width: 82%;  text-align:left; margin-top: 5px; margin-bottom: 0; margin-right: 0; margin-left: 0;
   border-width: thin;     
 }
 .srcitems3 {
