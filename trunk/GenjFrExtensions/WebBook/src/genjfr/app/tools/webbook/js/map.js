@@ -192,7 +192,7 @@
 
     // sub functions
     function createMarker(point, size, ancestor, type, density, min, max, linkpage, linkOut, city, text) {
-       iconType = new GIcon(gicons[size], ancestor+type+".png");
+       iconType = new GIcon(gicons[size], "../theme/"+ancestor+type+".png");
        markerIcon = { icon:iconType };
        var marker = new GMarker(point, markerIcon);
        marker.mysize = size;
