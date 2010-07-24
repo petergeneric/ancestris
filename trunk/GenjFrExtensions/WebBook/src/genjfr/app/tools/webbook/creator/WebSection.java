@@ -58,6 +58,8 @@ public class WebSection {
     public String styleFile = "style.css";
     public String css = themeDir + SEP + styleFile;
     public String POPUP = "popup.htm";
+    public final String DEFPOPUPWIDTH = "400";
+    public final String DEFPOPUPLENGTH = "500";
     //
     public String prefixPersonDetailsDir = "";
     //

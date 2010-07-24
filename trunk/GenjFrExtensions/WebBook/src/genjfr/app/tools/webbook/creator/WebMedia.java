@@ -278,7 +278,7 @@ public class WebMedia extends WebSection {
             thumbPic = prefixPersonDetailsDir + origFile;    // this is the miniature picture
             if (!wh.isImage(media.getFile().getAbsolutePath())) {
                 thumbPic = themeDirMedia + "mednopic.png";
-                link = "<a href=\"javascript:popup('" + origFile + "','400','500')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
+                link = "<a href=\"javascript:popup('" + origFile + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             } else {
                 if (media.getPath().toString().compareTo("INDI:OBJE:FILE") != 0 && media.getPath().toString().compareTo("FAM:OBJE:FILE") != 0) {
                     thumbPic = "mini_" + origFile;

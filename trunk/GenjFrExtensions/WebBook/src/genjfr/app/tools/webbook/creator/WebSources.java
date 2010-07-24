@@ -342,7 +342,7 @@ public class WebSources extends WebSection {
                     wrapName(out, wife);
                     wrapDate(out, wife, true);
                 }
-                out.println("<br /><br />");
+                out.println("<br />");
                 if (!sourceIsPrivate && !(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
                     mediasOfEntity.addAll(target.getProperties(PropertyFile.class));
                     for (Iterator itm = mediasOfEntity.iterator(); itm.hasNext();) {
@@ -364,6 +364,8 @@ public class WebSources extends WebSection {
                         //out.println("<span class=\"spacer\">" + SPACE + "</span>");
                         files.clear();
                         out.println("<span class =\"srcitems0\">");
+                    } else {
+                        out.println("<br />");
                     }
                 }
             }
@@ -404,24 +406,44 @@ public class WebSources extends WebSection {
             wb.log.write(wb.log.ERROR, "wrapMedia - " + e.getMessage());
         }
 
+        // Get text if any
+        String text = "";
+        Property prop = file.getParent();
+        while (prop != null && !(prop instanceof Entity)) {
+            Property pText = prop.getProperty(PATH2DATATEXT);
+            if (pText == null) {
+                prop = prop.getParent();
+            } else {
+                text = pText.getDisplayValue();
+                break;
+            }
+        }
+
+        // wrap file media depending on whether it is not an image or it is
         String thumbPic = "mini_" + origFile;    // this is the miniature picture
         if (!wh.isImage(file.getFile().getAbsolutePath())) {
             thumbPic = buildLinkTheme(this, themeDir) + "mednopic.png";
-            link = "<a href=\"javascript:popup('" + origFile + "','100','100')\" >";
+            link = "<a class=tooltipL href=\"javascript:popup('" + origFile + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')\" >";
             if (dispMin) {
                 link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
             } else {
                 link += htmlText(title);
             }
+            if (!text.trim().isEmpty()) {
+                link += "<span><i>" + htmlText(text) + "</i></span>";
+            }
             link += "</a><br />";
         } else {
             thumbPic = "mini_" + origFile;
-            link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\" >";
+            link = "<a class=tooltipL href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\" >";
             if (dispMin) {
                 wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + thumbPic, WIDTH_PICTURES, 0, 100, false);
                 link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
             } else {
                 link += htmlText(title);
+            }
+            if (!text.trim().isEmpty()) {
+                link += "<span><i>" + htmlText(text) + "</i></span>";
             }
             link += "</a><br />";
         }

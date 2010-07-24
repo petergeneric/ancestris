@@ -307,7 +307,7 @@ public class WebIndividualsDetails extends WebSection {
         out.println("</p>");
 
 
-        // Images (only if not private)
+        // Images and other media (only if not private)
         if (!wh.isPrivate(indi)) {
             List<Property> files = new ArrayList<Property>();
             files.addAll(Arrays.asList(indi.getProperties(INDI2IMAGES)));
