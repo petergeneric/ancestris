@@ -438,7 +438,7 @@ public class WebMap extends WebSection {
         } else {
             cityFlash.others.add(indi);
         }
-        if (wh.isPrivate(indi)) {
+        if (isPrivate(indi)) {
             return;
         }
         Integer counter = cityFlash.names.get(wh.getLastName(indi, DEFCHAR));

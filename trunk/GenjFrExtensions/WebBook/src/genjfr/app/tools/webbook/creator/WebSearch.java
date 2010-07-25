@@ -456,7 +456,7 @@ public class WebSearch extends WebSection {
     private void writeTableIndis(PrintWriter out, List indis) {
 
         //out.println("var ID = [\"I001\",\"I002\",\"I003\",\"I004\",\"I005\"]");
-        //out.println("var IDdisplay = [\"Frederic Lapeyre (29 Oct 1968) (I001) |001|I001\",\"Jean Sebastien Frederic Surrel|001|I002\",\"Sebastien Lapeyre|002|I003\",\"Raymond Fred|003|I004\",\"Fred Surrel|001|I005\"]");
+        //out.println("var IDdisplay = [\"Frederic Lapeyre (01 Mar 1952) (I001) |001|I001\",\"Jean Philippe Frederic Surrel|001|I002\",\"Sebastien Aubry|002|I003\",\"Raymond Fred|003|I004\",\"Fred Surrel|001|I005\"]");
         StringBuffer list = new StringBuffer("var ID = [");
         StringBuffer listID = new StringBuffer("var IDdisplay = [");
         int cpt = 0;
@@ -464,7 +464,7 @@ public class WebSearch extends WebSection {
             Indi indi = (Indi) it1.next();
             list.append((cpt == 0 ? "" : ",") + "\"" + indi.getId() + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
-            listID.append(indi.getSex() + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi));
+            listID.append(getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi));
             listID.append("\"");
             cpt++;
         }
@@ -473,6 +473,19 @@ public class WebSearch extends WebSection {
         out.println(list.toString());
         out.println(listID.toString());
         return;
+    }
+
+    /**
+     * Get sex
+     */
+    private int getSex(Indi indi) {
+        if (indi == null) {
+            return 0;
+        }
+        if (isPrivate(indi)) {
+            return 0;
+        }
+        return indi.getSex();
     }
 
     /**
@@ -490,13 +503,7 @@ public class WebSearch extends WebSection {
      * Get name of individual
      */
     private String getName(Indi indi) {
-        String name = (indi == null) ? wp.param_unknown : (wh.getLastName(indi, DEFCHAR) + ", " + indi.getFirstName()).trim();
-        if (wh.isPrivate(indi)) {
-            name = "..., ...";
-        }
-        if (name.compareTo(",") == 0) {
-            name = "";
-        }
+        String name = wrapName(indi, DT_LASTFIRST, DT_NOLINK, DT_NOSOSA, DT_NOID);
         String result = name.replaceAll("\"", "");
         return result;
     }
@@ -505,6 +512,9 @@ public class WebSearch extends WebSection {
      * Get sosa of individual
      */
     private String getSosa(Indi indi) {
+        if (isPrivate(indi)) {
+            return "";
+        }
         String sosa = wh.getSosa(indi);
         return ((sosa != null && sosa.length() != 0) ? sosa : "");
     }
@@ -513,13 +523,25 @@ public class WebSearch extends WebSection {
      * Get dates of individual
      */
     private String getBDate(Indi indi) {
-        PropertyDate bdate = (indi == null) ? null : indi.getBirthDate();
+        if (indi == null) {
+            return "";
+        }
+        if (isPrivate(indi)) {
+            return "...";
+        }
+        PropertyDate bdate = indi.getBirthDate();
         String date = (indi == null) || (bdate == null) ? "" : bdate.toString().trim();
         return date;
     }
 
     private String getDDate(Indi indi) {
-        PropertyDate ddate = (indi == null) ? null : indi.getDeathDate();
+        if (indi == null) {
+            return "";
+        }
+        if (isPrivate(indi)) {
+            return "...";
+        }
+        PropertyDate ddate = indi.getDeathDate();
         String date = (indi == null) || (ddate == null) ? "" : ddate.toString().trim();
         return date;
     }

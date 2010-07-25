@@ -170,11 +170,11 @@ public class WebStatsImplex extends WebSection {
         out.println("<div class=\"contreport\">");
         out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("implex_root_individual")) + "</span></p>");
         out.println("<p class=\"column1\">");
-        wrapName(out, indi);
+        out.println(wrapEntity(indi));
+        out.println("<br /><br />");
+        out.println(htmlText(trs("implex_implex_factor")) + SPACE + new Double(dImplexFactor) + "%");
         out.println("<br />");
-        out.println(htmlText(trs("implex_implex_factor", new Double(dImplexFactor))));
-        out.println("<br />");
-        out.println(htmlText(trs("implex_consanguinity_factor", new Double(dConsanguinityFactor))));
+        out.println(htmlText(trs("implex_consanguinity_factor")) + SPACE + new Double(dConsanguinityFactor));
         out.println("<br /></p>");
     }
 
@@ -225,7 +225,7 @@ public class WebStatsImplex extends WebSection {
         Collection col = mapImplexCommonIndi.values();
         itr = col.iterator();
         while (itr.hasNext()) {
-            wrapName(out, (Indi) itr.next());
+            out.println(wrapEntity((Indi) itr.next()));
             out.println("<br />");
         }
         out.println("</p>");
@@ -248,7 +248,7 @@ public class WebStatsImplex extends WebSection {
         while (itr.hasNext()) {
             ConsanguinityInfo info = (ConsanguinityInfo) itr.next();
             out.println("<span class=\"column1f\">");
-            wrapName(out, info.indi);
+            out.println(wrapEntity(info.indi));
             out.println("</span>");
             out.println("<span class=\"column2f\">" + htmlText(info.consanguinityFactor) + "</span><br />");
             out.println("<p class=\"spacer\">" + SPACE + "</p>");

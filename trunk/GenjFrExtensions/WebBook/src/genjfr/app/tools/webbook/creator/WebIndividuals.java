@@ -1,8 +1,6 @@
 package genjfr.app.tools.webbook.creator;
 
 import genj.gedcom.Indi;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.TagPath;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 
@@ -35,6 +33,12 @@ public class WebIndividuals extends WebSection {
      */
     @Override
     public void create() {
+
+        // Preliminary build of individuals link for links from details to individuals
+        if (wb.sectionIndividualsDetails != null) {
+            personPage = wb.sectionIndividualsDetails.getPagesMap();
+            prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
+        }
 
         calcLetters(wh.getIndividuals(wh.gedcom, sortIndividuals));
 
@@ -140,7 +144,6 @@ public class WebIndividuals extends WebSection {
                 }
             }
 
-            String personfile = buildLink(this, wb.sectionIndividualsDetails, cpt);
             if (writeLetter) {
                 if (!first) {
                     out.println("</p>");
@@ -154,7 +157,11 @@ public class WebIndividuals extends WebSection {
                 out.println("<p class=\"letter\">" + "<a name=\"" + ancLet + "\"></a>" + ancLet + "</p>");
                 out.println("<p>");
             }
-            exportIndividualRow(out, indi, writeAnchor, personfile);
+            if (writeAnchor) {
+                out.println("<a name=\"" + htmlAnchorText(wh.getLastName(indi, DEFCHAR)) + "\"></a>");
+            }
+            out.println(wrapEntity(indi));
+            out.println("<br />");
             // .. next individual
         }
 
@@ -173,63 +180,6 @@ public class WebIndividuals extends WebSection {
     }
 
     /**
-     * Exports individual row
-     */
-    private void exportIndividualRow(PrintWriter out, Indi indi, boolean writeAnchor, String personfile) {
-
-        String NODATE = SPACE;
-
-        String sexString = DEFCHAR + SPACE;
-        String themeDirLink = buildLinkTheme(this, themeDir);
-
-        if (indi.getSex() == 1) {
-            sexString = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
-        } else if (indi.getSex() == 2) {
-            sexString = "<img src=\"" + themeDirLink + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
-        } else {
-            sexString = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
-        }
-
-        PropertyDate birthDateProp = (PropertyDate) indi.getProperty(new TagPath("INDI:BIRT:DATE"));
-        String birthDateString = "";
-        if (birthDateProp == null) {
-            birthDateString = NODATE;
-        } else {
-            birthDateString = htmlText(birthDateProp.toString());
-        }
-
-        PropertyDate deathDateProp = (PropertyDate) indi.getProperty(new TagPath("INDI:DEAT:DATE"));
-        String deathDateString = "";
-        if (deathDateProp == null) {
-            deathDateString = NODATE;
-        } else {
-            deathDateString = htmlText(deathDateProp.toString());
-        }
-
-        String name = wh.getLastName(indi, DEFCHAR);
-        String first = indi.getFirstName();
-        String anchor = indi.getId();
-
-        if (writeAnchor) {
-            out.println("<a name=\"" + htmlAnchorText(name) + "\"></a>");
-        }
-
-        if (wh.isPrivate(indi)) {
-            name = "...";
-            first = "...";
-            birthDateString = "...";
-            deathDateString = "...";
-        }
-
-        out.println(sexString + SPACE);
-        out.print("<a href=\"" + personfile + '#' + anchor + "\">");
-        out.println(htmlText(name + ", " + first));
-        out.print("</a>");
-        out.println(SPACE + "(" + SPACE + birthDateString + SPACE + "-" + SPACE + deathDateString + SPACE + ")");
-        out.println("<br />");
-    }
-
-    /**
      * Calculate if there is a link to the letters and initiates the names pages
      */
     private void calcLetters(List<Indi> indis) {
@@ -243,9 +193,7 @@ public class WebIndividuals extends WebSection {
         // Calculate
         char letter = ' ';
         String name = "";
-        boolean writeLetter = false;
         int iNames = 0;
-        int currentPage = 0;
         String listfile = "";
         for (Iterator it = indis.iterator(); it.hasNext();) {
             Indi indi = (Indi) it.next();
@@ -286,6 +234,5 @@ public class WebIndividuals extends WebSection {
         }
         return true;
     }
-
-} // End_of_Report
+}
 

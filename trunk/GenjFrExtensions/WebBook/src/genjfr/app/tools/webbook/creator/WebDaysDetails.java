@@ -7,8 +7,6 @@
  */
 package genjfr.app.tools.webbook.creator;
 
-import genj.gedcom.Indi;
-import genj.gedcom.Fam;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
@@ -115,7 +113,7 @@ public class WebDaysDetails extends WebSection {
     }
 
     /**
-     * Exports individual details
+     * Exports days details
      */
     @SuppressWarnings("unchecked")
     private void exportDayDetails(PrintWriter out, String date, File dir, String dayfile) {
@@ -146,9 +144,8 @@ public class WebDaysDetails extends WebSection {
                 first = false;
             }
             out.println("<span class=\"dayevt1\">" + ((PropertyDate) prop).toString() + "<br /></span>");
-            out.println("<span class=\"dayevt2\">" + htmlText(prop.getParent().getPropertyName()) + "</span><span class=\"dayevt3\">");
-            wrapEntity(out, prop.getEntity());
-            out.println("</span>");
+            out.println("<span class=\"dayevt2\">" + htmlText(prop.getParent().getPropertyName()) + "</span>");
+            out.println("<span class=\"dayevt3\">" + wrapEntity(prop.getEntity()) + "</span>");
         }
         out.println("<span class=\"spacer\">" + SPACE + "</span>");
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
@@ -199,27 +196,6 @@ public class WebDaysDetails extends WebSection {
             return ent1.toString().compareTo(ent2.toString());
         }
     };
-
-    /**
-     * Print name with link
-     */
-    private void wrapEntity(PrintWriter out, Entity ent) {
-        if (ent instanceof Indi) {
-            Indi indi = (Indi) ent;
-            wrapName(out, indi);
-            wrapDate(out, indi, true);
-        }
-        if (ent instanceof Fam) {
-            Fam fam = (Fam) ent;
-            Indi husband = fam.getHusband();
-            Indi wife = fam.getWife();
-            wrapName(out, husband);
-            wrapDate(out, husband, true);
-            out.println(SPACE + "+");
-            wrapName(out, wife);
-            wrapDate(out, wife, true);
-        }
-    }
 
     /**
      * Calculate pages for day details

@@ -7,8 +7,6 @@
  */
 package genjfr.app.tools.webbook.creator;
 
-import genj.gedcom.Indi;
-import genj.gedcom.Fam;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
@@ -116,7 +114,7 @@ public class WebCitiesDetails extends WebSection {
     }
 
     /**
-     * Exports individual details
+     * Exports city details
      */
     @SuppressWarnings("unchecked")
     private void exportCityDetails(PrintWriter out, String city) {
@@ -333,31 +331,10 @@ public class WebCitiesDetails extends WebSection {
         if (getDate(prop) != null) {
             date = getDate(prop).toString();
         }
-        out.println("<span class=\"cityevt1\">" + htmlText(date) + "</span><span class=\"cityevt2\">" + htmlText(event.getPropertyName()) + "</span><span class=\"cityevt3\">");
-        wrapEntity(out, prop.getEntity());
-        out.println("</span>");
+        out.println("<span class=\"cityevt1\">" + htmlText(date) + "</span>");
+        out.println("<span class=\"cityevt2\">" + htmlText(event.getPropertyName()) + "</span>");
+        out.println("<span class=\"cityevt3\">" + wrapEntity(prop.getEntity()) + "</span>");
         out.println("<span class=\"spacer\">" + SPACE + "</span>");
-    }
-
-    /**
-     * Print name with link
-     */
-    private void wrapEntity(PrintWriter out, Entity ent) {
-        if (ent instanceof Indi) {
-            Indi indi = (Indi) ent;
-            wrapName(out, indi);
-            wrapDate(out, indi, true);
-        }
-        if (ent instanceof Fam) {
-            Fam fam = (Fam) ent;
-            Indi husband = fam.getHusband();
-            Indi wife = fam.getWife();
-            wrapName(out, husband);
-            wrapDate(out, husband, true);
-            out.println(SPACE + "+");
-            wrapName(out, wife);
-            wrapDate(out, wife, true);
-        }
     }
 
     /**

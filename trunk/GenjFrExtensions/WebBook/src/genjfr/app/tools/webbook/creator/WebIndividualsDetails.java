@@ -196,7 +196,7 @@ public class WebIndividualsDetails extends WebSection {
                 writeScript(out);
             }
             exportLinks(out, personfile, 1, previousPage, nextPage, lastPage);
-            exportIndividualDetails(out, indi, dir, personfile);
+            exportIndividualDetails(out, indi, dir);
             // .. next individual
         }
         if (out != null) {
@@ -216,13 +216,12 @@ public class WebIndividualsDetails extends WebSection {
      * Exports individual details
      */
     @SuppressWarnings("unchecked")
-    private void exportIndividualDetails(PrintWriter out, Indi indi, File dir, String personfile) {
+    private void exportIndividualDetails(PrintWriter out, Indi indi, File dir) {
 
         // Details
-        String lastname = wh.getLastName(indi, DEFCHAR);
-        String firstname = indi.getFirstName();
+        String themeDirLink = buildLinkTheme(this, themeDir);
         String anchor = indi.getId();
-
+        String name = wrapName(indi, DT_LASTFIRST, DT_NOLINK, DT_SOSA, DT_ID);
         Indi father = indi.getBiologicalFather();
         Indi mother = indi.getBiologicalMother();
         Indi fatherfather = (father != null) ? father.getBiologicalFather() : null;
@@ -230,48 +229,20 @@ public class WebIndividualsDetails extends WebSection {
         Indi fathermother = (mother != null) ? mother.getBiologicalFather() : null;
         Indi mothermother = (mother != null) ? mother.getBiologicalMother() : null;
 
-        String sexString = "?" + SPACE;
-        String sexStyle1 = "", sexStyle2 = "";
-        String themeDirLink = buildLinkTheme(this, themeDir);
-        if (indi.getSex() == 1) {
-            sexString = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
-            sexStyle1 = "<h2 class=\"hom\">";
-            sexStyle2 = "</h2>";
-        } else if (indi.getSex() == 2) {
-            sexString = "<img src=\"" + themeDirLink + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
-            sexStyle1 = "<h2 class=\"fem\">";
-            sexStyle2 = "</h2>";
-        } else {
-            sexString = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
-            sexStyle1 = "<h2 class=\"unk\">";
-            sexStyle2 = "</h2>";
-        }
-
         // Start of details ----------------------------------------------
 
         // Individual name
-        out.println(sexStyle1);
+        out.println("<h2 class=\"" + getSexStyle(indi) + "\">");
         out.println("<a name=\"" + anchor + "\"></a>");
-        out.println(sexString + SPACE);
-        String name = (lastname + ", " + firstname).trim();
-        if (wh.isPrivate(indi)) {
-            name = "..., ...";
-        }
-        if (name.compareTo(",") == 0) {
-            name = "";
-        }
-        out.print(htmlText(name));
-        String sosa = wh.getSosa(indi);
-        if (sosa != null && sosa.length() != 0) {
-            out.println(SPACE + "(" + sosa + ")");
-        }
-        out.println(sexStyle2);
+        out.println(wrapSex(indi));
+        out.println(name);
+        out.println("</h2>");
 
         // First container
         out.println("<div class=\"conteneur\">");
 
         // Email button
-        if (wp.param_dispEmailButton.equals("1") && !wh.isPrivate(indi)) {
+        if (wp.param_dispEmailButton.equals("1")) {
             String str = htmlText(trs("TXT_mail_comment"));
             out.println("<a href=\"javascript:popup('" + indi.toString() + "')\"><img src=\"" + themeDirLink + "mail.gif\" alt=\"" + str + "\" title=\"" + str + "\"/></a><br /><br />");
         }
@@ -280,7 +251,7 @@ public class WebIndividualsDetails extends WebSection {
         // Format is: eventIcon, eventname, date, description, [source link], [note link], [media link]
         out.println("<p class=\"decal\"><span class=\"gras\">" + fam_chronologie + "</span></p>");
         out.println("<p class=\"parentm\">");
-        List<String> listEvents = getNameDetails(indi);
+        List<String> listEvents = getEventDetails(indi);
         for (Iterator s = listEvents.iterator(); s.hasNext();) {
             String event = (String) s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
             String[] eventBits = event.split("\\|", -1);
@@ -308,33 +279,31 @@ public class WebIndividualsDetails extends WebSection {
 
 
         // Images and other media (only if not private)
-        if (!wh.isPrivate(indi)) {
-            List<Property> files = new ArrayList<Property>();
-            files.addAll(Arrays.asList(indi.getProperties(INDI2IMAGES)));
-            Fam[] families = indi.getFamiliesWhereSpouse();
-            for (int i = 0; i < families.length; i++) {
-                Fam family = families[i];
-                files.addAll(Arrays.asList(family.getProperties(FAM2IMAGES)));
-            }
-            if (!files.isEmpty()) {
-                out.println("<p class=\"image\">");
-                for (Iterator it = files.iterator(); it.hasNext();) {
-                    PropertyFile file = (PropertyFile) it.next();
-                    if ((file == null) || (file.getFile() == null)) {
-                        continue;
-                    }
-                    // get file name
-                    String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-                    if (wh.isImage(origFile) && wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
-                        out.println(wrapMedia(origFile, name, file));
-                    }
-                    if (!wh.isImage(origFile)) {
-                        out.println(wrapMedia(origFile, name, file));
-                    }
-
+        List<Property> files = new ArrayList<Property>();
+        files.addAll(Arrays.asList(indi.getProperties(INDI2IMAGES)));
+        Fam[] families = indi.getFamiliesWhereSpouse();
+        for (int i = 0; i < families.length; i++) {
+            Fam family = families[i];
+            files.addAll(Arrays.asList(family.getProperties(FAM2IMAGES)));
+        }
+        if (!files.isEmpty()) {
+            out.println("<p class=\"image\">");
+            for (Iterator it = files.iterator(); it.hasNext();) {
+                PropertyFile file = (PropertyFile) it.next();
+                if ((file == null) || (file.getFile() == null)) {
+                    continue;
                 }
-                out.println("</p>");
+                // get file name
+                String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
+                if (wh.isImage(origFile) && wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
+                    out.println(wrapMedia(origFile, name, file));
+                }
+                if (!wh.isImage(origFile)) {
+                    out.println(wrapMedia(origFile, name, file));
+                }
+
             }
+            out.println("</p>");
         }
         // end of container
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
@@ -346,24 +315,24 @@ public class WebIndividualsDetails extends WebSection {
         out.println("<div class=\"conteneur\">");
         out.println("<p class=\"decal\"><span class=\"gras\">" + fam_grandparents + "</span></p>");
         out.println("<p class=\"parentgp\">");
-        wrapName(out, fatherfather);
+        out.println(wrapName(fatherfather));
         out.println("<br />");
-        wrapDate(out, fatherfather, false);
+        out.println(wrapDate(fatherfather, false));
         out.println("</p>");
         out.println("<p class=\"parentgp\">");
-        wrapName(out, motherfather);
+        out.println(wrapName(motherfather));
         out.println("<br />");
-        wrapDate(out, motherfather, false);
+        out.println(wrapDate(motherfather, false));
         out.println("</p>");
         out.println("<p class=\"parentgp\">");
-        wrapName(out, fathermother);
+        out.println(wrapName(fathermother));
         out.println("<br />");
-        wrapDate(out, fathermother, false);
+        out.println(wrapDate(fathermother, false));
         out.println("</p>");
         out.println("<p class=\"parentgp\">");
-        wrapName(out, mothermother);
+        out.println(wrapName(mothermother));
         out.println("<br />");
-        wrapDate(out, mothermother, false);
+        out.println(wrapDate(mothermother, false));
         out.println("</p>");
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
         out.println("</div>");
@@ -395,14 +364,14 @@ public class WebIndividualsDetails extends WebSection {
         // Parents
         out.println("<div class=\"conteneur\">");
         out.println("<p class=\"parentp\">");
-        wrapName(out, father);
+        out.println(wrapName(father));
         out.println("<br />");
-        wrapDate(out, father, false);
+        out.println(wrapDate(father, false));
         out.println("</p>");
         out.println("<p class=\"parentp\">");
-        wrapName(out, mother);
+        out.println(wrapName(mother));
         out.println("<br />");
-        wrapDate(out, mother, false);
+        out.println(wrapDate(mother, false));
         out.println("</p>");
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
         out.println("</div>");
@@ -415,23 +384,17 @@ public class WebIndividualsDetails extends WebSection {
         Arrays.sort(osiblings, new PropertyComparator("INDI:BIRT:DATE"));
         for (int i = 0; i < osiblings.length; i++) {
             Indi osibling = osiblings[i];
-            wrapSex(out, osibling);
-            wrapName(out, osibling);
-            wrapDate(out, osibling, true);
+            out.println(wrapEntity(osibling));
             out.println("<br />");
         }
         out.println("<span class=\"grasplus\">");
-        wrapSex(out, indi);
-        wrapName(out, indi);
-        wrapDate(out, indi, true);
+        out.println(wrapEntity(indi));
         out.println("</span><br />");
         Indi[] ysiblings = indi.getYoungerSiblings();
         Arrays.sort(ysiblings, new PropertyComparator("INDI:BIRT:DATE"));
         for (int i = 0; i < ysiblings.length; i++) {
             Indi ysibling = ysiblings[i];
-            wrapSex(out, ysibling);
-            wrapName(out, ysibling);
-            wrapDate(out, ysibling, true);
+            out.println(wrapEntity(ysibling));
             out.println("<br />");
         }
         out.println("<br /></p>");
@@ -456,9 +419,7 @@ public class WebIndividualsDetails extends WebSection {
                     }
                     for (int sj = 0; sj < stepSiblings.length; sj++) {
                         Indi stepSbling = stepSiblings[sj];
-                        wrapSex(out, stepSbling);
-                        wrapName(out, stepSbling);
-                        wrapDate(out, stepSbling, true);
+                        out.println(wrapEntity(stepSbling));
                         out.println("<br />");
                     }
                 }
@@ -488,9 +449,7 @@ public class WebIndividualsDetails extends WebSection {
                     }
                     for (int sj = 0; sj < stepSiblings.length; sj++) {
                         Indi stepSbling = stepSiblings[sj];
-                        wrapSex(out, stepSbling);
-                        wrapName(out, stepSbling);
-                        wrapDate(out, stepSbling, true);
+                        out.println(wrapEntity(stepSbling));
                         out.println("<br />");
                     }
                 }
@@ -505,7 +464,7 @@ public class WebIndividualsDetails extends WebSection {
         // Families (spouses and corresponding kids)
         // (note: will need xref for the relations of the weddings XREF later so better do it here)
         List xrefList = indi.getProperties(PropertyXRef.class);
-        Fam[] families = indi.getFamiliesWhereSpouse();
+        families = indi.getFamiliesWhereSpouse();
         Arrays.sort(families, new PropertyComparator("FAM:MARR:DATE"));
         if (!wp.param_dispSpouse.equals("1")) {
             families = null;            // so that families are not displayed by skipping the loop which follows
@@ -519,12 +478,13 @@ public class WebIndividualsDetails extends WebSection {
             }
             out.println("<div class=\"conteneur\">");
             out.println("<p class=\"decal\"><span class=\"gras\">" + fam_family + (families.length > 1 ? " (" + (i + 1) + ")" : "") + "</span></p>");
-            out.println("<p class=\"parentf\"><img src=\"" + themeDirLink + getSexIcon(spouse) + "\" />");
+            out.println("<p class=\"parentf\">");
+            out.println(wrapSex(spouse));
             out.println("<span class=\"gras\">" + fam_spouse + "</span>:&nbsp;");
-            wrapName(out, spouse);
-            wrapDate(out, spouse, true);
+            out.println(wrapName(spouse));
+            out.println(wrapDate(spouse, true));
             out.println("<br />");
-            listEvents = getNameDetails(family);
+            listEvents = getEventDetails(family);
             for (Iterator s = listEvents.iterator(); s.hasNext();) {
                 String event = (String) s.next();     // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
                 String[] eventBits = event.split("\\|", -1);
@@ -557,9 +517,7 @@ public class WebIndividualsDetails extends WebSection {
                 out.println("<p class=\"parentfc\">");
                 for (int j = 0; j < children.length; j++) {
                     Indi child = children[j];
-                    wrapSex(out, child);
-                    wrapName(out, child);
-                    wrapDate(out, child, true);
+                    out.println(wrapEntity(child));
                     out.println("<br />");
                 }
                 out.println("</p>");
@@ -577,9 +535,7 @@ public class WebIndividualsDetails extends WebSection {
                             out.println("<p class=\"parentfc\">");
                             for (int sj = 0; sj < stepSiblings.length; sj++) {
                                 Indi stepSbling = stepSiblings[sj];
-                                wrapSex(out, stepSbling);
-                                wrapName(out, stepSbling);
-                                wrapDate(out, stepSbling, true);
+                                out.println(wrapEntity(stepSbling));
                                 out.println("<br />");
                             }
                             out.println("</p>");
@@ -595,7 +551,7 @@ public class WebIndividualsDetails extends WebSection {
         // Relations
         // (xrefList loaded earlier)
         boolean displayRelation = false;
-        if (wp.param_dispRelations.equals("1") && !wh.isPrivate(indi) && (xrefList.size() > 0)) {
+        if (wp.param_dispRelations.equals("1") && (xrefList.size() > 0)) {
             for (Iterator it = xrefList.iterator(); it.hasNext();) {
                 PropertyXRef xref = (PropertyXRef) it.next();
                 Entity target = xref.getTargetEntity();
@@ -647,26 +603,7 @@ public class WebIndividualsDetails extends WebSection {
                     }
                     out.println(fam_relof);
                 }
-
-                if (target instanceof Indi) {
-                    Indi indiRel = (Indi) target;
-                    wrapName(out, indiRel);
-                    wrapDate(out, indiRel, true);
-                }
-
-                if (target instanceof Fam) {
-                    Fam famRel = (Fam) target;
-                    Indi husband = famRel.getHusband();
-                    Indi wife = famRel.getWife();
-                    wrapName(out, husband);
-                    wrapDate(out, husband, true);
-                    out.println(SPACE + "+");
-                    //out.println(wh.htmlText(famRel.getMarriageDate().toString()));
-                    //out.println(")"+SPACE);
-                    wrapName(out, wife);
-                    wrapDate(out, wife, true);
-                }
-
+                out.println(wrapEntity(target));
                 out.println("<br />");
             }
             if (displayRelation) {
@@ -679,7 +616,7 @@ public class WebIndividualsDetails extends WebSection {
 
         // Note
         boolean displayNote = false;
-        if (wp.param_dispNotes.equals("1") && !wh.isPrivate(indi)) {
+        if (wp.param_dispNotes.equals("1")) {
             HashSet notes = getNotes(indi);
             if (notes.size() > 0) {
                 for (Iterator it = notes.iterator(); it.hasNext();) {
@@ -732,36 +669,6 @@ public class WebIndividualsDetails extends WebSection {
         return notes;
     }
 
-    private void getPropertiesRecursively(Property parent, List<Property> notes) {
-        List<Property> props = Arrays.asList(parent.getProperties());
-        for (Iterator<Property> it = props.iterator(); it.hasNext();) {
-            Property child = it.next();
-            if ((child.getTag().compareTo("NOTE") == 0) || (child.getTag().compareTo("TEXT") == 0)) {
-                notes.add(child);
-            }
-            getPropertiesRecursively(child, notes);
-        }
-    }
-
-    /**
-     * Print sex icons of individuals
-     */
-    private void wrapSex(PrintWriter out, Indi indi) {
-        //
-        String themeDirLink = buildLinkTheme(this, themeDir);
-        String id = (indi == null) ? "" : indi.getId();
-        String sexString = "?" + SPACE;
-        int iSex = (indi == null) ? 0 : indi.getSex();
-        if (iSex == 1) {
-            sexString = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
-        } else if (iSex == 2) {
-            sexString = "<img src=\"" + themeDirLink + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
-        } else {
-            sexString = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
-        }
-        out.print(sexString + SPACE);
-    }
-
     /**
      * Calculate pages for individual details
      */
@@ -780,9 +687,9 @@ public class WebIndividualsDetails extends WebSection {
     }
 
     /**
-     * Get individual details
+     * Get individual events details
      */
-    public List<String> getNameDetails(Entity entity) {
+    public List<String> getEventDetails(Entity entity) {
 
         String ev[] = null;
         if (entity == null) {
@@ -850,7 +757,7 @@ public class WebIndividualsDetails extends WebSection {
                 String format3 = "{ $V}";
                 if (showPlace) {
                     String format = (showAllPlaceJurisdictions ? "{ $P}" : "{ $p}");
-                    String juridic = props[j].format(format, wh.getPrivacyPolicy()).trim();
+                    String juridic = props[j].format(format, getPrivacyPolicy()).trim();
                     if (juridic != null) {
                         format3 += " " + juridic.replaceAll(",", " ");
                     }
@@ -861,7 +768,7 @@ public class WebIndividualsDetails extends WebSection {
                     format3 = " " + ((city == null) ? "" : city.toString() + ", ") + ((ctry == null) ? "" : ctry.toString());
                 }
                 String format = format1 + format2 + " : " + format3;
-                description = props[j].format(format, wh.getPrivacyPolicy()).trim();
+                description = props[j].format(format, getPrivacyPolicy()).trim();
 
                 // source?
                 String source = "";

@@ -8,8 +8,6 @@
 package genjfr.app.tools.webbook.creator;
 
 import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.Fam;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
@@ -130,13 +128,13 @@ public class WebMedia extends WebSection {
         out.println("<br /><br /></p>");
         exportLinks(out, mediafile, 0, 0, 1, lastPage);
 
-        String file_title = "", file_line = "", href = "", anchor = "";
+        String file_title = "", file_entity = "", href = "", anchor = "";
         char last = ' ';
         for (Iterator it = medias.iterator(); it.hasNext();) {
             PropertyFile media = (PropertyFile) it.next();
             href = getPageForMedia(media);
+            file_entity = wrapEntity(media.getEntity());
             file_title = wh.getTitle(media, DEFCHAR);
-            file_line = htmlText(media.getEntity().toString()) + SPACE + SPACE + SPACE + ((file_title.length() > 0) ? "(" + htmlText(file_title) + ")" : "");
             anchor = htmlAnchorText(media.getEntity().toString());
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
@@ -152,7 +150,7 @@ public class WebMedia extends WebSection {
             out.println(anchor);
             out.println("<div class=\"conteneur\">");
             out.println("<p class=\"medlist\">" + cpt + "</p>");
-            out.println("<p class=\"medlisttitle\"><a href=\"" + href + "\">" + file_line + "</a></p><br />");
+            out.println("<p class=\"medlisttitle\">" + file_entity + SPACE + SPACE + ":" + SPACE + SPACE + "<a href=\"" + href + "\">" + file_title + "</a></p><br />");
             out.println("<div class=\"spacer\">" + SPACE + "</div>");
             out.println("</div>");
         }
@@ -186,8 +184,8 @@ public class WebMedia extends WebSection {
                 exportLinks(out, mediafile, 0, previousPage, nextPage, lastPage);
                 openTable(out);
             }
-            exportSectionDetails(out, media, dir, mediafile, cpt);
-            // .. next individual
+            exportSectionDetails(out, media, dir, cpt);
+            // .. next source
         }
         if (out != null) {
             closeTable(out);
@@ -244,7 +242,7 @@ public class WebMedia extends WebSection {
     /**
      * Exports section details
      */
-    private void exportSectionDetails(PrintWriter out, PropertyFile media, File dir, String mediafile, int cpt) {
+    private void exportSectionDetails(PrintWriter out, PropertyFile media, File dir, int cpt) {
         //
         // Small pictures are to be retrieved from the already created pictures (by report on individual details)
         // (e.g. ../details/media/individuals/xxx.jpg)
@@ -264,7 +262,7 @@ public class WebMedia extends WebSection {
         String link = SPACE;
         String themeDirMedia = buildLinkTheme(this, themeDir);
 
-        if ((media != null) && (media.getFile() != null) && (!wh.isPrivate(target))) {    // file tag is filled in
+        if ((media != null) && (media.getFile() != null)) {    // file tag is filled in
 
             origFile = wh.getCleanFileName(media.getValue(), DEFCHAR);
             try { // copy locally (link or file itself)
@@ -286,36 +284,20 @@ public class WebMedia extends WebSection {
                 }
                 link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(media.getFile().getAbsolutePath()) + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
             }
-        } else if (wh.isPrivate(target)) {
+        } else if (isPrivate(target)) {
             link = "<img alt=\"" + htmlText(trs("med_priv")) + "\" title=\"" + htmlText(trs("med_priv")) + "\" src=\"" + themeDirMedia + "medpriv.png\" /><br />";
         } else {
             link = "<img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(trs("med_none")) + "\" src=\"" + themeDirMedia + "medno.png\" /><br />";
         }
         out.println("<td class=\"thumbnail-col\" ><a name=\"" + media.hashCode() + "\"></a>" + link);
         if (title != null && title.length() != 0) {
-            if (wh.isPrivate(target)) {
+            if (isPrivate(target)) {
                 out.println(htmlText(trs("med_priv")) + "<br />");
             } else {
                 out.println(htmlText(title) + "<br />");
             }
         }
-        if (target instanceof Indi) {
-            Indi indiRel = (Indi) target;
-            wrapName(out, indiRel);
-            out.println("<br />");
-            wrapDate(out, indiRel, true);
-        }
-        if (target instanceof Fam) {
-            Fam famRel = (Fam) target;
-            Indi husband = famRel.getHusband();
-            Indi wife = famRel.getWife();
-            wrapName(out, husband);
-            wrapDate(out, husband, true);
-            out.println(SPACE + "+");
-            out.println("<br />");
-            wrapName(out, wife);
-            wrapDate(out, wife, true);
-        }
+        out.println(wrapEntity(target, DT_BREAK, DT_LASTFIRST, DT_ICON, DT_LINK, DT_SOSA, DT_ID));
         out.println("<br />" + SPACE + "<br />" + SPACE + "</td>");
 
 

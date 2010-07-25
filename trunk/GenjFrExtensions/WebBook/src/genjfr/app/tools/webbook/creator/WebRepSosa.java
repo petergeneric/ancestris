@@ -199,7 +199,7 @@ public class WebRepSosa extends WebSection {
     void formatIndi(Indi indi, int gen, int sosa, PrintWriter doc) {
         // Print individual
         doc.println("<p class=\"sosacolumn1\"><span class=\"gras\">" + sosa + "</span>" + SPACE + "-" + SPACE);
-        wrapName(doc, indi);
+        doc.println(wrapEntity(indi));
         doc.println("</p>");
         // Get and write properies
         doc.println("<div class=\"sosacolumn2\">");
@@ -233,13 +233,13 @@ public class WebRepSosa extends WebSection {
     void writeEvents(Indi indi, String events[], PrintWriter doc) {
 
         // Get list of events for that individual
-        List<String> listEvents = wb.sectionIndividualsDetails.getNameDetails(indi);
+        List<String> listEvents = wb.sectionIndividualsDetails.getEventDetails(indi);
 
         // Get list of events for all his/her families
         Fam[] families = indi.getFamiliesWhereSpouse();
         for (int i = 0; families != null && i < families.length; i++) {
             Fam family = families[i];
-            listEvents.addAll(wb.sectionIndividualsDetails.getNameDetails(family));
+            listEvents.addAll(wb.sectionIndividualsDetails.getEventDetails(family));
         }
         Collections.sort(listEvents);
 

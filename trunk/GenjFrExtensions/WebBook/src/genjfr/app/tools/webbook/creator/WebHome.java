@@ -34,6 +34,12 @@ public class WebHome extends WebSection {
     @Override
     public void create() {
 
+        // Preliminary build of individuals link for links from details to individuals
+        if (wb.sectionIndividualsDetails != null) {
+            personPage = wb.sectionIndividualsDetails.getPagesMap();
+            prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
+        }
+
         File dir = wh.createDir(wh.getDir().getAbsolutePath(), true);
         File file = wh.getFileForName(dir, indexFile);
         PrintWriter out = wh.getWriter(file, UTF8);
@@ -160,10 +166,8 @@ public class WebHome extends WebSection {
         }
 
         // Static message
-        out.println(trs("TXT_text_sosa", " <a href=\"" + getLink(stats.indiDeCujus) + "\">" + getNameShort(stats.indiDeCujus) + "</a>", stats.nbAncestors, stats.nbGen) + "<br />");
-
-        out.println(trs("TXT_text_old", "<a href=\"" + getLink(stats.indiOlder) + "\">" + getName(stats.indiOlder) + "</a>",
-                stats.olderBirthDate == null ? trs("TXT_text_unknown_date") : stats.olderBirthDate) + "<br />");
+        out.println(trs("TXT_text_sosa", wrapEntity(stats.indiDeCujus, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID), stats.nbAncestors, stats.nbGen) + "<br />");
+        out.println(trs("TXT_text_old", wrapEntity(stats.indiOlder, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID)) + "<br />");
 
         if (wp.param_dispStatAncestor.equals("1")) {
             stats.calcLonguestLine(stats.indiDeCujus);
@@ -171,22 +175,22 @@ public class WebHome extends WebSection {
             if (stats.indiDeCujus == stats.longIndiG) {
                 if (stats.indiDeCujus == stats.longIndiA) {
                     out.println(trs("TXT_text_longuest1") + "<br />");
-                    out.println(trs("TXT_text_largest1", trs("TXT_text_largest1too")) + "<br />");
+                    out.println(trs("TXT_text_largest1") + "<br />");
                 } else {
                     out.println(trs("TXT_text_longuest1") + "<br />");
-                    out.println(trs("TXT_text_largest2", "<a href=\"" + getLink(stats.longIndiA) + "\">" + getNameShort(stats.longIndiA) + "</a>", stats.nbAncestorsA) + "<br />");
+                    out.println(trs("TXT_text_largest2", wrapEntity(stats.longIndiA, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID), stats.nbAncestorsA) + "<br />");
                 }
             } else {
                 if (stats.indiDeCujus == stats.longIndiA) {
-                    out.println(trs("TXT_text_largest1", trs("TXT_text_largest1too") + SPACE) + "<br />");
-                    out.println(trs("TXT_text_longuest2", "<a href=\"" + getLink(stats.longIndiG) + "\">" + getNameShort(stats.longIndiG) + "</a>", stats.nbGenG) + "<br />");
+                    out.println(trs("TXT_text_largest1") + "<br />");
+                    out.println(trs("TXT_text_longuest2", wrapEntity(stats.longIndiG, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID), stats.nbGenG) + "<br />");
                 } else {
                     if (stats.longIndiG == stats.longIndiA) {
-                        out.println(trs("TXT_text_longuest2", "<a href=\"" + getLink(stats.longIndiG) + "\">" + getNameShort(stats.longIndiG) + "</a>", stats.nbGenG) + "<br />");
-                        out.println(trs("TXT_text_largest1", trs("TXT_text_largest1too") + SPACE) + "<br />");
+                        out.println(trs("TXT_text_longuest2", wrapEntity(stats.longIndiG, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID), stats.nbGenG) + "<br />");
+                        out.println(trs("TXT_text_largest1") + "<br />");
                     } else {
-                        out.println(trs("TXT_text_longuest2", "<a href=\"" + getLink(stats.longIndiG) + "\">" + getNameShort(stats.longIndiG) + "</a>", stats.nbGenG) + "<br />");
-                        out.println(trs("TXT_text_largest2", "<a href=\"" + getLink(stats.longIndiA) + "\">" + getNameShort(stats.longIndiA) + "</a>", stats.nbAncestorsA) + "<br />");
+                        out.println(trs("TXT_text_longuest2", wrapEntity(stats.longIndiG, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID), stats.nbGenG) + "<br />");
+                        out.println(trs("TXT_text_largest2", wrapEntity(stats.longIndiA, DT_NOBREAK, DT_FIRSTLAST, DT_ICON, DT_LINK, DT_SOSA, DT_NOID), stats.nbAncestorsA) + "<br />");
                     }
                 }
             }
@@ -225,31 +229,5 @@ public class WebHome extends WebSection {
         // conteneur
         out.println("</div>");
 
-    }
-
-    public String getLink(Indi indi) {
-        return wb.sectionIndividualsDetails.sectionDir + SEP + wb.sectionIndividualsDetails.getPagesMap().get(indi.getId()) + "#" + indi.getId();
-    }
-
-    public String getName(Indi indi) {
-        String name = indi.getFirstName() + " " + wh.getLastName(indi, DEFCHAR);
-        if (wh.isPrivate(indi)) {
-            name = "... ...";
-        } else {
-            // add sosa number
-            String sosa = wh.getSosa(indi);
-            if (sosa != null && sosa.length() != 0) {
-                name += " (" + sosa + ")";
-            }
-        }
-        return name;
-    }
-
-    public String getNameShort(Indi indi) {
-        String name = indi.getFirstName() + " " + wh.getLastName(indi, DEFCHAR);
-        if (wh.isPrivate(indi)) {
-            name = "... ...";
-        }
-        return name;
     }
 }

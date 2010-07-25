@@ -224,19 +224,13 @@ public class WebSources extends WebSection {
                 }
                 if ((target instanceof Indi) || (target instanceof Fam)) {
                     list.add(target);
-                    sourceIsPrivate = sourceIsPrivate || wh.isPrivate(target);
+                    sourceIsPrivate = sourceIsPrivate || isPrivate(target);
                 }
             }
         }
         Collections.sort(list, sortEntities);
 
         // Starts the output on the page
-        if (wh.isPrivate(src)) {
-            out.println("<a name=\"" + anchor + "\"></a>");
-            out.println("...");
-            out.println("<br />");
-            return;
-        }
         out.println("<p><a name=\"" + anchor + "\"></a>" + SPACE + "</p>");
 
         String src_title = src.getTitle();
@@ -257,13 +251,11 @@ public class WebSources extends WebSection {
         prop = src.getProperty(PATH2ABBR);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2AUTH);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2EVEN);
@@ -280,31 +272,26 @@ public class WebSources extends WebSection {
             }
             String description = prop.getValue().replaceAll("BIRT", trs("src_BIRT")).replaceAll("MARR", trs("src_MARR")).replaceAll("DEAT", trs("src_DEAT"));
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + description + "," + SPACE + htmlText(date) + "," + SPACE + htmlText(place) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2REPO);
         if ((prop != null) && (prop.toString().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.toString()) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2TEXT);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems3\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2DATATEXT);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems3\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         prop = src.getProperty(PATH2NOTE);
         if ((prop != null) && (prop.getValue().length() > 0)) {
             out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         // Print pictures of SOUR entity
@@ -317,7 +304,6 @@ public class WebSources extends WebSection {
                 out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
             }
             out.println("</span>");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
             files.clear();
         }
 
@@ -327,21 +313,7 @@ public class WebSources extends WebSection {
             out.println("<span class=\"srcitems2\">");
             for (Iterator it = list.iterator(); it.hasNext();) {
                 Entity target = (Entity) it.next();
-                if (target instanceof Indi) {
-                    Indi indiRel = (Indi) target;
-                    wrapName(out, indiRel);
-                    wrapDate(out, indiRel, true);
-                }
-                if (target instanceof Fam) {
-                    Fam famRel = (Fam) target;
-                    Indi husband = famRel.getHusband();
-                    Indi wife = famRel.getWife();
-                    wrapName(out, husband);
-                    wrapDate(out, husband, true);
-                    out.println(SPACE + "+");
-                    wrapName(out, wife);
-                    wrapDate(out, wife, true);
-                }
+                out.println(wrapEntity(target));
                 out.println("<br />");
                 if (!sourceIsPrivate && !(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
                     mediasOfEntity.addAll(target.getProperties(PropertyFile.class));
@@ -370,7 +342,6 @@ public class WebSources extends WebSection {
                 }
             }
             out.println("</span><br />");
-            //out.println("<span class=\"spacer\">" + SPACE + "</span>");
         }
 
         // Closes the block

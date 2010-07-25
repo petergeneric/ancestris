@@ -1,9 +1,12 @@
 package genjfr.app.tools.webbook.creator;
 
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.PrivacyPolicy;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genjfr.app.App;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
@@ -16,6 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -83,6 +87,9 @@ public class WebSection {
     public Map<String, String> dayPage = new TreeMap<String, String>();             // map is : days to link
     //
     public String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    //
+    // Privacy policy
+    public PrivacyPolicy privacyPolicy = null;
 
     /**
      * Constructor
@@ -155,7 +162,7 @@ public class WebSection {
     }
 
     /**
-     * Helper - Writes HTML header and body information
+     * HTML header
      */
     public void printOpenHTML(PrintWriter out) {
         printOpenHTML(out, null, null);
@@ -164,7 +171,6 @@ public class WebSection {
     public void printOpenHTML(PrintWriter out, String title) {
         printOpenHTML(out, title, null);
     }
-    //USED
 
     public void printOpenHTML(PrintWriter out, String title, WebSection section) {
         printOpenHTMLHead(out, title, section);
@@ -218,7 +224,18 @@ public class WebSection {
     }
 
     /**
-     * Exports page links
+     * HTML end body
+     */
+    public void printCloseHTML(PrintWriter out) {
+
+        // Close page
+        out.println("<p>" + "<a name=\"bot\"></a>" + SPACE + "</p>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+
+    /**
+     * Page links
      */
     public void exportLinks(PrintWriter out, String pagename, int start, int previous, int next, int last) {
         printLinks(out, pagename,
@@ -229,9 +246,6 @@ public class WebSection {
                 this);
     }
 
-    /**
-     * Helper - Writes HTML end header and end body information
-     *///USED
     public void printLinks(PrintWriter out, String here, WebSection wsFrom) {
         printLinks(out, here, "", "", "", "", wsFrom);
     }
@@ -281,19 +295,8 @@ public class WebSection {
     }
 
     /**
-     * Helper - Writes HTML end header and end body information
-     *///USED
-    public void printCloseHTML(PrintWriter out) {
-
-        // Close page
-        out.println("<p>" + "<a name=\"bot\"></a>" + SPACE + "</p>");
-        out.println("</body>");
-        out.println("</html>");
-    }
-
-    /**
      * Build link from one section to another
-     **///USED
+     **/
     public String buildLink(WebSection wsFrom, WebSection wsTo, int nbItem) {
         String relPath = "";
         if ((wsFrom.sectionDir.length() == 0) && (wsTo.sectionDir.length() == 0)) {
@@ -343,94 +346,6 @@ public class WebSection {
             relPath = ".." + SEP + wsTo.sectionDir + SEP;
         }
         return relPath;
-    }
-
-    /**
-     * Generates Spaces
-     */
-    public void exportSpaces(PrintWriter out, int num) {
-        for (int c = 0; c < num; c++) {
-            out.print(SPACE);
-        }
-    }
-
-    /**
-     * Home
-     * Indi => prénom nom
-     * Indi => prénom Nom (sosa)
-     *
-     * Individuals
-     * Indi => Nom, Prénom (birth - death)
-     *
-     * IndividualsDetails
-     * Indi:
-     * Sex, Nom, Prénom (sosa)
-     *
-     */
-    /**
-     * Helper - Writes HTML table cell information
-     */
-    public void printCell(PrintWriter out, Object content) {
-
-
-        // We ask a property for it's value instead of just toString()
-        if (content instanceof Property) {
-            content = ((Property) content).toString();
-        }
-
-        // We don't want to see 'null' but ''
-        if (content == null || content.toString().length() == 0) {
-            content = SPACE;
-        }
-
-        // Here comes the HTML
-        out.println("<td>" + content.toString() + "</td>");
-
-    }
-
-    /**
-     * Helper - Calculate a url for individual's id
-     */
-    public String wrapID(Indi indi) {
-        StringBuffer result = new StringBuffer();
-        result.append("<a name=\"");
-        result.append(wh.getLastName(indi, DEFCHAR));
-        result.append("\"/>");
-
-        result.append("<a href=\"");
-        result.append(getFileForEntity(null, indi).getName());
-        result.append("\">");
-        result.append(indi.getId());
-        result.append("</a>");
-        return result.toString();
-    }
-
-    /**
-     * Helper that resolves a filename for given entity
-     */
-    public File getFileForEntity(File dir, Entity entity) {
-        return new File(dir, entity.getId() + ".html");
-    }
-
-    /**
-     * Convert string into anchor compatible text
-     *///USED
-    public String htmlAnchorText(String anchor) {
-        // trim and only AZaz-
-        String strInput = "";
-        if (anchor == null) {
-            return DEFCHAR;
-        }
-        strInput = anchor.trim().toLowerCase();
-        if (strInput.length() == 0) {
-            return DEFCHAR;
-        }
-        char[] charInput = strInput.toCharArray();
-        StringBuffer strOutput = new StringBuffer(1000);
-        for (int i = 0; i < charInput.length; i++) {
-            strOutput.append(wh.convertChar(charInput[i], true, DEFCHAR));
-        }
-        return strOutput.toString().toUpperCase();
     }
 
     /**
@@ -487,66 +402,6 @@ public class WebSection {
         out.println("}");
         out.println("//-->");
         out.println("</script>");
-    }
-
-    /**
-     * Print name with link
-     */
-    public void wrapName(PrintWriter out, Indi indi) {
-        //
-        String id = (indi == null) ? "" : indi.getId();
-        String name = (indi == null) ? wp.param_unknown : (wh.getLastName(indi, DEFCHAR) + ", " + indi.getFirstName()).trim();
-        String personFile = (indi == null) ? "" : personPage.get(id);
-        if (indi != null) {
-            out.print("<a href=\"" + prefixPersonDetailsDir + personFile + '#' + id + "\">");
-        }
-        if (wh.isPrivate(indi)) {
-            name = "..., ...";
-        }
-        if (name.compareTo(",") == 0) {
-            name = "";
-        }
-        out.print(htmlText(name));
-        String sosa = wh.getSosa(indi);
-        if (sosa != null && sosa.length() != 0) {
-            out.println(SPACE + "(" + sosa + ")");
-        }
-        if (wp.param_dispId.equals("1") && id != null && id.length() != 0) {
-            out.println(SPACE + "(" + id + ")");
-        }
-        if (indi != null) {
-            out.print("</a>");
-        }
-    }
-
-    /**
-     * Print dates of individual
-     */
-    public void wrapDate(PrintWriter out, Indi indi, boolean parenthesis) {
-        //
-        String id = (indi == null) ? "" : indi.getId();
-        PropertyDate bdate = (indi == null) ? null : indi.getBirthDate();
-        PropertyDate ddate = (indi == null) ? null : indi.getDeathDate();
-        String birthdate = (indi == null) || (bdate == null) ? "." : bdate.toString();
-        String deathdate = (indi == null) || (ddate == null) ? "" : " - " + ddate.toString();
-        String date = (birthdate + deathdate).trim();
-        if (wh.isPrivate(indi)) {
-            date = ". - .";
-        }
-        if (date.compareTo(".") != 0) {
-            out.print(SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : ""));
-        }
-    }
-
-    /**
-     * Print name with link
-     */
-    public String getSexIcon(Indi indi) {
-        //
-        if (indi == null) {
-            return "u.gif";
-        }
-        return (indi.getSex() == 1 ? "m" : indi.getSex() == 2 ? "f" : "u") + ".gif";
     }
     /**
      * Comparator to sort Lastnames
@@ -631,6 +486,273 @@ public class WebSection {
     }
 
     /**
+     * Convert string into anchor compatible text to ensure links will work
+     */
+    public String htmlAnchorText(String anchor) {
+        // trim and only AZaz-
+        String strInput = "";
+        if (anchor == null) {
+            return DEFCHAR;
+        }
+        strInput = anchor.trim().toLowerCase();
+        if (strInput.length() == 0) {
+            return DEFCHAR;
+        }
+        char[] charInput = strInput.toCharArray();
+        StringBuffer strOutput = new StringBuffer(1000);
+        for (int i = 0; i < charInput.length; i++) {
+            strOutput.append(wh.convertChar(charInput[i], true, DEFCHAR));
+        }
+        return strOutput.toString().toUpperCase();
+    }
+
+    /**
+     * Privacy policy (using genj private policy core function
+     * TODO: will need to enrich and move to own PrivatePolicy module within ancestris core
+     */
+    public PrivacyPolicy getPrivacyPolicy() {
+        if (privacyPolicy == null) {
+            privacyPolicy = new PrivacyPolicy(
+                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
+                    new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
+                    NbPreferences.forModule(App.class).get("privFlag", ""));  // string
+        }
+        return privacyPolicy;
+    }
+
+    /**
+     * Check if individuals private
+     * Individual is private if matches private policy
+     */
+    public boolean isPrivate(Indi indi) {
+        return ((indi != null) && (indi.getBirthDate() != null) && (getPrivacyPolicy().isPrivate(indi)));
+    }
+
+    /**
+     * Check if entity is private
+     * Individual : see above
+     * Family : private if either husband or wife is private
+     */
+    public boolean isPrivate(Entity ent) {
+        if (ent instanceof Indi) {
+            return isPrivate((Indi) ent);
+        }
+        if (ent instanceof Fam) {
+            Fam famRel = (Fam) ent;
+            Indi husband = famRel.getHusband();
+            Indi wife = famRel.getWife();
+            return isPrivate(husband) || isPrivate(wife);
+        }
+        return false;
+    }
+    /**
+     * Display types
+     */
+    public final boolean DT_NOBREAK = false;
+    public final boolean DT_BREAK = true;
+    public final int DT_LASTFIRST = 0;
+    public final int DT_FIRSTLAST = 1;
+    public final int DT_LAST = 2;
+    public final boolean DT_NOICON = false;
+    public final boolean DT_ICON = true;
+    public final boolean DT_NOLINK = false;
+    public final boolean DT_LINK = true;
+    public final boolean DT_NOSOSA = false;
+    public final boolean DT_SOSA = true;
+    public final boolean DT_NOID = false;
+    public final boolean DT_ID = true;
+
+    /**
+     * Wrapper for entity
+     */
+    public String wrapEntity(Entity ent) {
+        return wrapEntity(ent, DT_NOBREAK, DT_LASTFIRST, DT_ICON, DT_LINK, DT_SOSA, DT_ID);
+    }
+
+    public String wrapEntity(Entity ent, boolean linebreak, int nameType, boolean icon, boolean link, boolean sosa, boolean dispId) {
+        //
+        String str = "";
+
+        if (ent instanceof Indi) {
+            Indi indi = (Indi) ent;
+            if (icon) {
+                str += wrapSex(indi);
+            }
+            str += wrapName(indi, nameType, link, sosa, dispId);
+            if (linebreak) {
+                str += "<br />";
+            }
+            str += wrapDate(indi, true);
+        }
+        if (ent instanceof Fam) {
+            Fam fam = (Fam) ent;
+            Indi husband = fam.getHusband();
+            Indi wife = fam.getWife();
+            if (icon) {
+                str += wrapSex(fam);
+            }
+            str += wrapName(husband, nameType, link, sosa, dispId);
+            str += wrapDate(husband, true);
+            str += SPACE + "+" + SPACE;
+            if (linebreak) {
+                str += "<br />";
+            }
+            str += wrapName(wife, nameType, link, sosa, dispId);
+            str += wrapDate(wife, true);
+        }
+        return str;
+    }
+
+    /**
+     * Wrapper for name
+     */
+    public String wrapName(Indi indi) {
+        return wrapName(indi, DT_LASTFIRST, DT_LINK, DT_SOSA, DT_ID);
+    }
+
+    public String wrapName(Indi indi, int nameType, boolean link, boolean sosa, boolean dispId) {
+
+        // Returned string
+        String str = "";
+
+        // Eliminate case where indi is null
+        if (indi == null) {
+            return wp.param_unknown;
+        }
+
+        // Get id
+        String id = indi.getId();
+
+        // Build opening of link
+        String personFile = personPage.get(id);
+        if (link) {
+            str += "<a href=\"" + prefixPersonDetailsDir + personFile + '#' + id + "\">";
+        }
+
+        // Build name to display
+        String name = "";
+        String lastname = "";
+        String firstname = "";
+        String privDisplay = NbPreferences.forModule(App.class).get("privDisplay", "");
+        if (isPrivate(indi)) {
+            lastname = privDisplay;
+            firstname = privDisplay;
+        } else {
+            lastname = wh.getLastName(indi, DEFCHAR);
+            firstname = indi.getFirstName().trim();
+        }
+        switch (nameType) {
+            case DT_LASTFIRST:
+                name = lastname + ", " + firstname;
+                break;
+            case DT_FIRSTLAST:
+                name = firstname + " " + lastname;
+                break;
+            case DT_LAST:
+                name = lastname;
+                break;
+            default:
+                name = lastname + ", " + firstname;
+        }
+        str += htmlText(name);
+
+        // Build sosa
+        if (sosa) {
+            String sosaNb = wh.getSosa(indi);
+            if (sosaNb != null && sosaNb.length() != 0) {
+                str += SPACE + "(" + sosaNb + ")";
+            }
+        }
+
+        // Build id
+        if (wp.param_dispId.equals("1") && id != null && !id.isEmpty() && dispId) {
+            str += SPACE + "(" + id + ")";
+        }
+        // Close link
+        if (link) {
+            str += "</a>";
+        }
+
+        return str;
+    }
+
+    /**
+     * Wrapper for dates
+     */
+    public String wrapDate(Indi indi, boolean parenthesis) {
+
+        // Returned string
+        String str = "";
+
+        // Eliminate case where indi is null
+        if (indi == null) {
+            return "";
+        }
+
+        // Get date
+        PropertyDate bdate = indi.getBirthDate();
+        PropertyDate ddate = indi.getDeathDate();
+        String birthdate = (bdate == null) ? "." : bdate.toString();
+        String deathdate = (ddate == null) ? "" : " - " + ddate.toString();
+        String date = (birthdate + deathdate).trim();
+        if (isPrivate(indi)) {
+            date = ". - .";
+        }
+        if (!date.equals(".")) {
+            str += SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : "");
+        }
+        return str;
+    }
+
+    /**
+     * Wrapper for sex icon
+     */
+    public String wrapSex(Indi indi) {
+
+        // Returned string
+        String str = "";
+
+        String themeDirLink = buildLinkTheme(this, themeDir);
+        int iSex = (indi == null || isPrivate(indi)) ? 0 : indi.getSex();
+        if (iSex == 1) {
+            str = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
+        } else if (iSex == 2) {
+            str = "<img src=\"" + themeDirLink + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
+        } else {
+            str = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
+        }
+        return str + SPACE;
+    }
+
+    public String wrapSex(Fam fam) {
+
+        // Returned string
+        String str = "";
+
+        String themeDirLink = buildLinkTheme(this, themeDir);
+        return "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />" + SPACE;
+    }
+
+    public String getSexStyle(Indi indi) {
+
+        if (isPrivate(indi)) {
+            return "unk";
+        }
+
+        // Returned string
+        String str = "";
+
+        if (indi.getSex() == 1) {
+            str += "hom";
+        } else if (indi.getSex() == 2) {
+            str += "fem";
+        } else {
+            str += "unk";
+        }
+        return str;
+    }
+
+    /**
      * Convert string into html compatible text
      */
     public String htmlText(int i) {
@@ -644,7 +766,6 @@ public class WebSection {
     public String htmlText(Object o) {
         return htmlText(o.toString());
     }
-    //USED
 
     public String htmlText(String text) {
         return htmlText(text, true);

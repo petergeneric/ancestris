@@ -24,14 +24,11 @@ import java.awt.image.BufferedImage;
 
 import com.sun.image.codec.jpeg.*;
 
-import genj.gedcom.PrivacyPolicy;
-import genjfr.app.App;
 import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
 import java.nio.charset.Charset;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -54,7 +51,6 @@ public class WebHelper {
     public Indi indiDeCujus = null;
     private List individualsList = null;
     private List sourcesList = null;
-    public PrivacyPolicy privacyPolicy = null;
     private FTPRegister uploadRegister = null;
     /**
      * Variables
@@ -723,7 +719,31 @@ public class WebHelper {
     }
 
     /***************************************************************************
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      * TOOLS FOR GEDCOM SETS
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     * 
      */
     //
     /**
@@ -750,19 +770,6 @@ public class WebHelper {
             }
         }
         return indiDeCujus;
-    }
-
-    /**
-     * Privacy policy
-     */
-    public PrivacyPolicy getPrivacyPolicy() {
-        if (privacyPolicy == null) {
-            privacyPolicy = new PrivacyPolicy(
-                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
-                    new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
-                    NbPreferences.forModule(App.class).get("privFlag", ""));
-        }
-        return privacyPolicy;
     }
 
     /**
@@ -1287,25 +1294,6 @@ public class WebHelper {
         return;
     }
 
-    /**
-     * Check if individual or entity
-     */
-    public boolean isPrivate(Indi indi) {
-        return ((indi != null) && (indi.getBirthDate() != null) && (getPrivacyPolicy().isPrivate(indi)));
-    }
-
-    public boolean isPrivate(Entity ent) {
-        if (ent instanceof Indi) {
-            return isPrivate((Indi) ent);
-        }
-        if (ent instanceof Fam) {
-            Fam famRel = (Fam) ent;
-            Indi husband = famRel.getHusband();
-            Indi wife = famRel.getWife();
-            return isPrivate(husband) || isPrivate(wife);
-        }
-        return false;
-    }
 } // End_of_Report
 
 

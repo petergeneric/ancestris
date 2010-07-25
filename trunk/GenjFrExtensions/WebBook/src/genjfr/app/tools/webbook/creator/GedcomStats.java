@@ -50,7 +50,6 @@ class GedcomStats {
     public int nbFamsWithKids = 0;
     public double avgKids = 0;
     public String place = "";
-    public String olderBirthDate = "";
     //
     // private variables
     private int nbGenTemp = 0;
@@ -96,8 +95,6 @@ class GedcomStats {
                 }
             }
         }
-
-        olderBirthDate = (foundDate) ? propDateMin.getDisplayValue() : null;
 
         nbGen--;
         nbAncestors--;
