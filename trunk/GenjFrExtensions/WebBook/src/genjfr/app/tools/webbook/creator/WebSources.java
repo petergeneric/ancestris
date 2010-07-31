@@ -254,14 +254,10 @@ public class WebSources extends WebSection {
 
         // Print all properties
         prop = src.getProperty(PATH2ABBR);
-        if ((prop != null) && (prop.getValue().length() > 0)) {
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-        }
+        printProperty(out, prop, "", "srcitems2");
 
         prop = src.getProperty(PATH2AUTH);
-        if ((prop != null) && (prop.getValue().length() > 0)) {
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-        }
+        printProperty(out, prop, "", "srcitems2");
 
         prop = src.getProperty(PATH2EVEN);
         if (prop != null) {
@@ -275,29 +271,20 @@ public class WebSources extends WebSection {
             if (pplace != null) {
                 place = pplace.toString().replaceAll(",", " ");
             }
-            String description = prop.getValue().replaceAll("BIRT", trs("src_BIRT")).replaceAll("MARR", trs("src_MARR")).replaceAll("DEAT", trs("src_DEAT"));
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + description + "," + SPACE + htmlText(date) + "," + SPACE + htmlText(place) + "</span><br />");
+            printProperty(out, prop, "," + SPACE + htmlText(date) + "," + SPACE + htmlText(place), "srcitems2");
         }
 
         prop = src.getProperty(PATH2REPO);
-        if ((prop != null) && (prop.toString().length() > 0)) {
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.toString()) + "</span><br />");
-        }
+        printProperty(out, prop, "", "srcitems2");
 
         prop = src.getProperty(PATH2TEXT);
-        if ((prop != null) && (prop.getValue().length() > 0)) {
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems3\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-        }
+        printProperty(out, prop, "", "srcitems3");
 
         prop = src.getProperty(PATH2DATATEXT);
-        if ((prop != null) && (prop.getValue().length() > 0)) {
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems3\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-        }
+        printProperty(out, prop, "", "srcitems3");
 
         prop = src.getProperty(PATH2NOTE);
-        if ((prop != null) && (prop.getValue().length() > 0)) {
-            out.println("<span class=\"srcitems1\">" + htmlText(prop.getPropertyName()) + ":</span><span class=\"srcitems2\">" + htmlText(sourceIsPrivate ? trs("med_priv") : prop.getValue()) + "</span><br />");
-        }
+        printProperty(out, prop, "", "srcitems2");
 
         // Print pictures of SOUR entity
         if (!sourceIsPrivate && (wp.param_media_GeneSources.equals("1")) && !files.isEmpty()) {
@@ -340,7 +327,6 @@ public class WebSources extends WebSection {
                             out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
                         }
                         out.println("</span><br />");
-                        //out.println("<span class=\"spacer\">" + SPACE + "</span>");
                         files.clear();
                         out.println("<span class =\"srcitems0\">");
                     } else {
@@ -468,6 +454,19 @@ public class WebSources extends WebSection {
         } else {
             return isUnderSource(parent, srcId);
         }
+    }
+
+    private void printProperty(PrintWriter out, Property prop, String str, String style) {
+        if ((prop == null) || (prop.getValue().trim().isEmpty())) {
+            return;
+        }
+        out.println("<span class=\"srcitems1\">");
+        out.println(wrapPropertyName(prop));
+        out.println(":</span>");
+        out.println("<span class=\"" + style + "\">");
+        out.println(wrapPropertyValue(prop));
+        out.println(wrapString(prop, str));
+        out.println("</span><br />");
     }
 } // End_of_Report
 

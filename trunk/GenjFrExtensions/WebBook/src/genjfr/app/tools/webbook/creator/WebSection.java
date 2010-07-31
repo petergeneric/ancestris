@@ -8,6 +8,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertySource;
+import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genjfr.app.App;
@@ -1143,22 +1144,47 @@ public class WebSection {
         return ret;
     }
 
-    public String wrapEventDate(String date) {
+    public String wrapPropertyName(Property prop) {
 
-        if (date == null) {
+        if (prop == null) {
             return "";
         }
 
-        return htmlText(date);
+        return htmlText(prop.getPropertyName());
     }
 
-    public String wrapEventName(Property event) {
+    public String wrapPropertyValue(Property prop) {
 
-        if (event == null) {
+        if (prop == null) {
             return "";
         }
 
-        return htmlText(event.getPropertyName());
+        String str = prop.getValue();
+        if (prop instanceof PropertyXRef) {
+            str = ((PropertyXRef)prop).getTarget().toString();
+        }
+
+        return htmlText(str);
+    }
+
+    public String wrapEventDate(PropertyDate date) {
+
+        String str = trs("place_nodate");
+        if (date != null) {
+            str = date.toString();
+        }
+
+        return htmlText(str);
+    }
+
+    public String wrapString(Property prop, String str) {
+
+        // use prop to detect privacy
+        if (str == null) {
+            return "";
+        }
+
+        return htmlText(str);
     }
 
     /**

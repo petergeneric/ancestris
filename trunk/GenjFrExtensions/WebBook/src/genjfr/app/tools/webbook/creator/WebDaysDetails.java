@@ -142,8 +142,8 @@ public class WebDaysDetails extends WebSection {
                 out.println("<span class=\"spacer\">" + SPACE + "</span>");
                 first = false;
             }
-            out.println("<span class=\"dayevt1\">" + wrapEventDate(((PropertyDate) prop).toString()) + "</span>");
-            out.println("<span class=\"dayevt2\">" + wrapEventName(prop.getParent()) + "</span>");
+            out.println("<span class=\"dayevt1\">" + wrapEventDate(((PropertyDate) prop)) + "</span>");
+            out.println("<span class=\"dayevt2\">" + wrapPropertyName(prop.getParent()) + "</span>");
             out.println("<span class=\"dayevt3\">" + wrapEntity(prop.getEntity()) + "</span>");
         }
         out.println("<span class=\"spacer\">" + SPACE + "</span>");

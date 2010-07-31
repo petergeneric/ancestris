@@ -327,12 +327,8 @@ public class WebCitiesDetails extends WebSection {
         if (event == null) {
             return;
         }
-        String date = trs("place_nodate");
-        if (getDate(prop) != null) {
-            date = getDate(prop).toString();
-        }
-        out.println("<span class=\"cityevt1\">" + wrapEventDate(date) + "</span>");
-        out.println("<span class=\"cityevt2\">" + wrapEventName(event) + "</span>");
+        out.println("<span class=\"cityevt1\">" + wrapEventDate(getDate(prop)) + "</span>");
+        out.println("<span class=\"cityevt2\">" + wrapPropertyName(event) + "</span>");
         out.println("<span class=\"cityevt3\">" + wrapEntity(prop.getEntity()) + "</span>");
         out.println("<span class=\"spacer\">" + SPACE + "</span>");
     }

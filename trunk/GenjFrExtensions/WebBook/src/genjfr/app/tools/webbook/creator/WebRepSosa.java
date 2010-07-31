@@ -203,11 +203,12 @@ public class WebRepSosa extends WebSection {
 
     void formatIndi(Indi indi, int gen, int sosa, PrintWriter doc) {
         // Print individual
-        doc.println("<p class=\"sosacolumn1\"><span class=\"gras\">" + sosa + "</span>" + SPACE + "-" + SPACE);
-        doc.println(wrapEntity(indi));
+        doc.println("<p class=\"sosacolumn1\"><span class=\"gras\">" + sosa + "</span>" + SPACE + "-</p>");
+        doc.println("<p class=\"sosacolumn2\">");
+        doc.println(wrapEntity(indi, DT_BREAK, DT_LASTFIRST, DT_ICON, DT_LINK, DT_SOSA, DT_ID));
         doc.println("</p>");
         // Get and write properies
-        doc.println("<div class=\"sosacolumn2\">");
+        doc.println("<div class=\"sosacolumn3\">");
         writeEvents(indi, events, doc);
         doc.println(SPACE + "</div>");
     }
@@ -251,10 +252,15 @@ public class WebRepSosa extends WebSection {
         for (Iterator s = sources.iterator(); s.hasNext();) {
             Source src = (Source) s.next();
             // display source and title
-            doc.println("<br /><a href=\"" + wrapSource(src.getId()) + "\">(" + src.getId() + ")</a>" + SPACE + htmlText(src.getTitle()) + "<br />");
+            doc.println("<br /><a href=\"" + linkSource(src.getId()) + "\">(" + src.getId() + ")</a>");
+            doc.println(SPACE);
+            doc.println(wrapString(src, src.getTitle()));
+            doc.println("<br />");
             // display text
             if (wp.param_ancestorSource.equals(NbBundle.getMessage(WebBookVisualPanel4.class, "sourceTypeAncestor.type3")) && src.getText().length() != 0) {
-                doc.println("<span class=\"sosatext\">" + htmlText(src.getText()) + "</span><br />");
+                doc.println("<span class=\"sosatext\">");
+                doc.println(wrapString(src, src.getText()));
+                doc.println("</span><br />");
             }
         }
         doc.println("<br />");
@@ -282,7 +288,7 @@ public class WebRepSosa extends WebSection {
     /**
      * Print name with link
      */
-    private String wrapSource(String src) {
+    private String linkSource(String src) {
         //
         String link = "";
         String sourceFile = (src == null) ? "" : ((sourcePage == null) ? "" : sourcePage.get(src));

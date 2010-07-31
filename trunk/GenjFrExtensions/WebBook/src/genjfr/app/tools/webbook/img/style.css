@@ -454,12 +454,15 @@ html>body tbody.scrollContent td + td + td + td + td + td {
   width: 99%; margin: 0; margin-bottom: 1em; padding: 5px; 
 }
 .sosacolumn1 {
-   float: left; width: 25%; margin-left: 1em; margin-right: 0; margin-top: 0;
+   float: left; width: 3%; margin-left: 1em; margin-right: 0; margin-top: 0;
 }
 .sosacolumn2 {
+   float: left; width: 22%; margin: 0; margin-bottom: 1em;
+}
+.sosacolumn3 {
    float: left; width: 73%; margin: 0; margin-bottom: 1em;
 }
-.sosacolumn2 ul {
+.sosacolumn3 ul {
    margin: 0; padding: 0; padding-left: 15px; 
 }
 .sosasources {
