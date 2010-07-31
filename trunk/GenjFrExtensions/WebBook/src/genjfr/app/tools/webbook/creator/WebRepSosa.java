@@ -7,7 +7,6 @@
  */
 package genjfr.app.tools.webbook.creator;
 
-import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Source;
 
@@ -18,7 +17,6 @@ import genjfr.app.tools.webbook.WebBookVisualPanel4;
 import java.io.File;
 import java.io.PrintWriter;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +34,7 @@ import org.openide.util.NbBundle;
 public class WebRepSosa extends WebSection {
 
     private String indi2srcDir = "";
+    private String indi2mediaDir = "";
     private Map<Integer, String> linkForGen = new TreeMap<Integer, String>();
     private boolean maxGenReached = false;
     String[] events = {"BIRT", "CHR", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
@@ -57,6 +56,8 @@ public class WebRepSosa extends WebSection {
     @Override
     public void create() {
 
+        initEvents();
+
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
 
         // Generate links to the 2 sections below
@@ -65,9 +66,13 @@ public class WebRepSosa extends WebSection {
             prefixPersonDetailsDir = buildLinkShort(this, wb.sectionIndividualsDetails);
         }
 
+        // Preliminary build of sources link for links from details to sources
         if (wb.sectionSources != null) {
             sourcePage = wb.sectionSources.getPagesMap();
             indi2srcDir = buildLinkShort(this, wb.sectionSources);
+        }
+        if (wb.sectionMedia != null) {
+            indi2mediaDir = buildLinkShort(this, wb.sectionMedia);
         }
 
         Indi indi = wh.getIndiDeCujus(wp.param_decujus);
@@ -232,27 +237,7 @@ public class WebRepSosa extends WebSection {
      */
     void writeEvents(Indi indi, String events[], PrintWriter doc) {
 
-        // Get list of events for that individual
-        List<String> listEvents = wb.sectionIndividualsDetails.getEventDetails(indi);
-
-        // Get list of events for all his/her families
-        Fam[] families = indi.getFamiliesWhereSpouse();
-        for (int i = 0; families != null && i < families.length; i++) {
-            Fam family = families[i];
-            listEvents.addAll(wb.sectionIndividualsDetails.getEventDetails(family));
-        }
-        Collections.sort(listEvents);
-
-        // Display events
-        for (Iterator s = listEvents.iterator(); s.hasNext();) {
-            String event = (String) s.next();   // date . description . source id
-            String[] eventBits = event.split("\\|", -1);
-            if (eventBits[2].length() != 0 && wp.param_media_GeneSources.equals("1")) {
-                doc.println(eventBits[1].trim() + SPACE + SPACE + eventBits[2] + "<br />");
-            } else {
-                doc.println(eventBits[1].trim() + "<br />");
-            }
-        }
+        doc.println(wrapEvents(indi, true, indi2srcDir, indi2mediaDir));
         doc.println("<br />");
 
         return;

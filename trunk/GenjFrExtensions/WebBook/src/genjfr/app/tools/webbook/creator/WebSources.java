@@ -166,7 +166,7 @@ public class WebSources extends WebSection {
             if ((cpt == 1) || ((cpt / 5) * 5) == cpt) {
                 exportLinks(out, sourcefile, 0, previousPage, nextPage, lastPage);
             }
-            exportSectionDetails(out, src, dir, sourcefile);
+            exportSectionDetails(out, src, dir);
             // .. next individual
         }
         if (out != null) {
@@ -186,7 +186,7 @@ public class WebSources extends WebSection {
      * Exports section details
      */
     @SuppressWarnings("unchecked")
-    private void exportSectionDetails(PrintWriter out, Source src, File dir, String sourcefile) {
+    private void exportSectionDetails(PrintWriter out, Source src, File dir) {
 
         /**
          * Sources generally have the following structure
@@ -300,7 +300,7 @@ public class WebSources extends WebSection {
             for (Iterator it = files.iterator(); it.hasNext();) {
                 PropertyFile file = (PropertyFile) it.next();
                 out.println("<span class=\"srcimage1\">");
-                wrapMedia(out, dir, file);
+                out.println(wrapMedia(dir, file, "", true, !wp.param_media_GeneSources.equals("1"), true, true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
                 out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
             }
             out.println("</span>");
@@ -329,7 +329,9 @@ public class WebSources extends WebSection {
                         for (Iterator itm = files.iterator(); itm.hasNext();) {
                             PropertyFile file = (PropertyFile) itm.next();
                             out.println("<span class=\"srcimage1\">");
-                            wrapMedia(out, dir, file, (wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3"))));
+                            out.println(wrapMedia(dir, file, "", true, !wp.param_media_GeneSources.equals("1"),
+                                    wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")),
+                                    true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
                             out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
                         }
                         out.println("</span><br />");
@@ -350,79 +352,6 @@ public class WebSources extends WebSection {
 
 
         // End of export section details ----------------------------------------------
-    }
-
-    /**
-     * Print media
-     */
-    private void wrapMedia(PrintWriter out, File dir, PropertyFile file) {
-        wrapMedia(out, dir, file, true);
-    }
-
-    private void wrapMedia(PrintWriter out, File dir, PropertyFile file, boolean dispMin) {
-        //
-        String link = SPACE;
-
-        if ((file == null) || (file.getFile() == null)) {
-            return;
-        }
-        String title = wh.getTitle(file, DEFCHAR);
-
-        String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-
-        try {
-            wh.copy(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, !wp.param_media_CopySources.equals("1"), false);
-        } catch (IOException e) {
-            //e.printStackTrace();
-            wb.log.write(wb.log.ERROR, "wrapMedia - " + e.getMessage());
-        }
-
-        // Get text if any
-        String text = "";
-        Property prop = file.getParent();
-        while (prop != null && !(prop instanceof Entity)) {
-            Property pText = prop.getProperty(PATH2DATATEXT);
-            if (pText == null) {
-                prop = prop.getParent();
-            } else {
-                text = pText.getDisplayValue();
-                break;
-            }
-        }
-
-        // wrap file media depending on whether it is not an image or it is
-        String thumbPic = "mini_" + origFile;    // this is the miniature picture
-        if (!wh.isImage(file.getFile().getAbsolutePath())) {
-            thumbPic = buildLinkTheme(this, themeDir) + "mednopic.png";
-            link = "<a class=tooltipL href=\"javascript:popup('" + origFile + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')\" >";
-            if (dispMin) {
-                link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
-            } else {
-                link += htmlText(title);
-            }
-            if (!text.trim().isEmpty()) {
-                link += "<span><i>" + htmlText(text) + "</i></span>";
-            }
-            link += "</a><br />";
-        } else {
-            thumbPic = "mini_" + origFile;
-            link = "<a class=tooltipL href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\" >";
-            if (dispMin) {
-                wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + thumbPic, WIDTH_PICTURES, 0, 100, false);
-                link += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" />";
-            } else {
-                link += htmlText(title);
-            }
-            if (!text.trim().isEmpty()) {
-                link += "<span><i>" + htmlText(text) + "</i></span>";
-            }
-            link += "</a><br />";
-        }
-        out.println(link);
-        if (dispMin) {
-            out.println(htmlText(title));
-        }
-        return;
     }
 
     /**

@@ -255,50 +255,20 @@ public class WebMedia extends WebSection {
             out.println("<tr class=\"thumbnail-row\" >");
         }
 
+
+        // open cell
+        out.println("<td class=\"thumbnail-col\" >");
+
+        // print media picture
         Entity target = media.getEntity();
-        String title = wh.getTitle(media, DEFCHAR);
-        String thumbPic = "smallpic";
-        String origFile = "origFile";
-        String link = SPACE;
-        String themeDirMedia = buildLinkTheme(this, themeDir);
+        out.println(wrapMedia(dir, media, "", true, !wp.param_media_GeneMedia.equals("1"), true, true, "", target.getValue().trim(), true, "OBJE:NOTE", "tooltip"));
 
-        if ((media != null) && (media.getFile() != null)) {    // file tag is filled in
-
-            origFile = wh.getCleanFileName(media.getValue(), DEFCHAR);
-            try { // copy locally (link or file itself)
-                wh.copy(media.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, !wp.param_media_GeneMedia.equals("1"), false);
-                //System.out.println(dir.getAbsolutePath()+File.separator+str);
-            } catch (IOException e) {
-                //e.printStackTrace();
-                wb.log.write(wb.log.ERROR, "exportSectionDetails - " + e.getMessage());
-            }
-
-            thumbPic = prefixPersonDetailsDir + origFile;    // this is the miniature picture
-            if (!wh.isImage(media.getFile().getAbsolutePath())) {
-                thumbPic = themeDirMedia + "mednopic.png";
-                link = "<a href=\"javascript:popup('" + origFile + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
-            } else {
-                if (media.getPath().toString().compareTo("INDI:OBJE:FILE") != 0 && media.getPath().toString().compareTo("FAM:OBJE:FILE") != 0) {
-                    thumbPic = "mini_" + origFile;
-                    wh.scaleImage(media.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + thumbPic, WIDTH_PICTURES, 0, 100, false);
-                }
-                link = "<a href=\"javascript:popup('" + origFile + "','" + wh.getImageSize(media.getFile().getAbsolutePath()) + "')\"><img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(title) + "\" src=\"" + thumbPic + "\" /></a><br />";
-            }
-        } else if (isPrivate(target)) {
-            link = "<img alt=\"" + htmlText(trs("med_priv")) + "\" title=\"" + htmlText(trs("med_priv")) + "\" src=\"" + themeDirMedia + "medpriv.png\" /><br />";
-        } else {
-            link = "<img alt=\"" + htmlText(target.toString()) + "\" title=\"" + htmlText(trs("med_none")) + "\" src=\"" + themeDirMedia + "medno.png\" /><br />";
-        }
-        out.println("<td class=\"thumbnail-col\" ><a name=\"" + media.hashCode() + "\"></a>" + link);
-        if (title != null && title.length() != 0) {
-            if (isPrivate(target)) {
-                out.println(htmlText(trs("med_priv")) + "<br />");
-            } else {
-                out.println(htmlText(title) + "<br />");
-            }
-        }
+        // print entity name
         out.println(wrapEntity(target, DT_BREAK, DT_LASTFIRST, DT_ICON, DT_LINK, DT_SOSA, DT_ID));
-        out.println("<br />" + SPACE + "<br />" + SPACE + "</td>");
+        out.println("<br />" + SPACE + "<br />" + SPACE);
+
+        // close cell
+        out.println("</td>");
 
 
         // End of export section details ----------------------------------------------

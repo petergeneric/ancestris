@@ -537,17 +537,6 @@ public class WebHelper {
                 infile.toLowerCase().endsWith(".gif"));
     }
 
-    /** Replace mini image depending on media type */
-    public String getImage(String infile, String themeDir) {
-        if (infile == null) {
-            return "";
-        }
-        if (isImage(infile))  {
-            return infile;
-        }
-        return themeDir + "mednopic.png";
-    }
-
     /** Get image size */
     String getImageSize(String absoluteFile) {
         Image image = Toolkit.getDefaultToolkit().getImage(absoluteFile);

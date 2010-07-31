@@ -97,7 +97,7 @@ public class WebDaysDetails extends WebSection {
                 printOpenHTML(out, "TXT_Daysdetails", this);
             }
             exportLinks(out, dayfile, 1, previousPage, nextPage, lastPage);
-            exportDayDetails(out, day, dir, dayfile);
+            exportDayDetails(out, day);
             // .. next day
         }
         if (out != null) {
@@ -116,7 +116,7 @@ public class WebDaysDetails extends WebSection {
      * Exports days details
      */
     @SuppressWarnings("unchecked")
-    private void exportDayDetails(PrintWriter out, String date, File dir, String dayfile) {
+    private void exportDayDetails(PrintWriter out, String date) {
 
         // Day name
         String month = trs(Months[Integer.valueOf(date.substring(0, 2)) - 1]);
@@ -133,7 +133,6 @@ public class WebDaysDetails extends WebSection {
             if ((prop == null) || (prop.getValue().length() == 0)) {
                 continue;
             }
-            boolean change = false;
             // Case of a change and a date
             if (first) {
                 out.println("<div class=\"daycont\">");
@@ -143,8 +142,8 @@ public class WebDaysDetails extends WebSection {
                 out.println("<span class=\"spacer\">" + SPACE + "</span>");
                 first = false;
             }
-            out.println("<span class=\"dayevt1\">" + ((PropertyDate) prop).toString() + "<br /></span>");
-            out.println("<span class=\"dayevt2\">" + htmlText(prop.getParent().getPropertyName()) + "</span>");
+            out.println("<span class=\"dayevt1\">" + wrapEventDate(((PropertyDate) prop).toString()) + "</span>");
+            out.println("<span class=\"dayevt2\">" + wrapEventName(prop.getParent()) + "</span>");
             out.println("<span class=\"dayevt3\">" + wrapEntity(prop.getEntity()) + "</span>");
         }
         out.println("<span class=\"spacer\">" + SPACE + "</span>");

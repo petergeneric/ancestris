@@ -14,17 +14,13 @@ import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
-import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
-import genj.gedcom.time.PointInTime;
-import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyComparator;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.Arrays;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -46,11 +42,6 @@ public class WebIndividualsDetails extends WebSection {
     private int WIDTH_PICTURES = 150;
     private String indi2srcDir = "";
     private String indi2mediaDir = "";
-    private String[] events = null;
-    private String[] eventsMarr = null;
-    private boolean showDate = true;
-    private boolean showPlace = true;
-    private boolean showAllPlaceJurisdictions = true;
     private String fam_chronologie = "";
     private String fam_grandparents = "";
     private String fam_siblings = "";
@@ -109,33 +100,6 @@ public class WebIndividualsDetails extends WebSection {
             createPopupEmail(wh.getFileForName(dir, POPUPTAG));
             wh.log.write(POPUPTAG + trs("EXEC_DONE"));
         }
-
-    }
-
-    /**
-     * Init events
-     */
-    private void initEvents() {
-        events = new String[]{// Events
-                    "BIRT", "CHR",
-                    "DEAT", "BURI", "CREM",
-                    "ADOP",
-                    "BAPM", "BARM", "BASM", "BLES",
-                    "CHRA", "CONF", "FCOM", "ORDN",
-                    "NATU", "EMIG", "IMMI",
-                    "CENS", "PROB", "WILL",
-                    "GRAD", "RETI",
-                    "EVEN",
-                    // Attributes
-                    "CAST", "DSCR", "EDUC", "IDNO", "NATI", "NCHI", "NMR", "OCCU", "PROP", "RELI", "RESI", "SSN", "TITL"
-                };
-
-        eventsMarr = new String[]{// Events
-                    "ANUL", "CENS", "DIV", "DIVF",
-                    "ENGA", "MARR", "MARB", "MARC",
-                    "MARL", "MARS",
-                    "EVEN"
-                };
 
         fam_chronologie = htmlText(trs("fam_chronologie"));
         fam_grandparents = htmlText(trs("fam_grandparents"));
@@ -251,29 +215,7 @@ public class WebIndividualsDetails extends WebSection {
         // Format is: eventIcon, eventname, date, description, [source link], [note link], [media link]
         out.println("<p class=\"decal\"><span class=\"gras\">" + fam_chronologie + "</span></p>");
         out.println("<p class=\"parentm\">");
-        List<String> listEvents = getEventDetails(indi);
-        for (Iterator s = listEvents.iterator(); s.hasNext();) {
-            String event = (String) s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
-            String[] eventBits = event.split("\\|", -1);
-            // eventIcon
-            out.println("<img src=\"" + themeDirLink + "ev_" + eventBits[3] + ".png" + "\" alt=\"\"");
-            // eventname : date description
-            out.println(eventBits[1].trim());
-            // [source link]
-            if (wp.param_media_GeneSources.equals("1") && eventBits[2].length() != 0) {
-                out.println(eventBits[2].trim());
-            }
-            // [media link]
-            if (wp.param_media_GeneMedia.equals("1") && eventBits[4].length() != 0) {
-                out.println(eventBits[4]);
-            }
-            // [note link]
-            if (eventBits[5].length() != 0) {
-                out.println(eventBits[5]);
-            }
-            // 
-            out.println("<br />");
-        }
+        out.println(wrapEvents(indi, false, indi2srcDir, indi2mediaDir));
         out.println("<br />");
         out.println("</p>");
 
@@ -295,13 +237,10 @@ public class WebIndividualsDetails extends WebSection {
                 }
                 // get file name
                 String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-                if (wh.isImage(origFile) && wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false)) {
-                    out.println(wrapMedia(origFile, name, file));
+                if (wh.isImage(origFile)) {
+                    wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false);
                 }
-                if (!wh.isImage(origFile)) {
-                    out.println(wrapMedia(origFile, name, file));
-                }
-
+                out.println(wrapMedia(null, file, indi2mediaDir, false, false, true, false, "", name, false, "OBJE:NOTE", "tooltip"));
             }
             out.println("</p>");
         }
@@ -484,29 +423,7 @@ public class WebIndividualsDetails extends WebSection {
             out.println(wrapName(spouse));
             out.println(wrapDate(spouse, true));
             out.println("<br />");
-            listEvents = getEventDetails(family);
-            for (Iterator s = listEvents.iterator(); s.hasNext();) {
-                String event = (String) s.next();     // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
-                String[] eventBits = event.split("\\|", -1);
-                // eventIcon
-                out.println("<img src=\"" + themeDirLink + "ev_" + eventBits[3] + ".png" + "\" alt=\"\"");
-                // eventname : date description
-                out.println(eventBits[1].trim());
-                // [source link]
-                if (wp.param_media_GeneSources.equals("1") && eventBits[2].length() != 0) {
-                    out.println(eventBits[2].trim());
-                }
-                // [media link]
-                if (wp.param_media_GeneMedia.equals("1") && eventBits[4].length() != 0) {
-                    out.println(eventBits[4]);
-                }
-                // [note link]
-                if (eventBits[5].length() != 0) {
-                    out.println(eventBits[5]);
-                }
-                //
-                out.println("<br />");
-            }
+            out.println(wrapEvents(family, false, indi2srcDir, indi2mediaDir));
             out.println("</p>");
             Indi[] children = family.getChildren();
             Arrays.sort(children, new PropertyComparator("INDI:BIRT:DATE"));
@@ -684,186 +601,6 @@ public class WebIndividualsDetails extends WebSection {
             }
             personPage.put(indi.getId(), personfile);
         }
-    }
-
-    /**
-     * Get individual events details
-     */
-    public List<String> getEventDetails(Entity entity) {
-
-        String ev[] = null;
-        if (entity == null) {
-            return null;
-        }
-        if (entity instanceof Indi) {
-            ev = events;
-        } else if (entity instanceof Fam) {
-            ev = eventsMarr;
-        } else {
-            return null;
-        }
-        List<String> list = new ArrayList<String>();
-        String description = "";
-        String date = "";
-        for (int i = 0; i < ev.length; i++) {
-            Property[] props = entity.getProperties(ev[i]);
-            for (int j = 0; j < props.length; j++) {
-                // date? (used to sort only)
-                Property p = props[j].getProperty("DATE");
-                PropertyDate pDate = (p instanceof PropertyDate ? (PropertyDate) p : null);
-
-                if (ev[i].equals("BIRT")) {
-                    date = "0-";
-                } else if (ev[i].equals("DEAT")) {
-                    date = "8-";
-                } else if (ev[i].equals("BURI") || ev[i].equals("CREM")) {
-                    date = "9-";
-                } else {
-                    date = "5-";
-                }
-
-                if (pDate == null) {
-                    date += "-";
-                } else {
-                    PointInTime pit = null;
-                    try {
-                        pit = pDate.getStart().getPointInTime(PointInTime.GREGORIAN);
-                        date += "";
-                        date += pit.getYear();
-                        date += pit.getMonth();
-                        date += pit.getJulianDay();
-                    } catch (GedcomException e) {
-                        //e.printStackTrace();
-                        //wb.log.write(wb.log.ERROR, "getNameDetails - " + e.getMessage());
-                        //wb.log.write(wb.log.ERROR, "getNameDetails - date = " + pDate.getStart());
-                        //wb.log.write(wb.log.ERROR, "getNameDetails - entity = " + pDate.getEntity());
-                        date += pDate.getStart();
-                    }
-                }
-                // description?
-                //   {$t} property tag (doesn't count as matched)
-                //   {$T} property name(doesn't count as matched)
-                //   {$D} date as fully localized string
-                //   {$y} year
-                //   {$p} place (city)
-                //   {$P} place (all jurisdictions)
-                //   {$v} value
-                //   {$V} display value
-                // format 1 : event name
-                String format1 = "<span class=\"gras\"> { $T}: </span>";
-                // format 2 : date
-                String format2 = (showDate ? "{ $D}" : "");
-                // format 3 : description
-                String format3 = "{ $V}";
-                if (showPlace) {
-                    String format = (showAllPlaceJurisdictions ? "{ $P}" : "{ $p}");
-                    String juridic = props[j].format(format, getPrivacyPolicy()).trim();
-                    if (juridic != null) {
-                        format3 += " " + juridic.replaceAll(",", " ");
-                    }
-                }
-                if ("RESI".compareTo(ev[i]) == 0) {
-                    Property city = props[j].getProperty(new TagPath(".:ADDR:CITY"));
-                    Property ctry = props[j].getProperty(new TagPath(".:ADDR:CTRY"));
-                    format3 = " " + ((city == null) ? "" : city.toString() + ", ") + ((ctry == null) ? "" : ctry.toString());
-                }
-                String format = format1 + format2 + " : " + format3;
-                description = props[j].format(format, getPrivacyPolicy()).trim();
-
-                // source?
-                String source = "";
-                Property[] pSources = props[j].getProperties("SOUR");
-                if (pSources != null && pSources.length > 0) {
-                    for (int k = 0; k < pSources.length; k++) {
-                        if (pSources[k] instanceof PropertySource) {
-                            PropertySource pSource = (PropertySource) pSources[k];
-                            source += wrapSource(buildLinkTheme(this, themeDir) + "src.gif", pSource);
-                        }
-                    }
-                }
-                // event tag in lowercase (will be used for image associated with event for instance)
-                String event_tag = props[j].getTag().toLowerCase();
-
-                // media?
-                String media = "";
-                Property[] pMedias = props[j].getProperties("OBJE");
-                if (pMedias != null && pMedias.length > 0) {
-                    for (int k = 0; k < pMedias.length; k++) {
-                        PropertyFile pFile = (PropertyFile) pMedias[k].getProperty("FILE");
-                        media += wrapMedia(buildLinkTheme(this, themeDir) + "media.png", "", pFile);
-                    }
-                }
-                // note?
-                String note = "";
-                Property[] pNotes = props[j].getProperties("NOTE");
-                if (pNotes != null && pNotes.length > 0) {
-                    for (int k = 0; k < pNotes.length; k++) {
-                        Property pNote = pNotes[k];
-                        note += wrapNote(buildLinkTheme(this, themeDir) + "note.png", pNote);
-                    }
-                }
-
-                // write data (date is used to sort only, description includes the date of the event
-                list.add(date + "|" + description + "|" + source + "|" + event_tag + "|" + media + "|" + note);
-            }
-        }
-
-        Collections.sort(list);
-        return list;
-    }
-
-    /**
-     * Buld source bloc (assuming link to a source entity)
-     */
-    private String wrapSource(String origFile, PropertySource source) {
-        //
-        String id = "";
-        if (source != null && source.getTargetEntity() != null) {
-            id = source.getTargetEntity().getId();
-        }
-        String link = "";
-        String sourceFile = (id == null) ? "" : ((sourcePage == null) ? "" : sourcePage.get(id));
-        if (id != null) {
-            link = indi2srcDir + sourceFile + '#' + id;
-        }
-        // display image
-        String ret = "<a class=tooltip href=\"" + link + "\">";
-        ret += "<img src=\"" + origFile + "\" alt=\"" + id + "\" />";
-        ret += "<span>" + htmlText(trs("TXT_src_comment")) + "&nbsp;" + id + "</span></a>";
-        return ret;
-
-    }
-
-    /**
-     * Buld media bloc (assuming media record included in property)
-     */
-    private String wrapMedia(String origFile, String name, PropertyFile file) {
-        // build title from TITL and NOTE
-        Property pProp = file.getParent().getProperty("TITL");
-        String title = "<b>" + ((pProp == null || pProp.getValue().trim().isEmpty()) ? htmlText(name) : htmlText(pProp.getValue())) + "</b>";
-        pProp = file.getParent().getProperty("NOTE");
-        title += (pProp == null || pProp.getValue().trim().isEmpty()) ? "" : ((!title.isEmpty() ? "<br>" : "") + "<i>" + htmlText(pProp.getPropertyName()) + " : " + htmlText(pProp.getValue()) + "</i>");
-        if (title.trim().isEmpty()) {
-            title = file.getValue();
-        }
-        // display image
-        String ret = "<a class=tooltip href=\"" + indi2mediaDir + wb.sectionMedia.getPageForMedia(file) + "\">";
-        ret += "<img src=\"" + wh.getImage(origFile, buildLinkTheme(this, themeDir)) + "\" alt=\"" + name + "\" />";
-        ret += "<span>" + title + "</span></a>";
-        return ret;
-    }
-
-    /**
-     * Buld note bloc (assuming note record included in property)
-     */
-    private String wrapNote(String origFile, Property note) {
-        // Get text
-        String noteText = "<i>" + ((note == null || note.getValue().trim().isEmpty()) ? "" : htmlText(note.getValue())) + "</i>";
-        // display note
-        String ret = "<a class=tooltip \">";
-        ret += "<img src=\"" + origFile + "\" />";
-        ret += "<span>" + noteText + "</span></a>";
-        return ret;
     }
 
     /**
