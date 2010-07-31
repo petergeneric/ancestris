@@ -83,11 +83,11 @@ public class WebIndividualsDetails extends WebSection {
         initEvents();
 
         // Preliminary build of sources link for links from details to sources
-        if (wb.sectionSources != null) {
+        if (wb.sectionSources != null && wb.sectionSources.toBeGenerated) {
             sourcePage = wb.sectionSources.getPagesMap();
             indi2srcDir = buildLinkShort(this, wb.sectionSources);
         }
-        if (wb.sectionMedia != null) {
+        if (wb.sectionMedia != null && wb.sectionMedia.toBeGenerated) {
             indi2mediaDir = buildLinkShort(this, wb.sectionMedia);
         }
 
@@ -220,30 +220,33 @@ public class WebIndividualsDetails extends WebSection {
         out.println("</p>");
 
 
-        // Images and other media (only if not private)
-        List<Property> files = new ArrayList<Property>();
-        files.addAll(Arrays.asList(indi.getProperties(INDI2IMAGES)));
-        Fam[] families = indi.getFamiliesWhereSpouse();
-        for (int i = 0; i < families.length; i++) {
-            Fam family = families[i];
-            files.addAll(Arrays.asList(family.getProperties(FAM2IMAGES)));
-        }
-        if (!files.isEmpty()) {
-            out.println("<p class=\"image\">");
-            for (Iterator it = files.iterator(); it.hasNext();) {
-                PropertyFile file = (PropertyFile) it.next();
-                if ((file == null) || (file.getFile() == null)) {
-                    continue;
-                }
-                // get file name
-                String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-                if (wh.isImage(origFile)) {
-                    wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false);
-                }
-                out.println(wrapMedia(null, file, indi2mediaDir, false, false, true, false, "", name, false, "OBJE:NOTE", "tooltip"));
+        // Images and other media (only if media are to be generated)
+        if (wp.param_media_GeneMedia.equals("1")) {
+            List<Property> files = new ArrayList<Property>();
+            files.addAll(Arrays.asList(indi.getProperties(INDI2IMAGES)));
+            Fam[] families = indi.getFamiliesWhereSpouse();
+            for (int i = 0; i < families.length; i++) {
+                Fam family = families[i];
+                files.addAll(Arrays.asList(family.getProperties(FAM2IMAGES)));
             }
-            out.println("</p>");
+            if (!files.isEmpty()) {
+                out.println("<p class=\"image\">");
+                for (Iterator it = files.iterator(); it.hasNext();) {
+                    PropertyFile file = (PropertyFile) it.next();
+                    if ((file == null) || (file.getFile() == null)) {
+                        continue;
+                    }
+                    // get file name
+                    String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
+                    if (wh.isImage(origFile)) {
+                        wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false);
+                    }
+                    out.println(wrapMedia(null, file, indi2mediaDir, false, false, true, false, "", name, false, "OBJE:NOTE", "tooltip"));
+                }
+                out.println("</p>");
+            }
         }
+
         // end of container
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
         out.println("</div>");
@@ -403,7 +406,7 @@ public class WebIndividualsDetails extends WebSection {
         // Families (spouses and corresponding kids)
         // (note: will need xref for the relations of the weddings XREF later so better do it here)
         List xrefList = indi.getProperties(PropertyXRef.class);
-        families = indi.getFamiliesWhereSpouse();
+        Fam[] families = indi.getFamiliesWhereSpouse();
         Arrays.sort(families, new PropertyComparator("FAM:MARR:DATE"));
         if (!wp.param_dispSpouse.equals("1")) {
             families = null;            // so that families are not displayed by skipping the loop which follows

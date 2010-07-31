@@ -15,7 +15,6 @@ import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -31,7 +30,6 @@ import java.util.Comparator;
 public class WebMedia extends WebSection {
 
     private final static String POPUPTAG = "popup.htm";
-    private int WIDTH_PICTURES = 200;
     private int nbPhotoPerRow = 3;
     //
     List<Property> medias = null;
@@ -45,7 +43,14 @@ public class WebMedia extends WebSection {
 
     @SuppressWarnings("unchecked")
     public void init() {
+
+        if (!toBeGenerated) {
+            return;
+        }
+
+        // Regular initialisation
         init(trs("TXT_Media"), "media", "media_", formatFromSize(wh.getNbIndis()), ".html", 0, 30);
+
         // Build list of media, for medias of INDI and FAM but that are not under a SOUR.
         List<Entity> entities = new ArrayList<Entity>();
         entities.addAll(wh.gedcom.getEntities(Gedcom.INDI));
@@ -64,6 +69,8 @@ public class WebMedia extends WebSection {
             mediasOfEntity.clear();
         }
         Collections.sort(medias, sortEntities);
+
+        // Calculations
         calcLetters(medias);
         calcPages(medias);
     }
@@ -73,6 +80,10 @@ public class WebMedia extends WebSection {
      */
     @Override
     public void create() {
+
+        if (!toBeGenerated) {
+            return;
+        }
 
         // Preliminary build of individualsdetails link for links from sources to details
         if (wb.sectionIndividualsDetails != null) {

@@ -19,7 +19,6 @@ import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.WebBookVisualPanel3;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ public class WebSources extends WebSection {
     private final static TagPath PATH2EVEN = new TagPath("SOUR:DATA:EVEN");
     private final static TagPath PATH2NOTE = new TagPath("SOUR:NOTE");
     private final static TagPath PATH2XREF = new TagPath("SOUR:XREF");
-    private int WIDTH_PICTURES = 200;
 
     /**
      * Constructor
@@ -55,6 +53,9 @@ public class WebSources extends WebSection {
     }
 
     public void init() {
+        if (!toBeGenerated) {
+            return;
+        }
         init(trs("TXT_Sources"), "sources", "sources_", formatFromSize(wh.getNbIndis()), ".html", 0, 15);
         calcPages();
     }
@@ -64,6 +65,10 @@ public class WebSources extends WebSection {
      */
     @Override
     public void create() {
+
+        if (!toBeGenerated) {
+            return;
+        }
 
         // Preliminary build of individualsdetails link for links from sources to details
         if (wb.sectionIndividualsDetails != null) {

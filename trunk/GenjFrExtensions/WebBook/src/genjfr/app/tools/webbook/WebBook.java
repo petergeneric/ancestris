@@ -24,7 +24,6 @@ import genjfr.app.tools.webbook.creator.WebStatsImplex;
 import genjfr.app.tools.webbook.creator.WebTheme;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
 import genjfr.app.tools.webbook.transfer.FTPLoader;
-import java.io.IOException;
 
 /**
  * Ancestris WebBook
@@ -113,8 +112,8 @@ public class WebBook {
         sectionLastnames = new WebLastnames(true, this, wp, wh);
         sectionIndividuals = new WebIndividuals(true, this, wp, wh);
         sectionIndividualsDetails = new WebIndividualsDetails(true, this, wp, wh);
-        sectionSources = new WebSources(true, this, wp, wh);
-        sectionMedia = new WebMedia(true, this, wp, wh);
+        sectionSources = new WebSources(wp.param_media_GeneSources.equals("1"), this, wp, wh);
+        sectionMedia = new WebMedia(wp.param_media_GeneMedia.equals("1"), this, wp, wh);
         sectionCities = new WebCities(true, this, wp, wh);
         sectionCitiesDetails = new WebCitiesDetails(true, this, wp, wh);
         sectionDays = new WebDays(true, this, wp, wh);
@@ -240,5 +239,4 @@ public class WebBook {
         log.write("----------- " + log.trs("EXEC_end") + " -----------");
 
     }
-
 }

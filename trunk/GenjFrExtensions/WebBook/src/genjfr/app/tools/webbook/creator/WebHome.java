@@ -95,10 +95,10 @@ public class WebHome extends WebSection {
         if (wp.param_media_GeneSources.equals("1") || wp.param_media_GeneMedia.equals("1")) {
             out.println("<p>" + trs("TXT_menu_documents") + "</p>");
             out.println("<ul>");
-            if (wb.sectionSources.toBeGenerated && wp.param_media_GeneSources.equals("1")) {
+            if (wb.sectionSources.toBeGenerated) {
                 out.println("<li><a href=\"" + wb.sectionSources.sectionLink + "\">" + htmlText(wb.sectionSources.sectionName) + "</a></li>");
             }
-            if (wb.sectionMedia.toBeGenerated && wp.param_media_GeneMedia.equals("1")) {
+            if (wb.sectionMedia.toBeGenerated) {
                 out.println("<li><a href=\"" + wb.sectionMedia.sectionLink + "\">" + htmlText(wb.sectionMedia.sectionName) + "</a></li>");
             }
             out.println("</ul>");

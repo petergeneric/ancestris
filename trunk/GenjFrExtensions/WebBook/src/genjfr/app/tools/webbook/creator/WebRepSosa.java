@@ -67,11 +67,11 @@ public class WebRepSosa extends WebSection {
         }
 
         // Preliminary build of sources link for links from details to sources
-        if (wb.sectionSources != null) {
+        if (wb.sectionSources != null && wb.sectionSources.toBeGenerated) {
             sourcePage = wb.sectionSources.getPagesMap();
             indi2srcDir = buildLinkShort(this, wb.sectionSources);
         }
-        if (wb.sectionMedia != null) {
+        if (wb.sectionMedia != null && wb.sectionMedia.toBeGenerated) {
             indi2mediaDir = buildLinkShort(this, wb.sectionMedia);
         }
 
