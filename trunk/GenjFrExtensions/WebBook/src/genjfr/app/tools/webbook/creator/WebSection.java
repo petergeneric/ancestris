@@ -949,7 +949,7 @@ public class WebSection {
                 if (pMedias != null && pMedias.length > 0) {
                     for (int k = 0; k < pMedias.length; k++) {
                         PropertyFile pFile = (PropertyFile) pMedias[k].getProperty("FILE");
-                        media += wrapMedia(null, pFile, from2mediaDir, false, false, false, false, buildLinkTheme(this, themeDir) + "media.png", "", false, "OBJE:NOTE", "tooltip");
+                        media += wrapMedia(null, pFile, from2mediaDir, false, false, true, false, buildLinkTheme(this, themeDir) + "media.png", "", false, "OBJE:NOTE", "tooltip");
                     }
                 }
                 // note?
@@ -1120,11 +1120,11 @@ public class WebSection {
         }
         str += "<i>" + htmlText(text) + "</i>";
         str += "</span>";
-        str += "</a><br />";
+        str += "</a>";
 
         // Add a title line if required
         if (displayTitle) {
-            str += htmlText(title) + "<br />";
+            str += "<br />" + htmlText(title) + "<br />";
         }
 
         return str;

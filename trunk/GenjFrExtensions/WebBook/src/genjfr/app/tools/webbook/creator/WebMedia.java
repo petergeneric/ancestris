@@ -269,10 +269,11 @@ public class WebMedia extends WebSection {
 
         // open cell
         out.println("<td class=\"thumbnail-col\" >");
+        out.println("<a name=\"" + media.hashCode() + "\"></a>");
 
         // print media picture
         Entity target = media.getEntity();
-        out.println(wrapMedia(dir, media, "", true, !wp.param_media_GeneMedia.equals("1"), true, true, "", target.getValue().trim(), true, "OBJE:NOTE", "tooltip"));
+        out.println(wrapMedia(dir, media, "", true, !wp.param_media_CopyMedia.equals("1"), true, true, "", target.getValue().trim(), true, "OBJE:NOTE", "tooltip"));
 
         // print entity name
         out.println(wrapEntity(target, DT_BREAK, DT_LASTFIRST, DT_ICON, DT_LINK, DT_SOSA, DT_ID));

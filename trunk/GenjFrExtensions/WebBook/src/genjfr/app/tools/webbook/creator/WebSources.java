@@ -305,7 +305,7 @@ public class WebSources extends WebSection {
             for (Iterator it = files.iterator(); it.hasNext();) {
                 PropertyFile file = (PropertyFile) it.next();
                 out.println("<span class=\"srcimage1\">");
-                out.println(wrapMedia(dir, file, "", true, !wp.param_media_GeneSources.equals("1"), true, true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
+                out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"), true, true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
                 out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
             }
             out.println("</span>");
@@ -334,7 +334,7 @@ public class WebSources extends WebSection {
                         for (Iterator itm = files.iterator(); itm.hasNext();) {
                             PropertyFile file = (PropertyFile) itm.next();
                             out.println("<span class=\"srcimage1\">");
-                            out.println(wrapMedia(dir, file, "", true, !wp.param_media_GeneSources.equals("1"),
+                            out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"),
                                     wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")),
                                     true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
                             out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
