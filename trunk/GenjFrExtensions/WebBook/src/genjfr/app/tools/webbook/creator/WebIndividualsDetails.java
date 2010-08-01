@@ -243,7 +243,7 @@ public class WebIndividualsDetails extends WebSection {
                     if (wh.isImage(origFile)) {
                         wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false);
                     }
-                    out.println(wrapMedia(null, file, indi2mediaDir, false, false, true, false, "", name, false, "OBJE:NOTE", "tooltip"));
+                    out.println(wrapMedia(null, file, indi2mediaDir, false, false, true, false, "", indi.toString(), false, "OBJE:NOTE", "tooltip"));
                 }
                 out.println("</p>");
             }
