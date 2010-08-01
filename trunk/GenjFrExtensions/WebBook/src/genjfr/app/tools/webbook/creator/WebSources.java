@@ -321,7 +321,7 @@ public class WebSources extends WebSection {
                             out.println("<span class=\"srcimage1\">");
                             out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"),
                                     wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")),
-                                    true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
+                                    true, "", "", false, PATH2DATATEXT.toString(), "tooltipL"));
                             out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
                         }
                         out.println("</span><br />");

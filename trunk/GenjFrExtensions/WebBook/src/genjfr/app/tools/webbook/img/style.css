@@ -133,11 +133,11 @@ img { border-style: none; }
 /* Used for tooltips */
 a.tooltip{
     position:relative; /*this is the key*/
-    z-index:24; background-color:#ffffff;
+    z-index:24; 
     color:#000000;
     text-decoration:none}
 
-a.tooltip:hover{z-index:25; background-color:#ffffff}
+a.tooltip:hover{z-index:25; }
 
 a.tooltip span{display: none}
 
@@ -152,11 +152,11 @@ a.tooltip:hover span{ /*the span will display just on :hover state*/
 
 a.tooltipL{
     position:relative; /*this is the key*/
-    z-index:24; background-color:#ffffff;
+    z-index:24; 
     color:#000000;
     text-decoration:none}
 
-a.tooltipL:hover{z-index:25; background-color:#ffffff}
+a.tooltipL:hover{z-index:25; }
 
 a.tooltipL span{display: none}
 
