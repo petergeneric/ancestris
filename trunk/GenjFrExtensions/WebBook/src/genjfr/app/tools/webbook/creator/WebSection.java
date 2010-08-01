@@ -12,7 +12,6 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genjfr.app.App;
-import genjfr.app.PrivacyPolicy;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
@@ -98,8 +97,6 @@ public class WebSection {
     //
     public String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     //
-    // Privacy policy
-    public PrivacyPolicy privacyPolicy = null;
     //
     private String[] events = null;
     private String[] eventsMarr = null;
@@ -549,47 +546,6 @@ public class WebSection {
     }
 
     /**
-     * Privacy policy (using genj private policy core function
-     * TODO: will need to enrich and move to own PrivatePolicy module within ancestris core
-     */
-    public PrivacyPolicy getPrivacyPolicy() {
-        if (privacyPolicy == null) {
-            privacyPolicy = new PrivacyPolicy(
-                    new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
-                    NbPreferences.forModule(App.class).get("privFlag", ""), // string
-                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
-                    null, //  TODO events, not used yet
-                    false); // TODO infoOfDeceasedisPublic, not used yet
-        }
-        return privacyPolicy;
-    }
-
-    /**
-     * Check if individuals private
-     * Individual is private if matches private policy
-     */
-    public boolean isPrivate(Indi indi) {
-        return ((indi != null) && (indi.getBirthDate() != null) && (getPrivacyPolicy().isPrivate(indi)));
-    }
-
-    /**
-     * Check if entity is private
-     * Individual : see above
-     * Family : private if either husband or wife is private
-     */
-    public boolean isPrivate(Entity ent) {
-        if (ent instanceof Indi) {
-            return isPrivate((Indi) ent);
-        }
-        if (ent instanceof Fam) {
-            Fam famRel = (Fam) ent;
-            Indi husband = famRel.getHusband();
-            Indi wife = famRel.getWife();
-            return isPrivate(husband) || isPrivate(wife);
-        }
-        return false;
-    }
-    /**
      * Display types
      */
     public final boolean DT_NOBREAK = false;
@@ -620,7 +576,7 @@ public class WebSection {
         if (ent instanceof Indi) {
             Indi indi = (Indi) ent;
             if (icon) {
-                str += wrapSex(indi);
+                str += wrapSex(indi) + SPACE;
             }
             str += wrapName(indi, nameType, link, sosa, dispId);
             if (linebreak) {
@@ -633,7 +589,7 @@ public class WebSection {
             Indi husband = fam.getHusband();
             Indi wife = fam.getWife();
             if (icon) {
-                str += wrapSex(fam);
+                str += wrapSex(fam) + SPACE;
             }
             str += wrapName(husband, nameType, link, sosa, dispId);
             str += wrapDate(husband, true);
@@ -678,7 +634,7 @@ public class WebSection {
         String lastname = "";
         String firstname = "";
         String privDisplay = NbPreferences.forModule(App.class).get("privDisplay", "");
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             lastname = privDisplay;
             firstname = privDisplay;
         } else {
@@ -739,7 +695,7 @@ public class WebSection {
         String birthdate = (bdate == null) ? "." : bdate.toString();
         String deathdate = (ddate == null) ? "" : " - " + ddate.toString();
         String date = (birthdate + deathdate).trim();
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             date = ". - .";
         }
         if (!date.equals(".")) {
@@ -757,7 +713,7 @@ public class WebSection {
         String str = "";
 
         String themeDirLink = buildLinkTheme(this, themeDir);
-        int iSex = (indi == null || isPrivate(indi)) ? 0 : indi.getSex();
+        int iSex = (indi == null || wh.isPrivate(indi)) ? 0 : indi.getSex();
         if (iSex == 1) {
             str = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
         } else if (iSex == 2) {
@@ -765,7 +721,7 @@ public class WebSection {
         } else {
             str = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
         }
-        return str + SPACE;
+        return str;
     }
 
     public String wrapSex(Fam fam) {
@@ -774,12 +730,12 @@ public class WebSection {
         String str = "";
 
         String themeDirLink = buildLinkTheme(this, themeDir);
-        return "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />" + SPACE;
+        return "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
     }
 
     public String getSexStyle(Indi indi) {
 
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             return "unk";
         }
 

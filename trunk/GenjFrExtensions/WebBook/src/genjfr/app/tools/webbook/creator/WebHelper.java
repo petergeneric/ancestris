@@ -23,12 +23,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import com.sun.image.codec.jpeg.*;
+import genjfr.app.App;
+import genjfr.app.PrivacyPolicy;
 
 import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
 import java.nio.charset.Charset;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -1282,6 +1285,52 @@ public class WebHelper {
         }
         return;
     }
+
+    /**
+     * Privacy policy (using genj private policy core function
+     * TODO: will need to enrich and move to own PrivatePolicy module within ancestris core
+     */
+    // Privacy policy
+    public PrivacyPolicy privacyPolicy = null;
+    //
+    public PrivacyPolicy getPrivacyPolicy() {
+        if (privacyPolicy == null) {
+            privacyPolicy = new PrivacyPolicy(
+                    new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
+                    NbPreferences.forModule(App.class).get("privFlag", ""), // string
+                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
+                    null, //  TODO events, not used yet
+                    false); // TODO infoOfDeceasedisPublic, not used yet
+        }
+        return privacyPolicy;
+    }
+
+    /**
+     * Check if individuals private
+     * Individual is private if matches private policy
+     */
+    public boolean isPrivate(Indi indi) {
+        return ((indi != null) && (indi.getBirthDate() != null) && (getPrivacyPolicy().isPrivate(indi)));
+    }
+
+    /**
+     * Check if entity is private
+     * Individual : see above
+     * Family : private if either husband or wife is private
+     */
+    public boolean isPrivate(Entity ent) {
+        if (ent instanceof Indi) {
+            return isPrivate((Indi) ent);
+        }
+        if (ent instanceof Fam) {
+            Fam famRel = (Fam) ent;
+            Indi husband = famRel.getHusband();
+            Indi wife = famRel.getWife();
+            return isPrivate(husband) || isPrivate(wife);
+        }
+        return false;
+    }
+
 
 } // End_of_Report
 

@@ -82,25 +82,6 @@ public class WebIndividualsDetails extends WebSection {
 
         initEvents();
 
-        // Preliminary build of sources link for links from details to sources
-        if (wb.sectionSources != null && wb.sectionSources.toBeGenerated) {
-            sourcePage = wb.sectionSources.getPagesMap();
-            indi2srcDir = buildLinkShort(this, wb.sectionSources);
-        }
-        if (wb.sectionMedia != null && wb.sectionMedia.toBeGenerated) {
-            indi2mediaDir = buildLinkShort(this, wb.sectionMedia);
-        }
-
-        // Generate detail pages
-        File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
-        exportData(dir);
-
-        // Generate email popup
-        if (wp.param_dispEmailButton.equals("1")) {
-            createPopupEmail(wh.getFileForName(dir, POPUPTAG));
-            wh.log.write(POPUPTAG + trs("EXEC_DONE"));
-        }
-
         fam_chronologie = htmlText(trs("fam_chronologie"));
         fam_grandparents = htmlText(trs("fam_grandparents"));
         fam_siblings = htmlText(trs("fam_siblings"));
@@ -120,6 +101,26 @@ public class WebIndividualsDetails extends WebSection {
         fam_relof = htmlText(trs("fam_relof"));
         fam_note = htmlText(trs("fam_note"));
         fam_noteSrc = htmlText(trs("fam_noteSrc"));
+
+        // Preliminary build of sources link for links from details to sources
+        if (wb.sectionSources != null && wb.sectionSources.toBeGenerated) {
+            sourcePage = wb.sectionSources.getPagesMap();
+            indi2srcDir = buildLinkShort(this, wb.sectionSources);
+        }
+        if (wb.sectionMedia != null && wb.sectionMedia.toBeGenerated) {
+            indi2mediaDir = buildLinkShort(this, wb.sectionMedia);
+        }
+
+        // Generate detail pages
+        File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
+        exportData(dir);
+
+        // Generate email popup
+        if (wp.param_dispEmailButton.equals("1")) {
+            createPopupEmail(wh.getFileForName(dir, POPUPTAG));
+            wh.log.write(POPUPTAG + trs("EXEC_DONE"));
+        }
+
     }
 
     /**
@@ -199,6 +200,7 @@ public class WebIndividualsDetails extends WebSection {
         out.println("<h2 class=\"" + getSexStyle(indi) + "\">");
         out.println("<a name=\"" + anchor + "\"></a>");
         out.println(wrapSex(indi));
+        out.println(SPACE);
         out.println(name);
         out.println("</h2>");
 
@@ -422,7 +424,7 @@ public class WebIndividualsDetails extends WebSection {
             out.println("<p class=\"decal\"><span class=\"gras\">" + fam_family + (families.length > 1 ? " (" + (i + 1) + ")" : "") + "</span></p>");
             out.println("<p class=\"parentf\">");
             out.println(wrapSex(spouse));
-            out.println("<span class=\"gras\">" + fam_spouse + "</span>:&nbsp;");
+            out.println("<span class=\"gras\">" + fam_spouse + "</span>:"+SPACE);
             out.println(wrapName(spouse));
             out.println(wrapDate(spouse, true));
             out.println("<br />");

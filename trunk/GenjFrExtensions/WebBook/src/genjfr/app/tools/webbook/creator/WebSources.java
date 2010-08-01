@@ -217,7 +217,6 @@ public class WebSources extends WebSection {
         List<PropertyFile> files = new ArrayList<PropertyFile>();              // Files of sources in SOUR and related entities for that SOUR
         files.addAll(src.getProperties(PropertyFile.class));                   // Put first all files directly attached to SOUR entity
 
-        boolean sourceIsPrivate = false;
         Property[] props = src.getProperties(PATH2XREF);
         List<Entity> list = new ArrayList<Entity>();                           // List of related entities
         if (props != null && props.length > 0) {
@@ -229,7 +228,6 @@ public class WebSources extends WebSection {
                 }
                 if ((target instanceof Indi) || (target instanceof Fam)) {
                     list.add(target);
-                    sourceIsPrivate = sourceIsPrivate || isPrivate(target);
                 }
             }
         }
@@ -287,7 +285,7 @@ public class WebSources extends WebSection {
         printProperty(out, prop, "", "srcitems2");
 
         // Print pictures of SOUR entity
-        if (!sourceIsPrivate && (wp.param_media_GeneSources.equals("1")) && !files.isEmpty()) {
+        if ((wp.param_media_GeneSources.equals("1")) && !files.isEmpty()) {
             out.println("<span class=\"srcitems1\">" + htmlText(trs("src_media")) + ":</span><span class=\"srcimage\">");
             for (Iterator it = files.iterator(); it.hasNext();) {
                 PropertyFile file = (PropertyFile) it.next();
@@ -307,7 +305,7 @@ public class WebSources extends WebSection {
                 Entity target = (Entity) it.next();
                 out.println(wrapEntity(target));
                 out.println("<br />");
-                if (!sourceIsPrivate && !(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
+                if (!(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
                     mediasOfEntity.addAll(target.getProperties(PropertyFile.class));
                     for (Iterator itm = mediasOfEntity.iterator(); itm.hasNext();) {
                         PropertyFile file = (PropertyFile) itm.next();

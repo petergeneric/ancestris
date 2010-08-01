@@ -482,7 +482,7 @@ public class WebSearch extends WebSection {
         if (indi == null) {
             return 0;
         }
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             return 0;
         }
         return indi.getSex();
@@ -512,7 +512,7 @@ public class WebSearch extends WebSection {
      * Get sosa of individual
      */
     private String getSosa(Indi indi) {
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             return "";
         }
         String sosa = wh.getSosa(indi);
@@ -526,7 +526,7 @@ public class WebSearch extends WebSection {
         if (indi == null) {
             return "";
         }
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             return "...";
         }
         PropertyDate bdate = indi.getBirthDate();
@@ -538,7 +538,7 @@ public class WebSearch extends WebSection {
         if (indi == null) {
             return "";
         }
-        if (isPrivate(indi)) {
+        if (wh.isPrivate(indi)) {
             return "...";
         }
         PropertyDate ddate = indi.getDeathDate();
