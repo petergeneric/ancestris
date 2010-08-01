@@ -4,7 +4,6 @@
  */
 package genjfr.app.tools.webbook.creator;
 
-import genj.gedcom.Indi;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
@@ -16,6 +15,8 @@ import java.util.Date;
  * @author frederic
  */
 public class WebHome extends WebSection {
+
+    private String version = "";
 
     /**
      * Constructor
@@ -219,7 +220,7 @@ public class WebHome extends WebSection {
         out.println("<br /><hr /><br />");
 
         // Footer
-        out.println("<p class=\"legal\">" + trs("TXT_text_pages", "<a href=\"http://www.ancestris.com\">Ancestris WebBook</a>", new Date()) + "</p>");
+        out.println("<p class=\"legal\">" + trs("TXT_text_pages", "<a href=\"http://www.ancestris.com\" title=\"" + version + "\" >Ancestris WebBook</a>", new Date()) + "</p>");
         out.println("</div>");
 
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
@@ -229,5 +230,9 @@ public class WebHome extends WebSection {
         // conteneur
         out.println("</div>");
 
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

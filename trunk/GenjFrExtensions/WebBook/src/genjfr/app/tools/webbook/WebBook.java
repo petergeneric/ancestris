@@ -131,8 +131,10 @@ public class WebBook {
          * Start writing to log
          */
         WebBookPlugin pi = new WebBookPlugin();
+        String version = pi.getPluginVersion();
         log.write("----------- " + log.trs("CTL_WebBookTitle") + " -----------");
-        log.write(pi.getPluginDisplayName() + " - " + pi.getPluginVersion());
+        log.write(pi.getPluginDisplayName() + " - " + version);
+        sectionHome.setVersion(version);
         log.write("----------- " + log.trs("EXEC_start") + " -----------");
         log.timeStamp();
         log.write(" ");
