@@ -271,7 +271,7 @@ public class WebSources extends WebSection {
             if (pplace != null) {
                 place = pplace.toString().replaceAll(",", " ");
             }
-            printProperty(out, prop, "," + SPACE + htmlText(date) + "," + SPACE + htmlText(place), "srcitems2");
+            printProperty(out, prop, ", " + date + " - " + place, "srcitems2");
         }
 
         prop = src.getProperty(PATH2REPO);
