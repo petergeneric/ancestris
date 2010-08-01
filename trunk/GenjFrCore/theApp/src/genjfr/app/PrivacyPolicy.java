@@ -114,6 +114,8 @@ public class PrivacyPolicy {
     //
     // For performance reasons, keep track of private years entities
     private Set<Entity> privateYearsEntities = new HashSet<Entity>();
+    //
+    private int yearsIndiCanBeAlive = 120;
 
     /**
      * Constructor
@@ -217,6 +219,7 @@ public class PrivacyPolicy {
                     }
                     if (hasPrivateYearsDate(entity)) {
                         privateYearsEntities.add(entity);
+                        privateYearsEntities.add(ent);
                         return true;
                     }
                 }
@@ -230,6 +233,18 @@ public class PrivacyPolicy {
      * Check whether a prop belongs to a person alive or supposed alive : no death event and birth < xxx years
      */
     private boolean isInfoOfAlive(Property prop) {
+        Entity ent = prop.getEntity();
+
+        if (ent instanceof Indi) {
+            Indi indi = (Indi) ent;
+            PropertyDate bdate = indi.getBirthDate();
+            PropertyDate ddate = indi.getDeathDate();
+            if (bdate == null) {
+                return false;
+            }
+            Delta anniversary = bdate.getAnniversary();
+            return ddate == null && anniversary != null && anniversary.getYears() < yearsIndiCanBeAlive;
+        }
         return false;
     }
 
@@ -252,13 +267,15 @@ public class PrivacyPolicy {
      * Check for marked with tag
      */
     private boolean hasTagMarkingPrivate(Property prop) {
-        return getPropertyFor(prop, tagMarkingPrivate, Property.class) != null;
-        // TODO: à ajouter
-        //        // is parent property is private?
-        //        prop = prop.getParent();
-        //        if (prop != null) {
-        //            return isPrivate(prop);
-        //        }
+        if (getPropertyFor(prop, tagMarkingPrivate, Property.class) != null) {
+            return true;
+        }
+        // is parent property marked?
+        prop = prop.getParent();
+        if (prop != null) {
+            return hasTagMarkingPrivate(prop);
+        }
+        return false;
     }
 
     /**
