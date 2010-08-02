@@ -235,7 +235,7 @@ public class PrivacyPolicy {
                 return false;
             }
             Delta anniversary = bdate.getAnniversary();
-            return ddate == null && anniversary != null && anniversary.getYears() < yearsIndiCanBeAlive;
+            return (ddate == null) && (anniversary != null) && (anniversary.getYears() < yearsIndiCanBeAlive);
         }
         return false;
     }
