@@ -158,14 +158,6 @@ public class PrivacyPolicy {
             return true;
         }
 
-        // FL: code ci-dessous supprimé d'ici car doit plutôt être placé au niveau de certains tests élémentaires
-        // (en effet: si on test la naissance, la personne peut ne pas avoir l'air privée sur la règle des années
-        // alors qu'elle le serait sur le décès). Il faut donc ne pas se contenter de remonter l'arbre des propriétés.
-        //        // is parent property is private?
-        //        prop = prop.getParent();
-        //        if (prop != null) {
-        //            return isPrivate(prop);
-        //        }
         return false;
     }
 
