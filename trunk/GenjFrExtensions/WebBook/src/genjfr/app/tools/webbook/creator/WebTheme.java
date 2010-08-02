@@ -56,7 +56,7 @@ public class WebTheme extends WebSection {
     public void createFiles(File dir) {
 
         // Get male and female icons in the dierctory
-        String genjImagesDir = "genjfr/app/tools/webbook/img/";
+        String imagesDir = "genjfr/app/tools/webbook/img/";
         String toFile = dir.getAbsolutePath() + File.separator;
 
         try {
@@ -70,8 +70,8 @@ public class WebTheme extends WebSection {
                 Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
                 while (entries.hasMoreElements()) {
                     String name = entries.nextElement().getName();
-                    if (name.startsWith(genjImagesDir)) { //filter according to the path
-                        String entry = name.substring(genjImagesDir.length());
+                    if (name.startsWith(imagesDir)) { //filter according to the path
+                        String entry = name.substring(imagesDir.length());
                         int checkSubdir = entry.indexOf("/");
                         if (checkSubdir < 0 && !entry.trim().isEmpty()) {
                             // if it is NOT a subdirectory, it must be an image so copy it

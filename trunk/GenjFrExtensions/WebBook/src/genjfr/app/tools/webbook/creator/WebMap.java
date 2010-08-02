@@ -123,9 +123,9 @@ public class WebMap extends WebSection {
         out.println("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
 
         // include javascript
-        String genjJavascriptDir = "js/";
+        String javascriptDir = "js/";
         try {
-            String str = wh.readStream(genjJavascriptDir + "map.js");
+            String str = wh.readStream(javascriptDir + "map.js");
             out.println(filter(str));
         } catch (IOException e) {
             //e.printStackTrace();

@@ -155,7 +155,7 @@ public class WebSearch extends WebSection {
 
         out.println("<tr><td>" + trs("search_place") + ":</td><td><input name=\"key_pl\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xpl\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
 
-        out.println("<tr><td>" + trs("search_genjid") + ":</td><td><input name=\"key_id\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xid\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_id") + ":</td><td><input name=\"key_id\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xid\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
 
         out.println("<tr><td>" + trs("search_sosa") + ":</td><td><input name=\"key_so\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xso\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
 
@@ -180,7 +180,7 @@ public class WebSearch extends WebSection {
      */
     private void exportResults(File dir, String exportfile) {
 
-        String genjJavascriptDir = "js/";
+        String javascriptDir = "js/";
 
         File file = wh.getFileForName(dir, exportfile);
         PrintWriter out = wh.getWriter(file, UTF8);
@@ -191,7 +191,7 @@ public class WebSearch extends WebSection {
         out.println("<script src=\"" + resourceFile + "\"></script>");
         out.println("<script language=\"JavaScript\">");
         try {
-            String str = wh.readStream(genjJavascriptDir + "search.js");
+            String str = wh.readStream(javascriptDir + "search.js");
             out.println(filter(str));
         } catch (IOException e) {
             //e.printStackTrace();

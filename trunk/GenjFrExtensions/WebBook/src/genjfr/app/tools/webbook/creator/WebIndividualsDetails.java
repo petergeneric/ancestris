@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * GenJ - Report creating a web Book or reports
+ * Ancestris
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 0.1
  */
