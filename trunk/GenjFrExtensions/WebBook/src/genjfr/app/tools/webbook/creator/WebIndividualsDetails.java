@@ -92,13 +92,15 @@ public class WebIndividualsDetails extends WebSection {
         fam_stepsibmother = htmlText(trs("fam_stepsibmother"));
         fam_stepkids = htmlText(trs("fam_stepkids"));
         fam_relations = htmlText(trs("fam_relations"));
-        fam_relhas = htmlText(trs("fam_relhas"));
-        fam_relis = htmlText(trs("fam_relis"));
-        fam_relunk = htmlText(trs("fam_relunk"));
-        fam_relwhois = htmlText(trs("fam_relwhois"));
-        fam_relat = htmlText(trs("fam_relat"));
-        fam_relthe = htmlText(trs("fam_relthe"));
-        fam_relof = htmlText(trs("fam_relof"));
+
+        fam_relhas = trs("fam_relhas");
+        fam_relis = trs("fam_relis");
+        fam_relunk = trs("fam_relunk");
+        fam_relwhois = trs("fam_relwhois");
+        fam_relat = trs("fam_relat");
+        fam_relthe = trs("fam_relthe");
+        fam_relof = trs("fam_relof");
+
         fam_note = htmlText(trs("fam_note"));
         fam_noteSrc = htmlText(trs("fam_noteSrc"));
 
@@ -491,40 +493,38 @@ public class WebIndividualsDetails extends WebSection {
                 out.println("&bull;" + SPACE);
                 if (isXref) {
                     String str = "";
-                    str += fam_relhas;
+                    str += fam_relhas + " ";
                     Property prop = xref.getTarget().getProperty("RELA");
                     String link = (prop == null) ? fam_relunk : prop.toString().toLowerCase();
                     String event = xref.getParent().getPropertyName().toLowerCase();
                     boolean doubleup = link.indexOf(event) >= 0;
                     PropertyDate date = (PropertyDate) xref.getParent().getProperty("DATE");
                     if (!doubleup) {
-                        str += link;
-                        str += fam_relat + SPACE + event + ",";
+                        str += link + " " + fam_relat + " " + event + ", ";
                     } else {
-                        str += link + ",";
+                        str += link + ", ";
                     }
                     if (date != null) {
-                        str += fam_relthe + SPACE + date.toString().toLowerCase() + ", ";
+                        str += fam_relthe + " " + date.toString().toLowerCase() + ", ";
                     }
                     str += fam_relwhois;
                     out.println(wrapString(indi, str));
                 }
                 if (isAsso) {
                     String str = "";
-                    str += fam_relis;
+                    str += fam_relis + " ";
                     Property prop = xref.getProperty("RELA");
                     String link = (prop == null) ? fam_relunk : prop.toString().toLowerCase();
                     String event = xref.getTarget().getParent().getPropertyName().toLowerCase();
                     boolean doubleup = link.indexOf(event) >= 0;
                     PropertyDate date = (PropertyDate) xref.getTarget().getParent().getProperty("DATE");
                     if (!doubleup) {
-                        str += link;
-                        str += fam_relat + SPACE + event + ",";
+                        str += link + " " + fam_relat + " " + event + ", ";
                     } else {
-                        str += link + ",";
+                        str += link + ", ";
                     }
                     if (date != null) {
-                        str += fam_relthe + SPACE + date.toString().toLowerCase() + ", ";
+                        str += fam_relthe + " " + date.toString().toLowerCase() + ", ";
                     }
                     str += fam_relof;
                     out.println(wrapString(indi, str));
