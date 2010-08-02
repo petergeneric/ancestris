@@ -145,7 +145,7 @@ public class WebMedia extends WebSection {
             PropertyFile media = (PropertyFile) it.next();
             href = getPageForMedia(media);
             file_entity = wrapEntity(media.getEntity());
-            file_title = wh.getTitle(media, DEFCHAR);
+            file_title = wrapString(media, wh.getTitle(media, DEFCHAR));
             anchor = htmlAnchorText(media.getEntity().toString());
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
@@ -339,17 +339,6 @@ public class WebMedia extends WebSection {
      */
     public String getPageForMedia(PropertyFile media) {
         return (media == null ? "" : mediaPage.get(Integer.valueOf(media.hashCode())));
-    }
-
-    /**
-     * Test for (recursive) containment
-     */
-    public boolean isUnderSource(Property in) {
-        Property parent = in.getParent();
-        if (parent == null) {
-            return false;
-        }
-        return parent.getTag().compareTo("SOUR") == 0 ? true : isUnderSource(parent);
     }
 
     /**

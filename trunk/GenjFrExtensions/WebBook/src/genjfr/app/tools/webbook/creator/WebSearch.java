@@ -462,7 +462,7 @@ public class WebSearch extends WebSection {
         int cpt = 0;
         for (Iterator it1 = indis.iterator(); it1.hasNext();) {
             Indi indi = (Indi) it1.next();
-            list.append((cpt == 0 ? "" : ",") + "\"" + indi.getId() + "\"");
+            list.append((cpt == 0 ? "" : ",") + "\"" + wrapString(indi, indi.getId()) + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
             listID.append(getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi));
             listID.append("\"");
@@ -512,11 +512,8 @@ public class WebSearch extends WebSection {
      * Get sosa of individual
      */
     private String getSosa(Indi indi) {
-        if (wh.isPrivate(indi)) {
-            return "";
-        }
         String sosa = wh.getSosa(indi);
-        return ((sosa != null && sosa.length() != 0) ? sosa : "");
+        return ((sosa != null && sosa.length() != 0) ? wrapString(indi, sosa) : "");
     }
 
     /**

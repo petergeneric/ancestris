@@ -490,40 +490,44 @@ public class WebIndividualsDetails extends WebSection {
                 }
                 out.println("&bull;" + SPACE);
                 if (isXref) {
-                    out.println(htmlText(fam_relhas));
+                    String str = "";
+                    str += fam_relhas;
                     Property prop = xref.getTarget().getProperty("RELA");
                     String link = (prop == null) ? fam_relunk : prop.toString().toLowerCase();
                     String event = xref.getParent().getPropertyName().toLowerCase();
                     boolean doubleup = link.indexOf(event) >= 0;
                     PropertyDate date = (PropertyDate) xref.getParent().getProperty("DATE");
                     if (!doubleup) {
-                        out.println(htmlText(link));
-                        out.println(fam_relat + SPACE + htmlText(event) + ",");
+                        str += link;
+                        str += fam_relat + SPACE + event + ",";
                     } else {
-                        out.println(htmlText(link) + ",");
+                        str += link + ",";
                     }
                     if (date != null) {
-                        out.println(fam_relthe + SPACE + htmlText(date.toString().toLowerCase()) + ", ");
+                        str += fam_relthe + SPACE + date.toString().toLowerCase() + ", ";
                     }
-                    out.println(fam_relwhois);
+                    str += fam_relwhois;
+                    out.println(wrapString(indi, str));
                 }
                 if (isAsso) {
-                    out.println(htmlText(fam_relis));
+                    String str = "";
+                    str += fam_relis;
                     Property prop = xref.getProperty("RELA");
                     String link = (prop == null) ? fam_relunk : prop.toString().toLowerCase();
                     String event = xref.getTarget().getParent().getPropertyName().toLowerCase();
                     boolean doubleup = link.indexOf(event) >= 0;
                     PropertyDate date = (PropertyDate) xref.getTarget().getParent().getProperty("DATE");
                     if (!doubleup) {
-                        out.println(htmlText(link));
-                        out.println(fam_relat + SPACE + htmlText(event) + ",");
+                        str += link;
+                        str += fam_relat + SPACE + event + ",";
                     } else {
-                        out.println(htmlText(link) + ",");
+                        str += link + ",";
                     }
                     if (date != null) {
-                        out.println(fam_relthe + SPACE + htmlText(date.toString().toLowerCase()) + ", ");
+                        str += fam_relthe + SPACE + date.toString().toLowerCase() + ", ";
                     }
-                    out.println(fam_relof);
+                    str += fam_relof;
+                    out.println(wrapString(indi, str));
                 }
                 out.println(wrapEntity(target));
                 out.println("<br />");
@@ -554,10 +558,12 @@ public class WebIndividualsDetails extends WebSection {
                             displayNote = true;
                         }
                         String parentNote = (parent.getTag().compareTo("SOUR") == 0) ? " " + fam_noteSrc
-                                + " " + htmlText(parent.getParent().getPropertyName().toLowerCase()) + ":" : ":";
-                        out.println("<span class=\"undl\">" + (parent.getTag().compareTo(Gedcom.INDI) == 0 ? "" : parentTag + parentNote) + "</span>");
+                                + " " + parent.getParent().getPropertyName().toLowerCase() + ":" : ":";
+                        out.println("<span class=\"undl\">");
+                        out.println(parent.getTag().compareTo(Gedcom.INDI) == 0 ? "" : wrapString(indi, parentTag + parentNote));
+                        out.println("</span>");
                         out.println("<span class=\"ital\">");
-                        out.println(htmlText(noteStr));
+                        out.println(wrapString(indi, noteStr));
                         out.println("</span><br />");
                     }
                 }

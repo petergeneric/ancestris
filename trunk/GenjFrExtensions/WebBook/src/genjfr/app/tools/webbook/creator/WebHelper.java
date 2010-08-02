@@ -1306,31 +1306,34 @@ public class WebHelper {
     }
 
     /**
-     * Check if individuals private
-     * Individual is private if matches private policy
-     */
-    public boolean isPrivate(Indi indi) {
-        return ((indi != null) && (indi.getBirthDate() != null) && (getPrivacyPolicy().isPrivate(indi)));
-    }
-
-    /**
      * Check if entity is private
      * Individual : see above
      * Family : private if either husband or wife is private
      */
     public boolean isPrivate(Entity ent) {
         if (ent instanceof Indi) {
-            return isPrivate((Indi) ent);
+            return isPrivate((Property) ent);
         }
         if (ent instanceof Fam) {
             Fam famRel = (Fam) ent;
             Indi husband = famRel.getHusband();
             Indi wife = famRel.getWife();
-            return isPrivate(husband) || isPrivate(wife);
+            return isPrivate((Property) husband) || isPrivate((Property) wife);
         }
         return false;
     }
 
+    /**
+     * Check if property is private
+     */
+    public boolean isPrivate(Property prop) {
+        return ((prop != null) && (getPrivacyPolicy().isPrivate(prop)));
+    }
+
+
+    public String getPrivDisplay() {
+        return NbPreferences.forModule(App.class).get("privDisplay", "");
+    }
 
 } // End_of_Report
 

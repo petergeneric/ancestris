@@ -207,15 +207,15 @@ a.tooltipL:hover span{ /*the span will display just on :hover state*/
   border-width: thin; vertical-align: bottom;            
 }
 .srcimage0 {
-  float: left; width: 76%;  text-align: left; margin-right: 0; margin-top: 0; margin-bottom: 1em;  margin-left: 22%;
+  float: left; width: 76%;  text-align: left; margin-right: 0; margin-top: 0; margin-bottom: 0;  margin-left: 22%;
   border-width: thin; vertical-align: bottom;            
 }
 .srcimage1 {
-  float: left; width: 200px;  text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
+  float: left; text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
   border-width: thin; border-style: outset; background: #fdff6b;
 }
 .srcimage1:hover {
-  float: left; width: 200px;  text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
+  float: left; text-align: center; margin-right: 0; margin-top: 10px; margin-bottom: 0;  margin-left: 0;
   border-width: thin; border-style: outset; background: #ffba00;
 }
 .srcimage2 {
