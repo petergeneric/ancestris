@@ -627,10 +627,10 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         }
         Integer i = getIntFromStr(str);
         if (i == -1) {
-            i = 250;
+            i = 248;
         }
-        if (i > 255) {
-            i = 255;
+        if (i > 248) {
+            i = 248;
         }
         jSpinner3.setValue(i);
     }
