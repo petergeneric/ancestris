@@ -32,7 +32,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
         jTextField3 = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner(new SpinnerNumberModel(40, 20, 255, 1));
+        jSpinner3 = new javax.swing.JSpinner(new SpinnerNumberModel(248, 20, 248, 1));
         jLabel23 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(128, 128, 16384, 128));
         jLabel22 = new javax.swing.JLabel();
@@ -182,7 +182,6 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 691, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -278,11 +277,10 @@ final class OptionFormatPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jSpinner1)
                                     .addComponent(jSpinner3, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))))))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 503, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -354,7 +352,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(jLabel6)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
