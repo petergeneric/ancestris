@@ -112,10 +112,11 @@ public class PrivacyPolicy {
     private boolean infoOfDeceasedIsPublic;
     //
     //
-    // For performance reasons, keep track of private years entities
+    // For performance reasons, keep track of private years entities and alive entities
     private Set<Entity> privateYearsEntities = new HashSet<Entity>();
+    private Set<Entity> aliveEntities = new HashSet<Entity>();
     //
-    private int yearsIndiCanBeAlive = 120;
+    private int yearsIndiCanBeAlive = 130; //TODO - le mettre en paramètre dans les préférences
 
     /**
      * Constructor
@@ -178,6 +179,9 @@ public class PrivacyPolicy {
      */
     @SuppressWarnings("unchecked")
     private boolean isWithinPrivateYears(Property prop) {
+        if (prop == null) {
+            return false;
+        }
         Entity ent = prop.getEntity();
 
         // check if entity has already been considered as private before
@@ -191,18 +195,10 @@ public class PrivacyPolicy {
                 return true;
             }
         } else {
-            List<Entity> list = new ArrayList<Entity>();
-            List<PropertyXRef> refProps = ent.getProperties(PropertyXRef.class);
-            for (Iterator<PropertyXRef> it = refProps.iterator(); it.hasNext();) {
-                PropertyXRef propertyXRef = it.next();
-                Entity target = propertyXRef.getTargetEntity();
-                if (list.contains(target)) {
-                    continue;
-                }
-                if ((target instanceof Indi) || (target instanceof Fam)) {
-                    list.add(target);
-                }
-            }
+            // get INDI and FAM related entities
+            // (not all, otherwise might loop forever as I would have to use
+            //  the recursive isWithinPrivateYears in here)
+            List<Entity> list = getRelatedPeople(ent);
             if (!list.isEmpty()) {
                 for (Iterator<Entity> it = list.iterator(); it.hasNext();) {
                     Entity entity = it.next();
@@ -225,17 +221,52 @@ public class PrivacyPolicy {
      * Check whether a prop belongs to a person alive or supposed alive : no death event and birth < xxx years
      */
     private boolean isInfoOfAlive(Property prop) {
+        if (prop == null) {
+            return false;
+        }
         Entity ent = prop.getEntity();
 
+        // check if entity has already been considered as private before
+        if (aliveEntities.contains(ent)) {
+            return true;
+        }
+
         if (ent instanceof Indi) {
-            Indi indi = (Indi) ent;
-            PropertyDate bdate = indi.getBirthDate();
-            PropertyDate ddate = indi.getDeathDate();
-            if (bdate == null) {
-                return false;
+            if (isAlive((Indi) ent)) {
+                aliveEntities.add(ent);
+                return true;
             }
-            Delta anniversary = bdate.getAnniversary();
-            return (ddate == null) && (anniversary != null) && (anniversary.getYears() < yearsIndiCanBeAlive);
+        } else if (ent instanceof Fam) {
+            return false;
+        } else {
+            // Get related indis and families
+            List<Entity> list = getRelatedPeople(ent);
+            if (!list.isEmpty()) {
+                for (Iterator<Entity> it = list.iterator(); it.hasNext();) {
+                    Entity entity = it.next();
+                    if (aliveEntities.contains(entity)) {
+                        return true;
+                    }
+                    if ((entity instanceof Indi) && (isAlive((Indi) entity))) {
+                        aliveEntities.add(entity);
+                        aliveEntities.add(ent);
+                        return true;
+                    }
+                    if (entity instanceof Fam) {
+                        Indi husband = ((Fam) entity).getHusband();
+                        if (husband != null && isAlive(husband)) {
+                            aliveEntities.add(husband);
+                            aliveEntities.add(ent);
+                            return true;
+                        }
+                        Indi wife = ((Fam) entity).getWife();
+                        if (wife != null && isAlive(wife)) {
+                            aliveEntities.add(wife);
+                            aliveEntities.add(ent);
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
@@ -317,6 +348,40 @@ public class PrivacyPolicy {
         // check anniversary of property's date
         Delta anniversary = date.getAnniversary();
         return anniversary != null && anniversary.getYears() < yearsInfoIsPrivate;
+    }
+
+    /**
+     * Is Alive
+     * Definition : person whose birth is less than 130 years ago
+     * and person whith no DEAT tag present
+     * @param indi
+     * @return
+     */
+    private boolean isAlive(Indi indi) {
+        PropertyDate bdate = indi.getBirthDate();
+        PropertyDate ddate = indi.getDeathDate();
+        if (bdate == null) {
+            return false;
+        }
+        Delta anniversary = bdate.getAnniversary();
+        return (ddate == null) && (anniversary != null) && (anniversary.getYears() < yearsIndiCanBeAlive);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Entity> getRelatedPeople(Entity ent) {
+        List<Entity> list = new ArrayList<Entity>();
+        List<PropertyXRef> refProps = ent.getProperties(PropertyXRef.class);
+        for (Iterator<PropertyXRef> it = refProps.iterator(); it.hasNext();) {
+            PropertyXRef propertyXRef = it.next();
+            Entity target = propertyXRef.getTargetEntity();
+            if (list.contains(target)) {
+                continue;
+            }
+            if ((target instanceof Indi) || (target instanceof Fam)) {
+                list.add(target);
+            }
+        }
+        return list;
     }
 
     // Find a sub-property by tag and type
