@@ -68,7 +68,7 @@ public class CenteredArranger extends AlignLeftArranger {
             return;
         int min = indibox.children[0].x - indibox.children[0].wMinus;
         int diff = min + (currentX - spacing - min) / 2;
-        diff -= (indibox.wPlus + indibox.wMinus) / 2;
+        diff -= (indibox.wPlus + indibox.wMinus) / 2 - indibox.wMinus;
         for (int i = 0; i < indibox.children.length; i++) {
             IndiBox child = indibox.children[i];
             child.x -= diff;
