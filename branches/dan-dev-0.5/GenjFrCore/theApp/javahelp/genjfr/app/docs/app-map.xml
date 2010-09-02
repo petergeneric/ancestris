@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
+<map version="2.0">
+    <mapID target="ancestris.app.about" url="app-about.html"/>
+    <mapID target="ancestris.app.advanced" url="./advanced/advanced_ancestris.html"/>
+    <mapID target="ancestris.app.basic" url="./first_steps/basic_ancestris.html"/>
+    <mapID target="ancestris.app.blueprints" url="./advanced/blueprints.html"/>
+    <mapID target="ancestris.app.discovering" url="./first_steps/decouverte_ancestris.html"/>
+    <mapID target="ancestris.app.download" url="./first_steps/telechargement_ancestris.html"/>
+    <mapID target="ancestris.app.external.links" url="./first_steps/external_links_ancestris.html"/>
+    <mapID target="ancestris.app.gedcom.standard" url="./first_steps/gedcom_standard.html"/>
+    <mapID target="ancestris.app.gedcoms.manager" url="./first_steps/gedcoms_manager.html"/>
+    <mapID target="ancestris.app.intro" url="ancestris.html"/>
+    <mapID target="ancestris.app.misc" url="./misc_topics/misc_ancestris.html"/>
+    <mapID target="ancestris.app.nomade" url="./advanced/ancestris_nomade.html"/>
+    <mapID target="ancestris.app.options.menu1" url="./first_steps/menu_options_1.html"/>
+    <mapID target="ancestris.app.plugins" url="./advanced/ancestris_plugins.html"/>
+    <mapID target="ancestris.app.plugins.liste" url="./plugins/plugins_liste.html"/>
+    <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
+    <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
+    <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
+    <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel4" url="app-about.html"/>
+    <mapID target="ancestris.app.view.chrono" url="./first_steps/view_chrono_ancestris.html"/>
+    <mapID target="ancestris.app.view.editors" url="./first_steps/view_editors_ancestris.html"/>
+    <mapID target="ancestris.app.view.entity" url="./first_steps/view_entity_ancestris.html"/>
+    <mapID target="ancestris.app.view.navigator" url="./first_steps/view_navigator_ancestris.html"/>
+    <mapID target="ancestris.app.view.reports" url="./first_steps/view_reports_ancestris.html"/>
+    <mapID target="ancestris.app.view.search" url="./first_steps/view_search_ancestris.html"/>
+    <mapID target="ancestris.app.view.table" url="./first_steps/view_table_ancestris.html"/>
+    <mapID target="ancestris.app.view.tree" url="./first_steps/view_tree_ancestris.html"/>
+    <mapID target="ancestris.app.views" url="./first_steps/views_ancestris.html"/>
+    <mapID target="ancestris.app.windows" url="./first_steps/fenetrage.html"/>
+    <mapID target="ancestris.app.wizard" url="./first_steps/wizard_ancestris.html"/>
+</map>

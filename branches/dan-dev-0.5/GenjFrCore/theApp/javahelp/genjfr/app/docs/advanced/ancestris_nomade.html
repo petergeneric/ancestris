@@ -1,0 +1,146 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Ancestris - Nomade</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="../ancestris.css">
+  </head>
+  <body>
+      <br>
+      <div class="section1">
+          <center><h2 class="section1">Ancestris - Nomade</h2></center>
+          <br>
+          Vous avez envie de vous balader avec toute votre g&eacute;n&eacute;alogie 
+          avec vous, pour la montrer par exemple &agrave; un copain qui a un
+          ordinateur, etc... Ancestris a &eacute;t&eacute; pr&eacute;vu pour
+          &ccedil;a &eacute;galement. Comment faire?<br>
+          <br>
+          <u><b>Vous &ecirc;tes sous Windows</b></u> :<br>
+          <ul>
+              <li>On commence par rep&eacute;rer o&ugrave; est sa cl&eacute; USB dans l'arborescence de vos r&eacute;pertoires.<br> 
+              Vous devriez voir appara&icirc;tre votre cl&eacute; dans votre
+              navigateur de fichiers.</li>
+              <li>Vous cr&eacute;ez sur la racine de votre cl&eacute;, un r&eacute;pertoire que
+              l'on pourrait appeler "ancestris".<br>
+              Sous Windows, vous pourriez avoir quelque
+              chose du genre : E:\ancestris (si E: est la lettre attribu&eacute;e par Windows &agrave;
+              votre cl&eacute;).</li>
+              <li>Dans ce sous r&eacute;pertoire "ancestris", vous placez le fichier que
+              vous venez de t&eacute;l&eacute;charger. Il s'appelle en g&eacute;n&eacute;ral ancestris_xxxxx.zip.
+              (xxxx est &agrave; remplacer par le num&eacute;ro de version du fichier que vous venez de t&eacute;l&eacute;charger -
+              ex: ancestris_0.2-2.zip ou ancestris-20100226.zip)</li>
+              <li>Vous d&eacute;compressez le fichier ancestris_xxxxx.zip, il va se cr&eacute;er
+              tous les sous-r&eacute;pertoires n&eacute;cessaires. Une fois que c'est fait, vous pouvez, pour
+              gagner un peu de place, effacer le fichier ancestris_xxxxx.zip, vous n'en aurez
+              plus besoin.</li>
+              <li>Vous &ecirc;tes sous Windows, vous pourriez utilement mettre dans le
+              r&eacute;pertoire "ancestris\bin" de votre cl&eacute; (c'est l&agrave; que vous allez trouver
+              un fichier ex&eacute;cutable, qui s'appelle ancestris.exe), un petit fichier bat
+              pour lancer Ancestris. Sous Windows, un fichier bat est un fichier de commande
+              ex&eacute;cutable). Pour vous simplifier la vie, vous ouvrez un &eacute;diteur 
+              texte, genre Notepad, et vous faites un copier/coller, du texte ci-dessous
+              (les 3 lignes qui suivent et attention qu'elles soient bien sur trois lignes)
+              dans votre &eacute;diteur, ensuite vous sauvegardez ce texte en appelant le fichier
+              nouvellement cr&eacute;&eacute; "runancestris.bat" (faites "Sauvegarder Sous").
+                  <div class="code_citation">
+                  rem - Ce fichier sert a lancer le logiciel de genealogie Ancestris -<br>
+                  @echo off<br>
+                  ancestris.exe --userdir ..\.ancestris<br>
+                  </div>
+              Voil&agrave; un exemple de ce &agrave; quoi ressemble l'arborescence des fichiers
+              de la cl&eacute; USB sous un syst&egrave;me Windows&nbsp;:<br>
+              <img src="../images/screenshots/ancestris_nomade.png" alt="Arborescence
+                   de la cle USB sous Windows" border="0" width="258" height="429"><br>
+              </li>
+              <li>Je vous conseille de cr&eacute;er un sous-r&eacute;pertoire ancestris\gedcom
+              (sous Windows), et dans ce sous-r&eacute;pertoire "gedcom", vous y
+              mettez votre ou vos fichiers gedcom.</li>
+              <li> Vous pouvez &eacute;galement cr&eacute;er un sous-r&eacute;pertoire ancestris\documents
+              (sous Windows), dans lequel seront stock&eacute;s les documents cr&eacute;es.</li>
+              <li> Vous &ecirc;tes sous Windows, alors il vous suffit de cliquer sur runancestris.bat, il va
+              cr&eacute;er automatiquement un r&eacute;pertoire .ancestris juste &agrave; cot&eacute;
+              du dossier ancestris.</li>
+              <li> Si d&eacute;j&agrave; vous avez votre configuration aux petits oignons,
+              pourquoi ne pas r&eacute;cup&eacute;rer tout votre sous r&eacute;pertoire ".ancestris"
+              et installez le sur votre cl&eacute;. Vous pouvez aussi utiliser la
+              fonction d'importation des param&egrave;tres d'Ancestris si vous avez pris la
+              pr&eacute;caution sur votre ordinateur principal, de faire un export vers un
+              fichier de configuration zipp&eacute; de votre choix. Lors du lancement &agrave; partir de
+              la cl&eacute; USB, si vous avez copi&eacute; dessus, votre fichier de configuration
+              zipp&eacute;, vous allez dans les param&egrave;tres d'Ancestris, et vous faites l'import
+              en donnant le chemin et le nom du fichier qui se trouve sur votre cl&eacute;.<br>
+              Vous reprendrez ainsi tous les param&eacute;trages, ainsi que tous les fichiers
+              n&eacute;cessaires &agrave; la localisation (visualisation g&eacute;ographique).</li>
+          </ul>
+          <br>
+          Pour lancer maintenant Ancestris vous ne cliquez plus sur l'ex&eacute;cutable mais
+          sur &laquo;runancestris.bat&raquo; que vous venez d'installer, vous pouvez &eacute;galement cr&eacute;er
+          un raccourci que vous placez &agrave; la racine de votre clef USB.<br>
+          <br>
+
+          <u><b>Vous &ecirc;tes sous Linux</b></u> :<br>
+          <ul>
+              <li>D&egrave;s que vous aurez install&eacute; votre cl&eacute; dans l'USB,
+              celle ci sera automatiquement reconnu par votre syst&egrave;me et
+              apparaÎtra sur votre bureau.<br>Ouvrez votre cl&eacute; et
+              cr&eacute;ez un nouveau dossier que vous nommerez par exemple
+              &laquo;ancestris&raquo;.</li>
+              <li>T&eacute;l&eacute;chargez le fichier sur le site d'Ancestris :
+                  <a href="http://www.arvernes.com/wiki/index.php/Ancestris">http://www.arvernes.com/wiki/index.php/Ancestris</a>.<br>
+              Il s'appelle en g&eacute;n&eacute;ral ancestris_xxxxx.zip.
+              (xxxx est &agrave; remplacer par le num&eacute;ro de version du
+              fichier que vous venez de t&eacute;l&eacute;charger - ex:
+              ancestris_0.2-2.zip ou ancestris-20100226.zip). Vous pouvez demander
+              &agrave; votre navigateur (Firefox), l'emplacement du
+              t&eacute;l&eacute;chargement. Dans &laquo;Edition&raquo;, &laquo;Pr&eacute;f&eacute;rences&raquo;,
+              &laquo;Onglet g&eacute;n&eacute;ral&raquo;. rep&eacute;rez la ligne &laquo;Enregistrer
+              les fichiers dans le dossier&raquo;. Cliquez sur parcourir et choisissez
+              le lieu de stockage, dans notre cas, il s'agit de votre cl&eacute; usb
+              et du dossier ancestris.</li>
+              <li>Rendez-vous ensuite dans votre r&eacute;pertoire ancestris de votre
+              cl&eacute; USB, o&ugrave; vous trouverez le fichier zipp&eacute; fraichement
+              t&eacute;l&eacute;charg&eacute;, cliquez droit dessus et descendez sur la ligne
+              &laquo;extraire ici&raquo;. Pour un gain de place vous pouvez sans
+              souci, apr&egrave;s extraction, supprimer le fichier zipp&eacute;.</li>
+              <li>Ouvrez le dossier &laquo;ancestris&raquo;, puis le sous-r&eacute;pertoire
+              &laquo;bin&raquo; qui contient deux ex&eacute;cutables, un pour windows (ancestris.exe),
+              et un pour Linux (ancestris). Dans notre cas on va prendre le
+              fichier &laquo;ancestris&raquo;. Cliquez dessus, une fen&ecirc;tre vous demandera
+              si vous voulez lancer ancestris. Il existe deux possibilit&eacute;s,
+              une dans un terminal et le lancement simple, prenez la deuxi&egrave;me
+              possibilit&eacute;. Vous voil&agrave; maintenant dans le logiciel Ancestris.</li>
+              <li>Comme pour Windows vous pouvez cr&eacute;er des sous r&eacute;pertoires
+              &laquo;ancestris/gedcom&raquo; - &laquo;ancestris/documents&raquo; sur votre cl&eacute; USB.</li>
+              <li>Vous pouvez utiliser un lanceur, directement install&eacute;
+              sur votre bureau. Clic droit sur un espace vide de
+              celui-ci, cr&eacute;er un lanceur. Dans Nom, mettez Ancestris. Dans
+              commande, ouvrir parcourir, cherchez votre cl&eacute;
+              /ancestris/ancestris/bin/ancestris et enfin validez.
+              Sur votre bureau un ic&ocirc;ne nomm&eacute; Ancestris vient d'&ecirc;tre
+              cr&eacute;er, cliquez dessus afin d'ouvrir le logiciel.</li>
+
+          </ul>
+          <br>
+
+          <u><b>Vous &ecirc;tes sous Mac Os</b></u> :<br>
+          <ul>
+              <li>A compl&eacute;ter.</li>
+          </ul>
+          <br>
+          <div class="featured">
+          <i><b><u>N.B.</u></b>&nbsp;Ce document, comme tous les documents de cette aide pour Ancestris, est
+              &agrave; compl&eacute;ter.<br>
+              Donc n'h&eacute;sitez pas les amis, &agrave; faire parvenir votre texte &agrave;&nbsp;:
+              <A HREF="mailto:ancestris@arvernes.com">ancestris@arvernes.com</A><br>
+              Des captures d'&eacute;cran que ce soit sous Windows, Linux, Mac OS sont
+              souhait&eacute;es. Merci de nous les envoyer.<br>
+          </i>
+          </div>
+          <br>
+      </div>
+  </body>
+</html>
