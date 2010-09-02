@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: genjfr.app.tools.optionswizard
+OpenIDE-Module-Layer: genjfr/app/tools/optionswizard/layer.xml
+OpenIDE-Module-Localizing-Bundle: genjfr/app/tools/optionswizard/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0.0.3.1
+

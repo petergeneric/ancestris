@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: genjfr.app.tools.webbook
+OpenIDE-Module-Layer: genjfr/app/tools/webbook/layer.xml
+OpenIDE-Module-Localizing-Bundle: genjfr/app/tools/webbook/Bundle.properties
+OpenIDE-Module-Requires: org.netbeans.api.javahelp.Help
+OpenIDE-Module-Specification-Version: 0.3.1
+
