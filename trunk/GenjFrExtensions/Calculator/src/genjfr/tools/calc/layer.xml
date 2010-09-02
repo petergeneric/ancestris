@@ -19,6 +19,13 @@
             </file>
         </folder>
     </folder>
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="calc-helpset.xml" url="calc-helpset.xml">
+                <attr name="position" intvalue="3649"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="Windows2">
         <folder name="Components">
             <file name="CalcTopComponent.settings" url="CalcTopComponentSettings.xml"/>
