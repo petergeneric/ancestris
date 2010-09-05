@@ -11,7 +11,6 @@ import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
-import genjfr.app.App;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
@@ -27,7 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -65,10 +63,15 @@ public class WebSection {
     private String siteDesc = "";
     private String language = "";
     //
+    public String includesDir = "includes";
+    public String includeInit = "awb_init.php";
+    public String includeHeaderStart = "awb_header_start.php";
+    public String includeHeaderEnd = "awb_header_end.php";
+    public String includeFooter = "awb_footer.php";
+    //
     public String themeDir = "theme";
-    public String indexFile = "index.html";
+    public String indexFile = "index";
     public String styleFile = "style.css";
-    public String css = themeDir + SEP + styleFile;
     public String POPUP = "popup.htm";
     public final String DEFPOPUPWIDTH = "400";
     public final String DEFPOPUPLENGTH = "500";
@@ -80,8 +83,8 @@ public class WebSection {
     public static final int NB_WORDS = 7;
     private static final int IMG_BUFFER_SIZE = 1024;
     public byte[] imgBuffer = new byte[IMG_BUFFER_SIZE];
-    //
 
+    //
     public enum Letters {
 
         A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
@@ -114,12 +117,12 @@ public class WebSection {
         this.wh = wh;
     }
 
-    public void init(String sectionName, String sectionDir, String sectionPrefix, String formatNbrs, String sectionSuffix, int firstPage, int nbPerPage) {
+    public void init(String sectionName, String sectionDir, String sectionPrefix, String formatNbrs, int firstPage, int nbPerPage) {
         this.sectionName = sectionName;
         this.sectionDir = sectionDir;
         this.sectionPrefix = sectionPrefix;
         this.formatNbrs = formatNbrs;
-        this.sectionSuffix = sectionSuffix;
+        this.sectionSuffix = wp.param_PHP_Support.equals("1") ? ".php" : ".html";
         this.nbPerPage = nbPerPage;
         this.sectionLink = sectionDir + SEP + sectionPrefix + ((formatNbrs.length() == 0) ? "" : String.format(formatNbrs, firstPage)) + sectionSuffix;
         // init meta tags
@@ -130,6 +133,7 @@ public class WebSection {
         replyto = wp.param_email;
         keywords = getKeywords();
         language = Locale.getDefault().getLanguage();
+        indexFile = "index" + this.sectionSuffix;
         //
         wh.log.write(sectionName);
         return;
@@ -203,6 +207,11 @@ public class WebSection {
     /**
      * HTML header
      */
+    private String getParentDir(WebSection section) {
+        String path = (section == null || section.sectionDir == null) ? "" : ((section.sectionDir.length() == 0) ? "" : "..");
+        return (path == null) || (path.length() == 0) ? "" : path + SEP;
+    }
+
     public void printOpenHTML(PrintWriter out) {
         printOpenHTML(out, null, null);
     }
@@ -218,38 +227,55 @@ public class WebSection {
 
     public void printOpenHTMLHead(PrintWriter out, String title, WebSection section) {
 
-        // HEAD
-        if (title != null && title.length() != 0) {
-            htmlTitle = htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs(title));
-        }
-        String path = (section == null || section.sectionDir == null) ? "" : ((section.sectionDir.length() == 0) ? "" : "..");
+        String parent = getParentDir(section);
 
-        out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
-        out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + language + "\" lang=\"" + language + "\" >");
-        out.println("<head>");
-        out.println("<title>" + htmlTitle + "</title>");
-        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />");
-        out.println("<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />");
-        out.println("<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" />");
-        out.println("<meta name=\"keywords\" content=\"" + keywords + "\" />");
-        out.println("<meta http-equiv=\"Content-language\" content=\"" + language + "\" />");
-        out.println("<meta name=\"author\" content=\"" + author + "\" />");
-        out.println("<meta name=\"generator\" content=\"Ancestris\" />");
-        out.println("<meta name=\"robots\" content=\"all\" />");
-        out.println("<meta name=\"reply-to\" content=\"" + replyto + "\" />");
-        out.println("<meta name=\"owner\" content=\"" + owner + "\" />");
-        if (css.length() > 0) {
-            String parent = (path == null) || (path.length() == 0) ? "" : path + SEP;
-            out.println("<link rel=\"StyleSheet\" href=\"" + parent + css + "\" type=\"text/css\"/>");
+        if (wp.param_PHP_Support.equals("1")) {
+            // HEAD
+            if (!parent.isEmpty()) {
+                out.println("<?php chdir('..'); ?>");
+            }
+            out.println("<?php include(\"" + includesDir + SEP + includeInit + "\"); ?>");
+            out.println("<?php include(\"" + includesDir + SEP + includeHeaderStart + "\"); ?>");
+            // Take care of style relative to curent directory
+            out.println("<link rel=\"stylesheet\" href=\"" + parent + wp.param_PHP_HeadCSS + "\" type=\"text/css\"/>");
+            out.println("<link rel=\"stylesheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
+            // Close HEAD and start BODY
+            out.println("<?php include(\"" + includesDir + SEP + includeHeaderEnd + "\"); ?>");
+            out.println("");
+            out.println("<!-- START OF VARIABLE CONTENT -->");
+            out.println("");
+        } else {
+            // HEAD
+            if (title != null && title.length() != 0) {
+                htmlTitle = htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs(title));
+            }
+            out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+            out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + language + "\" lang=\"" + language + "\" >");
+            out.println("<head>");
+            out.println("<title>" + htmlTitle + "</title>");
+            out.println("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />");
+            out.println("<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />");
+            out.println("<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" />");
+            out.println("<meta name=\"keywords\" content=\"" + keywords + "\" />");
+            out.println("<meta http-equiv=\"Content-language\" content=\"" + language + "\" />");
+            out.println("<meta name=\"author\" content=\"" + author + "\" />");
+            out.println("<meta name=\"generator\" content=\"Ancestris\" />");
+            out.println("<meta name=\"robots\" content=\"all\" />");
+            out.println("<meta name=\"reply-to\" content=\"" + replyto + "\" />");
+            out.println("<meta name=\"owner\" content=\"" + owner + "\" />");
+            // Take care of style relative to curent directory
+            out.println("<link rel=\"StyleSheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
+            // Close HEAD
+            out.println("</head>");
+            // BODY
+            out.println("<body>");
         }
+
     }
 
     public void printOpenHTMLBody(PrintWriter out, String title, WebSection section) {
-        // Close HEAD
-        out.println("</head>");
-        // BODY
-        out.println("<body>");
+
         if (title != null) {
             String titlePage = "";
             if (title.length() == 0) {
@@ -257,7 +283,7 @@ public class WebSection {
             } else {
                 titlePage = trs(title);
             }
-            out.println("<h1>" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(titlePage) + "</h1>");
+            out.println("<div class=\"title\">" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(titlePage) + "</div>");
         }
         // done
     }
@@ -267,8 +293,18 @@ public class WebSection {
      */
     public void printCloseHTML(PrintWriter out) {
 
-        // Close page
         out.println("<p>" + "<a name=\"bot\"></a>" + SPACE + "</p>");
+
+        if (wp.param_PHP_Support.equals("1")) {
+            //String parent = getParentDir(this); // no need because of chdir statement in header of file
+            out.println("");
+            out.println("<!-- END OF VARIABLE CONTENT -->");
+            out.println("");
+            out.println("<?php include(\"" + includesDir + "/" + includeFooter + "\"); ?>");
+            return;
+        }
+
+        // Close page
         out.println("</body>");
         out.println("</html>");
     }
@@ -393,7 +429,7 @@ public class WebSection {
     public void createPopupEmail(File file) {
         PrintWriter out = wh.getWriter(file, UTF8);
         out.println("<html><head><title>" + trs("TXT_popupemail_title") + "</title>");
-        out.println("<link rel=\"StyleSheet\" href=\"../" + css + "\" type=\"text/css\"/>");
+        out.println("<link rel=\"StyleSheet\" href=\"../" + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
         out.println("<script language='javascript'>");
         out.println("var arrTemp=self.location.href.split(\"?\");");
         out.println("var person = (arrTemp.length>0) ? \": \"+arrTemp[1] : \"\";");

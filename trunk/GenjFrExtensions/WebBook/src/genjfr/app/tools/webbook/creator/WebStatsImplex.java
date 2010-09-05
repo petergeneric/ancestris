@@ -75,7 +75,7 @@ public class WebStatsImplex extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_StatsImplex"), "stats", "stats_", formatFromSize(wh.getNbIndis()), ".html", 2, 0);
+        init(trs("TXT_StatsImplex"), "stats", "stats_", formatFromSize(wh.getNbIndis()), 2, 0);
     }
 
     /**

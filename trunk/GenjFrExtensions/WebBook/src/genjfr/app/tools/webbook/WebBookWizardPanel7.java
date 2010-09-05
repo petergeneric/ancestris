@@ -106,8 +106,7 @@ public class WebBookWizardPanel7 implements WizardDescriptor.ValidatingPanel, Wi
         ((WebBookVisualPanel7) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadStart", ""));
         ((WebBookVisualPanel7) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadCSS", ""));
         ((WebBookVisualPanel7) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadEnd", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadBody", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref10(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Footer", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Footer", ""));
         component.setComponents();
     }
 
@@ -124,8 +123,7 @@ public class WebBookWizardPanel7 implements WizardDescriptor.ValidatingPanel, Wi
         NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadStart", ((WebBookVisualPanel7) getComponent()).getPref06());
         NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadCSS", ((WebBookVisualPanel7) getComponent()).getPref07());
         NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadEnd", ((WebBookVisualPanel7) getComponent()).getPref08());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadBody", ((WebBookVisualPanel7) getComponent()).getPref09());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Footer", ((WebBookVisualPanel7) getComponent()).getPref10());
+        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Footer", ((WebBookVisualPanel7) getComponent()).getPref09());
     }
 
     /*

@@ -49,7 +49,7 @@ public class WebMedia extends WebSection {
         }
 
         // Regular initialisation
-        init(trs("TXT_Media"), "media", "media_", formatFromSize(wh.getNbIndis()), ".html", 0, 30);
+        init(trs("TXT_Media"), "media", "media_", formatFromSize(wh.getNbIndis()), 0, 30);
 
         // Build list of media, for medias of INDI and FAM but that are not under a SOUR.
         List<Entity> entities = new ArrayList<Entity>();

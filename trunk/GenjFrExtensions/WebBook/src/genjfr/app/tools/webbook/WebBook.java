@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.webbook;
 
+import genjfr.app.tools.webbook.creator.WebIncludes;
 import genjfr.app.tools.webbook.creator.WebHome;
 import genj.gedcom.Gedcom;
 import genjfr.app.tools.webbook.creator.WebCities;
@@ -73,6 +74,7 @@ public class WebBook {
     //
     // WebBook sections definition
     //
+    public WebIncludes sectionIncludes;
     public WebTheme sectionTheme;
     public WebHome sectionHome;
     public WebLastnames sectionLastnames;
@@ -107,6 +109,7 @@ public class WebBook {
         // Opens up the register that stores which files have been changed locally and uploaded
         uploadRegister = new FTPRegister(wp, wh);
         // Now initialises all sections
+        sectionIncludes = new WebIncludes(true, this, wp, wh);
         sectionTheme = new WebTheme(true, this, wp, wh);
         sectionHome = new WebHome(true, this, wp, wh);
         sectionLastnames = new WebLastnames(true, this, wp, wh);
@@ -190,8 +193,7 @@ public class WebBook {
         log.write(" ");
         log.write("----------- " + log.trs("EXEC_create") + " -----------");
         sectionTheme.create();
-        //wh.createIncludes();
-
+        sectionIncludes.create();
 
 
 

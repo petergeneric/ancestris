@@ -38,7 +38,7 @@ public class WebCitiesDetails extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Citiesdetails"), "citiesdetails", "citiesdetails_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection);
+        init(trs("TXT_Citiesdetails"), "citiesdetails", "citiesdetails_", formatFromSize(wh.getNbIndis()), 1, sizeIndiSection);
         calcPages();
     }
 

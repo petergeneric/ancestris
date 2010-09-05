@@ -32,7 +32,7 @@ public class WebLastnames extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Lastnames"), "names", "names", "", ".html", 1, 0);
+        init(trs("TXT_Lastnames"), "names", "names", "", 1, 0);
     }
 
 

@@ -47,7 +47,7 @@ public class WebRepSosa extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_RepSosa"), "repsosa", "repsosa_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection/2);
+        init(trs("TXT_RepSosa"), "repsosa", "repsosa_", formatFromSize(wh.getNbIndis()), 1, sizeIndiSection/2);
     }
 
     /**
