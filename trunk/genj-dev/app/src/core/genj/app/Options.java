@@ -90,7 +90,8 @@ public class Options extends OptionProvider {
   private static String[] languages;
 
   /** all available language codes */
-  private final static String[] codes = findCodes();
+//  private final static String[] codes = findCodes();
+  private final static String[] codes = {"en","de","fr","hu","es","nl","ru","it","ja","pt_BR","cs","pl","fi"};
 
   private static String[] findCodes() {
 
