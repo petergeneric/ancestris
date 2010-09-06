@@ -116,7 +116,7 @@ public class WebMap extends WebSection {
         if (mapKey == null) {
             mapKey = "not_found";
         }
-        out.println("<?xml-stylesheet href=\"#internalStyle\" type=\"text/css\"?>");
+        //out.println("<?xml-stylesheet href=\"#internalStyle\" type=\"text/css\"?>");
         out.println("<style type=\"text/css\" id=\"internalStyle\">");
         out.println("  html { height: 100%; overflow: hidden; }");
         out.println("</style>");
@@ -135,7 +135,7 @@ public class WebMap extends WebSection {
         // include body declaration and title
         out.println("</head>");
         out.println("<body onload=\"initialize()\" onresize=\"resizeApp()\" onunload=\"GUnload()\" style=\"height:77%;\" >");
-        out.println("<h1><a name=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</h1>");
+        out.println("<div class=\"title\"><a name=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</div>");
         printHomeLink(out, this);
 
         // Include page itself
@@ -175,8 +175,9 @@ public class WebMap extends WebSection {
         out.println("<input type=\"button\" onclick=\"add()\" style=\"font-weight: bold; height:15px; vertical-align: middle; background: url('../theme/n.gif')\"  />");
         out.println("</p>");
         out.println("</div>");
-        out.println("</body>");
-        out.println("</html>");
+        
+        // Closes page
+        printCloseHTML(out);
 
         wh.log.write(fileStr + trs("EXEC_DONE"));
         out.close();

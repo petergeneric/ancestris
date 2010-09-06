@@ -189,7 +189,7 @@ public class WebRepSosa extends WebSection {
             return null;
         }
         printOpenHTML(doc, null, this);
-        doc.println("<h1>" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(trs("RepSosaOptions.title")) + SPACE + wrapName(rootIndi, DT_FIRSTLAST, DT_NOLINK, DT_SOSA, DT_NOID) + "</h1>");
+        doc.println("<div class=\"title\">" + "<a name=\"top\">" + SPACE + "</a>" + htmlText(trs("RepSosaOptions.title")) + SPACE + wrapName(rootIndi, DT_FIRSTLAST, DT_NOLINK, DT_SOSA, DT_NOID) + "</div>");
         exportGenLinks(doc);
         exportLinks(doc, sectionPrefix + String.format(formatNbrs, Math.min(cptPage + 1, maxPage)) + sectionSuffix, 1, Math.max(1, cptPage - 1), cptPage == maxPage ? maxPage : cptPage + 1, maxPage);
         return doc;
