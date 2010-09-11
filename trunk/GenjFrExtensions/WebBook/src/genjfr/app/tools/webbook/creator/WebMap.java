@@ -116,10 +116,12 @@ public class WebMap extends WebSection {
         if (mapKey == null) {
             mapKey = "not_found";
         }
-        //out.println("<?xml-stylesheet href=\"#internalStyle\" type=\"text/css\"?>");
-        out.println("<style type=\"text/css\" id=\"internalStyle\">");
-        out.println("  html { height: 100%; overflow: hidden; }");
-        out.println("</style>");
+//        if (!wp.param_PHP_Support.equals("1")) {
+//            out.println("<?xml-stylesheet href=\"#internalStyle\" type=\"text/css\"?>");
+//            out.println("<style type=\"text/css\" id=\"internalStyle\">");
+//            out.println("  html { height: 100%; overflow: hidden; }");
+//            out.println("</style>");
+//        }
         out.println("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
 
         // include javascript
@@ -133,13 +135,16 @@ public class WebMap extends WebSection {
         }
 
         // include body declaration and title
-        out.println("</head>");
-        out.println("<body onload=\"initialize()\" onresize=\"resizeApp()\" onunload=\"GUnload()\" style=\"height:77%;\" >");
         out.println("<div class=\"title\"><a name=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</div>");
-        printHomeLink(out, this);
+        if (!wp.param_PHP_Support.equals("1")) {
+            printHomeLink(out, this);
+        }
 
         // Include page itself
-        out.println("<div id=\"map\" class=\"map\"></div>");
+//        if (!wp.param_PHP_Support.equals("1")) {
+//            out.println("<div id=\"map\" class=\"map\"></div>");
+//        }
+        out.println("<div id=\"map\" class=\"map\" style=\"height: 600px\"></div>");
         out.println("<div class=\"mapctrl\">");
         out.println("<p class=\"mapctrlbox\">");
         out.println("<span class=\"gras\">" + htmlText(trs("map_ancestors")) + "</span>&nbsp;&nbsp;<input id=\"anca\" name=\"ancestor\" type=\"radio\" value=\"all\" onclick=\"boxclick()\" checked=\"checked\" />" + htmlText(trs("map_all")));
@@ -175,7 +180,12 @@ public class WebMap extends WebSection {
         out.println("<input type=\"button\" onclick=\"add()\" style=\"font-weight: bold; height:15px; vertical-align: middle; background: url('../theme/n.gif')\"  />");
         out.println("</p>");
         out.println("</div>");
-        
+        out.println(" ");
+        out.println("<script>");
+        out.println("displayMap();");
+        out.println("displayMarkers();");
+        out.println("</script>");
+
         // Closes page
         printCloseHTML(out);
 
