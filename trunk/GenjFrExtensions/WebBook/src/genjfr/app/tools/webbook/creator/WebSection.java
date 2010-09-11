@@ -640,6 +640,24 @@ public class WebSection {
 
     /**
      * Wrapper for name
+     *
+     * In case of private individual, returned string depends on PHP support:
+     * - Without PHP support, provides hidden or cleared string for the name
+     * - With php support, provides both, using this formula:
+     *    <?php echo authgen() ? "madame Bidule&nbsp;(257)" : "... ...&nbsp;(...)" ?>
+     *    where:
+     *    - php support given by wp.param_PHP_Support.equals("1")
+     *    - authgen() is an example php instruction used as a test and provided by the user in the options
+     *
+     * Logic:
+     *  - if private
+     *     - if PHP
+     *          string = php ? A : hidden
+     *       else
+     *          string = hidden
+     *    else
+     *       string = A
+     * 
      */
     public String wrapName(Indi indi) {
         return wrapName(indi, DT_LASTFIRST, DT_LINK, DT_SOSA, DT_ID);
@@ -664,14 +682,55 @@ public class WebSection {
             str += "<a href=\"" + prefixPersonDetailsDir + personFile + '#' + id + "\">";
         }
 
-        // Get privacy string
+        // Some strings to handle privacy
         String privDisplay = wh.getPrivDisplay();
+        String strClear = "";
+        String strHidden = "";
 
         // Build name to display
+        strClear = htmlText(getNameDisplay(indi, nameType, privDisplay, false));
+        strHidden = htmlText(getNameDisplay(indi, nameType, privDisplay, true));
+
+        // Build sosa
+        String sosaNb = "";
+        if (sosa) {
+            sosaNb = wh.getSosa(indi);
+            if (sosaNb != null && sosaNb.length() != 0) {
+                strClear += SPACE + "(" + sosaNb + ")";
+                strHidden += SPACE + "(" + privDisplay + ")";
+            }
+        }
+
+        // Build id
+        if (wp.param_dispId.equals("1") && id != null && !id.isEmpty() && dispId) {
+            strClear += SPACE + "(" + id + ")";
+            strHidden += SPACE + "(" + privDisplay + ")";
+        }
+
+        // Now handle privacy and PHP support
+        if (wh.isPrivate(indi)) {
+            if (wp.param_PHP_Support.equals("1")) {
+                str += "<?php echo " + wp.param_PHP_Test + " ? \"" + strClear + "\" : \"" + strHidden + "\" ?>";
+            } else {
+                str += strHidden;
+            }
+        } else {
+            str += strClear;
+        }
+
+        // Close link
+        if (link) {
+            str += "</a>";
+        }
+
+        return str;
+    }
+
+    private String getNameDisplay(Indi indi, int nameType, String privDisplay, boolean hidden) {
         String name = "";
         String lastname = "";
         String firstname = "";
-        if (wh.isPrivate(indi)) {
+        if (hidden) {
             lastname = privDisplay;
             firstname = privDisplay;
         } else {
@@ -691,37 +750,7 @@ public class WebSection {
             default:
                 name = lastname + ", " + firstname;
         }
-        str += htmlText(name);
-
-        // Build sosa
-        String sosaNb = "";
-        if (sosa) {
-            if (wh.isPrivate(indi)) {
-                sosaNb = privDisplay;
-            } else {
-                sosaNb = wh.getSosa(indi);
-            }
-            if (sosaNb != null && sosaNb.length() != 0) {
-                str += SPACE + "(" + sosaNb + ")";
-            }
-        }
-
-        // Build id
-        String idNb = "";
-        if (wp.param_dispId.equals("1") && id != null && !id.isEmpty() && dispId) {
-            if (wh.isPrivate(indi)) {
-                idNb = privDisplay;
-            } else {
-                idNb = id;
-            }
-            str += SPACE + "(" + idNb + ")";
-        }
-        // Close link
-        if (link) {
-            str += "</a>";
-        }
-
-        return str;
+        return name;
     }
 
     /**
