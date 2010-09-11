@@ -116,12 +116,6 @@ public class WebMap extends WebSection {
         if (mapKey == null) {
             mapKey = "not_found";
         }
-//        if (!wp.param_PHP_Support.equals("1")) {
-//            out.println("<?xml-stylesheet href=\"#internalStyle\" type=\"text/css\"?>");
-//            out.println("<style type=\"text/css\" id=\"internalStyle\">");
-//            out.println("  html { height: 100%; overflow: hidden; }");
-//            out.println("</style>");
-//        }
         out.println("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
 
         // include javascript
@@ -141,9 +135,6 @@ public class WebMap extends WebSection {
         }
 
         // Include page itself
-//        if (!wp.param_PHP_Support.equals("1")) {
-//            out.println("<div id=\"map\" class=\"map\"></div>");
-//        }
         out.println("<div id=\"map\" class=\"map\" style=\"height: 600px\"></div>");
         out.println("<div class=\"mapctrl\">");
         out.println("<p class=\"mapctrlbox\">");
