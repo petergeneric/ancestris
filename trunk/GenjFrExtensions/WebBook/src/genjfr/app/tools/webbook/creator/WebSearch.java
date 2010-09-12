@@ -394,9 +394,9 @@ public class WebSearch extends WebSection {
         int cpt = 0;
         for (Iterator it1 = indis.iterator(); it1.hasNext();) {
             Indi indi = (Indi) it1.next();
-            list.append((cpt == 0 ? "" : ",") + "\"" + wrapString(indi, indi.getId()) + "\"");
+            list.append((cpt == 0 ? "" : ",") + "\"" + indi.getId() + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
-            listID.append(getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi));
+            listID.append(phpText(indi));
             listID.append("\"");
             cpt++;
         }
@@ -407,17 +407,23 @@ public class WebSearch extends WebSection {
         return;
     }
 
+    private String phpText(Indi indi) {
+        String strPriv = wh.getPrivDisplay();
+        if (wh.isPrivate(indi)) {
+            return "0" + "|" + indi.getId() + "|" + getPage(indi) + "|" + strPriv + "|" + strPriv + "|" + strPriv + "|" + strPriv;
+        } else {
+            return getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi);
+        }
+    }
+
     /**
      * Get sex
      */
-    private int getSex(Indi indi) {
+    private String getSex(Indi indi) {
         if (indi == null) {
-            return 0;
+            return "0";
         }
-        if (wh.isPrivate(indi)) {
-            return 0;
-        }
-        return indi.getSex();
+        return "" + indi.getSex();
     }
 
     /**
@@ -455,9 +461,6 @@ public class WebSearch extends WebSection {
         if (indi == null) {
             return "";
         }
-        if (wh.isPrivate(indi)) {
-            return "...";
-        }
         PropertyDate bdate = indi.getBirthDate();
         String date = (indi == null) || (bdate == null) ? "" : bdate.toString().trim();
         return date;
@@ -466,9 +469,6 @@ public class WebSearch extends WebSection {
     private String getDDate(Indi indi) {
         if (indi == null) {
             return "";
-        }
-        if (wh.isPrivate(indi)) {
-            return "...";
         }
         PropertyDate ddate = indi.getDeathDate();
         String date = (indi == null) || (ddate == null) ? "" : ddate.toString().trim();
@@ -486,18 +486,7 @@ public class WebSearch extends WebSection {
      * Read input file and put into string
      */
     private String filter(String inputStr) {
-        String text = inputStr.replaceAll("search_please", trs("search_please"))
-                .replaceAll("search_results", trs("search_results"))
-                .replaceAll("alt_male", trs("alt_male"))
-                .replaceAll("alt_female", trs("alt_female"))
-                .replaceAll("alt_unknown", trs("alt_unknown"))
-                .replaceAll("searcht_sex", trs("searcht_sex"))
-                .replaceAll("searcht_id", trs("searcht_id"))
-                .replaceAll("searcht_name", trs("searcht_name"))
-                .replaceAll("searcht_sosa", trs("searcht_sosa"))
-                .replaceAll("searcht_bdate", trs("searcht_bdate"))
-                .replaceAll("searcht_ddate", trs("searcht_ddate"))
-                .replaceAll(".html#", (wp.param_PHP_Support.equals("1")) ? ".php#" : ".html#");
+        String text = inputStr.replaceAll("search_please", trs("search_please")).replaceAll("search_results", trs("search_results")).replaceAll("alt_male", trs("alt_male")).replaceAll("alt_female", trs("alt_female")).replaceAll("alt_unknown", trs("alt_unknown")).replaceAll("searcht_sex", trs("searcht_sex")).replaceAll("searcht_id", trs("searcht_id")).replaceAll("searcht_name", trs("searcht_name")).replaceAll("searcht_sosa", trs("searcht_sosa")).replaceAll("searcht_bdate", trs("searcht_bdate")).replaceAll("searcht_ddate", trs("searcht_ddate")).replaceAll(".html#", (wp.param_PHP_Support.equals("1")) ? ".php#" : ".html#");
         return text;
     }
 } // End_of_Report

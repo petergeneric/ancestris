@@ -679,7 +679,7 @@ public class WebSection {
         // Build opening of link
         String personFile = personPage.get(id);
         if (link) {
-            str += "<a href=\"" + prefixPersonDetailsDir + personFile + '#' + id + "\">";
+            str += "<a href='" + prefixPersonDetailsDir + personFile + '#' + id + "'>";
         }
 
         // Some strings to handle privacy
@@ -708,15 +708,7 @@ public class WebSection {
         }
 
         // Now handle privacy and PHP support
-        if (wh.isPrivate(indi)) {
-            if (wp.param_PHP_Support.equals("1")) {
-                str += "<?php echo " + wp.param_PHP_Test + " ? \"" + strClear + "\" : \"" + strHidden + "\" ?>";
-            } else {
-                str += strHidden;
-            }
-        } else {
-            str += strClear;
-        }
+        str += phpText(indi, strClear, strHidden);
 
         // Close link
         if (link) {
@@ -758,16 +750,18 @@ public class WebSection {
      */
     public String wrapDate(Indi indi, boolean parenthesis) {
 
-        // Returned string
-        String str = "";
-
         // Eliminate case where indi is null
         if (indi == null) {
             return "";
         }
 
-        // Get privacy string
+        // Returned string
+        String str = "";
+
+        // Some strings to handle privacy
         String privDisplay = wh.getPrivDisplay();
+        String strClear = "";
+        String strHidden = "";
 
         // Get date
         String date = "";
@@ -775,14 +769,18 @@ public class WebSection {
         PropertyDate ddate = indi.getDeathDate();
         String birthdate = (bdate == null) ? "." : bdate.toString();
         String deathdate = (ddate == null) ? "" : " - " + ddate.toString();
-        if (wh.isPrivate(indi)) {
-            date = privDisplay;
-        } else {
-            date = (birthdate + deathdate).trim();
-        }
+        date = (birthdate + deathdate).trim();
         if (!date.equals(".")) {
-            str += SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : "");
+            strClear = SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : "");
+            strHidden = SPACE + (parenthesis ? "(" : "") + htmlText(privDisplay) + (parenthesis ? ")" : "");
         }
+        if (date.isEmpty()) {
+            return "";
+        }
+
+        // Now handle privacy and PHP support
+        str += phpText(indi, strClear, strHidden);
+
         return str;
     }
 
@@ -791,73 +789,79 @@ public class WebSection {
      */
     public String wrapSex(Indi indi) {
 
+        // Eliminate case where indi is null
+        if (indi == null) {
+            return "";
+        }
+
         // Returned string
         String str = "";
 
-        // Get privacy string
+        // Some strings to handle privacy
         String themeDirLink = buildLinkTheme(this, themeDir);
-        String privDisplay = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
+        String strClear = "";
+        String strHidden = "<img src='" + themeDirLink + "u.gif' alt='" + trs("alt_unknown") + "' />";
 
         // Build sex icon
         int iSex = (indi == null) ? 0 : indi.getSex();
         if (iSex == 1) {
-            if (wh.isPrivate(indi)) {
-                str = privDisplay;
-            } else {
-                str = "<img src=\"" + themeDirLink + "m.gif\" alt=\"" + trs("alt_male") + "\" />";
-            }
+            strClear = "<img src='" + themeDirLink + "m.gif' alt='" + trs("alt_male") + "' />";
         } else if (iSex == 2) {
-            if (wh.isPrivate(indi)) {
-                str = privDisplay;
-            } else {
-                str = "<img src=\"" + themeDirLink + "f.gif\" alt=\"" + trs("alt_female") + "\" />";
-            }
+            strClear = "<img src='" + themeDirLink + "f.gif' alt='" + trs("alt_female") + "' />";
         } else {
-            if (wh.isPrivate(indi)) {
-                str = privDisplay;
-            } else {
-                str = "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
-            }
+            strClear = "<img src='" + themeDirLink + "u.gif' alt='" + trs("alt_unknown") + "' />";
         }
+
+        // Now handle privacy and PHP support
+        str += phpText(indi, strClear, strHidden);
+
         return str;
     }
 
     public String wrapSex(Fam fam) {
 
         String themeDirLink = buildLinkTheme(this, themeDir);
-        return "<img src=\"" + themeDirLink + "u.gif\" alt=\"" + trs("alt_unknown") + "\" />";
+        return "<img src='" + themeDirLink + "u.gif' alt='" + trs("alt_unknown") + "' />";
     }
 
     public String getSexStyle(Indi indi) {
 
-        // Get privacy style
-        String privDisplay = "unk";
+        // Eliminate case where indi is null
+        if (indi == null) {
+            return "";
+        }
 
         // Returned string
         String str = "";
 
+        // Some strings to handle privacy
+        String strClear = "";
+        String strHidden = "unk";
+
         if (indi.getSex() == 1) {
-            if (wh.isPrivate(indi)) {
-                str += privDisplay;
-            } else {
-                str += "hom";
-            }
+            strClear += "hom";
         } else if (indi.getSex() == 2) {
-            if (wh.isPrivate(indi)) {
-                str += privDisplay;
-            } else {
-                str += "fem";
-            }
+            strClear += "fem";
         } else {
-            if (wh.isPrivate(indi)) {
-                str += privDisplay;
-            } else {
-                str += "unk";
-            }
+            strClear += "unk";
         }
+
+        // Now handle privacy and PHP support
+        str += phpText(indi, strClear, strHidden);
+
         return str;
     }
 
+    /**
+     * Events wrapper
+     * @param entity
+     * @param includeFamilies
+     * @param from2sourceDir
+     * @param from2mediaDir
+     * @return
+     * if the whole entity is private, just replace the whole lot with privacy string
+     * (if it is not, individual private events will still show as private)
+     */
     public String wrapEvents(Entity entity, boolean includeFamilies, String from2sourceDir, String from2mediaDir) {
 
         // Eliminate case where indi is null
@@ -867,10 +871,10 @@ public class WebSection {
 
         // Returned string
         String str = "";
-        String themeDirLink = buildLinkTheme(this, themeDir);
 
-        // Get privacy string
-        String privDisplay = wh.getPrivDisplay();
+        // Some strings to handle privacy
+        String strClear = "";
+        String themeDirLink = buildLinkTheme(this, themeDir);
 
         // Generate event string
         List<String> listEvents = getEventDetails(entity, from2sourceDir, from2mediaDir);
@@ -889,29 +893,31 @@ public class WebSection {
             String event = (String) s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
             String[] eventBits = event.split("\\|", -1);
             // eventIcon
-            str += "<img src=\"" + themeDirLink + "ev_" + eventBits[3] + ".png" + "\" alt=\"\" />";
+            strClear += "<img src='" + themeDirLink + "ev_" + eventBits[3] + ".png" + "' alt='' />";
             // eventname : date description
-            str += eventBits[1].trim();
+            strClear += eventBits[1].trim();
             // [source link]
             if (wp.param_media_GeneSources.equals("1") && eventBits[2].length() != 0) {
-                str += eventBits[2].trim();
+                strClear += eventBits[2].trim();
             }
             // [media link]
             if (wp.param_media_GeneMedia.equals("1") && eventBits[4].length() != 0) {
-                str += eventBits[4];
+                strClear += eventBits[4];
             }
             // [note link]
             if (eventBits[5].length() != 0) {
-                str += eventBits[5];
+                strClear += eventBits[5];
             }
             //
-            str += "<br />";
+            strClear += "<br />";
         }
 
-        // if the whole entity is private, just replace the whole lot with privacy string
-        // (if it is not, individual private events will still show as private)
+        // Now handle privacy and PHP support
+        // If whole entity is private, hide even the properties inside else let "sub-privicy" properties be displayed
         if (wh.isPrivate(entity)) {
-            return privDisplay + "<br />";
+            str += phpText(entity, strClear, wh.getPrivDisplay() + "<br />");
+        } else {
+            str += strClear;
         }
         return str;
     }
@@ -983,7 +989,7 @@ public class WebSection {
                 //   {$v} value
                 //   {$V} display value
                 // format 1 : event name
-                String format1 = "<span class=\"gras\"> { $T}: </span>";
+                String format1 = "<span class='gras'> { $T}: </span>";
                 // format 2 : date
                 String format2 = (showDate ? "{ $D}" : "");
                 // format 3 : description
@@ -1037,13 +1043,18 @@ public class WebSection {
                 }
 
                 // write data (date is used to sort only, description includes the date of the event
-                if (wh.isPrivate(props[j])) {
-                    list.add(date + "|" + privDisplay + "|" + privDisplay + "|" + privDisplay + "|" + privDisplay + "|" + privDisplay);
-                } else {
+                // (if whole entity is private, do not hide at this level, let it clear)
+                if (wh.isPrivate(entity)) {
                     list.add(date + "|" + description + "|" + source + "|" + event_tag + "|" + media + "|" + note);
+                } else {
+                    String str = date + "|";
+                    str += phpText(props[j], description, privDisplay) + "|";
+                    str += phpText(props[j], source, privDisplay) + "|";
+                    str += event_tag + "|";
+                    str += phpText(props[j], media, privDisplay) + "|";
+                    str += phpText(props[j], note, privDisplay);
+                    list.add(str);
                 }
-
-
             }
         }
 
@@ -1066,8 +1077,8 @@ public class WebSection {
             link = from2sourceDir + sourceFile + '#' + id;
         }
         // display image
-        String ret = "<a class=tooltip href=\"" + link + "\">";
-        ret += "<img src=\"" + origFile + "\" alt=\"" + id + "\" />";
+        String ret = "<a class=tooltip href='" + link + "'>";
+        ret += "<img src='" + origFile + "' alt='" + id + "' />";
         ret += "<span>" + htmlText(trs("TXT_src_comment")) + "&nbsp;" + id + "</span></a>";
         return ret;
 
@@ -1103,16 +1114,22 @@ public class WebSection {
     public String wrapMedia(File dir, PropertyFile file, String from2mediaDir, boolean toBeCopied, boolean useLink,
             boolean displayMin, boolean popup, String forcedIcon, String defaultTitle, boolean displayTitle, String textPath, String style) {
 
+        // Eliminate case where indi is null
+        if (file == null) {
+            return "";
+        }
+
         // Returned string and other variables
         String str = "";
         boolean isFileValid = (file != null) && (file.getFile() != null);
         boolean isImage = isFileValid ? wh.isImage(file.getFile().getAbsolutePath()) : false;
         String miniPrefix = "mini_";
 
-        // Get privacy string and media
+        // Some strings to handle privacy
+        String strClear = "";
+        String strHidden = "";
         String privDisplay = wh.getPrivDisplay();
         String privMedia = isUnderSource(file) ? "medprivSour.png" : "medprivPic.png";
-        boolean isMediaPrivate = wh.isPrivate(file);
 
         // Build filename
         String filename = wh.getCleanFileName(file.getValue(), DEFCHAR);
@@ -1132,25 +1149,24 @@ public class WebSection {
         }
 
         // Build href link
+        String hrefHidden = "";
         String href = "";
         if (isFileValid) {
             if (popup) {
                 if (isImage) {
-                    href = "\"javascript:popup('" + filename + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\"";
+                    href = "'javascript:popup('" + filename + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')'";
                 } else {
-                    href = "\"javascript:popup('" + filename + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')\"";
+                    href = "'javascript:popup('" + filename + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')'";
                 }
             } else {
-                href = "\"" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "\"";
+                href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
             }
         } else {
             href = "";
         }
-        if (isMediaPrivate) {
-            href = "";
-        }
 
         // Build title
+        String titleHidden = privDisplay;
         String title = "";
         Property pProp = file.getParent().getProperty("TITL");
         if (pProp == null || pProp.getValue().trim().isEmpty()) {
@@ -1162,11 +1178,9 @@ public class WebSection {
         } else {
             title = pProp.getValue();
         }
-        if (isMediaPrivate) {
-            title = privDisplay;
-        }
 
         // Build source image
+        String srcHidden = buildLinkTheme(this, themeDir) + privMedia;
         String src = "";
         if (forcedIcon.isEmpty()) {
             if (displayMin) {
@@ -1183,11 +1197,9 @@ public class WebSection {
         } else {
             src = buildLinkTheme(this, themeDir) + forcedIcon;
         }
-        if (isMediaPrivate) {
-            src = buildLinkTheme(this, themeDir) + privMedia;
-        }
 
         // Build tooltip text, up the file, and under tagPath. TagPath can be SOUR:DATA:TEXT or OBJE:NOTE or etc.
+        String textHidden = privDisplay;
         String text = "";
         Property prop = file.getParent();
         while (prop != null && !(prop instanceof Entity)) {
@@ -1199,34 +1211,39 @@ public class WebSection {
                 break;
             }
         }
-        if (isMediaPrivate) {
-            text = privDisplay;
-        }
 
         // Compose final html
         if (!href.isEmpty()) {
-            str += "<a class=" + style + " href=" + href + " >";
+            strClear += "<a class=" + style + " href=" + href + " >";
+            strHidden += "<a class=" + style + " href=" + hrefHidden + " >";
         } else {
-            str += "<a class=" + style + " >";
+            strClear += "<a class=" + style + " >";
+            strHidden += "<a class=" + style + " >";
         }
         if (displayMin) {
-            str += "<img alt=\"" + htmlText(title) + "\" title=\"" + htmlText(title) + "\" src=\"" + src + "\" />";
+            strClear += "<img alt='" + htmlText(title) + "' title='" + htmlText(title) + "' src='" + src + "' />";
+            strHidden += "<img alt='" + htmlText(titleHidden) + "' title='" + htmlText(titleHidden) + "' src='" + srcHidden + "' />";
         } else {
-            str += htmlText(title);
+            strClear += htmlText(title);
+            strHidden += htmlText(titleHidden);
         }
-        str += "<span>";
+        strClear += "<span>";
+        strHidden += "<span>";
         if (!title.isEmpty()) {
-            str += "<b>" + htmlText(title) + "</b>";
-            str += "<br>";
+            strClear += "<b>" + htmlText(title) + "</b><br>";
+            strHidden += "<b>" + htmlText(titleHidden) + "</b><br>";
         }
-        str += "<i>" + htmlText(text) + "</i>";
-        str += "</span>";
-        str += "</a>";
+        strClear += "<i>" + htmlText(text) + "</i></span></a>";
+        strHidden += "<i>" + htmlText(textHidden) + "</i></span></a>";
 
         // Add a title line if required
         if (displayTitle) {
-            str += "<br />" + htmlText(title) + "<br />";
+            strClear += "<br />" + htmlText(title) + "<br />";
+            strHidden += "<br />" + htmlText(titleHidden) + "<br />";
         }
+
+        // Now handle privacy and PHP support
+        str += phpText(file, strClear, strHidden);
 
         return str;
     }
@@ -1238,8 +1255,8 @@ public class WebSection {
         // Get text
         String noteText = "<i>" + ((note == null || note.getValue().trim().isEmpty()) ? "" : htmlText(note.getValue())) + "</i>";
         // display note
-        String ret = "<a class=tooltip \">";
-        ret += "<img src=\"" + pictureFile + "\" />";
+        String ret = "<a class=tooltip '>";
+        ret += "<img src='" + pictureFile + "' />";
         ret += "<span>" + noteText + "</span></a>";
         return ret;
     }
@@ -1250,13 +1267,8 @@ public class WebSection {
             return "";
         }
 
-        // Get privacy string
-        String privDisplay = wh.getPrivDisplay();
-        if (wh.isPrivate(prop)) {
-            return htmlText(privDisplay);
-        }
-
-        return htmlText(prop.getPropertyName());
+        // Return string filtered by php and privacy needs
+        return phpText(prop, htmlText(prop.getPropertyName()), htmlText(wh.getPrivDisplay()));
     }
 
     public String wrapPropertyValue(Property prop) {
@@ -1270,13 +1282,8 @@ public class WebSection {
             str = ((PropertyXRef) prop).getTarget().toString();
         }
 
-        // Get privacy string
-        String privDisplay = wh.getPrivDisplay();
-        if (wh.isPrivate(prop)) {
-            return htmlText(privDisplay);
-        }
-
-        return htmlText(str);
+        // Return string filtered by php and privacy needs
+        return phpText(prop, htmlText(str), htmlText(wh.getPrivDisplay()));
     }
 
     public String wrapEventDate(PropertyDate date) {
@@ -1286,13 +1293,8 @@ public class WebSection {
             str = date.toString();
         }
 
-        // Get privacy string
-        String privDisplay = wh.getPrivDisplay();
-        if (wh.isPrivate(date)) {
-            return htmlText(privDisplay);
-        }
-
-        return htmlText(str);
+        // Return string filtered by php and privacy needs
+        return phpText(date, htmlText(str), htmlText(wh.getPrivDisplay()));
     }
 
     public String wrapString(Property prop, String str) {
@@ -1302,13 +1304,8 @@ public class WebSection {
             return "";
         }
 
-        // Get privacy string
-        String privDisplay = wh.getPrivDisplay();
-        if (wh.isPrivate(prop)) {
-            return htmlText(privDisplay);
-        }
-
-        return htmlText(str);
+        // Return string filtered by php and privacy needs
+        return phpText(prop, htmlText(str), htmlText(wh.getPrivDisplay()));
     }
 
     /**
@@ -1323,8 +1320,20 @@ public class WebSection {
     }
 
     /**
-     * Convert string into html compatible text
+     * Convert string into html/php compatible text
      */
+    private String phpText(Property prop, String strClear, String strHidden) {
+        if (wh.isPrivate(prop)) {
+            if (wp.param_PHP_Support.equals("1")) {
+                return "<?php echo " + wp.param_PHP_Test + " ? \"" + strClear + "\" : \"" + strHidden + "\" ?>";
+            } else {
+                return strHidden;
+            }
+        } else {
+            return strClear;
+        }
+    }
+
     public String htmlText(int i) {
         return htmlText(Integer.toString(i));
     }
