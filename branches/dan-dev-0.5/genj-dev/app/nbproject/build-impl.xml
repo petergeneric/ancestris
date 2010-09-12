@@ -108,6 +108,17 @@ is divided into following sections:
         </condition>
         <condition property="have.sources">
             <or>
+                <available file="${src.de.dir}"/>
+                <available file="${src.hu.dir}"/>
+                <available file="${src.es.dir}"/>
+                <available file="${src.nl.dir}"/>
+                <available file="${src.ru.dir}"/>
+                <available file="${src.cs.dir}"/>
+                <available file="${src.pt_BR.dir}"/>
+                <available file="${src.pl.dir}"/>
+                <available file="${src.fi.dir}"/>
+                <available file="${src.ja.dir}"/>
+                <available file="${src.it.dir}"/>
                 <available file="${src.en.dir}"/>
                 <available file="${src.images.dir}"/>
                 <available file="${src.fr.dir}"/>
@@ -168,6 +179,17 @@ is divided into following sections:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="-pre-init,-init-private,-init-user,-init-project,-do-init" name="-init-check">
+        <fail unless="src.de.dir">Must set src.de.dir</fail>
+        <fail unless="src.hu.dir">Must set src.hu.dir</fail>
+        <fail unless="src.es.dir">Must set src.es.dir</fail>
+        <fail unless="src.nl.dir">Must set src.nl.dir</fail>
+        <fail unless="src.ru.dir">Must set src.ru.dir</fail>
+        <fail unless="src.cs.dir">Must set src.cs.dir</fail>
+        <fail unless="src.pt_BR.dir">Must set src.pt_BR.dir</fail>
+        <fail unless="src.pl.dir">Must set src.pl.dir</fail>
+        <fail unless="src.fi.dir">Must set src.fi.dir</fail>
+        <fail unless="src.ja.dir">Must set src.ja.dir</fail>
+        <fail unless="src.it.dir">Must set src.it.dir</fail>
         <fail unless="src.en.dir">Must set src.en.dir</fail>
         <fail unless="src.images.dir">Must set src.images.dir</fail>
         <fail unless="src.fr.dir">Must set src.fr.dir</fail>
@@ -196,7 +218,7 @@ is divided into following sections:
     </target>
     <target name="-init-macrodef-javac">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute default="${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}" name="srcdir"/>
+            <attribute default="${src.de.dir}:${src.hu.dir}:${src.es.dir}:${src.nl.dir}:${src.ru.dir}:${src.cs.dir}:${src.pt_BR.dir}:${src.pl.dir}:${src.fi.dir}:${src.ja.dir}:${src.it.dir}:${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${includes}" name="includes"/>
@@ -224,7 +246,7 @@ is divided into following sections:
             </sequential>
         </macrodef>
         <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute default="${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}" name="srcdir"/>
+            <attribute default="${src.de.dir}:${src.hu.dir}:${src.es.dir}:${src.nl.dir}:${src.ru.dir}:${src.cs.dir}:${src.pt_BR.dir}:${src.pl.dir}:${src.fi.dir}:${src.ja.dir}:${src.it.dir}:${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <sequential>
@@ -419,11 +441,22 @@ is divided into following sections:
                 <include name="*"/>
             </dirset>
         </pathconvert>
-        <j2seproject3:depend srcdir="${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}:${build.generated.subdirs}"/>
+        <j2seproject3:depend srcdir="${src.de.dir}:${src.hu.dir}:${src.es.dir}:${src.nl.dir}:${src.ru.dir}:${src.cs.dir}:${src.pt_BR.dir}:${src.pl.dir}:${src.fi.dir}:${src.ja.dir}:${src.it.dir}:${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}:${build.generated.subdirs}"/>
     </target>
     <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-compile-depend" if="have.sources" name="-do-compile">
         <j2seproject3:javac gensrcdir="${build.generated.sources.dir}"/>
         <copy todir="${build.classes.dir}">
+            <fileset dir="${src.de.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.hu.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.es.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.nl.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.ru.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.cs.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.pt_BR.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.pl.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.fi.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.ja.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.it.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.en.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.images.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.fr.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
@@ -445,7 +478,7 @@ is divided into following sections:
     <target depends="init,deps-jar,-pre-pre-compile" name="-do-compile-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
         <j2seproject3:force-recompile/>
-        <j2seproject3:javac excludes="" gensrcdir="${build.generated.sources.dir}" includes="${javac.includes}" sourcepath="${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}"/>
+        <j2seproject3:javac excludes="" gensrcdir="${build.generated.sources.dir}" includes="${javac.includes}" sourcepath="${src.de.dir}:${src.hu.dir}:${src.es.dir}:${src.nl.dir}:${src.ru.dir}:${src.cs.dir}:${src.pt_BR.dir}:${src.pl.dir}:${src.fi.dir}:${src.ja.dir}:${src.it.dir}:${src.en.dir}:${src.images.dir}:${src.fr.dir}:${src.dir}:${launcher.dir}:${report.dir}:${contrib.dir}"/>
     </target>
     <target name="-post-compile-single">
         <!-- Empty placeholder for easier customization. -->
@@ -633,6 +666,39 @@ is divided into following sections:
             <classpath>
                 <path path="${javac.classpath}"/>
             </classpath>
+            <fileset dir="${src.de.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.hu.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.es.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.nl.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.ru.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.cs.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.pt_BR.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.pl.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.fi.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.ja.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.it.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
             <fileset dir="${src.en.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
