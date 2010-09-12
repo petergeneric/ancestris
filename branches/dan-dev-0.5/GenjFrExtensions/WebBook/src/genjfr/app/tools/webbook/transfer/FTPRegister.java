@@ -96,7 +96,7 @@ public class FTPRegister {
         return true;
     }
 
-    public boolean calculate() {
+    public boolean calculate(List<File> localFiles) {
 
         String[] keys = readKeys();
         if (keys.length == 0) {
@@ -109,6 +109,10 @@ public class FTPRegister {
 
             // loop on files generated this time with server and base dir that match
             if (!isValid(key)) {
+                continue;
+            }
+            // loop if file not in the local list
+            if (!isLocal(key, localFiles)) {
                 continue;
             }
 
@@ -347,5 +351,15 @@ public class FTPRegister {
 
     private boolean isValid(String key) {
         return key.indexOf(host + targetdir) == 0;
+    }
+
+    private boolean isLocal(String key, List<File> localFiles) {
+        for (Iterator it = localFiles.iterator(); it.hasNext();) {
+            File file = (File) it.next();
+            if (key.indexOf(file.getName()) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

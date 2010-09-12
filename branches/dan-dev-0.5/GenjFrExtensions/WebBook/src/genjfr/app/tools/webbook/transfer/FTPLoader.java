@@ -27,6 +27,7 @@ public class FTPLoader {
     private Log log = null;
     private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
     private RequestProcessor.Task theTask = null;
+    private FTPUpload ftpu = null;
     //
     public String localfile;
     public String targetfile;
@@ -70,7 +71,8 @@ public class FTPLoader {
                 ph.start();
 
                 // Put bulk of files giving the log and the progress window id as reference
-                new FTPUpload(host, user, password, localFiles, localdir.getAbsolutePath(), targetdir, log, uploadRegister, ph).run();
+                ftpu = new FTPUpload(host, user, password, localFiles, localdir.getAbsolutePath(), targetdir, log, uploadRegister, ph);
+                ftpu.run();
                 if (log.endSuccessful) {
                     runUserShell();
                 }
@@ -106,8 +108,10 @@ public class FTPLoader {
             return false;
         }
         log.write(log.ERROR, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStopped"));
-        return theTask.cancel();
-
+        ftpu.cancel();
+        theTask.cancel();
+        RP.stop();
+        return true;
     }
 
     /**

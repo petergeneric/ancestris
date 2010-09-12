@@ -25,7 +25,7 @@ public class WebIndividuals extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Individualslist"), "persons", "persons_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection * 2);
+        init(trs("TXT_Individualslist"), "persons", "persons_", formatFromSize(wh.getNbIndis()), 1, sizeIndiSection * 2);
     }
 
     /**

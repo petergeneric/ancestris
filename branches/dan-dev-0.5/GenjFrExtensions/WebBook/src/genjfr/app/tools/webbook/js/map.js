@@ -12,13 +12,22 @@
     var shadowWidth;
 
     // Entry point
-    function initialize() {
+    function displayMap() {
        if (GBrowserIsCompatible()) {
           createMap();
           adjustZoom();
           createIcons();
           loadMarkers();
-          resizeApp();
+          }
+       else {
+          alert("Sorry, the Google Maps feature is not compatible with this browser");
+          }
+       }
+
+    function displayMarkers() {
+       if (GBrowserIsCompatible()) {
+          createIcons();
+          loadMarkers();
           }
        else {
           alert("Sorry, the Google Maps feature is not compatible with this browser");
@@ -91,10 +100,10 @@
                 var density    = ls[l].getAttribute("d");
                 var min        = ls[l].getAttribute("min");
                 var max        = ls[l].getAttribute("max");
-                var linkpage   = ls[l].getAttribute("lkp"); 
-                var linkIn     = ls[l].getAttribute("lki"); 
-                var linkOut    = ls[l].getAttribute("lko"); 
-                var city       = ls[l].getAttribute("cty"); 
+                var linkpage   = ls[l].getAttribute("lkp");
+                var linkIn     = ls[l].getAttribute("lki");
+                var linkOut    = ls[l].getAttribute("lko");
+                var city       = ls[l].getAttribute("cty");
                 var html       = ls[l].firstChild.nodeValue;
 
                 // create marker
@@ -157,27 +166,27 @@
       if (document.getElementById("den3").checked) density = 3;
       for (var i=0; i<gmarkers.length; i++) {
         var show = true;
-        if ((volume != "*")   && (gmarkers[i].mysize != volume))           { gmarkers[i].hide(); continue; } 
-        if ((ancestor != "*") && (gmarkers[i].myancestor != ancestor))     { gmarkers[i].hide(); continue; } 
-        if ((type != "*")     && (gmarkers[i].mytype.indexOf(type) == -1)) { gmarkers[i].hide(); continue; } 
-        if ((gmarkers[i].mymin != 0) && (gmarkers[i].mymin < min))         { gmarkers[i].hide(); continue; } 
-        if ((gmarkers[i].mymax != 0) && (gmarkers[i].mymax > max))         { gmarkers[i].hide(); continue; } 
-        if (gmarkers[i].mydensity < density)                               { gmarkers[i].hide(); continue; } 
+        if ((volume != "*")   && (gmarkers[i].mysize != volume))           { gmarkers[i].hide(); continue; }
+        if ((ancestor != "*") && (gmarkers[i].myancestor != ancestor))     { gmarkers[i].hide(); continue; }
+        if ((type != "*")     && (gmarkers[i].mytype.indexOf(type) == -1)) { gmarkers[i].hide(); continue; }
+        if ((gmarkers[i].mymin != 0) && (gmarkers[i].mymin < min))         { gmarkers[i].hide(); continue; }
+        if ((gmarkers[i].mymax != 0) && (gmarkers[i].mymax > max))         { gmarkers[i].hide(); continue; }
+        if (gmarkers[i].mydensity < density)                               { gmarkers[i].hide(); continue; }
         gmarkers[i].show();
         }
     }
 
     // secondary entry points
-    function add() { 
-      iconSize += 4; set(); 
+    function add() {
+      iconSize += 4; set();
       }
 
-    function sub() { 
-      iconSize -= 4; set(); 
+    function sub() {
+      iconSize -= 4; set();
       }
 
-    function chg() { 
-      iconSize = parseInt(document.getElementById("markersize").value); set(); 
+    function chg() {
+      iconSize = parseInt(document.getElementById("markersize").value); set();
       }
 
     function set() {
@@ -213,7 +222,7 @@
              }
           html += lines;
           html += "<br /><br />";
-          html += "<a href="+link+" target=\"_blank\">"+"detailed_events "+city+"</a>";
+          html += "<a href="+link+" target=\"_blank\">"+"Voir les événements détaillés pour "+city+"</a>";
           html += "</div>";
           marker.openInfoWindowHtml(html);
           });
@@ -221,7 +230,7 @@
        return marker;
        }
 
-    function e(id) { 
+    function e(id) {
        return document.getElementById(id);
        }
 
@@ -253,14 +262,15 @@
           }
        var width = getWindowWidth();
        var footerHeight;
-       if (width < 950) { footerHeight = 120 } 
-       else if (width < 1170) { footerHeight = 90 } 
-       else { footerHeight = 60 } 
+       if (width < 950) { footerHeight = 120 }
+       else if (width < 1170) { footerHeight = 90 }
+       else { footerHeight = 60 }
        var height = getWindowHeight() - offsetTop - footerHeight - 10;
        if (height >= 0) {
           mapElem.style.height = height + "px";
           }
        }
+
 
 //]]>
 </script>

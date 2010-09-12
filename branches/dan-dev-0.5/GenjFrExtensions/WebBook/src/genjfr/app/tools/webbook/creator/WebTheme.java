@@ -7,8 +7,6 @@ package genjfr.app.tools.webbook.creator;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -16,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -40,7 +37,7 @@ public class WebTheme extends WebSection {
         // create directory
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + themeDir, true);
 
-        // create directory
+        // empty directory
         wh.emptyDir(dir, false);
 
         // copy icons and style sheet
@@ -51,7 +48,7 @@ public class WebTheme extends WebSection {
     }
 
     /**
-     * Helper - Create icons
+     * Create icons and other files
      */
     public void createFiles(File dir) {
 

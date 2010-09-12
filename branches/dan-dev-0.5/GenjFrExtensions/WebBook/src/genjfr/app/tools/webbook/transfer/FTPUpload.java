@@ -69,6 +69,7 @@ public class FTPUpload {
 
     /* Webbook upload variables */
     private ProgressHandle progress;
+    private boolean taskCancelled;
     private List<File> localFiles;
     private String localRoot;
     private String remoteRoot;
@@ -82,7 +83,8 @@ public class FTPUpload {
     /**
      *  Constructor
      */
-    public FTPUpload(String host, String user, String password, List<File> localFiles, String localRoot, String remoteRoot, Log log, FTPRegister uploadRegister, ProgressHandle progress) {
+    public FTPUpload(String host, String user, String password, List<File> localFiles, String localRoot, String remoteRoot, Log log, FTPRegister uploadRegister,
+            ProgressHandle progress) {
         this.host = host;
         this.user = user;
         this.password = password;
@@ -92,6 +94,7 @@ public class FTPUpload {
         this.log = log;
         this.uploadRegister = uploadRegister;
         this.progress = progress;
+        taskCancelled = false;
     }
 
     /**
@@ -161,6 +164,14 @@ public class FTPUpload {
         }
     }
 
+
+    /**
+     * Cancels transfer
+     */
+    void cancel() {
+        taskCancelled = true;
+    }
+
     /**
      * Determines which files to upload and remove
      */
@@ -168,7 +179,7 @@ public class FTPUpload {
 
         // Calculates which files to remove on the server if necessary
         try {
-            uploadRegister.calculate();
+            uploadRegister.calculate(localFiles);
             if (!moreThanOneLoop) {
                 totalToTransfer = uploadRegister.getNbFilesToTransfer();
             }
@@ -192,12 +203,12 @@ public class FTPUpload {
             // Opens connection with server
             debugMsg("Opening socket");
             FTPcmd = new Socket(host, 21);
-            debugMsg("FTPcmd="+FTPcmd);
+            debugMsg("FTPcmd=" + FTPcmd);
             FTPcmd.setSoTimeout(timeout);
             cmdInput = new BufferedReader(new InputStreamReader(FTPcmd.getInputStream()));
-            debugMsg("cmdInput="+cmdInput);
+            debugMsg("cmdInput=" + cmdInput);
             cmdOutput = new PrintStream(FTPcmd.getOutputStream());
-            debugMsg("cmdOutput="+cmdOutput);
+            debugMsg("cmdOutput=" + cmdOutput);
 
             //Check if the connection went fine
             getResponse();
@@ -256,6 +267,11 @@ public class FTPUpload {
                 File file = (File) it.next();
                 currentLocalDir = getFileDir(file);
 
+                // Quit if task has been cancelled or is finished
+                if (taskCancelled) {
+                    abort();
+                    break;
+                }
                 // Do not upload file if not need to be
                 if (!uploadRegister.isToTransfer(file)) {
                     if (!moreThanOneLoop) {
@@ -734,7 +750,7 @@ public class FTPUpload {
      */
     private void debugMsg(String str) {
         if (debug) {
-            log.write("DEBUG - "+ str);
+            log.write("DEBUG - " + str);
         }
     }
 
@@ -749,4 +765,5 @@ public class FTPUpload {
     public String trs(String string, Object[] arr) {
         return NbBundle.getMessage(FTPLoader.class, string, arr);
     }
+
 }

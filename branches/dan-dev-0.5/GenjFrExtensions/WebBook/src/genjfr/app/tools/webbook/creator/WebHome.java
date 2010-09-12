@@ -26,7 +26,7 @@ public class WebHome extends WebSection {
     }
 
     public void init() {
-        init("", "", "", "", "", 0, 0);
+        init("", "", "", "", 0, 0);
     }
 
     /**

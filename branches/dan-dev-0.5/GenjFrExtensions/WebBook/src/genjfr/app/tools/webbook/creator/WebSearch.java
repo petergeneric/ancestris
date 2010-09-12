@@ -33,9 +33,6 @@ import java.util.Map;
 public class WebSearch extends WebSection {
 
     private String searchFile = "";
-    private String titleFile = "";
-    private String inputFile = "";
-    private String resultsFile = "";
     private String resourceFile = "";
 
     /**
@@ -46,7 +43,7 @@ public class WebSearch extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Search"), "search", "search_", formatFromSize(wh.getNbIndis()), ".html", 0, 0);
+        init(trs("TXT_Search"), "search", "search_", formatFromSize(wh.getNbIndis()), 0, 0);
     }
 
     /**
@@ -63,9 +60,6 @@ public class WebSearch extends WebSection {
 
         // Generate detail pages
         searchFile = sectionPrefix + String.format(formatNbrs, 0) + sectionSuffix;
-        titleFile = sectionPrefix + String.format(formatNbrs, 1) + sectionSuffix;
-        inputFile = sectionPrefix + String.format(formatNbrs, 2) + sectionSuffix;
-        resultsFile = sectionPrefix + String.format(formatNbrs, 3) + sectionSuffix;
         resourceFile = sectionPrefix + String.format(formatNbrs, 4) + ".js";
 
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
@@ -78,17 +72,8 @@ public class WebSearch extends WebSection {
      */
     private void exportData(File dir) {
 
-        // Create search frames page
-        exportFrames(dir, searchFile);
-
-        // Create search frames page
-        exportTitle(dir, titleFile);
-
         // Create search input page
-        exportInput(dir, inputFile);
-
-        // Create search results page
-        exportResults(dir, resultsFile);
+        exportSearch(dir, searchFile);
 
         // Create js content file
         List indis = wh.getIndividuals(wh.gedcom, null);
@@ -96,89 +81,9 @@ public class WebSearch extends WebSection {
     }
 
     /**
-     * Exports frames
+     * Exports search file
      */
-    private void exportFrames(File dir, String exportfile) {
-        File file = wh.getFileForName(dir, exportfile);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
-        }
-        out.println("<!DOCTYPE html PUBLIC  \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>" + htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs("TXT_Search")) + "</title>");
-        out.println("</head>");
-        out.println("<frameset rows=\"70,*\" framespacing=\"0\">");
-        out.println("<frame src=\"" + titleFile + "\" name=input_frame frameborder=\"0\" scrolling=\"no\" noresize >");
-        out.println("<frameset cols=\"30%,*\" framespacing=\"0\">");
-        out.println("<frame src=\"" + inputFile + "\" name=input_frame frameborder=\"0\" scrolling=\"auto\">");
-        out.println("<frame src=\"" + resultsFile + "\" name=\"resultat\" frameborder=\"0\" scrolling=\"auto\">");
-        out.println("</frameset>");
-        out.println("</frameset>");
-        out.println("</html>");
-        wh.log.write(searchFile + trs("EXEC_DONE"));
-        out.close();
-    }
-
-    /**
-     * Exports input Frame
-     */
-    private void exportTitle(File dir, String exportfile) {
-        File file = wh.getFileForName(dir, exportfile);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
-        }
-        printOpenHTML(out, "TXT_Search", this);
-        printCloseHTML(out);
-        wh.log.write(exportfile + trs("EXEC_DONE"));
-        out.close();
-    }
-
-    /**
-     * Exports input Frame
-     */
-    private void exportInput(File dir, String exportfile) {
-        File file = wh.getFileForName(dir, exportfile);
-        PrintWriter out = wh.getWriter(file, UTF8);
-        if (out == null) {
-            return;
-        }
-        printOpenHTML(out, null, this);
-        out.println("<p class=\"searchdecal\">" + trs("search_criteria") + "</p>");
-        out.println("<form method=\"get\" action=\"" + resultsFile + "\" target=\"resultat\" accept-charset=\"iso-8859-1\">");
-        out.println("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\" class=\"searchtable\">");
-        out.println("<tr><td>" + trs("search_firstname") + ":</td><td><input name=\"key_fn\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xfn\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_lastname") + ":</td><td><input name=\"key_ln\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xln\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_place") + ":</td><td><input name=\"key_pl\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xpl\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_id") + ":</td><td><input name=\"key_id\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xid\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_sosa") + ":</td><td><input name=\"key_so\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xso\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_birthd") + ":</td><td>" + trs("search_between") + "&nbsp;<input name=\"key_1bi\" type=\"text\" size=\"5\" />&nbsp;" + trs("search_dateand") + "&nbsp;<input name=\"key_2bi\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input name=\"key_xbi\" type=\"checkbox\" value=\"on\" />" + trs("search_not") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_marrid") + ":</td><td>" + trs("search_between") + "&nbsp;<input name=\"key_1ma\" type=\"text\" size=\"5\" />&nbsp;" + trs("search_dateand") + "&nbsp;<input name=\"key_2ma\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input name=\"key_xma\" type=\"checkbox\" value=\"on\" />" + trs("search_not") + "</td></tr>");
-
-        out.println("<tr><td>" + trs("search_deathd") + ":</td><td>" + trs("search_between") + "&nbsp;<input name=\"key_1de\" type=\"text\" size=\"5\" />&nbsp;" + trs("search_dateand") + "&nbsp;<input name=\"key_2de\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input name=\"key_xde\" type=\"checkbox\" value=\"on\" />" + trs("search_not") + "</td></tr>");
-
-        out.println("<tr><td colspan=\"2\" align=\"center\"><br /><input name=\"andor\" type=\"radio\" value=\"and\" checked />" + trs("search_and") + "&nbsp;&nbsp;&nbsp;<input name=\"andor\" type=\"radio\" value=\"or\" />" + trs("search_or") + "</td></tr>");
-
-        out.println("<tr><td colspan=\"2\" align=\"center\"><br /><input name=\"OK\" type=\"submit\" value=\"" + trs("search_go") + "\" />&nbsp;&nbsp;<input name=\"reset\" type=\"reset\" value=\"" + trs("search_reset") + "\" />&nbsp;&nbsp;<input name=\"home\" type=\"button\" value=\"" + trs("alt_home") + "\" onclick=\"top.window.location.href='" + getHomeLink(this) + "'\" /></td></tr>");
-        out.println("</table>");
-        out.println("</form>");
-        printCloseHTML(out);
-        wh.log.write(exportfile + trs("EXEC_DONE"));
-        out.close();
-    }
-
-    /**
-     * Exports results Frame
-     */
-    private void exportResults(File dir, String exportfile) {
+    private void exportSearch(File dir, String exportfile) {
 
         String javascriptDir = "js/";
 
@@ -197,6 +102,33 @@ public class WebSearch extends WebSection {
             //e.printStackTrace();
             wb.log.write(wb.log.ERROR, "exportResults - " + e.getMessage());
         }
+        out.println("</script>");
+        out.println("<div class=\"title\"><a name=\"top\">&nbsp;</a>" + trs("TXT_Search") + "</div>");
+        out.println("<p class=\"searchdecal\">" + trs("search_criteria") + "</p>");
+        out.println("<form name=\"searchInputForm\" method=\"get\" action=\"" + exportfile + "\" accept-charset=\"iso-8859-1\">");
+        out.println("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\" class=\"searchtable\">");
+        out.println("<tr><td>" + trs("search_firstname") + ":</td><td><input name=\"key_fn\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xfn\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_lastname") + ":</td><td><input name=\"key_ln\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xln\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_place") + ":</td><td><input name=\"key_pl\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xpl\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_id") + ":</td><td><input name=\"key_id\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xid\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_sosa") + ":</td><td><input name=\"key_so\" type=\"text\" size=\"15\" />&nbsp;<input name=\"key_xso\" type=\"checkbox\" value=\"on\" />" + trs("search_exact") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_birthd") + ":</td><td>" + trs("search_between") + "&nbsp;<input name=\"key_1bi\" type=\"text\" size=\"5\" />&nbsp;" + trs("search_dateand") + "&nbsp;<input name=\"key_2bi\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input name=\"key_xbi\" type=\"checkbox\" value=\"on\" />" + trs("search_not") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_marrid") + ":</td><td>" + trs("search_between") + "&nbsp;<input name=\"key_1ma\" type=\"text\" size=\"5\" />&nbsp;" + trs("search_dateand") + "&nbsp;<input name=\"key_2ma\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input name=\"key_xma\" type=\"checkbox\" value=\"on\" />" + trs("search_not") + "</td></tr>");
+        out.println("<tr><td>" + trs("search_deathd") + ":</td><td>" + trs("search_between") + "&nbsp;<input name=\"key_1de\" type=\"text\" size=\"5\" />&nbsp;" + trs("search_dateand") + "&nbsp;<input name=\"key_2de\" type=\"text\" size=\"5\" />&nbsp;&nbsp;<input name=\"key_xde\" type=\"checkbox\" value=\"on\" />" + trs("search_not") + "</td></tr>");
+        out.println("<tr><td colspan=\"2\" align=\"center\"><br /><input name=\"andor\" type=\"radio\" value=\"and\" checked />" + trs("search_and") + "&nbsp;&nbsp;&nbsp;<input name=\"andor\" type=\"radio\" value=\"or\" />" + trs("search_or") + "</td></tr>");
+        out.println("<tr><td colspan=\"2\" align=\"center\"><br />");
+        out.println("<input name=\"OK\" type=\"submit\" value=\"" + trs("search_go") + "\" />&nbsp;&nbsp;");
+        out.println("<input name=\"reset\" type=\"reset\" value=\"" + trs("search_reset") + "\" />&nbsp;&nbsp;");
+        out.println("<input name=\"home\" type=\"button\" value=\"" + trs("alt_home") + "\" onclick=\"top.window.location.href='" + getHomeLink(this) + "'\" />");
+        out.println("</td></tr>");
+        out.println("</table>");
+        out.println("</form>");
+        out.println("<br>");
+        out.println("<hr>");
+        out.println("<p class=\"searchdecal\">" + trs("search_result") + "</p>");
+        out.println("<br>");
+        out.println("<script language=javascript>");
+        out.println("   processSearch();");
         out.println("</script>");
         printCloseHTML(out);
         wh.log.write(exportfile + trs("EXEC_DONE"));
@@ -462,9 +394,9 @@ public class WebSearch extends WebSection {
         int cpt = 0;
         for (Iterator it1 = indis.iterator(); it1.hasNext();) {
             Indi indi = (Indi) it1.next();
-            list.append((cpt == 0 ? "" : ",") + "\"" + wrapString(indi, indi.getId()) + "\"");
+            list.append((cpt == 0 ? "" : ",") + "\"" + indi.getId() + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
-            listID.append(getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi));
+            listID.append(phpText(indi));
             listID.append("\"");
             cpt++;
         }
@@ -475,17 +407,23 @@ public class WebSearch extends WebSection {
         return;
     }
 
+    private String phpText(Indi indi) {
+        String strPriv = wh.getPrivDisplay();
+        if (wh.isPrivate(indi)) {
+            return "0" + "|" + indi.getId() + "|" + getPage(indi) + "|" + strPriv + "|" + strPriv + "|" + strPriv + "|" + strPriv;
+        } else {
+            return getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi);
+        }
+    }
+
     /**
      * Get sex
      */
-    private int getSex(Indi indi) {
+    private String getSex(Indi indi) {
         if (indi == null) {
-            return 0;
+            return "0";
         }
-        if (wh.isPrivate(indi)) {
-            return 0;
-        }
-        return indi.getSex();
+        return "" + indi.getSex();
     }
 
     /**
@@ -523,9 +461,6 @@ public class WebSearch extends WebSection {
         if (indi == null) {
             return "";
         }
-        if (wh.isPrivate(indi)) {
-            return "...";
-        }
         PropertyDate bdate = indi.getBirthDate();
         String date = (indi == null) || (bdate == null) ? "" : bdate.toString().trim();
         return date;
@@ -534,9 +469,6 @@ public class WebSearch extends WebSection {
     private String getDDate(Indi indi) {
         if (indi == null) {
             return "";
-        }
-        if (wh.isPrivate(indi)) {
-            return "...";
         }
         PropertyDate ddate = indi.getDeathDate();
         String date = (indi == null) || (ddate == null) ? "" : ddate.toString().trim();
@@ -554,19 +486,7 @@ public class WebSearch extends WebSection {
      * Read input file and put into string
      */
     private String filter(String inputStr) {
-        String text = inputStr.replaceAll("search_please",
-                trs("search_please")).replaceAll("search_results1",
-                trs("search_results1")).replaceAll("search_results2",
-                trs("search_results2")).replaceAll("alt_male",
-                trs("alt_male")).replaceAll("alt_female",
-                trs("alt_female")).replaceAll("alt_unknown",
-                trs("alt_unknown")).replaceAll("searcht_sex",
-                trs("searcht_sex")).replaceAll("searcht_id",
-                trs("searcht_id")).replaceAll("searcht_name",
-                trs("searcht_name")).replaceAll("searcht_sosa",
-                trs("searcht_sosa")).replaceAll("searcht_bdate",
-                trs("searcht_bdate")).replaceAll("searcht_ddate",
-                trs("searcht_ddate"));
+        String text = inputStr.replaceAll("search_please", trs("search_please")).replaceAll("search_results", trs("search_results")).replaceAll("alt_male", trs("alt_male")).replaceAll("alt_female", trs("alt_female")).replaceAll("alt_unknown", trs("alt_unknown")).replaceAll("searcht_sex", trs("searcht_sex")).replaceAll("searcht_id", trs("searcht_id")).replaceAll("searcht_name", trs("searcht_name")).replaceAll("searcht_sosa", trs("searcht_sosa")).replaceAll("searcht_bdate", trs("searcht_bdate")).replaceAll("searcht_ddate", trs("searcht_ddate")).replaceAll(".html#", (wp.param_PHP_Support.equals("1")) ? ".php#" : ".html#");
         return text;
     }
 } // End_of_Report

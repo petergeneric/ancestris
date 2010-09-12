@@ -51,7 +51,7 @@ public class WebStatsFrequent extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_StatsFrequent"), "stats", "stats_", formatFromSize(wh.getNbIndis()), ".html", 1, 0);
+        init(trs("TXT_StatsFrequent"), "stats", "stats_", formatFromSize(wh.getNbIndis()), 1, 0);
     }
 
     /**

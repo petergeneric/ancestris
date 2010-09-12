@@ -70,7 +70,7 @@ public class WebIndividualsDetails extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Individualsdetails"), "details", "personsdetails_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection);
+        init(trs("TXT_Individualsdetails"), "details", "personsdetails_", formatFromSize(wh.getNbIndis()), 1, sizeIndiSection);
         calcPages();
     }
 

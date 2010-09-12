@@ -163,14 +163,14 @@ public class WebHelper {
 
     /**
      * Generates file name
-     *///USED
+     */
     public File getFileForName(File dir, String fileName) {
         return new File(dir, fileName);
     }
 
     /**
      * Helper - Create a PrintWriter wrapper for output stream
-     *///USED
+     */
     public PrintWriter getWriter(File file, Charset cs) {
 
         PrintWriter pw = null;

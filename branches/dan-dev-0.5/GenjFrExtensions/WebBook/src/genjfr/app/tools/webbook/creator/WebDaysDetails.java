@@ -37,7 +37,7 @@ public class WebDaysDetails extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Daysdetails"), "daysdetails", "daysdetails_", formatFromSize(wh.getNbIndis()), ".html", 1, sizeIndiSection);
+        init(trs("TXT_Daysdetails"), "daysdetails", "daysdetails_", formatFromSize(wh.getNbIndis()), 1, sizeIndiSection);
         calcPages();
     }
 

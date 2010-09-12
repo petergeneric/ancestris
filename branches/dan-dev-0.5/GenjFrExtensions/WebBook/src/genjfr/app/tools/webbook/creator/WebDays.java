@@ -31,7 +31,7 @@ public class WebDays extends WebSection {
     }
 
     public void init() {
-        init(trs("TXT_Dayslist"), "days", "days", "", ".html", 1, 0);
+        init(trs("TXT_Dayslist"), "days", "days", "", 1, 0);
     }
 
     /**

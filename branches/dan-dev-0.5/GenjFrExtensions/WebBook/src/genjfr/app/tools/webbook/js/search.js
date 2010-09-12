@@ -1,17 +1,27 @@
-<!--
 
-find_string = parent.resultat.location.href.substring(parent.resultat.location.href.indexOf("?")+1);
+find_string = location.href.substring(location.href.indexOf("?")+1);
 find_string = unescape(find_string);
 arrayofStrings = find_string.split("&");
 
-input_key_fn = "";  input_key_xfn = "";
-input_key_ln = "";  input_key_xln = "";
-input_key_pl = "";  input_key_xpl = "";
-input_key_id = "";  input_key_xid = "";
-input_key_so = "";  input_key_xso = "";
-input_key_1bi = ""; input_key_2bi = ""; input_key_xbi = "";
-input_key_1ma = ""; input_key_2ma = ""; input_key_xma = "";
-input_key_1de = ""; input_key_2de = ""; input_key_xde = "";
+input_key_fn = "";
+input_key_xfn = "";
+input_key_ln = "";
+input_key_xln = "";
+input_key_pl = "";
+input_key_xpl = "";
+input_key_id = "";
+input_key_xid = "";
+input_key_so = "";
+input_key_xso = "";
+input_key_1bi = "";
+input_key_2bi = "";
+input_key_xbi = "";
+input_key_1ma = "";
+input_key_2ma = "";
+input_key_xma = "";
+input_key_1de = "";
+input_key_2de = "";
+input_key_xde = "";
 input_andor = "";
 
 input_valid = "0";
@@ -20,10 +30,8 @@ var list_found=[];
 
 
 for (var i=0 ; i < arrayofStrings.length ; i++) {
-
-   //document.write (arrayofStrings[i]+"<br />");
    if(arrayofStrings[i].substring(0,6)=="key_fn") {
-      input_key_fn = arrayofStrings[i].substring(7).toUpperCase();
+      input_key_fn = arrayofStrings[i].substring(7);
       if (input_key_fn != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xfn") {
@@ -31,7 +39,7 @@ for (var i=0 ; i < arrayofStrings.length ; i++) {
       }
 
    if(arrayofStrings[i].substring(0,6)=="key_ln") {
-      input_key_ln = arrayofStrings[i].substring(7).toUpperCase();
+      input_key_ln = arrayofStrings[i].substring(7);
       if (input_key_ln != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xln") {
@@ -39,7 +47,7 @@ for (var i=0 ; i < arrayofStrings.length ; i++) {
       }
 
    if(arrayofStrings[i].substring(0,6)=="key_pl") {
-      input_key_pl = arrayofStrings[i].substring(7).toUpperCase();
+      input_key_pl = arrayofStrings[i].substring(7);
       if (input_key_pl != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xpl") {
@@ -47,7 +55,7 @@ for (var i=0 ; i < arrayofStrings.length ; i++) {
       }
 
    if(arrayofStrings[i].substring(0,6)=="key_id") {
-      input_key_id = arrayofStrings[i].substring(7).toUpperCase();
+      input_key_id = arrayofStrings[i].substring(7);
       if (input_key_id != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xid") {
@@ -55,7 +63,7 @@ for (var i=0 ; i < arrayofStrings.length ; i++) {
       }
 
    if(arrayofStrings[i].substring(0,6)=="key_so") {
-      input_key_so = arrayofStrings[i].substring(7).toUpperCase();
+      input_key_so = arrayofStrings[i].substring(7);
       if (input_key_so != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xso") {
@@ -63,40 +71,40 @@ for (var i=0 ; i < arrayofStrings.length ; i++) {
       }
 
    if(arrayofStrings[i].substring(0,7)=="key_1bi") {
-      input_key_1bi = arrayofStrings[i].substring(8).toUpperCase();
+      input_key_1bi = arrayofStrings[i].substring(8);
       if (input_key_1bi != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_2bi") {
-      input_key_2bi = arrayofStrings[i].substring(8).toUpperCase();
+      input_key_2bi = arrayofStrings[i].substring(8);
+      if (input_key_2bi != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xbi") {
       input_key_xbi = arrayofStrings[i].substring(8).toUpperCase();
       }
-   if(input_key_2bi == "" && input_key_1bi != "") input_key_2bi = input_key_1bi;
 
    if(arrayofStrings[i].substring(0,7)=="key_1ma") {
-      input_key_1ma = arrayofStrings[i].substring(8).toUpperCase();
+      input_key_1ma = arrayofStrings[i].substring(8);
       if (input_key_1ma != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_2ma") {
-      input_key_2ma = arrayofStrings[i].substring(8).toUpperCase();
+      input_key_2ma = arrayofStrings[i].substring(8);
+      if (input_key_2ma != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xma") {
       input_key_xma = arrayofStrings[i].substring(8).toUpperCase();
       }
-   if(input_key_2ma == "" && input_key_1ma != "") input_key_2ma = input_key_1ma;
 
    if(arrayofStrings[i].substring(0,7)=="key_1de") {
-      input_key_1de = arrayofStrings[i].substring(8).toUpperCase();
+      input_key_1de = arrayofStrings[i].substring(8);
       if (input_key_1de != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_2de") {
-      input_key_2de = arrayofStrings[i].substring(8).toUpperCase();
+      input_key_2de = arrayofStrings[i].substring(8);
+      if (input_key_2de != "") input_valid = "1";
       }
    if(arrayofStrings[i].substring(0,7)=="key_xde") {
       input_key_xde = arrayofStrings[i].substring(8).toUpperCase();
       }
-   if(input_key_2de == "" && input_key_1de != "") input_key_2de = input_key_1de;
 
 
    if(arrayofStrings[i].substring(0,5)=="andor") {
@@ -104,54 +112,122 @@ for (var i=0 ; i < arrayofStrings.length ; i++) {
       }
    }
 
-if (input_valid == "0") {
-   document.write ("<p class=\"searchdecal\">search_please</p>");
-   }
 
-if (input_valid == "1") {
-   var nbResults;
-   nbResults=0;
-   first = "1";
 
-   if (input_key_fn != "") {
-      nbResults = recherche("string", input_key_fn, "", input_key_xfn, list_firstnames, list_firstnamesID, first);
-      first = "0";
-      }
-   if (input_key_ln != "") {
-      nbResults = recherche("string", input_key_ln, "",  input_key_xln, list_lastnames, list_lastnamesID, first);
-      first = "0";
-      }
-   if (input_key_pl != "") {
-      nbResults = recherche("place", input_key_pl, "",  input_key_xpl, list_places, list_placesID, first);
-      first = "0";
-      }
-   if (input_key_id != "") {
-      nbResults = recherche("string", input_key_id, "",  input_key_xid, list_ids, list_idsID, first);
-      first = "0";
-      }
-   if (input_key_so != "") {
-      nbResults = recherche("string", input_key_so, "",  input_key_xso, list_sosas, list_sosasID, first);
-      first = "0";
-      }
-   if (input_key_1bi != "") {
-      nbResults = recherche("number", input_key_1bi, input_key_2bi, input_key_xbi, list_births, list_birthsID, first);
-      first = "0";
-      }
-   if (input_key_1ma != "") {
-      nbResults = recherche("number", input_key_1ma, input_key_2ma, input_key_xma, list_marriages, list_marriagesID, first);
-      first = "0";
-      }
-   if (input_key_1de != "") {
-      nbResults = recherche("number", input_key_1de, input_key_2de, input_key_xde, list_deaths, list_deathsID, first);
-      first = "0";
-      }
-   displayResults();
-   }
+function processSearch() {
 
+	nbResults=0;
+
+	if (input_valid == "0") {
+		input_key_fn = document.searchInputForm.key_fn.value;
+		input_key_xfn = document.searchInputForm.key_xfn.checked ? document.searchInputForm.key_xfn.value.toUpperCase() : "OFF";
+		input_key_ln = document.searchInputForm.key_ln.value;
+		input_key_xln = document.searchInputForm.key_xln.checked ? document.searchInputForm.key_xln.value.toUpperCase() : "OFF";
+		input_key_pl = document.searchInputForm.key_pl.value;
+		input_key_xpl = document.searchInputForm.key_xpl.checked ? document.searchInputForm.key_xpl.value.toUpperCase() : "OFF";
+		input_key_id = document.searchInputForm.key_id.value;
+		input_key_xid = document.searchInputForm.key_xid.checked ? document.searchInputForm.key_xid.value.toUpperCase() : "OFF";
+		input_key_so = document.searchInputForm.key_so.value;
+		input_key_xso = document.searchInputForm.key_xso.checked ? document.searchInputForm.key_xso.value.toUpperCase() : "OFF";
+		input_key_1bi = document.searchInputForm.key_1bi.value;
+		input_key_2bi = document.searchInputForm.key_2bi.value;
+		input_key_xbi = document.searchInputForm.key_xbi.checked ? document.searchInputForm.key_xbi.value.toUpperCase() : "OFF";
+		input_key_1ma = document.searchInputForm.key_1ma.value;
+		input_key_2ma = document.searchInputForm.key_2ma.value;
+		input_key_xma = document.searchInputForm.key_xma.checked ? document.searchInputForm.key_xma.value.toUpperCase() : "OFF";
+		input_key_1de = document.searchInputForm.key_1de.value;
+		input_key_2de = document.searchInputForm.key_2de.value;
+		input_key_xde = document.searchInputForm.key_xde.checked ? document.searchInputForm.key_xde.value.toUpperCase() : "OFF";
+
+		input_andor = document.searchInputForm.andor[0].checked ? document.searchInputForm.andor[0].value.toUpperCase() : document.searchInputForm.andor[1].value.toUpperCase();
+
+		if (input_key_fn != "") input_valid = "1";
+		if (input_key_ln != "") input_valid = "1";
+		if (input_key_pl != "") input_valid = "1";
+		if (input_key_id != "") input_valid = "1";
+		if (input_key_so != "") input_valid = "1";
+		if (input_key_1bi != "") input_valid = "1";
+		if (input_key_2bi != "") input_valid = "1";
+		if (input_key_1ma != "") input_valid = "1";
+		if (input_key_2ma != "") input_valid = "1";
+		if (input_key_1de != "") input_valid = "1";
+		if (input_key_2de != "") input_valid = "1";
+		}
+
+	if (input_valid == "0") {
+   	   document.write ("<p class=\"searchdecal\">search_please</p>");
+	   return;
+	   }
+
+	if (input_valid == "1") {
+	   document.searchInputForm.key_fn.value = input_key_fn;
+	   if (input_key_xfn == "ON") document.searchInputForm.key_xfn.checked = true;
+	   document.searchInputForm.key_ln.value = input_key_ln;
+	   if (input_key_xln == "ON") document.searchInputForm.key_xln.checked = true;
+	   document.searchInputForm.key_pl.value = input_key_pl;
+	   if (input_key_xpl == "ON") document.searchInputForm.key_xpl.checked = true;
+	   document.searchInputForm.key_id.value = input_key_id;
+	   if (input_key_xid == "ON") document.searchInputForm.key_xid.checked = true;
+	   document.searchInputForm.key_so.value = input_key_so;
+	   if (input_key_xso == "ON") document.searchInputForm.key_xso.checked = true;
+	   document.searchInputForm.key_1bi.value = input_key_1bi;
+	   document.searchInputForm.key_2bi.value = input_key_2bi;
+	   if (input_key_xbi == "ON") document.searchInputForm.key_xbi.checked = true;
+	   document.searchInputForm.key_1ma.value = input_key_1ma;
+	   document.searchInputForm.key_2ma.value = input_key_2ma;
+	   if (input_key_xma == "ON") document.searchInputForm.key_xma.checked = true;
+	   document.searchInputForm.key_1de.value = input_key_1de;
+	   document.searchInputForm.key_2de.value = input_key_2de;
+	   if (input_key_xde == "ON") document.searchInputForm.key_xde.checked = true;
+	   if (input_andor == "AND") document.searchInputForm.andor[0].checked = true; else document.searchInputForm.andor[1].checked = true;
+           }
+
+	if (input_valid == "1") {
+	   nbResults=0;
+	   first = "1";
+
+	   if (input_key_fn != "") {
+	      nbResults = recherche("string", input_key_fn, "", input_key_xfn, list_firstnames, list_firstnamesID, first);
+	      first = "0";
+	      }
+	   if (input_key_ln != "") {
+	      nbResults = recherche("string", input_key_ln, "",  input_key_xln, list_lastnames, list_lastnamesID, first);
+	      first = "0";
+	      }
+	   if (input_key_pl != "") {
+	      nbResults = recherche("place", input_key_pl, "",  input_key_xpl, list_places, list_placesID, first);
+	      first = "0";
+	      }
+	   if (input_key_id != "") {
+	      nbResults = recherche("string", input_key_id, "",  input_key_xid, list_ids, list_idsID, first);
+	      first = "0";
+	      }
+	   if (input_key_so != "") {
+	      nbResults = recherche("string", input_key_so, "",  input_key_xso, list_sosas, list_sosasID, first);
+	      first = "0";
+	      }
+	   if (input_key_1bi != "") {
+	      nbResults = recherche("number", input_key_1bi, input_key_2bi, input_key_xbi, list_births, list_birthsID, first);
+	      first = "0";
+	      }
+	   if (input_key_1ma != "") {
+	      nbResults = recherche("number", input_key_1ma, input_key_2ma, input_key_xma, list_marriages, list_marriagesID, first);
+	      first = "0";
+	      }
+	   if (input_key_1de != "") {
+	      nbResults = recherche("number", input_key_1de, input_key_2de, input_key_xde, list_deaths, list_deathsID, first);
+	      first = "0";
+	      }
+	   displayResults(nbResults);
+	   }
+}
 
 
 function recherche(searchType, keyword1, keyword2, keyflag, list, list_id, init) {
-   var nbres;
+   var nbres=0;
+
+   keyword1 = keyword1.toUpperCase();
+   keyword2 = keyword2.toUpperCase();
 
    if ((input_andor == "OR") || (init == "1")) {
       nbres = list_found.length;
@@ -173,7 +249,7 @@ function recherche(searchType, keyword1, keyword2, keyflag, list, list_id, init)
                   continue;
                   }
                // else add to list_found
-               list_found[nbres] = arrayofStrings[j1]; 
+               list_found[nbres] = arrayofStrings[j1];
                nbres++;
                }
             }
@@ -201,7 +277,7 @@ function recherche(searchType, keyword1, keyword2, keyflag, list, list_id, init)
                   continue;
                   }
                // else add to list_found
-               local_list_found[nbres] = arrayofStrings[j1]; 
+               local_list_found[nbres] = arrayofStrings[j1];
                nbres++;
                }
             }
@@ -232,7 +308,7 @@ function matchSearch(searchType, keyword1, keyword2, keyflag, valueIn) {
       x = valueIn.split(" ");
       for (var i = 0 ; i < x.length ; i++) {
          if (x[i] == keyword1) return true;
-         } 
+         }
       return false;
       }
    // Case of number
@@ -248,38 +324,46 @@ function matchSearch(searchType, keyword1, keyword2, keyflag, valueIn) {
       x = valueIn.split(",");
       for (var i = 0 ; i < x.length ; i++) {
          if (x[i] == keyword1) return true;
-         } 
+         }
       return false;
       }
-   
+
    }
 
-function displayResults() {
-   document.write ("<div><p class=\"searchdecal\">search_results1 "+nbResults+" search_results2</p></div>");
-   document.write ("<div id=\"tableContainer\" class=\"tableContainer\">");
-   document.write ("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"  class=\"scrollTable\" >");
-   document.write ("<thead class=\"fixedHeader\"><tr> <th>searcht_sex</th><th>searcht_id</th><th>searcht_name</th><th>searcht_sosa</th><th>searcht_bdate</th><th>searcht_ddate</th></tr></thead><tbody class=\"scrollContent\">");
+function displayResults(matches) {
+
+   stringRes = "";
+
+   if (matches == 0) {
+      return;
+   }
+   stringRes += "<p class=\"searchdecal\">" + matches + " search_results</p><br>";
+   stringRes += "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"  class=\"scrollTable\" >";
+   stringRes += "<thead class=\"fixedHeader\"><tr> <th>searcht_sex</th><th>searcht_id</th><th>searcht_name</th><th>searcht_sosa</th><th>searcht_bdate</th><th>searcht_ddate</th></tr></thead>";
+   stringRes += "<tbody class=\"scrollContent\">";
    sexString = "";
    // Scan IDs (start with ID loop first to sort results along ids
    for (var i1 = 0 ; i1 < ID.length ; i1++) {
-      for (var i2 = 0 ; i2 < list_found.length ; i2++) { 
+      for (var i2 = 0 ; i2 < list_found.length ; i2++) {
          if (list_found[i2] == ID[i1]) {
             arrayofStrings = IDdisplay[i1].split("|");
             if (arrayofStrings[0] == 1) {
-               sexString = "<img src=\"../theme/m.gif\" alt=\"alt_male\" />";
+               sexString = "<img src=\"../theme/m.gif\" alt=\"Homme\" />";
                }
             else if (arrayofStrings[0] == 2) {
-               sexString = "<img src=\"../theme/f.gif\" alt=\"alt_female\" />";
+               sexString = "<img src=\"../theme/f.gif\" alt=\"Femme\" />";
                }
             else  {
-               sexString = "<img src=\"../theme/u.gif\" alt=\"alt_unknown\" />";
+               sexString = "<img src=\"../theme/u.gif\" alt=\"Sexe inconnu\" />";
                }
-            document.write ("<tr><td>"+sexString+"</td><td>"+arrayofStrings[1]+"</td><td><a href=\"../details/personsdetails_"+arrayofStrings[2]+".html#"+arrayofStrings[1]+"\" target=\"_top\">"+arrayofStrings[3]+"</a></td><td>"+arrayofStrings[4]+"</td><td>"+arrayofStrings[5]+"</td><td>"+arrayofStrings[6]+"</td></tr>");
+            stringRes += "<tr><td>"+sexString+"</td><td>"+arrayofStrings[1]+"</td><td><a href=\"../details/personsdetails_"+arrayofStrings[2]+".html#"+arrayofStrings[1]+"\" target=\"_top\">"+arrayofStrings[3]+"</a></td><td>"+arrayofStrings[4]+"</td><td>"+arrayofStrings[5]+"</td><td>"+arrayofStrings[6]+"</td></tr>";
             }
          }
       }
-   document.write ("</tbody></table>");
+   stringRes += "</tbody></table>";
 
+   document.write(stringRes);
+   return stringRes;
 }
 
 function removeClassName (elem, className) {
@@ -296,7 +380,7 @@ String.prototype.trim = function() {
 }
 
 function stripedTable() {
-	if (document.getElementById && document.getElementsByTagName) {  
+	if (document.getElementById && document.getElementsByTagName) {
 		var allTables = document.getElementsByTagName('table');
 		if (!allTables) { return; }
 
@@ -319,4 +403,3 @@ function stripedTable() {
 window.onload = function() { stripedTable(); }
 
 
-//-->
