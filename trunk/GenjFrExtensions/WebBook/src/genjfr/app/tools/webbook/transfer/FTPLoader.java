@@ -110,7 +110,6 @@ public class FTPLoader {
         log.write(log.ERROR, NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStopped"));
         ftpu.cancel();
         theTask.cancel();
-        RP.stop();
         return true;
     }
 

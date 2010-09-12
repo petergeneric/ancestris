@@ -64,14 +64,15 @@ public class WebBookParams {
     public String param_FTP_log;
     // panel 7
     public String param_PHP_Support;
-    public String param_PHP_Test;
+    public String param_PHP_Profil;
+    public String param_PHP_Code;
     public String param_PHP_Integrate;
+    public String param_PHP_Test;
     public String param_PHP_Init;
     public String param_PHP_MyScript;
     public String param_PHP_HeadStart;
     public String param_PHP_HeadCSS;
     public String param_PHP_HeadEnd;
-    public String param_PHP_HeadBody;
     public String param_PHP_Footer;
 
     /**
@@ -136,14 +137,15 @@ public class WebBookParams {
 
         // panel 7
         param_PHP_Support = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Support", "");
-        param_PHP_Test = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Test", "");
+        param_PHP_Profil = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Profil", "");
+        param_PHP_Code = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Code", "");
         param_PHP_Integrate = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Integrate", "");
+        param_PHP_Test = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Test", "");
         param_PHP_Init = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Init", "");
         param_PHP_MyScript = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_MyScript", "");
         param_PHP_HeadStart = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadStart", "");
         param_PHP_HeadCSS = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadCSS", "");
         param_PHP_HeadEnd = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadEnd", "");
-        param_PHP_HeadBody = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadBody", "");
         param_PHP_Footer = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Footer", "");
     }
 
@@ -198,14 +200,15 @@ public class WebBookParams {
         log.write("param_FTP_log = " + param_FTP_log);
         // panel 7
         log.write("param_PHP_Support = " + param_PHP_Support);
-        log.write("param_PHP_Test = " + param_PHP_Test);
+        log.write("param_PHP_Profil = " + param_PHP_Profil);
+        log.write("param_PHP_Code = *******");
         log.write("param_PHP_Integrate = " + param_PHP_Integrate);
+        log.write("param_PHP_Test = " + param_PHP_Test);
         log.write("param_PHP_Init = " + param_PHP_Init);
         log.write("param_PHP_MyScript = " + param_PHP_MyScript);
         log.write("param_PHP_HeadStart = " + param_PHP_HeadStart);
         log.write("param_PHP_HeadCSS = " + param_PHP_HeadCSS);
         log.write("param_PHP_HeadEnd = " + param_PHP_HeadEnd);
-        log.write("param_PHP_HeadBody = " + param_PHP_HeadBody);
         log.write("param_PHP_Footer = " + param_PHP_Footer);
         log.write("----------- ");
     }

@@ -229,7 +229,7 @@ public class WebSection {
 
         String parent = getParentDir(section);
 
-        if (wp.param_PHP_Support.equals("1")) {
+        if (wp.param_PHP_Support.equals("1") && wp.param_PHP_Integrate.equals("1")) {
             // HEAD
             if (!parent.isEmpty()) {
                 out.println("<?php chdir('..'); ?>");
@@ -244,26 +244,24 @@ public class WebSection {
             out.println("");
             out.println("<!-- START OF VARIABLE CONTENT -->");
             out.println("");
-        } else {
+
+        } else if (wp.param_PHP_Support.equals("1") && !wp.param_PHP_Integrate.equals("1")) {
             // HEAD
-            if (title != null && title.length() != 0) {
-                htmlTitle = htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs(title));
+            if (!parent.isEmpty()) {
+                out.println("<?php chdir('..'); ?>");
             }
+            out.println("<?php include(\"" + includesDir + SEP + includeInit + "\"); ?>");
+            out.println(getHeader(title));
+            out.println("<link rel=\"stylesheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
+            // Close HEAD and start BODY
+            out.println("</head>");
+            out.println("<body>");
+            out.println("");
+            out.println("<!-- START OF VARIABLE CONTENT -->");
+            out.println("");
+        } else {
             out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
-            out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + language + "\" lang=\"" + language + "\" >");
-            out.println("<head>");
-            out.println("<title>" + htmlTitle + "</title>");
-            out.println("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />");
-            out.println("<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />");
-            out.println("<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" />");
-            out.println("<meta name=\"keywords\" content=\"" + keywords + "\" />");
-            out.println("<meta http-equiv=\"Content-language\" content=\"" + language + "\" />");
-            out.println("<meta name=\"author\" content=\"" + author + "\" />");
-            out.println("<meta name=\"generator\" content=\"Ancestris\" />");
-            out.println("<meta name=\"robots\" content=\"all\" />");
-            out.println("<meta name=\"reply-to\" content=\"" + replyto + "\" />");
-            out.println("<meta name=\"owner\" content=\"" + owner + "\" />");
+            out.println(getHeader(title));
             // Take care of style relative to curent directory
             out.println("<link rel=\"StyleSheet\" href=\"" + parent + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
             // Close HEAD
@@ -272,6 +270,29 @@ public class WebSection {
             out.println("<body>");
         }
 
+    }
+
+    public String getHeader(String title) {
+        String str = "";
+        // HEAD
+        if (title != null && title.length() != 0) {
+            htmlTitle = htmlText(wp.param_title) + SPACE + "-" + SPACE + htmlText(trs(title));
+        }
+        str += "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+        str += "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" + language + "\" lang=\"" + language + "\" >";
+        str += "<head>";
+        str += "<title>" + htmlTitle + "</title>";
+        str += "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />";
+        str += "<meta http-equiv=\"Content-Style-Type\" content=\"text/css\" />";
+        str += "<meta name=\"description\" content=\"" + htmlTitle + " " + siteDesc + "\" />";
+        str += "<meta name=\"keywords\" content=\"" + keywords + "\" />";
+        str += "<meta http-equiv=\"Content-language\" content=\"" + language + "\" />";
+        str += "<meta name=\"author\" content=\"" + author + "\" />";
+        str += "<meta name=\"generator\" content=\"Ancestris\" />";
+        str += "<meta name=\"robots\" content=\"all\" />";
+        str += "<meta name=\"reply-to\" content=\"" + replyto + "\" />";
+        str += "<meta name=\"owner\" content=\"" + owner + "\" />";
+        return str;
     }
 
     public void printOpenHTMLBody(PrintWriter out, String title, WebSection section) {

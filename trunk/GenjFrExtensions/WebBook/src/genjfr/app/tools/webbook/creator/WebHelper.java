@@ -29,7 +29,11 @@ import genjfr.app.PrivacyPolicy;
 import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbPreferences;
 
@@ -227,6 +231,40 @@ public class WebHelper {
             strOutput.append(convertChar(charInput[i], false, defchar));
         }
         return strOutput.toString();
+    }
+
+    public void copyFiles(String imagesDir, String toFile, String fromDir) {
+        try {
+            // get resource directory where images are
+            URL dirURL = wp.getClass().getClassLoader().getResource(wp.getClass().getName().replace(".", "/") + ".class");
+            if (dirURL.getProtocol().equals("jar")) {
+                /* A JAR path */
+                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
+                JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+                Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+                while (entries.hasMoreElements()) {
+                    String name = entries.nextElement().getName();
+                    if (name.startsWith(imagesDir)) { //filter according to the path
+                        String entry = name.substring(imagesDir.length());
+                        int checkSubdir = entry.indexOf("/");
+                        if (checkSubdir < 0 && !entry.trim().isEmpty()) {
+                            // if it is NOT a subdirectory, it must be an image so copy it
+                            result.add(entry);
+                        }
+                    }
+                }
+
+                String[] list = result.toArray(new String[result.size()]);
+                for (int i = 0; i < list.length; i++) {
+                    String fileName = list[i];
+                    copy(fromDir + fileName, toFile + fileName);
+                }
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            log.write(log.ERROR, "copyFiles - " + e.getMessage());
+        }
     }
 
     public String convertChar(char c, boolean isAnchor, String defchar) {
