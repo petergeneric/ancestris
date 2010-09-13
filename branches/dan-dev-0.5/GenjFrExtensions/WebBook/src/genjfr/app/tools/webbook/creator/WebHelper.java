@@ -861,7 +861,7 @@ public class WebHelper {
             };
         }
         if (individualsList == null) {
-            individualsList = new ArrayList<Indi>(gedcom.getEntities(Gedcom.INDI));
+            individualsList = new ArrayList(gedcom.getEntities(Gedcom.INDI));
             Collections.sort(individualsList, sortIndividuals);
         }
         return individualsList;

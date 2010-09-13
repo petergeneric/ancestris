@@ -187,7 +187,7 @@ public class Calculator extends JPanel implements KeyListener{
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		buttons.setFont(new Font("Courier", 10, Font.BOLD));
 
-//		TODO: on enleve les fonction math        buttons.add( buildUnaryPanel() );               
+//TODO: on enleve les fonctions math        buttons.add( buildUnaryPanel() );
 		buttons.add( buildDigitPanel() );
 		buttons.add( buildFunctionSimplePanel() );                
 

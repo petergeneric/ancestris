@@ -38,7 +38,6 @@
  */
 package genjfr.app.sendfeedback;
 
-import genj.app.App;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -73,8 +72,7 @@ import org.openide.util.NbBundle;
  */
 public final class Zipper {
 
-//    private static final Logger LOGGER = Logger.getLogger(Zipper.class.getName());
-    private static final Logger LOGGER = App.LOG;
+    private static final Logger LOGGER = Logger.getLogger(Zipper.class.getPackage().getName());
     /** Source of export/import (zip file or userdir) */
     private File source;
     /** Cache of paths relative to source root */
@@ -368,7 +366,6 @@ public final class Zipper {
                 copyFileOrProperties(relativePath, includeKeys, excludeKeys, zipOutputStream);
             } else {
                 // Add ZIP entry to output stream.
-                // TODO: create folder!
                 zipOutputStream.putNextEntry(new ZipEntry(relativePath+"/.empty"));
             }
             // Complete the entry

@@ -81,20 +81,10 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jcbIncGenjLog.setSelected(true);
         jcbIncGenjLog.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jcbIncGenjLog.text")); // NOI18N
         jcbIncGenjLog.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jcbIncGenjLog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbIncGenjLogActionPerformed(evt);
-            }
-        });
 
         jtMailHost.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jtMailHost.text")); // NOI18N
 
         jtEmail.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jtEmail.text")); // NOI18N
-        jtEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtEmailActionPerformed(evt);
-            }
-        });
 
         jtName.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jtName.text")); // NOI18N
 
@@ -176,14 +166,6 @@ public class FeedbackPanel extends javax.swing.JPanel {
                     .addComponent(jcbIncGenjLog)))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jcbIncGenjLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbIncGenjLogActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jcbIncGenjLogActionPerformed
-
-    private void jtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtEmailActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

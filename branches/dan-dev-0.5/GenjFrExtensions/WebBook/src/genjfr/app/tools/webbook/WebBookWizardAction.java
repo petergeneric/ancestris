@@ -5,7 +5,7 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomDirectory;
+import genjfr.util.GedcomDirectory;
 import genjfr.app.App;
 import java.awt.Component;
 import java.awt.Dialog;

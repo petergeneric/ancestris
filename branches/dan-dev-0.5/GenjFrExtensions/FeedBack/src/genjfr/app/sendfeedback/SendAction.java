@@ -6,7 +6,6 @@ package genjfr.app.sendfeedback;
 
 import genj.Version;
 import genj.util.EnvironmentChecker;
-import genjfr.app.App;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -17,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.MultiPartEmail;
@@ -84,7 +84,7 @@ public final class SendAction implements ActionListener {
     public static String getSystemInfo() {
         Properties p = System.getProperties();
         StringBuffer sb = new StringBuffer();
-        sb.append("GenjFr ");
+        sb.append("Ancestris ");
         sb.append(Version.getInstance().getBuildString());
         sb.append(" (");
         sb.append(Locale.getDefault());
@@ -131,7 +131,7 @@ public final class SendAction implements ActionListener {
                     attachment = new EmailAttachment();
                     attachment.setURL(sendUserDir().toURI().toURL());
                     attachment.setDisposition(EmailAttachment.ATTACHMENT);
-                    attachment.setDescription("GenjFr User Dir");
+                    attachment.setDescription("Ancestris User Dir");
                     attachment.setName("userdir.zip");
                 }
 
@@ -150,7 +150,7 @@ public final class SendAction implements ActionListener {
                 email.send();
             } catch (Exception e) {
                 response = e.getMessage();
-                genj.app.App.LOG.info("" + e);
+                Logger.getLogger(SendAction.class.getPackage().getName()).info("" + e);
                 failed = true;
             }
 
@@ -186,7 +186,7 @@ public final class SendAction implements ActionListener {
         private File theFile;
 
         GenjLogFile() {
-            File home = new File(EnvironmentChecker.getProperty(App.class,
+            File home = new File(EnvironmentChecker.getProperty(
                     "user.home.genj", null, "determining home directory"));
             theFile = new File(home, "genjfr.log");
         }

@@ -4,8 +4,8 @@
  */
 package genjfr.app.geo;
 
+import genjfr.util.GedcomDirectory;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import genjfr.app.GenjViewTopComponent;
 import java.beans.PropertyChangeEvent;
