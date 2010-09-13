@@ -19,21 +19,25 @@
  */
 package genj.edit;
 
-import genj.gedcom.Gedcom;
-import genj.util.Registry;
+import genj.gedcom.Context;
+import genj.gedcom.GedcomException;
+import genj.util.ChangeSupport;
 import genj.view.ViewContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Action;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeListener;
 
 /**
  * The base class for our two editors basic and advanced
  */
 /*package*/ abstract class Editor extends JPanel {
-
-  /**
-   * Initializer (post constructor)
-   */
-  public abstract void init(Gedcom gedcom, EditView view, Registry registry);
+  
+  protected ChangeSupport changes = new ChangeSupport(this);
+  protected List<Action> actions = new ArrayList<Action>();
 
   /** 
    * Accessor - current 
@@ -43,11 +47,26 @@ import javax.swing.JPanel;
   /** 
    * Accessor - current 
    */
-  public abstract void setContext(ViewContext context);
+  public abstract void setContext(Context context);
   
   /**
    * commit changes
    */
-  public abstract void commit();
+  public abstract void commit() throws GedcomException;
   
+  /**
+   * Editor's actions
+   */
+  public List<Action> getActions() {
+    return actions;
+  }
+
+  public void addChangeListener(ChangeListener listener) {
+    changes.addChangeListener(listener);
+  }
+  
+  public void removeChangeListener(ChangeListener listener) {
+    changes.removeChangeListener(listener);
+  }
+
 } //Editor

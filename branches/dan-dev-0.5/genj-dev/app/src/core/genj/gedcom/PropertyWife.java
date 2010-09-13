@@ -37,13 +37,15 @@ public class PropertyWife extends PropertyXRef {
    * Empty Constructor
    */
   public PropertyWife() {
+    super("WIFE");
   }
   
   /**
-   * Constructor
+   * need tag-argument constructor for all properties
    */
-  protected PropertyWife(String target) {
-    setValue(target);
+  protected PropertyWife(String tag) {
+    super(tag);
+    assertTag("WIFE");
   }
 
   /**
@@ -56,13 +58,6 @@ public class PropertyWife extends PropertyXRef {
     if (getTargetEntity()==null) 
       return null;
     return resources.getString("prop.wife.veto");
-  }
-
-  /**
-   * Returns the Gedcom-Tag of this property
-   */
-  public String getTag() {
-    return TAG;
   }
 
   /**
@@ -94,18 +89,18 @@ public class PropertyWife extends PropertyXRef {
 
     // Enclosing family has a wife already ?
     if (fam.getWife()!=null)
-      throw new GedcomException(resources.getString("error.already.spouse", new String[]{ fam.getWife().toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.spouse", fam.getWife().toString(), fam.toString()));
 
     // Look for wife (not-existing -> Gedcom throws Exception)
     Indi wife = (Indi)getCandidate();
 
     // make sure wife isn't also husband
     if (fam.getHusband()==wife)
-      throw new GedcomException(resources.getString("error.already.spouse", new String[]{ wife.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.spouse", wife.toString(), fam.toString()));
 
     // make sure the wife isn't descendant of family
     if (wife.isDescendantOf(fam))
-      throw new GedcomException(resources.getString("error.already.descendant", new String[]{ wife.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.descendant", wife.toString(), fam.toString()));
 
     // Connect back from husband (maybe using invalid back reference)
     ps = wife.getProperties(PATH_INDIFAMS);

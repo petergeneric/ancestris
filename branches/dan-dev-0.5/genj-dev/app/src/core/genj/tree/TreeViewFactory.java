@@ -19,14 +19,10 @@
  */
 package genj.tree;
 
-import genj.gedcom.Gedcom;
-import genj.util.Registry;
-import genj.util.Resources;
 import genj.util.swing.ImageIcon;
+import genj.view.View;
 import genj.view.ViewFactory;
-import genj.view.ViewManager;
 
-import javax.swing.JComponent;
 
 /**
  * A factory for our TreeView component et al
@@ -36,8 +32,8 @@ public class TreeViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#createView(String, Gedcom, Registry)
    */
-  public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager) {
-    return new TreeView(title, gedcom, registry, manager);
+  public View createView() {
+    return new TreeView();
   }
 
   /**
@@ -50,8 +46,8 @@ public class TreeViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getName(boolean)
    */
-  public String getTitle(boolean abbreviate) {
-    return Resources.get(this).getString("title" + (abbreviate?".short":""));
+  public String getTitle() {
+    return TreeView.TITLE;
   }
   
 } //TreeViewFactory

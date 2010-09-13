@@ -24,7 +24,6 @@ import genj.util.swing.ImageIcon;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,7 +31,7 @@ import java.util.logging.Level;
 /**
  * Wrapper for a Property
  */
-public class MetaProperty implements Comparable {
+public class MetaProperty implements Comparable<MetaProperty> {
 
   /** static - flags */
   public final static int
@@ -41,7 +40,7 @@ public class MetaProperty implements Comparable {
     WHERE_CARDINALITY_ALLOWS = 4; // only those that are still allowed by cardinality
   
   /** static - loaded images */    
-  private static Map name2images = new HashMap();
+  private static Map<String,ImageIcon> name2images = new HashMap<String,ImageIcon>();
   
   /** static - images */
   public final static ImageIcon
@@ -64,7 +63,7 @@ public class MetaProperty implements Comparable {
   private String name, names;
   
   /** cached - type */
-  private Class type;
+  private Class<? extends Property>[] types;
 
   /** cached - info */
   private String info;
@@ -76,16 +75,16 @@ public class MetaProperty implements Comparable {
   private boolean isGrammar;
   
   /** properties */
-  private Map attrs;
+  private Map<String,String> attrs;
   
   /** subs */
-  private Map tag2nested = new HashMap();
-  List nested = new ArrayList();
+  private Map<String,MetaProperty> tag2nested = new HashMap<String,MetaProperty>();
+  List<MetaProperty> nested = new ArrayList<MetaProperty>();
 
   /**
    * Constructor
    */
-  /*package*/ MetaProperty(Grammar grammar, String tag, Map attributes, boolean isGrammar) {
+  /*package*/ MetaProperty(Grammar grammar, String tag, Map<String,String> attributes, boolean isGrammar) {
     // remember tags&props
     this.grammar = grammar;
     this.tag = tag;
@@ -100,8 +99,7 @@ public class MetaProperty implements Comparable {
   
   private void copyAttributesFrom(MetaProperty supr) {
 
-    for (Iterator nested=new ArrayList(supr.nested).iterator(); nested.hasNext(); ) {
-      MetaProperty sub = (MetaProperty)nested.next();
+    for (MetaProperty sub : new ArrayList<MetaProperty>(supr.nested)) {
       if (!"0".equals(sub.attrs.get("inherit"))) {
         addNested(sub);
       }
@@ -113,6 +111,8 @@ public class MetaProperty implements Comparable {
       attrs.put("img", supr.getAttribute("img"));
     if (getAttribute("cardinality")==null)
       attrs.put("cardinality", supr.getAttribute("cardinality"));
+    if (getAttribute("hide")==null)
+      attrs.put("hide", supr.getAttribute("hide"));
   }
   
   /**
@@ -153,7 +153,7 @@ public class MetaProperty implements Comparable {
   /*package*/ MetaProperty[] getAllNested(Property parent, int filter) {
     
     // Loop over subs
-    List result = new ArrayList(nested.size());
+    List<MetaProperty> result = new ArrayList<MetaProperty>(nested.size());
     for (int s=0;s<nested.size();s++) {
       
       // .. next sub
@@ -161,9 +161,8 @@ public class MetaProperty implements Comparable {
 
       // default only?
       if ((filter&WHERE_DEFAULT)!=0) {
-        String isDefault = sub.getAttribute("default");
-        if (isDefault==null||"0".equals(isDefault))
-        continue;
+        if (!sub.isDefault())
+          continue;
       }
         
       // hidden at all (a.k.a cardinality == 0)?
@@ -222,6 +221,11 @@ public class MetaProperty implements Comparable {
     return v==null || v.equals(version);
   }
   
+  public boolean isDefault() {
+    String isDefault = getAttribute("default");
+    return isDefault!=null&&"1".equals(isDefault);
+  }
+  
   /**
    * Check if this is required - cardinality 1:*
    */
@@ -233,8 +237,7 @@ public class MetaProperty implements Comparable {
   /**
    * A comparison based on tag name
    */
-  public int compareTo(Object o) {
-    MetaProperty other = (MetaProperty)o;
+  public int compareTo(MetaProperty other) {
     return Collator.getInstance().compare(getName(), other.getName());
   }
 
@@ -250,7 +253,7 @@ public class MetaProperty implements Comparable {
   /**
    * Test
    */
-  public boolean allows(String sub, Class type) {
+  public boolean allows(String sub, Class<? extends Property> type) {
     // has to be defined as sub with isGrammar==true
     MetaProperty meta = (MetaProperty)tag2nested.get(sub);
     return meta!=null && type.isAssignableFrom(meta.getType());
@@ -262,20 +265,17 @@ public class MetaProperty implements Comparable {
   public Property create(String value) throws GedcomException {
 
     // let's try to instantiate    
-    Property result;
-    
+    Property result = null;
     try {
-      result = (Property)getType().newInstance();
-      result = result.init(this, value);
-    } catch (GedcomException e) {
-      throw e;
+      result = getType(value).getDeclaredConstructor(String.class).newInstance(getTag());
     } catch (Exception e) {
       // 20030530 catch exceptions only - during load
       // an outofmemoryerrror could happen here
       Gedcom.LOG.log(Level.WARNING, "Couldn't instantiate property "+getType()+" with value '"+value, e);
-      result = new PropertySimpleValue(); 
-      ((PropertySimpleValue)result).init(this, value);
+      result = new PropertySimpleValue(getTag()); 
     }
+    
+    result.setValue(value);
     
     // increate count
     isInstantiated = true;
@@ -332,22 +332,53 @@ public class MetaProperty implements Comparable {
   /**
    * Accessor - type
    */
-  public Class getType() {
+  public Class<? extends Property> getType() {
+    return getTypes()[0];
+  }
+  
+  public Class<? extends Property> getType(String value) {
+    
+    for (Class<? extends Property> type : getTypes()) {
+      
+      // check for valid xref values (20070104 since values are not trimmed by loaders we do this here) 
+      if (PropertyXRef.class.isAssignableFrom(type) && !(value.trim().startsWith("@")&&value.trim().endsWith("@")) ) 
+        continue;
+      
+      // use that
+      return type;
+    }
+    
+    return PropertySimpleValue.class;
+  }
+  
+  /**
+   * Accessor - types
+   */
+  @SuppressWarnings("unchecked")
+  public Class<? extends Property>[] getTypes() {
+    
     // check cached type
-    if (type==null) {
+    if (types==null) {
+      
       String attrType = getAttribute("type");
       if (attrType==null)
-        type = PropertySimpleValue.class;
+        types = new Class[]{ PropertySimpleValue.class };
       else try {
-        type = Class.forName("genj.gedcom."+attrType);
+        
+        String[] attrTypes = attrType.split("\\|");
+        types = new Class[attrTypes.length];
+        
+        for (int i=0;i<attrTypes.length;i++)
+          types[i] = (Class<? extends Property>)Class.forName("genj.gedcom."+attrTypes[i]);
+        
       } catch (Throwable t) {
-        Gedcom.LOG.log(Level.WARNING, "Property type genj.gedcom."+attrType+" couldn't be instantiated", t);    
-        type = PropertySimpleValue.class;
+        Gedcom.LOG.log(Level.WARNING, "Property type(s) genj.gedcom."+attrType+" couldn't be instantiated", t);    
+        types = new Class[]{ PropertySimpleValue.class };
       }
-      // resolved
     }
-    // done
-    return type;
+    
+    // resolved
+    return types;
   }
 
   /**
@@ -434,7 +465,7 @@ public class MetaProperty implements Comparable {
     // current tag in map?
     MetaProperty result = (MetaProperty)tag2nested.get(tag);
     if (result==null) {
-      result = new MetaProperty(grammar, tag, new HashMap(), false);
+      result = new MetaProperty(grammar, tag, new HashMap<String,String>(), false);
       if (persist) addNested(result);
     }
     // done
@@ -483,6 +514,11 @@ public class MetaProperty implements Comparable {
     }
     // done
     return result;
+  }
+  
+  @Override
+  public String toString() {
+    return getTag() + attrs;
   }
   
 } //MetaProperty

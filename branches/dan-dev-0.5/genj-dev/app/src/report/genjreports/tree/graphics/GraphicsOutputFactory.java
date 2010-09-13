@@ -9,7 +9,6 @@
 package genjreports.tree.graphics;
 
 import genj.report.Report;
-import genj.report.options.ComponentContainer;
 import genj.util.swing.Action2;
 
 import java.io.File;
@@ -24,8 +23,7 @@ import java.util.Map;
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
-public class GraphicsOutputFactory implements ComponentContainer
-{
+public class GraphicsOutputFactory {
 
     /**
      * Output type.
@@ -35,7 +33,7 @@ public class GraphicsOutputFactory implements ComponentContainer
     public String[] output_types = null;
 
     private Map<String, GraphicsOutput> outputs = new LinkedHashMap<String, GraphicsOutput>();
-    private List<GraphicsOutput> outputList = new ArrayList<GraphicsOutput>();
+    public List<GraphicsOutput> outputList = new ArrayList<GraphicsOutput>();
 
     /**
      * Creates the object
@@ -87,13 +85,5 @@ public class GraphicsOutputFactory implements ComponentContainer
         outputs.put(name, output);
         outputList.add(output);
         output_types = outputs.keySet().toArray(new String[0]);
-    }
-
-    public List<Object> getComponents()
-    {
-        List<Object> components = new ArrayList<Object>();
-        components.add(this);
-        components.addAll(outputList);
-        return components;
     }
 }

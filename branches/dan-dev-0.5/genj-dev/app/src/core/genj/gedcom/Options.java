@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import genj.option.Option;
 import genj.option.OptionProvider;
 import genj.option.PropertyOption;
 import genj.util.Resources;
@@ -40,44 +41,27 @@ public class Options extends OptionProvider {
   
   /** option - whether to use spaces in separating places */
   public boolean isUseSpacedPlaces = true;
-
-  // added after wizard (Frederic)
-  public String fmt_address1 = "";
-  public String fmt_address2 = "";
-  public String fmt_address3 = "";
-  public String fmt_address4 = "";
-  public String fmt_address5 = "";
-  public String fmt_address6 = "";
-  public String fmt_address7 = "";
-  public boolean fmt_address1_mand = false;
-  public boolean fmt_address2_mand = false;
-  public boolean fmt_address3_mand = false;
-  public boolean fmt_address4_mand = false;
-  public boolean fmt_address5_mand = false;
-  public boolean fmt_address6_mand = false;
-  public boolean fmt_address7_mand = false;
-  public String gedcomDir = "";
-  public String gedcomFile = "";
-  public String reportDir = "";
-  public String submName = "";
-  public String submCity = "";
-  public String submCountry = "";
-  public String submPostCode = "";
-  public String submPhone = "";
-  public String submEmail = "";
-  public String submWeb = "";
-
+  
   /** option - whether id-gaps should be filled */
   public boolean isFillGapsInIDs = false;
   
   /** option - whether to convert last names to uppercase */
   public boolean isUpperCaseNames = false;
   
-  /** option - wether to set wife lastname when indi is created */
+  /** option - whether to set wife's last name when person is created */
   public boolean setWifeLastname = true;
   
+  /** option - whether to add GIVN|SURN information on name changes */
+  public boolean isAddGivenSurname = false;
+  
+  /** option - whether to main AGE information for events */
+  public boolean isAddAge = false;
+  
+  /** option - whether to prefer inline over records for notes and medias */
+  public boolean isUseInline = false;
+  
   /** option - whether to use "last,first" or "first last" */
-  public int nameFormat = 0;
+  public int nameFormat = 1;
   public final static String[] nameFormats = {
     RESOURCES.getString("option.nameFormat.first"),
     RESOURCES.getString("option.nameFormat.last")
@@ -96,7 +80,7 @@ public class Options extends OptionProvider {
   protected int numberOfUndos = 10;
   
   /** option - place hierarchy keys for city NOT EDITABLE ATM */
-  protected Set placeHierarchyCityKeys = new HashSet(Arrays.asList(new String[]{ "city", "commune", "ville", "stadt"}));
+  protected Set<String> placeHierarchyCityKeys = new HashSet<String>(Arrays.asList(new String[]{ "city", "commune", "ville", "stadt"}));
   
   /** option - private information mask */
   public String maskPrivate = "...";
@@ -183,7 +167,7 @@ public class Options extends OptionProvider {
   /** 
    * Provider callback 
    */
-  public List getOptions() {
+  public List<? extends Option> getOptions() {
     return PropertyOption.introspect(instance);
   }
 

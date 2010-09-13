@@ -35,7 +35,7 @@ public class ReportAlmanac extends Report {
    * main for Gedcom
    */
   public void start(Gedcom gedcom) {
-    report(gedcom, gedcom.getEntities(Gedcom.INDI));
+    report(gedcom, (Collection<Indi>)gedcom.getEntities(Gedcom.INDI));
   }
 
   /**
@@ -143,7 +143,7 @@ public class ReportAlmanac extends Report {
   private void getLifespan(Indi indi, PointInTime from, PointInTime to) {
 
     // look at his events to find start and end
-    List<Property> events = indi.getProperties(PropertyEvent.class);
+    List<? extends Property> events = indi.getProperties(PropertyEvent.class);
     for (int e=0; e<events.size(); e++) {
       Property event = (Property)events.get(e);
       PropertyDate date = (PropertyDate)event.getProperty("DATE");

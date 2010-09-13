@@ -36,7 +36,6 @@ public class RegExMatcher extends Matcher {
    * better use JDK1.4 and higher
    */
   /*package*/ RegExMatcher() {
-    Class tst = Pattern.class;
   }
   
   /**
@@ -53,7 +52,7 @@ public class RegExMatcher extends Matcher {
   /**
    * @see genj.search.Matcher#match(java.lang.String, java.util.List)
    */
-  protected void match(String input, List result) {
+  protected void match(String input, List<Match> result) {
     // try to match anything
     java.util.regex.Matcher m = compiled.matcher(input);
     while (true) {

@@ -73,13 +73,6 @@ public class ReportCalendar extends Report
     private Writer writer;
 
     /**
-     * The result is stored in files
-     */
-    public boolean usesStandardOut() {
-        return false;
-    }
-
-    /**
      * The report's entry point.
      */
     public void start(Gedcom gedcom) throws IOException {

@@ -152,7 +152,7 @@ public class PropertyReader {
       // we simply spit out a warning and continue as if nothing happened
       if (level>currentLevel+1) {
         trackBadLevel(level, prop);
-        while (level-1>currentLevel++) 
+        for (int i=currentLevel;i<level-1;i++) 
           prop = prop.addProperty("_TAG", "");
       }
     
@@ -163,7 +163,7 @@ public class PropertyReader {
       Property child = addProperty(prop, tag, value, pos);
       
       // first recurse into child(ren)
-      readProperties(child, currentLevel+1, 0);
+      readProperties(child, level, 0);
         
       // 20060406 now link after children are setup - this makes a difference for
       // e.g. link() in case of ASSO that looks at RELA

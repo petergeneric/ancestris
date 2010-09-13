@@ -26,29 +26,29 @@ import genj.util.swing.ImageIcon;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Abstract base type for all GEDCOM properties
  */
-public abstract class Property implements Comparable {
+public abstract class Property implements Comparable<Property> {
 
   /** static strings */
   protected final static String 
     UNSUPPORTED_TAG = "Unsupported Tag";
   
   private static final Pattern FORMAT_PATTERN = Pattern.compile("\\{(.*?)\\$(.)(.*?)\\}");
-    
+  
   /** parent of this property */
   private Property parent=null;
   
   /** children of this property */
   // 20070128 made this a lazy list so we're not wasting the space for all those leaf nodes out there
-  private List children = null;
+  private List<Property> children = null;
   
   /** images */
   protected ImageIcon image, imageErr;
@@ -65,8 +65,13 @@ public abstract class Property implements Comparable {
   /** a localized label */
   public final static String LABEL = resources.getString("prop");
 
-  /** the meta information */
-  private MetaProperty meta = null;
+  /** the tag */
+  private String tag = null;
+
+  
+  protected Property(String tag) {
+    this.tag = tag;
+  }
 
   /**
    * Lifecycle - callback after being added to parent.
@@ -139,24 +144,76 @@ public abstract class Property implements Comparable {
    * @return success or not
    */
   public boolean addFile(File file) {
+    return addFile(file, "");
+  }
+  public boolean addFile(File file, String title) {
     // FILE not allowed here? 
     if (!getMetaProperty().allows("FILE")) {
       // OBJE neither? 
       if (!getMetaProperty().allows("OBJE")) 
         return false;
       // let new OBJE handle this
-      return addProperty("OBJE", "").addFile(file);
+      return addProperty("OBJE", "").addFile(file, title);
     }
     // need to add it?
-    List pfiles = getProperties(PropertyFile.class);
+    List<PropertyFile> pfiles = getProperties(PropertyFile.class);
     PropertyFile pfile;
     if (pfiles.isEmpty()) {
       pfile = (PropertyFile)addProperty("FILE", "");
     } else {
       pfile = (PropertyFile)pfiles.get(0);
     }
+    // set title
+    Property ptitle = getProperty("TITL");
+    if (ptitle!=null)
+      ptitle.setValue(title);
+    else if (title.length()>0)
+      addProperty("TITL", title);
+      
     // keep it
     return pfile.addFile(file);
+  }
+  
+  /**
+   * Associates a note object with this property
+   */
+  public boolean addNote(Note note) {
+    // NOTE? 
+    if (!getMetaProperty().allows("NOTE")) 
+      return false;
+    // add reference
+    PropertyNote xref = new PropertyNote();
+    addProperty(xref);
+    xref.setValue(note.getId());
+    try {
+      xref.link();
+    } catch (GedcomException e) {
+      Gedcom.LOG.log(Level.FINE, "unexpected", e);
+      delProperty(xref);
+      return false;
+    }
+    return true;
+  }
+  
+  /**
+   * Associates a media object with this proprty
+   */
+  public boolean addMedia(Media media) {
+    // OBJE? 
+    if (!getMetaProperty().allows("OBJE")) 
+      return false;
+    // add reference
+    PropertyMedia xref = new PropertyMedia();
+    addProperty(xref);
+    xref.setValue(media.getId());
+    try {
+      xref.link();
+    } catch (GedcomException e) {
+      Gedcom.LOG.log(Level.FINE, "unexpected", e);
+      delProperty(xref);
+      return false;
+    }
+    return true;
   }
   
   /**
@@ -221,7 +278,7 @@ public abstract class Property implements Comparable {
     
     // keep child now
     if (children==null)
-      children = new ArrayList();
+      children = new ArrayList<Property>();
     children.add(pos, child);
     
     if (isTransient) child.isTransient = true;
@@ -273,6 +330,9 @@ public abstract class Property implements Comparable {
     if (children==null)
       throw new IndexOutOfBoundsException("no such child");
 
+    if (deletee==null)
+      throw new IllegalArgumentException("can't delete null property");
+    
     // find position (throw outofbounds if n/a)
     int pos = 0;
     for (;;pos++) {
@@ -301,7 +361,6 @@ public abstract class Property implements Comparable {
     // remove it now
     children.remove(pos);
     removed.parent = null;
-    removed.meta = null;
 
     // propagate change (see addNotify() for motivation why propagate is here)
     propagatePropertyDeleted(this, pos, removed);
@@ -312,7 +371,7 @@ public abstract class Property implements Comparable {
   /**
    * Move contained properties
    */
-  public void moveProperties(List properties, int pos) {
+  public void moveProperties(List<Property> properties, int pos) {
     
     // move children around
     for (int i = 0; i < properties.size(); i++) {
@@ -368,12 +427,19 @@ public abstract class Property implements Comparable {
   /**
    * Returns the image which is associated with this property.
    */
+  public ImageIcon getImage() {
+    return getImage(false);
+  }
+  
+  /**
+   * Returns the image which is associated with this property.
+   */
   public ImageIcon getImage(boolean checkValid) {
     
     // valid or not ?
     if (!checkValid||isValid()) {
       if (image==null) 
-        image = getMetaProperty().getImage(); 
+        image = getGedcom()!=null ? getMetaProperty().getImage() : MetaProperty.IMG_CUSTOM; 
       return image;
     }
     
@@ -392,20 +458,6 @@ public abstract class Property implements Comparable {
   }
 
   /**
-   * Return a containgin property of given type in the hierarchy of parents 
-   */
-  public Property getContaining(Class type) {
-    Property prop = this;
-    while (prop!=null) {
-      if (type.isAssignableFrom(prop.getClass())) 
-        return prop;
-      prop = prop.getParent();
-    }
-    return null;
-  }
-  
-  
-  /**
    * Returns the property this property belongs to
    */
   public Property getParent() {
@@ -413,24 +465,15 @@ public abstract class Property implements Comparable {
   }
   
   /**
-   * Returns the path from this to containing property
-   */
-  public TagPath getPathToContaining(Property rparent) {    
-    Stack result = new Stack();
-    getPathToContaining(rparent, result);
-    return new TagPath(result);
-  }
-  
-  /**
    * Returns the path from this to a nested property
    */
   public TagPath getPathToNested(Property nested) {    
-    Stack result = new Stack();
+    Stack<String> result = new Stack<String>();
     nested.getPathToContaining(this, result);
     return new TagPath(result);
   }
   
-  private void getPathToContaining(Property containing, Stack result) {
+  private void getPathToContaining(Property containing, Stack<String> result) {
     result.push(getTag());
     if (containing==this)
       return;
@@ -452,7 +495,7 @@ public abstract class Property implements Comparable {
    */
   public TagPath getPath(boolean unique) {
 
-    Stack stack = new Stack();
+    Stack<String> stack = new Stack<String>();
 
     // loop through parents
     String tag = getTag();
@@ -511,7 +554,7 @@ public abstract class Property implements Comparable {
   /**
    * Test properties
    */
-  public boolean hasProperties(List props) {
+  public boolean hasProperties(List<Property> props) {
     return children==null ? false : children.containsAll(props);
   }
   
@@ -528,9 +571,9 @@ public abstract class Property implements Comparable {
    * @param value regular expression pattern of value to match
    * @return matching properties
    */
-  public List findProperties(Pattern tag, Pattern value) {
+  public List<Property> findProperties(Pattern tag, Pattern value) {
     // create result
-    List result = new ArrayList();
+    List<Property> result = new ArrayList<Property>();
     // check argument
     if (value==null) value = Pattern.compile(".*");
     // recurse
@@ -543,7 +586,7 @@ public abstract class Property implements Comparable {
     return tag.matcher(getTag()).matches() && value.matcher(getValue()).matches(); 
   }
   
-  private void findPropertiesRecursively(Collection result, Pattern tag, Pattern value, boolean recursively) {
+  private void findPropertiesRecursively(Collection<Property> result, Pattern tag, Pattern value, boolean recursively) {
     // check current
     if (findPropertiesRecursivelyTest(tag, value))
       result.add(this);
@@ -565,7 +608,7 @@ public abstract class Property implements Comparable {
    * Returns this property's properties by tag 
    */
   public Property[] getProperties(String tag, boolean validOnly) {
-    ArrayList result = new ArrayList(getNoOfProperties());
+    ArrayList<Property> result = new ArrayList<Property>(getNoOfProperties());
     for (int i=0, j = getNoOfProperties(); i<j ; i++) {
       Property prop = getProperty(i);
       if (prop.getTag().equals(tag)&&(!validOnly||prop.isValid()))
@@ -577,17 +620,18 @@ public abstract class Property implements Comparable {
   /**
    * Returns this property's properties which are of given type
    */
-  public List getProperties(Class type) {
-    List props = new ArrayList(10);
+  public <T> List<T> getProperties(Class<T> type) {
+    List<T> props = new ArrayList<T>(10);
     getPropertiesRecursively(props, type);
     return props;
   }
   
-  private void getPropertiesRecursively(List props, Class type) {
+  @SuppressWarnings("unchecked")
+  private <T> void getPropertiesRecursively(List<T> props, Class<T> type) {
     for (int c=0;c<getNoOfProperties();c++) {
       Property child = getProperty(c);
       if (type.isAssignableFrom(child.getClass())) {
-        props.add(child);
+        props.add((T)child);
       }
       child.getPropertiesRecursively(props, type);
     }
@@ -691,7 +735,7 @@ public abstract class Property implements Comparable {
    */
   public Property[] getProperties(TagPath path) {
     
-   final  List result = new ArrayList(10);
+   final  List<Property> result = new ArrayList<Property>(10);
 
     PropertyVisitor visitor = new PropertyVisitor() {
       protected boolean leaf(Property prop) {
@@ -787,23 +831,10 @@ public abstract class Property implements Comparable {
   /**
    * Returns the Gedcom-Tag of this property
    */
-  public abstract String getTag();
-
-  /**
-   * Initializes this poperty giving it a chance to inspect
-   * support for tag and value, eventually returning a 
-   * different type that is better suited for the SPECIFIC
-   * combination.
-   */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    // remember meta
-    this.meta = meta;
-    // assuming concrete sub-type handles tag - keep value
-    setValue(value);
-    // we stay around
-    return this;
+  public final String getTag() {
+    return tag;
   }
-  
+
   /**
    * Returns the value of this property as string (this is a Gedcom compliant value)
    */
@@ -837,12 +868,42 @@ public abstract class Property implements Comparable {
   }
 
   /**
-   * The default toString() returns the display value of this property
+   * The default string representation returns the property name, date and place information and display value (if available)
    */
+  @Override
   public String toString() {
-    return getDisplayValue();
+    
+    WordBuffer result = new WordBuffer(" ");
+    result.append(getPropertyName());
+    
+    String val = getDisplayValue();
+    if (val.length()>0) 
+      result.append(val);
+    
+    Property date = getProperty("DATE");
+    if (date instanceof PropertyDate && date.isValid()) 
+      result.append(date.getDisplayValue());
+
+    Property plac = getProperty("PLAC");
+    if (plac!=null) {
+      String s = plac.getDisplayValue();
+      if (s.length()>0) 
+        result.append(plac.getDisplayValue());
+    } else {
+      Property addr = getProperty("ADDR");
+      if (addr!=null) {
+        Property city = addr.getProperty("CITY");
+        if (city!=null) {
+          String s = city.getDisplayValue();
+          if (s.length()>0) 
+            result.append(s);
+        }
+      }
+    }
+    return result.toString();
   }
-  
+
+
   /**
    * Returns a value at given path or fallback
    */
@@ -896,16 +957,12 @@ public abstract class Property implements Comparable {
 
   /**
    * Compares this property to another property
-   * @return -1 this &lt; property <BR>
-   *          0 this = property <BR>
-   *          1 this &gt; property
+   * @return  a negative integer, zero, or a positive integer as this object
+   *      is less than, equal to, or greater than the specified object.
    */
-  public int compareTo(Object that) {
-    // safety check
-    if (!(that instanceof Property)) 
-      throw new ClassCastException("compareTo("+that+")");
+  public int compareTo(Property that) {
     // no gedcom available?
-    return compare(this.getDisplayValue(), ((Property)that).getDisplayValue() );
+    return compare(this.getDisplayValue(), that.getDisplayValue() );
   }
   
   /**
@@ -967,9 +1024,7 @@ public abstract class Property implements Comparable {
    * Resolve meta property
    */
   public MetaProperty getMetaProperty() {
-    if (meta==null)
-      meta = getGedcom().getGrammar().getMeta(getPath());    
-    return meta;
+    return getGedcom().getGrammar().getMeta(getPath());    
   }
 
   /**
@@ -983,8 +1038,8 @@ public abstract class Property implements Comparable {
   /**
    * Convert collection of properties into array
    */
-  public static Property[] toArray(Collection ps) {
-    return (Property[])ps.toArray(new Property[ps.size()]);
+  public static Property[] toArray(Collection<Property> ps) {
+    return ps.toArray(new Property[ps.size()]);
   }
   
   /**
@@ -1044,17 +1099,17 @@ public abstract class Property implements Comparable {
    * @param properties the properties to look at
    * @param limit max number of names followed by "..." where zero is all
    */
-  public static String getPropertyNames(Property[] properties, int limit) {
+  public static String getPropertyNames(Iterable<? extends Property> properties, int limit) {
     
     WordBuffer result = new WordBuffer(", ");
     int i=0;
-    while (i<properties.length) {
-      result.append(properties[i++].getPropertyName());
-      if (i==limit) break;
+    for (Property prop : properties) {
+      if (i==limit) {
+        result.append("...");
+        break;
+      }
+      result.append(prop.getPropertyName());
     }
-    if (i<properties.length)
-      result.append("...");
-    
     return result.toString();
   }
   
@@ -1065,12 +1120,11 @@ public abstract class Property implements Comparable {
    * @param properties properties to normalize
    * @return normalized list
    */
-  public static List normalize(List properties) {
+  public static List<Property> normalize(List<? extends Property> properties) {
     
-    ArrayList result = new ArrayList(properties.size());
+    ArrayList<Property> result = new ArrayList<Property>(properties.size());
     
-    for (Iterator it = properties.iterator(); it.hasNext(); ) {
-      Property prop = (Property)it.next();
+    for (Property prop : properties) {
       if (prop.isTransient())
         continue;
       // any containing in selection as well?
@@ -1210,6 +1264,11 @@ public abstract class Property implements Comparable {
       // next
     }
     // done
+  }
+  
+  protected void assertTag(String tag) {
+    if (!this.tag.equals(tag)) 
+      throw new Error("Tag should be "+tag+" but is "+this.tag);
   }
   
 } //Property

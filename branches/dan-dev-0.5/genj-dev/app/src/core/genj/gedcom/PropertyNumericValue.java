@@ -25,39 +25,16 @@ package genj.gedcom;
  */
 public class PropertyNumericValue extends Property {
   
-  /** boxed type */
-  private Class box = Integer.class;
-
+  private Class<?> box = Integer.class; 
+  
   /** the numeric value of boxed type */
-  private Comparable value = "";
-  
-  /** our tag */
-  private String tag;
-
-  /**
-   * Constructor
-   */
-  public PropertyNumericValue() {
-  }
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return tag;
-  }
+  private Object value = "";
   
   /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
+   * need tag-argument constructor for all properties
    */
-  /*package*/ Property init(MetaProperty meta, String value) {
-    tag = meta.getTag();
-    try {
-      return super.init(meta, value);
-    } catch (GedcomException e) {
-      // don't expect any problems here
-    }
-    return this;
+  public PropertyNumericValue(String tag) {
+    super(tag);
   }
 
   /**
@@ -70,6 +47,7 @@ public class PropertyNumericValue extends Property {
   /**
    * Sets the value of this property
    */
+  @SuppressWarnings("unchecked")
   public void setValue(String set) {
     
     // grab old
@@ -89,16 +67,14 @@ public class PropertyNumericValue extends Property {
   /**
    * Compare two numeric values
    */
-  public int compareTo(Object o) {
-    // numeric value as well?
-    if (!(o instanceof PropertyNumericValue))
-      return super.compareTo(o);
-    PropertyNumericValue that = (PropertyNumericValue)o;
+  @SuppressWarnings("unchecked")
+  public int compareTo(Property other) {
+    PropertyNumericValue that = (PropertyNumericValue)other;
     // boxes don't match?
     if (that.value.getClass()!=this.value.getClass())
-      return super.compareTo(o);
+      return super.compareTo(other);
     // let boxes compare
-    return this.value.compareTo(that.value);
+    return ((Comparable<Object>)(this.value)).compareTo((Comparable<Object>)(that.value));
   }
   
 } //PropertyNumericValue

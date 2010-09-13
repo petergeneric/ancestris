@@ -42,8 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-
-import spin.Spin;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A model that wraps the Gedcom information in a timeline fashion
@@ -51,7 +50,7 @@ import spin.Spin;
 /*package*/ class Model implements GedcomListener {
 
   /** the gedcom we're looking at */
-  /*package*/ Gedcom gedcom;
+  private Gedcom gedcom;
   
   /** limits */
   /*package*/ double 
@@ -59,15 +58,16 @@ import spin.Spin;
     min = Double.NaN;
 
   /** a filter for events that we're interested in */
-  private Set paths = new HashSet(), tags = new HashSet();
+  private Set<TagPath> paths = new HashSet<TagPath>();
+  private Set<String> tags = new HashSet<String>();
   
   /** default filter */
   private final static String[] DEFAULT_PATHS = new String[]{ 
-    "INDI:BIRT", "FAM:MARR", "INDI:RESI", "INDI:EMIG" 
+    "INDI:BIRT", "FAM:MARR", "INDI:EMIG" 
   };
     
   /** our levels */
-  /*package*/List layers;
+  /*package*/List<List<Event>> layers;
   
   /** time per event */
   /*package*/ double 
@@ -75,23 +75,45 @@ import spin.Spin;
     timeAfterEvent  = 2.0D;
   
   /** listeners */
-  private List listeners = new ArrayList(1);
+  private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
   
   /**
    * Constructor
    */
-  /*package*/ Model(Gedcom ged, String[] paths) {
+  /*package*/ Model() {
+    setPaths(Arrays.asList(TagPath.toArray(DEFAULT_PATHS)));
+  }
+  
+  /**
+   * gedcom we're looking at
+   */
+  /*package*/ Gedcom getGedcom() {
+    return gedcom;
+  }
+  
+  /**
+   * gedcom to look at
+   */
+  /*package*/ void setGedcom(Gedcom newGedcom) {
     
-    // set paths to go for
-    if (paths==null) 
-      paths = DEFAULT_PATHS;
-    setPathsInternally(Arrays.asList(paths));
+    // noop
+    if (gedcom==newGedcom)
+      return;
     
-    // keep gedcom
-    gedcom = ged;
+    // old?
+    if (gedcom!=null)
+      gedcom.removeGedcomListener(this);
+    
+    // keep
+    gedcom = newGedcom;
+    
+    // new?
+    if (gedcom!=null)
+      gedcom.addGedcomListener(this);
+    
+    // create events
     createEvents();
     
-    // done
   }
   
   /**
@@ -99,10 +121,6 @@ import spin.Spin;
    */
   /*package*/ void addListener(Listener listener) {
     listeners.add(listener);
-    
-    // first?
-    if (listeners.size()==1)
-      gedcom.addGedcomListener((GedcomListener)Spin.over(this));
   }
   
   /**
@@ -110,10 +128,6 @@ import spin.Spin;
    */
   /*package*/ void removeListener(Listener listener) {
     listeners.remove(listener);
-    
-    // none?
-    if (listeners.isEmpty())
-      gedcom.removeGedcomListener((GedcomListener)Spin.over(this));
   }
   
   /**
@@ -121,12 +135,14 @@ import spin.Spin;
    */
   /*package*/ void setTimePerEvent(double before, double after) {
     // already there?
-    if (timeBeforeEvent==before&&timeAfterEvent==after) return;
+    if (timeBeforeEvent==before&&timeAfterEvent==after) 
+      return;
     // remember
     timeBeforeEvent = before;
     timeAfterEvent = after;
     // layout the events we've got
-    if (layers!=null) layoutEvents();
+    if (layers!=null) 
+      layoutEvents();
     // done
   }
   
@@ -207,24 +223,24 @@ import spin.Spin;
   /**
    * Returns the events that cover the given context
    */
-  protected Set getEvents(Context context) {
+  protected Set<Event> getEvents(Context context) {
     
     Set propertyHits = new HashSet();
     Set entityHits = new HashSet();
     
-    Property[] props = context.getProperties();
-    Entity[] ents = context.getEntities();
+    List<? extends Property> props = context.getProperties();
+    List<? extends Entity> ents = context.getEntities();
     
     for (int l=0; l<layers.size(); l++) {
       Iterator events = ((List)layers.get(l)).iterator();
       while (events.hasNext()) {
         Event event = (Event)events.next();
-        for (int j = 0; j < ents.length; j++) {
-          if (ents[j]==event.getEntity())
+        for (int j = 0; j < ents.size(); j++) {
+          if (ents.get(j)==event.getEntity())
             entityHits.add(event);
         }
-        for (int i = 0; i < props.length; i++) {
-          if (event.getProperty()==props[i]||event.getProperty().contains(props[i]))
+        for (int i = 0; i < props.size(); i++) {
+          if (event.getProperty()==props.get(i)||event.getProperty().contains(props.get(i)))
             propertyHits.add(event);
         }
       }
@@ -236,52 +252,28 @@ import spin.Spin;
   /**
    * Returns the filter - set of Tags we consider
    */
-  public Set getPaths() {
+  public Set<TagPath> getPaths() {
     return Collections.unmodifiableSet(paths);
   }
   
   /**
    * Sets the filter - set of Tags we consider
    */
-  public void setPaths(Collection set) {
+  public void setPaths(Collection<TagPath> set) {
     
-    // defaults?
-// 20070125 let's allow for empty path set    
-//    if (set.isEmpty()) 
-//      set = Arrays.asList(DEFAULT_PATHS);
-      
-    // do it internally - this has been an endless loop
-    // from 2005/05/11 to 2005/11/05 without anyone
-    // noticing :(
-    setPathsInternally(set);
+    paths.clear();
+    tags.clear();
+    
+    for (TagPath path : set) {
+      paths.add(path);
+      tags.add(path.getLast());
+    }
     
     // re-generate events
     createEvents();
     
     // done
     
-  }
-  
-  private void setPathsInternally(Collection set) {
-    
-    // clear 
-    paths.clear();
-    tags.clear();
-    
-    // add
-    for (Iterator it = set.iterator();it.hasNext();) {
-      Object next = it.next();
-      try {
-        if (!(next instanceof TagPath)) 
-          next = new TagPath(next.toString());
-      } catch (IllegalArgumentException e) {
-        continue; 
-      }
-      paths.add(next);
-      tags.add(((TagPath)next).getLast());
-    }
-    
-    // done
   }
   
   /**
@@ -354,7 +346,7 @@ import spin.Spin;
     min = Double.MAX_VALUE;
     max = -Double.MAX_VALUE;
     // prepare some space
-    layers = new ArrayList(10);
+    layers = new ArrayList<List<Event>>(10);
     // look for events in INDIs and FAMs
     if (gedcom!=null) {
       createEventsFrom(gedcom.getEntities(Gedcom.INDI).iterator());

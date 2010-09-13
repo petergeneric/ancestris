@@ -22,7 +22,6 @@ package genj.tree;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Indi;
@@ -45,8 +44,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
-
-import spin.Spin;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Model of our tree
@@ -57,14 +55,14 @@ import spin.Spin;
   private Callback callback = new Callback();
   
   /** listeners */
-  private List listeners = new ArrayList(3);
+  private List<ModelListener> listeners = new CopyOnWriteArrayList<ModelListener>();
 
   /** arcs */
-  private Collection arcs = new ArrayList(100);
+  private Collection<TreeArc> arcs = new ArrayList<TreeArc>(100);
 
   /** nodes */
-  private Map entities2nodes = new HashMap(100);
-  private Collection nodes = new ArrayList(100);
+  private Map<Entity,TreeNode> entities2nodes = new HashMap<Entity, TreeNode>(100);
+  private Collection<TreeNode> nodes = new ArrayList<TreeNode>(100);
 
   /** bounds */
   private Rectangle bounds = new Rectangle();
@@ -88,17 +86,14 @@ import spin.Spin;
   private boolean isFoldSymbols = true;
   
   /** individuals whose ancestors we're not interested in */
-  private Set hideAncestors = new HashSet();
+  private Set<String> hideAncestors = new HashSet<String>();
 
   /** individuals whose descendants we're not interested in */
-  private Set hideDescendants = new HashSet();
+  private Set<String> hideDescendants = new HashSet<String>();
   
   /** individuals' family */
-  private Map indi2fam = new HashMap();
+  private Map<Indi,Fam> indi2fam = new HashMap<Indi, Fam>();
 
-  /** gedcom we're looking at */
-  private Gedcom gedcom;
-  
   /** the root we've used */
   private Entity root;
 
@@ -106,34 +101,41 @@ import spin.Spin;
   private TreeMetrics metrics = new TreeMetrics( 60, 30, 30, 15, 10 );
   
   /** bookmarks */
-  private LinkedList bookmarks = new LinkedList();
+  private LinkedList<Bookmark> bookmarks = new LinkedList<Bookmark>();
   
   /**
    * Constructor
    */
-  public Model(Gedcom ged) {
-    gedcom = ged;
-  }
-  
-  /**
-   * Accessor - gedcom   */
-  public Gedcom getGedcom() {
-    return gedcom;
+  public Model() {
   }
   
   /**
    * Accessor - current root
    */
   public void setRoot(Entity entity) {
-    // Indi or Fam plz
-    if (!(entity instanceof Indi||entity instanceof Fam)) 
-      return;
+    
     // no change?
-    if (root==entity) return;
-    // keep as root
-    root = entity;
+    if (root==entity) 
+      return;
+    
+    // detach
+    if (root!=null) {
+      root.getGedcom().removeGedcomListener(callback);
+      root = null;
+    }
+    
+    // attach
+    if (entity instanceof Indi ||entity instanceof Fam) {
+      root = entity;
+      root.getGedcom().addGedcomListener(callback);
+    }
+    
+    // start fresh
+    bookmarks.clear();
+    
     // parse the current information
     update();
+    
     // done
   }
 
@@ -244,10 +246,6 @@ import spin.Spin;
    */
   public void addListener(ModelListener l) {
     listeners.add(l);
-    
-    // first?
-    if (listeners.size()==1)
-      gedcom.addGedcomListener((GedcomListener)Spin.over((GedcomListener)callback));
   }
   
   /**
@@ -255,25 +253,27 @@ import spin.Spin;
    */
   public void removeListener(ModelListener l) {
     listeners.remove(l);
-    
-    // last?
-    if (listeners.isEmpty())
-      gedcom.removeGedcomListener((GedcomListener)Spin.over((GedcomListener)callback));
  }
   
   /**
    * Nodes by range
    */
-  public Collection getNodesIn(Rectangle range) {
-    if (cache==null) return new HashSet();
+  public Collection<? extends TreeNode> getNodesIn(Rectangle range) {
+    if (cache==null) 
+      return new HashSet<TreeNode>();
     return cache.get(range);
   }
 
   /**
    * Arcs by range
    */
-  public Collection getArcsIn(Rectangle range) {
-    return arcs;
+  public Collection<TreeArc> getArcsIn(Rectangle range) {
+    List<TreeArc> result = new ArrayList<TreeArc>(arcs.size());
+    for (TreeArc arc : arcs) {
+      if (arc.getPath()!=null && arc.getPath().intersects(range))
+        result.add(arc);
+    }
+    return result;
   }
 
   /**
@@ -340,14 +340,14 @@ import spin.Spin;
   /**
    * Accessor - bookmarks
    */
-  public List getBookmarks() {
+  public List<Bookmark> getBookmarks() {
     return Collections.unmodifiableList(bookmarks);
   }
   
   /**
    * Accessor - bookmarks
    */
-  public void setBookmarks(List set) {
+  public void setBookmarks(List<Bookmark> set) {
     bookmarks.clear();
     bookmarks.addAll(set);
   }
@@ -355,70 +355,55 @@ import spin.Spin;
   /**
    * Accessor - id's of entities hiding ancestors
    */
-  public Collection getHideAncestorsIDs() {
-    return getIds(hideAncestors);
+  public Collection<String> getHideAncestorsIDs() {
+    return hideAncestors;
   }
   
   /**
    * Accessor - id's of entities hiding ancestors
    */
-  public void setHideAncestorsIDs(Collection ids) {
+  public void setHideAncestorsIDs(Collection<String> ids) {
     hideAncestors.clear();
-    hideAncestors.addAll(getEntities(ids));
+    hideAncestors.addAll(ids);
   }
 
   /**
    * Accessor - id's of entities hiding descendants
    */
-  public Collection getHideDescendantsIDs() {
-    return getIds(hideDescendants);
+  public Collection<String> getHideDescendantsIDs() {
+    return hideDescendants;
   }
   
   /**
    * Accessor - id's of entities hiding descendants
    */
-  public void setHideDescendantsIDs(Collection ids) {
+  public void setHideDescendantsIDs(Collection<String> ids) {
     hideDescendants.clear();
-    hideDescendants.addAll(getEntities(ids));
+    hideDescendants.addAll(ids);
   }
 
   /**
    * Helper - get ids from collection of entities
    */  
-  private Collection getIds(Collection entities) {
-    List result = new ArrayList();
-    Iterator es = entities.iterator();
-    while (es.hasNext()) {
-      Entity e = (Entity)es.next();
+  private Collection<String> getIds(Collection<Entity> entities) {
+    List<String> result = new ArrayList<String>();
+    for (Entity e : entities) 
       result.add(e.getId());
-    }
     return result;    
-  }
-  
-  /**
-   * Helper - get entities from collection of ids
-   */  
-  private Collection getEntities(Collection ids) {
-    List result = new ArrayList();
-    for (Iterator it = ids.iterator(); it.hasNext(); ) {
-      Entity e = gedcom.getEntity(it.next().toString());
-      if (e!=null) result.add(e);
-    }
-    return result;
   }
   
   /**
    * Whether we're hiding descendants of given entity
    */
   /*package*/ boolean isHideDescendants(Indi indi) {
-    return hideDescendants.contains(indi);
+    return hideDescendants.contains(indi.getId());
   }
   
   /**
    * Whether we're hiding ancestors of given entity
    */
   /*package*/ boolean isHideAncestors(Indi indi) {
-    return hideAncestors.contains(indi);
+    return hideAncestors.contains(indi.getId());
   }
   
   /** 
@@ -447,7 +432,7 @@ import spin.Spin;
     // check content
     Object content = node.getContent();
     if (content instanceof Entity) {
-      entities2nodes.put(content, node);
+      entities2nodes.put((Entity)content, node);
     }
     nodes.add(node);
     return node;
@@ -478,7 +463,10 @@ import spin.Spin;
     bounds.setFrame(0,0,0,0);
     
     // nothing to do if no root set
-    if (root==null) return;
+    if (root==null) {
+      fireStructureChanged();
+      return;
+    }
 
     // parse and layout    
     try {
@@ -586,7 +574,7 @@ import spin.Spin;
     /** indi */
     private Indi indi;
     /** set to change */
-    private Set set;
+    private Set<String> set;
     /**
      * constructor
      * @param individual indi to un/fold
@@ -600,7 +588,7 @@ import spin.Spin;
      * perform 
      */
     public void run() {
-      if (!set.remove(indi)) set.add(indi);
+      if (!set.remove(indi.getId())) set.add(indi.getId());
       update();
     }
   } //FoldUnfold

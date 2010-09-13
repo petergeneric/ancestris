@@ -7,7 +7,7 @@
 
 package genj.gedcom;
 
-import genj.io.GedcomReader;
+import genj.io.GedcomReaderFactory;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -41,7 +41,7 @@ public class GraphInvariantTest extends TestCase {
     Logger.getLogger("").setLevel(Level.OFF);
 
     // try to read our sample file
-    gedcom = new GedcomReader(getClass().getResourceAsStream("graphinvariants.ged")).read();
+    gedcom = GedcomReaderFactory.createReader(getClass().getResourceAsStream("graphinvariants.ged"), null).read();
     
   }
   

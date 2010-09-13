@@ -19,11 +19,13 @@
  */
 package genj.report;
 
+import genj.util.EnvironmentChecker;
 import genj.util.PackageUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * ClassLoad for Reports
@@ -39,19 +40,19 @@ import java.util.logging.Logger;
 public class ReportLoader {
 
   /** reports we have */
-  private List<Report> instances = new ArrayList(10);
+  private List<Report> instances = new ArrayList<Report>(10);
   
   /** report files */
-  private Map file2reportclass = new HashMap(10);
+  private Map<File,String> file2reportclass = new HashMap<File, String>(10);
   
   /** classpath */
-  private List classpath = new ArrayList(10);
+  private List<URL> classpath = new ArrayList<URL>(10);
   
   /** whether reports are in classpath */
-  private boolean isReportsInClasspath = true;
+  private boolean isReportsInClasspath = false;
   
   /** a singleton */
-  private static ReportLoader singleton;
+  private volatile static ReportLoader singleton;
   
   /**
    * Clears the report loader's state effectively forcing a reload
@@ -80,66 +81,43 @@ public class ReportLoader {
   }
   
   /**
+   * Report by class name
+   */
+  public Report getReportByName(String classname) {
+    for (Report report : instances) {
+      if (report.getClass().getName().equals(classname))
+        return report;
+    }
+    return null;
+    
+  }
+  
+  /**
    * dir resolver
    */
   public static File getReportDirectory() {
-        try {
-            File defaultDir = new File( new URI(ReportLoader.class.getProtectionDomain().getCodeSource().getLocation().getFile()));
-            ReportView.LOG.info("directory:" + defaultDir);
-            defaultDir = new File(defaultDir.getParentFile().getParentFile().getParent(),"report");
-            ReportView.LOG.info("directory:" + defaultDir);
-                    
-            // where are the reports
-//            return new File(EnvironmentChecker.getProperty(ReportLoader.class, new String[]{"genj.report.dir", "user.dir/report"}, defaultDir.getPath(), "find report class-files"));
-            //FIXME: pas de possibilite de personnaliser le repertoire des rapports pour l'instant
-            return defaultDir;
-        } catch (Exception ex) {
-            Logger.getLogger(ReportLoader.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    
+    // where are the reports 
+    return new File(EnvironmentChecker.getProperty(
+      new String[]{ "genj.report.dir", "user.dir/report"},
+      "report",
+      "find report class-files"
+    ));
   }
   
   /**
    * Constructor
    */
   private ReportLoader() {
-        try {
-            //FIXME:daniel    File base = getReportDirectory();
-            //    ReportView.LOG.info("Reading reports from "+base);
-            //
-            //    // parse report directory
-            //    try {
-            //      classpath.add(base.toURI().toURL());
-            //    } catch (MalformedURLException e) {
-            //      // n/a
-            //    }
-            //    parseDir(base, null);
-            //
-            //    // Prepare classloader
-            //    URLClassLoader cl = new URLClassLoader((URL[])classpath.toArray(new URL[classpath.size()]), getClass().getClassLoader());
-            //
-            //    // Load reports
-            //    for (Iterator files = file2reportclass.keySet().iterator(); files.hasNext(); ) {
-            //      File file = (File)files.next();
-            //      String clazz = (String)file2reportclass.get(file);
-            //      try {
-            //        Report r = (Report)cl.loadClass(clazz).newInstance();
-            //        r.putFile(file);
-            //        if (!isReportsInClasspath&&r.getClass().getClassLoader()!=cl) {
-            //          ReportView.LOG.warning("Reports are in classpath and can't be reloaded");
-            //          isReportsInClasspath = true;
-            //        }
-            //        instances.add(r);
-            //      } catch (Throwable t) {
-            //        ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+clazz, t);
-            //      }
-            //    }
-            //
+    try {
             for (Class clazz:PackageUtils.getClassesForPackage("genjreports","Report")) {
                 Report r;
                 try{
                     r= (Report)clazz.newInstance();
-                    //FIXME: mais a quoi ca sert?
+                    //TODO: le fichier n'est utilise que pour affichage ou le rapport ReportWebSite.
+                    // Ce rapport est supprime dans ancestris car il ne sert a rien compte tenu de l'exisstence
+                    // du webbook
+                    // il pourra donc etre supprime lors de la refactorisation des rapports
                     r.putFile(new File(clazz.getCanonicalName()));
                     instances.add(r);
                 } catch (Throwable t) {
@@ -147,14 +125,14 @@ public class ReportLoader {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReportLoader.class.getName()).log(Level.SEVERE, null, ex);
+            ReportView.LOG.log(Level.SEVERE, null, ex);
         }
     // sort 'em
-    Collections.sort(instances, new Comparator() { 
-      public int compare(Object a, Object b) {
+    Collections.sort(instances, new Comparator<Report>() { 
+      public int compare(Report a, Report b) {
         // 20063008 this can actually fail if the report is bad
         try {
-          return ((Report)a).getName().compareTo(((Report)b).getName());
+          return a.getName().compareTo(b.getName());
         } catch (Throwable t) {
           return 0;
         }

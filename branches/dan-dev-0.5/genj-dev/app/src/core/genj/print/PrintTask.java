@@ -1,7 +1,7 @@
 /**
  * GenJ - GenealogyJ
  *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,28 +19,29 @@
  */
 package genj.print;
 
+import genj.option.Option;
+import genj.option.PropertyOption;
+import genj.renderer.DPI;
+import genj.renderer.EmptyHintKey;
 import genj.util.Dimension2d;
 import genj.util.EnvironmentChecker;
 import genj.util.Resources;
 import genj.util.Trackable;
 import genj.util.WordBuffer;
-import genj.util.swing.Action2;
-import genj.util.swing.ImageIcon;
-import genj.util.swing.ProgressWidget;
-import genj.util.swing.UnitGraphics;
-import genj.window.WindowManager;
 
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,28 +61,22 @@ import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
-import javax.swing.Action;
-import javax.swing.JComponent;
 
 /**
  * Our own task for printing
  */
-public class PrintTask extends Action2 implements Printable, Trackable {
+/*package*/ class PrintTask implements Printable, Trackable {
 
   /** our flavor */
   /*package*/ final static DocFlavor FLAVOR = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
-  
   /*package*/ final static Resources RESOURCES = Resources.get(PrintTask.class);
   /*package*/ final static Logger LOG = Logger.getLogger("genj.print");
   
-  /** the owning component */
-  private JComponent owner;
-
   /** our print service */
   private PrintService service;
 
   /** the current renderer */
-  private Printer renderer;
+  private PrintRenderer renderer;
 
   /** current page */
   private int page = 0;
@@ -102,24 +97,19 @@ public class PrintTask extends Action2 implements Printable, Trackable {
   private PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
   
   /** pages */
-  private Dimension cachedPages;
+  private Dimension pages;
+  private double zoomx = 1.0D, zoomy = 1.0D;
+  private boolean printEmpties = false;
 
   /**
    * Constructor
    */
-  public PrintTask(Printer setRenderer, String setTitle, JComponent setOwner, PrintRegistry setRegistry) throws PrintException {
-    
-    // looks
-    setImage(new ImageIcon(this,"images/Print"));
-
+  public PrintTask(String title, PrintRenderer renderer) throws PrintException {
+  
     // remember 
-    renderer = setRenderer;
-    owner = setOwner;
-    title = RESOURCES.getString("title", setTitle);
-    registry = setRegistry;
-
-    // setup async
-    setAsync(Action2.ASYNC_SAME_INSTANCE);
+    this.renderer = renderer;
+    this.title = title;
+    this.registry = PrintRegistry.get(renderer);
     
     // restore last service
     PrintService service = registry.get(getDefaultService());
@@ -128,12 +118,21 @@ public class PrintTask extends Action2 implements Printable, Trackable {
     setService(service);
 
     // setup a default job name
-    attributes.add(new JobName(title, null));
+    attributes.add(new JobName("GenJ", null));
     
     // restore print attributes
     registry.get(attributes);
+    
+    // file output preset?
+    String file = EnvironmentChecker.getProperty("genj.print.file", null, "Print file output");
+    if (file!=null)
+      attributes.add(new Destination(new File(file).toURI()));
 
     // done
+  }
+  
+  /*package*/ String getTitle() {
+    return title;
   }
 
   /**
@@ -174,33 +173,13 @@ public class PrintTask extends Action2 implements Printable, Trackable {
   }
 
   /**
-   * Owner access
-   */
-  /*package*/ JComponent getOwner() {
-    return owner;
-  }
-
-  /**
-   * Invalidate current state (in case parameters/options/service has changed)
-   */
-  /*package*/ void invalidate() {
-    // forget cached information
-    cachedPages = null;
-  }
-  
-  /**
    * Set current service
    */
   /*package*/ void setService(PrintService set) {
-    // known?
-    if (service==set)
-      return;
     // keep
     service = set;
     // remember
     registry.put(service);
-    // reset state
-    invalidate();
   }
 
   /**
@@ -213,9 +192,9 @@ public class PrintTask extends Action2 implements Printable, Trackable {
   /**
    * Resolve resolution (in inches)
    */
-  /*package*/ Point getResolution() {
+  /*package*/ DPI getResolution() {
     // In java printing the resolution is always 72dpi
-    return new Point(72,72);
+    return new DPI (72,72);
 //    PrinterResolution resolution = (PrinterResolution)getAttribute(PrinterResolution.class);
 //    return new Point(
 //      resolution.getCrossFeedResolution(PrinterResolution.DPI),
@@ -266,54 +245,98 @@ public class PrintTask extends Action2 implements Printable, Trackable {
     );
   }
   
-  
-  /**
-   * Calculate page in inches
-   */
-  /*package*/ Rectangle2D getPage(int x, int y, float pad) {
-    
-    Dimension2D size = getPageSize();
-
-    return new Rectangle2D.Double(
-       pad + x*(size.getWidth ()+pad), 
-       pad + y*(size.getHeight()+pad), 
-       size.getWidth(), 
-       size.getHeight()
-    );
-  }
-  
   /**
    * Resolve page size (in inches)
    */
   /*package*/ Dimension2D getPageSize() {
     
     OrientationRequested orientation = (OrientationRequested)getAttribute(OrientationRequested.class);
-    MediaSize media = MediaSize.getMediaSizeForName((MediaSizeName)getAttribute(Media.class));
+    Media media = (Media)getAttribute(Media.class);
+    
+    // try to find out media size for MediaSizeName
+    MediaSize size = null;
+    if (media instanceof MediaSizeName) 
+      size = MediaSize.getMediaSizeForName((MediaSizeName)media);
+
+    // hmm, might be sun.print.CustomMediaSizeName - try fallback: public MediaSizeName getStandardMedia()
+    if (size==null) {
+      try {
+        size = MediaSize.getMediaSizeForName((MediaSizeName)media.getClass().getMethod("getStandardMedia").invoke(media));
+        LOG.fine("Got MediaSize "+size+" from "+media+".getStandardMedia()");
+      } catch (Throwable t) {
+        // ignored
+      }
+    }
+
+    // fallback to A4
+    if (size==null) {
+      LOG.warning("Need MediaSize, got unknown MediaSizeName, MediaTray or MediaName '"+media+"' - using A4");
+      attributes.add(MediaSizeName.ISO_A4);
+      size = MediaSize.getMediaSizeForName(MediaSizeName.ISO_A4);
+    }
     
     Dimension2D result = new Dimension2d();
-    
-    if (orientation==OrientationRequested.LANDSCAPE||orientation==OrientationRequested.REVERSE_LANDSCAPE)
-      result.setSize(media.getY(MediaSize.INCH), media.getX(MediaSize.INCH));
-    else
-      result.setSize(media.getX(MediaSize.INCH), media.getY(MediaSize.INCH));
-    
+
+    double w,h;
+    if (orientation==OrientationRequested.LANDSCAPE||orientation==OrientationRequested.REVERSE_LANDSCAPE) {
+      result.setSize(size.getY(MediaSize.INCH), size.getX(MediaSize.INCH));
+    } else {
+      result.setSize(size.getX(MediaSize.INCH), size.getY(MediaSize.INCH));
+    }    
     return result;
   }
   
   /**
-   * Compute pages
+   * pages 
    */
-  /*package*/ Dimension getPages() {
-    if (cachedPages==null)
-      cachedPages = renderer.calcSize(new Dimension2d(getPrintable()), getResolution());
-    return cachedPages;
+  /*package*/ void setPages(Dimension pages, boolean fit) {
+    
+    if (pages.width==0 || pages.height==0)
+      throw new IllegalArgumentException("0 not allowed");
+    
+    this.pages = pages;
+
+    Rectangle2D printable = getPrintable();
+    Dimension2D size = getSize();
+    
+    this.zoomx = pages.width*printable.getWidth()   / size.getWidth();
+    this.zoomy = pages.height*printable.getHeight() / size.getHeight();
+    
+    if (!fit) {
+      if (zoomx>zoomy) zoomx=zoomy;
+      if (zoomy>zoomx) zoomy=zoomx;
+    }
   }
   
-  /**
-   * Renderer
-   */
-  /*package*/ Printer getRenderer() {
-    return renderer;
+  /*package*/ boolean isPrintEmpties() {
+    return printEmpties;
+  }
+  
+  
+  /*package*/ void setPrintEmpties(boolean set) {
+    this.printEmpties  = set;
+  }
+  
+  /*package*/ void setZoom(double zoom) {
+    this.zoomx = zoom;
+    this.zoomy = zoom;
+    this.pages = null;
+  }
+  
+  /*package*/ Dimension2D getSize() {
+    return renderer.getSize();
+  }
+  
+  /*package*/ Dimension getPages() {
+    if (pages!=null) 
+      return pages;
+    // ask renderer
+    Rectangle2D printable = getPrintable();
+    Dimension2D dim = renderer.getSize();
+    return new Dimension(
+      (int)Math.ceil(dim.getWidth ()*zoomx/printable.getWidth ()),
+      (int)Math.ceil(dim.getHeight()*zoomy/printable.getHeight())
+    );
   }
   
   /**
@@ -330,16 +353,13 @@ public class PrintTask extends Action2 implements Printable, Trackable {
   /**
    * Resolve a print attribute
    */
-  private PrintRequestAttribute getAttribute(Class category) {
-    // check
-    if (!PrintRequestAttribute.class.isAssignableFrom(category))
-      throw new IllegalArgumentException("only PrintRequestAttributes allowed");
+  private PrintRequestAttribute getAttribute(Class<? extends PrintRequestAttribute> category) {
     // check our attributes first
-    Object result = (PrintRequestAttribute)attributes.get(category);
+    Object result = attributes.get(category);
     if (result instanceof PrintRequestAttribute)
       return (PrintRequestAttribute)result;
     // make sure we know the media if this is not Media category
-    if (!Media.class.isAssignableFrom(category)) 
+    if (!Media.class.isAssignableFrom(category))
       getAttribute(Media.class);
     // now grab configured default for category
     result = service.getDefaultAttributeValue(category);
@@ -351,8 +371,8 @@ public class PrintTask extends Action2 implements Printable, Trackable {
       result = service.getSupportedAttributeValues(category, null, attributes);
       if (result==null)
         LOG.warning( "Couldn't find supported PrintRequestAttribute for category "+category+" with "+toString(attributes));
-      else if (result.getClass().isArray()&&result.getClass().getComponentType()==category) {
-	      LOG.finer( "Got PrintRequestAttribute values "+Arrays.toString((Object[])result)+" for category "+category);
+      else if (result.getClass().isArray()) {
+	      LOG.fine( "Got PrintRequestAttribute values "+Arrays.toString((Object[])result)+" for category "+category);
 	      
 	      // apparently some systems can return null values, e.g. 
 	      //    [null, (0.0,0.0)->(279.4,355.6)mm, (0.0,0.0)->(279.4,431.8)mm, (0.0,0.0)->(330.2,482.6)mm, (0.0,0.0)->(406.4,508.0)mm, (0.0,0.0)->(406.4,609.6)mm, (0.0,0.0)->(1188.861,1682.044)mm, (0.0,0.0)->(1682.044,2380.897)mm, (0.0,0.0)->(203.2,254.0)mm, (0.0,0.0)->(203.2,304.8)mm, (0.0,0.0)->(841.022,1188.861)mm, (0.0,0.0)->(594.078,841.022)mm, (0.0,0.0)->(420.158,594.078)mm, (0.0,0.0)->(297.039,420.158)mm, (0.0,0.0)->(209.903,297.039)mm, (0.0,0.0)->(148.519,209.903)mm, (0.0,0.0)->(215.9,279.4)mm, (0.0,0.0)->(279.4,431.8)mm, (0.0,0.0)->(431.8,558.8)mm, (0.0,0.0)->(558.8,863.6)mm, (0.0,0.0)->(863.6,1117.6)mm, (0.0,0.0)->(228.6,304.8)mm, (0.0,0.0)->(304.8,457.2)mm, (0.0,0.0)->(457.2,609.6)mm, (0.0,0.0)->(609.6,914.4)mm, (0.0,0.0)->(914.4,1219.2)mm, (0.0,0.0)->(916.869,1296.811)mm, (0.0,0.0)->(647.7,916.869)mm, (0.0,0.0)->(457.906,647.7)mm, (0.0,0.0)->(323.85,457.906)mm, (0.0,0.0)->(228.953,323.85)mm, (0.0,0.0)->(161.925,228.953)mm, (0.0,0.0)->(104.775,241.3)mm, (0.0,0.0)->(161.925,228.953)mm, (0.0,0.0)->(110.067,220.133)mm, (0.0,0.0)->(98.425,190.5)mm, (0.0,0.0)->(184.15,266.7)mm, (0.0,0.0)->(999.772,1413.933)mm, (0.0,0.0)->(706.967,999.772)mm, (0.0,0.0)->(499.886,706.967)mm, (0.0,0.0)->(352.778,499.886)mm, (0.0,0.0)->(249.767,352.778)mm, (0.0,0.0)->(175.683,249.767)mm, (0.0,0.0)->(1029.758,1455.914)mm, (0.0,0.0)->(727.781,1029.758)mm, (0.0,0.0)->(514.703,727.781)mm, (0.0,0.0)->(363.008,514.703)mm, (0.0,0.0)->(256.469,363.008)mm, (0.0,0.0)->(182.739,256.469)mm, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null] 
@@ -360,84 +380,48 @@ public class PrintTask extends Action2 implements Printable, Trackable {
 
 	      Object[] os = (Object[])result;
 	      result = null;
-	      for (int i=0;result==null && i<os.length;i++) 
-	        result = os[i];
-	    } else {
-	      // according to http://java.sun.com/j2se/1.4.2/docs/guide/jps/spec/attributes.fm5.html the result can be an array or the single value
-        LOG.finer( "Got PrintRequestAttribute value "+result+" for category "+category);
-	    }
+	      for (int i=0;result==null && i<os.length;i++) {
+	        if (os[i]!=null && category.isAssignableFrom(os[i].getClass())) {
+	          result = os[i];
+	          break;
+	        }
+	      }
+      }
+    }
+    // revert to media default if not available
+    if (result==null&&category==Media.class) {
+      result = MediaSizeName.ISO_A4;
+      LOG.warning("fallback media is "+result);
+      attributes.add((Media)result);
+    }    
+    // try to find yet another fallback for media printable area
+    // according to this bug in Java pre7
+    //   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6508532
+    // there can be null or [null] returned (as seen in Daniel's setup)
+    if (result==null&&category==MediaPrintableArea.class) {
+      Dimension2D page = getPageSize();
+      result = new MediaPrintableArea(1,1,(float)page.getWidth()-2,(float)page.getHeight()-2, MediaPrintableArea.INCH);
+      LOG.warning( "Using fallback MediaPrintableArea "+result);
     }
     // remember
-    if (result!=null)
+    if (result!=null) {
       attributes.add((PrintRequestAttribute)result);
+      LOG.fine( "PrintRequestAttribute for category "+category+" is "+result+" with "+toString(attributes));
+    } else {
+      LOG.warning( "Couldn't find any PrintRequestAttribute for category "+category+" with "+toString(attributes));
+    }
     // done
     return (PrintRequestAttribute)result;
   }
-  
-  /**
-   * @see genj.util.swing.Action2#preExecute()
-   */
-  protected boolean preExecute() {
 
-    // show dialog
-    PrintWidget widget = new PrintWidget(this);
-
-    // prepare actions
-    Action[] actions = { 
-        new Action2(RESOURCES, "print"),
-        Action2.cancel() 
-    };
-
-    // show it in dialog
-    int choice = WindowManager.getInstance(owner).openDialog("print", title, WindowManager.QUESTION_MESSAGE, widget, actions, owner);
-
-    // keep settings
-    registry.put(attributes);
-
-    // check choice
-    if (choice != 0 || getPages().width == 0 || getPages().height == 0)
-      return false;
-
-    // file output?
-    String file = EnvironmentChecker.getProperty(this, "genj.print.file", null, "Print file output");
-    if (file!=null)
-      attributes.add(new Destination(new File(file).toURI()));
-    
-    // setup progress dlg
-    progress = WindowManager.getInstance(owner).openNonModalDialog(null, title, WindowManager.INFORMATION_MESSAGE, new ProgressWidget(this, getThread()), Action2.cancelOnly(), owner);
-
-    // continue
-    return true;
-  }
-
-  /**
-   * @see genj.util.swing.Action2#execute()
-   */
-  protected void execute() {
-    try {
-      service.createPrintJob().print(new SimpleDoc(this, FLAVOR, null), attributes);
-    } catch (PrintException e) {
-      throwable = e;
-    }
-  }
-
-  /**
-   * @see genj.util.swing.Action2#postExecute(boolean)
-   */
-  protected void postExecute(boolean preExecuteResult) {
-    // close progress
-    WindowManager.getInstance(owner).close(progress);
-    // something we should know about?
-    if (throwable != null) 
-      LOG.log(Level.WARNING, "print() threw error", throwable);
-    // finished
+  /*package*/ List<? extends Option> getOptions() {
+    return PropertyOption.introspect(renderer);
   }
 
   /**
    * @see genj.util.Trackable#cancelTrackable()
    */
   public void cancelTrackable() {
-    cancel(true);
   }
 
   /**
@@ -451,9 +435,32 @@ public class PrintTask extends Action2 implements Printable, Trackable {
    * @see genj.util.Trackable#getState()
    */
   public String getState() {
-    return RESOURCES.getString("progress", new String[] { "" + (page + 1), "" + (getPages().width * getPages().height) });
+    return RESOURCES.getString("progress", (page + 1), (getPages().width * getPages().height) );
   }
+  
+  /*package*/ void print() {
+    
+    // store current settings
+    registry.put(attributes);
 
+    // init print
+    try {
+      service.createPrintJob().print(new SimpleDoc(this, FLAVOR, null), attributes);
+    } catch (PrintException e) {
+      LOG.log(Level.WARNING, "print failed", e);
+    }
+    
+    // debug target?
+    String file = EnvironmentChecker.getProperty("genj.print.file", null, "Print file output");
+    if (file!=null)
+      try {
+        Desktop.getDesktop().open(new File(file));
+      } catch (Throwable t) {
+        LOG.log(Level.FINE, "can't open "+file, t);
+      }
+    
+  }
+  
   /**
    * callback - printable
    */
@@ -467,22 +474,42 @@ public class PrintTask extends Action2 implements Printable, Trackable {
       return NO_SUCH_PAGE;
 
     page = pageIndex;
-
-    // prepare current page/clip
-    Point dpi = getResolution();
     
-    Rectangle2D printable = getPrintable();
-    UnitGraphics ug = new UnitGraphics(graphics, dpi.x, dpi.y);
-    ug.pushClip(0,0, printable);
-
-    // translate for to top left on page
-    ug.translate(printable.getX(), printable.getY()); 
-
+    // bring forward resolution
+    Graphics2D g2d = (Graphics2D)graphics;
+    g2d.setRenderingHint(DPI.KEY, getResolution());
+    
     // draw content
-    renderer.renderPage((Graphics2D)graphics, new Point(col, row), new Dimension2d(printable), dpi, false);
+    print((Graphics2D)graphics, row, col);
     
     // next
     return PAGE_EXISTS;
   }
   
+  
+  /*package*/ void print(Graphics2D graphics, int row, int col) {
+
+    // prepare current page/clip
+    DPI dpi = DPI.get(graphics);
+    
+    Rectangle2D pixels = dpi.toPixel(getPrintable());
+    
+    graphics.translate(pixels.getX()-col*pixels.getWidth(), pixels.getY()-row*pixels.getHeight()); 
+    
+    Rectangle2D box = new Rectangle2D.Double(
+        col*pixels.getWidth(),
+        row*pixels.getHeight(),
+        pixels.getWidth(),
+        pixels.getHeight());
+    graphics.clip(box);
+
+    graphics.scale(zoomx, zoomy);
+
+    graphics.setRenderingHint(EmptyHintKey.KEY, true);
+    
+    renderer.render(graphics);
+
+    // done
+  }
+
 } //PrintTask

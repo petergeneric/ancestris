@@ -33,9 +33,18 @@ public class Submitter extends Entity {
   private final static TagPath PATH_WEB  =new TagPath("SUBM:_WWW");
 
   /**
+   * need tag,id-arguments constructor for all entities
+   */
+  public Submitter(String tag, String id) {
+    super(tag, id);
+    assertTag(Gedcom.SUBM);
+  }
+  
+  /**
    * Name ...
    */
-  protected String getToStringPrefix(boolean hideIds, boolean showAsLink) {
+  @Override
+  protected String getToStringPrefix(boolean showIds) {
     return getName();
   }
   
@@ -46,10 +55,13 @@ public class Submitter extends Entity {
     return getValue(PATH_NAME, "");
   }
   
+  /**
+   * Name of Submitter
+   */
   public void setName(String name) {
     setValue(PATH_NAME, name);
   }
-  
+
   /**
    * City of Submitter
    */
@@ -115,5 +127,5 @@ public class Submitter extends Entity {
   public void setWeb(String name) {
     setValue(PATH_WEB, name);
   }
-
+  
 } //Submitter

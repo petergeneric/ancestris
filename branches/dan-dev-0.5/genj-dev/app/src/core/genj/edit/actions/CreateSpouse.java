@@ -25,7 +25,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import genj.view.ViewManager;
 
 /**
  * Action that knows how to create a spouse for an individual 
@@ -35,16 +34,17 @@ public class CreateSpouse extends CreateRelationship {
   private Indi spouse;
   
   /** constructor */
-  public CreateSpouse(Indi spouse, ViewManager mgr) {
-    super( resources.getString("create.spouse"), spouse.getGedcom(), Gedcom.INDI, mgr);
+  public CreateSpouse(Indi spouse) {
+    super( resources.getString("create.spouse"), spouse.getGedcom(), Gedcom.INDI);
     this.spouse = spouse;
+    setImage(Indi.IMG_UNKNOWN);
   }
   
   /** warn about a spouse that already has spouses */
   public String getWarning(Entity target) {
     int n = spouse.getNoOfFams();
     if (n>0)
-      return resources.getString("create.spouse.warning", new String[]{ spouse.toString(), ""+n });
+      return resources.getString("create.spouse.warning", spouse.toString(), ""+n );
     return null;
   }
   

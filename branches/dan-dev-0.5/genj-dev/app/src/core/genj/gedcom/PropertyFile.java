@@ -21,48 +21,31 @@ package genj.gedcom;
 
 import genj.util.swing.ImageIcon;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
 
 /**
  * Gedcom Property : FILE
  */
-public class PropertyFile extends Property implements IconValueAvailable {
+public class PropertyFile extends Property {
 
   /** standard image */
   public final static ImageIcon DEFAULT_IMAGE = Grammar.V55.getMeta(new TagPath("INDI:OBJE:FILE")).getImage();
 
-  /** expected tag */
-  private final static String TAG = "FILE";
-  
   /** the file-name */
   private String  file;
 
   /** whether file-name is relative or absolute */
   private boolean isRelativeChecked = false;
-
-  /** the image */
-  private Object valueAsIcon = null;
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return TAG;
-  }
   
   /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
+   * need tag-argument constructor for all properties
    */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(TAG);
-    return super.init(meta, value);
+  public PropertyFile(String tag) {
+    super(tag);
   }
-  
+
   /**
    * Overriden - file association is easy for a PropertyFile
    */
@@ -95,101 +78,9 @@ public class PropertyFile extends Property implements IconValueAvailable {
   }
 
   /**
-   * Tries to return the data of the referenced file as an icon
-   */
-  public synchronized ImageIcon getValueAsIcon() {
-
-    // ever loaded?
-    if (valueAsIcon instanceof SoftReference) {
-      
-      // check reference
-      ImageIcon result = (ImageIcon)((SoftReference)valueAsIcon).get();
-      if (result!=null)
-        return result;
-     
-      // reference was cut
-      valueAsIcon = null;   
-    }
-
-    // never loaded or cut reference? 
-    if (valueAsIcon==null) {
-      
-      // load it
-      ImageIcon result = loadValueAsIcon();
-      
-      // remember
-      if (result!=null)
-        valueAsIcon = new SoftReference(result);
-      else
-        valueAsIcon = new Object(); // NULL
-
-      // done    
-      return result;
-    }
-
-    // checked and never loaded
-    return null;
-  }
-  
-  /**
-   * Tries to Load the date of the referenced file 
-   */
-  private synchronized ImageIcon loadValueAsIcon() {
-
-    ImageIcon result = null;
-
-    // Check File for Image ?
-    if (file!=null&&file.trim().length()>0) {
-
-      // Open InputStream
-      InputStream in = null;
-      try {
-        
-        // read image - this might be big
-        in = getGedcom().getOrigin().open(file);
-        long size = in.available();
-        result = new ImageIcon(file, in);
-        
-        // make sure the result makes sense
-        int w = result.getIconWidth();
-        int h = result.getIconHeight();
-        if (w<=0||h<=0)
-          throw new IllegalArgumentException();
-          
-        // scale down if too big
-        int max = getMaxValueAsIconSize(false);
-        if (max>0 && size>max) {
-          
-          double ratio = w / (double)h;
-          int maxarea = Math.max(32*32, max/4);
-          
-          w = (int)(Math.sqrt(maxarea * ratio   ));
-          h = (int)(Math.sqrt(maxarea / ratio ));
-            
-          BufferedImage thumb = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-          Graphics2D g = (Graphics2D)thumb.getGraphics();
-          g.drawImage(result.getImage(), 0, 0, w, h, null);
-          result = new ImageIcon(thumb);
-        }
-        
-      } catch (Throwable t) {
-        result = null;
-      } finally {
-        // cleanup
-        if (in!=null) try { in.close(); } catch (IOException ioe) {};
-      }
-      
-      // done
-    }
-
-    // done
-    return result;
-  }
-  
-  /**
    * Sets this property's value
    */
-  public void setValue(String value) {
+  public synchronized void setValue(String value) {
 
     String old = getValue();
 
@@ -197,9 +88,6 @@ public class PropertyFile extends Property implements IconValueAvailable {
     file = value.replace('\\','/');
     isRelativeChecked = false;
     
-    // Reinit our icon calculation
-    valueAsIcon = null;
-
     // 20030518 don't automatically update TITL/FORM
     // will be prompted in ProxyFile
     
@@ -247,9 +135,8 @@ public class PropertyFile extends Property implements IconValueAvailable {
   /**
    * The files location (if externally accessible)    */
   public File getFile() {
-    File result = getGedcom().getOrigin().getFile(file);
-    if (result==null||!result.exists()||!result.isFile()) return null;
-    return result;
+    Gedcom gedcom = getGedcom();
+    return gedcom!=null ? gedcom.getOrigin().getFile(file) : null;
   }
 
   /**

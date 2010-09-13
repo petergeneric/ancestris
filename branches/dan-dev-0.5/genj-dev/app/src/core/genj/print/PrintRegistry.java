@@ -43,12 +43,19 @@ import javax.print.attribute.standard.MediaPrintableArea;
  * An extended Registry for Print parameters
  */
 public class PrintRegistry extends Registry {
+  
+  public static PrintRegistry get(Object source) {
+    
+    Registry r = Registry.get(source);
+    
+    return new PrintRegistry(r);
+  }
 
   /**
    * Constructor
    */
-  public PrintRegistry(Registry registry, String view) {
-    super(registry, view);
+  private PrintRegistry(Registry registry) {
+    super(registry, "");
   }
   
   /**
@@ -88,15 +95,20 @@ public class PrintRegistry extends Registry {
   /**
    * Retrieve PrintRequestAttributes
    */
+  @SuppressWarnings("unchecked")
   public void get(AttributeSet set) {
     
     StringTokenizer attributes = new StringTokenizer(super.get("attributes", ""));
     while (attributes.hasMoreTokens()) {
       String attribute = attributes.nextToken();
       try {
-        set.add(get(Class.forName(attribute), null));
+        Attribute a = get((Class<Attribute>)Class.forName(attribute), null);
+        if (a!=null)
+          set.add(a);
+        else
+          PrintTask.LOG.log(Level.INFO, "Couldn't restore print attribute "+attribute);
       } catch (Throwable t) {
-        PrintTask.LOG.log(Level.INFO, "Couldn't restore print attribute "+attribute, t);
+        PrintTask.LOG.log(Level.WARNING, "Error restoring print attribute "+attribute, t);
       }
     }
     
@@ -124,7 +136,7 @@ public class PrintRegistry extends Registry {
   /**
    * Retrieve PrintRequestAttribute
    */
-  public Attribute get(Class type, Attribute def) {
+  public Attribute get(Class<Attribute> type, Attribute def) {
 
     // check type
     if (!Attribute.class.isAssignableFrom(type))
@@ -162,14 +174,14 @@ public class PrintRegistry extends Registry {
   /**
    * Retrieve - TextSyntax
    */
-  private Attribute getTextSyntax(Class type, Attribute def) {
+  private Attribute getTextSyntax(Class<Attribute> type, Attribute def) {
     // try to get a stored value
     String txt = super.get(type.getName(),(String)null);
     if (txt==null)
       return def;
     // try to instantiate appropriate attr
     try {
-      return (Attribute)type.getConstructor(new Class[]{String.class, Locale.class}).newInstance(new Object[]{txt, null});
+      return type.getConstructor(new Class[]{String.class, Locale.class}).newInstance(new Object[]{txt, null});
     } catch (Throwable t) {
       return def;
     }
@@ -187,14 +199,14 @@ public class PrintRegistry extends Registry {
   /**
    * Retrieve - URISyntax
    */
-  private Attribute getURISyntax(Class type, Attribute def) {
+  private Attribute getURISyntax(Class<Attribute> type, Attribute def) {
     // try to get a stored value
     String uri = super.get(type.getName(),(String)null);
     if (uri==null)
       return def;
     // try to instantiate appropriate attr
     try {
-      return (Attribute)type.getConstructor(new Class[]{URI.class}).newInstance(new Object[]{new URI(uri)});
+      return type.getConstructor(new Class[]{URI.class}).newInstance(new Object[]{new URI(uri)});
     } catch (Throwable t) {
       return def;
     }
@@ -212,14 +224,14 @@ public class PrintRegistry extends Registry {
   /**
    * Retrieve - IntegerSyntax
    */
-  private Attribute getIntegerSyntax(Class type, Attribute def) {
+  private Attribute getIntegerSyntax(Class<Attribute> type, Attribute def) {
     // try to get a stored value
     int i = super.get(type.getName(),(int)-1);
     if (i<0)
       return def;
     // try to instantiate appropriate attr
     try {
-      return (Attribute)type.getConstructor(new Class[]{Integer.TYPE}).newInstance(new Object[]{new Integer(i)});
+      return type.getConstructor(new Class[]{Integer.TYPE}).newInstance(new Object[]{new Integer(i)});
     } catch (Throwable t) {
       return def;
     }
@@ -237,7 +249,7 @@ public class PrintRegistry extends Registry {
   /**
    * Retrieve - EnumSyntax
    */
-  private Attribute getEnumSyntax(Class type, Attribute def) {
+  private Attribute getEnumSyntax(Class<Attribute> type, Attribute def) {
     // try to get a stored value
     int i = super.get(type.getName(),(int)-1);
     if (i<0)

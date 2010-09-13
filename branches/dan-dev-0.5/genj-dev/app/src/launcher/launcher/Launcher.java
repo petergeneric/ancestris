@@ -18,6 +18,16 @@ package launcher;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.KeyboardFocusManager;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -66,39 +76,6 @@ import launcher.ipc.Server;
  *   java -jar thejar.jar
  * </pre>
  */
-
-/*
-      // Check if we can talk to another GenJ instance
-      int port = 2505;
-      try {
-        StringBuffer msg = new StringBuffer();
-        for (int i = 0; i < args.length; i++) msg.append(args[i]).append("\n");
-        msg.append("\n");
-        if (!"OK".equals(new Client().send(port, msg.toString()))) 
-          throw new RuntimeException("no ack");
-        LOG.fine("Sent application arguments to 2nd Genj instance");
-        return;
-      } catch (Throwable t) {
-        LOG.log(Level.FINE, "No 2nd GenJ instance willing to talk", t);
-      }
-      
-      // Be the first instance of GenJ 
-      try {
-        new Server(port, new CallHandler() {
-          public String handleCall(String msg) {
-            StringTokenizer lines = new StringTokenizer(msg, "\n");
-            while (lines.hasMoreTokens()) 
-              LOG.info("got message from 2nd GenJ instance: "+lines.nextToken());
-            return "OK";
-          }
-        });
-      } catch (IOException e) {
-        LOG.log(Level.WARNING, "couldn't register as 1st GenJ listening on port "+port, e);
-      }
-
-
- */
-
 public class Launcher {
 
   private final static Logger LOG = Logger.getLogger("launcher");
@@ -110,7 +87,8 @@ public class Launcher {
     MANIFEST = "META-INF/MANIFEST.MF",
     LAUNCH_CLASSPATH = "Launch-Classpath",
     LAUNCH_CLASS = "Launch-Class",
-    LAUNCH_PORT = "Launch-Port";
+    LAUNCH_PORT = "Launch-Port",
+    LAUNCH_SPLASH = "Launch-Splash";
   
   /**
    * Launcher's main
@@ -119,43 +97,130 @@ public class Launcher {
     
     try {
       
-      // setup IPC connection
-      if (!setupIPC(args))
-        return;
-      
       // cd into 'current' directoruy
       cd(Launcher.class);
       
+      // prepare classloader
+      String[] classpath = getLaunchClasspath();
+      exportClasspath(classpath);
+      ClassLoader cl  = getClassLoader(classpath);
+      Thread.currentThread().setContextClassLoader(cl);
+      
+      // setup IPC connection
+//      if (!setupIPC(args, cl))
+//        return;
+      
+      // show splash screen
+      showSplash();
+      
       // call main
-      callMain(args);
+      callMain(args, cl);
       
     } catch (Throwable t) {
       t.printStackTrace(System.err);
     }
 
+    // hide splash screen
+    hideSplash();
+    
     // nothing more to do here
+  }
+  
+  private static void hideSplash() {
+    Splash splash = Splash.instance;
+    if (splash!=null) 
+      splash.dispose();
+  }
+  
+  private static void showSplash() {
+    
+    String img = getManifest().getMainAttributes().getValue(LAUNCH_SPLASH);
+    if (img==null)
+      return;
+    
+    try {
+      new Splash(Toolkit.getDefaultToolkit().createImage(Launcher.class.getResource(img)));
+    } catch (Throwable t) {
+      System.err.println("Can't read splash image "+img);
+      t.printStackTrace(System.err);
+      return;
+    }
+    
+  }
+
+  /**
+   * our splash
+   */
+  private static class Splash extends Window implements PropertyChangeListener {
+    
+    private static Splash instance;
+    
+    private Image image;
+    
+    private Splash(Image image) {
+      
+      // Java 1.6 allows to pass a null-owner to the available java.awt.Window constructors
+      // while Java 1.5 doesn't. The no-owner arg constructor is only for java.awt.* package
+      // classes so to make this work in 1.5 we use a silent Frame as argument
+      super(new Frame());
+
+      instance = this;
+
+      // grab image and load it
+      this.image = image;
+      MediaTracker mt = new MediaTracker(this);
+      mt.addImage(image,0);
+      try {
+          mt.waitForID(0);
+      } catch(InterruptedException ie){}
+
+      // size and show
+      setSize(new Dimension(image.getWidth(null), image.getHeight(null)));
+      setLocationRelativeTo(null);
+      setVisible(true);
+    }
+    
+    @Override
+    public synchronized void dispose() {
+      // still needed?
+      if (instance==null)
+        return;
+      // listen to active window change
+      KeyboardFocusManager.getCurrentKeyboardFocusManager().removePropertyChangeListener(this);
+      super.dispose();
+      // clear
+      instance = null;
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+      // don't listen to active window change
+      KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(this);
+      super.setVisible(b);
+    }
+    
+    public void propertyChange(PropertyChangeEvent evt) {
+      // hide splash if other window becomes active
+      if ("activeWindow".equals(evt.getPropertyName()) && evt.getNewValue()!=this)
+        dispose();
+    }
+    
+    @Override
+    public void paint(Graphics g) {
+      g.drawImage(image, 0, 0, this);
+    }
   }
   
   /**
    * call the main method of the class being launched
    */
-  private static void callMain(String[] args) throws Exception {
+  private static void callMain(String[] args, ClassLoader cl) throws Exception {
 
     // get access to main method?
     if (main==null) {
 
-        // prepare classpath
-      String[] classpath = getLaunchClasspath();
-      
-      // tell everyone about it
-      setClasspath(classpath);
-      
-      // prepare classloader
-      ClassLoader cl  = getClassLoader(classpath);
-  
       // instantiate class and run main
-      Thread.currentThread().setContextClassLoader(cl);
-      Class clazz = cl.loadClass( getLaunchClass());
+      Class<?> clazz = cl.loadClass( getLaunchClass());
       main = clazz.getMethod("main", new Class[]{String[].class});
       
     }
@@ -169,7 +234,7 @@ public class Launcher {
    * Setup IPC communication to other launcher instance that can handle a launch
    * @return whether to continue into launch or
    */
-  private static boolean setupIPC(String[] args) {
+  private static boolean setupIPC(String[] args, final ClassLoader cl) {
     
     final String launchClass = getLaunchClass();
     int port = getLaunchPort();
@@ -201,7 +266,7 @@ public class Launcher {
         CallHandler handler = new CallHandler() {
           public String handleCall(String msg) {
             try {
-              callMain(decode(msg));
+              callMain(decode(msg), cl);
             } catch (Throwable t) {
               return "ERR";
             }
@@ -257,7 +322,7 @@ public class Launcher {
    * @param  clazz  class to get containing jar file for
    * @return success or not 
    */
-  private static boolean cd(Class clazz) {
+  private static boolean cd(Class<?> clazz) {
     
     try {         
       
@@ -295,7 +360,7 @@ public class Launcher {
    * @param  clazz  class to get URL for
    * @return the URL this class was loaded from
    */
-  private static URL getClassURL(Class clazz) {
+  private static URL getClassURL(Class<?> clazz) {
     String resourceName = "/" + clazz.getName().replace('.', '/') + ".class";
     return clazz.getResource(resourceName);
   }
@@ -346,7 +411,7 @@ public class Launcher {
   /**
    * Set java.class.path
    */
-  private static void setClasspath(String[] classpath) {
+  private static void exportClasspath(String[] classpath) {
     
     String separator = System.getProperty("path.separator");
     
@@ -365,7 +430,7 @@ public class Launcher {
   private static String[] getLaunchClasspath() throws MalformedURLException {
 
     String classpath = expandSystemProperties(getManifest().getMainAttributes().getValue(LAUNCH_CLASSPATH));
-    List result = new ArrayList();
+    List<String> result = new ArrayList<String>();
     
     // collect a list of classloader URLs
     StringTokenizer tokens = new StringTokenizer(classpath, ",", false);
@@ -382,7 +447,7 @@ public class Launcher {
     return (String[])result.toArray(new String[result.size()]);
   }
   
-  private static void buildClasspath(File file, List result) throws MalformedURLException {
+  private static void buildClasspath(File file, List<String> result) throws MalformedURLException {
     
     // a simple file?
     if (!file.isDirectory() && file.getName().endsWith(".jar")) {
@@ -414,8 +479,8 @@ public class Launcher {
     try {
 
       // find all manifest files
-      Stack manifests = new Stack();
-      for (Enumeration e = Launcher.class.getClassLoader().getResources(MANIFEST); e.hasMoreElements(); )
+      Stack<URL> manifests = new Stack<URL>();
+      for (Enumeration<URL> e = Launcher.class.getClassLoader().getResources(MANIFEST); e.hasMoreElements(); )
         manifests.add(e.nextElement());
       
       // it has to have the runnable attribute

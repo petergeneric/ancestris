@@ -46,17 +46,17 @@ public interface PropertyTableModel {
   /**
    * Root-property in given row
    */
-  public Property getProperty(int row);
+  public Property getRowRoot(int row);
   
   /**
    * Path from root to property in given column
    */
-  public TagPath getPath(int col);
+  public TagPath getColPath(int col);
   
   /**
    * Column name
    */
-  public String getName(int col);
+  public String getColName(int col);
   
   /** 
    * Add listener

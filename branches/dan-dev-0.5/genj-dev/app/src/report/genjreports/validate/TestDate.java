@@ -111,11 +111,11 @@ import java.util.List;
 
       String event1 = Gedcom.getName(trigger.get(trigger.length()-(trigger.getLast().equals("DATE")?2:1)));
       String event2 = Gedcom.getName(path2.get(path2.length()-2));
-      String[] events = new String[] { event1, event2 };
+      
       if (comparison==BEFORE)
-        buf.append(report.translate("err.date.before", events));
+        buf.append(report.translate("err.date.before", event1, event2));
       else
-        buf.append(report.translate("err.date.after", events));
+        buf.append(report.translate("err.date.after", event1, event2));
       
       entity = date2.getEntity();
       if (entity instanceof Indi)

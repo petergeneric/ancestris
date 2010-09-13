@@ -19,11 +19,6 @@
  */
 package genj.gedcom;
 
-import java.text.MessageFormat;
-
-import genj.util.Resources;
-
-
 /**
  * Abstract base type for all Entities - don't make abstract since we actually
  * instantiate this for entities we don't know 
@@ -36,11 +31,16 @@ public class Entity extends Property {
   /** the id */
   private String id;
   
-  /** the tag */
-  private String tag;
-  
   /** just in case someone's using a value */
   private String value;
+  
+  /**
+   * need tag,id-arguments constructor for all entities
+   */
+  protected Entity(String tag, String id) {
+    super(tag);
+    this.id = id;
+  }
   
   /**
    * Lifecycle - callback after being added to Gedcom
@@ -91,6 +91,14 @@ public class Entity extends Property {
   public Entity getEntity() {
     return this;
   }
+  
+  public boolean isConnected() {
+    for (PropertyXRef xref : getProperties(PropertyXRef.class)) {
+      if (xref.isValid())
+        return true;
+    }
+    return false;
+  }
 
   /**
    * Changes an entity's ID
@@ -120,53 +128,28 @@ public class Entity extends Property {
   }
   
   /**
-   * Initialize entity
-   */
-  /*package*/ void init(String setTag, String setId) {
-    tag = setTag;
-    id = setId;
-  }
-  
-  /**
    * @see genj.gedcom.Property#toString()
    */
   public final String toString() {
-    return toString(true, false);
+    return toString(true);
   }
   
-  public final String toString(boolean showIds, boolean showAsLink) {
+  public final String toString(boolean showIds) {
     
     StringBuffer buf = new StringBuffer();
-    buf.append(getToStringPrefix(showIds, showAsLink));
+    buf.append(getToStringPrefix(showIds));
     if (buf.length()==0)
-      buf.append(getTag());
+      buf.append(getPropertyName());
     if (showIds) {
       buf.append(" (");
-      String linkToId = getIdLinkFormat();
-   if (showAsLink && ! linkToId.equals("")) {
-  MessageFormat fmt = Resources.getMessageFormat(linkToId);
-  buf.append(fmt.format(new String[]{""+getId()}));
-   }else {
-        buf.append(getId());
-   }
+      buf.append(getId());
       buf.append(')');
     }
     return buf.toString();
   }
 
-  protected String getIdLinkFormat() {
- return genj.report.Options.getInstance().getLinkToId();
-  }
-
-  protected String getToStringPrefix(boolean showIds, boolean showAsLink) {
-    return getTag();
-  }
-  
-  /**
-   * @see genj.gedcom.Property#getTag()
-   */
-  public String getTag() {
-    return tag;
+  protected String getToStringPrefix(boolean showIds) {
+    return getPropertyName();
   }
   
   /**
@@ -186,13 +169,12 @@ public class Entity extends Property {
   /**
    * @see genj.gedcom.Property#compareTo(java.lang.Object)
    */
-  public int compareTo(Object o) {
-    try {
-      Entity other = (Entity)o;
-      return getID() - other.getID(); 
-    } catch (Throwable t) {
-    }
-    return super.compareTo(o);
+  public int compareTo(Property other) {
+    
+    if (!(other instanceof Entity))
+      throw new IllegalArgumentException("Cannot compare entity to property");
+    
+    return getID() - ((Entity)other).getID(); 
   }
 
   /**

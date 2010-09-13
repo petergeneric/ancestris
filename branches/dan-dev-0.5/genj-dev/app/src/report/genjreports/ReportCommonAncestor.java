@@ -12,7 +12,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import genj.report.options.ComponentReport;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -53,7 +52,7 @@ import genjreports.tree.output.RendererFactory;
  * @author ylhenoret
  *
  */
-public class ReportCommonAncestor extends ComponentReport {
+public class ReportCommonAncestor extends Report {
 
     private static final String OUTPUT_CATEGORY = "output";
     
@@ -128,7 +127,7 @@ public class ReportCommonAncestor extends ComponentReport {
    
     public ReportCommonAncestor()
     {
-        addOptions(outputs, OUTPUT_CATEGORY);
+//        addOptions(outputs, OUTPUT_CATEGORY);
     }
     
     /* ----------------- */
@@ -177,7 +176,7 @@ public class ReportCommonAncestor extends ComponentReport {
 	/**
 	 * our main method for an argument of a bunch of individuals
 	 */
-	public void start(Indi[] indis) {
+	public Object start(Indi[] indis) {
 
 		// first and second indis
 		Indi firstSelectedIndi = indis[0];
@@ -230,10 +229,10 @@ public class ReportCommonAncestor extends ComponentReport {
 
 			GraphicsOutput output = outputs.createOutput(this);
 	        if (output == null) // report canceled
-	            return;
+	            return null;
 	        try {
 	            output.output(new Renderer(firstSelectedIndi, secondSelectedIndi, firstIndiDirectLinks, secondIndiDirectLinks));
-	            output.display(this);
+	            return output.result(this);
 	        } catch (IOException e) {
 	            println("error");
 	        }
@@ -242,7 +241,7 @@ public class ReportCommonAncestor extends ComponentReport {
 		// nothing to show?
 		else if (ancestor == null) {
 			getOptionFromUser(translate("nocommon"), Report.OPTION_OK);
-			return;
+			return  null;
 		}
 //
 //		// show the result
@@ -256,6 +255,7 @@ public class ReportCommonAncestor extends ComponentReport {
 //				ancestor)));
 //
 //		showAnnotationsToUser(indi.getGedcom(), getName(), list);
+                return null;
 	}
 	  
 	  

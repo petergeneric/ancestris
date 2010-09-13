@@ -19,21 +19,18 @@
  */
 package genj.view;
 
-import genj.gedcom.Gedcom;
-import genj.util.Registry;
 import genj.util.swing.ImageIcon;
 
-import javax.swing.JComponent;
 
 /**
  * The interface to a view's factory
  */
 public interface ViewFactory {
-
+  
   /**
    * Callback for creating a view 
    */
-  public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager);
+  public View createView();
   
   /**
    * Returns an image for this view
@@ -43,6 +40,6 @@ public interface ViewFactory {
   /**
    * Returns a localized title for this view
    */
-  public String getTitle(boolean abbreviate);
+  public String getTitle();
   
 } //ViewFactory

@@ -24,7 +24,7 @@ import java.util.Comparator;
 /**
  * A path based comparator of properties where prop[i]<prop[i+1] (unless reversed)
  */
-public class PropertyComparator implements Comparator {
+public class PropertyComparator implements Comparator<Property> {
   
   /** the path we're sorting by */
   private TagPath path;
@@ -64,11 +64,10 @@ public class PropertyComparator implements Comparator {
   /**
    * @see java.util.Comparator#compare(Object, Object)
    */
-  public int compare(Object o1, Object o2) {
+  public int compare(Property p1, Property p2) {
     
-    Property 
-      p1 = ((Property)o1).getProperty(path),
-      p2 = ((Property)o2).getProperty(path);
+    p1 = p1.getProperty(path);
+    p2 = p2.getProperty(path);
     
     // null?
     if (p1==p2  ) return  0;

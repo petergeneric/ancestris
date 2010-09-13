@@ -37,11 +37,9 @@ public class PropertyName extends Property {
   public static final int PREFIX_LAST = 1;
   public static final int IGNORE_PREFIX = 2;
 
-  public final static String TAG =  "NAME";
-  
   private final static String 
-    KEY_LASTNAME = TAG+".last",
-    KEY_FIRSTNAME = TAG+".first";
+    KEY_LASTNAME = "NAME.last",
+    KEY_FIRSTNAME = "NAME.first";
   
   /** the first + last name */
   private String
@@ -53,42 +51,39 @@ public class PropertyName extends Property {
   private String nameAsString;
 
   /**
+   * need tag-argument constructor for all properties
+   */
+  /*package*/ PropertyName(String tag) {
+    super(tag);
+  }
+  
+  /**
    * Empty Constructor
    */
   public PropertyName() {
+    super("NAME");
   }
   
   /**
    * Constructor
    */
   public PropertyName(String first, String last) {
+    this();
     setName(first, last);
-  }
-  
-  /**
-   * Constructor
-   */
-  public PropertyName(String name) {
-    setValue(name);
   }
   
   /**
    * @see java.lang.Comparable#compareTo(Object)
    */
-  public int compareTo(Object o) {
+  public int compareTo(Property other) {
   
-    // cast to PropertyName if applicable
-    if (!(o instanceof PropertyName)) 
-      return super.compareTo(o);
-    PropertyName that = (PropertyName)o;
-
     // check last name initially
-    int result = compare(this.getLastName(), that.getLastName());
+    int result = compare(this.getLastName(), ((PropertyName)other).getLastName());
     if (result!=0)
       return result;
      
     // advance to first name
-    return compare(this.getFirstName(), that.getFirstName());
+    return compare(this.getFirstName(), ((PropertyName)other).getFirstName());
   }
 
   /**
@@ -168,6 +163,24 @@ public class PropertyName extends Property {
   public String getSuffix() {
     return suffix;
   }
+  
+  /**
+   * nested nickname
+   */
+  public String getNick() {
+    return getPropertyValue("NICK");
+  }
+  
+  public void setNick(String nick) {
+    Property n = getProperty("NICK");
+    if (n==null) {
+      if (nick.length()==0)
+        return;
+      n = addProperty("NICK", nick);
+    } else {
+      n.setValue(nick);
+    }
+  }
 
   /**
    * the name (e.g. "Meier, Nils")
@@ -178,21 +191,6 @@ public class PropertyName extends Property {
     if (firstName.length()==0) 
       return lastName;
     return lastName + ", " + firstName;
-  }
-
-  /**
-   * the tag
-   */
-  public String getTag() {
-    return TAG;
-  }
-  
-  /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(TAG);
-    return super.init(meta,value);
   }
 
   /**
@@ -273,7 +271,8 @@ public class PropertyName extends Property {
   public PropertyName setName(String first, String last, String suff, boolean replaceAllLastNames) {
 
     // 20070128 don't bother with calculating old if this is happening in init()
-    String old = getParent()==null?null:getValue();
+    boolean hasParent = getParent()!=null;
+    String old = hasParent ? getValue() : null;
 
     // check for uppercase lastname
     if (Options.getInstance().isUpperCaseNames)
@@ -300,10 +299,28 @@ public class PropertyName extends Property {
     
     // remember us
     remember(first, last);
-
+    
+    // update GIVN|SURN - IF we have a parent
+    if (hasParent) {
+      boolean add = Options.getInstance().isAddGivenSurname;
+      Property givn = getProperty("GIVN");
+      if (add || givn!=null) {
+        if (givn==null)
+          givn = addProperty("GIVN", first);
+        else
+          givn.setValue(first);
+      }
+      Property surn = getProperty("SURN");
+      if (add || surn!=null) {
+        if (surn==null)
+          surn = addProperty("SURN", last);
+        else
+          surn.setValue(last);
+      }
+    }
+    
     // Make sure no Information is kept in base class
     nameAsString=null;
-
     lastName  = last;
     firstName = first;
     suffix    = suff;
@@ -385,34 +402,34 @@ public class PropertyName extends Property {
   /**
    * Return all last names
    */
-  public List getLastNames(boolean sortByName) {
+  public List<String> getLastNames(boolean sortByName) {
     Gedcom gedcom = getGedcom();
     if (gedcom==null)
-      return new ArrayList(0);
+      return new ArrayList<String>(0);
     return getLastNames(gedcom, sortByName);
   }
 
   /**
    * Return all first names
    */
-  public List getFirstNames(boolean sortByName) {
+  public List<String> getFirstNames(boolean sortByName) {
     Gedcom gedcom = getGedcom();
     if (gedcom==null)
-      return new ArrayList(0);
+      return new ArrayList<String>(0);
     return getFirstNames(gedcom, sortByName);
   }
 
   /**
    * Return all last names
    */
-  public static List getLastNames(Gedcom gedcom, boolean sortByName) {
+  public static List<String> getLastNames(Gedcom gedcom, boolean sortByName) {
     return gedcom.getReferenceSet(KEY_LASTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
   }
 
   /**
    * Return all first names
    */
-  public static List getFirstNames(Gedcom gedcom, boolean sortByName) {
+  public static List<String> getFirstNames(Gedcom gedcom, boolean sortByName) {
     return gedcom.getReferenceSet(KEY_FIRSTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
   }
 
@@ -448,7 +465,7 @@ public class PropertyName extends Property {
     if (gedcom==null)
       return;
     // forget old last and remember new
-    ReferenceSet refSet = gedcom.getReferenceSet(KEY_LASTNAME);
+    ReferenceSet<String, Property> refSet = gedcom.getReferenceSet(KEY_LASTNAME);
     if (lastName.length()>0) refSet.remove(lastName, this);
     if (newLast.length()>0) refSet.add(newLast, this);
     // forget old first and remember new

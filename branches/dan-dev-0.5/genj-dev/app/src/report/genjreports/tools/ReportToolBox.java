@@ -7,6 +7,7 @@
  */
 package genjreports.tools;
 
+import genj.app.Workbench;
 import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
@@ -25,6 +26,8 @@ import java.util.*;
 import java.io.*;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -199,19 +202,17 @@ public class ReportToolBox extends Report {
     // Loop over all entity types
     for (int i = 0; i < entityTypes.length; i++) { 
        if ((i == 0) || ((settings.entToDo != 0) && (settings.entToDo != i))) continue;
-       Collection entities = gedcom.getEntities(entityTypes[i]);
+       Collection<? extends Entity> entities = gedcom.getEntities(entityTypes[i]);
        final String entityIDPrefix = gedcom.getNextAvailableID(entityTypes[i]).substring(0,1);
        final Map listID = new TreeMap(); // sorted mapping list
        String oldID, newID = "";
        int iCounter = 0;
        String key, ID;
-       Entity entity = new Entity();
        
        // First loop to get list of ids and sort on value of entity
        log.write(translate("Entity")+" "+entityTypes[i]+"...");
        log.write("("+translate("MustPrefix")+" '"+entityIDPrefix+"')");
-       for (Iterator it = entities.iterator(); it.hasNext();) {
-         entity = (Entity)it.next();
+       for (Entity entity: entities) {
          ID = entity.getId();
          key = entity.toString();
          listID.put(key, ID);
@@ -1483,50 +1484,56 @@ public class ReportToolBox extends Report {
   * Open Gedcom file
   */
   private Gedcom openGedcomFile(String filepath) {
-    // Variables
-    Gedcom gedcomX = null;
-    Origin originX = null;
-    GedcomReader readerX;
-
-    // Create pointer to file
-    try {
-       originX = Origin.create(new URL("file", "", filepath));
-       } catch (MalformedURLException e) {
-       log.write("URLexception:"+e);
-       return null;
-       }
-
-    // Create reader to pointer
-    try {
-       readerX = new GedcomReader(originX);
-      } catch (IOException e) {
-       log.write("IOexception:"+e);
-       return null;
-      }
-
-    // Build-up gedcom from reader
-    try {
-      gedcomX = readerX.read();
-      } catch (GedcomIOException e) {
-      log.write("GedcomIOexception:"+e);
-      log.write("File:"+filepath);
-      log.write("At line:"+e.getLine());
-      return null;
-      }
-
-    // Display warnings if any
-    log.write("   "+translate("LinesRead")+": "+readerX.getLines());
-    List warnings = readerX.getWarnings();
-    log.write("   "+translate("Warnings")+": "+warnings.size());
-    for (Iterator it = warnings.iterator(); it.hasNext();) {
-       String wng = (String)it.next().toString();
-       log.write("   "+wng);
-       } // end loop
-
-    // Link entities
-    linkGedcom(gedcomX);
-
-    return gedcomX;
+        try {
+            return Workbench.getInstance().openGedcom((new File(filepath)).toURL()).getGedcom();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ReportToolBox.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+            //    // Variables
+            //    Gedcom gedcomX = null;
+            //    Origin originX = null;
+            //    GedcomReader readerX;
+            //
+            //    // Create pointer to file
+            //    try {
+            //       originX = Origin.create(new URL("file", "", filepath));
+            //       } catch (MalformedURLException e) {
+            //       log.write("URLexception:"+e);
+            //       return null;
+            //       }
+            //
+            //    // Create reader to pointer
+            //    try {
+            //       readerX = new GedcomReader(originX);
+            //      } catch (IOException e) {
+            //       log.write("IOexception:"+e);
+            //       return null;
+            //      }
+            //
+            //    // Build-up gedcom from reader
+            //    try {
+            //      gedcomX = readerX.read();
+            //      } catch (GedcomIOException e) {
+            //      log.write("GedcomIOexception:"+e);
+            //      log.write("File:"+filepath);
+            //      log.write("At line:"+e.getLine());
+            //      return null;
+            //      }
+            //
+            //    // Display warnings if any
+            //    log.write("   "+translate("LinesRead")+": "+readerX.getLines());
+            //    List warnings = readerX.getWarnings();
+            //    log.write("   "+translate("Warnings")+": "+warnings.size());
+            //    for (Iterator it = warnings.iterator(); it.hasNext();) {
+            //       String wng = (String)it.next().toString();
+            //       log.write("   "+wng);
+            //       } // end loop
+            //
+            //    // Link entities
+            //    linkGedcom(gedcomX);
+            //    return gedcomX;
+            //    return gedcomX;
     }
 
  /**
@@ -1558,23 +1565,7 @@ public class ReportToolBox extends Report {
   * Save Gedcom file
   */
   private boolean saveGedcom(Gedcom gedcomX) {
-    File fileX = gedcomX.getOrigin().getFile();
-    GedcomWriter writerX = null;
-    try {
-       writerX = new GedcomWriter(gedcomX, fileX.getName(), gedcomX.getEncoding(), new FileOutputStream(fileX));
-       } catch (IOException e) {
-       log.write("IOexception:"+e);
-       return false;
-       }
-    try {
-       writerX.write();
-      } catch (GedcomIOException e) {
-       log.write("GedcomIOexception:"+e);
-       return false;
-      }
-    log.write("   "+translate("LinesWritten")+": "+writerX.getLines());
-
-    return true;
+      return Workbench.getInstance().saveGedcom(new Context(gedcomX));
     }
 
 

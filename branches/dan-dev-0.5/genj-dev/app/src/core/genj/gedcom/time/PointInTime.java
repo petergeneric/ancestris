@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat;
 /**
  * A point in time - either hebrew, roman, frenchr, gregorian or julian
  */
-public class PointInTime implements Comparable {
+public class PointInTime implements Comparable<PointInTime> {
   
   public final static int
     FORMAT_GEDCOM = 0,
@@ -75,6 +75,16 @@ public class PointInTime implements Comparable {
    */
   public PointInTime(Calendar cal) {
     calendar = cal;
+  }
+  
+  /**
+   * Constructor
+   */
+  public PointInTime(java.util.Calendar cal) {
+    calendar = GREGORIAN;
+    day = cal.get(java.util.Calendar.DAY_OF_MONTH) - 1;
+    month = cal.get(java.util.Calendar.MONTH);
+    year = cal.get(java.util.Calendar.YEAR);
   }
   
   /**
@@ -210,11 +220,30 @@ public class PointInTime implements Comparable {
     set(UNKNOWN,UNKNOWN,UNKNOWN);
   }
   
+  
   /**
    * Calculate day of week
    */
   public String getDayOfWeek(boolean localize) throws GedcomException {
     return calendar.getDayOfWeek(this, localize);
+  }
+  
+  public PointInTime add(int d, int m, int y) {
+    java.util.Calendar c = java.util.Calendar.getInstance();
+    c.set(java.util.Calendar.DAY_OF_MONTH, day!=UNKNOWN ? day+1 : 1);
+    c.set(java.util.Calendar.MONTH, month!=UNKNOWN ? month : 0);
+    c.set(java.util.Calendar.YEAR, year!=UNKNOWN ? year : 0);
+    
+    c.add(java.util.Calendar.DAY_OF_MONTH, d);
+    c.add(java.util.Calendar.MONTH, m);
+    c.add(java.util.Calendar.YEAR, y);
+    
+    set(c.get(java.util.Calendar.DAY_OF_MONTH)-1,
+        c.get(java.util.Calendar.MONTH),
+        c.get(java.util.Calendar.YEAR)
+        );
+    
+    return this;
   }
   
   /**
@@ -382,22 +411,16 @@ public class PointInTime implements Comparable {
   }
     
   /**
-   * compare to other
-   */  
-  public int compareTo(Object o) {
-    return compareTo((PointInTime)o);
-  }    
-
-  /**
-   * compare to other
-   * @param other the pit to compare to
-   */  
+   * Compares this point in time to another
+   * @return  a negative integer, zero, or a positive integer as this object
+   *      is less than, equal to, or greater than the specified object.
+   */
   public int compareTo(PointInTime other) {
     
     // check valid
     boolean
       v1 = isValid(),
-      v2 = other.isValid();
+      v2 = other!=null && other.isValid();
     if (!v1&&!v2)
       return 0;
     if (!v2)
@@ -478,7 +501,9 @@ public class PointInTime implements Comparable {
       if (calendar==GREGORIAN&&isComplete()) {
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.set(year, month, day+1);
-        buffer.append(NUMERICDATEFORMAT.format(c.getTime()));
+        synchronized (NUMERICDATEFORMAT) {
+          buffer.append(NUMERICDATEFORMAT.format(c.getTime()));
+        }
         return buffer;
       }
       
@@ -498,7 +523,7 @@ public class PointInTime implements Comparable {
     if (year!=UNKNOWN) {
       if (month!=UNKNOWN) {
         if (day!=UNKNOWN) {
-          buffer.append(new Integer(day+1));
+          buffer.append(day+1);
         }
         buffer.append(format==FORMAT_GEDCOM ? calendar.getMonth(month) : calendar.getDisplayMonth(month, format==FORMAT_SHORT));
       }

@@ -229,7 +229,7 @@ public class Report4Generations extends Report {
         Property propTitle = indi.getProperty(new TagPath("INDI:TITL"));
 
         // String t = indi.getProperty(new TagPath("INDI:TITL"),true).toString();
-        String title = (propTitle == null)?"":propTitle.toString();
+        String title = (propTitle == null)?"":propTitle.getDisplayValue();
         if (title.length() > 0)
             title = " TITL: "+title;
         return n + b + d + " PLAC: "+place+title;

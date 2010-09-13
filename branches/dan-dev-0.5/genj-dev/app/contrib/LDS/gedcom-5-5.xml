@@ -22,7 +22,7 @@
    <SPFX type="PropertySimpleValue" img="Name"/>
    <SURN type="PropertySimpleValue" img="Name"/>
    <NSFX type="PropertySimpleValue" img="Name"/>
-   <SOUR type="PropertySource" img="Source">
+   <SOUR type="PropertySource|PropertyMultilineValue" img="Source">
     <PAGE xref="1" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
     <EVEN xref="1" type="PropertyChoiceValue" img="Blob" cardinality="0:1">
      <ROLE type="PropertyChoiceValue" img="Blob"/>
@@ -31,24 +31,24 @@
      <DATE type="PropertyDate" img="Date"/>
      <TEXT type="PropertyMultilineValue" img="Blob"/>
     </DATA>
-    <QUAY xref="1" type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
-    <OBJE xref="1" type="PropertyMedia" img="Media">
+    <QUAY xref="1" type="PropertyQuality" img="Blob" cardinality="0:1"/>
+    <OBJE xref="1" type="PropertyMedia|PropertySimpleReadOnly" img="Media">
      <TITL default="1" xref="0" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
      <FORM default="1" hide="1" xref="0" type="PropertyChoiceValue" img="Format" cardinality="1:1"/>
      <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="0:M">
      </FILE>
-     <NOTE default="1" xref="0" type="PropertyNote" img="Note" cardinality="0:1"/>
+     <NOTE default="1" xref="0" type="PropertyNote|PropertyMultilineValue" img="Note" cardinality="0:1"/>
     </OBJE>
     <TEXT xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
-    <NOTE type="PropertyNote" img="Note"/>
+    <NOTE type="PropertyNote|PropertyMultilineValue" img="Note"/>
    </SOUR>
-   <NOTE type="PropertyNote" img="Note">
+   <NOTE type="PropertyNote|PropertyMultilineValue" img="Note">
     <SOUR super="INDI:NAME:SOUR"/>
    </NOTE>
   </NAME>
   <SEX default="1" cardinality="0:1" type="PropertySex" img="Sex" img.male="Male" img.female="Female"/>
   +++++++++++++ Events +++++++++++++
-  <BIRT default="1" type="PropertyEvent" img="Birth">
+  <BIRT default="1" type="PropertyEvent" img="Birth" cardinality="0:1">
    <TYPE type="PropertyChoiceValue" img="Type"/>
    <DATE default="1" cardinality="0:1" type="PropertyDate" img="Date"/>
    <PLAC default="1" cardinality="0:1" type="PropertyPlace" img="Place">
@@ -85,20 +85,20 @@
    <ADDR default="1"/>
   </RESI>
   <OCCU type="PropertyChoiceValue" img="Occupation" super="INDI:BIRT" cardinality="0:M"/>
-  <RELI type="PropertyChoiceValue" img="Religion" super="INDI:BIRT">
+  <RELI type="PropertyChoiceValue" img="Religion" super="INDI:BIRT" cardinality="0:M">
    <DATE default="0"/>
    <PLAC default="0"/>
   </RELI>
-  <CAST type="PropertySimpleValue" img="Caste" super="INDI:RELI"/>
-  <DSCR type="PropertyChoiceValue" img="Description" super="INDI:RELI"/>
-  <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI"/>
+  <CAST hide="1" type="PropertySimpleValue" img="Caste" super="INDI:RELI"/>
+  <DSCR hide="1" type="PropertyChoiceValue" img="Description" super="INDI:RELI"/>
+  <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI" cardinality="0:M"/>
   <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
   <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI"/>
-  <NCHI type="PropertySimpleValue" img="NumChildren" super="INDI:RELI"/>
-  <PROP type="PropertyChoiceValue" img="Property" super="INDI:RELI"/>
+  <NCHI hide="1" type="PropertySimpleValue" img="NumChildren" super="INDI:RELI"/>
+  <PROP hide="1" type="PropertyChoiceValue" img="Property" super="INDI:RELI"/>
   <SSN  type="PropertySimpleValue" img="SSN" super="INDI:RELI"/>
   <TITL type="PropertyChoiceValue" img="Title" super="INDI:RELI"/>
-  <NMR  type="PropertySimpleValue" img="Marriage" super="INDI:RELI"/>
+  <NMR  hide="1" type="PropertySimpleValue" img="Marriage" super="INDI:RELI"/>
   +++++++++++++ More Events +++++++++++++
   <GRAD cardinality="0:M" img="Graduation" super="INDI:BIRT"/>
   <CHR  img="Baptism" super="INDI:GRAD">
@@ -115,12 +115,12 @@
   <FCOM img="FirstCommunion" super="INDI:BIRT"/>
   <ORDN img="Ordination" super="INDI:BIRT"/>
   <NATU img="Naturalisation" super="INDI:GRAD"/>
-  <EMIG img="Emmigration" super="INDI:GRAD"/>
-  <IMMI img="Immigration" super="INDI:GRAD"/>
-  <CENS img="Census" super="INDI:GRAD"/>
+  <EMIG img="Emmigration" super="INDI:GRAD" cardinality="0:M"/>
+  <IMMI img="Immigration" super="INDI:GRAD" cardinality="0:M"/>
+  <CENS img="Census" super="INDI:GRAD" cardinality="0:M"/>
   <PROB img="Probate" super="INDI:GRAD"/>
-  <WILL img="Will" super="INDI:GRAD"/>
-  <RETI img="Retirement" super="INDI:GRAD"/>
+  <WILL img="Will" super="INDI:GRAD" cardinality="0:M"/>
+  <RETI img="Retirement" super="INDI:GRAD" cardinality="0:M"/>
   <EVEN img="Event" super="INDI:GRAD">
    <TYPE default="1"/>
   </EVEN>
@@ -160,13 +160,13 @@
   </ASSO>
   <ALIA hide="1" type="PropertyAlias" img="Indi"/>
   +++++++++++++ numbers / processing +++++++++++++
-  <RFN type="PropertySimpleValue" img="Code" cardinality="0:1"/>
-  <AFN type="PropertyNumericValue" img="Code"/>
+  <RFN hide="1" type="PropertySimpleValue" img="Code" cardinality="0:1"/>
+  <AFN hide="1" type="PropertyNumericValue" img="Code"/>
   <REFN type="PropertySimpleValue" img="Code">
    <TYPE type="PropertySimpleValue" img="Type"/>
   </REFN>
-  <RIN type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
-  <RESN type="PropertySimpleReadOnly" img="Description" cardinality="0:1"/>
+  <RIN hide="1" type="PropertySimpleValue" img="Blob" cardinality="0:1"/>
+  <RESN hide="1" type="PropertySimpleReadOnly" img="Description" cardinality="0:1"/>
   +++++++++++++ change  - it swallows subs DATE|TIME - no need to declare in grammar +++++++++++++
   <CHAN hide="1" type="PropertyChange" img="Time">
    <NOTE super="INDI:NAME:NOTE"/>
@@ -180,7 +180,7 @@
   <HUSB hide="1" type="PropertyHusband" img="IndiMale"/>
   <WIFE hide="1" type="PropertyWife" img="IndiFemale"/>
   <NCHI img="NumChildren" type="PropertySimpleValue"/>
-  <ENGA img="Engagement" super="INDI:BIRT">
+  <ENGA img="Engagement" super="INDI:BIRT" cardinality="0:M">
    <HUSB type="PropertySimpleReadOnly" img="IndiMale" cardinality="0:1">
     <AGE default="1" type="PropertyAge" img="Time" cardinality="1:1"/>
    </HUSB>
@@ -277,7 +277,7 @@
   <OBJE super="INDI:OBJE"/>
   <NOTE super="INDI:NOTE"/>
   <REPO hide="1" type="PropertyRepository" img="Repository">
-   <NOTE xref="1" type="PropertyNote" img="Note"/>
+   <NOTE xref="1" type="PropertyNote|PropertyMultilineValue" img="Note"/>
    <CALN xref="1" type="PropertySimpleValue" img="Attribute">
     <MEDI type="PropertyChoiceValue" img="Attribute"/>
    </CALN>

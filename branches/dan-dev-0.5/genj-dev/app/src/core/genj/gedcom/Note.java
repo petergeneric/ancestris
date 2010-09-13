@@ -34,6 +34,14 @@ public class Note extends Entity implements MultiLineProperty {
   private PropertyMultilineValue delegate;
   
   /**
+   * need tag,id-arguments constructor for all entities
+   */
+  public Note(String tag, String id) {
+    super(tag, id);
+    assertTag(Gedcom.NOTE);
+  }
+  
+  /**
    * Notification to entity that it has been added to a Gedcom
    */
   /*package*/ void addNotify(Gedcom ged) {
@@ -62,7 +70,8 @@ public class Note extends Entity implements MultiLineProperty {
   /**
    * Note ...
    */
-  protected String getToStringPrefix(boolean hideIds, boolean showAsLink) {
+  @Override
+  protected String getToStringPrefix(boolean showIds) {
     return delegate.getDisplayValue();
   }
 
@@ -91,9 +100,9 @@ public class Note extends Entity implements MultiLineProperty {
     return delegate.getValue();
   }
   
-  public List findProperties(Pattern tag, Pattern value) {
+  public List<Property> findProperties(Pattern tag, Pattern value) {
     // let super do its thing
-    List result = super.findProperties(tag, value);
+    List<Property> result = super.findProperties(tag, value);
     // don't let 'this' in there
     result.remove(this);
     // done

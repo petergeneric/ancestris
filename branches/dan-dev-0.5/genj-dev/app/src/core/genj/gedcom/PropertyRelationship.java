@@ -36,6 +36,14 @@ public class PropertyRelationship extends PropertyChoiceValue {
   private TagPath anchor = null;
 
   /**
+   * need tag-argument constructor for all properties
+   */
+  public PropertyRelationship(String tag) {
+    super(tag);
+    assertTag("RELA");
+  }
+  
+  /**
    * Compute Gedcom compliant value which includes our anchor information
    */
   public String getValue() {

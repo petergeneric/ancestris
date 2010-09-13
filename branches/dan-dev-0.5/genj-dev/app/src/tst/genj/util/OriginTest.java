@@ -16,6 +16,7 @@ public class OriginTest extends TestCase {
   /**
    * test origin's way of calculating relative paths
    */
+  @SuppressWarnings("deprecation")
   public void testRelative() throws Throwable {
     
     String dir = new File("./gedcom").getCanonicalPath();

@@ -1,7 +1,7 @@
 /**
  * GenJ - GenealogyJ
  *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,6 +19,8 @@
  */
 package genj.util.swing;
 
+import genj.renderer.DPI;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -30,7 +32,6 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
 
@@ -42,7 +43,7 @@ import javax.swing.JComponent;
 public class ScreenResolutionScale extends JComponent {
   
   /** current dpi */
-  private Point dpi = new Point( 
+  private DPI dpi = new DPI( 
     Toolkit.getDefaultToolkit().getScreenResolution(),
     Toolkit.getDefaultToolkit().getScreenResolution()
   );
@@ -52,7 +53,7 @@ public class ScreenResolutionScale extends JComponent {
 
   /**
    * Constructor   */
-  public ScreenResolutionScale(Point dpi) {
+  public ScreenResolutionScale(DPI dpi) {
     setDPI(dpi);
     addMouseMotionListener(new MouseGlue());
   }
@@ -60,25 +61,15 @@ public class ScreenResolutionScale extends JComponent {
   /**
    * Accessor - dpi
    */
-  public Point getDPI() {
-    return new Point(dpi);
+  public DPI getDPI() {
+    return dpi;
   }
 
   /**
    * Accessor - dpi
    */
-  public void setDPI(Point set) {
-    dpi.setLocation(set);
-  }
-
-  /**
-   * Accessor - dpc
-   */
-  public Point2D getDPC() {
-    return new Point2D.Float(
-      DPI2CM * dpi.x,
-      DPI2CM * dpi.y
-    );
+  public void setDPI(DPI set) {
+    dpi = set;
   }
 
   /**
@@ -106,7 +97,7 @@ public class ScreenResolutionScale extends JComponent {
   private void paintScale(Graphics graphcs) {
 
     // wrap it
-    UnitGraphics gw = new UnitGraphics(graphcs, DPI2CM * dpi.x, DPI2CM * dpi.y);
+    UnitGraphics gw = new UnitGraphics(graphcs, DPI2CM * dpi.horizontal(), DPI2CM * dpi.vertical());
     gw.setAntialiasing(true);
 
     // set font
@@ -147,16 +138,14 @@ public class ScreenResolutionScale extends JComponent {
   private void paintLabel(Graphics graphcs) {
     graphcs.setColor(Color.black);
     FontMetrics fm = graphcs.getFontMetrics(); 
-    int
-      fh = fm.getHeight(),
-      fd = fh - fm.getDescent();
+    int fh = fm.getHeight();
     
     NumberFormat nf = NumberFormat.getInstance();
     nf.setMaximumFractionDigits(2);
     String[] txt = new String[]{
-      ""+nf.format(dpi.x),
+      ""+nf.format(dpi.horizontal()),
       "by",
-      ""+nf.format(dpi.y),
+      ""+nf.format(dpi.vertical()),
       "DPI"
     };
     for (int i = 0; i < txt.length; i++) {
@@ -174,7 +163,7 @@ public class ScreenResolutionScale extends JComponent {
    * @see javax.swing.JComponent#getPreferredSize()
    */
   public Dimension getPreferredSize() {
-    return new Dimension(3*dpi.x, 3*dpi.y);
+    return new Dimension(3*dpi.horizontal(), 3*dpi.vertical());
   }
   
   /**
@@ -206,8 +195,8 @@ public class ScreenResolutionScale extends JComponent {
       // remember current position
       startPos.x = e.getPoint().x;
       startPos.y = e.getPoint().y;
-      startDPI.x = dpi.x;
-      startDPI.y = dpi.y;
+      startDPI.x = dpi.horizontal();
+      startDPI.y = dpi.vertical();
 
       // check mode n-s/w-e      
       axis = startPos.x>startPos.y;
@@ -227,9 +216,9 @@ public class ScreenResolutionScale extends JComponent {
         x = e.getPoint().x,
         y = e.getPoint().y;
       if (axis) 
-        dpi.x = (int)Math.max(10, startDPI.x * (x/startPos.x) );
+        dpi = new DPI( (int)Math.max(10, startDPI.x * (x/startPos.x)), dpi.vertical());
       else     
-        dpi.y = (int)Math.max(10, startDPI.y * (y/startPos.y) );
+        dpi = new DPI( dpi.horizontal(), (int)Math.max(10, startDPI.y * (y/startPos.y)));
         
       // show it
       repaint();

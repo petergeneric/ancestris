@@ -28,7 +28,16 @@ public class PropertyFamilySpouse extends PropertyXRef {
   /**
    * Empty Constructor
    */
-  public PropertyFamilySpouse() {
+  /*package*/ PropertyFamilySpouse() {
+    super("FAMS");
+  }
+  
+  /**
+   * need tag-argument constructor for all properties
+   */
+  /*package*/ PropertyFamilySpouse(String tag) {
+    super(tag);
+    assertTag("FAMS");
   }
   
   /**
@@ -51,13 +60,6 @@ public class PropertyFamilySpouse extends PropertyXRef {
   }
 
   /**
-   * Returns the Gedcom-Tag of this property
-   */
-  public String getTag() {
-    return "FAMS";
-  }
-
-  /**
    * Links reference to entity (if not already done)
    * @exception GedcomException when property has no parent property,
    * referenced individual is child, wife or husband in enclosing family
@@ -75,7 +77,6 @@ public class PropertyFamilySpouse extends PropertyXRef {
 
     // Prepare some VARs
     Property p;
-    Gedcom gedcom = getGedcom();
 
     // Look for family (not-existing -> Gedcom throws Exception)
     Fam fam = (Fam)getCandidate();
@@ -88,17 +89,17 @@ public class PropertyFamilySpouse extends PropertyXRef {
       throw new GedcomException(resources.getString("error.already.spouses", fam));
 
     if ((husband==indi)||(wife==indi))
-      throw new GedcomException(resources.getString("error.already.spouse", new String[]{ indi.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.spouse", indi.toString(), fam.toString()));
 
     Fam[] familiesWhereChild = indi.getFamiliesWhereChild();
     for (int i=0; i<familiesWhereChild.length; i++) {
       if (familiesWhereChild[i]==fam)
-        throw new GedcomException(resources.getString("error.already.child", new String[]{ indi.toString(), fam.toString()}));
+        throw new GedcomException(resources.getString("error.already.child", indi.toString(), fam.toString()));
     }
     
     // Make sure indi isn't already descendant of family 
     if (indi.isDescendantOf(fam)) 
-      throw new GedcomException(resources.getString("error.already.descendant", new String[]{ indi.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.descendant", indi.toString(), fam.toString()));
     
     // place as husband or wife according to gender
     if (indi.getSex()==PropertySex.UNKNOWN) 
@@ -127,7 +128,7 @@ public class PropertyFamilySpouse extends PropertyXRef {
     // place as husband/wife as appropriately
     if (indi.getSex()==PropertySex.MALE) {
       // swap if necessary
-      if (husband!=null)
+      if (husband!=null&&husband.getSex()!=PropertySex.MALE)
         fam.swapSpouses();
       // create new back ref
       PropertyXRef backref = new PropertyHusband();

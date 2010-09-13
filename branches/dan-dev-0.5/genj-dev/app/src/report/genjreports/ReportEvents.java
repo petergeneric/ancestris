@@ -370,7 +370,7 @@ public class ReportEvents extends Report {
       }
       // equals
       public boolean equals(Object that) {
-        return event==((Hit)that).event;
+        return that instanceof Hit ? event==((Hit)that).event : false;
       }
       // toString
       public String toString() {

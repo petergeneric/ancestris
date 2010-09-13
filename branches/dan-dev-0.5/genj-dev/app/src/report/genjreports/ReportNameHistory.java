@@ -68,16 +68,9 @@ public class ReportNameHistory extends Report {
   }
 
   /**
-   * no stdout necessary for this report
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * Main
    */
-  public void start(Gedcom gedcom) {
+  public Chart start(Gedcom gedcom) {
 
     Collection indis = gedcom.getEntities(Gedcom.INDI);
 
@@ -99,7 +92,7 @@ public class ReportNameHistory extends Report {
 
     // check if got something
     if (name2series.isEmpty())
-      return;
+      return null;
 
     // name the group 'other' now: "14 Other Names"
     if (makeGroupOther) {
@@ -111,7 +104,7 @@ public class ReportNameHistory extends Report {
     }
 
     // show it
-    showChartToUser(new Chart(translate("title", gedcom.getName()), null, translate("yaxis"), IndexedSeries.toArray(name2series.values()), new DecimalFormat("#"), true));
+    return new Chart(translate("title", gedcom.getName()), null, translate("yaxis"), IndexedSeries.toArray(name2series.values()), new DecimalFormat("#"), true);
 
     // done
   }

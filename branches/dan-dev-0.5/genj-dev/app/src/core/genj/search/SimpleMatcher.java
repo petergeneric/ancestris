@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 
 
 /**
- * A matcher based on regular expressions
+ * A matcher based on simple text containment
  */
 public class SimpleMatcher extends Matcher {
   
@@ -45,11 +45,11 @@ public class SimpleMatcher extends Matcher {
   /**
    * @see genj.search.Matcher#match(java.lang.String, java.util.List)
    */
-  protected void match(String input, List result) {
+  protected void match(String input, List<Match> result) {
     
     input = input.toLowerCase();
     
-    ArrayList matches = new ArrayList(words.length);
+    ArrayList<Match> matches = new ArrayList<Match>(words.length);
     
     // search for matches
     for (int i=0;i<words.length;i++) {

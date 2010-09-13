@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -25,10 +24,7 @@ public class AnselCharsetTest extends TestCase {
    */
   public void testEncodingDecoding() {
 
-    Iterator strings = getStrings().iterator();
-    while (strings.hasNext()) {
-
-      String s = strings.next().toString();
+    for (String s : getStrings()) {
 
       // encode string 
       byte[] anselbytes = null;
@@ -67,9 +63,9 @@ public class AnselCharsetTest extends TestCase {
   /**
    * Calculate test strings
    */
-  private List getStrings() {
+  private List<String> getStrings() {
     
-    ArrayList result = new ArrayList(32);
+    ArrayList<String> result = new ArrayList<String>(32);
 
     // {oe}{ae}{ue}{ss}
     result.add(""+oe+ae+ue+ss);

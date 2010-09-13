@@ -25,7 +25,6 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAlias;
-import genj.view.ViewManager;
 
 /**
  * Create an alias between records of two individuals indicating that the person is the same
@@ -35,8 +34,8 @@ public class CreateAlias extends CreateRelationship {
   private Indi source;
   
   /** constructor */
-  public CreateAlias(Indi source, ViewManager mgr) {
-    super(resources.getString("create.alias"), source.getGedcom(), Gedcom.INDI, mgr);
+  public CreateAlias(Indi source) {
+    super(resources.getString("create.alias"), source.getGedcom(), Gedcom.INDI);
     this.source = source;
   }
 

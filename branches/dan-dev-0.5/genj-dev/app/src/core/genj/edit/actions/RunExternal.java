@@ -19,21 +19,19 @@
  */
 package genj.edit.actions;
 
-import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyFile;
-import genj.io.FileAssociation;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * External action 
  */
 public class RunExternal extends Action2 {
-  
-  /** the wrapped association */
-  private FileAssociation association;
   
   /** the wrapped file */
   private File file;
@@ -41,41 +39,24 @@ public class RunExternal extends Action2 {
   /**
    * Constructor
    */
-  public RunExternal(PropertyFile f) {
-    file = f.getFile();
-    super.setImage(f.getImage(false));
-    super.setText(Resources.get(RunExternal.class).getString("file.open"));
-  }
-  
-  /**
-   * Constructor
-   */
-  public RunExternal(PropertyFile f, FileAssociation fa) {
-    association = fa;
-    file = f.getFile();
-    super.setImage(f.getImage(false));
-    super.setText(association.getName()+" ("+association.getSuffixes()+")");
-  }
-  
-  /**
-   * Constructor
-   */
-  public RunExternal(Gedcom ged, String f, FileAssociation fa) {
-    association = fa;
-    file = ged.getOrigin().getFile(f);
-    super.setText(association.getName()+" ("+association.getSuffixes()+")");
+  public RunExternal(File file) {
+    this.file = file;
+    super.setImage(PropertyFile.DEFAULT_IMAGE);
+    super.setText("Open");
+    setEnabled(file.exists());
   }
   
   /**
    * @see genj.util.swing.Action2#execute()
    */
-  protected void execute() {
+  public void actionPerformed(ActionEvent event) {
     if (file==null)
       return;
-    if (association==null)
-      association = FileAssociation.get(file, "View", getTarget());
-    if (association!=null)
-      association.execute(file);
+    try {
+      Desktop.getDesktop().open(file);
+    } catch (Throwable t) {
+      Logger.getLogger("genj.edit.actions").log(Level.INFO, "can't open "+file, t);
+    }
   }
   
 } //RunExternal

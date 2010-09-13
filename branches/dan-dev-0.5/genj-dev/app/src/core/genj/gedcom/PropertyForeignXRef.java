@@ -29,18 +29,13 @@ import genj.util.swing.ImageIcon;
 /*package*/ class PropertyForeignXRef extends PropertyXRef {
 
   /**
-   * Empty Constructor
+   * Empty Constructor - no one-argument constructor required as this is managed by
+   * code explicitly
    */
-  protected PropertyForeignXRef() {
+  /*package*/ PropertyForeignXRef() {
+    super("XREF");
   }
   
-  /**
-   * getTag method comment.
-   */
-  public String getTag() {
-    return "XREF";
-  }
-
   /**
    * There's no gedcom equivalent to a foreign (back) reference - returning ID of foreign entity
    */
@@ -93,7 +88,7 @@ import genj.util.swing.ImageIcon;
    * @see genj.gedcom.PropertyForeignXRef#isValid()
    */
   public boolean isValid() {
-    return false;
+    return true; //always valid
   }
 
   /**

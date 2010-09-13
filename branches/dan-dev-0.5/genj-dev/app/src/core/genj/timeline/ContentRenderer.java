@@ -19,6 +19,7 @@
  */
 package genj.timeline;
 
+import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyDate;
 import genj.renderer.Options;
 import genj.util.swing.ImageIcon;
@@ -55,7 +56,7 @@ public class ContentRenderer {
   /*package*/ boolean paintGrid = false;
   
   /** current selection */
-  /*package*/ Set selection = new HashSet();
+  /*package*/ Set<Model.Event> selection = new HashSet<Model.Event>();
   
   /** background color */
   /*package*/ Color cBackground = null;
@@ -188,15 +189,19 @@ public class ContentRenderer {
 
     // clipping from here    
     g.pushClip(event.from, level, next==null?Integer.MAX_VALUE:next.from, level+1);
-        
-    // draw its image
-    ImageIcon img = event.pe.getImage(false);
-    g.draw(img, event.from, level+0.5, 0, 0.5);
-    int dx=img.getIconWidth() + 2;
 
+    int dx = 0;
+    
+    // draw its image
+    if (!paintTags) {
+      ImageIcon img = event.pe.getImage(false);
+      g.draw(img, event.from, level+0.5, 0, 0.5);
+      dx+=img.getIconWidth() + 2;
+    }
+    
     // draw its tag    
     if (paintTags) {
-      String tag = event.pe.getTag();
+      String tag = Gedcom.getName(event.pe.getTag());
       g.setColor(cTag);
       g.draw(tag, event.from, level+1, 0, 1, dx, 0);
       dx+=fm.stringWidth(tag)+fm.charWidth(' ');

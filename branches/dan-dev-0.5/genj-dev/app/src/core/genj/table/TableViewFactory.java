@@ -19,14 +19,11 @@
  */
 package genj.table;
 
-import genj.gedcom.Gedcom;
-import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
+import genj.view.View;
 import genj.view.ViewFactory;
-import genj.view.ViewManager;
 
-import javax.swing.JComponent;
 
 /**
  * The factory for the TableView
@@ -39,8 +36,8 @@ public class TableViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#createView(String, Gedcom, Registry, ViewManager)
    */
-  public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager) {
-    return new TableView(title,gedcom,registry,manager);
+  public View createView() {
+    return new TableView();
   }
 
   /**
@@ -53,8 +50,8 @@ public class TableViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getName(boolean)
    */
-  public String getTitle(boolean abbreviate) {
-    return Resources.get(this).getString("title" + (abbreviate?".short":""));
+  public String getTitle() {
+    return Resources.get(this).getString("title");
   }
 
 } //TableViewFactory

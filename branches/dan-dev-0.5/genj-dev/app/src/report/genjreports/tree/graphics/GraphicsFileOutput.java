@@ -47,8 +47,8 @@ public abstract class GraphicsFileOutput implements GraphicsOutput {
     /**
      * Displays the generated file.
      */
-    public void display(Report report) {
-        report.showFileToUser(file);
+    public Object result(Report report) {
+        return file;
     }
 
     /**

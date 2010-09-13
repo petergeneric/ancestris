@@ -12,8 +12,11 @@ package genjreports;
  /*
   * TODO Daniel: add start(Indi) and start(Indi[]) entry points
   * TODO Daniel: print pedigree chart for trees less than ???
-  * TODO Daniel: print additionnal info (ox+) for each indi
+  * TODO Daniel: print additional info (ox+) for each indi
   */
+/* 
+ * Updated 2010/01/20 Paul Robinson
+ */
 
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -56,6 +59,7 @@ public class ReportTrees extends Report {
         Entity[] indis = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
 
         println(title);
+        println("");
 
         // Step through all the Individuals we haven't seen yet
         println(translate("indicount",indis.length)+"\n");
@@ -157,8 +161,7 @@ public class ReportTrees extends Report {
             }
 
         }
-        println("");
-        println(translate("endreport"));
+
 
         // Done
         return;

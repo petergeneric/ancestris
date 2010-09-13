@@ -23,7 +23,6 @@ import genj.crypto.Enigma;
 import genj.util.ReferenceSet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,6 +31,13 @@ import java.util.List;
 public class PropertyChoiceValue extends PropertySimpleValue {
 
   /**
+   * need tag-argument constructor for all properties
+   */
+  public PropertyChoiceValue(String tag) {
+    super(tag);
+  }
+  
+  /**
    * Remember a value
    */
   protected boolean remember(String oldValue, String newValue) {
@@ -39,7 +45,7 @@ public class PropertyChoiceValue extends PropertySimpleValue {
     Gedcom gedcom = getGedcom();
     if (isTransient||gedcom==null)
       return false;
-    ReferenceSet refSet = gedcom.getReferenceSet(getTag());
+    ReferenceSet<String, Property> refSet = gedcom.getReferenceSet(getTag());
     // intern newValue - we expect the remembered values to be shared so we share the string instances for an upfront cost
     newValue = newValue.intern();
     // check for secret values
@@ -70,7 +76,7 @@ public class PropertyChoiceValue extends PropertySimpleValue {
   public static String[] getChoices(final Gedcom gedcom, final String tag, boolean sort) {
     
     // lookup choices
-    List choices = gedcom.getReferenceSet(tag).getKeys(sort ? gedcom.getCollator() : null);
+    List<String> choices = gedcom.getReferenceSet(tag).getKeys(sort ? gedcom.getCollator() : null);
 
     // done
     return (String[])choices.toArray(new String[choices.size()]);
@@ -83,15 +89,13 @@ public class PropertyChoiceValue extends PropertySimpleValue {
   public static Property[] getSameChoices(Gedcom gedcom, String tag, boolean sort) {
     
     // lookup choices
-    ReferenceSet references = gedcom.getReferenceSet(tag);
-    List choices = references.getKeys(sort ? gedcom.getCollator() : null);
+    ReferenceSet<String, Property> references = gedcom.getReferenceSet(tag);
+    List<String> choices = references.getKeys(sort ? gedcom.getCollator() : null);
 
     // grab 'em all
-    List result = new ArrayList(choices.size());
-    for (Iterator it = choices.iterator(); it.hasNext();) {
-      String choice = (String) it.next();
+    List<Property> result = new ArrayList<Property>(choices.size());
+    for (String choice : choices) 
       result.addAll(references.getReferences(choice));
-    }
     
     // done
     return Property.toArray(result);
@@ -106,7 +110,7 @@ public class PropertyChoiceValue extends PropertySimpleValue {
     Gedcom gedcom = getGedcom();
     if (gedcom==null)
       return new Property[0];
-    ReferenceSet refSet = gedcom.getReferenceSet(getTag());
+    ReferenceSet<String, Property> refSet = gedcom.getReferenceSet(getTag());
     // convert
     return toArray(refSet.getReferences(super.getValue()));
   }

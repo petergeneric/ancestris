@@ -8,10 +8,7 @@
 
 package genjreports.tree.arrange;
 
-import genj.report.options.ComponentContainer;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +23,7 @@ import genjreports.tree.output.HorizontalLines;
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
-public class LayoutFactory implements ComponentContainer
-{
+public class LayoutFactory {
     /**
      * Minimal gap between boxes and lines.
      */
@@ -73,8 +69,4 @@ public class LayoutFactory implements ComponentContainer
             });
     }
 
-    public List<Object> getComponents()
-    {
-        return Arrays.asList(new Object[] { this });
-    }
 }

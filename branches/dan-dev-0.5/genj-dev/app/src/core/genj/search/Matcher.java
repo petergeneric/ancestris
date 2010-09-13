@@ -36,7 +36,7 @@ public abstract class Matcher {
    * match
    */
   public final Match[] match(String value) {
-    List result = new ArrayList(100);
+    List<Match> result = new ArrayList<Match>(100);
     match(value, result);
     return (Match[])result.toArray(new Match[result.size()]);
   }
@@ -44,7 +44,7 @@ public abstract class Matcher {
   /**
    * match (impl)
    */
-  protected abstract void match(String value, List result);
+  protected abstract void match(String value, List<Match> result);
   
   /**
    * A match

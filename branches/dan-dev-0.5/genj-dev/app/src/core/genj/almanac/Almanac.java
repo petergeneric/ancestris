@@ -80,7 +80,7 @@ public class Almanac {
   /** 
    * Singleton Accessor 
    */
-  public static Almanac getInstance() {
+  public static synchronized Almanac getInstance() {
     if (instance==null)
       instance = new Almanac();
     return instance;
@@ -164,16 +164,16 @@ public class Almanac {
   /**
    * Accessor - categories
    */
-  public List getCategories() {
+  public List<String> getCategories() {
     synchronized (categories) {
-      return new ArrayList(categories);
+      return new ArrayList<String>(categories);
     }
   }
   
   /**
    * Accessor - events by point in time
    */
-  public Iterator getEvents(PointInTime when, int days, Set cats) throws GedcomException {
+  public Iterator<Event> getEvents(PointInTime when, int days, Set cats) throws GedcomException {
     return new Range(when, days, cats);
   }
   
@@ -285,8 +285,8 @@ public class Almanac {
     }
     /** look into ./contrib/almanac */
     protected File getDirectory() {
-      return new File(EnvironmentChecker.getProperty(this,
-          new String[]{ "genj.almanac.dir", "user.home.genj/contrib/almanac"},
+      return new File(EnvironmentChecker.getProperty(
+          new String[]{ "genj.almanac.dir", "user.dir/contrib/almanac"},
           "contrib/almanac",
           "find almanac files"
         ));
@@ -396,7 +396,7 @@ public class Almanac {
     protected File getDirectory() {
       
       // we know were those are
-      File result = new File(EnvironmentChecker.getProperty(this,
+      File result = new File(EnvironmentChecker.getProperty(
           new String[]{ "genj.wikipedia.dir", "user.dir/contrib/wikipedia"}, "contrib/wikipedia",
           "find wikipedia files"
         ));

@@ -26,8 +26,6 @@ import genj.util.swing.ImageIcon;
  */
 public class PropertySex extends Property {
   
-  private final static String TAG = "SEX";
-  
   /** images */
   private final static ImageIcon
     IMG_UNKNOWN= Grammar.V55.getMeta(new TagPath("INDI:SEX")).getImage(),
@@ -53,16 +51,15 @@ public class PropertySex extends Property {
   private String sexAsString;
 
   /**
-   * Empty Constructor
+   * need tag-argument constructor for all properties
    */
-  public PropertySex() {
+  /*package*/ PropertySex(String tag) {
+    super(tag);
+    assertTag("SEX");
   }
   
-  /**
-   * Constructor
-   */
-  public PropertySex(String sex) {
-    setValue(sex);
+  /*package*/ PropertySex() {
+    super("SEX");
   }
   
   /**
@@ -120,21 +117,6 @@ public class PropertySex extends Property {
    */
   public int getSex() {
     return sex;
-  }
-
-  /**
-   * Accessor for Tag
-   */
-  public String getTag() {
-    return TAG;
-  }
-
-  /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(TAG);
-    return super.init(meta, value);
   }
 
   /**

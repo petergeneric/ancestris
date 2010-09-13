@@ -33,8 +33,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import javax.swing.JPanel;
 
+import javax.swing.JPanel;
 import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -50,9 +50,9 @@ public class ViewPortOverview extends JPanel {
   /** keep the viewport */
   private JViewport viewport;
   
-  /** the last indicator */
-  private Rectangle last; 
-
+  /** last indicator painted */
+  private Rectangle last;
+  
   /**
    * Constructor
    */
@@ -82,33 +82,33 @@ public class ViewPortOverview extends JPanel {
     renderContent(g, zoom.getX(), zoom.getY());
 
     // frame it
-    g.setColor(new Color(0, 0, 128));
+    g.setColor(new Color(0, 128, 0));
     g.drawRect(0,0,dim.width-1,dim.height-1);
 
     // do we have the zoom
     if (zoom==null) zoom = getZoom();
-
+    
     // build rect
     Rectangle shown = viewport.getViewRect();
-    last = new Rectangle(
+    last= new Rectangle(
       (int)(shown.x     * zoom.getX()),
       (int)(shown.y     * zoom.getY()),
       (int)(shown.width * zoom.getX()),
       (int)(shown.height* zoom.getY())
     );
-
-      // indicate content bounds
-     Graphics2D g2d = (Graphics2D)g;
-     g.drawRect(last.x, last.y, last.width, last.height);
-     g2d.setColor(new Color(0, 164, 255, 64));
-     g.fillRect(last.x, last.y, last.width, last.height);
-
-   }
-
-   /**
-    * Override for specific rendering
-    */
-   protected void renderContent(Graphics g, double zoomx, double zoomy) {
+    
+    // indicate content bounds
+    Graphics2D g2d = (Graphics2D)g;
+    g.drawRect(last.x, last.y, last.width, last.height);
+    g2d.setColor(new Color(0, 255, 0, 64));
+    g.fillRect(last.x, last.y, last.width, last.height);
+    
+  }
+  
+  /**
+   * Override for specific rendering
+   */
+  protected void renderContent(Graphics g, double zoomx, double zoomy) {
   }
   
   /**
@@ -153,17 +153,18 @@ public class ViewPortOverview extends JPanel {
      * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
      */
     public void mouseClicked(MouseEvent e) {
-       // center in position
+      // center in position
+      
+      Rectangle shown = viewport.getViewRect();
+      Point2D zoom = getZoom();
+      int 
+        x = (int)(e.getPoint().x/zoom.getX()),
+        y = (int)(e.getPoint().y/zoom.getY());
 
-       Rectangle shown = viewport.getViewRect();
-       Point2D zoom = getZoom();
-       int
-         x = (int)(e.getPoint().x/zoom.getX()),
-         y = (int)(e.getPoint().y/zoom.getY());
-
-       // scroll
-       viewport.setViewPosition(new Point(x-shown.width/2,y-shown.height/2));
-           }
+      // scroll
+      viewport.setViewPosition(new Point(x-shown.width/2,y-shown.height/2));
+      
+    }
     /**
      * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
      */

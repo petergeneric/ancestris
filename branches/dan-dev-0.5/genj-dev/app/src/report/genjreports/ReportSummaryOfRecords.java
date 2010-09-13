@@ -55,13 +55,6 @@ public class ReportSummaryOfRecords extends Report {
   /** filter properties */
   public String filterProperties = "CHAN";
   
-  /**
-   * Overridden image - we're using the provided FO image
-   */
-  protected ImageIcon getImage() {
-    return Report.IMG_FO;
-  }
-
   public int getMaxImagesPerRecord() {
     return maxImagesPerRecord;
   }
@@ -71,23 +64,14 @@ public class ReportSummaryOfRecords extends Report {
   }
 
   /**
-   * While we generate information on stdout it's not really
-   * necessary because we're returning a Document
-   * that is handled by the UI anyways
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * The report's entry point
    */
-  public void start(Gedcom gedcom) {
+  public Document start(Gedcom gedcom) {
 
     // create a document
     Document doc = new Document(translate("title", gedcom.getName()));
 
-    doc.addText("This report shows information about all records in the Gedcom file "+gedcom.getName());
+    doc.addText(translate("outputHeader")+": "+gedcom.getName());
     
     // prepare filter
     Pattern tagFilter = null;
@@ -98,16 +82,16 @@ public class ReportSummaryOfRecords extends Report {
        println("Filter for properties is not a valid regular expression ("+e.getMessage()+")");
     }
 
-    // Loop through individuals, families and notes
+    // Loop through individuals, families //and notes
     exportEntities(gedcom.getEntities(Gedcom.INDI, "INDI:NAME"), doc, tagFilter);
     exportEntities(gedcom.getEntities(Gedcom.FAM, "FAM:HUSB:*:..:NAME"), doc, tagFilter);
-    exportEntities(gedcom.getEntities(Gedcom.NOTE, "NOTE"), doc, tagFilter);
+    //exportEntities(gedcom.getEntities(Gedcom.NOTE, "NOTE"), doc, tagFilter);
 
     // add a new page here - before the index is generated
     doc.nextPage();
 
     // Done
-    showDocumentToUser(doc);
+    return doc;
   }
 
   /**
@@ -127,7 +111,7 @@ public class ReportSummaryOfRecords extends Report {
     println(translate("exporting", ent.toString() ));
 
     // start a new section
-    doc.startSection( ent.toString(this.includeIds, false), ent );
+    doc.startSection( ent.toString(this.includeIds), ent );
 
     // start a table for the entity
     doc.startTable("width=100%");
@@ -200,8 +184,8 @@ public class ReportSummaryOfRecords extends Report {
 
       // ... and the text
       String format = "";
-      if (level==0) format = "text-decoration=underline";
-      if (level==1) format =  "font-style=italic";
+      if (level==0) format = "font-weight=bold";
+      if (level==1) format = "font-style=italic";
       doc.addText(Gedcom.getName(prop.getTag()), format);
       doc.addText(" ");
 
@@ -224,7 +208,7 @@ public class ReportSummaryOfRecords extends Report {
 
       PropertyXRef xref = (PropertyXRef)prop;
       Entity ent = xref.getTargetEntity();
-      doc.addLink(ent.toString(includeIds, false), ent);
+      doc.addLink(ent.toString(includeIds), ent);
 
       // done
       return;

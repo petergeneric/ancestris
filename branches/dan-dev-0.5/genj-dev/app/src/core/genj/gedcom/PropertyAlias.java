@@ -32,13 +32,15 @@ public class PropertyAlias extends PropertyXRef {
    * Empty Constructor
    */
   /*package*/ PropertyAlias() {
+    super("ALIA");
   }
 
   /**
-   * Returns the Gedcom-Tag of this property
+   * need tag-argument constructor for all properties
    */
-  public String getTag() {
-    return "ALIA";
+  /*package*/ PropertyAlias(String tag) {
+    super(tag);
+    assertTag("ALIA");
   }
 
   /**
@@ -52,9 +54,9 @@ public class PropertyAlias extends PropertyXRef {
     Entity ent = getCandidate();
     
     // Connect back from alias (maybe using back reference)
-    List aliass = ent.getProperties(PropertyAlias.class);
+    List<PropertyAlias> aliass = ent.getProperties(PropertyAlias.class);
     for (int i=0, j=aliass.size(); i<j; i++) {
-      PropertyAlias alias = (PropertyAlias)aliass.get(i);
+      PropertyAlias alias = aliass.get(i);
       if (alias.isCandidate(indi)) {
         link(alias);
         return;

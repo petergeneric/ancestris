@@ -31,7 +31,6 @@ import javax.swing.ImageIcon;
  */
 public class PropertyAge extends Property {
 
-  public final static String TAG = "AGE";
   public final static ImageIcon IMG = Grammar.V55.getMeta(new TagPath("INDI:BIRT:AGE")).getImage();
   
   /** the age */
@@ -44,6 +43,13 @@ public class PropertyAge extends Property {
   public static String[] PHRASES = {
     "CHILD", "INFANT", "STILLBORN"
   };
+  
+  /**
+   * need tag-argument constructor for all properties
+   */
+  public PropertyAge(String tag) {
+    super(tag);
+  }
 
   /**
    * Returns <b>true</b> if this property is valid
@@ -73,25 +79,10 @@ public class PropertyAge extends Property {
   }
 
   /**
-   * Accessor Tag
-   */
-  public String getTag() {
-    return TAG;
-  }
-  
-  /**
    * Label for Age
    */
   public static String getLabelForAge() {
-    return Gedcom.getName(TAG);
-  }
-
-  /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(TAG);
-    return super.init(meta, value);
+    return Gedcom.getName("AGE");
   }
 
   /**
@@ -136,6 +127,13 @@ public class PropertyAge extends Property {
     
     // Done
   }
+  
+  public void setValue(Delta age) {
+    String old = getValue();
+    this.age.setValue(age);
+    // notify
+    propagatePropertyChanged(this, old);
+  }
 
   /**
    * Update the age
@@ -163,11 +161,10 @@ public class PropertyAge extends Property {
   /**
    * @see genj.gedcom.Property#compareTo(java.lang.Object)
    */
-  public int compareTo(Object o) {
-    PropertyAge other = (PropertyAge)o;
+  public int compareTo(Property other) {
     if (!isValid()||!other.isValid())
-      return super.compareTo(o);
-    return age.compareTo(other.age);
+      return super.compareTo(other);
+    return age.compareTo(((PropertyAge)other).age);
   }
 
   /**
@@ -184,9 +181,9 @@ public class PropertyAge extends Property {
     // might FAM:MARR:WIFE|HUSB:AGE
     if (e instanceof Fam) {
       Property parent = getParent();
-      if (parent.getTag().equals(PropertyHusband.TAG))
+      if (parent.getTag().equals("HUSB"))
         e = ((Fam) e).getHusband();
-      if (parent.getTag().equals(PropertyWife.TAG))
+      if (parent.getTag().equals("WIFE"))
         e = ((Fam) e).getWife();
     }
     // check individual?
@@ -210,7 +207,7 @@ public class PropertyAge extends Property {
   public PointInTime getLater() {
     Property parent = getParent();
     // might FAM:MARR:WIFE|HUSB:AGE
-    if (parent.getTag().equals(PropertyHusband.TAG) || parent.getTag().equals(PropertyWife.TAG)) {
+    if (parent.getTag().equals("HUSB") || parent.getTag().equals("WIFE")) {
       // one more up
       parent = parent.getParent();
     }

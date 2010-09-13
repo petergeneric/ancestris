@@ -1,7 +1,7 @@
 /**
  * GenJ - GenealogyJ
  *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,48 +22,59 @@ package genj.print;
 import genj.option.Option;
 import genj.option.OptionListener;
 import genj.option.OptionsWidget;
-import genj.option.PropertyOption;
+import genj.renderer.DPI;
 import genj.renderer.Options;
-import genj.util.Dimension2d;
+import genj.renderer.RenderPreviewHintKey;
+import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
+import genj.util.swing.GraphicsHelper;
 import genj.util.swing.NestedBlockLayout;
-import genj.util.swing.UnitGraphics;
+import genj.util.swing.ScrollPaneWidget;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.print.PrintService;
 import javax.print.ServiceUI;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * A PrintDialog */
-public class PrintWidget extends JTabbedPane implements OptionListener {
+public class PrintWidget extends JTabbedPane {
   
-  /** task */
+  /*package*/ final static Resources RESOURCES = Resources.get(PrintWidget.class);
+  /*package*/ final static Logger LOG = Logger.getLogger("genj.print");
+  
   private PrintTask task;
-  
-  /** services to choose from */
   private ChoiceWidget services;
-
-  /** a preview */
+  private ScalingWidget scaling;
   private Preview preview;
-
+  private Apply apply = new Apply();
+  private JCheckBox fit, empties;
+  
   /**
    * Constructor   */
   public PrintWidget(PrintTask task) {
@@ -71,10 +82,18 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
     // remember 
     this.task = task;
 
-    add(PrintTask.RESOURCES.getString("printer" ), createFirstPage());
-    add(PrintTask.RESOURCES.getString("settings"), createSecondPage());
+    add(RESOURCES.getString("printer" ), createFirstPage());
+    add(RESOURCES.getString("settings"), createSecondPage());
     
     // done    
+  }
+  
+  public void commit() {
+    
+    if (services.getSelectedItem()!=null)
+      task.setService((PrintService)services.getSelectedItem());
+
+    // FIXME commit zoom
   }
   
   private JPanel createFirstPage() {
@@ -82,6 +101,7 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
     String LAYOUT_TEMPLATE = 
       "<col>"+
       "<row><lprinter/><printers wx=\"1\"/><settings/></row>"+
+      "<row><zoom/><fit/></row>"+
       "<row><lpreview/></row>"+
       "<row><preview wx=\"1\" wy=\"1\"/></row>"+
       "</col>";
@@ -90,7 +110,7 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
     JPanel page = new JPanel(new NestedBlockLayout(LAYOUT_TEMPLATE));
     
     // 'printer'
-    page.add("lprinter", new JLabel(PrintTask.RESOURCES.getString("printer")));
+    page.add(new JLabel(RESOURCES.getString("printer")));
     
     // choose service
     services = new ChoiceWidget(task.getServices(), task.getService());
@@ -103,35 +123,36 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
           task.setService((PrintService)services.getSelectedItem());
       }
     });
-    page.add("printers", services);
+    page.add(services);
 
     // settings
-    page.add("settings", new JButton(new Settings()));
+    page.add(new JButton(new Settings()));
     
-    // 'preview'
-    page.add("lpreview", new JLabel(PrintTask.RESOURCES.getString("preview")));
-    
-    // the actual preview
+    // zoom & stuff
+    scaling = new ScalingWidget();
+    scaling.addChangeListener(apply);
+    page.add(scaling);
+
+    fit = new JCheckBox(RESOURCES.getString("fit"), false);
+    fit.setEnabled(false);
+    fit.addChangeListener(apply);
+    page.add(fit);
+
+    // preview
+    page.add(new JLabel(RESOURCES.getString("preview")));
     preview = new Preview();
     
-    page.add("preview", new JScrollPane(preview));
+    page.add(new ScrollPaneWidget(preview));
     
     // done
     return page;    
   }
   
   private JComponent createSecondPage() {
-    List options = PropertyOption.introspect(task.getRenderer());
-    for (int i = 0; i < options.size(); i++) 
-      ((Option)options.get(i)).addOptionListener(this);
-    return new OptionsWidget(PrintTask.RESOURCES.getString("printer"), options);
-  }
-  
-  /**
-   * option change callback
-   */
-  public void optionChanged(Option option) {
-    task.invalidate();
+    List<? extends Option> options = task.getOptions();
+    for (Option option : options) 
+      option.addOptionListener(apply);
+    return new OptionsWidget(task.getTitle(), options);
   }
   
   /**
@@ -139,22 +160,25 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
    */
   private class Preview extends JComponent implements Scrollable {
     
-    private float 
-      padd = 0.1F, // inch
-      zoom = 0.25F; // 25%
-
-    private Point dpiScreen = Options.getInstance().getDPI();
+    private double zoom = 0.2D;
+    private int gap = 5; // pixels
+    private DPI dpi = new DPI(
+        (int)(Options.getInstance().getDPI().horizontal() * zoom),
+        (int)(Options.getInstance().getDPI().vertical  () * zoom)
+      );
     
     /**
      * @see javax.swing.JComponent#getPreferredSize()
      */
     public Dimension getPreferredSize() {
-      // calculate
+
       Dimension pages = task.getPages(); 
-      Rectangle2D page = task.getPage(pages.width-1,pages.height-1, padd);
+      
+      Dimension2D page = dpi.toPixel(task.getPageSize());
+
       return new Dimension(
-        (int)((page.getMaxX())*dpiScreen.x*zoom),
-        (int)((page.getMaxY())*dpiScreen.y*zoom)
+          (int)Math.ceil(pages.width*page.getWidth()   + pages.width *gap + gap), 
+          (int)Math.ceil(pages.height*page.getHeight() + pages.height*gap + gap)
       );
     }
 
@@ -169,35 +193,47 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
       g.setColor(Color.white);
       
       // render pages in app's dpi space
-      Printer renderer = task.getRenderer();
+      Graphics2D g2d = (Graphics2D)g;
+      g2d.setRenderingHint(RenderPreviewHintKey.KEY, true);
+      g2d.setRenderingHint(DPI.KEY, dpi);
       Dimension pages = task.getPages(); 
-      UnitGraphics ug = new UnitGraphics(g, dpiScreen.x*zoom, dpiScreen.y*zoom);
-      Rectangle2D clip = ug.getClip();
+      Dimension2D pageSize = dpi.toPixel(task.getPageSize());
+      Rectangle clip = g2d.getClipBounds();
+      AffineTransform at = g2d.getTransform();
       for (int y=0;y<pages.height;y++) {
         for (int x=0;x<pages.width;x++) {
-          // calculate layout
-          Rectangle2D 
-            page = task.getPage(x,y, padd), 
-            imageable = task.getPrintable(page);
+          
+          // calculate view
+          Rectangle2D page = new Rectangle2D.Double(
+             gap + x*(pageSize.getWidth ()+gap), 
+             gap + y*(pageSize.getHeight()+gap), 
+             pageSize.getWidth (), 
+             pageSize.getHeight()
+          );
+          
           // visible?
           if (!clip.intersects(page))
             continue;
+          
           // draw page
-          ug.setColor(Color.white);
-          ug.draw(page, 0, 0, true);
+          g2d.setColor(Color.white);
+          g2d.fill(page);
+          
           // draw number
-          ug.setColor(Color.gray);
-          ug.draw(String.valueOf(x+y*pages.width+1),page.getCenterX(),page.getCenterY(),0.5D,0.5D);
-          ug.pushTransformation();
-          ug.pushClip(imageable);
-          ug.translate(imageable.getMinX(), imageable.getMinY());
-          ug.getGraphics().scale(zoom,zoom);
-          renderer.renderPage(ug.getGraphics(), new Point(x,y), new Dimension2d(imageable), dpiScreen, true);
-          ug.popTransformation();
-          ug.popClip();
+          g.setColor(Color.gray);
+          g.setFont(new Font("Arial", Font.BOLD, 48));
+          GraphicsHelper.render(g2d, String.valueOf(x+y*pages.width+1), page.getCenterX(), page.getCenterY(), 0.5, 0.5);
+          
+          // draw preview
+          g2d.translate( gap + x*(page.getWidth()+gap), gap + y*(page.getHeight()+gap));
+          task.print(g2d, y, x);
+          g2d.setTransform(at);
+          g2d.setClip(clip);
+          
           // next   
         }
       }
+      
       // done
     }
 
@@ -230,19 +266,17 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
 
     /** constructor */
     private Settings() {
-      super.setText(PrintTask.RESOURCES.getString("settings"));
-      super.setTarget(PrintWidget.this);
+      super.setText(RESOURCES.getString("settings"));
     }
 
     /** run */
-    protected void execute() {
+    public void actionPerformed(ActionEvent event) {
+      
       // show settings
-      Point pos = task.getOwner().getLocationOnScreen();
+      Point pos = PrintWidget.this.getLocationOnScreen();
       PrintService choice = ServiceUI.printDialog(null, pos.x, pos.y, task.getServices(), task.getService(), null, task.getAttributes());
-      if (choice!=null) {
+      if (choice!=null) 
         services.setSelectedItem(choice);
-        task.invalidate();
-      }
 
       // update preview
       preview.revalidate();
@@ -251,5 +285,31 @@ public class PrintWidget extends JTabbedPane implements OptionListener {
     }
     
   } //Settings
+
+  /**
+   * Apply changed settings
+   */
+  private class Apply implements ChangeListener, OptionListener{
+    
+    public void stateChanged(ChangeEvent e) {
+      apply();
+    }
+    public void optionChanged(Option option) {
+      apply();
+    }
+    private void apply() {
+      Object scale = scaling.getValue();
+      if (scale instanceof Dimension) {
+        task.setPages((Dimension)scale, fit.isSelected());
+        fit.setEnabled(true);
+      }
+      if (scale instanceof Double) {
+        task.setZoom((Double)scale);
+        fit.setEnabled(false);
+      }
+      preview.revalidate();
+      preview.repaint();
+    }
+  }
   
 } //PrintWidget

@@ -323,7 +323,7 @@ select="$header-width * 0.3333"/><xsl:text>pc</xsl:text>
   public Document startSection(String title, String id, int sectionDepth) {
     
     // check if
-    if (id.startsWith("_"))
+    if (id!=null&&id.startsWith("_"))
       throw new IllegalArgumentException("underscore is reserved for internal IDs");
     
     // return to the last block in flow

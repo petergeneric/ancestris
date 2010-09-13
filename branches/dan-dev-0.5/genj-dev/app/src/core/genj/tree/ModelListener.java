@@ -29,7 +29,7 @@ public interface ModelListener {
   /**
    * Notification that nodes have changed
    */
-  public void nodesChanged(Model model, Collection nodes);
+  public void nodesChanged(Model model, Collection<TreeNode> nodes);
   
   /**
    * Notification that the structure of the graph has changed

@@ -30,8 +30,8 @@ public class FrenchRCalendar extends Calendar {
   /* valid from 22 SEP 1792 to not including 1 JAN 1806 */
   private static final int
     AN_0  = 2375474,
-    AN_I  = PointInTime.GREGORIAN.toJulianDay(22-1, 9-1, 1792),
-    UNTIL = PointInTime.GREGORIAN.toJulianDay( 1-1, 1-1, 1806);
+    AN_I  = new GregorianCalendar().toJulianDay(22-1, 9-1, 1792),
+    UNTIL = new GregorianCalendar().toJulianDay( 1-1, 1-1, 1806);
 
   private static final String MONTHS[] 
    = { "VEND","BRUM","FRIM","NIVO","PLUV","VENT","GERM","FLOR","PRAI","MESS","THER","FRUC","COMP" };
@@ -87,7 +87,7 @@ public class FrenchRCalendar extends Calendar {
     if (!pit.isComplete()) 
       throw new GedcomException("");
     // localized?
-    String[] result = localize ? localizedWeekDays : localizedWeekDays;
+    String[] result = localize ? localizedWeekDays : weekDays;
     // Jour Complementaire?
     if (pit.getMonth()==13-1)
       return result[10+pit.getDay()];

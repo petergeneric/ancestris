@@ -27,14 +27,6 @@ public class ReportPhonetics extends Report {
     };
 
     /**
-     * Indication of how this reports shows information
-     * to the user. Standard Out here only.
-     */
-    public boolean usesStandardOut() {
-        return true;
-    }
-
-    /**
      * Tells whether this report doesn't change information in the Gedcom-file
      */
     public boolean isReadOnly() {

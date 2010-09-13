@@ -27,12 +27,13 @@ public class PropertyRepository extends PropertyXRef {
 
   /** the repository's content */
   private String repository;
-
+  
   /**
-   * Returns the tag of this property
+   * need tag-argument constructor for all properties
    */
-  public String getTag() {	
-    return "REPO";
+  public PropertyRepository(String tag) {
+    super(tag);
+    assertTag("REPO");
   }
 
   /**

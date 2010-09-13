@@ -21,7 +21,6 @@ package genj.renderer;
 
 import genj.gedcom.Gedcom;
 import genj.util.EnvironmentChecker;
-import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
 
@@ -44,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,21 +51,31 @@ import java.util.logging.Logger;
 public class BlueprintManager {
   
   private final static String SUFFIX = ".html";
+  private final static Registry REGISTRY = Registry.get(BlueprintManager.class);
+  private final static Resources RESOURCES = Resources.get(BlueprintManager.class);
   
+  public final static String TXT_BLUEPRINT = RESOURCES.getString("blueprint");
+  
+  private final static String[][] DEFAULTS = {
+   { "INDI", "default", "complete", "verbose", "colorful", "professional", "simple", "pastel", "light", "small" },
+   { "FAM", "default", "complete", "simple", "pastel", "light", "small" },
+   { "OBJE", "default", "complete", "55" },
+   { "NOTE", "default", "complete" },
+   { "SOUR", "default", "complete" },
+   { "SUBM", "default", "complete" },
+   { "REPO", "default", "complete" }
+  };
+
   /*package*/ final static Logger LOG = Logger.getLogger("genj.renderer");
 
   /** blueprints per entity */
-  private Map tag2blueprints = new HashMap();
+  private Map<String, List<Blueprint>> tag2blueprints = new HashMap<String, List<Blueprint>>();
 
   /** singleton */
   private static BlueprintManager instance;
   
-  /** resources */
-  private Resources resources = Resources.get(BlueprintManager.class);
-  
   /**
    * Singleton access
-   * TODO maybe this should better be in the options
    */
   public static BlueprintManager getInstance() {
     if (instance==null)
@@ -80,39 +88,30 @@ public class BlueprintManager {
   private BlueprintManager() {
     
     // load readonly/predefined blueprints (from resources)
-    for (int t=0;t<Gedcom.ENTITIES.length;t++) {
+    for (int t=0;t<DEFAULTS.length;t++) {
       
-      String tag = Gedcom.ENTITIES[t];
+      String[] defaults = DEFAULTS[t];
       
-      StringTokenizer names = new StringTokenizer(resources.getString("blueprints."+tag,""));
-      while (names.hasMoreTokens()) {
-        String name = names.nextToken();
-        String html =  resources.getString("blueprints."+tag+"."+name);
+      String tag = defaults[0];
+
+      for (int i=1;i<defaults.length;i++) {
+        String key = defaults[i];
+        String name = RESOURCES.getString("blueprints."+key, false);
+        if (name==null)
+          name = key;
         try {
-          addBlueprint(new Blueprint(tag, name, html.toString(), true));
-        } catch (IOException e) {
-          // can't happen
+          addBlueprint(loadBlueprint(
+              getClass().getResourceAsStream("blueprints/"+tag+"/"+key+SUFFIX),
+              tag,
+              name,
+              true
+          ));
+        } catch (Throwable e) {
+          LOG.warning("can't read pre-defined blueprint "+tag+"/"+key);
         }
       }
       
     }
-    
-    // try to load old style blueprints from registry
-    Registry registry = Registry.lookup("genj", null);
-    for (int t=0;t<Gedcom.ENTITIES.length;t++) {
-      String tag = Gedcom.ENTITIES[t];
-      StringTokenizer names = new StringTokenizer(registry.get("options.blueprints."+tag,""));
-      while (names.hasMoreTokens()) {
-        String name = names.nextToken();
-        String html = registry.get("options.blueprints."+tag+"."+name, (String)null);
-        if (html!=null&&html.length()>0) try {
-          addBlueprint(new Blueprint(tag, name, html, false));
-        } catch (IOException e) {
-          LOG.log(Level.WARNING, "converting old-style blueprint '"+name+"' failed",e);
-        }
-      }
-    }
-    registry.remove("options.blueprints");
     
     // load user defined blueprints from disk
     loadBlueprints();
@@ -124,7 +123,7 @@ public class BlueprintManager {
    * Resolve blueprint directory
    */
   private File getBlueprintDirectory() {
-    return new File(EnvironmentChecker.getProperty(this, "user.home.genj/blueprints", "?", "Looking for blueprints"));
+    return new File(EnvironmentChecker.getProperty("user.home.genj/blueprints", "?", "Looking for blueprints"));
   }
   
   /**
@@ -149,8 +148,7 @@ public class BlueprintManager {
     // put it back to where it belongs
     File file = getBlueprintFile(blueprint); 
     File parent = file.getParentFile();
-    parent.mkdirs();
-    if (!parent.exists()||!parent.isDirectory())
+    if ( (!parent.exists()&&!parent.mkdirs()) ||!parent.isDirectory() )
       throw new IOException("Cannot create folder for blueprint "+blueprint.getName());
     
     readwrite(new StringReader(blueprint.getHTML()), new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
@@ -215,7 +213,6 @@ public class BlueprintManager {
   
   /**
    * Load one blueprint from inputstream
-   *
    */
   private Blueprint loadBlueprint(InputStream in, String tag, String name, boolean readOnly) throws IOException {
     
@@ -249,24 +246,17 @@ public class BlueprintManager {
    * @param origin an optional context that blueprints are loaded from if necessary
    * @param tag the entity tag the blueprint is supposed to be for
    * @param the name of the blueprint   */
-  public Blueprint getBlueprint(Origin origin, String tag, String name) {
+  public Blueprint getBlueprint(String tag, String name) {
     // patch name if default
     if (name.length()==0)
       name = "Default";
     // look through global blueprints for that type
-    List bps = getBlueprints(tag);
+    List<Blueprint> bps = getBlueprints(tag);
     for (int i=0; i<bps.size(); i++) {
       Blueprint bp = (Blueprint)bps.get(i);
       // .. found! return
       if (bp.getName().equals(name)) 
         return bp;   	
-    }
-    // not found - try origin
-    String local = "blueprints/"+tag+"/"+name+SUFFIX;
-    try {
-      return loadBlueprint(origin.open(local), tag, name, true);
-    } catch (IOException e) {
-      LOG.log(Level.FINE, "Failed to load blueprint "+local+" from "+origin+" ("+e.getMessage()+")");
     }
     // fallback try first
     return (Blueprint)bps.get(0);
@@ -274,14 +264,14 @@ public class BlueprintManager {
   
   /**
    * Blueprints for a given type   */
-  public List getBlueprints(String tag) {
+  public List<Blueprint> getBlueprints(String tag) {
     return Collections.unmodifiableList(getBlueprintsInternal(tag));
   }
   
-  private List getBlueprintsInternal(String tag) {
-    List result = (List)tag2blueprints.get(tag);
+  private List<Blueprint> getBlueprintsInternal(String tag) {
+    List<Blueprint> result = tag2blueprints.get(tag);
     if (result==null) {
-      result = new ArrayList();
+      result = new ArrayList<Blueprint>();
       tag2blueprints.put(tag, result);
     }
     return result;
@@ -296,14 +286,14 @@ public class BlueprintManager {
       getBlueprintFile(blueprint);
     
     // keep it overriding same name unless read-only
-    List blueprints = getBlueprintsInternal(blueprint.getTag());
-    for (ListIterator it=blueprints.listIterator(); it.hasNext(); ) {
+    List<Blueprint> blueprints = getBlueprintsInternal(blueprint.getTag());
+    for (ListIterator<Blueprint> it=blueprints.listIterator(); it.hasNext(); ) {
       Blueprint other = (Blueprint)it.next();
       // found one with same name?
       if (other.getName().equalsIgnoreCase(blueprint.getName())) {
         // don't allow if read only
         if (other.isReadOnly())
-          throw new IOException("Can't override read-only blueprint");
+          throw new IOException("Can't overwrite read-only blueprint");
         // remove
         it.remove();
         break;

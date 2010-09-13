@@ -106,8 +106,6 @@ public class ButtonHelper {
       group.add(result);
     }
     if (container!=null) {
-      if (action instanceof Action2)
-        ((Action2)action).setTarget(container);
       container.add(result);
       if (container instanceof JToolBar) result.setMaximumSize(new Dimension(128,128));
     }

@@ -122,12 +122,12 @@ public class ReportGedcom2Geneanet extends Report {
     /**
      * This method actually starts this report
      */
-    public void start(Gedcom gedcom) {
+    public Document start(Gedcom gedcom) {
 
     	gedcomName = gedcom.getName();
 
     	// initialization of the place index depending on the place format
-    	if(!initializeLocationIndex(gedcom)){return;}
+    	if(!initializeLocationIndex(gedcom)){return null;}
 
     	if(Location.existPLACTag){
     		Location.initializeLocationElementIndex(locationTranslationTable);
@@ -139,7 +139,7 @@ public class ReportGedcom2Geneanet extends Report {
             analyze(  (Indi) it.next());
         }
 
-        generateOutput();
+        return generateOutput();
 
         // write main file out
 
@@ -150,7 +150,7 @@ public class ReportGedcom2Geneanet extends Report {
      * generates the text output 
      * @param geneanetList the list of Geneanet lines
      */
-    private void generateOutput(){
+    private Document generateOutput(){
     	GeneanetIndexLine line;
     	Map map2;
     	Document doc = new Document(getName());
@@ -178,7 +178,7 @@ public class ReportGedcom2Geneanet extends Report {
     		// write in console
     		//println(geneanet.toString());
 
-        showDocumentToUser(doc);
+        return doc;
     }
 
     /* ---------------------------- */
@@ -341,7 +341,7 @@ public class ReportGedcom2Geneanet extends Report {
      * generates the text output 
      * @param geneanetList the list of Geneanet lines
      */
-    private void generateOutput(List geneanetList){
+    private Document generateOutput(List geneanetList){
     	GeneanetIndexLine geneanet;
     	Iterator it = geneanetList.iterator();
 
@@ -360,7 +360,7 @@ public class ReportGedcom2Geneanet extends Report {
     		// write in console
     		//println(geneanet.toString());
     	}
-        showDocumentToUser(doc);
+        return doc;
     }
     
     /**

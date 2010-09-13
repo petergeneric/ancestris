@@ -19,24 +19,34 @@
  */
 package genj.edit;
 
-import java.util.List;
-
+import genj.option.Option;
 import genj.option.OptionProvider;
 import genj.option.PropertyOption;
+import genj.util.Resources;
+
+import java.util.List;
 
 /**
  * Global options for editor
  */
 public class Options extends OptionProvider {
   
-  /** option - whether an editor should */
-  public boolean isOpenEditor = true;
+  private final static Resources RES = Resources.get(Options.class);
   
   /** option - whether changes are auto commit */
   public boolean isAutoCommit = false;
   
   /** option - whether to split jurisdictions into their components when editing places */
   public boolean isSplitJurisdictions = true;
+  
+  /** option - whether we correct names */
+  public int correctName = 0;
+  
+  public final static String[] correctNames = { 
+    RES.getString("option.correctName.none"),
+    RES.getString("option.correctName.caps"),
+    RES.getString("option.correctName.allcaps")
+  };
   
   /** 'singleton' */
   private static Options instance = new Options();
@@ -51,7 +61,7 @@ public class Options extends OptionProvider {
   /**
    * provided options
    */
-  public List getOptions() {
+  public List<? extends Option> getOptions() {
     return PropertyOption.introspect(instance);
   }
 

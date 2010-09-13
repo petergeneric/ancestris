@@ -19,14 +19,11 @@
  */
 package genj.edit.actions;
 
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.util.swing.NestedBlockLayout;
-import genj.view.ContextSelectionEvent;
-import genj.view.ViewContext;
-import genj.view.ViewManager;
-import genj.window.WindowManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,8 +46,8 @@ public class CreateEntity extends AbstractChange {
   /**
    * Constructor
    */
-  public CreateEntity(Gedcom ged, String tag, ViewManager manager) {
-    super(ged, Gedcom.getEntityImage(tag).getOverLayed(imgNew), resources.getString("new", Gedcom.getName(tag, false) ), manager);
+  public CreateEntity(Gedcom ged, String tag) {
+    super(ged, Gedcom.getEntityImage(tag).getOverLayed(imgNew), resources.getString("new", Gedcom.getName(tag, false) ));
     etag = tag;
   }
   
@@ -96,7 +93,7 @@ public class CreateEntity extends AbstractChange {
   /**
    * @see genj.edit.EditViewFactory.Change#change()
    */
-  public void perform(Gedcom gedcom) throws GedcomException {
+  protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
     // check id
     String id = null;
     if (requestID.isEditable()) {
@@ -107,9 +104,8 @@ public class CreateEntity extends AbstractChange {
     // create the entity
     Entity entity = gedcom.createEntity(etag, id);
     entity.addDefaultProperties();
-    // set focus
-    WindowManager.broadcast(new ContextSelectionEvent(new ViewContext(entity), getTarget(), true));
     // done
+    return new Context(entity);
   }
   
 } //Create

@@ -41,7 +41,8 @@ public abstract class PropertyXRef extends Property {
   /**
    * Empty Constructor
    */
-  protected PropertyXRef() {
+  protected PropertyXRef(String tag) {
+    super(tag);
   }
 
   /**
@@ -84,9 +85,7 @@ public abstract class PropertyXRef extends Property {
     Entity entity = getGedcom().getEntity(getTargetType(), value);
     if (entity==null)
       // Can't find {0} {1} ({2} in {3})
-      throw new GedcomException(resources.getString("error.notfound", new String[]{
-          Gedcom.getName(getTargetType()), value
-        }));
+      throw new GedcomException(resources.getString("error.notfound", Gedcom.getName(getTargetType()), value));
     return entity;
   }
 
@@ -203,20 +202,6 @@ public abstract class PropertyXRef extends Property {
   }
   
   /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(getTag());
-    // 20070104 since values are not trimmed by loaders we do this here - a value of '@..@ ' (note
-    // the trailing space) should be accepted
-    value = value.trim();
-    // check format
-    if (!(value.startsWith("@")&&value.endsWith("@")))
-      throw new GedcomException(resources.getString("error.norefvalue", new String[]{ value, Gedcom.getName(getTag()) }));
-    return super.init(meta, value);
-  }
-
-  /**
    * This property as a verbose string
    */
   public String toString() {
@@ -252,11 +237,10 @@ public abstract class PropertyXRef extends Property {
    * a PropertyXRef
    */
   public static Entity[] getReferences(Entity ent) {
-    List result = new ArrayList(10);
+    List<Entity> result = new ArrayList<Entity>(10);
     // loop through pxrefs
-    List ps = ent.getProperties(PropertyXRef.class);
-    for (int p=0; p<ps.size(); p++) {
-    	PropertyXRef px = (PropertyXRef)ps.get(p);
+    List<PropertyXRef> ps = ent.getProperties(PropertyXRef.class);
+    for (PropertyXRef px : ps) {
       Property target = px.getTarget(); 
       if (target!=null) result.add(target.getEntity());
     }
@@ -292,12 +276,10 @@ public abstract class PropertyXRef extends Property {
   /**
    * Comparison based on target
    */  
-  public int compareTo(Object o) {
+  public int compareTo(Property other) {
     
     // safety check
-    if (!(o instanceof PropertyXRef)) 
-      return super.compareTo(o);
-    PropertyXRef that = (PropertyXRef)o;
+    PropertyXRef that = (PropertyXRef)other;
     
     // got the references?
     if (this.getTargetEntity()==null||that.getTargetEntity()==null)

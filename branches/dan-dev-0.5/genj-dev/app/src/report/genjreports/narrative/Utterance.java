@@ -37,6 +37,9 @@ public class Utterance {
   private Utterance(Resources resources, String template) {
     this.resources = resources;
     this.template = template;
+    if (template == null) {
+      System.err.println("No resource found for " + template);
+    }
     props.put("LBRACKET", "[");
     props.put("RBRACKET", "]");
     props.put("LBRACE", "{");
@@ -44,15 +47,15 @@ public class Utterance {
   }
 
   public static Utterance forProperty(Resources resources, String property) {
-    return forTemplate(resources, translate(property, resources));
+    return forTemplate(resources, translateWithFallback(property, resources));
   }
 
   public static Utterance forProperty(Resources resources, String property, String[] params, Entity[] linkedEntities) {
-    return forTemplate(resources, translate(property, resources), params, linkedEntities);
+    return forTemplate(resources, translateWithFallback(property, resources), params, linkedEntities);
   }
 
   public static Utterance forProperty(Resources resources, String property, String[] params) {
-    return forTemplate(resources, translate(property, resources), params);
+    return forTemplate(resources, translateWithFallback(property, resources), params);
   }
 
   public static Utterance forTemplate(Resources resources, String template) {
@@ -88,6 +91,15 @@ public class Utterance {
 
   public static boolean isTranslatable(String key, Resources resources) {
       return translate(key, resources) != null;
+  }
+
+  public static String translateWithFallback(String key, Resources resources) {
+    String translation = translate(key, resources);
+    if (translation == null) {
+      System.err.println("No translation found for " + key);
+      translation = key;
+    }
+    return translation;
   }
 
   /**
@@ -136,6 +148,7 @@ public class Utterance {
   public void setSubject(Indi indi) {
     gender = indi.getSex();
     props.put(SUBJECT, translate("pronoun.nom" + getGenderKeySuffix()));
+    props.put(SUBJECT + ".dat", translate("pronoun.dat" + getGenderKeySuffix()));
   }
 
   private static final Pattern argPattern = Pattern.compile("\\[[^\\[\\]]*\\]");
@@ -158,13 +171,13 @@ public class Utterance {
         if (key.startsWith("OPTIONAL_")) {
           value = "";
         } else {
-          System.err.println("No value for key " + key + " in sentence template " + template);
           if (key.startsWith("ending.")) {
             value = translate(key + getGenderKeySuffix());
           } else if (key.startsWith("SUBJECT.")) {
             value = translate("pronoun." + key.substring(8) + getGenderKeySuffix());
           }
           if (value == null) {
+            System.err.println("No value for key " + key + " in sentence template " + template);
             value = key;
           }
         }

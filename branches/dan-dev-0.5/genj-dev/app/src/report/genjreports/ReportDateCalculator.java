@@ -42,17 +42,9 @@ public class ReportDateCalculator extends Report {
     }
 
   /**
-   * We don't use STDOUT
-   * @see genj.report.Report#usesStandardOut()
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * Our entry point
    */
-  public void start(PropertyDate date) {
+  public JLabel start(PropertyDate date) {
       // Date in gregorian format
       //      PointInTime pit = GregorianCalendar.toPointInTime(date.getStart().getCalendar().toJulianDay(date.getStart().getDay(),
       //											  date.getStart().getMonth(),
@@ -74,7 +66,7 @@ public class ReportDateCalculator extends Report {
 	      ageStr = getValueFromUser( translate("date.title"), translate("age.title"), new String[0]);
         // check if the user cancelled this
         if (ageStr==null)
-          return;
+          return null;
 
 	  }
 
@@ -91,7 +83,8 @@ public class ReportDateCalculator extends Report {
 	      result = translate("age.invalid");
 	  }
       }
-      showComponentToUser(new JLabel(result));
+      
+      return new JLabel(result);
   }
 
     // only for gregorian
@@ -109,12 +102,6 @@ public class ReportDateCalculator extends Report {
     Calendar calendar = date.getCalendar();
     if (calendar!=age.getCalendar())
       return null;
-
-    // grab earlier values
-    int
-      y =  date.getYear (),
-      m = date.getMonth(),
-      d = date.getDay();
 
     // make sure years are not empty (could be on all UNKNOWN PIT)
     if (date.getYear()==PointInTime.UNKNOWN)

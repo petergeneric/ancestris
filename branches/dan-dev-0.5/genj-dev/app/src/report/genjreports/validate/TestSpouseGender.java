@@ -65,13 +65,8 @@ import java.util.List;
     
     PropertyXRef xref = (PropertyXRef)fam.getProperty(role);
     Indi indi = (Indi)xref.getTargetEntity();
-     
-    String[] format = new String[] {
-      Gedcom.getName(role),
-      indi.toString()
-    };
-    
-    issues.add(new ViewContext(xref).setText(report.translate("err.spouse."+role, format)));
+
+    issues.add(new ViewContext(xref).setText(report.translate("err.spouse."+role, Gedcom.getName(role), indi.toString())));
   }
 
 } //TestHusbandGender

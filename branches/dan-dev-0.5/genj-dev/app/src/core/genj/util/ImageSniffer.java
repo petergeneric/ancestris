@@ -1,7 +1,7 @@
 /**
  * GenJ - GenealogyJ
  *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,8 +19,9 @@
  */
 package genj.util;
 
+import genj.renderer.DPI;
+
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.geom.Dimension2D;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +41,7 @@ public class ImageSniffer {
 
   /** sniffed values */  
   protected Dimension dimension;
-  protected Point dpi = new Point(72,72);
+  protected DPI dpi = new DPI(72,72);
     
   /**
    * Constructor
@@ -80,7 +81,7 @@ public class ImageSniffer {
     }
 
     // validate what we've got
-    if (dpi!=null&&(dpi.x<=0||dpi.y<=0))
+    if (dpi!=null&&(dpi.horizontal()<=0||dpi.vertical()<=0))
       dpi = null;
     if (dimension!=null&&(dimension.width<1||dimension.height<1))
       dimension = null;
@@ -99,7 +100,7 @@ public class ImageSniffer {
    * Accessor - resolution (dpi)
    * @return null if unknown
    */
-  public Point getDPI() {
+  public DPI getDPI() {
     return dpi;
   }
 
@@ -120,8 +121,8 @@ public class ImageSniffer {
     if (dpi==null||dimension==null) 
       return null;
     return new Dimension2d(
-      (double)dimension.width/dpi.x, 
-      (double)dimension.height/dpi.y
+      (double)dimension.width/dpi.horizontal(), 
+      (double)dimension.height/dpi.vertical()
     );
   }
   
@@ -207,7 +208,7 @@ public class ImageSniffer {
           x = sniffIntBigEndian(in),
           y = sniffIntBigEndian(in);
         if (read(in)==1) { //meter
-          dpi = new Point(
+          dpi = new DPI(
           	(int)Math.round(2.54D*x/100),
           	(int)Math.round(2.54D*y/100)
           );
@@ -287,7 +288,7 @@ public class ImageSniffer {
       skip(xres-(read-start), in);
       xres = sniffInt(in, intel) / sniffInt(in, intel);
     }
-    dpi = new Point(xres, yres);
+    dpi = new DPI(xres, yres);
     
     // done
     return true;
@@ -332,10 +333,10 @@ public class ImageSniffer {
             // check units
             switch (read(in)) {
               case 1: // dots per inch
-                dpi = new Point(sniffShortBigEndian(in), sniffShortBigEndian(in));
+                dpi = new DPI(sniffShortBigEndian(in), sniffShortBigEndian(in));
                 break;
               case 2: // dots per cm
-                dpi = new Point(
+                dpi = new DPI(
 	                (int)(sniffShortBigEndian(in) * 2.54f),
 	                (int)(sniffShortBigEndian(in) * 2.54f)
                 );
@@ -412,7 +413,7 @@ public class ImageSniffer {
     skip(8, in);
     
     // resolution
-    dpi = new Point(
+    dpi = new DPI(
       (int)Math.round(2.54D*sniffIntLittleEndian(in)/100), // dots per meter
       (int)Math.round(2.54D*sniffIntLittleEndian(in)/100)  // dots per meter
     );
@@ -434,7 +435,8 @@ public class ImageSniffer {
    */
   private void skip(int num, InputStream in) throws IOException {
     read += num;
-    in.skip(num);
+    if (num!=in.skip(num))
+      throw new IOException("cannot skip");
   }
 
   /**

@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -59,7 +58,7 @@ public class Grammar {
   private String version;
   
   /** meta roots */
-  private Map tag2root = new HashMap();
+  private Map<String, MetaProperty> tag2root = new HashMap<String, MetaProperty>();
   
   /**
    * Singleton Constructor
@@ -82,7 +81,7 @@ public class Grammar {
           LOG.info("Loading grammar through classloader");
       } else {
     	try {
-    		in = new FileInputStream(new File(EnvironmentChecker.getProperty(this, "user.dir", ".", "current directory for grammar"),descriptor));
+    		in = new FileInputStream(new File(EnvironmentChecker.getProperty("user.dir", ".", "current directory for grammar"),descriptor));
     	} catch(FileNotFoundException e) {
     		/* when executing dev\geo\src\tst\genj\geo\App.java  in Eclipse */
     		in = new FileInputStream(new File("../app/"+descriptor));
@@ -110,17 +109,16 @@ public class Grammar {
    * All used paths for given type 
    * @param etag tag of entity or null for all
    */
-  public TagPath[] getAllPaths(String etag, Class property) {
+  public TagPath[] getAllPaths(String etag, Class<? extends Property> property) {
     return getPathsRecursively(etag, property);
   }
   
-  private TagPath[] getPathsRecursively(String etag, Class property) {
+  private TagPath[] getPathsRecursively(String etag, Class<? extends Property> property) {
     
     // prepare result
-    List result = new ArrayList();
+    List<TagPath> result = new ArrayList<TagPath>();
     // loop through roots
-    for (Iterator it=tag2root.values().iterator(); it.hasNext(); ) {
-      MetaProperty root = (MetaProperty)it.next();
+    for (MetaProperty root : tag2root.values()) {
       String tag = root.getTag();
       if (etag==null||tag.equals(etag))
         getPathsRecursively(root, property, new TagPath(tag), result);
@@ -129,7 +127,7 @@ public class Grammar {
     return TagPath.toArray(result);
   }
 
-  private void getPathsRecursively(MetaProperty meta, Class property, TagPath path, Collection result) {
+  private void getPathsRecursively(MetaProperty meta, Class<? extends Property> property, TagPath path, Collection<TagPath> result) {
   
     // something worthwhile to dive into?
     if (!meta.isInstantiated) 
@@ -140,10 +138,8 @@ public class Grammar {
       result.add(path);
       
     // recurse into
-    for (Iterator it=meta.nested.iterator();it.hasNext();) {
-      MetaProperty nested = (MetaProperty)it.next();
+    for (MetaProperty nested : meta.nested) 
       getPathsRecursively(nested, property, new TagPath(path, nested.getTag()), result);
-    }
     
     // done
   }
@@ -173,7 +169,7 @@ public class Grammar {
     
     // something we didn't know about yet?
     if (root==null) {
-      root = new MetaProperty(this, tag, new HashMap(), false);
+      root = new MetaProperty(this, tag, new HashMap<String, String>(), false);
       tag2root.put(tag, root);
     }
     
@@ -186,7 +182,7 @@ public class Grammar {
    */
   private class Parser extends DefaultHandler {
     
-    private Stack stack = null;
+    private Stack<MetaProperty> stack = null;
     
     /* element callback */
     public void startElement(java.lang.String uri, java.lang.String localName, java.lang.String qName, Attributes attributes) throws org.xml.sax.SAXException {
@@ -198,12 +194,12 @@ public class Grammar {
         version = attributes.getValue("version");
         if (version==null)
           throw new RuntimeException("expected GEDCOM version");
-        stack = new Stack();
+        stack = new Stack<MetaProperty>();
         return;
       }
       
       // grab attributes
-      Map properties = new HashMap();
+      Map<String,String> properties = new HashMap<String,String>();
       for (int i=0,j=attributes.getLength();i<j;i++)
         properties.put(attributes.getQName(i), attributes.getValue(i));
       
@@ -238,5 +234,25 @@ public class Grammar {
         stack.pop();
     }
   } //Parser
+
+  /**
+   * check if a tag path is valid 
+   */
+  public boolean isValid(TagPath path) {
+    
+    String tag = path.get(0);
+    MetaProperty root = (MetaProperty)tag2root.get(tag);
+    if (root==null)
+      return false;
+    
+    for (int i=1;i<path.length();i++) {
+      tag = path.get(i);
+      if (!root.allows(tag))
+        return false;
+      root = root.getNested(tag, false);
+    }
+    
+    return true;
+  }
   
 } //Grammar

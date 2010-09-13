@@ -25,13 +25,7 @@ package genj.gedcom;
 public class PropertySimpleReadOnly extends PropertySimpleValue {
 
   /**
-   * Constructor
-   */
-  public PropertySimpleReadOnly() {
-  }
-  
-  /**
-   * Constructor
+   * need tag-argument constructor for all properties
    */
   public PropertySimpleReadOnly(String tag) {
     super(tag);

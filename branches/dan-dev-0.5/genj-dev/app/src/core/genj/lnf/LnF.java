@@ -131,8 +131,7 @@ public class LnF {
    */
   private static String getLnFDir() {
     return EnvironmentChecker.getProperty(
-      LnF.class,
-      new String[]{ "genj.lnf.dir"},
+      "genj.lnf.dir",
       LNF_DIR,
       "read lnf.properties"
     );

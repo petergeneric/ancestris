@@ -25,20 +25,21 @@ package genj.gedcom;
  */
 public class PropertyHusband extends PropertyXRef {
 
-  public final static String TAG = "HUSB";
   public final static String LABEL_FATHER = Gedcom.resources.getString("HUSB.father");
 
   /**
    * Empty Constructor
    */
-  public PropertyHusband() {
+  /*package*/ PropertyHusband() {
+    super("HUSB");
   }
   
   /**
-   * Constructor with reference
+   * need tag-argument constructor for all properties
    */
-  protected PropertyHusband(String target) {
-    setValue(target);
+  /*package*/ PropertyHusband(String tag) {
+    super(tag);
+    assertTag("HUSB");
   }
 
   /**
@@ -58,13 +59,6 @@ public class PropertyHusband extends PropertyXRef {
    */
   public Indi getHusband() {
     return (Indi)getTargetEntity();
-  }
-
-  /**
-   * Returns the Gedcom-Tag of this property
-   */
-  public String getTag() {
-    return TAG;
   }
 
   /**
@@ -88,18 +82,18 @@ public class PropertyHusband extends PropertyXRef {
 
     // Enclosing family has a husband already ?
     if (fam.getHusband()!=null)
-      throw new GedcomException(resources.getString("error.already.spouse", new String[]{ fam.getHusband().toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.spouse", fam.getHusband().toString(), fam.toString()));
 
     // Look for husband (not-existing -> Gedcom throws Exception)
     Indi husband = (Indi)getCandidate();
 
     // make sure wife isn't also husband
     if (fam.getWife()==husband)
-      throw new GedcomException(resources.getString("error.already.spouse", new String[]{ husband.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.spouse", husband.toString(), fam.toString()));
 
     // make sure the husband isn't descendant of family
     if (husband.isDescendantOf(fam))
-      throw new GedcomException(resources.getString("error.already.descendant", new String[]{ husband.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.descendant", husband.toString(), fam.toString()));
     
     // Connect back from husband (maybe using invalid back reference)
     ps = husband.getProperties(new TagPath("INDI:FAMS"));

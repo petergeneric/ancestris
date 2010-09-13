@@ -7,7 +7,6 @@
  */
 package genjreports.validate;
 
-import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -16,20 +15,20 @@ import genj.gedcom.Property;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
-import genj.report.AnnotationsReport;
+import genj.report.Report;
 import genj.util.EnvironmentChecker;
 import genj.util.swing.Action2;
 import genj.view.ViewContext;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * A report that validates a Gedcom file and displays
  * anomalies and 'standard' compliancy issues
  */
-public class ReportValidate extends AnnotationsReport {
+public class ReportValidate extends Report {
 
   /** whether order of properties counts or not */
   public boolean isOrderDiscretionary = true;
@@ -90,74 +89,70 @@ public class ReportValidate extends AnnotationsReport {
   };
 
   /**
-   * @see genj.report.Report#usesStandardOut()
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * Start for argument properties
    */
-  public void start(Property[] props) {
+  public List<ViewContext> start(Property[] props) {
 
-    List issues = new ArrayList();
+    List<ViewContext> issues = new ArrayList<ViewContext>();
 
     if (props.length>0) {
-      List tests = createTests(props[0].getGedcom());
+      Gedcom gedcom = props[0].getGedcom();
+      List<Test> tests = createTests(gedcom);
 
       for (int i=0;i<props.length;i++) {
         TagPath path = props[i].getPath();
-        test(props[i], path, props[i].getGedcom().getGrammar().getMeta(path), tests, issues);
+        test(props[i], path, gedcom.getGrammar().getMeta(path), tests, issues);
       }
+      
+      // show results
+      return results(gedcom, issues);
     }
 
-    // show results
-    results(issues);
+    return null;
   }
 
   /**
    * Start for argument entity
    */
-  public void start(Entity entity) {
-    start(new Entity[]{ entity });
+  public List<ViewContext> start(Entity entity) {
+    return start(new Entity[]{ entity });
   }
 
-  public void start(Entity[] entities) {
+  public List<ViewContext> start(Entity[] entities) {
 
     Gedcom gedcom = entities[0].getGedcom();
-    List tests = createTests(gedcom);
+    List<Test> tests = createTests(gedcom);
 
-    List issues = new ArrayList();
+    List<ViewContext> issues = new ArrayList<ViewContext>();
     for (int i=0;i<entities.length;i++) {
       TagPath path = new TagPath(entities[i].getTag());
       test(entities[i], path, entities[i].getGedcom().getGrammar().getMeta(path), tests, issues);
     }
 
     // show results
-    results(issues);
+    return results(gedcom, issues);
   }
 
   /**
    * Start for argument gedcom
    */
-  public void start(final Gedcom gedcom) {
+  public List<ViewContext> start(final Gedcom gedcom) {
 
     // prepare tests
-    List tests = createTests(gedcom);
-    List issues = new ArrayList();
+    List<Test> tests = createTests(gedcom);
+    List<ViewContext> issues = new ArrayList<ViewContext>();
 
     // test if there's a submitter
     if (gedcom.getSubmitter()==null) {
       final ViewContext ctx = new ViewContext(gedcom);
       ctx.setText(translate("err.nosubmitter", gedcom.getName())).setImage(Gedcom.getImage());
       ctx.addAction(new Action2(translate("fix")) {
-        protected void execute() {
+        public void actionPerformed(ActionEvent event) {
           setEnabled(false);
           gedcom.doMuteUnitOfWork(new UnitOfWork() {
             public void perform(Gedcom gedcom) throws GedcomException {
               Submitter sub = (Submitter)gedcom.createEntity(Gedcom.SUBM);
-              sub.setName(EnvironmentChecker.getProperty(ReportValidate.this, "user.name", "?", "using user.name for fixing missing submitter"));
+              sub.setName(EnvironmentChecker.getProperty("user.name", "?", "using user.name for fixing missing submitter"));
             }
           });
         }
@@ -167,40 +162,35 @@ public class ReportValidate extends AnnotationsReport {
 
     // Loop through entities and test 'em
     for (int t=0;t<Gedcom.ENTITIES.length;t++) {
-      for (Iterator es=gedcom.getEntities(Gedcom.ENTITIES[t]).iterator();es.hasNext();) {
-        Entity e = (Entity)es.next();
+      for (Entity e : gedcom.getEntities(Gedcom.ENTITIES[t])) {
         TagPath path = new TagPath(e.getTag());
         test(e, path, gedcom.getGrammar().getMeta(path), tests, issues);
       }
     }
 
     // show results
-    results(issues);
+    return results(gedcom, issues);
   }
 
   /**
    * show validation results
    */
-private void results(List<Context> issues) {
+  private List<ViewContext> results(Gedcom gedcom, List<ViewContext> issues) {
 
     // any fixes proposed at all?
     if (issues.size()==0) {
-      setMessage(translate("noissues"));
-      return;
+      getOptionFromUser(translate("noissues"), Report.OPTION_OK);
+      return null;
     }
 
-    // show fixes
-    setMessage(translate("issues", Integer.toString(issues.size())));
-    for (Context ctx : issues)
-    	addAnnotation(ctx);
-
-    // done
+    // wrap
+    return issues;
   }
 
   /**
    * Test a property (recursively)
    */
-  private void test(Property prop, TagPath path, MetaProperty meta, List tests, List issues) {
+  private void test(Property prop, TagPath path, MetaProperty meta, List<Test> tests, List<ViewContext> issues) {
     // test tests
     for (int i=0, j=tests.size(); i<j; i++) {
       Test tst = (Test)tests.get(i);
@@ -227,7 +217,7 @@ private void results(List<Context> issues) {
         continue;
       // check if Gedcom grammar allows it
       if (!meta.allows(ctag)) {
-        String msg = translate("err.notgedcom", new String[]{ctag, prop.getGedcom().getGrammar().getVersion(), path.toString()});
+        String msg = translate("err.notgedcom", ctag, prop.getGedcom().getGrammar().getVersion(), path.toString() );
         issues.add(new ViewContext(child).setText(msg).setImage(MetaProperty.IMG_ERROR));
         continue;
       }
@@ -241,9 +231,9 @@ private void results(List<Context> issues) {
   /**
    * Create the tests we're using
    */
-  private List createTests(Gedcom gedcom) {
+  private List<Test> createTests(Gedcom gedcom) {
 
-    List result = new ArrayList();
+    List<Test> result = new ArrayList<Test>();
 
     // ******************** SPECIALIZED TESTS *******************************
 

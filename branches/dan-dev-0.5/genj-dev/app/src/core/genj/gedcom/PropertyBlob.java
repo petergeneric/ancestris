@@ -21,28 +21,29 @@ package genj.gedcom;
 
 import genj.util.Base64;
 import genj.util.ByteArray;
-import genj.util.swing.ImageIcon;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
 import java.util.logging.Level;
 
 /**
  * Gedcom Property : BLOB
  */
-public class PropertyBlob extends Property implements MultiLineProperty, IconValueAvailable {
+public class PropertyBlob extends Property implements MultiLineProperty {
   
-  private final static String TAG = "BLOB";
-
   /** the content (either base64 or raw bytes) */
   private Object content = "";
+  
+  public PropertyBlob() {
+    super("BLOB");
+  }
 
-  /** a soft reference to image icon */
-  private SoftReference icon;
-
-  /** whether was checked for image */
-  private boolean noIconAvailable;
+  /**
+   * need tag-argument constructor for all properties
+   */
+  public PropertyBlob(String tag) {
+    super(tag);
+  }
 
   /**
    * Returns the data of this Blob
@@ -73,21 +74,6 @@ public class PropertyBlob extends Property implements MultiLineProperty, IconVal
   }
 
   /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return TAG;
-  }
-  
-  /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(TAG);
-    return super.init(meta,value);
-  }
-
-  /**
    * Returns the property value line
    */
   public String getValue() {
@@ -100,47 +86,6 @@ public class PropertyBlob extends Property implements MultiLineProperty, IconVal
     return content.toString().length()+" Base64 Bytes";
   }
 
-  /**
-   * Tries to return the data as an Icon
-   */
-  public synchronized ImageIcon getValueAsIcon() {
-
-    // was already identified as unavailable?
-    if (noIconAvailable)
-      return null;
-
-    // soft ref'd image ?
-    if (icon!=null) {
-      ImageIcon result = (ImageIcon)icon.get();
-      if (result!=null)
-        return result;
-    }
-    
-    // Data for Image ?
-    byte[] bs = getBlobData();
-    if (bs==null) {
-      noIconAvailable = true;
-      return null;
-    }
-
-    // Try to create image
-    try {
-      ImageIcon result = new ImageIcon(getTitle(), bs);
-
-      // remember
-      icon = new SoftReference(result);
-      
-      // done
-      return result;
-      
-    } catch (Throwable t) {
-    }
-
-    // fall through
-    noIconAvailable = true;
-    return null;
-  }
-  
   /**
    * @see genj.gedcom.MultiLineProperty#getLineCollector()
    */
@@ -165,14 +110,12 @@ public class PropertyBlob extends Property implements MultiLineProperty, IconVal
   /**
    * Sets a property value line
    */
-  public void setValue(String value) {
+  public synchronized void setValue(String value) {
     
     String old = getValue();
 
     // Successfull new information
     content = value;
-    icon = null;
-    noIconAvailable = false;
 
     // Remember changed property
     propagatePropertyChanged(this, old);
@@ -194,10 +137,6 @@ public class PropertyBlob extends Property implements MultiLineProperty, IconVal
     
     String old = getValue();
 
-    // Reset state
-    noIconAvailable = false;
-    icon = null;
-    
     // file?
     if (file.length()!=0) {
       // Try to open file
@@ -312,7 +251,7 @@ public class PropertyBlob extends Property implements MultiLineProperty, IconVal
     
     /** current tag */
     public String getTag() {
-      return offset==0 ? TAG : "CONT";
+      return offset==0 ? getTag() : "CONT";
     }
 
     /** Returns the next line of this iterator */

@@ -48,7 +48,7 @@ public class TestCardinality extends Test {
           Property first = (Property)seen.get(tag);
           if (first!=null) {
             seen.put(tag, null);
-            issues.add(new ViewContext(first).setText(report.translate("err.cardinality.max", new String[]{ prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality() })));
+            issues.add(new ViewContext(first).setText(report.translate("err.cardinality.max", prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality() )));
           }
         }
       }
@@ -58,7 +58,7 @@ public class TestCardinality extends Test {
     MetaProperty[] metas = prop.getNestedMetaProperties(0);
     for (int i = 0; i < metas.length; i++) {
       if (metas[i].isRequired() && seen.get(metas[i].getTag())==null) {
-        String txt = report.translate("err.cardinality.min", new String[]{ prop.getTag(), metas[i].getTag(), prop.getGedcom().getGrammar().getVersion(), metas[i].getCardinality() });
+        String txt = report.translate("err.cardinality.min", prop.getTag(), metas[i].getTag(), prop.getGedcom().getGrammar().getVersion(), metas[i].getCardinality() );
         issues.add(new ViewContext(prop).setImage(metas[i].getImage()).setText(txt));
       }
     }

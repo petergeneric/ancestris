@@ -19,6 +19,7 @@
  */
 package genj.option;
 
+
 import genj.util.Registry;
 
 import javax.swing.DefaultComboBoxModel;
@@ -40,13 +41,19 @@ public abstract class MultipleChoiceOption extends PropertyOption {
   }
 
   /** restore */
-  public void restore(Registry registry) {
-    option.restore(registry);
+  public void restore(Registry r) {
+    option.restore(r);
+  }
+  public void restore() {
+    option.restore();
   }
 
   /** persist */
-  public void persist(Registry registry) {
-    option.persist(registry);
+  public void persist(Registry r) {
+    option.persist(r);
+  }
+  public void persist() {
+    option.persist();
   }
 
   /** name */

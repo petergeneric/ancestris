@@ -31,12 +31,10 @@ final public class Images {
   public static ImageIcon
   
     imgView,
-    imgAdvanced,
     
     imgStickOn,
     imgStickOff,
-    imgBack,
-    imgForward,
+    imgFocus,
     
     imgUndo,
     imgRedo,
@@ -45,10 +43,10 @@ final public class Images {
     imgCopy, 
     imgPaste,
     
-    imgNew,
+    imgAdd,
 	
-    imgDelEntity,
-    imgNewEntity;
+    imgDel,
+    imgNew;
 
   /**
    * Constructor which pre-loads all images
@@ -56,12 +54,10 @@ final public class Images {
   private Images() {
     
     imgView      = new ImageIcon(this,"images/View");
-    imgAdvanced  = new ImageIcon(this,"images/Advanced");
 
     imgStickOn   = new ImageIcon(this,"images/StickOn");
     imgStickOff  = new ImageIcon(this,"images/StickOff");
-    imgBack    = new ImageIcon(this,"images/Return");
-    imgForward  = new ImageIcon(this,"images/Forward");
+    imgFocus     = new ImageIcon(this,"images/Focus");
 
     imgUndo      = new ImageIcon(this,"images/Undo");
     imgRedo      = new ImageIcon(this,"images/Redo");
@@ -70,9 +66,9 @@ final public class Images {
     imgCopy      = new ImageIcon(this,"images/Copy");
     imgPaste     = new ImageIcon(this,"images/Paste");
     
-    imgNew     = new ImageIcon(this,"images/New");
+    imgAdd       = new ImageIcon(this,"images/Add");
     
-    imgNewEntity   = new ImageIcon(this,"images/entity/New");
-    imgDelEntity    = new ImageIcon(this,"images/entity/Delete");
+    imgNew       = new ImageIcon(this,"images/New");
+    imgDel       = new ImageIcon(this,"images/Delete");
   }
 }

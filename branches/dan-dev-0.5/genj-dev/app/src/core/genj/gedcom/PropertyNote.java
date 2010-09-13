@@ -30,20 +30,17 @@ import java.util.regex.Pattern;
 public class PropertyNote extends PropertyXRef {
 
   public static final String TAG = "NOTE";
-
+  
   /**
-   * This will be called once when instantiation has
-   * happend - it's our chance to substitute this with
-   * a multilinevalue if no reference applicable
+   * need tag-argument constructor for all properties
    */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    // expecting NOTE
-    meta.assertTag("NOTE");
-    // ONLY for @..@!!!
-    if (value.startsWith("@")&&value.endsWith("@"))
-      return super.init(meta, value);
-    // switch to multiline value
-    return new PropertyMultilineValue().init(meta, value);
+  /*package*/PropertyNote(String tag) {
+    super(tag);
+    assertTag("NOTE");
+  }
+
+  /*package*/ PropertyNote() {
+    super("NOTE");
   }
 
   /**
@@ -58,13 +55,6 @@ public class PropertyNote extends PropertyXRef {
     }
     // nope
     return false;
-  }
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return "NOTE";
   }
 
   /**

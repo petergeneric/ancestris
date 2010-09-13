@@ -26,37 +26,31 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
 import genj.gedcom.TagPath;
-import genj.renderer.Options;
-import genj.renderer.PropertyRenderer;
-import genj.util.Dimension2d;
+import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
 import genj.util.swing.Action2;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.LinkWidget;
 import genj.util.swing.SortableTableModel;
+import genj.util.swing.SortableTableModel.Directive;
 import genj.view.ContextProvider;
-import genj.view.ContextSelectionEvent;
+import genj.view.SelectionSink;
 import genj.view.ViewContext;
-import genj.window.WindowBroadcastEvent;
-import genj.window.WindowBroadcastListener;
-import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.font.FontRenderContext;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -71,8 +65,7 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
+import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -85,16 +78,15 @@ import javax.swing.table.TableModel;
 /**
  * A widget that shows entities in rows and columns
  */
-public class PropertyTableWidget extends JPanel implements WindowBroadcastListener {
+public class PropertyTableWidget extends JPanel  {
   
   private final static Logger LOG = Logger.getLogger("genj.common");
   
-  /** shortcuts panel */
   private JPanel panelShortcuts;
-
-  /** table component */
   private Table table;
-  
+  private boolean ignoreSelection  = false;
+  private int visibleRowCount = -1;
+  private TransferHandler transferer;
   
   /**
    * Constructor
@@ -116,6 +108,8 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     // create table comp
     table = new Table();
     setModel(propertyModel);
+    setRowSelection(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    setColSelection(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
     // setup layout
     setLayout(new BorderLayout());
@@ -123,6 +117,29 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     add(BorderLayout.EAST, panelShortcuts);
     
     // done
+  }
+ 
+  /**
+   * Column selection
+   * @set one of 
+   * ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+   * ListSelectionModel.SINGLE_SELECTION
+   * ListSelectionModel.SINGLE_INTERVAL_SELECTION
+   * -1
+   */
+  public void setColSelection(int set) {
+    table.setColSelection(set);
+  }
+  
+  /**
+   * Column selection
+   * @set one of 
+   * ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+   * ListSelectionModel.SINGLE_SELECTION
+   * ListSelectionModel.SINGLE_INTERVAL_SELECTION
+   */
+  public void setRowSelection(int set) {
+    table.setRowSelection(set);
   }
   
   /**
@@ -133,20 +150,23 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
   }
   
   /**
-   * Component lifecycle callback - removed
-   */
-  public void removeNotify() {
-    super.removeNotify();
-    // clear table's current model - lifecycle destructor
-    // so to say that will disconnect listeners recursively
-    table.setPropertyModel(null);
-  }
-  
-  /**
    * Setter for current model
    */
   public void setModel(PropertyTableModel set) {
-    table.setPropertyModel(set);
+    table.setPropertyTableModel(set);
+  }
+  
+  public void setVisibleRowCount(int rows) {
+    visibleRowCount   = rows;
+    revalidate();
+    repaint();
+  }
+  
+  /**
+   * Getter for current model
+   */
+  public PropertyTableModel getModel() {
+    return table.getPropertyTableModel();
   }
   
   /**
@@ -156,80 +176,93 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     table.setAutoResizeMode(on ? JTable.AUTO_RESIZE_ALL_COLUMNS : JTable.AUTO_RESIZE_OFF);
   }
   
-  /**
-   * Resolve row for property
-   */
-  public int getRow(Property property) {
-    return table.getRow(property);
+  public int[] getSelectedRows() {
+    return table.getSelectedRows();
+  }
+  
+  public Property getSelectedRow() {
+    int i = table.getSelectedRow();
+    return i<0 ? null : table.getRowRoot(i);
   }
   
   /**
    * Select a cell
    */
-  public boolean handleBroadcastEvent(WindowBroadcastEvent event) {
+  public void select(Context context) {
     
-    // let flow through if it's a message from ourselves
-    if (event.isOutbound())
-      return true;
-
-    if (table.propertyModel == null) return true;
-    // a meaningful event for us?
-    ContextSelectionEvent cse = ContextSelectionEvent.narrow(event, table.propertyModel.getGedcom());
-    if (cse==null)
-      return true;
-
+    if (ignoreSelection)
+      return;
+    
+    if (context.getGedcom()!=getModel().getGedcom())
+      throw new IllegalArgumentException("select on wrong gedcom");
+    
     // set selection
     try {
-      table.ignoreSelection = true;
+      ignoreSelection = true;
       
       // loop over selected properties
-      Context context = cse.getContext();
-      Property[] props = context.getProperties();
+      List<? extends Property> props = context.getProperties();
       
       // use all of selected entities properties if there are no property selections
-      if (props.length==0) {
-        List all = new ArrayList();
-        Entity[] ents = context.getEntities();
-        for (int i = 0; i < ents.length; i++) {
-          all.addAll(ents[i].getProperties(Property.class));
-          all.add(ents[i]);
-        }
-        props = Property.toArray(all);
+      if (props.isEmpty()) {
+        List<Property> ps = new ArrayList<Property>(context.getProperties());
+        for (Entity ent : context.getEntities())
+          if (!ps.contains(ent))
+            ps.add(ent);
+        props = ps;
       }
-      
+        
       ListSelectionModel rows = table.getSelectionModel();
       ListSelectionModel cols = table.getColumnModel().getSelectionModel();
       table.clearSelection();
       
-      int r=-1,c=-1;
-      for (int i=0;i<props.length;i++) {
+      Point cell = new Point();
+      for (Property prop : props) {
   
-        Property prop = props[i];
-        r = getRow(prop.getEntity());
-        if (r<0)
+        // add cell selection
+        cell = table.getCell(prop);
+        if (cell.y>=0) {
+          rows.addSelectionInterval(cell.y,cell.y);
+          if (cell.x>=0)
+            cols.addSelectionInterval(cell.x,cell.x);
+        } else {
+          int row = table.getRow(prop);
+          if (row>=0) {
+            rows.addSelectionInterval(row,row);
+            cols.addSelectionInterval(0,table.getColumnCount()-1);
+            cell.y=row;
+          }
           continue;
-        c = table.getCol(r, prop);
+        }
 
-        // change selection
-        rows.addSelectionInterval(r,r);
-        if (c>=0)
-          cols.addSelectionInterval(c,c);
       }
       
       // scroll to last selection
-      if (r>=0) {
+      if (cell.y>=0) {
         Rectangle visible = table.getVisibleRect();
-        Rectangle scrollto = table.getCellRect(r,c,true);
-        if (c<0) scrollto.x = visible.x;
+        Rectangle scrollto = table.getCellRect(cell.y,cell.x,true);
+        if (cell.x<0) scrollto.x = visible.x;
         table.scrollRectToVisible(scrollto);
       }
 
     } finally {
-      table.ignoreSelection = false;
+      ignoreSelection = false;
     }
     
-    // don't think anyone cares but we'll let it through
-    return true;
+  }
+
+  /**
+   * add listener
+   */
+  public void addListSelectionListener(ListSelectionListener listener) {
+    table.getSelectionModel().addListSelectionListener(listener);
+  }
+  
+  /**
+   * remove listener
+   */
+  public void removeListSelectionListener(ListSelectionListener listener) {
+    table.getSelectionModel().removeListSelectionListener(listener);
   }
   
   /**
@@ -242,7 +275,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     
     SortableTableModel model = (SortableTableModel)table.getModel();
     TableColumnModel columns = table.getColumnModel();
-    List directives = model.getDirectives();
+    List<Directive> directives = model.getDirectives();
 
     WordBuffer result = new WordBuffer(",");
     result.append(columns.getColumnCount());
@@ -270,10 +303,8 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
     try {
       StringTokenizer tokens = new StringTokenizer(layout, ",");
       int n = Integer.parseInt(tokens.nextToken());
-      if (n!=model.getColumnCount())
-        return;
   
-      for (int i=0;i<n;i++) {
+      for (int i=0;i<n&&i<columns.getColumnCount();i++) {
         TableColumn col = columns.getColumn(i);
         int w = Integer.parseInt(tokens.nextToken());
         col.setWidth(w);
@@ -284,7 +315,8 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       while (tokens.hasMoreTokens()) {
         int c = Integer.parseInt(tokens.nextToken());
         int d = Integer.parseInt(tokens.nextToken());
-        model.setSortingStatus(c, d);
+        if (c<columns.getColumnCount())
+          model.setSortingStatus(c, d);
       }
 
     } catch (Throwable t) {
@@ -317,29 +349,29 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
   /**
    * Table Content
    */
-  private class Table extends JTable implements ContextProvider, ListSelectionListener  {
+  private class Table extends JTable implements ContextProvider {
     
     private PropertyTableModel propertyModel;
-    private boolean ignoreSelection  = false;
     private SortableTableModel sortableModel = new SortableTableModel();
+    private int defaultRowHeight;
     
     /**
      * Constructor
      */
     Table() {
 
-      setPropertyModel(null);
+      setPropertyTableModel(null);
       setDefaultRenderer(Object.class, new Renderer());
-      getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-      getColumnModel().setColumnSelectionAllowed(true);
-      getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
       getTableHeader().setReorderingAllowed(false);
       
-      setRowHeight((int)Math.ceil(Options.getInstance().getDefaultFont().getLineMetrics("", new FontRenderContext(null,false,false)).getHeight())+getRowMargin());
-      
       getColumnModel().getSelectionModel().addListSelectionListener(this);
-      getSelectionModel().addListSelectionListener(this);
-      
+      // 20091208 JTable already implements and add itself as listener
+      //getSelectionModel().addListSelectionListener(this);
+
+      Renderer r = new Renderer();
+      r.setFont(getFont());
+      defaultRowHeight = r.getPreferredSize().height;
+
       // prep sortable model
       setModel(sortableModel);
       sortableModel.setTableHeader(getTableHeader());
@@ -380,16 +412,40 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       // done
     }
     
+    @Override
+    public TransferHandler getTransferHandler() {
+      if (transferer==null)
+        transferer = new Transferer();
+      return transferer;
+    }
+    
+    @Override
+    public int[] getSelectedRows() {
+      int[] rows = super.getSelectedRows();
+      for (int r=0;r<rows.length;r++)
+        rows[r] = sortableModel.modelIndex(rows[r]);
+      return rows;
+    }
+    
+    void setRowSelection(int set) {
+      getSelectionModel().setSelectionMode(set);
+    }
+    
+    void setColSelection(int set) {
+      getColumnModel().setColumnSelectionAllowed(set>=0);
+      if (set>=0)
+        getColumnModel().getSelectionModel().setSelectionMode(set);
+    }
+    
     /** create a shortcut */
     Action2 createShortcut(String txt, final int y) {
       return new Action2(txt.toUpperCase()) {
-        protected void execute() {
+        public void actionPerformed(ActionEvent event) {
           int x = 0;
           try { x = ((JViewport)table.getParent()).getViewPosition().x; } catch (Throwable t) {};
           table.scrollRectToVisible(new Rectangle(x, y, 1, getParent().getHeight()));
         }
       };
-      
     }
     
     /** generate */
@@ -479,60 +535,75 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       // done
     }
     
-    /**
-     * look up a column for given property
-     */
-    int getCol(int row, Property property) {
-      
-      // find col
-      TableModel model = getModel();
-      for (int i=0, j=model.getColumnCount(); i<j; i++) {
-        if (model.getValueAt(row,i)==property)
-          return i;
+    int getRow(Property prop) {
+     
+      PropertyTableModel model = getPropertyTableModel();
+      for (int i=0;i<model.getNumRows();i++) {
+        if (model.getRowRoot(i).contains(prop))
+          return ((SortableTableModel)getModel()).viewIndex(i);
       }
-      
-      // not found
       return -1;
     }
     
-    /**
-     * look up a row
-     */
-    int getRow(Property property) {
+    
+    Point getCell(Property property) {
+      
+      Point p = new Point(-1,-1);
+      
       if (propertyModel==null)
-        return -1;
+        return p;
+      
       SortableTableModel model = (SortableTableModel)getModel();
       for (int i=0;i<model.getRowCount();i++) {
-        if (propertyModel.getProperty(model.modelIndex(i))==property)
-          return i;
+        
+        int r = model.modelIndex(i);
+
+        for (int j=0; j<model.getColumnCount(); j++) {
+          if (model.getValueAt(r, j)==property)
+            return new Point(j,r);
+        }
+
       }
-      return -1;
+      
+      return p;
+    }
+
+    Property getRowRoot(int index) {
+      return propertyModel.getRowRoot(sortableModel.modelIndex(index));
     }
 
     /**
      * setting a property model
      */
-    void setPropertyModel(PropertyTableModel propertyModel) {
+    void setPropertyTableModel(PropertyTableModel propertyModel) {
       // remember
       this.propertyModel = propertyModel;
       // pass through 
       sortableModel.setTableModel(new Model(propertyModel));
-
+      // done
     }
     
-    /** 
-     * ListSelectionListener - callback
+    /**
+     * accessing property model
      */
-    public void valueChanged(ListSelectionEvent e) {
+    PropertyTableModel getPropertyTableModel() {
+      return propertyModel;
+    }
+
+    @Override
+    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
       
-      // let super handle it (strange that JTable implements this as well)
-      super.valueChanged(e);
+      // grab before context
+      List<? extends Property> before = getContext().getProperties();
+      
+      // let table do its thing
+      super.changeSelection(rowIndex, columnIndex, toggle, extend);
       
       // propagate selection change?
-      if (ignoreSelection||e.getValueIsAdjusting())
+      if (ignoreSelection)
         return;
 
-      ViewContext context = null;
+      List<Property> properties = new ArrayList<Property>();
       ListSelectionModel rows = getSelectionModel();
       ListSelectionModel cols  = getColumnModel().getSelectionModel();
       
@@ -547,28 +618,40 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
             continue;
           Property prop = (Property)getValueAt(r,c);
           if (prop==null)
-            prop = propertyModel.getProperty(model.modelIndex(r));
+            prop = propertyModel.getRowRoot(model.modelIndex(r));
           // keep it
-          if (context==null) context = new ViewContext(prop);
-          else context.addProperty(prop);
+          if (before.contains(prop)) 
+            properties.add(prop);
+          else
+            properties.add(0, prop);
         }
       }
       
       // tell about it
-      if (context!=null)
-        WindowManager.broadcast(new ContextSelectionEvent(context, this));
-
+      if (!properties.isEmpty()) {
+        ignoreSelection = true;
+        SelectionSink.Dispatcher.fireSelection(PropertyTableWidget.this, new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties), false);	
+        ignoreSelection = false;
+      }
       
       // done
     }
     
     /** 
-     * The Scollpane we're using asks this JTable's preferred srollable viewport size (via ViewportLayout) which strangely is
-     * hardcoded to something around 400 - we want to use the preferred size though since it is caculated by JTable's
-     * tablelayout depending on the number of rows. We're restricting this to 128 pixels height though.
+     * 
      */ 
     public Dimension getPreferredScrollableViewportSize() {
-      return getPreferredSize();
+      Dimension d = super.getPreferredScrollableViewportSize();
+      if (visibleRowCount>0) {
+        d.height = 0; 
+        for(int row=0; row<visibleRowCount; row++) {
+          if (row<getModel().getRowCount())
+            d.height += getRowHeight(row); 
+          else
+            d.height += defaultRowHeight; 
+        }
+      }
+      return d;
     }
     
     /**
@@ -582,11 +665,9 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
         return null;
       SortableTableModel model = (SortableTableModel)getModel();
       
-      // prepare result
-      ViewContext result = new ViewContext(ged);
-      
       // one row one col?
-      int[] rows = getSelectedRows();
+      List<Property> properties = new ArrayList<Property>();
+      int[] rows = super.getSelectedRows();
       if (rows.length>0) {
         int[] cols = getSelectedColumns();
 
@@ -599,7 +680,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
             // add property for each cell
             Property p = (Property)getValueAt(rows[r], cols[c]);
             if (p!=null) {
-              result.addProperty(p);
+              properties.add(p);
               rowRepresented = true;
             }
             // next selected col
@@ -607,20 +688,20 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
           
           // add representation for each row that wasn't represented by a property
           if (!rowRepresented)
-            result.addProperty(propertyModel.getProperty(model.modelIndex(rows[r])));
+            properties.add(propertyModel.getRowRoot(model.modelIndex(rows[r])));
           
           // next selected row
         }
       }
       
       // done
-      return result;
+      return new ViewContext(ged, new ArrayList<Entity>(), properties);
     }
     
     /**
      * The logical model
      */
-    private class Model extends AbstractTableModel implements PropertyTableModelListener {
+    private class Model extends AbstractTableModel implements PropertyTableModelListener, SortableTableModel.RowComparator {
       
       /** our model */
       private PropertyTableModel model;
@@ -686,11 +767,18 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
           model.removeListener(this);
       }
       
+      @Override
+      public int compare(Object valueA, Object valueB, int col) {
+        if (propertyModel instanceof AbstractPropertyTableModel)
+          return ((AbstractPropertyTableModel)propertyModel).compare((Property)valueA,(Property)valueB, col);
+        return AbstractPropertyTableModel.defaultCompare((Property)valueA,(Property)valueB, col);
+      }
+      
       /**
        *  patched column name
        */
       public String getColumnName(int col) {
-        return model!=null ? model.getName(col) : "";
+        return model!=null ? model.getColName(col) : "";
       }
       
       /** num columns */
@@ -705,7 +793,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
       
       /** path in column */
       private TagPath getPath(int col) {
-        return model!=null ? model.getPath(col) : null;
+        return model!=null ? model.getColPath(col) : null;
       }
       
       /** context */
@@ -719,7 +807,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
           return new Context(prop);
         
         // selected row at least?
-        Property root = model.getProperty(row);
+        Property root = model.getRowRoot(row);
         if (root!=null)
           return new Context(root.getEntity());
 
@@ -736,7 +824,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
         
         Property prop = cells[row][col];
         if (prop==null) {
-          prop = model.getProperty(row).getProperty(model.getPath(col));
+          prop = model.getRowRoot(row).getProperty(model.getColPath(col));
           cells[row][col] = prop;
         }
         return prop;
@@ -751,7 +839,7 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
        * get property by row
        */
       private Property getProperty(int row) {
-        return model.getProperty(row);
+        return model.getRowRoot(row);
       }
       
     } //Model
@@ -761,78 +849,97 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
      */
     private class Renderer extends HeadlessLabel implements TableCellRenderer {
       
-      /** current property */
-      private Property curProp;
-      
-      /** table */
-      private JTable curTable;
-      
-      /** attributes */
-      private boolean isSelected;
-      
-      /**
-       * constructor
-       */
-      /*package*/ Renderer() {
-        setFont(Options.getInstance().getDefaultFont());
+      Renderer() {
+        setPadding(2);
       }
       
       /**
        * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int)
        */
       public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
-        // there's a property here
-        curProp = (Property)value;
-        curTable = table;
-        // and some status
-        isSelected = selected;
+
+        setFont(table.getFont());
+        if (getRowHeight()!=getPreferredSize().height)
+          setRowHeight(getPreferredSize().height);
+        
+        // figure out value and alignment
+        if (propertyModel instanceof AbstractPropertyTableModel) {
+          AbstractPropertyTableModel m = (AbstractPropertyTableModel)propertyModel;
+          setText(m.getCellValue((Property)value, row, col));
+          setHorizontalAlignment(m.getCellAlignment((Property)value, row, col));
+        } else {
+          setText(AbstractPropertyTableModel.getDefaultCellValue((Property)value, row, col));
+          setHorizontalAlignment(AbstractPropertyTableModel.getDefaultCellAlignment((Property)value, row, col));
+        }
+        
+        // background?
+        if (selected) {
+          setBackground(table.getSelectionBackground());
+          setForeground(table.getSelectionForeground());
+          setOpaque(true);
+        } else {
+          setForeground(table.getForeground());
+          setOpaque(false);
+        }
         // ready
         return this;
       }
       
-      /**
-       * patched preferred size
-       */
-      public Dimension getPreferredSize() {
-        if (curProp==null)
-          return new Dimension(0,0);
-        return Dimension2d.getDimension(PropertyRenderer.get(curProp).getSize(getFont(), new FontRenderContext(null, false, false), curProp, new HashMap(), Options.getInstance().getDPI()));
-      }
-      
-      /**
-       * @see genj.util.swing.HeadlessLabel#paint(java.awt.Graphics)
-       */
-      public void paint(Graphics g) {
-        Graphics2D graphics = (Graphics2D)g;
-        // our bounds
-        Rectangle bounds = getBounds();
-        bounds.x=0; bounds.y=0;
-        // background?
-        if (isSelected) {
-          g.setColor(curTable.getSelectionBackground());
-          g.fillRect(0,0,bounds.width,bounds.height);
-          g.setColor(curTable.getSelectionForeground());
-        } else {
-          g.setColor(curTable.getForeground());
-        }
-        // no prop and we're done
-        if (curProp==null) 
-          return;
-        // set font
-        g.setFont(getFont());
-        // get the proxy
-        PropertyRenderer proxy = PropertyRenderer.get(curProp);
-        // add some space left and right
-        bounds.x += 1;
-        bounds.width -= 2;
-        // let it render
-        proxy.render(graphics, bounds, curProp, new HashMap(), Options.getInstance().getDPI());
-        // done
-      }
-      
     } //PropertyTableCellRenderer
     
-  } //Content
+    private class Transferer extends TransferHandler {
+
+      /**
+       * Create a Transferable to use as the source for a data transfer.
+       * 
+       * @param c
+       *          The component holding the data to be transfered. This argument is provided to enable sharing of TransferHandlers by multiple components.
+       * @return The representation of the data to be transfered.
+       * 
+       */
+      protected Transferable createTransferable(JComponent c) {
+        
+        // ourselves?
+        if (c!=Table.this) 
+          return null;
+        
+        // loop
+        int[] cols = table.getSelectedColumns();
+        int[] rows = table.getSelectedRows();
+
+        if (rows == null || cols == null || rows.length == 0 || cols.length == 0) 
+          return null;
+
+        StringBuffer plainBuf = new StringBuffer();
+        StringBuffer htmlBuf = new StringBuffer();
+
+        htmlBuf.append("<html>\n<body>\n<table>\n");
+        
+        for (int row = 0; row < rows.length; row++) {
+          htmlBuf.append("<tr>\n");
+          for (int col = 0; col < cols.length; col++) { 
+            Property obj = (Property)table.getValueAt(sortableModel.viewIndex(rows[row]), cols[col]);
+            String val = AbstractPropertyTableModel.getDefaultCellValue(obj, row, col);
+            plainBuf.append(val + "\t");
+            htmlBuf.append("  <td>" + val + "</td>\n");
+          }
+          // we want a newline at the end of each line and not a tab
+          plainBuf.deleteCharAt(plainBuf.length() - 1).append("\n");
+          htmlBuf.append("</tr>\n");
+        }
+
+        // remove the last newline
+        plainBuf.deleteCharAt(plainBuf.length() - 1);
+        htmlBuf.append("</table>\n</body>\n</html>");
+
+        return new BasicTransferable(plainBuf.toString(), htmlBuf.toString());
+      }
+
+      public int getSourceActions(JComponent c) {
+        return c==Table.this ? COPY : NONE;
+      }
+    }
+  } //Table
 
   
   
@@ -904,5 +1011,6 @@ public class PropertyTableWidget extends JPanel implements WindowBroadcastListen
 //      // done
 //    }
 //  } //DateShortcutGenerator
+  
   
 } //PropertyTableWidget

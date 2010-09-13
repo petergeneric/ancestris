@@ -47,13 +47,6 @@ public class ReportCGW extends Report {
     public int depLen = 0;
 
     /**
-     * Overriden image - we're using the provided FO image
-     */
-    protected ImageIcon getImage() {
-      return Report.IMG_FO;
-    }
-
-    /**
      * One of the report's entry point
      */
     public void start(Gedcom gedcom) {

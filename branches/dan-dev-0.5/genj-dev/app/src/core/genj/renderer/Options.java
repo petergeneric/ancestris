@@ -1,7 +1,7 @@
 /**
  * GenJ - GenealogyJ
  *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -20,18 +20,19 @@
 package genj.renderer;
 
 import genj.option.CustomOption;
+import genj.option.Option;
 import genj.option.OptionProvider;
 import genj.option.PropertyOption;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
 import genj.util.swing.ScreenResolutionScale;
-import genj.window.WindowManager;
 
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JComponent;
 
 /**
  * Blueprint/Renderer Options
@@ -47,7 +48,7 @@ public class Options extends OptionProvider {
   private Font defaultFont = new Font("SansSerif", 0, 11);
 
   /** the current screen resolution */
-  private Point dpi = new Point(
+  private DPI dpi = new DPI(
     Toolkit.getDefaultToolkit().getScreenResolution(),
     Toolkit.getDefaultToolkit().getScreenResolution()
   );
@@ -76,8 +77,8 @@ public class Options extends OptionProvider {
   /**
    * Access to our options (one)
    */
-  public List getOptions() {
-    List result = PropertyOption.introspect(getInstance());
+  public List<? extends Option> getOptions() {
+    List<Option> result = new ArrayList<Option>(PropertyOption.introspect(getInstance()));
     result.add(new ScreenResolutionOption());
     return result;
   }
@@ -85,7 +86,7 @@ public class Options extends OptionProvider {
   /**
    * Accessor - DPI
    */
-  public Point getDPI() {
+  public DPI getDPI() {
     return dpi;
   }
 
@@ -105,23 +106,28 @@ public class Options extends OptionProvider {
     }
 
     /** callback - persist */
-    public void persist(Registry registry) {
-      registry.put("dpi", dpi);
+    public void persist() {
+      Registry.get(this).put("dpi.h", dpi.horizontal());
+      Registry.get(this).put("dpi.v", dpi.vertical());
     }
 
     /** callback - restore */
-    public void restore(Registry registry) {
-      Point set = registry.get("dpi", (Point)null);
-      if (set!=null)
-        dpi = set;
+    public void restore() {
+      int h = Registry.get(this).get("dpi.h", 0);
+      int v = Registry.get(this).get("dpi.v", 0);
+      if (h>0&&v>0)
+        dpi = new DPI(h,v);
     }
 
     /** callback - edit option */
-    protected void edit() {
-      ScreenResolutionScale scale = new ScreenResolutionScale(dpi);
-      int rc = widget.getWindowManager().openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, scale, Action2.okCancel(), widget);
-      if (rc==0)
-        dpi = scale.getDPI();
+    @Override
+    protected JComponent getEditor() {
+      return new ScreenResolutionScale(dpi);
+    }
+    
+    @Override
+    protected void commit(JComponent editor) {
+      dpi = ((ScreenResolutionScale)editor).getDPI();
     }
 
   } //ScreenResolutionOption

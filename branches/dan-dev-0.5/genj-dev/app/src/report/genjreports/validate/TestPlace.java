@@ -46,8 +46,7 @@ public class TestPlace extends Test {
       String[] jurisdictions = place.getJurisdictions();
       String[] format = place.getFormat();
       if (format.length!=jurisdictions.length) {
-        String[] counts = new String[]{ String.valueOf(jurisdictions.length), String.valueOf(format.length) };
-        issues.add(new ViewContext(place).setText(report.translate("warn.plac.value", counts)));
+        issues.add(new ViewContext(place).setText(report.translate("warn.plac.value", String.valueOf(jurisdictions.length), String.valueOf(format.length))));
       }
     }
 

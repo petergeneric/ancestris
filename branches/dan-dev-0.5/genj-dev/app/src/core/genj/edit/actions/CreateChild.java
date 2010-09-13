@@ -28,7 +28,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
-import genj.view.ViewManager;
 
 /**
  * Create a child of a family or person
@@ -41,16 +40,16 @@ public class CreateChild extends CreateRelationship {
   private boolean male;
   
   /** constructor */
-  public CreateChild(Fam family, ViewManager mgr, boolean male) {
-    super(calcText(male), family.getGedcom(), Gedcom.INDI, mgr);
+  public CreateChild(Fam family, boolean male) {
+    super(calcText(male), family.getGedcom(), Gedcom.INDI);
     this.male = male;
     setImage(male ? PropertyChild.IMG_MALE : PropertyChild.IMG_FEMALE);
     this.parentOrFamily = family;
   }
   
   /** constructor */
-  public CreateChild(Indi parent, ViewManager mgr, boolean male) {
-    super(calcText(male), parent.getGedcom(), Gedcom.INDI, mgr);
+  public CreateChild(Indi parent, boolean male) {
+    super(calcText(male), parent.getGedcom(), Gedcom.INDI);
     this.male = male;
     setImage(male ? PropertyChild.IMG_MALE : PropertyChild.IMG_FEMALE);
     this.parentOrFamily = parent;

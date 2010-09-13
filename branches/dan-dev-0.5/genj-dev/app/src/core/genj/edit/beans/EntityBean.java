@@ -22,7 +22,6 @@ package genj.edit.beans;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
-import genj.util.Registry;
 
 import java.awt.BorderLayout;
 
@@ -44,8 +43,7 @@ public class EntityBean extends PropertyBean {
     return false;
   }
 
-  void initialize(Registry setRegistry) {
-    super.initialize(setRegistry);
+  public EntityBean() {
     
     preview = new Preview();
     changed = new JLabel();
@@ -55,12 +53,14 @@ public class EntityBean extends PropertyBean {
     add(BorderLayout.SOUTH, changed);
   }
   
+  @Override
+  protected void commitImpl(Property property) {
+    // noop
+  }
+  
   /**
    * Set context to edit
    */
-  boolean accepts(Property prop) {
-    return prop instanceof Entity;
-  }
   public void setPropertyImpl(Property prop) {
 
     // show it
@@ -72,7 +72,7 @@ public class EntityBean extends PropertyBean {
     if (entity!=null) {
       PropertyChange change = entity.getLastChange();
       if (change!=null)
-        changed.setText(resources.getString("entity.change", new String[] {change.getDateDisplayValue(), change.getTimeDisplayValue()} ));      
+        changed.setText(RESOURCES.getString("entity.change", change.getDateDisplayValue(), change.getTimeDisplayValue() ));      
         changed.setVisible(true);
     }
     

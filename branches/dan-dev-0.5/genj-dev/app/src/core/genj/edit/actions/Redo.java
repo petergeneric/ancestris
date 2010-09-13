@@ -19,6 +19,10 @@
  */
 package genj.edit.actions;
 
+import java.awt.event.ActionEvent;
+
+import spin.Spin;
+
 import genj.edit.Images;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -37,9 +41,15 @@ public class Redo extends Action2 implements GedcomMetaListener {
   /**
    * Constructor
    */
+  public Redo() {
+    this(null, false);
+  }
+  
+  /**
+   * Constructor
+   */
   public Redo(Gedcom gedcom) {
     this(gedcom, gedcom.canRedo());
-    setText(null);
   }
   
   /**
@@ -58,11 +68,29 @@ public class Redo extends Action2 implements GedcomMetaListener {
     
   }
   
+  
+  public void follow(Gedcom newGedcom) {
+    
+    if (gedcom==newGedcom)
+      return;
+    
+    if (gedcom!=null)
+      gedcom.removeGedcomListener((GedcomMetaListener)Spin.over(this));
+    
+    gedcom = newGedcom;
+    
+    if (gedcom!=null)
+      gedcom.addGedcomListener((GedcomMetaListener)Spin.over(this));
+    
+    
+    setEnabled(gedcom!=null && gedcom.canRedo());
+  }
+  
   /**
    * Undo changes from last transaction
    */
-  protected void execute() {
-    if (gedcom.canRedo())
+  public void actionPerformed(ActionEvent event) {
+    if (gedcom!=null&&gedcom.canRedo())
       gedcom.redoUnitOfWork();
   }
   
@@ -103,7 +131,8 @@ public class Redo extends Action2 implements GedcomMetaListener {
   }
 
   public void gedcomWriteLockReleased(Gedcom gedcom) {
-    setEnabled(gedcom.canRedo());
+    if (this.gedcom==gedcom)
+      setEnabled(gedcom.canRedo());
   }
   
 } //Undo

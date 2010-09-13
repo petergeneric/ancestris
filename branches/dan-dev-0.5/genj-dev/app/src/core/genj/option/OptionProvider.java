@@ -19,8 +19,6 @@
  */
 package genj.option;
 
-import genj.util.Registry;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,27 +31,21 @@ import javax.imageio.spi.ServiceRegistry;
 public abstract class OptionProvider {
 
   /** all known options */
-  private static List options;
+  private static List<Option> options;
   
-  /** specifically set option providers */
-  private static String[] PROVIDERS;
-
   /**
    * Accessor - options
    */
-  public abstract List getOptions();
+  public abstract List<? extends Option> getOptions();
 
   /**
    * Persist all options from all OptionProviders to registry
    */
-  public static void persistAll(Registry registry) {
+  public static void persistAll() {
     
-    registry = new Registry(registry, "options");
-  
     // loop over all options
-    Iterator it = getAllOptions(null).iterator();
-    while (it.hasNext()) try {
-      ((Option)it.next()).persist(registry);
+    for (Option option : getAllOptions()) try {
+      option.persist();
     } catch (Throwable t) {
     }
     
@@ -62,54 +54,36 @@ public abstract class OptionProvider {
   }
   
   /**
-   * Static Accessor - explicitly set OptionProviders to consider. Needs to be called before
-   * first option interaction via getAllOptions()
-   */
-  public static void setOptionProviders(String[] providers) {
-    PROVIDERS = providers;
-  }
-  
-  /**
    * Static Accessor - all options available from OptionProviders
    */
-  public static List getAllOptions() {  
-    return getAllOptions(null);
-  }
-  public static List getAllOptions(Registry restoreFrom) {  
+  public synchronized static List<Option> getAllOptions() {  
 
     // known?
     if (options!=null)
       return options;    
   
-    // collect    
-    options = new ArrayList(32);
-    if (restoreFrom!=null) 
-      restoreFrom = new Registry(restoreFrom, "options");
+    List<Option> ops = new ArrayList<Option>(32);
   
     // prepare options
-    Iterator providers = lookupProviders();
+    Iterator<OptionProvider> providers = lookupProviders();
     while (providers.hasNext()) {
       
       // one provider at a time
-      OptionProvider provider = (OptionProvider)providers.next();
+      OptionProvider provider = providers.next();
       
-      // grab its options
-      List os = provider.getOptions();
-      options.addAll(os);
-      
-      // restore their value
-      if (restoreFrom!=null) {
-        for (Iterator it=os.iterator(); it.hasNext(); ) {
-          try {
-            Option option = (Option)it.next();
-            option.restore(restoreFrom);
-          } catch (Throwable t) {
-            t.printStackTrace();
-          }
+      // grab optirestore their value
+      for (Option option : provider.getOptions()) {
+        try {
+          option.restore();
+          ops.add(option);
+        } catch (Throwable t) {
+          t.printStackTrace();
         }
       }
       // next provider
     }
+    
+    options = ops;
     
     // done
     return options;
@@ -118,22 +92,7 @@ public abstract class OptionProvider {
   /**
    * Lookup providers where considering
    */
-  private static Iterator lookupProviders() {
-    
-    // fixed ones?
-    if (PROVIDERS!=null) {
-        List result = new ArrayList(32);
-        for (int i=0;i<PROVIDERS.length;i++) { 
-          try {
-            result.add((OptionProvider)Class.forName(PROVIDERS[i]).newInstance());
-          } catch (Throwable t) {
-            t.printStackTrace(System.err);
-          }
-        }
-        return result.iterator();
-    }
-    
-    // use sun's service stuff
+  private static Iterator<OptionProvider> lookupProviders() {
     return ServiceRegistry.lookupProviders(OptionProvider.class);
   }
 

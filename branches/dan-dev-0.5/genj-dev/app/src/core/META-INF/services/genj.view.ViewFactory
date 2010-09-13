@@ -6,3 +6,4 @@ genj.report.ReportViewFactory
 genj.nav.NavigatorViewFactory
 genj.entity.EntityViewFactory
 genj.search.SearchViewFactory
+genj.help.HelpViewFactory

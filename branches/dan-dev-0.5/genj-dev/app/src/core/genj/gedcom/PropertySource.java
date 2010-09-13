@@ -28,28 +28,13 @@ import genj.util.swing.ImageIcon;
 public class PropertySource extends PropertyXRef {
 
   /**
-   * This will be called once when instantiation has
-   * happend - it's our chance to substitute this with
-   * a multilinevalue if no reference applicable
+   * need tag-argument constructor for all properties
    */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    // expecting SOUR
-    meta.assertTag("SOUR");
-    // ONLY for @..@!!!
-    if (value.startsWith("@")&&value.endsWith("@"))
-      return super.init(meta,value);
-    // switch to multiline value
-    return new PropertyMultilineValue().init(meta, value);
+  public PropertySource(String tag) {
+    super(tag);
+    assertTag("SOUR");
   }
-
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return "SOUR";
-  }
-
+  
   /**
    * Links reference to entity (if not already done)
    * @exception GedcomException when processing link would result in inconsistent state

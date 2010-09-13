@@ -21,10 +21,8 @@ package genj.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,13 +35,15 @@ import javax.swing.event.DocumentListener;
 public class ChangeSupport implements DocumentListener, ChangeListener, ActionListener {
 
   /** listeners */
-  private List listeners = new LinkedList();
+  private List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
   
   /** source */
   private Object source;
   
   /** has changed */
   private boolean hasChanged = false;
+  
+  private boolean mute = false;
   
   /**
    * Constructor
@@ -94,19 +94,26 @@ public class ChangeSupport implements DocumentListener, ChangeListener, ActionLi
   public void fireChangeEvent() {
     fireChangeEvent(source);
   }
-  protected void fireChangeEvent(Object source) {
+  
+  public final void fireChangeEvent(Object source) {
+    fireChangeEvent(new ChangeEvent(source));
+  }
+  
+  public void fireChangeEvent(ChangeEvent event) {
+    
     hasChanged = true;
-    ChangeEvent e = new ChangeEvent(source);
-    Iterator it = new ArrayList(listeners).iterator();
-    while (it.hasNext())
-      ((ChangeListener)it.next()).stateChanged(e);
+    
+    if (!mute) {
+      for (ChangeListener listener : listeners)
+        listener.stateChanged(event);
+    }
   }
   
   /**
    * callback - change event = fire change event
    */
   public void stateChanged(ChangeEvent e) {
-    fireChangeEvent(e.getSource());
+    fireChangeEvent(e);
   }
 
   /**
@@ -127,6 +134,14 @@ public class ChangeSupport implements DocumentListener, ChangeListener, ActionLi
    */
   public void actionPerformed(ActionEvent e) {
     fireChangeEvent(e.getSource());
+  }
+
+  public void mute() {
+    mute = true;
+  }
+
+  public void unmute() {
+    mute = false;
   }
   
 } //ChangeSupport

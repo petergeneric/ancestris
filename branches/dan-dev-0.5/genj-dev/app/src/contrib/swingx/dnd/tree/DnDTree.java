@@ -359,7 +359,7 @@ public class DnDTree extends JTree implements Autoscroll {
                 update(dtde.getLocation());
 
                 if (parentPath != null) {
-                    Transferable transferable = ObjectTransferable.getTigerTransferable(dtde);
+                    Transferable transferable = dtde.getTransferable();
                     if (transferable == null) {
                         accepted = true;
                     } else {

@@ -113,8 +113,8 @@ public class ScreenOutput implements GraphicsOutput {
     /**
      * Displays the component.
      */
-    public void display(Report report) {
-        report.showComponentToUser(pane);
+    public Object result(Report report) {
+        return pane;
     }
 
     /**

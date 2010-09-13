@@ -19,28 +19,25 @@
  */
 package genj.search;
 
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
-import genj.gedcom.Grammar;
-import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
-import genj.gedcom.TagPath;
 import genj.util.GridBagHelper;
 import genj.util.Registry;
 import genj.util.Resources;
+import genj.util.WordBuffer;
 import genj.util.swing.Action2;
-import genj.util.swing.ButtonHelper;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import genj.view.ContextProvider;
-import genj.view.ContextSelectionEvent;
-import genj.view.ToolBarSupport;
+import genj.view.SelectionSink;
+import genj.view.ToolBar;
+import genj.view.View;
 import genj.view.ViewContext;
-import genj.view.ViewManager;
-import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -51,13 +48,9 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import javax.swing.AbstractButton;
 import javax.swing.AbstractListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -66,7 +59,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -77,7 +69,7 @@ import spin.Spin;
 /**
  * View for searching
  */
-public class SearchView extends JPanel implements ToolBarSupport {
+public class SearchView extends View {
   
   /** formatting */
   private final static String
@@ -85,17 +77,13 @@ public class SearchView extends JPanel implements ToolBarSupport {
    CLOSE = "</font>",
    NEWLINE = "<br>";
   
-  /** max # hits */
-  private final static int MAX_HITS = 255;
-  
   /** default values */
   private final static String[]
     DEFAULT_VALUES = {
       "M(a|e)(i|y)er", "San.+Francisco", "^(M|F)"
     },
-    DEFAULT_PATHS = {
-      "INDI", "INDI:NAME", "INDI:BIRT", "INDI:OCCU", "INDI:NOTE", "INDI:RESI",
-      "FAM"
+    DEFAULT_TAGS = {
+      "NAME", "BIRT", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI"
     }
   ;
   
@@ -103,16 +91,13 @@ public class SearchView extends JPanel implements ToolBarSupport {
   private final static int MAX_OLD = 16;
   
   /** resources */
-  /*package*/ static Resources resources = Resources.get(SearchView.class);
+  /*package*/ final static Resources RESOURCES = Resources.get(SearchView.class);
   
-  /** gedcom */
-  private Gedcom gedcom;
+  /** current context */
+  private Context context = new Context();
   
   /** registry */
-  private Registry registry;
-  
-  /** manager */
-  private ViewManager manager;
+  private final static Registry REGISTRY = Registry.get(SearchView.class);
   
   /** shown results */
   private Results results = new Results();
@@ -122,61 +107,81 @@ public class SearchView extends JPanel implements ToolBarSupport {
   private HeadlessLabel viewFactory = new HeadlessLabel(listResults.getFont()); 
 
   /** criterias */
-  private ChoiceWidget choicePath, choiceValue;
+  private ChoiceWidget choiceTag, choiceValue;
   private JCheckBox checkRegExp;
   private JLabel labelCount;
   
-  /** history */
-  private LinkedList oldPaths, oldValues;
+  private Action2 actionStart = new ActionStart(), actionStop = new ActionStop();
   
-  /** buttons */
-  private AbstractButton bSearch, bStop;
+  /** history */
+  private LinkedList<String> oldTags, oldValues;
   
   /** images */
   private final static ImageIcon
     IMG_START = new ImageIcon(SearchView.class, "Start"),
     IMG_STOP  = new ImageIcon(SearchView.class, "Stop" );
+  
+  /** worker */
+  private Worker worker;
 
   /**
    * Constructor
    */
-  public SearchView(Gedcom geDcom, Registry reGistry, ViewManager maNager) {
+  public SearchView() {
     
-    // remember
-    gedcom = geDcom;
-    registry = reGistry;
-    manager = maNager;
+    // setup worker
+    worker = new Worker((WorkerListener)Spin.over(new WorkerListener() {
+      public void more(List<Hit> hits) {
+        results.add(hits);
+        labelCount.setText(""+results.getSize());
+      }
+      public void started() {
+        // clear current results
+        results.clear();
+        labelCount.setText("");
+        actionStart.setEnabled(false);
+        actionStop.setEnabled(true);
+      }
+      public void stopped() {
+        actionStop.setEnabled(false);
+        actionStart.setEnabled(context.getGedcom()!=null);
+      }
+    }));
     
     // lookup old search values & settings
-    oldPaths = new LinkedList(Arrays.asList(registry.get("old.paths" , DEFAULT_PATHS)));
-    oldValues= new LinkedList(Arrays.asList(registry.get("old.values", DEFAULT_VALUES)));
-    boolean useRegEx = registry.get("regexp", false);
+    oldTags = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.tags" , DEFAULT_TAGS)));
+    oldValues= new LinkedList<String>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
+    boolean useRegEx = REGISTRY.get("regexp", false);
 
     // prepare an action listener connecting to click
     ActionListener aclick = new ActionListener() {
       /** button */
       public void actionPerformed(ActionEvent e) {
-        bStop.doClick();
-        bSearch.doClick();
+        if (actionStop.isEnabled()) 
+          stop();
+        if (actionStart.isEnabled()) 
+          start();
       }
     };
     
     // prepare search criteria
-    JLabel labelValue = new JLabel(resources.getString("label.value"));
-    checkRegExp = new JCheckBox(resources.getString("label.regexp"), useRegEx);
+    JLabel labelValue = new JLabel(RESOURCES.getString("label.value"));
+    checkRegExp = new JCheckBox(RESOURCES.getString("label.regexp"), useRegEx);
 
     choiceValue = new ChoiceWidget(oldValues);
     choiceValue.addActionListener(aclick);
 
-    PopupWidget popupPatterns = new PopupWidget("...", null, createPatternActions());
+    PopupWidget popupPatterns = new PopupWidget("...", null);
+    popupPatterns.addItems(createPatternActions());
     popupPatterns.setMargin(new Insets(0,0,0,0));
 
-    JLabel labelPath = new JLabel(resources.getString("label.path"));    
-    choicePath = new ChoiceWidget(oldPaths);
-    choicePath.addActionListener(aclick);
+    JLabel labelTag = new JLabel(RESOURCES.getString("label.tag"));    
+    choiceTag = new ChoiceWidget(oldTags);
+    choiceTag.addActionListener(aclick);
     
-    PopupWidget popupPaths = new PopupWidget("...", null, createPathActions());
-    popupPaths.setMargin(new Insets(0,0,0,0));
+    PopupWidget popupTags = new PopupWidget("...", null);
+    popupTags.addItems(createTagActions());
+    popupTags.setMargin(new Insets(0,0,0,0));
     
     labelCount = new JLabel();
     
@@ -195,10 +200,10 @@ public class SearchView extends JPanel implements ToolBarSupport {
     gh.add(popupPatterns ,0,1,1,1);
     gh.add(choiceValue   ,1,1,3,1, GridBagHelper.GROW_HORIZONTAL|GridBagHelper.FILL_HORIZONTAL, new Insets(3,3,3,3));
     // .. line 2
-    gh.add(labelPath     ,0,2,4,1, GridBagHelper.GROW_HORIZONTAL|GridBagHelper.FILL_HORIZONTAL);
+    gh.add(labelTag     ,0,2,4,1, GridBagHelper.GROW_HORIZONTAL|GridBagHelper.FILL_HORIZONTAL);
     // .. line 3
-    gh.add(popupPaths    ,0,3,1,1);
-    gh.add(choicePath    ,1,3,3,1, GridBagHelper.GROW_HORIZONTAL|GridBagHelper.FILL_HORIZONTAL, new Insets(0,3,3,3));
+    gh.add(popupTags    ,0,3,1,1);
+    gh.add(choiceTag    ,1,3,3,1, GridBagHelper.GROW_HORIZONTAL|GridBagHelper.FILL_HORIZONTAL, new Insets(0,3,3,3));
     
     // prepare layout
     setLayout(new BorderLayout());
@@ -208,61 +213,84 @@ public class SearchView extends JPanel implements ToolBarSupport {
 
     // done
   }
+  
+  public void start() {
+    
+    // if context
+    if (context==null)
+      return;
 
-  /**
-   * Return list of results
-   */
-  public List<Property> getResults() {
-      List<Property> props = new ArrayList<Property>();
-      for (Iterator it = results.hits.iterator(); it.hasNext();) {
-          Hit hit = (Hit)it.next();
-          props.add(hit.property);
-      }
-      return props;
+    // stop worker
+    worker.stop();
+    
+    // prep args
+    String value = choiceValue.getText();
+    String tags = choiceTag.getText();
+    remember(choiceValue, oldValues, value);
+    remember(choiceTag , oldTags , tags );
+    
+    // start anew
+    worker.start(context.getGedcom(), tags, value, checkRegExp.isSelected());
+    
+    // done
   }
-
-  /**
-   * @see javax.swing.JComponent#addNotify()
-   */
-  public void addNotify() {
-    // start listening
-    gedcom.addGedcomListener((GedcomListener)Spin.over(results));
-    // continue
-    super.addNotify();
-    // set focus
-    choiceValue.requestFocusInWindow();
+  
+  public void stop() {
+    
+    worker.stop();
+    
   }
   
   /**
    * @see javax.swing.JComponent#removeNotify()
    */
   public void removeNotify() {
-    // stop listening
-    gedcom.removeGedcomListener((GedcomListener)Spin.over(results));
     // keep old
-    registry.put("regexp"    , checkRegExp.isSelected());
-    registry.put("old.values", oldValues);
-    registry.put("old.paths" , oldPaths );
+    REGISTRY.put("regexp"    , checkRegExp.isSelected());
+    REGISTRY.put("old.values", oldValues);
+    REGISTRY.put("old.tags" , oldTags );
     // continue
     super.removeNotify();
   }
 
+  @Override
+  public void setContext(Context newContext, boolean isActionPerformed) {
+
+    // disconnect old
+    if (context.getGedcom()!=null && context.getGedcom()!=newContext.getGedcom()) {
+      
+      stop();
+      results.clear();
+      labelCount.setText("");
+      actionStart.setEnabled(false);
+      
+      context.getGedcom().removeGedcomListener((GedcomListener)Spin.over(results));
+    }
+    
+    // keep new
+    context = newContext;
+    
+    // connect new
+    if (context.getGedcom()!=null) {
+      context = new Context(newContext.getGedcom());
+      context.getGedcom().addGedcomListener((GedcomListener)Spin.over(results));
+      actionStart.setEnabled(true);
+    }
+    
+  }
   
   /**
    * @see genj.view.ToolBarSupport#populate(javax.swing.JToolBar)
    */
-  public void populate(JToolBar bar) {
-    ButtonHelper bh = new ButtonHelper().setContainer(bar).setInsets(0);
-    ActionSearch search = new ActionSearch();
-    ActionStop   stop   = new ActionStop  (search);
-    bSearch = bh.create(search);
-    bStop   = bh.create(stop);
+  public void populate(ToolBar toolbar) {
+    toolbar.add(actionStart);
+    toolbar.add(actionStop);
   }
   
   /**
    * Remembers a value
    */
-  private void remember(ChoiceWidget choice, LinkedList old, String value) {
+  private void remember(ChoiceWidget choice, LinkedList<String> old, String value) {
     // not if empty
     if (value.trim().length()==0) return;
     // keep (up to max)
@@ -276,28 +304,14 @@ public class SearchView extends JPanel implements ToolBarSupport {
   }
 
   /**
-   * Returns a matcher for given pattern and regex flag
+   * Create preset Tag Actions
    */
-  private Matcher getMatcher(String pattern, boolean regex) {
-
-    Matcher result = regex ? (Matcher)new RegExMatcher() : (Matcher)new SimpleMatcher();
+  private List<Action2> createTagActions() {
     
-    // init
-    result.init(pattern);
-    
-    // done
-    return result;
-  }
-
-  /**
-   * Create preset Path Actions
-   */
-  private List createPathActions() {
-    
-    // loop through DEFAULT_PATHS
-    List result = new ArrayList();
-    for (int i=0;i<DEFAULT_PATHS.length;i++) {
-      result.add(new ActionPath(DEFAULT_PATHS[i]));
+    // loop through DEFAULT_TAGS
+    List<Action2> result = new ArrayList<Action2>();
+    for (int i=0;i<DEFAULT_TAGS.length;i++) {
+      result.add(new ActionTag(DEFAULT_TAGS[i]));
     }
     
     // done
@@ -307,15 +321,15 @@ public class SearchView extends JPanel implements ToolBarSupport {
   /**
    * Create RegExp Pattern Actions
    */
-  private List createPatternActions() {
+  private List<Action2> createPatternActions() {
     // loop until ...
-    List result = new ArrayList();
+    List<Action2> result = new ArrayList<Action2>();
     for (int i=0;;i++) {
       // check text and pattern
       String 
         key = "regexp."+i,
-        txt = resources.getString(key+".txt", false),
-        pat = resources.getString(key+".pat", false);
+        txt = RESOURCES.getString(key+".txt", false),
+        pat = RESOURCES.getString(key+".pat", false);
       // no more?
       if (txt==null) break;
       // pattern?
@@ -326,29 +340,44 @@ public class SearchView extends JPanel implements ToolBarSupport {
     }
     return result; 
   }
+
+    /**
+   * Return list of results
+   */
+  public List<Property> getResults() {
+      List<Property> props = new ArrayList<Property>();
+      for (Hit hit: results.hits) {
+          props.add(hit.getProperty());
+      }
+      return props;
+  }
+
+
   
   /**
    * Action - select predefined paths
    */
-  private class ActionPath extends Action2 {
+  private class ActionTag extends Action2 {
     
-    private TagPath tagPath;
+    private String tags;
     
     /**
      * Constructor
      */
-    private ActionPath(String path) {
-      tagPath = new TagPath(path);
-      MetaProperty meta = Grammar.V55.getMeta(tagPath);
-      setText(meta.getName());
-      setImage(meta.getImage());
+    private ActionTag(String tags) {
+      this.tags = tags;
+      
+      WordBuffer txt = new WordBuffer(", ");
+      for (String t : tags.split(",")) 
+        txt.append(Gedcom.getName(t.trim()));
+      setText(txt.toString());
     }
     
     /**
      * @see genj.util.swing.Action2#execute()
      */
-    protected void execute() {
-      choicePath.setText(tagPath.toString());
+    public void actionPerformed(ActionEvent event) {
+      choiceTag.setText(tags);
     }
   } //ActionPath
 
@@ -377,7 +406,7 @@ public class SearchView extends JPanel implements ToolBarSupport {
     /**
      * @see genj.util.swing.Action2#execute()
      */
-    protected void execute() {
+    public void actionPerformed(ActionEvent event) {
 
       // analyze what we've got
       final JTextField field = choiceValue.getTextEditor();
@@ -421,149 +450,18 @@ public class SearchView extends JPanel implements ToolBarSupport {
   /**
    * Action - trigger search
    */
-  private class ActionSearch extends Action2 {
-    /** tag path */
-    private TagPath tagPath = null;
-    /** count of hits found */
-    private int hitCount = 0;
-    /** entities found */
-    private Set entities = new HashSet();
-    /** hits */
-    private List hits = new ArrayList(MAX_HITS);
-    /** the current matcher*/
-    private Matcher matcher;
+  private class ActionStart extends Action2 {
+    
     /** constructor */
-    private ActionSearch() {
+    private ActionStart() {
       setImage(IMG_START);
-      setAsync(ASYNC_SAME_INSTANCE);
-    }
-    /**
-     * before execute (sync)
-     */
-    protected boolean preExecute() {
-      // reset results
-      results.clear();
-      // update buttons
-      bSearch.setEnabled(false);
-      bStop.setEnabled(true);
-      // prepare matcher & path
-      String value = choiceValue.getText();
-      String path = choicePath.getText();
-      try {
-        matcher = getMatcher(value, checkRegExp.isSelected());
-        tagPath = path.length()>0 ? new TagPath(path) : null;
-      } catch (IllegalArgumentException e) {
-        WindowManager.getInstance(getTarget()).openDialog(null,value,WindowManager.ERROR_MESSAGE,e.getMessage(),Action2.okOnly(),SearchView.this);
-        return false;
-      }
-      // remember
-      remember(choiceValue, oldValues, value);
-      remember(choicePath , oldPaths , path );
-      // continue
-      return true;
-    }
-
-    /** run (async) */
-    protected void execute() {
-      search(gedcom);
+      setTip(RESOURCES.getString("start.tip"));
     }
     
-    /** run (sync() callback on EDT) */
-    protected void syncExecute() {
-      synchronized (hits) {
-        results.add(hits);
-        hits.clear();
-      }
-      labelCount.setText(""+hitCount);
-    }
-    
-    /**
-     * @see genj.util.swing.Action2#handleThrowable(java.lang.String, java.lang.Throwable)
-     */
-    protected void handleThrowable(String phase, Throwable t) {
-      WindowManager.getInstance(getTarget()).openDialog(null,null,WindowManager.INFORMATION_MESSAGE,t.getMessage() ,Action2.okOnly(),SearchView.this);
-    }
-
-    /**
-     * after execute (on EDT)
-     */
-    protected void postExecute(boolean preExecuteResult) {
-      // update count
-      labelCount.setText(""+hitCount);
-      // reset our state
-      entities.clear();
-      hits.clear();
-      hitCount = 0;
-      // toggle buttons
-      bSearch.setEnabled(true);
-      bStop.setEnabled(false);
-      // done
-    }
-    
-    /** search in gedcom (not on EDT) */
-    private void search(Gedcom gedcom) {
-      for (int t=0; t<Gedcom.ENTITIES.length; t++) {
-        for (Iterator es=gedcom.getEntities(Gedcom.ENTITIES[t]).iterator();es.hasNext();) {
-          search((Entity)es.next());
-        }
-      }
-    }
-    
-    /** search entity (not on EDT) */
-    private void search(Entity entity) {
-      search(entity, entity, 0);
-    }
-    
-    /** search property (not on EDT) */
-    private void search(Entity entity, Property prop, int pathIndex) {
-      // still going?
-      if (getThread().isInterrupted()) return;
-      // got a path?
-      boolean searchThis = true;
-      if (tagPath!=null) {
-        // break if we don't match path
-        if (pathIndex<tagPath.length()&&!tagPath.get(pathIndex).equals(prop.getTag())) 
-          return;
-        // search this if path is consumed 
-        searchThis = pathIndex>=tagPath.length()-1;
-      }
-      // parse all but transients
-      if (searchThis&&!prop.isTransient()) {
-        // check entity's id
-        if (entity==prop)
-          search(entity, entity, entity.getId(), true);
-        // check prop's value
-        search(entity, prop, prop.getDisplayValue(), false);
-      }
-      // check subs
-      int n = prop.getNoOfProperties();
-      for (int i=0;i<n;i++) {
-        search(entity, prop.getProperty(i), pathIndex+1);
-      }
-      // done
-    }
-
-    /** search property's value */
-    private void search(Entity entity, Property prop, String value, boolean isID) {
-      // look for matches
-      Matcher.Match[] matches = matcher.match(value);
-      if (matches.length==0)
-        return;
-      // too many?
-      if (hitCount==MAX_HITS)
-        throw new IndexOutOfBoundsException(resources.getString("maxhits", Integer.toString(MAX_HITS)));
-      hitCount++;
-      // keep entity
-      entities.add(entity);
-      // create a hit
-      Hit hit = new Hit(prop, value, matches, entities.size(), isID);
-      // keep it
-      synchronized (hits) {
-        hits.add(hit);
-        // sync (on first)?
-        if (hits.size()==1) sync();
-      }
-      // done
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      stop();
+      start();
     }
     
   } //ActionSearch
@@ -572,17 +470,15 @@ public class SearchView extends JPanel implements ToolBarSupport {
    * Action - stop search
    */
   private class ActionStop extends Action2 {
-    /** start */
-    private ActionSearch start;
     /** constructor */
-    private ActionStop(ActionSearch start) {
+    private ActionStop() {
       setImage(IMG_STOP);
+      setTip(RESOURCES.getString("stop.tip"));
       setEnabled(false);
-      this.start = start;
     }
     /** run */
-    protected void execute() {
-      start.cancel(false);
+    public void actionPerformed(ActionEvent event) {
+      stop();
     }
   } //ActionStop
 
@@ -592,7 +488,7 @@ public class SearchView extends JPanel implements ToolBarSupport {
   private class Results extends AbstractListModel implements GedcomListener {
     
     /** the results */
-    public List hits = new ArrayList(255);
+    private List<Hit> hits = new ArrayList<Hit>(255);
     
     /**
      * clear the results (sync to EDT)
@@ -611,7 +507,7 @@ public class SearchView extends JPanel implements ToolBarSupport {
     /**
      * add a result (sync to EDT)
      */
-    private void add(List list) {
+    private void add(List<Hit> list) {
       // nothing to do?
       if (list.isEmpty()) 
         return;
@@ -713,16 +609,19 @@ public class SearchView extends JPanel implements ToolBarSupport {
      */
     public ViewContext getContext() {
       
-      ViewContext result = new ViewContext(gedcom);
+      if (context==null)
+        return null;
       
+      List<Property> properties = new ArrayList<Property>();
       Object[] selection = getSelectedValues();
       for (int i = 0; i < selection.length; i++) {
         Hit hit = (Hit)selection[i];
-        result.addProperty(hit.getProperty());
+        properties.add(hit.getProperty());
       }
-      return result;
+      return new ViewContext(context.getGedcom(), null, properties);
     }
 
+    
     /**
      * we know about action delegates and will use that here if applicable
      */
@@ -746,7 +645,7 @@ public class SearchView extends JPanel implements ToolBarSupport {
     public void valueChanged(ListSelectionEvent e) {
       int row = listResults.getSelectedIndex();
       if (row>=0)
-        WindowManager.broadcast(new ContextSelectionEvent(new ViewContext(results.getHit(row).getProperty()), this));
+    	  SelectionSink.Dispatcher.fireSelection(SearchView.this, new Context(results.getHit(row).getProperty()), false);
     }
 
     

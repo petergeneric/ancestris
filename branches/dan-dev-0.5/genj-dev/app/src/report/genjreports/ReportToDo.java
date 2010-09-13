@@ -73,25 +73,11 @@ public class ReportToDo extends Report {
          */
 
   /**
-   * Overriden image - we're using the provided FO image
-   */
-  protected ImageIcon getImage() {
-    return Report.IMG_FO;
-  }
-
-  /**
-   * we're not generating anything to stdout anymore aside from debugging ino
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * The report's entry point
    */
-  public void start(Gedcom gedcom) {
+  public Document start(Gedcom gedcom) {
     List ents = gedcom.getEntities();
-    start((Entity[])ents.toArray(new Entity[ents.size()]));
+    return start((Entity[])ents.toArray(new Entity[ents.size()]));
   }
 
   /**
@@ -104,14 +90,14 @@ public class ReportToDo extends Report {
   /**
    * The report's entry point - for a single family
    */
-  public void start(Fam fam) {
-    start(new Fam[]{ fam });
+  public Document start(Fam fam) {
+    return start(new Fam[]{ fam });
   }
 
   /**
    * The report's entry point - for a bunch of entities
    */
-  public void start(Entity[] entities) {
+  public Document start(Entity[] entities) {
 
     // create an output document
     Document doc = new Document(translate("titletodos"));
@@ -169,7 +155,7 @@ public class ReportToDo extends Report {
     }
 
     // Done
-    showDocumentToUser(doc);
+    return doc;
 
   }
 
@@ -211,7 +197,7 @@ public class ReportToDo extends Report {
 
     doc.nextTableRow(ROW_FORMAT_HEADER1);
     doc.nextTableCell("number-columns-spanned=6");
-    doc.addText( translate("titlefam", new String[] { fam.toString(), fam.getId() }) );
+    doc.addText( translate("titlefam", fam.toString(), fam.getId() ) );
 
     // //// Epoux
     tempIndi = fam.getHusband();
@@ -348,7 +334,7 @@ public class ReportToDo extends Report {
 
     doc.nextTableRow(ROW_FORMAT_HEADER1);
     doc.nextTableCell("number-columns-spanned=6");
-    doc.addText( translate("titleindi", new String[] { indi.getName(), indi.getId() }) );
+    doc.addText( translate("titleindi", indi.getName(), indi.getId() ) );
 
     doc.nextTableRow();
     doc.nextTableCell("number-columns-spanned=6,"+FORMAT_HEADER2);

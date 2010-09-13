@@ -19,12 +19,14 @@
    */
 package genj.edit.actions;
 
+import java.awt.event.ActionEvent;
+
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyPlace;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextFieldWidget;
-import genj.view.ViewManager;
 
 import javax.swing.JPanel;
 
@@ -42,8 +44,8 @@ public class SetPlaceHierarchy extends AbstractChange {
     /**
      * Constructor
      */
-    public SetPlaceHierarchy(PropertyPlace place, ViewManager mgr) {
-      super(place.getGedcom(), place.getImage(false), resources.getString("place.hierarchy"), mgr);
+    public SetPlaceHierarchy(PropertyPlace place) {
+      super(place.getGedcom(), place.getImage(false), resources.getString("place.hierarchy"));
 
       this.place = place;
     }
@@ -75,8 +77,9 @@ public class SetPlaceHierarchy extends AbstractChange {
     /**
      * set the submitter
      */
-    public void perform(Gedcom gedcom) throws GedcomException {
+    protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
       place.setFormatAsString(true, hierarchy.getText().trim());
+      return null;
     }
 
 } //SetPlaceFormat

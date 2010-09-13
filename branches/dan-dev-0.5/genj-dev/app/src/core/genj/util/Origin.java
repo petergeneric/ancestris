@@ -23,9 +23,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -108,7 +110,7 @@ public abstract class Origin {
     // Absolute file specification?
     if (ABSOLUTE.matcher(name).matches()) {
       
-      LOG.fine("Trying to open "+name+" as absolute path (origin is "+this+")");
+      LOG.finer("Trying to open "+name+" as absolute path (origin is "+this+")");
 
       URLConnection uc;
       try {
@@ -128,7 +130,7 @@ public abstract class Origin {
     }
 
     // relative file
-    LOG.fine("Trying to open "+name+" as relative path (origin is "+this+")");
+    LOG.finer("Trying to open "+name+" as relative path (origin is "+this+")");
     
     return openImpl(name);
   }
@@ -176,7 +178,7 @@ public abstract class Origin {
       file = back2forwardslash(new File(file).getCanonicalPath()); 
       
       boolean startsWith = file.startsWith(here);
-      LOG.fine("File "+file+" is "+(startsWith?"":"not ")+"relative to "+here);
+      LOG.finer("File "+file+" is "+(startsWith?"":"not ")+"relative to "+here);
       if (startsWith)
         return file.substring(here.length());
     } catch (Throwable t) {
@@ -310,7 +312,10 @@ public abstract class Origin {
      * @see genj.util.Origin#getFile()
      */
     public File getFile() {
-      return "file".equals(url.getProtocol()) ? new File(url.getFile()) : null;
+      // only for locals
+      if (!"file".equals(url.getProtocol()))
+        return null;
+      return new File(url.getFile());
     }
 
     /**
@@ -447,21 +452,22 @@ public abstract class Origin {
     /** wrapped input stream */
     private InputStream in;
     
-    /** length of data */
-    private int len;
+    /** available data */
+    private int available;
 
     /**
      * Constructor
      */
     protected InputStreamImpl(InputStream in, int len) {
       this.in=in;
-      this.len=len;
+      this.available=len;
     }
 
     /**
      * @see java.io.InputStream#read()
      */
     public int read() throws IOException {
+      if (available>0) available--;
       return in.read();
     }
     
@@ -469,6 +475,7 @@ public abstract class Origin {
      * @see java.io.InputStream#read(byte[], int, int)
      */
     public int read(byte[] b, int off, int len) throws IOException {
+      available = Math.max(0, available-len);
       return in.read(b, off, len);
     }
 
@@ -476,7 +483,7 @@ public abstract class Origin {
      * @see java.io.InputStream#available()
      */
     public int available() throws IOException {
-      return len;
+      return available;
     }
     
     /**

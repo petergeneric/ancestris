@@ -116,7 +116,7 @@ public class FormatOptionsWidget extends JPanel {
       return null;
     // check if it's a valid path
     if (result.getParentFile()==null)
-      result = new File(EnvironmentChecker.getProperty(this, "user.home", ".", "home directory for report output"), result.getPath());
+      result = new File(EnvironmentChecker.getProperty("user.home", ".", "home directory for report output"), result.getPath());
     // strip any of our known extensions
     Format format = getFormat();
     if (format.getFileExtension()==null)

@@ -22,28 +22,17 @@ package genj.gedcom;
 
 /**
  * Gedcom Property : SUBMITTER 
- * A property that either consists of SUBMITTER information or
- * refers to a SUBMITTER entity
+ * A property that refers to a SUBMITTER record.
  */
 public class PropertySubmitter extends PropertyXRef {
   
-  private String tag;
-
   /**
-   * constructor
+   * need tag-argument constructor for all properties
    */
-  Property init(MetaProperty meta, String value) throws GedcomException {
-    this.tag = meta.getTag();
-    return super.init(meta, value);
+  public PropertySubmitter(String tag) {
+    super(tag);
   }
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return tag;
-  }
-
+  
   /**
    * Links reference to entity (if not already done)
    * @exception GedcomException when processing link would result in inconsistent state

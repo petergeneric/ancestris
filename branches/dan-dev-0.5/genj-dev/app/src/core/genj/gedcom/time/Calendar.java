@@ -40,9 +40,9 @@ public abstract class Calendar {
   protected String[] months;
   protected String[] monthsLowerCase;
   protected String[] weekDays, localizedWeekDays;
-  protected Map
-    localizedMonthNames = new HashMap(),
-    abbreviatedMonthNames = new HashMap();
+  protected Map<String,String>
+    localizedMonthNames = new HashMap<String,String>(),
+    abbreviatedMonthNames = new HashMap<String,String>();
     
   protected final static Resources resources = PointInTime.resources; 
 
@@ -216,7 +216,7 @@ public abstract class Calendar {
   protected String getDayOfWeek(PointInTime pit, boolean localize) throws GedcomException {
     if (!pit.isComplete())
       throw new GedcomException(resources.getString("pit.incomplete"));
-    String[] result = localize ? localizedWeekDays : localizedWeekDays;
+    String[] result = localize ? localizedWeekDays : weekDays;
     int dow = (pit.getJulianDay() + 1) % 7;
     return result[dow >= 0 ? dow : dow+7];
   }

@@ -19,6 +19,8 @@
  */
 package genj.gedcom;
 
+import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 
 /**
@@ -120,7 +122,7 @@ public class PrivacyPolicy {
   }
     
   /** find a sub-property by tag and type */
-  private Property getPropertyFor(Property prop, String tag, Class type) {
+  private Property getPropertyFor(Property prop, String tag, Class<? extends Property> type) {
     // check children
     for (int i=0, j=prop.getNoOfProperties(); i<j; i++) {
       Property child = prop.getProperty(i);
@@ -130,7 +132,7 @@ public class PrivacyPolicy {
     return null;
   }
   
-  private boolean is(Property prop, String tag, Class type) {
+  private boolean is(Property prop, String tag, Class<? extends Property> type) {
     return prop.getTag().equals(tag) && type.isAssignableFrom(prop.getClass()); 
   }
   

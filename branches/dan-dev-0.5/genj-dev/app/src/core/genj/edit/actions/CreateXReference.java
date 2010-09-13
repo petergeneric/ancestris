@@ -8,7 +8,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
-import genj.view.ViewManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,10 +20,11 @@ public class CreateXReference extends CreateRelationship {
   
   private Property source;
   private String sourceTag;
-
+  private PropertyXRef xref;
+  
   /** Constructor */
-  public CreateXReference(Property source, String sourceTag, ViewManager mgr) {
-    super(getName(source, sourceTag),source.getGedcom(), getTargetType(source, sourceTag), mgr);
+  public CreateXReference(Property source, String sourceTag) {
+    super(getName(source, sourceTag),source.getGedcom(), getTargetType(source, sourceTag));
     this.source = source;
     this.sourceTag = sourceTag;
   }
@@ -51,20 +51,21 @@ public class CreateXReference extends CreateRelationship {
   
   /** more about what we do */
   public String getDescription() {
-    return resources.getString("create.xref.desc", new String[]{ Gedcom.getName(targetType), source.getEntity().toString()});
+    return resources.getString("create.xref.desc", Gedcom.getName(targetType), source.getEntity().toString());
   }
 
   /** do the change */
   protected Property change(Entity target, boolean targetIsNew) throws GedcomException {
     
     // create a the source link
-    PropertyXRef xref = (PropertyXRef)source.addProperty(sourceTag, '@'+target.getId()+'@');
+    xref = (PropertyXRef)source.addProperty(sourceTag, '@'+target.getId()+'@');
     
     try {
       xref.link();
       xref.addDefaultProperties();
     } catch (GedcomException e) {
       source.delProperty(xref);
+      xref = null;
       throw e;
     }
     
@@ -73,4 +74,11 @@ public class CreateXReference extends CreateRelationship {
     
   }
 
+  /**
+   * The created reference
+   */
+  public PropertyXRef getReference() {
+    return xref;
+  }
+  
 }

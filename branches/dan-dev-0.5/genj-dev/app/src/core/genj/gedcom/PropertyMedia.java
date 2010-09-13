@@ -19,38 +19,26 @@
  */
 package genj.gedcom;
 
-import genj.util.swing.ImageIcon;
-import java.util.List;
 
 /**
  * Gedcom Property : MEDIA
- * Property wrapping a reference to a multiMedia object - this object
- * can contain BLOBs with in-line information. We discourage the use
- * of this entity in GenJ and encourage in-line OBJE properties instead.
+ * Property wrapping a reference to a multiMedia object - in Gedcom 5.5 this 
+ * record contains BLOBs with in-line information. We discourage the use
+ * of this entity in GenJ and encourage either to switch to 5.5.1 which allows
+ * in-line FILE or use inline OBJE properties instead.
  */
-public class PropertyMedia extends PropertyXRef implements IconValueAvailable {
-
+public class PropertyMedia extends PropertyXRef {
+  
   /**
-   * This will be called once when instantiation has
-   * happend - it's our chance to substitute this with
-   * a read-only value if no reference applicable
+   * need tag-argument constructor for all properties
    */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    // expecting NOTE
-    meta.assertTag("OBJE");
-    // ONLY for @..@!!!
-    if (value.startsWith("@")&&value.endsWith("@"))
-      return super.init(meta,value);
-    // switch to ro value
-    return new PropertySimpleReadOnly().init(meta, value);
+  /*package*/ PropertyMedia(String tag) {
+    super(tag);
+    assertTag("OBJE");
   }
 
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return "OBJE";
+  /*package*/ PropertyMedia() {
+    super("OBJE");
   }
 
   /**
@@ -80,12 +68,4 @@ public class PropertyMedia extends PropertyXRef implements IconValueAvailable {
     return Gedcom.OBJE;
   }
 
-  /**
-   * Returns an ImgIcon if existing in one of the sub-properties
-   */
-  public ImageIcon getValueAsIcon() {
-    List ps = super.getProperties(IconValueAvailable.class);
-    return ps.isEmpty() ? null : ((IconValueAvailable)ps.get(0)).getValueAsIcon();
-  }
-  
 } //PropertyMedia

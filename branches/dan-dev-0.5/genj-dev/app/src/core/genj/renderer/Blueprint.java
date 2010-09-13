@@ -60,12 +60,12 @@ public class Blueprint {
   /**
    * Accessor - html
    */
-  public void setHTML(String hTml) {
+  public void setSource(String html) {
     // o.k.?
     if (isReadOnly()) 
       throw new IllegalArgumentException("Can't change read-only Blueprint");
     // remember
-    html = hTml;
+    this.html = html;
     isDirty = true;
     // done
   }
@@ -108,8 +108,13 @@ public class Blueprint {
   /**
    * Entity this blueprint is for
    */
-  /*package*/ String getTag() {
+  public String getTag() {
     return tag;
+  }
+  
+  @Override
+  public String toString() {
+    return getName();
   }
   
 } //RenderingScheme

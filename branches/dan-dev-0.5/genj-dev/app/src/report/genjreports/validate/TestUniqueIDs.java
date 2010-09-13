@@ -53,12 +53,12 @@ public class TestUniqueIDs extends Test {
     // mark first as dupe
     Property first = (Property)id2first.get(value);
     if (first!=null) {
-      issues.add(new ViewContext(first).setText(report.translate("err.notuniqueid", new String[] { first.getTag(), first.getValue() })));
+      issues.add(new ViewContext(first).setText(report.translate("err.notuniqueid",first.getTag(), first.getValue() )));
       id2first.put(value, null);
     }
     
     // mark duplicates
-    issues.add(new ViewContext(prop).setText(report.translate("err.notuniqueid", new String[] { prop.getTag(), prop.getValue() })));
+    issues.add(new ViewContext(prop).setText(report.translate("err.notuniqueid", prop.getTag(), prop.getValue() )));
     
     
     // done

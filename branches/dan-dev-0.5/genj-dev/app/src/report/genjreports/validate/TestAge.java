@@ -117,11 +117,10 @@ public class TestAge extends Test {
     if (isError(delta.getYears()))  {
       
       WordBuffer words = new WordBuffer();
-      String[] format = new String[]{ indi.toString(), String.valueOf(years)}; 
       if (comparison==UNDER) {
-        words.append(report.translate("err.age.under", format));
+        words.append(report.translate("err.age.under", indi.toString(), String.valueOf(years)));
       } else {
-        words.append(report.translate("err.age.over", format));
+        words.append(report.translate("err.age.over", indi.toString(), String.valueOf(years)));
       }
       words.append("-");
       words.append(report.translate(explanation));

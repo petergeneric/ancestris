@@ -24,7 +24,6 @@ import genj.crypto.Enigma;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyXRef;
 import genj.gedcom.time.PointInTime;
 import genj.util.Trackable;
 
@@ -40,7 +39,8 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -63,36 +63,28 @@ public class GedcomWriter implements Trackable {
   private int line;
   private int entity;
   private boolean cancel = false;
-  private Filter[] filters = new Filter[0];
+  private Filter filter;
   private Enigma enigma = null;
-  private String password;
-  private String encoding;
 
   /**
    * Constructor for a writer that will write gedcom-formatted output
    * on writeGedcom()
    * @param ged object to write out
-   * @param name file name stored as header value
-   * @param enc encoding - either IBMPC, ASCII, UNICODE or ANSEL
    * @param stream the stream to write to
    */
-  public GedcomWriter(Gedcom ged, String name, String enc, OutputStream stream) throws IOException, GedcomEncodingException {
-    this(ged,name,enc,false,stream);
-  }
-  public GedcomWriter(Gedcom ged, String name, String enc, boolean writeBOM, OutputStream stream) throws IOException, GedcomEncodingException  {
+  public GedcomWriter(Gedcom ged, OutputStream stream) throws IOException, GedcomEncodingException  {
     
     Calendar now = Calendar.getInstance();
 
     // init data
     gedcom = ged;
-    password = gedcom.getPassword();
-    encoding = enc!=null ? enc : ged.getEncoding();
-    file = name;
+    file = ged.getOrigin()==null ? "Uknown" : ged.getOrigin().getFileName();
     line = 0;
     date = PointInTime.getNow().getValue();
     time = new SimpleDateFormat("HH:mm:ss").format(now.getTime());
+    filter = new Filter.Union(gedcom, Collections.<Filter>emptyList());
 
-    CharsetEncoder encoder = getCharset(writeBOM, stream, encoding).newEncoder();
+    CharsetEncoder encoder = getCharset(false, stream, ged.getEncoding()).newEncoder();
     encoder.onUnmappableCharacter(CodingErrorAction.REPORT);
     out = new BufferedWriter(new OutputStreamWriter(stream, encoder));
     
@@ -109,7 +101,7 @@ public class GedcomWriter implements Trackable {
       // Unicode
       if (Gedcom.UNICODE.equals(encoding)) {
         if (writeBOM) try {
-          out.write(GedcomReader.SniffedInputStream.BOM_UTF16BE);
+          out.write(GedcomEncodingSniffer.BOM_UTF16BE);
         } catch (Throwable t) {
           // ignored
         }
@@ -118,7 +110,7 @@ public class GedcomWriter implements Trackable {
       // UTF8
       if (Gedcom.UTF8.equals(encoding)) {
         if (writeBOM) try {
-          out.write(GedcomReader.SniffedInputStream.BOM_UTF8);
+          out.write(GedcomEncodingSniffer.BOM_UTF8);
         } catch (Throwable t) {
           // ignored
         }
@@ -173,19 +165,10 @@ public class GedcomWriter implements Trackable {
    * Sets filters to use for checking whether to write 
    * entities/properties or not
    */
-  public void setFilters(Filter[] fs) {
-    if (fs == null)
-      fs = new Filter[0];
-    filters = fs;
+  public void setFilters(Collection<Filter> fs) {
+    filter = new Filter.Union(gedcom, fs);
   }
   
-  /**
-   * Sets password to use for properties marked for encryption
-   */
-  public void setPassword(String pwd) {
-    password = pwd;
-  }
-
   /**
    * Number of lines written
    */
@@ -203,7 +186,7 @@ public class GedcomWriter implements Trackable {
     if (gedcom==null)
       throw new IllegalStateException("can't call write() twice");
     
-    Collection ents = gedcom.getEntities(); 
+    List<Entity> ents = gedcom.getEntities(); 
     total = ents.size();
 
     // Out operation
@@ -246,7 +229,7 @@ public class GedcomWriter implements Trackable {
     writeLine( "1 SOUR ANCESTRIS");
     writeLine( "2 VERS "+Version.getInstance());
     writeLine( "2 NAME Ancestris");
-    writeLine( "2 CORP Ancestris_Equipe_française");
+    writeLine( "2 CORP Ancestris_Equipe_francaise");
     writeLine( "3 ADDR http://www.ancestris.com");
     writeLine( "1 DEST ANY");
     writeLine( "1 DATE "+date);
@@ -257,7 +240,7 @@ public class GedcomWriter implements Trackable {
     writeLine( "1 GEDC");
     writeLine( "2 VERS "+gedcom.getGrammar().getVersion());
     writeLine( "2 FORM Lineage-Linked");
-    writeLine( "1 CHAR "+encoding);
+    writeLine( "1 CHAR "+gedcom.getEncoding());
     if (gedcom.getLanguage()!=null)
       writeLine( "1 LANG "+gedcom.getLanguage());
     if (gedcom.getPlaceFormat().length()>0) {
@@ -271,15 +254,17 @@ public class GedcomWriter implements Trackable {
    * Write Entities information
    * @exception IOException
    */
-  private void writeEntities(Collection ents) throws IOException {
+  private void writeEntities(List<Entity> entities) throws IOException {
 
     // Loop through entities
-    for (Iterator it=ents.iterator();it.hasNext();) {
+    es: for (Entity e : entities) {
       // .. check op
-      if (cancel) throw new GedcomIOException("Operation cancelled", line);
+      if (cancel) 
+        throw new GedcomIOException("Operation cancelled", line);
+      // .. filtered?
+      if (filter.veto(e))
+        continue es;
       // .. writing it and its subs
-      Entity e = (Entity)it.next();
-      
       try {
         line += new EntityWriter().write(0, e);
       } catch(UnmappableCharacterException unme) {
@@ -316,22 +301,12 @@ public class GedcomWriter implements Trackable {
     protected void writeProperty(int level, Property prop) throws IOException {
       
       // check against filters
-      Entity target = null;
-      if (prop instanceof PropertyXRef) {
-        Property p = ((PropertyXRef) prop).getTarget();
-        if (p != null)
-          target = p.getEntity();
-      }
-      for (int f = 0; f < filters.length; f++) {
-        if (filters[f].checkFilter(prop) == false)
+      if (!prop.isTransient() ) {
+        if (filter.veto(prop))
           return;
-        if (target != null)
-          if (filters[f].checkFilter(target) == false)
-            return;
       }
-
       // cont
-        super.writeProperty(level, prop);
+      super.writeProperty(level, prop);
     }
      
     /** intercept value decoding to facilitate encryption */
@@ -344,27 +319,23 @@ public class GedcomWriter implements Trackable {
      */
     private String encrypt(String value) throws IOException {
       
-      // not necessary for empty values
-      if (value.length()==0)
+      // not necessary for gedcom without password or empty values
+      if (gedcom.getPassword()==null || value.length()==0)
         return value;
       
       // Make sure enigma is setup
       if (enigma==null) {
 
         // no need if password is unknown (data is already/still encrypted)
-        if (password==Gedcom.PASSWORD_UNKNOWN)
+        if (gedcom.getPassword()==Gedcom.PASSWORD_UNKNOWN)
           return value;
           
-        // no need if password empty
-        if (password.length()==0)
-          return value;
-
         // error if password isn't set    
-        if (password==Gedcom.PASSWORD_NOT_SET)
+        if (gedcom.getPassword()==null)
           throw new IOException("Password not set - needed for encryption");
           
         // error if can't encrypt
-        enigma = Enigma.getInstance(password);
+        enigma = Enigma.getInstance(gedcom.getPassword());
         if (enigma==null) 
           throw new IOException("Encryption not available");
           

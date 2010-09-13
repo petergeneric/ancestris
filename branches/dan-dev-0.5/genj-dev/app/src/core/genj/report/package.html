@@ -45,48 +45,58 @@ them individually. </p>
 <p>A report can also be run by opening the context-menu for a Gedcom element
 in the UI. Depending on the selected element (for example an entity, a
 property or a Gedcom-file itself) reports that can accept this context as
-input are presented. A report declares whether it can run on a given
-context by overriding 
- <pre> <a href=./Report.html#accepts(java.lang.Object)>String accepts(Object context)</a> </pre>
-and returning a textual description of the action the report will do if
-executed (if applicable - null otherwise). 
-</p>
+input are presented. The simplest way for a report to declare that it can run 
+on a given Gedcom object is by declaring any of these methods:</p>
 
-<p>
-By default it's assumed that a report can be executed on instances of the 
-<a href=../gedcom/Gedcom.html>Gedcom</a> type - when run the report is 
-called with a reference to the instance of the corresponding type.
-</p>
+ <pre> start(genj.gedcom.Gedcom aGedcomInput)
+ start(genj.gedcom.Property aPropertyInput)
+ start(genj.gedcom.Property[] propertiesInput)
+ start(genj.gedcom.Entity[] entitiesInput)
+ start(genj.gedcom.Entity anEntityInput) </pre>
+
+<p>If the user selects the right input those reports are automatically matched
+for selection to be run.</p>
+
+<p>Another more advanced way to declare applicability to be run is to override:</p>
+
+ <pre> <a href=./Report.html#accepts(java.lang.Object)>String accepts(Object context)</a> </pre>
+ 
+<p>The report is expected to return a text that describes the report's action on given context or
+null if the input is not compatible. The report still has to declare one of the start-methods
+above or override this basic method (should normally not be necessary):</p>
+
+ <pre> <a href=./Report.html#start(java.lang.Object)>String accepts(Object context)</a> </pre>
 
 <h2>Report In/Output</h2>
 
-<p>
-Reports have several ways of interacting with the user - they can generate output:
- <ul>
-  <li>print text to a stream that is displayed in ReportView's report output widget
-   (see <a href=./Report.html#println()>println()</a>)
-  <li>open a browser on a URL
-   (see <a href=./Report.html#showBrowserToUser(java.net.URL)>showBrowserToUser()</a>)
-  <li>show a chart to the user
-   (see <a href=./Report.html#showChartToUser(genj.chart.Chart)>showChartToUser()</a>)
-  <li>show a Java Swing component to the user
-   (see <a href=./Report.html#showComponentToUser(javax.swing.JComponent)>showComponentToUser()</a>)
-  <li>show a list of predefined items containing references to Gedcom objects to the user
-   (see <a href=./Report.html#showItemsToUser(java.lang.String,%20genj.gedcom.Gedcom,%20java.util.List)>showItemsToUser()</a>)
- </ul>
+<p>Reports have several ways of interacting with the user. As a basic and very easy to use method they can 
+generate output by simply dumping text to a stream that is displayed in ReportView 
+(see <a href=./Report.html#println()>println()</a>).</p>
+
+<p>Alternatively the start method can return an instance of one of the following types which is then
+presented to the user:
+<table>
+ <tr><td>Type</td><td>Result</td></tr>
+ <tr><td>java.net.URL</td><td>Platform's browser is opened to show the URL</td></tr>
+ <tr><td>genj.chart.Chart</td><td>Chart is shown in report view</td></tr>
+ <tr><td>javax.swing.JComponent</td><td>Component is shown in report view</td></tr>
+ <tr><td>genj.fo.Document</td><td>User is asked for document formatting and the result is shown</td></tr>
+ <tr><td>java.io.File</td><td>Platform's default viewer for file is opened</td></tr>
+ <tr><td>genj.view.ViewContext.ContextList</td><td>List of Gedcom objects is shown to user in report view</td></tr>
+</table>
 </p>
 
 <p>
-And they can ask for input:
+Reports can also ask for input:
  <ul>
   <li>ask the user for a directory
-    (see <a href=./Report.html#getDirectoryFromUser(java.lang.String,%20java.lang.String)>getDirectoryFromUser()</a>)
+    (see <a href="./Report.html#getDirectoryFromUser(java.lang.String, java.lang.String)">getDirectoryFromUser()</a>)
   <li>ask the user to select an entity (e.g. Individuals, 
-    see <a href=./Report.html##getEntityFromUser(java.lang.String,%20genj.gedcom.Gedcom,%20java.lang.String)>getEntityFromUser()</a>)
+    see <a href="./Report.html#getEntityFromUser(java.lang.String, genj.gedcom.Gedcom, java.lang.String)">getEntityFromUser()</a>)
   <li>ask the user to make a choice (e.g. yes/no, 
-    see <a href=./Report.html#getOptionFromUser(java.lang.String,%20int)>getOptionFromUser()</a>)
+    see <a href="./Report.html#getOptionFromUser(java.lang.String, int)">getOptionFromUser()</a>)
   <li>ask the user to enter a value (e.g. name as text,
-    see <a href=./Report.html#getValueFromUser(java.lang.String,%20java.lang.Object[],%20java.lang.Object)>getValueFromUser()</a>)
+    see <a href="./Report.html#getValueFromUser(java.lang.String, java.lang.Object[], java.lang.Object)">getValueFromUser()</a>)
  </ul>
 </p>
 
@@ -98,9 +108,9 @@ And they can ask for input:
 <h2>Compiling Reports</h2>
 
 <p>
- Since Reports are written in Java they have to be (manually) compiled before they
- can be used through GenJ. Run one of the compile scripts in the directory containing
- all reports for that.
+ Since Reports are written in Java they have to be compiled before they can be used through GenJ. This can be
+ achieved by running the Recompile Reports reports from within the UI and then clicking on the reload button
+ in the Run-dialog of Report View.
 </p>
 
 </body>

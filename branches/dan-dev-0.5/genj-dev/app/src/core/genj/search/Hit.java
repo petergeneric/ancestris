@@ -44,7 +44,7 @@ import javax.swing.text.StyledDocument;
   }
 
   /** the property */
-  public Property property;
+  private Property property;
   
   /** an image (cached) */
   private ImageIcon img; 

@@ -27,11 +27,26 @@ import java.util.List;
  * Class for encapsulating multimedia entry in a gedcom file
  */
 public class Media extends Entity {
+  
+  private final static TagPath
+    TITLE55 = new TagPath("OBJE:TITL"),
+    TITLE551 = new TagPath("OBJE:FILE:TITL");
+  
+  private TagPath titlepath = TITLE55;
 
+  /**
+   * need tag,id-arguments constructor for all entities
+   */
+  public Media(String tag, String id) {
+    super(tag, id);
+    assertTag(Gedcom.OBJE);
+  }
+  
   /**
    * Title ...
    */
-  protected String getToStringPrefix() {
+  @Override
+  protected String getToStringPrefix(boolean showIds) {
     return getTitle();
   }
   
@@ -39,31 +54,59 @@ public class Media extends Entity {
    * Overriden - special case for file association
    */
   public boolean addFile(File file) {
-    List pfiles = getProperties(PropertyBlob.class);
-    PropertyBlob pfile;
-    if (pfiles.isEmpty()) {
-      pfile = (PropertyBlob)addProperty("BLOB", "");
+
+    // check for blob
+    if (!getMetaProperty().allows("BLOB")) 
+      return super.addFile(file);
+      
+    List<PropertyBlob> blobs = getProperties(PropertyBlob.class);
+    PropertyBlob blob;
+    if (blobs.isEmpty()) {
+      blob = (PropertyBlob)addProperty("BLOB", "");
     } else {
-      pfile = (PropertyBlob)pfiles.get(0);
+      blob = (PropertyBlob)blobs.get(0);
     }
     // keep it
-    return pfile.addFile(file);
+    return blob.addFile(file);
   }
 
   /**
+   * Returns the file (if exists) for this OBJE
+   */
+  public File getFile() {
+    Property file = getProperty("FILE", true);
+    return (file instanceof PropertyFile) ? ((PropertyFile)file).getFile() : null;    
+  }
+  
+  /**
    * Returns the property file for this OBJE
    */
-  public PropertyFile getFile() {
-    Property file = getProperty("FILE", true);
-    return (file instanceof PropertyFile) ? (PropertyFile)file : null;    
+  public PropertyBlob getBlob() {
+    Property blob = getProperty("BLOB", true);
+    return (blob instanceof PropertyBlob) ? (PropertyBlob)blob : null;    
   }
   
   /**
    * Returns the title of this OBJE
    */
   public String getTitle() {
-    Property title = getProperty("TITL");
+    Property title = getProperty(titlepath);
     return title==null ? "" : title.getValue();
+  }
+  
+  @Override
+  void addNotify(Gedcom ged) {
+    super.addNotify(ged);
+    
+    if (getMetaProperty().allows("TITLE"))
+      titlepath = TITLE55;
+    else
+      titlepath = TITLE551;
+      
+  }
+
+  public void setTitle(String title) {
+    setValue(titlepath, title);
   }
 
 } //Media

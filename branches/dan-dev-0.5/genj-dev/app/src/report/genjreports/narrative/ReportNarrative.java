@@ -82,37 +82,41 @@ public class ReportNarrative extends Report {
   private String sourceIndexTitle;
 
   /**
-   * The result is stored in files so we don't need the
-   * console to popup (even though we print some stuff for debugging)
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
-   * Overridden image - we use the fancy one for FormattedOutput
-   */
-  protected ImageIcon getImage() {
-    return Report.IMG_FO;
-  }
-
-  /**
    * The report's entry point
    */
-  public void start(Gedcom gedcom) {
+  public Object start(Gedcom gedcom) {
 
     String resource = ancestors ? "ancestors.of" : "descendants.of";
     Indi indi = (Indi)getEntityFromUser(translate(resource), gedcom, Gedcom.INDI); // Remove while testing
     if (indi==null)
-      return;
+      return null;
 
-    start(indi);
+    return start(indi);
+  }
+
+  // For tests without user interaction
+  public Object startTest(Gedcom gedcom, String startingIndiTag) {
+    // Indi indi = (Indi)getStartingEntity(translate(resource), gedcom, Gedcom.INDI); // Remove while testing
+    Indi indi = (Indi) gedcom.getEntity(Gedcom.INDI, startingIndiTag); // Pale Black
+    return start(indi);
+
+  }
+
+  /**
+   * Starting point for ancestors or descendants.  Overridden in tests.
+   * @param msg Prompt if interactive
+   * @param gedcom Family tree
+   * @param tag z.B. INDI
+   * @return Entity from family tree
+   */
+  public Entity getStartingEntity(String msg, Gedcom gedcom, String tag) {
+    return getEntityFromUser(msg, gedcom, tag);
   }
 
   /**
    * The report's entry point
    */
-  public void start(Indi indi) {
+  public Document start(Indi indi) {
 
     println("indi = " + indi.getName());
 
@@ -177,9 +181,9 @@ public class ReportNarrative extends Report {
     }
 
     // done
-    showDocumentToUser(doc);
-
     println(translate("log.finished"));
+    return doc;
+
   }
 
 //  private void printUtterance(String key) {

@@ -28,6 +28,7 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
 
 /**
  * Our own JTextField
@@ -41,14 +42,7 @@ public class TextFieldWidget extends JTextField {
   private boolean isSelectAllOnFocus = false;
   
   /** change support */
-  private ChangeSupport changeSupport = new ChangeSupport(this) {
-    public void fireChangeEvent() {
-      // no template anymore
-      isTemplate = false;
-      // continue
-      super.fireChangeEvent();
-    }
-  };
+  private ChangeSupport changeSupport;
   
   /**
    * Constructor
@@ -70,8 +64,19 @@ public class TextFieldWidget extends JTextField {
   public TextFieldWidget(String text, int cols) {
     super(text, cols);
     setAlignmentX(0);
-
+    
+    // init change support at this point
+    changeSupport = new ChangeSupport(this) {
+      public void fireChangeEvent() {
+        // no template anymore
+        isTemplate = false;
+        // continue
+        super.fireChangeEvent();
+      }
+    };
     getDocument().addDocumentListener(changeSupport);
+
+    // done
   }
   
   /**
@@ -79,6 +84,19 @@ public class TextFieldWidget extends JTextField {
    */
   public void addChangeListener(ChangeListener l) {
     changeSupport.addChangeListener(l);
+  }
+  
+  @Override
+  public void setDocument(Document doc) {
+    // detach if changeSupport is up (this might be called from super-class before our constructor)
+    Document old = getDocument();
+    if (changeSupport!=null&&old!=null)
+      old.removeDocumentListener(changeSupport);
+    // continue
+    super.setDocument(doc);
+    // re-attach
+    if (changeSupport!=null&&doc!=null) 
+      doc.addDocumentListener(changeSupport);
   }
   
   /**

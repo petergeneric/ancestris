@@ -62,7 +62,7 @@ public class TestFamilyClone extends Test {
           issues.add(new ViewContext(fam).setText(report.translate("warn.fam.cloned", fam.getId() )));
           reportedFams.add(fam);
         }
-        issues.add(new ViewContext(other).setText(report.translate("warn.fam.clone", new String[]{ other.getId(), fam .getId() })));
+        issues.add(new ViewContext(other).setText(report.translate("warn.fam.clone", other.getId(), fam .getId() )));
         reportedFams.add(other);
       }
     }

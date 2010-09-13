@@ -19,391 +19,294 @@
  */
 package genj.edit;
 
-import genj.edit.actions.Redo;
-import genj.edit.actions.Undo;
-import genj.edit.beans.BeanFactory;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyXRef;
+import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ButtonHelper;
-import genj.util.swing.PopupWidget;
-import genj.view.CommitRequestedEvent;
+import genj.util.swing.DialogHelper;
 import genj.view.ContextProvider;
-import genj.view.ContextSelectionEvent;
-import genj.view.ToolBarSupport;
+import genj.view.ToolBar;
+import genj.view.View;
 import genj.view.ViewContext;
-import genj.view.ViewManager;
-import genj.window.WindowBroadcastListener;
-import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
+import javax.swing.Action;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-
-import spin.Spin;
+import javax.swing.JToggleButton;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Component for editing genealogic entity properties
  */
-public class EditView extends JPanel implements ToolBarSupport, WindowBroadcastListener, ContextProvider  {
+public class EditView extends View implements ContextProvider{
   
   /*package*/ final static Logger LOG = Logger.getLogger("genj.edit");
+  private final static Registry REGISTRY = Registry.get(EditView.class);
+  static final Resources RESOURCES = Resources.get(EditView.class);
   
-  /** instances */
-  private static List instances = new LinkedList();
-
-  /** the gedcom we're looking at */
-  private Gedcom  gedcom;
-  
-  /** the registry we use */
-  private Registry registry;
-  
-  /** bean factory */
-  private BeanFactory beanFactory;
-
-  /** the view manager */
-  private ViewManager manager;
-  
-  /** the resources we use */
-  static final Resources resources = Resources.get(EditView.class);
-
-  /** actions we offer */
-  private Sticky   sticky = new Sticky();
-  private Back     back = new Back();
-  private Forward forward = new Forward();
-  private Mode     mode;
-  private ContextMenu contextMenu = new ContextMenu();
+  private Mode     mode = new Mode();
+  private Sticky sticky = new Sticky();
+  private Focus focus = new Focus();
+  private OK ok = new OK();
+  private Cancel cancel = new Cancel();
   private Callback callback = new Callback();
-  private Undo undo;
-  private Redo redo;
   
-  /** whether we're sticky */
-  private  boolean isSticky = false;
-
-  /** current editor */
+  private boolean isIgnoreSetContext = false;
+  private boolean isChangeSource = false;
+  
   private Editor editor;
+  private JPanel buttons;
+  private ToolBar toolbar;
+  private Gedcom gedcom;
   
   /**
    * Constructor
    */
-  public EditView(String setTitle, Gedcom setGedcom, Registry setRegistry, ViewManager setManager) {
+  public EditView() {
     
     super(new BorderLayout());
     
-    // remember
-    gedcom   = setGedcom;
-    registry = setRegistry;
-    manager  = setManager;
-    beanFactory = new BeanFactory(manager, registry);
-
-    // prepare action
-    mode = new Mode();
-    undo = new Undo(gedcom);
-    redo = new Redo(gedcom);
+    buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    ButtonHelper bh = new ButtonHelper().setInsets(0).setContainer(buttons);
+    bh.create(ok).setFocusable(false);    
+    bh.create(cancel).setFocusable(false);
     
-    // run mode switch if applicable
-    if (registry.get("advanced", false))
-      mode.trigger();
+    setLayout(new BorderLayout());
+    add(BorderLayout.SOUTH, buttons);
     
-    // add keybindings
-    InputMap imap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
-    ActionMap amap = getActionMap();
-    imap.put(KeyStroke.getKeyStroke("alt LEFT"), back);
-    amap.put(back, back);
-    imap.put(KeyStroke.getKeyStroke("alt RIGHT"), forward);
-    amap.put(forward, forward);
+    // check for current modes
+    mode.setSelected(REGISTRY.get("advanced", false));
+    focus.setSelected(REGISTRY.get("focus", false));
 
     // Done
   }
-  
-  
-
   
   /**
    * Set editor to use
    */
   private void setEditor(Editor set) {
 
-    // preserve old context and reset current editor to force commit changes
-    ViewContext old = null;
-    if (editor!=null) {
-      old = editor.getContext();
-      editor.setContext(new ViewContext(gedcom));
+    // commit old editor unless set==null
+    Context old = null;
+    if (set!=null) {
+      
+      // preserve old context 
+      old = editor!=null ? editor.getContext() : null;
+      
+      // force commit
+      commit();
+  
     }
     
-    // remove old editor 
-    removeAll();
+    // clear old editor
+    if (editor!=null) {
+      editor.removeChangeListener(ok);
+      editor.removeChangeListener(cancel);
+      editor.setContext(new Context());
+      remove(editor);
+      editor = null;
+    }
       
-    // keep new
+    // set new and restore context
     editor = set;
-    editor.init(gedcom, this, registry);
-
-    // add to layout
-    add(editor, BorderLayout.CENTER);
-
-    // restore old context
-    if (old!=null)
-      editor.setContext(old);
-      
+    if (editor!=null) {
+      add(editor, BorderLayout.CENTER);
+      if (old!=null)
+        editor.setContext(old);
+      editor.addChangeListener(ok);
+      editor.addChangeListener(cancel);
+    }
+    
     // show
     revalidate();
     repaint();
   }
-
-  /**
-   * @see javax.swing.JComponent#addNotify()
-   */
-  public void addNotify() {
-    
-    // let super do its thing first
-    super.addNotify();    
-    
-    // remember
-    instances.add(this);
-    
-    // Check if we were sticky
-    Entity entity = gedcom.getEntity(registry.get("entity", (String)null));
-    if (registry.get("sticky", false) && entity!=null) {
-      isSticky = true;
-    } else {
-      // fallback
-      ViewContext context = ContextSelectionEvent.getLastBroadcastedSelection();
-      if (context!=null&&context.getGedcom()==gedcom&&gedcom.contains(context.getEntity()))
-        entity = context.getEntity();
-      // fallback more (only if needed)
-      if (entity==null)
-        entity = gedcom.getFirstEntity(Gedcom.INDI);
-    }
-    
-    if (entity!=null)
-      setContext(new ViewContext(entity));
-
-    // listen to gedcom
-    callback.enable();
-    gedcom.addGedcomListener((GedcomListener)Spin.over(undo));
-    gedcom.addGedcomListener((GedcomListener)Spin.over(redo));
-    
-  }
-
-  /**
-   * Notification when component is not used any more
-   */
-  public void removeNotify() {
-    
-    // remember context
-    registry.put("sticky", isSticky);
-    Entity entity = editor.getContext().getEntity();
-    if (entity!=null)
-      registry.put("entity", entity.getId());
-
-    // remember mode
-    registry.put("advanced", mode.advanced);
-
-    // forget this instance
-    instances.remove(this);
-    
-    // don't listen to gedcom
-    callback.disable();
-    gedcom.removeGedcomListener((GedcomListener)Spin.over(undo));
-    gedcom.removeGedcomListener((GedcomListener)Spin.over(redo));
-    
-    // Continue
-    super.removeNotify();
-
-    // Done
-  }
   
   /**
-   * BeanFactory
+   * Check whether editor should grab focus or not
    */
-  /*package*/ BeanFactory getBeanFactory() {
-    return beanFactory;
-  }
-  
-  /**
-   * Ask the user whether he wants to commit changes 
-   */
-  /*package*/ boolean isCommitChanges() {
-    
-    // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume 
-    // that the containing window was closed and we're not going to throw a dialog out there or do a change
-    // behind the covers - we really would need a about-to-close hook for contained components here :(
-    if (!getTopLevelAncestor().isVisible())
-      return false;
-      
-    // check for auto commit
-    if (Options.getInstance().isAutoCommit)
-      return true;
-    
-    JCheckBox auto = new JCheckBox(resources.getString("confirm.autocomit"));
-    auto.setFocusable(false);
-    
-    int rc = WindowManager.getInstance(this).openDialog(null, 
-        resources.getString("confirm.keep.changes"), WindowManager.QUESTION_MESSAGE, 
-        new JComponent[] {
-          new JLabel(resources.getString("confirm.keep.changes")),
-          auto
-        },
-        Action2.yesNo(), 
-        this
-    );
-    
-    if (rc!=0)
-      return false;
-    
-    Options.getInstance().isAutoCommit = auto.isSelected();
-    
-    return true;
-    
-  }
-  
-  /**
-   * Return all open instances for given gedcom
-   */
-  /*package*/ static EditView[] getInstances(Gedcom gedcom) {
-    List result = new ArrayList();
-    Iterator it = instances.iterator();
-    while (it.hasNext()) {
-      EditView edit = (EditView)it.next();
-      if (edit.gedcom==gedcom)
-        result.add(edit);
-    }
-    return (EditView[])result.toArray(new EditView[result.size()]);
+  /*package*/ boolean isGrabFocus() {
+    return focus.isSelected();
   }
   
   /**
    * ContextProvider callback
    */
   public ViewContext getContext() {
-    return editor.getContext();
+    return editor!=null ? editor.getContext() : null;
   }
+  
+  @Override
+  public void commit() {
+    commit(true);
+  }
+  
+  private void commit(boolean ask) {
 
-  /**
-   * Context listener callback
-   */
-  public boolean handleBroadcastEvent(genj.window.WindowBroadcastEvent event) {
+    // changes?
+    if (!ok.isEnabled())
+      return;
+
+    // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume 
+    // that the containing window was closed and we're not going to throw a dialog out there or do a change
+    // behind the covers - we really would need a about-to-close hook for contained components here :(
+    if (!getTopLevelAncestor().isVisible())
+      return;
+
+    // check for auto commit
+    if (ask&&!Options.getInstance().isAutoCommit) {
     
-    // check for commit request
-    if (event instanceof CommitRequestedEvent && ((CommitRequestedEvent)event).getGedcom()==gedcom) {
-      editor.commit();
-      return true;
-    }
-    
-    
-    // check for context selection
-    ContextSelectionEvent cse = ContextSelectionEvent.narrow(event, gedcom);
-    if (cse==null) 
-      return true;
-    
-    ViewContext context = cse.getContext();
-    
-    // ignore if no entity info in it
-    if (context.getEntity()==null)
-      return true;
-    
-    // an inbound message ?
-    if (cse.isInbound()) {
-      // set context unless sticky
-      if (!isSticky) setContext(context); 
-      // don't continue inbound
-      return false;
-    }
+      JCheckBox auto = new JCheckBox(RESOURCES.getString("confirm.autocomit"));
+      auto.setFocusable(false);
       
-    // an outbound message coming from a contained component - we listen for double clicks ourselves
-    if (cse.isActionPerformed()) {
+      int rc = DialogHelper.openDialog(RESOURCES.getString("confirm.keep.changes"), 
+          DialogHelper.QUESTION_MESSAGE, new JComponent[] {
+            new JLabel(RESOURCES.getString("confirm.keep.changes")),
+            auto
+          }, 
+          Action2.yesNo(),
+          this
+      );
       
-      if (context.getProperty() instanceof PropertyXRef) {
+      if (rc!=0) {
         
-        PropertyXRef xref = (PropertyXRef)context.getProperty();
-        xref = xref.getTarget();
-        if (xref!=null)
-          context = new ViewContext(xref);
+        ok.setEnabled(false);
+        cancel.setEnabled(false);
+        buttons.setVisible(false);
+        
+        return;
+      }
+    
+      Options.getInstance().isAutoCommit = auto.isSelected();
+    
+    }
+    
+    try {
+
+      isChangeSource = true;
+      isIgnoreSetContext = true;
+      
+      if (gedcom.isWriteLocked())
+        editor.commit();
+      else
+        gedcom.doUnitOfWork(new UnitOfWork() {
+          public void perform(Gedcom gedcom) throws GedcomException {
+            editor.commit();
+          }
+        });
+      
+    } catch (Throwable t) {
+      LOG.log(Level.WARNING, "error committing editor", t);
+    } finally {
+      isChangeSource = false;
+      isIgnoreSetContext = false;
+      ok.setEnabled(false);
+      cancel.setEnabled(false);
+      buttons.setVisible(false);
+    }
+  }
+  
+  public void setContext(Context context, boolean isActionPerformed) {
+    
+    // ignore it?
+    if (isIgnoreSetContext)
+      return;
+    
+    // disconnect from last gedcom?
+    if (context.getGedcom()!=gedcom && gedcom!=null) {
+      gedcom.removeGedcomListener(callback);
+      gedcom=null;
+    }
+    
+    // clear?
+    if (context.getGedcom()==null) {
+      sticky.setSelected(false);
+      setEditor(null);
+      populate(toolbar);
+      ok.setEnabled(false);
+      cancel.setEnabled(false);
+      buttons.setVisible(false);
+      return;
+    }
+    
+    // connect to gedcom?
+    if (context.getGedcom()!=gedcom) {
+      gedcom = context.getGedcom();
+      gedcom.addGedcomListener(callback);
+    }
+    
+    // commit?
+    commit();
+    
+    // set
+    if (context.getEntities().size()==1) {
+
+      if (editor==null) {
+        sticky.setSelected(false);
+        if (mode.isSelected())
+          setEditor(new AdvancedEditor(context.getGedcom(), this));
+        else
+          setEditor(new BasicEditor(context.getGedcom(), this));
       }
       
-      // follow
-      setContext(context);
+      if (!sticky.isSelected()||isActionPerformed)
+        editor.setContext(context);
       
+    } else {
+      if (editor!=null)
+        editor.setContext(new Context(context.getGedcom()));
     }
-      
-    // let it bubble up outbound
-    return true;
-  }
   
-  public void setContext(ViewContext context) {
-    
-    // keep track of current editor's context
-    ViewContext current = editor.getContext();
-    if (current.getEntity()!=context.getEntity())
-      back.push(current);
-
-    // tell to editors
-    setContextImpl(context);
+    // start with a fresh edit
+    ok.setEnabled(false);
+    cancel.setEnabled(false);
+    buttons.setVisible(false);
     
     // done
-  }
-  
-  private void setContextImpl(ViewContext context) {
-    
-    editor.setContext(context);
-
-    // update title
-    context = editor.getContext();
-    manager.setTitle(this, context!=null&&context.getEntity()!=null?context.getEntity().toString():"");
-    
+    populate(toolbar);
   }
   
   /**
    * @see genj.view.ToolBarSupport#populate(JToolBar)
    */
-  public void populate(JToolBar bar) {
+  public void populate(ToolBar toolbar) {
 
-    // buttons for property manipulation    
-    ButtonHelper bh = new ButtonHelper()
-      .setInsets(0)
-      .setContainer(bar);
+    this.toolbar = toolbar;
+    if (toolbar==null)
+      return;
+    
+    toolbar.beginUpdate();
+    
+    // editor?
+    if (editor!=null) {
+      for (Action a : editor.getActions())
+        toolbar.add(a);
+    }
+    toolbar.addSeparator();
 
-    // return in history
-    bh.create(back);
-    bh.create(forward);
-    
-    // toggle sticky
-    bh.create(sticky, Images.imgStickOn, isSticky);
-    
-    // add undo/redo
-    bh.create(undo);
-    bh.create(redo);
-    
-    // add actions
-    bar.add(contextMenu);
-    
-    // add basic/advanced
-    bar.addSeparator();
-    bh.create(mode, Images.imgAdvanced, mode.advanced).setFocusable(false);
+    // add sticky/focus/mode
+    toolbar.add(new JToggleButton(sticky));
+    toolbar.add(new JToggleButton(focus));
+    toolbar.add(new JToggleButton(mode));
     
     // done
+    toolbar.endUpdate();
   }
   
   /**
@@ -414,52 +317,68 @@ public class EditView extends JPanel implements ToolBarSupport, WindowBroadcastL
   }
   
   /**
-   * whether we're sticky
-   */
-  public boolean isSticky() {
-    return isSticky;
-  }
-  
-  /**
    * Current entity
    */
   public Entity getEntity() {
     return editor.getContext().getEntity();
   }
+    
+//  /**
+//   * ContextMenu
+//   */
+//  private class ContextMenu extends PopupWidget {
+//    
+//    /** constructor */
+//    private ContextMenu() {
+//      setIcon(Gedcom.getImage());
+//      setToolTipText(resources.getString( "action.context.tip" ));
+//    }
+//    
+//    /** override - popup creation */
+//    protected JPopupMenu createPopup() {
+//      // force editor to commit
+//      editor.setContext(editor.getContext());
+//      // create popup
+//      return manager.getContextMenu(editor.getContext(), this);
+//    }
+//     
+//  } //ContextMenu
   
   /**
-   * ContextMenu
-   */
-  private class ContextMenu extends PopupWidget {
-    
-    /** constructor */
-    private ContextMenu() {
-      setIcon(Gedcom.getImage());
-      setToolTipText(resources.getString( "action.context.tip" ));
-    }
-    
-    /** override - popup creation */
-    protected JPopupMenu createPopup() {
-      // force editor to commit
-      editor.setContext(editor.getContext());
-      // create popup
-      return manager.getContextMenu(editor.getContext(), this);
-    }
-     
-  } //ContextMenu
-  
-  /**
-   * Action - toggle
+   * Action - toggle sticky mode
    */
   private class Sticky extends Action2 {
     /** constructor */
     protected Sticky() {
       super.setImage(Images.imgStickOff);
-      super.setTip(resources, "action.stick.tip");
+      super.setTip(RESOURCES, "action.stick.tip");
+      super.setSelected(false);
     }
     /** run */
-    protected void execute() {
-      isSticky = !isSticky;
+    public void actionPerformed(ActionEvent event) {
+      setSelected(isSelected());
+    }
+    @Override
+    public boolean setSelected(boolean selected) {
+      super.setImage(selected ? Images.imgStickOn : Images.imgStickOff);
+      return super.setSelected(selected);
+    }
+  } //Sticky
+  
+  /**
+   * Action - toggle focus mode
+   */
+  private class Focus extends Action2 {
+    /** constructor */
+    protected Focus() {
+      super.setImage(Images.imgFocus);
+      super.setTip(RESOURCES, "action.focus.tip");
+      super.setSelected(false);
+    }
+    /** run */
+    public void actionPerformed(ActionEvent event) {
+      setSelected(isSelected());
+      REGISTRY.put("focus", isSelected());
     }
   } //Sticky
   
@@ -467,187 +386,103 @@ public class EditView extends JPanel implements ToolBarSupport, WindowBroadcastL
    * Action - advanced or basic
    */
   private class Mode extends Action2 {
-    private boolean advanced = false;
     private Mode() {
       setImage(Images.imgView);
-      setEditor(new BasicEditor());
-      setTip(resources, "action.mode");
+      setTip(RESOURCES, "action.mode");
+      super.setSelected(false);
     }
-    protected void execute() {
-      advanced = !advanced;
-      setEditor(advanced ? (Editor)new AdvancedEditor() : new BasicEditor());
+    public void actionPerformed(ActionEvent event) {
+      setSelected(isSelected());
+    }
+    @Override
+    public boolean setSelected(boolean selected) {
+      REGISTRY.put("advanced", selected);
+      if (getContext()!=null)
+        setEditor(selected ? new AdvancedEditor(getContext().getGedcom(), EditView.this) : new BasicEditor(getContext().getGedcom(), EditView.this));
+      populate(toolbar);
+      return super.setSelected(selected);
     }
   } //Advanced
 
   /**
-   * Forward to a previous context
-   */  
-  private class Forward extends Back {
-    
-    /**
-     * Constructor
-     */
-    public Forward() {
-      
-      // patch looks
-      setImage(Images.imgForward);
-      setTip(Resources.get(this).getString("action.forward.tip"));
-      
-    }
-    
-    /**
-     * go forward
-     */
-    protected void execute() {
-      
-      if (stack.size()==0)
-        return;
-      
-      // push current on back
-      Context old = editor.getContext();
-      if (old.getEntities().length>0) {
-        back.stack.push(editor.getContext());
-        back.setEnabled(true);
-      }
-      
-      // go forward
-      ViewContext context = new ViewContext((Context)stack.pop());
-      
-      // let others know (we'll ignore the outgoing never receiving the incoming)
-      WindowManager.broadcast(new ContextSelectionEvent(context, EditView.this));
-      setContextImpl(context);
-      
-      // reflect state
-      setEnabled(stack.size()>0);
-    }
-    
-  } //Forward
-  
-  /**
-   * Return to a previous context
-   */  
-  private class Back extends Action2 {
-    
-    /** stack of where to go back to  */
-    protected Stack stack = new Stack();
-    
-    /**
-     * Constructor
-     */
-    public Back() {
-      
-      // setup looks
-      setImage(Images.imgBack);
-      setTip(Resources.get(this).getString("action.return.tip"));
+   * A ok action
+   */
+  private class OK extends Action2 implements ChangeListener {
+
+    /** constructor */
+    private OK() {
+      setText(Action2.TXT_OK);
       setEnabled(false);
-      
     }
 
-    /**
-     * go back
-     */
-    protected void execute() {
-      if (stack.size()==0)
-        return;
-      
-      // push current on forward
-      Context old = editor.getContext();
-      if (old.getEntities().length>0) {
-        forward.stack.push(editor.getContext());
-        forward.setEnabled(true);
-      }
-      
-      // return to last
-      ViewContext context = new ViewContext((Context)stack.pop());
-      
-      // let others know (we'll ignore the outgoing never receiving the incoming)
-      WindowManager.broadcast(new ContextSelectionEvent(context, EditView.this));
-      setContextImpl(context);
-      
-      // reflect state
-      setEnabled(stack.size()>0);
+    /** cancel current proxy */
+    public void actionPerformed(ActionEvent event) {
+      commit(false);
     }
     
-    /** 
-     * push another on stack 
-     */
-    public void push(Context context) {
-      // clear forward
-      forward.clear();
-      // keep it
-      stack.push(new Context(context));
-      // trim stack - arbitrarily chosen size
-      while (stack.size()>32)
-        stack.remove(0);
-      // we're good
+    public void stateChanged(ChangeEvent e) {
       setEnabled(true);
+      buttons.setVisible(true);
+      buttons.revalidate();
     }
-    
-    void clear() {
-      stack.clear();
-      setEnabled(false);
-    }
-    
-    void remove(Entity entity) {
-      // parse stack
-      for (Iterator it = stack.listIterator(); it.hasNext(); ) {
-        Context ctx = (Context)it.next();
-        Entity[] ents = ctx.getEntities();
-        for (int i = 0; i < ents.length; i++) {
-          if (ents[i]==entity) {
-            it.remove();
-            break;
-          }
-        }
-      }
-      // update status
-      setEnabled(!stack.isEmpty());
-    }
-    
-    void remove(Property prop) {
-      List list = Collections.singletonList(prop);
-      // parse stack
-      for (Iterator it = stack.listIterator(); it.hasNext(); ) {
-        Context ctx = (Context)it.next();
-        ctx.removeProperties(list);
-      }
-      
-    }
-  } //Back
+
+  } //OK
 
   /**
-   * Gedcom callback
-   */  
+   * A cancel action
+   */
+  private class Cancel extends Action2 implements ChangeListener {
+
+    /** constructor */
+    private Cancel() {
+      setText(Action2.TXT_CANCEL);
+      setEnabled(false);
+    }
+
+    /** cancel current proxy */
+    public void actionPerformed(ActionEvent event) {
+      // disable ok&cancel
+      ok.setEnabled(false);
+      cancel.setEnabled(false);
+      buttons.setVisible(false);
+
+      // re-set for cancel
+      Context ctx = editor.getContext();
+      editor.setContext(new Context());
+      editor.setContext(ctx);
+      populate(toolbar);
+    }
+    
+    public void stateChanged(ChangeEvent e) {
+      setEnabled(true);
+      buttons.setVisible(true);
+      buttons.revalidate();
+    }
+
+  } //Cancel
+  
   private class Callback extends GedcomListenerAdapter {
     
-    void enable() {
-      gedcom.addGedcomListener((GedcomListener)Spin.over(this));
-      back.clear();
-      forward.clear();
+    @Override
+    public void gedcomWriteLockAcquired(Gedcom gedcom) {
+      
+      // changes we have to commit?
+      if (!isChangeSource)
+        commit(false);
+      
     }
     
-    void disable() {
-      gedcom.removeGedcomListener((GedcomListener)Spin.over(this));
-      back.clear();
-      forward.clear();
-    }
-    
-    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-      back.remove(entity);
-      forward.remove(entity);
-    }
-
-    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property removed) {
-      back.remove(removed);
-      forward.remove(removed);
-    }
-
+    @Override
     public void gedcomWriteLockReleased(Gedcom gedcom) {
-      // check if we should go back to one
-      if (editor.getContext().getEntities().length==0) {
-        if (back.isEnabled()) back.execute();
+      
+      // foreign change while we're looking?
+      if (editor!=null && !isChangeSource) {
+        Context ctx = editor.getContext();
+        editor.setContext(new Context());
+        editor.setContext(ctx);
+        populate(toolbar);
       }
     }
-  } //Back
+  }
   
 } //EditView

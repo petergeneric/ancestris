@@ -40,14 +40,16 @@ public class PropertyChild extends PropertyXRef {
   /**
    * Empty Constructor
    */
-  public PropertyChild() {
+  /*package*/ PropertyChild() {
+    super("CHIL");
   }
   
   /**
-   * Constructor
+   * need tag-argument constructor for all properties
    */
-  protected PropertyChild(String target) {
-    setValue(target);
+  /*package*/ PropertyChild(String tag) {
+    super(tag);
+    assertTag("CHIL");
   }
   
   /**
@@ -71,14 +73,6 @@ public class PropertyChild extends PropertyXRef {
   }
 
   /**
-   * Returns the Gedcom-Tag of this property
-   * @return tag as <code>String</code>
-   */
-  public String getTag() {
-    return "CHIL";
-  }
-
-  /**
    * Links reference to entity (if not already done)
    * @exception GedcomException when property has no parent property,
    * referenced individual is child, wife or husband in enclosing family
@@ -93,13 +87,10 @@ public class PropertyChild extends PropertyXRef {
     } catch (ClassCastException ex) {
       throw new GedcomException(resources.getString("error.noenclosingfam"));
     }
-    Indi father = fam.getHusband();
-    Indi mother = fam.getWife();
 
     // Prepare some VARs
     Property p;
     Property ps[];
-    Gedcom gedcom = getGedcom();
 
     // Look for child (not-existing -> Gedcom throws Exception)
     Indi child = (Indi)getCandidate();
@@ -107,12 +98,12 @@ public class PropertyChild extends PropertyXRef {
     // Make sure the child is not ancestor of family already (father, mother, grandfather, grandgrandfather, ...) 
     // .. that would introduce a circle
     if (child.isAncestorOf(fam)) 
-      throw new GedcomException(resources.getString("error.already.ancestor", new String[]{ child.toString(), fam.toString()}));
+      throw new GedcomException(resources.getString("error.already.ancestor", child.toString(), fam.toString()));
 
     // NM20070921 - see PropertyFamilyChild.link()
     
     // Connect back from child (maybe using back reference)
-    List famcs = child.getProperties(PropertyFamilyChild.class);
+    List<PropertyFamilyChild> famcs = child.getProperties(PropertyFamilyChild.class);
     for (int i=0, j=famcs.size(); i<j; i++) {
       
       PropertyFamilyChild pfc = (PropertyFamilyChild)famcs.get(i);
@@ -135,7 +126,7 @@ public class PropertyChild extends PropertyXRef {
    * an externalized label we need in some ui actions
    */
   public static String getLabelChildAlreadyinFamily(Indi child, Fam fam) {
-    return resources.getString("error.already.child", new String[]{ child.toString(), fam.toString()});
+    return resources.getString("error.already.child", child.toString(), fam.toString());
   }
 
   /**

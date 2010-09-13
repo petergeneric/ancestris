@@ -288,6 +288,13 @@ public class Delta implements Comparable {
     return buffer.toString();
   }
 
+  public void setValue(Delta other) {
+    this.years = other.years;
+    this.months = other.months;
+    this.days = other.days;
+    this.calendar = other.calendar;
+  }
+  
   /**
    * Gedcom value
    */

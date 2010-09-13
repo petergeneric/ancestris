@@ -176,56 +176,42 @@ public class ReportFlashList extends Report {
   private String recordKeyText = "";        // Text for the legend
 
   /**
-  * Overriden image - we're using the provided FO image
-  */
-  protected ImageIcon getImage() {
-    return Report.IMG_FO;
-  }
-
-  /**
-   * While we generate information on stdout it's not really
-   * necessary because we're returning a Document
-   * that is handled by the UI anyways
+   * One of the report's entry point
    */
-  public boolean usesStandardOut() {
-    return false;
+  public Document start(Gedcom gedcom) {
+    return start(gedcom, gedcom.getEntities(Gedcom.INDI), null);
   }
 
   /**
    * One of the report's entry point
    */
-  public void start(Gedcom gedcom) {
-    start(gedcom, gedcom.getEntities(Gedcom.INDI), null);
+  public Document start(Indi[] indis) {
+    return start(indis[0].getGedcom(), Arrays.asList(indis), null);
   }
 
   /**
    * One of the report's entry point
    */
-  public void start(Indi[] indis) {
-    start(indis[0].getGedcom(), Arrays.asList(indis), null);
-  }
-
-  /**
-   * One of the report's entry point
-   */
-  public void start(Indi indi) {
-    start(indi.getGedcom(), indi.getGedcom().getEntities(Gedcom.INDI), indi);
+  public Document start(Indi indi) {
+    return start(indi.getGedcom(), indi.getGedcom().getEntities(Gedcom.INDI), indi);
   }
 
   /**
    * Our main logic
    */
-  private void start(Gedcom gedcom, Collection indis, Indi indiDeCujus) {
+  private Document start(Gedcom gedcom, Collection indis, Indi indiDeCujus) {
 
     //Get location and lastname options based on PLAC tag in gedcom and user input
     // Updates values of recordKey, posLoc1, posLoc2, posLoc3, existPLACTag
-    if (!getFlashOptions(gedcom)) return;
+    if (!getFlashOptions(gedcom)) 
+      return null;
     
     // get de-cujus (sosa 1) if entry point is generic
     if (indiDeCujus == null) {
       String msg = translate("AskDeCujus");
       indiDeCujus = (Indi)getEntityFromUser(msg, gedcom, Gedcom.INDI);
-      if (indiDeCujus == null) return;
+      if (indiDeCujus == null) 
+        return null;
       }
 
     // prepare our index
@@ -332,7 +318,8 @@ public class ReportFlashList extends Report {
     
     // done with main output
     println(translate("Completed"));      
-    showDocumentToUser(doc);
+    
+    return doc;
   
   } // end_of_start
 

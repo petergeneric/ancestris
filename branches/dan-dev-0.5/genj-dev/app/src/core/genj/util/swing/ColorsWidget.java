@@ -19,17 +19,22 @@
  */
 package genj.util.swing;
 
+import genj.util.ChangeSupport;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -44,6 +49,8 @@ import javax.swing.event.ListSelectionListener;
  * A widget for colors
  */
 public class ColorsWidget extends JPanel {
+
+  private ChangeSupport changes = new ChangeSupport(this);
   
   /** the wrapped swing ColorChooser */
   private JColorChooser chooser = new JColorChooser();
@@ -59,7 +66,7 @@ public class ColorsWidget extends JPanel {
     
     // patch chooser
     chooser.setPreviewPanel(new JPanel()); 
-
+    
     // prepare list
     final JList list = new JList(model);
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -73,19 +80,35 @@ public class ColorsWidget extends JPanel {
     list.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
         int i = list.getSelectedIndex();
-        if (i>=0)
-          chooser.setColor(model.getItemAt(i).color);
+        if (i>=0) {
+          changes.mute();
+          try {
+            chooser.setColor(model.getItemAt(i).color);
+          } finally {
+            changes.unmute();
+          }
+        }
       }
     });
     chooser.getSelectionModel().addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
         int i = list.getSelectedIndex();
-        if (i>=0) 
+        if (i>=0) {
           model.setColor(i, chooser.getColor());
+          changes.fireChangeEvent();
+        }
       }
     });
     
     // done
+  }
+  
+  public void addChangeListener(ChangeListener listener) {
+    changes.addChangeListener(listener);
+  }
+  
+  public void removeChangeListener(ChangeListener listener) {
+    changes.removeChangeListener(listener);
   }
   
   /**
@@ -102,6 +125,10 @@ public class ColorsWidget extends JPanel {
     return model.getItem(key).color;
   }
   
+  public Map<String,Color> getColors() {
+    return model.colors();
+  }
+  
   /**
    * Adds a color
    */
@@ -115,8 +142,15 @@ public class ColorsWidget extends JPanel {
   private class Model extends AbstractListModel {
 
     /** items */
-    private List items = new ArrayList();
+    private List<Item> items = new ArrayList<Item>();
 
+    Map<String,Color> colors() {
+      Map<String,Color> result = new HashMap<String, Color>();
+      for (Item item : items)
+        result.put(item.key, item.color);
+      return result;
+    }
+    
     void clear() {
       int size = items.size();
       for (int i=size-1;i>=0;i--) {
@@ -133,15 +167,13 @@ public class ColorsWidget extends JPanel {
       fireContentsChanged(this, index, index);
     }
     Item getItem(String key) {
-      for (int i = 0; i < items.size(); i++) {
-        Item item = (Item)items.get(i);
+      for (Item item : items) 
         if (item.key.equals(key))
           return item;
-      }
       throw new IllegalArgumentException("key for unknown color");
     }
     Item getItemAt(int index) {
-      return (Item)getElementAt(index);
+      return items.get(index);
     }
     public Object getElementAt(int index) {
       return items.get(index);

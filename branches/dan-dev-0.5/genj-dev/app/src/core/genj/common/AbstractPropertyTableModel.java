@@ -23,9 +23,14 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyNumericValue;
+import genj.gedcom.PropertySex;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.swing.SwingConstants;
 
 import spin.Spin;
 
@@ -34,9 +39,22 @@ import spin.Spin;
  */
 public abstract class AbstractPropertyTableModel implements PropertyTableModel, GedcomListener {
   
-  private List listeners = new ArrayList(3);
+  protected final static int 
+    LEFT = SwingConstants.LEFT,
+    CENTER = SwingConstants.CENTER,
+    RIGHT = SwingConstants.RIGHT;
+  
+  private List<PropertyTableModelListener> listeners = new CopyOnWriteArrayList<PropertyTableModelListener>();
   private Gedcom gedcom = null;
   private GedcomListener callback;
+  
+  protected AbstractPropertyTableModel(Gedcom gedcom) {
+    this.gedcom = gedcom;
+  }
+  
+  final public Gedcom getGedcom() {
+    return gedcom;
+  }
   
   /** 
    * Add listener
@@ -44,8 +62,6 @@ public abstract class AbstractPropertyTableModel implements PropertyTableModel, 
   public void addListener(PropertyTableModelListener listener) {
     listeners.add(listener);
     if (listeners.size()==1) {
-      // cache gedcom now
-      if (gedcom==null) gedcom=getGedcom();
       // and start listening (make sure events are spin over to the EDT)
       gedcom.addGedcomListener((GedcomListener)Spin.over((GedcomListener)this));
     }
@@ -64,32 +80,32 @@ public abstract class AbstractPropertyTableModel implements PropertyTableModel, 
   /**
    * Column name
    */
-  public String getName(int col) {
-    return getPath(col).getName();    
+  public String getColName(int col) {
+    return getColPath(col).getName();    
   }
   
   /**
    * Structure change
    */
   protected void fireRowsChanged(int rowStart, int rowEnd, int col) {
-    for (int i=0;i<listeners.size();i++)
-      ((PropertyTableModelListener)listeners.get(i)).handleRowsChanged(this, rowStart, rowEnd, col);
+    for (PropertyTableModelListener listener : listeners)
+      listener.handleRowsChanged(this, rowStart, rowEnd, col);
   }
   
   /**
    * Structure change
    */
   protected void fireRowsAdded(int rowStart, int rowEnd) {
-    for (int i=0;i<listeners.size();i++)
-      ((PropertyTableModelListener)listeners.get(i)).handleRowsAdded(this, rowStart, rowEnd);
+    for (PropertyTableModelListener listener : listeners)
+      listener.handleRowsAdded(this, rowStart, rowEnd);
   }
 
   /**
    * Structure change
    */
   protected void fireRowsDeleted(int rowStart, int rowEnd) {
-    for (int i=0;i<listeners.size();i++)
-      ((PropertyTableModelListener)listeners.get(i)).handleRowsDeleted(this, rowStart, rowEnd);
+    for (PropertyTableModelListener listener : listeners)
+      listener.handleRowsDeleted(this, rowStart, rowEnd);
   }
 
   /**
@@ -127,4 +143,41 @@ public abstract class AbstractPropertyTableModel implements PropertyTableModel, 
     // ignored
   }
 
+  public String getCellValue(Property property, int row, int col) {
+    return getDefaultCellValue(property, row, col);
+  }
+  
+  /*package*/ static String getDefaultCellValue(Property property, int ro, int col) {
+    if (property==null)
+      return "";
+    if (property instanceof Entity) 
+      return ((Entity)property).getId();
+    if (property instanceof PropertySex) 
+      return Character.toString(((PropertySex)property).getDisplayValue().charAt(0));
+    return property.getDisplayValue();
+  }
+  
+  public int getCellAlignment(Property property, int row, int col) {
+    return getDefaultCellAlignment(property, row, col);
+  }
+  
+  /*package*/ static int getDefaultCellAlignment(Property property, int row, int col) {
+    if (property instanceof Entity) 
+      return RIGHT;
+    if (property instanceof PropertyDate) 
+      return RIGHT;
+    if (property instanceof PropertyNumericValue) 
+      return RIGHT;
+    if (property instanceof PropertySex) 
+      return CENTER;
+    return LEFT;
+  }
+
+  public int compare(Property valueA, Property valueB, int col) {
+    return defaultCompare(valueA, valueB, col);
+  }
+
+  /*package*/ static int defaultCompare(Property valueA, Property valueB, int col) {
+    return valueA.compareTo(valueB);
+  }
 }

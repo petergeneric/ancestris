@@ -17,16 +17,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
- * $Revision: 1.37 $ $Author: nmeier $ $Date: 2009/02/18 13:07:13 $
+ * $Revision: 1.41 $ $Author: nmeier $ $Date: 2010-01-14 00:20:46 $
  */
 package genj.util;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,7 +40,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,38 +48,45 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JFrame;
+
 /**
- * Registry - improved java.util.Properties
+ * Registry - betterfied java.util.Properties
  */
-public class Registry {
+public class Registry implements PropertyChangeListener {
   
   private final static Logger LOG = Logger.getLogger("genj.util");
-
-  private String view;
+  
+  private String prefix;
   private Properties properties;
-  private Registry parent;
-
-  private static Hashtable registries = new Hashtable();
-
+  
+  private static Map<String, Registry> prefix2registry = new HashMap<String, Registry>();
+  private static Map<File, Registry> file2registry = new HashMap<File, Registry>();
+  
   /**
-   * Constructor for empty registry that can't be looked up
-   * afterwards and won't be saved
+   * Constructor 
    */
-  public Registry() {
-    // view is empty (root)
-    view       ="";
+  public Registry(Registry registry, String view) {
+    if (registry.prefix.length()>0)
+      view = registry.prefix + "." + view;
+    this.prefix = view;
+    this.properties = registry.properties;
+  }
+  
+  /**
+   * Constructor 
+   */
+  private Registry(String rootPrefix) {
+    
+    this.prefix = rootPrefix;
+    
     // patch properties that keeps order
-    properties = new Properties() {
-      /**
-       * @see java.util.Hashtable#keys()
-       */
-      public synchronized Enumeration keys() {
-        Vector result = new Vector(super.keySet()); 
-        Collections.sort(result);
-        return result.elements();
-      }
-    };
-    // done
+    this.properties = new SortingProperties();
+    
+    // remember
+    synchronized (Registry.class) {
+      prefix2registry.put(prefix,this);
+    }
   }
 
   /**
@@ -86,88 +95,87 @@ public class Registry {
    * @param InputStream to load registry from
    */
   public Registry(InputStream in) {
-    this();
     // Load settings
+    prefix = "";
+    properties = new SortingProperties();
     try {
       properties.load(in);
     } catch (Exception ex) {
     }
   }
+  
+  private Registry(File file) {
+    // Load settings
+    prefix = "";
+    properties = new SortingProperties();
+    FileInputStream in = null;
+    try {
+      in = new FileInputStream(file);
+      properties.load(in);
+    } catch (Exception ex) {
+    } finally {
+      try { in.close(); } catch (Throwable t) {}
+    }
+  }
 
   /**
-   * Constructor for registry loaded from local disk
-   * @param InputStream to load registry from
+   * Registry representation of a file - changes are committed
    */
-  public Registry(String name) {
-    this(name, (Origin)null);
+  public static Registry get(File file) {
+    synchronized (Registry.class) {
+      Registry r = file2registry.get(file);
+      if (r==null) {
+        r = new Registry(file);
+        file2registry.put(file, r);
+      }
+      return r;
+    }
+  }
+
+  /**
+   * Accessor 
+   */
+  public static Registry get(Object source) {
+    return get(source.getClass());
   }
   
   /**
-   * Constructor for registry loaded relative to given Origin
+   * Accessor 
    */
-  public Registry(String name, Origin origin) {
-    
-    this();
+  public static Registry get(Class<?> source) {
+    return get(source.getName());
+  }
+  
+  /**
+   * Accessor 
+   */
+  public static Registry get(String pckg) {
 
-    // read all relative to origin
-    if (origin!=null) {
-      
-      LOG.fine("Loading registry '"+name+".properties' from origin "+origin);
-      try {
-        InputStream in = origin.open(name+".properties");
-        properties.load(in);
-        in.close();
-      } catch (Throwable t) {
-        LOG.log(Level.INFO, "Failed to read registry "+name+" from "+origin+" ("+t.getMessage()+")");
+    String[] tokens = pckg.split("\\.");
+// TODO: pourquoi ce test echoue?
+    // Parce qu'on utilise Registry.get("genj") à pas mal d'endroits
+//    if (tokens.length==1)
+//      throw new IllegalArgumentException("default package not allowed");
+    
+    String prefix = tokens[0];
+    
+    Registry r;
+    synchronized (Registry.class) {
+      r = prefix2registry.get(prefix);
+      if (r==null) {
+        r = new Registry(tokens[0]);
+        prefix2registry.put(prefix, r);
       }
     }
-    
-    // read all from local registry
-    File file = getFile(name);
-    try {
-      LOG.fine("Loading registry '"+name+"' from file "+file.getAbsolutePath());
-      FileInputStream in = new FileInputStream(file);
-      properties.load(in);
-      in.close();
-    } catch (Throwable t) {
-      LOG.log(Level.INFO, "Failed to read registry "+name+" from "+file+" ("+t.getMessage()+")");
-    }
-    
-    // remember
-    registries.put(name,this);
-    // done
+
+    return tokens.length==1 ? r : new Registry(r, pckg.substring(prefix.length()+1));
   }
 
-  /**
-   * Constructor for a view of a Registry
-   * @param view the logical view as String
-   */
-  public Registry(Registry registry, String view) {
-
-    // Make sure it's a valid name ?
-    if ( (view==null) || ((view = view.trim()).length()==0) ) {
-      throw new IllegalArgumentException("View can't be empty");
-    }
-
-    // Prepare data
-    this.view       = view;
-    this.parent     = registry;
-
-    // Done
-  }
-  
-  /**
-   * Set registry content by other
-   */
-  public void set(Registry registry) {
-    this.properties = (Properties)registry.properties.clone();
-  }
-  
   /**
    * Remove keys
    */
   public void remove(String prefix) {
-    List keys = new ArrayList(properties.keySet());
+    List<Object> keys = new ArrayList<Object>(properties.keySet());
     for (int i=0,j=keys.size();i<j;i++) {
       String key = (String)keys.get(i);
       if (key.startsWith(prefix))
@@ -176,80 +184,23 @@ public class Registry {
   }
   
   /**
-   * Return the root parent in registry hierarchy
-   */
-  public Registry getRoot() {
-    if (parent==null)
-      return this;
-    return parent.getRoot();
-  }
-
-  /**
-   * Return the parent of this registry
-   * @return parent if this is a view
-   */
-  public Registry getParent() {
-    return parent;
-  }
-
-  /**
-   * Returns a registry for given logical name (lazy once instantiation)
-   */
-  public static Registry lookup(String name, Origin origin) {
-    Registry result = (Registry)registries.get(name);
-    if (result!=null)
-      return result;
-    return new Registry(name, origin);
-  }
-  
-  /**
-   * Returns this registry's view
-   */
-  public String getView() {
-
-    // Base of registry ?
-    if (parent==null)
-      return "";
-
-    // View of registry !
-    String s = parent.getView();
-    return (s.length()==0 ? "" : s+".")+view;
-  }
-
-  /**
-   * Returns this registry's view's last part
-   */
-  public String getViewSuffix() {
-
-    String v = getView();
-
-    int pos = v.lastIndexOf('.');
-    if (pos==-1)
-      return v;
-
-    return v.substring(pos+1);
-  }
-  
-  /**
    * Returns a map of values
    */
-  public Map get(String prefix, Map def) {
-    Map result = new HashMap();
+  @SuppressWarnings("unchecked")
+  public <K,V> Map<K,V> get(String key, Map<K,V> def) {
+    Map<K,V> result = new HashMap<K,V>();
     // loop over keys in map
-    Iterator keys = def.keySet().iterator();
-    while (keys.hasNext()) {
+    for (K subkey : def.keySet()) {
       // grab from default
-      Object key = keys.next();
-      Object value = def.get(key);
+      V value = def.get(subkey);
       // try to get a better value
       try {
-        value = getClass().getMethod("get", new Class[]{ String.class, value.getClass() })
-          .invoke(this, new Object[]{ prefix+"."+key, value });
+        value = (V)getClass().getMethod("get", new Class[]{ String.class, value.getClass() })
+          .invoke(this, new Object[]{ key+"."+subkey, value });
       } catch (Throwable t) {
-        
       }
-      // keep it
-      result.put(key, value);
+      // overwrite it
+      result.put(subkey, value);
     }
     // done
     return result;
@@ -445,31 +396,9 @@ public class Registry {
   }
 
   /**
-   * Returns vector of strings by key
-   */
-  /*
-  public Vector get(String key, Vector def) {
-
-    // Get size of array
-    int size = get(key,-1);
-    if (size==-1)
-      return def;
-
-    // Gather array
-    Vector result = new Vector(size);
-    for (int i=0;i<size;i++) {
-      result.addElement(get(key+"."+(i+1),""));
-    }
-
-    // Done
-    return result;
-  }
-  */
-
-  /**
    * Returns a collection of strings by key
    */
-  public Collection get(String key, Collection def) {
+  public List<String> get(String key, List<String> def) {
 
     // Get size of array
     int size = get(key,-1);
@@ -477,17 +406,9 @@ public class Registry {
       return def;
 
     // Create result
-    Collection result;
-    try {
-      result = (Collection)def.getClass().newInstance();
-    } catch (Throwable t) {
-      return def;
-    }
-    
-    // Collection content
-    for (int i=0;i<size;i++) {
+    List<String> result = new ArrayList<String>();
+    for (int i=0;i<size;i++) 
       result.add(get(key+"."+(i+1),""));
-    }
 
     // Done
     return result;
@@ -506,9 +427,9 @@ public class Registry {
       return def;
 
     // boolean value
-    if (result.equals("1"))
+    if (result.equals("1") || result.equals("true"))
       return true;
-    if (result.equals("0"))
+    if (result.equals("0") || result.equals("false"))
       return false;
 
     // Done
@@ -535,13 +456,13 @@ public class Registry {
    * Returns String parameter to key
    */
   public String get(String key, String def) {
+    
+    // prepend prefix
+    if (prefix.length()>0)
+      key = prefix+"."+key;
 
     // Get property by key
-    String result;
-    if (parent==null)
-      result = properties.getProperty(key);
-    else
-      result = parent.get(view+"."+key,def);
+    String result = (String)properties.get(key);
 
     // verify it exists
     // 20060222 NM can't assume length()==0 means default should apply - it could indeed mean an empty value!
@@ -558,33 +479,29 @@ public class Registry {
    */
   public void put(String key, String value) {
 
-    // store
-    if (parent==null) {
-      // 20040523 removed check for old value - don't need it imho
-      if (value==null)
-        properties.remove(key);
-      else
-        properties.put(key,value);
-    } else {
-      parent.put(view+"."+key,value);
-    }
+    // prepend prefix
+    if (prefix.length()>0)
+      key = prefix+"."+key;
+
+    if (value==null)
+      properties.remove(key);
+    else
+      properties.put(key,value);
   }
 
   /**
    * Remember an array of values
    */
-  public void put(String prefix, Map values) {
+  public void put(String key, Map<String,?> values) {
     
     // loop over keys in map
-    Iterator keys = values.keySet().iterator();
-    while (keys.hasNext()) {
+    for (String subkey : values.keySet()) {
       // grab value
-      Object key = keys.next();
-      Object value = values.get(key);
+      Object value = values.get(subkey);
       // try to store
       try {
         value = getClass().getMethod("put", new Class[]{ String.class, value.getClass() })
-          .invoke(this, new Object[]{ prefix+"."+key, value });
+          .invoke(this, new Object[]{ key+"."+subkey, value });
       } catch (Throwable t) {        
       }
     }
@@ -727,13 +644,13 @@ public class Registry {
   /**
    * Remembers a collection of Strings
    */
-  public void put(String key, Collection values) {
+  public void put(String key, Collection<?> values) {
 
     // Remember
     int l = values.size();
     put(key,l);
     
-    Iterator elements = values.iterator();
+    Iterator<?> elements = values.iterator();
     for (int i=0;elements.hasNext();i++) {
       put(key+"."+(i+1),elements.next().toString());
     }
@@ -744,7 +661,7 @@ public class Registry {
   /**
    * Remembers a boolean value
    */
-  public void put(String key, boolean value) {
+  public void put(String key, Boolean value) {
 
     // Remember
     put(key,(value?"1":"0"));
@@ -764,51 +681,98 @@ public class Registry {
   }
   
   /**
-   * Calculates a filename for given registry name
+   * Set the file to read from/write to 
    */
-  private static File getFile(String name) {
+  public void setFile(File file) {
     
-    name = name+".properties";
+    synchronized (Registry.class) {
     
-    String dir = EnvironmentChecker.getProperty(
-      Registry.class,
-      new String[]{ "user.home.genj" },
-      ".",
-      "calculate dir for registry file "+name
-    );
-    
-    return new File(dir,name);
-  }
+      // read all from local registry
+      try {
+        properties.clear();
+        LOG.fine("Loading registry "+prefix+" from file "+file.getAbsolutePath());
+        FileInputStream in = new FileInputStream(file);
+        properties.load(in);
+        in.close();
+      } catch (Throwable t) {
+        LOG.log(Level.FINE, "Failed to read registry from "+file+" ("+t.getMessage()+")");
+      }
 
+      file2registry.put(file, this);
+    }
+  }
+  
   /**
    * Save registries
    */
   public static void persist() {
     
-    // Go through registries
-    Enumeration keys = registries.keys();
-    while (keys.hasMoreElements()) {
-
-      // Get Registry
-      String key = keys.nextElement().toString();
-      Registry registry = (Registry)registries.get(key);
-
-      // Open known file
+    // Go through list of registries that have a file
+    for (File file : file2registry.keySet()) {
+      Registry registry = file2registry.get(file);
       try {
-        File file = getFile(key);
-        
         LOG.fine("Storing registry in file "+file.getAbsolutePath());
-        file.getParentFile().mkdirs();
+        File dir = file.getParentFile();
+        if (!dir.exists()&&!dir.mkdirs())
+          throw new IOException("dir is bad "+dir);
+        
         FileOutputStream out = new FileOutputStream(file);
-        registry.properties.store(out,key);
+        registry.properties.store(out, registry.prefix);
         out.flush();
         out.close();
       } catch (IOException ex) {
+        LOG.log(Level.INFO, "Can't store registry in file "+file.getAbsolutePath(), ex);
       }
 
     }
 
     // Done
+  }
+
+  /**
+   * store JFrame characteristics
+   */
+  public void put(String key, JFrame frame) {
+    Rectangle bounds = frame.getBounds();
+    boolean maximized = frame.getExtendedState()==JFrame.MAXIMIZED_BOTH;
+    if (bounds!=null&&!maximized)
+      put(key, bounds);
+    put(key+".maximized", maximized);
+  }
+  
+  public JFrame get(String key, JFrame frame) {
+    
+    frame.setBounds(get(key, new Rectangle(0,0,640,480)));
+    if (get(key+".maximized", true))
+      frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    
+    return frame;
+  }
+
+  private static class SortingProperties extends Properties {
+    @SuppressWarnings("unchecked")
+    @Override
+    public synchronized Enumeration<Object> keys() {
+      Vector result = new Vector(super.keySet()); 
+      Collections.sort(result);
+      return result.elements();
+    }
+  };
+  
+  public void propertyChange(PropertyChangeEvent evt) {
+    String key = evt.getPropertyName();
+    Object val = evt.getNewValue();
+    if (val==null) {
+      remove(key);
+      return;
+    }
+    
+    try {
+      getClass().getMethod("put", String.class, val.getClass())
+      .invoke(this, key, val);
+    } catch (Throwable t) {
+      put(key, val.toString());
+    }
   }
 
 } //Registry

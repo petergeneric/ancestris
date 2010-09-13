@@ -19,17 +19,25 @@
  */
 package genj.edit.beans;
 
+import genj.common.SelectEntityWidget;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
-import genj.util.Registry;
-import genj.view.ContextSelectionEvent;
+import genj.gedcom.UnitOfWork;
+import genj.util.swing.Action2;
+import genj.util.swing.DialogHelper;
+import genj.view.SelectionSink;
 import genj.view.ViewContext;
-import genj.window.WindowManager;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
 
 /**
  * A proxy for a property that links entities
@@ -39,8 +47,72 @@ public class XRefBean extends PropertyBean {
   private Preview preview;
   private PropertyXRef xref;
   
-  void initialize(Registry setRegistry) {
-    super.initialize(setRegistry);
+  @Override
+  public ViewContext getContext() {
+    // super knows
+    ViewContext result = super.getContext();
+    if (result!=null)
+      result.addAction(new Swivel());
+    return result;
+  }
+
+  /**
+   * swivle a reference pointer
+   */
+  private class Swivel extends Action2 {
+    public Swivel() {
+      setText(RESOURCES.getString("xref.swivel"));
+      setImage(MetaProperty.IMG_LINK);
+    }
+    @Override
+    public void actionPerformed(ActionEvent event) {
+      
+      if (xref==null)
+        return;
+      
+      SelectEntityWidget select = new SelectEntityWidget(xref.getGedcom(), xref.getTargetType(), null);
+      if (0!=DialogHelper.openDialog(
+          getText(), 
+          DialogHelper.QUESTION_MESSAGE, 
+          select, 
+          Action2.okCancel(), 
+          event))
+        return;
+
+      final Entity newTarget = select.getSelection();
+      
+      if (xref.getTarget()!=null)
+        LOG.fine("Swiveling "+xref.getEntity().getId()+"."+xref.getPath()+" from "+xref.getTarget().getEntity().getId()+" to "+newTarget.getId());
+      else
+        LOG.fine("Swiveling "+xref.getEntity().getId()+"."+xref.getPath()+" to "+newTarget.getId());
+        
+      try {
+        xref.getGedcom().doUnitOfWork(new UnitOfWork() {
+          public void perform(Gedcom gedcom) throws GedcomException {
+            Property backpointer = xref.getTarget();
+            if (backpointer!=null) {
+              xref.unlink();
+              backpointer.getParent().delProperty(backpointer);
+            }
+            xref.setValue("@"+newTarget.getId()+"@");
+            xref.link();
+          }
+        });
+      } catch (GedcomException ge) {
+        DialogHelper.openDialog(
+            getText(), 
+            DialogHelper.WARNING_MESSAGE, 
+            ge.getMessage(), 
+            Action2.okOnly(), 
+            event);
+        LOG.log(Level.FINER, ge.getMessage(), ge);
+      }
+      
+      // done
+    }
+  }
+  
+  public XRefBean() {
     
     preview = new Preview();
     
@@ -56,12 +128,15 @@ public class XRefBean extends PropertyBean {
         if (xref==null)
           return;
         // tell about it
-        WindowManager.broadcast(new ContextSelectionEvent(new ViewContext(xref), preview, true));
+        SelectionSink.Dispatcher.fireSelection(e, new ViewContext(xref));
       }
     });
   }
   
-  
+  @Override
+  protected void commitImpl(Property property) {
+    //noop
+  }
   
   /**
    * Nothing to edit
@@ -73,9 +148,6 @@ public class XRefBean extends PropertyBean {
   /**
    * Set context to edit
    */
-  boolean accepts(Property prop) {
-    return prop instanceof PropertyXRef;
-  }
   public void setPropertyImpl(Property prop) {
     
     PropertyXRef xref = (PropertyXRef)prop;

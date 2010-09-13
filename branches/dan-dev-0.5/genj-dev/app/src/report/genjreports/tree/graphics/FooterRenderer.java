@@ -91,12 +91,11 @@ public class FooterRenderer implements GraphicsRenderer
         case 2:
             PropertyChange lastChange = firstIndi.individual.getGedcom().getLastChange();
             if (lastChange != null)
-                displayDate = lastChange.toString();
+                displayDate = lastChange.getDisplayValue();
             break;
         case 3:
             PropertyChange currentTime = new PropertyChange();
-            currentTime.setTime(System.currentTimeMillis());
-            displayDate = currentTime.toString();
+            displayDate = currentTime.getDisplayValue();
             break;
         }
         if (displayDate == null)
@@ -158,7 +157,7 @@ public class FooterRenderer implements GraphicsRenderer
             if (time > mostRecentTime)
             {
                 mostRecentTime = time;
-                mostRecent = lastChange.toString();
+                mostRecent = lastChange.getDisplayValue();
             }
         }
     }

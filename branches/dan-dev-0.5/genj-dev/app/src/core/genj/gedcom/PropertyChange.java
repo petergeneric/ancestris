@@ -48,6 +48,19 @@ public class PropertyChange extends Property implements MultiLineProperty {
    DATE = "DATE";
 
   private long time = -1;
+  
+  public PropertyChange() {
+    super(CHAN);
+    setTime(System.currentTimeMillis());
+  }
+
+  /**
+   * need tag-argument constructor for all properties
+   */
+  public PropertyChange(String tag) {
+    super(tag);
+    assertTag(CHAN);
+  }
 
   /**
    * @see genj.gedcom.Property#isReadOnly()
@@ -97,24 +110,6 @@ public class PropertyChange extends Property implements MultiLineProperty {
     buffer.append(decimal.format(sec));
 
     return buffer.toString();
-  }
-
-  /**
-   * @see genj.gedcom.Property#getTag()
-   */
-  public String getTag() {
-    return CHAN;
-  }
-
-  /**
-   * @see genj.gedcom.PropertySimpleValue#setTag(java.lang.String)
-   */
-  Property init(MetaProperty meta, String value) throws GedcomException {
-    meta.assertTag(CHAN);
-    super.init(meta,value);
-    if (value.length()==0)
-      setTime(System.currentTimeMillis());
-    return this;
   }
 
   /**
@@ -210,15 +205,11 @@ public class PropertyChange extends Property implements MultiLineProperty {
   /**
    * @see genj.gedcom.Property#compareTo(java.lang.Object)
    */
-  public int compareTo(Object o) {
-    // safety check
-    if (!(o instanceof PropertyChange))
-      return super.compareTo(o);
+  public int compareTo(Property other) {
     // compare time
-    PropertyChange other = (PropertyChange)o;
-    if (time<other.time)
+    if (time<((PropertyChange)other).time)
       return -1;
-    if (time>other.time)
+    if (time>((PropertyChange)other).time)
       return 1;
     return 0;
   }
@@ -321,7 +312,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
    */
   /*package*/ static class Monitor extends GedcomListenerAdapter {
 
-    private Set updated = new HashSet();
+    private Set<Entity> updated = new HashSet<Entity>();
 
     /** update entity for given property */
     private void update(Property where) {
@@ -348,7 +339,7 @@ public class PropertyChange extends Property implements MultiLineProperty {
       // update values (tx time is UTC time!)
       PropertyChange prop = (PropertyChange)entity.getProperty(PropertyChange.CHAN);
       if (prop==null)
-        prop = (PropertyChange)entity.addProperty("CHAN", "");
+        prop = (PropertyChange)entity.addProperty(new PropertyChange());
       else
         prop.setTime(System.currentTimeMillis());
 

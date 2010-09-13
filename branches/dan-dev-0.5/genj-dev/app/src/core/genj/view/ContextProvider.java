@@ -19,6 +19,8 @@
  */
 package genj.view;
 
+import java.awt.Component;
+
 
 /**
  * Support for providing context if asked
@@ -29,5 +31,39 @@ public interface ContextProvider {
    * Get context
    */
   public ViewContext getContext();
+  
+  /**
+   * Resolver for context by component 
+   */
+  public class Lookup {
+    
+    private ViewContext context;
+    private ContextProvider provider;
+    
+    public Lookup(Component component) {
+      // find context provider in component hierarchy
+      while (component != null) {
+        // component can provide context?
+        if (component instanceof ContextProvider) {
+          context = ((ContextProvider) component).getContext();
+          if (context != null) {
+            provider = (ContextProvider)component;
+            break;
+          }
+        }
+        // try parent
+        component = component.getParent();
+      }
+    }
+    
+    public ViewContext getContext() {
+      return context;
+    }
+    
+    public ContextProvider getProvider() {
+      return provider;
+    }
+  }
+  
 
 } //ContextProvider

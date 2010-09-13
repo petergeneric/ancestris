@@ -48,6 +48,18 @@ public class Indi extends Entity {
     IMG_FEMALE  = Grammar.V55.getMeta(PATH_INDI).getImage("female"),
     IMG_UNKNOWN = Grammar.V55.getMeta(PATH_INDI).getImage();
     
+  public Indi() {
+    super(Gedcom.INDI, "?");
+  }
+  
+  /**
+   * need tag,id-arguments constructor for all entities
+   */
+  public Indi(String tag, String id) {
+    super(tag, id);
+    assertTag(Gedcom.INDI);
+  }
+
   /**
    * @return a PropertyDate corresponding to the INDI:BIRT:DATE property.  
    *          Return null if the property is unset.   
@@ -101,10 +113,11 @@ public class Indi extends Entity {
     Fam fam = getFamilyWhereBiologicalChild();
     if (fam==null)
       return new Indi[0];
-    List result  = new ArrayList(fam.getNoOfChildren());
+    List<Indi> result  = new ArrayList<Indi>(fam.getNoOfChildren());
     Indi[] siblings = fam.getChildren();
     for (int s=0;s<siblings.length;s++)
-      if (includeMe||siblings[s]!=this) result.add(siblings[s]);
+      if (includeMe||siblings[s]!=this) 
+        result.add(siblings[s]);
     
     // done
     return toIndiArray(result);
@@ -123,7 +136,7 @@ public class Indi extends Entity {
     Arrays.sort(siblings, new PropertyComparator("INDI:BIRT:DATE"));
     
     // grab everything up to me
-    List result = new ArrayList(siblings.length);
+    List<Indi> result = new ArrayList<Indi>(siblings.length);
     for (int i=siblings.length-1;i>=0;i--) {
       if (siblings[i]==this)
         break;
@@ -174,11 +187,11 @@ public class Indi extends Entity {
     Arrays.sort(siblings, new PropertyComparator("INDI:BIRT:DATE"));
     
     // grab everything up older than me
-    List result = new ArrayList(siblings.length);
+    List<Indi> result = new ArrayList<Indi>(siblings.length);
     for (int i=0,j=siblings.length;i<j;i++) {
       if (siblings[i]==this)
         break;
-      result.add(0, siblings[i]);
+      result.add(siblings[i]);
     }
     
     // done
@@ -193,7 +206,7 @@ public class Indi extends Entity {
   public Indi[] getPartners() {
     // Look at all families and remember spouses
     Fam[] fs = getFamiliesWhereSpouse();
-    List l = new ArrayList(fs.length);
+    List<Indi> l = new ArrayList<Indi>(fs.length);
     for (int f=0; f<fs.length; f++) {
       Indi p = fs[f].getOtherSpouse(this);
       if (p!=null) l.add(p);
@@ -204,13 +217,31 @@ public class Indi extends Entity {
     return result;
   }
   
+  /** 
+   * Calculate indi's parents. The number of partners can be
+   * smaller than the number of families this individual is
+   * child in because spouses in families don't have to be defined.
+   */
+  public List<Indi> getParents () {
+    List<Indi> parents = new ArrayList<Indi>(2);
+    for (Fam fam : getFamiliesWhereChild()) {
+      Indi husband = fam.getHusband();
+      if (husband!=null)
+        parents.add(husband);
+      Indi wife = fam.getWife();
+      if (wife!=null)
+        parents.add(wife);
+    }
+    return parents;
+  }
+  
   /**
    * Calculate indi's children
    */
   public Indi[] getChildren() {
     // Look at all families and remember children
     Fam[] fs = getFamiliesWhereSpouse();
-    List l = new ArrayList(fs.length);
+    List<Indi> l = new ArrayList<Indi>(fs.length);
     for (int f=0; f<fs.length; f++) {
       Indi[]cs = fs[f].getChildren();
       for (int c=0;c<cs.length;c++)
@@ -232,7 +263,7 @@ public class Indi extends Entity {
       return "";
 
     // Return string value
-    return p.toString();
+    return p.getDisplayValue();
   }
 
   /**
@@ -246,14 +277,14 @@ public class Indi extends Entity {
     }
 
     // Return string value
-    return p.toString();
+    return p.getDisplayValue();
   }
 
   /**
    * Returns the families in which this individual is a spouse
    */
   public Fam[] getFamiliesWhereSpouse() {
-    ArrayList result = new ArrayList(getNoOfProperties());
+    ArrayList<Fam> result = new ArrayList<Fam>(getNoOfProperties());
     for (int i=0,j=getNoOfProperties();i<j;i++) {
       Property prop = getProperty(i);
       if ("FAMS".equals(prop.getTag())&&prop.isValid()) 
@@ -268,12 +299,12 @@ public class Indi extends Entity {
    */
   public Fam[] getFamiliesWhereChild( ) {
     
-    List famcs = getProperties(PropertyFamilyChild.class);
-    List result = new ArrayList(famcs.size());
+    List<PropertyFamilyChild> famcs = getProperties(PropertyFamilyChild.class);
+    List<Fam> result = new ArrayList<Fam>(famcs.size());
     for (int i=0; i<famcs.size(); i++) {
       PropertyFamilyChild famc = (PropertyFamilyChild)famcs.get(i);
       if (famc.isValid()&&!result.contains(famc))
-        result.add(famc.getTargetEntity());
+        result.add((Fam)famc.getTargetEntity());
     }
     
     return Fam.toFamArray(result);
@@ -287,7 +318,7 @@ public class Indi extends Entity {
 
     // look at all FAMCs
     Fam result = null;
-    List famcs = getProperties(PropertyFamilyChild.class);
+    List<PropertyFamilyChild> famcs = getProperties(PropertyFamilyChild.class);
     for (int i=0; i<famcs.size(); i++) {
       PropertyFamilyChild famc = (PropertyFamilyChild)famcs.get(i);
       // not valid - not interesting
@@ -309,7 +340,7 @@ public class Indi extends Entity {
    * Returns indi's first name
    */
   public String getFirstName() {
-    PropertyName p = (PropertyName)getProperty(PropertyName.TAG,true);
+    PropertyName p = (PropertyName)getProperty("NAME",true);
     return p!=null ? p.getFirstName() : "";  
   }
 
@@ -317,7 +348,7 @@ public class Indi extends Entity {
    * Calculate indi's last name
    */
   public String getLastName() {
-    PropertyName p = (PropertyName)getProperty(PropertyName.TAG,true);
+    PropertyName p = (PropertyName)getProperty("NAME",true);
     return p!=null ? p.getLastName() : ""; 
   }
 
@@ -325,7 +356,7 @@ public class Indi extends Entity {
    * Calculate indi's name suffix
    */
   public String getNameSuffix() {
-    PropertyName p = (PropertyName)getProperty(PropertyName.TAG,true);
+    PropertyName p = (PropertyName)getProperty("NAME",true);
     return p!=null ? p.getSuffix() : ""; 
   }
   
@@ -333,7 +364,7 @@ public class Indi extends Entity {
    * Sets indi's name
    */
   public void setName(String first, String last) {
-    PropertyName p = (PropertyName)getProperty(PropertyName.TAG,true);
+    PropertyName p = (PropertyName)getProperty("NAME",true);
     if (p==null) p = (PropertyName)addProperty(new PropertyName()); 
     p.setName(first, last);
   }
@@ -342,7 +373,7 @@ public class Indi extends Entity {
    * Returns indi's name (e.g. "Meier, Nils")
    */
   public String getName() {
-    PropertyName p = (PropertyName)getProperty(PropertyName.TAG,true);
+    PropertyName p = (PropertyName)getProperty("NAME",true);
     if (p==null)
       return "";
     return p.getDisplayValue();
@@ -400,10 +431,10 @@ public class Indi extends Entity {
     // 20070115 while we make sure that no circle exists in our gedcom data (invariants) there are cases where sub-trees of a tree occur multiple times
     // (e.g. cousin marrying cousin, ancestor marrying descendant, cloned families pointing to identical ancestors, ...)
     // So we're carrying a set of visited indis to abbreviate the ancestor check by looking for revisits.
-    return recursiveIsAncestorOf(indi, new HashSet());
+    return recursiveIsAncestorOf(indi, new HashSet<Indi>());
   }
   
-  private boolean recursiveIsAncestorOf(Indi indi, Set visited) {
+  private boolean recursiveIsAncestorOf(Indi indi, Set<Indi> visited) {
 
     // if we've visited the individual already then there's obviously no need to check twice 
     if (visited.contains(indi)) 
@@ -411,7 +442,7 @@ public class Indi extends Entity {
     visited.add(indi);
     
     // check all possible of indi's parents
-    List famcs = indi.getProperties(PropertyFamilyChild.class);
+    List<PropertyFamilyChild> famcs = indi.getProperties(PropertyFamilyChild.class);
     for (int i=0; i<famcs.size(); i++) {
       
       PropertyFamilyChild famc = (PropertyFamilyChild)famcs.get(i);
@@ -495,14 +526,15 @@ public class Indi extends Entity {
   /**
    * Name ...
    */
-  protected String getToStringPrefix(boolean hideIds, boolean showAsLink) {
+  @Override
+  protected String getToStringPrefix(boolean showIds) {
     return getName();
   }
   
   /**
    * list of indis to array
    */
-  /*package*/ static Indi[] toIndiArray(Collection c) {
+  /*package*/ static Indi[] toIndiArray(Collection<Indi> c) {
     return (Indi[])c.toArray(new Indi[c.size()]);    
   }
 
@@ -524,13 +556,6 @@ public class Indi extends Entity {
   public String getAgeString(PointInTime pit) {
     Delta delta = getAge(pit);
     return delta!=null ? delta.toString() : "";
-  }
-  
-  /**
-   * Tag always INDI
-   */
-  public String getTag() {
-    return Gedcom.INDI;
   }
   
   /**
@@ -586,6 +611,15 @@ public class Indi extends Entity {
       // valid date?
       Property date = deat.getProperty("DATE");
       if (date!=null&&date.isValid())
+        return true;
+    }
+    // TOOD we should have a configurable value for max age 
+    
+    // born more than 100 years ago?
+    PropertyDate birt = getBirthDate();
+    if (birt!=null) {
+      Delta delta = birt.getAnniversary();
+      if (delta!=null && delta.getYears()>100)
         return true;
     }
     // not afaik

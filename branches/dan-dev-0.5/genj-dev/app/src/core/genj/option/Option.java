@@ -19,10 +19,9 @@
  */
 package genj.option;
 
-import genj.util.Registry;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 
@@ -32,7 +31,7 @@ import java.util.List;
  */
 public abstract class Option {
 
-  private List listeners;
+  private List<OptionListener> listeners;
 
   private String category;
 
@@ -64,12 +63,12 @@ public abstract class Option {
   /**
    * Restore option values from registry
    */
-  public abstract void restore(Registry registry);
+  public abstract void restore();
 
   /**
    * Persist option values to registry
    */
-  public abstract void persist(Registry registry);
+  public abstract void persist();
 
   /**
    * Create an editor
@@ -81,7 +80,7 @@ public abstract class Option {
    */
   public void addOptionListener(OptionListener listener) {
     if (listeners==null)
-      listeners = new ArrayList(4);
+      listeners = new CopyOnWriteArrayList<OptionListener>();
     listeners.add(listener);
   }
 

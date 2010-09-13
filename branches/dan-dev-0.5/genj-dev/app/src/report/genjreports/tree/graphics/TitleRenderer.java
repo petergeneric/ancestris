@@ -8,10 +8,13 @@
 
 package genjreports.tree.graphics;
 
+import genj.gedcom.Indi;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+import genjreports.tree.IndiBox;
 import genjreports.tree.output.GraphicsTreeElements;
 
 /**
@@ -30,7 +33,8 @@ public class TitleRenderer implements GraphicsRenderer
     /**
      * Image title.
      */
-    public String title = "";
+    public String title = "$n ($i)";
+    private String formattedTitle;
 
     /**
      * Title font height. If set to 0, the height is determined automatically.
@@ -78,10 +82,27 @@ public class TitleRenderer implements GraphicsRenderer
             int height = getTitleHeight();
             graphics.setColor(Color.BLACK);
             graphics.setFont(new Font("verdana", Font.BOLD, height));
-            GraphicsTreeElements.centerString(graphics, title, getImageWidth() / 2, height * 3/4 + VERTICAL_MARGIN);
+            GraphicsTreeElements.centerString(graphics, formattedTitle, getImageWidth() / 2, height * 3/4 + VERTICAL_MARGIN);
 
             graphics.translate(0, height + VERTICAL_MARGIN); // Move rendered image below the title
         }
         renderer.render(graphics);
     }
+    
+    /**
+     * @param indi
+     */
+    private String format(String value, Indi indi)
+    {
+      value = value.replaceAll("\\$i", indi.getId());
+      value = value.replaceAll("\\$n", indi.getName());
+      value = value.replaceAll("\\$f", indi.getFirstName());
+      value = value.replaceAll("\\$l", indi.getLastName());
+      return value;
+    }
+
+    public void setIndi(IndiBox firstIndi) {
+      formattedTitle = format(title, firstIndi.individual);
+    }
+
 }

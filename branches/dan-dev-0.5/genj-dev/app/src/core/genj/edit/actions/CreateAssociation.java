@@ -26,7 +26,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
-import genj.view.ViewManager;
 
 /**
  * Create an association between a property (the existing target) and an individual (a source to be chosen or created)
@@ -36,15 +35,15 @@ public class CreateAssociation extends CreateRelationship {
   private Property target;
   
   /** constructor */
-  public CreateAssociation(Property target, ViewManager mgr) {
-    super(resources.getString("create.association"), target.getGedcom(), Gedcom.INDI, mgr);
+  public CreateAssociation(Property target) {
+    super(resources.getString("create.association"), target.getGedcom(), Gedcom.INDI);
     this.target = target;
     
   }
 
   /** description of what this does */
   public String getDescription() {
-    return resources.getString("create.association.with", new String[]{ Gedcom.getName(target.getTag()), target.getEntity().toString() });
+    return resources.getString("create.association.with", Gedcom.getName(target.getTag()), target.getEntity().toString() );
   }
 
   /** perform the change */

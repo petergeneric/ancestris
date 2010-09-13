@@ -19,16 +19,20 @@
  */
 package genj.util.swing;
 
+import genj.io.InputSource;
 import genj.util.EnvironmentChecker;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
@@ -50,13 +54,13 @@ public class FileChooserWidget extends JPanel {
   public final static String EXECUTABLES = "exe, bin, sh, cmd, bat";
   
   /** start directory */
-  private String directory = EnvironmentChecker.getProperty(this, "user.home", ".", "file chooser directory");
+  private String directory = EnvironmentChecker.getProperty("user.home", ".", "file chooser directory");
   
   /** an accessory if any */
   private JComponent accessory;
   
   /** action listeners */
-  private List listeners = new ArrayList();
+  private List<ActionListener> listeners = new CopyOnWriteArrayList<ActionListener>();
   
   /** action listener connector to text field */
   private ActionListener actionProxy = new ActionListener() {
@@ -180,13 +184,25 @@ public class FileChooserWidget extends JPanel {
     // from here on but sometimes that undersirable since file might
     // not contain a valid full path in the first place
     text.setText(file!=null ? file.getPath() : "");
+    if (file!=null&&file.getParentFile().isDirectory())
+      setDirectory(file.getParentFile().toString());
   }
   
   /**
    * Get current file
    */
   public File getFile() {
-    return new File(text.getText());
+    
+    File file = new File(text.getText().trim());
+    String name = file.getName();
+    
+    if (extensions!=null&&name.indexOf(".")<0&&extensions.indexOf(',')<0) {
+      String ext = extensions.trim();
+      if (name.length()>0&&!name.endsWith("."+ext))
+        file = new File(file.getParentFile(), name+"."+ext);
+    }
+    
+    return file;
   }
   
   /** 
@@ -202,29 +218,47 @@ public class FileChooserWidget extends JPanel {
   public boolean requestFocusInWindow() {
     return text.requestFocusInWindow();
   }
+  
+  @Override
+  public void requestFocus() {
+    text.requestFocus();
+  }
 
   /**
    * Choose with file dialog
    */
-  private class Choose extends Action2 {
+  private class Choose extends Action2 implements PropertyChangeListener {
     
     /** constructor */
     private Choose() {
       setText("...");
-      setTarget(FileChooserWidget.this);
     }
 
     /** choose file */    
-    protected void execute() {
+    public void actionPerformed(ActionEvent event) {
 
       // create and show chooser      
       FileChooser fc = new FileChooser(FileChooserWidget.this, getName(), Action2.TXT_OK, extensions, directory);
+      
       fc.setAccessory(accessory);
+      fc.addPropertyChangeListener(this);
+      
+      File file = getFile();
+      if (file.isFile())
+        fc.setSelectedFile(file);
+      
       fc.showDialog();
       
       // check result
-      File file = fc.getSelectedFile();
+      file = fc.getSelectedFile();
       if (file!=null)  {
+        
+        if (extensions!=null && extensions.indexOf(',')<0) {
+          String ext = extensions.trim();
+          if (!file.getName().endsWith("."+ext))
+            file = new File(file.getParentFile(), file.getName()+"."+ext);
+        }
+        
         setFile(file);
         directory = file.getParent();
         
@@ -233,6 +267,16 @@ public class FileChooserWidget extends JPanel {
       }
       
       // done
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+      
+      if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
+        File file = (File)evt.getNewValue();
+        if (accessory instanceof ThumbnailWidget)
+          ((ThumbnailWidget)accessory).setSource(file!=null ? InputSource.get(file) : null);
+      }
     }
     
   } //Choose

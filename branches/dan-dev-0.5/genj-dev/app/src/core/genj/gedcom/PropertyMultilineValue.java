@@ -26,25 +26,14 @@ import java.util.ArrayList;
  */
 public class PropertyMultilineValue extends Property implements MultiLineProperty {
   
-  /** the tag */
-  private String tag;
-  
   /** our value */
   private String lines = "";
   
   /**
-   * @see genj.gedcom.Property#getTag()
+   * need tag-argument constructor for all properties
    */
-  public String getTag() {
-    return tag;
-  }
-
-  /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  /*package*/ Property init(MetaProperty meta, String value) throws GedcomException {
-    tag = meta.getTag();
-    return super.init(meta, value);
+  /*package*/ PropertyMultilineValue(String tag) {
+    super(tag);
   }
   
   /**
@@ -75,7 +64,7 @@ public class PropertyMultilineValue extends Property implements MultiLinePropert
    * Accessor Value as lines
    */
   public String[] getLines() {
-     ArrayList result = new ArrayList();
+     ArrayList<String> result = new ArrayList<String>();
      Iterator it = getLineIterator();
      do {
        result.add(it.getValue());

@@ -78,17 +78,11 @@ public class ReportEventsByMonths extends Report {
   }
 
   /**
-   * No STDOUT necessary
-   */
-  public boolean usesStandardOut() {
-    return false;
-  }
-
-  /**
    * Report's main
    */
-  public void start(Gedcom gedcom) {
-	  Map<String, String> labels = new HashMap<String, String>();
+  public Object start(Gedcom gedcom) {
+    
+	Map<String, String> labels = new HashMap<String, String>();
 	  
     // look for events we consider
     List<IndexedSeries> series = new ArrayList<IndexedSeries>();
@@ -126,15 +120,13 @@ public class ReportEventsByMonths extends Report {
       //String label = Gedcom.getName(is.getName());
       String label = (String)labels.get(is.getName());
       // the chart title
-      String[] chartTitleParameters = {label, new Integer(inferiorYearLimit).toString(),new Integer(superiorYearLimit).toString()};
-      Chart chart = new Chart(translate("chart.title",chartTitleParameters), is, categories, false);
+      Chart chart = new Chart(translate("chart.title",label, new Integer(inferiorYearLimit).toString(),new Integer(superiorYearLimit).toString()), is, categories, false);
       
       charts.addTab(label, chart);
     }
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(BorderLayout.CENTER, charts);
-
-    showComponentToUser(panel);
+    return panel;
 
     // done
   }

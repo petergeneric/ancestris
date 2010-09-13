@@ -33,18 +33,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -55,10 +58,10 @@ import javax.swing.tree.TreeSelectionModel;
 public class PathTreeWidget extends JScrollPane {
 
   /** list listeners */
-  private List    listeners = new ArrayList();
+  private List<Listener> listeners = new ArrayList<Listener>();
   
-  /** gedcom */
-  private Gedcom  gedcom;
+  /** grammar */
+  private Grammar grammar = Grammar.V55;
   
   /** the tree we use for display */
   private JTree   tree;
@@ -71,13 +74,16 @@ public class PathTreeWidget extends JScrollPane {
    */
   public PathTreeWidget() {
 
+    Callback callback = new Callback();
+    
     // Prepare tree
     tree = new JTree(model);
     tree.setShowsRootHandles(false);
     tree.setRootVisible(false);
     tree.setCellRenderer(new Renderer());
     tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-    tree.addMouseListener(new Selector());
+    tree.addMouseListener(callback);
+    tree.addTreeWillExpandListener(callback);
 
     // Do a little bit of layouting
     setMinimumSize(new Dimension(160, 160));
@@ -86,21 +92,16 @@ public class PathTreeWidget extends JScrollPane {
 
     // Done
   }
+  
+  public void setGrammar(Grammar grammar) {
+    this.grammar = grammar;
+  }
 
   /**
    * Adds another listener to this
    */
   public void addListener(Listener listener) {
     listeners.add(listener);
-  }
-
-  /**
-   * Helper that expands all rows
-   */
-  private void expandRows() {
-    for (int i=0;i<tree.getRowCount();i++) {
-      tree.expandRow(i);
-    }
   }
 
   /**
@@ -127,7 +128,29 @@ public class PathTreeWidget extends JScrollPane {
    */
   public void setPaths(TagPath[] paths, TagPath[] selection) {
     model.setPaths(paths, selection);
-    expandRows();
+
+    // ensure all first level paths are expanded
+    for (TagPath path : paths) {
+      Object[] treepath = new Object[2];
+      treepath[0] = model;
+      treepath[1] = new TagPath(path.get(0));
+      tree.expandPath(new TreePath(treepath));
+    }
+    
+    // ensure selected nodes are expanded
+    for (TagPath path : selection) {
+      Object[] treepath = new Object[path.length()];
+      treepath[0] = model;
+      for (int i=1;i<path.length();i++) {
+        treepath[i] = new TagPath(path, i);
+      }
+      tree.expandPath(new TreePath(treepath));
+    }
+    
+  }
+
+  public void setSelected(TagPath path, boolean set) {
+    model.setSelected(path, set);
   }
   
   /**
@@ -162,8 +185,8 @@ public class PathTreeWidget extends JScrollPane {
       // change for tag path
       if (value instanceof TagPath) {
         TagPath path = (TagPath)value; 
-        setText( path.getLast() );
-        setIcon( Grammar.V55.getMeta(path).getImage() );
+        setText( path.getLast() + " ("+Gedcom.getName(path.getLast())+")");
+        setIcon( grammar.getMeta(path).getImage() );
         checkbox.setSelected(model.getSelection().contains(value));
         panel.invalidate(); // make sure no preferred side is cached
       }      
@@ -179,16 +202,16 @@ public class PathTreeWidget extends JScrollPane {
   private class Model implements TreeModel {
     
     /** the tag-paths to choose from */
-    private TagPath[] paths = new TagPath[0];
+    private Set<TagPath> paths = new HashSet<TagPath>();
 
     /** the selection */
-    private Set selection = new HashSet();
+    private Set<TagPath> selection = new HashSet<TagPath>();
     
     /** map a path to its children */
-    private Map path2childen = new HashMap(); 
+    private Map<TagPath,TagPath[]> path2childen = new HashMap<TagPath,TagPath[]>(); 
     
     /** listeners */
-    private List tmlisteners = new ArrayList();
+    private List<TreeModelListener> tmlisteners = new CopyOnWriteArrayList<TreeModelListener>();
   
     /**
      * Sets the TagPaths to choose from
@@ -196,17 +219,39 @@ public class PathTreeWidget extends JScrollPane {
     public void setPaths(TagPath[] ps, TagPath[] ss) {
 
       // remember selection
-      selection = new HashSet(Arrays.asList(ss));
+      selection = new HashSet<TagPath>(Arrays.asList(ss));
       
       // keep paths
-      paths = ps;
+      paths = new HashSet<TagPath>();
+      paths.addAll(Arrays.asList(ps));
+      paths.addAll(Arrays.asList(ss));
       
       // notify
       TreeModelEvent e = new TreeModelEvent(this, new Object[]{ this });
-      TreeModelListener[] ls = getListenerSnapshot();
-      for (int l=0;l<ls.length;l++) ls[l].treeStructureChanged(e);
+      for (TreeModelListener listener : tmlisteners)
+        listener.treeStructureChanged(e);
       
       // done
+    }
+    
+    private void setSelected(TagPath path, boolean set) {
+
+      if (!paths.contains(path))
+        throw new IllegalArgumentException("path not a choice");
+      
+      // in/out
+      if (set)
+        selection.add(path);
+      else
+        selection.remove(path);
+      
+      // notify
+      TreeModelEvent e = new TreeModelEvent(this, new Object[]{ this });
+      for (TreeModelListener listener : tmlisteners) 
+        listener.treeNodesChanged(e);
+      
+      fireSelectionChanged(path, set);
+      
     }
     
     /**
@@ -214,23 +259,10 @@ public class PathTreeWidget extends JScrollPane {
      */
     private void toggleSelection(TagPath path) {
       
-      // toggle
-      boolean removed = selection.remove(path);
-      if (!removed) selection.add(path);
-      
-      fireSelectionChanged(path, !removed);
-      
-      // notify
-      TreeModelEvent e = new TreeModelEvent(this, new Object[]{ this });
-      TreeModelListener[] ls = getListenerSnapshot();
-      for (int l=0;l<ls.length;l++) ls[l].treeNodesChanged(e);
-    }
-    
-    /**
-     * Get listeners
-     */
-    private TreeModelListener[] getListenerSnapshot() {
-      return (TreeModelListener[])tmlisteners.toArray(new TreeModelListener[listeners.size()]);
+      if (selection.contains(path))
+        setSelected(path, false);
+      else
+        setSelected(path, true);
     }
     
     /**
@@ -266,7 +298,7 @@ public class PathTreeWidget extends JScrollPane {
      */
     private TagPath[] getChildren(Object node) {
       // lazy
-      TagPath[] result = (TagPath[])path2childen.get(node);
+      TagPath[] result = path2childen.get(node);
       if (result==null) {
         result = node==this ? getChildrenOfRoot() : getChildrenOfNode((TagPath)node);
       }
@@ -279,13 +311,12 @@ public class PathTreeWidget extends JScrollPane {
      */
     private TagPath[] getChildrenOfNode(TagPath path) {
       // all paths starting with path
-      List children = new ArrayList(8);
-      for (int p=0;p<paths.length;p++) {
-        if (paths[p].length()>path.length()&&paths[p].startsWith(path)) 
-          add(new TagPath(paths[p], path.length()+1), children);
+      List<TagPath> children = new ArrayList<TagPath>(8);
+      for (TagPath p : paths) {
+        if (p.length()>path.length()&&p.startsWith(path)) 
+          add(new TagPath(p, path.length()+1), children);
       }
-      for (Iterator ss=selection.iterator();ss.hasNext();) {
-        TagPath sel = (TagPath)ss.next();
+      for (TagPath sel : selection) {
         if (sel.length()>path.length()&&sel.startsWith(path)) 
           add(new TagPath(sel, path.length()+1), children);
       }
@@ -298,16 +329,16 @@ public class PathTreeWidget extends JScrollPane {
      */
     private TagPath[] getChildrenOfRoot() {
       // all paths' first tag 
-      List children = new ArrayList(8);
-      for (int p=0;p<paths.length;p++) 
-        add(new TagPath(paths[p], 1), children);
-      for (Iterator ss=selection.iterator();ss.hasNext();) 
-        add(new TagPath((TagPath)ss.next(), 1), children);
+      List<TagPath> children = new ArrayList<TagPath>(8);
+      for (TagPath path : paths) 
+        add(new TagPath(path, 1), children);
+      for (TagPath path : selection) 
+        add(new TagPath(path, 1), children);
       // done
       return TagPath.toArray(children);
     }
     
-    private void add(TagPath path, List list) {
+    private void add(TagPath path, List<TagPath> list) {
       if (!list.contains(path))
         list.add(path);
     }
@@ -343,7 +374,7 @@ public class PathTreeWidget extends JScrollPane {
     /**
      * Returns the selected TagPaths
      */
-    public Collection getSelection() {
+    public Collection<TagPath> getSelection() {
       return selection;
     }
 
@@ -362,9 +393,9 @@ public class PathTreeWidget extends JScrollPane {
   } //Listener
 
   /**
-   * Selector - mouse click selects
+   * Callback for mouse click selects and expand ops
    */
-  private class Selector extends MouseAdapter {
+  private class Callback extends MouseAdapter implements TreeWillExpandListener {
     /** 
      * callback for mouse click 
      */
@@ -376,6 +407,14 @@ public class PathTreeWidget extends JScrollPane {
       // last segment is the path we're interested in
       model.toggleSelection((TagPath)path.getLastPathComponent());
       // done
+    }
+
+    public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+      if (event.getPath().getPathCount()<3)
+        throw new ExpandVetoException(event);
+    }
+
+    public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
     }
   } //Selector
   

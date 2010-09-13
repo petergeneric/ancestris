@@ -23,11 +23,10 @@ package genj.util.swing;
 import genj.util.MnemonicAndText;
 import genj.util.Resources;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -37,45 +36,25 @@ import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
  * An Action
  */
-public class Action2 extends AbstractAction implements Runnable, Cloneable {
+public class Action2 extends AbstractAction {
   
-  private final static String 
+  /*package*/ final static String 
     KEY_TEXT = Action.NAME,
     KEY_OLDTEXT = Action.NAME+".old",
     KEY_SHORT_TEXT = "shortname",
     KEY_TIP = Action.SHORT_DESCRIPTION,
     KEY_ENABLED = "enabled",
     KEY_MNEMONIC = Action.MNEMONIC_KEY,
-    KEY_ICON = Action.SMALL_ICON;
+    KEY_ICON = Action.SMALL_ICON,
+    KEY_SELECTED = "SwingSelectedKey";
     
   private final static Logger LOG = Logger.getLogger("genj.actions");
   
-  /** a noop ActionDelegate */
-  public static final Action2 NOOP = new ActionNOOP();
-  
-  /** async modes */
-  public static final int 
-    ASYNC_NOT_APPLICABLE = 0,
-    ASYNC_SAME_INSTANCE  = 1,
-    ASYNC_NEW_INSTANCE   = 2;
-  
-  /** attributes */
-  private Component target;
-  private KeyStroke accelerator;
-  
-  /** whether we're async or not */
-  private int async = ASYNC_NOT_APPLICABLE;
-  
-  /** the thread executing asynchronously */
-  private Thread thread;
-  private Object threadLock = new Object();
-
   /** predefined strings */
   public final static String
     TXT_YES         = UIManager.getString("OptionPane.yesButtonText"),
@@ -103,179 +82,8 @@ public class Action2 extends AbstractAction implements Runnable, Cloneable {
     setEnabled(enabled);
   }
   
-  /**
-   * trigger execution - ActionListener support
-   * @see Action2#trigger()
-   */
-  public final void actionPerformed(ActionEvent e) {
-    trigger();
-  }
-  
-  /**
-   * trigger execution - Runnable support
-   * @see Action2#trigger()
-   */
-  public final void run() {
-    trigger();
-  }
-
-  /**
-   * trigger execution
-   * @return status of preExecute (true unless overridden)
-   */
-  public final boolean trigger() {
-    
-    // enabled?
-    if (!isEnabled()) 
-      throw new IllegalArgumentException("trigger() while !isEnabled");
-
-    // do we have to create a new instance?
-    if (async==ASYNC_NEW_INSTANCE) {
-      try {
-        Action2 ad = (Action2)clone();
-        ad.setAsync(ASYNC_SAME_INSTANCE);
-        return ad.trigger();
-      } catch (Throwable t) {
-        t.printStackTrace();
-        handleThrowable("trigger", new RuntimeException("Couldn't clone instance of "+getClass().getName()+" for ASYNC_NEW_INSTANCE"));
-      }
-      return false;
-    }
-    
-    // pre
-    boolean preExecuteResult;
-    try {
-      preExecuteResult = preExecute();
-    } catch (Throwable t) {
-      handleThrowable("preExecute",t);
-      preExecuteResult = false;
-    }
-    
-    // execute
-    if (preExecuteResult) try {
-      
-      if (async!=ASYNC_NOT_APPLICABLE) {
-        
-        synchronized (threadLock) {
-          getThread().start();
-        }
-        
-      } else {
-        execute();
-      }
-      
-    } catch (Throwable t) {
-      handleThrowable("execute(sync)", t);
-     
-      // guide into sync'd postExecute because
-      // getThread().start() might fail in 
-      // certain security contexts (e.g. applet)
-      preExecuteResult = false;
-    }
-    
-    // post
-    if (async==ASYNC_NOT_APPLICABLE||!preExecuteResult) try {
-      postExecute(preExecuteResult);
-    } catch (Throwable t) {
-      handleThrowable("postExecute", t);
-    }
-    
-    // done
-    return preExecuteResult;
-  }
-  
-  /**
-   * Setter 
-   */
-  protected void setAsync(int set) {
-    async=set;
-  }
-  
-  /** 
-   * Stops asynchronous execution
-   */
-  public void cancel(boolean wait) {
-
-    Thread cancel;
-    synchronized (threadLock) {
-      if (thread==null||!thread.isAlive()) 
-        return;
-      cancel = thread;      
-      cancel.interrupt();
-    }
-
-    if (wait) try {
-      cancel.join();
-    } catch (InterruptedException e) {
-    }
-
-    // done
-  }
-  
-  /**
-   * The thread running this asynchronously
-   * @return thread or null
-   */
-  protected Thread getThread() {
-    if (async!=ASYNC_SAME_INSTANCE) return null;
-    synchronized (threadLock) {
-      if (thread==null) {
-        thread = new Thread(new CallAsyncExecute());
-        thread.setPriority(Thread.NORM_PRIORITY);
-      }
-      return thread;
-    }
-  }
-  
-  /**
-   * Implementor's functionality (always sync to EDT)
-   */
-  protected boolean preExecute() {
-    // Default 'yes, continue'
-    return true;
-  }
-  
-  /**
-   * Implementor's functionality 
-   * (called asynchronously to EDT if !ASYNC_NOT_APPLICABLE)
-   */
-  protected void execute() {
-    //noop
-  }
-  
-  /**
-   * Trigger a syncExecute callback
-   */
-  protected final void sync() {
-    if (SwingUtilities.isEventDispatchThread())
-      syncExecute();
-    else
-      SwingUtilities.invokeLater(new CallSyncExecute());
-  }
-  
-  /**
-   * Implementor's functionality
-   * (sync callback)
-   */
-  protected void syncExecute() {
-  }
-  
-  /**
-   * Implementor's functionality (always sync to EDT)
-   */
-  protected void postExecute(boolean preExecuteResult) {
-    // Default NOOP
-  }
-  
-  /** 
-   * Handle an uncaught throwable (always sync to EDT)
-   */
-  protected void handleThrowable(String phase, Throwable t) {
-    LogRecord record = new  LogRecord(Level.WARNING, "Action failed in "+phase);
-    record.setThrown(t);
-    record.setSourceClassName(getClass().getName());
-    record.setSourceMethodName(phase);
-    LOG.log(record); 
+  /** default noop implementation of action invocation */
+  public void actionPerformed(ActionEvent e) {
   }
   
   /**
@@ -290,34 +98,6 @@ public class Action2 extends AbstractAction implements Runnable, Cloneable {
     if (KEY_TIP.equals(key))
       return getTip();
     return super.getValue(key);
-  }
-  
-  /**
-   * accessor - topmost target component
-   */
-  public Action2 setTarget(Component t) {
-    // remember
-    target = t;
-    return this;
-  }
-  
-  /**
-   * accessor - target component
-   */
-  public Component getTarget() {
-    return target;
-  }
-  
-  /** accessor - accelerator */
-  public Action2 setAccelerator(String s) {
-    accelerator = KeyStroke.getKeyStroke(s);
-    return this;
-  }
-  
-  /** accessor - accelerator */
-  public Action2 setAccelerator(KeyStroke accelerator) {
-    this.accelerator = accelerator;
-    return this;
   }
   
   /**
@@ -377,6 +157,11 @@ public class Action2 extends AbstractAction implements Runnable, Cloneable {
     super.putValue(KEY_MNEMONIC, c==0 ? null : new Integer(c));
     return this;
   }
+  
+  public char getMnemonic() {
+    Integer val = (Integer)super.getValue(KEY_MNEMONIC);
+    return val != null ? (char)val.intValue() : (char)0;
+  }
 
   /**
    * accessor - text
@@ -409,187 +194,199 @@ public class Action2 extends AbstractAction implements Runnable, Cloneable {
   }
 
   /**
-     * accessor - image 
-     */
+   * accessor - image 
+   */
   public Icon getImage() {
     return (Icon)super.getValue(KEY_ICON);
   }
 
-  /** accessor - accelerator */
-  public KeyStroke getAccelerator() {
-    return accelerator;
-  }
-  
-  /** install into components action map */
-  public void install(JComponent into, int condition) {
-    
-    if (accelerator==null)
-      return;
-    
-    InputMap inputs = into.getInputMap(condition);
-    inputs.put(accelerator, this);
-    into.getActionMap().put(this, this);
-      
+  /** convenience factory */
+  public static Action2 yes() {
+    return new Constant(Action2.TXT_YES);
   }
 
   /** convenience factory */
-  public static Action yes() {
-    return new Action2(Action2.TXT_YES);
+  public static Action2 no() {
+    return new Constant(Action2.TXT_NO);
   }
 
   /** convenience factory */
-  public static Action no() {
-    return new Action2(Action2.TXT_NO);
+  public static Action2 ok() {
+    return new Constant(Action2.TXT_OK);
   }
 
   /** convenience factory */
-  public static Action ok() {
-    return new Action2(Action2.TXT_OK);
+  public static Action2 cancel() {
+    return new Constant(Action2.TXT_CANCEL);
   }
 
   /** convenience factory */
-  public static Action cancel() {
-    return new Action2(Action2.TXT_CANCEL);
+  public static Action2[] yesNo() {
+    return new Action2[]{ yes(), no() };
+  }
+  
+  /** convenience factory */
+  public static Action2[] yesNoCancel() {
+    return new Action2[]{ yes(), no(), cancel() };
+  }
+  
+  /** convenience factory */
+  public static Action2[] okCancel() {
+    return new Action2[]{ ok(), cancel() };
+  }
+  
+  /** convenience factory */
+  public static Action2[] andCancel(Action2 ok) {
+    return new Action2[]{ ok, cancel() };
+  }
+  
+  /** convenience factory */
+  public static Action2[] okAnd(Action2 action) {
+    return new Action2[]{ ok(), action };
+  }
+  
+  /** convenience factory */
+  public static Action2[] okOnly() {
+    return new Action2[]{ ok() };
+  }
+  
+  /** convenience factory */
+  public static Action2[] cancelOnly() {
+    return new Action2[]{ cancel() };
+  }
+  
+  private static class Constant extends Action2 {
+    private Constant(String txt) { super(txt); }
+    public void actionPerformed(ActionEvent e) {};
+  };
+  
+  public Action2 install(JComponent component, String shortcut) {
+    return install(component,shortcut,JComponent.WHEN_IN_FOCUSED_WINDOW);
+  }
+  
+  public Action2 install(JComponent component, String shortcut, int condition) {
+    InputMap inputs = component.getInputMap(condition);
+    inputs.put(KeyStroke.getKeyStroke(shortcut), this);
+    component.getActionMap().put(this, this);
+    return this;
+  }
+  
+  public static void uninstall(JComponent component, String shortcut) {
+    uninstall(component, component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW), shortcut);
+    uninstall(component, component.getInputMap(JComponent.WHEN_FOCUSED), shortcut);
+    uninstall(component, component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT), shortcut);
+  }
+  
+  private static void uninstall(JComponent component, InputMap map, String shortcut) {
+    KeyStroke key = KeyStroke.getKeyStroke(shortcut);
+    Object o = map.get(key);
+    if (o instanceof Action2) {
+      map.put(key, null);
+      component.getActionMap().remove(o);
+    }
   }
 
-  /** convenience factory */
-  public static Action[] yesNo() {
-    return new Action[]{ yes(), no() };
+  public boolean isSelected() {
+    return Boolean.TRUE.equals((Boolean)getValue(KEY_SELECTED));
   }
   
-  /** convenience factory */
-  public static Action[] yesNoCancel() {
-    return new Action[]{ yes(), no(), cancel() };
+  public boolean setSelected(boolean selected) {
+    boolean old = isSelected();
+    putValue(KEY_SELECTED, selected ? Boolean.TRUE : Boolean.FALSE);
+    return old;
   }
-  
-  /** convenience factory */
-  public static Action[] okCancel() {
-    return new Action[]{ ok(), cancel() };
-  }
-  
-  /** convenience factory */
-  public static Action[] okAnd(Action action) {
-    return new Action[]{ ok(), action };
-  }
-  
-  /** convenience factory */
-  public static Action[] okOnly() {
-    return new Action[]{ ok() };
-  }
-  
-  /** convenience factory */
-  public static Action[] cancelOnly() {
-    return new Action[]{ cancel() };
-  }
-  
-  /**
-   * Async Execution
-   */
-  private class CallAsyncExecute implements Runnable {
-    public void run() {
-      
-      Throwable thrown = null;
-      try {
-        execute();
-      } catch (Throwable t) {
-        thrown = t;
-      }
-      
-      // forget thread
-      synchronized (threadLock) {
-        thread = null;
-      }
-      
-      // queue handleThrowable
-      if (thrown!=null)
-        SwingUtilities.invokeLater(new CallSyncHandleThrowable(thrown));
-      
-      // queue postExecute
-      SwingUtilities.invokeLater(new CallSyncPostExecute());
-    }
-  } //AsyncExecute
-  
-  /**
-   * Sync (EDT) Post Execute
-   */
-  private class CallSyncPostExecute implements Runnable {
-    public void run() {
-      try {
-        postExecute(true);
-      } catch (Throwable t) {
-        handleThrowable("postExecute", t);
-      }
-    }
-  } //SyncPostExecute
-  
-  /**
-   * Sync (EDT) syncExecute
-   */
-  private class CallSyncExecute implements Runnable {
-    public void run() {
-      try {
-        syncExecute();
-      } catch (Throwable t) {
-        handleThrowable("syncExecute", t);
-      }
-    }
-  } //SyncPostExecute
-  
-  /**
-   * Sync (EDT) handle throwable
-   */
-  private class CallSyncHandleThrowable implements Runnable {
-    private Throwable t;
-    protected CallSyncHandleThrowable(Throwable set) {
-      t=set;
-    }
-    public void run() {
-      // an async throwable we're going to handle now?
-      try {
-        handleThrowable("execute(async)",t);
-      } catch (Throwable t) {
-      }
-    }
-  } //SyncHandleThrowable
-  
-  /**
-   * Action - noop
-   */
-  private static class ActionNOOP extends Action2 {
-    /**
-     * @see genj.util.swing.Action2#execute()
-     */
-    protected void execute() {
-      // ignored
-    }
-  } //ActionNOOP
   
   /**
    * An action group
    */
-  public static class Group extends ArrayList {
+  public static class Group extends Action2 implements Iterable<Action2> {
     
-    /** a name */
-    private String name;
-    private ImageIcon icon;
+    private ArrayList<Action2> actions = new ArrayList<Action2>(4);
+    private boolean sort;
     
     /** constructor */
-    public Group(String name, ImageIcon imageIcon) {
-      this.icon = imageIcon;
-      this.name = name;
-    }
-    public Group(String name) {
-    	this(name,null);
+    public Group(String text, Icon icon, boolean sort) {
+      super(text);
+      setImage(icon);
+      this.sort = sort;
     }
     
-    /** accessor */
-    public String getName() {
-      return name;
+    /** constructor */
+    public Group(String text, Icon icon) {
+      super(text);
+      setImage(icon);
     }
-	public ImageIcon getIcon() {
-		return icon;
-	}
-  }
+    
+    /** constructor */
+    public Group(String text, ImageIcon imageIcon, List<Action2> actions) {
+      super(text);
+      setImage(imageIcon);
+      
+      this.actions.addAll(actions);
+    }
+    
+    public Group(String text) {
+    	this(text,null);
+    }
+    
+    public Group add(Action2 action) {
+      // merge into known
+      for (Action old : this) {
+        if (old.equals(action)) {
+          if (old instanceof Group) for (Action2 a : (Group)action)
+            ((Group)old).add(a);
+          return this;
+        }
+      }
+      // keep
+      if (sort) {
+        for (int i=0;i<actions.size();i++) {
+          if (actions.get(i).getText().compareTo(action.getText())>0) {
+            actions.add(i, action);
+            return this;
+          }
+        }
+      }
+      actions.add(action);
+      return this;
+    }
 
-} //ActionDelegate
+    public Group addAll(Group group) {
+      for (Action2 action : group)
+        add(action);
+      return this;
+    }
+    
+    public Group addAll(List<Action2> actions) {
+      for (Action2 action : actions)
+        add(action);
+      return this;
+    }
+    
+    public Group clear() {
+      actions.clear();
+      return this;
+    }
+
+    public int size() {
+      return actions.size();
+    }
+
+    public Iterator<Action2> iterator() {
+      return actions.iterator();
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+      throw new IllegalArgumentException("group doesn't support actionPerformed()");
+    }
+    
+    @Override
+    public void setEnabled(boolean newValue) {
+      for (Action action : actions)
+        action.setEnabled(newValue);
+    }
+
+  } //Group
+
+} //Action2
 

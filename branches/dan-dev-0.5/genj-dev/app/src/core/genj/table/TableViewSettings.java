@@ -20,54 +20,42 @@
 package genj.table;
 
 import genj.common.PathTreeWidget;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.util.GridBagHelper;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.util.swing.ButtonHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.ListSelectionWidget;
-import genj.view.Settings;
-import genj.view.ViewManager;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.AbstractButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Class for providing ViewInfo information to a ViewEditor
  */
-public class TableViewSettings extends JPanel implements Settings {
+public class TableViewSettings extends JPanel {
 
-  /** components */
-  private JComboBox           cTypes;
   private PathTreeWidget      pathTree;
-  private ListSelectionWidget pathList;
-  private TableView           table;
+  private ListSelectionWidget<TagPath> pathList;
   private Resources           resources = Resources.get(this);
 
-  /**
-   * @see genj.view.Settings#init(genj.view.ViewManager)
-   */
-  public void init(ViewManager manager) {
-
+  public TableViewSettings(final TableView view) {
+    
+    final Grammar grammar = view.getGedcom()!=null ? view.getGedcom().getGrammar() : Grammar.V55;
+    
     // Create!
     GridBagHelper gh = new GridBagHelper(this);
-
-    // Chooseable type
-    cTypes = new JComboBox();
-
-    for (int i=0;i<Gedcom.ENTITIES.length;i++) {
-      cTypes.addItem(Gedcom.getName(Gedcom.ENTITIES[i],true));
-    }
-    cTypes.addActionListener(new ActionChooseEntity());
 
     // Tree of TagPaths
     pathTree = new PathTreeWidget();
@@ -84,116 +72,97 @@ public class TableViewSettings extends JPanel implements Settings {
       }
       // EOC
     };
+    String tag = view.getMode().getTag();
+    TagPath[] selectedPaths = view.getMode(tag).getPaths();
+    TagPath[] usedPaths     = grammar.getAllPaths(tag, Property.class);
+    pathTree.setGrammar(grammar);
+    pathTree.setPaths(usedPaths, selectedPaths);
     pathTree.addListener(plistener);
 
+    // Up/Down of ordering
+    final Move up = new Move(true);
+    final Move dn = new Move(false);
+    final Del del = new Del();
+    
     // List of TagPaths
-    pathList = new ListSelectionWidget() {
-      protected ImageIcon getIcon(Object choice) {
-	      TagPath path = (TagPath)choice;
-	      return Grammar.V55.getMeta(path).getImage();
+    pathList = new ListSelectionWidget<TagPath>() {
+      protected ImageIcon getIcon(TagPath path) {
+	      return grammar.getMeta(path).getImage();
       }
     };
-
-    // Up/Down of ordering
-    ButtonHelper bh = new ButtonHelper().setInsets(0);
-    AbstractButton bUp   = bh.create(new ActionUpDown(true));
-    AbstractButton bDown = bh.create(new ActionUpDown(false));
-    
-    // Layout
-    gh.add(new JLabel(resources.getString("info.entities"))  ,0,1,1,1);
-    gh.add(cTypes                  ,1,1,2,1,GridBagHelper.GROWFILL_HORIZONTAL);
-
-    gh.add(new JLabel(resources.getString("info.columns"))   ,0,2,1,1);
-    gh.add(pathTree                ,1,2,2,2,GridBagHelper.GROWFILL_BOTH);
-
-    gh.add(new JLabel(resources.getString("info.order"))  ,0,4,1,1);
-    gh.add(bUp                                            ,0,5,1,1,GridBagHelper.FILL_HORIZONTAL);
-    gh.add(bDown                                          ,0,6,1,1,GridBagHelper.FILL_HORIZONTAL);
-    gh.add(pathList                                       ,1,4,2,4,GridBagHelper.GROWFILL_BOTH);
-
-    // Done
-  }
-  
-  /**
-   * @see genj.view.Settings#setView(javax.swing.JComponent, genj.view.ViewManager)
-   */
-  public void setView(JComponent view) {
-    // remember
-    table = (TableView)view;
-    // switch type
-    cTypes.setSelectedItem(Gedcom.getName(table.getMode().getTag(), true));
-    // done
-  }
-
-
-  /**
-   * Tells the ViewInfo to apply made changes
-   */
-  public void apply() {
-    // Write columns by TagPaths
-    String tag = Gedcom.ENTITIES[cTypes.getSelectedIndex()];
-    List choices = pathList.getChoices();
-    TagPath[] paths = (TagPath[])choices.toArray(new TagPath[choices.size()]);
-    table.getMode(tag).setPaths(paths);
-    // Done
-  }
-
-  /**
-   * Tells the ViewInfo to reset made changes
-   */
-  public void reset() {
-
-    // Reflect columns by TagPaths
-    String tag = Gedcom.ENTITIES[cTypes.getSelectedIndex()];
-    
-    TagPath[] selectedPaths = table.getMode(tag).getPaths();
-    TagPath[] usedPaths     = table.gedcom.getGrammar().getAllPaths(tag, Property.class);
-
-    pathTree.setPaths(usedPaths, selectedPaths);
     pathList.setChoices(selectedPaths);
+    pathList.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        TagPath path = pathList.getChoice(e.getPoint());
+        if (path!=null&&e.getClickCount()==2) 
+          pathTree.setSelected(path, false);
+      }
+    });
+    pathList.addSelectionListener(new ListSelectionListener() {
+      public void valueChanged(ListSelectionEvent e) {
+        // update actions
+        int i = pathList.getSelectedIndex();
+        up.setEnabled(i>0);
+        dn.setEnabled(i>=0&&i<pathList.getChoices().size()-1);
+        del.setEnabled(i>=0);
+      }
+    });
+    pathList.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent e) {
+        // commit selected choices
+        List<TagPath> choices = pathList.getChoices();
+        view.getMode().setPaths(choices.toArray(new TagPath[choices.size()]));
+      }      
+    });
 
-    // Done
-  }
-  
-  /**
-   * @see genj.view.Settings#getEditor()
-   */
-  public JComponent getEditor() {
-    return this;
+    // Layout
+    gh.add(new JLabel(resources.getString("info.columns")),0,0,4,1, GridBagHelper.FILL_HORIZONTAL);
+    gh.add(pathTree                                       ,0,1,4,1,GridBagHelper.GROWFILL_BOTH);
+
+    gh.add(new JLabel(resources.getString("info.order"))  ,0,2,4,1, GridBagHelper.FILL_HORIZONTAL);
+    gh.add(pathList                                       ,0,3,4,1,GridBagHelper.GROWFILL_BOTH);
+    gh.add(new JButton(up)                                ,0,4,1,1,GridBagHelper.FILL_HORIZONTAL);
+    gh.add(new JButton(dn)                                ,1,4,1,1,GridBagHelper.FILL_HORIZONTAL);
+    gh.add(new JButton(del)                               ,2,4,1,1,GridBagHelper.FILL_HORIZONTAL);
+
   }
 
-  /**
-   * Action - ActionChooseEntity
-   */
-  private class ActionChooseEntity extends Action2 {
-    /** constructor */
-    /** run */
-    public void execute() {
-      if (table==null) return;
-      table.setMode(table.getMode(Gedcom.ENTITIES[cTypes.getSelectedIndex()]));
-      reset();
-    }
-  } //ActionChooseEntity
-  
   /**
    * Action - ActionUpDown
    */
-  private class ActionUpDown extends Action2 {
+  private class Move extends Action2 {
     /** up or down */
     private boolean up;
     /** constructor */
-    protected ActionUpDown(boolean up) {
+    protected Move(boolean up) {
       this.up=up;
+      setEnabled(false);
       if (up) setText(resources, "info.up");
       else setText(resources, "info.down");
     }
     /** run */
-    public void execute() {
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      int i = pathList.getSelectedIndex();
       if (up)
-        pathList.up();
+        pathList.swapChoices(i,i-1);
       else 
-        pathList.down();
+        pathList.swapChoices(i,i+1);
+    }
+  }
+  
+  /**
+   * Action - ActionUpDown
+   */
+  private class Del extends Action2 {
+    /** constructor */
+    protected Del() {
+      setEnabled(false);
+      setText(resources, "info.del");
+    }
+    /** run */
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      pathTree.setSelected(pathList.getSelectedChoice(), false);
     }
   } //ActionUpDown
-  
 }

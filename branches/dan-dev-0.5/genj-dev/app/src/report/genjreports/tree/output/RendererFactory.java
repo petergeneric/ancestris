@@ -8,11 +8,6 @@
 
 package genjreports.tree.output;
 
-import genj.report.options.ComponentContainer;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import genjreports.tree.IndiBox;
 import genjreports.tree.Translator;
 import genjreports.tree.graphics.FooterRenderer;
@@ -24,12 +19,11 @@ import genjreports.tree.graphics.TitleRenderer;
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
-public class RendererFactory implements ComponentContainer
-{
-    private TreeRendererBase renderer;
-    private GraphicsRenderer rotateRenderer;
-    private GraphicsRenderer titleRenderer;
-    private FooterRenderer footerRenderer;
+public class RendererFactory {
+    public TreeRendererBase renderer;
+    public GraphicsRenderer rotateRenderer;
+    public TitleRenderer titleRenderer;
+    public FooterRenderer footerRenderer;
 
     public RendererFactory(Translator translator)
     {
@@ -44,18 +38,9 @@ public class RendererFactory implements ComponentContainer
         renderer.setElements(elements);
         renderer.setFirstIndi(firstIndi);
         footerRenderer.setFirstIndi(firstIndi);
+        titleRenderer.setIndi(firstIndi);
 
         return footerRenderer;
     }
 
-    public List<Object> getComponents()
-    {
-        List<Object> components = new ArrayList<Object>();
-        components.add(this);
-        components.add(rotateRenderer);
-        components.add(renderer);
-        components.add(titleRenderer);
-        components.add(footerRenderer);
-        return components;
-    }
 }

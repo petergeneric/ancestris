@@ -96,13 +96,15 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
     setToggleClickCount(Integer.MAX_VALUE);
     addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent e) {
-        // make sure something is selected but don't screw current multi-selection
-        TreePath path = getPathForLocation(e.getX(), e.getY());
-        if (path!=null&&getSelection().contains(path.getLastPathComponent()))
+        // default JTree doesn't react to right-mouse clicks -  we're trying harder
+        if (e.getButton()==1)
           return;
+        // something selectable?
+        TreePath path = getPathForLocation(e.getX(), e.getY());
         if (path==null)
-          clearSelection();
-        else
+          return;
+        // make sure it's selected
+        if (!getSelection().contains(path.getLastPathComponent()))
           setSelection(Collections.singletonList((Property)path.getLastPathComponent()));
       }
     });
@@ -123,13 +125,11 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
     if (root==null) 
       return new ViewContext(gedcom);
     // no selection - it's the root
-    Property[] selection = Property.toArray(getSelection());
-    if (selection.length==0)
+    List<Property> selection = getSelection();
+    if (selection.isEmpty())
       return new ViewContext(root);
     // we can be specific now
-    ViewContext result = new ViewContext(gedcom);
-    result.addProperties(selection);
-    return result;
+    return new ViewContext(gedcom, new ArrayList<Entity>(), selection);
   }
   
   /**
@@ -158,7 +158,7 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
    */
   public void addNotify() {
     // continue
-    super.addNotify();    
+    super.addNotify();
     // connect model to gedcom
     gedcom.addGedcomListener((GedcomListener)Spin.over(getPropertyModel()));
   }
@@ -474,7 +474,7 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
             if (action==MOVE&&draggingFrom==gedcom) {
               for (Property child : children) 
                 child.getParent().delProperty(child);
-              }
+            }
             
             // link references now that already existing props have been deleted
             for (PropertyXRef xref : xrefs) {
@@ -756,5 +756,5 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
     }
     protected abstract void performIO(Gedcom gedcom) throws IOException, UnsupportedFlavorException;
   }
-    
+
 } //PropertyTree

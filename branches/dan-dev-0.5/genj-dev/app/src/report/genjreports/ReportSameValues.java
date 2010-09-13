@@ -12,7 +12,12 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyName;
-import genj.report.AnnotationsReport;
+import genj.report.Report;
+import genj.view.ViewContext;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A report that uses PropertyChoiceValue's referencing ability. For
@@ -23,7 +28,7 @@ import genj.report.AnnotationsReport;
  *
  * @author nils
  */
-public class ReportSameValues extends AnnotationsReport {
+public class ReportSameValues extends Report {
 
   /**
    * We only accept instances of PropertyChoice and PropertyName - since
@@ -46,40 +51,33 @@ public class ReportSameValues extends AnnotationsReport {
       return null;
 
     // return a meaningfull text for that context
-    return translate("xname", new String[]{ ((Property)context).getPropertyName(), val } );
-  }
-
-  /**
-   * We don't use STDOUT
-   * @see genj.report.Report#usesStandardOut()
-   */
-  public boolean usesStandardOut() {
-    return false;
+    return translate("xname", ((Property)context).getPropertyName(), val );
   }
 
   /**
    * Our entry point for choices
    */
-  public void start(PropertyChoiceValue choice) {
-    find(choice.getGedcom(), choice.getPropertyName(), choice.getSameChoices(), choice.getDisplayValue());
+  public List<ViewContext> start(PropertyChoiceValue choice) {
+    return find(choice.getGedcom(), choice.getPropertyName(), choice.getSameChoices(), choice.getDisplayValue());
   }
 
   /**
    * Our entry point for names
    */
-  public void start(PropertyName name) {
-    find(name.getGedcom(), name.getPropertyName(), name.getSameLastNames(), name.getLastName());
+  public List<ViewContext> start(PropertyName name) {
+    return find(name.getGedcom(), name.getPropertyName(), name.getSameLastNames(), name.getLastName());
   }
 
   /**
    * our main logic
    */
-  private void find(Gedcom gedcom, String propName, Property[] sameProps, String val) {
+  private List<ViewContext> find(Gedcom gedcom, String propName, Property[] sameProps, String val) {
 
     if (val==null||val.length()==0)
-      return;
+      return null;
 
     // collect parents of sameProps
+    ArrayList<ViewContext> result = new ArrayList<ViewContext>();
     for (int i=0; i<sameProps.length; i++) {
 
       // "Birth, Meier, Nils (I001)"
@@ -93,16 +91,14 @@ public class ReportSameValues extends AnnotationsReport {
         txt = parent.getPropertyName() + " | " +prop.getEntity();
 
       // one annotation for each
-      addAnnotation(prop, txt);
+      result.add(new ViewContext(prop).setText(txt));
     }
 
     // sort 'em
-    sortAnnotations();
-
-    // show 'em
-    setMessage(translate("xname",new String[]{ propName, val}));
+    Collections.sort(result);
 
     // done
+    return result;
   }
 
 } //ReportSameValues

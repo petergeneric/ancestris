@@ -21,11 +21,19 @@ package genj.option;
 
 import genj.util.Registry;
 import genj.util.Resources;
+import genj.util.swing.Action2;
+import genj.util.swing.DialogHelper;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.FontChooser;
+import genj.util.swing.GraphicsHelper;
 import genj.util.swing.TextFieldWidget;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -42,8 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  * An option based on a simple accessible value
@@ -59,11 +72,23 @@ public abstract class PropertyOption extends Option {
   /**
    * Get options for given instance
    */
-  public static List introspect(Object instance) {
+  public static List<PropertyOption> introspect(Object instance) {
+    return introspect(instance, false);
+  }
 
+  public static List<PropertyOption> introspect(Object instance, boolean recursively) {
+    return introspect(instance, recursively?new ArrayList<Object>():null);
+  }
+  
+  private static List<PropertyOption> introspect(Object instance, List<Object> trackingRecursivelyVisited) {
+ 
+    // tracking visited?
+    if (trackingRecursivelyVisited!=null)
+      trackingRecursivelyVisited.add(instance);   
+    
     // prepare result
-    List result = new ArrayList();
-    Set beanattrs = new HashSet();
+    List<PropertyOption> result = new ArrayList<PropertyOption>();
+    Set<String> beanattrs = new HashSet<String>();
 
     // loop over bean properties of instance
     try {
@@ -81,15 +106,12 @@ public abstract class PropertyOption extends Option {
           // int, boolean, String?
           if (!Impl.isSupportedArgument(property.getPropertyType()))
             continue;
-
+          
           // try a read
           property.getReadMethod().invoke(instance, (Object[])null);
 
           // create
-          Option option = BeanPropertyImpl.create(instance, property);
-
-          // and keep the option
-          result.add(option);
+          result.add(BeanPropertyImpl.create(instance, property));
 
           // remember name
           beanattrs.add(property.getName());
@@ -104,7 +126,7 @@ public abstract class PropertyOption extends Option {
     for (int f=0;f<fields.length;f++) {
 
       Field field = fields[f];
-      Class type = field.getType();
+      Class<?> type = field.getType();
 
       // won't address name of property again
       if (beanattrs.contains(field.getName()))
@@ -121,18 +143,25 @@ public abstract class PropertyOption extends Option {
       }
 
       // int, boolean, String?
-      if (!Impl.isSupportedArgument(type))
-        continue;
-
-      // create
-      Option option = FieldImpl.create(instance, field);
-
-      // and keep the option
-      result.add(option);
-
+      if (Impl.isSupportedArgument(type)) {
+        result.add(FieldImpl.create(instance, field));
+      } else {
+        // could still be recursive
+        if (trackingRecursivelyVisited!=null)
+          try {
+            for (PropertyOption recursiveOption : introspect(field.get(instance), trackingRecursivelyVisited)) {
+              String cat = recursiveOption.getCategory();
+              recursiveOption.setCategory(field.getName() );
+              result.add(recursiveOption);
+            }
+          } catch (Throwable t) {
+            // ignore it
+          }
+      }
+ 
       // next
     }
-
+    
     // done
     return result;
   }
@@ -144,6 +173,16 @@ public abstract class PropertyOption extends Option {
     this.instance = instance;
     this.property = property;
   }
+  
+  /**
+   * Persist
+   */
+  public abstract void persist(Registry registry);
+
+  /**
+   * Persist
+   */
+  public abstract void restore(Registry registry);
 
   /**
    * Accessor - option value
@@ -206,12 +245,13 @@ public abstract class PropertyOption extends Option {
     /** callback - text representation = none */
     public String getTextRepresentation() {
       Font font = (Font)option.getValue();
-      return font==null ? "..." : font.getFamily() + "," + font.getSize();
+      return font==null ? "" : font.getFamily() + "," + font.getSize();
     }
 
     /** callback - component representation */
     public JComponent getComponentRepresentation() {
-      chooser.setSelectedFont((Font)option.getValue());
+      Font value = (Font)option.getValue();
+      chooser.setSelectedFont(value);
       return chooser;
     }
 
@@ -222,6 +262,42 @@ public abstract class PropertyOption extends Option {
 
   } //FontUI
 
+  /**
+   * A UI for a color
+   */
+  protected static class ColorUI extends DialogUI {
+
+    /** constructor */
+    public ColorUI(PropertyOption option) {
+      super(option);
+    }
+    
+    @Override
+    protected JComponent getEditor(Object value) {
+      JColorChooser editor = new JColorChooser();
+      if (value!=null)
+        editor.setColor((Color)value);
+      return editor;
+    }
+    
+    @Override
+    public JComponent getComponentRepresentation() {
+      JComponent c = super.getComponentRepresentation();
+      Object value = option.getValue();
+      if (c instanceof AbstractButton && value!=null) {
+        ((AbstractButton)c).setText(null);
+        ((AbstractButton)c).setIcon(GraphicsHelper.getIcon(new Rectangle(8,8), (Color)value));
+      }
+      return c;
+    }
+    
+    @Override
+    protected Object getValue(JComponent editor) {
+      return ((JColorChooser)editor).getColor();
+    }
+
+  } //ColorUI
+  
   /**
    * A UI for a file
    */
@@ -313,15 +389,82 @@ public abstract class PropertyOption extends Option {
     public void endRepresentation() {
       option.setValue(getText());
     }
-  } //BooleanUI
+  } //SimpleUI
 
+  /**
+   * A UI for multiline text
+   */
+  protected static class MultilineUI extends DialogUI {
+    
+    /** constructor */
+    public MultilineUI(PropertyOption option) {
+      super(option);
+    }
+    @Override
+    protected JComponent getEditor(Object value) {
+      JTextArea text = new JTextArea(4,12);
+      text.setLineWrap(true);
+      text.setText(value!=null?value.toString():"");
+      return text;
+    }
+    @Override
+    protected Object getValue(JComponent editor) {
+      return ((JTextArea)editor).getText();
+    }
+  } //MultilineUI
+
+  /**
+   * A UI for in-dialog option editing
+   */
+  protected abstract static class DialogUI extends JButton implements ActionListener, OptionUI {
+    
+    /** option */
+    protected PropertyOption option;
+
+    /** constructor */
+    public DialogUI(PropertyOption option) {
+      this.option = option;
+      setMargin(new Insets(2,2,2,2));
+      addActionListener(this);
+    }
+    public String getTextRepresentation() {
+      return null;
+    }
+    
+    /** component */
+    public JComponent getComponentRepresentation() {
+      setText("...");
+      return this;
+    }
+    /** commit */
+    public void endRepresentation() {
+    }
+
+    protected abstract JComponent getEditor(Object value);
+    protected abstract Object getValue(JComponent editor);
+    
+    /** invoke UI */
+    public void actionPerformed(ActionEvent e) {
+      Object value = option.getValue();
+      JComponent editor = getEditor(value);
+      int rc = DialogHelper.openDialog(option.getName(), DialogHelper.QUESTION_MESSAGE, new JScrollPane(editor), Action2.okCancel(), e);
+      if (rc==0) {
+        option.setValue(getValue(editor));
+
+        // give any implementation a chance to re-set editing component
+        getComponentRepresentation();
+      }
+    }
+  } //DialogUI
+  
   /**
    * Impl base type
    */
   private static abstract class Impl extends PropertyOption {
 
     /** type */
-    protected Class type;
+    protected Class<?> type;
+    protected boolean multiline = false;
 
     /** a user readable name */
     private String name;
@@ -335,7 +478,7 @@ public abstract class PropertyOption extends Option {
     /**
      * Constructor
      */
-    protected Impl(Object instance, String property, Class type) {
+    protected Impl(Object instance, String property, Class<?> type) {
       super(instance, property);
       this.type     = type;
 
@@ -394,8 +537,11 @@ public abstract class PropertyOption extends Option {
     /**
      * Restore option values from registry
      */
+    public void restore() {
+      restore(Registry.get(instance));
+    }
     public void restore(Registry registry) {
-      String value = registry.get(instance.getClass().getName() + '.' + getProperty(), (String)null);
+      String value = registry.get(getProperty(), (String)null);
       if (value!=null)
         setValue(value);
     }
@@ -403,10 +549,13 @@ public abstract class PropertyOption extends Option {
     /**
      * Persist option values to registry
      */
+    public void persist() {
+      persist(Registry.get(instance));
+    }
     public void persist(Registry registry) {
       Object value = getValue();
       if (value!=null)
-        registry.put(instance.getClass().getName() + '.' + getProperty(), value.toString());
+        registry.put(getProperty(), value.toString());
     }
 
     /**
@@ -414,6 +563,9 @@ public abstract class PropertyOption extends Option {
      */
     public OptionUI getUI(OptionsWidget widget) {
       // TODO Options - hardcoded UI
+      // a color?
+      if (Color.class.isAssignableFrom(type))
+        return new ColorUI(this);
       // a font?
       if (Font.class.isAssignableFrom(type))
         return new FontUI(this);
@@ -423,6 +575,9 @@ public abstract class PropertyOption extends Option {
       // a file?
       if (type==File.class)
         return new FileUI(this);
+      // multiline?
+      if (type==String.class&&multiline)
+        return new MultilineUI(this);
       // all else
       return new SimpleUI(this);
     }
@@ -474,9 +629,10 @@ public abstract class PropertyOption extends Option {
     /**
      * Test for supported option types
      */
-    private static boolean isSupportedArgument(Class type) {
+    private static boolean isSupportedArgument(Class<?> type) {
       return
         Font.class.isAssignableFrom(type)   ||
+        Color.class.isAssignableFrom(type)   ||
         File.class.isAssignableFrom(type)   ||
         String.class.isAssignableFrom(type) ||
         Float.TYPE.isAssignableFrom(type) ||
@@ -497,7 +653,7 @@ public abstract class PropertyOption extends Option {
     protected Field field;
 
     /** factory */
-    protected static Option create(final Object instance, Field field) {
+    protected static PropertyOption create(final Object instance, Field field) {
       // create one
       PropertyOption result = new FieldImpl(instance, field);
       // is it an Integer field with matching multiple choice field?
@@ -519,6 +675,7 @@ public abstract class PropertyOption extends Option {
     /** Constructor */
     private FieldImpl(Object instance, Field field) {
       super(instance, field.getName(), field.getType());
+      multiline = field.getAnnotation(Multiline.class)!=null;
       this.field = field;
     }
 
@@ -543,7 +700,7 @@ public abstract class PropertyOption extends Option {
     PropertyDescriptor descriptor;
 
     /** factory */
-    protected static Option create(final Object instance, PropertyDescriptor descriptor) {
+    protected static PropertyOption create(final Object instance, PropertyDescriptor descriptor) {
       // create one
       PropertyOption result = new BeanPropertyImpl(instance, descriptor);
       // is it an Integer field with matching multiple choice field?
@@ -565,6 +722,7 @@ public abstract class PropertyOption extends Option {
     /** Constructor */
     private BeanPropertyImpl(Object instance, PropertyDescriptor property) {
       super(instance, property.getName(), property.getPropertyType());
+      multiline = property.getReadMethod().getAnnotation(Multiline.class)!=null;
       this.descriptor = property;
     }
 
@@ -588,7 +746,7 @@ public abstract class PropertyOption extends Option {
     /**
      * box type making sure no primitive types are returned
      */
-    private static Class box(Class type) {
+    private static Class<?> box(Class<?> type) {
       if (type == boolean.class) return Boolean.class;
       if (type == byte.class) return Byte.class;
       if (type == char.class) return Character.class;
@@ -605,7 +763,7 @@ public abstract class PropertyOption extends Option {
       return object!=null ? object.toString() : "";
     }
 
-    protected Object toObject(Object object, Class expected) {
+    protected Object toObject(Object object, Class<?> expected) {
       // make sure expected is not a primitive type
       expected = box(expected);
       // already ok?
@@ -632,14 +790,14 @@ public abstract class PropertyOption extends Option {
     SIZE   = "size=";
 
     /** font from string representation */
-    protected Object toObject(Object object, Class expected) {
+    protected Object toObject(Object object, Class<?> expected) {
 
       if (expected!=Font.class||object==null||object.getClass()!=String.class)
         return super.toObject(object, expected);
       String string = (String)object;
 
       // check what we've got
-      Map map = new HashMap();
+      Map<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
 
       String family = getAttribute(string, FAMILY);
       if (family==null)

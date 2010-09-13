@@ -98,9 +98,8 @@ public abstract class Format {
   /**
    * equals
    */
-  public boolean equals(Object other) {
-    Format that = (Format)other;
-    return this.format.equals(that.format);
+  public boolean equals(Object that) {
+    return that instanceof Format ? this.format.equals(((Format)that).format) : false;
   }
   
   /**
@@ -114,7 +113,8 @@ public abstract class Format {
       
       // grab image directory
       File dir = new File(out.getParentFile(), out.getName()+".images");
-      dir.mkdirs();
+      if (!dir.mkdirs())
+        throw new IOException("cannot create directory "+dir);
     
       // copy all images so their local to the generated document
       if (dir.exists()) {

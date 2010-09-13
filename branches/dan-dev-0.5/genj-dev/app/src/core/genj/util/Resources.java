@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class which provides localized text-resources for a package
@@ -48,30 +50,37 @@ import java.util.WeakHashMap;
 public class Resources {
   
   /** keep track of loaded resources */
-  private static Map instances = new HashMap();
+  private static Map<String, Resources> instances = new HashMap<String, Resources>();
 
   /** the mapping key, resource  */
-  private Map key2string;
-  private List keys;
+  private volatile Map<String, String> key2string;
+  private List<String> keys;
 
   /** the package name this resource is for */
   private String pkg;
 
   /** cached message formats */
-  private WeakHashMap msgFormats = new WeakHashMap();
+  private WeakHashMap<String, MessageFormat> msgFormats = new WeakHashMap<String, MessageFormat>();
+  
+  /**
+   * Constructor for empty resources
+   */
+  public Resources() {
+    this((InputStream)null);
+  }
   
   /**
    * Constructor for resources from explicit input stream
    */
   public Resources(InputStream in) {
     
-    key2string = new HashMap();
-    keys = new ArrayList(1000);
+    key2string = new HashMap<String, String>();
+    keys = new ArrayList<String>(1000);
     
-    try {
+    if (in!=null) try {
       load(in);
     } catch (IOException e) {
-      // swallow
+      Logger.getLogger("genj.util").log(Level.FINE, "can't read resources", e);
     }
   }
   
@@ -100,7 +109,7 @@ public class Resources {
    * Calc package for instance
    */
   private static String calcPackage(Object object) {
-    Class clazz = object instanceof Class ? (Class)object : object.getClass();
+    Class<?> clazz = object instanceof Class<?> ? (Class<?>)object : object.getClass();
     String name = clazz.getName();
     int last = name.lastIndexOf('.');
     return last<0 ? "" : name.substring(0, last);
@@ -137,38 +146,72 @@ public class Resources {
    * Load more resources from stream
    */
   public void load(InputStream in) throws IOException {
-    load(in, keys, key2string);
+    load(in, keys, key2string, false);
   }
   
-  private static String trimLeft(String s) {
-    int pos = 0;
-    for (int len=s.length(); pos<len; pos++) {
-      if (!Character.isWhitespace(s.charAt(pos)))
+  public void load(InputStream in, boolean literate) throws IOException {
+    load(in, keys, key2string, literate);
+  }
+  
+  private static String trim(String s) {
+    
+    // take off whitespace or * in front
+    int start = 0;
+    for (int len=s.length(); start<len; start++) {
+      char c = s.charAt(start);
+      if ('*'!=c && !Character.isWhitespace(c))
         break;
     }
-    return pos==0 ? s : s.substring(pos);
+    return start==0 ? s : s.substring(start);
   }
   
   /**
    * Loads key/value pairs from inputstream with unicode content
    */
-  private static void load(InputStream in, List keys, Map key2string) throws IOException {
+  private static void load(InputStream in, List<String> keys, Map<String,String> key2string, boolean literate) throws IOException {
     
     if (in==null)
       throw new IOException("can't load resources from null");
     
     try {
       BufferedReader lines = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+      
       // loop over all lines
       String key, val, last = null;
+      int indent = 0;
+      boolean comment = false;
       while (true) {
+        
         // next line
         String line = lines.readLine();
         if (line==null) 
           break;
-        String trimmed = trimLeft(line);
-        if (trimmed.length()==0)
+        
+        // literate mode means we only look at comments
+        if (literate) {
+          
+          if (comment) {
+            int close = line.lastIndexOf("*/");
+            if (close>0) {
+              comment = false;
+              line = line.substring(close+2);
+            }
+          } else {
+            int open = line.indexOf("/*");
+            if (open<0)
+              continue;
+            comment = true;
+            line = line.substring(open+2).trim();
+          }        
+        }
+        
+        // empty line stops continuation
+        String trimmed = trim(line);
+        if (trimmed.length()==0) {
+          last = null;
           continue;
+        }
+        
         // .. continuation as follows:
         if (last!=null) {
           // +... -> newline....
@@ -181,8 +224,8 @@ public class Resources {
             key2string.put(last, key2string.get(last)+breakify(trimmed.substring(1)));
             continue;
           }
-          // \s... -> ....
-          if (line.charAt(0)==' ') {
+          // \ssomething -> ....
+          if (line.indexOf(trimmed)>indent) {
             String appendto = (String)key2string.get(last);
             if (!(appendto.endsWith(" ")||appendto.endsWith("\n"))) appendto += " ";
             key2string.put(last, appendto + breakify(trimmed));
@@ -190,18 +233,18 @@ public class Resources {
           }
         } 
           
-        // has to start with non-space
-        if (!Character.isLetter(line.charAt(0)))
-          continue;
+//        // text has to start with letter
+//        if (!Character.isLetter(line.charAt(0)))
+//          continue;
         
         // break down key and value
         int i = trimmed.indexOf('=');
-        if (i<0) 
+        if (i<=0) 
           continue;
         key = trimmed.substring(0, i).trim();
-        if (key.indexOf(' ')>0)
+        if (!literate&&!Character.isJavaIdentifierStart(line.charAt(0)))
           continue;
-        val = trimLeft(trimmed.substring(i+1));
+        val = trim(trimmed.substring(i+1));
         keys.add(key);
         
         // remember (we keep lowercase keys in map)
@@ -210,7 +253,7 @@ public class Resources {
         
         // next
         last = key;
-        
+        indent =  line.indexOf(trimmed);
       }
 
     } catch (UnsupportedEncodingException e) {
@@ -230,7 +273,7 @@ public class Resources {
   /**
    * Lazy getter for resource map
    */
-  private Map getKey2String() {
+  private Map<String,String> getKey2String() {
     
     // easy if already initialized - outside synchronization
     if (key2string!=null)
@@ -245,24 +288,24 @@ public class Resources {
       
       // load resources for current locale now
       Locale locale = Locale.getDefault();
-      Map tmpKey2Val = new HashMap();    
-      List tmpKeys = new ArrayList(100);
+      Map<String,String> tmpKey2Val = new HashMap<String,String>();    
+      List<String> tmpKeys = new ArrayList<String>(100);
 
       // loading english first (primary language)
       try {
-        load(getClass().getResourceAsStream(calcFile(pkg, null, null)), tmpKeys, tmpKey2Val);
+        load(getClass().getResourceAsStream(calcFile(pkg, null, null)), tmpKeys, tmpKey2Val, false);
       } catch (Throwable t) {
       }
       
       // trying to load language specific next
       try {
-        load(getClass().getResourceAsStream(calcFile(pkg, locale.getLanguage(), null)), tmpKeys, tmpKey2Val);
+        load(getClass().getResourceAsStream(calcFile(pkg, locale.getLanguage(), null)), tmpKeys, tmpKey2Val, false);
       } catch (Throwable t) {
       }
   
       // trying to load language and country specific next
       try {
-        load(getClass().getResourceAsStream(calcFile(pkg, locale.getLanguage(), locale.getCountry())), tmpKeys, tmpKey2Val);
+        load(getClass().getResourceAsStream(calcFile(pkg, locale.getLanguage(), locale.getCountry())), tmpKeys, tmpKey2Val, false);
       } catch (Throwable t) {
       }
 
@@ -306,32 +349,14 @@ public class Resources {
    * @param key identifies string to return
    * @param values array of values to replace placeholders in value
    */
-  public String getString(String key, Object substitute) {
-    return getString(key, new Object[]{ substitute });
-  }
-
-  /**
-   * Returns a localized string
-   * @param key identifies string to return
-   * @param values array of values to replace placeholders in value
-   */
-  public String getString(String key, Object[] substitutes) {
-    return getString(key, substitutes, true);
-  }
-  
-  /**
-   * Returns a localized string
-   * @param key identifies string to return
-   * @param values array of values to replace placeholders in value
-   */
-  public String getString(String key, Object[] substitutes, boolean notNull) {
+  public String getString(String key, Object... substitutes) {
 
     // do we have a message format already?
     MessageFormat format = (MessageFormat)msgFormats.get(key);
     if (format==null) {
       String string = getString(key, false);
       if (string==null)
-        return notNull ? key : null;
+        return key;
       format = getMessageFormat(string);
       msgFormats.put(key, format);
     }
@@ -362,7 +387,7 @@ public class Resources {
   /**
    * Returns the available Keys
    */
-  public List getKeys() {
+  public List<String> getKeys() {
     // initialize first
     getKey2String();
     return keys;

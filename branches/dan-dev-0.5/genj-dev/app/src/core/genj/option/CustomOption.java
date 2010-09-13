@@ -17,12 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
- * $Revision: 1.8 $ $Author: nmeier $ $Date: 2006/02/21 23:28:40 $
+ * $Revision: 1.9 $ $Author: nmeier $ $Date: 2010-01-08 05:35:30 $
  */
 package genj.option;
 
 import genj.util.swing.Action2;
 import genj.util.swing.ButtonHelper;
+import genj.util.swing.DialogHelper;
+
+import java.awt.event.ActionEvent;
 
 import javax.swing.JComponent;
 
@@ -45,10 +48,22 @@ public abstract class CustomOption extends Option {
     return ui;
   }
   
+  protected void edit() {
+    JComponent editor = getEditor();
+    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, editor, Action2.okCancel(), widget);
+    if (rc==0)
+      commit(editor);
+  }
+  
   /** 
    * implementation requirement - edit visually 
    */
-  protected abstract void edit();
+  protected abstract JComponent getEditor();
+    
+  /** 
+   * implementation requirement - commit edit
+   */
+  protected abstract void commit(JComponent editor);
     
   /** 
    * Custom UI is a button only
@@ -71,7 +86,7 @@ public abstract class CustomOption extends Option {
     }
     
     /** callback - button pressed */
-    protected void execute() {
+    public void actionPerformed(ActionEvent event) {
       edit();
     }
   

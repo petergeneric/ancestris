@@ -28,5 +28,5 @@ public interface GraphicsOutput {
     /**
      * Displays the generated content.
      */
-    public void display(Report report);
+    public Object result(Report report);
 }

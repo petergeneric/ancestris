@@ -22,7 +22,6 @@ package genj.gedcom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,11 +45,19 @@ public class Fam extends Entity {
       super(SORT_SIBLINGS);
     }
     
-    public int compare(Object o1, Object o2) {
-      int result = super.compare(o1, o2);
-      return result!=0 ? result : getPropertyPosition((Property)o1) - getPropertyPosition((Property)o2);
+    public int compare(Property p1, Property p2) {
+      int result = super.compare(p1, p2);
+      return result!=0 ? result : getPropertyPosition(p1) - getPropertyPosition(p2);
     }
   };
+  
+  /**
+   * need tag,id-arguments constructor for all entities
+   */
+  public Fam(String tag, String id) {
+    super(tag, id);
+    assertTag(Gedcom.FAM);
+  }
 
   /**
    * Returns child #i
@@ -82,9 +89,8 @@ public class Fam extends Entity {
   public Indi[] getChildren(boolean sorted) {
 
     // look for all valid CHIL
-    List CHILs = new ArrayList(getNoOfProperties());
-    for (Iterator it = getProperties(PropertyChild.class).iterator(); it.hasNext(); ) {
-      PropertyChild prop = (PropertyChild)it.next();
+    List<PropertyChild> CHILs = new ArrayList<PropertyChild>(getNoOfProperties());
+    for (PropertyChild prop : getProperties(PropertyChild.class)) {
       if (prop.isValid()) {
         CHILs.add(prop);
         // we don't sort children if there is one or many without a proper date
@@ -102,7 +108,7 @@ public class Fam extends Entity {
       Collections.sort(CHILs, new CHILComparator());
     
     // grab children now
-    List children = new ArrayList(CHILs.size());
+    List<Indi> children = new ArrayList<Indi>(CHILs.size());
     for (int i=0;i<CHILs.size();i++) {
       Indi child = ((PropertyChild)CHILs.get(i)).getChild();
       if (!children.contains(child))
@@ -205,7 +211,8 @@ public class Fam extends Entity {
       return null;
     
     // Add new husband
-    PropertyHusband ph = new PropertyHusband(husband.getId());
+    PropertyHusband ph = new PropertyHusband();
+    ph.setValue(husband.getId());
     addProperty(ph);
 
     // Link !
@@ -243,7 +250,8 @@ public class Fam extends Entity {
       return null;
     
     // Add new wife
-    PropertyWife pw = new PropertyWife(wife.getId());
+    PropertyWife pw = new PropertyWife();
+    pw.setValue(wife.getId());
     addProperty(pw);
 
     // Link !
@@ -310,7 +318,8 @@ public class Fam extends Entity {
   public PropertyXRef addChild(Indi newChild) throws GedcomException {
 
     // Remember Indi who is child
-    PropertyChild pc = new PropertyChild(newChild.getId());
+    PropertyChild pc = new PropertyChild();
+    pc.setValue(newChild.getId());
     addProperty(pc);
 
     // Link !
@@ -327,26 +336,27 @@ public class Fam extends Entity {
   /**
    * list of famas to array
    */
-  /*package*/ static Fam[] toFamArray(Collection c) {
+  /*package*/ static Fam[] toFamArray(Collection<Fam> c) {
     return (Fam[])c.toArray(new Fam[c.size()]);    
   }
 
   /**
    * Meier, Magdalene (I1) & Meier, Lars (I2) ...
    */
-  protected String getToStringPrefix(boolean showIds, boolean showAsLink) {
+  @Override
+  protected String getToStringPrefix(boolean showIds) {
     
     StringBuffer result = new StringBuffer();
 
     Indi husband = getHusband();
     if (husband!=null) {
-      result.append(husband.toString(showIds, showAsLink));
+      result.append(husband.toString(showIds));
       result.append(Options.getInstance().getTxtMarriageSymbol());
     }
     
     Indi wife = getWife();
     if (wife!=null) {
-      result.append(wife.toString(showIds, showAsLink));
+      result.append(wife.toString(showIds));
     }
 
     // Done
@@ -389,23 +399,45 @@ public class Fam extends Entity {
    */
   public void swapSpouses() throws GedcomException {
     
-    Indi 
-      husband = getHusband(),
-      wife = getWife();
+    PropertyHusband husband = (PropertyHusband) getProperty("HUSB", true);
+    PropertyWife wife = (PropertyWife) getProperty("WIFE", true);
+    
+    // noop?
+    if (husband==null&&wife==null)
+      return;
+    
+    // only one?
+    if (husband==null) {
+      setHusband(getWife());
+      return;
+    }
 
-    setWife(null);
-    setHusband(null);
+    if (wife==null) {
+      setWife(getHusband());
+      return;
+    }
       
-    if (wife!=null)
-      setHusband(wife);
-    if (husband!=null)
-      setWife(husband);
-      
+    // swivel pointers
+    PropertyFamilySpouse famsh= null;
+    PropertyFamilySpouse famsw = null;
+    
+    if (husband!=null) {
+      famsh = (PropertyFamilySpouse) husband.getTarget();
+      husband.unlink();
+    }
+
+    if (wife!=null) {
+      famsw = (PropertyFamilySpouse) wife.getTarget();
+      wife.unlink();
+    }
+
+    if (husband!=null&&famsw!=null)
+      husband.link(famsw);
+    
+    if (wife!=null&&famsh!=null)
+      wife.link(famsh);
+    
   }
+
   
-  protected String getIdLinkFormat() {
- return genj.report.Options.getInstance().getLinkToFam();
-  }
-
-
 } //Fam

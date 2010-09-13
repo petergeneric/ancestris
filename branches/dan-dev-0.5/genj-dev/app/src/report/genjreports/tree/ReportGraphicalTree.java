@@ -9,12 +9,9 @@
 package genjreports.tree;
 
 import genj.gedcom.Indi;
-import genj.option.PropertyOption;
-import genj.report.options.ComponentReport;
+import genj.report.Report;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import genjreports.tree.arrange.LayoutFactory;
 import genjreports.tree.build.BasicTreeBuilder;
@@ -41,77 +38,56 @@ import genjreports.tree.output.TreeElementsFactory;
  * @author Przemek Wiech <pwiech@losthive.org>
  * @version 0.24
  */
-public class ReportGraphicalTree extends ComponentReport
+public class ReportGraphicalTree extends Report
 {
-    private static final String OUTPUT_CATEGORY = "output";
-    private static final String ELEMENTS_CATEGORY = "elements";
-    private static final String RENDERER_CATEGORY = "renderer";
-    private static final String LAYOUT_CATEGORY = "layout";
-    private static final String BUILDER_CATEGORY = "builder";
-
     /**
      * Object used for translating strings.
      */
-    private Translator translator = new Translator(this);;
+    private Translator translator = new Translator(this);
 
     /**
      * Builds the tree structure.
      */
-    private TreeBuilder builder = new BasicTreeBuilder();
+    public TreeBuilder builder = new BasicTreeBuilder();
 
     /**
      * Provides implementations for drawing elements of the tree.
      */
-    private TreeElementsFactory treeElements = new TreeElementsFactory();
+    public TreeElementsFactory treeElements = new TreeElementsFactory();
 
     /**
      * Places boxes on the plane.
      */
-    private LayoutFactory layouts = new LayoutFactory();
+    public LayoutFactory layouts = new LayoutFactory();
 
     /**
      * Draws the tree to an output.
      */
-    private RendererFactory renderers = new RendererFactory(translator);
+    public RendererFactory renderers = new RendererFactory(translator);
 
     /**
      * Generates file or screen output.
      */
-    private GraphicsOutputFactory outputs = new GraphicsOutputFactory();
-
-    /**
-     * Original option values for options that use variable replacing.
-     */
-    private Map<PropertyOption, Object> originalValues;
+    public GraphicsOutputFactory outputs = new GraphicsOutputFactory();
 
     public ReportGraphicalTree()
     {
-        // Add options from all components
-        addOptions(builder, BUILDER_CATEGORY);
-        addOptions(layouts, LAYOUT_CATEGORY);
-        addOptions(treeElements, ELEMENTS_CATEGORY);
-        addOptions(renderers, RENDERER_CATEGORY);
-        addOptions(outputs, OUTPUT_CATEGORY);
-
-        // Override categories for these options
-        setCategory("flip", LAYOUT_CATEGORY);
-        setCategory("rotation", LAYOUT_CATEGORY);
-    }
-
-    /**
-     * The result is stored in files
-     */
-    public boolean usesStandardOut() {
-        return false;
+//        // Add options from all components
+//        addOptions(builder, BUILDER_CATEGORY);
+//        addOptions(layouts, LAYOUT_CATEGORY);
+//        addOptions(treeElements, ELEMENTS_CATEGORY);
+//        addOptions(renderers, RENDERER_CATEGORY);
+//        addOptions(outputs, OUTPUT_CATEGORY);
+//
+//        // Override categories for these options
+//        setCategory("flip", LAYOUT_CATEGORY);
+//        setCategory("rotation", LAYOUT_CATEGORY);
     }
 
     /**
      * The report's entry point
      */
-    public void start(Indi indi) {
-
-        // Replace variables
-        replaceVariables(indi);
+    public Object start(Indi indi) {
 
         // Build the tree
         IndiBox indibox = builder.build(indi);
@@ -131,13 +107,11 @@ public class ReportGraphicalTree extends ComponentReport
         GraphicsOutput output = outputs.createOutput(this);
         if (output == null)  // Report cancelled
         {
-            restoreOptionValues();
-            return;
+            return null;
         }
 
         try {
             output.output(renderer);
-            output.display(this);
         } catch (OutOfMemoryError e) {
             println("ERROR! The report ran out of memory.\n");
             println("You can try to do the following things:");
@@ -148,36 +122,7 @@ public class ReportGraphicalTree extends ComponentReport
             println("Error generating output: " + e.getMessage());
         }
 
-        // Restore option values (those with replaced variables)
-        restoreOptionValues();
+        return output.result(this);
     }
 
-    /**
-     * @param indi
-     */
-    private void replaceVariables(Indi indi)
-    {
-        originalValues = new HashMap<PropertyOption, Object>();
-        for (PropertyOption option : getOptions())
-        {
-            if (option.getValue().getClass().equals(String.class))
-            {
-                String value = (String)option.getValue();
-                originalValues.put(option, value);
-
-                value = value.replaceAll("\\$i", indi.getId());
-                value = value.replaceAll("\\$n", indi.getName());
-                value = value.replaceAll("\\$f", indi.getFirstName());
-                value = value.replaceAll("\\$l", indi.getLastName());
-
-                option.setValue(value);
-            }
-        }
-    }
-
-    private void restoreOptionValues()
-    {
-        for (Map.Entry<PropertyOption, Object> entry : originalValues.entrySet())
-            entry.getKey().setValue(entry.getValue());
-    }
 }

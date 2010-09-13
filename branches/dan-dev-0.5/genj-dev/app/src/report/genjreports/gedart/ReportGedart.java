@@ -1,5 +1,10 @@
 package genjreports.gedart;
 
+/*
+ * FIXME: le rapport gedart sera totalement reecrit pour ancestris sous la forme d'un module
+ * ce module sera dans le meme esprit que gedart c'est a dire permettre a tous de creer ses rapport
+ * mais probablement base sur d'autre technologies de reporting (voir par exemple gasper ou les
+ * possibilites de script dans java 1.6) */
 /**
  * Reports are Freeware Code Snippets
  *
@@ -36,10 +41,10 @@ package genjreports.gedart;
  * TODO: 	recuperer l'evt lors d'une asso
  * TODO:	recuperer CHAN:DATE
  * TODO:	mettre une arbo des templates
- * TODO:	faire une extension de genj pour g�rer des rapports type gedart
+ * TODO:	faire une extension de genj pour gerer des rapports type gedart
  * TODO:	Aspect multilangue  
  * TODO:	voir getOptionsFromUser
- * TODO:	ajouter une m�thode pour trier: comme  public Entity[] getEntities(String tag, Comparator comparator) dans Gedcom
+ * TODO:	ajouter une methode pour trier: comme  public Entity[] getEntities(String tag, Comparator comparator) dans Gedcom
  * TODO:	ajouter des methodes 'getancestors getdescendants dans reportIndi
  * TODO:	Ajouter un fichier de properties pour pouvoir demander des options 
  * 
@@ -66,7 +71,7 @@ import javax.swing.ImageIcon;
  */
 /*
  * Liste des pistes et fonctions:
- * - lancer le rapport sur tous les indi lies à une personne	non faire un outils avance de selection des indis
+ * - lancer le rapport sur tous les indi lies a une personne	non faire un outils avance de selection des indis
  * - Ascendance/Descendance d'un indi ou une fam				non idem
  * - gestion des prives
  * - options:
@@ -95,30 +100,12 @@ public class ReportGedart extends Report {
 	private DocReport mydoc;
 	private Gedcom theGedcom;
 	
-	public Object accepts(Object context) {
-		return (gedartTemplates.toArray(context));
-		
-	}
-	/**
-	 * Overriden image - we're using the provided FO image
-	 */
-	protected ImageIcon getImage() {
-		return Report.IMG_FO;
-	}
-
-	/**
-	 * we're not generating anything to stdout anymore aside from debugging ino
-	 */
-	public boolean usesStandardOut() {
-		return true;
-	}
-
 	/**
 	 * The report's entry point
 	 */
-	public void start(Gedcom gedcom, GedartTemplate template) {
+	public File start(Gedcom gedcom, GedartTemplate template) {
 		theGedcom=gedcom;
-		process(gedcom.getEntities("INDI", "INDI:NAME"), 
+		return process(gedcom.getEntities("INDI", "INDI:NAME"),
 				gedcom.getEntities("FAM", "FAM:HUSB:*:..:NAME"),
 				template);
 	}
@@ -127,32 +114,36 @@ public class ReportGedart extends Report {
 	 * The report's entry point - for a single individual
 	 */
 	
-	public void start(Indi indi, GedartTemplate template) {
+	public File start(Indi indi, GedartTemplate template) {
 		theGedcom=indi.getGedcom();
-		process(new Indi[] { indi }, new Fam[] {}, template);
+		return process(new Indi[] { indi }, new Fam[] {}, template);
 	}
 	
-	public void start(Indi[] indis, GedartTemplate template) {
+	public File start(Indi[] indis, GedartTemplate template) {
 		theGedcom=indis[0].getGedcom();
-		process(indis, new Fam[0],template);
+		return process(indis, new Fam[0],template);
 	}
 
 	/**
 	 * The report's entry point - for a single family
 	 */
-	public void start(Fam fam, GedartTemplate template) {
+	public File start(Fam fam, GedartTemplate template) {
 		theGedcom=fam.getGedcom();
-		process(new Indi[] {}, new Fam[] { fam },template);
+		return process(new Indi[] {}, new Fam[] { fam },template);
 	}
 
-	public void start(Fam[] fams, GedartTemplate template) {
+	public File start(Fam[] fams, GedartTemplate template) {
 		theGedcom=fams[0].getGedcom();
-		process(new Indi[0], fams,template);
+		return process(new Indi[0], fams,template);
 	}
 
-	public void start(Object context) throws Throwable{
-		start(context,null);
-	}
+//TODO:	public Object accepts(Object context) {
+//		return (gedartTemplates.toArray(context));
+//	}
+
+//	public void start(Object context) throws Throwable{
+//		start(context,null);
+//	}
 	
 
 		/**
@@ -161,7 +152,7 @@ public class ReportGedart extends Report {
 		 * @param indis
 		 * @param fams
 		 */
-	private void process(Entity[] indis, Entity[] fams, GedartTemplate  usetemplate) {
+	private File process(Entity[] indis, Entity[] fams, GedartTemplate  usetemplate) {
 		String thetemplate;
 		String extension =null;
 		if (usetemplate == null)
@@ -177,7 +168,7 @@ public class ReportGedart extends Report {
 			isTodo = false;
 		}
 		// Init todo tags
-		PropertyTodo.setTag(todoStart, todoStart);
+//		PropertyTodo.setTag(todoStart, todoStart);
 
 		// TODO: voir mode multifile if (isOneFile){
 		// create an output document
@@ -188,12 +179,12 @@ public class ReportGedart extends Report {
 				file = File.createTempFile("GenJ-", "-gedart");
 			}catch (IOException ioe) {file = null;}
 		else{
-			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true,extension,true);
+			file = getFileFromUser(translate("output.file"), Action2.TXT_OK, true,extension);
 		}
 
 		if (file == null){
 			LOG.log(Level.INFO,"file = null");
-			return;
+			return null ;
 		}
 
 		LOG.log(Level.INFO,"file="+file);
@@ -205,7 +196,7 @@ public class ReportGedart extends Report {
 		} catch (IOException ioe) {
 			System.err.println("IO Exception!");
 			ioe.printStackTrace();
-			return; // abort
+			return null; // abort
 		}
 		mydoc.put("INDIS", indis);
 		mydoc.put("FAMS", fams);
@@ -221,21 +212,7 @@ public class ReportGedart extends Report {
 
 		mydoc.render(thetemplate+"/index.vm");
 		mydoc.close();
-		if (file.length() < 1000000l){
-			try {
-				println("" + file.toURL());
-			} catch (MalformedURLException e) {}
-		} else {
-			if (!saveReportToFile)
-				println("Attention: le fichier est trop gros pour �tre affich� dans cette fen�tre");
-			println("Le fichier "+file.getPath()+" a �t� cr��.");
-			if (file.length() > 10000000l)
-				println("Attention: le fichier est trop gros pour �tre affich� par votre navigateur");
-			else 
-				showFileToUser(file);
-			println("Taille du fichier: "+file.length());
-		}
-		LOG.log(Level.INFO,"taille du fichier={0}",file.length());
+                return file;
 	}
 
 	/**

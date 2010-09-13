@@ -17,20 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Revision: 1.136 $ $Author: pewu $ $Date: 2009/10/21 08:40:54 $
+ * $Revision: 1.142 $ $Author: nmeier $ $Date: 2010-01-28 02:51:13 $
  */
 package genj.report;
 
-import genj.chart.Chart;
 import genj.common.SelectEntityWidget;
-import genj.fo.Document;
-import genj.fo.Format;
-import genj.fo.FormatOptionsWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.PointInTime;
-import genj.io.FileAssociation;
 import genj.option.Option;
 import genj.option.OptionsWidget;
 import genj.option.PropertyOption;
@@ -39,31 +34,28 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
-import genj.window.WindowManager;
+import genj.util.swing.DialogHelper;
 
 import java.awt.Component;
+import java.awt.Graphics;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.TreeMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.Action;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -74,15 +66,25 @@ import javax.swing.filechooser.FileFilter;
  * Base-class of all GenJ reports. Sub-classes that are compiled
  * and available in ./report will be loaded by GenJ automatically
  * and can be reloaded during runtime.
+ * 
+ * categories: text,utility,chart,graph
  */
 public abstract class Report implements Cloneable {
+  
+  private final static PrintWriter NUL = new PrintWriter(new OutputStream() { @Override public void write(int b) { }} );
 
   protected final static Logger LOG = Logger.getLogger("genj.report");
 
-  protected final static ImageIcon
-    IMG_SHELL = new genj.util.swing.ImageIcon(ReportView.class,"ReportShell"),
-    IMG_FO    = new genj.util.swing.ImageIcon(ReportView.class,"ReportFO"  ),
-    IMG_GUI   = new genj.util.swing.ImageIcon(ReportView.class,"ReportGui"  );
+  protected final static Icon DEFAULT_ICON = new Icon() {
+    public int getIconHeight() {
+      return 16;
+    }
+    public int getIconWidth() {
+      return 16;
+    }
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+    }
+  };
 
   /** global report options */
   protected Options OPTIONS = Options.getInstance();
@@ -92,14 +94,6 @@ public abstract class Report implements Cloneable {
     OPTION_YESNO    = 0,
     OPTION_OKCANCEL = 1,
     OPTION_OK       = 2;
-
-  /** categories */
-  private static final Category DEFAULT_CATEGORY = new Category("Other", IMG_SHELL);
-  private static final Categories categories = new Categories();
-  static {
-      // Default category when category isn't defined in properties file
-      categories.add(DEFAULT_CATEGORY);
-  }
 
   private final static String[][] OPTION_TEXTS = {
     new String[]{Action2.TXT_YES, Action2.TXT_NO     },
@@ -114,10 +108,10 @@ public abstract class Report implements Cloneable {
     ALIGN_RIGHT  = 2;
 
   /** one report for all reports */
-  protected final static Registry registry = new Registry("genj-reports");
+  protected Registry registry;
 
   /** language we're trying to use */
-  private final static String lang = Locale.getDefault().getLanguage();
+  private final static String userLanguage = Locale.getDefault().getLanguage();
 
   /** translation resources common to all reports */
   static final Resources COMMON_RESOURCES = Resources.get(Report.class);
@@ -125,169 +119,166 @@ public abstract class Report implements Cloneable {
   /** translation texts */
   private Resources resources;
 
-  /** out */
-  protected PrintWriter out;
-
-  /** a window  manager */
-  private WindowManager windowManager;
-
-  /** owning component */
-  private Component owner;
-
   /** options */
-  private List options;
+  private List<Option> options;
 
   /** image */
-  private ImageIcon image;
+  private Icon icon;
 
   /** file */
   private File file;
+  
+  /** outs */
+  private PrintWriter out = NUL;
+  private Component owner = null;
+  
 
   /**
    * Constructor
    */
   protected Report() {
-
-  }
-
-  /**
-   * integration - private instance for a run
-   */
-  /*package*/ Report getInstance(Component owner, PrintWriter out) {
-
-    try {
-
-      // make sure options are initialized
-      getOptions();
-
-      // clone this
-      Report result = (Report)clone();
-
-      // remember context for result
-      result.windowManager = WindowManager.getInstance(owner);
-      result.out = out;
-      result.owner = owner;
-
-      // done
-      return result;
-
-    } catch (CloneNotSupportedException e) {
-      ReportView.LOG.log(Level.SEVERE, "couldn't clone report", e);
-      throw new RuntimeException("getInstance() failed");
-    }
+    registry = new Registry(Registry.get(Report.class), getClass().getName());
   }
 
   /**
    * integration - log a message
    */
   /*package*/ void log(String txt) {
-    if (out!=null)
-      out.println(txt);
+    getOut().println(txt);
+  }
+  
+  /**
+   * Get a logging out
+   */
+  public PrintWriter getOut() {
+    return out;
+  }
+  
+  /** 
+   * Set logging out (this is a thread local operation)
+   */
+  /*package*/ void setOut(PrintWriter set) {
+    out = set;
+  }
+
+  /** 
+   * Set owner (this is a thread local operation)
+   */
+  /*package*/ void setOwner(Component set) {
+    owner = set;
   }
 
   /**
    * Store report's options
    */
-  public void saveOptions() {
+  /*package*/ void saveOptions() {
     // if known
     if (options==null)
       return;
     // save 'em
-    Iterator it = options.iterator();
-    while (it.hasNext())
-      ((Option)it.next()).persist(registry);
+    for (Option option : options)
+      if (option instanceof PropertyOption)
+        ((PropertyOption)option).persist(registry);
+      else
+        option.persist();
     // done
+  }
+  
+  protected Registry getRegistry() {
+    return registry;
   }
 
   /**
    * Get report's options
    */
-  public List getOptions() {
+  public final List<? extends Option> getOptions() {
 
     // already calculated
     if (options!=null)
       return options;
 
+    options = new ArrayList<Option>();
+    
     // calculate options
-    options = PropertyOption.introspect(this);
+    // 20091205 going recursive here is new to support Przemek's case of settings on report's components
+    List<PropertyOption> props = PropertyOption.introspect(this, true);
 
     // restore options values
-    Iterator it = options.iterator();
-    while (it.hasNext()) {
-      PropertyOption option = (PropertyOption)it.next();
+    for (PropertyOption prop : props) {
       // restore old value
-      option.restore(registry);
+      prop.restore(registry);
       // options do try to localize the name and tool tip based on a properties file
       // in the same package as the instance - problem is that this
       // won't work with our special way of resolving i18n in reports
       // so we have to do that manually
-      String oname = translateOption(option.getProperty());
-      if (oname.length()>0) option.setName(oname);
-      String toolTipKey = option.getProperty() + ".tip";
+      String oname = translateOption(prop.getProperty());
+      if (oname.length()>0) prop.setName(oname);
+      String toolTipKey = prop.getProperty() + ".tip";
       String toolTip = translateOption(toolTipKey);
       if (toolTip.length() > 0 && !toolTip.equals(toolTipKey))
-          option.setToolTip(toolTip);
-      // set category
-      option.setCategory(getName());
-    }
+        prop.setToolTip(toolTip);
+      // set default category
+      if (prop.getCategory()==null)
+        prop.setCategory(getName());
+      else
+        prop.setCategory(translateOption(prop.getCategory()));
 
+      // remember
+      options.add(prop);
+    }
+    
     // done
     return options;
   }
-
+  
   /**
    * An image
    */
-  protected ImageIcon getImage() {
+  public Icon getIcon() {
+    
+    // got it?
+    if (icon!=null)
+      return icon;
 
-    // resolve an image
-    if (image==null) try {
-      String file = getTypeName()+".png";
-      InputStream in = getClass().getResourceAsStream(file);
-      if (in==null) {
-        // fallback to gif if possible
-        file = getTypeName()+".gif";
-        in = getClass().getResourceAsStream(file);
+    // find category in report settings
+    String cat = translate("category");
+    if (cat.equals("category")||cat.length()==0) {
+      icon = DEFAULT_ICON;
+    } else {
+      // resolve an image
+      String file = "Category"+Character.toUpperCase(cat.charAt(0))+cat.substring(1)+".png";
+      InputStream in = null;
+      try {
+        in = Report.class.getResourceAsStream(file);
+        icon = new genj.util.swing.ImageIcon(file, in);
+      } catch (Throwable t) {
+        icon = DEFAULT_ICON;
+      } finally {
+        if (in!=null) try { in.close(); } catch (IOException e) {}
       }
-      image = new genj.util.swing.ImageIcon(file, in);
-    } catch (Throwable t) {
-      image = usesStandardOut() ? IMG_SHELL : IMG_GUI;
     }
-
+    
     // done
-    return image;
+    return icon;
   }
 
   /**
-   * Returns the report category. If the category is not defined in the report's
-   * properties file, the category is set to "Other".
+   * Returns the report category
    */
-  public Category getCategory() {
-      String name = translate("category");
-      if (name.equals("category"))
-          return DEFAULT_CATEGORY;
-
-      Category category = (Category)categories.get(name);
-      if (category == null) {
-          category = createCategory(name);
-          categories.add(category);
-      }
-      return category;
-  }
-
-  private Category createCategory(String name) {
-      String file = "Category" + name + ".png";
-
-      InputStream in = Report.class.getResourceAsStream(file);
-      if (in == null)
-          in = getClass().getResourceAsStream(file);
-
-      ImageIcon image;
-      if (in != null)
-          image = new genj.util.swing.ImageIcon(file, in);
-      else
-          image = IMG_SHELL;
-      return new Category(name, image);
+  public final String getCategory() {
+    // find category in report settings
+    String cat = translate("category");
+    if (cat.equals("category")||cat.length()==0)
+      return "";
+    
+    // try to translate
+    String result = COMMON_RESOURCES.getString("category."+cat, false);
+    if (result==null) {
+      LOG.fine("report's category "+cat+" doesn't exist");
+      return COMMON_RESOURCES.getString("category.utility");
+    }    
+    
+    return result;
   }
 
   /**
@@ -296,8 +287,7 @@ public abstract class Report implements Cloneable {
    * flush the current log with this method.
    */
   public final void flush() {
-    if (out!=null)
-      out.flush();
+    getOut().flush();
   }
 
   /**
@@ -356,26 +346,16 @@ public abstract class Report implements Cloneable {
 
   /**
    * An implementation of Report can ask the user for a file with this method.
-   */
-  public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension) {
-      return getFileFromUser(title, button, askForOverwrite, extension,false);
-  }
-
-  /**
-   * An implementation of Report can ask the user for a file with this method.
    *
    * @param title  file dialog title
    * @param button  file dialog OK button text
    * @param askForOverwrite  whether to confirm overwriting files
    * @param extension  extension of files to display
-   * @param appendExtension whether to append extension to filename if no extension has been set
    */
-  public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension,boolean appendExtension) {
-
-    String key = getClass().getName()+".file";
+  public File getFileFromUser(String title, String button, boolean askForOverwrite, String extension) {
 
     // show filechooser
-    String dir = registry.get(key, EnvironmentChecker.getProperty(this, "user.home", ".", "looking for report dir to let the user choose from"));
+    String dir = registry.get("file", EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from"));
     JFileChooser chooser = new JFileChooser(dir);
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setDialogTitle(title);
@@ -389,19 +369,15 @@ public abstract class Report implements Cloneable {
     if (rc!=JFileChooser.APPROVE_OPTION||result==null)
       return null;
 
-    if (appendExtension && (result.getName().indexOf('.') == -1)){
-		result = new File(result.getAbsoluteFile()+"."+extension);
-	}
-    
     // choose an existing file?
     if (result.exists()&&askForOverwrite) {
-      rc = windowManager.openDialog(null, title, WindowManager.WARNING_MESSAGE, ReportView.RESOURCES.getString("report.file.overwrite"), Action2.yesNo(), owner);
+      rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, ReportView.RESOURCES.getString("report.file.overwrite"), Action2.yesNo(), owner);
       if (rc!=0)
         return null;
     }
 
     // keep it
-    registry.put(key, result.getParent().toString());
+    registry.put("file", result.getParent().toString());
     return result;
   }
 
@@ -410,10 +386,8 @@ public abstract class Report implements Cloneable {
    */
   public File getDirectoryFromUser(String title, String button) {
 
-    String key = getClass().getName()+".dir";
-
     // show directory chooser
-    String dir = registry.get(key, EnvironmentChecker.getProperty(this, "user.home", ".", "looking for report dir to let the user choose from"));
+    String dir = registry.get("dir", EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from"));
     JFileChooser chooser = new JFileChooser(dir);
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     chooser.setDialogTitle(title);
@@ -425,125 +399,8 @@ public abstract class Report implements Cloneable {
       return null;
 
     // keep it
-    registry.put(key, result.toString());
+    registry.put(dir, result.toString());
     return result;
-  }
-
-  /**
-   * A sub-class can show a document to the user with this method allowing
-   * to save, transform and view it
-   */
-  public void showDocumentToUser(Document doc) {
-
-    String title = "Document "+doc.getTitle();
-
-    Registry foRegistry = new Registry(registry, getClass().getName()+".fo");
-
-    Action[] actions = Action2.okCancel();
-    FormatOptionsWidget output = new FormatOptionsWidget(doc, foRegistry);
-    output.connect(actions[0]);
-    int rc = windowManager.openDialog("reportdoc", title, WindowManager.QUESTION_MESSAGE, output, actions, owner);
-
-    // cancel?
-    if (rc!=0)
-      return;
-
-    // grab formatter and output file
-    Format formatter = output.getFormat();
-
-    File file = null;
-    String progress = null;
-    if (formatter.getFileExtension()!=null) {
-
-      file = output.getFile();
-      if (file==null)
-        return;
-      file.getParentFile().mkdirs();
-
-      // show a progress dialog
-      progress = windowManager.openNonModalDialog(
-          null, title, WindowManager.INFORMATION_MESSAGE, new JLabel("Writing Document to file "+file+" ..."), Action2.okOnly(), owner);
-
-    }
-
-    // store options
-    output.remember(foRegistry);
-
-    // format and write
-    try {
-      formatter.format(doc, file);
-    } catch (Throwable t) {
-      LOG.log(Level.WARNING, "formatting "+doc+" failed", t);
-      windowManager.openDialog(null, "Formatting "+doc+" failed", WindowManager.ERROR_MESSAGE, t.getMessage(), Action2.okOnly(), owner);
-      file = null;
-    }
-
-    // close progress dialog
-    if (progress!=null)
-      windowManager.close(progress);
-
-    // open document
-    if (file!=null) {
-    	showFileToUser(file, formatter.getFileExtension());
-    }
-
-    // done
-  }
-
-  /**
-   * Show a file if there's a file association for it
-   */
-	public void showFileToUser(File file)
-	{
-		showFileToUser(file, null);
-	}
-
-	  /**
-	   * Show a file if there's a file association for it
-	   */
-	public void showFileToUser(File file, String extension)
-	{
-		// let ReportView show the file or show it in external application
-		if (owner instanceof ReportView && ("html".equals(extension) || file.getName().endsWith(".html"))) {
-			try {
-				log("" + file.toURI().toURL());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			FileAssociation association = null;
-			if (extension != null)
-				association = FileAssociation.get(extension, extension, "Open", owner);
-			else
-				association = FileAssociation.get(file, "Open", owner);
-			if (association != null)
-				association.execute(file);
-		}
-	}
-
-  /**
-   * A sub-class can show a chart to the user with this method
-   */
-  public final void showChartToUser(Chart chart) {
-    showComponentToUser(chart);
-  }
-
-  /**
-   * A sub-class can show a Java Swing component to the user with this method
-   */
-  public void showComponentToUser(JComponent component) {
-
-    // open a non-modal dialog
-    windowManager.openNonModalDialog(getClass().getName()+"#component",getName(), WindowManager.INFORMATION_MESSAGE,component,Action2.okOnly(),owner);
-
-    // done
-  }
-
-  /**
-   * A sub-class can open a browser that will show the given URL with this method
-   */
-  public final void showBrowserToUser(URL url) {
-    FileAssociation.open(url, owner);
   }
 
   /**
@@ -562,7 +419,7 @@ public abstract class Report implements Cloneable {
       select.setSelection(entity);
 
     // show it
-    int rc = windowManager.openDialog("select."+tag,getName(),WindowManager.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),select},Action2.okCancel(),owner);
+    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),select},Action2.okCancel(),owner);
     if (rc!=0)
       return null;
 
@@ -582,7 +439,7 @@ public abstract class Report implements Cloneable {
 //   * A sub-class can query the user to choose a value that is somehow represented by given component
 //   */
 //  public final boolean getValueFromUser(JComponent options) {
-//    int rc = windowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, new JComponent[]{options}, Action2.okCancel(), owner);
+//    int rc = WindowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, new JComponent[]{options}, Action2.okCancel(), owner.get());
 //    return rc==0;
 //  }
 
@@ -594,7 +451,7 @@ public abstract class Report implements Cloneable {
     ChoiceWidget choice = new ChoiceWidget(choices, selected);
     choice.setEditable(false);
 
-    int rc = windowManager.openDialog(null,getName(),WindowManager.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},Action2.okCancel(),owner);
+    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},Action2.okCancel(),owner);
 
     return rc==0 ? choice.getSelectedItem() : null;
   }
@@ -615,7 +472,6 @@ public abstract class Report implements Cloneable {
 
     // try to find previously entered choices
     if (key!=null) {
-      key = getClass().getName()+"."+key;
       String[] presets = registry.get(key, (String[])null);
       if (presets != null)
         defaultChoices = presets;
@@ -623,12 +479,12 @@ public abstract class Report implements Cloneable {
 
     // show 'em
     ChoiceWidget choice = new ChoiceWidget(defaultChoices, defaultChoices.length>0 ? defaultChoices[0] : "");
-    int rc = windowManager.openDialog(null,getName(),WindowManager.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},Action2.okCancel(),owner);
+    int rc = DialogHelper.openDialog(getName(),DialogHelper.QUESTION_MESSAGE,new JComponent[]{new JLabel(msg),choice},Action2.okCancel(),owner);
     String result = rc==0 ? choice.getText() : null;
 
     // Remember?
     if (key!=null&&result!=null&&result.length()>0) {
-      List values = new ArrayList(defaultChoices.length+1);
+      List<String> values = new ArrayList<String>(defaultChoices.length+1);
       values.add(result);
       for (int d=0;d<defaultChoices.length&&d<20;d++)
         if (!result.equalsIgnoreCase(defaultChoices[d]))
@@ -646,7 +502,7 @@ public abstract class Report implements Cloneable {
   public final boolean getOptionsFromUser(String title, Object options) {
 
     // grab options by introspection
-    List os = PropertyOption.introspect(options);
+    List<PropertyOption> os = PropertyOption.introspect(options);
 
     // calculate a logical prefix for this options object (strip packages and enclosing type info)
     String prefix = options.getClass().getName();
@@ -658,11 +514,9 @@ public abstract class Report implements Cloneable {
     if (i>0) prefix = prefix.substring(i+1);
 
     // restore parameters
-    Registry r = new Registry(registry, prefix);
-    Iterator it = os.iterator();
-    while (it.hasNext()) {
-      PropertyOption option  = (PropertyOption)it.next();
-      option.restore(r);
+    for (PropertyOption option : os) {
+      
+      option.restore(registry);
 
       // translate the options as a courtesy now - while options do try
       // to localize the name they base that on a properties file in the
@@ -670,20 +524,18 @@ public abstract class Report implements Cloneable {
       // with our special way of resolving i18n in reports
       String oname = translate(prefix+"."+option.getName());
       if (oname.length()>0) option.setName(oname);
-
     }
 
     // show to user and check for non-ok
     OptionsWidget widget = new OptionsWidget(title, os);
-    int rc = windowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, widget, Action2.okCancel(), owner);
+    int rc = DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, widget, Action2.okCancel(), owner);
     if (rc!=0)
       return false;
 
     // save parameters
     widget.stopEditing();
-    it = os.iterator();
-    while (it.hasNext())
-      ((Option)it.next()).persist(r);
+    for (PropertyOption option : os)
+      option.persist(registry);
 
     // done
     return true;
@@ -708,7 +560,7 @@ public abstract class Report implements Cloneable {
     for (int i=0;i<as.length;i++)
       as[i]  = new Action2(actions[i]);
 
-    return windowManager.openDialog(null, getName(), WindowManager.QUESTION_MESSAGE, msg, as, owner);
+    return DialogHelper.openDialog(getName(), DialogHelper.QUESTION_MESSAGE, msg, as, owner);
 
   }
 
@@ -745,31 +597,13 @@ public abstract class Report implements Cloneable {
    * containing simple key=value pairs can lookup internationalized
    * text-values with this method.
    * @param key the key to lookup in [ReportName].properties
-   * @param value an integer value to replace %1 in value with
+   * @param values values to replace %[0..] in resource strings
    */
-  public final String translate(String key, int value) {
-    return translate(key, new Integer(value));
+  public final String translate(String key, Object... values) {
+    return translate(key, (Locale)null, values);
   }
-
-  /**
-   * Sub-classes that are accompanied by a [ReportName].properties file
-   * containing simple key=value pairs can lookup internationalized
-   * text-values with this method.
-   * @param key the key to lookup in [ReportName].properties
-   * @param value an object value to replace %1 in value with
-   */
-  public final String translate(String key, Object value) {
-    return translate(key, new Object[]{value});
-  }
-
-  /**
-   * Sub-classes that are accompanied by a [ReportName].properties file
-   * containing simple key=value pairs can lookup internationalized
-   * text-values with this method.
-   * @param key the key to lookup in [ReportName].properties
-   * @param values an array of values to replace %1, %2, ... in value with
-   */
-  public String translate(String key, Object[] values) {
+  
+  public final String translate(String key, Locale locale, Object... values) {
 
     Resources resources = getResources();
     if (resources==null)
@@ -777,12 +611,16 @@ public abstract class Report implements Cloneable {
 
     // look it up in language
     String result = null;
-    if (lang!=null)
-      result = resources.getString(key+'.'+lang, values, false);
+    String lang = locale!=null ? locale.getLanguage() : userLanguage;
+    if (lang!=null) {
+      String locKey = key+'.'+lang;
+      result = resources.getString(locKey, values);
+      if (result!=locKey)
+        return result;
+    }
 
     // fallback if necessary
-    if (result==null)
-      result = resources.getString(key, values, true);
+    result = resources.getString(key, values);
 
     // done
     return result;
@@ -825,7 +663,7 @@ public abstract class Report implements Cloneable {
         InputStream in = (reports.exists()&&reports.isDirectory()) ?
             new FileInputStream(new File(reports, src)) :
             getClass().getResourceAsStream(src);
-        resources.load(in);
+        resources.load(in, true);
       } catch (IOException e) {
         // ignore
       }
@@ -842,9 +680,9 @@ public abstract class Report implements Cloneable {
    * @param prefix String in front of the indented text (can be null)
    */
     public static String getIndent(int level, int spacesPerLevel, String prefix) {
-        String oneLevel = "";
+        StringBuffer oneLevel = new StringBuffer();
         while(oneLevel.length() != spacesPerLevel)
-            oneLevel=oneLevel+" ";
+            oneLevel.append(" ");
         StringBuffer buffer = new StringBuffer(256);
         while (--level>0) {
             buffer.append(oneLevel);
@@ -979,45 +817,18 @@ public abstract class Report implements Cloneable {
    * @param context normally an instance of type Gedcom but depending on
    *    accepts() could also be of type Entity or Property
    */
-  public void start(Object context) throws Throwable {
+  public Object start(Object context) throws Throwable {
     try {
-      getStartMethod(context).invoke(this, new Object[]{ context });
-    } catch (Throwable t) {
-      String msg = "can't run report on input";
-      if (t instanceof InvocationTargetException)
-        throw ((InvocationTargetException)t).getTargetException();
-      throw t;
+      return getStartMethod(context).invoke(this, new Object[]{ context });
+    } catch (InvocationTargetException t) {
+      throw ((InvocationTargetException)t).getTargetException();
     }
   }
-
-  public void start(Object context, Object parameter) throws Throwable {
-	  Method startMethod = getStartMethod(context,parameter);
-	  // if start(context,parameter) doesn't exists, try start(context)
-	  if (startMethod == null) 
-		  start(context);
-	  else
-		try {
-	      getStartMethod(context,parameter).invoke(this, new Object[]{ context , parameter});
-	    } catch (Throwable t) {
-	      String msg = "can't run report on input";
-	      if (t instanceof InvocationTargetException)
-	        throw ((InvocationTargetException)t).getTargetException();
-	      throw t;
-	    }
-	  }
-
 
   /**
    * Tells wether this report doesn't change information in the Gedcom-file
    */
   public boolean isReadOnly() {
-    return true;
-  }
-
-  /**
-   * Returns true if this report uses STDOUT
-   */
-  public boolean usesStandardOut() {
     return true;
   }
 
@@ -1033,7 +844,7 @@ public abstract class Report implements Cloneable {
      * </il>
      * @return title of action for given context or null for n/a
      */
-    public Object accepts(Object context) {
+    public String accepts(Object context) {
       return getStartMethod(context)!=null ? getName() : null;
     }
 
@@ -1049,10 +860,10 @@ public abstract class Report implements Cloneable {
           // needs to be named start
           if (!methods[m].getName().equals("start")) continue;
           // make sure its a one-arg
-          Class[] params = methods[m].getParameterTypes();
+          Class<?>[] params = methods[m].getParameterTypes();
           if (params.length!=1) continue;
           // keep it
-          Class param = params[0];
+          Class<?> param = params[0];
           if (param.isAssignableFrom(context.getClass()))
             return methods[m];
           // try next
@@ -1061,57 +872,6 @@ public abstract class Report implements Cloneable {
       }
       // n/a
       return null;
-    }
-
-    /*package*/ Method getStartMethod(Object context, Object parameter) {
-
-        // check for what this report accepts
-        try {
-          Method[] methods = getClass().getDeclaredMethods();
-          for (int m = 0; m < methods.length; m++) {
-            // needs to be named start
-            if (!methods[m].getName().equals("start")) continue;
-            // make sure its a two-arg
-            Class[] params = methods[m].getParameterTypes();
-            if (params.length!=2) continue;
-            // keep it
-            Class param = params[0];
-            if (param.isAssignableFrom(context.getClass()))
-              return methods[m];
-            // try next
-          }
-        } catch (Throwable t) {
-        }
-        // n/a:
-        return null;
-      }
-
-    /**
-     * Represents the report category.
-     */
-    public static class Category
-    {
-        private String name;
-        private ImageIcon image;
-
-        public Category(String name, ImageIcon image) {
-            this.name = name;
-            this.image = image;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public ImageIcon getImage() {
-            return image;
-        }
-    }
-
-    private static class Categories extends TreeMap {
-        void add(Category category) {
-            put(category.getName(), category);
-        }
     }
 
     /**
@@ -1140,6 +900,5 @@ public abstract class Report implements Cloneable {
             return extension.toUpperCase() + " files";
         }
     }
-
 
 } //Report

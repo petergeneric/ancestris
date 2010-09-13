@@ -19,6 +19,7 @@
  */
 package genj.util.swing;
 
+import genj.util.ChangeSupport;
 import genj.util.EnvironmentChecker;
 
 import java.awt.BorderLayout;
@@ -34,6 +35,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeListener;
 
 /**
  * A component for choosing a font */
@@ -48,13 +50,15 @@ public class FontChooser extends JPanel {
   /** text for size */
   private JTextField size;
   
+  private ChangeSupport changes = new ChangeSupport(this);
+  
   /** 
    * apparently on some systems there might be a problem with 
    * accessing all fonts (vmcrash reported by dmoyne) when
    * we render each and every of those fonts in the font-selection-list
    */
   private final static boolean isRenderWithFont = 
-    null == EnvironmentChecker.getProperty(FontChooser.class, "genj.debug.fontproblems", null, "supress font usage in font-selection-list");
+    null == EnvironmentChecker.getProperty("genj.debug.fontproblems", null, "supress font usage in font-selection-list");
     
 
   
@@ -67,6 +71,9 @@ public class FontChooser extends JPanel {
     fonts.setEditable(false);
     fonts.setRenderer(new Renderer());
     size = new JTextField(3);
+    
+    fonts.addActionListener(changes);
+    size.getDocument().addDocumentListener(changes);
     
     //layout
     setAlignmentX(0F);
@@ -90,6 +97,12 @@ public class FontChooser extends JPanel {
   /**
    * Accessor - selected font   */
   public void setSelectedFont(Font font) {
+    if (font==null) {
+      fonts.setSelectedIndex(-1);
+      size.setText("");
+      return;
+    }
+      
     String family = font.getFamily();
     Font[] fs = getAllFonts();
     for (int i = 0; i < fs.length; i++) {
@@ -107,7 +120,7 @@ public class FontChooser extends JPanel {
   public Font getSelectedFont() {
     Font font = (Font)fonts.getSelectedItem();
     if (font==null)
-      font = getFont();
+      return null;
     return font.deriveFont((float)getSelectedFontSize());
   }
   
@@ -115,7 +128,7 @@ public class FontChooser extends JPanel {
    * Calculates current selected size
    */
   private int getSelectedFontSize() {
-    int result = 2;
+    int result = 10;
     try {
       result = Integer.parseInt(size.getText());
     } catch (Throwable t) {
@@ -196,5 +209,13 @@ public class FontChooser extends JPanel {
     }
     
   } //Renderer
+
+  public void addChangeListener(ChangeListener listener) {
+    changes.addChangeListener(listener);
+  }
+  
+  public void removeChangeListener(ChangeListener listener) {
+    changes.removeChangeListener(listener);
+  }
   
 } //FontChooser

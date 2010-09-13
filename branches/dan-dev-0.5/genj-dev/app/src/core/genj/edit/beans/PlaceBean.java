@@ -20,13 +20,13 @@
 package genj.edit.beans;
 
 import genj.edit.Options;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.GridBagHelper;
-import genj.util.Registry;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
-import genj.window.WindowManager;
+import genj.util.swing.DialogHelper;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -51,8 +51,8 @@ public class PlaceBean extends PropertyBean {
   private Property[] sameChoices = new Property[0];
 
 
-  void initialize(Registry setRegistry) {
-    super.initialize(setRegistry);
+  public PlaceBean() {
+    
     // nothing much we can do - hook up to change events and show changeAll on change 
     changeSupport.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
@@ -64,9 +64,8 @@ public class PlaceBean extends PropertyBean {
     // listen to selection of global and ask for confirmation
     global.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        WindowManager wm = WindowManager.getInstance(PlaceBean.this);
-        if (wm!=null&&global.isSelected()) {
-          int rc = wm.openDialog(null, resources.getString("choice.global.enable"), WindowManager.QUESTION_MESSAGE, getGlobalConfirmMessage(),Action2.yesNo(), PlaceBean.this);
+        if (global.isSelected()) {
+          int rc = DialogHelper.openDialog(RESOURCES.getString("choice.global.enable"), DialogHelper.QUESTION_MESSAGE, getGlobalConfirmMessage(), Action2.yesNo(),PlaceBean.this);
           global.setSelected(rc==0);
         }        
       }
@@ -108,56 +107,59 @@ public class PlaceBean extends PropertyBean {
   /**
    * Finish editing a property through proxy
    */
-  public void commit(Property property) {
-    
-    super.commit(property);
+  @Override
+  protected void commitImpl(Property property) {
     
     // propagate change
     ((PropertyPlace)property).setValue(getCommitValue(), global.isSelected());
     
     // reset
-    // TODO this will force a focus change - we should really just reset the choices
-    setProperty(property);
-  
+    setPropertyImpl(property);
+    
   }
 
   /**
    * Set context to edit
    */
-  boolean accepts(Property prop) {
-    return prop instanceof PropertyPlace;
-  }
   public void setPropertyImpl(Property prop) {
-    PropertyPlace place = (PropertyPlace)prop;
-    if (place==null)
-      return;
-    
-    sameChoices = place.getSameChoices();
     
     // remove all current fields and clear current default focus - this is all dynamic for each context
-    removeAll();
+    int old = rows;
     rows = 0;
     defaultFocus = null;
     
-    /*
-      thought about using getDisplayValue() here but the problem is that getAllJurisdictions()
-      works on values (PropertyChoiceValue stuff) - se we have to use getValue() here
-     */
+    Gedcom ged = getRoot().getGedcom();
+    PropertyPlace place = (PropertyPlace)prop;
+    String value;
+    String formatAsString;
+    String[] jurisdictions;
     
-    // secret info?
-    String value = place.isSecret() ? "" : place.getValue();
+    if (place==null) {
+      sameChoices = new Property[0];
+      value = "";
+      jurisdictions = new String[0];
+      formatAsString = ged.getPlaceFormat();
+    } else {
+      sameChoices = place.getSameChoices();
+      /*
+        thought about using getDisplayValue() here but the problem is that getAllJurisdictions()
+        works on values (PropertyChoiceValue stuff) - se we have to use getValue() here
+       */
+      value = place.isSecret() ? "" : place.getValue();
+      formatAsString = place.getFormatAsString();
+      jurisdictions = place.getJurisdictions();
+    }
    
     // either a simple value or broken down into comma separated jurisdictions
-    if (!Options.getInstance().isSplitJurisdictions || place.getFormatAsString().length()==0) {
-      createChoice(null, value, place.getAllJurisdictions(-1,true), place.getFormatAsString());
+    if (!Options.getInstance().isSplitJurisdictions || formatAsString.length()==0) {
+      createChoice(null, value, PropertyPlace.getAllJurisdictions(ged, -1, true), formatAsString);
     } else {
-      String[] format = place.getFormat();
-      String[] jurisdictions = place.getJurisdictions();
+      String[] format = PropertyPlace.getFormat(ged);
       for (int i=0;i<Math.max(format.length, jurisdictions.length); i++) {
-        createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", place.getAllJurisdictions(i, true), null);
+        createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", PropertyPlace.getAllJurisdictions(ged, i, true), null);
       }
     }
-
+    
     // add 'change all'
     global.setVisible(false);
     global.setSelected(false);
@@ -165,6 +167,10 @@ public class PlaceBean extends PropertyBean {
     
     // add filler
     gh.addFiller(1,++rows);
+    
+    // remove leftovers now - this means a focus change occurs back to first available field within bean
+    for (int i=0;i<old;i++)
+      remove(0);
     
     // Done
   }
@@ -180,7 +186,12 @@ public class PlaceBean extends PropertyBean {
     choice.setIgnoreCase(true);
     choice.setEditable(true);
     choice.setValues(values);
-    choice.setText(value);
+//    if (value.length()>0) {
+      choice.setText(value);
+//    } else {
+//      choice.setText("["+Gedcom.getName(PropertyPlace.TAG)+"]");
+//      choice.setTemplate(true);
+//    }
     choice.addChangeListener(changeSupport);
     if (tip!=null&&tip.length()>0)
       choice.setToolTipText(tip);
@@ -199,7 +210,7 @@ public class PlaceBean extends PropertyBean {
     // we're using getDisplayValue() here
     // because like in PropertyRelationship's case there might be more
     // in the gedcom value than what we want to display (witness@INDI:BIRT)
-    return resources.getString("choice.global.confirm", new String[]{ ""+sameChoices.length, sameChoices[0].getDisplayValue(), getCommitValue() });
+    return RESOURCES.getString("choice.global.confirm", ""+sameChoices.length, sameChoices[0].getDisplayValue(), getCommitValue() );
   }
   
 } //PlaceBean

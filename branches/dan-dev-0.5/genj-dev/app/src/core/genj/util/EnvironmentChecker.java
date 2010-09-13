@@ -22,7 +22,6 @@ package genj.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,7 +30,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
@@ -56,41 +54,29 @@ public class EnvironmentChecker {
         "user.name", "user.dir", "user.home", "all.home", "user.home.genj", "all.home.genj"
   };
   
-  private final static Set NOOVERRIDE = new HashSet();
+  private final static Set<String> NOOVERRIDE = new HashSet<String>();
+  
   
   /**
-   * Check for Java 1.4 and higher
+   * Check for Java 1.6 and higher
    */
-  public static boolean isJava14(Object receipient) {
-    String version = getProperty(receipient, "java.version", "", "Checking Java VM version");
-    // o.k. this should be more flexible 8)
-    if (version.startsWith("1.1") || version.startsWith("1.2")  || version.startsWith("1.3"))
-      return false;
-    // we're good
-    return true;
-  }
-  
-  /**
-   * Check for Java 1.5 and higher
-   */
-  public static boolean isJava15(Object receipient) {
-    String version = getProperty(receipient, "java.version", "", "Checking Java VM version");
-    // o.k. this should be more flexible 8)
-    return version.startsWith("1.5") || version.startsWith("1.6");
+  public static boolean isJava16() {
+    String version = getProperty("java.version", "", "Checking Java VM version");
+    return version.matches("1\\.[6789].*");
   }
   
   /**
    * Check for Mac
    */
   public static boolean isMac() {
-    return getProperty(EnvironmentChecker.class, "mrj.version", null, "isMac()")!=null;
+    return getProperty("mrj.version", null, "isMac()")!=null;
   }
   
   /**
    * Check for Windows
    */
   public static boolean isWindows() {
-    return getProperty(EnvironmentChecker.class, "os.name", "", "isWindows()").indexOf("Windows")>-1;
+    return getProperty("os.name", "", "isWindows()").indexOf("Windows")>-1;
   }
   
   private static String getDatePattern(int format) {
@@ -109,20 +95,12 @@ public class EnvironmentChecker {
     // Go through system properties
     for (int i=0; i<SYSTEM_PROPERTIES.length; i++) {
       String key = SYSTEM_PROPERTIES[i];
-      String msg = key + " = "+getProperty(EnvironmentChecker.class, SYSTEM_PROPERTIES[i], "", "check system props");
+      String msg = key + " = "+getProperty(SYSTEM_PROPERTIES[i], "", "check system props");
       if (NOOVERRIDE.contains(key))
         msg += " (no override)";
       LOG.info(msg);
     }
     
-    try {
-        if (!EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
-            BufferedReader in = new BufferedReader(new FileReader("/proc/version"));
-            String linuxVersionDesc = in.readLine();
-            LOG.info("Linux version = "+linuxVersionDesc);
-            in.close();
-        }
-    } catch (Exception e){}
     // check locale specific stuff
     LOG.info("Locale = "+Locale.getDefault());
     LOG.info("DateFormat (short) = "+getDatePattern(DateFormat.SHORT));
@@ -133,7 +111,7 @@ public class EnvironmentChecker {
       try {
         
       // check classpath
-      String cpath = getProperty(EnvironmentChecker.class, "java.class.path", "", "check classpath");
+      String cpath = getProperty("java.class.path", "", "check classpath");
       StringTokenizer tokens = new StringTokenizer(cpath,System.getProperty("path.separator"),false);
       while (tokens.hasMoreTokens()) {
         String entry = tokens.nextToken();
@@ -176,14 +154,26 @@ public class EnvironmentChecker {
   /**
    * Returns a (system) property
    */
-  public static String getProperty(Object receipient, String key, String fallback, String msg) {
-    return getProperty(receipient, new String[]{key}, fallback, msg);
+  public static String getProperty(String key, String fallback, String msg) {
+    return getProperty(new String[]{key}, fallback, msg);
+  }
+  
+  /**
+   * Logfile
+   */
+  public static File getLog() {
+    
+    File home = new File(getProperty("user.home.genj", null, "log file"));
+    if ( !(home.exists()||home.mkdirs()) && !home.isDirectory()) 
+      throw new Error("Can't initialize home directoy "+home);
+    
+    return new File(home, "genj.log");
   }
 
   /**
    * Returns a (system) property
    */
-  public static String getProperty(Object receipient, String[] keys, String fallback, String msg) {
+  public static String getProperty(String[] keys, String fallback, String msg) {
     // see if one key fits
     String key = null, val, postfix;
     try {
@@ -219,10 +209,9 @@ public class EnvironmentChecker {
     try {
       Properties props = new Properties();
       props.load(in);
-      for (Iterator keys = props.keySet().iterator(); keys.hasNext(); ) {
-        String key = keys.next().toString();
-        if (System.getProperty(key)==null)
-          setProperty(key, props.getProperty(key));
+      for (Object key : props.keySet()) {
+        if (System.getProperty((String)key)==null)
+          setProperty((String)key, props.getProperty((String)key));
       }
     } catch (Throwable t) {
       if (t instanceof IOException)
@@ -237,8 +226,10 @@ public class EnvironmentChecker {
   private static void setProperty(String key, String val) {
     String old = System.getProperty(key); 
     if (old==null) {
+      LOG.fine("Setting system property "+key);
       System.setProperty(key, val);
     } else {
+      LOG.fine("Not overriding system property "+key);
       NOOVERRIDE.add(key);
     }
   }
@@ -247,6 +238,7 @@ public class EnvironmentChecker {
    * read system properties from file
    */
   static {
+    
     try {
       EnvironmentChecker.loadSystemProperties(new FileInputStream(new File("system.properties")));
     } catch (IOException e) {
@@ -286,15 +278,18 @@ public class EnvironmentChecker {
   }
   
   /**
-   * "user.home.genj" the genj application data directory ("C:/Documents and Settings/$USER/Application Data/genj" on windows, "~/.genj" otherwise)
+   * "user.home.genj" the genj application data directory 
+   *  C:/Documents and Settings/%USERNAME%/Application Data/genj on windows
+   *  ~/Library/Application Support/GenJ on Mac
+   *  ~/.genj otherwise
    */
   static {
-      // FIXME: faire autrement (c'est une rapide modif pour pouvoir sauver les options sans toucher au "classique")
+      // TODO: faire autrement (c'est une rapide modif pour pouvoir sauver les options sans toucher au "classique")
       // Peut-etre utiliser InstalledFileLocator
       File nbuserdir = new File(System.getProperty("netbeans.user"));
 
 //      setProperty("user.home.genj", (new File(nbuserdir,"genj")).getAbsolutePath());
-      setProperty("user.home.genj", (new File(nbuserdir,"genjfr")).getAbsolutePath());  // Maintenant c'est genjfr
+      setProperty("user.home.genj", (new File(nbuserdir,"ancestris")).getAbsolutePath());
 
 //    try {
 //      File user_home_genj;
@@ -323,7 +318,7 @@ public class EnvironmentChecker {
       if (isWindows()) {
         File app_data = new File(System.getProperty("all.home"), "Application Data");
         if (app_data.isDirectory())
-          setProperty("all.home.genj", new File(app_data, "GenjFr").getAbsolutePath());
+          setProperty("all.home.genj", new File(app_data, "GenJ3").getAbsolutePath());
       }
     } catch (Throwable t) {
       // ignore if we can't access system properties

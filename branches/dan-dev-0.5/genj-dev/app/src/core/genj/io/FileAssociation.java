@@ -390,32 +390,11 @@ public class FileAssociation {
     // new - not found so we're going to try a platform default handler
     // check for kfmclient, explorer, xdg-open, etc.
     // ****
-    // FIXME: utiliser         Desktop.getDesktop().open(App.LOGFILE);
     FileAssociation fa=new FileAssociation();
     fa.setName("Ouvrir");
     fa.useDesktop(true);
     return fa;
-//    if ((new File("/usr/bin/xdg-open")).exists()) {
-//    	fa.setExecutable("/usr/bin/xdg-open");
-//    	return fa;
-//    }
-//    if ((new File("/usr/bin/gnome-open")).exists()) {
-//    	fa.setExecutable("/usr/bin/gnome-open");
-//    	return fa;
-//    }
-//    if ((new File("/usr/bin/kfmclient")).exists()) {
-//    	fa.setExecutable("/usr/bin/kfmclient exec");
-//    	return fa;
-//    }
-//    if (EnvironmentChecker.isMac()) {
-//    	fa.setExecutable("open");
-//    	return fa;
-//    }
-//    if (EnvironmentChecker.isWindows()){
-//    	fa.setExecutable("explorer");
-//    	return fa;
-//    }
-//
+    // TODO: Il faudra pouvoir mettre un possibilite de mettre une commande pour la modification ou la visualisation
 //     // none found and no platform default figured out either - go ask
 //    JFileChooser chooser = new JFileChooser();
 //    chooser.setDialogTitle(Resources.get(FileAssociation.class).getString("assocation.choose", suffixes));

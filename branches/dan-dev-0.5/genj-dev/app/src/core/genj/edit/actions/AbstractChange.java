@@ -20,16 +20,19 @@
 package genj.edit.actions;
 
 import genj.edit.Images;
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import genj.util.swing.Action2;
+import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
-import genj.view.ViewManager;
-import genj.window.WindowManager;
+import genj.view.SelectionSink;
+
+import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -40,7 +43,7 @@ import javax.swing.JTextArea;
 /**
  * ActionChange - change the gedcom information
  */
-public abstract class AbstractChange extends Action2 implements UnitOfWork {
+public abstract class AbstractChange extends Action2 {
   
   /** resources */
   /*package*/ final static Resources resources = Resources.get(AbstractChange.class);
@@ -48,38 +51,23 @@ public abstract class AbstractChange extends Action2 implements UnitOfWork {
   /** the gedcom we're working on */
   protected Gedcom gedcom;
   
-  /** the manager in the background */
-  protected ViewManager manager;
+  private Context selection;
   
   /** image *new* */
-  protected final static ImageIcon imgNew = Images.imgNewEntity;
+  protected final static ImageIcon imgNew = Images.imgNew;
   
   private JTextArea confirm;
 
   /**
    * Constructor
    */
-  public AbstractChange(Gedcom ged, ImageIcon img, String text, ViewManager mgr) {
+  public AbstractChange(Gedcom ged, ImageIcon img, String text) {
     gedcom = ged;
-    manager = mgr;
     super.setImage(img);
     super.setText(text);
+    super.setTip(text);
   }
 
-  /**
-   * Show a dialog for errors
-   */  
-  protected void handleThrowable(String phase, Throwable t) {
-    // for a NPE I've seen a null message - better convert that to string here
-    String message = ""+t.getMessage();
-    // show it
-    getWindowManager().openDialog("err", "Error", WindowManager.ERROR_MESSAGE, message, Action2.okOnly(), getTarget());
-  }
-  
-  protected WindowManager getWindowManager() {
-    return WindowManager.getInstance(getTarget());    
-  }
-  
   /** 
    * Returns the confirmation message - null if none
    */
@@ -117,8 +105,11 @@ public abstract class AbstractChange extends Action2 implements UnitOfWork {
   /**
    * @see genj.util.swing.Action2#execute()
    */
-  protected void execute() {
+  public void actionPerformed(final ActionEvent event) {
     
+    // cleanup first
+    confirm = null;
+	  
     // prepare confirmation message for user
     String msg = getConfirmMessage();
     if (msg!=null) {
@@ -130,25 +121,33 @@ public abstract class AbstractChange extends Action2 implements UnitOfWork {
       };
       
       // Recheck with the user
-      int rc = getWindowManager().openDialog(getClass().getName(), getText(), WindowManager.QUESTION_MESSAGE, getDialogContent(), actions, getTarget() );
+      int rc = DialogHelper.openDialog(getText(), DialogHelper.QUESTION_MESSAGE, getDialogContent(), actions, event) ;
       if (rc!=0)
         return;
     }
         
     // do the change
     try {
-      gedcom.doUnitOfWork(this);
+      gedcom.doUnitOfWork(new UnitOfWork() {
+        public void perform(Gedcom gedcom) throws GedcomException {
+          selection = execute(gedcom, event);
+        }
+      });
     } catch (Throwable t) {
-      getWindowManager().openDialog(getClass().getName(), null, WindowManager.ERROR_MESSAGE, t.getMessage(), Action2.okOnly(), getTarget());
+      DialogHelper.openDialog(null, DialogHelper.ERROR_MESSAGE, t.getMessage(), Action2.okOnly(), event);
     }
     
+    // propagate selection
+    if (selection!=null)
+    	SelectionSink.Dispatcher.fireSelection(event, selection);
+      
     // done
   }
   
   /**
    * perform the actual change
    */
-  public abstract void perform(Gedcom gedcom) throws GedcomException;
-  
+  protected abstract Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException;
+
 } //Change
 

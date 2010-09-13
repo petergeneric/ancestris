@@ -7,7 +7,6 @@
 
 package genj.gedcom;
 
-import genj.io.GedcomIOException;
 import genj.io.GedcomWriter;
 
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class GedcomDelTest extends TestCase {
             public void write(int arg0) { /* nop */ }
         };
         
-        GedcomWriter writer = new GedcomWriter(gedcom,"test",null,sink);                    
+        GedcomWriter writer = new GedcomWriter(gedcom,sink);                    
         writer.write(); //closes fos
     }
 

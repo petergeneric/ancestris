@@ -86,6 +86,7 @@ public class ReportSosa extends Report {
   public boolean reportResi = true; 
   public boolean reportPlaceOfResi = true;
   public boolean reportDateOfResi = true;
+  public boolean reportIndiNumber = true;
 
   /** option - Information to display for each event */
   public boolean showAllPlaceJurisdictions = false;
@@ -176,7 +177,7 @@ public class ReportSosa extends Report {
 /**
    * Main for argument individual
    */
-  public void start(Indi indi) {
+  public Document start(Indi indi) {
 
     // Init some stuff
     PrivacyPolicy policy = OPTIONS.getPrivacyPolicy();
@@ -223,7 +224,7 @@ public class ReportSosa extends Report {
     recursion.start(indi, policy, doc);
 
     // Done
-    showDocumentToUser(doc);
+    return doc;
   }
 
   /**
@@ -291,7 +292,7 @@ public class ReportSosa extends Report {
                    listOfNotes.add(sText);
                 String sNote = "";
                 Property sProp = source.getPropertyByPath(NOTE);
-                if (sProp != null) sNote = sProp.toString();
+                if (sProp != null) sNote = sProp.getValue();
                 if ((sNote != null) && (sNote.trim().length() > 0))
                    listOfNotes.add(sNote);
                 globalSrcNotes.put(source, listOfNotes);
@@ -301,13 +302,13 @@ public class ReportSosa extends Report {
              // husband and wife would get it and it would be redundant!)
              String strNote = "";
              Property sProp2 = propSrc.getPropertyByPath(NOTE);
-             if (sProp2 != null) strNote = sProp2.toString();
+             if (sProp2 != null) strNote = sProp2.getValue();
              if ((strNote != null) && (strNote.trim().length() > 0) && (!isAlreadyIn(listOfNotes, strNote))) {
                 listOfNotes.add(descStr+strNote);
                 }
              strNote = "";
              sProp2 = propSrc.getPropertyByPath(DATA);
-             if (sProp2 != null) strNote = sProp2.toString();
+             if (sProp2 != null) strNote = sProp2.getValue();
              if ((strNote != null) && (strNote.trim().length() > 0) && (!isAlreadyIn(listOfNotes, strNote))) {
                 listOfNotes.add(descStr+strNote);
                 }
@@ -320,7 +321,9 @@ public class ReportSosa extends Report {
      * dump individual's name
      */
     String getName(Indi indi, int sosa, PrivacyPolicy privacy) {
-      return (sosa>0?sosa+" ":"") + privacy.getDisplayValue(indi, "NAME") + " (" + indi.getId() + ")";
+      if(reportIndiNumber)return (sosa>0?sosa+" ":"") + privacy.getDisplayValue(indi, "NAME") + " (" + indi.getId() + ")";
+      	else return (sosa>0?sosa+" ":"") + privacy.getDisplayValue(indi, "NAME");
+      
     }
 
     /**

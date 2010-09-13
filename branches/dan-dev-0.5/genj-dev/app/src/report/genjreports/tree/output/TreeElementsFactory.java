@@ -8,8 +8,6 @@
 
 package genjreports.tree.output;
 
-import genj.report.options.ComponentContainer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +17,11 @@ import java.util.List;
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
-public class TreeElementsFactory implements ComponentContainer
-{
-    private TreeElements elements;
-    private TreeElements rotateElements;
-    private TreeElements flipElements;
+public class TreeElementsFactory {
+  
+    public TreeElements elements;
+    public TreeElements rotateElements;
+    public TreeElements flipElements;
 
     public TreeElementsFactory()
     {
@@ -37,13 +35,4 @@ public class TreeElementsFactory implements ComponentContainer
         return flipElements;
     }
 
-    public List<Object> getComponents()
-    {
-        List<Object> components = new ArrayList<Object>();
-        components.add(elements);
-        components.add(rotateElements);
-        components.add(flipElements);
-        components.add(this);
-        return components;
-    }
 }

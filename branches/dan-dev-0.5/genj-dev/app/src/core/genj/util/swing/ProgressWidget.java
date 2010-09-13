@@ -19,79 +19,78 @@
  */
 package genj.util.swing;
 
-import genj.util.GridBagHelper;
 import genj.util.Trackable;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 
 /**
- * A Dialog used to show the progress of an operation
+ * A component to show the progress of a trackable
  */
 public class ProgressWidget extends JPanel {
-
-  private final static String
-    OPTION_CANCEL = UIManager.getString("OptionPane.cancelButtonText");
+  
+  private final static ImageIcon IMG_CANCEL = new ImageIcon(ProgressWidget.class, "Cancel.png");
 
   /** using a progress bar for 0-100 */
-  private JProgressBar  progress;
+  private JProgressBar  progress = new JProgressBar(0, 100);
 
   /** what we track */
-  private Trackable     trackable;
-  
-  /** the thread that'll finish */
-  private Thread        worker;
-  
-  /** label for state */
-  private JLabel        state;
+  private Trackable     track;
   
   /** timer */
   private Timer timer;
   
+  private Dimension minPreferredSize;
+  
   /**
    * Constructor
    */
-  public ProgressWidget(Trackable trAckable, Thread woRker) {
+  public ProgressWidget(Trackable trackable) {
 
-    // remember
-    trackable  = trAckable;
-    worker     = woRker;
+    super(new BorderLayout());
+    
+    JButton cancel = new JButton(new Cancel());
+    cancel.setRequestFocusEnabled(false);
+    cancel.setFocusable(false);
+    cancel.setMargin(new Insets(0,0,0,0));
+    
+    add(progress, BorderLayout.CENTER);
+    add(cancel, BorderLayout.EAST);
 
-    // prepare components
-    GridBagHelper gh = new GridBagHelper(this)
-      .setInsets(new Insets(2,2,2,2))
-      .setParameter(GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL);
-
-    // .. explanation
-    state = new JLabel(" ",JLabel.CENTER);
-    gh.add(state, 0, 0);
-
-    // .. progess
-    progress = new JProgressBar();
-    gh.add(progress, 0, 1);
+    progress.setStringPainted(true);
+    track = trackable;
 
     // prepare timer
     timer = new Timer(100, new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // update progress bar      
-        progress.setValue(trackable.getProgress());
-        // update state
-        state.setText(trackable.getState());
-        // still going?
-        if (!worker.isAlive())
-          timer.stop();
-        // done for now
+        progress.setValue(track.getProgress());
+        progress.setString(track.getState());
+        revalidate();
+        repaint();
       }
     });
        
     // done
+  }
+  
+  @Override
+  public Dimension getPreferredSize() {
+    Dimension oldMin = minPreferredSize;
+    minPreferredSize = super.getPreferredSize();
+    if (oldMin!=null) {
+      minPreferredSize.width = Math.max(minPreferredSize.width+16, oldMin.width);
+      minPreferredSize.height= Math.max(minPreferredSize.height, oldMin.height);
+    }
+    return minPreferredSize;
   }
   
   /**
@@ -100,7 +99,6 @@ public class ProgressWidget extends JPanel {
   public void addNotify() {
     // start timer
     timer.start();
-
     // continue
     super.addNotify();
   }
@@ -109,15 +107,20 @@ public class ProgressWidget extends JPanel {
    * @see javax.swing.JComponent#removeNotify()
    */
   public void removeNotify() {
-    
     // make sure timer is stopped
     timer.stop();
-    
-    // cancel trackable if still running
-    trackable.cancelTrackable();
-    
     // continue
     super.removeNotify();
+  }
+  
+  private class Cancel extends Action2 {
+    private Cancel() {
+      setImage(IMG_CANCEL);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      track.cancelTrackable();
+    }
   }
 
 } //ProgressWidget

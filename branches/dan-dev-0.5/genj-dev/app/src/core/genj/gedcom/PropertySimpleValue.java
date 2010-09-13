@@ -25,51 +25,22 @@ package genj.gedcom;
  */
 public class PropertySimpleValue extends Property {
 
-  /** A generic Attribute's tag */
-  private String tag;
-
   /** the value */
   private String value;
-
-  /**
-   * Constructor
-   */
-  public PropertySimpleValue() {
-  }
 
   /**
    * Constructor with tag
    */
   public PropertySimpleValue(String tag) {
-    this.tag = tag;
+    super(tag);
   }
 
   /**
    * Constructor with tag & value
    */
   public PropertySimpleValue(String tag, String value) {
-    this.tag = tag;
+    super(tag);
     this.value = value;
-  }
-
-  /**
-   * Returns the tag of this property
-   */
-  public String getTag() {
-    return tag;
-  }
-  
-  /**
-   * @see genj.gedcom.Property#setTag(java.lang.String)
-   */
-  /*package*/ Property init(MetaProperty meta, String value) {
-    tag = meta.getTag();
-    try {
-      return super.init(meta, value);
-    } catch (GedcomException e) {
-      // don't expect any problems here
-      return this;
-    }
   }
 
   /**

@@ -19,49 +19,38 @@
  */
 package genj.search;
 
-import javax.swing.JComponent;
-
-import genj.gedcom.Gedcom;
-import genj.util.Registry;
 import genj.util.swing.ImageIcon;
+import genj.view.View;
 import genj.view.ViewFactory;
-import genj.view.ViewManager;
+
 
 /**
  * Factory for the SearchView
  */
 public class SearchViewFactory implements ViewFactory {
-
-    /** image */
-    /*package*/ static final ImageIcon IMG = new ImageIcon(SearchViewFactory.class, "View");
-    private SearchView searchView = null;
-
-    /**
-     * @see genj.view.ViewFactory#createView(java.lang.String, genj.gedcom.Gedcom, genj.util.Registry, genj.view.ViewManager)
-     */
-    public JComponent createView(String title, Gedcom gedcom, Registry registry, ViewManager manager) {
-        searchView = new SearchView(gedcom, registry, manager);
-        return searchView;
-    }
-
+  
+  /** image */
+  /*package*/ static final ImageIcon IMG = new ImageIcon(SearchViewFactory.class, "View"); 
+  
   /**
-   * Getter of search View
+   * @see genj.view.ViewFactory#createView(java.lang.String, genj.gedcom.Gedcom, genj.util.Registry, genj.view.ViewManager)
    */
-  public SearchView getEditView() {
-    return searchView;
+  public View createView() {
+    return new SearchView();
   }
 
-    /**
-     * @see genj.view.ViewFactory#getImage()
-     */
-    public ImageIcon getImage() {
-        return IMG;
-    }
+  /**
+   * @see genj.view.ViewFactory#getImage()
+   */
+  public ImageIcon getImage() {
+    return IMG;
+  }
 
-    /**
-     * @see genj.view.ViewFactory#getTitle(boolean)
-     */
-    public String getTitle(boolean abbreviate) {
-        return SearchView.resources.getString("title" + (abbreviate ? ".short" : ""));
-    }
+  /**
+   * @see genj.view.ViewFactory#getTitle(boolean)
+   */
+  public String getTitle() {
+    return SearchView.RESOURCES.getString("title");
+  }
+
 } //SearchViewFactory

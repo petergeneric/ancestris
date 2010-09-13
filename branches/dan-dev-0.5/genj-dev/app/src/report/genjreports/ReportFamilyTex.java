@@ -22,7 +22,7 @@ import genj.report.Report;
  * @author Ekran, based on work of Carsten Muessig <carsten.muessig@gmx.net>
  * @version $Revision: 1.8 $
  * @modified by $Author: lukas0815 $, Ekran
- * updated   = $Date: 2009/07/25 20:46:42 $
+ * updated   = $Date: 2009-07-25 20:46:42 $
  */
 
 public class ReportFamilyTex extends Report {

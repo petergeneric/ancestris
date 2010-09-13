@@ -53,11 +53,11 @@ public class ReportLinesFan extends Report {
     /**
      * Main for argument individual
      */
-    public void start(Indi indi) {
+    public File start(Indi indi) {
 
         File file = getFileFromUser(translate("output.file"), Action2.TXT_OK,true);
         if (file == null)
-        return ;
+          return null;
 
 	try{
 
@@ -114,7 +114,7 @@ public class ReportLinesFan extends Report {
         writer.close();
 
         // show file the result to the user
-        showFileToUser(file);
+        return file;
 
     }
 

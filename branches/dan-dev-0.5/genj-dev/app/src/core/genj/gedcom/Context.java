@@ -19,28 +19,35 @@
  */
 package genj.gedcom;
 
-import genj.util.swing.ImageIcon;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * A context represents a 'current context in Gedcom terms', a gedcom
  * an entity and a property
  */
-public class Context implements Comparable<Context> {
+public class Context {
 
   private Gedcom gedcom;
-  private List entities = new ArrayList();
-  private List properties = new ArrayList();
-  private Class entityType = null;
-  private Class propertyType = null;
-  private ImageIcon  img = null;
-  private String txt = null;
+  private List<Entity> entities = new ArrayList<Entity>();
+  private List<Property> properties = new ArrayList<Property>();
 
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Context))
+      return false;
+    Context that = (Context)obj;
+    return this.gedcom==that.gedcom && this.entities.equals(that.entities) 
+      && this.properties.equals(that.properties);
+  }
+  
+  /**
+   * Constructor
+   */
+  public Context() {
+  }
+  
   /**
    * Constructor
    */
@@ -48,18 +55,55 @@ public class Context implements Comparable<Context> {
     this.gedcom = context.gedcom;
     this.entities.addAll(context.entities);
     this.properties.addAll(context.properties);
-    this.entityType = context.entityType;
-    this.propertyType = context.propertyType;
-    this.img = context.img;
-    this.txt = context.txt;
+  }
+
+  /**
+   * Constructor
+   */
+  public Context(Gedcom gedcom, Collection<? extends Entity> entities) {
+    this(gedcom, entities, null);
+  }
+  
+  /**
+   * Constructor
+   */
+  public Context(Gedcom gedcom, Collection<? extends Entity> entities, Collection<? extends Property> properties) {
+    
+    this.gedcom = gedcom;
+
+    // grab ents
+    if (entities!=null)
+      for (Entity e : entities) {
+        if (e.getGedcom()!=gedcom)
+          throw new IllegalArgumentException("gedcom must be same");
+        if (!this.entities.contains(e))
+          this.entities.add(e);
+      }
+
+    // grab props
+    if (properties!=null)
+      for (Property p : properties) {
+        // we don't want entities to leak through as properties
+        if (p instanceof Entity) {
+          if (!this.entities.contains(p))
+            this.entities.add((Entity)p);
+        } else if (!this.properties.contains(p)) {
+          Entity e = p.getEntity();
+          if (e.getGedcom()!=gedcom)
+            throw new IllegalArgumentException("gedcom must be same");
+          this.properties.add(p);
+          if (!this.entities.contains(e))
+            this.entities.add(e);
+        }
+      }
+
+    // done
   }
 
   /**
    * Constructor
    */
   public Context(Gedcom ged) {
-    if (ged==null)
-      throw new IllegalArgumentException("gedcom for context can't be null");
     gedcom = ged;
   }
 
@@ -68,7 +112,10 @@ public class Context implements Comparable<Context> {
    */
   public Context(Property prop) {
     this(prop.getGedcom());
-    addProperty(prop);
+    properties.add(prop);
+    Entity entity = prop.getEntity();
+    if (!entities.contains(entity))
+      entities.add(entity);
   }
 
   /**
@@ -76,83 +123,32 @@ public class Context implements Comparable<Context> {
    */
   public Context(Entity entity) {
     this(entity.getGedcom());
-    addEntity(entity);
+    entities.add(entity);
   }
-
+  
   /**
-   * Add an entity
+   * A context minus the given entity
    */
-  public void addEntity(Entity e) {
-    // check gedcom
-    if (e.getGedcom()!=gedcom)
-      throw new IllegalArgumentException("entity's gedcom can't be different");
-    // keep track of entity/types we contain
-    entities.remove(e);
-    if (entityType!=null&&entityType!=e.getClass())
-      entityType = Entity.class;
-    else
-      entityType = e.getClass();
-    entities.add(e);
-  }
-
-  /**
-   * Add entities
-   */
-  public void addEntities(Entity[] es) {
-    for (int i = 0; i < es.length; i++)
-      addEntity(es[i]);
-  }
-
-  /**
-   * Remove entities
-   */
-  public void removeEntities(Collection rem) {
-
-    // easy for entities
-    entities.removeAll(rem);
-
-    // do properties to
-    for (ListIterator iterator = properties.listIterator(); iterator.hasNext();) {
-      Property prop = (Property) iterator.next();
-      if (rem.contains(prop.getEntity()))
-        iterator.remove();
+  public Context remove(Entity entity) {
+    List<Entity> ents = new ArrayList<Entity>(entities);
+    ents.remove(entity);
+    List<Property> props = new ArrayList<Property>(properties.size());
+    for (Property prop : properties) {
+      Entity ent = prop.getEntity();
+      if (ent!=entity&&ent!=null)
+        props.add(prop);
     }
+    return new Context(gedcom, ents, props);
   }
 
   /**
-   * Add a property
+   * A context minus the given property
    */
-  public void addProperty(Property p) {
-    // keep entity
-    addEntity(p.getEntity());
-    if (p instanceof Entity)
-      return;
-    // check gedcom
-    if (p.getGedcom()!=gedcom)
-      throw new IllegalArgumentException("property's gedcom can't be different");
-    // keep track of property types we contain
-    properties.remove(p);
-    if (propertyType!=null&&propertyType!=p.getClass())
-      propertyType = Property.class;
-    else
-      propertyType = p.getClass();
-    // keep it
-    properties.add(p);
-  }
-
-  /**
-   * Add properties
-   */
-  public void addProperties(Property[] ps) {
-    for (int i = 0; i < ps.length; i++)
-      addProperty(ps[i]);
-  }
-
-  /**
-   * Remove properties
-   */
-  public void removeProperties(Collection rem) {
-    properties.removeAll(rem);
+  public Context remove(Property property) {
+    List<Entity> ents = new ArrayList<Entity>(entities);
+    List<Property> props = new ArrayList<Property>(properties);
+    props.remove(property);
+    return new Context(gedcom, ents, props);
   }
 
   /**
@@ -179,92 +175,78 @@ public class Context implements Comparable<Context> {
   /**
    * Accessor - all entities
    */
-  public Entity[] getEntities() {
-    if (entityType==null)
-      return new Entity[0];
-    return (Entity[])entities.toArray((Entity[])Array.newInstance(entityType, entities.size()));
+  public List<? extends Entity> getEntities() {
+    return entities;
   }
 
   /**
    * Accessor - properties
    */
-  public Property[] getProperties() {
-    if (propertyType==null)
-      return new Property[0];
-    return (Property[])properties.toArray((Property[])Array.newInstance(propertyType, properties.size()));
+  public List<? extends Property> getProperties() {
+    return properties;
   }
 
-  /**
-   * Accessor
-   */
-  public String getText() {
-
-    if (txt!=null)
-      return txt;
-
-    if (properties.size()==1) {
-      Property prop = (Property)properties.get(0);
-      txt = Gedcom.getName(prop.getTag()) + "/" + prop.getEntity();
-    } else if (!properties.isEmpty())
-      txt = Property.getPropertyNames(Property.toArray(properties), 5);
-    else  if (entities.size()==1)
-      txt = entities.get(0).toString();
-    else if (!entities.isEmpty())
-      txt = Entity.getPropertyNames(Property.toArray(entities), 5);
-    else txt = gedcom.getName();
-
-    return txt;
+  /** storage */
+  public String toString() {
+    
+    if (gedcom==null)
+      return "";
+    
+    StringBuffer result = new StringBuffer();
+    result.append(gedcom.getName());
+    for (Entity entity : entities) {
+      result.append(";");
+      result.append(entity.getId());
+      
+      for (Property prop : properties) {
+        if (prop.getEntity()==entity) {
+          result.append(",");
+          result.append(prop.getPath());
+        }
+      }
+      
+    }
+    return result.toString();
   }
+  
+  public static Context fromString(Gedcom gedcom, String toString) throws GedcomException {
 
-  /**
-   * Accessor
-   */
-  public Context setText(String text) {
-    txt = text;
-    return this;
-  }
+    List<Entity> entities = new ArrayList<Entity>();
+    List<Property> properties = new ArrayList<Property>();
 
-  /**
-   * Accessor
-   */
-  public ImageIcon getImage() {
-    // an override?
-    if (img!=null)
-      return img;
-    // check prop/entity/gedcom
-    if (properties.size()==1)
-      img = ((Property)properties.get(0)).getImage(false);
-    else if (entities.size()==1)
-      img = ((Entity)entities.get(0)).getImage(false);
-    else img = Gedcom.getImage();
-    return img;
-  }
+    String[] es = toString.split(";");
+    
+    // first is gedcom name
+    if (!es[0].equals(gedcom.getName()))
+      throw new GedcomException(es[0]+" doesn't match "+gedcom.getName());
+    
+    // loop over entities
+    for (int e=1; e<es.length; e++) {
+      
+      String[] ps = es[e].split(",");
 
-  /**
-   * Accessor
-   */
-  public Context setImage(ImageIcon set) {
-    img = set;
-    return this;
-  }
+      // first is entity id
+      Entity entity = gedcom.getEntity(ps[0]);
+      if (entity==null)
+        throw new GedcomException(ps[0]+" not in "+gedcom);
+      entities.add(entity);
 
-  /**
-   * Add given context to this context
-   */
-  public void addContext(Context context) {
-    if (context.getGedcom()!=getGedcom())
-      throw new IllegalArgumentException();
-    addProperties(context.getProperties());
-    addEntities(context.getEntities());
+      // then props
+      for (int p=1; p<ps.length; p++) {
+        try {
+          Property property = entity.getPropertyByPath(ps[p]);
+          if (property==null)
+            throw new GedcomException(ps[p]+" not in "+ps[0]+" in "+gedcom);
+          properties.add(property);
+        } catch (IllegalArgumentException iae) {
+          throw new GedcomException(ps[p]+" not valid for "+es[e]);
+        }
+        
+      }
+    }
+    return new Context(gedcom, entities, properties);
+    
   }
-
-  /** comparison  */
-  public int compareTo(Context that) {
-    if (this.txt==null)
-      return -1;
-    if (that.txt==null)
-      return 1;
-    return this.txt.compareTo(that.txt);
-  }
+  
 
 } //Context

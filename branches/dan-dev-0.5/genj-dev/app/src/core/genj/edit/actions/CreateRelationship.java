@@ -20,16 +20,14 @@
 package genj.edit.actions;
 
 import genj.common.SelectEntityWidget;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.util.Registry;
 import genj.util.WordBuffer;
 import genj.util.swing.NestedBlockLayout;
-import genj.view.ContextSelectionEvent;
-import genj.view.ViewContext;
-import genj.view.ViewManager;
-import genj.window.WindowManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +47,8 @@ import javax.swing.JTextField;
  * </il>
  */
 public abstract class CreateRelationship extends AbstractChange {
+  
+  protected Registry REGISTRY = Registry.get(CreateRelationship.class);
 
   /** the referenced entity */
   private Entity existing;
@@ -65,8 +65,8 @@ public abstract class CreateRelationship extends AbstractChange {
   /**
    * Constructor
    */
-  public CreateRelationship(String name, Gedcom gedcom, String targetType, ViewManager manager) {
-    super(gedcom, Gedcom.getEntityImage(targetType).getOverLayed(imgNew), resources.getString("link", name), manager);
+  public CreateRelationship(String name, Gedcom gedcom, String targetType) {
+    super(gedcom, Gedcom.getEntityImage(targetType), resources.getString("link", name));
     this.targetType = targetType;
   }
 
@@ -116,8 +116,9 @@ public abstract class CreateRelationship extends AbstractChange {
     JPanel result = new JPanel(new NestedBlockLayout("<col><row><select wx=\"1\"/></row><row><text wx=\"1\" wy=\"1\"/></row><row><check/><text/></row></col>"));
 
     // create selector
-    final SelectEntityWidget select = new SelectEntityWidget(gedcom, targetType, resources.getString("select.new"));
- 
+    final SelectEntityWidget select = new SelectEntityWidget(gedcom, targetType, SelectEntityWidget.NEW);
+    existing = select.getSelection();
+    
     // prepare id checkbox and textfield
     requestID = new JTextField(gedcom.getNextAvailableID(targetType), 8);
     requestID.setEditable(false);
@@ -150,16 +151,16 @@ public abstract class CreateRelationship extends AbstractChange {
     
     // preselect something (for anything but indi and fam)?
     if (!(targetType.equals(Gedcom.INDI)||targetType.equals(Gedcom.FAM)))
-      select.setSelection(gedcom.getEntity(ViewManager.getRegistry(gedcom).get("select."+targetType, (String)null)));
+      select.setSelection(gedcom.getEntity(REGISTRY.get("select."+gedcom.getName()+"."+targetType, (String)null)));
     
     // done
     return result;
   }
 
   /**
-   * @see genj.edit.EditViewFactory.Change#change()
+   * perform the change
    */
-  public void perform(Gedcom gedcom) throws GedcomException {
+  protected final Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
     // create the entity if necessary
     Entity change;
     if (existing!=null) {
@@ -180,13 +181,11 @@ public abstract class CreateRelationship extends AbstractChange {
     // perform the change
     Property focus = change(change, change!=existing);
     
-    // remember selection
-    ViewManager.getRegistry(gedcom).put("select."+targetType, change.getId());
-    
-    // select
-    WindowManager.broadcast(new ContextSelectionEvent(new ViewContext(focus), getTarget(), false));
+    // remember target of relationship as next time target
+    REGISTRY.put("select."+gedcom.getName()+"."+targetType, change.getId());
     
     // done
+    return new Context(focus.getEntity());
   }
   
   /**

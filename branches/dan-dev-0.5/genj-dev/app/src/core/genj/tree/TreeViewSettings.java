@@ -19,89 +19,67 @@
  */
 package genj.tree;
 
-import genj.renderer.BlueprintList;
-import genj.renderer.BlueprintManager;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.util.swing.ButtonHelper;
 import genj.util.swing.ColorsWidget;
 import genj.util.swing.FontChooser;
-import genj.util.swing.ListWidget;
 import genj.util.swing.NestedBlockLayout;
-import genj.view.Settings;
-import genj.view.ViewManager;
 
-import java.awt.Color;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
  * The settings component for the Tree View */
-public class TreeViewSettings extends JTabbedPane implements Settings {
+public class TreeViewSettings extends JTabbedPane {
+  
+  private final static Resources RESOURCES = Resources.get(TreeViewSettings.class);
 
-  /** keeping track of tree these settings are for */
-  private TreeView view;
-
-  /** spinners */
+  /** members  */
   private JSpinner[] spinners = new JSpinner[5]; 
-  
-  /** colorchooser for colors */
-  private ColorsWidget colorWidget;
-  
-  /** blueprintlist */
-  private BlueprintList blueprintList;
-  
-  /** resources */
-  private Resources resources = Resources.get(this);
-
-  /** Checkboxes */
-  private JCheckBox 
-    checkBending = new JCheckBox(resources.getString("bend" )),
-    checkAntialiasing = new JCheckBox(resources.getString("antialiasing" )),
-    checkAdjustFonts = new JCheckBox(resources.getString("adjustfonts" )),
-    checkMarrSymbols = new JCheckBox(resources.getString("marrsymbols" ))
-  ;
-  
-  /** buttons */
+  private ColorsWidget colors;
+  private JCheckBox checkBending, checkAntialiasing, checkMarrSymbols;
   private Action2 
-    bookmarkUp = new ActionMove(-1), 
-    bookmarkDown = new ActionMove( 1), 
-    bookmarkDelete =  new ActionDelete(); 
+    up = new Move(-1), 
+    down = new Move( 1), 
+    delete =  new Delete(); 
+  private FontChooser font;
+  private Commit commit;
+  private Bookmarks bookmarks;
+  private JList bList;
   
-  /** font chooser */
-  private FontChooser fontChooser = new FontChooser();
-  
-  /** bookmark list */
-  private JList bookmarkList;
-
   /**
-   * @see genj.view.Settings#init(genj.view.ViewManager)
+   * Constructor
+   * @param view
    */
-  public void init(ViewManager manager) {
+  public TreeViewSettings(TreeView view) {
+    
+    commit = new Commit(view);
     
     // panel for checkbox options    
     JPanel options = new JPanel(new NestedBlockLayout(
         "<col>"+
-         "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
@@ -114,214 +92,203 @@ public class TreeViewSettings extends JTabbedPane implements Settings {
          "</col>"
      ));
 
-    checkBending       .setToolTipText(resources.getString("bend.tip"));
-    checkAntialiasing  .setToolTipText(resources.getString("antialiasing.tip"));
-    checkAdjustFonts .setToolTipText(resources.getString("adjustfonts.tip"));
-    checkMarrSymbols.setToolTipText(resources.getString("marrsymbols.tip"));
+    checkBending = createCheck("bend", view.getModel().isBendArcs());
+    checkAntialiasing = createCheck("antialiasing", view.isAntialising());
+    checkMarrSymbols = createCheck("marrsymbols", view.getModel().isMarrSymbols());
+    font = new FontChooser();
+    font.setSelectedFont(view.getContentFont());
+    font.addChangeListener(commit);
+    
     options.add(checkBending);
     options.add(checkAntialiasing);
-    options.add(checkAdjustFonts);
     options.add(checkMarrSymbols);
-    options.add(fontChooser);    
-    
-    spinners[0] = createSpinner("indiwidth",  options, 0.4, 16.0);
-    spinners[1] = createSpinner("indiheight", options, 0.4, 16.0);
-    spinners[2] = createSpinner("famwidth",   options, 0.4, 16.0);
-    spinners[3] = createSpinner("famheight",  options, 0.4, 16.0);
-    spinners[4] = createSpinner("padding",    options, 0.4,  4.0);
-    
+    options.add(font);    
+
+    TreeMetrics m = view.getModel().getMetrics();
+    spinners[0] = createSpinner("indiwidth",  options, 0.4, m.wIndis*0.1D, 16.0);
+    spinners[1] = createSpinner("indiheight", options, 0.4, m.hIndis*0.1D,16.0);
+    spinners[2] = createSpinner("famwidth",   options, 0.4, m.wFams*0.1D, 16.0);
+    spinners[3] = createSpinner("famheight",  options, 0.4, m.hFams*0.1D, 16.0);
+    spinners[4] = createSpinner("padding",    options, 0.4, m.pad*0.1D, 4.0);
+
     // color chooser
-    colorWidget = new ColorsWidget();
-    
-    // blueprint options
-    blueprintList = new BlueprintList(BlueprintManager.getInstance());
+    colors = new ColorsWidget();
+    for (String key : view.getColors().keySet()) 
+      colors.addColor(key, RESOURCES.getString("color."+key), view.getColors().get(key));
+    colors.addChangeListener(commit);
     
     // bookmarks
-    Box bookmarks = new Box(BoxLayout.Y_AXIS);
-    bookmarkList = new ListWidget();
-    bookmarkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    bookmarks.add(new JScrollPane(bookmarkList));
+    bookmarks = new Bookmarks(view.getModel().getBookmarks());
+    bookmarks.addListDataListener(commit);
     
-    JPanel bookmarkActions = new JPanel();
-    ButtonHelper bh = new ButtonHelper().setContainer(bookmarkActions);
-    bh.create(bookmarkUp);
-    bh.create(bookmarkDown);
-    bh.create(bookmarkDelete);
-    bookmarkList.addListSelectionListener(new ListSelectionListener() {
+    bList = new JList(bookmarks);
+    bList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    bList.getModel().addListDataListener(commit);
+    bList.addListSelectionListener(new ListSelectionListener() {
       /** update buttons */
       public void valueChanged(ListSelectionEvent e) {
         int 
-          i = bookmarkList.getSelectedIndex(),
-          n = bookmarkList.getModel().getSize();
-      
-        bookmarkUp.setEnabled(i>0);
-        bookmarkDown.setEnabled(i>=0&&i<n-1);
-        bookmarkDelete.setEnabled(i>=0);
+          i = bList.getSelectedIndex(),
+          n = bookmarks.getSize();
+        up.setEnabled(i>0);
+        down.setEnabled(i>=0&&i<n-1);
+        delete.setEnabled(i>=0);
       }
     });
-    bookmarks.add(bookmarkActions);
+    
+    JPanel bPanel = new JPanel(new NestedBlockLayout("<col><list wx=\"1\" wy=\"1\"/><row><up/><dn/><del/></row></col>"));
+    bPanel.add(new JScrollPane(bList));
+    bPanel.add(new JButton(up));
+    bPanel.add(new JButton(down));
+    bPanel.add(new JButton(delete));
     
     // add those tabs
-    add(resources.getString("page.main")  , options);
-    add(resources.getString("page.colors"), colorWidget);
-    add(resources.getString("page.bookmarks"), bookmarks);
-    add(resources.getString("page.blueprints"), blueprintList);
-    
+    add(RESOURCES.getString("page.main")  , options);
+    add(RESOURCES.getString("page.colors"), colors);
+    add(RESOURCES.getString("page.bookmarks"), bPanel);
+
     // done
+  }
+
+  private JCheckBox createCheck(String key, boolean checked) {
+    JCheckBox result = new JCheckBox(RESOURCES.getString(key), checked);
+    result.setToolTipText(RESOURCES.getString(key+".tip"));
+    result.addActionListener(commit);
+    return result;
   }
   
   /**
    * Create a spinner
    */
-  private JSpinner createSpinner(String key, Container c, double min, double max) {
+  private JSpinner createSpinner(String key, Container c, double min, double val,double max) {
     
-    JSpinner result = new JSpinner(new SpinnerNumberModel(1D, min, max, 0.1D));
+    val = Math.min(max, Math.max(val, min));
+    
+    JSpinner result = new JSpinner(new SpinnerNumberModel(val, min, max, 0.1D));
     JSpinner.NumberEditor editor = new JSpinner.NumberEditor(result, "##0.0");
     result.setEditor(editor);
     result.addChangeListener(editor);
-    result.setToolTipText(resources.getString("info."+key+".tip"));
+    result.setToolTipText(RESOURCES.getString("info."+key+".tip"));
+    result.addChangeListener(commit);
     
-    c.add(new JLabel(resources.getString("info."+key)));
+    c.add(new JLabel(RESOURCES.getString("info."+key)));
     c.add(result);
     
     // done
     return result;
   }
   
-  /**
-   * @see genj.view.Settings#setView(javax.swing.JComponent, genj.view.ViewManager)
-   */
-  public void setView(JComponent viEw) {
-    // remember
-    view = (TreeView)viEw;
-    // update characteristics
-    blueprintList.setGedcom(view.getModel().getGedcom());
-    // done
+  private class Bookmarks extends AbstractListModel {
+    
+    private ArrayList<Bookmark> list;
+    
+    Bookmarks(List<Bookmark> list) {
+      this.list = new ArrayList<Bookmark>(list);
+    }
+
+    public Object getElementAt(int index) {
+      return list.get(index);
+    }
+
+    public int getSize() {
+      return list.size();
+    }
+    
+    public void swap(int i, int j) {
+      if (i==j)
+        return;
+      Bookmark b = list.get(i);
+      list.set(i, list.get(j));
+      list.set(j, b);
+      fireContentsChanged(this, Math.min(i,j), Math.max(i,j));
+    }
+
+    public void delete(int i) {
+      list.remove(i);
+      fireIntervalRemoved(this, i, i);
+    }
+
+    public List<Bookmark> get() {
+      return Collections.unmodifiableList(list);
+    }
   }
   
-  /**
-   * @see genj.view.ApplyResetSupport#apply()
-   */
-  public void apply() {
-    // options
-    view.getModel().setBendArcs(checkBending.isSelected());
-    view.setAntialiasing(checkAntialiasing.isSelected());
-    view.setAdjustFonts(checkAdjustFonts.isSelected());
-    view.setContentFont(fontChooser.getSelectedFont());
-    view.getModel().setMarrSymbols(checkMarrSymbols.isSelected());
-    // colors
-    Iterator colors = view.colors.keySet().iterator();
-    while (colors.hasNext()) {
-      String key = colors.next().toString();
-      view.colors.put(key, colorWidget.getColor(key));
-    }
-    // bookmarks
-    List bookmarks = new ArrayList();
-    ListModel list = bookmarkList.getModel();
-    for (int i=0;i<list.getSize();i++) {
-      bookmarks.add(list.getElementAt(i));
-    }
-    view.getModel().setBookmarks(bookmarks);
-    // metrics
-    view.getModel().setMetrics(new TreeMetrics(
-      (int)(((Double)spinners[0].getModel().getValue()).doubleValue()*10),
-      (int)(((Double)spinners[1].getModel().getValue()).doubleValue()*10),
-      (int)(((Double)spinners[2].getModel().getValue()).doubleValue()*10),
-      (int)(((Double)spinners[3].getModel().getValue()).doubleValue()*10),
-      (int)(((Double)spinners[4].getModel().getValue()).doubleValue()*10)
-    ));
-    // blueprints
-    view.setBlueprints(blueprintList.getSelection());
-    // done
-  }
-
-  /**
-   * @see genj.view.ApplyResetSupport#reset()
-   */
-  public void reset() {
-    // options
-    checkBending.setSelected(view.getModel().isBendArcs());
-    checkAntialiasing.setSelected(view.isAntialising());
-    checkAdjustFonts.setSelected(view.isAdjustFonts());
-    fontChooser.setSelectedFont(view.getContentFont());
-    checkMarrSymbols.setSelected(view.getModel().isMarrSymbols());
-    // colors
-    colorWidget.removeAllColors();
-    Iterator keys = view.colors.keySet().iterator();
-    while (keys.hasNext()) {
-      String key = keys.next().toString();
-      String name = resources.getString("color."+key);
-      Color color = (Color)view.colors.get(key);
-      colorWidget.addColor(key, name, color);
-    }
-    // bookmarks
-    bookmarkList.setModel(new DefaultComboBoxModel(view.getModel().getBookmarks().toArray()));
-    // metrics
-    TreeMetrics m = view.getModel().getMetrics();
-    int[] values = new int[] {
-      m.wIndis, m.hIndis, m.wFams, m.hFams, m.pad   
-    };
-    for (int i=0;i<values.length;i++) {
-      spinners[i].setValue(new Double(values[i]*0.1D));
-    }
-    // blueprints
-    blueprintList.setSelection(view.getBlueprints());
-    // done
-  }
-  
-  /**
-   * @see genj.view.Settings#getEditor()
-   */
-  public JComponent getEditor() {
-    return this;
-  }
-
   /**
    * Action - move a bookmark
    */
-  private class ActionMove extends Action2 {
+  private class Move extends Action2 {
     /** by how much to move */
     private int by;
-    /**
-     * Constructor
-     */
-    private ActionMove(int how) {
-      setText(resources.getString("bookmark.move."+how));
+    private Move(int how) {
+      setText(RESOURCES.getString("bookmark.move."+how));
       setEnabled(false);
       by = how;
     }
-    /**
-     * @see genj.util.swing.Action2#execute()
-     */
-    protected void execute() {
-      int i = bookmarkList.getSelectedIndex();
-      DefaultComboBoxModel model = (DefaultComboBoxModel)bookmarkList.getModel();
-      Object bookmark = model.getElementAt(i);
-      model.removeElementAt(i);
-      model.insertElementAt(bookmark, i+by);
-      bookmarkList.setSelectedIndex(i+by);
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      int i = bList.getSelectedIndex();
+      bookmarks.swap(i, i+by);
+      bList.setSelectedIndex(i+by);
     }
   } //ActionMove
   
   /**
    * Action - delete a bookmark
    */
-  private class ActionDelete extends Action2 {
-    /**
-     * Constructor
-     */
-    private ActionDelete() {
-      setText(resources.getString("bookmark.del"));
+  private class Delete extends Action2 {
+    private Delete() {
+      setText(RESOURCES.getString("bookmark.del"));
       setEnabled(false);
     }
-    /**
-     * @see genj.util.swing.Action2#execute()
-     */
-    protected void execute() {
-      int i = bookmarkList.getSelectedIndex();
-      if (i>=0)
-        ((DefaultComboBoxModel)bookmarkList.getModel()).removeElementAt(i);
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      int i = bList.getSelectedIndex();
+      bookmarks.delete(i);
     }
   } //ActionDelete
+
+  private class Commit implements ChangeListener, ActionListener, ListDataListener {
+    
+    private TreeView view;
+    
+    private Commit(TreeView view) {
+      this.view = view;
+    }
+
+    public void stateChanged(ChangeEvent e) {
+      actionPerformed(null);
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+      // options
+      view.getModel().setBendArcs(checkBending.isSelected());
+      view.setAntialiasing(checkAntialiasing.isSelected());
+      view.setContentFont(font.getSelectedFont());
+      view.getModel().setMarrSymbols(checkMarrSymbols.isSelected());
+      // metrics
+      view.getModel().setMetrics(new TreeMetrics(
+        (int)(((Double)spinners[0].getModel().getValue()).doubleValue()*10),
+        (int)(((Double)spinners[1].getModel().getValue()).doubleValue()*10),
+        (int)(((Double)spinners[2].getModel().getValue()).doubleValue()*10),
+        (int)(((Double)spinners[3].getModel().getValue()).doubleValue()*10),
+        (int)(((Double)spinners[4].getModel().getValue()).doubleValue()*10)
+      ));
+      // colors
+      view.setColors(colors.getColors());
+      // bookmarks
+      view.getModel().setBookmarks(bookmarks.get());
+      // done
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+      actionPerformed(null);
+    }
+
+    public void intervalAdded(ListDataEvent e) {
+      actionPerformed(null);
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+      actionPerformed(null);
+    }
+  }
   
 } //TreeViewSettings
