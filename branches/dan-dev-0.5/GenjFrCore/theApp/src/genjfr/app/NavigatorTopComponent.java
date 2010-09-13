@@ -65,16 +65,6 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -82,9 +72,6 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
     }
 
     Object readProperties(java.util.Properties p) {
-//FIXME        EditTopComponent singleton = EditTopComponent.getDefault();
-//        singleton.readPropertiesImpl(p);
-//        return singleton;
         readPropertiesImpl(p);
         return this;
     }

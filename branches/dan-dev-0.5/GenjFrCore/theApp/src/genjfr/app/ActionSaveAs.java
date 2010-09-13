@@ -5,12 +5,34 @@
 
 package genjfr.app;
 
+import genj.app.Images;
+import genj.gedcom.Gedcom;
+import genj.util.Resources;
+import genj.util.swing.Action2;
+import java.awt.event.ActionEvent;
+
 
   /**
    * Action - Save
    */
-  public class ActionSaveAs extends ActionSave {
-    public ActionSaveAs(){
-        super(true,true);
+  public class ActionSaveAs extends Action2 {
+    /** gedcom */
+    protected Gedcom gedcomBeingSaved;
+    private Resources RES = Resources.get("genj.app");
+
+    /**
+     * Constructor for saving gedcom
+     */
+    public ActionSaveAs() {
+        setText(RES.getString("cc.menu.saveas"));
+     setTip(RES, "cc.tip.save_file");
+      // setup
+      setImage(Images.imgSave);
     }
-  } //ActionSaveAs
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        App.workbenchHelper.saveAsGedcom(App.center.getSelectedContext());
+    }
+
+  } // ActionSave

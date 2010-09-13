@@ -4,18 +4,22 @@
  */
 package genjfr.app;
 
+import genj.edit.EditView;
 import genj.edit.EditViewFactory;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.view.ViewContext;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app//Edit//EN",
 autostore = false)
+@RetainLocation("genjfr-editor")
 public final class EditTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "EditTopComponent";
@@ -63,16 +67,6 @@ public final class EditTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -81,9 +75,6 @@ public final class EditTopComponent extends GenjViewTopComponent {
 
 
     Object readProperties(java.util.Properties p) {
-//FIXME        EditTopComponent singleton = EditTopComponent.getDefault();
-//        singleton.readPropertiesImpl(p);
-//        return singleton;
         readPropertiesImpl(p);
         return this;
     }
@@ -94,12 +85,12 @@ public final class EditTopComponent extends GenjViewTopComponent {
     }
 
     public Entity getCurrentEntity() {
-        return ((EditViewFactory)viewfactory).getEditView().getEntity();
-    }
+        return ((EditView)getView()).getEntity();
+}
 
     public void setCurrentEntity(Property property) {
-        ViewContext vc = new ViewContext(property);
-        ((EditViewFactory)viewfactory).getEditView().setContext(vc); // requires viewFactory not to be static
+        Context vc = new Context(property);
+        ((EditView)getView()).setContext(vc,true);
     }
 
 }

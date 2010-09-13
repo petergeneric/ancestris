@@ -43,7 +43,6 @@
                 <package>genj</package>
                 <package>genj.almanac</package>
                 <package>genj.app</package>
-                <package>genj.applet</package>
                 <package>genj.chart</package>
                 <package>genj.common</package>
                 <package>genj.crypto</package>
@@ -61,7 +60,6 @@
                 <package>genj.print</package>
                 <package>genj.renderer</package>
                 <package>genj.report</package>
-                <package>genj.report.options</package>
                 <package>genj.search</package>
                 <package>genj.table</package>
                 <package>genj.timeline</package>
@@ -69,7 +67,6 @@
                 <package>genj.util</package>
                 <package>genj.util.swing</package>
                 <package>genj.view</package>
-                <package>genj.window</package>
                 <package>genjfr.genjcore</package>
                 <package>gj.awt.geom</package>
                 <package>gj.layout</package>
@@ -78,6 +75,9 @@
                 <package>gj.util</package>
                 <package>launcher</package>
                 <package>launcher.ipc</package>
+                <package>spin</package>
+                <package>spin.off</package>
+                <package>spin.over</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/graphj.jar</runtime-relative-path>
@@ -112,8 +112,8 @@
                 <binary-origin>../../genj-dev/app/dist/lib/batik-css.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-lang-2.4.jar</runtime-relative-path>
-                <binary-origin>../../genj-dev/app/dist/lib/commons-lang-2.4.jar</binary-origin>
+                <runtime-relative-path>ext/spin-1.5.jar</runtime-relative-path>
+                <binary-origin>../../genj-dev/app/dist/lib/spin-1.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-dom.jar</runtime-relative-path>
@@ -124,10 +124,6 @@
                 <binary-origin>../../genj-dev/app/dist/lib/batik-svggen.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/velocity-tools-generic-1.4.jar</runtime-relative-path>
-                <binary-origin>../../genj-dev/app/dist/lib/velocity-tools-generic-1.4.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/batik-gvt.jar</runtime-relative-path>
                 <binary-origin>../../genj-dev/app/dist/lib/batik-gvt.jar</binary-origin>
             </class-path-extension>
@@ -136,20 +132,8 @@
                 <binary-origin>../../genj-dev/app/dist/lib/batik-ext.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oro-2.0.8.jar</runtime-relative-path>
-                <binary-origin>../../genj-dev/app/dist/lib/oro-2.0.8.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/commons-collections-3.2.1.jar</runtime-relative-path>
-                <binary-origin>../../genj-dev/app/dist/lib/commons-collections-3.2.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/avalon-framework-4.2.0.jar</runtime-relative-path>
                 <binary-origin>../../genj-dev/app/dist/lib/avalon-framework-4.2.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/velocity-1.6.2.jar</runtime-relative-path>
-                <binary-origin>../../genj-dev/app/dist/lib/velocity-1.6.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/batik-awt-util.jar</runtime-relative-path>

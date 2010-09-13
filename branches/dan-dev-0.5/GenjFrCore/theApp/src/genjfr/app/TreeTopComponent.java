@@ -7,12 +7,9 @@ package genjfr.app;
 
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
-import java.util.logging.Logger;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
@@ -21,6 +18,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
     dtd="-//genjfr.app//Tree//EN",
     autostore=false
 )
+@RetainLocation("genjfr-output")
 public final class TreeTopComponent extends GenjViewTopComponent {
 
     private static TreeTopComponent factory;
@@ -34,7 +32,9 @@ public final class TreeTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-output";}
+    String getDefaultFactoryMode() {
+        return "genjfr-output";
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -69,16 +69,6 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -87,21 +77,10 @@ public final class TreeTopComponent extends GenjViewTopComponent {
 
 
     Object readProperties(java.util.Properties p) {
-//FIXME        EditTopComponent singleton = EditTopComponent.getDefault();
-//        singleton.readPropertiesImpl(p);
-//        return singleton;
         readPropertiesImpl(p);
         return this;
     }
 
-//    private void readPropertiesImpl(java.util.Properties p) {
-//        String version = p.getProperty("version");
-////        String gedName = p.getProperty("gedcom");
-////        if (gedName!=null)
-////            App.center.load(new String[]{gedName});
-////        setPanel(App.center.getOpenedGedcom(gedName),new EditViewFactory());
-//        // TODO read your settings according to their version
-//    }
     @Override
     protected String preferredID() {
         return PREFERRED_ID;

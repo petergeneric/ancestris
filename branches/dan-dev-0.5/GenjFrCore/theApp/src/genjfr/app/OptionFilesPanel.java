@@ -568,7 +568,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }
 
     private void putRegistryFromSettings() {
-        Registry registry = Registry.lookup("genj", null);
+        Registry registry = Registry.get("genj");
 
         registry.put("options.genj.gedcom.Options.gedcomFile", NbPreferences.forModule(App.class).get("gedcomFile", ""));
         registry.put("options.genj.gedcom.Options.reportDir", NbPreferences.forModule(App.class).get("reportDir", ""));

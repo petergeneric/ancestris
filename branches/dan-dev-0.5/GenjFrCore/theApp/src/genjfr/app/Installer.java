@@ -75,7 +75,7 @@ public class Installer extends ModuleInstall {
         if (pi != null) {
             System.out.println("Launching Wizard...");
             restart = pi.launchModule(registry);
-            registry = new Registry("genj");
+            registry = Registry.get("genj");
         } else {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "Error.noWizard.text"));
         }

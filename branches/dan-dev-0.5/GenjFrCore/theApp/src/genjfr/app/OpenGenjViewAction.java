@@ -6,14 +6,8 @@
 package genjfr.app;
 
 import genj.util.swing.Action2;
-import genj.view.ViewFactory;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Map;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import org.openide.windows.TopComponent;
 
 /** Opens a Genj top component.
  *
@@ -38,7 +32,8 @@ final class OpenGenjViewAction extends Action2  {
     }
 
     /** execute callback */
-    protected void execute() {
+    @Override
+  public void actionPerformed(ActionEvent e) {
         GenjViewTopComponent win = component.create();
         win.init();
         win.open();

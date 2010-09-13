@@ -6,6 +6,7 @@
 package genjfr.app;
 
 import genj.gedcom.Property;
+import genj.search.SearchView;
 import genj.search.SearchViewFactory;
 import genj.view.ViewFactory;
 import java.util.ArrayList;
@@ -69,16 +70,6 @@ public final class SearchTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -96,7 +87,8 @@ public final class SearchTopComponent extends GenjViewTopComponent {
     }
 
     public List<Property> getResultProperties() {
-        return ((SearchViewFactory)viewfactory).getEditView().getResults();
-    }
+//        return ((SearchViewFactory)viewfactory).getEditView().getResults();
+        return ((SearchView) getView()).getResults();
+}
 
 }

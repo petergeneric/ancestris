@@ -22,14 +22,14 @@ package genjfr.app;
 import genj.Version;
 import genj.app.Options;
 //import genj.app.SplashWindow;
+import genj.app.WorkbenchHelper;
 import genj.gedcom.Gedcom;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.window.GenjFrWindowManager;
-import genj.window.WindowManager;
+import genj.view.SelectionSink;
 import genjfr.app.pluginservice.GenjFrPlugin;
 
 import java.awt.EventQueue;
@@ -71,10 +71,11 @@ public class App {
     /*package*/ static File LOGFILE;
     private static Startup startup;
     public static ControlCenter center;
-    public static WindowManager genjWindowManager;
+    public static WorkbenchHelper workbenchHelper;
+
 //    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
-    public static Registry REGISTRY = new Registry("genj");
+    public static Registry REGISTRY = Registry.get("genj");
 
     private static AppPlugin appplugin = new AppPlugin();
 
@@ -102,7 +103,7 @@ public class App {
 
         // wait for startup do be done
         synchronized (startup) {
-            if (startup.center == null) {
+            if (workbenchHelper == null) {
                 try {
                     startup.wait();
                 } catch (InterruptedException e) {
@@ -110,9 +111,6 @@ public class App {
             }
         }
         center = startup.center;
-        genj.app.App.LOG = LOG; // FIXME: horrible hack!
-        genj.app.App.LOGFILE = LOGFILE; // FIXME: horrible hack!
-        genj.app.App.genjfrWindowManager = startup.winMgr; // TODO: horrible hack!
 
         if (!x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
             x11ErrorHandlerFixInstalled = true;
@@ -123,21 +121,6 @@ public class App {
                 }
             });
         }
-// load
-//        startup.center.load(args);
-
-//Runnable r = new Runnable() {
-//      public void run() {
-//        startup.center.load(args);
-//      }
-//    } ;
-//        try {
-//            SwingUtilities.invokeAndWait(r);
-//        } catch (InterruptedException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (InvocationTargetException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
     }
 
     /* TODO: sauvegarde des fichiers ouverts fait dans le hook du code exit
@@ -157,7 +140,7 @@ public class App {
 
     public static void close() {
         // persist options
-        OptionProvider.persistAll(REGISTRY);
+        OptionProvider.persistAll();
         // Store registry
         Registry.persist();
         // Reload modes if restart required
@@ -231,20 +214,16 @@ public class App {
     private static class Startup implements Runnable {
 
         ControlCenter center;
-        WindowManager winMgr;
-
         /**
          * Constructor
          */
         public void run() {
 
-//    	SplashWindow sw = new SplashWindow("genjfrsplash",new JFrame(),10000);
-
             // Catch anything that might happen
             try {
 
                 // create our home directory
-                File home = new File(EnvironmentChecker.getProperty(App.class, "user.home.genj", null, "determining home directory"));
+                File home = new File(EnvironmentChecker.getProperty("user.home.genj", null, "determining home directory"));
                 home.mkdirs();
                 if (!home.exists() || !home.isDirectory()) {
                     throw new IOException("Can't initialize home directoy " + home);
@@ -267,6 +246,7 @@ public class App {
                 System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
 
                 // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
+                REGISTRY.setFile(new File(EnvironmentChecker.getProperty("user.home.genj", ".", "calculate dir for registry"), "ancestris.properties"));
 //                REGISTRY = checkOptionsWizard(REGISTRY);
                 if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
                     putRegistryFromSettings(REGISTRY);
@@ -276,9 +256,9 @@ public class App {
                 // On maintient la possibilite de changer mais le lnf reel utilise pas l'appli est java
                 REGISTRY.put("options.genj.app.Options.lookAndFeel", "1");
                 REGISTRY.persist();
-                REGISTRY = new Registry("genj");
+                REGISTRY = Registry.get("genj");
                 // initialize options first (creates a registry view within the above registry only containing the options)
-                OptionProvider.getAllOptions(REGISTRY);
+                OptionProvider.getAllOptions();
 
                 // Setup File Logging and check environment
                 LOGFILE = new File(home, "genjfr.log");
@@ -286,7 +266,7 @@ public class App {
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
-
+                
                 // Log is up
                 LOG.info("\n\n==================8<================================================================");
                 LOG.info("Startup");
@@ -314,37 +294,21 @@ public class App {
                 }
 
                 // check VM version
-                if (!EnvironmentChecker.isJava14(App.class)) {
-                    if (EnvironmentChecker.getProperty(App.class, "genj.forcevm", null, "Check force of VM") == null) {
-                        LOG.severe("Need Java 1.4 to run GenJ");
-                        System.exit(1);
-                        return;
-                    }
-                }
+//TODO: demander une version >1.6 dans NB
+//                if (!EnvironmentChecker.isJava14(App.class)) {
+//                    if (EnvironmentChecker.getProperty(App.class, "genj.forcevm", null, "Check force of VM") == null) {
+//                        LOG.severe("Need Java 1.4 to run GenJ");
+//                        System.exit(1);
+//                        return;
+//                    }
+//                }
 
-                // get app resources now
-                Resources resources = Resources.get(App.class);
-
-                // create window manager
-//        WindowManager
-                winMgr = new GenjFrWindowManager(new Registry(REGISTRY, "window"), Gedcom.getImage());
-                WindowManager.setDefaultWm(winMgr);
-
-                // Disclaimer - check version and registry value
-//        String version = Version.getInstance().getVersionString();
-//        if (!version.equals(registry.get("disclaimer",""))) {
-//          // keep it
-//          registry.put("disclaimer", version);
-//          // show disclaimer
-//          winMgr.openDialog("disclaimer", "Disclaimer", WindowManager.INFORMATION_MESSAGE, resources.getString("app.disclaimer"), Action2.okOnly(), null);
-//        }
 
                 // setup control center
-                center = new ControlCenter(REGISTRY, winMgr, new Shutdown(REGISTRY));
+                center = new ControlCenter(REGISTRY);
+        workbenchHelper = new WorkbenchHelper();
+        SelectionSink.Dispatcher.setSink(workbenchHelper);
 
-                // show it
-//        winMgr.openWindow("cc", resources.getString("app.title"), Gedcom.getImage(), center, center.getMenuBar(), center.getExitAction());
-//FIXME: ne semble plus servir a rien                winMgr.openWindow("cc", resources.getString("app.title"), Gedcom.getImage(), center, null, null);
 
                 // done
                 LOG.info("/Startup");
@@ -676,12 +640,12 @@ public class App {
 
   /**
    * Helper that returns registry for gedcom
-   * TODO: mettre ailleurs
+   * TODO: getRegistry(gedcom) a mettre ailleurs
    */
   public static Registry getRegistry(Gedcom gedcom) {
     Origin origin = gedcom.getOrigin();
     String name = origin.getFileName();
-    return Registry.lookup(name, origin);
+    return Registry.get(origin.getFile(name+".properties"));
   }
 
   private static class AppPlugin extends GenjFrPlugin{

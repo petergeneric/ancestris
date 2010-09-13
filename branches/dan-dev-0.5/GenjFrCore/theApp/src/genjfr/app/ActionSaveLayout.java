@@ -4,8 +4,10 @@
  */
 package genjfr.app;
 
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
+import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public final class ActionSaveLayout implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         StringBuilder sb = new StringBuilder("fenetres");
-        Gedcom selected = App.center.getSelectedGedcom();
+        Context selected = App.center.getSelectedContext();
         if (selected == null){
             return;
         }
@@ -35,20 +37,20 @@ public final class ActionSaveLayout implements ActionListener {
 
         NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
                 NbBundle.getMessage(this.getClass(),"DLG_ActionSaveLayout",date),
-                NbBundle.getMessage(this.getClass(),"TTL_ActionSaveLayout",selected.getName()),
+                NbBundle.getMessage(this.getClass(),"TTL_ActionSaveLayout",selected.getGedcom().getName()),
                 NotifyDescriptor.OK_CANCEL_OPTION);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION))
             return;
 
         WindowManager wm = WindowManager.getDefault() ;
-        saveDefaultLayout(selected, prefs);
+        saveDefaultLayout(selected.getGedcom(), prefs);
     }
 
     public void saveDefaultLayout(Gedcom gedcom, Preferences prefs){
         List<String> openedViews = new ArrayList<String>();
 
-        for (GenjViewInterface gjvTc : GenjViewTopComponent.getMyLookup().lookupAll(GenjViewInterface.class)) {
+        for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
             if (((GenjViewTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
                 App.LOG.info(gjvTc.getClass().getName()+": "+gjvTc.getMode().getName());
                 Mode mode = gjvTc.getMode();
@@ -68,12 +70,14 @@ public final class ActionSaveLayout implements ActionListener {
         }
         prefs.put("openViews.date",System.currentTimeMillis()+"");
     }
-    static void saveLayout(Gedcom gedcom) {
+    public static void saveLayout(Gedcom gedcom) {
         List<String> openedViews = new ArrayList<String>();
         Registry prefs = App.getRegistry(gedcom);
 
-        for (GenjViewInterface gjvTc : GenjViewTopComponent.getMyLookup().lookupAll(GenjViewInterface.class)) {
-            if (((GenjViewTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
+        for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
+//            if (((GenjViewTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
+            boolean isopened = ((GenjViewTopComponent)gjvTc).isOpened();
+            if (isopened &&  gedcom.equals(gjvTc.getGedcom())){
                 App.LOG.info(gjvTc.getClass().getName()+": "+gjvTc.getMode().getName());
                 Mode mode = gjvTc.getMode();
                 prefs.put(((GenjViewTopComponent)gjvTc).preferredID()+".dockMode", mode.getName());

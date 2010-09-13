@@ -34,8 +34,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
     protected void performAction(Node[] nodes) {
         if (fileToOpen != null) {
             try {
-                ActionOpen open = new ActionOpen(fileToOpen.toURI().toURL().toString(),true);
-                open.trigger();
+                App.workbenchHelper.openGedcom(fileToOpen.toURI().toURL());
             } catch (Exception e) {
                 System.out.println("Error opening default gedcom:" + e);
             }

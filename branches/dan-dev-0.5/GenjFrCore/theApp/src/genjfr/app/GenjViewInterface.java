@@ -14,7 +14,6 @@ import org.openide.windows.Mode;
  */
 public interface GenjViewInterface {
 
-    public Gedcom getSelectedGedcom();
     public Gedcom getGedcom();
     public Mode getMode();
     public void setDefaultMode(String mode);

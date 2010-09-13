@@ -7,7 +7,7 @@
     <import file="nbproject/build-impl.xml"/>
     <target name="build-launchers" depends="-init">
         <echo message=" "/>
-        <echo message="BUILDING GENJFR DISTRIBUTION..." />
+        <echo message="BUILDING ANCESTRIS DISTRIBUTION..." />
         <fail unless="app.name">Must have set at least an application name ('app.name')</fail>
 
         <pathconvert property="zip.platform.update.tracking">
@@ -92,11 +92,15 @@
     </target>
     <target name="build-zip" depends="suite.build-zip">
         <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
         <echo message="${app.name}: update zip-distribution with own stuff"/>
         <zip destfile="${dist.dir}/${app.name}.zip" update="true">
-            <zipfileset dir="res/" includes="GNU ..." prefix="${app.name}"/>
             <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>
-            <zipfileset dir="res/language/platform11" prefix="${app.name}/platform11"/>
+            <zipfileset dir="${harness.dir}/../platform/core/locale" prefix="${app.name}/platform/core/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/ext/locale" prefix="${app.name}/platform/modules/ext/locale"/>
+            <zipfileset dir="res/platform/" prefix="${app.name}/platform/"/>
         </zip>
     </target>
 

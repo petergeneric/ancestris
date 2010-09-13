@@ -5,13 +5,35 @@
 
 package genjfr.app.pluginservice;
 
+import java.util.Collection;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
  * @author daniel
  */
 public abstract class GenjFrPlugin implements PluginInterface {
+    private final static InstanceContent ic = new InstanceContent();
+    private static AbstractLookup abstractLookup = new AbstractLookup(ic);
+
+    public static void register (Object o){
+        ic.add(o);
+    }
+
+    public static void unregister (Object o){
+        ic.remove(o);
+    }
+
+    public static <T> Collection<? extends T> lookupAll(Class<T> clazz) {
+        return abstractLookup.lookupAll(clazz);
+    }
+
+    public static <T> T lookup(Class<T> clazz) {
+        return abstractLookup.lookup(clazz);
+    }
+
     public String getPluginName() {
         return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
     }

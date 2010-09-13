@@ -71,8 +71,8 @@
             </file>
             <file name="genjfr-app-SaveLayoutAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled" />
-                <attr name="delegate"       newvalue="genjfr.app.ActionSaveLayout" />
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="delegate" newvalue="genjfr.app.ActionSaveLayout"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_SaveLayout"/>
                 <attr name="iconBase" stringvalue="genjfr/app/ActionSaveLayout.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
@@ -310,7 +310,6 @@
             </file>
 
         </folder>
-        <file name="Window_hidden"/>
         <!--
         <folder name="Window">
             <file name="CloneDocumentAction.shadow_hidden"/>
@@ -342,22 +341,12 @@
     </folder>
     <folder name="Services">
         <folder name="AutoupdateType">
-            <file name="genjfr_core_update_center.instance">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_core_update_center.instance"/>
-                <attr name="enabled" boolvalue="true"/>
-                <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
-                <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url_key" stringvalue="genjfr_core_update_center"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-<!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-                <attr name="category" stringvalue="STANDARD"/>
--->            </file>
             <file name="genjfr_extensions_update_center.instance">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_extensions_update_center.instance"/>
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url_key" stringvalue="genjfr_extensions_update_center"/>
+                <attr name="url" stringvalue="http://daniel.andre.free.fr/ancestris-test/updates/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
@@ -412,36 +401,20 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>
-            <file name="EditTopComponent.settings" url="EditTopComponentSettings.xml"/>
-            <file name="EntityTopComponent.settings" url="EntityTopComponentSettings.xml"/>
-            <file name="NavigatorTopComponent.settings" url="NavigatorTopComponentSettings.xml"/>
-            <file name="ReportTopComponent.settings" url="ReportTopComponentSettings.xml"/>
-            <file name="SearchTopComponent.settings" url="SearchTopComponentSettings.xml"/>
-            <file name="TableTopComponent.settings" url="TableTopComponentSettings.xml"/>
-            <file name="TimelineTopComponent.settings" url="TimelineTopComponentSettings.xml"/>
-            <file name="TreeTopComponent.settings" url="TreeTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="genjfr-explorer">
                 <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>
             </folder>
             <folder name="genjfr-nav">
-                <file name="NavigatorTopComponent.wstcref" url="NavigatorTopComponentWstcref.xml"/>
             </folder>
             <folder name="genjfr-output">
-                <file name="TreeTopComponent.wstcref" url="TreeTopComponentWstcref.xml"/>
-                <file name="ReportTopComponent.wstcref" url="ReportTopComponentWstcref.xml"/>
             </folder>
             <folder name="genjfr-properties">
-                <file name="EntityTopComponent.wstcref" url="EntityTopComponentWstcref.xml"/>
-                <file name="SearchTopComponent.wstcref" url="SearchTopComponentWstcref.xml"/>
             </folder>
             <folder name="genjfr-table">
-                <file name="TableTopComponent.wstcref" url="TableTopComponentWstcref.xml"/>
-                <file name="TimelineTopComponent.wstcref" url="TimelineTopComponentWstcref.xml"/>
             </folder>
             <folder name="genjfr-editor">
-                <file name="EditTopComponent.wstcref" url="EditTopComponentWstcref.xml"/>
             </folder>
 
             <file name="genjfr-editor.wsmode" url="modes/genjfr-editor.wsmode"/>

@@ -7,10 +7,8 @@ package genjfr.app;
 
 import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
-import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.windows.Mode;
-import org.openide.windows.WindowManager;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
@@ -19,6 +17,7 @@ import org.openide.windows.WindowManager;
     dtd="-//genjfr.app//Table//EN",
     autostore=false
 )
+@RetainLocation("genjfr-table")
 public final class TableTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TableTopComponent";
@@ -27,7 +26,9 @@ public final class TableTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-table";}
+    String getDefaultFactoryMode() {
+        return "genjfr-table";
+    }
 
     ViewFactory getViewFactory() {
         return viewfactory;
@@ -67,16 +68,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
-
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -84,9 +75,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
     }
 
     Object readProperties(java.util.Properties p) {
-//FIXME        EditTopComponent singleton = EditTopComponent.getDefault();
-//        singleton.readPropertiesImpl(p);
-//        return singleton;
         readPropertiesImpl(p);
         return this;
     }

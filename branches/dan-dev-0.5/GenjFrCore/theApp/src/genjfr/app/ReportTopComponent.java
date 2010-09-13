@@ -81,9 +81,6 @@ public final class ReportTopComponent extends GenjViewTopComponent {
     }
 
     Object readProperties(java.util.Properties p) {
-//FIXME        EditTopComponent singleton = EditTopComponent.getDefault();
-//        singleton.readPropertiesImpl(p);
-//        return singleton;
         readPropertiesImpl(p);
         return this;
     }

@@ -4,11 +4,9 @@
  */
 package genjfr.app;
 
-import genj.app.HelpWidget;
 import genj.app.Images;
-import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.window.WindowManager;
+import java.awt.event.ActionEvent;
 import org.netbeans.api.javahelp.Help;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -16,8 +14,6 @@ import org.openide.util.NbBundle;
 
 public final class ActionHelp extends Action2 {
 
-    private Resources resources = Resources.get(genj.app.ControlCenter.class);
-    private WindowManager windowManager = App.center.getWindowManager();
 
     /** constructor */
     public ActionHelp() {
@@ -26,7 +22,8 @@ public final class ActionHelp extends Action2 {
     }
 
     /** run */
-    protected void execute() {
+    @Override
+  public void actionPerformed(ActionEvent e) {
         String id = "ancestris.app.about";
         Help help = (Help) Lookup.getDefault().lookup(Help.class);
         if (help != null && help.isValidID(id, true).booleanValue()) {
@@ -34,12 +31,6 @@ public final class ActionHelp extends Action2 {
         } else {
 //    Toolkit.getDefaultToolkit().beep();
         }
-
-
-//      if (windowManager.show("help"))
-//        return;
-//      windowManager.openWindow("help",resources.getString("cc.menu.help"),Images.imgHelp,new HelpWidget(),null,null);
-//      // done
     }
 } //ActionHelp
 

@@ -4,6 +4,7 @@
  */
 package genjfr.app;
 
+import genj.view.ViewFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -24,7 +25,7 @@ autostore = false)
 // FL - j'avais mis autostart = "true" pour que les properties soient sauvegardées avant le restart, mais cela n'a plus l'air d'être la peine (je crois que c'était
 //        pour le restart après wizard ou pour les options, mais du temps ou le wizard etait avant le lancement de l'appli, pas après...)
         
-public final class ControlCenterTopComponent extends GenjViewTopComponent {
+public final class ControlCenterTopComponent extends GenjViewTopComponent{
 
     private static ControlCenterTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -152,5 +153,10 @@ public final class ControlCenterTopComponent extends GenjViewTopComponent {
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
+    }
+
+    @Override
+    ViewFactory getViewFactory() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

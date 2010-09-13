@@ -703,7 +703,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }
 
     private void putRegistryFromSettings() {
-        Registry registry = Registry.lookup("genj", null);
+        Registry registry = Registry.get("genj");
 
         registry.put("options.genj.report.Options.birthSymbol", NbPreferences.forModule(App.class).get("symbolBirth", ""));
         registry.put("options.genj.report.Options.baptismSymbol", NbPreferences.forModule(App.class).get("symbolBapm", ""));

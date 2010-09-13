@@ -365,7 +365,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     }
 
     private void putRegistryFromSettings() {
-        Registry registry = Registry.lookup("genj", null);
+        Registry registry = Registry.get("genj");
 
         registry.put("options.genj.app.Options.language", NbPreferences.forModule(App.class).get("language", ""));
         registry.put("options.genj.app.Options.lookAndFeel", NbPreferences.forModule(App.class).get("skin", ""));

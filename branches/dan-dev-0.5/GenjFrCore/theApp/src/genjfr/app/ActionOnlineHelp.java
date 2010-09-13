@@ -9,7 +9,7 @@ import genj.app.Images;
 import genj.io.FileAssociation;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.window.WindowManager;
+import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.openide.util.NbBundle;
@@ -19,19 +19,18 @@ import org.openide.util.NbBundle;
  * @author daniel
  */
   public final class ActionOnlineHelp extends Action2 {
-      private Resources resources = Resources.get(genj.app.ControlCenter.class);
-      private WindowManager windowManager = App.center.getWindowManager();
+    private Resources RES = Resources.get("genj.app");
     /** constructor */
     public ActionOnlineHelp() {
       setText(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp"));
       setImage(Images.imgHelp);
     }
     /** run */
-    protected void execute() {
+    @Override
+  public void actionPerformed(ActionEvent event) {
       try {
-        FileAssociation.open(new URL(resources.getString("cc.menu.onlineurl")), null);
+        FileAssociation.open(new URL(RES.getString("cc.menu.onlineurl")), null);
       } catch (MalformedURLException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
         }
       // done

@@ -859,7 +859,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }
 
     private void putRegistryFromSettings() {
-        Registry registry = Registry.lookup("genj", null);
+        Registry registry = Registry.get("genj");
 
         registry.put("options.genj.gedcom.Options.submName", NbPreferences.forModule(App.class).get("submName", ""));
         registry.put("options.genj.gedcom.Options.submCity", NbPreferences.forModule(App.class).get("submCity", ""));
