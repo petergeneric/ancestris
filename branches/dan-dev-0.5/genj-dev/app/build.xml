@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="GenJ" default="dist" basedir=".">
   
-  <property file="build.properties"/>
-	
   <path id="project.class.path">
     <pathelement path ="./build/version"/>
     <pathelement path ="./build/classes/contrib"/>
     <pathelement path ="./build/classes/core"/>
     <pathelement path ="./build/classes/tst"/>
-    <pathelement path="${dir.geo}/build/lib/geo.jar"/>
-    <pathelement path="${dir.geo}/build/lib/jump.jar"/>
     <fileset dir=".">
-        <include name="**/*.jar"/>
+        <include name="lib/*.jar"/>
+        <include name="contrib/**/*.jar"/>
     </fileset>
  	  <dirset dir="./language" includes="*"/>
  	  <dirset dir="./src" includes="*"/>
     <pathelement path ="./images"/>
   </path>
 
-	
   <property name="project.class.path" refid="project.class.path"/>
 
   <!--
    Initialization
    -->
   <target name="init">
-    <fail unless="dir.geo" message="Please specify dir.geo in build.properties"/>
-    <echo level="info">Creating output directories</echo>
-    <mkdir dir="./build"/>
-    <mkdir dir="./build/run"/>
-    <mkdir dir="./build/dist"/>
-    <mkdir dir="./build/lib"/>
 
-    <tstamp><format property="now.long" pattern="yyyy/MM/dd HH:mm:ss"/></tstamp>
     <tstamp><format property="now.short" pattern="yyyyMMdd"/></tstamp>
+    <tstamp><format property="now.long" pattern="yyyy/MM/dd HH:mm:ss"/></tstamp>
+  	
+    <loadproperties srcfile="./build.properties"/>
+
   	<property name="version" value="${now.short}"/>
     <property name="build" value="${version} ${now.long} ${user.name}"/>
   	
     <echo level="info">version = ${version}</echo>
     <echo level="info">build = ${build}</echo>
+  	
+  	<echo file="./build/version.properties">
+  		version = ${version}
+    </echo>
+    	
+  	<echo level="info">Creating output directories</echo>
+    <mkdir dir="./build"/>
+    <mkdir dir="./build/run"/>
+    <mkdir dir="./build/dist"/>
+    <mkdir dir="./build/lib"/>
+
   </target>
   	
   <!--
@@ -56,7 +60,7 @@
   <target name="compile.launcher" depends="init">
     <mkdir dir="./build/classes/launcher"/>
     <javac srcdir="src/launcher" destdir="./build/classes/launcher"
-      debug="${javac.debug}" optimize="off" deprecation="on" encoding="ASCII" >
+      debug="${javac.debug}" target="1.5" optimize="off" deprecation="on" encoding="ASCII" >
     </javac>
   </target>
 	
@@ -66,7 +70,7 @@
   <target name="compile.contrib" depends="init">
     <mkdir dir="./build/classes/contrib"/>
     <javac srcdir="src/contrib" destdir="./build/classes/contrib"
-           debug="${javac.debug}" optimize="off" deprecation="on" encoding="ASCII" >
+           debug="${javac.debug}" target="1.5" optimize="off" deprecation="on" encoding="ASCII" >
       <classpath refid="project.class.path"/>
     </javac>
   </target>
@@ -77,7 +81,7 @@
   <target name="compile.core" depends="init">
     <mkdir dir="./build/classes/core"/>
     <javac srcdir="src/core" destdir="./build/classes/core"
-           debug="${javac.debug}" optimize="off" deprecation="on" encoding="ASCII" >
+           debug="${javac.debug}" target="1.5" optimize="on" deprecation="on" encoding="ASCII" >
       <classpath refid="project.class.path"/>
     </javac>
   </target>
@@ -86,12 +90,9 @@
    Report Compilation
    -->
   <target name="compile.report" depends="init">
-    <ant dir="${dir.geo}" target="dist">
-        <property name="dir.app" value="../app"/>
-    </ant>
     <mkdir dir="./build/classes/report"/>
     <javac srcdir="src/report" destdir="./build/classes/report"
-           debug="${javac.debug}" optimize="off" deprecation="on" encoding="UTF-8" >
+           debug="${javac.debug}" target="1.5" optimize="off" deprecation="on" encoding="UTF-8" >
       <classpath refid="project.class.path"/>
     </javac>
   </target>
@@ -102,7 +103,7 @@
   <target name="compile.tst" depends="init">
     <mkdir dir="./build/classes/tst"/>
     <javac srcdir="src/tst" destdir="./build/classes/tst"
-           debug="${javac.debug}" optimize="off" deprecation="on" encoding="ASCII" >
+           debug="${javac.debug}" target="1.5" optimize="off" deprecation="on" encoding="ASCII" >
       <classpath refid="project.class.path"/>
     </javac>
   </target>
@@ -113,13 +114,7 @@
   <target name="compile" depends="compile.contrib, compile.core, compile.report, compile.launcher">
   </target>
 
-	  <!--
-	   Compilation except reports
-	   -->
-	<target name="compile.app" depends="compile.contrib, compile.core, compile.launcher">
-	  </target>
-
-	<!--
+  <!--
    Cleaning
    -->
   <target name="clean">
@@ -255,57 +250,6 @@
   </target>
 
   <!--
-   Distribution - Applet
-   -->
-  <target name="dist.applet" depends="init,keyfile,compile,version">
-  
-  	 <!-- what we exclude - would be great to derive that automatically :( -->
-     <property name="exclude" value="
-      genj/app/**, genj/fo/**, genj/chart/**, genj/lnf/**, genj/report/**, **/*ViewPrinter*.class, **/*ViewSettings*.class
-     "/>
-
-     <!-- applet sub -->
-     <mkdir dir="./build/applet"/>
-
-     <!-- create genj.jar -->
-     <delete file="./build/applet/genj.jar"/>
-     <jar jarfile="./build/applet/genj.jar" update="True">
-       <fileset dir="./build/classes/contrib" 
-       	 excludes="${exclude}"
-         includes="**/*.class"/>
-       <fileset dir="./build/classes/core" 
-       	 excludes="${exclude}"
-         includes="**/*.class"/>
-       <fileset dir="./images" excludes="${exclude}"/>
-       <fileset dir="./language/en" excludes="${exclude}"/>
-       <fileset dir="./src/core" excludes="${exclude}"
-         includes="**/*.properties,**/*.xml"/>
-       <fileset dir="./build/version"/>
-      <fileset dir="." includes="contrib/LDS/*.xml"/>
-     </jar>
-  	
-     <!-- copy graphj.jar -->
-     <copy todir="./build/applet" file="./lib/graphj.jar"/>
-  	
-    <!-- copy example.ged -->
-    <copy todir="./build/applet">
-      <fileset dir="./gedcom"/>
-	  </copy> 	
-  	
-  	 <!-- sign em -->
-     <signjar keystore="./build/keyfile" alias="genj" storepass="password">
-      <fileset dir="./build/applet" includes="*.jar"/>
-     </signjar>	
-  	
-     <!-- create genj_applet_xyz.jar -->
-     <zip zipfile="./build/dist/genj_applet-${version}.zip" update="True">
-       <fileset dir="./build" includes="applet/*"/>
-       <fileset dir="." includes="doc/*"/>
-     </zip>
-
-  </target>
-
-  <!--
    Distribution - Application
    -->
   <target name="dist.app" depends="compile, version">
@@ -318,18 +262,20 @@
        <fileset dir="./build/version"/>
        <fileset dir="./images"/>
        <fileset dir="./language/en"/>
-       <fileset dir="./src/core" includes="**/*.properties,**/*.xml,META-INF/**"/>
+       <fileset dir="./src/core" includes="**/*.properties,**/*.xml,**/*.html,META-INF/**"/>
      </jar>
      
      <!-- create run.jar -->
      <delete file="./build/lib/run.jar"/>
      <jar jarfile="./build/lib/run.jar" update="True">
        <fileset dir="./build/classes/launcher" includes="**"/>
+       <fileset dir="./images" includes="splash.png"/>
        <manifest>
          <attribute name="Main-Class" value="launcher.Launcher"/>
       	 <attribute name="Launch-Classpath" value="lib, contrib, $${java.home}/lib/tools.jar, $${java.home}/../lib/tools.jar"/>
        	 <attribute name="Launch-Class" value="genj.app.App"/>
          <attribute name="Launch-Port" value="2505"/>
+         <attribute name="Launch-Splash" value="/splash.png"/>
        </manifest>
      </jar>
      
@@ -339,9 +285,11 @@
        <!-- some libraries -->
        <zipfileset dir="./build/lib" includes="run.jar"/>
        <zipfileset dir="./build" includes="lib/genj.jar"/>
-       <zipfileset dir="." includes="lib/jfreechart-1.0.13.jar"/>
-       <zipfileset dir="." includes="lib/jcommon-1.0.16.jar"/>
        <zipfileset dir="." includes="lib/graphj.jar"/>
+       <zipfileset dir="." includes="lib/jcommon*.jar"/>
+       <zipfileset dir="." includes="lib/jfreechart*.jar"/>
+       <zipfileset dir="." includes="lib/spin*.jar"/>
+       <zipfileset dir="." includes="lib/swingx*.jar"/>
        
        <!-- stuff for reports (classes, sources, scripts)-->
        <zipfileset dir="./build/classes" includes="report/**/*.class" excludes="report/_*/**"/>
@@ -367,7 +315,7 @@
   <!--
    Distribution
    -->
-  <target name="dist" depends="init,compile,version,dist.languages,dist.applet,dist.app,dist.javadoc">
+  <target name="dist" depends="init,compile,version,dist.languages,dist.app">
   </target>
 
   <!--
