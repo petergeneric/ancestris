@@ -219,7 +219,8 @@ public class ReportGedart extends Report {
 		// exportSummary(fams);
 		// }
 
-		mydoc.render(thetemplate+"/index.vm");
+//		mydoc.render(thetemplate+"/index.vm");
+		mydoc.render((new File(thetemplate,"index.vm")).getPath());
 		mydoc.close();
 		if (file.length() < 1000000l){
 			try {
