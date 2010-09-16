@@ -64,11 +64,11 @@ public class FTPLoader {
 
             public synchronized void run() {
                 // Collect all files to send across
+                ph.start();
                 log.timeStamp();
                 log.write(NbBundle.getMessage(FTPLoader.class, "TASK_UploadExecutionStart"));
                 List<File> localFiles = getFilesRecursively(localdir);
                 Collections.sort(localFiles);
-                ph.start();
 
                 // Put bulk of files giving the log and the progress window id as reference
                 ftpu = new FTPUpload(host, user, password, localFiles, localdir.getAbsolutePath(), targetdir, log, uploadRegister, ph);
