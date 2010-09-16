@@ -144,6 +144,11 @@
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TreeAction"/>
                 <attr name="instanceCreate" methodvalue="genjfr.app.GenjViewTopComponent.openAction"/>
             </file>
+            <file name="genjfr-explorer-GedcomExplorerAction.instance">
+                <attr name="component" methodvalue="genjfr.explorer.GedcomExplorerTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="genjfr.explorer.Bundle#CTL_GedcomExplorerAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
         </folder>
         <folder name="Help">
             <!-- Override the registered action with the new one. This will be
@@ -333,6 +338,11 @@
             <file name="org-netbeans-core-windows-actions-UndockAction.shadow_hidden"/>
         </folder>
 -->
+        <folder name="Window">
+            <file name="GedcomExplorerAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-explorer-GedcomExplorerAction.instance"/>
+            </file>
+        </folder>
     </folder>
     <folder name="OptionsDialog">
         <folder name="Advanced">
@@ -401,8 +411,12 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>
+            <file name="GedcomExplorerTopComponent.settings" url="GedcomExplorerTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
+            <folder name="explorer">
+                <file name="GedcomExplorerTopComponent.wstcref" url="GedcomExplorerTopComponentWstcref.xml"/>
+            </folder>
             <folder name="genjfr-explorer">
                 <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>
             </folder>
