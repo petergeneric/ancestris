@@ -35,8 +35,8 @@ public class ActionClose extends Action2 {
     @Override
     public void actionPerformed(ActionEvent event) {
         Context context = App.center.getSelectedContext();
-        App.workbenchHelper.closeGedcom(context);
-
+        if (context != null)
+            App.workbenchHelper.closeGedcom(context);
     }
 } //ActionClose
 
