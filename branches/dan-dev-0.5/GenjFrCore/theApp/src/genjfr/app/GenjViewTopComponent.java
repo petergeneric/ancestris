@@ -651,7 +651,7 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
       List<Action2> singles = new ArrayList<Action2>(8);
       Map<Action2.Group,Action2.Group> lookup = new HashMap<Action2.Group,Action2.Group>();
 
-      for (Action2 action : getProvidedActions((List<ActionProvider>) GenjFrPlugin.lookupAll(ActionProvider.class), context)) {
+      for (Action2 action : getProvidedActions(context)) {
         if (action instanceof Action2.Group) {
           Action2.Group group = lookup.get(action);
           if (group!=null) {
@@ -674,10 +674,10 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
       return popup;
     }
 
-    private Action2.Group getProvidedActions(List<ActionProvider> providers, Context context) {
+      private Action2.Group getProvidedActions(Context context) {
       Action2.Group group = new Action2.Group("");
       // ask the action providers
-      for (ActionProvider provider : providers)
+        for (ActionProvider provider : (List<ActionProvider>) GenjFrPlugin.lookupAll(ActionProvider.class) )
         provider.createActions(context, Purpose.CONTEXT, group);
       // done
       return group;
