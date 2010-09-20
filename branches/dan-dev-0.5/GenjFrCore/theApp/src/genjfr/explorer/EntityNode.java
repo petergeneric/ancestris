@@ -5,10 +5,16 @@
 
 package genjfr.explorer;
 
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.util.swing.Action2;
+import genjfr.util.MyContext;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.lookup.Lookups;
@@ -51,4 +57,18 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>{
     public int compareTo(EntityNode that) {
         return entity.compareTo(that.getEntity());
     }
+
+        public Action[] getActions(boolean isContext) {
+        MyContext nodeContext = new MyContext(new Context(entity));
+        if (nodeContext == null) {
+            return null;
+        }
+        List<Action2> nodeactions = new ArrayList<Action2>(8);
+        nodeactions.addAll(nodeContext.getPopupActions());
+
+        // done
+        return nodeactions.toArray(new Action[0]);
+    }
+
+
 }

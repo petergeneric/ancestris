@@ -7,35 +7,27 @@ package genjfr.explorer;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.Action2;
-import genj.util.swing.MenuHelper;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
 import genj.view.ViewContext;
 import genjfr.app.ActionClose;
 import genjfr.app.ActionSave;
-import genjfr.app.App;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import genjfr.util.MyContext;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.MenuSelectionManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Node.Cookie;
 import org.openide.nodes.NodeTransfer;
-import org.openide.util.actions.Presenter;
 import org.openide.util.datatransfer.PasteType;
 import org.openide.util.lookup.Lookups;
 
@@ -94,59 +86,17 @@ class GedcomFileNode extends AbstractNode {
     }
 
     public Action[] getActions(boolean isContext) {
-        if (context == null) {
-            return null;
-        }
-        ViewContext vcontext = new ViewContext(context);
+        MyContext vcontext = new MyContext(context);
         if (vcontext == null) {
             return null;
         }
-        vcontext.addAction(new ActionSave());
-        vcontext.addAction(new ActionClose());
-        // make sure context is valid
-
         List<Action2> nodeactions = new ArrayList<Action2>(8);
-        // popup local actions?
-        nodeactions.addAll(vcontext.getActions());
-
-        // get and merge all actions
-        List<Action2> groups = new ArrayList<Action2>(8);
-        List<Action2> singles = new ArrayList<Action2>(8);
-        Map<Action2.Group, Action2.Group> lookup = new HashMap<Action2.Group, Action2.Group>();
-
-        for (Action2 action : getProvidedActions(vcontext)) {
-            if (action instanceof Action2.Group) {
-                Action2.Group group = lookup.get(action);
-                if (group != null) {
-                    group.add(new ActionProvider.SeparatorAction());
-                    group.addAll((Action2.Group) action);
-                } else {
-                    lookup.put((Action2.Group) action, (Action2.Group) action);
-                    groups.add((Action2.Group) action);
-                }
-            } else {
-                singles.add(action);
-            }
-        }
-
-        // add to menu
-        nodeactions.add(null);
-        nodeactions.addAll(groups);
-        nodeactions.add(null);
-        nodeactions.addAll(singles);
+        nodeactions.add(new ActionSave());
+        nodeactions.add(new ActionClose());
+        nodeactions.addAll(vcontext.getPopupActions());
 
         // done
         return nodeactions.toArray(new Action[0]);
-    }
-
-    public static Action2.Group getProvidedActions(Context context) {
-        Action2.Group group = new Action2.Group("");
-        // ask the action providers
-        for (ActionProvider provider : (List<ActionProvider>) GenjFrPlugin.lookupAll(ActionProvider.class)) {
-            provider.createActions(context, Purpose.CONTEXT, group);
-        }
-        // done
-        return group;
     }
 
     public boolean canDestroy() {

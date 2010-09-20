@@ -42,4 +42,8 @@ class EntitiesNode extends AbstractNode {
     public Image getOpenedIcon(int type) {
         return getIcon(type);
     }
+    public Action[] getActions(boolean isContext) {
+        return new Action[]{};
+    }
+
 }
