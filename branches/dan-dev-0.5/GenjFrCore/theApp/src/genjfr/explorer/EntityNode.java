@@ -9,6 +9,8 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.Note;
+import genj.gedcom.PropertyMultilineValue;
 import genj.util.swing.Action2;
 import genjfr.util.MyContext;
 import java.awt.Image;
@@ -35,8 +37,11 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>{
         } else if (entity instanceof Fam){
             Fam f = (Fam) entity;
             setDisplayName(f.toString(false));
+        } else if (entity instanceof Note){
+            Note n = (Note) entity;
+            setDisplayName(n.getDelegate().getLines()[0]);
         } else {
-            setDisplayName(entity.toString(false));
+            setDisplayName(entity.getValue());
         }
     }
 
