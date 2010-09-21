@@ -321,6 +321,15 @@ public class PointInTime implements Comparable<PointInTime> {
       }
     }
     
+    // check for trailing B.C.
+    boolean bc = false;
+    if (calendar == GREGORIAN) {
+      if (txt.endsWith("B.C.")) {
+        bc = true;
+        txt = txt.substring(0,txt.length()-"B.C.".length()).trim();
+      }
+    }
+    
     // no tokens - fine - no info
     DirectAccessTokenizer tokens = new DirectAccessTokenizer(txt, " ", true);
     String first = tokens.get(0);
@@ -336,7 +345,7 @@ public class PointInTime implements Comparable<PointInTime> {
     // only one token? gotta be YYYY
     if (second==null) {
         try {
-          set(UNKNOWN, UNKNOWN, calendar.getYear(first));
+          set(UNKNOWN, UNKNOWN, addc(calendar.getYear(first), bc));
         } catch (Throwable t) {
           return false;
         }
@@ -353,7 +362,7 @@ public class PointInTime implements Comparable<PointInTime> {
       } catch (Throwable t) {
       }
       try {
-        set(UNKNOWN, calendar.parseMonth(first),  calendar.getYear(second));
+        set(UNKNOWN, calendar.parseMonth(first), addc(calendar.getYear(second), bc));
       } catch (Throwable t) {
         return false;
       }
@@ -364,12 +373,19 @@ public class PointInTime implements Comparable<PointInTime> {
     third = txt.substring(tokens.getStart());
     
     try {
-      set( Integer.parseInt(first) - 1, calendar.parseMonth(second), calendar.getYear(third));
+      set( Integer.parseInt(first) - 1, calendar.parseMonth(second), addc(calendar.getYear(third), bc));
     } catch (Throwable t) {
       return false;
     }
     return getYear()!=UNKNOWN&&getMonth()!=UNKNOWN&&getDay()!=UNKNOWN;
     
+  }
+  
+  private int addc(int year, boolean bc) {
+    if (!bc) return year;
+    if (year==0)
+      throw new IllegalArgumentException("no year 0 allowed");
+    return 0-year;
   }
   
   /**
@@ -496,14 +512,25 @@ public class PointInTime implements Comparable<PointInTime> {
    */
   public WordBuffer toString(WordBuffer buffer, int format) {
     
+    int yearAdjusted = year;
+    boolean bc = false;
+    
+    if (calendar==GREGORIAN&&year<0) {
+      yearAdjusted = 0-year;
+      bc = true;
+    }
+    
     // numeric && gregorian && complete
     if (format==FORMAT_NUMERIC) {
       if (calendar==GREGORIAN&&isComplete()) {
         java.util.Calendar c = java.util.Calendar.getInstance();
-        c.set(year, month, day+1);
+        c.set( yearAdjusted, month, day+1);
         synchronized (NUMERICDATEFORMAT) {
           buffer.append(NUMERICDATEFORMAT.format(c.getTime()));
         }
+        // add bc for gregorian
+        if (bc)
+          buffer.append(" B.C.");
         return buffer;
       }
       
@@ -527,11 +554,15 @@ public class PointInTime implements Comparable<PointInTime> {
         }
         buffer.append(format==FORMAT_GEDCOM ? calendar.getMonth(month) : calendar.getDisplayMonth(month, format==FORMAT_SHORT));
       }
-      buffer.append(format==FORMAT_GEDCOM ? calendar.getYear(year) : calendar.getDisplayYear(year));
+      buffer.append(format==FORMAT_GEDCOM ? calendar.getYear(yearAdjusted) : calendar.getDisplayYear(yearAdjusted));
       
       // add calendar indicator for julian
       if (format!=FORMAT_GEDCOM&&calendar==JULIAN)
         buffer.append("(j)");
+      
+      // add bc for gregorian
+      if (bc)
+        buffer.append(" B.C.");
     }      
     
     // done

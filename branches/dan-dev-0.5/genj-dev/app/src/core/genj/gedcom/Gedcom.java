@@ -1197,8 +1197,7 @@ public class Gedcom implements Comparable {
   }
 
   /**
-   * Returns a readable name for the given tag
-   */
+   * Returns a readable name for the given tag   */
   public static String getName(String tag) {
     return getName(tag, false);
   }

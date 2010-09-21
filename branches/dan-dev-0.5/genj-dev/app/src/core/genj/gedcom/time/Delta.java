@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 /**
  * Delta
  */
-public class Delta implements Comparable {
+public class Delta implements Comparable<Delta> {
 
   /** localizations */
   public final static String
@@ -141,12 +141,16 @@ public class Delta implements Comparable {
       yearlier =  earlier.getYear (),
       mearlier = earlier.getMonth(),
       dearlier = earlier.getDay();
+    
+    if (earlier.getCalendar()==PointInTime.GREGORIAN && yearlier<0) yearlier++;
 
     // age at what point in time?
     int
       ylater =  later.getYear (),
       mlater = later.getMonth(),
       dlater = later.getDay();
+
+    if (later.getCalendar()==PointInTime.GREGORIAN && ylater<0) ylater++;
 
     // make sure years are not empty (could be on all UNKNOWN PIT)
     if (yearlier==PointInTime.UNKNOWN||ylater==PointInTime.UNKNOWN)
@@ -202,8 +206,7 @@ public class Delta implements Comparable {
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
-  public int compareTo(Object o) {
-    Delta other = (Delta)o;
+  public int compareTo(Delta other) {
     // compare years
     int delta = years - other.years;
     if (delta != 0)
@@ -215,6 +218,19 @@ public class Delta implements Comparable {
     // .. days
     delta = days - other.days;
     return delta;
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Delta))
+      return false;
+    Delta d = (Delta)obj;
+    return d.calendar == calendar && d.days == days && d.months == months && d.years == years;
+  }
+  
+  @Override
+  public int hashCode() {
+    return calendar.hashCode() + days + months + years;
   }
 
 
