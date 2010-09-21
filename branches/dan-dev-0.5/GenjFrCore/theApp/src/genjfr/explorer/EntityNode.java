@@ -10,12 +10,15 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Note;
-import genj.gedcom.PropertyMultilineValue;
 import genj.util.swing.Action2;
+import genj.view.SelectionSink;
 import genjfr.util.MyContext;
+import java.awt.Component;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -51,6 +54,12 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>{
     }
 
     @Override
+    public Action getPreferredAction() {
+        return new FireNodeSelection();
+    }
+
+
+    @Override
     public Image getIcon(int type) {
         return entity.getImage().getImage();
     }
@@ -75,5 +84,11 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>{
         return nodeactions.toArray(new Action[0]);
     }
 
+        private class FireNodeSelection extends AbstractAction{
 
+        public void actionPerformed(ActionEvent e) {
+            SelectionSink.Dispatcher.fireSelection((Component)null, new Context(entity),true);
+        }
+
+        }
 }
