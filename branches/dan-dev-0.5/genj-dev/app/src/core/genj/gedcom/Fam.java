@@ -171,7 +171,16 @@ public class Fam extends Entity {
     }
     throw new IllegalArgumentException("No such spouse");
   }
-
+  
+  /**
+   * convenient spouses as list
+   */
+  public List<Indi> getSpouses() {
+    List<Indi> spouses = new ArrayList<Indi>();
+    if (getHusband()!=null) spouses.add(getHusband());
+    if (getWife   ()!=null) spouses.add(getWife());
+    return spouses;
+  }
   /**
    * Returns the other parent to the given one
    */
