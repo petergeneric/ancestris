@@ -44,7 +44,7 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>{
             Note n = (Note) entity;
             setDisplayName(n.getDelegate().getLines()[0]);
         } else {
-            setDisplayName(entity.getValue());
+            setDisplayName(entity.toString(false));
         }
     }
 
