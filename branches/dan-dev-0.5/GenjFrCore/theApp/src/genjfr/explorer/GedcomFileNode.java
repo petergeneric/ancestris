@@ -35,7 +35,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author daniel
  */
-class GedcomFileNode extends AbstractNode {
+class GedcomFileNode extends AbstractNode implements ExplorerNode {
 
     Context context;
 
@@ -55,7 +55,7 @@ class GedcomFileNode extends AbstractNode {
                 return new PasteType() {
 
                     public Transferable paste() throws IOException {
-                        getChildren().add(new Node[]{new EntitiesNode(movie)});
+                        getChildren().add(new Node[]{new EntitiesNode(context.getGedcom(),movie)});
                         if ((action & DnDConstants.ACTION_MOVE) != 0) {
                             dropNode.getParentNode().getChildren().remove(new Node[]{dropNode});
                         }
@@ -111,5 +111,9 @@ class GedcomFileNode extends AbstractNode {
     @Override
     public Image getOpenedIcon(int type) {
         return getIcon(type);
+    }
+
+    public Context getContext() {
+        return context;
     }
 }

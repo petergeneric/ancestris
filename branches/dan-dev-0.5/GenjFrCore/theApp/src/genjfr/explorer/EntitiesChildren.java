@@ -29,7 +29,7 @@ public class EntitiesChildren  extends Children.Keys {
 
     protected Node[] createNodes(Object key) {
         GedcomEntities obj = (GedcomEntities) key;
-        return new Node[] { new EntitiesNode( obj ) };
+        return new Node[] { new EntitiesNode(gedcom, obj ) };
     }
 
     protected void addNotify() {

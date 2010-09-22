@@ -4,6 +4,8 @@
  */
 package genjfr.explorer;
 
+import genj.view.ContextProvider;
+import genj.view.ViewContext;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -14,13 +16,14 @@ import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Node;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.explorer//GedcomExplorer//EN",
 autostore = false)
-public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider{
+public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, ContextProvider{
 
     private static GedcomExplorerTopComponent instance;
     /** path to the icon used by the component and its open action */
@@ -51,13 +54,18 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        displayType = new javax.swing.JComboBox();
         gedcomsPane = new BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
+
+        displayType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Toutes les entités", "Parenté proche" }));
+        add(displayType, java.awt.BorderLayout.PAGE_START);
         add(gedcomsPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox displayType;
     private javax.swing.JScrollPane gedcomsPane;
     // End of variables declaration//GEN-END:variables
     /**
@@ -133,5 +141,15 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
 
     public ExplorerManager getExplorerManager() {
          return explorerManager;
+    }
+
+    public ViewContext getContext() {
+        Node[] nodes = getActivatedNodes();
+        if (nodes == null || nodes.length == 0)
+            return null;
+        Node contextnode = nodes[0];
+        if (contextnode instanceof ExplorerNode)
+            return new ViewContext(((ExplorerNode)contextnode).getContext());
+        return null;
     }
 }

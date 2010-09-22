@@ -22,7 +22,6 @@
 package genjfr.util;
 
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,16 +49,17 @@ public class GedcomDirectory {
     gedcoms.add(context);
     List<Listener> ls = new ArrayList<Listener>(listeners);
     for (Listener listener : ls) 
-      listener.gedcomRegistered(gedcoms.size()-1, context);
+      listener.gedcomRegistered(context);
   }
   
   /** unregister gedcom file */
   public void unregisterGedcom(Context context) {
-    int i = gedcoms.indexOf(context);
-    gedcoms.remove(context);
+      for (Context c:findContext(context)){
+    gedcoms.remove(c);
     List<Listener> ls = new ArrayList<Listener>(listeners);
     for (Listener listener : ls) 
-      listener.gedcomUnregistered(i, context);
+      listener.gedcomUnregistered(context);
+      }
   }
 
   /** accessor gedcoms */
@@ -85,7 +85,16 @@ public class GedcomDirectory {
     }
 
   public interface Listener {
-    public void gedcomRegistered(int num, Context context);
-    public void gedcomUnregistered(int num, Context context);
+    public void gedcomRegistered(Context context);
+    public void gedcomUnregistered(Context context);
   }
+
+  private List<Context> findContext(Context ctx){
+      List<Context> result = new ArrayList<Context>();
+    for (Context c:gedcoms){
+        if (c.getGedcom().equals(ctx.getGedcom()))
+            result.add(c);
+    }
+    return result;
+    }
 }

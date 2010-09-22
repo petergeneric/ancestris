@@ -79,13 +79,13 @@
             </file>
         </folder>
         <folder name="Window">
+            <!--
             <file name="genjfr-app-ControlCenterAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.ControlCenterTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ControlCenterAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
-            <!--
             <file name="genjfr-app-EditAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.EditTopComponent.findInstance"/>
@@ -410,15 +410,13 @@
     </folder>
     <folder name="Windows2">
         <folder name="Components">
-            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>
+<!--            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>-->
             <file name="GedcomExplorerTopComponent.settings" url="GedcomExplorerTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="explorer">
-                <file name="GedcomExplorerTopComponent.wstcref" url="GedcomExplorerTopComponentWstcref.xml"/>
-            </folder>
             <folder name="genjfr-explorer">
-                <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>
+                <file name="GedcomExplorerTopComponent.wstcref" url="GedcomExplorerTopComponentWstcref.xml"/>
+<!--                <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>-->
             </folder>
             <folder name="genjfr-nav">
             </folder>

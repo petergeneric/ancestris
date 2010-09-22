@@ -28,7 +28,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author daniel
  */
-class EntityNode extends AbstractNode implements Comparable<EntityNode>{
+class EntityNode extends AbstractNode implements Comparable<EntityNode>,ExplorerNode{
     Entity entity;
 
     public EntityNode(Entity e) {
@@ -84,10 +84,14 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>{
         return nodeactions.toArray(new Action[0]);
     }
 
+    public Context getContext() {
+        return new Context(entity);
+    }
+
         private class FireNodeSelection extends AbstractAction{
 
         public void actionPerformed(ActionEvent e) {
-            SelectionSink.Dispatcher.fireSelection((Component)null, new Context(entity),true);
+            SelectionSink.Dispatcher.fireSelection((Component)null, getContext(),true);
         }
 
         }

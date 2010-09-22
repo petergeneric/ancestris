@@ -64,7 +64,7 @@ public class MyLifecycleManager extends LifecycleManager {
     }
 
     @Override
-    public void markForRestart() throws UnsupportedOperationException {
+    public void markForRestart() {
        Collection<? extends LifecycleManager> c = Lookup.getDefault().lookup(new Lookup.Template(LifecycleManager.class)).allInstances();
        for (LifecycleManager lm: c) {
            if (lm != this) {

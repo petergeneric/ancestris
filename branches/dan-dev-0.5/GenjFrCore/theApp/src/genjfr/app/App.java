@@ -305,7 +305,7 @@ public class App {
 
 
                 // setup control center
-                center = new ControlCenter(REGISTRY);
+                center = new ControlCenter();
         workbenchHelper = new WorkbenchHelper();
         SelectionSink.Dispatcher.setSink(workbenchHelper);
 

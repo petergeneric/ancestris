@@ -5,30 +5,28 @@
 
 package genjfr.explorer;
 
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import java.awt.Image;
 import javax.swing.Action;
-import org.openide.actions.CopyAction;
-import org.openide.actions.CutAction;
-import org.openide.actions.DeleteAction;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.Lookups;
-import sun.misc.Resource;
 
 /**
  *
  * @author daniel
  */
-class EntitiesNode extends AbstractNode {
+class EntitiesNode extends AbstractNode implements ExplorerNode{
 
     private GedcomEntities entities;
+    private Gedcom gedcom;
 
     /** Creates a new instance of InstrumentNode */
-    public EntitiesNode(GedcomEntities entities) {
+    public EntitiesNode(Gedcom gedcom, GedcomEntities entities) {
 //        super(Children.LEAF, Lookups.fixed( new Object[] {key} ) );
         super( new EntityChildren(entities), Lookups.singleton(entities) );
         this.entities = entities;
+        this.gedcom = gedcom;
         setDisplayName(entities.getTitle());
         setIconBaseWithExtension(entities.getImage().toString());
 //        setIconBaseWithExtension("org/netbeans/myfirstexplorer/marilyn.gif");
@@ -46,4 +44,7 @@ class EntitiesNode extends AbstractNode {
         return new Action[]{};
     }
 
+    public Context getContext() {
+        return gedcom == null? null:new Context(gedcom);
+    }
 }

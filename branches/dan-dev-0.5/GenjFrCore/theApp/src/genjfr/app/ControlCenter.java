@@ -19,46 +19,23 @@
  */
 package genjfr.app;
 
-import genjfr.explorer.GedcomTableWidget;
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomMetaListener;
-import genj.gedcom.Property;
 import genjfr.util.GedcomDirectory;
-import genj.io.Filter;
 import genj.util.DirectAccessTokenizer;
-import genj.util.EnvironmentChecker;
 import genj.util.Registry;
-import genj.util.Resources;
-import genj.util.WordBuffer;
-import genj.util.swing.Action2;
-import genj.util.swing.FileChooser;
-import genj.util.swing.HeapStatusWidget;
-import genj.util.swing.NestedBlockLayout;
-import genj.view.ViewContext;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
-import genj.app.*;
 import genj.gedcom.Context;
-import genj.util.swing.DialogHelper;
+import genjfr.explorer.GedcomExplorerTopComponent;
 import java.net.URL;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
@@ -68,55 +45,11 @@ import javax.swing.SwingUtilities;
  */
 public class ControlCenter extends JPanel{
 
-
     /** members */
-    private GedcomTableWidget tGedcoms;
-    protected Registry registry;
-    private Resources resources = Resources.get(genj.app.Workbench.class);
-    private List gedcomActions = new ArrayList();
-    protected Stats stats = new Stats();
 
     private int isLoaded = 1;
     final private Object loadLock = new Object();
 
-    /**
-     * Constructor
-     */
-    public ControlCenter(Registry setRegistry) {
-
-        // Initialize data
-        registry = new Registry(setRegistry, "cc");
-
-        // Table of Gedcoms
-        tGedcoms = new GedcomTableWidget(registry) {
-            public ViewContext getContext() {
-                ViewContext result = super.getContext();
-                if (result != null) {
-                    result.addAction(new ActionSave());
-                    result.addAction(new ActionClose());
-                }
-                return result;
-            }
-
-            ;
-        };
-
-        // ... Listening
-        tGedcoms.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-            public void valueChanged(ListSelectionEvent e) {
-                for (int i = 0; i < gedcomActions.size(); i++) {
-                    ((Action2) gedcomActions.get(i)).setEnabled(tGedcoms.getSelectedContext() != null);
-                }
-            }
-        });
-
-        // Layout
-        setLayout(new BorderLayout());
-        add(new JScrollPane(tGedcoms), BorderLayout.CENTER);
-        add(createStatusBar(), BorderLayout.SOUTH);
-
-    }
 
     /**
      * Loads gedcom files
@@ -130,20 +63,6 @@ public class ControlCenter extends JPanel{
         SwingUtilities.invokeLater(new ActionAutoOpen(files));
     }  
 
-    /**
-     * Returns a status bar for the bottom
-     */
-    private JPanel createStatusBar() {
-
-        HeapStatusWidget mem = new HeapStatusWidget();
-        mem.setToolTipText(resources.getString("cc.heap"));
-
-        JPanel result = new JPanel(new NestedBlockLayout("<row><info wx=\"1\" gx=\"1\"/><mem/></row>"));
-        result.add(stats);
-        result.add(mem);
-
-        return result;
-    }
  
     public boolean isReady(int i) {
         if (isLoaded == 0) {
@@ -320,7 +239,8 @@ public class ControlCenter extends JPanel{
     } //LastOpenLoader
 
     public Context getSelectedContext(){
-        return tGedcoms.getSelectedContext();
+        return GedcomExplorerTopComponent.getDefault().getContext();
+//        return tGedcoms.getSelectedContext();
     }
 
     /**
@@ -330,92 +250,6 @@ public class ControlCenter extends JPanel{
         return getSelectedContext().getGedcom();
     }
 
-
-    public Stats getStats() {
-        return stats;
-    }
-
-    public void selectionChanged(Workbench workbench, Context context, boolean actionPerformed) {
-        tGedcoms.selectionChanged(workbench, context, actionPerformed);
-    }
-
-    /**
-     * a little status tracker
-     */
-    protected class Stats extends JLabel implements GedcomMetaListener, GedcomDirectory.Listener {
-
-        private int commits;
-        private int read, written;
-
-        private Stats() {
-            setHorizontalAlignment(SwingConstants.LEFT);
-            GedcomDirectory.getInstance().addListener(this);
-        }
-
-        public void gedcomWriteLockReleased(Gedcom gedcom) {
-            commits++;
-            update();
-        }
-
-        public synchronized void handleRead(int lines) {
-            read += lines;
-            update();
-        }
-
-        public synchronized void handleWrite(int lines) {
-            written += lines;
-            update();
-        }
-
-        private void update() {
-            WordBuffer buf = new WordBuffer(", ");
-            if (commits > 0) {
-                buf.append(resources.getString("stat.commits", new Integer(commits)));
-            }
-            if (read > 0) {
-                buf.append(resources.getString("stat.lines.read", new Integer(read)));
-            }
-            if (written > 0) {
-                buf.append(resources.getString("stat.lines.written", new Integer(written)));
-            }
-            setText(buf.toString());
-        }
-
-        public void gedcomHeaderChanged(Gedcom gedcom) {
-        }
-
-        public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
-        }
-
-        public void gedcomAfterUnitOfWork(Gedcom gedcom) {
-        }
-
-        public void gedcomWriteLockAcquired(Gedcom gedcom) {
-        }
-
-        public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        }
-
-        public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        }
-
-        public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        }
-
-        public void gedcomPropertyChanged(Gedcom gedcom, Property prop) {
-        }
-
-        public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property removed) {
-        }
-
-        public void gedcomRegistered(int num, Context context) {
-            context.getGedcom().addGedcomListener(this);
-        }
-
-        public void gedcomUnregistered(int num, Context context) {
-            context.getGedcom().removeGedcomListener(this);
-        }
-    } //Stats
 
     public Collection<String> getOpenedGedcoms() {
         // Remember open gedcoms

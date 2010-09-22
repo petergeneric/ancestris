@@ -30,7 +30,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.lang.UnsupportedOperationException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
