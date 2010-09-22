@@ -6,6 +6,8 @@ package genjfr.app;
 
 import genj.util.Registry;
 import genjfr.app.pluginservice.PluginInterface;
+import java.util.Collection;
+import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.openide.LifecycleManager;
 import org.openide.modules.ModuleInstall;
@@ -41,10 +43,19 @@ public class Installer extends ModuleInstall {
             }
         });
         }
+    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+        public void run() {
+        Preferences p  = NbPreferences.forModule(App.class);
+        Collection pfiles = MyPreferences.get(p, "gedcoms", (Collection) null);
+        App.center.load(pfiles);
+        }
+    });
     }
 
     @Override
     public boolean closing() {
+        Preferences p  = NbPreferences.forModule(App.class);
+        MyPreferences.put(p, "gedcoms", App.center.getOpenedGedcoms());
         return App.closing();
     }
 

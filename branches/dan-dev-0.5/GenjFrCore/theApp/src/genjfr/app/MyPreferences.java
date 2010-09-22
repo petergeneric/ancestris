@@ -8,17 +8,17 @@ package genjfr.app;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
+import java.util.prefs.Preferences;
 
 /**
  *
  * @author daniel
  */
-public class nbRegistry {
+public class MyPreferences {
       /**
    * Remembers a collection of Strings
    */
-  public static void put(Properties p,String key, Collection values) {
+  public static void put(Preferences p,String key, Collection values) {
 
     // Remember
     int l = values.size();
@@ -33,50 +33,12 @@ public class nbRegistry {
   }
 
   /**
-   * Returns String parameter to key
-   */
-  public static String get(Properties p,String key, String def) {
-
-    // Get property by key
-    String result;
-      result = p.getProperty(key);
-
-    if (result==null)
-      return def;
-
-    // Done
-    return result;
-  }
-
-  /**
-   * Returns integer parameter to key
-   */
-  public static int get(Properties p,String key, int def) {
-
-    // Get property by key
-    String result = get(p,key,(String)null);
-
-    // .. existing ?
-    if (result==null)
-      return def;
-
-    // .. number ?
-    try {
-      return Integer.parseInt(result.trim());
-    } catch (NumberFormatException ex) {
-    }
-
-    return def;
-  }
-
-
-  /**
    * Returns a collection of strings by key
    */
-  public static Collection get(Properties p, String key, Collection def) {
+  public static Collection get(Preferences p, String key, Collection def) {
 
     // Get size of array
-    int size = get(p,key,-1);
+    int size = p.getInt(key,-1);
     if (size==-1)
       return def;
 
@@ -93,7 +55,7 @@ public class nbRegistry {
 
     // Collection content
     for (int i=0;i<size;i++) {
-      result.add(get(p,key+"."+(i+1),""));
+      result.add(p.get(key+"."+(i+1),""));
     }
 
     // Done
