@@ -1197,7 +1197,8 @@ public class Gedcom implements Comparable {
   }
 
   /**
-   * Returns a readable name for the given tag   */
+   * Returns a readable name for the given tag
+   */
   public static String getName(String tag) {
     return getName(tag, false);
   }
@@ -1377,9 +1378,9 @@ public class Gedcom implements Comparable {
    * can be compared by name
    */
   public int compareTo(Object other) {
-      throw new UnsupportedOperationException("comparaison de deux ged a enlever");
-//    Gedcom that = (Gedcom)other;
-//    return getName().compareTo(that.getName());
+//FIXME:       throw new UnsupportedOperationException("comparaison de deux ged a enlever");
+    Gedcom that = (Gedcom)other;
+    return getName().compareTo(that.getName());
   };
   
   /**
