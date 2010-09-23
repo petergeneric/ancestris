@@ -61,6 +61,17 @@ public class PropertyDateTest extends TestCase {
     assertEquals(display, pit.toString());
   }
   
+  public void testDeltas() {
+   
+    long now = System.currentTimeMillis();
+    
+    // one day
+    assertEquals(Delta.get(PointInTime.getPointInTime(now), PointInTime.getPointInTime(now+24*60*60*1000)), new Delta(1, 0, 0));
+    
+    // 1BC vs 1AD (1 year) 
+    assertEquals(Delta.get(new PointInTime(1,1,-1), new PointInTime(1,1,1)), new Delta(0, 0, 1));
+    
+  }
   
   /**
    * Test dates
