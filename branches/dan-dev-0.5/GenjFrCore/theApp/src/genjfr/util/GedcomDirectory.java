@@ -63,7 +63,7 @@ public class GedcomDirectory {
   }
 
   /** accessor gedcoms */
-  public List<Context> getGedcoms() {
+  public List<Context> getContexts() {
     return new ArrayList<Context>(gedcoms);
   }
 

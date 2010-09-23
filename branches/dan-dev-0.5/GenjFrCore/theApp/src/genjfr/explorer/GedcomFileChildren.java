@@ -45,7 +45,7 @@ class GedcomFileChildren extends Children.Keys {
     }
 
     void updateGedcoms() {
-        List<Context> contexts = GedcomDirectory.getInstance().getGedcoms();
+        List<Context> contexts = GedcomDirectory.getInstance().getContexts();
         List<Gedcom> gedcoms = new ArrayList<Gedcom>();
         for (Context context : contexts) {
             gedcoms.add(context.getGedcom());

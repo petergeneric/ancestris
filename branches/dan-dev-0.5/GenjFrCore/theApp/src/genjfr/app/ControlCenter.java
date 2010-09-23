@@ -92,10 +92,10 @@ public class ControlCenter extends JPanel{
         final Semaphore sem = new Semaphore();
         sem.acquire();
         // force a commit
-        for (Context context:GedcomDirectory.getInstance().getGedcoms())
+        for (Context context:GedcomDirectory.getInstance().getContexts())
             App.workbenchHelper.fireCommit(context);
 
-            for (Context context:GedcomDirectory.getInstance().getGedcoms()){
+            for (Context context:GedcomDirectory.getInstance().getContexts()){
 //            // next gedcom
 //            Gedcom gedcom = context.getGedcom();
 //            // changes need saving?
@@ -247,14 +247,15 @@ public class ControlCenter extends JPanel{
      * @deprecated use getSelectedContext().getGedcom()
      */
     public Gedcom getSelectedGedcom() {
-        return getSelectedContext().getGedcom();
+        Context ctx = getSelectedContext();
+        return ctx==null?null:getSelectedContext().getGedcom();
     }
 
 
     public Collection<String> getOpenedGedcoms() {
         // Remember open gedcoms
         Collection<String> save = new ArrayList();
-        for (Context context: GedcomDirectory.getInstance().getGedcoms()){
+        for (Context context: GedcomDirectory.getInstance().getContexts()){
             // next gedcom
             Gedcom gedcom = context.getGedcom();
             // remember as being open, password and open views
@@ -293,7 +294,7 @@ public class ControlCenter extends JPanel{
         if (url == null) {
             return null;
         }
-        for (Context context: GedcomDirectory.getInstance().getGedcoms()){
+        for (Context context: GedcomDirectory.getInstance().getContexts()){
             if (url.equals(context.getGedcom().getOrigin().toString())){
                 return context;
             }

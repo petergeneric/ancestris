@@ -4,6 +4,7 @@
  */
 package genjfr.app.geo;
 
+import genj.gedcom.Context;
 import genjfr.util.GedcomDirectory;
 import genj.gedcom.Gedcom;
 import genjfr.app.App;
@@ -79,9 +80,9 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
             if (gedParam == null) {
                 gedcom = App.center.getSelectedGedcom(); // get selected gedcom
                 if (gedcom == null) { // if none selected, take first one
-                    Iterator it = GedcomDirectory.getInstance().getGedcoms().iterator();
+                    Iterator it = GedcomDirectory.getInstance().getContexts().iterator();
                     if (it.hasNext()) { // well, apparently no gedcom exist in the list
-                        gedcom = (Gedcom) it.next();
+                        gedcom = ((Context) it.next()).getGedcom();
                     }
                 }
             } else {
