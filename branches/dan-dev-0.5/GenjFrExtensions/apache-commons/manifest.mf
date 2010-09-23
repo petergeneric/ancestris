@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: genjfr.apache.commons
 OpenIDE-Module-Localizing-Bundle: genjfr/apache/commons/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0.0.3.0
+OpenIDE-Module-Specification-Version: 0.5.0.0
 
