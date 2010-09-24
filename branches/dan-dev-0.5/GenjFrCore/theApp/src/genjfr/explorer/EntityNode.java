@@ -69,6 +69,15 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>,Explorer
     }
 
     public int compareTo(EntityNode that) {
+        if (entity instanceof Indi) {
+            Indi i = (Indi)entity;
+            Indi o = (Indi) that.getEntity();
+            return i.getLastName().compareToIgnoreCase(o.getLastName());
+        } else if (entity instanceof Fam){
+            Fam i = (Fam)entity;
+            Fam o = (Fam) that.getEntity();
+            return i.toString(false).compareToIgnoreCase(o.toString(false));
+        }
         return entity.compareTo(that.getEntity());
     }
 
