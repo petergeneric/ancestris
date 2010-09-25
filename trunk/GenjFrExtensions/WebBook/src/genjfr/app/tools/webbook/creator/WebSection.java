@@ -1170,20 +1170,20 @@ public class WebSection {
         }
 
         // Build href link
-        String hrefHidden = "\"javascript:popup('" + buildLinkTheme(this, themeDir) + privMedia + "','120','120')\"";
+        String hrefHidden = "'javascript:popup(\'" + buildLinkTheme(this, themeDir) + privMedia + "\',\'120\',\'120\')'";
         String href = "";
         if (isFileValid) {
             if (popup) {
                 if (isImage) {
-                    href = "\"javascript:popup('" + filename + "','" + wh.getImageSize(file.getFile().getAbsolutePath()) + "')\"";
+                    href = "'javascript:popup(\'" + filename + "\',\'" + wh.getImageSize(file.getFile().getAbsolutePath()) + "\')'";
                 } else {
-                    href = "\"javascript:popup('" + filename + "','" + DEFPOPUPWIDTH + "','" + DEFPOPUPLENGTH + "')\"";
+                    href = "'javascript:popup(\'" + filename + "\',\'" + DEFPOPUPWIDTH + "\',\'" + DEFPOPUPLENGTH + "\')'";
                 }
             } else {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
             }
         } else {
-            href = "\"\"";
+            href = "''";
         }
 
         // Build title
