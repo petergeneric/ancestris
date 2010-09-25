@@ -885,21 +885,21 @@ public class WebSection {
 
         // Some strings to handle privacy
         String themeDirLink = buildLinkTheme(this, themeDir);
-        String strClear = "<a href='javascript:popup(\\\"" + indi.toString() + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
         String strHidden = "<img src='" + themeDirLink + picture + "' />";
 
         // Now handle privacy and PHP support
         // If whole entity is private, hide even the properties inside else let "sub-privicy" properties be displayed
         if (wh.isPrivate(indi)) {
+            String strClear = "<a href='javascript:popup(\\\"" + indi.toString() + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
             str += phpText(indi, strClear, strHidden);
         } else {
+            String strClear = "<a href='javascript:popup(\"" + indi.toString() + "\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
             str += strClear;
         }
         return str;
     }
 
-
-   /**
+    /**
      * Events wrapper
      * @param entity
      * @param includeFamilies
@@ -1198,14 +1198,15 @@ public class WebSection {
         // Build href link
         String hrefHidden = "";
         String href = "";
+        String quote = wh.isPrivate(file) && wp.param_PHP_Support.equals("1") ? "\\\"" : "\"";
         if (isFileValid) {
             if (popup) {
                 if (isImage) {
-                    href = "'javascript:popup(\\\"" + filename + "\\\",\\\"" + wh.getImageSize(file.getFile().getAbsolutePath()) + "\\\")'";
-                    hrefHidden += "'javascript:popup(\\\"" + buildLinkTheme(this, themeDir) + privMedia + "\\\",\\\"120,\\\"120\\\")'";
+                    href = "'javascript:popup(" + quote + filename + quote + "," + quote + wh.getImageSize(file.getFile().getAbsolutePath(), quote) + quote + ")'";
+                    hrefHidden += "'javascript:popup(" + quote + buildLinkTheme(this, themeDir) + privMedia + quote + "," + quote + "120" + quote + "," + quote + "120" + quote + ")'";
                 } else {
-                    href = "'javascript:popup(\\\"" + filename + "\\\",\\\"" + DEFPOPUPWIDTH + "\\\",\\\"" + DEFPOPUPLENGTH + "\\\")'";
-                    hrefHidden += "'javascript:popup(\\\"" + buildLinkTheme(this, themeDir) + privMedia + "\\\",\\\"120,\\\"120\\\")'";
+                    href = "'javascript:popup(" + quote + filename + quote + "," + quote + DEFPOPUPWIDTH + quote + "," + quote + DEFPOPUPLENGTH + quote + ")'";
+                    hrefHidden += "'javascript:popup(" + quote + buildLinkTheme(this, themeDir) + privMedia + quote + "," + quote + "120" + quote + "," + quote + "120" + quote + ")'";
                 }
             } else {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";

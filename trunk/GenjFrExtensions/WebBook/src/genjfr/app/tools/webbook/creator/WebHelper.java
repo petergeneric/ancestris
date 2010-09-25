@@ -579,7 +579,7 @@ public class WebHelper {
     }
 
     /** Get image size */
-    String getImageSize(String absoluteFile) {
+    String getImageSize(String absoluteFile, String quote) {
         Image image = Toolkit.getDefaultToolkit().getImage(absoluteFile);
         mediaTracker.addImage(image, 0);
 
@@ -587,14 +587,14 @@ public class WebHelper {
             mediaTracker.waitForID(0);
         } catch (Exception e) {
             //e.printStackTrace();
-            return "100','100";
+            return "100" + quote + "," + quote + "100";
         }
 
         int imageHeight = image.getHeight(null);
         int imageWidth = image.getWidth(null);
         mediaTracker.removeImage(image);
         image.flush();
-        return "" + imageWidth + "','" + imageHeight;
+        return "" + imageWidth + quote + "," + quote + imageHeight;
     }
 
     /** Scale image */
