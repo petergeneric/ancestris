@@ -150,7 +150,7 @@ public class WebCitiesDetails extends WebSection {
                 first = false;
                 if (prop instanceof PropertyPlace) {
                     displayPlace(out, city, prop);
-                } 
+                }
                 displayHeader(out);
             }
             displayEvent(out, prop);
@@ -240,7 +240,7 @@ public class WebCitiesDetails extends WebSection {
         if (prop instanceof PropertyPlace) {
             String[] dataBits = prop.toString().split("\\,", -1);
             ctry = dataBits[dataBits.length - 1].trim();
-        } 
+        }
         return ctry;
     }
 
@@ -298,7 +298,7 @@ public class WebCitiesDetails extends WebSection {
      */
     private void displayLink2Map(PrintWriter out, Property prop, String city) {
         if (wp.param_media_GeneMap.equals("1")) {
-            out.println(SPACE + SPACE + "<a href=\"../map/map.html?" + htmlAnchorText(getFullname(prop)) + "\"><img src=\"../" + themeDir + "/map.gif\" alt=\"" + htmlText(city) + "\" title=\"" + htmlText(trs("map_of", city)) + "\"/></a>");
+            out.println(SPACE + SPACE + "<a href=\"../map/map." + (wp.param_PHP_Support.equals("1") ? ".php" : ".html") + "?" + htmlAnchorText(getFullname(prop)) + "\"><img src=\"../" + themeDir + "/map.gif\" alt=\"" + htmlText(city) + "\" title=\"" + htmlText(trs("map_of", city)) + "\"/></a>");
         }
     }
 
@@ -356,6 +356,5 @@ public class WebCitiesDetails extends WebSection {
     public Map getPagesMap() {
         return cityPage;
     }
-
 } // End_of_Report
 

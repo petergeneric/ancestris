@@ -39,7 +39,6 @@ public class WebIndividualsDetails extends WebSection {
     private final static String POPUPTAG = "popupemail.htm";
     private final static TagPath INDI2IMAGES = new TagPath("INDI:OBJE:FILE");
     private final static TagPath FAM2IMAGES = new TagPath("FAM:OBJE:FILE");
-    private int WIDTH_PICTURES = 150;
     private String indi2srcDir = "";
     private String indi2mediaDir = "";
     private String fam_chronologie = "";
@@ -239,11 +238,6 @@ public class WebIndividualsDetails extends WebSection {
                     PropertyFile file = (PropertyFile) it.next();
                     if ((file == null) || (file.getFile() == null)) {
                         continue;
-                    }
-                    // get file name
-                    String origFile = wh.getCleanFileName(file.getValue(), DEFCHAR);
-                    if (wh.isImage(origFile)) {
-                        wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + origFile, WIDTH_PICTURES, 0, 100, false);
                     }
                     out.println(wrapMedia(null, file, indi2mediaDir, false, false, true, false, "", indi.toString(), false, "OBJE:NOTE", "tooltip"));
                 }
