@@ -886,14 +886,15 @@ public class WebSection {
         // Some strings to handle privacy
         String themeDirLink = buildLinkTheme(this, themeDir);
         String strHidden = "<img src='" + themeDirLink + picture + "' />";
+        title = htmlText(title);
 
         // Now handle privacy and PHP support
         // If whole entity is private, hide even the properties inside else let "sub-privicy" properties be displayed
         if (wh.isPrivate(indi)) {
-            String strClear = "<a href='javascript:popup(\\\"" + indi.toString() + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
+            String strClear = "<a href='javascript:popup(\\\"" + htmlText(indi.toString()) + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
             str += phpText(indi, strClear, strHidden);
         } else {
-            String strClear = "<a href='javascript:popup(\"" + indi.toString() + "\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
+            String strClear = "<a href='javascript:popup(\"" + htmlText(indi.toString()) + "\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
             str += strClear;
         }
         return str;
