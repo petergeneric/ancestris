@@ -211,7 +211,8 @@ public class WebIndividualsDetails extends WebSection {
         // Email button
         if (wp.param_dispEmailButton.equals("1")) {
             String str = htmlText(trs("TXT_mail_comment"));
-            out.println("<a href=\"javascript:popup('" + indi.toString() + "')\"><img src=\"" + themeDirLink + "mail.gif\" alt=\"" + str + "\" title=\"" + str + "\"/></a><br /><br />");
+            out.println(wrapEmailButton(indi, "mail.gif", str));
+            out.println("<br /><br />");
         }
 
         // Events of the individual

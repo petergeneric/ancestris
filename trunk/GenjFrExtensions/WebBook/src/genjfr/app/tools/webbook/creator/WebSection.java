@@ -873,7 +873,33 @@ public class WebSection {
         return str;
     }
 
-    /**
+    public String wrapEmailButton(Indi indi, String picture, String title) {
+        // Eliminate case where indi is null
+        if (indi == null) {
+            return wp.param_unknown;
+        }
+
+        // Returned string
+        String str = "";
+
+
+        // Some strings to handle privacy
+        String themeDirLink = buildLinkTheme(this, themeDir);
+        String strClear = "<a href=\"javascript:popup('" + indi.toString() + "')\"><img src=\"" + themeDirLink + picture + "\" alt=\"" + title + "\" title=\"" + title + "\"/></a>";
+        String strHidden = "<img src=\"" + themeDirLink + picture + "\" />";
+
+        // Now handle privacy and PHP support
+        // If whole entity is private, hide even the properties inside else let "sub-privicy" properties be displayed
+        if (wh.isPrivate(indi)) {
+            str += phpText(indi, strClear, strHidden);
+        } else {
+            str += strClear;
+        }
+        return str;
+    }
+
+
+   /**
      * Events wrapper
      * @param entity
      * @param includeFamilies
@@ -1170,14 +1196,16 @@ public class WebSection {
         }
 
         // Build href link
-        String hrefHidden = "'javascript:popup(\'" + buildLinkTheme(this, themeDir) + privMedia + "\',\'120\',\'120\')'";
+        String hrefHidden = "";
         String href = "";
         if (isFileValid) {
             if (popup) {
                 if (isImage) {
-                    href = "'javascript:popup(\'" + filename + "\',\'" + wh.getImageSize(file.getFile().getAbsolutePath()) + "\')'";
+                    href = "'javascript:popup(\\\"" + filename + "\\\",\\\"" + wh.getImageSize(file.getFile().getAbsolutePath()) + "\\\")'";
+                    hrefHidden += "'javascript:popup(\\\"" + buildLinkTheme(this, themeDir) + privMedia + "\\\",\\\"120,\\\"120\\\")'";
                 } else {
-                    href = "'javascript:popup(\'" + filename + "\',\'" + DEFPOPUPWIDTH + "\',\'" + DEFPOPUPLENGTH + "\')'";
+                    href = "'javascript:popup(\\\"" + filename + "\\\",\\\"" + DEFPOPUPWIDTH + "\\\",\\\"" + DEFPOPUPLENGTH + "\\\")'";
+                    hrefHidden += "'javascript:popup(\\\"" + buildLinkTheme(this, themeDir) + privMedia + "\\\",\\\"120,\\\"120\\\")'";
                 }
             } else {
                 href = "'" + from2mediaDir + wb.sectionMedia.getPageForMedia(file) + "'";
@@ -1236,9 +1264,12 @@ public class WebSection {
         // Compose final html
         if (!href.isEmpty()) {
             strClear += "<a class=" + style + " href=" + href + " >";
-            strHidden += "<a class=" + style + " href=" + hrefHidden + " >";
         } else {
             strClear += "<a class=" + style + " >";
+        }
+        if (!hrefHidden.isEmpty()) {
+            strHidden += "<a class=" + style + " href=" + hrefHidden + " >";
+        } else {
             strHidden += "<a class=" + style + " >";
         }
         if (displayMin) {

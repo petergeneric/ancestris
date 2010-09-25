@@ -356,7 +356,8 @@ public class FTPRegister {
     private boolean isLocal(String key, List<File> localFiles) {
         for (Iterator it = localFiles.iterator(); it.hasNext();) {
             File file = (File) it.next();
-            if (key.indexOf(file.getName()) > 0) {
+            String str = file.getAbsolutePath().substring(localRoot.length());
+            if (key.indexOf(str) > 0) {
                 return true;
             }
         }
