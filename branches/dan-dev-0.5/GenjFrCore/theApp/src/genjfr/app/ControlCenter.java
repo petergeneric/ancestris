@@ -238,17 +238,23 @@ public class ControlCenter extends JPanel{
         }
     } //LastOpenLoader
 
-    public Context getSelectedContext(){
-        return GedcomExplorerTopComponent.getDefault().getContext();
-//        return tGedcoms.getSelectedContext();
+    public Context getSelectedContext(boolean firstIfNoneSelected){
+        Context c = GedcomExplorerTopComponent.getDefault().getContext();
+        if (!firstIfNoneSelected)
+            return c;
+        if (c!=null)
+            return c;
+        if (GedcomDirectory.getInstance().getContexts().isEmpty())
+            return null;
+        return GedcomDirectory.getInstance().getContexts().get(0);
     }
 
     /**
      * @deprecated use getSelectedContext().getGedcom()
      */
-    public Gedcom getSelectedGedcom() {
-        Context ctx = getSelectedContext();
-        return ctx==null?null:getSelectedContext().getGedcom();
+    public Gedcom getSelectedGedcom(boolean firstIfNoneSelected) {
+        Context ctx = getSelectedContext(firstIfNoneSelected);
+        return ctx==null?null:ctx.getGedcom();
     }
 
 

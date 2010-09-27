@@ -362,7 +362,7 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
     }
 
     void init() {
-        init(App.center.getSelectedContext());
+        init(App.center.getSelectedContext(true));
     }
 
     public void init(Context context) {

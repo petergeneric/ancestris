@@ -111,7 +111,7 @@ public final class WebBookWizardAction extends CallableSystemAction {
     }
 
     public Gedcom getGedcom() {
-        Gedcom gedcom = App.center.getSelectedGedcom(); // get selected gedcom
+        Gedcom gedcom = App.center.getSelectedGedcom(true); // get selected gedcom
         if (gedcom == null) { // if none selected, take first one
             Iterator it = GedcomDirectory.getInstance().getContexts().iterator();
             if (it.hasNext()) { // well, apparently no gedcom exist in the list

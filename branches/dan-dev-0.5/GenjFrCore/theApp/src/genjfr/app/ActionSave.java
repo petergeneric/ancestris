@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        App.workbenchHelper.saveGedcom(App.center.getSelectedContext());
+        App.workbenchHelper.saveGedcom(App.center.getSelectedContext(false));
     }
 
   } // ActionSave

@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        App.workbenchHelper.saveAsGedcom(App.center.getSelectedContext());
+        App.workbenchHelper.saveAsGedcom(App.center.getSelectedContext(false));
     }
 
   } // ActionSave

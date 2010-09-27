@@ -144,7 +144,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
     private void initGedcom(Gedcom gedParam) {
         if (gedcom == null) {
             if (gedParam == null) {
-                gedcom = App.center.getSelectedGedcom(); // get selected gedcom
+                gedcom = App.center.getSelectedGedcom(true); // get selected gedcom
                 if (gedcom == null) { // if none selected, take first one
                     Iterator it = GedcomDirectory.getInstance().getContexts().iterator();
                     if (it.hasNext()) { // well, apparently no gedcom exist in the list

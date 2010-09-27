@@ -26,7 +26,7 @@ public final class ActionSaveLayout implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         StringBuilder sb = new StringBuilder("fenetres");
-        Context selected = App.center.getSelectedContext();
+        Context selected = App.center.getSelectedContext(false);
         if (selected == null){
             return;
         }
