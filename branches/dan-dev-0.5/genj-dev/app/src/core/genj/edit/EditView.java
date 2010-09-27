@@ -91,7 +91,8 @@ public class EditView extends View implements ContextProvider{
     add(BorderLayout.SOUTH, buttons);
     
     // check for current modes
-    mode.setSelected(REGISTRY.get("advanced", false));
+//    mode.setSelected(REGISTRY.get("advanced", false));
+    mode.setSelected(true);
     focus.setSelected(REGISTRY.get("focus", false));
 
     // Done
@@ -259,7 +260,8 @@ public class EditView extends View implements ContextProvider{
 
       if (editor==null) {
         sticky.setSelected(false);
-        if (mode.isSelected())
+//        if (mode.isSelected())
+        if (true)
           setEditor(new AdvancedEditor(context.getGedcom(), this));
         else
           setEditor(new BasicEditor(context.getGedcom(), this));
@@ -303,7 +305,7 @@ public class EditView extends View implements ContextProvider{
     // add sticky/focus/mode
     toolbar.add(new JToggleButton(sticky));
     toolbar.add(new JToggleButton(focus));
-    toolbar.add(new JToggleButton(mode));
+//    toolbar.add(new JToggleButton(mode));
     
     // done
     toolbar.endUpdate();
