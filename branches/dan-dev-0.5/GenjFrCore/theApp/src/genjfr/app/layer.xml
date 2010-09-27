@@ -356,7 +356,18 @@
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url" stringvalue="http://daniel.andre.free.fr/ancestris-test/updates/updates.xml"/>
+                <attr name="url" stringvalue="http://arvernes.dyndns.org/files/ancestris/0.5/extensions/updates.xml"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+<!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
+                <attr name="category" stringvalue="STANDARD"/>
+-->            </file>
+            <file name="genjfr_core_update_center.instance">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_core_update_center.instance"/>
+                <attr name="enabled" boolvalue="true"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
+                <attr name="url_key" stringvalue="genjfr_core_update_center"/>
+                <attr name="url" stringvalue="http://arvernes.dyndns.org/files/ancestris/0.5/core/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
