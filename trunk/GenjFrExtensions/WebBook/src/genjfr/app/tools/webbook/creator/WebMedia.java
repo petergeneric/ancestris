@@ -9,6 +9,8 @@ package genjfr.app.tools.webbook.creator;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genjfr.app.tools.webbook.WebBook;
@@ -304,8 +306,38 @@ public class WebMedia extends WebSection {
             Property p1 = (Property) o1;
             Property p2 = (Property) o2;
 
-            String str1 = htmlAnchorText(p1.getEntity().toString());
-            String str2 = htmlAnchorText(p2.getEntity().toString());
+            Entity ent1 = p1.getEntity();
+            Entity ent2 = p2.getEntity();
+
+            String name1 = "";
+            String name2 = "";
+            if (ent1 instanceof Indi && ent2 instanceof Indi) {
+                name1 = ((Indi)ent1).getLastName() + ((Indi)ent1).getFirstName();
+                name2 = ((Indi)ent2).getLastName() + ((Indi)ent2).getFirstName();
+            } else
+            if (ent1 instanceof Fam && ent2 instanceof Fam) {
+                Indi mainIndi1 = ((Fam)ent1).getHusband();
+                if (mainIndi1 == null) {
+                    mainIndi1 = ((Fam)ent1).getWife();
+                }
+                if (mainIndi1 == null) {
+                    return 0;
+                }
+                Indi mainIndi2 = ((Fam)ent2).getHusband();
+                if (mainIndi2 == null) {
+                    mainIndi2 = ((Fam)ent2).getWife();
+                }
+                if (mainIndi2 == null) {
+                    return 0;
+                }
+                name1 = mainIndi1.getLastName() + mainIndi1.getFirstName();
+                name2 = mainIndi2.getLastName() + mainIndi2.getFirstName();
+            } else {
+                return 0;
+            }
+
+            String str1 = htmlAnchorText(name1);
+            String str2 = htmlAnchorText(name2);
 
             if (str1.startsWith(DEFCHAR)) {
                 if (str2.startsWith(DEFCHAR)) {
