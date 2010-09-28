@@ -30,9 +30,6 @@ public class WebTheme extends WebSection {
         // create directory
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + themeDir, true);
 
-        // empty directory
-        wh.emptyDir(dir, false);
-
         // copy icons and style sheet
         createFiles(dir);
 

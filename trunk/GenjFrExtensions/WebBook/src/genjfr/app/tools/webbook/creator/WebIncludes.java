@@ -35,9 +35,6 @@ public class WebIncludes extends WebSection {
         // create directory
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + includesDir, true);
 
-        // empty directory
-        wh.emptyDir(dir, false);
-
         // copy icons and style sheet
         createFiles(dir);
 

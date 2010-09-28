@@ -274,21 +274,6 @@ public class FTPRegister {
         return value;
     }
 
-    private String getKey(File file) {
-        String path = file.getAbsolutePath();
-        String[] keys = readKeys();
-        for (int i = 0; i < keys.length; i++) {
-            String key = keys[i];
-            if (isValid(key)) {
-                String[] fields = readKey(key);
-                if (equals(fields[REG_LOCALPATH], path)) {
-                    return key;
-                }
-            }
-        }
-        return null;
-    }
-
     private String getMD5(String filename) {
 
         FileInputStream in = null;
@@ -354,13 +339,30 @@ public class FTPRegister {
     }
 
     private boolean isLocal(String key, List<File> localFiles) {
+        String strKey = key.substring(host.length() + targetdir.length());
         for (Iterator it = localFiles.iterator(); it.hasNext();) {
             File file = (File) it.next();
-            String str = file.getAbsolutePath().substring(localRoot.length());
-            if (key.indexOf(str) > 0) {
+            String strLocal = file.getAbsolutePath().substring(localRoot.length() + 1);
+            if (strLocal.equals(strKey)) {
                 return true;
             }
         }
         return false;
     }
+    private String getKey(File file) {
+        String strLocal = file.getAbsolutePath().substring(localRoot.length() + 1);
+        String[] keys = readKeys();
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            if (isValid(key)) {
+                String[] fields = readKey(key);
+                String strKey = key.substring(host.length() + targetdir.length());
+                if (strLocal.equals(strKey)) {
+                    return key;
+                }
+            }
+        }
+        return null;
+    }
+
 }

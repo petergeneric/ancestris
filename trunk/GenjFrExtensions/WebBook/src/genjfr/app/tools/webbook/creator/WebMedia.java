@@ -306,38 +306,8 @@ public class WebMedia extends WebSection {
             Property p1 = (Property) o1;
             Property p2 = (Property) o2;
 
-            Entity ent1 = p1.getEntity();
-            Entity ent2 = p2.getEntity();
-
-            String name1 = "";
-            String name2 = "";
-            if (ent1 instanceof Indi && ent2 instanceof Indi) {
-                name1 = ((Indi)ent1).getLastName() + ((Indi)ent1).getFirstName();
-                name2 = ((Indi)ent2).getLastName() + ((Indi)ent2).getFirstName();
-            } else
-            if (ent1 instanceof Fam && ent2 instanceof Fam) {
-                Indi mainIndi1 = ((Fam)ent1).getHusband();
-                if (mainIndi1 == null) {
-                    mainIndi1 = ((Fam)ent1).getWife();
-                }
-                if (mainIndi1 == null) {
-                    return 0;
-                }
-                Indi mainIndi2 = ((Fam)ent2).getHusband();
-                if (mainIndi2 == null) {
-                    mainIndi2 = ((Fam)ent2).getWife();
-                }
-                if (mainIndi2 == null) {
-                    return 0;
-                }
-                name1 = mainIndi1.getLastName() + mainIndi1.getFirstName();
-                name2 = mainIndi2.getLastName() + mainIndi2.getFirstName();
-            } else {
-                return 0;
-            }
-
-            String str1 = htmlAnchorText(name1);
-            String str2 = htmlAnchorText(name2);
+            String str1 = htmlAnchorText(getEntityName(p1.getEntity()));
+            String str2 = htmlAnchorText(getEntityName(p2.getEntity()));
 
             if (str1.startsWith(DEFCHAR)) {
                 if (str2.startsWith(DEFCHAR)) {
@@ -351,6 +321,28 @@ public class WebMedia extends WebSection {
             return str1.compareTo(str2);
         }
     };
+
+    /**
+     * Gets name from Indi or Fam entity starting with lastname
+     */
+    public String getEntityName(Entity ent) {
+        String name = "";
+        if (ent instanceof Indi) {
+            name = ((Indi) ent).getLastName() + ((Indi) ent).getFirstName();
+        } else if (ent instanceof Fam) {
+            Indi mainIndi = ((Fam) ent).getHusband();
+            if (mainIndi == null) {
+                mainIndi = ((Fam) ent).getWife();
+            }
+            if (mainIndi == null) {
+                name = "";
+            }
+            name = mainIndi.getLastName() + mainIndi.getFirstName();
+        } else {
+            return "";
+        }
+        return name;
+    }
 
     /**
      * Calculate pages for section details
@@ -388,7 +380,7 @@ public class WebMedia extends WebSection {
         char letter = ' ';
         for (Iterator it = medias.iterator(); it.hasNext();) {
             PropertyFile media = (PropertyFile) it.next();
-            String str = htmlAnchorText(media.getEntity().toString());
+            String str = htmlAnchorText(getEntityName(media.getEntity()));
             if (str == null) {
                 continue;
             }
