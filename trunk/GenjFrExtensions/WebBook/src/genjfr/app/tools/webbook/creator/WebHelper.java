@@ -155,14 +155,28 @@ public class WebHelper {
                 File ad = new File(absoluteDir);
                 if (!ad.exists()) {
                     ad.mkdir();
+                    putSecurityFile(ad);
                 }
             }
         }
         File f = new File(outfile);
         if (create) {
             f.mkdir();
+            putSecurityFile(f);
         }
         return (f);
+    }
+
+    /**
+     * In case of PHP site, ensure we have an index.php file in the directory in case surfer goes direct to the directory
+     **/
+    private void putSecurityFile(File dir) {
+        if (wp.param_PHP_Support.equals("1")) {
+            File file = getFileForName(dir, "index.php");
+            PrintWriter out = getWriter(file, Charset.forName("UTF-8"));
+            out.println("<?php header('Location: ../index.php'); die; ?>");
+            out.close();
+        }
     }
 
     /**
@@ -572,10 +586,10 @@ public class WebHelper {
         if (infile == null) {
             return false;
         }
-        return (infile.toLowerCase().endsWith(".jpg") || 
-                infile.toLowerCase().endsWith(".png") ||
-                infile.toLowerCase().endsWith(".bmp") ||
-                infile.toLowerCase().endsWith(".gif"));
+        return (infile.toLowerCase().endsWith(".jpg")
+                || infile.toLowerCase().endsWith(".png")
+                || infile.toLowerCase().endsWith(".bmp")
+                || infile.toLowerCase().endsWith(".gif"));
     }
 
     /** Get image size */
@@ -1323,7 +1337,6 @@ public class WebHelper {
         }
         return;
     }
-
     /**
      * Privacy policy (using genj private policy core function
      * TODO: will need to enrich and move to own PrivatePolicy module within ancestris core
@@ -1331,6 +1344,7 @@ public class WebHelper {
     // Privacy policy
     public PrivacyPolicy privacyPolicy = null;
     //
+
     public PrivacyPolicy getPrivacyPolicy() {
         if (privacyPolicy == null) {
             privacyPolicy = new PrivacyPolicy(
@@ -1368,11 +1382,9 @@ public class WebHelper {
         return ((prop != null) && (getPrivacyPolicy().isPrivate(prop)));
     }
 
-
     public String getPrivDisplay() {
         return NbPreferences.forModule(App.class).get("privDisplay", "");
     }
-
 } // End_of_Report
 
 
