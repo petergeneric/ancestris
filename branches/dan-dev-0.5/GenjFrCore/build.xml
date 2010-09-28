@@ -100,7 +100,7 @@
             <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
             <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
             <zipfileset dir="${harness.dir}/../platform/modules/ext/locale" prefix="${app.name}/platform/modules/ext/locale"/>
-            <zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/>
+<!--            <zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/>-->
         </zip>
     </target>
 
