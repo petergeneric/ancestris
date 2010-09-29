@@ -152,7 +152,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
     }
 
     private void putRegistryFromSettings(Registry registry) {
-        App.putRegistryFromSettings(registry);
+        App.putRegistryFromSettings();
         Registry.persist();
 
     }
