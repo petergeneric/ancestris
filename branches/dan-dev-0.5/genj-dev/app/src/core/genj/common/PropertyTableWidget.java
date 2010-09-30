@@ -449,7 +449,7 @@ public class PropertyTableWidget extends JPanel  {
     }
     
     /** generate */
-    void createShortcuts(int col, JComponent container) {
+    void createShortcuts(int col, int dir, JComponent container) {
 
       if (propertyModel==null||container.getHeight()==0)
         return;
@@ -462,7 +462,7 @@ public class PropertyTableWidget extends JPanel  {
       
       String cursor = "";
       for (int r=0;r<model.getRowCount();r++) {
-        Property prop = (Property)model.getValueAt(r, col);
+        Property prop = (Property)model.getValueAt(dir>0?r:model.getRowCount()-r-1, col);
         if (prop instanceof PropertyDate)
           break;
         if (prop==null)
@@ -478,7 +478,7 @@ public class PropertyTableWidget extends JPanel  {
         cursor = value;
 
         // action
-        Action2 action = createShortcut(value, table.getCellRect(r, col, true).y);
+        Action2 action = createShortcut(value, table.getCellRect(dir>0?r:model.getRowCount()-r-1, col, true).y);
         actions.add(action);
         
         // key binding
@@ -527,10 +527,10 @@ public class PropertyTableWidget extends JPanel  {
         return;
       
       SortableTableModel.Directive directive = (SortableTableModel.Directive)sortableModel.getDirectives().get(0);
-      if (directive.getDirection()<=0)
-        return;
+//      if (directive.getDirection()<=0)
+//        return;
       
-      createShortcuts(directive.getColumn(), panelShortcuts);
+      createShortcuts(directive.getColumn(), directive.getDirection(),panelShortcuts);
 
       // done
     }
