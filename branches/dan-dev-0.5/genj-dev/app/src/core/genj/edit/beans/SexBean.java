@@ -39,6 +39,7 @@ public class SexBean extends PropertyBean {
   /** members */
   private JRadioButton male = new JRadioButton(PropertySex.getLabelForSex(PropertySex.MALE));
   private JRadioButton female = new JRadioButton(PropertySex.getLabelForSex(PropertySex.FEMALE));
+  private JRadioButton unknown = new JRadioButton(PropertySex.getLabelForSex(PropertySex.UNKNOWN));
   private JRadioButton last;
   private ButtonGroup group = new ButtonGroup();
   
@@ -58,18 +59,21 @@ public class SexBean extends PropertyBean {
     
     add(male);
     add(female);
+    add(unknown);
     
-    String tip = RESOURCES.getString("sex.tip");
-    male.setToolTipText(tip);
-    female.setToolTipText(tip);
+//    String tip = RESOURCES.getString("sex.tip");
+//    male.setToolTipText(tip);
+//    female.setToolTipText(tip);
     
     group = new ButtonGroup();
     group.add(male);
     group.add(female);
+    group.add(unknown);
 
     ActionHandler handler = new ActionHandler();
     male.addActionListener(handler);
     female.addActionListener(handler);
+    unknown.addActionListener(handler);
 
     // Done
   }
@@ -81,19 +85,19 @@ public class SexBean extends PropertyBean {
   
   private class ActionHandler implements ActionListener {
     public void actionPerformed(ActionEvent e) {
-      if ( (e.getModifiers()&ActionEvent.CTRL_MASK)!=0 ) {
-        group.clearSelection();
-        last = null;
-      } else {
-        if (last==e.getSource()) {
-          last = last==male ? female : male;
-          last.setSelected(true);
-        } else {
-          last = (JRadioButton)e.getSource();
-        }
-        if (getProperty()!=null&&getSex()==((PropertySex)getProperty()).getSex())
-          return;
-      }
+//      if ( (e.getModifiers()&ActionEvent.CTRL_MASK)!=0 ) {
+//        group.clearSelection();
+//        last = null;
+//      } else {
+//        if (last==e.getSource()) {
+//          last = last==male ? female : male;
+//          last.setSelected(true);
+//        } else {
+//          last = (JRadioButton)e.getSource();
+//        }
+//        if (getProperty()!=null&&getSex()==((PropertySex)getProperty()).getSex())
+//          return;
+//      }
       changeSupport.fireChangeEvent();
     }
   }
@@ -131,6 +135,10 @@ public class SexBean extends PropertyBean {
         case PropertySex.FEMALE:
           female.doClick();
           defaultFocus = female;
+          break;
+        case PropertySex.UNKNOWN:
+          unknown.doClick();
+          defaultFocus = unknown;
           break;
       }
 
