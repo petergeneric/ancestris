@@ -148,7 +148,7 @@ public class WebMedia extends WebSection {
             href = getPageForMedia(media);
             file_entity = wrapEntity(media.getEntity());
             file_title = wrapString(media, wh.getTitle(media, DEFCHAR));
-            anchor = htmlAnchorText(media.getEntity().toString());
+            anchor = htmlAnchorText(getEntityName(media.getEntity()));
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
                 String l = String.valueOf(last);

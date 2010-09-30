@@ -16,6 +16,8 @@ import java.security.MessageDigest;
 import java.util.prefs.BackingStoreException;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
 
 /**
  * Ancestris
@@ -52,6 +54,8 @@ public class FTPRegister {
     private static final char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',};
     private int nbFilesToTransfer = 0;
     private int nbFilesToRemove = 0;
+
+    //private InputOutput io =  IOProvider.getDefault().getIO("DEBUG", true);
 
     /**
      * Constructor
@@ -137,6 +141,7 @@ public class FTPRegister {
             }
 
             if ((uploadType.equals(FTP_SYNCHRONISE)) && (!equals(fields[REG_REMOTEMD5], fields[REG_LOCALMD5])) && (equals(fields[REG_GENLASTRUN], YES))) {
+//                io.getOut().println(" ");
                 fields[REG_TOBETRSF] = YES;
                 nbFilesToTransfer++;
             }
