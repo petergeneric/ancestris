@@ -48,6 +48,22 @@
             <propertyresource name="buildversion"/>
         </xmlproperty>
         <property name="buildnumber" value="${info.entry.commit(revision)}" />
+        <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Specification-Version" property="spec.version"/>
+        <property name="spec.version.base" value="${spec.version}.${buildnumber}" />
+        <copyfile dest="build/${manifest.mf}-temp" src="${manifest.mf}"/>
+        <manifest file="build/${manifest.mf}-temp" mode="update">
+          <attribute name="OpenIDE-Module-Specification-Version" value="${spec.version}.${buildnumber}"/>
+        </manifest>
     </target>
     <target name="jar-prep" depends="-pre-jar-prep,projectized-common.jar-prep"></target>
+        <target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate">
+        <!-- XXX it seems that using <manifest> forces the JAR to be recreated each time -->
+        <!-- (presumably due to the variable OIDE-M-I-V) -->
+        <!-- so might have to use e.g. <manifest> task (created in build/ somewhere)? -->
+        <!-- Cf: http://issues.apache.org/bugzilla/show_bug.cgi?id=29085 -->
+        <!-- This task adds some or all of: -Public-Packages, -Friends, Class-Path, -IDE-Dependencies, -Module-Dependencies, -Specification-Version, -Implementation-Version, -Build-Version, AutoUpdate-Show-In-Client -->
+        <jarwithmoduleattributes jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="build/${manifest.mf}-temp" stamp="${cluster}/.lastModified">
+            <fileset dir="${build.classes.dir}"/>
+        </jarwithmoduleattributes>
+    </target>
 </project>

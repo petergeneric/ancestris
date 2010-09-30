@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: genjfr.app.sendfeedback
 OpenIDE-Module-Layer: genjfr/app/sendfeedback/layer.xml
 OpenIDE-Module-Localizing-Bundle: genjfr/app/sendfeedback/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.5.0.0
+OpenIDE-Module-Specification-Version: 0.5.0
 

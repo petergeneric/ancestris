@@ -56,10 +56,11 @@ public abstract class GenjFrPlugin implements PluginInterface {
      */
     public String getPluginVersion() {
         String version = PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");
-        String buildVersion = PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Build-Version");
-        if (buildVersion == null || buildVersion.isEmpty())
-            buildVersion = PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Implementation-Version");
-        return version.replaceFirst("1\\.0\\.0", "0")+(buildVersion!=null?"-r"+buildVersion:"");
+        return version;
+//        String buildVersion = PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Build-Version");
+//        if (buildVersion == null || buildVersion.isEmpty())
+//            buildVersion = PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Implementation-Version");
+//        return version.replaceFirst("1\\.0\\.0", "0")+(buildVersion!=null?"-r"+buildVersion:"");
     }
 
     public String getPluginShortDescription() {
