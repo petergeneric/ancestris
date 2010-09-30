@@ -6,15 +6,15 @@ and open the template in the editor.
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
     <tocitem text="Livre Web">
-        <tocitem text="Le Livre Web" target="ancestris.app.tools.webbook.about"/>
-        <tocitem expand="false"  text="Les options du Livre Web" >
-           <tocitem text="Options de l'étape 1" target="ancestris.app.tools.webbook.step1"/>
-           <tocitem text="Options de l'étape 2" target="ancestris.app.tools.webbook.step2"/>
-           <tocitem text="Options de l'étape 3" target="ancestris.app.tools.webbook.step3"/>
-           <tocitem text="Options de l'étape 4" target="ancestris.app.tools.webbook.step4"/>
-           <tocitem text="Options de l'étape 5" target="ancestris.app.tools.webbook.step5"/>
-           <tocitem text="Options de l'étape 6" target="ancestris.app.tools.webbook.step6"/>
-           <tocitem text="Options de l'étape 7" target="ancestris.app.tools.webbook.step7"/>
+        <tocitem text="Présentation générale" target="ancestris.app.tools.webbook.about"/>
+        <tocitem expand="false"  text="L'Assistant" >
+           <tocitem text="Page d'Accueil" target="ancestris.app.tools.webbook.step1"/>
+           <tocitem text="Individus" target="ancestris.app.tools.webbook.step2"/>
+           <tocitem text="Multimédia" target="ancestris.app.tools.webbook.step3"/>
+           <tocitem text="Rapport ascendant" target="ancestris.app.tools.webbook.step4"/>
+           <tocitem text="Copie locale" target="ancestris.app.tools.webbook.step5"/>
+           <tocitem text="Transfert" target="ancestris.app.tools.webbook.step6"/>
+           <tocitem text="Site" target="ancestris.app.tools.webbook.step7"/>
        </tocitem>
     </tocitem>
 </toc>
