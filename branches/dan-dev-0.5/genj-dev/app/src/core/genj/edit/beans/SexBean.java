@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
@@ -55,7 +56,8 @@ public class SexBean extends PropertyBean {
   public SexBean() {
     
     // use our layout
-    setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+// disposition verticale (au moins pour le gedcom)    setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+      setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
     
     add(male);
     add(female);
