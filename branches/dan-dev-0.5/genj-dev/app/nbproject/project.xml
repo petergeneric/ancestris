@@ -5,6 +5,13 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>GenJ</name>
             <source-roots>
+                <root id="src.de.dir"/>
+                <root id="src.en.dir"/>
+                <root id="src.es.dir"/>
+                <root id="src.pl.dir"/>
+                <root id="src.pt_BR.dir"/>
+                <root id="src.ru.dir"/>
+                <root id="src.it.dir"/>
                 <root id="src.report.dir"/>
                 <root id="src.en.dir"/>
                 <root id="src.images.dir"/>
