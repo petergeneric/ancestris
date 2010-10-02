@@ -114,7 +114,21 @@ public class Resources {
     int last = name.lastIndexOf('.');
     return last<0 ? "" : name.substring(0, last);
   }
-  
+
+  /**
+   * Reset cached Resourcces (for language change)
+   */
+  public static void clearResources(){
+    synchronized (instances) {
+      for (String s:instances.keySet()){
+          instances.get(s).unCache();
+      }
+    }
+  }
+
+  private void unCache(){
+      key2string = null;
+  }
   /**
    * Calc file for package (package/resources.properties)
    */
