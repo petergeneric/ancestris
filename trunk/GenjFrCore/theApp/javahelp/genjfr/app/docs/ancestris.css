@@ -240,4 +240,10 @@ p.warning   {
     background: white;
     }
 
+.buttons a   {
+    color: olive;
+    background: white;
+    text-decoration: none;
+    }
+
 /* Specific style for the Help section - End */
