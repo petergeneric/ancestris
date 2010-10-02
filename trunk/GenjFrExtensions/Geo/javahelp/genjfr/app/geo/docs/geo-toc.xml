@@ -6,6 +6,10 @@ and open the template in the editor.
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
     <tocitem text="Geo">
-       <tocitem text="La visualisation Géographique" target="ancestris.app.view.geo" />
+       <tocitem text="Présentation générale" target="ancestris.app.view.geo" />
+       <tocitem text="Menu lieu" target="ancestris.app.view.geo.menuplace" />
+       <tocitem text="Menu événement" target="ancestris.app.view.geo.menuevent" />
+       <tocitem text="Editeur de lieu" target="ancestris.app.view.geo.editplace" />
+       <tocitem text="Recherche des lieux" target="ancestris.app.view.geo.search" />
     </tocitem>
 </toc>

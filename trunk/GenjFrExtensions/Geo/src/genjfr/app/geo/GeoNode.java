@@ -14,10 +14,13 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import org.netbeans.api.javahelp.Help;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
@@ -50,8 +53,8 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         if (obj != null) {
             String color = obj.isUnknown ? "color='#ff2300'" : "color='#03a60d'"; // color='!textText'"; "color='!controlShadow'"
             return obj.isEvent ? "<font color='!textText'>" + obj.toString() + " </font>&nbsp;"
-                    : "<font color='!textText'>" + obj.toString() + "</font><font "+ color +"> [" + obj.getCoordinates() + "]" + 
-                      " <i></font><font color='!textText'>(" + obj.getNbOfEvents() + ")" + "</i></font>&nbsp;";
+                    : "<font color='!textText'>" + obj.toString() + "</font><font " + color + "> [" + obj.getCoordinates() + "]"
+                    + " <i></font><font color='!textText'>(" + obj.getNbOfEvents() + ")" + "</i></font>&nbsp;";
         } else {
             return null;
         }
@@ -91,7 +94,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     public Action[] getActions(boolean popup) {
         if (isLeaf()) {
             return new Action[]{
-                        new GeoAction("ACTION_EditEvent")};
+                        new GeoAction("ACTION_EditEvent"),
+                        null,
+                        new GeoAction("ACTION_HelpEvent")};
         } else {
             GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
             if (obj == null) {
@@ -108,7 +113,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                             null,
                             new GeoAction("ACTION_EditPlace"),
                             null,
-                            new GeoAction("ACTION_UpdateList")};
+                            new GeoAction("ACTION_UpdateList"),
+                            null,
+                            new GeoAction("ACTION_HelpPlace")};
             }
         }
     }
@@ -173,6 +180,18 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 if (etc != null) {
                     etc.requestActive();
                     etc.setCurrentEntity(obj.getProperty());
+                }
+            } else if (actionName.equals("ACTION_HelpPlace")) {
+                String id = "ancestris.app.view.geo.menuplace";
+                Help help = Lookup.getDefault().lookup(Help.class);
+                if (help != null && help.isValidID(id, true).booleanValue()) {
+                    help.showHelp(new HelpCtx(id));
+                }
+            } else if (actionName.equals("ACTION_HelpEvent")) {
+                String id = "ancestris.app.view.geo.menuevent";
+                Help help = Lookup.getDefault().lookup(Help.class);
+                if (help != null && help.isValidID(id, true).booleanValue()) {
+                    help.showHelp(new HelpCtx(id));
                 }
             }
         }
