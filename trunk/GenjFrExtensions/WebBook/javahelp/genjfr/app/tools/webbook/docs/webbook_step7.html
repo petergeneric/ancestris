@@ -13,23 +13,105 @@ and open the template in the editor.
         <div class="section1">
             <center><h2 class="section1">Assistant - Panneau "Site"</h2></center>
             <br>
-            Blablabla.<br>
+            <table class="buttons" border="0" width="100%"><tr><td align="left"><a href="webbook_step6.html">[Panneau précédent]</a></td><td align="right">&nbsp;</td></tr></table>
+            <br>
+            Ce panneau permet de mettre à profit le langage PHP. C'est un langage informatique qui permet d'écrire les pages Internet "à la volée" pendant que les utilisateurs surfent sur le Web. Ceci vous permet d'afficher les mêmes pages avec le contenu qui change en fonction de l'utilisateur, de sa façon de surfer, ou même du temps qu'il fait au moment où il surfe !<br>
+            <br>
+            Si vos pages sont générées en langage PHP et que votre hébergeur accepte ce langage - c'est généralement le cas - vous pouvez bénéficer de deux principaux avantages : avec un seul site de généalogie, vous pouvez afficher à certains utilisateurs les données confidentielles mais pas à d'autres ; et vous pouvez intégrer votre généalogie à un site existant en en conservant l'aspect et les principes de navigation.            <br>
+            <br>
+            Si vos pages sont générées en langage HTML, c'est le cas par défaut, votre site sera "statique". Tous les utilisateurs verront tous les mêmes pages de la même façon. Par ailleurs, si vous ajoutez ces pages à un site existant, elles "n'épouseront" pas la fluidité de navigation du site existant.            <br>
+            <br>
+            Ce panneau vous permet donc de choisir si vous souhaitez bénéficier de ces deux avantages, et pour chacun, d'en spécifier les paramêtres.<br>
             <br>
             <h3 class="section1">Site PHP</h3>
-            ...
-            <br>
-            <h3 class="section1">Codes</h3>
-            ...
+            Si vous cochez cette case et que vous ne souhaitez pas intégrer vos pages à un site existant, il vous faudra indiquer un code profile et un code mot de passe. Celui-ci sera à indiquer par l'utilisateur dans les cases prévues à cet effet en bas de page, pour voir les informations confidentielles. S'il n'y a pas d'information confidentielle dans votre généalogie, ces codes seront inutiles donc vous pouvez mettre ce que vous souhaitez.<br>
             <br>
             <h3 class="section1">Site existant</h3>
-            ...
-            <br>
-            <h3 class="section1">Données privées</h3>
-            ...
-            <br>
-            <h3 class="section1">Scripts</h3>
-            ...
-            <br>
+            Si vous cochez la case "Site PHP" et que vous souhaitez intégrer vos pages à un site existant, c'est possible. Il faut cependant que vous ayez des connaissances du langage PHP et que votre site respecte les points suivants :
+            <br><br><br>
+            <ul>
+                <li>
+                    Votre site doit être écrit en langage PHP. Si ce n'est pas le cas, étudier ce qui suit pour transformer votre site de "HTML" en "PHP". Ce n'est pas forcément compliqué.
+                    <br><br><br><br>
+                </li>
+                <li>
+                    Chaque page du site existant doit commencé par le même <b>début de page</b>. C'est dans cette partie que se trouvent les fonctions PHP utilisées dans toutes les pages, notamment les fonctions d'initialisation des variables. Voici un exemple de ce que pourrait être le fichier d'initiatlisation des pages :<br>
+                    <div class ="code_citation">
+                        &lt;?php<br>
+                        session_start();<br>
+                        $ident["genealogie"] = "pw1234";<br>
+                        $authgen["genealogie"] = true;<br>
+                        function authgen() {<br>
+                        &nbsp;&nbsp;&nbsp;global $authgen;<br>
+                        &nbsp;&nbsp;&nbsp;return $authgen[$_SESSION['profil']];<br>
+                        }<br>
+                        ?&gt;
+                    </div>
+                    Après ce fichier, Ancestris insèrera un fichier <b>spécifique</b> d'instructions de votre choix, par exemple pour que toutes les pages de généalogie puissent être reconnues. Laisser ce champs vide sinon.<br>
+                    Vous remarquez au passage que le "<b>test à vérifier</b> pour accéder aux données privées", que l'Assistant du Livre Web vous demande, doit être une fonction définie dans ce fichier. Ici, on voit la fonction authgen().
+                    <br><br><br><br>
+                </li>
+                <li>
+                    Chaque page de votre site doit ensuite comporter le même début d'entête. Ce fichier contient le début du code HTML de vos pages. Par exemple :
+                    <div class ="code_citation">
+                        &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;<br>
+                        &lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"&gt;<br>
+                        &lt;head&gt;<br>
+                        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;<br>
+                        &lt;title&gt;Titre de mon site&lt;/title&gt;<br>
+                        &lt;meta name="description" content="La description de mon site" /&gt;<br>
+                        &lt;meta name="keywords" content="mot-clé1,mot-clé2" /&gt;<br>
+                        &lt;meta name="robots" content="index,follow" /&gt;<br>
+                        &lt;meta name="author" content="mon nom" /&gt;<br>
+                        &lt;meta name="generator" content="moi" /&gt;<br>
+                        &lt;meta http-equiv="Content-language" content="fr" /&gt;<br>
+                        &lt;meta name="reply-to" content="" /&gt;<br>
+                        &lt;meta name="owner" content="fr" /&gt;<br>
+                        &lt;meta name="copyright" content="Copyright (c) 2010 by me" /&gt;<br>
+                        &lt;meta name="resource-type" content="document" /&gt;<br>
+                        &lt;meta name="distribution" content="global" /&gt;<br>
+                        &lt;meta name="revisit-after" content="1 days" /&gt;<br>
+                        &lt;meta name="rating" content="general" /&gt;<br>
+                        &lt;meta http-equiv="expires" content="0" /&gt;<br>
+                        &lt;meta http-equiv="Content-Script-Type" content="text/javascript" /&gt;<br>
+                    </div>
+                    Vous noterez que ce fichier ne doit pas terminer l'entête de la page HTML avec &lt;/head&gt;. Ancestris doit en effet pouvoir y insérer sa feuille de style.
+                    <br><br><br><br>
+                </li>
+                <li>
+                    Chaque page de votre site doit ensuite comporter l'appel à votre <b>feuille de style</b>. Par exemple :
+                    <div class ="code_citation">
+                        &lt;link rel="stylesheet" href="style.css" type="text/css" media="screen, projection, tv" /&gt;<br>
+                        &lt;link rel="stylesheet" href="style-print.css" type="text/css" media="print" /&gt;<br>
+                    </div>
+                    C'est après ce fichier qu'Ancestris va insérer sa feuille de style.
+                    <br><br><br><br>
+                </li>
+                <li>
+                    Chaque page de votre site doit ensuite comporter la <b>fin d'entête</b>. Par exemple :
+                    <div class ="code_citation">
+                        &lt;link rel="shortcut icon" href="/monsite.ico" type="image/x-icon" /&gt;<br>
+                        &lt;/head&gt;<br>
+                        &lt;body&gt;<br>
+                        ...
+                    </div>
+                    C'est dans ce fichier que se termine l'entête et que commence le corps &lt;body&gt; de la page.
+                    <br><br><br><br>
+                </li>
+                <li>
+                    Enfin, chaque page de votre site doit comporter le même <b>bas de page</b>. Par exemple :
+                    <div class ="code_citation">
+                        ...<br>
+                        &lt;/body&gt;<br>
+                        &lt;/html&gt;
+                        ...
+                    </div>
+                    <br><br>
+                </li>
+            </ul>
+            Voilà pour l'essentiel. Une façon de voir comment le livre Web peut être intégré à un site est d'aller voir sur mon site, à l'adresse http://www.lapeyre-frederic.com.
+            <br><br><br>
         </div>
+        <table class="buttons" border="0" width="100%"><tr><td align="left"><a href="webbook_step6.html">[Panneau précédent]</a></td><td align="right">&nbsp;</td></tr></table>
     </body>
 </html>
