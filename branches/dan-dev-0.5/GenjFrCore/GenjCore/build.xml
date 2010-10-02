@@ -49,7 +49,6 @@
         </xmlproperty>
         <property name="buildnumber" value="${info.entry.commit(revision)}" />
         <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Specification-Version" property="spec.version"/>
-        <property name="spec.version.base" value="${spec.version}.${buildnumber}" />
         <copyfile dest="build/${manifest.mf}-temp" src="${manifest.mf}"/>
         <manifest file="build/${manifest.mf}-temp" mode="update">
           <attribute name="OpenIDE-Module-Specification-Version" value="${spec.version}.${buildnumber}"/>
