@@ -6,6 +6,7 @@ and open the template in the editor.
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
     <mapID target="ancestris.app.tools.webbook.about" url="webbook-about.html"/>
+    <mapID target="ancestris.app.tools.webbook.sections" url="webbook_sections.html"/>
     <mapID target="ancestris.app.tools.webbook.step1" url="webbook_step1.html"/>
     <mapID target="ancestris.app.tools.webbook.step2" url="webbook_step2.html"/>
     <mapID target="ancestris.app.tools.webbook.step3" url="webbook_step3.html"/>

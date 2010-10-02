@@ -7,6 +7,7 @@ and open the template in the editor.
 <toc version="2.0">
     <tocitem text="Livre Web">
         <tocitem text="Présentation générale" target="ancestris.app.tools.webbook.about"/>
+        <tocitem text="Les sections du livre" target="ancestris.app.tools.webbook.sections"/>
         <tocitem expand="false"  text="L'Assistant" >
            <tocitem text="Page d'Accueil" target="ancestris.app.tools.webbook.step1"/>
            <tocitem text="Individus" target="ancestris.app.tools.webbook.step2"/>
