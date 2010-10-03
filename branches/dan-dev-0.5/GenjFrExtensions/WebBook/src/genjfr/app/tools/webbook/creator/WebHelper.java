@@ -29,7 +29,11 @@ import genjfr.app.PrivacyPolicy;
 import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
 import genjfr.app.tools.webbook.transfer.FTPRegister;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbPreferences;
 
@@ -151,14 +155,28 @@ public class WebHelper {
                 File ad = new File(absoluteDir);
                 if (!ad.exists()) {
                     ad.mkdir();
+                    putSecurityFile(ad);
                 }
             }
         }
         File f = new File(outfile);
         if (create) {
             f.mkdir();
+            putSecurityFile(f);
         }
         return (f);
+    }
+
+    /**
+     * In case of PHP site, ensure we have an index.php file in the directory in case surfer goes direct to the directory
+     **/
+    private void putSecurityFile(File dir) {
+        if (wp.param_PHP_Support.equals("1")) {
+            File file = getFileForName(dir, "index.php");
+            PrintWriter out = getWriter(file, Charset.forName("UTF-8"));
+            out.println("<?php header('Location: ../index.php'); die; ?>");
+            out.close();
+        }
     }
 
     /**
@@ -227,6 +245,40 @@ public class WebHelper {
             strOutput.append(convertChar(charInput[i], false, defchar));
         }
         return strOutput.toString();
+    }
+
+    public void copyFiles(String imagesDir, String toFile, String fromDir) {
+        try {
+            // get resource directory where images are
+            URL dirURL = wp.getClass().getClassLoader().getResource(wp.getClass().getName().replace(".", "/") + ".class");
+            if (dirURL.getProtocol().equals("jar")) {
+                /* A JAR path */
+                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
+                JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+                Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+                while (entries.hasMoreElements()) {
+                    String name = entries.nextElement().getName();
+                    if (name.startsWith(imagesDir)) { //filter according to the path
+                        String entry = name.substring(imagesDir.length());
+                        int checkSubdir = entry.indexOf("/");
+                        if (checkSubdir < 0 && !entry.trim().isEmpty()) {
+                            // if it is NOT a subdirectory, it must be an image so copy it
+                            result.add(entry);
+                        }
+                    }
+                }
+
+                String[] list = result.toArray(new String[result.size()]);
+                for (int i = 0; i < list.length; i++) {
+                    String fileName = list[i];
+                    copy(fromDir + fileName, toFile + fileName);
+                }
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            log.write(log.ERROR, "copyFiles - " + e.getMessage());
+        }
     }
 
     public String convertChar(char c, boolean isAnchor, String defchar) {
@@ -534,14 +586,14 @@ public class WebHelper {
         if (infile == null) {
             return false;
         }
-        return (infile.toLowerCase().endsWith(".jpg") || 
-                infile.toLowerCase().endsWith(".png") ||
-                infile.toLowerCase().endsWith(".bmp") ||
-                infile.toLowerCase().endsWith(".gif"));
+        return (infile.toLowerCase().endsWith(".jpg")
+                || infile.toLowerCase().endsWith(".png")
+                || infile.toLowerCase().endsWith(".bmp")
+                || infile.toLowerCase().endsWith(".gif"));
     }
 
     /** Get image size */
-    String getImageSize(String absoluteFile) {
+    String getImageSize(String absoluteFile, String quote) {
         Image image = Toolkit.getDefaultToolkit().getImage(absoluteFile);
         mediaTracker.addImage(image, 0);
 
@@ -549,14 +601,14 @@ public class WebHelper {
             mediaTracker.waitForID(0);
         } catch (Exception e) {
             //e.printStackTrace();
-            return "100','100";
+            return "100" + quote + "," + quote + "100";
         }
 
         int imageHeight = image.getHeight(null);
         int imageWidth = image.getWidth(null);
         mediaTracker.removeImage(image);
         image.flush();
-        return "" + imageWidth + "','" + imageHeight;
+        return "" + imageWidth + quote + "," + quote + imageHeight;
     }
 
     /** Scale image */
@@ -1285,7 +1337,6 @@ public class WebHelper {
         }
         return;
     }
-
     /**
      * Privacy policy (using genj private policy core function
      * TODO: will need to enrich and move to own PrivatePolicy module within ancestris core
@@ -1293,6 +1344,7 @@ public class WebHelper {
     // Privacy policy
     public PrivacyPolicy privacyPolicy = null;
     //
+
     public PrivacyPolicy getPrivacyPolicy() {
         if (privacyPolicy == null) {
             privacyPolicy = new PrivacyPolicy(
@@ -1330,11 +1382,9 @@ public class WebHelper {
         return ((prop != null) && (getPrivacyPolicy().isPrivate(prop)));
     }
 
-
     public String getPrivDisplay() {
         return NbPreferences.forModule(App.class).get("privDisplay", "");
     }
-
 } // End_of_Report
 
 

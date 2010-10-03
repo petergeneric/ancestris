@@ -4,20 +4,45 @@ and open the template in the editor.
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" href="../ancestris.css">
-  </head>
-  <body>
-      <div class="section1">
-
-          <center><h2 class="section1">Livre Web</h2></center>
-
-            Les options de cette sixi&egrave;me fenêtre...<br>
-
-
-      <br>
-      </div>
-  </body>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="../../../docs/ancestris.css">
+    </head>
+    <body>
+        <div class="section1">
+            <center><h2 class="section1">Assistant - Panneau "Transfert"</h2></center>
+            <br>
+            <table class="buttons" border="0" width="100%"><tr><td align="left"><a href="webbook_step5.html">[Panneau précédent]</a></td><td align="right"><a href="webbook_step7.html">[Panneau suivant]</a></td></tr></table>
+            <br>
+            Ce panneau permet de fournir à Ancestris tous les renseignements concernant la remontée des pages de la généalogie sur le serveur Internet.<br><br>
+            En général, vous souhaiterez évidemment publier sur Internet, donc cocherez la case correspondante. Mais comme cette phase de "remontée" peut être très longue, il est recommandé de ne pas cocher cette case si vous souhaitez tester un peu à quoi votre site va ressembler. Vous pouvez effectuer ces tests en local sur votre ordinateur et remonter les pages une fois seulement que vous êtes content du résultat.<br>
+            <br>
+            <h3 class="section1">Connexion</h3>
+            Ancestris doit connaître les paramètres de connexion à votre serveur Internet. Ils vous ont été fournis par votre fournisseur Internet. Un autre paramètre est à fournir par vous, c'est le nom du répertoire où doit être rangé le livre Web sur votre serveur Internet.
+            <br>
+            <h3 class="section1">Description du site</h3>
+            Cette description est enregistrée dans toutes les pages du livre Web. Elle ne sera visible que par les moteurs de recherche. Soyez donc bref et utilisez les mots clés avec lesquels vous sohaitez que l'on vous trouve sur Internet.
+            <br>
+            <h3 class="section1">Type de transfert</h3>
+            Paramètre très important !!! De celui-ci dépendra le temps que prendra la remontée des pages.
+            <ul>
+                <li>
+                    "Systématique" remontra absolument toutes les pages, même si elles existent déjà sur le serveur et qu'elle n'ont pas changé.
+                </li>
+                <li>
+                    "Ajout de la différence" remontra uniquement les pages qui ont changé depuis la dernière remontée.
+                </li>
+                <li>
+                    "Ajout de la différence et suppression" remontra uniquement les pages qui ont changé depuis la dernière remontée et supprimera du serveur les pages non générées cette fois-ci mais qui ont été remontées dans le passé.
+                </li>
+            </ul>
+            En cochant la case de remise à zéro de l'historique, Ancestris effacera, préalablement à la remontée des pages, toute trace de remontée précédente, si bien que la remontée suivante sera "systématique", même si vous aviez sélectionné un autre mode de remontée.
+            <br>
+            <h3 class="section1">Exécution</h3>
+            Il est possible de lancer un programme à la fin de la génération. Il suffit d'en donner le chemin d'accès. Ceci peut-être utile si vous souhaitez automatiser un complément à la génération du livre Web. Par exemple, la modification de la page d'accueil, l'envoi d'un mail à votre famille, etc.
+            <br>
+        </div>
+        <table class="buttons" border="0" width="100%"><tr><td align="left"><a href="webbook_step5.html">[Panneau précédent]</a></td><td align="right"><a href="webbook_step7.html">[Panneau suivant]</a></td></tr></table>
+    </body>
 </html>

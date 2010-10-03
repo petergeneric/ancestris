@@ -104,6 +104,7 @@ public class WebSearch extends WebSection {
         }
         out.println("</script>");
         out.println("<div class=\"title\"><a name=\"top\">&nbsp;</a>" + trs("TXT_Search") + "</div>");
+        printHomeLink(out, this);
         out.println("<p class=\"searchdecal\">" + trs("search_criteria") + "</p>");
         out.println("<form name=\"searchInputForm\" method=\"get\" action=\"" + exportfile + "\" accept-charset=\"iso-8859-1\">");
         out.println("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\" class=\"searchtable\">");
@@ -119,7 +120,7 @@ public class WebSearch extends WebSection {
         out.println("<tr><td colspan=\"2\" align=\"center\"><br />");
         out.println("<input name=\"OK\" type=\"submit\" value=\"" + trs("search_go") + "\" />&nbsp;&nbsp;");
         out.println("<input name=\"reset\" type=\"reset\" value=\"" + trs("search_reset") + "\" />&nbsp;&nbsp;");
-        out.println("<input name=\"home\" type=\"button\" value=\"" + trs("alt_home") + "\" onclick=\"top.window.location.href='" + getHomeLink(this) + "'\" />");
+        //out.println("<input name=\"home\" type=\"button\" value=\"" + trs("alt_home") + "\" onclick=\"top.window.location.href='" + getHomeLink(this) + "'\" />");
         out.println("</td></tr>");
         out.println("</table>");
         out.println("</form>");

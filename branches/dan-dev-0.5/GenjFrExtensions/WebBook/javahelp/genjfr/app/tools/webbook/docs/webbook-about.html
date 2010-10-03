@@ -5,28 +5,156 @@ and open the template in the editor.
 <html>
     <head>
         <title>Au sujet du Livre Web</title>
-        <link rel="stylesheet" href="nbdocs:/org/netbeans/modules/usersguide/ide.css" type="text/css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="../../../docs/ancestris.css">
     </head>
     <body>
-        <h2>Au sujet du Livre Web</h2>
-        <p>
-            Ceci est le Livre Web, ou WebBook en anglais.
-        </p>
-        <p>
-            Aide à écrire.
-        </p>
+        <div class="section1">
+            <center><h2 class="section1">Livre Web<br>Présentation Générale</h2></center>
+            <br>
+            Le Livre Web est l'outil de publication Internet d'Ancestris.<br>
+            <br>
+            <a name="utilisation"></a>
+            <h3 class="section1">I - Utilisation</h3>
+            Son utilisation est très simple :
+            <ol>
+                <li>
+                    Le livre Web se lance en choisissant "Outils/Livre Web" dans le menu principal.
+                </li>
+                <li>
+                    Vous vous laissez ensuite guidé dans l'<a href="#assistant">assistant</a> qui s'ouvre et vous indiquez vos choix jusqu'au dernier panneau
+                </li>
+                <li>
+                    Vous cliquez finalement sur le bouton "OK" pour lancer la publication sur Internet.
+                </li>
+                <li>
+                    La fenêtre d'exécution de la publication apparaît alors et vous pouvez y suivre ce qu'il se passe. C'est dans cette étape que sont générées toutes les pages de votre site. Cela peut prendre quelques minutes si votre généalogie est très fournie, notamment en média.
+                </li>
+                <li>
+                    Un autre onglet dans cette fenêtre vous fait également part des fichiers qui sont remontés sur votre site Web. Cette dernière phase peut être assez longue. Ceci est fonction du nombre de pages et de la vitesse de votre connexion Internet.
+                </li>
+                <li>
+                    Voilà, c'est fini. Allez sur votre site au moyen de votre navigateur préféré et vous y trouverez votre toute nouvelle généalogie.
+                </li>
+            </ol>
+            <br>
+            <a name="fonctionnalites"></a>
+            <h3 class="section1">II - Fonctionnalités</h3>
+            Bien sûr, il existe, au travers de l'<a href="#assistant">assistant</a>, de nombres options. Elles sont relativement explicites dans l'ensemble mais certaines nécessitent un peu d'explication. C'est normal, constatez plutôt la richesse des fonctionnalités ci-après.
+            <ul>
+                <li>
+                    Votre généalogie sur Internet peut être intégrée dans votre site Web existant, ou bien dans des pages indépendantes
+                </li>
+                <li>
+                    Les informations confidentielles de votre généalogie peuvent être protégées par un mot de passe, sans avoir à disposer de deux généalogies sur votre site.
+                </li>
+                <li>
+                    Vous pouvez préciser les critères de confidentialité des informations
+                </li>
+                <li>
+                    Vous pouvez  <a href="webbook_sections.html">inclure ou non certaines sections</a> du livre
+                </li>
+                <li>
+                    Vous pouvez inclure ou non certaines informations dans les pages
+                </li>
+                <li>
+                    Vous pouvez modifier certains des éléments à faire apparaître dans les pages.
+                </li>
+                <li>
+                    Vous choisissez l'individu de-cujus que vous voulez.
+                </li>
+                <li>
+                    Vous pouvez décider de remonter ou non les pages sur votre site Internet. Ceci est utile les premières fois pour personnaliser vos pages avec les options précédentes avant de les remonter.
+                </li>
+                <li>
+                    Vous pouvez choisir pour gagner du temps de ne remonter que les pages de votre site qui ont changé. Gain de temps considérable !
+                </li>
+                <li>
+                    Vous pouvez en fin de génération demander l'exécution d'un programme de votre choix. Par exemple, ceci vous permet de déclencher l'envoi d'un email à vos amis pour leur indiquer que votre site vient d'être mis à jour.
+                </li>
+            </ul>
+            <br>
+            <a name="choix"></a>
+            <h3 class="section1">III - Choix préliminaires</h3>
+            Avant de publier sur Internet, certains choix sont à faire.
+            <ul class="warning">
+                <li>
+                    <b>Le langage des pages - facile</b>
+                </li>
+                <ul>
+                    <li>
+                        Tout site Internet peut être écrit dans plusieurs languages possibles. Le Livre Web vous permet de générer votre généalogie en langage "HTML" ou bien en langage "PHP". Ce dernier permet davantage de fonctionnalités. Renseignez-vous pour savoir si votre hébergeur de site Internet est compatible avec "PHP". C'est généralement le cas. <br>
+                    </li>
+                    <li>
+                        Sinon, il vous faudra générer votre site en language "HTML". Ceci est pratique si vous voulez une copie de votre site en local et naviguer dans votre généalogie. En effet, à moins d'avoir un logiciel particulier sur votre ordinateur, vous ne pourrez pas naviguer en local sur un site généré en langage "PHP".<br>
+                    </li>
+                    <li>
+                        Ce choix sera à indiquer dans le <a href="webbook_step7.html">panneau de l'assistant prévu à cet effet</a>.
+                    </li>
+                </ul>
+
+                <li>
+                    <b>La protection de vos données confidentielles - facile</b>
+                </li>
+                <ul>
+                    <li>
+                        Si certaines de vos informations sont privées, il serait préférable de protéger l'accès à ces informations. Si vous pouvez générer les pages en langage "PHP", les informations confidentielles telles que définies dans Ancestris pourront être protégées. Vous aurez simplement à indiquer un profile et un mot de passe à l'assistant dans le <a href="webbook_step7.html">panneau prévu à cet effet</a> et c'est tout, vous n'aurez rien d'autre à faire. Lors de la navigation sur votre site, seuls les visiteurs indiquant ces codes dans les cases en bas des pages pourront voir les informations confidentielles de votre généalogie.<br>
+                    </li>
+                    <li>
+                        Dans le cas de génération de pages en langage "HTML", il faudra protéger les pages au moyen du fichier ".htaccess". Si vous ne savez pas faire, il faut vous faire assister d'une personne ayant l'habitude de faire des sites web ou vous documenter sur Internet.
+                    </li>
+                </ul>
+                <li>
+                    <b>L'intégration à un site existant - utilisateurs avertis !</b>
+                </li>
+                <ul>
+                    <li>
+                        Si vous disposez déjà d'un site Internet, vous préférez sans doute que le Livre Web soit intégré à ce site et en conserve l'apparence générale. Si vous pouvez générer les pages en langage "PHP", ce sera possible. Il faudra néanmoins que votre site soit déjà écrit en PHP et qu'il soit structuré autour d'un entête unique et d'un pied de page unique, dont il faudra indiquer les noms. Il faudra également indiquer le nom de la feuille de style de votre site. Reportez-vous au <a href="webbook_step7.html">panneau de l'assistant prévu à cet effet</a>. A défaut, un peu de "bricolage" à votre site est possible. <br>
+                    </li>
+                    <li>
+                        Dans le cas de génération de pages en langage "HTML", l'intégration à un site existant n'est pas possible, c'est-à-dire que vos pages généalogiques auront une apparence différente de votre site. Bien sûr, si vous êtes un expert de développement Web, vous pourrez toujours modifier les pages du Livre Web à votre bon plaisir et faire ce que vous voulez.
+                    </li>
+                </ul>
+            </ul>
+            <br>
+            <a name="assistant"></a>
+            <h3 class="section1">IV - Assistant</h3>
+            Voilà, vous avez vérifié et fait les choix ci-dessus. Lancez l'assistant. Celui-ci vous présente successivement 7 panneaux. Vous pouvez passer au panneau suivant et revenir au panneau précédent. <br><br>
+            La première fois que vous lancez l'assistant, les informations contenues dans les panneaux sont renseignées automatiquement avec des valeurs par défaut. Vous pourrez ainsi aisément vous contenter de passer tous les panneaux et lancer la génération pour voir ce que donne votre site en local. Il ne sera alors pas remonté sur Internet et sera généré en "HTML". <br><br>
+            L'assistant conserve les informations renseignées qui restent propres à chaque fichier Gedcom. Ceci permet d'avoir des jeux de paramètres différents pour des fichiers Gedcom différents sans avoir à tout ressaisir.<br><br>
+            <ul class="note">
+                <li>
+                    En passant la souris sur les champs à renseigner, vous aurez une explication rapide. Pour plus de détails, consultez l'aide de chaque panneau au moyen du bouton "Aide" dans l'assistant ce qui correspond aux liens ci-dessous.
+                </li>
+            </ul>
+            <ol>
+                <li>
+                    <a href="webbook_step1.html">Page d'accueil</a> : pour personnaliser la page d'accueil de votre site
+                </li>
+                <li>
+                    <a href="webbook_step2.html">Individus</a> : pour choisir le de-cujus et indiquer quels informations seront affichées avec les individus
+                </li>
+                <li>
+                    <a href="webbook_step3.html">Multimedia</a> : pour indiquer si et comment vous souhaitez les sections "Sources", "Médias et photos", et "Carte géographique"
+                </li>
+                <li>
+                    <a href="webbook_step4.html">Rapport ascendant</a> : pour indiquer si et comment vous souhaitez afficher le rapport ascendant à partir du de-cujus
+                </li>
+                <li>
+                    <a href="webbook_step5.html">Copie locale</a> : pour indiquer les répertoires en local pour le Livre Web avant de le remonter, et le fichier log
+                </li>
+                <li>
+                    <a href="webbook_step6.html">Transfert</a> : pour indiquer les paramètres de connexion à votre site Web et les autres informations nécessaires au transfert
+                </li>
+                <li>
+                    <a href="webbook_step7.html">Site</a> : pour indiquer si vous souhaitez intégrer le Livre Web à un site existant
+                </li>
+            </ol>
+            <br>
+            Maintenant que vous avez personnalisé les options de votre Livre Web au moyen de l'assistant, appuyer sur le bouton "OK" et surfer votre généalogie.
+            <br>
+            <br>
+            <br>
+        </div>
     </body>
 </html>
-<!--
-Tip: to create a link which will open in an external web browser, try:
-<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-    <param name="content" value="http://www.netbeans.org/">
-    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
-    <param name="textFontSize" value="medium">
-    <param name="textColor" value="blue">
-</object>
-To create a link to a help set from another module, you need to know the code name base and path, e.g.:
-<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
-(This link will behave sanely if that module is disabled or missing.)
--->

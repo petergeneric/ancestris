@@ -16,6 +16,8 @@ import java.security.MessageDigest;
 import java.util.prefs.BackingStoreException;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
 
 /**
  * Ancestris
@@ -52,6 +54,8 @@ public class FTPRegister {
     private static final char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',};
     private int nbFilesToTransfer = 0;
     private int nbFilesToRemove = 0;
+
+    //private InputOutput io =  IOProvider.getDefault().getIO("DEBUG", true);
 
     /**
      * Constructor
@@ -137,6 +141,7 @@ public class FTPRegister {
             }
 
             if ((uploadType.equals(FTP_SYNCHRONISE)) && (!equals(fields[REG_REMOTEMD5], fields[REG_LOCALMD5])) && (equals(fields[REG_GENLASTRUN], YES))) {
+//                io.getOut().println(" ");
                 fields[REG_TOBETRSF] = YES;
                 nbFilesToTransfer++;
             }
@@ -274,21 +279,6 @@ public class FTPRegister {
         return value;
     }
 
-    private String getKey(File file) {
-        String path = file.getAbsolutePath();
-        String[] keys = readKeys();
-        for (int i = 0; i < keys.length; i++) {
-            String key = keys[i];
-            if (isValid(key)) {
-                String[] fields = readKey(key);
-                if (equals(fields[REG_LOCALPATH], path)) {
-                    return key;
-                }
-            }
-        }
-        return null;
-    }
-
     private String getMD5(String filename) {
 
         FileInputStream in = null;
@@ -354,12 +344,30 @@ public class FTPRegister {
     }
 
     private boolean isLocal(String key, List<File> localFiles) {
+        String strKey = key.substring(host.length() + targetdir.length());
         for (Iterator it = localFiles.iterator(); it.hasNext();) {
             File file = (File) it.next();
-            if (key.indexOf(file.getName()) > 0) {
+            String strLocal = file.getAbsolutePath().substring(localRoot.length() + 1);
+            if (strLocal.equals(strKey)) {
                 return true;
             }
         }
         return false;
     }
+    private String getKey(File file) {
+        String strLocal = file.getAbsolutePath().substring(localRoot.length() + 1);
+        String[] keys = readKeys();
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            if (isValid(key)) {
+                String[] fields = readKey(key);
+                String strKey = key.substring(host.length() + targetdir.length());
+                if (strLocal.equals(strKey)) {
+                    return key;
+                }
+            }
+        }
+        return null;
+    }
+
 }

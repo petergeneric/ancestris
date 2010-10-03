@@ -9,6 +9,8 @@ package genjfr.app.tools.webbook.creator;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genjfr.app.tools.webbook.WebBook;
@@ -146,7 +148,7 @@ public class WebMedia extends WebSection {
             href = getPageForMedia(media);
             file_entity = wrapEntity(media.getEntity());
             file_title = wrapString(media, wh.getTitle(media, DEFCHAR));
-            anchor = htmlAnchorText(media.getEntity().toString());
+            anchor = htmlAnchorText(getEntityName(media.getEntity()));
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
                 String l = String.valueOf(last);
@@ -304,8 +306,8 @@ public class WebMedia extends WebSection {
             Property p1 = (Property) o1;
             Property p2 = (Property) o2;
 
-            String str1 = htmlAnchorText(p1.getEntity().toString());
-            String str2 = htmlAnchorText(p2.getEntity().toString());
+            String str1 = htmlAnchorText(getEntityName(p1.getEntity()));
+            String str2 = htmlAnchorText(getEntityName(p2.getEntity()));
 
             if (str1.startsWith(DEFCHAR)) {
                 if (str2.startsWith(DEFCHAR)) {
@@ -319,6 +321,28 @@ public class WebMedia extends WebSection {
             return str1.compareTo(str2);
         }
     };
+
+    /**
+     * Gets name from Indi or Fam entity starting with lastname
+     */
+    public String getEntityName(Entity ent) {
+        String name = "";
+        if (ent instanceof Indi) {
+            name = ((Indi) ent).getLastName() + ((Indi) ent).getFirstName();
+        } else if (ent instanceof Fam) {
+            Indi mainIndi = ((Fam) ent).getHusband();
+            if (mainIndi == null) {
+                mainIndi = ((Fam) ent).getWife();
+            }
+            if (mainIndi == null) {
+                name = "";
+            }
+            name = mainIndi.getLastName() + mainIndi.getFirstName();
+        } else {
+            return "";
+        }
+        return name;
+    }
 
     /**
      * Calculate pages for section details
@@ -356,7 +380,7 @@ public class WebMedia extends WebSection {
         char letter = ' ';
         for (Iterator it = medias.iterator(); it.hasNext();) {
             PropertyFile media = (PropertyFile) it.next();
-            String str = htmlAnchorText(media.getEntity().toString());
+            String str = htmlAnchorText(getEntityName(media.getEntity()));
             if (str == null) {
                 continue;
             }

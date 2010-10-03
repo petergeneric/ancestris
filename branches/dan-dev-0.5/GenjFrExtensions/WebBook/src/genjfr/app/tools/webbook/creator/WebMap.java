@@ -130,9 +130,7 @@ public class WebMap extends WebSection {
 
         // include body declaration and title
         out.println("<div class=\"title\"><a name=\"top\">" + SPACE + "</a>" + htmlText(trs("TXT_Map")) + "</div>");
-        if (!wp.param_PHP_Support.equals("1")) {
-            printHomeLink(out, this);
-        }
+        printHomeLink(out, this);
 
         // Include page itself
         out.println("<div id=\"map\" class=\"map\" style=\"height: 600px\"></div>");

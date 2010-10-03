@@ -34,6 +34,12 @@ public class Log {
         io = IOProvider.getDefault().getIO(title, true);
         io.select();
 
+        // warn if log file name not supplied
+        if (logname == null || logname.trim().isEmpty()) {
+            io.getOut().println("Warning!!! No log file name provided, therefore writing to output window only.");
+            return;
+        }
+
         // initialises log file
         File logFile = new File(logname);
         if (logFile == null) {
@@ -44,7 +50,7 @@ public class Log {
                 outFile = new PrintWriter(new FileWriter(logFile));
             } catch (IOException ioe) {
                 io.getErr().println("IO Exception!");
-                //ioe.printStackTrace();
+                ioe.printStackTrace();
             }
         }
     }
@@ -75,7 +81,9 @@ public class Log {
             io.getErr().println(text);
             endSuccessful = false;
         }
-        outFile.println(text);
+        if (outFile != null) {
+            outFile.println(text);
+        }
     }
 
     /**
