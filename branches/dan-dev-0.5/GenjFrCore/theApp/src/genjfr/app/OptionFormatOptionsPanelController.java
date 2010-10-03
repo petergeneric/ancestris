@@ -15,6 +15,7 @@ import org.openide.util.Lookup;
 iconBase = "genjfr/app/OptionFormat.png",
 keywords = "#OptionsCategory_Keywords_OptionFormat",
 keywordsCategory = "OptionFormat",
+id = "OptionsFormat",
 position=2)
 public final class OptionFormatOptionsPanelController extends OptionsPanelController {
 

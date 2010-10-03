@@ -237,6 +237,18 @@ public class PrivacyPolicy {
                 return true;
             }
         } else if (ent instanceof Fam) {
+            Indi husband = ((Fam) ent).getHusband();
+            if (husband != null && isAlive(husband)) {
+                aliveEntities.add(husband);
+                aliveEntities.add(ent);
+                return true;
+            }
+            Indi wife = ((Fam) ent).getWife();
+            if (wife != null && isAlive(wife)) {
+                aliveEntities.add(wife);
+                aliveEntities.add(ent);
+                return true;
+            }
             return false;
         } else {
             // Get related indis and families
@@ -263,6 +275,7 @@ public class PrivacyPolicy {
                         if (wife != null && isAlive(wife)) {
                             aliveEntities.add(wife);
                             aliveEntities.add(ent);
+                            return true;
                         }
                     }
                 }
