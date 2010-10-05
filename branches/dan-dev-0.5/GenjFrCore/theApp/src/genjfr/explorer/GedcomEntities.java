@@ -44,4 +44,8 @@ class GedcomEntities {
         return gedcom.getEntities(tag);
     }
 
+    public String getTag(){
+        return tag;
+    }
+
 }

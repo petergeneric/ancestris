@@ -34,20 +34,28 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>,Explorer
     public EntityNode(Entity e) {
         super(Children.LEAF, Lookups.fixed( new Object[] {e} ) );
         entity =  e;
+    }
+
+    @Override
+    public String getDisplayName() {
         if (entity instanceof Indi) {
             Indi i = (Indi)entity;
-            setDisplayName(i.getName());
+            return(i.getName());
         } else if (entity instanceof Fam){
             Fam f = (Fam) entity;
-            setDisplayName(f.toString(false));
+            return(f.toString(false));
         } else if (entity instanceof Note){
             Note n = (Note) entity;
-            setDisplayName(n.getDelegate().getLines()[0]);
+            return(n.getDelegate().getLines()[0]);
         } else {
-            setDisplayName(entity.toString(false));
+            return(entity.toString(false));
         }
     }
 
+    void fireChanges(){
+        fireDisplayNameChange(null, null);
+        fireIconChange();
+    }
     @Override
     public String getHtmlDisplayName(){
         return null;

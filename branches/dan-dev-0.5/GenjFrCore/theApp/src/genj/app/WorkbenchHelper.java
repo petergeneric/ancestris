@@ -19,11 +19,13 @@
  */
 package genj.app;
 
+import genj.gedcom.Entity;
 import genj.io.Filter;
 import genj.util.Trackable;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
@@ -62,7 +64,7 @@ import org.openide.util.NbPreferences;
 /**
  * The central component of the GenJ application
  */
-public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkbenchHelper {
+public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkbenchHelper,GedcomListener {
 
     private Workbench workbench;
     private final static Logger LOG = Logger.getLogger("genj.app");
@@ -241,6 +243,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             }
             if (unregister)
                 GedcomDirectory.getInstance().unregisterGedcom(context);
+
             return true;
         } else
             return false;
@@ -397,12 +400,14 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         for (WorkbenchListener listener : GenjFrPlugin.lookupAll(WorkbenchListener.class)) {
             listener.gedcomClosed(workbench, gedcom);
         }
+        gedcom.removeGedcomListener(this);
     }
 
     public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
         for (WorkbenchListener listener : GenjFrPlugin.lookupAll(WorkbenchListener.class)) {
             listener.gedcomOpened(workbench, gedcom);
         }
+        gedcom.addGedcomListener(this);
     }
 
     public void viewOpened(Workbench workbench, View view) {
@@ -416,6 +421,38 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             listener.viewClosed(workbench, view);
         }
     }
+
+    // Gedcom Listener
+    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+        for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
+            listener.gedcomEntityAdded( gedcom,  entity);
+        }
+    }
+
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
+            listener.gedcomEntityDeleted( gedcom,  entity);
+        }
+    }
+
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
+            listener.gedcomPropertyChanged( gedcom,  property);
+        }
+    }
+
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
+            listener.gedcomPropertyAdded( gedcom,  property, pos, added);
+        }
+    }
+
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
+            listener.gedcomPropertyDeleted( gedcom, property, pos,deleted);
+        }
+    }
+
 
     public void register(Object o) {
         GenjFrPlugin.register(o);
