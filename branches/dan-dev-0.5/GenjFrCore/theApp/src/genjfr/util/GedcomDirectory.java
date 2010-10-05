@@ -22,15 +22,17 @@
 package genjfr.util;
 
 import genj.gedcom.Context;
+import genj.view.SelectionListener;
+import genjfr.app.pluginservice.GenjFrPlugin;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A static registry for Gedcom instances
  */
-public class GedcomDirectory {
+public class GedcomDirectory implements SelectionListener{
   
-  private static GedcomDirectory instance = new GedcomDirectory();
+  private static GedcomDirectory instance;
   
   private List<Context> gedcoms = new ArrayList<Context>();
   private List<Listener> listeners = new ArrayList<Listener>();
@@ -41,6 +43,10 @@ public class GedcomDirectory {
 
   /** singleton accessor */
   public static GedcomDirectory getInstance() {
+      if (instance == null) {
+          instance  = new GedcomDirectory();
+        GenjFrPlugin.register(instance);
+      }
     return instance;
   }
   
@@ -77,7 +83,7 @@ public class GedcomDirectory {
     listeners.remove(listener);
   }
 
-    public void selectionChanged(Context context) {
+    public void setContext(Context context, boolean isActionPerformed) {
         for (int i=0;i<gedcoms.size();i++){
             if (gedcoms.get(i).getGedcom().equals(context.getGedcom()))
                 gedcoms.set(i, context);

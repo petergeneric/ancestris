@@ -36,6 +36,7 @@ import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.FileChooser;
+import genj.view.SelectionListener;
 import genj.view.SelectionSink;
 import genj.view.View;
 import genj.view.ViewFactory;
@@ -367,9 +368,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         for (WorkbenchListener listener : GenjFrPlugin.lookupAll(WorkbenchListener.class)) {
             listener.selectionChanged(workbench, context, isActionPerformed);
         }
-        // revoir aussi tout le mecanisme centre/wb/app
-//TODO: supprime car ne semble rien faire
-//        genjfr.app.App.center.selectionChanged(workbench, context, isActionPerformed);
+        for (SelectionListener listener : GenjFrPlugin.lookupAll(SelectionListener.class)) {
+            listener.setContext(context, isActionPerformed);
+        }
     }
 
     public void processStarted(Workbench workbench, Trackable process) {
