@@ -155,6 +155,7 @@
             <public-packages>
                 <package>genj.app</package>
                 <package>genjfr.app</package>
+                <package>genjfr.explorer</package>
                 <package>genjfr.util</package>
             </public-packages>
         </data>
