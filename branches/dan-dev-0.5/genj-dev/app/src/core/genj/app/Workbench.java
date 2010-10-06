@@ -218,7 +218,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     
     // restore context
     try {
-      context = Context.fromString(gedcom, REGISTRY.get(gedcom.getName(), gedcom.getName()));
+      context = Context.fromString(gedcom, REGISTRY.get(gedcom.getName()+".context", gedcom.getName()));
     } catch (GedcomException ge) {
     } finally {
       // fixup context if necessary - start with adam if available
@@ -415,7 +415,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     helper.gedcomClosed(this, context.getGedcom());
     
     // remember context
-    REGISTRY.put(context.getGedcom().getName(), context.toString());
+    REGISTRY.put(context.getGedcom().getName()+".context", context.toString());
 
     // remember and tell
     context = new Context();
