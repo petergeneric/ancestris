@@ -4,31 +4,41 @@
  */
 package genjfr.app.editorstd;
 
+import genj.gedcom.Entity;
+import genjfr.explorer.ExplorerNode;
+import java.util.Collection;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout;
+import javax.swing.JPanel;
+import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.Lookup;
+import org.openide.util.LookupListener;
+import org.openide.util.Utilities;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
-public final class EditorStdTopComponent extends TopComponent {
+public final class EditorStdTopComponent extends TopComponent implements LookupListener {
 
     private static EditorStdTopComponent instance;
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/editorstd/editorStd.png";
     private static final String PREFERRED_ID = "EditorStdTopComponent";
+    private Lookup.Result result = null;
+    private JPanel panelOn = null;
 
     public EditorStdTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(EditorStdTopComponent.class, "CTL_EditorStdTopComponent"));
         setToolTipText(NbBundle.getMessage(EditorStdTopComponent.class, "HINT_EditorStdTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-
     }
 
     /** This method is called from within the constructor to
@@ -39,20 +49,63 @@ public final class EditorStdTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jLabel1.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addContainerGap(445, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(352, Short.MAX_VALUE))
+        );
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jButton1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jButton2.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(401, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton1)))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
@@ -91,12 +144,28 @@ public final class EditorStdTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        Lookup.Template tpl = new Lookup.Template(ExplorerNode.class);
+        result = Utilities.actionsGlobalContext().lookup(tpl);
+        result.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        result.removeLookupListener(this);
+        result = null;
+    }
+
+    @Override
+    public void resultChanged(LookupEvent lookupEvent) {
+        Lookup.Result r = (Lookup.Result) lookupEvent.getSource();
+        Collection c = r.allInstances();
+        if (!c.isEmpty()) {
+            ExplorerNode o = (ExplorerNode) c.iterator().next();
+            Entity selectedEntity = o.getContext() != null ? o.getContext().getEntity() : null;
+            setPanel(selectedEntity);
+        } else {
+            setPanel(null);
+        }
     }
 
     void writeProperties(java.util.Properties p) {
@@ -122,5 +191,35 @@ public final class EditorStdTopComponent extends TopComponent {
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
+    }
+
+    private void setPanel(Entity selectedEntity) {
+        // Get panel corresponding to entity
+        EntityPanel jPanelEntity = EntityPanel.findInstance(selectedEntity);
+        if (selectedEntity == null) {
+            return;
+        }
+
+        // Remove existing panel if any
+        if (panelOn != null && panelOn != jPanelEntity) {
+            jPanel1.remove(panelOn);
+        }
+
+        // Set new panel on (Netbeans requires this lenghty code below apparently)
+        GroupLayout mainPanelLayout = new GroupLayout(jPanel1);
+        jPanel1.setLayout(mainPanelLayout);
+        mainPanelLayout.setAutoCreateContainerGaps(true);
+        mainPanelLayout.setAutoCreateGaps(true);
+        GroupLayout.SequentialGroup hGroup = mainPanelLayout.createSequentialGroup();
+        hGroup.addComponent(jPanelEntity);
+        mainPanelLayout.setHorizontalGroup(hGroup);
+        GroupLayout.SequentialGroup vGroup = mainPanelLayout.createSequentialGroup();
+        vGroup.addComponent(jPanelEntity);
+        mainPanelLayout.setVerticalGroup(vGroup);
+        jPanelEntity.setVisible(true);
+        jPanelEntity.setContext(selectedEntity);
+
+        // Remember displayed panel
+        panelOn = jPanelEntity;
     }
 }
