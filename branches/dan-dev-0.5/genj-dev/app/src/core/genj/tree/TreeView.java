@@ -191,7 +191,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     JScrollPane scroll = new ScrollPaneWidget(new ViewPortAdapter(content));
     overview = new Overview(scroll);
     overview.setVisible(REGISTRY.get("overview", true));
-    overview.setSize(REGISTRY.get("overview", new Dimension(64,64)));
+    overview.setSize(REGISTRY.get("overview", new Dimension(64,128)));
     zoom = Math.max(0.1, Math.min(1.0, REGISTRY.get("zoom", 1.0F)));
     
     // setup layout
@@ -1075,6 +1075,14 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       
       // create it
       model.addBookmark(new Bookmark(name, entity));
+
+      // save bookmarks
+        {
+          Entity root = model.getRoot();
+          if (root != null){
+            REGISTRY.put(root.getGedcom().getName()+".bookmarks", model.getBookmarks());
+          }
+        }
       
       // done
     }
