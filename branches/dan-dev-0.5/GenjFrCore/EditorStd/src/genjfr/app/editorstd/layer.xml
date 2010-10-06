@@ -218,7 +218,7 @@
                 <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSibling.instance"/>
                 <attr name="position" intvalue="1200"/>
             </file>
-            <file name="genjfr-app-editorstd-actions-CreateSpouseshadow">
+            <file name="genjfr-app-editorstd-actions-CreateSpouse.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSpouse.instance"/>
                 <attr name="position" intvalue="1300"/>
             </file>
