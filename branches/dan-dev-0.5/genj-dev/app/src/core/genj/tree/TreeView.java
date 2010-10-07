@@ -722,9 +722,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     public ViewContext getContext() {
       TreeContext result = new TreeContext(context);
       Entity entity = context.getEntity();
-      if (entity instanceof Indi) {
-        result.addAction(new ActionBookmark((Indi)context.getEntity(), true));
-        result.addAction(new ActionRoot((Indi)context.getEntity(), false));
+      if (entity instanceof Indi || entity instanceof Fam) {
+        result.addAction(new ActionBookmark(entity, true));
+        result.addAction(new ActionRoot(entity, false));
       }
       if (entity!=null) {
         result.addAction(new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
@@ -1063,7 +1063,10 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       if (entity instanceof Fam) {
         Indi husb = ((Fam)entity).getHusband();
         Indi wife = ((Fam)entity).getWife();
-        if (husb!=null&&wife!=null) name = husb.getName() + " & " + wife.getName();
+        if (husb==null&&wife==null)
+            name = entity.getId();
+        else
+            name = (husb==null? "":husb.getName()) + " & " + (wife == null? "" : wife.getName());
       }
       
       // Ask for name of bookmark
