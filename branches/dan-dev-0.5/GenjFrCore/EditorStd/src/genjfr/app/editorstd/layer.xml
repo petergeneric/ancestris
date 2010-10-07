@@ -159,7 +159,7 @@
         </folder>
         <folder name="View">
             <file name="EditorStdAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-editorstd-actions-EditorStdAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-editorstd-EditorStdAction.instance"/>
                 <attr name="position" intvalue="-501"/>
             </file>
         </folder>
