@@ -8,7 +8,6 @@
  *
  * Created on 4 oct. 2010, 23:58:38
  */
-
 package genjfr.app.editorstd;
 
 import genj.gedcom.Entity;
@@ -20,8 +19,11 @@ import genj.gedcom.Indi;
  */
 public class IndiPanel extends EntityPanel {
 
+    private Entity entity;
+
     /** Creates new form IndiPanel */
     public IndiPanel(Entity entity) {
+        this.entity = entity;
         initComponents();
     }
 
@@ -62,15 +64,20 @@ public class IndiPanel extends EntityPanel {
                 .addContainerGap(261, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void setContext(Entity entity) {
-        Indi indi = (Indi)entity;
+        this.entity = entity;
+        Indi indi = (Indi) entity;
         jTextField1.setText(indi.toString());
+    }
+
+    @Override
+    public Entity getEntity() {
+        return entity;
     }
 }

@@ -19,8 +19,11 @@ import genj.gedcom.Submitter;
  */
 public class SubmitterPanel extends EntityPanel {
 
+    private Entity entity;
+
     /** Creates new form SubmPanel */
     public SubmitterPanel(Entity entity) {
+        this.entity = entity;
         initComponents();
     }
 
@@ -66,9 +69,15 @@ public class SubmitterPanel extends EntityPanel {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void setContext(Entity entity) {
+        this.entity = entity;
         Submitter submitter = (Submitter)entity;
         jTextField1.setText(submitter.toString());
     }
 
+    @Override
+    public Entity getEntity() {
+        return entity;
+    }
 }

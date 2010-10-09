@@ -91,10 +91,12 @@
         </folder>
         <folder name="Window">
             <file name="genjfr-app-editorstd-EditorStdAction.instance">
-                <attr name="component" methodvalue="genjfr.app.editorstd.EditorStdTopComponent.findInstance"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.editorstd.Bundle"/>
+                <attr name="delegate" newvalue="genjfr.app.editorstd.Action"/>
                 <attr name="displayName" bundlevalue="genjfr.app.editorstd.Bundle#CTL_EditorStdAction"/>
                 <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/editorStd.png"/>
-                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
     </folder>

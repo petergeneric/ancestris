@@ -41,7 +41,7 @@ public class EntityPanel extends javax.swing.JPanel {
         if (entity == null) {
             return null;
         }
-        EntityPanel entPanel = instances.get(entity.getTag());
+        EntityPanel entPanel = instances.get(entity.getGedcom() + "." + entity.getTag());
         if (entPanel == null) {
             if (entity instanceof Indi) {
                 entPanel = new IndiPanel(entity);
@@ -65,7 +65,7 @@ public class EntityPanel extends javax.swing.JPanel {
             } else {
                 entPanel = new EntityPanel();
             }
-            instances.put(entity.getTag(), entPanel);
+            instances.put(entity.getGedcom() + "." + entity.getTag(), entPanel);
         }
         return entPanel;
     }
@@ -93,7 +93,12 @@ public class EntityPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
+    public void setContext(Entity entity) {
+    }
 
-    public void setContext(Entity entity) {};
-    
+    ;
+
+    public Entity getEntity() {
+        return null;
+    }
 }
