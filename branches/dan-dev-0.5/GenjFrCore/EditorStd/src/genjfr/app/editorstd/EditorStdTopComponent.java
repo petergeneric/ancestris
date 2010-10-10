@@ -7,6 +7,8 @@ package genjfr.app.editorstd;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.UnitOfWork;
 import genjfr.app.App;
 import genjfr.explorer.ExplorerNode;
 import java.util.Collection;
@@ -15,11 +17,14 @@ import java.util.TreeMap;
 import javax.swing.GroupLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
@@ -41,6 +46,7 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
     private Gedcom gedcom = null;
     private Lookup.Result result = null;
     private EntityPanel panelOn = null;
+    private Entity previousSelectedEntity = null;
 
     public EditorStdTopComponent() {
         super();
@@ -147,8 +153,7 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jLabel1.text")); // NOI18N
 
@@ -169,39 +174,53 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
                 .addContainerGap(352, Short.MAX_VALUE))
         );
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jButton1.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jButton2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(okButton, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.okButton.text")); // NOI18N
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(401, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap())
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(okButton))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)))
+                .addComponent(okButton))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        try {
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    panelOn.saveEntity();
+                }
+            });
+        } catch (GedcomException ex) {
+            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(EditorStdTopComponent.class, "CTL_CannotSave"),
+                    NbBundle.getMessage(EditorStdTopComponent.class, "CTL_Error"),
+                    NotifyDescriptor.YES_NO_OPTION);
+            DialogDisplayer.getDefault().notify(d);
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
-
 
     @Override
     public int getPersistenceType() {
@@ -301,9 +320,19 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
 
         // Get panel corresponding to entity
         EntityPanel jPanelEntity = EntityPanel.findInstance(selectedEntity);
+
         // Remove existing panel if any
         if (panelOn != null && panelOn != jPanelEntity) {
             jPanel1.remove(panelOn);
+        }
+
+        // Check if entity is different and was in modified state
+        if (previousSelectedEntity != selectedEntity) {
+            if (previousSelectedEntity != null) {
+                panelOn.checkIfModified();
+            }
+            previousSelectedEntity = selectedEntity;
+            jPanelEntity.loadEntity(selectedEntity);
         }
 
         // Set new panel on (Netbeans requires this lenghty code below apparently)
@@ -318,7 +347,6 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
         vGroup.addComponent(jPanelEntity);
         mainPanelLayout.setVerticalGroup(vGroup);
         jPanelEntity.setVisible(true);
-        jPanelEntity.setContext(selectedEntity);
 
         // Remember displayed panel
         panelOn = jPanelEntity;

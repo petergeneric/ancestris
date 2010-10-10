@@ -12,26 +12,30 @@ package genjfr.app.editorstd;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Note;
+import genj.gedcom.Property;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author frederic
  */
-public class EntityPanel extends javax.swing.JPanel {
+public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
 
     private static SortedMap<String, EntityPanel> instances;
 
     /** Creates new form IndiPanel */
     public EntityPanel() {
-        initComponents();
     }
 
     public static synchronized EntityPanel findInstance(Entity entity) {
@@ -66,6 +70,8 @@ public class EntityPanel extends javax.swing.JPanel {
                 entPanel = new EntityPanel();
             }
             instances.put(entity.getGedcom() + "." + entity.getTag(), entPanel);
+            entity.getGedcom().addGedcomListener(entPanel);
+            entPanel.init();
         }
         return entPanel;
     }
@@ -90,15 +96,65 @@ public class EntityPanel extends javax.swing.JPanel {
             .addGap(0, 366, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
-    public void setContext(Entity entity) {
+    public void init() {
+        return;
     }
 
-    ;
+    public void checkIfModified() {
+        return;
+    }
+
+    public void loadEntity(Entity entity) {
+        return;
+    }
+
+    public void displayEntity() {
+        return;
+    }
+
+    public void saveEntity() {
+        return;
+    }
 
     public Entity getEntity() {
         return null;
     }
+
+    @Override
+    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+        return;
+    }
+
+    @Override
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        return;
+    }
+
+    @Override
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        loadEntity(this.getEntity());
+    }
+
+    @Override
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        loadEntity(this.getEntity());
+    }
+
+    @Override
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        loadEntity(this.getEntity());
+    }
+
+    public int getTabIndex(JTabbedPane tabPane, JPanel panel) {
+        for (int i = 0; i < tabPane.getTabCount(); i++) {
+            if (tabPane.getComponentAt(i) == panel) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
 }

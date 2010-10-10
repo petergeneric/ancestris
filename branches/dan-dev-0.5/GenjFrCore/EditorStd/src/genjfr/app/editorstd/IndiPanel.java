@@ -70,10 +70,14 @@ public class IndiPanel extends EntityPanel {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void setContext(Entity entity) {
-        this.entity = entity;
+    public void loadEntity(Entity entity) {
         Indi indi = (Indi) entity;
         jTextField1.setText(indi.toString());
+    }
+
+    @Override
+    public void saveEntity() {
+        return;
     }
 
     @Override

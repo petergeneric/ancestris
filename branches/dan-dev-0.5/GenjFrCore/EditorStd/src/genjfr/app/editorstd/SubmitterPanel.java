@@ -12,6 +12,9 @@ package genjfr.app.editorstd;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Submitter;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -38,10 +41,18 @@ public class SubmitterPanel extends EntityPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        editPane = new javax.swing.JTabbedPane();
+        addressStructureBeanPanel = new genjfr.app.editorstd.beans.AddressStructureBeanPanel();
+        jTextField2 = new javax.swing.JTextField();
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jLabel1.text")); // NOI18N
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jTextField1.text")); // NOI18N
+
+        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.addressStructureBeanPanel.TabConstraints.tabTitle"), addressStructureBeanPanel); // NOI18N
+
+        jTextField2.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jTextField2.text")); // NOI18N
+        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jTextField2.TabConstraints.tabTitle"), jTextField2); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -49,9 +60,12 @@ public class SubmitterPanel extends EntityPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(editPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -61,19 +75,55 @@ public class SubmitterPanel extends EntityPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(261, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editPane, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private genjfr.app.editorstd.beans.AddressStructureBeanPanel addressStructureBeanPanel;
+    private javax.swing.JTabbedPane editPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void setContext(Entity entity) {
+    public void init() {
+        addressStructureBeanPanel.init(getTabIndex(editPane, addressStructureBeanPanel));
+    }
+
+    @Override
+    public void checkIfModified() {
+        if (addressStructureBeanPanel.isModified) {
+            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SubmitterPanel.class, "CTL_SaveUnsaved"),
+                    NbBundle.getMessage(SubmitterPanel.class, "CTL_AskConfirmation"),
+                    NotifyDescriptor.YES_NO_OPTION);
+            if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.NO_OPTION) {
+                loadEntity(entity);
+                displayEntity();
+            } else {
+                saveEntity();
+            }
+        }
+    }
+
+    @Override
+    public void loadEntity(Entity entity) {
         this.entity = entity;
-        Submitter submitter = (Submitter)entity;
+        Submitter submitter = (Submitter) entity;
         jTextField1.setText(submitter.toString());
+        addressStructureBeanPanel.setProperties(entity);
+    }
+
+    @Override
+    public void displayEntity() {
+        addressStructureBeanPanel.displayProperties();
+    }
+
+    @Override
+    public void saveEntity() {
+        addressStructureBeanPanel.saveProperties();
     }
 
     @Override
