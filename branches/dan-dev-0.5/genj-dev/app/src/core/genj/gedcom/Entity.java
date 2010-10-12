@@ -186,12 +186,13 @@ public class Entity extends Property {
       start = 0,
       end   = id.length()-1;
       
-    while (start<=end&&!Character.isDigit(id.charAt(start))) start++;
-    while (end>=start&&!Character.isDigit(id.charAt(end))) end--;
+    while (start<id.length()&&!Character.isDigit(id.charAt(start))) start++;
+    end = start;
+    while (end<id.length()&&Character.isDigit(id.charAt(end))) end++;
 
     if (end<start) throw new NumberFormatException();
          
-    return Integer.parseInt(id.substring(start, end+1));
+    return Integer.parseInt(id.substring(start, end));
   }
 
   /**
