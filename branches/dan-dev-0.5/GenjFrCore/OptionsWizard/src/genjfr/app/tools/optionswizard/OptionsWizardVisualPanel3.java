@@ -123,7 +123,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel13, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel13.text")); // NOI18N
 
-        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel21.text")); // NOI18N
 
         jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jComboBox1.toolTipText")); // NOI18N
@@ -136,7 +136,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         jTextField2.setText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jTextField2.text")); // NOI18N
         jTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jTextField2.toolTipText")); // NOI18N
 
-        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel9.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel12.text")); // NOI18N
@@ -160,10 +160,10 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel11.text")); // NOI18N
         jLabel11.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel11.toolTipText")); // NOI18N
 
-        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel10.text")); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel1.toolTipText")); // NOI18N
 
@@ -172,7 +172,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox17, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jCheckBox17.text")); // NOI18N
         jCheckBox17.setToolTipText(org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jCheckBox17.toolTipText")); // NOI18N
 
-        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel20, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel20.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel3.class, "OptionsWizardVisualPanel3.jLabel15.text")); // NOI18N
@@ -196,7 +196,7 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
         jComboBox3.setMinimumSize(new java.awt.Dimension(69, 23));
         jComboBox3.setPreferredSize(new java.awt.Dimension(55, 23));
 
-        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 9)); // NOI18N
+        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 9));
         jComboBox4.setMinimumSize(new java.awt.Dimension(69, 23));
         jComboBox4.setPreferredSize(new java.awt.Dimension(55, 23));
 
@@ -227,16 +227,16 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                         .addContainerGap()
                         .addComponent(jLabel10))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))))
-                .addGap(6, 6, 6)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBox1)
                     .addComponent(jCheckBox17)
@@ -268,10 +268,10 @@ public final class OptionsWizardVisualPanel3 extends JPanel {
                                             .addComponent(jLabel8))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)))
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)))
+                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
