@@ -19,12 +19,12 @@ import java.util.Map;
  */
 final class OpenGenjViewAction extends Action2  {
     private final Map<?,?> map;
-    private final GenjViewTopComponent component;
+    private final AncestrisTopComponent component;
 
-    OpenGenjViewAction(GenjViewTopComponent component, Map<?,?> map) {
+    OpenGenjViewAction(AncestrisTopComponent component, Map<?,?> map) {
         this.component = component;
         this.map = map;
-        setImage(component.getViewFactory().getImage());
+        setImage(component.getImageIcon());
         setText((String)map.get("displayName"));
 //        setText(component.getViewFactory().getTitle(true));
 //        putValue(Action.NAME,(String)map.get("displayName"));
@@ -34,8 +34,8 @@ final class OpenGenjViewAction extends Action2  {
     /** execute callback */
     @Override
   public void actionPerformed(ActionEvent e) {
-        GenjViewTopComponent win = component.create();
-        win.init();
+        AncestrisTopComponent win = component.create();
+        win.init(App.center.getSelectedContext(true));
         win.open();
         win.requestActive();
     }

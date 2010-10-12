@@ -30,7 +30,7 @@ public final class ActionSaveLayout implements ActionListener {
         if (selected == null){
             return;
         }
-        Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
+        Preferences prefs = NbPreferences.forModule(AncestrisTopComponent.class);
         Object date = prefs.get("openViews.date", null) == null?
             new String(NbBundle.getMessage(this.getClass(), "TXT_ASL_never")):
             new Date(new Long(prefs.get("openViews.date", "0")));
@@ -51,7 +51,7 @@ public final class ActionSaveLayout implements ActionListener {
         List<String> openedViews = new ArrayList<String>();
 
         for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
-            if (((GenjViewTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
+            if (((AncestrisTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
                 App.LOG.info(gjvTc.getClass().getName()+": "+gjvTc.getMode().getName());
                 Mode mode = gjvTc.getMode();
                 gjvTc.setDefaultMode(mode);
@@ -76,11 +76,11 @@ public final class ActionSaveLayout implements ActionListener {
 
         for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
 //            if (((GenjViewTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
-            boolean isopened = ((GenjViewTopComponent)gjvTc).isOpened();
+            boolean isopened = ((AncestrisTopComponent)gjvTc).isOpened();
             if (isopened &&  gedcom.equals(gjvTc.getGedcom())){
                 App.LOG.info(gjvTc.getClass().getName()+": "+gjvTc.getMode().getName());
                 Mode mode = gjvTc.getMode();
-                prefs.put(((GenjViewTopComponent)gjvTc).preferredID()+".dockMode", mode.getName());
+                prefs.put(((AncestrisTopComponent)gjvTc).preferredID()+".dockMode", mode.getName());
                 openedViews.add(gjvTc.getClass().getName());
             }
         }

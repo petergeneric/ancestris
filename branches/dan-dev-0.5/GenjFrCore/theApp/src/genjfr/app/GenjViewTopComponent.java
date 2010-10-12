@@ -9,6 +9,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Trackable;
 import genj.util.swing.Action2;
+import genj.util.swing.ImageIcon;
 import genj.util.swing.MenuHelper;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
@@ -91,10 +92,8 @@ import org.openide.windows.WindowManager;
  *   => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
-//@RetainLocation("genjfr-editor")
 @ServiceProvider(service=WorkbenchListener.class)
-//@ServiceProvider(service=GenjViewInterface.class,WorkbenchListener.class)
-public class GenjViewTopComponent extends TopComponent implements GenjViewInterface,WorkbenchListener {
+public class GenjViewTopComponent extends AncestrisTopComponent implements WorkbenchListener {
 
 //    static GenjViewTopComponent factory;
     /** path to the icon used by the component and its open action */
@@ -106,116 +105,11 @@ public class GenjViewTopComponent extends TopComponent implements GenjViewInterf
     private boolean isRestored = false;
   private final static Logger LOG = Logger.getLogger("genj.app");
   private final static ContextHook HOOK = new ContextHook();
-    private Context context;
-
-
-    String getDefaultFactoryMode() {return "genjfr-editor";}
-
-    String getDefaultMode(){
-        return NbPreferences.forModule(this.getClass()).get(preferredID()+".dockMode",getDefaultFactoryMode());
-    }
-
-    public void setDefaultMode(String mode) {
-        NbPreferences.forModule(this.getClass()).put(preferredID()+".dockMode", mode);
-    }
-
-    public void setDefaultMode(Mode mode) {
-        setDefaultMode(mode.getName());
-    }
-
-    @Override
-    public void open() {
-        if (context == null)
-            return;
-        if (!isRestored) {
-            String modeName = App.getRegistry(getGedcom()).get(preferredID()+".dockMode", getDefaultMode()) ;
-            
-             Mode m = WindowManager.getDefault().findMode (modeName);
-             if (m != null) {
-                m.dockInto(this);
-             }
-        }
-        super.open();
-    }
-
-    public Gedcom getGedcom() {
-        return context.getGedcom();
-    }
-/**
- *
- * @param gedcom
- * @deprecated
- */
-    public void setGedcom(Gedcom gedcom) {
-        LOG.warning("setGedcom obsolete, try workaround...");
-        this.context = new Context(gedcom);
-    }
 
     public View getView() {
         return view;
     }
 
-    /**
-     * @deprecated : use GenjFrPlugin.register(this)
-     */
-    public void addLookup() {
-        GenjFrPlugin.register(this);
-    }
-
-
-    public GenjViewTopComponent() {
-        super();
-        // toutes les fenetres peuvent aller dans tous les modes
-            putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); 
-    }
-
-    public void setPanel(JPanel jpanel) {
-
-        panel = jpanel;
-        if (panel == null) {
-            return;
-        }
-
-        // setup layout
-        setLayout(new BorderLayout());
-        add(panel, BorderLayout.CENTER);
-    }
-
-
-    void setPanel(Context context, ViewFactory factory) {
-        this.context = context;
-        if (context == null || context.getGedcom() == null) {
-            return;
-        }
-
-        // get a registry
-//        genj.util.Registry registry = new genj.util.Registry(ViewManager.getRegistry(gedcom), getPackage(factory)/*+"."+sequence*/);
-        genj.util.Registry registry = genj.util.Registry.get(getGedcom().getOrigin().getFile(getGedcom().getOrigin().getFileName()+".properties"));
-
-        // title
-//        String title = gedcom.getName() + " - " + factory.getTitle() + " (" + registry.getViewSuffix() + ")";
-        String title = getGedcom().getName() + " - " + factory.getTitle() ;
-
-        // create the view
-        view = factory.createView();
-        view.setContext(context, true);
-        setPanel(view);
-        setToolBar(view);
-        GenjFrPlugin.register(this);
-    }
-
-    /**
-     * Get the package name of a Factory
-     */
-    /*package*/ String getPackage(ViewFactory factory) {
-
-        Matcher m = Pattern.compile(".*\\.(.*)\\..*").matcher(factory.getClass().getName());
-        if (!m.find()) {
-            throw new IllegalArgumentException("can't resolve package for " + factory);
-        }
-        return m.group(1);
-
-    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -247,185 +141,34 @@ public class GenjViewTopComponent extends TopComponent implements GenjViewInterf
 //    }
 
     @Override
-    public int getPersistenceType() {
-//        return TopComponent.PERSISTENCE_ONLY_OPENED;
-        return TopComponent.PERSISTENCE_NEVER;
-    }
-
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-        Mode mode = getMode();
-        if (mode == null)
-            return;
-        for (TopComponent tc: mode.getTopComponents()) {
-            if (tc instanceof ModePersisterTopComponent)
-                return;
-        }
-        mode.dockInto(new ModePersisterTopComponent());
-    }
-
-    // code pour forcer la persistence des mode (place ici aussi car ne fonctionne pas tjs dans close
-    @Override
-    public boolean canClose(){
-        Mode mode = getMode();
-        if (mode == null)
-            return true;
-        for (TopComponent tc: mode.getTopComponents()) {
-            if (tc instanceof ModePersisterTopComponent)
-                return true;
-        }
-        mode.dockInto(new ModePersisterTopComponent());
-        return true;
-    }
-
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        p.setProperty("gedcom",getGedcom().getOrigin().toString());
-        // TODO store your settings
-    }
-
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
-        return this;
-    }
-
-    void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
-        final String gedName = p.getProperty("gedcom");
-//        if (gedName==null) return;
-        if (gedName==null)
-            close();
-        isRestored = true;
-        waitStartup(gedName);
-    }
-
-    @Override
     protected String preferredID() {
         return PREFERRED_ID;
-    }
-
-    public GenjViewTopComponent create() {
-        try {
-            return this.getClass().newInstance();
-            //return Constructor.newInstance(this);
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return null;
-        //return Constructor.newInstance(this);
-    }
-
-    /**
-     * Gets an action to display a GenjTopComponent. Used in layer.xml
-     * @param component
-     * @param displayName
-     * @param iconBase
-     * @param noIconInMenu
-     * @return the action
-     */
-    static public Action openAction(TopComponent component, String displayName, String iconBase, boolean noIconInMenu) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("displayName", displayName); // NOI18N
-        map.put("iconBase", iconBase); // NOI18N
-        map.put("noIconInMenu", noIconInMenu); // NOI18N
-        map.put("component", component); // NOI18N
-
-        return openAction(map);
-    }
-
-    static public Action openAction(Map map) {
-//        map.put("iconBase", Images((new EditViewFactory()).getImage().toString())); // NOI18N
-//        map.put("noIconInMenu", false); // NOI18N
-return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("component"), map);
-//
-//
-//        return Actions.alwaysEnabled(
-//                new OpenGenjViewAction((GenjViewTopComponent) map.get("component"), map),
-//                (String) map.get("displayName"), // NOI18N
-//                (String) map.get("iconBase"), // NOI18N
-//                Boolean.TRUE.equals(map.get("noIconInMenu")) // NOI18N
-//                );
     }
 
     ViewFactory getViewFactory() {
         return null;
     }
 
-    void init() {
-        init(App.center.getSelectedContext(true));
+    ImageIcon getImageIcon(){
+        return getViewFactory().getImage();
     }
 
-    public void init(Context context) {
-        setName();
-        setToolTipText();
+    public boolean createPanel(){
         if (getViewFactory() == null)
-            return;
-        setPanel(context,getViewFactory());
-        String gedcomName;
-        if ((getGedcom() != null) && ((gedcomName = getGedcom().getName())!=null)){
-            setName(gedcomName);
-            setToolTipText(getToolTipText() + ": " + gedcomName);
-        }
-        setIcon(getViewFactory().getImage().getImage());
-        // Modification du titre de la fenetre si undockee
-        // voir ici: http://old.nabble.com/Look-and-feel-issues-td21583766.html
-        this.addComponentListener(new ComponentAdapter() {
-
-            @Override
-            public void componentShown(ComponentEvent evt) {
-                Window w = SwingUtilities.getWindowAncestor(GenjViewTopComponent.this);
-                if(w!=null && w instanceof JFrame && ! (w.equals(WindowManager.getDefault().getMainWindow()))){
-//                if(w!=null && w instanceof JFrame){
-                    ((JFrame)w).setTitle(getName());
-                    ((JFrame)w).setIconImage(getIcon());
-                }
-            }
-
-        });
-
+           return false;
+        // create the view
+        view = getViewFactory().createView();
+        view.setContext(getContext(), true);
+        setPanel(view);
+        setToolBar(view);
+        return true;
     }
-
-    //FIXME: revoir la synchro avec le CC
-    void waitStartup(String name){
-        final String gedName = name;
-                new Thread(new Runnable() {
-            public void run() {
-                while (!App.center.isReady(0))
-                        ;
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                    if (App.center.getOpenedGedcom(gedName) == null)
-                        close();
-                    else {
-                        init(App.center.getOpenedContext(gedName));
-                        open();
-                    }
-                }
-            });
-            }
-        }).start();
-    }
-
 
     void setName() {
         setName(getViewFactory().getTitle());
     }
     void setToolTipText(){
         setToolTipText(getViewFactory().getTitle());
-    }
-
-    public Mode getMode() {
-        return WindowManager.getDefault().findMode(this);
     }
 
     // ToolBar support
@@ -689,19 +432,19 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
 
     public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
     // appropriate?
-    if (context.getGedcom()!= this.context.getGedcom()) {
+    if (context.getGedcom()!= getContext().getGedcom()) {
       LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
       return;
     }
 
     // already known?
-    if (!isActionPerformed && this.context.equals(context))
+    if (!isActionPerformed && getContext().equals(context))
       return;
 
     LOG.finer("fireSelection("+context+","+isActionPerformed+")");
 
     // remember
-    this.context = context;
+    setContext(context);
 
     if (context.getGedcom()!=null)
       App.getRegistry(context.getGedcom()).put(context.getGedcom().getName()+".context", context.toString());
@@ -717,7 +460,7 @@ return                 new OpenGenjViewAction((GenjViewTopComponent) map.get("co
     }
 
     public void commitRequested(Workbench workbench, Context context) {
-        if (context.getGedcom()!= this.context.getGedcom()) {
+        if (context.getGedcom()!= getContext().getGedcom()) {
           LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
           return;
         }
