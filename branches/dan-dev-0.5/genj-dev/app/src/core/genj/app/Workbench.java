@@ -418,8 +418,8 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     REGISTRY.put(context.getGedcom().getName()+".context", context.toString());
 
     // remember and tell
-    context = new Context();
-    helper.selectionChanged(this, context, true);
+//    context = new Context();
+// FIXME ne sert a rien?    helper.selectionChanged(this, context, true);
     
     // done
     return true;
