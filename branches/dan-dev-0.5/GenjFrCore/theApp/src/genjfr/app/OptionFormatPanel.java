@@ -277,7 +277,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jSpinner1)
                                     .addComponent(jSpinner3, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))))))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

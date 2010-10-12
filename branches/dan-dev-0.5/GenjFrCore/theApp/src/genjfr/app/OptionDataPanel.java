@@ -86,7 +86,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox1.text")); // NOI18N
         jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox1.toolTipText")); // NOI18N
 
-        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel9.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox19, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.text")); // NOI18N
@@ -94,7 +94,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jComboBox1.toolTipText")); // NOI18N
 
-        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel21.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox18, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.text")); // NOI18N
@@ -106,7 +106,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jTextField1.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField1.text")); // NOI18N
         jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField1.toolTipText")); // NOI18N
 
-        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel20, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel20.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel3.text")); // NOI18N
@@ -114,10 +114,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox17, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox17.text")); // NOI18N
         jCheckBox17.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox17.toolTipText")); // NOI18N
 
-        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel10.text")); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel1.toolTipText")); // NOI18N
 
@@ -190,7 +190,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
             }
         });
 
-        jComboBox3.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox3.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
         jComboBox3.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,7 +198,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
             }
         });
 
-        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox4.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
         jComboBox4.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,7 +206,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
             }
         });
 
-        jComboBox5.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
+        jComboBox5.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
         jComboBox5.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,7 +230,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
             }
         });
 
-        jComboBox8.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        jComboBox8.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
         jComboBox8.setPreferredSize(new java.awt.Dimension(59, 26));
         jComboBox8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,9 +260,9 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                             .addComponent(jLabel9))))
-                .addGap(6, 6, 6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,10 +284,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel8))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)))
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)))
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)))
                     .addComponent(jCheckBox1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
