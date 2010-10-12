@@ -10,6 +10,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genjfr.app.App;
+import genjfr.app.GenjViewInterface;
 import genjfr.explorer.ExplorerNode;
 import java.util.Collection;
 import java.util.SortedMap;
@@ -20,6 +21,7 @@ import javax.swing.ToolTipManager;
 import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
+import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -27,14 +29,16 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
+import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
-public final class EditorStdTopComponent extends TopComponent implements LookupListener {
+public final class EditorStdTopComponent extends TopComponent implements LookupListener,GenjViewInterface {
 
     // One TopComponent per Gedcom
     private static SortedMap<String, EditorStdTopComponent> instances;
@@ -109,7 +113,7 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
         }
     }
 
-    private Gedcom getGedcom() {
+    public Gedcom getGedcom() {
         return gedcom;
     }
 
@@ -350,5 +354,32 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
 
         // Remember displayed panel
         panelOn = jPanelEntity;
+    }
+
+
+    String getDefaultFactoryMode() {return "genjfr-editor";}
+
+    String getDefaultMode(){
+        return NbPreferences.forModule(this.getClass()).get(preferredID()+".dockMode",getDefaultFactoryMode());
+    }
+
+    public void setDefaultMode(String mode) {
+        NbPreferences.forModule(this.getClass()).put(preferredID()+".dockMode", mode);
+    }
+
+    public void setDefaultMode(Mode mode) {
+        setDefaultMode(mode.getName());
+    }
+
+    public Mode getMode() {
+        return WindowManager.getDefault().findMode(this);
+    }
+
+
+    @Override
+    public void init(Context context) {
+        if (context != null){
+            init(context.getGedcom(),context.getEntity().getId());
+        }
     }
 }

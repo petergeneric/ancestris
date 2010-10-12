@@ -40,12 +40,12 @@ import genj.view.SelectionListener;
 import genj.view.SelectionSink;
 import genj.view.View;
 import genj.view.ViewFactory;
-import genjfr.app.ActionOpen;
 import genjfr.app.ActionSaveLayout;
 import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
 import genjfr.app.GenjViewTopComponent;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import genjfr.app.pluginservice.PluginInterface;
 import genjfr.util.GedcomDirectory;
 
 import java.io.File;
@@ -59,8 +59,10 @@ import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.TopComponent;
 
 /**
  * The central component of the GenJ application
@@ -110,17 +112,18 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         private static void openDefaultViews(Context context) {
 
         Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
-        List<String> openedViews = new ArrayList<String>();
+        List<Class> openedViews = new ArrayList<Class>();
 
         // try gedcom properties
         Registry gedcomSettings = App.getRegistry(context.getGedcom());
 
+        try {
         for (int i = 0; i < 20; i++) {
             String item = gedcomSettings.get("openViews" + i, (String) null);
             if (item == null) {
                 break;
             }
-            openedViews.add(item);
+            openedViews.add(Class.forName(item));
         }
 
         if (openedViews.isEmpty()) {
@@ -129,23 +132,31 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                 if (item == null) {
                     break;
                 }
-                openedViews.add(item);
+                openedViews.add(Class.forName(item));
             }
         }
+        } catch (ClassNotFoundException ex) {
+               //Exceptions.printStackTrace(ex);
+        }
         if (openedViews.isEmpty()) {
-            openedViews.add("genjfr.app.TableTopComponent");
-            openedViews.add("genjfr.app.TreeTopComponent");
-            openedViews.add("genjfr.app.EditTopComponent");
+            // Open default views
+            for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+                openedViews.addAll(sInterface.getDefaultOpenedViews());
+            }
+//            openedViews.add("genjfr.app.TableTopComponent");
+//            openedViews.add("genjfr.app.TreeTopComponent");
+//            openedViews.add("genjfr.app.EditTopComponent");
         }
 
-        GenjViewTopComponent tc = null;
-        for (String className : openedViews) {
+        TopComponent tc = null;
+        for (Class clazz : openedViews) {
             try {
-                tc = (GenjViewTopComponent) Class.forName(className).newInstance();
-                tc.init(context);
+                tc = (TopComponent) clazz.newInstance();
+                if (tc instanceof GenjViewInterface)
+                    ((GenjViewInterface) tc).init(context);
                 tc.open();
             } catch (Exception ex) {
-                //Exceptions.printStackTrace(ex);
+                Exceptions.printStackTrace(ex);
             }
         }
         if (tc != null) {
@@ -468,6 +479,6 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     }
 
     public Context getContext() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return App.center.getSelectedContext(true);
     }
 }

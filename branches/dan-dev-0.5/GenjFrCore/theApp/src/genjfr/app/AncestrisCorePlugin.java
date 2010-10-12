@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package genjfr.app.editorstd;
+package genjfr.app;
 
 import genjfr.app.pluginservice.GenjFrPlugin;
 import java.util.Arrays;
@@ -12,13 +12,18 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author frederic
+ * @author daniel
  */
 @ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
-public class EditorStdPlugin extends GenjFrPlugin{
+public class AncestrisCorePlugin extends GenjFrPlugin{
+
     @Override
     public Collection<Class> getDefaultOpenedViews() {
-        return Arrays.asList(new Class[]{EditorStdTopComponent.class});
+        return Arrays.asList(new Class[]{
+            TreeTopComponent.class,
+            TableTopComponent.class,
+            EditTopComponent.class
+        });
     }
 
 }

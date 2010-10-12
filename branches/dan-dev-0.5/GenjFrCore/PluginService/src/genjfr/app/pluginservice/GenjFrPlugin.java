@@ -5,6 +5,7 @@
 
 package genjfr.app.pluginservice;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
@@ -78,4 +79,7 @@ public abstract class GenjFrPlugin implements PluginInterface {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public Collection<Class> getDefaultOpenedViews() {
+        return new ArrayList<Class>();
+    }
 }

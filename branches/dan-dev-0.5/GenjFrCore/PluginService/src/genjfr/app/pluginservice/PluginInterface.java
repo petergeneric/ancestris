@@ -4,6 +4,8 @@
  */
 package genjfr.app.pluginservice;
 
+import java.util.Collection;
+
 /**
  *
  * @author frederic
@@ -17,4 +19,5 @@ public interface PluginInterface {
 
     public String getPluginVersion();
     public boolean launchModule(Object o);
+    public Collection<Class> getDefaultOpenedViews();
 }

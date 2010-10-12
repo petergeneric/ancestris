@@ -5,6 +5,7 @@
 
 package genjfr.app;
 
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import org.openide.windows.Mode;
 
@@ -18,6 +19,7 @@ public interface GenjViewInterface {
     public Mode getMode();
     public void setDefaultMode(String mode);
     public void setDefaultMode(Mode mode);
+    public void init(Context context);
 
     public boolean close();
 }
