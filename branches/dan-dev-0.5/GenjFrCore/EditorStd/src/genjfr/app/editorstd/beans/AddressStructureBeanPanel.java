@@ -16,7 +16,6 @@ import genj.gedcom.PropertyMultilineValue;
 import genj.gedcom.PropertySimpleValue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -276,6 +275,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     private void updateField(JTextComponent text, Property prop) {
         if (prop != null) {
             text.setText(prop.getDisplayValue());
+        } else {
+            text.setText("");
         }
     }
 
