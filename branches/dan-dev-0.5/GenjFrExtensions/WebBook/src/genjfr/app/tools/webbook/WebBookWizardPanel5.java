@@ -7,6 +7,8 @@ package genjfr.app.tools.webbook;
 import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -121,13 +123,38 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
 
     public void validate() throws WizardValidationException {
         String name = component.getPref01();
+        // check if file name has been provided
         if (name.trim().isEmpty()) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_LocalWebDir"), null);
         }
+        // Check if file exists
         File file = new File(name);
         if (!file.exists()) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Invalid_LocalWebDir"), null);
         }
+        // Check if file is a directory
+        if (!file.isDirectory()) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_NotDir_LocalWebDir"), null);
+        }
+        // Check that directory is writable
+        if (!file.canWrite()) {
+            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_NotWritable_LocalWebDir"), null);
+        }
+        // Check that if directory is not empty, that if contains recognisable webbook directories
+        if (file.list().length != 0) {
+            String[] expectedFilesArray = {"names", "persons", "cities", "theme", "daysdetails", "repsosa", "citiesdetails"};
+            int foundWebbookFiles = 0;
+            for (int i = 0; i < expectedFilesArray.length; i++) {
+                file = new File(name + File.separator + expectedFilesArray[i]);
+                if (file != null && file.exists() && file.isDirectory()) {
+                    foundWebbookFiles++;
+                }
+            }
+            if (foundWebbookFiles < 3) {
+                throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_CautionForDeletion_LocalWebDir"), null);
+            }
+        }
+        //
         name = component.getPref02();
         if (name.trim().isEmpty()) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_LogFile"), null);
@@ -139,4 +166,3 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
         }
     }
 }
-
