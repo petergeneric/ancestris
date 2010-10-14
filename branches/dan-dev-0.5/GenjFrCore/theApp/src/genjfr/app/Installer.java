@@ -25,6 +25,13 @@ public class Installer extends ModuleInstall {
     private boolean restart = false;
 
     @Override
+    public void validate() throws IllegalStateException {
+        Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate");
+        p.putInt("period", p.getInt("period",0));
+    }
+
+
+    @Override
     public void restored() {
         // Launches main application
         App.main(new String[]{});
