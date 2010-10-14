@@ -38,7 +38,7 @@ public abstract class GenjFrPlugin implements PluginInterface {
 
     public static Class lookupForName(Class clazz,String name){
         for (Object sInterface : Lookup.getDefault().lookupAll(clazz)) {
-                if (((Class)sInterface).getCanonicalName().equals(name))
+                if (sInterface.getClass().getCanonicalName().equals(name))
                     return sInterface.getClass();
             }
         return null;

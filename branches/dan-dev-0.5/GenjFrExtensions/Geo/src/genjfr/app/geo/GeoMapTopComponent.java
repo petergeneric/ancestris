@@ -973,7 +973,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
     }
 
     //FIXME: revoir la synchro avec le CC
-    void waitStartup(String name) {
+    public void waitStartup(String name) {
         final String gedName = name;
         new Thread(new Runnable() {
 

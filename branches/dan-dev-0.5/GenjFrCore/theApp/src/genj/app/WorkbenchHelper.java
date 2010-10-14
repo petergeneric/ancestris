@@ -123,7 +123,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             if (item == null) {
                 break;
             }
-            openedViews.add(GenjFrPlugin.lookupForName(GenjViewInterface.class, item));
+                Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
+                if (clazz != null)
+                    openedViews.add(clazz);
         }
 
         if (openedViews.isEmpty()) {
@@ -132,7 +134,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                 if (item == null) {
                     break;
                 }
-            openedViews.add(GenjFrPlugin.lookupForName(GenjViewInterface.class, item));
+                Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
+                if (clazz != null)
+                    openedViews.add(clazz);
             }
         }
         if (openedViews.isEmpty()) {
