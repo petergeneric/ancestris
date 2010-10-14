@@ -7,6 +7,7 @@ package genjfr.app.pluginservice;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -33,6 +34,14 @@ public abstract class GenjFrPlugin implements PluginInterface {
 
     public static <T> T lookup(Class<T> clazz) {
         return abstractLookup.lookup(clazz);
+    }
+
+    public static Class lookupForName(Class clazz,String name){
+        for (Object sInterface : Lookup.getDefault().lookupAll(clazz)) {
+                if (((Class)sInterface).getCanonicalName().equals(name))
+                    return sInterface.getClass();
+            }
+        return null;
     }
 
     public String getPluginName() {

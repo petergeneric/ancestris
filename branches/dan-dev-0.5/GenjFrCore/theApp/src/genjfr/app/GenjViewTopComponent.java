@@ -9,7 +9,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Trackable;
 import genj.util.swing.Action2;
-import genj.util.swing.ImageIcon;
 import genj.util.swing.MenuHelper;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
@@ -23,13 +22,11 @@ import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -40,26 +37,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.Action;
 import javax.swing.FocusManager;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
-import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.Mode;
-import org.openide.windows.RetainLocation;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 
 /**
@@ -149,8 +135,8 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         return null;
     }
 
-    ImageIcon getImageIcon(){
-        return getViewFactory().getImage();
+    public Image getImageIcon(){
+        return getViewFactory().getImage().getImage();
     }
 
     public boolean createPanel(){
@@ -164,10 +150,10 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         return true;
     }
 
-    void setName() {
+    public void setName() {
         setName(getViewFactory().getTitle());
     }
-    void setToolTipText(){
+    public void setToolTipText(){
         setToolTipText(getViewFactory().getTitle());
     }
 

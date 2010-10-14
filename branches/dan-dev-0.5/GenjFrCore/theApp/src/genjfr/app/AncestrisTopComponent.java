@@ -8,6 +8,7 @@ import genj.gedcom.Gedcom;
 import genj.util.swing.ImageIcon;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -19,7 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -54,6 +57,7 @@ import org.openide.windows.WindowManager;
  *   => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
+@ServiceProvider(service=GenjViewInterface.class)
 public class AncestrisTopComponent extends TopComponent implements GenjViewInterface{
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
@@ -258,6 +262,8 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         setName();
         setToolTipText();
         setContext(context);
+        if (getImageIcon() != null)
+            setIcon(getImageIcon());
         if (context == null || context.getGedcom() == null) {
             return;
         }
@@ -270,8 +276,6 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
             setName(gedcomName);
             setToolTipText(getToolTipText() + ": " + gedcomName);
         }
-        if (getImageIcon() != null)
-            setIcon(getImageIcon().getImage());
         // Modification du titre de la fenetre si undockee
         // voir ici: http://old.nabble.com/Look-and-feel-issues-td21583766.html
         this.addComponentListener(new ComponentAdapter() {
@@ -294,26 +298,27 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         return false;
     }
 
-    ImageIcon getImageIcon(){
+    public Image getImageIcon(){
         return null;
     }
-    void setName() {
+    public void setName() {
         setName("");
     }
-    void setToolTipText(){
+    public void setToolTipText(){
         setToolTipText("");
     }
 
     //FIXME: revoir la synchro avec le CC
-    void waitStartup(String name){
+    public void waitStartup(String name){
         final String gedName = name;
                 new Thread(new Runnable() {
+            @SuppressWarnings("empty-statement")
             public void run() {
                 while (!App.center.isReady(0))
                         ;
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                    if (App.center.getOpenedGedcom(gedName) == null)
+                    if (App.center.getOpenedContext(gedName) == null)
                         close();
                     else {
                         init(App.center.getOpenedContext(gedName));

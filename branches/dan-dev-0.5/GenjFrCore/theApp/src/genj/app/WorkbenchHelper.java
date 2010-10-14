@@ -117,13 +117,13 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         // try gedcom properties
         Registry gedcomSettings = App.getRegistry(context.getGedcom());
 
-        try {
+        // FIXME: a reecrire plus proprement
         for (int i = 0; i < 20; i++) {
             String item = gedcomSettings.get("openViews" + i, (String) null);
             if (item == null) {
                 break;
             }
-            openedViews.add(Class.forName(item));
+            openedViews.add(GenjFrPlugin.lookupForName(GenjViewInterface.class, item));
         }
 
         if (openedViews.isEmpty()) {
@@ -132,11 +132,8 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                 if (item == null) {
                     break;
                 }
-                openedViews.add(Class.forName(item));
+            openedViews.add(GenjFrPlugin.lookupForName(GenjViewInterface.class, item));
             }
-        }
-        } catch (ClassNotFoundException ex) {
-               //Exceptions.printStackTrace(ex);
         }
         if (openedViews.isEmpty()) {
             // Open default views

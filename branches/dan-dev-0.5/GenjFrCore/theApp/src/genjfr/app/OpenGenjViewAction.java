@@ -6,6 +6,7 @@
 package genjfr.app;
 
 import genj.util.swing.Action2;
+import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ final class OpenGenjViewAction extends Action2  {
     OpenGenjViewAction(AncestrisTopComponent component, Map<?,?> map) {
         this.component = component;
         this.map = map;
-        setImage(component.getImageIcon());
+        setImage(new ImageIcon(component.getImageIcon()));
         setText((String)map.get("displayName"));
 //        setText(component.getViewFactory().getTitle(true));
 //        putValue(Action.NAME,(String)map.get("displayName"));
