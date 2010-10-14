@@ -9,45 +9,40 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
+import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
-import genjfr.app.GenjViewInterface;
+import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.explorer.ExplorerNode;
+import java.awt.Image;
 import java.util.Collection;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import javax.swing.GroupLayout;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
-import org.openide.windows.Mode;
-import org.openide.windows.TopComponent;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
-import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
-import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
-public final class EditorStdTopComponent extends TopComponent implements LookupListener,GenjViewInterface {
+public final class EditorStdTopComponent extends AncestrisTopComponent implements LookupListener {
 
     // One TopComponent per Gedcom
-    private static SortedMap<String, EditorStdTopComponent> instances;
+// Utiliser les lookup    private static SortedMap<String, EditorStdTopComponent> instances;
     //
     // Path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/editorstd/images/editorStd.png";
     private static final String PREFERRED_ID = "EditorStdTopComponent";
     // Variables per TopComponent instance
-    private Gedcom gedcom = null;
+//    private Gedcom gedcom = null;
     private Lookup.Result result = null;
     private EntityPanel panelOn = null;
     private Entity previousSelectedEntity = null;
@@ -56,95 +51,51 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
         super();
     }
 
-    public EditorStdTopComponent(Gedcom gedcom, String id) {
+    public EditorStdTopComponent(Context context) {
         super();
-        init(gedcom, id);
+        init(context);
     }
 
-    public void init(Gedcom gedParam, String id) {
-        // Init gedcom
-        initGedcom(gedParam);
-        if (gedcom == null) {
-            close();
-            return;
-        }
-
-        // TopComponent name, tooltip and Gedcom
+    public Image getImageIcon(){
+        return ImageUtilities.loadImage(ICON_PATH, true);
+    }
+    public void setName() {
         setName(NbBundle.getMessage(EditorStdTopComponent.class, "CTL_EditorStdTopComponent"));
+    }
+    public void setToolTipText(){
         setToolTipText(NbBundle.getMessage(EditorStdTopComponent.class, "HINT_EditorStdTopComponent"));
-        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-        ToolTipManager.sharedInstance().setDismissDelay(10000);
-        String name;
-        if ((gedcom != null) && ((name = gedcom.getName()) != null)) {
-            setName(name);
-            setToolTipText(getToolTipText() + ": " + name);
-        }
+    }
 
+    @Override
+    public void init(Context context) {
+        super.init(context);
+        ToolTipManager.sharedInstance().setDismissDelay(10000);
+    }
+
+    @Override
+    public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
 
-        // Set Panel with entity
-        if (gedcom != null && id != null && !id.isEmpty()) {
-            setPanel(gedcom.getEntity(id));
+        if (getContext() != null && getContext().getEntity() != null){
+            setPanel(getContext().getEntity());
         }
-    }
-
-    private void initGedcom(Gedcom gedParam) {
-        if (gedcom == null) {
-            if (gedParam == null) {
-                Context c = App.center.getSelectedContext(true);
-                if (c == null) {
-                    return;
-                }
-                gedcom = c.getGedcom();
-            } else {
-                gedcom = gedParam;
-            }
-        }
-        setGedcom(gedcom);
-    }
-
-    private void setGedcom(Gedcom selectedGedcom) {
-        gedcom = selectedGedcom;
-        String name;
-        if ((gedcom != null) && ((name = gedcom.getName()) != null)) {
-            setName(name);
-            setToolTipText(getToolTipText() + ": " + name);
-        }
-    }
-
-    public Gedcom getGedcom() {
-        return gedcom;
+        return true;
     }
 
     public static EditorStdTopComponent updateInstances(EditorStdTopComponent aThis) {
-        if (instances == null) {
-            instances = new TreeMap<String, EditorStdTopComponent>();
-        }
-        if (aThis != null) {
-            instances.put(aThis.getGedcom().getOrigin().toString(), aThis);
-            return aThis;
-        }
         Context c = App.center.getSelectedContext(true);
-        if (c == null) {
+        if (c == null || c.getGedcom() == null) {
             return null;
         }
-        Gedcom selectedGedcom = c.getGedcom();
-        Entity selectedEntity = c.getEntity();
-        String selectedId = "";
-        if (selectedGedcom == null) {
-            return null;
+        for (EditorStdTopComponent editor : GenjFrPlugin.lookupAll(EditorStdTopComponent.class)) {
+            if ((c.getGedcom().equals(editor.getContext().getGedcom())))
+                return editor;
         }
-        if (selectedEntity != null) {
-            selectedId = selectedEntity.getId();
-        }
-        String gedcomName = selectedGedcom.getOrigin().toString();
-        EditorStdTopComponent editorTC = instances.get(gedcomName);
-        if (editorTC == null) {
-            editorTC = new EditorStdTopComponent(selectedGedcom, selectedId);
-            instances.put(gedcomName, editorTC);
-        }
-        return editorTC;
+
+        EditorStdTopComponent instance = new EditorStdTopComponent(c);
+        GenjFrPlugin.register(instance);
+        return instance;
     }
 
     /** This method is called from within the constructor to
@@ -205,7 +156,7 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
+            getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
@@ -227,11 +178,6 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public void componentOpened() {
         Lookup.Template tpl = new Lookup.Template(ExplorerNode.class);
@@ -243,18 +189,20 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
     public void componentClosed() {
         result.removeLookupListener(this);
         result = null;
+        GenjFrPlugin.unregister(this);
     }
 
     @Override
     public void resultChanged(LookupEvent lookupEvent) {
+        if (getContext() == null)
+            return;
         Lookup.Result r = (Lookup.Result) lookupEvent.getSource();
         Collection c = r.allInstances();
         if (!c.isEmpty()) {
             ExplorerNode o = (ExplorerNode) c.iterator().next();
-            Entity selectedEntity = o.getContext() != null ? o.getContext().getEntity() : null;
-            if (gedcom != null && selectedEntity != null && selectedEntity.getGedcom() == gedcom) {
-                setPanel(selectedEntity);
-            }
+            if (!getContext().getGedcom().equals(o.getContext().getGedcom()))
+                return;
+            setPanel(o.getContext().getEntity());
         }
     }
 
@@ -262,8 +210,8 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        if (gedcom != null) {
-            p.setProperty("gedcom", gedcom.getOrigin().toString());
+        if (getGedcom() != null) {
+            p.setProperty("gedcom", getGedcom().getOrigin().toString());
             if (panelOn != null && panelOn.getEntity() != null) {
                 p.setProperty("entity", panelOn.getEntity().getId());
             }
@@ -282,34 +230,8 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
         if (gedcomProperty == null) {
             close();
         } else {
-            waitStartup(gedcomProperty, entityProperty);
+            waitStartup(gedcomProperty);
         }
-    }
-
-    void waitStartup(String gedcomProperty, String entityProperty) {
-        final String gedName = gedcomProperty;
-        final String entId = entityProperty;
-        final EditorStdTopComponent aThis = this;
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                while (!App.center.isReady(0));
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Context c = App.center.getOpenedContext(gedName);
-                        if (c == null) {
-                            return;
-                        }
-                        init(c.getGedcom(), entId);
-                        updateInstances(aThis);
-                    }
-                });
-            }
-        }).start();
-
     }
 
     @Override
@@ -354,32 +276,5 @@ public final class EditorStdTopComponent extends TopComponent implements LookupL
 
         // Remember displayed panel
         panelOn = jPanelEntity;
-    }
-
-
-    String getDefaultFactoryMode() {return "genjfr-editor";}
-
-    String getDefaultMode(){
-        return NbPreferences.forModule(this.getClass()).get(preferredID()+".dockMode",getDefaultFactoryMode());
-    }
-
-    public void setDefaultMode(String mode) {
-        NbPreferences.forModule(this.getClass()).put(preferredID()+".dockMode", mode);
-    }
-
-    public void setDefaultMode(Mode mode) {
-        setDefaultMode(mode.getName());
-    }
-
-    public Mode getMode() {
-        return WindowManager.getDefault().findMode(this);
-    }
-
-
-    @Override
-    public void init(Context context) {
-        if (context != null){
-            init(context.getGedcom(),context.getEntity().getId());
-        }
     }
 }
