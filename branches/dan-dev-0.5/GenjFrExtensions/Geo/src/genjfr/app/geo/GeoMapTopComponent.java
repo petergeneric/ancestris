@@ -7,8 +7,9 @@ package genjfr.app.geo;
 import genj.gedcom.Context;
 import genjfr.util.GedcomDirectory;
 import genj.gedcom.Gedcom;
+import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
-import genjfr.app.GenjViewTopComponent;
+import genjfr.app.GenjViewInterface;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -60,6 +61,7 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
 /**
@@ -67,7 +69,8 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoMap//EN",
 autostore = false)
-public final class GeoMapTopComponent extends GenjViewTopComponent implements GeoPlacesListener {
+@ServiceProvider(service=GenjViewInterface.class)
+public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener {
 
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/geo/geo.png";
@@ -701,7 +704,7 @@ public final class GeoMapTopComponent extends GenjViewTopComponent implements Ge
             theList = new GeoListTopComponent();
         }
         if (!theList.isInitialised()) {
-            theList.init(gedcom);
+            theList.init(getContext());
             theList.open();
         }
         theList.requestActive();

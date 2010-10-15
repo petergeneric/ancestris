@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 public final class GeoListAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         GeoListTopComponent tc = new GeoListTopComponent();
-        tc.init(App.center.getSelectedGedcom(true));
+        tc.init(App.center.getSelectedContext(true));
         tc.open();
         tc.requestActive();
     }

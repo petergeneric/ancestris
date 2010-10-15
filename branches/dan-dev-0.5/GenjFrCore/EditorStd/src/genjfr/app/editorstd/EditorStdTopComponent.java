@@ -11,6 +11,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
+import genjfr.app.GenjViewInterface;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.explorer.ExplorerNode;
 import java.awt.Image;
@@ -27,12 +28,14 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
+@ServiceProvider(service=GenjViewInterface.class)
 public final class EditorStdTopComponent extends AncestrisTopComponent implements LookupListener {
 
     // One TopComponent per Gedcom

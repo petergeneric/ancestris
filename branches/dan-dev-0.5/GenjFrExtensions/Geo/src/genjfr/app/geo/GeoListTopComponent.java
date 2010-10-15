@@ -4,24 +4,22 @@
  */
 package genjfr.app.geo;
 
-import genj.gedcom.Context;
-import genjfr.util.GedcomDirectory;
 import genj.gedcom.Gedcom;
+import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
-import genjfr.app.GenjViewTopComponent;
+import genjfr.app.GenjViewInterface;
+import genjfr.app.pluginservice.GenjFrPlugin;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import java.util.Iterator;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
-import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
-import org.openide.util.ImageUtilities;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
 /**
@@ -29,7 +27,8 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoList//EN",
 autostore = false)
-public final class GeoListTopComponent extends GenjViewTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
+@ServiceProvider(service=GenjViewInterface.class)
+public final class GeoListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
 
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/geo/list.png";
@@ -37,7 +36,7 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
     private GeoNodeObject[] nodes = null;
     private ExplorerManager mgr = new ExplorerManager();
     //
-    private Gedcom gedcom = null;
+//    private Gedcom gedcom = null;
     private GeoPlacesList gpl = null;
     private boolean isInitialised = false;
 
@@ -46,13 +45,8 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
         //super.setDefaultMode("anonymousMode_7");
     }
 
-    public void init(Gedcom gedParam) {
-        // Init gedcom
-        initGedcom(gedParam);
-        if (gedcom == null) {
-            close();
-        }
-
+    @Override
+    public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
 
@@ -60,42 +54,15 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
         ((BeanTreeView) jScrollPane1).setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         ((MyBeanTreeView) jScrollPane1).setUseSubstringInQuickSearch(true);
 
-        // TopComponent name and tooltip
-        setName(NbBundle.getMessage(GeoListTopComponent.class, "CTL_GeoListTopComponent"));
-        setToolTipText(NbBundle.getMessage(GeoListTopComponent.class, "HINT_GeoListTopComponent"));
-        String name;
-        if ((gedcom != null) && ((name = gedcom.getName()) != null)) {
-            setName(name);
-            setToolTipText(getToolTipText() + ": " + name);
-        }
-        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-
         // Init tree
         initTree();
         isInitialised = true;
-    }
-
-    private void initGedcom(Gedcom gedParam) {
-        if (gedcom == null) {
-            if (gedParam == null) {
-                gedcom = App.center.getSelectedGedcom(true); // get selected gedcom
-                if (gedcom == null) { // if none selected, take first one
-                    Iterator it = GedcomDirectory.getInstance().getContexts().iterator();
-                    if (it.hasNext()) { // well, apparently no gedcom exist in the list
-                        gedcom = ((Context) it.next()).getGedcom();
-                    }
-                }
-            } else {
-                gedcom = gedParam;
-            }
-        }
-        super.setGedcom(gedcom);
-        super.addLookup();
+        return true;
     }
 
     private void initTree() {
         // Launch search for locations and set listener
-        gpl = GeoPlacesList.getInstance(gedcom);
+        gpl = GeoPlacesList.getInstance(getGedcom());
         if (gpl.getPlaces() == null) {
             gpl.launchPlacesSearch();
         } else {
@@ -129,19 +96,20 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
 
     @Override
     public void componentClosed() {
-        if (gedcom != null) {
-            GeoPlacesList gpl = GeoPlacesList.getInstance(gedcom);
+        if (getGedcom() != null) {
+            GeoPlacesList gpl = GeoPlacesList.getInstance(getGedcom());
             gpl.removeGeoPlacesListener(this);
         }
         mgr.removePropertyChangeListener(this);
+        GenjFrPlugin.unregister(this);
     }
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        if (gedcom != null) {
-            p.setProperty("gedcom", gedcom.getOrigin().toString());
+        if (getGedcom() != null) {
+            p.setProperty("gedcom", getGedcom().getOrigin().toString());
         }
     }
 
@@ -152,24 +120,6 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
             return;
         }
         waitStartup(gedName);
-    }
-
-    //FIXME: revoir la synchro avec le CC
-    public void waitStartup(String name) {
-        final String gedName = name;
-        new Thread(new Runnable() {
-
-            public void run() {
-                while (!App.center.isReady(0));
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    public void run() {
-                        init(App.center.getOpenedGedcom(gedName));
-                    }
-                });
-            }
-        }).start();
-
     }
 
     @Override
@@ -183,10 +133,6 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
 
     public boolean isInitialised() {
         return isInitialised;
-    }
-
-    public Gedcom getGedcom() {
-        return gedcom;
     }
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
@@ -229,7 +175,7 @@ public final class GeoListTopComponent extends GenjViewTopComponent implements E
                 for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
                     if (tc instanceof GeoMapTopComponent) {
                         GeoMapTopComponent gmtc = (GeoMapTopComponent) tc;
-                        if (gmtc.getGedcom() == gedcom) {
+                        if (gmtc.getGedcom() == getGedcom()) {
                             theMap = gmtc;
                             break;
                         }
