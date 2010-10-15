@@ -4,21 +4,21 @@
  */
 package genjfr.app.geo;
 
-import genj.gedcom.Gedcom;
 import genjfr.app.AncestrisTopComponent;
-import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.TreeSelectionModel;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
@@ -43,6 +43,21 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     public GeoListTopComponent() {
         super();
         //super.setDefaultMode("anonymousMode_7");
+    }
+
+    @Override
+    public Image getImageIcon() {
+        return ImageUtilities.loadImage(ICON_PATH, true);
+    }
+
+    @Override
+    public void setName() {
+        setName(NbBundle.getMessage(GeoListTopComponent.class, "CTL_GeoListTopComponent"));
+    }
+
+    @Override
+    public void setToolTipText() {
+        setToolTipText(NbBundle.getMessage(GeoListTopComponent.class, "HINT_GeoListTopComponent")); 
     }
 
     @Override

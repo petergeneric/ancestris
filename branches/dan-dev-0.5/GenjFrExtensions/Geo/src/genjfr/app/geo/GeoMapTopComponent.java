@@ -10,12 +10,14 @@ import genj.gedcom.Gedcom;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
+import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -81,7 +83,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         NbBundle.getMessage(GeoMapTopComponent.class, "maps.googlemap"),
         NbBundle.getMessage(GeoMapTopComponent.class, "maps.cassini")
     };
-    private Gedcom gedcom = null;
+//    private Gedcom gedcom = null;
     private GeoPlacesList gpl = null;
     private GeoNodeObject[] markers = null;
     private Set<GeoPoint> geoPoints = new HashSet<GeoPoint>();
@@ -107,24 +109,30 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         super();
     }
 
-    public void init(Gedcom gedParam) {
-        // Init gedcom
-        initGedcom(gedParam);
-        if (gedcom == null) {
-            close();
-        }
+    @Override
+    public Image getImageIcon() {
+        return ImageUtilities.loadImage(ICON_PATH, true);
+    }
 
-        // TopComponent name, tooltip and Gedcom
+    @Override
+    public void setName() {
         setName(NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
-        setToolTipText(NbBundle.getMessage(GeoMapTopComponent.class, "HINT_GeoMapTopComponent"));
-        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-        ToolTipManager.sharedInstance().setDismissDelay(10000);
-        String name;
-        if ((gedcom != null) && ((name = gedcom.getName()) != null)) {
-            setName(name);
-            setToolTipText(getToolTipText() + ": " + name);
-        }
+    }
 
+    @Override
+    public void setToolTipText() {
+        setToolTipText(NbBundle.getMessage(GeoMapTopComponent.class, "HINT_GeoMapTopComponent"));
+    }
+
+    @Override
+    public void init(Context context) {
+        super.init(context);
+        geoFilter.setGedcom(context.getGedcom());
+        ToolTipManager.sharedInstance().setDismissDelay(10000);
+    }
+
+    @Override
+    public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
         jXMapKit1.setDataProviderCreditShown(true);
@@ -142,47 +150,24 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jButton6.setEnabled(false);
         initMarkersList();
         applyFilters();
-    }
-
-    private void initGedcom(Gedcom gedParam) {
-        if (gedcom == null) {
-            if (gedParam == null) {
-                gedcom = App.center.getSelectedGedcom(true); // get selected gedcom
-                if (gedcom == null) { // if none selected, take first one
-                    Iterator it = GedcomDirectory.getInstance().getContexts().iterator();
-                    if (it.hasNext()) { // well, apparently no gedcom exist in the list
-                        gedcom = ((Context) it.next()).getGedcom();
-                    }
-                }
-            } else {
-                gedcom = gedParam;
-            }
-            geoFilter.setGedcom(gedcom);
-        }
-        super.setGedcom(gedcom);
-        super.addLookup();
+        return true;
     }
 
     private void initMarkersList() {
         // Check we get a gedcom
-        if (gedcom == null) {
+        if (getGedcom() == null) {
             // TODO resolve when tc is null, should be provided by Control Center
             JOptionPane.showMessageDialog(null, "Vous devez d'abord ouvrir un fichier gedcom pour lancer le module Géographique");
             return;
         }
         // Launch search for markers and set listener
-        gpl = GeoPlacesList.getInstance(gedcom);
+        gpl = GeoPlacesList.getInstance(getGedcom());
         if (gpl.getPlaces() == null) {
             gpl.launchPlacesSearch();
         } else {
             geoPlacesChanged(gpl, "gedcom");
         }
         gpl.addGeoPlacesListener(this);
-    }
-
-    @Override
-    public Gedcom getGedcom() {
-        return gedcom;
     }
 
     public GeoNodeObject[] getMarkers() {
@@ -694,7 +679,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
             if (tc instanceof GeoListTopComponent) {
                 GeoListTopComponent gltc = (GeoListTopComponent) tc;
-                if (gltc.getGedcom() == gedcom) {
+                if (gltc.getGedcom() == getGedcom()) {
                     theList = gltc;
                     break;
                 }
@@ -854,7 +839,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         jButton6.setEnabled(false);
-        GeoPlacesList.getInstance(gedcom).launchPlacesSearch();
+        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch();
     }//GEN-LAST:event_jButton6ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -899,18 +884,19 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public void componentClosed() {
-        if (gedcom != null) {
-            GeoPlacesList gpl = GeoPlacesList.getInstance(gedcom);
+        if (getGedcom() != null) {
+            GeoPlacesList gpl = GeoPlacesList.getInstance(getGedcom());
             gpl.removeGeoPlacesListener(this);
         }
+        GenjFrPlugin.register(this);
     }
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        if (gedcom != null) {
-            p.setProperty("gedcom", gedcom.getOrigin().toString());
+        if (getGedcom() != null) {
+            p.setProperty("gedcom", getGedcom().getOrigin().toString());
         }
         if (jXMapKit1 == null) {
             return;
@@ -975,24 +961,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         waitStartup(gedName);
     }
 
-    //FIXME: revoir la synchro avec le CC
-    public void waitStartup(String name) {
-        final String gedName = name;
-        new Thread(new Runnable() {
-
-            public void run() {
-                while (!App.center.isReady(0));
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    public void run() {
-                        init(App.center.getOpenedGedcom(gedName));
-                    }
-                });
-            }
-        }).start();
-
-    }
-
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
@@ -1051,7 +1019,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         } else if (change.equals("name")) {
         } else if (change.equals("gedcom")) {
             markers = gpl.getPlaces();
-            geoFilter.calculatesIndividuals(gedcom, true); // refresh lists from gedcom changes
+            geoFilter.calculatesIndividuals(getGedcom(), true); // refresh lists from gedcom changes
         }
         applyFilters();
     }
@@ -1060,7 +1028,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         isBusyRecalc = true;
         geoPoints.clear();
         if (markers != null) {
-            geoFilter.calculatesIndividuals(gedcom, false); // refresh lists from selections being made in the editor or the list, not from gedcom changes
+            geoFilter.calculatesIndividuals(getGedcom(), false); // refresh lists from selections being made in the editor or the list, not from gedcom changes
             for (int i = 0; i < markers.length; i++) {
                 GeoNodeObject geoNodeObject = markers[i];
                 if (geoFilter.complies(geoNodeObject)) {

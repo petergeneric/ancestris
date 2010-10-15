@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 public final class GeoMapAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         GeoMapTopComponent tc = new GeoMapTopComponent();
-        tc.init(App.center.getSelectedGedcom(true));
+        tc.init(App.center.getSelectedContext(true));
         tc.open();
         tc.requestActive();
     }
