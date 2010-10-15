@@ -7,12 +7,9 @@ package genjfr.app;
 
 import genj.timeline.TimelineViewFactory;
 import genj.view.ViewFactory;
-import java.util.logging.Logger;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Top component which displays something.
@@ -21,6 +18,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
     dtd="-//genjfr.app//Timeline//EN",
     autostore=false
 )
+@ServiceProvider(service=GenjViewInterface.class)
 public final class TimelineTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TimelineTopComponent";

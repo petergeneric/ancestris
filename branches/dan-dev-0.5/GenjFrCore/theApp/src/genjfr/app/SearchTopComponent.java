@@ -9,11 +9,10 @@ import genj.gedcom.Property;
 import genj.search.SearchView;
 import genj.search.SearchViewFactory;
 import genj.view.ViewFactory;
-import java.util.ArrayList;
 import java.util.List;
-import org.openide.windows.TopComponent;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Top component which displays something.
@@ -22,6 +21,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
     dtd="-//genjfr.app//Search//EN",
     autostore=false
 )
+@ServiceProvider(service=GenjViewInterface.class)
 public final class SearchTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "SearchTopComponent";

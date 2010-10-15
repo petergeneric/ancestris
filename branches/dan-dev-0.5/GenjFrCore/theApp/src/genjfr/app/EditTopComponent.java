@@ -9,9 +9,9 @@ import genj.edit.EditViewFactory;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
-import genj.view.ViewContext;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 
 /**
@@ -20,6 +20,7 @@ import org.openide.windows.RetainLocation;
 @ConvertAsProperties(dtd = "-//genjfr.app//Edit//EN",
 autostore = false)
 @RetainLocation("genjfr-editor")
+@ServiceProvider(service=GenjViewInterface.class)
 public final class EditTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "EditTopComponent";

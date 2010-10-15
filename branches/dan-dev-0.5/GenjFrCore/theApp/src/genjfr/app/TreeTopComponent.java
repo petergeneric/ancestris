@@ -9,6 +9,7 @@ import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 
 /**
@@ -19,6 +20,7 @@ import org.openide.windows.RetainLocation;
     autostore=false
 )
 @RetainLocation("genjfr-output")
+@ServiceProvider(service=GenjViewInterface.class)
 public final class TreeTopComponent extends GenjViewTopComponent {
 
     private static TreeTopComponent factory;

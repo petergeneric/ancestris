@@ -8,6 +8,7 @@ package genjfr.app;
 import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 
 /**
@@ -18,6 +19,7 @@ import org.openide.windows.RetainLocation;
     autostore=false
 )
 @RetainLocation("genjfr-table")
+@ServiceProvider(service=GenjViewInterface.class)
 public final class TableTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TableTopComponent";

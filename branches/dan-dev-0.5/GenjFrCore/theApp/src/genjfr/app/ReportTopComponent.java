@@ -9,6 +9,7 @@ import genj.report.ReportViewFactory;
 import genj.view.ViewFactory;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Top component which displays something.
@@ -17,6 +18,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
     dtd="-//genjfr.app//Report//EN",
     autostore=false
 )
+@ServiceProvider(service=GenjViewInterface.class)
 public final class ReportTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "ReportTopComponent";
