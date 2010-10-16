@@ -144,8 +144,8 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
            return false;
         // create the view
         view = getViewFactory().createView();
-        view.setContext(getContext(), true);
         setPanel(view);
+        view.setContext(getContext(), true);
         setToolBar(view);
         return true;
     }

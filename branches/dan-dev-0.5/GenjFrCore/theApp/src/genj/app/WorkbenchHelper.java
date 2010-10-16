@@ -47,6 +47,7 @@ import genjfr.app.GenjViewTopComponent;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.app.pluginservice.PluginInterface;
 import genjfr.util.GedcomDirectory;
+import java.awt.Component;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -105,6 +106,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             if (context != null) {
                 GedcomDirectory.getInstance().registerGedcom(context);
                 openDefaultViews(context);
+                SelectionSink.Dispatcher.fireSelection((Component)null, context, true);
             }
         return context;
     }

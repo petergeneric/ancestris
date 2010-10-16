@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genjfr.app;
 
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
 //import org.openide.util.ImageUtilities;
+import java.awt.Graphics;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -15,28 +16,33 @@ import org.openide.windows.RetainLocation;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(
-    dtd="-//genjfr.app//Tree//EN",
-    autostore=false
-)
+@ConvertAsProperties(dtd = "-//genjfr.app//Tree//EN",
+autostore = false)
 @RetainLocation("genjfr-output")
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service = GenjViewInterface.class)
 public final class TreeTopComponent extends GenjViewTopComponent {
 
     private static TreeTopComponent factory;
     private static ViewFactory viewfactory = new TreeViewFactory();
-
     private static final String PREFERRED_ID = "TreeTopComponent";
+
+    /*
+     * lors de l'initialisation de la vue la taille du panel n'est pas correcte (0,0)
+     * donc le node n'est pas centre dans la vue. Ce flag permet de lancer un recentrage lorsque
+     * la taille a ete positionnee correctement et donc de refaire un centrage correct
+     * apres.
+     */
+    private boolean sizeIsCorrect = false;
 
     ViewFactory getViewFactory() {
         return viewfactory;
     }
 
-
     @Override
     String getDefaultFactoryMode() {
         return "genjfr-output";
     }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -77,10 +83,23 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         super.writeProperties(p);
     }
 
-
     Object readProperties(java.util.Properties p) {
         readPropertiesImpl(p);
         return this;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (!sizeIsCorrect) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    getView().setContext(getContext(), false);
+                }
+            });
+            sizeIsCorrect = true;
+        }
     }
 
     @Override
