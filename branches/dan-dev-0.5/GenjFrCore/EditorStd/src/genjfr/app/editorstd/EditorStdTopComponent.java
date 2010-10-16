@@ -6,6 +6,9 @@ package genjfr.app.editorstd;
 
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.UnitOfWork;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
@@ -18,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import javax.swing.GroupLayout;
 import javax.swing.ToolTipManager;
+import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.ImageUtilities;
@@ -299,6 +303,11 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
             saveImpl = new SaveCookieImpl();
         }
 
+        @Override
+        public String getDisplayName() {
+            return getGedcom().getName();
+        }
+
         private class SaveCookieImpl implements SaveCookie {
 
             @Override
@@ -309,8 +318,17 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 //                if (NotifyDescriptor.YES_OPTION.equals(result)) {
                 fire(false);
                 for (Iterator it = panels.iterator(); it.hasNext();) {
-                    EntityPanel panel = (EntityPanel) it.next();
-                    panel.saveEntity();
+                    final EntityPanel panel = (EntityPanel) it.next();
+                    try {
+                        getContext().getGedcom().doUnitOfWork(new UnitOfWork() {
+                            @Override
+                            public void perform(Gedcom gedcom) throws GedcomException {
+                                panel.saveEntity();
+                            }
+                        });
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
                 App.workbenchHelper.saveGedcom(getContext());
 //                }

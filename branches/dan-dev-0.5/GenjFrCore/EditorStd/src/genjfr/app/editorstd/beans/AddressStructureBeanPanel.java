@@ -280,22 +280,28 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
 
     private void updateField(JTextComponent text, Property prop) {
         if (prop != null) {
-            text.setText(prop.getDisplayValue());
+            String oldText = text.getText();
+            String newText = prop.getDisplayValue();
+            text.setText(newText);
+            if (!oldText.equals(newText)) {
+                setModified(true);
+            }
         } else {
             text.setText("");
         }
     }
 
     private void save(Property parentProperty, Property propToSave, String PROP_TAG, String value) {
-        if (parentProperty == null) {
+        if (parentProperty == null || value == null) {
             return;
         }
-        if (value != null && !value.isEmpty()) {
-            if (propToSave == null) {
-                parentProperty.addProperty(PROP_TAG, value);
-            } else {
-                propToSave.setValue(value);
-            }
+        if (propToSave != null) {
+            propToSave.setValue(value);
+            return;
+        }
+        if (propToSave == null && !value.isEmpty()) {
+            parentProperty.addProperty(PROP_TAG, value);
+            return;
         }
     }
 

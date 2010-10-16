@@ -124,6 +124,27 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
         return null;
     }
 
+    public int getTabIndex(JTabbedPane tabPane, JPanel panel) {
+        for (int i = 0; i < tabPane.getTabCount(); i++) {
+            if (tabPane.getComponentAt(i) == panel) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    void setManagers(Manager URmanager, EditorStdTopComponent editor) {
+        return;
+    }
+
+    /**
+     * Gedcom listeners
+     * - for addition, nothing
+     * - for deletion, nothing for the moment.
+     * - for the rest, reload entity and display
+     *
+     */
+
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
         return;
@@ -137,29 +158,22 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
     @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
         loadEntity(this.getEntity());
+        displayEntity();
     }
 
     @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
         loadEntity(this.getEntity());
+        displayEntity();
     }
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
         loadEntity(this.getEntity());
+        displayEntity();
     }
-
-    public int getTabIndex(JTabbedPane tabPane, JPanel panel) {
-        for (int i = 0; i < tabPane.getTabCount(); i++) {
-            if (tabPane.getComponentAt(i) == panel) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    void setManagers(Manager URmanager, EditorStdTopComponent editor) {
-        return;
-    }
+    /**
+     * End of Gedcom listeners
+     */
 
 }
