@@ -116,4 +116,4 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
     public Context getContext() {
         return context;
     }
-}
+    }

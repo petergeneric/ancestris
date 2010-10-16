@@ -23,7 +23,7 @@
     <attr name="Menu\File\org-netbeans-modules-project-ui-groups-GroupsMenu.shadow\position" intvalue="1300"/>
     <attr name="Menu\File\org-openide-actions-SaveAction.instance\position" intvalue="1850"/>
     <attr name="Menu\File\org-openide-actions-SaveAllAction.instance\position" intvalue="2200"/>
-    <attr name="Menu\File\org-openide-actions-SaveAsAction.shadow\position" intvalue="2100"/>
+    <attr name="Menu\File\org-openide-actions-SaveAsAction.instance\position" intvalue="2100"/>
     <folder name="Actions">
         <folder name="File">
             <file name="genjfr-app-ActionNew.instance">
@@ -170,7 +170,7 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            </folder>
+        </folder>
     </folder>
     <file name="BugtrackingOptionsDialog_hidden"/>
     <file name="DTDs_hidden"/>
@@ -201,14 +201,19 @@
             <file name="genjfr-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
                 <attr name="position" intvalue="1801"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+            <file name="org-openide-actions-SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="1850"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="genjfr-app-ActionSaveAs.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSaveAs.instance"/>
                 <attr name="position" intvalue="1900"/>
             </file>
-            <file name="org-openide-actions-SaveAction.instance_hidden"/>
-            <file name="org-openide-actions-SaveAllAction.instance_hidden"/>
             <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
         <file name="GoTo_hidden"/>
         <folder name="Help">
@@ -360,7 +365,8 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
--->            </file>
+-->
+            </file>
             <file name="genjfr_core_update_center.instance">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_core_update_center.instance"/>
                 <attr name="enabled" boolvalue="true"/>
@@ -370,7 +376,8 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
--->            </file>
+-->
+            </file>
         </folder>
         <folder name="JavaHelp">
             <file name="app-helpset.xml" url="app-helpset.xml">
@@ -416,6 +423,11 @@
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
                 <attr name="position" intvalue="20"/>
             </file>
+            <file name="org-openide-actions-SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
     </folder>
     <folder name="Windows2">
@@ -452,35 +464,35 @@
         </folder>
     </folder>
     <folder name="OptionsExport">
-    <folder name="MyCategory1">
-        <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
-        <attr name="position" intvalue="100"/>
-        <file name="option1">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
-            <attr name="include" stringvalue="config/Preferences/genjfr/.*|config/Preferences/genjfr/app/.*"/>
-        </file>
-        <file name="option2">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WinPreference"/>
-            <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
-        </file>
-        <file name="option3">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WorkPreference"/>
-            <attr name="include" stringvalue="config/Windows2Local/Components/.*"/>
-        </file>
-        <file name="option4">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
-            <attr name="include" stringvalue="genjfr/[^/]*|genjfr/gedart/.*"/>
-        </file>
-    </folder>
-    <folder name="MyCategory2">
-        <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference2"/>
-        <attr name="position" intvalue="200"/>
-        <file name="option5">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_AppPreference"/>
-            <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
-        </file>
-    </folder>
-            <folder name="blueprints">
+        <folder name="MyCategory1">
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+            <attr name="position" intvalue="100"/>
+            <file name="option1">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
+                <attr name="include" stringvalue="config/Preferences/genjfr/.*|config/Preferences/genjfr/app/.*"/>
+            </file>
+            <file name="option2">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WinPreference"/>
+                <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
+            </file>
+            <file name="option3">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WorkPreference"/>
+                <attr name="include" stringvalue="config/Windows2Local/Components/.*"/>
+            </file>
+            <file name="option4">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
+                <attr name="include" stringvalue="genjfr/[^/]*|genjfr/gedart/.*"/>
+            </file>
+        </folder>
+        <folder name="MyCategory2">
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference2"/>
+            <attr name="position" intvalue="200"/>
+            <file name="option5">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_AppPreference"/>
+                <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
+            </file>
+        </folder>
+        <folder name="blueprints">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
             <file name="blueprint">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
@@ -488,8 +500,8 @@
             </file>
         </folder>
 
-    <folder name="General_hidden"/>
-    <folder name="Advanced_hidden"/>
+        <folder name="General_hidden"/>
+        <folder name="Advanced_hidden"/>
     </folder>
 
 </filesystem>

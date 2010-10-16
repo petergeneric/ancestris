@@ -40,6 +40,7 @@ class EntitiesNode extends AbstractNode implements ExplorerNode{
     public Image getOpenedIcon(int type) {
         return getIcon(type);
     }
+    @Override
     public Action[] getActions(boolean isContext) {
         return new Action[]{};
     }
@@ -47,4 +48,4 @@ class EntitiesNode extends AbstractNode implements ExplorerNode{
     public Context getContext() {
         return gedcom == null? null:new Context(gedcom);
     }
-}
+    }

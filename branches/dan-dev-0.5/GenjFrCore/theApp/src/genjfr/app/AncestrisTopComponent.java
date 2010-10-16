@@ -298,7 +298,11 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         return false;
     }
 
-    public Image getImageIcon(){
+    public void refreshPanel(Context context) {
+        return;
+    }
+
+     public Image getImageIcon(){
         return null;
     }
     public void setName() {
