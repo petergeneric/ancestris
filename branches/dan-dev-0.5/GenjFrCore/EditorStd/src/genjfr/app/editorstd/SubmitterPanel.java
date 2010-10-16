@@ -14,6 +14,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Submitter;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.UndoRedo.Manager;
 import org.openide.util.NbBundle;
 
 /**
@@ -130,4 +131,10 @@ public class SubmitterPanel extends EntityPanel {
     public Entity getEntity() {
         return entity;
     }
+
+    @Override
+    void setManagers(Manager URmanager, EditorStdTopComponent editor) {
+        addressStructureBeanPanel.setManagers(URmanager, editor);
+    }
+
 }

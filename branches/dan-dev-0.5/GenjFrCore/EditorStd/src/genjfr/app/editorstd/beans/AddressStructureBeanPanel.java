@@ -14,11 +14,13 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyMultilineValue;
 import genj.gedcom.PropertySimpleValue;
+import genjfr.app.editorstd.EditorStdTopComponent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
+import org.openide.awt.UndoRedo.Manager;
 
 /**
  *
@@ -30,6 +32,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     private String title = "";
     private Property parentProperty;
     public boolean isModified;
+    private boolean isSetURmanager = false;
+    private EditorStdTopComponent editor;
 
     /** Creates new form AddressStructureBeanPanel */
     public AddressStructureBeanPanel() {
@@ -40,6 +44,7 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         this.index = index;
         this.title = ((javax.swing.JTabbedPane) getParent()).getTitleAt(index);
         addressStructure.addPropertyChangeListener(this);
+        // change listeners
         address_line.getDocument().addDocumentListener(this);
         address_line1.getDocument().addDocumentListener(this);
         address_line2.getDocument().addDocumentListener(this);
@@ -48,6 +53,7 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         address_postal_code.getDocument().addDocumentListener(this);
         address_country.getDocument().addDocumentListener(this);
         phone_number.getDocument().addDocumentListener(this);
+        // reset modified flag
         setModified(false);
     }
 
@@ -308,8 +314,28 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         setModified(true);
     }
 
-    private void setModified(boolean b) {
-        isModified = b;
-        ((javax.swing.JTabbedPane) getParent()).setTitleAt(index, b ? title + "*" : title);
+    private void setModified(boolean modified) {
+        isModified = modified;
+        ((javax.swing.JTabbedPane) getParent()).setTitleAt(index, modified ? title + "*" : title);
+        if (editor != null) {
+            editor.setModified(modified);
+        }
+    }
+
+    public void setManagers(Manager URmanager, EditorStdTopComponent editor) {
+        if (!isSetURmanager) {
+            isSetURmanager = true;
+            // change listeners
+            address_line.getDocument().addUndoableEditListener(URmanager);
+            address_line.getDocument().addUndoableEditListener(URmanager);
+            address_line1.getDocument().addUndoableEditListener(URmanager);
+            address_line2.getDocument().addUndoableEditListener(URmanager);
+            address_city.getDocument().addUndoableEditListener(URmanager);
+            address_state.getDocument().addUndoableEditListener(URmanager);
+            address_postal_code.getDocument().addUndoableEditListener(URmanager);
+            address_country.getDocument().addUndoableEditListener(URmanager);
+            phone_number.getDocument().addUndoableEditListener(URmanager);
+        }
+        this.editor = editor;
     }
 }

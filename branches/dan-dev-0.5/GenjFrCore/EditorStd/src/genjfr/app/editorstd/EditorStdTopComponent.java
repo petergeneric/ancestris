@@ -6,25 +6,27 @@ package genjfr.app.editorstd;
 
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.UnitOfWork;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.explorer.ExplorerNode;
 import java.awt.Image;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import javax.swing.GroupLayout;
 import javax.swing.ToolTipManager;
-import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.openide.awt.UndoRedo;
+import org.openide.cookies.SaveCookie;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
@@ -35,20 +37,27 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service = GenjViewInterface.class)
 public final class EditorStdTopComponent extends AncestrisTopComponent implements LookupListener {
 
-    // One TopComponent per Gedcom
-// Utiliser les lookup    private static SortedMap<String, EditorStdTopComponent> instances;
-    //
     // Path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/editorstd/images/editorStd.png";
     private static final String PREFERRED_ID = "EditorStdTopComponent";
+    //
+    // Keep track of opened panels for each editor
+    private HashSet<EntityPanel> panels = new HashSet<EntityPanel>();
+    //
     // Variables per TopComponent instance
-//    private Gedcom gedcom = null;
     private Lookup.Result result = null;
     private EntityPanel panelOn = null;
     private Entity previousSelectedEntity = null;
+    //
+    // Undo/Redo manager
+    private UndoRedo.Manager URmanager = new UndoRedo.Manager();
+    //
+    // Save cookie
+    private DummyNode dummyNode;
+    private Context context;
 
     public EditorStdTopComponent() {
         super();
@@ -59,13 +68,18 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         init(context);
     }
 
-    public Image getImageIcon(){
+    @Override
+    public Image getImageIcon() {
         return ImageUtilities.loadImage(ICON_PATH, true);
     }
+
+    @Override
     public void setName() {
         setName(NbBundle.getMessage(EditorStdTopComponent.class, "CTL_EditorStdTopComponent"));
     }
-    public void setToolTipText(){
+
+    @Override
+    public void setToolTipText() {
         setToolTipText(NbBundle.getMessage(EditorStdTopComponent.class, "HINT_EditorStdTopComponent"));
     }
 
@@ -76,29 +90,42 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     }
 
     @Override
+    public void refreshPanel(Context context) {
+        setPanel(context.getEntity());
+    }
+
+    @Override
     public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
 
-        if (getContext() != null && getContext().getEntity() != null){
+        // Create a dummy node for the save button
+        setActivatedNodes(new Node[]{dummyNode = new DummyNode()});
+
+        // Set Panel with entity
+        if (getContext() != null && getContext().getEntity() != null) {
             setPanel(getContext().getEntity());
         }
         return true;
     }
 
-    public static EditorStdTopComponent updateInstances(EditorStdTopComponent aThis) {
+    public static EditorStdTopComponent updateInstances() {
         Context c = App.center.getSelectedContext(true);
         if (c == null || c.getGedcom() == null) {
             return null;
         }
         for (EditorStdTopComponent editor : GenjFrPlugin.lookupAll(EditorStdTopComponent.class)) {
-            if ((c.getGedcom().equals(editor.getContext().getGedcom())))
+            if ((c.getGedcom().equals(editor.getContext().getGedcom()))) {
+                editor.requestActive();
                 return editor;
+            }
         }
 
-        EditorStdTopComponent instance = new EditorStdTopComponent(c);
-        GenjFrPlugin.register(instance);
-        return instance;
+        EditorStdTopComponent editor = new EditorStdTopComponent(c);
+        GenjFrPlugin.register(editor);
+        editor.open();
+        editor.requestActive();
+        return editor;
     }
 
     /** This method is called from within the constructor to
@@ -111,7 +138,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        okButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.jLabel1.text")); // NOI18N
 
@@ -132,52 +158,22 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
                 .addContainerGap(352, Short.MAX_VALUE))
         );
 
-        org.openide.awt.Mnemonics.setLocalizedText(okButton, org.openide.util.NbBundle.getMessage(EditorStdTopComponent.class, "EditorStdTopComponent.okButton.text")); // NOI18N
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(okButton))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(okButton))
+                .addGap(35, 35, 35))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        try {
-            getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    panelOn.saveEntity();
-                }
-            });
-        } catch (GedcomException ex) {
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(EditorStdTopComponent.class, "CTL_CannotSave"),
-                    NbBundle.getMessage(EditorStdTopComponent.class, "CTL_Error"),
-                    NotifyDescriptor.YES_NO_OPTION);
-            DialogDisplayer.getDefault().notify(d);
-            Exceptions.printStackTrace(ex);
-        }
-    }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -197,15 +193,18 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
     @Override
     public void resultChanged(LookupEvent lookupEvent) {
-        if (getContext() == null)
+        // Do not bother if context is null, because then panels are not yet ready
+        if (getContext() == null) {
             return;
+        }
+        // Get selected node
         Lookup.Result r = (Lookup.Result) lookupEvent.getSource();
         Collection c = r.allInstances();
         if (!c.isEmpty()) {
             ExplorerNode o = (ExplorerNode) c.iterator().next();
-            if (!getContext().getGedcom().equals(o.getContext().getGedcom()))
-                return;
-            setPanel(o.getContext().getEntity());
+            if (o != null && getContext().getGedcom().equals(o.getContext().getGedcom())) {
+                setContext(o.getContext());
+            }
         }
     }
 
@@ -215,9 +214,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         p.setProperty("version", "1.0");
         if (getGedcom() != null) {
             p.setProperty("gedcom", getGedcom().getOrigin().toString());
-            if (panelOn != null && panelOn.getEntity() != null) {
-                p.setProperty("entity", panelOn.getEntity().getId());
-            }
         }
     }
 
@@ -229,7 +225,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     private void readPropertiesImpl(java.util.Properties p) {
         String version = p.getProperty("version");
         final String gedcomProperty = p.getProperty("gedcom");
-        final String entityProperty = p.getProperty("entity");
         if (gedcomProperty == null) {
             close();
         } else {
@@ -249,6 +244,12 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
         // Get panel corresponding to entity
         EntityPanel jPanelEntity = EntityPanel.findInstance(selectedEntity);
+        if (!panels.contains(jPanelEntity)) {
+            panels.add(jPanelEntity);
+        }
+
+        // Set Undo Redo manager and save cookie (even if might have been done already)
+        jPanelEntity.setManagers(URmanager, this);
 
         // Remove existing panel if any
         if (panelOn != null && panelOn != jPanelEntity) {
@@ -279,5 +280,53 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
         // Remember displayed panel
         panelOn = jPanelEntity;
+    }
+
+    @Override
+    public UndoRedo getUndoRedo() {
+        return URmanager;
+    }
+
+    /*
+     * Dummy node class for the save button
+     */
+    private class DummyNode extends AbstractNode {
+
+        SaveCookieImpl saveImpl;
+
+        public DummyNode() {
+            super(Children.LEAF);
+            saveImpl = new SaveCookieImpl();
+        }
+
+        private class SaveCookieImpl implements SaveCookie {
+
+            @Override
+            public void save() throws IOException {
+//                Confirmation msg = new NotifyDescriptor.Confirmation("Do you want to save?", NotifyDescriptor.OK_CANCEL_OPTION,
+//                        NotifyDescriptor.QUESTION_MESSAGE);
+//                Object result = DialogDisplayer.getDefault().notify(msg);
+//                if (NotifyDescriptor.YES_OPTION.equals(result)) {
+                fire(false);
+                for (Iterator it = panels.iterator(); it.hasNext();) {
+                    EntityPanel panel = (EntityPanel) it.next();
+                    panel.saveEntity();
+                }
+                App.workbenchHelper.saveGedcom(getContext());
+//                }
+            }
+        }
+
+        public void fire(boolean modified) {
+            if (modified) {
+                getCookieSet().assign(SaveCookie.class, saveImpl);
+            } else {
+                getCookieSet().assign(SaveCookie.class);
+            }
+        }
+    }
+
+    public void setModified(boolean modified) {
+        dummyNode.fire(modified);
     }
 }

@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 public final class Action implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        EditorStdTopComponent tc = EditorStdTopComponent.updateInstances(null);
-        tc.open();
-        tc.requestActive();
+        EditorStdTopComponent.updateInstances();
     }
 }

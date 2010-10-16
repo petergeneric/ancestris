@@ -25,6 +25,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import org.openide.awt.UndoRedo.Manager;
 
 /**
  *
@@ -155,6 +156,10 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
             }
         }
         return 0;
+    }
+
+    void setManagers(Manager URmanager, EditorStdTopComponent editor) {
+        return;
     }
 
 }
