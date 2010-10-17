@@ -68,7 +68,7 @@ import org.openide.windows.TopComponent;
 /**
  * The central component of the GenJ application
  */
-public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkbenchHelper,GedcomListener {
+public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkbenchHelper, GedcomListener {
 
     private Workbench workbench;
     private final static Logger LOG = Logger.getLogger("genj.app");
@@ -102,16 +102,16 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     }
 
     public Context openGedcom(URL url) {
-            Context context = workbench.openGedcom(url);
-            if (context != null) {
-                GedcomDirectory.getInstance().registerGedcom(context);
-                openDefaultViews(context);
-                SelectionSink.Dispatcher.fireSelection((Component)null, context, true);
-            }
+        Context context = workbench.openGedcom(url);
+        if (context != null) {
+            GedcomDirectory.getInstance().registerGedcom(context);
+            openDefaultViews(context);
+            SelectionSink.Dispatcher.fireSelection((Component) null, context, true);
+        }
         return context;
     }
 
-        private static void openDefaultViews(Context context) {
+    private static void openDefaultViews(Context context) {
 
         Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
         List<Class> openedViews = new ArrayList<Class>();
@@ -125,9 +125,10 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             if (item == null) {
                 break;
             }
-                Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
-                if (clazz != null)
-                    openedViews.add(clazz);
+            Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
+            if (clazz != null) {
+                openedViews.add(clazz);
+            }
         }
 
         if (openedViews.isEmpty()) {
@@ -137,8 +138,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                     break;
                 }
                 Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
-                if (clazz != null)
+                if (clazz != null) {
                     openedViews.add(clazz);
+                }
             }
         }
         if (openedViews.isEmpty()) {
@@ -155,8 +157,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         for (Class clazz : openedViews) {
             try {
                 tc = (TopComponent) clazz.newInstance();
-                if (tc instanceof GenjViewInterface)
+                if (tc instanceof GenjViewInterface) {
                     ((GenjViewInterface) tc).init(context);
+                }
                 tc.open();
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
@@ -167,13 +170,13 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         }
     }
 
-
     public Context newGedcom() {
         //FIXME: changer le nouveau gedcom cree par defaut!
         Context context = workbench.newGedcom();
         Gedcom gedcom = context.getGedcom();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
+
                 public void perform(Gedcom gedcom) throws GedcomException {
 
                     // Create submitter
@@ -253,15 +256,19 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             // closes all views
             for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
                 if (context.getGedcom().equals(gjvTc.getGedcom())) {
-                    gjvTc.close();
+                    if (!gjvTc.close()) {
+                        return false;
+                    }
                 }
             }
-            if (unregister)
+            if (unregister) {
                 GedcomDirectory.getInstance().unregisterGedcom(context);
+            }
 
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 
     public void fireSelection(Context context, boolean isActionPerformed) {
@@ -440,34 +447,33 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     // Gedcom Listener
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
         for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
-            listener.gedcomEntityAdded( gedcom,  entity);
+            listener.gedcomEntityAdded(gedcom, entity);
         }
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
         for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
-            listener.gedcomEntityDeleted( gedcom,  entity);
+            listener.gedcomEntityDeleted(gedcom, entity);
         }
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
         for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
-            listener.gedcomPropertyChanged( gedcom,  property);
+            listener.gedcomPropertyChanged(gedcom, property);
         }
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
         for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
-            listener.gedcomPropertyAdded( gedcom,  property, pos, added);
+            listener.gedcomPropertyAdded(gedcom, property, pos, added);
         }
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
         for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
-            listener.gedcomPropertyDeleted( gedcom, property, pos,deleted);
+            listener.gedcomPropertyDeleted(gedcom, property, pos, deleted);
         }
     }
-
 
     public void register(Object o) {
         GenjFrPlugin.register(o);
