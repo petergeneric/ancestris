@@ -350,7 +350,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       return;
     
     // remember
-    context = new Context(newContext.getGedcom(), newContext.getEntities());
+   context = new Context(newContext.getGedcom(), newContext.getEntities());
     
     // must root change?
     if (isActionPerformed || context.getGedcom()==null) {
@@ -520,6 +520,10 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     // done
   }
 
+  public Entity getRoot(){
+      if (model == null) return null;
+      return model.getRoot();
+  }
   /**
    * Sets the root of this view
    */
