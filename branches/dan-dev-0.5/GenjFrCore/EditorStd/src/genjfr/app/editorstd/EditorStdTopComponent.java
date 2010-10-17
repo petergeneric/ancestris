@@ -201,11 +201,12 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         if (!canClose) {
             NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SubmitterPanel.class, "CTL_EditionUnsaved", getGedcom().getName()),
                     NbBundle.getMessage(SubmitterPanel.class, "CTL_AskConfirmation"),
-                    NotifyDescriptor.YES_NO_CANCEL_OPTION);
+                    NotifyDescriptor.YES_NO_OPTION);
             Object ret = DialogDisplayer.getDefault().notify(d);
-            if (ret.equals(NotifyDescriptor.CANCEL_OPTION)) {
-                return false;
-            }
+//            Would be used to use cancel as well but too complex to intercept at application closure
+//            if (ret.equals(NotifyDescriptor.CANCEL_OPTION)) {
+//                return false;
+//            }
             if (ret.equals(NotifyDescriptor.OK_OPTION)) {
                 saveEditor();
             }
