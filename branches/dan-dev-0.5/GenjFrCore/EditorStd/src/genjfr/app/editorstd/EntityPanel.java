@@ -108,6 +108,10 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
         return;
     }
 
+    public boolean isModified() {
+        return false;
+    }
+
     public void loadEntity(Entity entity) {
         return;
     }

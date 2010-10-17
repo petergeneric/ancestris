@@ -26,6 +26,8 @@ import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.UndoRedo;
 import org.openide.cookies.SaveCookie;
 import org.openide.nodes.AbstractNode;
@@ -61,7 +63,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     //
     // Save cookie
     private DummyNode dummyNode;
-    private Context context;
 
     public EditorStdTopComponent() {
         super();
@@ -189,6 +190,48 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     }
 
     @Override
+    public boolean canClose() {
+        boolean canClose = true;
+        for (Iterator it = panels.iterator(); it.hasNext();) {
+            EntityPanel panel = (EntityPanel) it.next();
+            if (panel.isModified()) {
+                canClose = false;
+            }
+        }
+        if (!canClose) {
+            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SubmitterPanel.class, "CTL_EditionUnsaved", getGedcom().getName()),
+                    NbBundle.getMessage(SubmitterPanel.class, "CTL_AskConfirmation"),
+                    NotifyDescriptor.YES_NO_CANCEL_OPTION);
+            Object ret = DialogDisplayer.getDefault().notify(d);
+            if (ret.equals(NotifyDescriptor.CANCEL_OPTION)) {
+                return false;
+            }
+            if (ret.equals(NotifyDescriptor.OK_OPTION)) {
+                saveEditor();
+            }
+        }
+        return super.canClose();
+    }
+
+    public void saveEditor() {
+        for (Iterator it = panels.iterator(); it.hasNext();) {
+            final EntityPanel panel = (EntityPanel) it.next();
+            try {
+                getContext().getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        panel.saveEntity();
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        App.workbenchHelper.saveGedcom(getContext());
+    }
+
+    @Override
     public void componentClosed() {
         result.removeLookupListener(this);
         result = null;
@@ -312,26 +355,8 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
             @Override
             public void save() throws IOException {
-//                Confirmation msg = new NotifyDescriptor.Confirmation("Do you want to save?", NotifyDescriptor.OK_CANCEL_OPTION,
-//                        NotifyDescriptor.QUESTION_MESSAGE);
-//                Object result = DialogDisplayer.getDefault().notify(msg);
-//                if (NotifyDescriptor.YES_OPTION.equals(result)) {
+                saveEditor();
                 fire(false);
-                for (Iterator it = panels.iterator(); it.hasNext();) {
-                    final EntityPanel panel = (EntityPanel) it.next();
-                    try {
-                        getContext().getGedcom().doUnitOfWork(new UnitOfWork() {
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                panel.saveEntity();
-                            }
-                        });
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-                App.workbenchHelper.saveGedcom(getContext());
-//                }
             }
         }
 

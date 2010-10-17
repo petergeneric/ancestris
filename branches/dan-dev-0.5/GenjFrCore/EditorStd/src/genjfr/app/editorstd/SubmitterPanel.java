@@ -110,6 +110,14 @@ public class SubmitterPanel extends EntityPanel {
     }
 
     @Override
+    public boolean isModified() {
+        if (addressStructureBeanPanel.isModified) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void loadEntity(Entity entity) {
         this.entity = entity;
         Submitter submitter = (Submitter) entity;
@@ -136,5 +144,4 @@ public class SubmitterPanel extends EntityPanel {
     void setManagers(Manager URmanager, EditorStdTopComponent editor) {
         addressStructureBeanPanel.setManagers(URmanager, editor);
     }
-
 }
