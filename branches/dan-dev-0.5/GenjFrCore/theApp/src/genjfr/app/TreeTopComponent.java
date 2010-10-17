@@ -91,7 +91,7 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
         // FIXME: peut etre faut il le placer ailleurs ou faire autrement...
         genj.util.Registry r = App.getRegistry(gedcom);
-        r.put("tree.root", ((TreeView)getView()).getRoot().getId());
+        r.put("tree.root", ((TreeView) getView()).getRoot().getId());
         r.persist();
         super.gedcomClosed(workbench, gedcom);
     }
@@ -108,11 +108,14 @@ public final class TreeTopComponent extends GenjViewTopComponent {
             SwingUtilities.invokeLater(new Runnable() {
 
                 public void run() {
-                    String root = App.getRegistry(getContext().getGedcom()).get("tree.root",(String) null);
-                    if (root == null)
+                    String root = App.getRegistry(getContext().getGedcom()).get("tree.root", (String) null);
+                    TreeView v = (TreeView) getView();
+                    if (root == null) {
                         getView().setContext(getContext(), false);
-                    else
-                        getView().setContext(new Context(getContext().getGedcom().getEntity(root)), false);
+                    } else {
+                        v.setRoot(getContext().getGedcom().getEntity(root));
+                        v.show(getContext().getGedcom().getEntity(root));
+                    }
                 }
             });
             sizeIsCorrect = true;

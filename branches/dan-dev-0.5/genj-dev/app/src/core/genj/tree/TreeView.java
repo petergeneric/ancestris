@@ -372,7 +372,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
   /**
    * Set current entity
    */
-  /*package*/ boolean show(Entity entity) {
+  /*package*/ public boolean show(Entity entity) {
     
     // allowed?
     if (!(entity instanceof Indi||entity instanceof Fam)) 
