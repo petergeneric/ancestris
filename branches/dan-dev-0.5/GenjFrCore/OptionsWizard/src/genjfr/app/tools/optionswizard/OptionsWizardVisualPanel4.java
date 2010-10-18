@@ -63,7 +63,7 @@ public final class OptionsWizardVisualPanel4 extends JPanel {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
 
-        setPreferredSize(new java.awt.Dimension(662, 496));
+        setPreferredSize(new java.awt.Dimension(615, 496));
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionsWizardVisualPanel4.class, "OptionsWizardVisualPanel4.jLabel1.text")); // NOI18N
@@ -221,12 +221,12 @@ public final class OptionsWizardVisualPanel4 extends JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel5)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
-                                    .addComponent(jTextField3))
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton2)
-                                    .addComponent(jButton3)))))
+                                    .addComponent(jButton3)
+                                    .addComponent(jButton2)))))
                     .addComponent(jLabel12)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
