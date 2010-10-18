@@ -11,7 +11,7 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  *
  * @author daniel
- * modification pour forcer la MAJ de genjcore 20101018
+ * modification pour forcer la MAJ de genjcore 20101018-1
  */
 @ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
 public class GenjCorePlugin extends GenjFrPlugin{

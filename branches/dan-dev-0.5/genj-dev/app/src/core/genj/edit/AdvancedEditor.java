@@ -221,7 +221,7 @@ import javax.swing.tree.TreePath;
    */
   @Override
   public void setContext(Context context) {
-    setContextImpl(context, true);
+    setContextImpl(context, false);
   }
   
   private void setContextImpl(Context context, boolean pickFirstProperty) {
