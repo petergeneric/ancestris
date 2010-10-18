@@ -170,9 +170,6 @@
         <file name="D-I.shadow">
             <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateIndi.instance"/>
         </file>
-        <file name="D-S.shadow">
-            <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSource.instance"/>
-        </file>
     </folder>
     <folder name="Toolbars">
         <folder name="EditorStd">
