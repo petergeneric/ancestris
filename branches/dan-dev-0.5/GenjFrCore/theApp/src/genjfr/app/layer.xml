@@ -53,9 +53,9 @@
             <file name="genjfr-app-ActionClose.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionClose"/>
             </file>
-            <file name="genjfr-app-ActionSave.instance">
+             <!--<file name="genjfr-app-ActionSave.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionSave"/>
-            </file>
+            </file>-->
             <file name="genjfr-app-ActionSaveAs.instance">
                 <attr name="delegate" newvalue="genjfr.app.ActionSaveAs"/>
             </file>
@@ -198,11 +198,11 @@
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
                 <attr name="position" intvalue="800"/>
             </file>
-            <file name="genjfr-app-ActionSave.shadow">
+             <!--<file name="genjfr-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
                 <attr name="position" intvalue="1801"/>
                 <attr name="noIconInMenu" boolvalue="true"/>
-            </file>
+            </file>-->
             <file name="org-openide-actions-SaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
                 <attr name="position" intvalue="1850"/>
@@ -211,6 +211,10 @@
             <file name="genjfr-app-ActionSaveAs.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSaveAs.instance"/>
                 <attr name="position" intvalue="1900"/>
+            </file>
+            <file name="genjfr-app-ActionSaveAs.shadow-separatorAfter.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2000"/>
             </file>
             <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
@@ -398,7 +402,7 @@
             <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
         </file>
         <file name="D-S.shadow">
-            <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+            <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
         </file>
     </folder>
     <folder name="Toolbars">
@@ -419,10 +423,10 @@
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
                 <attr name="position" intvalue="10"/>
             </file>
-            <file name="genjfr-app-ActionSave.shadow">
+             <!--<file name="genjfr-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
                 <attr name="position" intvalue="20"/>
-            </file>
+            </file>-->
             <file name="org-openide-actions-SaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
                 <attr name="position" intvalue="100"/>

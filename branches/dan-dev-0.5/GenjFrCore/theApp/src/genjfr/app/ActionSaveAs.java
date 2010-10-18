@@ -27,7 +27,7 @@ import java.awt.event.ActionEvent;
         setText(RES.getString("cc.menu.saveas"));
      setTip(RES, "cc.tip.save_file");
       // setup
-      setImage(Images.imgSave);
+      //setImage(Images.imgSave);
     }
 
     @Override
