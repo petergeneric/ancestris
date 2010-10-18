@@ -137,7 +137,7 @@ public class BlueprintRenderer {
   /** current graphics context */
   private Graphics2D graphics;
   
-  private Font plain,bold,italic;
+  private Font plain,bold,italic,bolditalic;
   
   /**
    * Constructor
@@ -194,13 +194,15 @@ public class BlueprintRenderer {
     // see http://www.3rd-evolution.de/tkrammer/docs/java_font_size.html
     // While Java assumes 72 dpi screen resolution Windows uses 96 dpi or 120 dpi depending on your font size setting in the display properties. 
     Font font = g.getFont();
-    if (!EnvironmentChecker.isMac()) {
-      float factor = DPI.get(graphics).vertical()/72F; 
+    // Uniquement pour windows
+    if (EnvironmentChecker.isWindows()) {
+      float factor = DPI.get(graphics).vertical()/72F;
       font = font.deriveFont(factor*font.getSize2D());
     }
     this.plain = font;
     this.bold = font.deriveFont(Font.BOLD);
     this.italic = font.deriveFont(Font.ITALIC);
+    this.bolditalic = font.deriveFont(Font.BOLD+Font.ITALIC);
 
     try {
       
@@ -257,11 +259,13 @@ public class BlueprintRenderer {
     public Font getFont(AttributeSet attr) {
       
       Font result = plain;
-      if (StyleConstants.isBold(attr)) 
+      if (StyleConstants.isBold(attr) && StyleConstants.isItalic(attr))
+          result = bolditalic;
+      else if(StyleConstants.isBold(attr))
         result = bold;
       else if (StyleConstants.isItalic(attr))
         result = italic;
-      return result;
+      return result.deriveFont(((float)StyleConstants.getFontSize(attr)));
     }
   } //MyHTMLDocument
   
