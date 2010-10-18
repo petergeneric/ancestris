@@ -5,8 +5,6 @@
 package genjfr.app.geo;
 
 import genj.gedcom.Context;
-import genjfr.util.GedcomDirectory;
-import genj.gedcom.Gedcom;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
@@ -40,7 +38,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputListener;
 import org.geonames.Style;
