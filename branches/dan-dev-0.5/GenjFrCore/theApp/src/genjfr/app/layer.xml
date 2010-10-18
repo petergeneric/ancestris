@@ -404,6 +404,30 @@
         <file name="D-S.shadow">
             <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
         </file>
+        <file name="D-Z.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-UndoAction.instance"/>
+        </file>
+        <file name="D-Y.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-RedoAction.instance"/>
+        </file>
+        <file name="D-C.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+        </file>
+        <file name="D-X.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+        </file>
+        <file name="D-V.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+        </file>
+        <file name="D-F.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-FindAction.instance"/>
+        </file>
+        <file name="D-R.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-ReplaceAction.instance"/>
+        </file>
+        <file name="DELETE.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+        </file>
     </folder>
     <folder name="Toolbars">
         <folder name="File">
