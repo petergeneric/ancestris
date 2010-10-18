@@ -392,7 +392,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     // noop?
     if (context.getGedcom()==null)
       return true;
-    
+
     // commit changes
     fireCommit(context);
     

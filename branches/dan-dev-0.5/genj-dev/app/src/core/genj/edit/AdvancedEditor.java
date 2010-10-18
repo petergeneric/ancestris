@@ -336,7 +336,6 @@ import javax.swing.tree.TreePath;
 
     if (bean!=null) 
       bean.commit();
-
   }
   
   /**
