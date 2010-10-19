@@ -28,6 +28,8 @@ import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.Toolbar;
+import org.openide.awt.ToolbarPool;
 import org.openide.awt.UndoRedo;
 import org.openide.cookies.SaveCookie;
 import org.openide.nodes.AbstractNode;
@@ -187,6 +189,32 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         Lookup.Template tpl = new Lookup.Template(ExplorerNode.class);
         result = Utilities.actionsGlobalContext().lookup(tpl);
         result.addLookupListener(this);
+        Toolbar tb = ToolbarPool.getDefault().findToolbar("EditorStd");
+        if (!tb.isVisible()) {
+            tb.setVisible(true);
+        }
+        tb = ToolbarPool.getDefault().findToolbar("EditorIndi");
+        if (!tb.isVisible()) {
+            tb.setVisible(true);
+        }
+        // Pour l'instant, on force les petits icones vue que les grandes ne sont pas disponibles
+        ToolbarPool.getDefault().setPreferredIconSize(16);
+        ToolbarPool.getDefault().setConfiguration(ToolbarPool.getDefault().getConfiguration());
+    }
+
+    @Override
+    public void componentClosed() {
+        Toolbar tb = ToolbarPool.getDefault().findToolbar("EditorStd");
+        if (tb.isVisible()) {
+            tb.setVisible(false);
+        }
+        tb = ToolbarPool.getDefault().findToolbar("EditorIndi");
+        if (tb.isVisible()) {
+            tb.setVisible(false);
+        }
+        result.removeLookupListener(this);
+        result = null;
+        GenjFrPlugin.unregister(this);
     }
 
     @Override
@@ -230,13 +258,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
             }
         }
         App.workbenchHelper.saveGedcom(getContext());
-    }
-
-    @Override
-    public void componentClosed() {
-        result.removeLookupListener(this);
-        result = null;
-        GenjFrPlugin.unregister(this);
     }
 
     @Override
