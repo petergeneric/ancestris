@@ -226,6 +226,9 @@ public class TableView extends View {
         mode.setSelected(true);
     }
     
+    // gap
+    toolbar.addSeparator();
+
     toolbar.add(new Settings());
 
   }
