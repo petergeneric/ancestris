@@ -19,8 +19,13 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import javax.swing.ActionMap;
 import javax.swing.GroupLayout;
 import javax.swing.ToolTipManager;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.DefaultEditorKit.CopyAction;
+import javax.swing.text.DefaultEditorKit.CutAction;
+import javax.swing.text.DefaultEditorKit.PasteAction;
 import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
@@ -38,6 +43,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
+import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -215,6 +221,24 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         result.removeLookupListener(this);
         result = null;
         GenjFrPlugin.unregister(this);
+    }
+
+    @Override
+    protected void componentActivated() {
+        ActionMap actionMap = getActionMap();
+        actionMap.put(DefaultEditorKit.copyAction, new DefaultEditorKit.CopyAction());
+        actionMap.put(DefaultEditorKit.cutAction, new DefaultEditorKit.CutAction());
+        actionMap.put(DefaultEditorKit.pasteAction, new DefaultEditorKit.PasteAction());
+        super.componentActivated();
+    }
+
+    @Override
+    protected void componentDeactivated() {
+        ActionMap actionMap = getActionMap();
+        actionMap.put(DefaultEditorKit.copyAction, SystemAction.get(org.openide.actions.CopyAction.class));
+        actionMap.put(DefaultEditorKit.cutAction, SystemAction.get(org.openide.actions.CutAction.class));
+        actionMap.put(DefaultEditorKit.pasteAction, SystemAction.get(org.openide.actions.PasteAction.class));
+        super.componentDeactivated();
     }
 
     @Override
