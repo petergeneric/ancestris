@@ -19,7 +19,6 @@ import org.openide.util.NbBundle;
  * @author daniel
  */
   public final class ActionOnlineHelp extends Action2 {
-    private Resources RES = Resources.get("genj.app");
     /** constructor */
     public ActionOnlineHelp() {
       setText(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp"));
@@ -29,7 +28,7 @@ import org.openide.util.NbBundle;
     @Override
   public void actionPerformed(ActionEvent event) {
       try {
-        FileAssociation.open(new URL(RES.getString("cc.menu.onlineurl")), null);
+        FileAssociation.open(new URL(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp_url")), null);
       } catch (MalformedURLException e) {
         e.printStackTrace();
         }
