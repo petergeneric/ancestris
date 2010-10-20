@@ -25,6 +25,9 @@
     <attr name="Menu\File\org-openide-actions-SaveAllAction.instance\position" intvalue="2200"/>
     <attr name="Menu\File\org-openide-actions-SaveAsAction.instance\position" intvalue="2100"/>
     <folder name="Actions">
+        <folder name="Edit">
+            <file name="org-netbeans-modules-quicksearch-QuickSearchAction.instance_hidden"/>
+        </folder>
         <folder name="File">
             <file name="genjfr-app-ActionNew.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
