@@ -55,9 +55,12 @@ public interface ContextProvider {
         component = component.getParent();
       }
     }
-    
+
+    // corrige le contexte retourne s'il change entre l'instanciation et l'appel a cette methode
     public ViewContext getContext() {
-      return context;
+        if (provider == null || provider.getContext() == null)
+            return context;
+        return provider.getContext();
     }
     
     public ContextProvider getProvider() {
