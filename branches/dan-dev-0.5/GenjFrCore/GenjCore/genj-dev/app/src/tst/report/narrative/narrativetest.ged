@@ -1,0 +1,77 @@
+0 HEAD
+1 SUBM Bill Kelly
+1 SOUR GENJ
+2 VERS 2.3.x
+2 NAME GenealogyJ
+1 GEDC
+2 VERS 5.5
+2 FORM Lineage-Linked
+0 @I1@ INDI
+1 NAME Jill /Hill/
+1 REFN R77
+1 SEX F
+1 BIRT
+2 DATE 1 Jan 1986
+2 PLAC 123 Main Street, Anywhere, Madison, IA, US
+2 SOUR @S1@
+3 PAGE 274
+1 BAPM
+2 DATE 2 Jan 1986
+2 PLAC St. Sebastian's Hill, Nowhere, Madison, IA, US
+1 CHR
+2 DATE 3 Jan 1986
+2 PLAC Little White Church, Somewhere, Madison, IA, US
+1 CAST Brahman
+1 DSCR five foot two, eyes of blue
+1 EDUC completed fifth grade
+1 SSN 123-45-6789
+1 NCHI 17
+1 NMR 13
+1 PROP pail of water
+1 RELI buddhist
+1 OCCU watercarrier
+1 _TODO I need to look up records of Jill's pilgrimage to Kyoto.
+1 _EMAIL jill@hill.com
+2 SOUR @S1@
+3 PAGE 274
+1 NOTE still need SOUR, 
+1 DEAT
+2 DATE 1 Jan 2002
+2 PLAC The Hill, Anywhere, Madison, IA, US
+1 CREM
+2 DATE 2 Jan 2002
+2 PLAC Hillside Funeral Home, Anywhere, Madison, IA, US
+1 BURI
+2 DATE 3 Jan 2002
+2 PLAC Hilltop Cemetery, Anywhere, Madison, IA, US
+1 FAMS @F1@
+0 @I2@ INDI
+1 NAME Jack /Black/
+1 SEX M
+1 OCCU
+1 FAMS @F1@
+1 ASSO @I2@
+2 TYPE INDI
+2 RELA Some kind of association@INDI:BIRT
+0 @I3@ INDI
+1 NAME Pale /Black/
+1 SEX M
+1 OCCU
+1 FAMC @F1@
+0 @F1@ FAM
+1 WIFE @I1@
+1 HUSB @I2@
+1 CHIL @I3@
+1 MARR Ville-under-Hill, Sussex, GB
+2 DATE 1 Jan 2002
+2 PLAC 
+0 @S1@ SOUR
+1 REFN src1
+1 TYPE Book
+1 TITL Jack and Jill - The Truth about the Hill
+1 AUTH Bob Woodward
+1 EDIT anonymous editor
+1 INTV Bob Woodward
+1 INFT Deep Throat
+1 OWNR Bill Kelly
+0 TRLR

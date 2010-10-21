@@ -1,0 +1,82 @@
+<html><head></head>
+
+<body>
+<h2><a href="http://genj.sourceforge.net/help/de/views.html">Ansichten</a> - Geographie-Ansicht</h2>
+<p>Diese Ansicht zeigt die Orte von Ereignisse auf Landkarten an.</p>
+
+<h3>Installation</h3>
+<p>GeoView ist eine Erweiterung von GenJ und enth&auml;lt Landkarten und Komponenten zur Darstellung der geografischen Informationen einer GEDCOM Datei. Zur Installation muss Geoview extra heruntergeladen (Dateiname: genj_geo-x.y.zip) und einfach in das GenJ Programm-Verzeichnis entzippt werden. Dabei ist die Struktur der Unterverzeichnisse beizubehalten.</p>
+
+
+<h3>Benutzung</h3>
+<p>Nach  der Installation ist im Kontrollzentrum in der Werkzeugleiste rechts ein kleines Erdesymbol. Wenn man es anklickt, &ouml;ffnet sich ein Fenster mit einer anklickbaren Landkarte im linken Bereich.</p>
+
+<p>GenJ versucht, alle Orte und Adressen der aktiven GEDCOM Datei mit Breiten- und L&auml;ngengrad zu lokalisieren. Sie werden rechts aufgelistet. Die Orte, deren Koordinaten gefunden wurden, werden auch in der Landkarte markiert.</p>
+
+<blockquote>
+<b>Achtung</b>
+GeoView braucht zum Bestimmen der Koordinaten eines Ortes einen Server im Internet. Daher muss der Computer online sein (s.u.).
+</blockquote>
+
+<p>Wenn hinter einem Ortsnamen rechts hinter den Koordinaten ein Fragezeichen steht, wurde mehr als ein Ort dieses Namens gefunden. Markieren Sie dort den Ort und klicken unten auf "Change" (&Auml;ndern). Nun k&ouml;nnen Sie den richtigen Ort aus einer Liste ausw&auml;hlen.</p>
+
+<p>Orte, die mit "Unknown" (unbekannt) gekennzeichnet sind, k&ouml;nnen Sie ebenfalls markieren, auf "Change" klicken und verschiedene Schreibweisen oder Namensvarianten versuchen. Mit "Remember" merkt sich GeoView die gew&auml;hlten Koordinaten f&uuml;r diesen Ort.</p>
+
+<p>Die Orte k&ouml;nnen selektiert werden, zugeh&ouml;rige Ereignisse sind darunter angeordnet (mit '+' auffalten). Wenn man auf ein Ereignis (doppel)klickt, wird die Auswahl in anderen Ansichten entsprechend umgeschaltet.</p>
+
+
+<h3>So werden die Ortsangaben in der GEDCOM Datei ausgewertet</h3>
+
+<p>GeoView bestimmt die Koordinaten f&uuml;r jedes Ereignis in der GEDCOM Datei, das einen Ort (PLAC) oder eine Adresse (ADDR) hat (dabei wird nur die erste Angabe ausgewertet). 
+<br>Zwei Orte gelten als verschieden, wenn sie verschiedenen Gebietsk&ouml;rperschaften zugeordnet sind. Zum Beispiel:</p>
+
+<pre> 1 BIRT
+ 2 PLAC Rendsburg
+<em> =&gt; Rendsburg</em>
+</pre>
+<pre> 1 BIRT
+ 2 PLAC Rendsburg, Schleswig Holstein
+<em> =&gt; Rendsburg, Schleswig-Holstein</em>
+</pre>
+<pre> 1 BIRT
+ 2 PLAC Rendsburg, Germany
+<em>  =&gt; Rendsburg, Germany</em> 
+</pre>
+<pre> 1 BIRT
+ 2 ADDR
+ 3 CITY Rendsburg
+ 3 CTRY Deutschland
+<em>  =&gt; Rendsburg, Deutschland</em> 
+</pre>
+<p></p>
+
+<h3>Einschr&auml;nkungen</h3>
+
+<p>Zum Bestimmen der Koordinaten eines Ortes kommuniziert GeoView mit einem Server im Internet. Daher muss der Computer online sein, und die Firewall muss ausgehende HTTP Verbindungen zulassen. Wenn der Computer hinter einem Firewall-Proxy angeschlossen ist, geben Sie im Control Center im Men&uuml; Ansicht - Optionen den Namen des HTTP Proxy (host:port) ein.</p>
+
+<p>Fehlende Verbindung ist in der Werkzeugleiste erkennbar (s.u.)<p>
+
+<p>Die gefundenen Zuordnungen werden lokal gespeichert. Markieren Sie einzelne Orte im rechten Fenster und klicken Sie auf 'Change', um fr&uuml;her zugeordnete Orte wieder zuzuordnen.</p>
+
+<h3>Werkzeugleiste</h3>
+
+<p>
+  </p><blockquote><img src="../../images/screenshots/geo2.png"></blockquote>
+ <ol>
+  <li>Landkarte w&auml;hlen
+  </li><li>Landkarte auf Fenstergr&ouml;&szlig;e vergr&ouml;&szlig;ern
+  </li><li>Zoom ein/ausschalten
+  </li><li>Orte zuordnen (gr&uuml;n - alle Orte zugeordnet, gelb - einige Orte zugeordnet, rot - Verbindungsprobleme; f&uuml;r mehr Information die Maus &uuml;ber die Schaltfl&auml;che f&uuml;hren)
+  </li><li>Ansicht schlie&szlig;en
+ </li></ol>
+<p></p>
+
+
+<h3>Weitere Informationen zu Geoview</h3>
+
+<p>Weitere Hinweise f&uuml;r zus&auml;tzliche Landkarten, Farb&auml;nderungen etc. 
+siehe <a href="http://genj.sourceforge.net/forum/viewforum.php?f=9">User FAQ</a> (engl.)<br>
+Suchen sie im Diskussionsforum <a href="http://genj.sourceforge.net/forum/search.php">Search</a> nach "GeoView".</p>
+
+
+</body></html>
