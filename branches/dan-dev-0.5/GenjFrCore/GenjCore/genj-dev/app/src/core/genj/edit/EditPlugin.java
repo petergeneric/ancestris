@@ -422,7 +422,6 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
           type==PropertyRepository.class||
           type==PropertySource.class||
           type==PropertySubmitter.class||
-          type==PropertyFamilyChild.class||
           type==PropertyMedia.class
           ) {
         group.add(new CreateXReference(entity,subs[s].getTag()));
@@ -459,16 +458,28 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
   private void createActions(Indi indi, Action2.Group group) {
     
     Action2.Group more = new Action2.Group(Resources.get(this).getString("add.more"));
-    
-    if (indi.getParents().size()<2)
-      group.add(new CreateParent(indi));
-    else
-      more.add(new CreateParent(indi));
+    CreateXReference createFamc = null;
+    // Check if xrefs FAMC can be added
+    MetaProperty[] subs = indi.getNestedMetaProperties(0);
+    for (int s=0;s<subs.length;s++) {
+      Class<? extends Property> type = subs[s].getType();
+      if (type==PropertyFamilyChild.class) {
+        createFamc = new CreateXReference(indi,subs[s].getTag());
+      }
+    }
+      if (indi.getParents().size() < 2) {
+          group.add(new CreateParent(indi));
+          group.add(createFamc);
+      } else {
+          more.add(new CreateParent(indi));
+          more.add(createFamc);
+      }
 
-    if (indi.getPartners().length==0)
-      group.add(new CreateSpouse(indi));
-    else
-      more.add(new CreateSpouse(indi));
+      if (indi.getPartners().length == 0) {
+          group.add(new CreateSpouse(indi));
+      } else {
+          more.add(new CreateSpouse(indi));
+      }
 
     group.add(new CreateChild(indi, true));
     group.add(new CreateChild(indi, false));
