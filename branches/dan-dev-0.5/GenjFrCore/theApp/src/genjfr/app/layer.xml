@@ -354,6 +354,7 @@
             <file name="GedcomExplorerAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-explorer-GedcomExplorerAction.instance"/>
             </file>
+            <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
         </folder>
     </folder>
     <folder name="OptionsDialog">
