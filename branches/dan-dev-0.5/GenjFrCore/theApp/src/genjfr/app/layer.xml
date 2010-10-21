@@ -431,6 +431,9 @@
         <file name="DELETE.shadow">
             <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
         </file>
+        <file name="F1.shadow">
+            <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-javahelp-HelpAction.instance"/>
+        </file>
     </folder>
     <folder name="Toolbars">
         <folder name="File">
