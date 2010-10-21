@@ -422,6 +422,7 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
           type==PropertyRepository.class||
           type==PropertySource.class||
           type==PropertySubmitter.class||
+          type==PropertyFamilyChild.class||
           type==PropertyMedia.class
           ) {
         group.add(new CreateXReference(entity,subs[s].getTag()));
