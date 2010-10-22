@@ -421,8 +421,6 @@ public class EditView extends View implements ContextProvider{
     /** cancel current proxy */
     public void actionPerformed(ActionEvent event) {
       commit(false);
-    // Frederic : save gedcom at the same time - 17/10/2010 - cela permet de supprimer le bouton genj save de la toolbar
-    Workbench.getInstance().saveGedcomImpl(gedcom);
     }
     
     public void stateChanged(ChangeEvent e) {
