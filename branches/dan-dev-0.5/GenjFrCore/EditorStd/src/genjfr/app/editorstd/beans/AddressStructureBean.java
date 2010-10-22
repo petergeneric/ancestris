@@ -4,6 +4,7 @@
  */
 package genjfr.app.editorstd.beans;
 
+import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyMultilineValue;
 import genj.gedcom.PropertySimpleValue;
@@ -30,7 +31,8 @@ public class AddressStructureBean implements Serializable {
     public static final String PROP_POST = "POST";
     private PropertyChoiceValue ctry;
     public static final String PROP_CTRY = "CTRY";
-    private PropertySimpleValue phon;
+    public final int phonSize = 3;
+    private Property[] phon = new Property[phonSize];
     public static final String PROP_PHON = "PHON";
 
 
@@ -188,7 +190,7 @@ public class AddressStructureBean implements Serializable {
      *
      * @return the value of phon
      */
-    public PropertySimpleValue getPhon() {
+    public Property[] getPhon() {
         return phon;
     }
 
@@ -197,8 +199,8 @@ public class AddressStructureBean implements Serializable {
      *
      * @param phon new value of phon
      */
-    public void setPhon(PropertySimpleValue phon) {
-        PropertySimpleValue oldPhon = this.phon;
+    public void setPhon(Property[] phon) {
+        Property[] oldPhon = this.phon;
         this.phon = phon;
         propertySupport.firePropertyChange(PROP_PHON, oldPhon, phon);
     }
