@@ -32,13 +32,7 @@
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="phone_number1" pref="145" max="32767" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="phone_number2" pref="146" max="32767" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="phone_number3" pref="145" max="32767" attributes="1"/>
-                          </Group>
+                          <Component id="phone_number1" alignment="0" pref="448" max="32767" attributes="1"/>
                           <Component id="address_line1" alignment="0" pref="448" max="32767" attributes="0"/>
                           <Component id="address_line2" alignment="0" pref="448" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
@@ -58,6 +52,8 @@
                                   <Component id="jLabel4" alignment="0" pref="360" max="32767" attributes="0"/>
                               </Group>
                           </Group>
+                          <Component id="phone_number3" alignment="0" pref="448" max="32767" attributes="1"/>
+                          <Component id="phone_number2" alignment="0" pref="448" max="32767" attributes="1"/>
                       </Group>
                   </Group>
               </Group>
@@ -97,14 +93,16 @@
                   <Component id="address_country" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="phone_number1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="phone_number2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="phone_number3" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="phone_number2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="phone_number3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

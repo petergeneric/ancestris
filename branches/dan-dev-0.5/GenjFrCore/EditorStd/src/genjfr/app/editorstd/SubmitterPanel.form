@@ -81,7 +81,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="submitterBeanPanel1" pref="507" max="32767" attributes="0"/>
+                      <Component id="submitterBeanPanel" pref="507" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -90,14 +90,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="submitterBeanPanel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="submitterBeanPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="351" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="genjfr.app.editorstd.beans.SubmitterBeanPanel" name="submitterBeanPanel1">
+            <Component class="genjfr.app.editorstd.beans.SubmitterBeanPanel" name="submitterBeanPanel">
             </Component>
           </SubComponents>
         </Container>
@@ -112,12 +112,12 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="genjfr.app.editorstd.beans.MultimediaLinkBeanPanel" name="multimediaLinkBeanPanel1">
+        <Component class="genjfr.app.editorstd.beans.MultimediaLinkBeanPanel" name="multimediaLinkBeanPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="M&#xe9;dias">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="genjfr/app/editorstd/Bundle.properties" key="SubmitterPanel.multimediaLinkBeanPanel1.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="genjfr/app/editorstd/Bundle.properties" key="SubmitterPanel.multimediaLinkBeanPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -140,8 +140,8 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="registeredBeanPanel1" alignment="0" pref="507" max="32767" attributes="0"/>
-                          <Component id="recordBeanPanel1" alignment="0" pref="507" max="32767" attributes="0"/>
+                          <Component id="registeredBeanPanel" alignment="0" pref="507" max="32767" attributes="0"/>
+                          <Component id="recordBeanPanel" alignment="0" pref="507" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -151,27 +151,27 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="recordBeanPanel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="recordBeanPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="registeredBeanPanel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="registeredBeanPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="327" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="genjfr.app.editorstd.beans.RecordBeanPanel" name="recordBeanPanel1">
+            <Component class="genjfr.app.editorstd.beans.RecordBeanPanel" name="recordBeanPanel">
             </Component>
-            <Component class="genjfr.app.editorstd.beans.RegisteredBeanPanel" name="registeredBeanPanel1">
+            <Component class="genjfr.app.editorstd.beans.RegisteredBeanPanel" name="registeredBeanPanel">
             </Component>
           </SubComponents>
         </Container>
-        <Component class="genjfr.app.editorstd.beans.ChangeDateBeanPanel" name="changeDateBeanPanel1">
+        <Component class="genjfr.app.editorstd.beans.ChangeDateBeanPanel" name="changeDateBeanPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Horodatage">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="genjfr/app/editorstd/Bundle.properties" key="SubmitterPanel.changeDateBeanPanel1.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="genjfr/app/editorstd/Bundle.properties" key="SubmitterPanel.changeDateBeanPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>

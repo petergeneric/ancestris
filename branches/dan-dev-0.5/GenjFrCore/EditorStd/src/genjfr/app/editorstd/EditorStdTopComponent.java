@@ -23,9 +23,6 @@ import javax.swing.ActionMap;
 import javax.swing.GroupLayout;
 import javax.swing.ToolTipManager;
 import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.DefaultEditorKit.CopyAction;
-import javax.swing.text.DefaultEditorKit.CutAction;
-import javax.swing.text.DefaultEditorKit.PasteAction;
 import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
@@ -71,6 +68,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     //
     // Save cookie
     private DummyNode dummyNode;
+    private boolean isBusy = false;
 
     public EditorStdTopComponent() {
         super();
@@ -255,7 +253,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
                     NbBundle.getMessage(SubmitterPanel.class, "CTL_AskConfirmation"),
                     NotifyDescriptor.YES_NO_CANCEL_OPTION);
             Object ret = DialogDisplayer.getDefault().notify(d);
-//            Would be used to use cancel as well but too complex to intercept at application closure
             if (ret.equals(NotifyDescriptor.CANCEL_OPTION)) {
                 return false;
             }
@@ -274,7 +271,11 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        panel.saveEntity();
+                        if (!isBusy) {
+                            isBusy = true;
+                            panel.saveEntity();
+                            isBusy = false;
+                        }
                     }
                 });
             } catch (GedcomException ex) {
@@ -282,6 +283,10 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
             }
         }
         App.workbenchHelper.saveGedcom(getContext());
+    }
+
+    public boolean isBusy() {
+        return isBusy;
     }
 
     @Override
