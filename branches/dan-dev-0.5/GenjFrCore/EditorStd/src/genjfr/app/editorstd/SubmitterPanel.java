@@ -41,21 +41,68 @@ public class SubmitterPanel extends EntityPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        submitterName = new javax.swing.JTextField();
         editPane = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        submitterBeanPanel1 = new genjfr.app.editorstd.beans.SubmitterBeanPanel();
         addressStructureBeanPanel = new genjfr.app.editorstd.beans.AddressStructureBeanPanel();
-        jTextField2 = new javax.swing.JTextField();
+        multimediaLinkBeanPanel1 = new genjfr.app.editorstd.beans.MultimediaLinkBeanPanel();
+        jPanel2 = new javax.swing.JPanel();
+        recordBeanPanel1 = new genjfr.app.editorstd.beans.RecordBeanPanel();
+        registeredBeanPanel1 = new genjfr.app.editorstd.beans.RegisteredBeanPanel();
+        changeDateBeanPanel1 = new genjfr.app.editorstd.beans.ChangeDateBeanPanel();
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jLabel1.text")); // NOI18N
 
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jTextField1.text")); // NOI18N
+        submitterName.setEditable(false);
+        submitterName.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.submitterName.text")); // NOI18N
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(submitterBeanPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(submitterBeanPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(351, Short.MAX_VALUE))
+        );
+
+        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
         editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.addressStructureBeanPanel.TabConstraints.tabTitle"), addressStructureBeanPanel); // NOI18N
+        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.multimediaLinkBeanPanel1.TabConstraints.tabTitle"), multimediaLinkBeanPanel1); // NOI18N
 
-        jTextField2.setText(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jTextField2.text")); // NOI18N
-        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jTextField2.TabConstraints.tabTitle"), jTextField2); // NOI18N
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(registeredBeanPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                    .addComponent(recordBeanPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(recordBeanPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(registeredBeanPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(327, Short.MAX_VALUE))
+        );
+
+        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+        editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.changeDateBeanPanel1.TabConstraints.tabTitle"), changeDateBeanPanel1); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -64,9 +111,9 @@ public class SubmitterPanel extends EntityPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(editPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE))
+                    .addComponent(editPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                    .addComponent(submitterName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -75,18 +122,24 @@ public class SubmitterPanel extends EntityPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(editPane, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                .addComponent(submitterName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editPane, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private genjfr.app.editorstd.beans.AddressStructureBeanPanel addressStructureBeanPanel;
+    private genjfr.app.editorstd.beans.ChangeDateBeanPanel changeDateBeanPanel1;
     private javax.swing.JTabbedPane editPane;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private genjfr.app.editorstd.beans.MultimediaLinkBeanPanel multimediaLinkBeanPanel1;
+    private genjfr.app.editorstd.beans.RecordBeanPanel recordBeanPanel1;
+    private genjfr.app.editorstd.beans.RegisteredBeanPanel registeredBeanPanel1;
+    private genjfr.app.editorstd.beans.SubmitterBeanPanel submitterBeanPanel1;
+    private javax.swing.JTextField submitterName;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -121,7 +174,7 @@ public class SubmitterPanel extends EntityPanel {
     public void loadEntity(Entity entity) {
         this.entity = entity;
         Submitter submitter = (Submitter) entity;
-        jTextField1.setText(submitter.toString());
+        submitterName.setText(submitter.getName());
         addressStructureBeanPanel.setProperties(entity);
     }
 
