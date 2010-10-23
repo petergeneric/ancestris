@@ -88,7 +88,7 @@ public class ControlCenter extends JPanel{
 //        return false;
     }
 
-    public void nbDoExit(final Runnable postExitCode) {
+    public void nbDoExit(Runnable postExitCode) {
         final Semaphore sem = new Semaphore();
         sem.acquire();
         // force a commit
@@ -120,7 +120,8 @@ public class ControlCenter extends JPanel{
 //                }
 //                // no - skip it
 //            }
-            App.workbenchHelper.closeGedcom(context, false);
+            if (!App.workbenchHelper.closeGedcom(context, false))
+                    postExitCode = null;
             // next gedcom
         }
         // Done
