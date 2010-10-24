@@ -5,8 +5,8 @@ package genjfr.app;
 
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.util.swing.ImageIcon;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import genjfr.util.GedcomDirectory;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Window;
@@ -19,8 +19,9 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
@@ -101,6 +102,13 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     }
     public void setContext(Context context){
         this.context=context;
+        AbstractNode n = GedcomDirectory.getInstance().getDummyNode(context);
+        if (n != null){
+
+            // Create a dummy node for the save button
+        setActivatedNodes(new Node[]{n});
+
+        }
     }
 
     public Context getContext() {
@@ -114,7 +122,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
  */
     public void setGedcom(Gedcom gedcom) {
         LOG.warning("setGedcom obsolete, try workaround...");
-        this.context = new Context(gedcom);
+        setContext(new Context(gedcom));
     }
 
 

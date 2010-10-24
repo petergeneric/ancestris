@@ -22,37 +22,58 @@
 package genjfr.util;
 
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomListener;
+import genj.gedcom.Property;
 import genj.view.SelectionListener;
+import genjfr.app.App;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import genjfr.util.GedcomObject.DummyNode;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.openide.cookies.SaveCookie;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
 /**
  * A static registry for Gedcom instances
  */
-public class GedcomDirectory implements SelectionListener{
+public class GedcomDirectory implements SelectionListener,GedcomListener{
   
   private static GedcomDirectory instance;
   
-  private List<Context> gedcoms = new ArrayList<Context>();
   private List<Listener> listeners = new ArrayList<Listener>();
+  private Map<Gedcom,GedcomObject> gedcomsOpened = new HashMap<Gedcom, GedcomObject>(5);
   
   /** singleton constructor */
   private GedcomDirectory() {
+      GenjFrPlugin.register(this);
   }
 
   /** singleton accessor */
   public static GedcomDirectory getInstance() {
       if (instance == null) {
           instance  = new GedcomDirectory();
-        GenjFrPlugin.register(instance);
+//FIXME: a effacer        GenjFrPlugin.register(instance);
       }
     return instance;
   }
   
   /** register gedcom file */
   public void registerGedcom(Context context) {
-    gedcoms.add(context);
+      if (context == null){
+          return;
+      }
+      Gedcom gedcom = context.getGedcom();
+      if (!gedcomsOpened.containsKey(gedcom)){
+          gedcomsOpened.put(gedcom, new GedcomObject(context));
+      }
+
     List<Listener> ls = new ArrayList<Listener>(listeners);
     for (Listener listener : ls) 
       listener.gedcomRegistered(context);
@@ -60,17 +81,22 @@ public class GedcomDirectory implements SelectionListener{
   
   /** unregister gedcom file */
   public void unregisterGedcom(Context context) {
-      for (Context c:findContext(context)){
-    gedcoms.remove(c);
+      if (context == null){
+          return;
+      }
+      gedcomsOpened.remove(context.getGedcom());
     List<Listener> ls = new ArrayList<Listener>(listeners);
     for (Listener listener : ls) 
       listener.gedcomUnregistered(context);
-      }
   }
 
   /** accessor gedcoms */
   public List<Context> getContexts() {
-    return new ArrayList<Context>(gedcoms);
+      List<Context> result = new ArrayList<Context>();
+      for (Gedcom g:gedcomsOpened.keySet()){
+          result.add(gedcomsOpened.get(g).getContext());
+      }
+      return result;
   }
 
 
@@ -84,10 +110,30 @@ public class GedcomDirectory implements SelectionListener{
   }
 
     public void setContext(Context context, boolean isActionPerformed) {
-        for (int i=0;i<gedcoms.size();i++){
-            if (gedcoms.get(i).getGedcom().equals(context.getGedcom()))
-                gedcoms.set(i, context);
-        }
+        try {
+            gedcomsOpened.get(context.getGedcom()).setContext(context);
+
+        } catch (NullPointerException e){}
+    }
+
+    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+        setModified(gedcomsOpened.get(gedcom), true);
+    }
+
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        setModified(gedcomsOpened.get(gedcom), true);
+    }
+
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        setModified(gedcomsOpened.get(gedcom), true);
+    }
+
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        setModified(gedcomsOpened.get(gedcom), true);
+    }
+
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        setModified(gedcomsOpened.get(gedcom), true);
     }
 
   public interface Listener {
@@ -95,12 +141,18 @@ public class GedcomDirectory implements SelectionListener{
     public void gedcomUnregistered(Context context);
   }
 
-  private List<Context> findContext(Context ctx){
-      List<Context> result = new ArrayList<Context>();
-    for (Context c:gedcoms){
-        if (c.getGedcom().equals(ctx.getGedcom()))
-            result.add(c);
+  public DummyNode getDummyNode(Context c){
+      try{
+          return gedcomsOpened.get(c.getGedcom()).getDummyNode();
+      } catch (NullPointerException e){
+          return null;
+      }
+  }
+
+  private void setModified(GedcomObject o, boolean modified) {
+      try {
+          o.getDummyNode().fire(modified);
+      } catch (NullPointerException e){}
     }
-    return result;
-    }
+
 }
