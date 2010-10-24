@@ -34,6 +34,12 @@ public class AddressStructureBean implements Serializable {
     public final int phonSize = 3;
     private Property[] phon = new Property[phonSize];
     public static final String PROP_PHON = "PHON";
+    private PropertySimpleValue email;
+    public static final String PROP_EMAIL = "_EMAIL";
+    private PropertySimpleValue www;
+    public static final String PROP_WWW = "_WWW";
+
+
 
 
 
@@ -214,6 +220,45 @@ public class AddressStructureBean implements Serializable {
         propertySupport.firePropertyChange(PROP_PHON, oldLang, phon);
     }
 
+    /**
+     * Get the value of email
+     *
+     * @return the value of email
+     */
+    public PropertySimpleValue getEmail() {
+        return email;
+    }
+
+    /**
+     * Set the value of email
+     *
+     * @param email new value of email
+     */
+    public void setEmail(PropertySimpleValue email) {
+        PropertySimpleValue oldEmail = this.email;
+        this.email = email;
+        propertySupport.firePropertyChange(PROP_EMAIL, oldEmail, email);
+    }
+
+    /**
+     * Get the value of www
+     *
+     * @return the value of www
+     */
+    public PropertySimpleValue getWww() {
+        return www;
+    }
+
+    /**
+     * Set the value of www
+     *
+     * @param www new value of www
+     */
+    public void setWww(PropertySimpleValue www) {
+        PropertySimpleValue oldWww = this.www;
+        this.www = www;
+        propertySupport.firePropertyChange(PROP_WWW, oldWww, www);
+    }
 
     
     // listerners //

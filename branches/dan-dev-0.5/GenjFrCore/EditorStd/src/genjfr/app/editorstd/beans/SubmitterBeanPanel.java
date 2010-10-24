@@ -15,6 +15,10 @@ import genj.gedcom.PropertySimpleValue;
 import genjfr.app.editorstd.EditorStdTopComponent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -27,7 +31,9 @@ import org.openide.util.NbBundle;
  */
 public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyChangeListener, DocumentListener {
 
-    private String[] languages = new String[87];
+    final private int nbLanguages = 87;
+    private Map<String, String> langMap = new TreeMap<String, String>();
+    private String[] languages = new String[nbLanguages];  // will be displayed
     //
     private int index = 0;
     private String title = "";
@@ -88,21 +94,32 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
         jLabel1 = new javax.swing.JLabel();
         submitter_name = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        lang1 = new javax.swing.JComboBox(languages);
-        lang2 = new javax.swing.JComboBox(languages);
-        lang3 = new javax.swing.JComboBox(languages);
+        lang1 = new AutoCompleteCombo(languages);
+        lang2 = new AutoCompleteCombo(languages);
+        lang3 = new AutoCompleteCombo(languages);
+        jLabel3 = new javax.swing.JLabel();
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "SubmitterBeanPanel.jLabel1.text")); // NOI18N
 
         submitter_name.setText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "SubmitterBeanPanel.submitter_name.text")); // NOI18N
+        submitter_name.setToolTipText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "TTT_subm_id_name")); // NOI18N
 
         jLabel2.setText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "SubmitterBeanPanel.jLabel2.text")); // NOI18N
 
         lang1.setEditable(true);
+        lang1.setToolTipText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "TTT_subm_id_lang1")); // NOI18N
 
         lang2.setEditable(true);
+        lang2.setToolTipText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "TTT_subm_id_lang2")); // NOI18N
+        lang2.setMinimumSize(new java.awt.Dimension(100, 27));
+        lang2.setPreferredSize(new java.awt.Dimension(100, 27));
 
         lang3.setEditable(true);
+        lang3.setToolTipText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "TTT_subm_id_lang3")); // NOI18N
+        lang3.setMinimumSize(new java.awt.Dimension(100, 27));
+        lang3.setPreferredSize(new java.awt.Dimension(100, 27));
+
+        jLabel3.setText(org.openide.util.NbBundle.getMessage(SubmitterBeanPanel.class, "SubmitterBeanPanel.jLabel3.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -111,17 +128,19 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(submitter_name, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lang1, 0, 107, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lang2, 0, 107, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lang3, 0, 106, Short.MAX_VALUE)))
+                        .addComponent(jLabel1)
+                        .addGap(33, 33, 33)
+                        .addComponent(submitter_name, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(lang1, 0, 269, Short.MAX_VALUE))
+                    .addComponent(jLabel3)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lang2, 0, 190, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lang3, 0, 196, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -131,18 +150,23 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(submitter_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(lang1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lang1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lang2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lang3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JComboBox lang1;
     private javax.swing.JComboBox lang2;
     private javax.swing.JComboBox lang3;
@@ -162,16 +186,24 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
         }
     }
 
+    /**
+     * Changes the display text on the panel using the content of the property
+     * @param text
+     * @param prop
+     */
     private void updateField(JTextComponent text, Property prop) {
         if (prop != null) {
-            String oldText = text.getText();
-            String newText = prop.getDisplayValue();
-            text.setText(newText);
-            if (!editor.isBusy() && !oldText.equals(newText)) {
-                setModified(true);
-            }
+            updateField(text, prop.getDisplayValue());
         } else {
             text.setText("");
+        }
+    }
+
+    private void updateField(JTextComponent text, String newText) {
+        String oldText = text.getText();
+        text.setText(newText);
+        if (!editor.isBusy() && !oldText.equals(newText)) {
+            setModified(true);
         }
     }
 
@@ -180,19 +212,19 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
             return;
         }
         if (lang.length > 2) {
-            updateField(((JTextComponent) lang3.getEditor().getEditorComponent()), lang[2]);
+            updateField(((JTextComponent) lang3.getEditor().getEditorComponent()), translateG2U(lang[2]));
         } else {
-            updateField(((JTextComponent) lang3.getEditor().getEditorComponent()), null);
+            updateField(((JTextComponent) lang3.getEditor().getEditorComponent()), "");
         }
         if (lang.length > 1) {
-            updateField(((JTextComponent) lang2.getEditor().getEditorComponent()), lang[1]);
+            updateField(((JTextComponent) lang2.getEditor().getEditorComponent()), translateG2U(lang[1]));
         } else {
-            updateField(((JTextComponent) lang2.getEditor().getEditorComponent()), null);
+            updateField(((JTextComponent) lang2.getEditor().getEditorComponent()), "");
         }
         if (lang.length > 0) {
-            updateField(((JTextComponent) lang1.getEditor().getEditorComponent()), lang[0]);
+            updateField(((JTextComponent) lang1.getEditor().getEditorComponent()), translateG2U(lang[0]));
         } else {
-            updateField(((JTextComponent) lang1.getEditor().getEditorComponent()), null);
+            updateField(((JTextComponent) lang1.getEditor().getEditorComponent()), "");
         }
     }
 
@@ -215,9 +247,9 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
             return;
         }
         // lang is initialised new Property[langSize] so should be non null and of correct size
-        save(parentProperty, lang[0], SubmitterBean.PROP_LANG, ((JTextComponent) lang1.getEditor().getEditorComponent()).getText());
-        save(parentProperty, lang[1], SubmitterBean.PROP_LANG, ((JTextComponent) lang2.getEditor().getEditorComponent()).getText());
-        save(parentProperty, lang[2], SubmitterBean.PROP_LANG, ((JTextComponent) lang3.getEditor().getEditorComponent()).getText());
+        save(parentProperty, lang[0], SubmitterBean.PROP_LANG, translateU2G(((JTextComponent) lang1.getEditor().getEditorComponent()).getText()));
+        save(parentProperty, lang[1], SubmitterBean.PROP_LANG, translateU2G(((JTextComponent) lang2.getEditor().getEditorComponent()).getText()));
+        save(parentProperty, lang[2], SubmitterBean.PROP_LANG, translateU2G(((JTextComponent) lang3.getEditor().getEditorComponent()).getText()));
     }
 
     @Override
@@ -261,93 +293,114 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
         this.editor = editor;
     }
 
+    private String translateG2U(Property prop) {
+        if (prop == null) {
+            return "";
+        }
+        return langMap.get(prop.getDisplayValue());
+    }
+
+    private String translateU2G(String text) {
+        for (Iterator<String> it = langMap.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
+            String Ulang = langMap.get(key);
+            if (Ulang.equals(text)) {
+                return key;
+            }
+        }
+        return "";
+    }
+
     private void initLanguages() {
-        languages[0] = "";
-        languages[1] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_French");
-        languages[2] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Afrikaans");
-        languages[3] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Albanian");
-        languages[4] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Amharic");
-        languages[5] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Anglo-Saxon");
-        languages[6] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Arabic");
-        languages[7] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Armenian");
-        languages[8] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Assamese");
-        languages[9] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Belorusian");
-        languages[10] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Bengali");
-        languages[11] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Braj");
-        languages[12] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Bulgarian");
-        languages[13] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Burmese");
-        languages[14] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Cantonese");
-        languages[15] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Catalan");
-        languages[16] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Catalan_Spn");
-        languages[17] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Church-Slavic");
-        languages[18] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Czech");
-        languages[19] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Danish");
-        languages[20] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Dogri");
-        languages[21] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Dutch");
-        languages[22] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_English");
-        languages[23] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Esperanto");
-        languages[24] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Estonian");
-        languages[25] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Faroese");
-        languages[26] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Finnish");
-        languages[27] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Georgian");
-        languages[28] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_German");
-        languages[29] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Greek");
-        languages[30] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Gujarati");
-        languages[31] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hawaiian");
-        languages[32] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hebrew");
-        languages[33] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hindi");
-        languages[34] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hungarian");
-        languages[35] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Icelandic");
-        languages[36] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Indonesian");
-        languages[37] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Italian");
-        languages[38] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Japanese");
-        languages[39] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Kannada");
-        languages[40] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Khmer");
-        languages[41] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Konkani");
-        languages[42] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Korean");
-        languages[43] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Lahnda");
-        languages[44] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Lao");
-        languages[45] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Latvian");
-        languages[46] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Lithuanian");
-        languages[47] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Macedonian");
-        languages[48] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Maithili");
-        languages[49] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Malayalam");
-        languages[50] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Mandrin");
-        languages[51] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Manipuri");
-        languages[52] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Marathi");
-        languages[53] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Mewari");
-        languages[54] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Navaho");
-        languages[55] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Nepali");
-        languages[56] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Norwegian");
-        languages[57] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Oriya");
-        languages[58] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Pahari");
-        languages[59] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Pali");
-        languages[60] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Panjabi");
-        languages[61] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Persian");
-        languages[62] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Polish");
-        languages[63] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Portuguese");
-        languages[64] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Prakrit");
-        languages[65] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Pusto");
-        languages[66] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Rajasthani");
-        languages[67] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Romanian");
-        languages[68] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Russian");
-        languages[69] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Sanskrit");
-        languages[70] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Serb");
-        languages[71] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Serbo_Croa");
-        languages[72] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Slovak");
-        languages[73] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Slovene");
-        languages[74] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Spanish");
-        languages[75] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Swedish");
-        languages[76] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Tagalog");
-        languages[77] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Tamil");
-        languages[78] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Telugu");
-        languages[79] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Thai");
-        languages[80] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Tibetan");
-        languages[81] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Turkish");
-        languages[82] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Ukrainian");
-        languages[83] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Urdu");
-        languages[84] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Vietnamese");
-        languages[85] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Wendic");
-        languages[86] = NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Yiddish");
+        langMap.put("", "");
+        langMap.put("French", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_French"));
+        langMap.put("Afrikaans", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Afrikaans"));
+        langMap.put("Albanian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Albanian"));
+        langMap.put("Amharic", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Amharic"));
+        langMap.put("Anglo-Saxon", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Anglo-Saxon"));
+        langMap.put("Arabic", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Arabic"));
+        langMap.put("Armenian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Armenian"));
+        langMap.put("Assamese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Assamese"));
+        langMap.put("Belorusian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Belorusian"));
+        langMap.put("Bengali", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Bengali"));
+        langMap.put("Braj", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Braj"));
+        langMap.put("Bulgarian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Bulgarian"));
+        langMap.put("Burmese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Burmese"));
+        langMap.put("Cantonese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Cantonese"));
+        langMap.put("Catalan", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Catalan"));
+        langMap.put("Catalan_Spn", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Catalan_Spn"));
+        langMap.put("Church-Slavic", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Church-Slavic"));
+        langMap.put("Czech", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Czech"));
+        langMap.put("Danish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Danish"));
+        langMap.put("Dogri", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Dogri"));
+        langMap.put("Dutch", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Dutch"));
+        langMap.put("English", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_English"));
+        langMap.put("Esperanto", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Esperanto"));
+        langMap.put("Estonian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Estonian"));
+        langMap.put("Faroese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Faroese"));
+        langMap.put("Finnish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Finnish"));
+        langMap.put("Georgian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Georgian"));
+        langMap.put("German", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_German"));
+        langMap.put("Greek", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Greek"));
+        langMap.put("Gujarati", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Gujarati"));
+        langMap.put("Hawaiian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hawaiian"));
+        langMap.put("Hebrew", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hebrew"));
+        langMap.put("Hindi", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hindi"));
+        langMap.put("Hungarian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Hungarian"));
+        langMap.put("Icelandic", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Icelandic"));
+        langMap.put("Indonesian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Indonesian"));
+        langMap.put("Italian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Italian"));
+        langMap.put("Japanese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Japanese"));
+        langMap.put("Kannada", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Kannada"));
+        langMap.put("Khmer", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Khmer"));
+        langMap.put("Konkani", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Konkani"));
+        langMap.put("Korean", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Korean"));
+        langMap.put("Lahnda", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Lahnda"));
+        langMap.put("Lao", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Lao"));
+        langMap.put("Latvian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Latvian"));
+        langMap.put("Lithuanian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Lithuanian"));
+        langMap.put("Macedonian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Macedonian"));
+        langMap.put("Maithili", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Maithili"));
+        langMap.put("Malayalam", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Malayalam"));
+        langMap.put("Mandrin", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Mandrin"));
+        langMap.put("Manipuri", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Manipuri"));
+        langMap.put("Marathi", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Marathi"));
+        langMap.put("Mewari", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Mewari"));
+        langMap.put("Navaho", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Navaho"));
+        langMap.put("Nepali", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Nepali"));
+        langMap.put("Norwegian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Norwegian"));
+        langMap.put("Oriya", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Oriya"));
+        langMap.put("Pahari", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Pahari"));
+        langMap.put("Pali", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Pali"));
+        langMap.put("Panjabi", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Panjabi"));
+        langMap.put("Persian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Persian"));
+        langMap.put("Polish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Polish"));
+        langMap.put("Portuguese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Portuguese"));
+        langMap.put("Prakrit", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Prakrit"));
+        langMap.put("Pusto", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Pusto"));
+        langMap.put("Rajasthani", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Rajasthani"));
+        langMap.put("Romanian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Romanian"));
+        langMap.put("Russian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Russian"));
+        langMap.put("Sanskrit", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Sanskrit"));
+        langMap.put("Serb", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Serb"));
+        langMap.put("Serbo_Croa", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Serbo_Croa"));
+        langMap.put("Slovak", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Slovak"));
+        langMap.put("Slovene", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Slovene"));
+        langMap.put("Spanish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Spanish"));
+        langMap.put("Swedish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Swedish"));
+        langMap.put("Tagalog", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Tagalog"));
+        langMap.put("Tamil", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Tamil"));
+        langMap.put("Telugu", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Telugu"));
+        langMap.put("Thai", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Thai"));
+        langMap.put("Tibetan", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Tibetan"));
+        langMap.put("Turkish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Turkish"));
+        langMap.put("Ukrainian", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Ukrainian"));
+        langMap.put("Urdu", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Urdu"));
+        langMap.put("Vietnamese", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Vietnamese"));
+        langMap.put("Wendic", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Wendic"));
+        langMap.put("Yiddish", NbBundle.getMessage(SubmitterBeanPanel.class, "Lang_Yiddish"));
+
+        languages = langMap.values().toArray(new String[0]);
+        Arrays.sort(languages);
     }
 }

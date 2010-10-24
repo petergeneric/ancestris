@@ -42,6 +42,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     public AddressStructureBeanPanel() {
         initCountries();
         initComponents();
+        address_line1.setVisible(false);
+        address_line2.setVisible(false);
     }
 
     public void init(int index) {
@@ -50,8 +52,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         addressStructure.addPropertyChangeListener(this);
         // change listeners
         address_line.getDocument().addDocumentListener(this);
-        address_line1.getDocument().addDocumentListener(this);
-        address_line2.getDocument().addDocumentListener(this);
+        //address_line1.getDocument().addDocumentListener(this);
+        //address_line2.getDocument().addDocumentListener(this);
         address_city.getDocument().addDocumentListener(this);
         address_state.getDocument().addDocumentListener(this);
         address_postal_code.getDocument().addDocumentListener(this);
@@ -59,6 +61,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         phone_number1.getDocument().addDocumentListener(this);
         phone_number2.getDocument().addDocumentListener(this);
         phone_number3.getDocument().addDocumentListener(this);
+        email.getDocument().addDocumentListener(this);
+        web_site.getDocument().addDocumentListener(this);
         // reset modified flag
         setModified(false);
     }
@@ -75,6 +79,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
             addressStructure.setCtry((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CTRY)));
         }
         addressStructure.setPhon((Property[]) (parentProperty.getProperties(AddressStructureBean.PROP_PHON)));
+        addressStructure.setEmail((PropertySimpleValue) (parentProperty.getProperty(AddressStructureBean.PROP_EMAIL)));
+        addressStructure.setWww((PropertySimpleValue) (parentProperty.getProperty(AddressStructureBean.PROP_WWW)));
         setModified(false);
     }
 
@@ -88,21 +94,34 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
             updateField(address_postal_code, addressStructure.getPost());
             updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
             updateField(addressStructure.getPhon());
+            updateField(email, addressStructure.getEmail());
+            email.setCaretPosition(0);
+            updateField(web_site, addressStructure.getWww());
+            web_site.setCaretPosition(0);
         }
     }
 
     public void saveProperties() {
         save(parentProperty, addressStructure.getAddr(), AddressStructureBean.PROP_ADDR, address_line.getText());
         if (addressStructure.getAddr() != null) {
-            save(addressStructure.getAddr(), addressStructure.getAddr1(), AddressStructureBean.PROP_ADDR1, address_line1.getText());
-            save(addressStructure.getAddr(), addressStructure.getAddr2(), AddressStructureBean.PROP_ADDR2, address_line2.getText());
+            save(addressStructure.getAddr(), addressStructure.getAddr1(), AddressStructureBean.PROP_ADDR1, lineFromAddress(address_line.getText(), 1));
+            address_line1.setText(addressStructure.getAddr1().getDisplayValue());
+            save(addressStructure.getAddr(), addressStructure.getAddr2(), AddressStructureBean.PROP_ADDR2, lineFromAddress(address_line.getText(), 2));
+            address_line2.setText(addressStructure.getAddr2().getDisplayValue());
             save(addressStructure.getAddr(), addressStructure.getCity(), AddressStructureBean.PROP_CITY, address_city.getText());
             save(addressStructure.getAddr(), addressStructure.getStae(), AddressStructureBean.PROP_STAE, address_state.getText());
             save(addressStructure.getAddr(), addressStructure.getPost(), AddressStructureBean.PROP_POST, address_postal_code.getText());
             save(addressStructure.getAddr(), addressStructure.getCtry(), AddressStructureBean.PROP_CTRY, ((JTextComponent) address_country.getEditor().getEditorComponent()).getText());
         }
         save(parentProperty, addressStructure.getPhon());
+        save(parentProperty, addressStructure.getEmail(), AddressStructureBean.PROP_EMAIL, email.getText());
+        save(parentProperty, addressStructure.getWww(), AddressStructureBean.PROP_WWW, web_site.getText());
         setModified(false);
+    }
+
+    private String lineFromAddress(String text, int i) {
+        String[] lines = text.split("\\n", 3);
+        return lines[i-1];
     }
 
     /** This method is called from within the constructor to
@@ -131,7 +150,11 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         jLabel6 = new javax.swing.JLabel();
         phone_number2 = new javax.swing.JTextField();
         phone_number3 = new javax.swing.JTextField();
-        address_country = new javax.swing.JComboBox(countries);
+        address_country = new AutoCompleteCombo(countries);
+        jLabel7 = new javax.swing.JLabel();
+        email = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        web_site = new javax.swing.JTextField();
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.jLabel1.text")); // NOI18N
 
@@ -139,8 +162,10 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         address_line.setRows(5);
         jScrollPane1.setViewportView(address_line);
 
+        address_line1.setEditable(false);
         address_line1.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.address_line1.text")); // NOI18N
 
+        address_line2.setEditable(false);
         address_line2.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.address_line2.text")); // NOI18N
 
         address_city.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.address_city.text")); // NOI18N
@@ -168,6 +193,16 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
 
         address_country.setEditable(true);
 
+        jLabel7.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.jLabel7.text")); // NOI18N
+
+        email.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.email.text")); // NOI18N
+        email.setToolTipText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "TTT_subm_addr_email")); // NOI18N
+
+        jLabel8.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.jLabel8.text")); // NOI18N
+
+        web_site.setText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "AddressStructureBeanPanel.web_site.text")); // NOI18N
+        web_site.setToolTipText(org.openide.util.NbBundle.getMessage(AddressStructureBeanPanel.class, "TTT_subm_addr_www")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -178,14 +213,23 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(42, 42, 42)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(phone_number1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                            .addComponent(address_line1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                            .addComponent(address_line2, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(address_line1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                                        .addComponent(address_line2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(29, 29, 29))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(10, 10, 10)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(web_site, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                            .addComponent(phone_number1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -195,12 +239,13 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
                                     .addComponent(jLabel6))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(address_city, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
-                                    .addComponent(address_state, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
-                                    .addComponent(address_country, javax.swing.GroupLayout.Alignment.TRAILING, 0, 360, Short.MAX_VALUE)))
-                            .addComponent(phone_number3, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                            .addComponent(phone_number2, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))))
+                                    .addComponent(address_city, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                                    .addComponent(address_state, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                                    .addComponent(address_country, javax.swing.GroupLayout.Alignment.TRAILING, 0, 309, Short.MAX_VALUE)))
+                            .addComponent(phone_number3, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                            .addComponent(phone_number2, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                            .addComponent(email, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -210,26 +255,29 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(address_line1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(address_line2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(address_postal_code, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(address_city, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(address_state, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(address_country, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(address_postal_code, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(address_city, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(address_state, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(address_country, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(address_line1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(address_line2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -238,6 +286,14 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
                 .addComponent(phone_number2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(phone_number3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(web_site, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -250,16 +306,20 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     private javax.swing.JTextField address_line2;
     private javax.swing.JTextField address_postal_code;
     private javax.swing.JTextField address_state;
+    private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField phone_number1;
     private javax.swing.JTextField phone_number2;
     private javax.swing.JTextField phone_number3;
+    private javax.swing.JTextField web_site;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -288,6 +348,12 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
             }
             if (evt.getPropertyName().equals(AddressStructureBean.PROP_PHON)) {
                 updateField(addressStructure.getPhon());
+            }
+            if (evt.getPropertyName().equals(AddressStructureBean.PROP_EMAIL)) {
+                updateField(email, addressStructure.getEmail());
+            }
+            if (evt.getPropertyName().equals(AddressStructureBean.PROP_WWW)) {
+                updateField(web_site, addressStructure.getWww());
             }
         }
     }
@@ -384,13 +450,15 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
             isSetURmanager = true;
             // change listeners
             address_line.getDocument().addUndoableEditListener(URmanager);
-            address_line1.getDocument().addUndoableEditListener(URmanager);
-            address_line2.getDocument().addUndoableEditListener(URmanager);
+            //address_line1.getDocument().addUndoableEditListener(URmanager);
+            //address_line2.getDocument().addUndoableEditListener(URmanager);
             address_city.getDocument().addUndoableEditListener(URmanager);
             address_state.getDocument().addUndoableEditListener(URmanager);
             address_postal_code.getDocument().addUndoableEditListener(URmanager);
             ((JTextComponent) address_country.getEditor().getEditorComponent()).getDocument().addUndoableEditListener(URmanager);
             phone_number1.getDocument().addUndoableEditListener(URmanager);
+            email.getDocument().addUndoableEditListener(URmanager);
+            web_site.getDocument().addUndoableEditListener(URmanager);
         }
         this.editor = editor;
     }
@@ -645,4 +713,5 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         countries[246] = NbBundle.getMessage(AddressStructureBeanPanel.class, "Countrycode_ZW");
 
     }
+
 }
