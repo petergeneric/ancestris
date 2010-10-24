@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genjfr.app.editorstd.beans;
 
 import genj.gedcom.Property;
@@ -21,12 +20,12 @@ public class SubmitterBean implements Serializable {
     public final int langSize = 3;
     private Property[] lang = new Property[langSize];
     public static final String PROP_LANG = "LANG";
-
     private PropertyChangeSupport propertySupport;
 
     public SubmitterBean() {
         propertySupport = new PropertyChangeSupport(this);
     }
+
     /**
      * Get the value of name
      *
@@ -62,8 +61,17 @@ public class SubmitterBean implements Serializable {
      * @param lang new value of lang
      */
     public void setLang(Property[] lang) {
+        if (lang == null) {
+            return;
+        }
         Property[] oldLang = this.lang;
-        this.lang = lang;
+        for (int i = 0; i < langSize; i++) {
+            if (lang.length > i) {
+                this.lang[i] = lang[i];
+            } else {
+                this.lang[i] = null;
+            }
+        }
         propertySupport.firePropertyChange(PROP_LANG, oldLang, lang);
     }
 
@@ -74,5 +82,4 @@ public class SubmitterBean implements Serializable {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertySupport.removePropertyChangeListener(listener);
     }
-
 }

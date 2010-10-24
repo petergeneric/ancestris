@@ -211,18 +211,13 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
     }
 
     private void save(Property parentProperty, Property[] lang) {
-        if (lang == null) {
+        if (parentProperty == null) {
             return;
         }
-        if (lang.length > 0) {
-            save(parentProperty, lang[0], SubmitterBean.PROP_LANG, ((JTextComponent) lang1.getEditor().getEditorComponent()).getText());
-        }
-        if (lang.length > 1) {
-            save(parentProperty, lang[1], SubmitterBean.PROP_LANG, ((JTextComponent) lang2.getEditor().getEditorComponent()).getText());
-        }
-        if (lang.length > 2) {
-            save(parentProperty, lang[2], SubmitterBean.PROP_LANG, ((JTextComponent) lang3.getEditor().getEditorComponent()).getText());
-        }
+        // lang is initialised new Property[langSize] so should be non null and of correct size
+        save(parentProperty, lang[0], SubmitterBean.PROP_LANG, ((JTextComponent) lang1.getEditor().getEditorComponent()).getText());
+        save(parentProperty, lang[1], SubmitterBean.PROP_LANG, ((JTextComponent) lang2.getEditor().getEditorComponent()).getText());
+        save(parentProperty, lang[2], SubmitterBean.PROP_LANG, ((JTextComponent) lang3.getEditor().getEditorComponent()).getText());
     }
 
     @Override

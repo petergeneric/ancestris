@@ -200,9 +200,18 @@ public class AddressStructureBean implements Serializable {
      * @param phon new value of phon
      */
     public void setPhon(Property[] phon) {
-        Property[] oldPhon = this.phon;
-        this.phon = phon;
-        propertySupport.firePropertyChange(PROP_PHON, oldPhon, phon);
+        if (phon == null) {
+            return;
+        }
+        Property[] oldLang = this.phon;
+        for (int i = 0; i < phonSize; i++) {
+            if (phon.length > i) {
+                this.phon[i] = phon[i];
+            } else {
+                this.phon[i] = null;
+            }
+        }
+        propertySupport.firePropertyChange(PROP_PHON, oldLang, phon);
     }
 
 

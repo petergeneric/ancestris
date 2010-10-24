@@ -146,6 +146,7 @@ public class SubmitterPanel extends EntityPanel {
     public void init() {
         submitterBeanPanel.init(getTabIndex(editPane, submitterBeanPanel));
         addressStructureBeanPanel.init(getTabIndex(editPane, addressStructureBeanPanel));
+        multimediaLinkBeanPanel.init(getTabIndex(editPane, multimediaLinkBeanPanel));
     }
 
     @Override
@@ -165,7 +166,7 @@ public class SubmitterPanel extends EntityPanel {
 
     @Override
     public boolean isModified() {
-        return (submitterBeanPanel.isModified || addressStructureBeanPanel.isModified);
+        return (submitterBeanPanel.isModified || addressStructureBeanPanel.isModified || multimediaLinkBeanPanel.isModified);
     }
 
     @Override
@@ -175,18 +176,21 @@ public class SubmitterPanel extends EntityPanel {
         submitterName.setText(submitter.getName());
         submitterBeanPanel.setProperties(entity);
         addressStructureBeanPanel.setProperties(entity);
+        multimediaLinkBeanPanel.setProperties(entity);
     }
 
     @Override
     public void displayEntity() {
         submitterBeanPanel.displayProperties();
         addressStructureBeanPanel.displayProperties();
+        multimediaLinkBeanPanel.displayProperties();
     }
 
     @Override
     public void saveEntity() {
         submitterBeanPanel.saveProperties();
         addressStructureBeanPanel.saveProperties();
+        multimediaLinkBeanPanel.saveProperties();
     }
 
     @Override
@@ -198,5 +202,6 @@ public class SubmitterPanel extends EntityPanel {
     void setManagers(Manager URmanager, EditorStdTopComponent editor) {
         submitterBeanPanel.setManagers(URmanager, editor);
         addressStructureBeanPanel.setManagers(URmanager, editor);
+        multimediaLinkBeanPanel.setManagers(URmanager, editor);
     }
 }
