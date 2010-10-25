@@ -22,13 +22,11 @@ package genjfr.app;
 import genj.gedcom.Gedcom;
 import genjfr.util.GedcomDirectory;
 import genj.util.DirectAccessTokenizer;
-import genj.util.Registry;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -39,6 +37,7 @@ import genjfr.explorer.GedcomExplorerTopComponent;
 import java.net.URL;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
+import org.openide.util.Utilities;
 
 /**
  * The central component of the GenJ application
@@ -245,9 +244,8 @@ public class ControlCenter extends JPanel{
             return c;
         if (c!=null)
             return c;
-        if (GedcomDirectory.getInstance().getContexts().isEmpty())
-            return null;
-        return GedcomDirectory.getInstance().getContexts().get(0);
+        c = Utilities.actionsGlobalContext().lookup(Context.class);
+        return c;
     }
 
     /**

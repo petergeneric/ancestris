@@ -22,7 +22,10 @@ import javax.swing.SwingUtilities;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
@@ -66,6 +69,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     private boolean isRestored = false;
     private final static Logger LOG = Logger.getLogger("genj.app");
     private Context context;
+    InstanceContent ic = new InstanceContent();
 
 
     String getDefaultFactoryMode() {return "genjfr-editor";}
@@ -104,11 +108,10 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         this.context=context;
         AbstractNode n = GedcomDirectory.getInstance().getDummyNode(context);
         if (n != null){
-
             // Create a dummy node for the save button
-        setActivatedNodes(new Node[]{n});
-
+            setActivatedNodes(new Node[]{n});
         }
+        ic.add(context);
     }
 
     public Context getContext() {
@@ -136,6 +139,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
 
     public AncestrisTopComponent() {
         super();
+        associateLookup(new AbstractLookup(ic));
         // toutes les fenetres peuvent aller dans tous les modes
             putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); 
     }

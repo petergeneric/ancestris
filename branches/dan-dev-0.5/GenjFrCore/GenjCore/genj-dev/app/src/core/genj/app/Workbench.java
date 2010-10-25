@@ -241,7 +241,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
    */
   public boolean saveAsGedcom(Context context) {
     
-    if (context.getGedcom() == null)
+    if (context == null || context.getGedcom() == null)
       return false;
     
     // ask everyone to commit their data
