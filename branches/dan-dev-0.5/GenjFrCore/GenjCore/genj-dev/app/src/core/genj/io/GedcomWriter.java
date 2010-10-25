@@ -25,6 +25,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.time.PointInTime;
+import genj.util.Resources;
 import genj.util.Trackable;
 
 import java.io.BufferedWriter;
@@ -51,6 +52,7 @@ import java.util.logging.Logger;
  */
 public class GedcomWriter implements Trackable {
 
+  private final static Resources RESOURCES = Resources.get("genj.io");
   private static Logger LOG = Logger.getLogger("genj.io");
   
   /** lots of state */
@@ -229,7 +231,7 @@ public class GedcomWriter implements Trackable {
     writeLine( "1 SOUR ANCESTRIS");
     writeLine( "2 VERS "+Version.getInstance());
     writeLine( "2 NAME Ancestris");
-    writeLine( "2 CORP Ancestris_Equipe_francaise");
+    writeLine( "2 CORP "+RESOURCES.getString("header.corp","Ancestris"));
     writeLine( "3 ADDR http://www.ancestris.com");
     writeLine( "1 DEST ANY");
     writeLine( "1 DATE "+date);
