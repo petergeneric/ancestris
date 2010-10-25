@@ -64,15 +64,16 @@ public class EditView extends View implements ContextProvider{
   private Mode     mode = new Mode();
   private Sticky sticky = new Sticky();
   private Focus focus = new Focus();
-  private OK ok = new OK();
-  private Cancel cancel = new Cancel();
+//  private OK ok = new OK();
+//  private Cancel cancel = new Cancel();
+  private EditorChangeListener editorChangeListener = new EditorChangeListener();
   private Callback callback = new Callback();
   
   private boolean isIgnoreSetContext = false;
   private boolean isChangeSource = false;
   
   private Editor editor;
-  private JPanel buttons;
+//  private JPanel buttons;
   private ToolBar toolbar;
   private Gedcom gedcom;
   
@@ -83,13 +84,13 @@ public class EditView extends View implements ContextProvider{
     
     super(new BorderLayout());
     
-    buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    ButtonHelper bh = new ButtonHelper().setInsets(0).setContainer(buttons);
-    bh.create(ok).setFocusable(false);    
-    bh.create(cancel).setFocusable(false);
+//    buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+//    ButtonHelper bh = new ButtonHelper().setInsets(0).setContainer(buttons);
+// FIXME: enlever completement le code de ces boutons    bh.create(ok).setFocusable(false);
+//    bh.create(cancel).setFocusable(false);
     
     setLayout(new BorderLayout());
-    add(BorderLayout.SOUTH, buttons);
+//    add(BorderLayout.SOUTH, buttons);
     
     // check for current modes
 //    mode.setSelected(REGISTRY.get("advanced", false));
@@ -118,8 +119,9 @@ public class EditView extends View implements ContextProvider{
     
     // clear old editor
     if (editor!=null) {
-      editor.removeChangeListener(ok);
-      editor.removeChangeListener(cancel);
+//      editor.removeChangeListener(ok);
+//      editor.removeChangeListener(cancel);
+        editor.removeChangeListener(editorChangeListener);
       editor.setContext(new Context());
       remove(editor);
       editor = null;
@@ -131,8 +133,8 @@ public class EditView extends View implements ContextProvider{
       add(editor, BorderLayout.CENTER);
       if (old!=null)
         editor.setContext(old);
-      editor.addChangeListener(ok);
-      editor.addChangeListener(cancel);
+//      editor.addChangeListener(ok);
+      editor.addChangeListener(editorChangeListener);
     }
     
     // show
@@ -162,7 +164,7 @@ public class EditView extends View implements ContextProvider{
   private void commit(boolean ask) {
 
     // changes?
-    if (!ok.isEnabled())
+    if (!editorChangeListener.hasChanged())
       return;
 
     // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume 
@@ -172,32 +174,32 @@ public class EditView extends View implements ContextProvider{
       return;
 
     // check for auto commit
-    if (ask&&!Options.getInstance().isAutoCommit) {
-    
-      JCheckBox auto = new JCheckBox(RESOURCES.getString("confirm.autocomit"));
-      auto.setFocusable(false);
-      
-      int rc = DialogHelper.openDialog(RESOURCES.getString("confirm.keep.changes"), 
-          DialogHelper.QUESTION_MESSAGE, new JComponent[] {
-            new JLabel(RESOURCES.getString("confirm.keep.changes")),
-            auto
-          }, 
-          Action2.yesNo(),
-          this
-      );
-      
-      if (rc!=0) {
-        
-        ok.setEnabled(false);
-        cancel.setEnabled(false);
-        buttons.setVisible(false);
-        
-        return;
-      }
-    
-      Options.getInstance().isAutoCommit = auto.isSelected();
-    
-    }
+//    if (ask&&!Options.getInstance().isAutoCommit) {
+//
+//      JCheckBox auto = new JCheckBox(RESOURCES.getString("confirm.autocomit"));
+//      auto.setFocusable(false);
+//
+//      int rc = DialogHelper.openDialog(RESOURCES.getString("confirm.keep.changes"),
+//          DialogHelper.QUESTION_MESSAGE, new JComponent[] {
+//            new JLabel(RESOURCES.getString("confirm.keep.changes")),
+//            auto
+//          },
+//          Action2.yesNo(),
+//          this
+//      );
+//
+//      if (rc!=0) {
+//
+//        ok.setEnabled(false);
+//        cancel.setEnabled(false);
+//        buttons.setVisible(false);
+//
+//        return;
+//      }
+//
+//      Options.getInstance().isAutoCommit = auto.isSelected();
+//
+//    }
     
     try {
 
@@ -218,9 +220,10 @@ public class EditView extends View implements ContextProvider{
     } finally {
       isChangeSource = false;
       isIgnoreSetContext = false;
-      ok.setEnabled(false);
-      cancel.setEnabled(false);
-      buttons.setVisible(false);
+      editorChangeListener.setChanged(false);
+//      ok.setEnabled(false);
+//      cancel.setEnabled(false);
+//      buttons.setVisible(false);
     }
   }
   
@@ -241,9 +244,10 @@ public class EditView extends View implements ContextProvider{
       sticky.setSelected(false);
       setEditor(null);
       populate(toolbar);
-      ok.setEnabled(false);
-      cancel.setEnabled(false);
-      buttons.setVisible(false);
+      editorChangeListener.setChanged(false);
+//      ok.setEnabled(false);
+//      cancel.setEnabled(false);
+//      buttons.setVisible(false);
       return;
     }
     
@@ -277,9 +281,10 @@ public class EditView extends View implements ContextProvider{
     }
   
     // start with a fresh edit
-    ok.setEnabled(false);
-    cancel.setEnabled(false);
-    buttons.setVisible(false);
+      editorChangeListener.setChanged(false);
+//    ok.setEnabled(false);
+//    cancel.setEnabled(false);
+//    buttons.setVisible(false);
     
     // done
     populate(toolbar);
@@ -407,63 +412,63 @@ public class EditView extends View implements ContextProvider{
     }
   } //Advanced
 
-  /**
-   * A ok action
-   */
-  private class OK extends Action2 implements ChangeListener {
+//  /**
+//   * A ok action
+//   */
+//  private class OK extends Action2 implements ChangeListener {
+//
+//    /** constructor */
+//    private OK() {
+//      setText(Action2.TXT_OK);
+//      setEnabled(false);
+//    }
+//
+//    /** cancel current proxy */
+//    public void actionPerformed(ActionEvent event) {
+//      commit(false);
+//    }
+//
+//    public void stateChanged(ChangeEvent e) {
+//      setEnabled(true);
+//      buttons.setVisible(true);
+//      buttons.revalidate();
+//    }
+//
+//  } //OK
 
-    /** constructor */
-    private OK() {
-      setText(Action2.TXT_OK);
-      setEnabled(false);
-    }
-
-    /** cancel current proxy */
-    public void actionPerformed(ActionEvent event) {
-      commit(false);
-    }
-    
-    public void stateChanged(ChangeEvent e) {
-      setEnabled(true);
-      buttons.setVisible(true);
-      buttons.revalidate();
-    }
-
-  } //OK
-
-  /**
-   * A cancel action
-   */
-  private class Cancel extends Action2 implements ChangeListener {
-
-    /** constructor */
-    private Cancel() {
-      setText(Action2.TXT_CANCEL);
-      setEnabled(false);
-    }
-
-    /** cancel current proxy */
-    public void actionPerformed(ActionEvent event) {
-      // disable ok&cancel
-      ok.setEnabled(false);
-      cancel.setEnabled(false);
-      buttons.setVisible(false);
-
-      // re-set for cancel
-      Context ctx = editor.getContext();
-      editor.setContext(new Context());
-      editor.setContext(ctx);
-      populate(toolbar);
-    }
-    
-    public void stateChanged(ChangeEvent e) {
-      setEnabled(true);
-      buttons.setVisible(true);
-      buttons.revalidate();
-    }
-
-  } //Cancel
-  
+//  /**
+//   * A cancel action
+//   */
+//  private class Cancel extends Action2 implements ChangeListener {
+//
+//    /** constructor */
+//    private Cancel() {
+//      setText(Action2.TXT_CANCEL);
+//      setEnabled(false);
+//    }
+//
+//    /** cancel current proxy */
+//    public void actionPerformed(ActionEvent event) {
+//      // disable ok&cancel
+////      ok.setEnabled(false);
+////      cancel.setEnabled(false);
+//      buttons.setVisible(false);
+//
+//      // re-set for cancel
+//      Context ctx = editor.getContext();
+//      editor.setContext(new Context());
+//      editor.setContext(ctx);
+//      populate(toolbar);
+//    }
+//
+//    public void stateChanged(ChangeEvent e) {
+//      setEnabled(true);
+//      buttons.setVisible(true);
+//      buttons.revalidate();
+//    }
+//
+//  } //Cancel
+//
   private class Callback extends GedcomListenerAdapter {
     
     @Override
@@ -488,4 +493,19 @@ public class EditView extends View implements ContextProvider{
     }
   }
   
+private class EditorChangeListener implements ChangeListener{
+
+    private boolean changed = false;
+
+    public void stateChanged(ChangeEvent e) {
+        setChanged(true);
+    }
+
+        private void setChanged(boolean b) {
+            changed = b;
+        }
+        boolean hasChanged(){
+            return changed;
+        }
+}
 } //EditView
