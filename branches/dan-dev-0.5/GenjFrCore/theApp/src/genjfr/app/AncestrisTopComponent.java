@@ -81,6 +81,12 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
     }
 
+    /*
+     * voir les explications ici: http://blogs.sun.com/geertjan/entry/savecookie_part_2
+     * aussi on aurait pu utiliser http://blogs.sun.com/geertjan/entry/the_divorce_of_savecookies_from
+     * pour ne pas etre oblige d'utiliser un dummynode mais dans ce cas on ne peut pas
+     * avoir un partage du savecookie entre plusieurs vues comme ce doit etre le cas dans ancestris
+     */
     @Override
     public Lookup getLookup() {
         if (dummyNode == null) { return tcLookup; }
