@@ -26,6 +26,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
@@ -70,6 +71,21 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     private final static Logger LOG = Logger.getLogger("genj.app");
     private Context context;
     InstanceContent ic = new InstanceContent();
+    Lookup tcLookup = new AbstractLookup(ic);
+    Node dummyNode = null;
+
+    public AncestrisTopComponent() {
+        super();
+//        associateLookup(tcLookup);
+        // toutes les fenetres peuvent aller dans tous les modes
+        putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
+    }
+
+    @Override
+    public Lookup getLookup() {
+        if (dummyNode == null) { return tcLookup; }
+        return new ProxyLookup(new Lookup[] {tcLookup, dummyNode.getLookup()});
+    }
 
 
     String getDefaultFactoryMode() {return "genjfr-editor";}
@@ -107,9 +123,10 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     public void setContext(Context context){
         this.context=context;
         AbstractNode n = GedcomDirectory.getInstance().getDummyNode(context);
-        if (n != null){
+        if (n != null && n != dummyNode){
             // Create a dummy node for the save button
             setActivatedNodes(new Node[]{n});
+            dummyNode = n;
         }
         ic.add(context);
     }
@@ -134,14 +151,6 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
      */
     public void addLookup() {
         GenjFrPlugin.register(this);
-    }
-
-
-    public AncestrisTopComponent() {
-        super();
-        associateLookup(new AbstractLookup(ic));
-        // toutes les fenetres peuvent aller dans tous les modes
-            putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); 
     }
 
     public void setPanel(JPanel jpanel) {
