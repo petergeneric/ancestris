@@ -4,16 +4,21 @@
  */
 package genjfr.app.editorstd;
 
+import genj.app.Workbench;
+import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
+import genj.util.Trackable;
+import genj.view.View;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.App;
 import genjfr.app.GenjViewInterface;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.explorer.ExplorerNode;
+import genjfr.util.GedcomDirectory;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.Collection;
@@ -49,7 +54,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
 @ServiceProvider(service = GenjViewInterface.class)
-public final class EditorStdTopComponent extends AncestrisTopComponent implements LookupListener {
+public final class EditorStdTopComponent extends AncestrisTopComponent implements LookupListener, WorkbenchListener {
 
     // Path to the icon used by the component and its open action */
     static final String ICON_PATH = "genjfr/app/editorstd/images/editorStd.png";
@@ -67,7 +72,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     private UndoRedo.Manager URmanager = new UndoRedo.Manager();
     //
     // Save cookie
-    private DummyNode dummyNode;
+//    private DummyNode dummyNode;
     private boolean isBusy = false;
 
     public EditorStdTopComponent() {
@@ -111,7 +116,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         initComponents();
 
         // Create a dummy node for the save button
-        setActivatedNodes(new Node[]{dummyNode = new DummyNode()});
+//        setActivatedNodes(new Node[]{dummyNode = new DummyNode()});
 
         // Set Panel with entity
         if (getContext() != null && getContext().getEntity() != null) {
@@ -257,13 +262,13 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
                 return false;
             }
             if (ret.equals(NotifyDescriptor.OK_OPTION)) {
-                saveEditor();
+                commit();
             }
         }
         return super.canClose();
     }
 
-    public void saveEditor() {
+    public void commit() {
         for (Iterator it = panels.iterator(); it.hasNext();) {
             final EntityPanel panel = (EntityPanel) it.next();
             try {
@@ -282,7 +287,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
                 Exceptions.printStackTrace(ex);
             }
         }
-        App.workbenchHelper.saveGedcom(getContext());
     }
 
     public boolean isBusy() {
@@ -385,42 +389,80 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         return URmanager;
     }
 
-    /*
-     * Dummy node class for the save button
-     */
-    private class DummyNode extends AbstractNode {
-
-        SaveCookieImpl saveImpl;
-
-        public DummyNode() {
-            super(Children.LEAF);
-            saveImpl = new SaveCookieImpl();
-        }
-
-        @Override
-        public String getDisplayName() {
-            return getGedcom().getName();
-        }
-
-        private class SaveCookieImpl implements SaveCookie {
-
-            @Override
-            public void save() throws IOException {
-                saveEditor();
-                fire(false);
-            }
-        }
-
-        public void fire(boolean modified) {
-            if (modified) {
-                getCookieSet().assign(SaveCookie.class, saveImpl);
-            } else {
-                getCookieSet().assign(SaveCookie.class);
-            }
-        }
+    @Override
+    public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
     }
 
+    @Override
+    public void processStarted(Workbench workbench, Trackable process) {
+    }
+
+    @Override
+    public void processStopped(Workbench workbench, Trackable process) {
+    }
+
+    @Override
+    public void commitRequested(Workbench workbench, Context context) {
+        commit();
+    }
+
+    @Override
+    public void workbenchClosing(Workbench workbench) {
+    }
+
+    @Override
+    public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
+    }
+
+    @Override
+    public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
+    }
+
+    @Override
+    public void viewOpened(Workbench workbench, View view) {
+    }
+
+    @Override
+    public void viewClosed(Workbench workbench, View view) {
+    }
+
+//    /*
+//     * Dummy node class for the save button
+//     */
+//    private class DummyNode1 extends AbstractNode {
+//
+//        SaveCookieImpl saveImpl;
+//
+//        public DummyNode() {
+//            super(Children.LEAF);
+//            saveImpl = new SaveCookieImpl();
+//        }
+//
+//        @Override
+//        public String getDisplayName() {
+//            return getGedcom().getName();
+//        }
+//
+//        private class SaveCookieImpl implements SaveCookie {
+//
+//            @Override
+//            public void save() throws IOException {
+//                commit();
+//                fire(false);
+//            }
+//        }
+//
+//        public void fire(boolean modified) {
+//            if (modified) {
+//                getCookieSet().assign(SaveCookie.class, saveImpl);
+//            } else {
+//                getCookieSet().assign(SaveCookie.class);
+//            }
+//        }
+//    }
+//
     public void setModified(boolean modified) {
-        dummyNode.fire(modified);
+        GedcomDirectory.getInstance().setModified(getGedcom(), modified);
+//        dummyNode.fire(modified);
     }
 }
