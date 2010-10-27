@@ -271,6 +271,8 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     public void commit() {
         for (Iterator it = panels.iterator(); it.hasNext();) {
             final EntityPanel panel = (EntityPanel) it.next();
+            if (!panel.isModified())
+                continue;
             try {
                 getContext().getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -426,43 +428,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     public void viewClosed(Workbench workbench, View view) {
     }
 
-//    /*
-//     * Dummy node class for the save button
-//     */
-//    private class DummyNode1 extends AbstractNode {
-//
-//        SaveCookieImpl saveImpl;
-//
-//        public DummyNode() {
-//            super(Children.LEAF);
-//            saveImpl = new SaveCookieImpl();
-//        }
-//
-//        @Override
-//        public String getDisplayName() {
-//            return getGedcom().getName();
-//        }
-//
-//        private class SaveCookieImpl implements SaveCookie {
-//
-//            @Override
-//            public void save() throws IOException {
-//                commit();
-//                fire(false);
-//            }
-//        }
-//
-//        public void fire(boolean modified) {
-//            if (modified) {
-//                getCookieSet().assign(SaveCookie.class, saveImpl);
-//            } else {
-//                getCookieSet().assign(SaveCookie.class);
-//            }
-//        }
-//    }
-//
     public void setModified(boolean modified) {
         GedcomDirectory.getInstance().setModified(getGedcom(), modified);
-//        dummyNode.fire(modified);
     }
 }
