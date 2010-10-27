@@ -69,7 +69,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     private Entity previousSelectedEntity = null;
     //
     // Undo/Redo manager
-    private UndoRedo.Manager URmanager = new UndoRedo.Manager();
+//    private UndoRedo.Manager URmanager = new UndoRedo.Manager();
     //
     // Save cookie
 //    private DummyNode dummyNode;
@@ -351,7 +351,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         }
 
         // Set Undo Redo manager and save cookie (even if might have been done already)
-        jPanelEntity.setManagers(URmanager, this);
+//        jPanelEntity.setManagers(URmanager, this);
 
         // Remove existing panel if any
         if (panelOn != null && panelOn != jPanelEntity) {
@@ -384,10 +384,10 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         panelOn = jPanelEntity;
     }
 
-    @Override
-    public UndoRedo getUndoRedo() {
-        return URmanager;
-    }
+//    @Override
+//    public UndoRedo getUndoRedo() {
+//        return URmanager;
+//    }
 
     @Override
     public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
