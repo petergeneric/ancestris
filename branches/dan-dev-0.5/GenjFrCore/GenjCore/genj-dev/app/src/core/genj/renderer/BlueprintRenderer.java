@@ -265,7 +265,10 @@ public class BlueprintRenderer {
         result = bold;
       else if (StyleConstants.isItalic(attr))
         result = italic;
-      return result.deriveFont(((float)StyleConstants.getFontSize(attr)));
+      if (attr.isDefined(StyleConstants.FontSize)){
+          result = result.deriveFont(((float)StyleConstants.getFontSize(attr)));
+      }
+      return result;
     }
   } //MyHTMLDocument
   
