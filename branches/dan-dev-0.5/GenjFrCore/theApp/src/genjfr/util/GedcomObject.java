@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genjfr.util;
 
 import genj.gedcom.Context;
@@ -18,33 +17,40 @@ import org.openide.nodes.Children;
  * @author daniel
  */
 public class GedcomObject {
+
     private Context context;
     private DummyNode dummyNode;
+    private GedcomUndoRedo undoredo;
 
-    GedcomObject(Context context){
-          this.context = context;
-          dummyNode = new DummyNode();
+    GedcomObject(Context context) {
+        this.context = context;
+        dummyNode = new DummyNode();
+        undoredo = new GedcomUndoRedo((context.getGedcom()));
     }
 
-        public DummyNode getDummyNode() {
-            return dummyNode;
-        }
-
-      boolean hasSameGedcom(Context that) {
-          return hasSameGedcom(that.getGedcom());
+    public DummyNode getDummyNode() {
+        return dummyNode;
     }
-      boolean hasSameGedcom(Gedcom that) {
-          return context.getGedcom().equals(that);
-      }
 
-         void setContext(Context context) {
-            this.context = context;
-        }
+    public GedcomUndoRedo getUndoRedo() {
+        return undoredo;
+    }
 
-        Context getContext() {
-            return context;
-        }
+    boolean hasSameGedcom(Context that) {
+        return hasSameGedcom(that.getGedcom());
+    }
 
+    boolean hasSameGedcom(Gedcom that) {
+        return context.getGedcom().equals(that);
+    }
+
+    void setContext(Context context) {
+        this.context = context;
+    }
+
+    Context getContext() {
+        return context;
+    }
 
     public class DummyNode extends AbstractNode {
 
@@ -55,7 +61,6 @@ public class GedcomObject {
             saveImpl = new SaveCookieImpl();
         }
 
-
         @Override
         public String getDisplayName() {
             return getContext().getGedcom().getName();
@@ -65,7 +70,7 @@ public class GedcomObject {
 
             @Override
             public void save() throws IOException {
-            App.workbenchHelper.saveGedcom(getContext());
+                App.workbenchHelper.saveGedcom(getContext());
                 fire(false);
             }
         }
@@ -78,5 +83,4 @@ public class GedcomObject {
             }
         }
     }
-
 }

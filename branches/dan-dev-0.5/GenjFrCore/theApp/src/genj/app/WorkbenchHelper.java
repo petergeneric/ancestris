@@ -26,6 +26,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
@@ -68,7 +69,7 @@ import org.openide.windows.TopComponent;
 /**
  * The central component of the GenJ application
  */
-public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkbenchHelper, GedcomListener {
+public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkbenchHelper, GedcomMetaListener {
 
     private Workbench workbench;
     private final static Logger LOG = Logger.getLogger("genj.app");
@@ -472,6 +473,36 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
         for (GedcomListener listener : GenjFrPlugin.lookupAll(GedcomListener.class)) {
             listener.gedcomPropertyDeleted(gedcom, property, pos, deleted);
+        }
+    }
+
+    public void gedcomHeaderChanged(Gedcom gedcom) {
+        for (GedcomMetaListener listener : GenjFrPlugin.lookupAll(GedcomMetaListener.class)) {
+            listener.gedcomHeaderChanged(gedcom);
+        }
+    }
+
+    public void gedcomWriteLockAcquired(Gedcom gedcom) {
+        for (GedcomMetaListener listener : GenjFrPlugin.lookupAll(GedcomMetaListener.class)) {
+            listener.gedcomWriteLockAcquired(gedcom);
+        }
+    }
+
+    public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
+        for (GedcomMetaListener listener : GenjFrPlugin.lookupAll(GedcomMetaListener.class)) {
+            listener.gedcomBeforeUnitOfWork(gedcom);
+        }
+    }
+
+    public void gedcomAfterUnitOfWork(Gedcom gedcom) {
+        for (GedcomMetaListener listener : GenjFrPlugin.lookupAll(GedcomMetaListener.class)) {
+            listener.gedcomAfterUnitOfWork(gedcom);
+        }
+    }
+
+    public void gedcomWriteLockReleased(Gedcom gedcom) {
+        for (GedcomMetaListener listener : GenjFrPlugin.lookupAll(GedcomMetaListener.class)) {
+            listener.gedcomWriteLockReleased(gedcom);
         }
     }
 

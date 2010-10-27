@@ -19,6 +19,7 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import org.openide.awt.UndoRedo;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
@@ -93,6 +94,10 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         return new ProxyLookup(new Lookup[] {tcLookup, dummyNode.getLookup()});
     }
 
+    @Override
+    public UndoRedo getUndoRedo() {
+        return GedcomDirectory.getInstance().getUndoRedo(context);
+    }
 
     String getDefaultFactoryMode() {return "genjfr-editor";}
 

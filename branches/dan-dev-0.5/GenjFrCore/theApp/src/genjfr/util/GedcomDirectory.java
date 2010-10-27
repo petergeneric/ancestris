@@ -24,26 +24,21 @@ package genjfr.util;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
 import genj.view.SelectionListener;
-import genjfr.app.App;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.util.GedcomObject.DummyNode;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.openide.cookies.SaveCookie;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
+import org.openide.awt.UndoRedo;
 
 /**
  * A static registry for Gedcom instances
  */
-public class GedcomDirectory implements SelectionListener,GedcomListener{
+public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
   
   private static GedcomDirectory instance;
   
@@ -136,9 +131,36 @@ public class GedcomDirectory implements SelectionListener,GedcomListener{
         setModified(gedcomsOpened.get(gedcom), true);
     }
 
+    public void gedcomHeaderChanged(Gedcom gedcom) {
+        setModified(gedcomsOpened.get(gedcom), true);
+    }
+
+    public void gedcomWriteLockAcquired(Gedcom gedcom) {
+    }
+
+    public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
+    }
+
+    public void gedcomAfterUnitOfWork(Gedcom gedcom) {
+    }
+
+    public void gedcomWriteLockReleased(Gedcom gedcom) {
+        try {
+            gedcomsOpened.get(gedcom).getUndoRedo().gedcomUpdated(gedcom);
+        } catch (NullPointerException e) {}
+  }
+
   public interface Listener {
     public void gedcomRegistered(Context context);
     public void gedcomUnregistered(Context context);
+  }
+
+  public UndoRedo getUndoRedo(Context c){
+      try{
+          return gedcomsOpened.get(c.getGedcom()).getUndoRedo();
+      } catch (NullPointerException e){
+          return null;
+      }
   }
 
   public DummyNode getDummyNode(Context c){
