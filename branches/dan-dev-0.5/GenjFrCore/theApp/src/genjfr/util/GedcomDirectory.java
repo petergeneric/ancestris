@@ -149,6 +149,10 @@ public class GedcomDirectory implements SelectionListener,GedcomListener{
       }
   }
 
+  public void setModified(Gedcom g, boolean  modified){
+    setModified(gedcomsOpened.get(g), modified);
+    }
+
   private void setModified(GedcomObject o, boolean modified) {
       try {
           o.getDummyNode().fire(modified);
