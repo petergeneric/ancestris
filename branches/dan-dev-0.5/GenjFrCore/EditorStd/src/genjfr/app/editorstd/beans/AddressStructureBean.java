@@ -261,6 +261,7 @@ public class AddressStructureBean implements Serializable {
     }
 
     
+    
     // listerners //
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertySupport.addPropertyChangeListener(listener);

@@ -71,8 +71,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         this.parentProperty = parentProperty;
         addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
         if (addressStructure.getAddr() != null) {
-            addressStructure.setAddr1((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR1)));
-            addressStructure.setAddr2((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR2)));
+            //addressStructure.setAddr1((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR1)));
+            //addressStructure.setAddr2((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR2)));
             addressStructure.setCity((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CITY)));
             addressStructure.setStae((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_STAE)));
             addressStructure.setPost((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_POST)));
@@ -87,8 +87,8 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     public void displayProperties() {
         if (!editor.isBusy()) {
             updateField(address_line, addressStructure.getAddr());
-            updateField(address_line1, addressStructure.getAddr1());
-            updateField(address_line2, addressStructure.getAddr2());
+            //updateField(address_line1, addressStructure.getAddr1());
+            //updateField(address_line2, addressStructure.getAddr2());
             updateField(address_city, addressStructure.getCity());
             updateField(address_state, addressStructure.getStae());
             updateField(address_postal_code, addressStructure.getPost());
@@ -104,10 +104,10 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     public void saveProperties() {
         save(parentProperty, addressStructure.getAddr(), AddressStructureBean.PROP_ADDR, address_line.getText());
         if (addressStructure.getAddr() != null) {
-            save(addressStructure.getAddr(), addressStructure.getAddr1(), AddressStructureBean.PROP_ADDR1, lineFromAddress(address_line.getText(), 1));
-            address_line1.setText(addressStructure.getAddr1().getDisplayValue());
-            save(addressStructure.getAddr(), addressStructure.getAddr2(), AddressStructureBean.PROP_ADDR2, lineFromAddress(address_line.getText(), 2));
-            address_line2.setText(addressStructure.getAddr2().getDisplayValue());
+            //save(addressStructure.getAddr(), addressStructure.getAddr1(), AddressStructureBean.PROP_ADDR1, lineFromAddress(address_line.getText(), 1));
+            //address_line1.setText(addressStructure.getAddr1().getDisplayValue());
+            //save(addressStructure.getAddr(), addressStructure.getAddr2(), AddressStructureBean.PROP_ADDR2, lineFromAddress(address_line.getText(), 2));
+            //address_line2.setText(addressStructure.getAddr2().getDisplayValue());
             save(addressStructure.getAddr(), addressStructure.getCity(), AddressStructureBean.PROP_CITY, address_city.getText());
             save(addressStructure.getAddr(), addressStructure.getStae(), AddressStructureBean.PROP_STAE, address_state.getText());
             save(addressStructure.getAddr(), addressStructure.getPost(), AddressStructureBean.PROP_POST, address_postal_code.getText());
@@ -328,12 +328,12 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
             if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR)) {
                 updateField(address_line, addressStructure.getAddr());
             }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR1)) {
-                updateField(address_line1, addressStructure.getAddr1());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR2)) {
-                updateField(address_line2, addressStructure.getAddr2());
-            }
+//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR1)) {
+//                updateField(address_line1, addressStructure.getAddr1());
+//            }
+//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR2)) {
+//                updateField(address_line2, addressStructure.getAddr2());
+//            }
             if (evt.getPropertyName().equals(AddressStructureBean.PROP_CITY)) {
                 updateField(address_city, addressStructure.getCity());
             }
