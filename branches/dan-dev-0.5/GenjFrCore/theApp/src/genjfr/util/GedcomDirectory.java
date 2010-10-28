@@ -112,27 +112,27 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        setModified(gedcomsOpened.get(gedcom), true);
+        updateModified(gedcom);
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        setModified(gedcomsOpened.get(gedcom), true);
+        updateModified(gedcom);
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        setModified(gedcomsOpened.get(gedcom), true);
+        updateModified(gedcom);
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        setModified(gedcomsOpened.get(gedcom), true);
+        updateModified(gedcom);
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        setModified(gedcomsOpened.get(gedcom), true);
+        updateModified(gedcom);
     }
 
     public void gedcomHeaderChanged(Gedcom gedcom) {
-        setModified(gedcomsOpened.get(gedcom), true);
+        updateModified(gedcom);
     }
 
     public void gedcomWriteLockAcquired(Gedcom gedcom) {
@@ -171,14 +171,18 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
       }
   }
 
+  /**
+   * @deprecated use updateModified(gedcom) and let gedcomObject set its modified state using its own data
+   * @param g
+   * @param modified
+   */
   public void setModified(Gedcom g, boolean  modified){
-    setModified(gedcomsOpened.get(g), modified);
+          gedcomsOpened.get(g).getDummyNode().fire(modified);
     }
 
-  private void setModified(GedcomObject o, boolean modified) {
+    public void updateModified(Gedcom gedcom){
       try {
-          o.getDummyNode().fire(modified);
+          gedcomsOpened.get(gedcom).getDummyNode().fire(gedcom.hasChanged());
       } catch (NullPointerException e){}
     }
-
 }
