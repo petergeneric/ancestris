@@ -147,6 +147,7 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
     public void gedcomWriteLockReleased(Gedcom gedcom) {
         try {
             gedcomsOpened.get(gedcom).getUndoRedo().gedcomUpdated(gedcom);
+            updateModified(gedcom);
         } catch (NullPointerException e) {}
   }
 
