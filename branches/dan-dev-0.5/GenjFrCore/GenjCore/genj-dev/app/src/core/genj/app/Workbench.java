@@ -24,6 +24,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
+import genj.io.BackupFile;
 import genj.io.GedcomEncodingException;
 import genj.io.GedcomIOException;
 import genj.io.GedcomReader;
@@ -351,13 +352,14 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
       writer.write();
       
       // .. make backup
-      if (file.exists()) {
-        File bak = new File(file.getAbsolutePath() + "~");
-        if (bak.exists()&&!bak.delete())
-          throw new GedcomIOException("Couldn't delete backup file " + bak.getName(), -1);
-        if (!file.renameTo(bak))
-          throw new GedcomIOException("Couldn't create backup for " + file.getName(), -1);
-      }
+      BackupFile.createBackup(file);
+//      if (file.exists()) {
+//        File bak = new File(file.getAbsolutePath() + "~");
+//        if (bak.exists()&&!bak.delete())
+//          throw new GedcomIOException("Couldn't delete backup file " + bak.getName(), -1);
+//        if (!file.renameTo(bak))
+//          throw new GedcomIOException("Couldn't create backup for " + file.getName(), -1);
+//      }
 
       // .. and now !finally! move from temp to result
       if (!temp.renameTo(file))
