@@ -19,6 +19,7 @@
  */
 package genjfr.util;
 
+import genj.util.swing.Action2;
 import genj.util.swing.MenuHelper;
 import java.awt.Component;
 import java.util.Collection;
@@ -55,10 +56,14 @@ public class MyActionPresenter extends ActionPresenterProvider {
     }
 
     public final JMenuItem createPopupPresenter(Action action) {
-        MenuHelper mh = new MenuHelper();
+        if (action instanceof Action2) {
+            MenuHelper mh = new MenuHelper();
 
-        mh.createPopup();
-        return mh.createItem(action);
+            mh.createPopup();
+            return mh.createItem(action);
+        } else {
+            return getOther().createPopupPresenter(action);
+        }
     }
 
     public JMenuItem createMenuPresenter(Action action) {
