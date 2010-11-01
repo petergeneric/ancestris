@@ -47,7 +47,11 @@ public class DialogManagerImp implements DialogManager{
     public String show(String title, int messageType, String txt, String value, Object source) {
         NotifyDescriptor.InputLine d = new NotifyDescriptor.InputLine(txt, title, NotifyDescriptor.OK_CANCEL_OPTION, messageType);
         d.setInputText(value);
-        return (String) (DialogDisplayer.getDefault().notify(d));
+        // analyze
+        if (NotifyDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(d)){
+            return d.getInputText();
+        }
+        return null;
     }
 
     private static int getResult(Object returnValue,Object[] options){
