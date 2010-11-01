@@ -26,7 +26,8 @@
     <attr name="Menu\File\org-openide-actions-SaveAsAction.instance\position" intvalue="2100"/>
     <folder name="Actions">
         <folder name="Edit">
-            <file name="org-netbeans-modules-quicksearch-QuickSearchAction.instance_hidden"/>
+            <file name="genjfr-app-ActionHistory.instance">
+            </file>
         </folder>
         <folder name="File">
             <file name="genjfr-app-ActionNew.instance">
@@ -362,6 +363,24 @@
             <file name="org-netbeans-core-ui-options-filetypes-FileAssociationsOptionsPanelController.instance_hidden"/>
         </folder>
     </folder>
+    <folder name="QuickSearch">
+        <file name="Actions_hidden"/>
+        <folder name="Familles">
+            <attr name="command" stringvalue=""/>
+            <attr name="position" intvalue="10"/>
+            <file name="genjfr-app-FamQuickSearch.instance">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#QuickSearch/Familles/genjfr-app-FamQuickSearch.instance"/>
+            </file>
+        </folder>
+        <file name="GoToOption_hidden"/>
+        <folder name="Individus">
+            <attr name="command" stringvalue=""/>
+            <attr name="position" intvalue="0"/>
+            <file name="genjfr-app-IndiQuickSearch.instance">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#QuickSearch/Individus/genjfr-app-IndiQuickSearch.instance"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="Services">
         <folder name="AutoupdateType">
             <file name="genjfr_extensions_update_center.instance">
@@ -437,6 +456,12 @@
         </file>
     </folder>
     <folder name="Toolbars">
+        <folder name="Nav">
+            <file name="genjfr-app-ActionHistory.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-ActionHistory.instance"/>
+                <attr name="position" intvalue="900"/>
+            </file>
+        </folder>
         <folder name="File">
             <file name="genjfr-app-ActionNew.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
