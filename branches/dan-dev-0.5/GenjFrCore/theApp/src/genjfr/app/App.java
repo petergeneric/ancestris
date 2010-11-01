@@ -29,8 +29,10 @@ import genj.util.EnvironmentChecker;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
+import genj.util.swing.DialogHelper;
 import genj.view.SelectionSink;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import genjfr.util.DialogManagerImp;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -221,6 +223,9 @@ public class App {
 
             // Catch anything that might happen
             try {
+
+                // Install our dialog handler
+                DialogHelper.setDialogManager(DialogManagerImp.getInstance());
 
                 // create our home directory
                 File home = new File(EnvironmentChecker.getProperty("user.home.genj", null, "determining home directory"));
