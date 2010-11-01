@@ -73,6 +73,7 @@ public class DialogHelper {
     WARNING_MESSAGE = JOptionPane.WARNING_MESSAGE,
     QUESTION_MESSAGE = JOptionPane.QUESTION_MESSAGE,
     PLAIN_MESSAGE = JOptionPane.PLAIN_MESSAGE;
+    private static DialogManager dialogManager = null;
   
   public static void showError(String title, String msg, Throwable t, Object source) {
     openDialog(title, DialogHelper.ERROR_MESSAGE, msg, Action2.okOnly(), source);
@@ -84,6 +85,10 @@ public class DialogHelper {
   
   public static int openDialog(String title, int messageType,  String txt, Action[] actions, Object source) {
     
+    // delegate
+      if (dialogManager != null){
+          return dialogManager.show(title, messageType, txt, actions, source);
+      }
     // analyze the text
     int maxLine = 40;
     int cols = 40, rows = 1;
@@ -162,7 +167,12 @@ public class DialogHelper {
    */
   public static String openDialog(String title, int messageType,  String txt, String value, Object source) {
 
-    // prepare text field and label
+    // delegate
+      if (dialogManager != null){
+          return dialogManager.show(title, messageType, txt, value, source);
+      }
+
+      // prepare text field and label
     JLabel lb = new JLabel(txt);
     final TextFieldWidget tf = new TextFieldWidget(value, 24);
     final Action[] actions = Action2.okCancel();
@@ -185,6 +195,9 @@ public class DialogHelper {
   }
 
   public static int openDialog(String title, int messageType,  JComponent content, Action[] actions, Object source) {
+      if (dialogManager != null){
+          return dialogManager.show(title, messageType, content, actions, source);
+      }
     return new Dialog(title, messageType, content, actions, source).show();
   }
 
@@ -477,5 +490,17 @@ public class DialogHelper {
       }
     });
   }
-  
+
+    public static void setDialogManager(DialogManager dialogManager) {
+        DialogHelper.dialogManager = dialogManager;
+    }
+
+
+  public interface DialogManager{
+    public int show(String title, int messageType, final JComponent content, Action[] actions, Object source);
+
+    public int show(String title, int messageType, String txt, Action[] actions, Object source);
+
+    public String show(String title, int messageType, String txt, String value, Object source);
+    }
 } //AbstractWindowManager
