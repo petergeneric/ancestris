@@ -543,7 +543,7 @@
             </file>
             <file name="option4">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
-                <attr name="include" stringvalue="genjfr/[^/]*|genjfr/gedart/.*"/>
+                <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*"/>
             </file>
         </folder>
         <folder name="MyCategory2">
@@ -558,7 +558,7 @@
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
             <file name="blueprint">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
-                <attr name="include" stringvalue="genjfr/blueprints/[^/]*/([^/]*)\.html"/>
+                <attr name="include" stringvalue="ancestris/blueprints/[^/]*/([^/]*)\.html"/>
             </file>
         </folder>
 
