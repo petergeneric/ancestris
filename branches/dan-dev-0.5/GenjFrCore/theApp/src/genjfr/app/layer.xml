@@ -153,6 +153,7 @@
                 <attr name="displayName" bundlevalue="genjfr.explorer.Bundle#CTL_GedcomExplorerAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
+            <file name="org-netbeans-core-windows-actions-ResetWindowsAction.instance_hidden"/>
         </folder>
         <folder name="Help">
             <!-- Override the registered action with the new one. This will be
@@ -356,6 +357,7 @@
                 <attr name="originalFile" stringvalue="Actions/Window/genjfr-explorer-GedcomExplorerAction.instance"/>
             </file>
             <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
+            <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
         </folder>
     </folder>
     <folder name="OptionsDialog">
