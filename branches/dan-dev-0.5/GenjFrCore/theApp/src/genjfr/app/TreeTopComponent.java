@@ -5,7 +5,7 @@
 package genjfr.app;
 
 import genj.app.Workbench;
-import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
@@ -90,9 +90,12 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     @Override
     public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
         // FIXME: peut etre faut il le placer ailleurs ou faire autrement...
-        genj.util.Registry r = App.getRegistry(gedcom);
-        r.put("tree.root", ((TreeView) getView()).getRoot().getId());
-        r.persist();
+        Entity root = ((TreeView) getView()).getRoot();
+        if (root != null){
+            genj.util.Registry r = App.getRegistry(gedcom);
+            r.put("tree.root", ((TreeView) getView()).getRoot().getId());
+            r.persist();
+        }
         super.gedcomClosed(workbench, gedcom);
     }
 
