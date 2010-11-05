@@ -6,17 +6,10 @@ package genjfr.app;
 
 import genj.app.Images;
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import genj.util.Registry;
-import genjfr.util.GedcomDirectory;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.prefs.Preferences;
-import org.openide.util.NbPreferences;
 
 public class ActionOpen extends Action2 {
 
