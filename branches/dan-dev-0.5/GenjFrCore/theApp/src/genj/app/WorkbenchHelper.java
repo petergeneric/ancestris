@@ -174,6 +174,8 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     public Context newGedcom() {
         //FIXME: changer le nouveau gedcom cree par defaut!
         Context context = workbench.newGedcom();
+        if (context == null)
+            return null;
         Gedcom gedcom = context.getGedcom();
         try {
             gedcom.doUnitOfWork(new UnitOfWork() {
