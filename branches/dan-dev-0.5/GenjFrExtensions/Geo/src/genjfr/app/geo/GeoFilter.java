@@ -384,9 +384,10 @@ public class GeoFilter {
      * @return
      */
     private List<Indi> getCousins(List<Indi> ancestorsList) {
-        if (ancestorsList == null) {
+        if (ancestorsList == null || gedcom == null) {
             return null;
         }
+        
         Collection indis = gedcom.getEntities(Gedcom.INDI);
         HashSet<Indi> otherIndis = new HashSet<Indi>();
 
@@ -431,7 +432,7 @@ public class GeoFilter {
      * @return
      */
     private List<Indi> getOtherAncestorsList(List<Indi> ancestorsList, List<Indi> cousinsList) {
-        if (ancestorsList == null && cousinsList == null) {
+        if (ancestorsList == null && cousinsList == null || gedcom == null) {
             return null;
         }
         Collection indis = gedcom.getEntities(Gedcom.INDI);
