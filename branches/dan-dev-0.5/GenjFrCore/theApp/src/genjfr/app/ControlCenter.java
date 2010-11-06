@@ -239,6 +239,8 @@ public class ControlCenter extends JPanel{
     } //LastOpenLoader
 
     public Context getSelectedContext(boolean firstIfNoneSelected){
+        if (Utilities.actionsGlobalContext().lookupAll(Context.class).size()<2)
+            firstIfNoneSelected = true;
         Context c = GedcomExplorerTopComponent.getDefault().getContext();
         if (!firstIfNoneSelected)
             return c;
