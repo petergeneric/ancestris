@@ -80,6 +80,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -137,6 +138,8 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
   private Context context = new Context();
   
   private boolean ignoreContextChange = false;
+
+  private Sticky sticky = new Sticky();
   
   /**
    * Constructor
@@ -348,6 +351,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     // ignored?
     if (ignoreContextChange)
       return;
+    if (sticky.isSelected()){
+        return;
+    }
 
     //TODO: on change la facon de prendre en compte une selection dans l'arbre
 //    // remember
@@ -479,6 +485,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     
     // gap
     toolbar.addSeparator();
+
+    // sticky
+    toolbar.add(new JToggleButton(sticky));
     
     // vertical/horizontal
     toolbar.add(bh.create(new ActionOrientation(), Images.imgVert, model.isVertical()));
@@ -1122,7 +1131,28 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     }
     
   }
-  
+
+    /**
+   * Action - toggle sticky mode
+   */
+  private class Sticky extends Action2 {
+    /** constructor */
+    protected Sticky() {
+      super.setImage(genj.edit.Images.imgStickOff);
+      super.setTip(RESOURCES, "action.stick.tip");
+      super.setSelected(false);
+    }
+    /** run */
+    public void actionPerformed(ActionEvent event) {
+      setSelected(isSelected());
+    }
+    @Override
+    public boolean setSelected(boolean selected) {
+      super.setImage(selected ? genj.edit.Images.imgStickOn : genj.edit.Images.imgStickOff);
+      return super.setSelected(selected);
+    }
+  } //Sticky
+
   private class TreeContext extends ViewContext {
     public TreeContext(Context context) {
       super(context);
