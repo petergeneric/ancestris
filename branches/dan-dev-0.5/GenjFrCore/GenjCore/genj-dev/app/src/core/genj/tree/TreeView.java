@@ -348,24 +348,42 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
     // ignored?
     if (ignoreContextChange)
       return;
-    
-    // remember
-   context = new Context(newContext.getGedcom(), newContext.getEntities());
-    
-    // must root change?
-    if (isActionPerformed || context.getGedcom()==null) {
-      setRoot(context.getEntity());
-      return;
+
+    //TODO: on change la facon de prendre en compte une selection dans l'arbre
+//    // remember
+//   context = new Context(newContext.getGedcom(), newContext.getEntities());
+//
+//    // must root change?
+//    if (isActionPerformed || context.getGedcom()==null) {
+//      setRoot(context.getEntity());
+//      return;
+//    }
+//
+//    // nothing we can show?
+//    if (context.getEntity()==null)
+//      return;
+//
+//    // try to show - otherwise force
+//    if (!show(context.getEntity()))
+//      setRoot(context.getEntity());
+
+    // TODO: maintenant simpleclic: ignore
+    // double: on place la selection au centre sans changer de focus
+    // pour changer de root -> clic droit dans l'arbre
+        // remember
+    if (!isActionPerformed){
+        return;
     }
-    
+   context = new Context(newContext.getGedcom(), newContext.getEntities());
+
     // nothing we can show?
     if (context.getEntity()==null)
       return;
 
-    // try to show - otherwise force
+    // try to show - otherwise force setroot
     if (!show(context.getEntity()))
       setRoot(context.getEntity());
-    
+
     // done
   }
   
