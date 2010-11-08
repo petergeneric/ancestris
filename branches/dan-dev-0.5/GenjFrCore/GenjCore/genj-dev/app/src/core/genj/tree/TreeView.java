@@ -1058,7 +1058,15 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
      */
     public void actionPerformed(ActionEvent event) {
       // let everyone know
-      SelectionSink.Dispatcher.fireSelection(TreeView.this, new Context(bookmark.getEntity()), false);
+      Context newContext = new Context(bookmark.getEntity());
+
+      try {
+        ignoreContextChange = true;
+        SelectionSink.Dispatcher.fireSelection(TreeView.this, newContext, false);
+      } finally {
+        ignoreContextChange = false;
+      }
+      setContext(newContext, true);
     }
 
   }
