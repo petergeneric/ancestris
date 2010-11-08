@@ -663,7 +663,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       contentRenderer.cFamShape      = Color.BLACK;
       contentRenderer.cArcs          = Color.LIGHT_GRAY;
       contentRenderer.cSelectedShape = Color.RED;
+      contentRenderer.cRootShape     = Color.GREEN;
       contentRenderer.selected       = context.getEntities();
+      contentRenderer.root           = getRoot();
       contentRenderer.indiRenderer   = null;
       contentRenderer.famRenderer    = null;
       
@@ -829,7 +831,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       contentRenderer.cFamShape      = (Color)colors.get("fams");
       contentRenderer.cArcs          = (Color)colors.get("arcs");
       contentRenderer.cSelectedShape = (Color)colors.get("selects");
+      contentRenderer.cRootShape     = Color.GREEN;
       contentRenderer.selected       = selection ? context.getEntities() : new ArrayList<Entity>() ;
+      contentRenderer.root           = getRoot();
       contentRenderer.indiRenderer   = getEntityRenderer(Gedcom.INDI);
       contentRenderer.famRenderer    = getEntityRenderer(Gedcom.FAM );
       // let the renderer do its work
@@ -1066,6 +1070,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       } finally {
         ignoreContextChange = false;
       }
+        setRoot(bookmark.getEntity());
       setContext(newContext, true);
     }
 

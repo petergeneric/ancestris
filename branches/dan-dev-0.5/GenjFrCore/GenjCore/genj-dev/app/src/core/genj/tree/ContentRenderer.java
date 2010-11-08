@@ -55,9 +55,15 @@ public class ContentRenderer {
   /** selected color */
   /*package*/ Color cSelectedShape = null;
 
+  /** selected color */
+  /*package*/ Color cRootShape = null;
+
   /** an entity that we consider selected */
   /*package*/ Collection<? extends Entity> selected = new ArrayList<Entity>(0);
   
+  /** an entity that we consider as tree root*/
+  /*package*/ Entity root = null;
+
   /** the entity renderer we're using */
   /*package*/ BlueprintRenderer indiRenderer, famRenderer;
   
@@ -129,8 +135,14 @@ public class ContentRenderer {
   }
   
   /**
-   * Calc color for given node   */
+   * Calc color for given node
+   */
   private Color getColor(Object content) {
+    // selected?
+    if (cRootShape!=null&&content != null && content.equals(root)) {
+      return cRootShape;
+    }
+
     // selected?
     if (cSelectedShape!=null&&selected.contains(content)) {
       return cSelectedShape;
