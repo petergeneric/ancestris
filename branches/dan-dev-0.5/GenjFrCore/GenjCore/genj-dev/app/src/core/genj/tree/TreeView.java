@@ -20,6 +20,7 @@
 package genj.tree;
 
 import genj.common.SelectEntityWidget;
+import genj.edit.EditView;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
