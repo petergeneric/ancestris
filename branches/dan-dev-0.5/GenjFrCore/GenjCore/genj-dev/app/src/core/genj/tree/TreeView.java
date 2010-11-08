@@ -387,8 +387,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
       return;
 
     // try to show - otherwise force setroot
-    if (!show(context.getEntity()))
-      setRoot(context.getEntity());
+    show(context.getEntity(),true);
 
     // done
   }
@@ -419,6 +418,15 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
   }
   
   /**
+   * Set current entity, force root if not shown
+   */
+  /*package*/ public boolean show(Entity entity, boolean forceRoot) {
+        // try to show - otherwise force setroot
+        if (!show(context.getEntity()) && forceRoot)
+          setRoot(context.getEntity());
+        return true;
+    }
+      /**
    * Scroll to given position
    */
   private void scrollTo(Point p) {
