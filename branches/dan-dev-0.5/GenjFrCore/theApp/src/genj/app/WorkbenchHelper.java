@@ -19,6 +19,7 @@
  */
 package genj.app;
 
+import ancestris.util.AncestrisPreferences;
 import genj.gedcom.Entity;
 import genj.io.Filter;
 import genj.util.Trackable;
@@ -54,9 +55,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -114,47 +116,30 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 
     private static void openDefaultViews(Context context) {
 
-        Preferences prefs = NbPreferences.forModule(GenjViewTopComponent.class);
+        AncestrisPreferences prefs = AncestrisPreferences.get(GenjViewTopComponent.class);
         List<Class> openedViews = new ArrayList<Class>();
 
         // try gedcom properties
         Registry gedcomSettings = App.getRegistry(context.getGedcom());
 
         // FIXME: a reecrire plus proprement
-        for (int i = 0; i < 20; i++) {
-            String item = gedcomSettings.get("openViews" + i, (String) null);
-            if (item == null) {
-                break;
-            }
-            Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
-            if (clazz != null) {
-                openedViews.add(clazz);
-            }
-        }
+        String ovs[] = gedcomSettings.get("openViews",(String[])null);
+        openedViews.addAll(GenjFrPlugin.lookupForName(GenjViewInterface.class,ovs));
 
         if (openedViews.isEmpty()) {
-            for (int i = 0; i < 20; i++) {
-                String item = prefs.get("openViews" + i, null);
-                if (item == null) {
-                    break;
-                }
-                Class clazz = GenjFrPlugin.lookupForName(GenjViewInterface.class, item);
-                if (clazz != null) {
-                    openedViews.add(clazz);
-                }
-            }
+            openedViews.addAll(GenjFrPlugin.lookupForName(
+                        GenjViewInterface.class,
+                        prefs.get("openViews",(String[])null)));
         }
         if (openedViews.isEmpty()) {
             // Open default views
             for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
                 openedViews.addAll(sInterface.getDefaultOpenedViews());
             }
-//            openedViews.add("genjfr.app.TableTopComponent");
-//            openedViews.add("genjfr.app.TreeTopComponent");
-//            openedViews.add("genjfr.app.EditTopComponent");
         }
 
         TopComponent tc = null;
+        Map<String,TopComponent> name2tc = new HashMap<String, TopComponent>();
         for (Class clazz : openedViews) {
             try {
                 tc = (TopComponent) clazz.newInstance();
@@ -162,12 +147,16 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                     ((GenjViewInterface) tc).init(context);
                 }
                 tc.open();
+                name2tc.put(clazz.getCanonicalName(), tc);
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
         if (tc != null) {
             tc.requestActive();
+        }
+        for (String name:gedcomSettings.get("focusViews",new String[]{})){
+            name2tc.get(name).requestActive();
         }
     }
 

@@ -6,7 +6,9 @@
 package genjfr.app.pluginservice;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
@@ -44,6 +46,18 @@ public abstract class GenjFrPlugin implements PluginInterface {
         return null;
     }
 
+    public static Collection<Class> lookupForName(Class clazz,String[] names){
+        List<Class> openedViews = new ArrayList<Class>();
+
+        if (names != null){
+            List<String> namesList = Arrays.asList(names);
+            for (Object sInterface : Lookup.getDefault().lookupAll(clazz)) {
+                    if (namesList.contains(sInterface.getClass().getCanonicalName()))
+                        openedViews.add(sInterface.getClass());
+                }
+        }
+        return openedViews;
+    }
     public String getPluginName() {
         return PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module");
     }

@@ -4,6 +4,7 @@
  */
 package genjfr.app;
 
+import ancestris.util.AncestrisPreferences;
 import genj.util.Registry;
 import genjfr.app.pluginservice.PluginInterface;
 import java.util.Collection;
@@ -53,7 +54,7 @@ public class Installer extends ModuleInstall {
     WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
         public void run() {
         Preferences p  = NbPreferences.forModule(App.class);
-        Collection pfiles = MyPreferences.get(p, "gedcoms", (Collection) null);
+        Collection pfiles = AncestrisPreferences.get(p, "gedcoms", (Collection) null);
         App.center.load(pfiles);
         }
     });
@@ -62,7 +63,7 @@ public class Installer extends ModuleInstall {
     @Override
     public boolean closing() {
         Preferences p  = NbPreferences.forModule(App.class);
-        MyPreferences.put(p, "gedcoms", App.center.getOpenedGedcoms());
+        AncestrisPreferences.put(p, "gedcoms", App.center.getOpenedGedcoms());
         return App.closing();
     }
 

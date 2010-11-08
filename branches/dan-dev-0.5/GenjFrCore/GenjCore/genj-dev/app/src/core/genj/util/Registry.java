@@ -683,6 +683,9 @@ public class Registry implements PropertyChangeListener {
   /**
    * Set the file to read from/write to 
    */
+  // TODO: il faudra revoir le code de cette classe pour utiliser le systeme de preferences de NB
+  // Cette fonction n'est appelee qu'une seule foir a l'initialisation de l'appli (App.java)
+  // Voir aussi l'integration de MyPreferences
   public void setFile(File file) {
     
     synchronized (Registry.class) {
