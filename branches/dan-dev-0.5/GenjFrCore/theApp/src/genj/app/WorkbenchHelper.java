@@ -38,6 +38,7 @@ import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.FileChooser;
+import genj.view.MySelectionListener;
 import genj.view.SelectionListener;
 import genj.view.SelectionSink;
 import genj.view.View;
@@ -263,7 +264,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         }
     }
 
-    public void fireSelection(Context context, boolean isActionPerformed) {
+    public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
 //TODO: mieux controler. Devra atre refait lors du basculement total dans l'environnement NB
 //    // appropriate?
 //    if (context.getGedcom()!= this.context.getGedcom()) {
@@ -291,7 +292,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 //      REGISTRY.put(context.getGedcom().getName()+".context", context.toString());
 //
         // notify
-        selectionChanged(workbench, context, isActionPerformed);
+        selectionChanged(workbench, from, context, isActionPerformed);
     }
 
     public boolean isReady(int i) {
@@ -377,13 +378,20 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     }
 
     // IWorkbenchHelper Implementation
-    public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
-        for (WorkbenchListener listener : GenjFrPlugin.lookupAll(WorkbenchListener.class)) {
-            listener.selectionChanged(workbench, context, isActionPerformed);
+    public void selectionChanged(Workbench workbench,MySelectionListener from, Context context, boolean isActionPerformed) {
+            for (WorkbenchListener listener : GenjFrPlugin.lookupAll(WorkbenchListener.class)) {
+                listener.selectionChanged(workbench, context, isActionPerformed);
+            }
+            for (SelectionListener listener : GenjFrPlugin.lookupAll(SelectionListener.class)) {
+                if (!listener.equals(from))
+                    listener.setContext(context, isActionPerformed);
+            }
+            if (from != null){
+                from.setMyContext(context, isActionPerformed);
         }
-        for (SelectionListener listener : GenjFrPlugin.lookupAll(SelectionListener.class)) {
-            listener.setContext(context, isActionPerformed);
-        }
+    }
+    public void selectionChanged(Workbench workbench,Context context, boolean isActionPerformed) {
+        selectionChanged(workbench, null, context, isActionPerformed);
     }
 
     public void processStarted(Workbench workbench, Trackable process) {

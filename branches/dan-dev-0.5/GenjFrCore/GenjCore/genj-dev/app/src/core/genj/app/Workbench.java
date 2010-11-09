@@ -39,6 +39,7 @@ import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.TextFieldWidget;
+import genj.view.MySelectionListener;
 import genj.view.SelectionSink;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -231,7 +232,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     // tell everone
     helper.gedcomOpened(this, gedcom);
   
-    fireSelection(context, true);
+    fireSelection(null,context, true);
     return context;
     
     // done
@@ -453,8 +454,8 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     helper.commitRequested(this, context);
   }
   
-  public void fireSelection(Context context, boolean isActionPerformed) {
-      helper.fireSelection(context, isActionPerformed);
+  public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
+      helper.fireSelection(from, context, isActionPerformed);
   } 
   
   public void addWorkbenchListener(WorkbenchListener listener) {

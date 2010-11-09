@@ -50,6 +50,7 @@ import genj.util.swing.ViewPortOverview;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genj.view.ContextProvider;
+import genj.view.MySelectionListener;
 import genj.view.ScreenshotAction;
 import genj.view.SelectionSink;
 import genj.view.SettingsAction;
@@ -89,7 +90,7 @@ import javax.swing.event.ChangeListener;
 /**
  * TreeView
  */
-public class TreeView extends View implements ContextProvider, ActionProvider {
+public class TreeView extends View implements ContextProvider, ActionProvider, MySelectionListener {
   
   protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");      
   protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -342,6 +343,17 @@ public class TreeView extends View implements ContextProvider, ActionProvider {
   public Model getModel() {
     return model;
   }
+
+    public void setMyContext(Context context, boolean isActionPerformed) {
+        if (isActionPerformed) {
+            if (context == null) {
+                return;
+            }
+            setRoot(context.getEntity());
+        } else {
+            setContext(context, isActionPerformed);
+        }
+    }
 
   /**
    * view callback

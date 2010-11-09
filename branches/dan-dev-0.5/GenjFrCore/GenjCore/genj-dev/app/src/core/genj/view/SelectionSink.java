@@ -24,7 +24,7 @@ public interface SelectionSink {
    * @param context
    * @param isActionPerformed
    */
-  public void fireSelection(Context context, boolean isActionPerformed);
+  public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed);
 
   public class Dispatcher {
 
@@ -46,22 +46,20 @@ public interface SelectionSink {
 
     public static void fireSelection(Component source, Context context, boolean isActionPerformed) {
 
-      SelectionSink sink = (SelectionSink)DialogHelper.visitOwners(source, new ComponentVisitor() {
+      MySelectionListener listener = (MySelectionListener)DialogHelper.visitOwners(source, new ComponentVisitor() {
         public Component visit(Component parent, Component child) {
           if (parent instanceof RootPaneContainer) {
             Container contentPane = ((RootPaneContainer)parent).getContentPane();
             if (contentPane.getComponentCount()>0 && contentPane.getComponent(0) instanceof SelectionSink)
               return contentPane.getComponent(0);
           }
-          return parent instanceof SelectionSink ? parent : null;
+          return parent instanceof MySelectionListener ? parent : null;
         }
       });
       
-      if (sink==null)
-          sink = theSink;
-      if (sink!=null)
-        sink.fireSelection(context, isActionPerformed);
+      theSink.fireSelection(listener,context, isActionPerformed);
     }
+
     public static void fireSelection(Workbench w, Context context, boolean isActionPerformed) {
         fireSelection((Component)null, context, isActionPerformed);
     }

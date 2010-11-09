@@ -6,6 +6,7 @@
 package genj.app;
 
 import genj.gedcom.Context;
+import genj.view.MySelectionListener;
 import genj.view.View;
 import genj.view.ViewFactory;
 import java.io.File;
@@ -25,7 +26,7 @@ public interface IWorkbenchHelper extends WorkbenchListener{
 
     public Context getContext();
 
-    public void fireSelection(Context context, boolean isActionPerformed);
+    public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed);
 
     public File chooseFile(String title, String action, JComponent accessory);
 
