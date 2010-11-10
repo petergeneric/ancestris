@@ -29,7 +29,7 @@ public class ActionSave extends Action2 {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Context context = App.center.getSelectedContext(false);
+        Context context = App.center.getSelectedContext(true);
         if (context != null)  {
             App.workbenchHelper.saveGedcom(context);
         }
