@@ -116,11 +116,10 @@ public final class TreeTopComponent extends GenjViewTopComponent {
                     if (root != null) {
                         v.setRoot(getContext().getGedcom().getEntity(root));
                     }
-                    if (getContext() == null){
-                        v.show(getContext().getGedcom().getEntity(root));
-                    } else {
-                        getView().setContext(getContext(), true);
+                    if (v.getRoot() == null){
+                        v.setRoot(getContext().getEntity());
                     }
+                    getView().setContext(getContext(), true);
                 }
             });
             sizeIsCorrect = true;
