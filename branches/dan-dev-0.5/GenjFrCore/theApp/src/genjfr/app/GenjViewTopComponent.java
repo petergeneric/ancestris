@@ -9,6 +9,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Trackable;
 import genj.util.swing.Action2;
+import genj.util.swing.Action2.Group;
 import genj.util.swing.MenuHelper;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
@@ -79,7 +80,7 @@ import org.openide.util.lookup.ServiceProvider;
  * - autre ???
  */
 @ServiceProvider(service=WorkbenchListener.class)
-public class GenjViewTopComponent extends AncestrisTopComponent implements WorkbenchListener {
+public class GenjViewTopComponent extends AncestrisTopComponent implements WorkbenchListener, ActionProvider {
 
 //    static GenjViewTopComponent factory;
     /** path to the icon used by the component and its open action */
@@ -201,6 +202,12 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     super.addImpl(comp, constraints, index);
     // done
   }
+
+    public void createActions(Context context, Purpose purpose, Group into) {
+        // Delegate
+        if (view instanceof ActionProvider)
+            ((ActionProvider)view).createActions(context, purpose, into);
+    }
 
     private class AToolBar implements ToolBar{
         AtomicBoolean notEmpty = new AtomicBoolean(false);
