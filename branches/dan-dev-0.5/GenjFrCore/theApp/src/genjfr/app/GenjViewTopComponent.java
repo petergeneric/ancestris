@@ -205,7 +205,9 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
 
     public void createActions(Context context, Purpose purpose, Group into) {
         // Delegate
-        if (view instanceof ActionProvider)
+        if (!(view instanceof ActionProvider))
+            return;
+        if (getContext().getGedcom().equals(context.getGedcom()))
             ((ActionProvider)view).createActions(context, purpose, into);
     }
 
