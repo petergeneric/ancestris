@@ -399,8 +399,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     if (context.getEntity()==null)
       return;
 
-    // try to show - otherwise force setroot
-    show(context.getEntity(),true);
+    // try to show - otherwise don't force setroot
+//    show(context.getEntity(),true);
+    show(context.getEntity(),false);
 
     // done
   }
