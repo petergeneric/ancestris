@@ -559,7 +559,8 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     if (purpose==Purpose.CONTEXT&&context.getEntities().size()==1) {
       // fam or indi?
       Entity entity = context.getEntity();
-      if (entity instanceof Indi||entity instanceof Fam) { 
+      if (entity instanceof Indi||entity instanceof Fam) {
+         result.add(new ActionProvider.SeparatorAction());
         // create an action for our tree
         result.add(new ActionRoot(entity, true));
         result.add(new ActionBookmark(entity, false));
