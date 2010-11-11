@@ -76,11 +76,6 @@ public class IndiPanel extends EntityPanel {
     }
 
     @Override
-    public void saveEntity() {
-        return;
-    }
-
-    @Override
     public Entity getEntity() {
         return entity;
     }

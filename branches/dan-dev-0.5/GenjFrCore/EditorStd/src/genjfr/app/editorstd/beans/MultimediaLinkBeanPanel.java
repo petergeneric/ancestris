@@ -15,105 +15,38 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
-import genjfr.app.editorstd.EditorStdTopComponent;
+import java.awt.Toolkit;
+import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import org.openide.awt.UndoRedo.Manager;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.text.JTextComponent;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author frederic
  */
-public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements PropertyChangeListener, DocumentListener {
+public class MultimediaLinkBeanPanel extends BeanPanelParent implements PropertyChangeListener {
 
     private Entity[] mediaEntitiesList = new Entity[1];
     private Property[] mediaList = new Property[1];
     //
-    private int index = 0;
-    private String title = "";
-    private Property parentProperty;
-    public boolean isModified;
-    private boolean isSetURmanager = false;
-    private EditorStdTopComponent editor;
+    private FieldInputVerifier verifier = new FieldInputVerifier();
 
     /** Creates new form MultimediaLinkBeanPanel */
     public MultimediaLinkBeanPanel() {
         initComponents();
     }
 
-    public void init(int index) {
-        this.index = index;
-        this.title = ((javax.swing.JTabbedPane) getParent()).getTitleAt(index);
-//        addressStructure.addPropertyChangeListener(this);
-//        // change listeners
-//        address_line.getDocument().addDocumentListener(this);
-//        address_line1.getDocument().addDocumentListener(this);
-//        address_line2.getDocument().addDocumentListener(this);
-//        address_city.getDocument().addDocumentListener(this);
-//        address_state.getDocument().addDocumentListener(this);
-//        address_postal_code.getDocument().addDocumentListener(this);
-//        ((JTextComponent) address_country.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
-//        phone_number1.getDocument().addDocumentListener(this);
-//        phone_number2.getDocument().addDocumentListener(this);
-//        phone_number3.getDocument().addDocumentListener(this);
-        // reset modified flag
-        setModified(false);
-    }
-
-    public void setProperties(Property parentProperty) {
-        this.parentProperty = parentProperty;
-        // set lists
-        initEntitiesList();
-        initMediaList();
-        if (mediaListBox.getModel().getSize() > 0) {
-            mediaListBox.setSelectedIndex(0);
-        }
-        enableFields(internalMediaButton.isSelected());
-        // set the rest
-//        addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
-//        if (addressStructure.getAddr() != null) {
-//            addressStructure.setAddr1((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR1)));
-//            addressStructure.setAddr2((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR2)));
-//            addressStructure.setCity((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CITY)));
-//            addressStructure.setStae((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_STAE)));
-//            addressStructure.setPost((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_POST)));
-//            addressStructure.setCtry((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CTRY)));
-//        }
-//        addressStructure.setPhon((Property[]) (parentProperty.getProperties(AddressStructureBean.PROP_PHON)));
-        setModified(false);
-    }
-
-    public void displayProperties() {
-        if (!editor.isBusy()) {
-//            updateField(address_line, addressStructure.getAddr());
-//            updateField(address_line1, addressStructure.getAddr1());
-//            updateField(address_line2, addressStructure.getAddr2());
-//            updateField(address_city, addressStructure.getCity());
-//            updateField(address_state, addressStructure.getStae());
-//            updateField(address_postal_code, addressStructure.getPost());
-//            updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
-//            updateField(addressStructure.getPhon());
-        }
-    }
-
-    public void saveProperties() {
-//        save(parentProperty, addressStructure.getAddr(), AddressStructureBean.PROP_ADDR, address_line.getText());
-//        if (addressStructure.getAddr() != null) {
-//            save(addressStructure.getAddr(), addressStructure.getAddr1(), AddressStructureBean.PROP_ADDR1, address_line1.getText());
-//            save(addressStructure.getAddr(), addressStructure.getAddr2(), AddressStructureBean.PROP_ADDR2, address_line2.getText());
-//            save(addressStructure.getAddr(), addressStructure.getCity(), AddressStructureBean.PROP_CITY, address_city.getText());
-//            save(addressStructure.getAddr(), addressStructure.getStae(), AddressStructureBean.PROP_STAE, address_state.getText());
-//            save(addressStructure.getAddr(), addressStructure.getPost(), AddressStructureBean.PROP_POST, address_postal_code.getText());
-//            save(addressStructure.getAddr(), addressStructure.getCtry(), AddressStructureBean.PROP_CTRY, ((JTextComponent) address_country.getEditor().getEditorComponent()).getText());
-//        }
-//        save(parentProperty, addressStructure.getPhon());
-        setModified(false);
+    public void init() {
     }
 
     /** This method is called from within the constructor to
@@ -127,6 +60,7 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
 
         multimediaLinkBean = new genjfr.app.editorstd.beans.MultimediaLinkBean();
         mediaTypeGroup = new javax.swing.ButtonGroup();
+        mediaLabel = new javax.swing.JLabel();
         addMediaButton = new javax.swing.JButton();
         removeMediaButton = new javax.swing.JButton();
         xref_obje = new javax.swing.JComboBox(mediaEntitiesList);
@@ -137,7 +71,7 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
         multimedia_file_reference = new javax.swing.JTextField();
         fileSearchButton = new javax.swing.JButton();
         mediaTabbedPane = new javax.swing.JTabbedPane();
-        mediaLabel = new javax.swing.JLabel();
+        mediaPlayer = new genjfr.app.editorstd.media.MediaPanel();
         noteStructureBeanPanel = new genjfr.app.editorstd.beans.NoteStructureBeanPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -145,10 +79,17 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
         internalMediaButton = new javax.swing.JRadioButton();
         externalMediaButton = new javax.swing.JRadioButton();
 
+        mediaLabel.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.mediaLabel.text")); // NOI18N
+
         addMediaButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.addMediaButton.text")); // NOI18N
         addMediaButton.setMaximumSize(new java.awt.Dimension(29, 29));
         addMediaButton.setMinimumSize(new java.awt.Dimension(29, 29));
         addMediaButton.setPreferredSize(new java.awt.Dimension(29, 29));
+        addMediaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMediaButtonActionPerformed(evt);
+            }
+        });
 
         removeMediaButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.removeMediaButton.text")); // NOI18N
         removeMediaButton.setMaximumSize(new java.awt.Dimension(29, 29));
@@ -176,9 +117,24 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
         fileSearchButton.setMaximumSize(new java.awt.Dimension(29, 29));
         fileSearchButton.setMinimumSize(new java.awt.Dimension(29, 29));
         fileSearchButton.setPreferredSize(new java.awt.Dimension(29, 29));
+        fileSearchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileSearchButtonActionPerformed(evt);
+            }
+        });
 
-        mediaLabel.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.mediaLabel.text")); // NOI18N
-        mediaTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.mediaLabel.TabConstraints.tabTitle"), mediaLabel); // NOI18N
+        javax.swing.GroupLayout mediaPlayerLayout = new javax.swing.GroupLayout(mediaPlayer);
+        mediaPlayer.setLayout(mediaPlayerLayout);
+        mediaPlayerLayout.setHorizontalGroup(
+            mediaPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 372, Short.MAX_VALUE)
+        );
+        mediaPlayerLayout.setVerticalGroup(
+            mediaPlayerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 211, Short.MAX_VALUE)
+        );
+
+        mediaTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.mediaPlayer.TabConstraints.tabTitle"), mediaPlayer); // NOI18N
         mediaTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.noteStructureBeanPanel.TabConstraints.tabTitle"), noteStructureBeanPanel); // NOI18N
 
         jPanel1.setMinimumSize(new java.awt.Dimension(120, 100));
@@ -299,31 +255,57 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
     }//GEN-LAST:event_internalMediaButtonActionPerformed
 
     private void xref_objeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_xref_objeItemStateChanged
-        // Select item in list box if already there, clear selection otherwise
-        Entity selectedEntity = (Entity) xref_obje.getSelectedItem();
-        boolean found = false;
-        for (int i = 0; i < mediaList.length; i++) {
-            Property property = mediaList[i];
-            if (property instanceof PropertyXRef) {
-                PropertyXRef pRef = (PropertyXRef) property;
-                Entity entity = pRef.getTargetEntity();
-                if (entity instanceof Media && entity == selectedEntity) {
-                    mediaListBox.setSelectedIndex(i);
-                    found = true;
-                    break;
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            // Select item in list box if already there, clear selection otherwise
+            Entity selectedEntity = (Entity) xref_obje.getSelectedItem();
+            boolean found = false;
+            for (int i = 0; i < mediaList.length; i++) {
+                Property property = mediaList[i];
+                if (property instanceof PropertyXRef) {
+                    PropertyXRef pRef = (PropertyXRef) property;
+                    Entity entity = pRef.getTargetEntity();
+                    if (entity instanceof Media && entity == selectedEntity) {
+                        mediaListBox.setSelectedIndex(i);
+                        found = true;
+                        break;
+                    }
                 }
             }
+            if (!found) {
+                mediaListBox.clearSelection();
+            }
+            //
+            displayProperties((Property) xref_obje.getSelectedItem());
         }
-        if (!found) {
-            mediaListBox.clearSelection();
-        }
-        //
-        displayProperties((Property) xref_obje.getSelectedItem());
     }//GEN-LAST:event_xref_objeItemStateChanged
 
     private void internalMediaButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_internalMediaButtonItemStateChanged
         enableFields(internalMediaButton.isSelected());
     }//GEN-LAST:event_internalMediaButtonItemStateChanged
+
+    private void fileSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileSearchButtonActionPerformed
+        String str = multimedia_file_reference.getText();
+        JFileChooser fc = new JFileChooser(str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "");
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String relPath = RelativePath.getRelativePath(parentProperty.getGedcom().getOrigin().getFile(), fc.getSelectedFile());
+            multimedia_file_reference.setText(relPath);
+            try {
+                mediaPlayer.playMedia(fc.getSelectedFile().toURI().toURL());
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }//GEN-LAST:event_fileSearchButtonActionPerformed
+
+    private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
+//        try {
+//            new MP3Player().run();
+//        } catch (Exception ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+    }//GEN-LAST:event_addMediaButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMediaButton;
     private javax.swing.JTextField descriptive_title;
@@ -336,6 +318,7 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel mediaLabel;
     private javax.swing.JList mediaListBox;
+    private genjfr.app.editorstd.media.MediaPanel mediaPlayer;
     private javax.swing.JTabbedPane mediaTabbedPane;
     private javax.swing.ButtonGroup mediaTypeGroup;
     private genjfr.app.editorstd.beans.MultimediaLinkBean multimediaLinkBean;
@@ -346,79 +329,41 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
     private javax.swing.JComboBox xref_obje;
     // End of variables declaration//GEN-END:variables
 
+    public void setProperties(Property parentProperty) {
+        this.parentProperty = parentProperty;
+        // set lists
+        initEntitiesList();
+        initMediaList();
+        if (mediaListBox.getModel().getSize() > 0) {
+            mediaListBox.setSelectedIndex(0);
+        }
+        enableFields(internalMediaButton.isSelected());
+        // set the rest
+//        addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
+//        if (addressStructure.getAddr() != null) {
+//            addressStructure.setAddr1((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR1)));
+//            addressStructure.setAddr2((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR2)));
+//            addressStructure.setCity((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CITY)));
+//            addressStructure.setStae((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_STAE)));
+//            addressStructure.setPost((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_POST)));
+//            addressStructure.setCtry((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CTRY)));
+//        }
+//        addressStructure.setPhon((Property[]) (parentProperty.getProperties(AddressStructureBean.PROP_PHON)));
+    }
+
+    public void displayProperties() {
+//            updateField(address_line, addressStructure.getAddr());
+//            updateField(address_line1, addressStructure.getAddr1());
+//            updateField(address_line2, addressStructure.getAddr2());
+//            updateField(address_city, addressStructure.getCity());
+//            updateField(address_state, addressStructure.getStae());
+//            updateField(address_postal_code, addressStructure.getPost());
+//            updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
+//            updateField(addressStructure.getPhon());
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (!editor.isBusy()) {
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR)) {
-//                updateField(address_line, addressStructure.getAddr());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR1)) {
-//                updateField(address_line1, addressStructure.getAddr1());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR2)) {
-//                updateField(address_line2, addressStructure.getAddr2());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_CITY)) {
-//                updateField(address_city, addressStructure.getCity());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_STAE)) {
-//                updateField(address_state, addressStructure.getStae());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_POST)) {
-//                updateField(address_postal_code, addressStructure.getPost());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_CTRY)) {
-//                updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_PHON)) {
-//                updateField(addressStructure.getPhon());
-//            }
-        }
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
-
-    private void setModified(boolean modified) {
-        isModified = modified;
-        ((javax.swing.JTabbedPane) getParent()).setTitleAt(index, modified ? title + "*" : title);
-        if (editor != null) {
-            editor.setModified(modified);
-        }
-    }
-
-    public void setManagers(Manager URmanager, EditorStdTopComponent editor) {
-        if (!isSetURmanager) {
-            isSetURmanager = true;
-            // change listeners
-//            address_line.getDocument().addUndoableEditListener(URmanager);
-//            address_line1.getDocument().addUndoableEditListener(URmanager);
-//            address_line2.getDocument().addUndoableEditListener(URmanager);
-//            address_city.getDocument().addUndoableEditListener(URmanager);
-//            address_state.getDocument().addUndoableEditListener(URmanager);
-//            address_postal_code.getDocument().addUndoableEditListener(URmanager);
-//            ((JTextComponent) address_country.getEditor().getEditorComponent()).getDocument().addUndoableEditListener(URmanager);
-//            phone_number1.getDocument().addUndoableEditListener(URmanager);
-        }
-        this.editor = editor;
     }
 
     private void initEntitiesList() {
@@ -477,5 +422,36 @@ public class MultimediaLinkBeanPanel extends javax.swing.JPanel implements Prope
         pTemp = selectedMedia.getPropertyByPath("OBJE:TITL");
         mediaLabel.setText(pTemp != null ? pTemp.getDisplayValue() : "");
 
+    }
+    /**
+     * Class used to detect changes of field and commit gedcom changes for each valid modification
+     */
+    private class FieldInputVerifier extends InputVerifier {
+
+        public FieldInputVerifier() {
+            super();
+        }
+
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean valid = verify(input);
+
+            if (valid) {
+                return true;
+            } else {
+                Toolkit.getDefaultToolkit().beep();
+                return false;
+            }
+        }
+
+        @Override
+        public boolean verify(JComponent input) {
+            JTextComponent jtc = (JTextComponent) input;
+            String fieldText = jtc.getText();
+//            if (jtc == address_line && hasFieldChanged(addressStructure.getAddr(), fieldText)) {
+//                updateGedcom(parentProperty, addressStructure.getAddr(), AddressStructureBean.PROP_ADDR, fieldText);
+//            }
+            return true;
+        }
     }
 }

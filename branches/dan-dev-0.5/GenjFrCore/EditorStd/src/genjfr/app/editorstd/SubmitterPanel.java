@@ -12,10 +12,6 @@ package genjfr.app.editorstd;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Submitter;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
-import org.openide.awt.UndoRedo.Manager;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -145,34 +141,13 @@ public class SubmitterPanel extends EntityPanel {
 
     @Override
     public void init() {
-        submitterBeanPanel.init(getTabIndex(editPane, submitterBeanPanel));
-        addressStructureBeanPanel.init(getTabIndex(editPane, addressStructureBeanPanel));
-        multimediaLinkBeanPanel.init(getTabIndex(editPane, multimediaLinkBeanPanel));
-    }
-
-    @Override
-    public void checkIfModified() {
-        if (isModified()) {
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SubmitterPanel.class, "CTL_SaveUnsaved"),
-                    NbBundle.getMessage(SubmitterPanel.class, "CTL_AskConfirmation"),
-                    NotifyDescriptor.YES_NO_OPTION);
-            if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.NO_OPTION) {
-                loadEntity(entity);
-                displayEntity();
-            } else {
-                saveEntity();
-            }
-        }
-    }
-
-    @Override
-    public boolean isModified() {
-        return (submitterBeanPanel.isModified || addressStructureBeanPanel.isModified || multimediaLinkBeanPanel.isModified);
+        submitterBeanPanel.init();
+        addressStructureBeanPanel.init();
+        multimediaLinkBeanPanel.init();
     }
 
     @Override
     public void loadEntity(Entity entity) {
-        this.entity = entity;
         Submitter submitter = (Submitter) entity;
         submitterName.setText(submitter.getName());
         submitterBeanPanel.setProperties(entity);
@@ -188,21 +163,8 @@ public class SubmitterPanel extends EntityPanel {
     }
 
     @Override
-    public void saveEntity() {
-        submitterBeanPanel.saveProperties();
-        addressStructureBeanPanel.saveProperties();
-        multimediaLinkBeanPanel.saveProperties();
-    }
-
-    @Override
     public Entity getEntity() {
         return entity;
     }
 
-    @Override
-    void setManagers(Manager URmanager, EditorStdTopComponent editor) {
-        submitterBeanPanel.setManagers(URmanager, editor);
-        addressStructureBeanPanel.setManagers(URmanager, editor);
-        multimediaLinkBeanPanel.setManagers(URmanager, editor);
-    }
 }

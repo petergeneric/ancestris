@@ -9,8 +9,6 @@ import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.UnitOfWork;
 import genj.util.Trackable;
 import genj.view.View;
 import genjfr.app.AncestrisTopComponent;
@@ -20,28 +18,18 @@ import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.explorer.ExplorerNode;
 import genjfr.util.GedcomDirectory;
 import java.awt.Image;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import javax.swing.ActionMap;
 import javax.swing.GroupLayout;
 import javax.swing.ToolTipManager;
 import javax.swing.text.DefaultEditorKit;
-import org.openide.util.Exceptions;
 import org.openide.util.LookupEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.awt.Toolbar;
 import org.openide.awt.ToolbarPool;
-import org.openide.awt.UndoRedo;
-import org.openide.cookies.SaveCookie;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
@@ -66,14 +54,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     // Variables per TopComponent instance
     private Lookup.Result result = null;
     private EntityPanel panelOn = null;
-    private Entity previousSelectedEntity = null;
-    //
-    // Undo/Redo manager
-    private UndoRedo.Manager URmanager = new UndoRedo.Manager();
-    //
-    // Save cookie
-//    private DummyNode dummyNode;
-    private boolean isBusy = false;
 
     public EditorStdTopComponent() {
         super();
@@ -114,9 +94,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
-
-        // Create a dummy node for the save button
-//        setActivatedNodes(new Node[]{dummyNode = new DummyNode()});
 
         // Set Panel with entity
         if (getContext() != null && getContext().getEntity() != null) {
@@ -244,55 +221,8 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         super.componentDeactivated();
     }
 
-    @Override
-    public boolean canClose() {
-        boolean canClose = true;
-        for (Iterator it = panels.iterator(); it.hasNext();) {
-            EntityPanel panel = (EntityPanel) it.next();
-            if (panel.isModified()) {
-                canClose = false;
-            }
-        }
-        if (!canClose) {
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SubmitterPanel.class, "CTL_EditionUnsaved", getGedcom().getName()),
-                    NbBundle.getMessage(SubmitterPanel.class, "CTL_AskConfirmation"),
-                    NotifyDescriptor.YES_NO_CANCEL_OPTION);
-            Object ret = DialogDisplayer.getDefault().notify(d);
-            if (ret.equals(NotifyDescriptor.CANCEL_OPTION)) {
-                return false;
-            }
-            if (ret.equals(NotifyDescriptor.OK_OPTION)) {
-                commit();
-            }
-        }
-        return super.canClose();
-    }
-
     public void commit() {
-        for (Iterator it = panels.iterator(); it.hasNext();) {
-            final EntityPanel panel = (EntityPanel) it.next();
-            if (!panel.isModified())
-                continue;
-            try {
-                getContext().getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        if (!isBusy) {
-                            isBusy = true;
-                            panel.saveEntity();
-                            isBusy = false;
-                        }
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-    }
-
-    public boolean isBusy() {
-        return isBusy;
+        GedcomDirectory.getInstance().updateModified(getContext().getGedcom());
     }
 
     @Override
@@ -352,22 +282,12 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
             panels.add(jPanelEntity);
         }
 
-        // Set Undo Redo manager and save cookie (even if might have been done already)
-        jPanelEntity.setManagers(URmanager, this);
-
         // Remove existing panel if any
         if (panelOn != null && panelOn != jPanelEntity) {
             jPanel1.remove(panelOn);
         }
 
-        // Check if entity is different and was in modified state
-        if (previousSelectedEntity != selectedEntity) {
-            if (previousSelectedEntity != null) {
-                panelOn.checkIfModified();
-            }
-            previousSelectedEntity = selectedEntity;
-            jPanelEntity.loadEntity(selectedEntity);
-        }
+        jPanelEntity.loadEntity(selectedEntity);
 
         // Set new panel on (Netbeans requires this lenghty code below apparently)
         GroupLayout mainPanelLayout = new GroupLayout(jPanel1);
@@ -384,11 +304,6 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
 
         // Remember displayed panel
         panelOn = jPanelEntity;
-    }
-
-    @Override
-    public UndoRedo getUndoRedo() {
-        return URmanager;
     }
 
     @Override
@@ -428,7 +343,4 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     public void viewClosed(Workbench workbench, View view) {
     }
 
-    public void setModified(boolean modified) {
-        GedcomDirectory.getInstance().setModified(getGedcom(), modified);
-    }
 }

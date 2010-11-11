@@ -10,75 +10,60 @@
  */
 package genjfr.app.editorstd.beans;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySimpleValue;
-import genjfr.app.editorstd.EditorStdTopComponent;
+import genj.gedcom.UnitOfWork;
+import genjfr.util.GedcomDirectory;
+import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
-import org.openide.awt.UndoRedo.Manager;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author frederic
  */
-public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyChangeListener, DocumentListener {
+public class SubmitterBeanPanel extends BeanPanelParent implements PropertyChangeListener {
 
     final private int nbLanguages = 87;
     private Map<String, String> langMap = new TreeMap<String, String>();
-    private String[] languages = new String[nbLanguages];  // will be displayed
+    private String[] languages = new String[nbLanguages];
     //
-    private int index = 0;
-    private String title = "";
-    private Property parentProperty;
-    public boolean isModified;
-    private boolean isSetURmanager = false;
-    private EditorStdTopComponent editor;
+    private FieldInputVerifier verifier = new FieldInputVerifier();
 
-    /** Creates new form SubmitterBeanPanel */
+    /** 
+     * Creates new form SubmitterBeanPanel
+     */
     public SubmitterBeanPanel() {
         initLanguages();
         initComponents();
     }
 
-    public void init(int index) {
-        this.index = index;
-        this.title = ((javax.swing.JTabbedPane) getParent().getParent()).getTitleAt(index);
+    /**
+     * Initialises the panel with
+     * - a listener to listen to property changes (themselves triggered by gedcom changes)
+     * - a listener to focus changes via inputverifier
+     * - no changes made yet
+     * @param index
+     */
+    public void init() {
+        // listen to property bean changes (therefore gedcom changes come through there)
         submitter.addPropertyChangeListener(this);
-        // change listeners
-        submitter_name.getDocument().addDocumentListener(this);
-        ((JTextComponent) lang1.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
-        ((JTextComponent) lang2.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
-        ((JTextComponent) lang3.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
-        // reset modified flag
-        setModified(false);
-    }
-
-    public void setProperties(Property parentProperty) {
-        this.parentProperty = parentProperty;
-        submitter.setName((PropertySimpleValue) (parentProperty.getProperty(SubmitterBean.PROP_NAME)));
-        submitter.setLang((Property[]) (parentProperty.getProperties(SubmitterBean.PROP_LANG)));
-        setModified(false);
-    }
-
-    public void displayProperties() {
-        if (!editor.isBusy()) {
-            updateField(submitter_name, submitter.getName());
-            updateField(submitter.getLang());
-        }
-    }
-
-    public void saveProperties() {
-        save(parentProperty, submitter.getName(), SubmitterBean.PROP_NAME, submitter_name.getText());
-        save(parentProperty, submitter.getLang());
-        setModified(false);
+        // install change listeners when input fields loose focus
+        submitter_name.setInputVerifier(verifier);
+        ((JTextComponent) lang1.getEditor().getEditorComponent()).setInputVerifier(verifier);
+        ((JTextComponent) lang2.getEditor().getEditorComponent()).setInputVerifier(verifier);
+        ((JTextComponent) lang3.getEditor().getEditorComponent()).setInputVerifier(verifier);
     }
 
     /** This method is called from within the constructor to
@@ -174,37 +159,23 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
     private javax.swing.JTextField submitter_name;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (!editor.isBusy()) {
-            if (evt.getPropertyName().equals(SubmitterBean.PROP_NAME)) {
-                updateField(submitter_name, submitter.getName());
-            }
-            if (evt.getPropertyName().equals(SubmitterBean.PROP_LANG)) {
-                updateField(submitter.getLang());
-            }
-        }
+    /**
+     * Sets bean properties to Gedcom properties
+     * @param parentProperty
+     */
+    public void setProperties(Property parentProperty) {
+        this.parentProperty = parentProperty;
+        submitter.setName((PropertySimpleValue) (parentProperty.getProperty(SubmitterBean.PROP_NAME)));
+        submitter.setLang((Property[]) (parentProperty.getProperties(SubmitterBean.PROP_LANG)));
+        displayProperties();
     }
 
     /**
-     * Changes the display text on the panel using the content of the property
-     * @param text
-     * @param prop
+     * Display properties on the panel
      */
-    private void updateField(JTextComponent text, Property prop) {
-        if (prop != null) {
-            updateField(text, prop.getDisplayValue());
-        } else {
-            text.setText("");
-        }
-    }
-
-    private void updateField(JTextComponent text, String newText) {
-        String oldText = text.getText();
-        text.setText(newText);
-        if (!editor.isBusy() && !oldText.equals(newText)) {
-            setModified(true);
-        }
+    public void displayProperties() {
+        updateField(submitter_name, submitter.getName());
+        updateField(submitter.getLang());
     }
 
     private void updateField(Property[] lang) {
@@ -228,71 +199,6 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
         }
     }
 
-    private void save(Property parentProperty, Property propToSave, String PROP_TAG, String value) {
-        if (parentProperty == null || value == null) {
-            return;
-        }
-        if (propToSave != null) {
-            propToSave.setValue(value);
-            return;
-        }
-        if (propToSave == null && !value.isEmpty()) {
-            parentProperty.addProperty(PROP_TAG, value);
-            return;
-        }
-    }
-
-    private void save(Property parentProperty, Property[] lang) {
-        if (parentProperty == null) {
-            return;
-        }
-        // lang is initialised new Property[langSize] so should be non null and of correct size
-        save(parentProperty, lang[0], SubmitterBean.PROP_LANG, translateU2G(((JTextComponent) lang1.getEditor().getEditorComponent()).getText()));
-        save(parentProperty, lang[1], SubmitterBean.PROP_LANG, translateU2G(((JTextComponent) lang2.getEditor().getEditorComponent()).getText()));
-        save(parentProperty, lang[2], SubmitterBean.PROP_LANG, translateU2G(((JTextComponent) lang3.getEditor().getEditorComponent()).getText()));
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
-
-    private void setModified(boolean modified) {
-        isModified = modified;
-        ((javax.swing.JTabbedPane) getParent().getParent()).setTitleAt(index, modified ? title + "*" : title);
-        if (editor != null) {
-            editor.setModified(modified);
-        }
-    }
-
-    public void setManagers(Manager URmanager, EditorStdTopComponent editor) {
-        if (!isSetURmanager) {
-            isSetURmanager = true;
-            // change listeners
-            submitter_name.getDocument().addUndoableEditListener(URmanager);
-            ((JTextComponent) lang1.getEditor().getEditorComponent()).getDocument().addUndoableEditListener(URmanager);
-            ((JTextComponent) lang2.getEditor().getEditorComponent()).getDocument().addUndoableEditListener(URmanager);
-            ((JTextComponent) lang3.getEditor().getEditorComponent()).getDocument().addUndoableEditListener(URmanager);
-        }
-        this.editor = editor;
-    }
-
     private String translateG2U(Property prop) {
         if (prop == null) {
             return "";
@@ -309,6 +215,58 @@ public class SubmitterBeanPanel extends javax.swing.JPanel implements PropertyCh
             }
         }
         return "";
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+    }
+
+    /**
+     * Class used to detect changes of field and commit gedcom changes for each valid modification
+     */
+    private class FieldInputVerifier extends InputVerifier {
+
+        public FieldInputVerifier() {
+            super();
+        }
+
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean valid = verify(input);
+
+            if (valid) {
+                return true;
+            } else {
+                Toolkit.getDefaultToolkit().beep();
+                return false;
+            }
+        }
+
+        @Override
+        public boolean verify(JComponent input) {
+            // detect which input field we are dealing with
+            JTextComponent jtc = (JTextComponent) input;
+            String fieldText = jtc.getText();
+
+            if (jtc == submitter_name && hasFieldChanged(submitter.getName(), fieldText)) {
+                updateGedcom(parentProperty, submitter.getName(), SubmitterBean.PROP_LANG, fieldText);
+            }
+
+            if (jtc == lang1.getEditor().getEditorComponent() && hasFieldChanged(submitter.getLang()[0], translateU2G(fieldText))) {
+                updateGedcom(parentProperty, submitter.getLang()[0], SubmitterBean.PROP_LANG, translateU2G(fieldText));
+            }
+
+            if (jtc == lang2.getEditor().getEditorComponent() && hasFieldChanged(submitter.getLang()[1], translateU2G(fieldText))) {
+                updateGedcom(parentProperty, submitter.getLang()[1], SubmitterBean.PROP_LANG, translateU2G(fieldText));
+            }
+
+            if (jtc == lang3.getEditor().getEditorComponent() && hasFieldChanged(submitter.getLang()[2], translateU2G(fieldText))) {
+                updateGedcom(parentProperty, submitter.getLang()[2], SubmitterBean.PROP_LANG, translateU2G(fieldText));
+            }
+
+            // return value
+            return true;
+        }
     }
 
     private void initLanguages() {

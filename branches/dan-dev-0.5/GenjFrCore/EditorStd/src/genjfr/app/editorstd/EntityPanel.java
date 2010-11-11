@@ -23,9 +23,6 @@ import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import org.openide.awt.UndoRedo.Manager;
 
 /**
  *
@@ -104,14 +101,6 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
         return;
     }
 
-    public void checkIfModified() {
-        return;
-    }
-
-    public boolean isModified() {
-        return false;
-    }
-
     public void loadEntity(Entity entity) {
         return;
     }
@@ -120,25 +109,8 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
         return;
     }
 
-    public void saveEntity() {
-        return;
-    }
-
     public Entity getEntity() {
         return null;
-    }
-
-    public int getTabIndex(JTabbedPane tabPane, JPanel panel) {
-        for (int i = 0; i < tabPane.getTabCount(); i++) {
-            if (tabPane.getComponentAt(i) == panel) {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    void setManagers(Manager URmanager, EditorStdTopComponent editor) {
-        return;
     }
 
     /**
@@ -161,19 +133,16 @@ public class EntityPanel extends javax.swing.JPanel implements GedcomListener {
 
     @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        loadEntity(this.getEntity());
         displayEntity();
     }
 
     @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        loadEntity(this.getEntity());
         displayEntity();
     }
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        loadEntity(this.getEntity());
         displayEntity();
     }
     /**

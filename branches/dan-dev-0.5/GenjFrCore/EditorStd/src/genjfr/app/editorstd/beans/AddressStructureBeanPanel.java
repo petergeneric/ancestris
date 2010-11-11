@@ -14,29 +14,23 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyMultilineValue;
 import genj.gedcom.PropertySimpleValue;
-import genjfr.app.editorstd.EditorStdTopComponent;
+import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
-import org.openide.awt.UndoRedo.Manager;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author frederic
  */
-public class AddressStructureBeanPanel extends javax.swing.JPanel implements PropertyChangeListener, DocumentListener {
+public class AddressStructureBeanPanel extends BeanPanelParent implements PropertyChangeListener {
 
     private String[] countries = new String[247];
     //
-    private int index = 0;
-    private String title = "";
-    private Property parentProperty;
-    public boolean isModified;
-    private boolean isSetURmanager = false;
-    private EditorStdTopComponent editor;
+    private FieldInputVerifier verifier = new FieldInputVerifier();
 
     /** Creates new form AddressStructureBeanPanel */
     public AddressStructureBeanPanel() {
@@ -46,82 +40,19 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         address_line2.setVisible(false);
     }
 
-    public void init(int index) {
-        this.index = index;
-        this.title = ((javax.swing.JTabbedPane) getParent()).getTitleAt(index);
+    public void init() {
         addressStructure.addPropertyChangeListener(this);
         // change listeners
-        address_line.getDocument().addDocumentListener(this);
-        //address_line1.getDocument().addDocumentListener(this);
-        //address_line2.getDocument().addDocumentListener(this);
-        address_city.getDocument().addDocumentListener(this);
-        address_state.getDocument().addDocumentListener(this);
-        address_postal_code.getDocument().addDocumentListener(this);
-        ((JTextComponent) address_country.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
-        phone_number1.getDocument().addDocumentListener(this);
-        phone_number2.getDocument().addDocumentListener(this);
-        phone_number3.getDocument().addDocumentListener(this);
-        email.getDocument().addDocumentListener(this);
-        web_site.getDocument().addDocumentListener(this);
-        // reset modified flag
-        setModified(false);
-    }
-
-    public void setProperties(Property parentProperty) {
-        this.parentProperty = parentProperty;
-        addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
-        if (addressStructure.getAddr() != null) {
-            //addressStructure.setAddr1((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR1)));
-            //addressStructure.setAddr2((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR2)));
-            addressStructure.setCity((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CITY)));
-            addressStructure.setStae((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_STAE)));
-            addressStructure.setPost((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_POST)));
-            addressStructure.setCtry((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CTRY)));
-        }
-        addressStructure.setPhon((Property[]) (parentProperty.getProperties(AddressStructureBean.PROP_PHON)));
-        addressStructure.setEmail((PropertySimpleValue) (parentProperty.getProperty(AddressStructureBean.PROP_EMAIL)));
-        addressStructure.setWww((PropertySimpleValue) (parentProperty.getProperty(AddressStructureBean.PROP_WWW)));
-        setModified(false);
-    }
-
-    public void displayProperties() {
-        if (!editor.isBusy()) {
-            updateField(address_line, addressStructure.getAddr());
-            //updateField(address_line1, addressStructure.getAddr1());
-            //updateField(address_line2, addressStructure.getAddr2());
-            updateField(address_city, addressStructure.getCity());
-            updateField(address_state, addressStructure.getStae());
-            updateField(address_postal_code, addressStructure.getPost());
-            updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
-            updateField(addressStructure.getPhon());
-            updateField(email, addressStructure.getEmail());
-            email.setCaretPosition(0);
-            updateField(web_site, addressStructure.getWww());
-            web_site.setCaretPosition(0);
-        }
-    }
-
-    public void saveProperties() {
-        save(parentProperty, addressStructure.getAddr(), AddressStructureBean.PROP_ADDR, address_line.getText());
-        if (addressStructure.getAddr() != null) {
-            //save(addressStructure.getAddr(), addressStructure.getAddr1(), AddressStructureBean.PROP_ADDR1, lineFromAddress(address_line.getText(), 1));
-            //address_line1.setText(addressStructure.getAddr1().getDisplayValue());
-            //save(addressStructure.getAddr(), addressStructure.getAddr2(), AddressStructureBean.PROP_ADDR2, lineFromAddress(address_line.getText(), 2));
-            //address_line2.setText(addressStructure.getAddr2().getDisplayValue());
-            save(addressStructure.getAddr(), addressStructure.getCity(), AddressStructureBean.PROP_CITY, address_city.getText());
-            save(addressStructure.getAddr(), addressStructure.getStae(), AddressStructureBean.PROP_STAE, address_state.getText());
-            save(addressStructure.getAddr(), addressStructure.getPost(), AddressStructureBean.PROP_POST, address_postal_code.getText());
-            save(addressStructure.getAddr(), addressStructure.getCtry(), AddressStructureBean.PROP_CTRY, ((JTextComponent) address_country.getEditor().getEditorComponent()).getText());
-        }
-        save(parentProperty, addressStructure.getPhon());
-        save(parentProperty, addressStructure.getEmail(), AddressStructureBean.PROP_EMAIL, email.getText());
-        save(parentProperty, addressStructure.getWww(), AddressStructureBean.PROP_WWW, web_site.getText());
-        setModified(false);
-    }
-
-    private String lineFromAddress(String text, int i) {
-        String[] lines = text.split("\\n", 3);
-        return lines[i-1];
+        address_line.setInputVerifier(verifier);
+        address_city.setInputVerifier(verifier);
+        address_state.setInputVerifier(verifier);
+        address_postal_code.setInputVerifier(verifier);
+        ((JTextComponent) address_country.getEditor().getEditorComponent()).setInputVerifier(verifier);
+        phone_number1.setInputVerifier(verifier);
+        phone_number2.setInputVerifier(verifier);
+        phone_number3.setInputVerifier(verifier);
+        email.setInputVerifier(verifier);
+        web_site.setInputVerifier(verifier);
     }
 
     /** This method is called from within the constructor to
@@ -322,53 +253,32 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
     private javax.swing.JTextField web_site;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (!editor.isBusy()) {
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR)) {
-                updateField(address_line, addressStructure.getAddr());
-            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR1)) {
-//                updateField(address_line1, addressStructure.getAddr1());
-//            }
-//            if (evt.getPropertyName().equals(AddressStructureBean.PROP_ADDR2)) {
-//                updateField(address_line2, addressStructure.getAddr2());
-//            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_CITY)) {
-                updateField(address_city, addressStructure.getCity());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_STAE)) {
-                updateField(address_state, addressStructure.getStae());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_POST)) {
-                updateField(address_postal_code, addressStructure.getPost());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_CTRY)) {
-                updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_PHON)) {
-                updateField(addressStructure.getPhon());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_EMAIL)) {
-                updateField(email, addressStructure.getEmail());
-            }
-            if (evt.getPropertyName().equals(AddressStructureBean.PROP_WWW)) {
-                updateField(web_site, addressStructure.getWww());
-            }
+    public void setProperties(Property parentProperty) {
+        this.parentProperty = parentProperty;
+        addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
+        if (addressStructure.getAddr() != null) {
+            addressStructure.setCity((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CITY)));
+            addressStructure.setStae((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_STAE)));
+            addressStructure.setPost((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_POST)));
+            addressStructure.setCtry((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CTRY)));
         }
+        addressStructure.setPhon((Property[]) (parentProperty.getProperties(AddressStructureBean.PROP_PHON)));
+        addressStructure.setEmail((PropertySimpleValue) (parentProperty.getProperty(AddressStructureBean.PROP_EMAIL)));
+        addressStructure.setWww((PropertySimpleValue) (parentProperty.getProperty(AddressStructureBean.PROP_WWW)));
+        displayProperties();
     }
 
-    private void updateField(JTextComponent text, Property prop) {
-        if (prop != null) {
-            String oldText = text.getText();
-            String newText = prop.getDisplayValue();
-            text.setText(newText);
-            if (!editor.isBusy() && !oldText.equals(newText)) {
-                setModified(true);
-            }
-        } else {
-            text.setText("");
-        }
+    public void displayProperties() {
+        updateField(address_line, addressStructure.getAddr());
+        updateField(address_city, addressStructure.getCity());
+        updateField(address_state, addressStructure.getStae());
+        updateField(address_postal_code, addressStructure.getPost());
+        updateField(((JTextComponent) address_country.getEditor().getEditorComponent()), addressStructure.getCtry());
+        updateField(addressStructure.getPhon());
+        updateField(email, addressStructure.getEmail());
+        email.setCaretPosition(0);
+        updateField(web_site, addressStructure.getWww());
+        web_site.setCaretPosition(0);
     }
 
     private void updateField(Property[] phon) {
@@ -378,89 +288,91 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         if (phon.length > 2) {
             updateField(phone_number3, phon[2]);
         } else {
-            updateField(phone_number3, null);
+            updateField(phone_number3, "");
         }
         if (phon.length > 1) {
             updateField(phone_number2, phon[1]);
         } else {
-            updateField(phone_number2, null);
+            updateField(phone_number2, "");
         }
         if (phon.length > 0) {
             updateField(phone_number1, phon[0]);
         } else {
-            updateField(phone_number1, null);
-        }
-    }
-
-    private void save(Property parentProperty, Property propToSave, String PROP_TAG, String value) {
-        if (parentProperty == null || value == null) {
-            return;
-        }
-        if (propToSave != null) {
-            propToSave.setValue(value);
-            return;
-        }
-        if (propToSave == null && !value.isEmpty()) {
-            parentProperty.addProperty(PROP_TAG, value);
-            return;
-        }
-    }
-
-    private void save(Property parentProperty, Property[] phon) {
-        if (parentProperty == null) {
-            return;
-        }
-        // phon is initialised new Property[phonSize] so should be non null and of correct size
-        save(parentProperty, phon[0], AddressStructureBean.PROP_PHON, phone_number1.getText());
-        save(parentProperty, phon[1], AddressStructureBean.PROP_PHON, phone_number2.getText());
-        save(parentProperty, phon[2], AddressStructureBean.PROP_PHON, phone_number3.getText());
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
+            updateField(phone_number1, "");
         }
     }
 
     @Override
-    public void removeUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
+    public void propertyChange(PropertyChangeEvent evt) {
     }
 
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        if (!editor.isBusy()) {
-            setModified(true);
-        }
-    }
+    /**
+     * Class used to detect changes of field and commit gedcom changes for each valid modification
+     */
+    private class FieldInputVerifier extends InputVerifier {
 
-    private void setModified(boolean modified) {
-        isModified = modified;
-        ((javax.swing.JTabbedPane) getParent()).setTitleAt(index, modified ? title + "*" : title);
-        if (editor != null) {
-            editor.setModified(modified);
+        public FieldInputVerifier() {
+            super();
         }
-    }
 
-    public void setManagers(Manager URmanager, EditorStdTopComponent editor) {
-        if (!isSetURmanager) {
-            isSetURmanager = true;
-            // change listeners
-            address_line.getDocument().addUndoableEditListener(URmanager);
-            //address_line1.getDocument().addUndoableEditListener(URmanager);
-            //address_line2.getDocument().addUndoableEditListener(URmanager);
-            address_city.getDocument().addUndoableEditListener(URmanager);
-            address_state.getDocument().addUndoableEditListener(URmanager);
-            address_postal_code.getDocument().addUndoableEditListener(URmanager);
-            ((JTextComponent) address_country.getEditor().getEditorComponent()).getDocument().addUndoableEditListener(URmanager);
-            phone_number1.getDocument().addUndoableEditListener(URmanager);
-            email.getDocument().addUndoableEditListener(URmanager);
-            web_site.getDocument().addUndoableEditListener(URmanager);
+        @Override
+        public boolean shouldYieldFocus(JComponent input) {
+            boolean valid = verify(input);
+
+            if (valid) {
+                return true;
+            } else {
+                Toolkit.getDefaultToolkit().beep();
+                return false;
+            }
         }
-        this.editor = editor;
+
+        @Override
+        public boolean verify(JComponent input) {
+            JTextComponent jtc = (JTextComponent) input;
+            String fieldText = jtc.getText();
+            if (jtc == address_line && hasFieldChanged(addressStructure.getAddr(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getAddr(), AddressStructureBean.PROP_ADDR, fieldText);
+            }
+
+            if (jtc == address_city && hasFieldChanged(addressStructure.getCity(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getCity(), AddressStructureBean.PROP_CITY, fieldText);
+            }
+
+            if (jtc == address_state && hasFieldChanged(addressStructure.getStae(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getStae(), AddressStructureBean.PROP_STAE, fieldText);
+            }
+
+            if (jtc == address_postal_code && hasFieldChanged(addressStructure.getPost(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getPost(), AddressStructureBean.PROP_POST, fieldText);
+            }
+
+            if (jtc == address_country.getEditor().getEditorComponent() && hasFieldChanged(addressStructure.getCtry(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getCtry(), AddressStructureBean.PROP_CTRY, fieldText);
+            }
+
+            if (jtc == phone_number1 && hasFieldChanged(addressStructure.getPhon()[0], fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getPhon()[0], AddressStructureBean.PROP_PHON, fieldText);
+            }
+
+            if (jtc == phone_number2 && hasFieldChanged(addressStructure.getPhon()[1], fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getPhon()[1], AddressStructureBean.PROP_PHON, fieldText);
+            }
+
+            if (jtc == phone_number3 && hasFieldChanged(addressStructure.getPhon()[2], fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getPhon()[2], AddressStructureBean.PROP_PHON, fieldText);
+            }
+
+            if (jtc == email && hasFieldChanged(addressStructure.getEmail(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getEmail(), AddressStructureBean.PROP_EMAIL, fieldText);
+            }
+
+            if (jtc == web_site && hasFieldChanged(addressStructure.getWww(), fieldText)) {
+                updateGedcom(parentProperty, addressStructure.getWww(), AddressStructureBean.PROP_WWW, fieldText);
+            }
+
+            return true;
+        }
     }
 
     private void initCountries() {
@@ -713,5 +625,4 @@ public class AddressStructureBeanPanel extends javax.swing.JPanel implements Pro
         countries[246] = NbBundle.getMessage(AddressStructureBeanPanel.class, "Countrycode_ZW");
 
     }
-
 }
