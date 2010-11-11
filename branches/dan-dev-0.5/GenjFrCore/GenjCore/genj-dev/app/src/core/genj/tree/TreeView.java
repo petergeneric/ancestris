@@ -537,6 +537,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
     pb.setOpaque(false);
     toolbar.add(pb);
+    toolbar.add(new ActionGotoRoot());
     
     // settings
     toolbar.add(new Settings());
@@ -1070,6 +1071,27 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       // done
     }
     
+  } //ActionChooseRoot
+
+  /**
+   * Action - choose a root through dialog
+   */
+  private class ActionGotoRoot extends Action2 {
+
+    /** constructor */
+    private ActionGotoRoot() {
+//      setText(RESOURCES, "select.root");
+      setImage(Images.imgGotoRoot);
+    }
+
+    /** do the choosin' */
+    public void actionPerformed(ActionEvent event) {
+
+       show(getRoot());
+
+      // done
+    }
+
   } //ActionChooseRoot
 
   private class ActionGoto extends Action2 {

@@ -20,6 +20,7 @@
 package genj.tree;
 
 import genj.util.swing.ImageIcon;
+import javax.swing.Icon;
 
 /**
  * A wrapper to the images we use in the TreeView
@@ -35,7 +36,8 @@ final class Images {
     imgVert,
     imgDoFams,
     imgDontFams,
-    imgFoldSymbols;
+    imgFoldSymbols,
+    imgGotoRoot;
     
   /**
    * Constructor which pre-loads all images
@@ -43,6 +45,7 @@ final class Images {
   private Images() {
 
     imgView        = new ImageIcon(this,"images/View"       );
+    imgGotoRoot   = new ImageIcon(this,"images/GotoRoot"       );
 
     imgOverview    = new ImageIcon(this,"images/Overview"   );
     
