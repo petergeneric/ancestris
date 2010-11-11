@@ -379,9 +379,9 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
         if (group.size()>0)
           result.add(group);
         
-        result.add(new ActionProvider.SeparatorAction());
-        result.add(new Undo(context.getGedcom()));
-        result.add(new Redo(context.getGedcom()));
+//        result.add(new ActionProvider.SeparatorAction());
+//        result.add(new Undo(context.getGedcom()));
+//        result.add(new Redo(context.getGedcom()));
         
         break;
         
