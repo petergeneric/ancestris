@@ -15,6 +15,8 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
+import genjfr.app.editorstd.media.JListWithMedia;
+import genjfr.app.editorstd.media.MediaWrapper;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
@@ -37,7 +39,7 @@ import org.openide.util.Exceptions;
 public class MultimediaLinkBeanPanel extends BeanPanelParent implements PropertyChangeListener {
 
     private Entity[] mediaEntitiesList = new Entity[1];
-    private Property[] mediaList = new Property[1];
+    private MediaWrapper[] mediaList = new MediaWrapper[1];
     //
     private FieldInputVerifier verifier = new FieldInputVerifier();
 
@@ -75,7 +77,7 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         noteStructureBeanPanel = new genjfr.app.editorstd.beans.NoteStructureBeanPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        mediaListBox = new javax.swing.JList(mediaList);
+        mediaListBox = new JListWithMedia(mediaList);
         internalMediaButton = new javax.swing.JRadioButton();
         externalMediaButton = new javax.swing.JRadioButton();
 
@@ -246,7 +248,7 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
 
     private void mediaListBoxValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_mediaListBoxValueChanged
         if ((mediaListBox.getSelectedIndex() > -1) && (mediaListBox.getSelectedIndex() < mediaListBox.getModel().getSize())) {
-            displayMedia(mediaList[mediaListBox.getSelectedIndex()]);
+            displayMedia(mediaList[mediaListBox.getSelectedIndex()].getProperty());
         }
     }//GEN-LAST:event_mediaListBoxValueChanged
 
@@ -260,7 +262,7 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
             Entity selectedEntity = (Entity) xref_obje.getSelectedItem();
             boolean found = false;
             for (int i = 0; i < mediaList.length; i++) {
-                Property property = mediaList[i];
+                Property property = mediaList[i].getProperty();
                 if (property instanceof PropertyXRef) {
                     PropertyXRef pRef = (PropertyXRef) property;
                     Entity entity = pRef.getTargetEntity();
@@ -376,7 +378,13 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     }
 
     private void initMediaList() {
-        mediaList = parentProperty.getProperties("OBJE");
+        Property[] propList = parentProperty.getProperties("OBJE");
+        List<MediaWrapper> mediaTmpList = new ArrayList<MediaWrapper>();
+        for (int i = 0; i < propList.length; i++) {
+            Property property = propList[i];
+            mediaTmpList.add(new MediaWrapper(property));
+        }
+        mediaList = mediaTmpList.toArray(new MediaWrapper[1]);
         mediaListBox.setListData(mediaList);
         return;
     }
