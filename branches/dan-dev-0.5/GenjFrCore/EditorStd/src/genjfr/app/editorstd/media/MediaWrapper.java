@@ -18,10 +18,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.io.File;
-import java.net.URLConnection;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -42,19 +43,28 @@ import javax.imageio.ImageIO;
  */
 public class MediaWrapper {
 
+    static private final int sizeX = 64;
+    static private final int sizeY = 64;
+    static public final int PHOTO = 0;
+    static public final int AUDIO = 1;
+    static public final int VIDEO = 2;
+    static public final int UNKNOWN = 3;
+    //
+    public int mediaType = UNKNOWN;
+    private Property propertyParent;
     private Property property;
     private File file;
     private String mimeType = "";
     private ImageIcon image;
+    private BufferedImage bufferedImage = null;
     private static ImageIcon imagePhoto = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/media/photoIcon.jpg", true));
     private static ImageIcon imageAudio = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/media/audioIcon.jpg", true));
     private static ImageIcon imageVideo = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/media/videoIcon.jpg", true));
     private static ImageIcon imageMedia = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/media/mediaIcon.jpg", true));
-    static private final int sizeX = 64;
-    static private final int sizeY = 64;
 
     public MediaWrapper(Property property) {
         // Set property
+        this.propertyParent = property;
         if (property instanceof PropertyXRef) {
             PropertyXRef pRef = (PropertyXRef) property;
             Entity entity = pRef.getTargetEntity();
@@ -64,8 +74,6 @@ public class MediaWrapper {
         } else {
             this.property = property;
         }
-
-
         // Set file
         Property prop = this.property.getProperty("FILE");
         if (prop instanceof PropertyFile) {
@@ -82,36 +90,42 @@ public class MediaWrapper {
                 } catch (Exception ex) {
                     this.file = null;
                 }
-
             } else {
                 this.file = null;
             }
         }
-
         // Set Mimetype
         if (file != null) {
             this.mimeType = new MimeMap().getContentTypeFor(file.toURI().toString());
         } else {
             this.mimeType = "";
         }
-        System.out.println("DEBUG - mimetype="+mimeType);
-
         // Set image
         if (mimeType == null) {
+            mediaType = UNKNOWN;
             image = imageMedia;
         } else if (mimeType.toLowerCase().indexOf("image") > -1) {
+            mediaType = PHOTO;
             try {
+                bufferedImage = ImageIO.read(file);
                 image = new ImageIcon((Image) ImageIO.read(scaleImage(new FileInputStream(file))));
             } catch (Exception ex) {
                 image = imagePhoto;
             }
         } else if (mimeType.toLowerCase().indexOf("audio") > -1) {
+            mediaType = AUDIO;
             image = imageAudio;
         } else if (mimeType.toLowerCase().indexOf("video") > -1) {
+            mediaType = VIDEO;
             image = imageVideo;
         } else {
+            mediaType = UNKNOWN;
             image = imageMedia;
         }
+    }
+
+    public Property getPropertyParent() {
+        return propertyParent;
     }
 
     public Property getProperty() {
@@ -126,8 +140,12 @@ public class MediaWrapper {
         return mimeType;
     }
 
-    public ImageIcon getImage() {
+    public ImageIcon getImageIcon() {
         return image;
+    }
+
+    public BufferedImage getImage() {
+        return bufferedImage;
     }
 
     public Component getComponent() {

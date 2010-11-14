@@ -10,57 +10,74 @@
  */
 package genjfr.app.editorstd.media;
 
-import java.awt.BorderLayout;
 import java.net.URL;
+import javax.swing.GroupLayout;
+import javax.swing.JPanel;
 
 /**
  *
  * @author frederic
  */
-public class MediaPanel extends javax.swing.JPanel {
+public class MediaPanel extends JPanel {
+
+    private JPanel panelOn = null;
+    private ImageViewer iv = null;
+    private SoundPlayer sv = null;
+    private VideoPlayer vv = null;
 
     public MediaPanel() {
         initComponents();
-        setLayout(new BorderLayout()); // use a BorderLayout
+        //setLayout(new BorderLayout()); // use a BorderLayout
     }
 
-    public void playMedia(URL mediaURL) {
+    public void showMedia(MediaWrapper mediaWrapper) {
+        switch (mediaWrapper.mediaType) {
+            case MediaWrapper.PHOTO:
+                if (iv == null) {
+                    iv = new ImageViewer(mediaWrapper);
+                } else {
+                    iv.setImage(mediaWrapper);
+                }
+                setPanel(iv);
+                break;
+            case MediaWrapper.AUDIO:
+                if (sv == null) {
+                    sv = new SoundPlayer(mediaWrapper);
+                }
+                setPanel(sv);
+                break;
+            case MediaWrapper.VIDEO:
+                if (vv == null) {
+                    vv = new VideoPlayer(mediaWrapper);
+                }
+                setPanel(vv);
+                break;
+            default:
+                break;
+        }
+    }
 
+    private void setPanel(JPanel newPanel) {
+        // Remove existing panel if any
+        if (panelOn != null && panelOn != newPanel) {
+            changeablePanel.remove(panelOn);
+        }
 
-        //MediaPlayerDemo.run();
-        
+        // Set new panel on (Netbeans requires this lenghty code below apparently)
+        GroupLayout mainPanelLayout = new GroupLayout(changeablePanel);
+        changeablePanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setAutoCreateContainerGaps(true);
+        mainPanelLayout.setAutoCreateGaps(true);
+        GroupLayout.SequentialGroup hGroup = mainPanelLayout.createSequentialGroup();
+        hGroup.addComponent(newPanel);
+        mainPanelLayout.setHorizontalGroup(hGroup);
+        GroupLayout.SequentialGroup vGroup = mainPanelLayout.createSequentialGroup();
+        vGroup.addComponent(newPanel);
+        mainPanelLayout.setVerticalGroup(vGroup);
+        newPanel.setVisible(true);
 
-        
-//        try {
-//
-//            // Create a JMF player to play the media specified in the URL:
-//            Player mediaPlayer = Manager.createRealizedPlayer(new MediaLocator(mediaURL));
-//
-//            // Get the components for the video and the playback controls:
-//            Component video = mediaPlayer.getVisualComponent();
-//            Component controls = mediaPlayer.getControlPanelComponent();
-//
-//            if (video != null) {
-//                add(video, BorderLayout.CENTER); // add video component
-//            }
-//            if (controls != null) {
-//                add(controls, BorderLayout.SOUTH); // add controls
-//            }
-//            // Start the JMF player:
-//            mediaPlayer.start(); // start playing the media clip
-//
-//        } // end try
-//        catch (NoPlayerException noPlayerException) {
-//            System.err.println("No media player found");
-//            System.err.println(noPlayerException.fillInStackTrace());
-//        } // end catch
-//        catch (CannotRealizeException ex) {
-//            System.err.println("DEBUG - error=" + ex);
-//        } // end catch
-//        catch (IOException iOException) {
-//            System.err.println("Error reading from the source");
-//        } // end catch
-
+        // Remember displayed panel
+        panelOn = newPanel;
     }
 
     /** This method is called from within the constructor to
@@ -72,17 +89,31 @@ public class MediaPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        changeablePanel = new javax.swing.JPanel();
+
+        javax.swing.GroupLayout changeablePanelLayout = new javax.swing.GroupLayout(changeablePanel);
+        changeablePanel.setLayout(changeablePanelLayout);
+        changeablePanelLayout.setHorizontalGroup(
+            changeablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        changeablePanelLayout.setVerticalGroup(
+            changeablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(changeablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(changeablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel changeablePanel;
     // End of variables declaration//GEN-END:variables
 }
