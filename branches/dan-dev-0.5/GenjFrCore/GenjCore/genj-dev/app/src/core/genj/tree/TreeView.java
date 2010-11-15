@@ -20,7 +20,6 @@
 package genj.tree;
 
 import genj.common.SelectEntityWidget;
-import genj.edit.EditView;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -79,8 +78,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.Box;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JViewport;
@@ -538,11 +539,15 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     pb.setOpaque(false);
     toolbar.add(pb);
     toolbar.add(new ActionGotoRoot());
+    toolbar.addSeparator();
     
     // settings
-    toolbar.add(new Settings());
     toolbar.add(new ScreenshotAction(content));
     toolbar.add(new Print());
+    // Le addglue ne fonctionne pas acause du slider dont la taille n'est pas prise en compte correctement
+//    toolbar.addGlue();
+    toolbar.addSeparator();
+    toolbar.add(new Settings());
     
     // done
   }

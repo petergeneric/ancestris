@@ -30,6 +30,8 @@ public interface ToolBar {
 	public void add(Action action);
 	
 	public void add(JComponent component);
+
+        public void addGlue();
 	
 	public void addSeparator();
 	

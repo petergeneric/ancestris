@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.FocusManager;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -251,6 +252,10 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     }
     public void endUpdate() {
     }
+
+        public void addGlue() {
+            bar.add(Box.createGlue());
+        }
 
     }
 
