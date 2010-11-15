@@ -113,19 +113,20 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
   @Override
   public void gedcomOpened(Workbench workbench, final Gedcom gedcom) {
 
-    // check if there's any individuals
-    if (!gedcom.getEntities(Gedcom.INDI).isEmpty()) 
       return;
-
-    if (0!=DialogHelper.openDialog(RESOURCES.getString("wizard.first", gedcom.getName()), DialogHelper.QUESTION_MESSAGE, RESOURCES.getString("wizard.empty", gedcom.getName()), Action2.yesNo(), workbench)) 
-      return;
-    
-    try {
-      wizardFirst(workbench, gedcom);
-    } catch (Throwable t) {
-      LOG.log(Level.WARNING, "problem in wizard", t);
-    }
-    
+//    // check if there's any individuals
+//    if (!gedcom.getEntities(Gedcom.INDI).isEmpty())
+//      return;
+//
+//    if (0!=DialogHelper.openDialog(RESOURCES.getString("wizard.first", gedcom.getName()), DialogHelper.QUESTION_MESSAGE, RESOURCES.getString("wizard.empty", gedcom.getName()), Action2.yesNo(), workbench))
+//      return;
+//
+//    try {
+//      wizardFirst(workbench, gedcom);
+//    } catch (Throwable t) {
+//      LOG.log(Level.WARNING, "problem in wizard", t);
+//    }
+//
   }
   
   private Indi adamOrEve;
