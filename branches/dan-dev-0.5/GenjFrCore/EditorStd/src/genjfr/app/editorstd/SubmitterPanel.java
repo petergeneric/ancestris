@@ -70,7 +70,7 @@ public class SubmitterPanel extends EntityPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(submitterBeanPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(351, Short.MAX_VALUE))
+                .addContainerGap(256, Short.MAX_VALUE))
         );
 
         editPane.addTab(org.openide.util.NbBundle.getMessage(SubmitterPanel.class, "SubmitterPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N

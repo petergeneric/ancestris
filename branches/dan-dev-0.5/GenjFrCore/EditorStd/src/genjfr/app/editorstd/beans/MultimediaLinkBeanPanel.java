@@ -15,13 +15,13 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
+import genj.util.swing.ImageIcon;
 import genjfr.app.editorstd.media.JListWithMedia;
 import genjfr.app.editorstd.media.MediaWrapper;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +30,7 @@ import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.text.JTextComponent;
-import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -41,12 +41,18 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     private Entity[] mediaEntitiesList = new Entity[1];
     private MediaWrapper[] mediaList = new MediaWrapper[1];
     private boolean busy = false;
+    private static ImageIcon addIcon = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/images/add.png", true));
+    private static ImageIcon removeIcon = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/images/remove.png", true));
+    private static ImageIcon linkIcon = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/images/link.png", true));
     //
     private FieldInputVerifier verifier = new FieldInputVerifier();
 
     /** Creates new form MultimediaLinkBeanPanel */
     public MultimediaLinkBeanPanel() {
         initComponents();
+        addButton.setIcon(addIcon);
+        removeButton.setIcon(removeIcon);
+        linkButton.setIcon(linkIcon);
     }
 
     public void init() {
@@ -62,14 +68,14 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     private void initComponents() {
 
         multimediaLinkBean = new genjfr.app.editorstd.beans.MultimediaLinkBean();
-        mediaTypeGroup = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mediaListBox = new JListWithMedia(mediaList);
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        linkButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         xref_obje = new javax.swing.JComboBox(mediaEntitiesList);
         jLabel2 = new javax.swing.JLabel();
@@ -81,8 +87,9 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         mediaTabbedPane = new javax.swing.JTabbedPane();
         mediaPanel = new genjfr.app.editorstd.media.MediaPanel();
         noteStructureBeanPanel = new genjfr.app.editorstd.beans.NoteStructureBeanPanel();
-        internalMediaButton = new javax.swing.JRadioButton();
-        externalMediaButton = new javax.swing.JRadioButton();
+        seeMediaRecordButton = new javax.swing.JButton();
+        externalLabel = new javax.swing.JLabel();
+        internalLabel = new javax.swing.JLabel();
 
         jSplitPane1.setOpaque(true);
 
@@ -105,14 +112,17 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
         );
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.jButton1.text")); // NOI18N
-        jButton1.setPreferredSize(new java.awt.Dimension(29, 29));
+        addButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.addButton.text")); // NOI18N
+        addButton.setPreferredSize(new java.awt.Dimension(29, 29));
 
-        jButton2.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.jButton2.text")); // NOI18N
-        jButton2.setPreferredSize(new java.awt.Dimension(29, 29));
+        linkButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.linkButton.text")); // NOI18N
+        linkButton.setPreferredSize(new java.awt.Dimension(29, 29));
+
+        removeButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.removeButton.text")); // NOI18N
+        removeButton.setPreferredSize(new java.awt.Dimension(29, 29));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -123,20 +133,23 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(linkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(linkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -172,77 +185,75 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         mediaTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.mediaPanel.TabConstraints.tabTitle"), mediaPanel); // NOI18N
         mediaTabbedPane.addTab(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.noteStructureBeanPanel.TabConstraints.tabTitle"), noteStructureBeanPanel); // NOI18N
 
-        mediaTypeGroup.add(internalMediaButton);
-        internalMediaButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.internalMediaButton.text")); // NOI18N
-        internalMediaButton.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                internalMediaButtonItemStateChanged(evt);
-            }
-        });
-        internalMediaButton.addActionListener(new java.awt.event.ActionListener() {
+        seeMediaRecordButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.seeMediaRecordButton.text")); // NOI18N
+        seeMediaRecordButton.setMaximumSize(new java.awt.Dimension(29, 29));
+        seeMediaRecordButton.setMinimumSize(new java.awt.Dimension(29, 29));
+        seeMediaRecordButton.setPreferredSize(new java.awt.Dimension(29, 29));
+        seeMediaRecordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                internalMediaButtonActionPerformed(evt);
+                seeMediaRecordButtonActionPerformed(evt);
             }
         });
 
-        mediaTypeGroup.add(externalMediaButton);
-        externalMediaButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.externalMediaButton.text")); // NOI18N
+        externalLabel.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.externalLabel.text")); // NOI18N
+        externalLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        internalLabel.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.internalLabel.text")); // NOI18N
+        internalLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 387, Short.MAX_VALUE)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(mediaTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(internalMediaButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(externalMediaButton, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(multimedia_file_reference, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(fileSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(xref_obje, 0, 236, Short.MAX_VALUE)))
-                        .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(mediaTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addGap(18, 18, 18)
-                            .addComponent(descriptive_title, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(multimedia_format, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap()))
+                            .addComponent(externalLabel)
+                            .addComponent(internalLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(descriptive_title, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(multimedia_format, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(xref_obje, 0, 337, Short.MAX_VALUE)
+                                    .addComponent(multimedia_file_reference, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(seeMediaRecordButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fileSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 337, Short.MAX_VALUE)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(xref_obje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(internalMediaButton))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(externalMediaButton)
-                            .addComponent(multimedia_file_reference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(fileSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(descriptive_title, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(multimedia_format, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(mediaTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 206, Short.MAX_VALUE)
-                    .addContainerGap()))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(externalLabel)
+                    .addComponent(multimedia_file_reference, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fileSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(internalLabel)
+                    .addComponent(xref_obje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(seeMediaRecordButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(descriptive_title, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(multimedia_format, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(mediaTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jSplitPane1.setRightComponent(jPanel3);
@@ -251,11 +262,11 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -264,10 +275,6 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
             displayMedia(mediaList[mediaListBox.getSelectedIndex()].getPropertyParent());
         }
     }//GEN-LAST:event_mediaListBoxValueChanged
-
-    private void internalMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_internalMediaButtonActionPerformed
-        enableFields(internalMediaButton.isSelected());
-    }//GEN-LAST:event_internalMediaButtonActionPerformed
 
     private void xref_objeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_xref_objeItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
@@ -296,10 +303,6 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         }
     }//GEN-LAST:event_xref_objeItemStateChanged
 
-    private void internalMediaButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_internalMediaButtonItemStateChanged
-        enableFields(internalMediaButton.isSelected());
-    }//GEN-LAST:event_internalMediaButtonItemStateChanged
-
     private void fileSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileSearchButtonActionPerformed
         String str = multimedia_file_reference.getText();
         JFileChooser fc = new JFileChooser(str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "");
@@ -309,13 +312,17 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
             multimedia_file_reference.setText(relPath);
         }
     }//GEN-LAST:event_fileSearchButtonActionPerformed
+
+    private void seeMediaRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seeMediaRecordButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_seeMediaRecordButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JTextField descriptive_title;
-    private javax.swing.JRadioButton externalMediaButton;
+    private javax.swing.JLabel externalLabel;
     private javax.swing.JButton fileSearchButton;
-    private javax.swing.JRadioButton internalMediaButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel internalLabel;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
@@ -323,14 +330,16 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JButton linkButton;
     private javax.swing.JList mediaListBox;
     private genjfr.app.editorstd.media.MediaPanel mediaPanel;
     private javax.swing.JTabbedPane mediaTabbedPane;
-    private javax.swing.ButtonGroup mediaTypeGroup;
     private genjfr.app.editorstd.beans.MultimediaLinkBean multimediaLinkBean;
     private javax.swing.JTextField multimedia_file_reference;
     private javax.swing.JTextField multimedia_format;
     private genjfr.app.editorstd.beans.NoteStructureBeanPanel noteStructureBeanPanel;
+    private javax.swing.JButton removeButton;
+    private javax.swing.JButton seeMediaRecordButton;
     private javax.swing.JComboBox xref_obje;
     // End of variables declaration//GEN-END:variables
 
@@ -343,7 +352,6 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
             mediaListBox.setSelectedIndex(0);
             displayMedia(mediaList[mediaListBox.getSelectedIndex()].getPropertyParent()); // state changed not adjusting at initialisation so force display
         }
-        enableFields(internalMediaButton.isSelected());
         // set the rest
 //        addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
 //        if (addressStructure.getAddr() != null) {
@@ -399,7 +407,7 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         }
         busy = true;
         if (selectedMedia instanceof PropertyXRef) {
-            internalMediaButton.setSelected(true);
+            enableFields(true);
             PropertyXRef pRef = (PropertyXRef) selectedMedia;
             Entity entity = pRef.getTargetEntity();
             if (entity instanceof Media) {
@@ -410,19 +418,22 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
                 }
             }
         } else {
-            externalMediaButton.setSelected(true);
+            enableFields(false);
             displayProperties(selectedMedia);
         }
         busy = false;
     }
 
     private void enableFields(boolean isInternal) {
-        xref_obje.setEnabled(isInternal);
+        internalLabel.setVisible(isInternal);
+        xref_obje.setVisible(isInternal);
+        seeMediaRecordButton.setVisible(isInternal);
         if (!isInternal && !busy) {
             xref_obje.setSelectedIndex(0);
         }
-        multimedia_file_reference.setEnabled(!isInternal);
-        fileSearchButton.setEnabled(!isInternal);
+        externalLabel.setVisible(!isInternal);
+        multimedia_file_reference.setVisible(!isInternal);
+        fileSearchButton.setVisible(!isInternal);
         descriptive_title.setEditable(!isInternal);
         multimedia_format.setEditable(!isInternal);
     }
