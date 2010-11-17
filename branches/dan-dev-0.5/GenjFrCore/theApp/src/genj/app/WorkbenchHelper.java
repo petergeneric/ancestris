@@ -20,6 +20,7 @@
 package genj.app;
 
 import ancestris.util.AncestrisPreferences;
+import ancestris.util.ProgressBar;
 import genj.gedcom.Entity;
 import genj.io.Filter;
 import genj.util.Trackable;
@@ -81,8 +82,12 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     private int isLoaded = 1;
     final private Object loadLock = new Object();
 
+    private ProgressBar progress;
+
     public WorkbenchHelper() {
         this.workbench = Workbench.getInstance(this);
+        progress = new ProgressBar();
+        GenjFrPlugin.register(progress);
     }
 
     public Workbench getWorkbench() {
