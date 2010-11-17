@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * can be used by 3rd parties that are interested in writing Gedcom from
  * a GenJ object-representation managed outside of GenJ as well.
  */
-public class GedcomWriter implements Trackable {
+public class GedcomWriter implements IGedcomWriter {
 
   private final static Resources RESOURCES = Resources.get("genj.io");
   private static Logger LOG = Logger.getLogger("genj.io");

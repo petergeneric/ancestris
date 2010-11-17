@@ -31,6 +31,7 @@ import genj.io.GedcomReader;
 import genj.io.GedcomReaderContext;
 import genj.io.GedcomReaderFactory;
 import genj.io.GedcomWriter;
+import genj.io.IGedcomWriter;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -329,7 +330,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     try {
       
       // prep files and writer
-      GedcomWriter writer = null;
+      IGedcomWriter writer = null;
       File file = null, temp = null;
       try {
         // .. resolve to canonical file now to make sure we're writing to the
@@ -340,7 +341,9 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
         temp = File.createTempFile("genj", ".ged", file.getParentFile());
 
         // .. create writer
-        writer = new GedcomWriter(gedcom, new FileOutputStream(temp));
+        writer = (IGedcomWriter)Spin.off(new GedcomWriter(gedcom, new FileOutputStream(temp)));
+
+
       } catch (GedcomEncodingException gee) {
         DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.write_encoding_error", gee.getMessage()), Action2.okOnly(), null);
         return false;
@@ -350,8 +353,13 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
       }
 
       // .. write it
-      writer.write();
-      
+    try {
+        helper.processStarted(this, writer);
+        writer.write();
+    } finally {
+        helper.processStopped(this, writer);
+    }
+
       // .. make backup
       BackupFile.createBackup(file);
 //      if (file.exists()) {
