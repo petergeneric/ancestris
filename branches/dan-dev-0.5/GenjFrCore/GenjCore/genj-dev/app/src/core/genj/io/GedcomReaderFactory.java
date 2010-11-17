@@ -366,6 +366,10 @@ public class GedcomReaderFactory {
       // Done
       return true;
     }
+
+        public String getTaskName() {
+            return RESOURCES.getString("reader.title",gedcom.getName());
+        }
   
     /**
      * our entity reader

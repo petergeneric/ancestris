@@ -289,6 +289,10 @@ public class GedcomWriter implements Trackable {
     writeLine("0 TRLR");
   }
 
+    public String getTaskName() {
+            return RESOURCES.getString("writer.title",gedcom.getName());
+    }
+
   /**
    * our entity writer
    */

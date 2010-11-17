@@ -512,4 +512,8 @@ import javax.print.attribute.standard.OrientationRequested;
     // done
   }
 
+    public String getTaskName() {
+            return RESOURCES.getString("printer.title");
+    }
+
 } //PrintTask

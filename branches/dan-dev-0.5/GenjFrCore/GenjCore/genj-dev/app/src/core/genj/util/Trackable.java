@@ -40,4 +40,9 @@ public interface Trackable {
    */
   public String getState();
 
+  /**
+   * Returns the task name
+   */
+  public String getTaskName();
+
 } //Trackable
