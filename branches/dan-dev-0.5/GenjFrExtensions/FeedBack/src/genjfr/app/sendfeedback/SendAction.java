@@ -126,7 +126,6 @@ public final class SendAction implements ActionListener {
             try {
 
                 EmailAttachment attachment = null;
-                new EmailAttachment();
                 if (fbPanel.jcbIncGenjLog.isSelected()) {
                     attachment = new EmailAttachment();
                     attachment.setURL(sendUserDir().toURI().toURL());
@@ -170,12 +169,13 @@ public final class SendAction implements ActionListener {
     private File sendUserDir() throws IOException {
         String baseDir = System.getProperty("netbeans.user");
         Zipper zipUD = new Zipper(new File(baseDir));
-        zipUD.addIncludePatterns("config/Preferences/genjfr/.*");
+        zipUD.addIncludePatterns("ancestris/.*");
+        zipUD.addExcludePatterns("ancestris/.*\\.lck");
+        zipUD.addIncludePatterns("config/Preferences/.*");
+//        zipUD.addIncludePatterns("config/Preferences/org/.*");
         zipUD.addIncludePatterns("config/Toolbars/.*");
         zipUD.addIncludePatterns("config/Windows2Local/.*");
-        zipUD.addIncludePatterns("genjfr/.*");
-        zipUD.addIncludePatterns("config/Preferences/org/.*");
-        zipUD.addExcludePatterns("genjfr/.*\\.lck");
+        zipUD.addIncludePatterns("var/log/.*");
         File temp = File.createTempFile("genjfr", ".zip");
         zipUD.doExport(temp);
         return temp;
