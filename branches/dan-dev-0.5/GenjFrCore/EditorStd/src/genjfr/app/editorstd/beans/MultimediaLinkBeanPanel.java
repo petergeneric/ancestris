@@ -12,6 +12,7 @@ package genjfr.app.editorstd.beans;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
@@ -20,15 +21,15 @@ import genjfr.app.editorstd.media.JListWithMedia;
 import genjfr.app.editorstd.media.MediaWrapper;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.text.JTextComponent;
 import org.openide.util.ImageUtilities;
 
@@ -36,10 +37,13 @@ import org.openide.util.ImageUtilities;
  *
  * @author frederic
  */
-public class MultimediaLinkBeanPanel extends BeanPanelParent implements PropertyChangeListener {
+public class MultimediaLinkBeanPanel extends BeanPanelParent {
 
+    private DefaultListModel mediaList;
+    private List<MultimediaLinkBean> multimediaLinkBeanList = new ArrayList<MultimediaLinkBean>();
+    private int oldSpinValue = 0;
+    //
     private Entity[] mediaEntitiesList = new Entity[1];
-    private MediaWrapper[] mediaList = new MediaWrapper[1];
     private boolean busy = false;
     private static ImageIcon addIcon = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/images/add.png", true));
     private static ImageIcon removeIcon = new ImageIcon(ImageUtilities.loadImage("genjfr/app/editorstd/images/remove.png", true));
@@ -47,15 +51,25 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     //
     private FieldInputVerifier verifier = new FieldInputVerifier();
 
-    /** Creates new form MultimediaLinkBeanPanel */
+    /** 
+     * Creates new form MultimediaLinkBeanPanel
+     */
     public MultimediaLinkBeanPanel() {
+        mediaList = new DefaultListModel();
         initComponents();
         addButton.setIcon(addIcon);
         removeButton.setIcon(removeIcon);
         linkButton.setIcon(linkIcon);
     }
 
+    /**
+     * Initialisation of panel after constructor
+     */
     public void init() {
+        multimedia_file_reference.setInputVerifier(verifier);
+        ((JTextComponent) xref_obje.getEditor().getEditorComponent()).setInputVerifier(verifier);
+        descriptive_title.setInputVerifier(verifier);
+        multimedia_format.setInputVerifier(verifier);
     }
 
     /** This method is called from within the constructor to
@@ -67,15 +81,15 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        multimediaLinkBean = new genjfr.app.editorstd.beans.MultimediaLinkBean();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        mediaListBox = new JListWithMedia(mediaList);
+        mediaListBox = new JListWithMedia();
         addButton = new javax.swing.JButton();
         linkButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        upDownButton = new javax.swing.JSpinner();
         jPanel3 = new javax.swing.JPanel();
         xref_obje = new javax.swing.JComboBox(mediaEntitiesList);
         jLabel2 = new javax.swing.JLabel();
@@ -108,7 +122,7 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,12 +131,35 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
 
         addButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.addButton.text")); // NOI18N
         addButton.setPreferredSize(new java.awt.Dimension(29, 29));
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         linkButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.linkButton.text")); // NOI18N
         linkButton.setPreferredSize(new java.awt.Dimension(29, 29));
+        linkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkButtonActionPerformed(evt);
+            }
+        });
 
         removeButton.setText(org.openide.util.NbBundle.getMessage(MultimediaLinkBeanPanel.class, "MultimediaLinkBeanPanel.removeButton.text")); // NOI18N
         removeButton.setPreferredSize(new java.awt.Dimension(29, 29));
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
+
+        upDownButton.setModel(new javax.swing.SpinnerNumberModel(1, 0, 2, 1));
+        upDownButton.setPreferredSize(new java.awt.Dimension(10, 28));
+        upDownButton.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                upDownButtonStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -131,13 +168,15 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(linkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(upDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -146,10 +185,12 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(linkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(linkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(upDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -271,8 +312,14 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     }// </editor-fold>//GEN-END:initComponents
 
     private void mediaListBoxValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_mediaListBoxValueChanged
-        if (evt.getValueIsAdjusting() && (mediaListBox.getSelectedIndex() > -1) && (mediaListBox.getSelectedIndex() < mediaListBox.getModel().getSize())) {
-            displayMedia(mediaList[mediaListBox.getSelectedIndex()].getPropertyParent());
+        if (mediaListBox.getSelectedIndex() > -1) {
+            removeButton.setEnabled(true);
+            displayMedia(getMedia().getPropertyParent());
+            resetSpinner(mediaListBox.getSelectedIndex());
+        } else {
+            removeButton.setEnabled(false);
+            displayMedia(null);
+            resetSpinner(mediaListBox.getSelectedIndex());
         }
     }//GEN-LAST:event_mediaListBoxValueChanged
 
@@ -281,8 +328,8 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
             // Select item in list box if already there, clear selection otherwise
             Entity selectedEntity = (Entity) xref_obje.getSelectedItem();
             boolean found = false;
-            for (int i = 0; i < mediaList.length; i++) {
-                Property property = mediaList[i].getPropertyParent();
+            for (int i = 0; i < mediaList.size(); i++) {
+                Property property = getMedia(i).getPropertyParent();
                 if (property instanceof PropertyXRef) {
                     PropertyXRef pRef = (PropertyXRef) property;
                     Entity entity = pRef.getTargetEntity();
@@ -314,9 +361,100 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     }//GEN-LAST:event_fileSearchButtonActionPerformed
 
     private void seeMediaRecordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seeMediaRecordButtonActionPerformed
-        // TODO add your handling code here:
+        // TODO: go to media record panel viewer for the selected media record
     }//GEN-LAST:event_seeMediaRecordButtonActionPerformed
 
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        int index = mediaListBox.getSelectedIndex(); //get selected index
+        if (index == -1) { //no selection, so insert at beginning
+            index = 0;
+        } else {           //add after the selected item
+            index++;
+        }
+
+        // Create external multimedia link
+        try {
+            Property propChild = parentProperty.addProperty("OBJE", "", index);
+            mediaList.insertElementAt(new MediaWrapper(propChild), index);
+        } catch (GedcomException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+
+        //Select the new item and make it visible.
+        mediaListBox.setSelectedIndex(index);
+        mediaListBox.ensureIndexIsVisible(index);
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void linkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkButtonActionPerformed
+        int index = mediaListBox.getSelectedIndex(); //get selected index
+        if (index == -1) { //no selection, so insert at beginning
+            index = 0;
+        } else {           //add after the selected item
+            index++;
+        }
+
+        // Create internal multimedia link
+        try {
+            Property propChild = parentProperty.addProperty("OBJE", "", index);
+            mediaList.insertElementAt(new MediaWrapper(propChild), index);
+        } catch (GedcomException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+
+        //Select the new item and make it visible.
+        mediaListBox.setSelectedIndex(index);
+        mediaListBox.ensureIndexIsVisible(index);
+
+    }//GEN-LAST:event_linkButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        int index = mediaListBox.getSelectedIndex();
+        mediaList.remove(index);
+
+        int size = mediaList.getSize();
+
+        if (size == 0) { //Nobody's left, disable button
+            removeButton.setEnabled(false);
+
+        } else { //Select an index.
+            if (index == mediaList.getSize()) {
+                //removed item in last position
+                index--;
+            }
+
+            mediaListBox.setSelectedIndex(index);
+            mediaListBox.ensureIndexIsVisible(index);
+        }
+
+
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void upDownButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_upDownButtonStateChanged
+        int newSpinValue = ((Number) upDownButton.getValue()).intValue();
+        int moveMe = mediaListBox.getSelectedIndex();
+
+        if (moveMe < 0) {
+            return;
+        }
+        if (newSpinValue > oldSpinValue) {
+            //UP ARROW BUTTON
+            if (moveMe != 0) {
+                //not already at top
+                swap(moveMe, moveMe - 1);
+                mediaListBox.setSelectedIndex(moveMe - 1);
+                mediaListBox.ensureIndexIsVisible(moveMe - 1);
+            }
+        } else if (newSpinValue < oldSpinValue) {
+            //DOWN ARROW BUTTON
+            if (moveMe != mediaList.getSize() - 1) {
+                //not already at bottom
+                swap(moveMe, moveMe + 1);
+                mediaListBox.setSelectedIndex(moveMe + 1);
+                mediaListBox.ensureIndexIsVisible(moveMe + 1);
+            }
+        }
+        oldSpinValue = newSpinValue;
+    }//GEN-LAST:event_upDownButtonStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JTextField descriptive_title;
@@ -334,25 +472,29 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     private javax.swing.JList mediaListBox;
     private genjfr.app.editorstd.media.MediaPanel mediaPanel;
     private javax.swing.JTabbedPane mediaTabbedPane;
-    private genjfr.app.editorstd.beans.MultimediaLinkBean multimediaLinkBean;
     private javax.swing.JTextField multimedia_file_reference;
     private javax.swing.JTextField multimedia_format;
     private genjfr.app.editorstd.beans.NoteStructureBeanPanel noteStructureBeanPanel;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton seeMediaRecordButton;
+    private javax.swing.JSpinner upDownButton;
     private javax.swing.JComboBox xref_obje;
     // End of variables declaration//GEN-END:variables
 
     public void setProperties(Property parentProperty) {
         this.parentProperty = parentProperty;
-        // set lists
-        initEntitiesList();
+
+        // Initialise list of media links in the parent property
         initMediaList();
         if (mediaListBox.getModel().getSize() > 0) {
             mediaListBox.setSelectedIndex(0);
-            displayMedia(mediaList[mediaListBox.getSelectedIndex()].getPropertyParent()); // state changed not adjusting at initialisation so force display
+            //displayMedia(mediaList[mediaListBox.getSelectedIndex()].getPropertyParent()); // state changed not adjusting at initialisation, so force display
+            displayMedia(getMedia().getPropertyParent()); // state changed not adjusting at initialisation, so force display
         }
+
         // set the rest
+//        multimediaLinkBean.setFile(parentProperty.getProperty(MultimediaLinkBean.PROP_FILE));
+
 //        addressStructure.setAddr((PropertyMultilineValue) (parentProperty.getProperty(AddressStructureBean.PROP_ADDR)));
 //        if (addressStructure.getAddr() != null) {
 //            addressStructure.setAddr1((PropertySimpleValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_ADDR1)));
@@ -363,6 +505,69 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
 //            addressStructure.setCtry((PropertyChoiceValue) (addressStructure.getAddr().getProperty(AddressStructureBean.PROP_CTRY)));
 //        }
 //        addressStructure.setPhon((Property[]) (parentProperty.getProperties(AddressStructureBean.PROP_PHON)));
+
+        // Initialise list of media records in the gedcom
+        initEntitiesList();
+    }
+
+    /**
+     * Initialise list of media links in the parent property. These media will populate the list box
+     */
+    private void initMediaList() {
+        Property[] propList = parentProperty.getProperties("OBJE");
+        //List<MediaWrapper> mediaTmpList = new ArrayList<MediaWrapper>();
+        for (int i = 0; i < propList.length; i++) {
+            Property property = propList[i];
+            //mediaTmpList.add(new MediaWrapper(property));
+            mediaList.addElement(new MediaWrapper(property));
+        }
+        //mediaList = mediaTmpList.toArray(new MediaWrapper[1]);
+        //mediaListBox.setListData(mediaList);
+        mediaListBox.setModel(mediaList);
+        resetSpinner(0);
+        return;
+    }
+
+    /**
+     * Get selected media in the list box
+     * @return
+     */
+    private MediaWrapper getMedia() {
+        int index = mediaListBox.getSelectedIndex();
+        return (index > -1) ? ((MediaWrapper) mediaList.get(index)) : null;
+    }
+
+    private MediaWrapper getMedia(int i) {
+        return ((MediaWrapper) mediaList.get(i));
+    }
+
+    private void resetSpinner(int i) {
+        int maximum = (mediaList.getSize() > 0) ? mediaList.getSize() - 1 : 0;
+        ((SpinnerNumberModel) (upDownButton.getModel())).setMaximum(maximum);
+        if (i >= 0 && i <= maximum) {
+            oldSpinValue = maximum - i;
+            ((SpinnerNumberModel) (upDownButton.getModel())).setValue(oldSpinValue);
+        }
+    }
+
+    //Swap two elements in the list.
+    private void swap(int a, int b) {
+        Object aObject = mediaList.getElementAt(a);
+        Object bObject = mediaList.getElementAt(b);
+        mediaList.set(a, bObject);
+        mediaList.set(b, aObject);
+    }
+
+    /**
+     * Initialise list of media records in the gedcom ; these records will populate the combo box
+     */
+    private void initEntitiesList() {
+        Gedcom gedcom = parentProperty.getGedcom();
+        List<Entity> tempList = new ArrayList<Entity>();
+        tempList.add(null);
+        tempList.addAll(Arrays.asList(gedcom.getEntities(Gedcom.OBJE, "OBJE:TITL")));
+        mediaEntitiesList = tempList.toArray(new Entity[1]);
+        xref_obje.setModel(new DefaultComboBoxModel(mediaEntitiesList));
     }
 
     public void displayProperties() {
@@ -376,36 +581,14 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
 //            updateField(addressStructure.getPhon());
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-    }
-
-    private void initEntitiesList() {
-        Gedcom gedcom = parentProperty.getGedcom();
-        List<Entity> tempList = new ArrayList<Entity>();
-        tempList.add(null);
-        tempList.addAll(Arrays.asList(gedcom.getEntities(Gedcom.OBJE, "OBJE:TITL")));
-        mediaEntitiesList = tempList.toArray(new Entity[1]);
-        xref_obje.setModel(new DefaultComboBoxModel(mediaEntitiesList));
-    }
-
-    private void initMediaList() {
-        Property[] propList = parentProperty.getProperties("OBJE");
-        List<MediaWrapper> mediaTmpList = new ArrayList<MediaWrapper>();
-        for (int i = 0; i < propList.length; i++) {
-            Property property = propList[i];
-            mediaTmpList.add(new MediaWrapper(property));
-        }
-        mediaList = mediaTmpList.toArray(new MediaWrapper[1]);
-        mediaListBox.setListData(mediaList);
-        return;
-    }
-
     private void displayMedia(Property selectedMedia) {
         if (busy) {
             return;
         }
         busy = true;
+        if (selectedMedia == null) {
+            displayProperties(null);
+        }
         if (selectedMedia instanceof PropertyXRef) {
             enableFields(true);
             PropertyXRef pRef = (PropertyXRef) selectedMedia;
@@ -439,18 +622,15 @@ public class MultimediaLinkBeanPanel extends BeanPanelParent implements Property
     }
 
     private void displayProperties(Property selectedMedia) {
-        if (selectedMedia == null) {
-            return;
-        }
         Property pTemp;
-        pTemp = selectedMedia.getPropertyByPath("OBJE:TITL");
+        pTemp = (selectedMedia == null) ? null : selectedMedia.getPropertyByPath("OBJE:TITL");
         descriptive_title.setText(pTemp != null ? pTemp.getDisplayValue() : "");
-        pTemp = selectedMedia.getPropertyByPath("OBJE:FORM");
+        pTemp = (selectedMedia == null) ? null : selectedMedia.getPropertyByPath("OBJE:FORM");
         multimedia_format.setText(pTemp != null ? pTemp.getDisplayValue() : "");
-        pTemp = selectedMedia.getPropertyByPath("OBJE:FILE");
+        pTemp = (selectedMedia == null) ? null : selectedMedia.getPropertyByPath("OBJE:FILE");
         multimedia_file_reference.setText(pTemp != null ? pTemp.getDisplayValue() : "");
         // afficher le media (image, son, video)
-        mediaPanel.showMedia(mediaList[mediaListBox.getSelectedIndex()]);
+        mediaPanel.showMedia((selectedMedia == null) ? null : getMedia());
 
     }
 

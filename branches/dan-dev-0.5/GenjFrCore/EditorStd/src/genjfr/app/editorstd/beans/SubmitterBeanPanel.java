@@ -10,15 +10,9 @@
  */
 package genjfr.app.editorstd.beans;
 
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySimpleValue;
-import genj.gedcom.UnitOfWork;
-import genjfr.util.GedcomDirectory;
 import java.awt.Toolkit;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,14 +20,13 @@ import java.util.TreeMap;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author frederic
  */
-public class SubmitterBeanPanel extends BeanPanelParent implements PropertyChangeListener {
+public class SubmitterBeanPanel extends BeanPanelParent {
 
     final private int nbLanguages = 87;
     private Map<String, String> langMap = new TreeMap<String, String>();
@@ -57,8 +50,6 @@ public class SubmitterBeanPanel extends BeanPanelParent implements PropertyChang
      * @param index
      */
     public void init() {
-        // listen to property bean changes (therefore gedcom changes come through there)
-        submitter.addPropertyChangeListener(this);
         // install change listeners when input fields loose focus
         submitter_name.setInputVerifier(verifier);
         ((JTextComponent) lang1.getEditor().getEditorComponent()).setInputVerifier(verifier);
@@ -215,10 +206,6 @@ public class SubmitterBeanPanel extends BeanPanelParent implements PropertyChang
             }
         }
         return "";
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
     }
 
     /**

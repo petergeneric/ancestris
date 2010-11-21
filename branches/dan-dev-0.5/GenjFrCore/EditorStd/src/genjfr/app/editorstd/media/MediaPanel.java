@@ -21,16 +21,22 @@ import javax.swing.JPanel;
 public class MediaPanel extends JPanel {
 
     private JPanel panelOn = null;
+    private JPanel nullPanel = null;
     private ImageViewer iv = null;
     private SoundPlayer sv = null;
     private VideoPlayer vv = null;
 
     public MediaPanel() {
         initComponents();
+        nullPanel = new JPanel();
         //setLayout(new BorderLayout()); // use a BorderLayout
     }
 
     public void showMedia(MediaWrapper mediaWrapper) {
+        if (mediaWrapper == null) {
+            setPanel(nullPanel);
+            return;
+        }
         switch (mediaWrapper.mediaType) {
             case MediaWrapper.PHOTO:
                 if (iv == null) {

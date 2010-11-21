@@ -15,8 +15,6 @@ import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyMultilineValue;
 import genj.gedcom.PropertySimpleValue;
 import java.awt.Toolkit;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.text.JTextComponent;
@@ -26,7 +24,7 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class AddressStructureBeanPanel extends BeanPanelParent implements PropertyChangeListener {
+public class AddressStructureBeanPanel extends BeanPanelParent {
 
     private String[] countries = new String[247];
     //
@@ -41,7 +39,6 @@ public class AddressStructureBeanPanel extends BeanPanelParent implements Proper
     }
 
     public void init() {
-        addressStructure.addPropertyChangeListener(this);
         // change listeners
         address_line.setInputVerifier(verifier);
         address_city.setInputVerifier(verifier);
@@ -320,10 +317,6 @@ public class AddressStructureBeanPanel extends BeanPanelParent implements Proper
         } else {
             updateField(phone_number1, "");
         }
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
     }
 
     /**

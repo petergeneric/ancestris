@@ -76,7 +76,7 @@ public class ImageViewer extends javax.swing.JPanel {
         imagePane = new javax.swing.JPanel();
 
         zoom.setMajorTickSpacing(100);
-        zoom.setMaximum(300);
+        zoom.setMaximum(500);
         zoom.setMinimum(1);
         zoom.setMinorTickSpacing(50);
         zoom.setOrientation(javax.swing.JSlider.VERTICAL);

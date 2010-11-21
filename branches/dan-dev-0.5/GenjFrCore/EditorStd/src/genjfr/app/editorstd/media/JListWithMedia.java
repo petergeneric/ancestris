@@ -13,12 +13,7 @@ import java.awt.*;
  */
 public class JListWithMedia extends JList {
 
-    MediaWrapper[] mediaList;
-
-    public JListWithMedia(MediaWrapper[] mediaList) {
-        this.mediaList = mediaList;
-        setListData(mediaList);
-        //setBorder(new LineBorder(Color.gray));
+    public JListWithMedia() {
         setCellRenderer(new CustomCellRenderer());
     }
 
