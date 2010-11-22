@@ -75,6 +75,8 @@ public class TableView extends View {
   /** current type we're showing */
   private Mode currentMode;
   
+  private Sticky sticky = new Sticky();
+
   /**
    * Constructor
    */
@@ -167,6 +169,9 @@ public class TableView extends View {
   @Override
   public void setContext(Context context, boolean isActionPerformed) {
     
+    if (sticky.isSelected()){
+        return;
+    }
     // save settings
     currentMode.save();
 
@@ -229,6 +234,9 @@ public class TableView extends View {
     // gap
     toolbar.addSeparator();
 
+    // sticky
+    toolbar.add(new JToggleButton(sticky));
+
     toolbar.add(new Settings());
 
   }
@@ -279,7 +287,28 @@ public class TableView extends View {
       getMode(Gedcom.ENTITIES[next]).setSelected(true);
     }
   } //NextMode
-  
+
+      /**
+   * Action - toggle sticky mode
+   */
+  private class Sticky extends Action2 {
+    /** constructor */
+    protected Sticky() {
+      super.setImage(genj.edit.Images.imgStickOff);
+      super.setTip(resources, "action.stick.tip");
+      super.setSelected(false);
+    }
+    /** run */
+    public void actionPerformed(ActionEvent event) {
+      setSelected(isSelected());
+    }
+    @Override
+    public boolean setSelected(boolean selected) {
+      super.setImage(selected ? genj.edit.Images.imgStickOn : genj.edit.Images.imgStickOff);
+      return super.setSelected(selected);
+    }
+  } //Sticky
+
   /** 
    * A PropertyTableModelWrapper
    */
