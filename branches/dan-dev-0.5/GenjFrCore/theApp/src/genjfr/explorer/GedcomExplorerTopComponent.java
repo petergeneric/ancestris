@@ -99,9 +99,9 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
                 + "' ID. That is a potential source of errors and unexpected behavior.");
         return getDefault();
     }
-// FIXME: Faut-il le mettre?
-//    @Override
-//    public boolean canClose(){return  false;}
+
+    @Override
+    public boolean canClose(){return  false;}
 
     @Override
     public int getPersistenceType() {
