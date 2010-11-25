@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -213,10 +214,43 @@ public abstract class Format {
     long timestamp;
   }
   
-  protected Templates getTemplates(String filename) {
-    
+  private Templates getTemplatesFromResource(String filename) {
+      if (filename.startsWith(".")){
+          filename = filename.substring(1);
+      }
+      InputStream in = getClass().getResourceAsStream(filename);
+      if (in == null){
+          return null;
+      }
+    TemplatesCache cache = (TemplatesCache)xslCache.get(filename);
+    if (cache!=null)
+        return cache.templates;
+
+    cache = new TemplatesCache();
+    cache.timestamp = 0;
+
+    // get a new
+    try {
+      TransformerFactory factory = TransformerFactory.newInstance();
+      cache.templates = factory.newTemplates(new StreamSource(in));
+    } catch (TransformerConfigurationException e) {
+      throw new RuntimeException("Exception reading templates from "+filename+": "+e.getMessage());
+    }
+
+    // keep it
+    xslCache.put(filename, cache);
+
+    // done
+    return cache.templates;
+  }
+
+    protected Templates getTemplates(String filename) {
+      // first tries as resource
+      Templates resourceTemplates = getTemplatesFromResource(filename);
+      if (resourceTemplates != null){
+          return resourceTemplates;
+      }
     File file = new File(filename);
-    
     // check timestamp if we have it already
     long lastModified = file.lastModified();
     TemplatesCache cache = (TemplatesCache)xslCache.get(file);
