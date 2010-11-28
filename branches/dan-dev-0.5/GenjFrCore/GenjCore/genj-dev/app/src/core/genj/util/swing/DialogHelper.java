@@ -19,8 +19,6 @@
  */
 package genj.util.swing;
 
-import genj.util.Registry;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -260,9 +258,10 @@ public class DialogHelper {
 
       // restore bounds
       StackTraceElement caller = getCaller();
-      final Registry registry = Registry.get(caller.getClassName());
+//TODO Registry.get(String) n'existe plus      final Registry registry = Registry.get(caller.getClassName());
+// pour le moment on ne sauvegarde pas les dimensions des dialog box
       final String key = caller.getMethodName() + (caller.getLineNumber()>0?caller.getLineNumber():"") + ".dialog";
-      Dimension bounds = registry.get(key, (Dimension)null);
+      Dimension bounds = null; //registry.get(key, (Dimension)null);
       if (bounds!=null) {
         bounds.width = Math.max(bounds.width, dlg.getWidth());
         bounds.height = Math.max(bounds.height, dlg.getHeight());
@@ -273,7 +272,7 @@ public class DialogHelper {
       // hook up to the dialog being hidden by the optionpane - that's what is being called after the user selected a button (setValue())
       dlg.addComponentListener(new ComponentAdapter() {
         public void componentHidden(ComponentEvent e) {
-          registry.put(key, dlg.getSize());
+//          registry.put(key, dlg.getSize());
           dlg.dispose();
           dlg.removeComponentListener(this);
           dlg = null;
