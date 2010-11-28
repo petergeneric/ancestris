@@ -162,7 +162,10 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             tc.requestActive();
         }
         for (String name:gedcomSettings.get("focusViews",new String[]{})){
-            name2tc.get(name).requestActive();
+            TopComponent tcToFocus = name2tc.get(name);
+            if (tcToFocus != null){
+                tcToFocus.requestActive();
+            }
         }
     }
 
