@@ -19,16 +19,14 @@
  */
 package genjfr.app;
 
+import ancestris.util.RegistryStorageFactory;
 import genj.Version;
 import genj.app.Options;
-//import genj.app.SplashWindow;
 import genj.app.WorkbenchHelper;
 import genj.gedcom.Gedcom;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
-import genj.util.Origin;
 import genj.util.Registry;
-import genj.util.Resources;
 import genj.util.swing.DialogHelper;
 import genj.view.SelectionSink;
 import genjfr.app.pluginservice.GenjFrPlugin;
@@ -75,9 +73,7 @@ public class App {
     public static ControlCenter center;
     public static WorkbenchHelper workbenchHelper;
 
-//    private static Shutdown shutDownTask;
     private static boolean x11ErrorHandlerFixInstalled = false;
-    public static Registry REGISTRY = Registry.get("genj");
 
     private static AppPlugin appplugin = new AppPlugin();
 
@@ -224,6 +220,9 @@ public class App {
             // Catch anything that might happen
             try {
 
+                // Install our preferences handler
+                Registry.setStorageFactory(RegistryStorageFactory.getFactory());
+
                 // Install our dialog handler
                 DialogHelper.setDialogManager(DialogManagerImp.getInstance());
 
@@ -241,27 +240,14 @@ public class App {
                 Formatter formatter = new LogFormatter();
                 setLogLevel("INFO");
 
-
-//        Handler[] handlers = root.getHandlers();
-//        for (int i=0;i<handlers.length;i++) root.removeHandler(handlers[i]);
-//        BufferedHandler bufferedLogHandler = new BufferedHandler();
-//        root.addHandler(bufferedLogHandler);
-//        root.addHandler(new FlushingHandler(new StreamHandler(System.out, formatter)));
                 System.setOut(new PrintStream(new LogOutputStream(Level.INFO, "System", "out")));
                 System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
 
-                // init our data (file user.home.genj/genj.properties is read and properties are stored into registry)
-                REGISTRY.setFile(new File(EnvironmentChecker.getProperty("user.home.genj", ".", "calculate dir for registry"), "ancestris.properties"));
-//                REGISTRY = checkOptionsWizard(REGISTRY);
-                if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
-                    putRegistryFromSettings();
-                }
                 // Pour le moment il ne faut pas que je lnf soit mis a autre chose que java.
                 // ni pas les options, ni par l'assistant.
                 // On maintient la possibilite de changer mais le lnf reel utilise pas l'appli est java
-                REGISTRY.put("app.Options.lookAndFeel", "1");
-                REGISTRY.persist();
-                REGISTRY = Registry.get("genj");
+                Registry.get(genj.app.Options.class).put("lookAndFeel", "1");
+
                 // initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions();
 
@@ -283,9 +269,6 @@ public class App {
                     setLogLevel((NbPreferences.forModule(App.class).get("logLevel","")));
                 }
 
-//        root.removeHandler(bufferedLogHandler);
-//        bufferedLogHandler.flush(handler);
-
                 // Startup Information
                 LOG.info("version = " + Version.getInstance().getBuildString());
                 LOG.info("date = " + new Date());
@@ -300,13 +283,6 @@ public class App {
 
                 // check VM version
 //TODO: demander une version >1.6 dans NB
-//                if (!EnvironmentChecker.isJava14(App.class)) {
-//                    if (EnvironmentChecker.getProperty(App.class, "genj.forcevm", null, "Check force of VM") == null) {
-//                        LOG.severe("Need Java 1.4 to run GenJ");
-//                        System.exit(1);
-//                        return;
-//                    }
-//                }
 
 
                 // setup control center
@@ -332,28 +308,6 @@ public class App {
 
     } //Startup
 
-    /**
-     * Our shutdown code
-     */
-    private static class Shutdown implements Runnable {
-
-        private Registry registry;
-
-        /**
-         * Constructor
-         */
-        private Shutdown(Registry registry) {
-            this.registry = registry;
-        }
-
-        /**
-         * do the shutdown
-         */
-        public void run() {
-            close();
-        }
-    } //Shutdown
-
     public static void setLogLevel(String logLevel) {
         // prepare some basic logging for now
         Logger root = Logger.getLogger("");
@@ -371,63 +325,6 @@ public class App {
             root.setLevel(level);
         }
     }
-    /**
-     * a log handler that buffers
-     */
-    private static class BufferedHandler extends Handler {
-
-        private List<LogRecord> buffer = new ArrayList<LogRecord>();
-
-        @Override
-        public void close() throws SecurityException {
-            // noop
-        }
-
-        @Override
-        public void flush() {
-        }
-
-        private void flush(Handler other) {
-            for (LogRecord record : buffer) {
-                other.publish(record);
-            }
-            buffer.clear();
-        }
-
-        @Override
-        public void publish(LogRecord record) {
-            buffer.add(record);
-        }
-    }
-
-    /**
-     * a log handler that flushes on publish
-     */
-    private static class FlushingHandler extends Handler {
-
-        private Handler wrapped;
-
-        private FlushingHandler(Handler wrapped) {
-            this.wrapped = wrapped;
-            wrapped.setLevel(Level.ALL);
-            setLevel(Level.ALL);
-        }
-
-        public void publish(LogRecord record) {
-            wrapped.publish(record);
-            flush();
-        }
-
-        public void flush() {
-            wrapped.flush();
-        }
-
-        public void close() throws SecurityException {
-            flush();
-            wrapped.close();
-        }
-    }
-
     /**
      * Our own log format
      */
@@ -508,76 +405,6 @@ public class App {
             }
         }
     }
-
-    public static void putRegistryFromSettings() {
-        Registry registry = Registry.get("genj");
-        registry.put("app.Options.language", NbPreferences.forModule(App.class).get("language", ""));
-        registry.put("app.Options.lookAndFeel", NbPreferences.forModule(App.class).get("skin", ""));
-        registry.put("app.Options.isRestoreViews", NbPreferences.forModule(App.class).get("restoreWindows", ""));
-        registry.put("edit.Options.isAutoCommit", NbPreferences.forModule(App.class).get("autoCommit", ""));
-        registry.put("gedcom.Options.numberOfUndos", NbPreferences.forModule(App.class).get("undos", ""));
-        registry.put("edit.Options.isSplitJurisdictions", NbPreferences.forModule(App.class).get("splitJurisdiction", ""));
-        registry.put("edit.Options.isOpenEditor", NbPreferences.forModule(App.class).get("OpenEditor", ""));
-
-        registry.put("report.Options.birthSymbol", NbPreferences.forModule(App.class).get("symbolBirth", ""));
-        registry.put("report.Options.baptismSymbol", NbPreferences.forModule(App.class).get("symbolBapm", ""));
-        registry.put("report.Options.childOfSymbol", NbPreferences.forModule(App.class).get("symbolChildOf", ""));
-        registry.put("report.Options.engagingSymbol", NbPreferences.forModule(App.class).get("symbolEngm", ""));
-        registry.put("report.Options.marriageSymbol", NbPreferences.forModule(App.class).get("symbolMarr", ""));
-        registry.put("report.Options.divorceSymbol", NbPreferences.forModule(App.class).get("symbolDivc", ""));
-        registry.put("report.Options.occuSymbol", NbPreferences.forModule(App.class).get("symbolOccu", ""));
-        registry.put("report.Options.resiSymbol", NbPreferences.forModule(App.class).get("symbolResi", ""));
-        registry.put("report.Options.deathSymbol", NbPreferences.forModule(App.class).get("symbolDeat", ""));
-        registry.put("report.Options.burialSymbol", NbPreferences.forModule(App.class).get("symbolBuri", ""));
-        registry.put("gedcom.Options.maskPrivate", NbPreferences.forModule(App.class).get("privDisplay", ""));
-        registry.put("report.Options.privateTag", NbPreferences.forModule(App.class).get("privFlag", ""));
-        registry.put("report.Options.deceasedIsPublic", NbPreferences.forModule(App.class).get("privAlive", ""));
-        registry.put("report.Options.yearsEventsArePrivate", NbPreferences.forModule(App.class).get("privYears", ""));
-        registry.put("gedcom.Options.valueLineBreak", NbPreferences.forModule(App.class).get("txtLineBreak", ""));
-        registry.put("gedcom.Options.maxImageFileSizeKB", NbPreferences.forModule(App.class).get("imageSize", ""));
-        registry.put("gedcom.Options.nameFormat", NbPreferences.forModule(App.class).get("displayNames", ""));
-        registry.put("gedcom.Options.dateFormat", NbPreferences.forModule(App.class).get("displayDates", ""));
-
-        registry.put("gedcom.Options.submName", NbPreferences.forModule(App.class).get("submName", ""));
-        registry.put("gedcom.Options.submCity", NbPreferences.forModule(App.class).get("submCity", ""));
-        registry.put("gedcom.Options.submPhone", NbPreferences.forModule(App.class).get("submPhone", ""));
-        registry.put("gedcom.Options.submPostCode", NbPreferences.forModule(App.class).get("submPostCode", ""));
-        registry.put("gedcom.Options.submEmail", NbPreferences.forModule(App.class).get("submEmail", ""));
-        registry.put("gedcom.Options.submCountry", NbPreferences.forModule(App.class).get("submCountry", ""));
-        registry.put("gedcom.Options.submWeb", NbPreferences.forModule(App.class).get("submWeb", ""));
-        registry.put("gedcom.Options.isUpperCaseNames", NbPreferences.forModule(App.class).get("NamesUppercase", ""));
-        registry.put("gedcom.Options.setWifeLastname", NbPreferences.forModule(App.class).get("NamesSpouse", ""));
-        registry.put("gedcom.Options.fmt_address1", NbPreferences.forModule(App.class).get("fmt_address1", ""));
-        registry.put("gedcom.Options.fmt_address2", NbPreferences.forModule(App.class).get("fmt_address2", ""));
-        registry.put("gedcom.Options.fmt_address3", NbPreferences.forModule(App.class).get("fmt_address3", ""));
-        registry.put("gedcom.Options.fmt_address4", NbPreferences.forModule(App.class).get("fmt_address4", ""));
-        registry.put("gedcom.Options.fmt_address5", NbPreferences.forModule(App.class).get("fmt_address5", ""));
-        registry.put("gedcom.Options.fmt_address6", NbPreferences.forModule(App.class).get("fmt_address6", ""));
-        registry.put("gedcom.Options.fmt_address7", NbPreferences.forModule(App.class).get("fmt_address7", ""));
-        registry.put("gedcom.Options.fmt_address1_mand", NbPreferences.forModule(App.class).get("fmt_address1_mand", ""));
-        registry.put("gedcom.Options.fmt_address2_mand", NbPreferences.forModule(App.class).get("fmt_address2_mand", ""));
-        registry.put("gedcom.Options.fmt_address3_mand", NbPreferences.forModule(App.class).get("fmt_address3_mand", ""));
-        registry.put("gedcom.Options.fmt_address4_mand", NbPreferences.forModule(App.class).get("fmt_address4_mand", ""));
-        registry.put("gedcom.Options.fmt_address5_mand", NbPreferences.forModule(App.class).get("fmt_address5_mand", ""));
-        registry.put("gedcom.Options.fmt_address6_mand", NbPreferences.forModule(App.class).get("fmt_address6_mand", ""));
-        registry.put("gedcom.Options.fmt_address7_mand", NbPreferences.forModule(App.class).get("fmt_address7_mand", ""));
-        registry.put("gedcom.Options.isUseSpacedPlaces", NbPreferences.forModule(App.class).get("address_splitspaces", ""));
-        registry.put("gedcom.Options.isFillGapsInIDs", NbPreferences.forModule(App.class).get("IDFilling", ""));
-        registry.put("gedcom.Options.defaultEncoding", NbPreferences.forModule(App.class).get("encoding", ""));
-        registry.put("app.Options.isWriteBOM", NbPreferences.forModule(App.class).get("BOM", ""));
-
-        registry.put("gedcom.Options.gedcomFile", NbPreferences.forModule(App.class).get("gedcomFile", ""));
-        registry.put("gedcom.Options.reportDir", NbPreferences.forModule(App.class).get("reportDir", ""));
-        registry.put("options.associations", "6");
-        registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
-        registry.put("options.associations.2", NbPreferences.forModule(App.class).get("assoOffice", ""));
-        registry.put("options.associations.3", NbPreferences.forModule(App.class).get("assoAdobe", ""));
-        registry.put("options.associations.4", NbPreferences.forModule(App.class).get("assoImages", ""));
-        registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
-        registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
-        registry.put("app.Options.maxLogSizeKB", NbPreferences.forModule(App.class).get("logSize", ""));
-    }
-
     /**
      * Exiting the application automatically saves modes stored in memory
      * In case of restart after Wizard/Input or Options/Input, modes that were imported by the user are unfortunatelly overwritten

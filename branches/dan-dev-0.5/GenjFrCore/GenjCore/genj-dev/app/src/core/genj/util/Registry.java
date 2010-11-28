@@ -55,14 +55,14 @@ import javax.swing.JFrame;
  */
 public class Registry implements PropertyChangeListener {
   
-  private final static Logger LOG = Logger.getLogger("genj.util");
-  
+
   private String prefix;
-  private Properties properties;
   
-  private static Map<String, Registry> prefix2registry = new HashMap<String, Registry>();
   private static Map<File, Registry> file2registry = new HashMap<File, Registry>();
-  
+
+  private static IRegistryStorageFactory storageFactory = null;
+  private IRegistryStorage storage = null;
+
   /**
    * Constructor 
    */
@@ -70,24 +70,14 @@ public class Registry implements PropertyChangeListener {
     if (registry.prefix.length()>0)
       view = registry.prefix + "." + view;
     this.prefix = view;
-    this.properties = registry.properties;
+    this.storage = registry.storage;
   }
-  
-  /**
-   * Constructor 
-   */
-  private Registry(String rootPrefix) {
-    
-    this.prefix = rootPrefix;
-    
-    // patch properties that keeps order
-    this.properties = new SortingProperties();
-    
-    // remember
-    synchronized (Registry.class) {
-      prefix2registry.put(prefix,this);
+
+
+    protected Registry(IRegistryStorage preference) {
+        this.storage = preference;
+        this.prefix = "";
     }
-  }
 
   /**
    * Constructor for registry loaded from InputStream
@@ -97,25 +87,13 @@ public class Registry implements PropertyChangeListener {
   public Registry(InputStream in) {
     // Load settings
     prefix = "";
-    properties = new SortingProperties();
-    try {
-      properties.load(in);
-    } catch (Exception ex) {
-    }
+    storage = storageFactory.get(in);
   }
   
   private Registry(File file) {
     // Load settings
     prefix = "";
-    properties = new SortingProperties();
-    FileInputStream in = null;
-    try {
-      in = new FileInputStream(file);
-      properties.load(in);
-    } catch (Exception ex) {
-    } finally {
-      try { in.close(); } catch (Throwable t) {}
-    }
+    storage = storageFactory.get(file);
   }
 
   /**
@@ -143,44 +121,28 @@ public class Registry implements PropertyChangeListener {
    * Accessor 
    */
   public static Registry get(Class<?> source) {
-    return get(source.getName());
+      if (storageFactory!=null) {
+          return new Registry(storageFactory.get(source));
+      } else {
+        return get(source.getName());
+      }
   }
   
   /**
    * Accessor 
    */
   public static Registry get(String pckg) {
-
-    String[] tokens = pckg.split("\\.");
-// TODO: pourquoi ce test echoue?
-    // Parce qu'on utilise Registry.get("genj") à pas mal d'endroits
-//    if (tokens.length==1)
-//      throw new IllegalArgumentException("default package not allowed");
-    
-    String prefix = tokens[0];
-    
-    Registry r;
-    synchronized (Registry.class) {
-      r = prefix2registry.get(prefix);
-      if (r==null) {
-        r = new Registry(tokens[0]);
-        prefix2registry.put(prefix, r);
-      }
-    }
-
-    return tokens.length==1 ? r : new Registry(r, pckg.substring(prefix.length()+1));
+      return new Registry(storageFactory.get(pckg));
   }
 
   /**
    * Remove keys
    */
   public void remove(String prefix) {
-    List<Object> keys = new ArrayList<Object>(properties.keySet());
-    for (int i=0,j=keys.size();i<j;i++) {
-      String key = (String)keys.get(i);
-      if (key.startsWith(prefix))
-        properties.remove(key);
-    }
+      if (storage != null){
+          storage.remove(prefix);
+          return;
+      }
   }
   
   /**
@@ -457,21 +419,10 @@ public class Registry implements PropertyChangeListener {
    */
   public String get(String key, String def) {
     
-    // prepend prefix
-    if (prefix.length()>0)
-      key = prefix+"."+key;
-
-    // Get property by key
-    String result = (String)properties.get(key);
-
-    // verify it exists
-    // 20060222 NM can't assume length()==0 means default should apply - it could indeed mean an empty value!
-    // 20040523 NM removed trim() to allow for leading/trailing space values
-    if (result==null)
+      if (storage != null){
+          return storage.get(key,def);
+      }
       return def;
-      
-    // Done
-    return result;
   }
 
   /**
@@ -479,14 +430,9 @@ public class Registry implements PropertyChangeListener {
    */
   public void put(String key, String value) {
 
-    // prepend prefix
-    if (prefix.length()>0)
-      key = prefix+"."+key;
-
-    if (value==null)
-      properties.remove(key);
-    else
-      properties.put(key,value);
+      if (storage != null){
+          storage.put(key,value);
+      }
   }
 
   /**
@@ -679,32 +625,18 @@ public class Registry implements PropertyChangeListener {
 
     // Done
   }
-  
+    
   /**
-   * Set the file to read from/write to 
+   * Set the the preference handler for that registry
    */
-  // TODO: il faudra revoir le code de cette classe pour utiliser le systeme de preferences de NB
-  // Cette fonction n'est appelee qu'une seule foir a l'initialisation de l'appli (App.java)
-  // Voir aussi l'integration de MyPreferences
-  public void setFile(File file) {
-    
-    synchronized (Registry.class) {
-    
-      // read all from local registry
-      try {
-        properties.clear();
-        LOG.fine("Loading registry "+prefix+" from file "+file.getAbsolutePath());
-        FileInputStream in = new FileInputStream(file);
-        properties.load(in);
-        in.close();
-      } catch (Throwable t) {
-        LOG.log(Level.FINE, "Failed to read registry from "+file+" ("+t.getMessage()+")");
-      }
-
-      file2registry.put(file, this);
-    }
+  public static void setStorageFactory(IRegistryStorageFactory factory) {
+    storageFactory = factory;
   }
-  
+
+  public static IRegistryStorageFactory getStorageFactory() {
+      return storageFactory;
+    }
+
   /**
    * Save registries
    */
@@ -713,20 +645,7 @@ public class Registry implements PropertyChangeListener {
     // Go through list of registries that have a file
     for (File file : file2registry.keySet()) {
       Registry registry = file2registry.get(file);
-      try {
-        LOG.fine("Storing registry in file "+file.getAbsolutePath());
-        File dir = file.getParentFile();
-        if (!dir.exists()&&!dir.mkdirs())
-          throw new IOException("dir is bad "+dir);
-        
-        FileOutputStream out = new FileOutputStream(file);
-        registry.properties.store(out, registry.prefix);
-        out.flush();
-        out.close();
-      } catch (IOException ex) {
-        LOG.log(Level.INFO, "Can't store registry in file "+file.getAbsolutePath(), ex);
-      }
-
+      registry.storage.persist();
     }
 
     // Done
@@ -751,17 +670,7 @@ public class Registry implements PropertyChangeListener {
     
     return frame;
   }
-
-  private static class SortingProperties extends Properties {
-    @SuppressWarnings("unchecked")
-    @Override
-    public synchronized Enumeration<Object> keys() {
-      Vector result = new Vector(super.keySet()); 
-      Collections.sort(result);
-      return result.elements();
-    }
-  };
-  
+ 
   public void propertyChange(PropertyChangeEvent evt) {
     String key = evt.getPropertyName();
     Object val = evt.getNewValue();

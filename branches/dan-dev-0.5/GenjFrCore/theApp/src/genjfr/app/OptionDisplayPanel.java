@@ -9,7 +9,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 final class OptionDisplayPanel extends javax.swing.JPanel {
 
@@ -189,28 +188,26 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {
-        setLanguage(NbPreferences.forModule(App.class).get("language", ""));
-        setSkin(NbPreferences.forModule(App.class).get("skin", ""));
-        setRestoreWindows(NbPreferences.forModule(App.class).get("restoreWindows", ""));
-        setAutoCommit(NbPreferences.forModule(App.class).get("autoCommit", ""));
-        setUndos(NbPreferences.forModule(App.class).get("undos", ""));
-        setSplitJurisdictions(NbPreferences.forModule(App.class).get("splitJurisdiction", ""));
-        setOpenEditor(NbPreferences.forModule(App.class).get("OpenEditor", ""));
+        setLanguage(Registry.get(genj.app.Options.class).get("language", ""));
+        setSkin(Registry.get(genj.app.Options.class).get("LookAndFeel", ""));
+        setRestoreWindows(Registry.get(genj.app.Options.class).get("isRestoreWindows", ""));
+        setAutoCommit(Registry.get(genj.edit.Options.class).get("isAutoCommit", ""));
+        setUndos(Registry.get(genj.gedcom.Options.class).get("numberOfUndos", ""));
+        setSplitJurisdictions(Registry.get(genj.edit.Options.class).get("isSplitJurisdiction", ""));
+        setOpenEditor(Registry.get(genj.edit.Options.class).get("isOpenEditor", ""));
     }
 
     void store() {
-        NbPreferences.forModule(App.class).put("language", getLanguage());
-        NbPreferences.forModule(App.class).put("skin", getSkin());
-        NbPreferences.forModule(App.class).put("restoreWindows", getRestoreWindows());
-        NbPreferences.forModule(App.class).put("autoCommit", getAutoCommit());
-        NbPreferences.forModule(App.class).put("undos", getUndos());
-        NbPreferences.forModule(App.class).put("splitJurisdiction", getSplitJurisdictions());
-        NbPreferences.forModule(App.class).put("OpenEditor", getOpenEditor());
+        Registry.get(genj.app.Options.class).put("language", getLanguage());
+        Registry.get(genj.app.Options.class).put("LookAndFeel", getSkin());
+        Registry.get(genj.app.Options.class).put("isRestoreWindows", getRestoreWindows());
+        Registry.get(genj.edit.Options.class).put("isAutoCommit", getAutoCommit());
+        Registry.get(genj.gedcom.Options.class).put("numberOfUndos", getUndos());
+        Registry.get(genj.edit.Options.class).put("isSplitJurisdiction", getSplitJurisdictions());
+        Registry.get(genj.edit.Options.class).put("isOpenEditor", getOpenEditor());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
         
-        putRegistryFromSettings();
-
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
     }
 
@@ -364,18 +361,4 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         return i;
     }
 
-    private void putRegistryFromSettings() {
-        Registry registry = Registry.get("genj");
-
-        registry.put("options.genj.app.Options.language", NbPreferences.forModule(App.class).get("language", ""));
-        registry.put("options.genj.app.Options.lookAndFeel", NbPreferences.forModule(App.class).get("skin", ""));
-        registry.put("options.genj.app.Options.isRestoreViews", NbPreferences.forModule(App.class).get("restoreWindows", ""));
-        registry.put("options.genj.edit.Options.isAutoCommit", NbPreferences.forModule(App.class).get("autoCommit", ""));
-        registry.put("options.genj.gedcom.Options.numberOfUndos", NbPreferences.forModule(App.class).get("undos", ""));
-        registry.put("options.genj.edit.Options.isSplitJurisdictions", NbPreferences.forModule(App.class).get("splitJurisdiction", ""));
-        registry.put("options.genj.edit.Options.isOpenEditor", NbPreferences.forModule(App.class).get("OpenEditor", ""));
-
-        Registry.persist();
-
-    }
 }

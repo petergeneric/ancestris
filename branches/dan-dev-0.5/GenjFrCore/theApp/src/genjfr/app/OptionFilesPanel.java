@@ -13,8 +13,6 @@ import javax.swing.SpinnerNumberModel;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Lookup;
-import org.openide.util.NbPreferences;
-import org.openide.util.Utilities;
 
 final class OptionFilesPanel extends javax.swing.JPanel {
 
@@ -365,34 +363,48 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_logLevelActionPerformed
 
     void load() {
-        setGedcomFile(NbPreferences.forModule(App.class).get("gedcomFile", ""));
-        setReportDir(NbPreferences.forModule(App.class).get("reportDir", ""));
-        setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
-        setAssoOffice(NbPreferences.forModule(App.class).get("assoOffice", ""));
-        setAssoAdobe(NbPreferences.forModule(App.class).get("assoAdobe", ""));
-        setAssoImages(NbPreferences.forModule(App.class).get("assoImages", ""));
-        setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
-        setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
-        setLogSize(NbPreferences.forModule(App.class).get("logSize", ""));
-        setLogLevel(NbPreferences.forModule(App.class).get("logLevel", "INFO"));
+        setGedcomFile(Registry.get(genj.gedcom.Options.class).get("gedcomFile", ""));
+        setReportDir(Registry.get(genj.gedcom.Options.class).get("reportDir", ""));
+
+//TODO: not used atm        registry.put("options.associations", "6");
+//        registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
+//        registry.put("options.associations.2", NbPreferences.forModule(App.class).get("assoOffice", ""));
+//        registry.put("options.associations.3", NbPreferences.forModule(App.class).get("assoAdobe", ""));
+//        registry.put("options.associations.4", NbPreferences.forModule(App.class).get("assoImages", ""));
+//        registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
+//        registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
+
+//        setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
+//        setAssoOffice(NbPreferences.forModule(App.class).get("assoOffice", ""));
+//        setAssoAdobe(NbPreferences.forModule(App.class).get("assoAdobe", ""));
+//        setAssoImages(NbPreferences.forModule(App.class).get("assoImages", ""));
+//        setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
+//        setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
+        setAssoTxt("");
+        setAssoOffice("");
+        setAssoAdobe("");
+        setAssoImages("");
+        setAssoSound("");
+        setAssoWeb("");
+
+        setLogSize(Registry.get(genj.app.Options.class).get("logSize", ""));
+        setLogLevel(Registry.get(genj.app.Options.class).get("logLevel", "INFO"));
     }
 
     void store() {
 
-        NbPreferences.forModule(App.class).put("gedcomFile", getGedcomFile());
-        NbPreferences.forModule(App.class).put("reportDir", getReportDir());
-        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
-        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
-        NbPreferences.forModule(App.class).put("assoAdobe", getAssoAdobe());
-        NbPreferences.forModule(App.class).put("assoImages", getAssoImages());
-        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
-        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
-        NbPreferences.forModule(App.class).put("logSize", getLogSize());
-        NbPreferences.forModule(App.class).put("logLevel", getLogLevel());
+        Registry.get(genj.gedcom.Options.class).put("gedcomFile", getGedcomFile());
+        Registry.get(genj.gedcom.Options.class).put("reportDir", getReportDir());
+//        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
+//        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
+//        NbPreferences.forModule(App.class).put("assoAdobe", getAssoAdobe());
+//        NbPreferences.forModule(App.class).put("assoImages", getAssoImages());
+//        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
+//        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
+        Registry.get(genj.app.Options.class).put("logSize", getLogSize());
+        Registry.get(genj.app.Options.class).put("logLevel", getLogLevel());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
-
-        putRegistryFromSettings();
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));
 
@@ -565,25 +577,5 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             i = -1;
         }
         return i;
-    }
-
-    private void putRegistryFromSettings() {
-        Registry registry = Registry.get("genj");
-
-        registry.put("options.genj.gedcom.Options.gedcomFile", NbPreferences.forModule(App.class).get("gedcomFile", ""));
-        registry.put("options.genj.gedcom.Options.reportDir", NbPreferences.forModule(App.class).get("reportDir", ""));
-//        registry.put("options.associations", NbPreferences.forModule(App.class).get("6", ""));
-        registry.put("options.associations", "6");
-        registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
-        registry.put("options.associations.2", NbPreferences.forModule(App.class).get("assoOffice", ""));
-        registry.put("options.associations.3", NbPreferences.forModule(App.class).get("assoAdobe", ""));
-        registry.put("options.associations.4", NbPreferences.forModule(App.class).get("assoImages", ""));
-        registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
-        registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
-        registry.put("options.genj.app.Options.maxLogSizeKB", NbPreferences.forModule(App.class).get("logSize", ""));
-        registry.put("options.genj.app.Options.logLevel", NbPreferences.forModule(App.class).get("logLevel", ""));
-
-        Registry.persist();
-
     }
 }

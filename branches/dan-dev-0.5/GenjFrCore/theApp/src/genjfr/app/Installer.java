@@ -42,7 +42,7 @@ public class Installer extends ModuleInstall {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 public void run() {
                     // Any code here will be run with the UI is available
-                    App.REGISTRY = checkOptionsWizard(App.REGISTRY);
+                    checkOptionsWizard();
                     if (restart) {
                         JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "WillRestart.text"));
                         LifecycleManager.getDefault().markForRestart();
@@ -53,8 +53,7 @@ public class Installer extends ModuleInstall {
         }
     WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
         public void run() {
-        Preferences p  = NbPreferences.forModule(App.class);
-        Collection pfiles = AncestrisPreferences.get(p, "gedcoms", (Collection) null);
+        Collection pfiles = AncestrisPreferences.get(App.class).get("gedcoms", (Collection) null);
         App.center.load(pfiles);
         }
     });
@@ -62,8 +61,7 @@ public class Installer extends ModuleInstall {
 
     @Override
     public boolean closing() {
-        Preferences p  = NbPreferences.forModule(App.class);
-        AncestrisPreferences.put(p, "gedcoms", App.center.getOpenedGedcoms());
+        AncestrisPreferences.get(App.class).put("gedcoms", App.center.getOpenedGedcoms());
         return App.closing();
     }
 
@@ -75,10 +73,8 @@ public class Installer extends ModuleInstall {
     /**
      * Launches Wizard for the options if never done and the module exists
      *
-     * @param registry
-     * @return
      */
-    private Registry checkOptionsWizard(Registry registry) {
+    private void checkOptionsWizard() {
 
         // Lookup wizard module (it actually loads all the modules corresponding to PluginInterface)
         PluginInterface pi = null;
@@ -93,13 +89,10 @@ public class Installer extends ModuleInstall {
         // Also reload registry because the wizard does save a new set of options
         if (pi != null) {
             System.out.println("Launching Wizard...");
-            restart = pi.launchModule(registry);
-            registry = Registry.get("genj");
+            restart = pi.launchModule(null);
         } else {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(App.class, "Error.noWizard.text"));
         }
-
-        return registry;
 
     }
 }

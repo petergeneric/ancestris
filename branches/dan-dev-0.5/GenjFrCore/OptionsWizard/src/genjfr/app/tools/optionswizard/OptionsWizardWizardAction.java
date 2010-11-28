@@ -6,8 +6,6 @@ package genjfr.app.tools.optionswizard;
 
 import genj.util.Registry;
 import genjfr.app.App;
-import genjfr.app.pluginservice.PluginHelper;
-import genjfr.app.pluginservice.PluginInterface;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.text.MessageFormat;
@@ -23,7 +21,6 @@ import org.openide.util.actions.CallableSystemAction;
 // your code. You can copy-paste the code below wherever you need.
 public final class OptionsWizardWizardAction extends CallableSystemAction /*implements PluginInterface */{
 
-    private Registry registry;
     private WizardDescriptor.Panel[] panels;
     private boolean exitFlag = false;
     private static OptionsWizardWizardAction instance = null;
@@ -49,8 +46,6 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
 
         System.out.println("=== DEBUT DU WIZARD ===");
 
-        this.registry = (Registry) o;
-
         if (toBeLaunched()) {
             performAction();
         }
@@ -59,9 +54,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
             NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as below
         }
         
-        if (registry != null) {
-            putRegistryFromSettings(registry);
-        }
+        persist();
         
         System.out.println("=== FIN  DU  WIZARD === ("+exitFlag+")");
         return exitFlag;
@@ -151,8 +144,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
         return false;
     }
 
-    private void putRegistryFromSettings(Registry registry) {
-        App.putRegistryFromSettings();
+    private void persist() {
         Registry.persist();
 
     }
