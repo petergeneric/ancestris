@@ -5,7 +5,6 @@
 package genjfr.app;
 
 import ancestris.util.AncestrisPreferences;
-import genj.util.Registry;
 import genjfr.app.pluginservice.PluginInterface;
 import java.util.Collection;
 import java.util.prefs.Preferences;
