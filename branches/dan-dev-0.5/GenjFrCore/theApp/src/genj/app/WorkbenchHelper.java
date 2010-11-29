@@ -67,7 +67,6 @@ import javax.swing.JFileChooser;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
 
 /**
@@ -180,14 +179,16 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 
                 public void perform(Gedcom gedcom) throws GedcomException {
 
+                    AncestrisPreferences submPref = AncestrisPreferences.get(App.class);
+
                     // Create submitter
                     Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
-                    submitter.setName(NbPreferences.forModule(App.class).get("submName", ""));
-                    submitter.setCity(NbPreferences.forModule(App.class).get("submCity", ""));
-                    submitter.setPhone(NbPreferences.forModule(App.class).get("submPhone", ""));
-                    submitter.setEmail(NbPreferences.forModule(App.class).get("submEmail", ""));
-                    submitter.setCountry(NbPreferences.forModule(App.class).get("submCountry", ""));
-                    submitter.setWeb(NbPreferences.forModule(App.class).get("submWeb", ""));
+                    submitter.setName(submPref.get("submName", ""));
+                    submitter.setCity(submPref.get("submCity", ""));
+                    submitter.setPhone(submPref.get("submPhone", ""));
+                    submitter.setEmail(submPref.get("submEmail", ""));
+                    submitter.setCountry(submPref.get("submCountry", ""));
+                    submitter.setWeb(submPref.get("submWeb", ""));
 
                     // Create place format
                     gedcom.setPlaceFormat(getPlaceFormatFromOptions());
@@ -211,35 +212,36 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     String getPlaceFormatFromOptions() {
         String format = "";
         String jur = "";
-        final boolean USE_SPACES = NbPreferences.forModule(App.class).get("address_splitspaces", "").equals("true");
+        AncestrisPreferences formatPref = AncestrisPreferences.get(App.class);
+        final boolean USE_SPACES = formatPref.get("address_splitspaces", "").equals("true");
 
         String space = USE_SPACES ? " " : "";
         // go through all jursidictions
-        jur = NbPreferences.forModule(App.class).get("fmt_address1", "");
+        jur = formatPref.get("fmt_address1", "");
         if (!jur.equals("0")) {
             format += NbBundle.getMessage(App.class, "OptionDataPanel.jLabel13.text");
         }
-        jur = NbPreferences.forModule(App.class).get("fmt_address2", "");
+        jur = formatPref.get("fmt_address2", "");
         if (!jur.equals("0")) {
             format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel14.text");
         }
-        jur = NbPreferences.forModule(App.class).get("fmt_address3", "");
+        jur = formatPref.get("fmt_address3", "");
         if (!jur.equals("0")) {
             format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel15.text");
         }
-        jur = NbPreferences.forModule(App.class).get("fmt_address4", "");
+        jur = formatPref.get("fmt_address4", "");
         if (!jur.equals("0")) {
             format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel16.text");
         }
-        jur = NbPreferences.forModule(App.class).get("fmt_address5", "");
+        jur = formatPref.get("fmt_address5", "");
         if (!jur.equals("0")) {
             format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel17.text");
         }
-        jur = NbPreferences.forModule(App.class).get("fmt_address6", "");
+        jur = formatPref.get("fmt_address6", "");
         if (!jur.equals("0")) {
             format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel18.text");
         }
-        jur = NbPreferences.forModule(App.class).get("fmt_address7", "");
+        jur = formatPref.get("fmt_address7", "");
         if (!jur.equals("0")) {
             format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel19.text");
         }

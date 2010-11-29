@@ -4,6 +4,7 @@
  */
 package genjfr.app;
 
+import ancestris.util.AncestrisPreferences;
 import java.io.File;
 import javax.swing.JMenuItem;
 import org.netbeans.api.actions.Openable;
@@ -11,7 +12,6 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.actions.CookieAction;
 
 public final class ActionOpenDefault extends CookieAction implements Openable {
@@ -85,7 +85,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
+        String defaultFile = AncestrisPreferences.get(App.class).get("gedcomFile", "");
         if (defaultFile.isEmpty()) {
             return "";
         }

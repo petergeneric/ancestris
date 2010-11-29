@@ -19,6 +19,7 @@
  */
 package genjfr.app;
 
+import ancestris.util.AncestrisPreferences;
 import genj.gedcom.Gedcom;
 import genjfr.util.GedcomDirectory;
 import genj.util.DirectAccessTokenizer;
@@ -150,7 +151,7 @@ public class ControlCenter extends JPanel{
         }
 
         private String getDefaultFile(Collection<String> files) {
-            File defaultFile = new File(NbPreferences.forModule(App.class).get("gedcomFile", ""));
+            File defaultFile = new File(AncestrisPreferences.get(App.class).get("gedcomFile", ""));
             if (defaultFile == null) {
                 return null;
             }
@@ -311,7 +312,7 @@ public class ControlCenter extends JPanel{
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {
-        String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
+        String defaultFile = AncestrisPreferences.get(App.class).get("gedcomFile", "");
         if (defaultFile.isEmpty()) {
             return "";
         }

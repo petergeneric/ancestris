@@ -8,7 +8,6 @@ import genj.app.Images;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
-import org.openide.util.NbPreferences;
 
 public final class ActionNew extends Action2 {
 

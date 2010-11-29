@@ -19,6 +19,7 @@
  */
 package genjfr.app;
 
+import ancestris.util.AncestrisPreferences;
 import ancestris.util.RegistryStorageFactory;
 import genj.Version;
 import genj.app.Options;
@@ -59,7 +60,6 @@ import javax.swing.Timer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.NbPreferences;
 
 /**
  * Main Class for GenJ Application
@@ -266,7 +266,7 @@ public class App {
                 if (System.getProperty("genj.debug.level") != null) {
                     setLogLevel(System.getProperty("genj.debug.level"));
                 } else {
-                    setLogLevel((NbPreferences.forModule(App.class).get("logLevel","")));
+                    setLogLevel((AncestrisPreferences.get(App.class).get("logLevel","")));
                 }
 
                 // Startup Information

@@ -3,6 +3,7 @@
  */
 package genjfr.app;
 
+import ancestris.util.AncestrisPreferences;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genjfr.app.pluginservice.GenjFrPlugin;
@@ -24,7 +25,6 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.NbPreferences;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
@@ -102,11 +102,11 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     String getDefaultFactoryMode() {return "genjfr-editor";}
 
     String getDefaultMode(){
-        return NbPreferences.forModule(this.getClass()).get(preferredID()+".dockMode",getDefaultFactoryMode());
+        return AncestrisPreferences.get(this).get(preferredID()+".dockMode",getDefaultFactoryMode());
     }
 
     public void setDefaultMode(String mode) {
-        NbPreferences.forModule(this.getClass()).put(preferredID()+".dockMode", mode);
+        AncestrisPreferences.get(this).put(preferredID()+".dockMode", mode);
     }
 
     public void setDefaultMode(Mode mode) {
