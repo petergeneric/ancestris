@@ -447,8 +447,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setSubmEmail(Registry.get(genj.gedcom.Options.class).get("submEmail", ""));
         setSubmCountry(Registry.get(genj.gedcom.Options.class).get("submCountry", ""));
         setSubmWeb(Registry.get(genj.gedcom.Options.class).get("submWeb", ""));
-        setNamesUppercase(Registry.get(genj.gedcom.Options.class).get("NamesUppercase", ""));
-        setNamesSpouse(Registry.get(genj.gedcom.Options.class).get("NamesSpouse", ""));
+        setNamesUppercase(Registry.get(genj.gedcom.Options.class).get("isUpperCaseNames", ""));
+        setNamesSpouse(Registry.get(genj.gedcom.Options.class).get("setWifeLastname", ""));
         setAddress1(Registry.get(genj.gedcom.Options.class).get("fmt_address1", ""));
         setAddress2(Registry.get(genj.gedcom.Options.class).get("fmt_address2", ""));
         setAddress3(Registry.get(genj.gedcom.Options.class).get("fmt_address3", ""));
@@ -463,10 +463,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setAddress5Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address5_mand", ""));
         setAddress6Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address6_mand", ""));
         setAddress7Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address7_mand", ""));
-        setAddressSpaces(Registry.get(genj.gedcom.Options.class).get("address_splitspaces", ""));
-        setIDFilling(Registry.get(genj.gedcom.Options.class).get("IDFilling", ""));
-        setEncoding(Registry.get(genj.gedcom.Options.class).get("encoding", ""));
-        setBOM(Registry.get(genj.app.Options.class).get("BOM", ""));
+        setAddressSpaces(Registry.get(genj.gedcom.Options.class).get("isUseSpacedPlaces", ""));
+        setIDFilling(Registry.get(genj.gedcom.Options.class).get("isFillGapsInIDs", ""));
+        setEncoding(Registry.get(genj.gedcom.Options.class).get("defaultEncoding", ""));
+        setBOM(Registry.get(genj.app.Options.class).get("isWriteBOM", ""));
     }
 
     void store() {
@@ -477,8 +477,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         Registry.get(genj.gedcom.Options.class).put("submEmail", getSubmEmail());
         Registry.get(genj.gedcom.Options.class).put("submCountry", getSubmCountry());
         Registry.get(genj.gedcom.Options.class).put("submWeb", getSubmWeb());
-        Registry.get(genj.gedcom.Options.class).put("NamesUppercase", getNamesUppercase());
-        Registry.get(genj.gedcom.Options.class).put("NamesSpouse", getNamesSpouse());
+        Registry.get(genj.gedcom.Options.class).put("isUpperCaseNames", getNamesUppercase());
+        Registry.get(genj.gedcom.Options.class).put("setWifeLastname", getNamesSpouse());
         Registry.get(genj.gedcom.Options.class).put("fmt_address1", getAddress1());
         Registry.get(genj.gedcom.Options.class).put("fmt_address2", getAddress2());
         Registry.get(genj.gedcom.Options.class).put("fmt_address3", getAddress3());
@@ -493,10 +493,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         Registry.get(genj.gedcom.Options.class).put("fmt_address5_mand", getAddress5Mand());
         Registry.get(genj.gedcom.Options.class).put("fmt_address6_mand", getAddress6Mand());
         Registry.get(genj.gedcom.Options.class).put("fmt_address7_mand", getAddress7Mand());
-        Registry.get(genj.gedcom.Options.class).put("address_splitspaces", getAddressSpaces());
-        Registry.get(genj.gedcom.Options.class).put("IDFilling", getIdFilling());
-        Registry.get(genj.gedcom.Options.class).put("encoding", getEncoding());
-        Registry.get(genj.app.Options.class).put("BOM", getBOM());
+        Registry.get(genj.gedcom.Options.class).put("isUseSpacedPlaces", getAddressSpaces());
+        Registry.get(genj.gedcom.Options.class).put("isFillGapsInIDs", getIdFilling());
+        Registry.get(genj.gedcom.Options.class).put("defaultEncoding", getEncoding());
+        Registry.get(genj.app.Options.class).put("isWriteBOM", getBOM());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as in the wizard
 

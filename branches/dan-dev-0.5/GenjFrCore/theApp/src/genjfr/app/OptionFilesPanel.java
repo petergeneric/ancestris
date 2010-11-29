@@ -387,7 +387,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setAssoSound("");
         setAssoWeb("");
 
-        setLogSize(Registry.get(genj.app.Options.class).get("logSize", ""));
+        setLogSize(Registry.get(genj.app.Options.class).get("maxLogSizeKB", ""));
         setLogLevel(Registry.get(genj.app.Options.class).get("logLevel", "INFO"));
     }
 
@@ -401,7 +401,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 //        NbPreferences.forModule(App.class).put("assoImages", getAssoImages());
 //        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
 //        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
-        Registry.get(genj.app.Options.class).put("logSize", getLogSize());
+        Registry.get(genj.app.Options.class).put("maxLogSizeKB", getLogSize());
         Registry.get(genj.app.Options.class).put("logLevel", getLogLevel());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard

@@ -189,21 +189,21 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     void load() {
         setLanguage(Registry.get(genj.app.Options.class).get("language", ""));
-        setSkin(Registry.get(genj.app.Options.class).get("LookAndFeel", ""));
-        setRestoreWindows(Registry.get(genj.app.Options.class).get("isRestoreWindows", ""));
+        setSkin(Registry.get(genj.app.Options.class).get("lookAndFeel", ""));
+        setRestoreWindows(Registry.get(genj.app.Options.class).get("isRestoreViews", ""));
         setAutoCommit(Registry.get(genj.edit.Options.class).get("isAutoCommit", ""));
         setUndos(Registry.get(genj.gedcom.Options.class).get("numberOfUndos", ""));
-        setSplitJurisdictions(Registry.get(genj.edit.Options.class).get("isSplitJurisdiction", ""));
+        setSplitJurisdictions(Registry.get(genj.edit.Options.class).get("isSplitJurisdictions", ""));
         setOpenEditor(Registry.get(genj.edit.Options.class).get("isOpenEditor", ""));
     }
 
     void store() {
         Registry.get(genj.app.Options.class).put("language", getLanguage());
-        Registry.get(genj.app.Options.class).put("LookAndFeel", getSkin());
-        Registry.get(genj.app.Options.class).put("isRestoreWindows", getRestoreWindows());
+        Registry.get(genj.app.Options.class).put("lookAndFeel", getSkin());
+        Registry.get(genj.app.Options.class).put("isRestoreViews", getRestoreWindows());
         Registry.get(genj.edit.Options.class).put("isAutoCommit", getAutoCommit());
         Registry.get(genj.gedcom.Options.class).put("numberOfUndos", getUndos());
-        Registry.get(genj.edit.Options.class).put("isSplitJurisdiction", getSplitJurisdictions());
+        Registry.get(genj.edit.Options.class).put("isSplitJurisdictions", getSplitJurisdictions());
         Registry.get(genj.edit.Options.class).put("isOpenEditor", getOpenEditor());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
