@@ -630,7 +630,8 @@ public class Registry implements PropertyChangeListener {
    * Set the the preference handler for that registry
    */
   public static void setStorageFactory(IRegistryStorageFactory factory) {
-    storageFactory = factory;
+      if (storageFactory == null)
+        storageFactory = factory;
   }
 
   public static IRegistryStorageFactory getStorageFactory() {

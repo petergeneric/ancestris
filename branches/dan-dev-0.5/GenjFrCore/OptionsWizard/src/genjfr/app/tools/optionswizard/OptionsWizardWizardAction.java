@@ -4,7 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
-import genj.util.Registry;
+import ancestris.util.AncestrisPreferences;
 import genjfr.app.App;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -145,7 +145,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
     }
 
     private void persist() {
-        Registry.persist();
+        AncestrisPreferences.persist();
 
     }
 

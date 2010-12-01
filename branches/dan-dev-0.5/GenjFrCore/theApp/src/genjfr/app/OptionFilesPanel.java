@@ -4,7 +4,7 @@
  */
 package genjfr.app;
 
-import genj.util.Registry;
+import ancestris.util.AncestrisPreferences;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
@@ -363,8 +363,11 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_logLevelActionPerformed
 
     void load() {
-        setGedcomFile(Registry.get(genj.gedcom.Options.class).get("gedcomFile", ""));
-        setReportDir(Registry.get(genj.gedcom.Options.class).get("reportDir", ""));
+        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+
+        setGedcomFile(gedcomPrefs.get("gedcomFile", ""));
+        setReportDir(gedcomPrefs.get("reportDir", ""));
 
 //TODO: not used atm        registry.put("options.associations", "6");
 //        registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
@@ -387,22 +390,24 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setAssoSound("");
         setAssoWeb("");
 
-        setLogSize(Registry.get(genj.app.Options.class).get("maxLogSizeKB", ""));
-        setLogLevel(Registry.get(genj.app.Options.class).get("logLevel", "INFO"));
+        setLogSize(appPrefs.get("maxLogSizeKB", ""));
+        setLogLevel(appPrefs.get("logLevel", "INFO"));
     }
 
     void store() {
+        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
 
-        Registry.get(genj.gedcom.Options.class).put("gedcomFile", getGedcomFile());
-        Registry.get(genj.gedcom.Options.class).put("reportDir", getReportDir());
+        gedcomPrefs.put("gedcomFile", getGedcomFile());
+        gedcomPrefs.put("reportDir", getReportDir());
 //        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
 //        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
 //        NbPreferences.forModule(App.class).put("assoAdobe", getAssoAdobe());
 //        NbPreferences.forModule(App.class).put("assoImages", getAssoImages());
 //        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
 //        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
-        Registry.get(genj.app.Options.class).put("maxLogSizeKB", getLogSize());
-        Registry.get(genj.app.Options.class).put("logLevel", getLogLevel());
+        appPrefs.put("maxLogSizeKB", getLogSize());
+        appPrefs.put("logLevel", getLogLevel());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
 

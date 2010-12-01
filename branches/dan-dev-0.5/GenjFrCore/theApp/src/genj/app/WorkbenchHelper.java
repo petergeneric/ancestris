@@ -77,7 +77,6 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     private Workbench workbench;
     private final static Logger LOG = Logger.getLogger("genj.app");
     private final static Resources RES = Resources.get(Workbench.class);
-    private final static Registry REGISTRY = Registry.get(Workbench.class);
     private int isLoaded = 1;
     final private Object loadLock = new Object();
 
@@ -365,7 +364,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         if (gedcomDir == null || gedcomDir.trim().isEmpty()) {
             gedcomDir = "user.home";
         }
-        chooser.setCurrentDirectory(new File(REGISTRY.get("last.dir", gedcomDir)));
+        chooser.setCurrentDirectory(new File(AncestrisPreferences.get(Workbench.class).get("last.dir", gedcomDir)));
         if (accessory != null) {
             chooser.setAccessory(accessory);
         }
@@ -378,7 +377,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             return null;
         }
         // remember last directory
-        REGISTRY.put("last.dir", file.getParentFile().getAbsolutePath());
+        AncestrisPreferences.get(Workbench.class).put("last.dir", file.getParentFile().getAbsolutePath());
         // done
         return file;
     }

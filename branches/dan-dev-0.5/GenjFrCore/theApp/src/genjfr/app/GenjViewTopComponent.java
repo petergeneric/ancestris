@@ -3,6 +3,7 @@
  */
 package genjfr.app;
 
+import ancestris.util.AncestrisPreferences;
 import genj.app.Workbench;
 import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
@@ -177,7 +178,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
 
         //    add(bar, viewHandle.getRegistry().get("toolbar", BorderLayout.WEST));
         if ((bar != null) && (bar.getToolBar() != null)){
-            add(bar.getToolBar(), genj.util.Registry.get(view).get("toolbar",BorderLayout.WEST));;
+            add(bar.getToolBar(), AncestrisPreferences.get(view).get("toolbar",BorderLayout.WEST));;
         }
     // done
     }
@@ -190,7 +191,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     // restore toolbar orientation?
     if ((bar!=null) && (comp==bar.getToolBar())) {
       // remember
-      genj.util.Registry.get(view).put("toolbar", constraints.toString());
+      AncestrisPreferences.get(view).put("toolbar", constraints.toString());
       // find orientation
       int orientation = SwingConstants.HORIZONTAL;
       if (BorderLayout.WEST.equals(constraints)||BorderLayout.EAST.equals(constraints))

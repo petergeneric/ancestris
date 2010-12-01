@@ -4,7 +4,7 @@
  */
 package genjfr.app;
 
-import genj.util.Registry;
+import ancestris.util.AncestrisPreferences;
 import org.openide.awt.StatusDisplayer;
 
 final class OptionDataPanel extends javax.swing.JPanel {
@@ -440,63 +440,69 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox8ActionPerformed
 
     void load() {
-        setSubmName(Registry.get(genj.gedcom.Options.class).get("submName", ""));
-        setSubmCity(Registry.get(genj.gedcom.Options.class).get("submCity", ""));
-        setSubmPhone(Registry.get(genj.gedcom.Options.class).get("submPhone", ""));
-        setSubmPostCode(Registry.get(genj.gedcom.Options.class).get("submPostCode", ""));
-        setSubmEmail(Registry.get(genj.gedcom.Options.class).get("submEmail", ""));
-        setSubmCountry(Registry.get(genj.gedcom.Options.class).get("submCountry", ""));
-        setSubmWeb(Registry.get(genj.gedcom.Options.class).get("submWeb", ""));
-        setNamesUppercase(Registry.get(genj.gedcom.Options.class).get("isUpperCaseNames", ""));
-        setNamesSpouse(Registry.get(genj.gedcom.Options.class).get("setWifeLastname", ""));
-        setAddress1(Registry.get(genj.gedcom.Options.class).get("fmt_address1", ""));
-        setAddress2(Registry.get(genj.gedcom.Options.class).get("fmt_address2", ""));
-        setAddress3(Registry.get(genj.gedcom.Options.class).get("fmt_address3", ""));
-        setAddress4(Registry.get(genj.gedcom.Options.class).get("fmt_address4", ""));
-        setAddress5(Registry.get(genj.gedcom.Options.class).get("fmt_address5", ""));
-        setAddress6(Registry.get(genj.gedcom.Options.class).get("fmt_address6", ""));
-        setAddress7(Registry.get(genj.gedcom.Options.class).get("fmt_address7", ""));
-        setAddress1Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address1_mand", ""));
-        setAddress2Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address2_mand", ""));
-        setAddress3Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address3_mand", ""));
-        setAddress4Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address4_mand", ""));
-        setAddress5Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address5_mand", ""));
-        setAddress6Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address6_mand", ""));
-        setAddress7Mand(Registry.get(genj.gedcom.Options.class).get("fmt_address7_mand", ""));
-        setAddressSpaces(Registry.get(genj.gedcom.Options.class).get("isUseSpacedPlaces", ""));
-        setIDFilling(Registry.get(genj.gedcom.Options.class).get("isFillGapsInIDs", ""));
-        setEncoding(Registry.get(genj.gedcom.Options.class).get("defaultEncoding", ""));
-        setBOM(Registry.get(genj.app.Options.class).get("isWriteBOM", ""));
+        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+
+        setSubmName(gedcomPrefs.get("submName", ""));
+        setSubmCity(gedcomPrefs.get("submCity", ""));
+        setSubmPhone(gedcomPrefs.get("submPhone", ""));
+        setSubmPostCode(gedcomPrefs.get("submPostCode", ""));
+        setSubmEmail(gedcomPrefs.get("submEmail", ""));
+        setSubmCountry(gedcomPrefs.get("submCountry", ""));
+        setSubmWeb(gedcomPrefs.get("submWeb", ""));
+        setNamesUppercase(gedcomPrefs.get("isUpperCaseNames", ""));
+        setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
+        setAddress1(gedcomPrefs.get("fmt_address1", ""));
+        setAddress2(gedcomPrefs.get("fmt_address2", ""));
+        setAddress3(gedcomPrefs.get("fmt_address3", ""));
+        setAddress4(gedcomPrefs.get("fmt_address4", ""));
+        setAddress5(gedcomPrefs.get("fmt_address5", ""));
+        setAddress6(gedcomPrefs.get("fmt_address6", ""));
+        setAddress7(gedcomPrefs.get("fmt_address7", ""));
+        setAddress1Mand(gedcomPrefs.get("fmt_address1_mand", ""));
+        setAddress2Mand(gedcomPrefs.get("fmt_address2_mand", ""));
+        setAddress3Mand(gedcomPrefs.get("fmt_address3_mand", ""));
+        setAddress4Mand(gedcomPrefs.get("fmt_address4_mand", ""));
+        setAddress5Mand(gedcomPrefs.get("fmt_address5_mand", ""));
+        setAddress6Mand(gedcomPrefs.get("fmt_address6_mand", ""));
+        setAddress7Mand(gedcomPrefs.get("fmt_address7_mand", ""));
+        setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
+        setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
+        setEncoding(gedcomPrefs.get("defaultEncoding", ""));
+        setBOM(appPrefs.get("isWriteBOM", ""));
     }
 
     void store() {
-        Registry.get(genj.gedcom.Options.class).put("submName", getSubmName());
-        Registry.get(genj.gedcom.Options.class).put("submCity", getSubmCity());
-        Registry.get(genj.gedcom.Options.class).put("submPhone", getSubmPhone());
-        Registry.get(genj.gedcom.Options.class).put("submPostCode", getSubmPostCode());
-        Registry.get(genj.gedcom.Options.class).put("submEmail", getSubmEmail());
-        Registry.get(genj.gedcom.Options.class).put("submCountry", getSubmCountry());
-        Registry.get(genj.gedcom.Options.class).put("submWeb", getSubmWeb());
-        Registry.get(genj.gedcom.Options.class).put("isUpperCaseNames", getNamesUppercase());
-        Registry.get(genj.gedcom.Options.class).put("setWifeLastname", getNamesSpouse());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address1", getAddress1());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address2", getAddress2());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address3", getAddress3());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address4", getAddress4());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address5", getAddress5());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address6", getAddress6());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address7", getAddress7());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address1_mand", getAddress1Mand());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address2_mand", getAddress2Mand());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address3_mand", getAddress3Mand());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address4_mand", getAddress4Mand());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address5_mand", getAddress5Mand());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address6_mand", getAddress6Mand());
-        Registry.get(genj.gedcom.Options.class).put("fmt_address7_mand", getAddress7Mand());
-        Registry.get(genj.gedcom.Options.class).put("isUseSpacedPlaces", getAddressSpaces());
-        Registry.get(genj.gedcom.Options.class).put("isFillGapsInIDs", getIdFilling());
-        Registry.get(genj.gedcom.Options.class).put("defaultEncoding", getEncoding());
-        Registry.get(genj.app.Options.class).put("isWriteBOM", getBOM());
+        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+
+        gedcomPrefs.put("submName", getSubmName());
+        gedcomPrefs.put("submCity", getSubmCity());
+        gedcomPrefs.put("submPhone", getSubmPhone());
+        gedcomPrefs.put("submPostCode", getSubmPostCode());
+        gedcomPrefs.put("submEmail", getSubmEmail());
+        gedcomPrefs.put("submCountry", getSubmCountry());
+        gedcomPrefs.put("submWeb", getSubmWeb());
+        gedcomPrefs.put("isUpperCaseNames", getNamesUppercase());
+        gedcomPrefs.put("setWifeLastname", getNamesSpouse());
+        gedcomPrefs.put("fmt_address1", getAddress1());
+        gedcomPrefs.put("fmt_address2", getAddress2());
+        gedcomPrefs.put("fmt_address3", getAddress3());
+        gedcomPrefs.put("fmt_address4", getAddress4());
+        gedcomPrefs.put("fmt_address5", getAddress5());
+        gedcomPrefs.put("fmt_address6", getAddress6());
+        gedcomPrefs.put("fmt_address7", getAddress7());
+        gedcomPrefs.put("fmt_address1_mand", getAddress1Mand());
+        gedcomPrefs.put("fmt_address2_mand", getAddress2Mand());
+        gedcomPrefs.put("fmt_address3_mand", getAddress3Mand());
+        gedcomPrefs.put("fmt_address4_mand", getAddress4Mand());
+        gedcomPrefs.put("fmt_address5_mand", getAddress5Mand());
+        gedcomPrefs.put("fmt_address6_mand", getAddress6Mand());
+        gedcomPrefs.put("fmt_address7_mand", getAddress7Mand());
+        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
+        gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
+        gedcomPrefs.put("defaultEncoding", getEncoding());
+        appPrefs.put("isWriteBOM", getBOM());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as in the wizard
 

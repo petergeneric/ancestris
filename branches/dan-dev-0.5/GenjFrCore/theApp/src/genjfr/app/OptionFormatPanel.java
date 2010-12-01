@@ -4,7 +4,7 @@
  */
 package genjfr.app;
 
-import genj.util.Registry;
+import ancestris.util.AncestrisPreferences;
 import javax.swing.SpinnerNumberModel;
 import org.openide.awt.StatusDisplayer;
 
@@ -364,45 +364,51 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        setSymbolBirt(Registry.get(genj.report.Options.class).get("birthSymbol", ""));
-        setSymbolBapm(Registry.get(genj.report.Options.class).get("baptismSymbol", ""));
-        setSymbolChildOf(Registry.get(genj.report.Options.class).get("childOfSymbol", ""));
-        setSymbolEngm(Registry.get(genj.report.Options.class).get("engagingSymbol", ""));
-        setSymbolMarr(Registry.get(genj.report.Options.class).get("marriageSymbol", ""));
-        setSymbolDivc(Registry.get(genj.report.Options.class).get("divorceSymbol", ""));
-        setSymbolOccu(Registry.get(genj.report.Options.class).get("occuSymbol", ""));
-        setSymbolResi(Registry.get(genj.report.Options.class).get("resiSymbol", ""));
-        setSymbolDeat(Registry.get(genj.report.Options.class).get("deathSymbol", ""));
-        setSymbolBuri(Registry.get(genj.report.Options.class).get("burialSymbol", ""));
-        setPrivDisplay(Registry.get(genj.gedcom.Options.class).get("maskPrivate", ""));
-        setPrivFlag(Registry.get(genj.report.Options.class).get("privateTag", ""));
-        setPrivAlive(Registry.get(genj.report.Options.class).get("deceasedIsPublic", ""));
-        setPrivYears(Registry.get(genj.report.Options.class).get("yearsEventsArePrivate", ""));
-        setLineBreak(Registry.get(genj.gedcom.Options.class).get("valueLineBreak", ""));
-        setImageSize(Registry.get(genj.gedcom.Options.class).get("maxImageFileSizeKB", ""));
-        setDisplayNames(Registry.get(genj.gedcom.Options.class).get("nameFormat", ""));
-        setDisplayDates(Registry.get(genj.gedcom.Options.class).get("dateFormat", ""));
+        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+        AncestrisPreferences reportPrefs = AncestrisPreferences.get(genj.report.Options.class);
+
+        setSymbolBirt(reportPrefs.get("birthSymbol", ""));
+        setSymbolBapm(reportPrefs.get("baptismSymbol", ""));
+        setSymbolChildOf(reportPrefs.get("childOfSymbol", ""));
+        setSymbolEngm(reportPrefs.get("engagingSymbol", ""));
+        setSymbolMarr(reportPrefs.get("marriageSymbol", ""));
+        setSymbolDivc(reportPrefs.get("divorceSymbol", ""));
+        setSymbolOccu(reportPrefs.get("occuSymbol", ""));
+        setSymbolResi(reportPrefs.get("resiSymbol", ""));
+        setSymbolDeat(reportPrefs.get("deathSymbol", ""));
+        setSymbolBuri(reportPrefs.get("burialSymbol", ""));
+        setPrivDisplay(gedcomPrefs.get("maskPrivate", ""));
+        setPrivFlag(reportPrefs.get("privateTag", ""));
+        setPrivAlive(reportPrefs.get("deceasedIsPublic", ""));
+        setPrivYears(reportPrefs.get("yearsEventsArePrivate", ""));
+        setLineBreak(gedcomPrefs.get("valueLineBreak", ""));
+        setImageSize(gedcomPrefs.get("maxImageFileSizeKB", ""));
+        setDisplayNames(gedcomPrefs.get("nameFormat", ""));
+        setDisplayDates(gedcomPrefs.get("dateFormat", ""));
     }
 
     void store() {
-        Registry.get(genj.report.Options.class).put("birthSymbol", getSymbolBirt());
-        Registry.get(genj.report.Options.class).put("baptismSymbol", getSymbolBapm());
-        Registry.get(genj.report.Options.class).put("childOfSymbol", getSymbolChildOf());
-        Registry.get(genj.report.Options.class).put("engagingSymbol", getSymbolEngm());
-        Registry.get(genj.report.Options.class).put("marriageSymbol", getSymbolMarr());
-        Registry.get(genj.report.Options.class).put("divorceSymbol", getSymbolDivc());
-        Registry.get(genj.report.Options.class).put("occuSymbol", getSymbolOccu());
-        Registry.get(genj.report.Options.class).put("resiSymbol", getSymbolResi());
-        Registry.get(genj.report.Options.class).put("deathSymbol", getSymbolDeat());
-        Registry.get(genj.report.Options.class).put("burialSymbol", getSymbolBuri());
-        Registry.get(genj.gedcom.Options.class).put("maskPrivate", getPrivDisplay());
-        Registry.get(genj.report.Options.class).put("privateTag", getPrivFlag());
-        Registry.get(genj.report.Options.class).put("deceasedIsPublic", getPrivAlive());
-        Registry.get(genj.report.Options.class).put("yearsEventsArePrivate", getPrivYears());
-        Registry.get(genj.gedcom.Options.class).put("valueLineBreak", getLineBreak());
-        Registry.get(genj.gedcom.Options.class).put("maxImageFileSizeKB", getImageSize());
-        Registry.get(genj.gedcom.Options.class).put("nameFormat", getDisplayNames());
-        Registry.get(genj.gedcom.Options.class).put("dateFormat", getDisplayDates());
+        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+        AncestrisPreferences reportPrefs = AncestrisPreferences.get(genj.report.Options.class);
+
+        reportPrefs.put("birthSymbol", getSymbolBirt());
+        reportPrefs.put("baptismSymbol", getSymbolBapm());
+        reportPrefs.put("childOfSymbol", getSymbolChildOf());
+        reportPrefs.put("engagingSymbol", getSymbolEngm());
+        reportPrefs.put("marriageSymbol", getSymbolMarr());
+        reportPrefs.put("divorceSymbol", getSymbolDivc());
+        reportPrefs.put("occuSymbol", getSymbolOccu());
+        reportPrefs.put("resiSymbol", getSymbolResi());
+        reportPrefs.put("deathSymbol", getSymbolDeat());
+        reportPrefs.put("burialSymbol", getSymbolBuri());
+        gedcomPrefs.put("maskPrivate", getPrivDisplay());
+        reportPrefs.put("privateTag", getPrivFlag());
+        reportPrefs.put("deceasedIsPublic", getPrivAlive());
+        reportPrefs.put("yearsEventsArePrivate", getPrivYears());
+        gedcomPrefs.put("valueLineBreak", getLineBreak());
+        gedcomPrefs.put("maxImageFileSizeKB", getImageSize());
+        gedcomPrefs.put("nameFormat", getDisplayNames());
+        gedcomPrefs.put("dateFormat", getDisplayDates());
         
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
 

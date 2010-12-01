@@ -24,6 +24,8 @@ public class Installer extends ModuleInstall {
 
     private boolean restart = false;
 
+    // On verifie a chaque demarrage les mises a jour de plugin
+    // a moins que l'utilisateur n'ait change le reglage
     @Override
     public void validate() throws IllegalStateException {
         Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate");
@@ -37,6 +39,7 @@ public class Installer extends ModuleInstall {
         App.main(new String[]{});
 
         // Run wizard if necessary
+        // FIXME: le wizard doit etre lance dans le moduleinstall du wizard et non de l'application
         if (!NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 public void run() {

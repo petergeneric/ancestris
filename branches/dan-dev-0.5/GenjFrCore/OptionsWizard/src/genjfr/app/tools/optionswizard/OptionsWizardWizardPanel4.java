@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.optionswizard;
 
+import ancestris.util.AncestrisPreferences;
 import genjfr.app.App;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
@@ -12,6 +13,10 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbPreferences;
 
 public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
+    private final AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+    private final AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+    private final AncestrisPreferences reportPrefs = AncestrisPreferences.get(genj.report.Options.class);
+    private final AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -81,28 +86,27 @@ public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
-     ((OptionsWizardVisualPanel4) getComponent()).setGedcomFile(NbPreferences.forModule(App.class).get("gedcomFile", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setReportDir(NbPreferences.forModule(App.class).get("reportDir", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoOffice(NbPreferences.forModule(App.class).get("assoOffice", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoAdobe(NbPreferences.forModule(App.class).get("assoAdobe", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoImages(NbPreferences.forModule(App.class).get("assoImages", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
-     ((OptionsWizardVisualPanel4) getComponent()).setLogSize(NbPreferences.forModule(App.class).get("logSize", ""));
-
+        ((OptionsWizardVisualPanel4) getComponent()).setGedcomFile(gedcomPrefs.get("gedcomFile", ""));
+        ((OptionsWizardVisualPanel4) getComponent()).setReportDir(gedcomPrefs.get("reportDir", ""));
+        ((OptionsWizardVisualPanel4) getComponent()).setAssoTxt("");
+        ((OptionsWizardVisualPanel4) getComponent()).setAssoOffice("");
+        ((OptionsWizardVisualPanel4) getComponent()).setAssoAdobe("");
+        ((OptionsWizardVisualPanel4) getComponent()).setAssoImages("");
+        ((OptionsWizardVisualPanel4) getComponent()).setAssoSound("");
+        ((OptionsWizardVisualPanel4) getComponent()).setAssoWeb("");
+        ((OptionsWizardVisualPanel4) getComponent()).setLogSize(appPrefs.get("maxLogSizeKB", ""));
     }
 
     public void storeSettings(Object settings) {
-     NbPreferences.forModule(App.class).put("gedcomFile", ((OptionsWizardVisualPanel4) getComponent()).getGedcomFile());
-     NbPreferences.forModule(App.class).put("reportDir", ((OptionsWizardVisualPanel4) getComponent()).getReportDir());
-     NbPreferences.forModule(App.class).put("assoTxt", ((OptionsWizardVisualPanel4) getComponent()).getAssoTxt());
-     NbPreferences.forModule(App.class).put("assoOffice", ((OptionsWizardVisualPanel4) getComponent()).getAssoOffice());
-     NbPreferences.forModule(App.class).put("assoAdobe", ((OptionsWizardVisualPanel4) getComponent()).getAssoAdobe());
-     NbPreferences.forModule(App.class).put("assoImages", ((OptionsWizardVisualPanel4) getComponent()).getAssoImages());
-     NbPreferences.forModule(App.class).put("assoSound", ((OptionsWizardVisualPanel4) getComponent()).getAssoSound());
-     NbPreferences.forModule(App.class).put("assoWeb", ((OptionsWizardVisualPanel4) getComponent()).getAssoWeb());
-     NbPreferences.forModule(App.class).put("logSize", ((OptionsWizardVisualPanel4) getComponent()).getLogSize());
+        gedcomPrefs.put("gedcomFile", ((OptionsWizardVisualPanel4) getComponent()).getGedcomFile());
+        gedcomPrefs.put("reportDir", ((OptionsWizardVisualPanel4) getComponent()).getReportDir());
+//        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
+//        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
+//        NbPreferences.forModule(App.class).put("assoAdobe", getAssoAdobe());
+//        NbPreferences.forModule(App.class).put("assoImages", getAssoImages());
+//        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
+//        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
+        appPrefs.put("maxLogSizeKB", ((OptionsWizardVisualPanel4) getComponent()).getLogSize());
     }
 }
 

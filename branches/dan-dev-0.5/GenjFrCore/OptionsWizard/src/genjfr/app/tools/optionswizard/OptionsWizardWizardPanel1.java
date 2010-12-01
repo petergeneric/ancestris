@@ -4,14 +4,18 @@
  */
 package genjfr.app.tools.optionswizard;
 
-import genjfr.app.App;
+import ancestris.util.AncestrisPreferences;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
-import org.openide.util.NbPreferences;
+//import org.openide.util.NbPreferences;
 
 public class OptionsWizardWizardPanel1 implements WizardDescriptor.Panel {
+    private final AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
+    private final AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+    private final AncestrisPreferences reportPrefs = AncestrisPreferences.get(genj.report.Options.class);
+    private final AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -81,24 +85,24 @@ public class OptionsWizardWizardPanel1 implements WizardDescriptor.Panel {
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     public void readSettings(Object settings) {
-        ((OptionsWizardVisualPanel1) getComponent()).setLanguage(NbPreferences.forModule(App.class).get("language", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setSkin(NbPreferences.forModule(App.class).get("skin", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setRestoreWindows(NbPreferences.forModule(App.class).get("restoreWindows", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setAutoCommit(NbPreferences.forModule(App.class).get("autoCommit", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setUndos(NbPreferences.forModule(App.class).get("undos", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setSplitJurisdictions(NbPreferences.forModule(App.class).get("splitJurisdiction", ""));
-        ((OptionsWizardVisualPanel1) getComponent()).setOpenEditor(NbPreferences.forModule(App.class).get("OpenEditor", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setLanguage(appPrefs.get("language", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setSkin(appPrefs.get("lookAndFeel", ""));
+//TODO:        ((OptionsWizardVisualPanel1) getComponent()).setRestoreWindows(String.valueOf(genj.app.Options.getInstance().)));
+        ((OptionsWizardVisualPanel1) getComponent()).setAutoCommit(editPrefs.get("isAutoCommit", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setUndos(gedcomPrefs.get("numberOfUndos", ""));
+        ((OptionsWizardVisualPanel1) getComponent()).setSplitJurisdictions(editPrefs.get("isSplitJurisdictions", ""));
+//TODO        ((OptionsWizardVisualPanel1) getComponent()).setOpenEditor(String.valueOf(genj.edit.Options.getInstance().));
 
     }
 
     public void storeSettings(Object settings) {
-        NbPreferences.forModule(App.class).put("language", ((OptionsWizardVisualPanel1) getComponent()).getLanguage());
-        NbPreferences.forModule(App.class).put("skin", ((OptionsWizardVisualPanel1) getComponent()).getSkin());
-        NbPreferences.forModule(App.class).put("restoreWindows", ((OptionsWizardVisualPanel1) getComponent()).getRestoreWindows());
-        NbPreferences.forModule(App.class).put("autoCommit", ((OptionsWizardVisualPanel1) getComponent()).getAutoCommit());
-        NbPreferences.forModule(App.class).put("undos", ((OptionsWizardVisualPanel1) getComponent()).getUndos());
-        NbPreferences.forModule(App.class).put("splitJurisdiction", ((OptionsWizardVisualPanel1) getComponent()).getSplitJurisdictions());
-        NbPreferences.forModule(App.class).put("OpenEditor", ((OptionsWizardVisualPanel1) getComponent()).getOpenEditor());
+        appPrefs.put("language",((OptionsWizardVisualPanel1) getComponent()).getLanguage());
+        appPrefs.put("lookAndFeel", ((OptionsWizardVisualPanel1) getComponent()).getSkin());
+//TODO        NbPreferences.forModule(App.class).put("restoreWindows", ((OptionsWizardVisualPanel1) getComponent()).getRestoreWindows());
+        editPrefs.put("isAutoCommit",((OptionsWizardVisualPanel1) getComponent()).getAutoCommit());
+        gedcomPrefs.put("numberOfUndos", ((OptionsWizardVisualPanel1) getComponent()).getUndos());
+        editPrefs.put("isSplitJurisdictions",((OptionsWizardVisualPanel1) getComponent()).getSplitJurisdictions());
+//TODO        NbPreferences.forModule(App.class).put("OpenEditor", ((OptionsWizardVisualPanel1) getComponent()).getOpenEditor());
 
     }
 }

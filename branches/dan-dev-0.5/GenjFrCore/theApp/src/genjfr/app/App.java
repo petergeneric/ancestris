@@ -140,7 +140,7 @@ public class App {
         // persist options
         OptionProvider.persistAll();
         // Store registry
-        Registry.persist();
+        AncestrisPreferences.persist();
         // Reload modes if restart required
         loadModesIfRestartRequired();
         // done
@@ -246,7 +246,7 @@ public class App {
                 // Pour le moment il ne faut pas que je lnf soit mis a autre chose que java.
                 // ni pas les options, ni par l'assistant.
                 // On maintient la possibilite de changer mais le lnf reel utilise pas l'appli est java
-                Registry.get(genj.app.Options.class).put("lookAndFeel", "1");
+                AncestrisPreferences.get(genj.app.Options.class).put("lookAndFeel", "1");
 
                 // initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions();
@@ -479,6 +479,7 @@ public class App {
    * TODO: deux fichiers portant le meme nom sans collision des reglages.
    * TODO: dans l'avenir on pourra marquer les proprietes par un id que l'on attachera au
    * TODO: fichier gedcom dans une des proprietes.
+   * TODO: mettre dans ancestrispreferences
    */
   public static Registry getRegistry(Gedcom gedcom) {
     return Registry.get(new File(EnvironmentChecker.getProperty("user.home.genj", ".", "calculate dir for registry"),
