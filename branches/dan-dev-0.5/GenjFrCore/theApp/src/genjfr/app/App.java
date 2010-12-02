@@ -479,7 +479,7 @@ public class App {
    * TODO: deux fichiers portant le meme nom sans collision des reglages.
    * TODO: dans l'avenir on pourra marquer les proprietes par un id que l'on attachera au
    * TODO: fichier gedcom dans une des proprietes.
-   * TODO: mettre dans ancestrispreferences
+   * FIXME: mettre dans ancestrispreferences
    */
   public static Registry getRegistry(Gedcom gedcom) {
     return Registry.get(new File(EnvironmentChecker.getProperty("user.home.genj", ".", "calculate dir for registry"),

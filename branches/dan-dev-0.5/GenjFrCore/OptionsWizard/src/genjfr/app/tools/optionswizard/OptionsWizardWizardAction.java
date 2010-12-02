@@ -5,7 +5,6 @@
 package genjfr.app.tools.optionswizard;
 
 import ancestris.util.AncestrisPreferences;
-import genjfr.app.App;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.text.MessageFormat;
@@ -51,7 +50,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
         }
 
         if (exitFlag == true) {
-            NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as below
+            NbPreferences.forModule(this.getClass()).put("optionswizard", "4"); // should be same as below
         }
         
         persist();
@@ -66,7 +65,7 @@ public final class OptionsWizardWizardAction extends CallableSystemAction /*impl
         boolean launch = false;
 
         // Check if wizardflag shows it needs to be launched
-        String flag = NbPreferences.forModule(App.class).get("optionswizard", "");
+        String flag = NbPreferences.forModule(this.getClass()).get("optionswizard", "");
 
         // If number matches, set launch on
         if (!flag.equals("4")) { // increase number here each time we want to force wizard launch for users at a new release

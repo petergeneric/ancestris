@@ -5,12 +5,10 @@
 package genjfr.app.tools.optionswizard;
 
 import ancestris.util.AncestrisPreferences;
-import genjfr.app.App;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
-import org.openide.util.NbPreferences;
 
 public class OptionsWizardWizardPanel4 implements WizardDescriptor.Panel {
     private final AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);

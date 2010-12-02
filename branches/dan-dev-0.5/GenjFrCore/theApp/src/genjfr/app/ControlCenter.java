@@ -32,7 +32,6 @@ import java.util.Collection;
 import javax.swing.JPanel;
 
 import org.openide.util.Exceptions;
-import org.openide.util.NbPreferences;
 import genj.gedcom.Context;
 import genjfr.explorer.GedcomExplorerTopComponent;
 import java.net.URL;
@@ -142,11 +141,12 @@ public class ControlCenter extends JPanel{
                 theFiles = new ArrayList<String>();
             }
 //            addDefaultFile(theFiles);
-            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
-                if (theFiles.isEmpty() && getDefaultFile(theFiles) == null) {
-                    App.workbenchHelper.openGedcom();
-                }
-            }
+// TODO: demander l'ouverture d'un fichier gedcom si aucun fichier n'est ouvert. Comment?
+//            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
+//                if (theFiles.isEmpty() && getDefaultFile(theFiles) == null) {
+//                    App.workbenchHelper.openGedcom();
+//                }
+//            }
             files = theFiles;
         }
 
