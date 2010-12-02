@@ -85,7 +85,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        String defaultFile = AncestrisPreferences.get(App.class).get("gedcomFile", "");
+        String defaultFile = genjfr.app.Options.getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }

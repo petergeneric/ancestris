@@ -151,7 +151,12 @@ public class ControlCenter extends JPanel{
         }
 
         private String getDefaultFile(Collection<String> files) {
-            File defaultFile = new File(AncestrisPreferences.get(App.class).get("gedcomFile", ""));
+            // ne pas ouvrir si onlyempty est positionne
+            if (files != null && !files.isEmpty() && genjfr.app.Options.getOpenDefaultOnlyEmpty()) {
+                return null;
+            }
+
+            File defaultFile = new File(genjfr.app.Options.getDefaultGedcom());
             if (defaultFile == null) {
                 return null;
             }
@@ -312,7 +317,7 @@ public class ControlCenter extends JPanel{
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {
-        String defaultFile = AncestrisPreferences.get(App.class).get("gedcomFile", "");
+        String defaultFile = genjfr.app.Options.getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }

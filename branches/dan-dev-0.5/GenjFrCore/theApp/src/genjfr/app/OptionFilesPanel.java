@@ -77,6 +77,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         jButton9 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         logLevel = new javax.swing.JComboBox();
+        jcbOpenOnlyEmpty = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
@@ -198,6 +199,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jcbOpenOnlyEmpty, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenOnlyEmpty.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,6 +209,17 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jcbOpenOnlyEmpty))))
                     .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -232,7 +246,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                                     .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-                                    .addComponent(jTextField9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                                    .addComponent(jTextField9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton9)
@@ -241,16 +255,10 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3)
-                                    .addComponent(jButton2)))))
+                            .addComponent(jLabel5)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3))
                     .addComponent(jLabel12)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -260,7 +268,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(logLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))))
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -274,6 +282,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton2)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcbOpenOnlyEmpty)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -322,7 +332,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
                     .addComponent(logLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(77, 77, 77))
+                .addGap(26, 26, 26))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -366,7 +376,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
 
-        setGedcomFile(gedcomPrefs.get("gedcomFile", ""));
+        setGedcomFile(genjfr.app.Options.getDefaultGedcom());
+        jcbOpenOnlyEmpty.setSelected(genjfr.app.Options.getOpenDefaultOnlyEmpty());
         setReportDir(gedcomPrefs.get("reportDir", ""));
 
 //TODO: not used atm        registry.put("options.associations", "6");
@@ -398,7 +409,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
 
-        gedcomPrefs.put("gedcomFile", getGedcomFile());
+        genjfr.app.Options.setDefaultGedcom(getGedcomFile());
+        genjfr.app.Options.setOpenDefaultOnlyEmpty(jcbOpenOnlyEmpty.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
 //        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
 //        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
@@ -457,6 +469,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JCheckBox jcbOpenOnlyEmpty;
     private javax.swing.JComboBox logLevel;
     // End of variables declaration//GEN-END:variables
 

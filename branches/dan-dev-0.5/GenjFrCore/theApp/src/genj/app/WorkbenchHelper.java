@@ -331,8 +331,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {
-//fixme: a remettre        String defaultFile = NbPreferences.forModule(App.class).get("gedcomFile", "");
-        String defaultFile = "";
+        String defaultFile = genjfr.app.Options.getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }
