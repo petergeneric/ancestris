@@ -28,19 +28,12 @@ final public class Images {
 
   private static Images instance = new Images();
 
-  public static ImageIcon
-    imgClose, imgNew, imgOpen, imgExit, imgSave, imgAbout,imgHelp;
-
-  /**
-   * Constructor which pre-loads all images
-   */
-  private Images() {
-    imgClose        = new ImageIcon(this,"images/Close");
-    imgNew         = new ImageIcon(this,"images/New");
-    imgOpen         = new ImageIcon(this,"images/Open");
-    imgExit         = new ImageIcon(this,"images/Exit");
-    imgSave         = new ImageIcon(this,"images/Save");
-    imgAbout        = new ImageIcon(this,"images/About");
-    imgHelp        = new ImageIcon(this,"images/Help");
-  }
+  public final static ImageIcon
+    imgClose        = new ImageIcon(Images.class,"images/Close"),
+    imgNew         = new ImageIcon(Images.class,"images/New"),
+    imgOpen         = new ImageIcon(Images.class,"images/Open"),
+    imgExit         = new ImageIcon(Images.class,"images/Exit"),
+    imgSave         = new ImageIcon(Images.class,"images/Save"),
+    imgAbout        = new ImageIcon(Images.class,"images/About"),
+    imgHelp        = new ImageIcon(Images.class,"images/Help");
 }
