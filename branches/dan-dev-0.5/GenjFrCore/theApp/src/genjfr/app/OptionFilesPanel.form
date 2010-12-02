@@ -36,7 +36,7 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace min="12" pref="12" max="12" attributes="0"/>
-                              <Component id="jcbOpenOnlyEmpty" min="-2" max="-2" attributes="0"/>
+                              <Component id="jcbAlwaysOpen" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -121,7 +121,7 @@
                   <Component id="jTextField2" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jcbOpenOnlyEmpty" min="-2" max="-2" attributes="0"/>
+              <Component id="jcbAlwaysOpen" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -475,10 +475,13 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logLevelActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jcbOpenOnlyEmpty">
+    <Component class="javax.swing.JCheckBox" name="jcbAlwaysOpen">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="genjfr/app/Bundle.properties" key="OptionFilesPanel.jcbOpenOnlyEmpty.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="genjfr/app/Bundle.properties" key="OptionFilesPanel.jcbAlwaysOpen.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="genjfr/app/Bundle.properties" key="OptionFilesPanel.jcbOpenOnlyEmpty.tooltip" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

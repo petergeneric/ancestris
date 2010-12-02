@@ -77,7 +77,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         jButton9 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         logLevel = new javax.swing.JComboBox();
-        jcbOpenOnlyEmpty = new javax.swing.JCheckBox();
+        jcbAlwaysOpen = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
@@ -199,7 +199,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jcbOpenOnlyEmpty, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenOnlyEmpty.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jcbAlwaysOpen, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbAlwaysOpen.text")); // NOI18N
+        jcbAlwaysOpen.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenOnlyEmpty.tooltip")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -219,7 +220,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                                 .addComponent(jButton2))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
-                                .addComponent(jcbOpenOnlyEmpty))))
+                                .addComponent(jcbAlwaysOpen))))
                     .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -283,7 +284,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                     .addComponent(jButton2)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbOpenOnlyEmpty)
+                .addComponent(jcbAlwaysOpen)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -377,7 +378,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
 
         setGedcomFile(genjfr.app.Options.getDefaultGedcom());
-        jcbOpenOnlyEmpty.setSelected(genjfr.app.Options.getOpenDefaultOnlyEmpty());
+        jcbAlwaysOpen.setSelected(genjfr.app.Options.getAlwaysOpenDefault());
         setReportDir(gedcomPrefs.get("reportDir", ""));
 
 //TODO: not used atm        registry.put("options.associations", "6");
@@ -410,7 +411,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
 
         genjfr.app.Options.setDefaultGedcom(getGedcomFile());
-        genjfr.app.Options.setOpenDefaultOnlyEmpty(jcbOpenOnlyEmpty.isSelected());
+        genjfr.app.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
 //        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
 //        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
@@ -469,7 +470,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
-    private javax.swing.JCheckBox jcbOpenOnlyEmpty;
+    private javax.swing.JCheckBox jcbAlwaysOpen;
     private javax.swing.JComboBox logLevel;
     // End of variables declaration//GEN-END:variables
 

@@ -24,14 +24,14 @@ public class Options {
     public static String getDefaultGedcom(){
         return  appOptions.get("gedcomFile","");
     }
-    public static boolean  getOpenDefaultOnlyEmpty(){
-        return  appOptions.get("openDefaultOnlyEmpty",false);
+    public static boolean  getAlwaysOpenDefault(){
+        return  appOptions.get("alwaysOpenDefault",false);
     }
 
     public static void setDefaultGedcom(String def){
         appOptions.put("gedcomFile",def);
     }
-    public static void setOpenDefaultOnlyEmpty(boolean openEmpty){
-        appOptions.put("openDefaultOnlyEmpty",openEmpty);
+    public static void setAlwaysOpenDefault(boolean alwaysOpen){
+        appOptions.put("alwaysOpenDefault",alwaysOpen);
     }
 }

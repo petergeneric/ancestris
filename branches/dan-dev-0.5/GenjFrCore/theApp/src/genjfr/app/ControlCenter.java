@@ -152,7 +152,7 @@ public class ControlCenter extends JPanel{
 
         private String getDefaultFile(Collection<String> files) {
             // ne pas ouvrir si onlyempty est positionne
-            if (files != null && !files.isEmpty() && genjfr.app.Options.getOpenDefaultOnlyEmpty()) {
+            if (files != null && !files.isEmpty() && !genjfr.app.Options.getAlwaysOpenDefault()) {
                 return null;
             }
 
