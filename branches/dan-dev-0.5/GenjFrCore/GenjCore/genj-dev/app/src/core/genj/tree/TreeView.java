@@ -1079,13 +1079,13 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   } //ActionChooseRoot
 
   /**
-   * Action - choose a root through dialog
+   * Action - recenter tree to root
    */
   private class ActionGotoRoot extends Action2 {
 
     /** constructor */
     private ActionGotoRoot() {
-//      setText(RESOURCES, "select.root");
+      setTip(RESOURCES, "goto.root.tip");
       setImage(Images.imgGotoRoot);
     }
 
