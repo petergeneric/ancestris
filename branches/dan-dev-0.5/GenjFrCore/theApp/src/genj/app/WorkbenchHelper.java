@@ -50,6 +50,7 @@ import genjfr.app.GenjViewInterface;
 import genjfr.app.GenjViewTopComponent;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.app.pluginservice.PluginInterface;
+import genjfr.explorer.GedcomExplorerTopComponent;
 import genjfr.util.GedcomDirectory;
 import java.awt.Component;
 
@@ -122,6 +123,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 
         AncestrisPreferences prefs = AncestrisPreferences.get(GenjViewTopComponent.class);
         List<Class> openedViews = new ArrayList<Class>();
+
+        // Always open explorer (if not opened)
+        GedcomExplorerTopComponent.getDefault().open();
 
         // try gedcom properties
         Registry gedcomSettings = App.getRegistry(context.getGedcom());

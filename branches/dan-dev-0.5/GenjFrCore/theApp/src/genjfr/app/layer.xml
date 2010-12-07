@@ -494,8 +494,8 @@
     </folder>
     <folder name="Windows2">
         <folder name="Components">
-<!--            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>-->
-            <file name="GedcomExplorerTopComponent.settings" url="GedcomExplorerTopComponentSettings.xml"/>
+<!--            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>
+            <file name="GedcomExplorerTopComponent.settings" url="GedcomExplorerTopComponentSettings.xml"/>-->
         </folder>
         <folder name="Modes">
             <folder name="genjfr-explorer">

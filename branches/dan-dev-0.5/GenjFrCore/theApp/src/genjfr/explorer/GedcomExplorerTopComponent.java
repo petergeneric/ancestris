@@ -17,6 +17,7 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
+import org.openide.windows.Mode;
 
 /**
  * Top component which displays something.
@@ -45,6 +46,15 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(new GedcomFileChildren()));
         ((BeanTreeView) gedcomsPane).setRootVisible(false);
+    }
+
+        @Override
+    public void open() {
+             Mode m = WindowManager.getDefault().findMode ("genjfr-explorer");
+             if (m != null) {
+                m.dockInto(this);
+             }
+        super.open();
     }
 
     /** This method is called from within the constructor to
