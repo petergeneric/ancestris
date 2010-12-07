@@ -30,7 +30,8 @@ public class Installer extends ModuleInstall implements Runnable{
         // Run wizard if necessary
         // FIXME: le wizard doit etre lance dans le moduleinstall du wizard et non de l'application
         if (!NbPreferences.forModule(this.getClass()).get("optionswizard", "").equals("4")) {
-            WindowManager.getDefault().invokeWhenUIReady(this);
+            // FIXME: desactivation temporaire du wizard car la gestion des preferences a change
+//            WindowManager.getDefault().invokeWhenUIReady(this);
         }
     }
 
