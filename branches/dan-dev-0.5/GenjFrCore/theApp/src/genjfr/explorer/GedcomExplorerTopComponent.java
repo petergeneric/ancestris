@@ -6,6 +6,7 @@ package genjfr.explorer;
 
 import genj.view.ContextProvider;
 import genj.view.ViewContext;
+import genjfr.util.GedcomDirectory;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -18,12 +19,14 @@ import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.windows.Mode;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//genjfr.explorer//GedcomExplorer//EN",
 autostore = false)
+@RetainLocation("genjfr-explorer")
 public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, ContextProvider{
 
     private static GedcomExplorerTopComponent instance;
@@ -32,8 +35,10 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     private static final String PREFERRED_ID = "GedcomExplorerTopComponent";
 
     private transient ExplorerManager explorerManager = new ExplorerManager();
+    private boolean forceClose=false;
 
     public GedcomExplorerTopComponent() {
+        forceClose=false;
         initComponents();
         setName(NbBundle.getMessage(GedcomExplorerTopComponent.class, "CTL_GedcomExplorerTopComponent"));
         setToolTipText(NbBundle.getMessage(GedcomExplorerTopComponent.class, "HINT_GedcomExplorerTopComponent"));
@@ -46,15 +51,6 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(new GedcomFileChildren()));
         ((BeanTreeView) gedcomsPane).setRootVisible(false);
-    }
-
-        @Override
-    public void open() {
-             Mode m = WindowManager.getDefault().findMode ("genjfr-explorer");
-             if (m != null) {
-                m.dockInto(this);
-             }
-        super.open();
     }
 
     /** This method is called from within the constructor to
@@ -111,16 +107,21 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     }
 
     @Override
-    public boolean canClose(){return  false;}
+    public boolean canClose(){return  forceClose;}
 
     @Override
     public int getPersistenceType() {
         return TopComponent.PERSISTENCE_ALWAYS;
     }
 
+    // Closes explorer if no gedcom file opened
     @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
+    protected void componentOpened() {
+        super.componentOpened();
+        if( GedcomDirectory.getInstance().getContexts().isEmpty() ) {
+            forceClose = true;
+                close();
+        }
     }
 
     @Override
