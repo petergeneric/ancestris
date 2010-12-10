@@ -10,7 +10,7 @@
 <property name="original.project.jar"
           value="${original.project.dir}/dist/GenJ.jar"/>
 
-<target name="release">
+<target name="release.disabled">
     <echo message="Building ${original.project.dir}"/>
     <ant dir="${original.project.dir}"
         antfile="nb-build.xml"
@@ -30,8 +30,23 @@
     </copy>
 --></target>
 
+   <target name="compile" depends="projectized-common.compile,-post-compile"></target>
+     <target name="-post-compile">
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}/../images"/>
+        </copy>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}/../" includes="contrib/**"/>
+        </copy>
+        <copy todir="${build.classes.dir}" >
+            <fileset dir="${src.dir}/../language/fr" />
+            <fileset dir="${src.dir}/../language/en" />
+            <fileset dir="${src.dir}/../language/it" />
+        </copy>
 
-<target name="clean" depends="projectized-common.clean">
+    </target>
+
+<target name="clean.disabled" depends="projectized-common.clean">
     <echo message="Cleaning ${original.project.dir}"/>
     <ant dir="${original.project.dir}"
          target="clean" inheritall="false" inheritrefs="false"/>
