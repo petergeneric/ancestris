@@ -232,7 +232,7 @@ public class GedcomWriter implements IGedcomWriter {
     writeLine( "2 VERS "+Version.getInstance());
     writeLine( "2 NAME Ancestris");
     writeLine( "2 CORP "+RESOURCES.getString("header.corp","Ancestris"));
-    writeLine( "3 ADDR http://www.ancestris.com");
+    writeLine( "3 ADDR http://www.ancestris.org, http://www.ancestris.com");
     writeLine( "1 DEST ANY");
     writeLine( "1 DATE "+date);
     writeLine( "2 TIME "+time);

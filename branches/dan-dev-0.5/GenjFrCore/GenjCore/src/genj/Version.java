@@ -19,37 +19,22 @@
  */
 package genj;
 
-import genj.util.Resources;
+import genjfr.app.pluginservice.PluginInterface;
 
 /**
  * Type that encapsulates the GenJ Version
  */
 public class Version {
 
-  /** a version String */
-  private String version;
-
-  /** a build String */
-  private String build;
-
   /** Singleton reference */
   public static final Version singleton = new Version();
+  public static final PluginInterface plugref = new genjfr.genjcore.GenjCorePlugin();
 
   /**
    * Constructor
    */
   private Version() {
 
-    Resources r = Resources.get(this);
-    
-    version = r.getString("version", false);
-    if (version==null) 
-      version = "?";
-    
-    build = r.getString("build", false);
-    if (build==null)
-      build = "?";
-    
   }
 
   /**
@@ -63,14 +48,14 @@ public class Version {
    * The version number
    */
   public String getVersionString() {
-    return version;
+    return plugref.getPluginVersion();
   }
 
   /**
    * The build text
    */
   public String getBuildString() {
-    return build;
+    return plugref.getPluginVersion();
   }
 
   /**
