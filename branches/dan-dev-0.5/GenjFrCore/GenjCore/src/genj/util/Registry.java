@@ -434,6 +434,8 @@ public class Registry implements PropertyChangeListener {
 
       if (storage != null){
           storage.put(key,value);
+      } else {
+          Logger.getLogger("genj").fine("No storage set");
       }
   }
 
