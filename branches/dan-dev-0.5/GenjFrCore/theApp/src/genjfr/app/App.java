@@ -220,7 +220,11 @@ public class App {
             // Catch anything that might happen
             try {
 
+                // prepare our master log and own LogManager for GenJ
+                LOG = Logger.getLogger("genj");
+
                 // Install our preferences handler
+                LOG.fine("Setup Storage factory");
                 Registry.setStorageFactory(RegistryStorageFactory.getFactory());
 
                 // Install our dialog handler
@@ -233,8 +237,6 @@ public class App {
                     throw new IOException("Can't initialize home directoy " + home);
                 }
 
-                // prepare our master log and own LogManager for GenJ
-                LOG = Logger.getLogger("genj");
 
                 // prepare some basic logging for now
                 Formatter formatter = new LogFormatter();
