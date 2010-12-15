@@ -9,9 +9,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.util;
+package genj.util;
 
-import genj.util.IRegistryStorage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

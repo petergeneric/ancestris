@@ -31,21 +31,13 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -60,7 +52,6 @@ public class Registry implements PropertyChangeListener {
   
   private static Map<File, Registry> file2registry = new HashMap<File, Registry>();
 
-  private static IRegistryStorageFactory storageFactory = null;
   private IRegistryStorage storage = null;
 
   /**
@@ -87,13 +78,13 @@ public class Registry implements PropertyChangeListener {
   public Registry(InputStream in) {
     // Load settings
     prefix = "";
-    storage = storageFactory.get(in);
+    storage = RegistryStorageFactory.getFactory().get(in);
   }
   
   private Registry(File file) {
     // Load settings
     prefix = "";
-    storage = storageFactory.get(file);
+    storage = RegistryStorageFactory.getFactory().get(file);
   }
 
   /**
@@ -121,18 +112,14 @@ public class Registry implements PropertyChangeListener {
    * Accessor 
    */
   public static Registry get(Class<?> source) {
-      if (storageFactory!=null) {
-          return new Registry(storageFactory.get(source));
-      } else {
-        return get(source.getName());
-      }
+          return new Registry(RegistryStorageFactory.getFactory().get(source));
   }
   
   /**
    * Accessor 
    */
   public static Registry get(String pckg) {
-      return new Registry(storageFactory.get(pckg));
+      return new Registry(RegistryStorageFactory.getFactory().get(pckg));
   }
 
   /**
@@ -630,18 +617,6 @@ public class Registry implements PropertyChangeListener {
     // Done
   }
     
-  /**
-   * Set the the preference handler for that registry
-   */
-  public static void setStorageFactory(IRegistryStorageFactory factory) {
-      if (storageFactory == null)
-        storageFactory = factory;
-  }
-
-  public static IRegistryStorageFactory getStorageFactory() {
-      return storageFactory;
-    }
-
   /**
    * Save registries
    */

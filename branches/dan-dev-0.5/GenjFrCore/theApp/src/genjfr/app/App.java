@@ -20,7 +20,6 @@
 package genjfr.app;
 
 import ancestris.util.AncestrisPreferences;
-import ancestris.util.RegistryStorageFactory;
 import genj.Version;
 import genj.app.Options;
 import genj.app.WorkbenchHelper;
@@ -45,9 +44,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -222,10 +219,6 @@ public class App {
 
                 // prepare our master log and own LogManager for GenJ
                 LOG = Logger.getLogger("genj");
-
-                // Install our preferences handler
-                LOG.fine("Setup Storage factory");
-                Registry.setStorageFactory(RegistryStorageFactory.getFactory());
 
                 // Install our dialog handler
                 DialogHelper.setDialogManager(DialogManagerImp.getInstance());
