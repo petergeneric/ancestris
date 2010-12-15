@@ -143,12 +143,15 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   private boolean ignoreContextChange = false;
 
   private Sticky sticky = new Sticky();
+
+  private boolean followSelection = false;
   
   /**
    * Constructor
    */
   public TreeView() {
-    
+
+      followSelection = isFollowSelection();
     // remember
     DPI dpi = Options.getInstance().getDPI();
     DPMM = new Point2D.Float(
@@ -251,6 +254,15 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     // done
     super.removeNotify();
   }
+// TreeViw Preferences
+    public static boolean isFollowSelection() {
+        return REGISTRY.get("selection.follow",false);
+    }
+
+    public static void setFollowSelection(boolean followSelection) {
+        REGISTRY.put("selection.follow", followSelection);
+    }
+
   
   /**
    * ContextProvider callback
@@ -369,39 +381,23 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
         return;
     }
 
-    //TODO: on change la facon de prendre en compte une selection dans l'arbre
-//    // remember
-//   context = new Context(newContext.getGedcom(), newContext.getEntities());
-//
-//    // must root change?
-//    if (isActionPerformed || context.getGedcom()==null) {
-//      setRoot(context.getEntity());
-//      return;
-//    }
-//
-//    // nothing we can show?
-//    if (context.getEntity()==null)
-//      return;
-//
-//    // try to show - otherwise force
-//    if (!show(context.getEntity()))
-//      setRoot(context.getEntity());
-
-    // TODO: maintenant simpleclic: ignore
-    // double: on place la selection au centre sans changer de focus
-    // pour changer de root -> clic droit dans l'arbre
-        // remember
-    if (!isActionPerformed){
-        return;
+    if (isFollowSelection()){
+        if (isActionPerformed){
+            setRoot(newContext.getEntity());
+            return;
+        }
+    }else {
+        if (!isActionPerformed){
+            return;
+        }
     }
+
    context = new Context(newContext.getGedcom(), newContext.getEntities());
 
     // nothing we can show?
     if (context.getEntity()==null)
       return;
 
-    // try to show - otherwise don't force setroot
-//    show(context.getEntity(),true);
     show(context.getEntity(),false);
 
     // done

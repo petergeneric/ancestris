@@ -5,6 +5,7 @@
 package genjfr.app;
 
 import ancestris.util.AncestrisPreferences;
+import genj.tree.TreeView;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
@@ -48,6 +49,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel7 = new javax.swing.JLabel();
+        cbTreeFollowSelection = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
@@ -65,10 +68,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel6.text")); // NOI18N
         jLabel6.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel6.toolTipText")); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel2.text")); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel1.text")); // NOI18N
 
         jComboBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jComboBox2.toolTipText")); // NOI18N
@@ -80,10 +83,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jComboBox1.toolTipText")); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel4.text")); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel3.text")); // NOI18N
 
         jPanel1.setBackground(new java.awt.Color(179, 179, 179));
@@ -109,6 +112,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox1.text")); // NOI18N
         jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox1.toolTipText")); // NOI18N
+
+        jLabel7.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel7.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbTreeFollowSelection, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTreeFollowSelection.text")); // NOI18N
+        cbTreeFollowSelection.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTreeFollowSelection.tooltip")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -139,13 +148,14 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBox3)
-                                .addGap(154, 154, 154))))
+                            .addComponent(jCheckBox3)))
                     .addComponent(jLabel3)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(jCheckBox1)))
+                        .addComponent(jLabel7)
+                        .addGap(89, 89, 89)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbTreeFollowSelection)
+                            .addComponent(jCheckBox1))))
                 .addContainerGap(98, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -161,11 +171,15 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jCheckBox1))
-                        .addGap(47, 47, 47)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(cbTreeFollowSelection))
+                        .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCheckBox3)
                             .addComponent(jLabel4))
@@ -199,6 +213,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
         setSplitJurisdictions(editPrefs.get("isSplitJurisdictions", ""));
         setOpenEditor(editPrefs.get("isOpenEditor", ""));
+        cbTreeFollowSelection.setSelected(TreeView.isFollowSelection());
     }
 
     void store() {
@@ -213,6 +228,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         gedcomPrefs.put("numberOfUndos", getUndos());
         editPrefs.put("isSplitJurisdictions", getSplitJurisdictions());
         editPrefs.put("isOpenEditor", getOpenEditor());
+        TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
         
@@ -224,6 +240,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbTreeFollowSelection;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
@@ -236,6 +253,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables
