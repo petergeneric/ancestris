@@ -403,7 +403,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setAssoWeb("");
 
         setLogSize(appPrefs.get("maxLogSizeKB", ""));
-        setLogLevel(appPrefs.get("logLevel", "INFO"));
+        setLogLevel(AncestrisPreferences.get(App.class).get("logLevel", "INFO"));
     }
 
     void store() {
@@ -420,7 +420,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 //        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
 //        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
         appPrefs.put("maxLogSizeKB", getLogSize());
-        appPrefs.put("logLevel", getLogLevel());
+        AncestrisPreferences.get(App.class).put("logLevel", getLogLevel());
 
 //        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
 
