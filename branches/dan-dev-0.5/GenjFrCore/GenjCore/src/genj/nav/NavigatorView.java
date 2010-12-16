@@ -21,6 +21,7 @@ package genj.nav;
 
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.GedcomListenerAdapter;
@@ -173,13 +174,24 @@ public class NavigatorView extends View {
 
     // stay as is?
     Indi old = (Indi)context.getEntity();
-    if (old!=null && context.getGedcom().contains(old) && !(newContext.getEntity() instanceof Indi) ) 
+    if (old!=null && context.getGedcom().contains(old) && !(newContext.getEntity() instanceof Indi || newContext.getEntity() instanceof Fam) )
       return;
-    
-    // entity to take?
+
+    Indi newIndi = null;
     if (newContext.getEntity() instanceof Indi) {
+        newIndi = (Indi)newContext.getEntity();
+    } else if (newContext.getEntity() instanceof Fam){
+        Fam theFam = (Fam)newContext.getEntity();
+        if (theFam != null && theFam.getWife() != null)
+            newIndi = theFam.getWife();
+        if (theFam != null && theFam.getHusband() != null)
+            newIndi = theFam.getHusband();
+    }
+
+    // entity to take?
+    if (newIndi != null) {
       
-      context = new Context(newContext.getEntity());
+      context = new Context(newIndi);
 
       for (Component c : popupPanel.getComponents())
         c.setEnabled(true);
