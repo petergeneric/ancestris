@@ -29,7 +29,6 @@ public final class ActionSaveLayout implements ActionListener {
         if (selected == null){
             return;
         }
-//        Preferences prefs = NbPreferences.forModule(AncestrisTopComponent.class);
         AncestrisPreferences prefs = AncestrisPreferences.get(AncestrisTopComponent.class);
         Object date = prefs.get("openViews.date", (String)null) == null?
             new String(NbBundle.getMessage(this.getClass(), "TXT_ASL_never")):

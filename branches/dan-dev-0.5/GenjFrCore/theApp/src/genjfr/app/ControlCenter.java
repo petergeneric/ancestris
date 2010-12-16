@@ -140,13 +140,7 @@ public class ControlCenter extends JPanel{
             if (theFiles == null) {
                 theFiles = new ArrayList<String>();
             }
-//            addDefaultFile(theFiles);
 // TODO: demander l'ouverture d'un fichier gedcom si aucun fichier n'est ouvert. Comment?
-//            if (NbPreferences.forModule(App.class).get("optionswizard", "").equals("4")) {
-//                if (theFiles.isEmpty() && getDefaultFile(theFiles) == null) {
-//                    App.workbenchHelper.openGedcom();
-//                }
-//            }
             files = theFiles;
         }
 

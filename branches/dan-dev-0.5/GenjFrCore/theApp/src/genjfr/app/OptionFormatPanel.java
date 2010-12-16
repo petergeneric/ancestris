@@ -410,8 +410,6 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         gedcomPrefs.put("nameFormat", getDisplayNames());
         gedcomPrefs.put("dateFormat", getDisplayDates());
         
-//        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
-
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionPanel.saved.statustext"));
     }
 

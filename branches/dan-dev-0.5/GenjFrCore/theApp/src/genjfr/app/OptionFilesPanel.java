@@ -381,20 +381,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         jcbAlwaysOpen.setSelected(genjfr.app.Options.getAlwaysOpenDefault());
         setReportDir(gedcomPrefs.get("reportDir", ""));
 
-//TODO: not used atm        registry.put("options.associations", "6");
-//        registry.put("options.associations.1", NbPreferences.forModule(App.class).get("assoTxt", ""));
-//        registry.put("options.associations.2", NbPreferences.forModule(App.class).get("assoOffice", ""));
-//        registry.put("options.associations.3", NbPreferences.forModule(App.class).get("assoAdobe", ""));
-//        registry.put("options.associations.4", NbPreferences.forModule(App.class).get("assoImages", ""));
-//        registry.put("options.associations.5", NbPreferences.forModule(App.class).get("assoSound", ""));
-//        registry.put("options.associations.6", NbPreferences.forModule(App.class).get("assoWeb", ""));
-
-//        setAssoTxt(NbPreferences.forModule(App.class).get("assoTxt", ""));
-//        setAssoOffice(NbPreferences.forModule(App.class).get("assoOffice", ""));
-//        setAssoAdobe(NbPreferences.forModule(App.class).get("assoAdobe", ""));
-//        setAssoImages(NbPreferences.forModule(App.class).get("assoImages", ""));
-//        setAssoSound(NbPreferences.forModule(App.class).get("assoSound", ""));
-//        setAssoWeb(NbPreferences.forModule(App.class).get("assoWeb", ""));
+//TODO: not used atm        registry.put("options.associations", "6");...
         setAssoTxt("");
         setAssoOffice("");
         setAssoAdobe("");
@@ -413,16 +400,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         genjfr.app.Options.setDefaultGedcom(getGedcomFile());
         genjfr.app.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
-//        NbPreferences.forModule(App.class).put("assoTxt", getAssoTxt());
-//        NbPreferences.forModule(App.class).put("assoOffice", getAssoOffice());
-//        NbPreferences.forModule(App.class).put("assoAdobe", getAssoAdobe());
-//        NbPreferences.forModule(App.class).put("assoImages", getAssoImages());
-//        NbPreferences.forModule(App.class).put("assoSound", getAssoSound());
-//        NbPreferences.forModule(App.class).put("assoWeb", getAssoWeb());
         appPrefs.put("maxLogSizeKB", getLogSize());
         AncestrisPreferences.get(App.class).put("logLevel", getLogLevel());
-
-//        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));
 

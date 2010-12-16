@@ -504,9 +504,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("defaultEncoding", getEncoding());
         appPrefs.put("isWriteBOM", getBOM());
 
-//        NbPreferences.forModule(App.class).put("optionswizard", "4"); // should be same as in the wizard
-
-
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
     }
 

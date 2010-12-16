@@ -230,8 +230,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         editPrefs.put("isOpenEditor", getOpenEditor());
         TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
 
-//        NbPreferences.forModule(App.class).put("optionswizard", "3"); // should be same as in the wizard
-        
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
     }
 
