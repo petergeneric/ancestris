@@ -38,7 +38,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.PreferenceChangeListener;
 
 import javax.swing.JFrame;
 
@@ -51,6 +53,7 @@ public class Registry implements PropertyChangeListener {
   private String prefix;
   
   private static Map<File, Registry> file2registry = new HashMap<File, Registry>();
+  private static Logger LOG =Logger.getLogger("genj");
 
   private IRegistryStorage storage = null;
 
@@ -61,11 +64,13 @@ public class Registry implements PropertyChangeListener {
     if (registry.prefix.length()>0)
       view = registry.prefix + "." + view;
     this.prefix = view;
+    LOG.info("set storage to registry storage");
     this.storage = registry.storage;
   }
 
 
     protected Registry(IRegistryStorage preference) {
+    LOG.info("set storage to preference storage");
         this.storage = preference;
         this.prefix = "";
     }
@@ -78,12 +83,14 @@ public class Registry implements PropertyChangeListener {
   public Registry(InputStream in) {
     // Load settings
     prefix = "";
+    LOG.info("set storage to input streams storage");
     storage = RegistryStorageFactory.getFactory().get(in);
   }
   
   private Registry(File file) {
     // Load settings
     prefix = "";
+    LOG.info("set storage to file storage");
     storage = RegistryStorageFactory.getFactory().get(file);
   }
 
@@ -122,6 +129,9 @@ public class Registry implements PropertyChangeListener {
       return new Registry(RegistryStorageFactory.getFactory().get(pckg));
   }
 
+  void addPreferenceChangeListener(PreferenceChangeListener pcl){
+      storage.addPreferenceChangeListener(pcl);
+  }
   /**
    * Remove keys
    */
@@ -405,11 +415,11 @@ public class Registry implements PropertyChangeListener {
    * Returns String parameter to key
    */
   public String get(String key, String def) {
-    
+      LOG.log(Level.FINER, "get registry key {0}", key);
       if (storage != null){
           return storage.get(key,def);
       } else {
-          Logger.getLogger("genj").fine("No storage set");
+          Logger.getLogger("genj").severe("No storage set");
       }
       return def;
   }
@@ -418,11 +428,11 @@ public class Registry implements PropertyChangeListener {
    * Remembers a String value
    */
   public void put(String key, String value) {
-
+      LOG.log(Level.FINER, "put registry key {0}={1}", new String[]{key,value});
       if (storage != null){
           storage.put(key,value);
       } else {
-          Logger.getLogger("genj").fine("No storage set");
+          Logger.getLogger("genj").severe("No storage set");
       }
   }
 
