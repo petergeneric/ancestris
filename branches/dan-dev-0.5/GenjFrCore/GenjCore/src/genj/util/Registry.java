@@ -129,9 +129,9 @@ public class Registry implements PropertyChangeListener {
       return new Registry(RegistryStorageFactory.getFactory().get(pckg));
   }
 
-  void addPreferenceChangeListener(PreferenceChangeListener pcl){
-      storage.addPreferenceChangeListener(pcl);
-  }
+//  void addPreferenceChangeListener(PreferenceChangeListener pcl){
+//      storage.addPreferenceChangeListener(pcl);
+//  }
   /**
    * Remove keys
    */
