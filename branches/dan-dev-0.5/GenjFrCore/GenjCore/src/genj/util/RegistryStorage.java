@@ -24,6 +24,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.PreferenceChangeListener;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 
@@ -128,6 +129,11 @@ public abstract class RegistryStorage implements IRegistryStorage {
                 properties.put(key, value);
             }
         }
+
+        @Override
+        public void addPreferenceChangeListener(PreferenceChangeListener pcl) {
+            // Nothing for properties
+        }
     }
 
     private static class SortingProperties extends java.util.Properties {
@@ -198,6 +204,11 @@ public abstract class RegistryStorage implements IRegistryStorage {
             } catch (BackingStoreException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }
+
+        @Override
+        public void addPreferenceChangeListener(PreferenceChangeListener pcl) {
+            preferences.addPreferenceChangeListener(pcl);
         }
     }
 }

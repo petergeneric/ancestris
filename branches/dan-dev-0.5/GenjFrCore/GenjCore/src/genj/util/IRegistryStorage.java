@@ -12,6 +12,8 @@
 
 package genj.util;
 
+import java.util.prefs.PreferenceChangeListener;
+
 /**
  *
  * @author daniel.andre
@@ -24,4 +26,6 @@ public interface IRegistryStorage {
     public void remove(String key);
 
     public void persist();
+
+    public void addPreferenceChangeListener(PreferenceChangeListener pcl);
 }
