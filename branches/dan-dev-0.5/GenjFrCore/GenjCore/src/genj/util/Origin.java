@@ -313,7 +313,7 @@ public abstract class Origin {
      */
     public File getFile() {
       // only for locals
-      if (!"file".equals(url.getProtocol()))
+      if (!"file".equals(url.getProtocol()) && !"jar".equals(url.getProtocol()))
         return null;
       return new File(url.getFile());
     }

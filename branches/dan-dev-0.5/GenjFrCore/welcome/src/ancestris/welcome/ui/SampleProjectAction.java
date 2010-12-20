@@ -42,13 +42,12 @@
 
 package ancestris.welcome.ui;
 
+import ancestris.samples.api.SampleProvider;
+import genjfr.app.App;
+import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.URL;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -57,28 +56,11 @@ import org.openide.util.Lookup;
 public class SampleProjectAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
-        Action sampleProject = createSampleProjectAction();
-        if( null != sampleProject ) {
-            sampleProject.putValue( "PRESELECT_CATEGORY", "Samples" ); // NOI18N
-
-            sampleProject.actionPerformed( e );
-        }
-    }
-
-    private static Action createSampleProjectAction() {
-        ClassLoader loader = Lookup.getDefault().lookup( ClassLoader.class );
-        if( null == loader )
-            loader = ClassLoader.getSystemClassLoader();
+        SampleProvider sp = GenjFrPlugin.lookup(SampleProvider.class);
+        URL url;
         try {
-            Class clazz = Class.forName( "org.netbeans.modules.project.ui.actions.NewProject", true, loader ); // NOI18N
-            Method getDefault = clazz.getMethod( "newSample"); // NOI18N
-            Object newSample = getDefault.invoke( null );
-            if( newSample instanceof Action )
-                return (Action)newSample;
-        } catch( Exception e ) {
-            Logger.getLogger(SampleProjectAction.class.getName()).log( Level.INFO, null, e );
-        }
-        return null;
+            url = sp.getSampleGedcomURL();
+            App.workbenchHelper.openGedcom(url);
+        } catch (Exception ex){}
     }
-
 }

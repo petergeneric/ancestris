@@ -253,15 +253,18 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     // .. choose file
     Box options = new Box(BoxLayout.Y_AXIS);
     options.add(new JLabel(RES.getString("save.options.encoding")));
+
     ChoiceWidget comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
     comboEncodings.setEditable(false);
     comboEncodings.setSelectedItem(context.getGedcom().getEncoding());
     options.add(comboEncodings);
+
     options.add(new JLabel(RES.getString("save.options.password")));
     String pwd = context.getGedcom().getPassword();
     TextFieldWidget textPassword = new TextFieldWidget(context.getGedcom().hasPassword() ? pwd : "", 10);
     textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
     options.add(textPassword);
+
     File file = helper.chooseFile(RES.getString("cc.save.title"), RES.getString("cc.save.action"), options);
     if (file == null)
       return false;
