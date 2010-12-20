@@ -6,7 +6,7 @@
 3 ADDR http://www.ancestris.org, http://www.ancestris.com
 1 DEST ANY
 1 DATE 20 DEC 2010
-2 TIME 13:35:17
+2 TIME 15:48:36
 1 SUBM @B1@
 1 FILE bourbon.ged
 1 GEDC
@@ -72,18 +72,45 @@
 1 WIFE @I2@
 1 MARR
 2 DATE 21 NOV 1615
-2 PLAC ,Bordeaux,33063,,Gironde,,FRANCE
+2 PLAC ,BORDEAUX,33063,,Gironde,,FRANCE
 1 CHIL @I3@
 1 CHIL @I4@
 1 CHAN
-2 DATE 19 DEC 2010
-3 TIME 15:38:27
+2 DATE 20 DEC 2010
+3 TIME 14:04:28
 0 @I3@ INDI
 1 NAME Louis XIV /CAPET/
 1 SEX M
 1 BIRT
 2 DATE 5 SEP 1638
 2 PLAC ,SAINT-GERMAIN-EN-LAYE,78551,,Yvelines,,FRANCE
+2 SOUR @S1@
+3 OBJE
+4 TITL Acte de Baptême de Louis XIV
+4 FILE actes/Bapteme_Louis_XIV.jpg
+5 FORM jpg
+4 FILE actes/Transcription_bapteme_Louis_XIV.pdf
+5 FORM pdf
+4 NOTE Lien de l'acte : http://doc.geneanet.org/actes/zoom.php?idacte=121616
+3 DATA
+4 TEXT Le cinquiesme jour de septembre mil six
+5 CONT cents trente huict nasquit dans le chasteau
+5 CONT neuf de St Germain en Laye a onze heures
+5 CONT un quart du matin Monseigneur le dauphin
+5 CONT fils premier nay de tres chrestien et tres puissant
+5 CONT Monarqz Louys treiziesme de ce nom Roy
+5 CONT de france et de Navarre et de tres religieuse
+5 CONT et Illustre Princesse Anne d'Austriche
+5 CONT sa tres chaste et chere Espouse Et funt Incontinent
+5 CONT apres et le mesme Jour Ondoye par le
+5 CONT Reverand Pere en Dieu Messire dominiqz
+5 CONT Seguier Evesqz de Meaux et premier Aumosnier
+5 CONT de sa Maj[es]te avec les eaues baptismales des
+5 CONT fonts de la paroisse dud[it] lieu de st Germain en 
+5 CONT Laye bailles et livrees par Me Pierre
+5 CONT Cagnye pbre et cure de ladicte
+5 CONT Paroisse
+5 CONT Bailly
 1 DEAT
 2 DATE 1 SEP 1715
 2 PLAC ,VERSAILLES,78646,,Yvelines,,FRANCE
@@ -120,7 +147,7 @@
 2 NOTE
 1 CHAN
 2 DATE 20 DEC 2010
-3 TIME 12:01:22
+3 TIME 14:48:36
 0 @I4@ INDI
 1 NAME Philippe I /CAPET/
 2 NICK D'Orléans
@@ -135,7 +162,7 @@
 1 FAMS @F6@
 1 OBJE
 2 TITL Phillipe II d'Orléans
-2 FILE photos/Philippe_2.jpg
+2 FILE photos/Philippe_II.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
@@ -249,7 +276,7 @@
 3 TIME 09:43:33
 0 @I9@ INDI
 1 NAME Louis /CAPET/
-2 NICK DUC DE BOURGOGNE
+2 NICK Duc de Bourgogne
 1 SEX M
 1 BIRT
 2 DATE 6 AUG 1682
@@ -261,12 +288,12 @@
 1 FAMS @F5@
 1 OBJE
 2 TITL Louis, Duc de BOURGOGNE
-2 FILE photos/Duc_de_bourgogne.jpg
+2 FILE photos/Duc_de_Bourgogne.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
 2 DATE 20 DEC 2010
-3 TIME 09:51:59
+3 TIME 14:10:53
 0 @I10@ INDI
 1 NAME Marie-Adélaïde /DE SAVOIE/
 1 SEX F
@@ -279,7 +306,7 @@
 1 FAMS @F5@
 1 OBJE
 2 TITL Marie-Adélaïde DE SAVOIE
-2 FILE photos/MariaAdelaidevonSavoyen02.jpg
+2 FILE photos/Maria_Adelaide_von_Savoyen_02.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
@@ -325,7 +352,7 @@
 3 TIME 11:02:09
 0 @I12@ INDI
 1 NAME Charlotte-Élisabeth /VON DER PFALZ-SIMMERN/
-2 NICK DE BAVIÈre
+2 NICK De Bavière
 1 SEX F
 1 BIRT
 2 DATE 27 MAY 1652
@@ -336,7 +363,7 @@
 1 FAMS @F6@
 1 CHAN
 2 DATE 20 DEC 2010
-3 TIME 10:11:52
+3 TIME 14:08:40
 0 @F6@ FAM
 1 HUSB @I4@
 1 WIFE @I12@
@@ -346,7 +373,7 @@
 3 TIME 10:14:14
 0 @I13@ INDI
 1 NAME Philippe II /CAPET/
-2 NICK D'ORLÉANS
+2 NICK D'Orléans
 1 SEX M
 1 BIRT
 2 DATE 2 AUG 1674
@@ -361,12 +388,12 @@
 1 FAMS @F7@
 1 OBJE
 2 TITL Philippe d'Orléans
-2 FILE photos/Philippe_Orléans.jpg
+2 FILE photos/Philippe_Orleans.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
 2 DATE 20 DEC 2010
-3 TIME 10:27:16
+3 TIME 14:10:22
 0 @I14@ INDI
 1 NAME Françoise Marie /DE BOURBON/
 1 SEX F
@@ -403,7 +430,7 @@
 1 REPO @R2@
 1 CHAN
 2 DATE 20 DEC 2010
-3 TIME 11:40:59
+3 TIME 14:34:15
 0 @R1@ REPO
 1 NAME Archives Départementales de Seine-Saint-Denis
 1 ADDR 18 avenue du Président Salvador Allende
@@ -426,7 +453,7 @@
 1 FAMS @F8@
 1 OBJE
 2 TITL Marie LESZCZYNSKA
-2 FILE photos/Marie_LESZCZYNSKA.jpg
+2 FILE photos/Marie_Leszczynska.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
@@ -455,7 +482,7 @@
 1 FAMS @F9@
 1 OBJE
 2 TITL Louis de France
-2 FILE photos/Louis_de_France2.jpg
+2 FILE photos/Louis_de_France_02.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
@@ -474,7 +501,7 @@
 1 FAMS @F9@
 1 OBJE
 2 TITL Marie-Josèphe DE SAXE
-2 FILE photos/Marie-Josèphe_de_Saxe.jpg
+2 FILE photos/Marie-Josephe_de_Saxe.jpg
 3 FORM jpg
 2 NOTE
 1 CHAN
