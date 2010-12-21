@@ -14,7 +14,13 @@ package ancestris.samples;
 
 import ancestris.samples.api.SampleProvider;
 import genjfr.app.pluginservice.GenjFrPlugin;
+import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -25,8 +31,25 @@ import org.openide.util.lookup.ServiceProvider;
 public class SamplePlugin extends GenjFrPlugin implements SampleProvider {
 
     @Override
-    public URL getSampleGedcomURL() {
-        return this.getClass().getResource("resources/bourbon.ged");
+    public File getSampleGedcomFile() {
+        try {
+            final URL jarUrl = this.getClass().getResource("");
+            final JarURLConnection connection = (JarURLConnection) jarUrl.openConnection();
+            File basedir = FileUtil.archiveOrDirForURL(connection.getJarFileURL()).getParentFile().getParentFile();
+            return new File(basedir, "exemples" + File.separator + "gen-bourbon" + File.separator + "bourbon.ged");
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
     }
 
+    @Override
+    public URL getSampleGedcomURL() {
+        try {
+            return getSampleGedcomFile().toURI().toURL();
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
 }

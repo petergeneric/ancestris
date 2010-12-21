@@ -12,6 +12,7 @@
 
 package ancestris.samples.api;
 
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -19,5 +20,6 @@ import java.net.URL;
  * @author daniel
  */
 public interface SampleProvider {
+    public File getSampleGedcomFile();
     public URL getSampleGedcomURL();
 }

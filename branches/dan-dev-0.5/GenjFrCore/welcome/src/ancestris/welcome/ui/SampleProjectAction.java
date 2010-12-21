@@ -48,6 +48,7 @@ import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import javax.swing.AbstractAction;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -61,6 +62,8 @@ public class SampleProjectAction extends AbstractAction {
         try {
             url = sp.getSampleGedcomURL();
             App.workbenchHelper.openGedcom(url);
-        } catch (Exception ex){}
+        } catch (Exception ex){
+            Exceptions.printStackTrace(ex);
+        }
     }
 }
