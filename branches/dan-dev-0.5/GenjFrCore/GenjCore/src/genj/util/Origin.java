@@ -23,11 +23,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -331,8 +329,8 @@ public abstract class Origin {
         return new File(file);
       
       // should be in parent directory
-      return new File(getFile().getParent(), file);
-    }
+          return new File(getFile().getParent(), file);
+      }
 
 
   } //DefaultOrigin
