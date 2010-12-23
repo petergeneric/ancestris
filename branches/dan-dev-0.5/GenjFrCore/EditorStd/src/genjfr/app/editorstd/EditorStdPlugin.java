@@ -16,9 +16,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
 public class EditorStdPlugin extends GenjFrPlugin{
-    @Override
-    public Collection<Class> getDefaultOpenedViews() {
-        return Arrays.asList(new Class[]{EditorStdTopComponent.class});
-    }
+//    @Override
+//    public Collection<Class> getDefaultOpenedViews() {
+//        return Arrays.asList(new Class[]{EditorStdTopComponent.class});
+//    }
 
 }
