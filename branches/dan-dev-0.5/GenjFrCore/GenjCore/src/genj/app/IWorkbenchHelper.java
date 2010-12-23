@@ -1,6 +1,7 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
+ * modification qui ne sert qu'a forcer une MAJ du core
  */
 
 package genj.app;
