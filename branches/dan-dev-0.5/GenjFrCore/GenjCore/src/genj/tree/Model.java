@@ -98,7 +98,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
   private Entity root;
 
   /** metrics */
-  private TreeMetrics metrics = new TreeMetrics( 60, 30, 30, 15, 10 );
+  private TreeMetrics metrics = new TreeMetrics( 66, 40, 80, 7, 10 );
   
   /** bookmarks */
   private LinkedList<Bookmark> bookmarks = new LinkedList<Bookmark>();
@@ -227,7 +227,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
   }
 
   /**
-   * Accessor - the metrics   */
+   * Accessor - the metrics
+   */
   public TreeMetrics getMetrics() {
     return metrics;
   } 
@@ -299,7 +300,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
     // nothing found
     return null;
   }
-     /**
+   
+  /**
    * Content by position
    */
   public Object getContentAt(int x, int y) {
@@ -427,7 +429,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
   }
   
   /**
-   * Adds a node   */
+   * Adds a node
+   */
   /*package*/ TreeNode add(TreeNode node) {
     // check content
     Object content = node.getContent();
@@ -439,7 +442,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
   }
   
   /**
-   * Adds an arc   */
+   * Adds an arc
+   */
   /*package*/ TreeArc add(TreeArc arc) {
     arcs.add(arc);
     return arc;
@@ -453,7 +457,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
   }
 
   /**
-   * Parses the current model starting at root   */
+   * Parses the current model starting at root
+   */
   private void update() {
     
     // clear old
