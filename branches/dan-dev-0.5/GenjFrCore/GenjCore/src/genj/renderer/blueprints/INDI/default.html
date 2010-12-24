@@ -1,19 +1,24 @@
- <table width=100%>
+ <table width="100%" border="1">
  <tr valign=top>
  <td>
-   <b><prop path=INDI></b>
+   <font color="blue"><b><prop path=INDI></b></font> [<prop path=INDI:SEX img=yes txt=no>]
    <br>
-   <prop path=INDI:SEX img=yes txt=no>
-    <prop path=INDI:NAME>
+   <b><prop path=INDI:NAME></b>
    <br>
-   <prop path=INDI:BIRT:DATE img=yes>,
-    <prop path=INDI:BIRT:PLAC >
    <br>
-   <prop path=INDI:RESI:ADDR><br>
-    <prop path=INDI:RESI:ADDR:CITY img=yes>,
-     <prop path=INDI:RESI:ADDR:POST>
-  </td><td valign=top align=right>
-   <media max=25>
+   <i><name tag=BIRT></i>&nbsp;:&nbsp;<prop path=INDI:BIRT:DATE img=no>&nbsp;
+   (<prop path=INDI:BIRT:PLAC>)
+   <br>
+   <i><name tag=DEAT></i>&nbsp;:&nbsp;<prop path=INDI:DEAT:DATE img=no>&nbsp;
+   (<prop path=INDI:DEAT:PLAC>)
+   <br>
+   <i><name tag=ADDR></i>&nbsp;:&nbsp;<prop path=INDI:RESI:ADDR:CITY img=yes>
+   <br>
+   <i><name tag=OCCU></i>&nbsp;:&nbsp;<prop path=INDI:OCCU img=no>
+  </td>
+  <td valign=top align=right>
+   <media max=30>
   </td>
  </tr>
  </table>
+<!-- Modele Ancestris 0.5 - http://www.ancestris.org - last updated : 24/12/2010 -->
