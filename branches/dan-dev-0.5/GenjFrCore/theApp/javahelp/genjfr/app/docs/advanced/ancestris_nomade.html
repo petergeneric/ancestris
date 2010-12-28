@@ -21,22 +21,28 @@ and open the template in the editor.
           <br>
           <u><b>Vous &ecirc;tes sous Windows</b></u> :<br>
           <ul>
-              <li>On commence par rep&eacute;rer o&ugrave; est sa cl&eacute; USB dans l'arborescence de vos r&eacute;pertoires.<br> 
+              <li>On commence par rep&eacute;rer o&ugrave; est sa cl&eacute; USB dans 
+              l'arborescence de vos r&eacute;pertoires.<br> 
               Vous devriez voir appara&icirc;tre votre cl&eacute; dans votre
               navigateur de fichiers.</li>
               <li>Vous cr&eacute;ez sur la racine de votre cl&eacute;, un r&eacute;pertoire que
               l'on pourrait appeler "ancestris".<br>
               Sous Windows, vous pourriez avoir quelque
-              chose du genre : E:\ancestris (si E: est la lettre attribu&eacute;e par Windows &agrave;
-              votre cl&eacute;).</li>
+              chose du genre : F:\ancestris (si F: est la lettre attribu&eacute;e par 
+              Windows &agrave; votre cl&eacute;).</li>
               <li>Dans ce sous r&eacute;pertoire "ancestris", vous placez le fichier que
-              vous venez de t&eacute;l&eacute;charger. Il s'appelle en g&eacute;n&eacute;ral ancestris_xxxxx.zip.
-              (xxxx est &agrave; remplacer par le num&eacute;ro de version du fichier que vous venez de t&eacute;l&eacute;charger -
-              ex: ancestris_0.2-2.zip ou ancestris-20100226.zip)</li>
+              vous venez de t&eacute;l&eacute;charger. Il s'appelle en g&eacute;n&eacute;ral 
+              ancestris-windows.exe. Il vous suffit de le lancer et de demander 
+              &agrave; ce que tout s'installe sur votre cl&eacute; USB. Il est 
+              possible aussi que vous ayez t&eacute;l&eacute;charg&eacute; une 
+              version interm&eacute;diaire, dont le nom est sous 
+              la forme ancestris_xxxxx.zip. (xxxx est &agrave; remplacer par le num&eacute;ro 
+              de version du fichier que vous venez de t&eacute;l&eacute;charger -
+              ex: ancestris_0.2-2.zip ou ancestris-20100226.zip).</li> 
               <li>Vous d&eacute;compressez le fichier ancestris_xxxxx.zip, il va se cr&eacute;er
               tous les sous-r&eacute;pertoires n&eacute;cessaires. Une fois que c'est fait, vous pouvez, pour
               gagner un peu de place, effacer le fichier ancestris_xxxxx.zip, vous n'en aurez
-              plus besoin.</li>
+              plus besoin. Idem si vous aviez repris le fichier ancestris-windows.exe</li>
               <li>Vous &ecirc;tes sous Windows, vous pourriez utilement mettre dans le
               r&eacute;pertoire "ancestris\bin" de votre cl&eacute; (c'est l&agrave; que vous allez trouver
               un fichier ex&eacute;cutable, qui s'appelle ancestris.exe), un petit fichier bat
@@ -45,7 +51,8 @@ and open the template in the editor.
               texte, genre Notepad, et vous faites un copier/coller, du texte ci-dessous
               (les 3 lignes qui suivent et attention qu'elles soient bien sur trois lignes)
               dans votre &eacute;diteur, ensuite vous sauvegardez ce texte en appelant le fichier
-              nouvellement cr&eacute;&eacute; "runancestris.bat" (faites "Sauvegarder Sous").
+              nouvellement cr&eacute;&eacute; "runancestris.bat" (faites "Sauvegarder Sous"). 
+              Sur la capture d'&eacute;cran, il s'appelle simplement "run".
                   <div class="code_citation">
                   rem - Ce fichier sert a lancer le logiciel de genealogie Ancestris -<br>
                   @echo off<br>
@@ -54,7 +61,7 @@ and open the template in the editor.
               Voil&agrave; un exemple de ce &agrave; quoi ressemble l'arborescence des fichiers
               de la cl&eacute; USB sous un syst&egrave;me Windows&nbsp;:<br>
               <img src="../images/screenshots/ancestris_nomade.png" alt="Arborescence
-                   de la cle USB sous Windows" border="0" width="258" height="429"><br>
+                   de la cle USB sous Windows" border="0" width="600" height="504"><br>
               </li>
               <li>Je vous conseille de cr&eacute;er un sous-r&eacute;pertoire ancestris\gedcom
               (sous Windows), et dans ce sous-r&eacute;pertoire "gedcom", vous y
@@ -89,9 +96,12 @@ and open the template in the editor.
               apparaÎtra sur votre bureau.<br>Ouvrez votre cl&eacute; et
               cr&eacute;ez un nouveau dossier que vous nommerez par exemple
               &laquo;ancestris&raquo;.</li>
-              <li>T&eacute;l&eacute;chargez le fichier sur le site d'Ancestris :
-                  <a href="http://www.arvernes.com/wiki/index.php/Ancestris">http://www.arvernes.com/wiki/index.php/Ancestris</a>.<br>
-              Il s'appelle en g&eacute;n&eacute;ral ancestris_xxxxx.zip.
+              <li>T&eacute;l&eacute;chargez Ancestris sur le site d'Ancestris :
+                  <a href="http://www.ancestris.org">http://www.ancestris.org</a>.<br>
+              Plusieurs possibilit&eacute;s mais on va supposer que vous t&eacute;l&eacute;charg&eacute; 
+              le fichier ancestris-linux.sh. Vous avez pu aussi t&eacute;l&eacute;charger 
+              un fichier interm&eacute;diaire qui est disponible sous la d&eacute;nomination 
+              ancestris_xxxxx.zip.
               (xxxx est &agrave; remplacer par le num&eacute;ro de version du
               fichier que vous venez de t&eacute;l&eacute;charger - ex:
               ancestris_0.2-2.zip ou ancestris-20100226.zip). Vous pouvez demander
@@ -100,7 +110,10 @@ and open the template in the editor.
               &laquo;Onglet g&eacute;n&eacute;ral&raquo;. rep&eacute;rez la ligne &laquo;Enregistrer
               les fichiers dans le dossier&raquo;. Cliquez sur parcourir et choisissez
               le lieu de stockage, dans notre cas, il s'agit de votre cl&eacute; usb
-              et du dossier ancestris.</li>
+              et du dossier ancestris.<br>
+              Si vous avez repris le fichier ancestris-linux.sh, il vous suffit 
+              d'ouvrir un terminal, de copier ce fichier sur votre cl&eacute;, et 
+              de lancer la commande "sh ancestris-linux.sh".</li>
               <li>Rendez-vous ensuite dans votre r&eacute;pertoire ancestris de votre
               cl&eacute; USB, o&ugrave; vous trouverez le fichier zipp&eacute; fraichement
               t&eacute;l&eacute;charg&eacute;, cliquez droit dessus et descendez sur la ligne
