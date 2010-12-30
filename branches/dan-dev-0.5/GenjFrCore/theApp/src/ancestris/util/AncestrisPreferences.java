@@ -4,9 +4,9 @@
  */
 package ancestris.util;
 
-import genj.util.RegistryStorageFactory;
 import genj.util.IRegistryStorage;
 import genj.util.Registry;
+import genj.util.RegistryStorage;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -28,7 +28,7 @@ public class AncestrisPreferences extends Registry {
      * Accessor
      */
     public static AncestrisPreferences get(Class<?> source) {
-        return new AncestrisPreferences(RegistryStorageFactory.getFactory().get(source));
+        return new AncestrisPreferences(RegistryStorage.get(source));
     }
 
     /**

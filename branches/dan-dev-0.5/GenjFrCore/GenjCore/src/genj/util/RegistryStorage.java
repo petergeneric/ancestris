@@ -37,6 +37,11 @@ public abstract class RegistryStorage implements IRegistryStorage {
     private final static Logger LOG = Logger.getLogger("ancestris.util");
     String prefix = "";
 
+    public static IRegistryStorage get(Class cls) {
+        return new Preferences(cls);
+    }
+
+    // FIXME: DAN 20101230: not used shall we remove it?
     protected static class Properties extends RegistryStorage {
 
         java.util.Properties properties = null;
@@ -152,11 +157,16 @@ public abstract class RegistryStorage implements IRegistryStorage {
         private java.util.prefs.Preferences preferences = null;
 
         protected Preferences(Class cls) {
-            preferences = NbPreferences.forModule(cls).node(cls.getName().replace('.', '/'));
+            this(cls,cls.getPackage().getName().replace('.', '-'));
+        }
+        protected Preferences(Class cls, String fileName){
+            preferences = NbPreferences.forModule(cls);
+            if (fileName != null && !fileName.isEmpty())
+                preferences = preferences.node(fileName);
         }
 
-        protected Preferences(String pckg) {
-            preferences = NbPreferences.root().node(pckg.replace('.', '/'));
+        protected Preferences(String path) {
+            preferences = NbPreferences.root().node(path);
         }
 
         public void remove(String key) {
@@ -164,7 +174,6 @@ public abstract class RegistryStorage implements IRegistryStorage {
             if (prefix.length() > 0) {
                 key = prefix + "." + key;
             }
-
             preferences.remove(key);
         }
 

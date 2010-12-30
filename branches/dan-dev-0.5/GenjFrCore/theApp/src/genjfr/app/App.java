@@ -477,8 +477,7 @@ public class App {
    * FIXME: mettre dans ancestrispreferences
    */
   public static Registry getRegistry(Gedcom gedcom) {
-    return Registry.get(new File(EnvironmentChecker.getProperty("user.home.genj", ".", "calculate dir for registry"),
-            gedcom.getName()+".properties"));
+      return gedcom.getRegistry();
   }
 
   private static class AppPlugin extends GenjFrPlugin{

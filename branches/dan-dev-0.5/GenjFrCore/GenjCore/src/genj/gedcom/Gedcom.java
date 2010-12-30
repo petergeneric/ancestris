@@ -23,6 +23,7 @@ package genj.gedcom;
 
 import genj.util.Origin;
 import genj.util.ReferenceSet;
+import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.SafeProxy;
 import genj.util.swing.ImageIcon;
@@ -1252,6 +1253,20 @@ public class Gedcom implements Comparable {
     return resources;
   }
 
+  /**
+   * Helper that returns registry for gedcom
+   * TODO: getRegistry(gedcom) a mettre ailleurs
+   * le fichier gedcom.properties est maintenant dans le home user dir
+   * DAN 20101230: now in PreferencesRoot/gedcoms/settings/...
+   * TODO: Attention cela a pour inconvenient de ne par pouvoir ouvrir (dans la vie d'ancestris)
+   * TODO: deux fichiers portant le meme nom sans collision des reglages.
+   * TODO: dans l'avenir on pourra marquer les proprietes par un id que l'on attachera au
+   * TODO: fichier gedcom dans une des proprietes.
+   * FIXME: mettre dans ancestrispreferences
+   */
+  public Registry getRegistry(){
+    return Registry.get("gedcoms/settings/"+getName());
+  }
   /**
    * Accessor - encoding
    */

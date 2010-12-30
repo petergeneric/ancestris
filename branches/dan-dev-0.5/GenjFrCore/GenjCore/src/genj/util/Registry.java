@@ -75,38 +75,41 @@ public class Registry implements PropertyChangeListener {
         this.prefix = "";
     }
 
+//FIXME: used only for LnF. To be removed as LnF will be refactored
   /**
    * Constructor for registry loaded from InputStream
    * that can't be looked up and won't be saved
    * @param InputStream to load registry from
    */
-  public Registry(InputStream in) {
-    // Load settings
-    prefix = "";
-    LOG.info("set storage to input streams storage");
-    storage = RegistryStorageFactory.getFactory().get(in);
-  }
+//  public Registry(InputStream in) {
+//    // Load settings
+//    prefix = "";
+//    LOG.info("set storage to input streams storage");
+//    storage = new RegistryStorage.Properties(in);
+//  }
   
-  private Registry(File file) {
-    // Load settings
-    prefix = "";
-    LOG.info("set storage to file storage");
-    storage = RegistryStorageFactory.getFactory().get(file);
-  }
+// FIXME: not used: to be removed
+//  private Registry(File file) {
+//    // Load settings
+//    prefix = "";
+//    LOG.info("set storage to file storage");
+//    storage = new RegistryStorage.Properties(file);
+//  }
 
-  /**
-   * Registry representation of a file - changes are committed
-   */
-  public static Registry get(File file) {
-    synchronized (Registry.class) {
-      Registry r = file2registry.get(file);
-      if (r==null) {
-        r = new Registry(file);
-        file2registry.put(file, r);
-      }
-      return r;
-    }
-  }
+// FIXME: not used: to be removed
+//  /**
+//   * Registry representation of a file - changes are committed
+//   */
+//  public static Registry get(File file) {
+//    synchronized (Registry.class) {
+//      Registry r = file2registry.get(file);
+//      if (r==null) {
+//        r = new Registry(file);
+//        file2registry.put(file, r);
+//      }
+//      return r;
+//    }
+//  }
 
   /**
    * Accessor 
@@ -119,14 +122,14 @@ public class Registry implements PropertyChangeListener {
    * Accessor 
    */
   public static Registry get(Class<?> source) {
-          return new Registry(RegistryStorageFactory.getFactory().get(source));
+          return new Registry(new RegistryStorage.Preferences(source));
   }
   
   /**
    * Accessor 
    */
   public static Registry get(String pckg) {
-      return new Registry(RegistryStorageFactory.getFactory().get(pckg));
+      return new Registry(new RegistryStorage.Preferences(pckg));
   }
 
   public void addPreferenceChangeListener(PreferenceChangeListener pcl){
