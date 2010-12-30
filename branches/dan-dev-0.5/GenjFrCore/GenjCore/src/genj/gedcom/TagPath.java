@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @version 0.1 04/21/98
  * @version 2004/08/25 made immutable
  */
-public class TagPath {
+public class TagPath implements Comparable{
   
   /** a logical name */
   private String name = null;
@@ -421,5 +421,10 @@ public class TagPath {
         return true;
     return false;
   }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
+    }
   
 } //TagPath
