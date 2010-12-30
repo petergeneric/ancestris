@@ -27,6 +27,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
+import genj.view.SelectionSink;
 
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
@@ -80,6 +81,7 @@ public class DelProperty extends AbstractChange {
     
     // leaving an orphan?
     Set<Entity> orphans = new HashSet<Entity>();
+    Property parent = null;
 
     for (Property prop : candidates) {
       
@@ -87,8 +89,8 @@ public class DelProperty extends AbstractChange {
         orphans.add( ((PropertyXRef)prop).getTargetEntity() );
         orphans.add( prop.getEntity() );
       }
-      
-      prop.getParent().delProperty(prop);
+      parent = prop.getParent();
+      parent.delProperty(prop);
     }
     
     // check for and delete orphans
@@ -96,7 +98,8 @@ public class DelProperty extends AbstractChange {
       if (!(orphan instanceof Indi || orphan.isConnected()))
         gedcom.deleteEntity(orphan);
     }
-
+    if (parent != null)
+        SelectionSink.Dispatcher.fireSelection(new Context(parent), false);
     // nothing to go to
     return null;
   }

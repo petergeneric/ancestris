@@ -19,6 +19,7 @@
  */
 package genj.edit;
 
+import genj.app.Workbench;
 import genj.common.SelectEntityWidget;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
@@ -63,6 +64,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import javax.swing.Action;
@@ -99,8 +101,9 @@ import javax.swing.tree.TreePath;
   private final static Clipboard clipboard = initClipboard();
   
   private final static Registry REGISTRY = Registry.get(AdvancedEditor.class);
-  
-  private Set<TagPath> expands = new HashSet<TagPath>();
+
+  // Doit etre trie car une sequence du type IND:BIRT:OBJE,IND:BIRT ne deplie pas le obje sous le birt
+  private Set<TagPath> expands = new TreeSet<TagPath>();
   
   private boolean ignoreTreeSelection = false;
 
@@ -168,7 +171,7 @@ import javax.swing.tree.TreePath;
 
     // SplitPane with tree/edit
     splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treePane, editScroll);
-    splitPane.setDividerLocation(REGISTRY.get("divider",-1));
+    splitPane.setDividerLocation(REGISTRY.get("divider",300));
     splitPane.addPropertyChangeListener(new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         if (JSplitPane.DIVIDER_LOCATION_PROPERTY.equals(evt.getPropertyName()))
@@ -285,6 +288,7 @@ import javax.swing.tree.TreePath;
     
     Property prop = props.get(props.size()-1);
     try {
+          expand(prop.getPath());
 
       // get a bean for property
       bean = PropertyBean.getBean(prop.getClass()).setContext(prop);
@@ -480,9 +484,19 @@ import javax.swing.tree.TreePath;
       // now cut
       gedcom.doMuteUnitOfWork(new UnitOfWork() {
         public void perform(Gedcom gedcom) {
-          for (Property p : selection)  
-            p.getParent().delProperty(p);
+            Property parent = null;;
+          for (Property prop : selection){
+              parent = prop.getParent();
+              parent.delProperty(prop);
+            }
+          if (parent != null){
+              SelectionSink.Dispatcher.fireSelection(new Context(parent), false);
+              // FIXME: probablement pas necessaire puisque le expande est deja fait par le setContext
+              // Mais on assure au cas ou...
+              expand(parent.getPath());
+          }
         }
+
       });
       // done
     }
