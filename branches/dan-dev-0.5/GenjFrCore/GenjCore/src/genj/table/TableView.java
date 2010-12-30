@@ -71,11 +71,32 @@ public class TableView extends View {
       modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{"SUBM","SUBM:NAME" }));
       modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{"REPO","REPO:NAME", "REPO:NOTE"}));
     };
-    
+
+  private Map<String, String> defaultLayouts = new HashMap<String, String>();
+    {
+      defaultLayouts.put(Gedcom.INDI, "8,60,180,40,100,200,160,250,250");
+      defaultLayouts.put(Gedcom.FAM , "6,60,100,200,180,180,180");
+      defaultLayouts.put(Gedcom.OBJE, "2,60,300");
+      defaultLayouts.put(Gedcom.NOTE, "2,60,800");
+      defaultLayouts.put(Gedcom.SOUR, "3,60,300,500");
+      defaultLayouts.put(Gedcom.SUBM, "2,60,300");
+      defaultLayouts.put(Gedcom.REPO, "3,60,300,500");
+    };
+
   /** current type we're showing */
   private Mode currentMode;
   
   private Sticky sticky = new Sticky();
+
+  // TableView Preferences
+    public static boolean getFollowEntity() {
+        return REGISTRY.get("entity.follow",false);
+    }
+
+    public static void setFollowEntity(boolean followEntity) {
+        REGISTRY.put("entity.follow", followEntity);
+    }
+
 
   /**
    * Constructor
@@ -191,11 +212,14 @@ public class TableView extends View {
     
     // pick good mode
     Mode mode = getModeFor(context);
-    if (mode!=currentMode)
-      mode.setSelected(true);
+    boolean followEntity = false;
+    if (getFollowEntity())
+        if (mode!=currentMode)
+          mode.setSelected(true);
 
-    // select
-    propertyTable.select(context);
+    if (mode == currentMode)
+        // select
+        propertyTable.select(context);
   }
 
   private Mode getModeFor(Context context) {
@@ -475,7 +499,7 @@ public class TableView extends View {
       if (ps!=null) 
         paths = TagPath.toArray(ps);
 
-      layout = REGISTRY.get(tag+".layout", (String)null);
+      layout = REGISTRY.get(tag+".layout", defaultLayouts.get(tag));
       
     }
     

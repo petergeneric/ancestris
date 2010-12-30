@@ -5,6 +5,7 @@
 package genjfr.app;
 
 import ancestris.util.AncestrisPreferences;
+import genj.table.TableView;
 import genj.tree.TreeView;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
@@ -51,6 +52,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
         cbTreeFollowSelection = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        cbTableFollowEntity = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
@@ -119,6 +122,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbTreeFollowSelection, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTreeFollowSelection.text")); // NOI18N
         cbTreeFollowSelection.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTreeFollowSelection.tooltip")); // NOI18N
 
+        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel8.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbTableFollowEntity, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTableFollowEntity.text")); // NOI18N
+        cbTableFollowEntity.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTableFollowEntity.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,11 +160,14 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jCheckBox3)))
                     .addComponent(jLabel3)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
                         .addGap(89, 89, 89)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbTreeFollowSelection)
-                            .addComponent(jCheckBox1))))
+                            .addComponent(jCheckBox1)
+                            .addComponent(cbTableFollowEntity))))
                 .addContainerGap(98, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -171,7 +183,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jCheckBox1))
@@ -179,6 +191,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(cbTreeFollowSelection))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(cbTableFollowEntity))
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCheckBox3)
@@ -214,6 +230,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         setSplitJurisdictions(editPrefs.get("isSplitJurisdictions", ""));
         setOpenEditor(editPrefs.get("isOpenEditor", ""));
         cbTreeFollowSelection.setSelected(TreeView.isFollowSelection());
+        cbTableFollowEntity.setSelected(TableView.getFollowEntity());
     }
 
     void store() {
@@ -229,6 +246,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         editPrefs.put("isSplitJurisdictions", getSplitJurisdictions());
         editPrefs.put("isOpenEditor", getOpenEditor());
         TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
+        TableView.setFollowEntity(cbTableFollowEntity.isSelected());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
     }
@@ -238,6 +256,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbTableFollowEntity;
     private javax.swing.JCheckBox cbTreeFollowSelection;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
@@ -252,6 +271,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables

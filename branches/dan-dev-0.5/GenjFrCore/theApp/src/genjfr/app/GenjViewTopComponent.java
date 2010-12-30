@@ -24,6 +24,7 @@ import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -49,7 +50,6 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import org.openide.util.lookup.ServiceProvider;
-//import org.openide.util.ImageUtilities;
 
 /**
  * Top component which displays something.
@@ -95,10 +95,32 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
   private final static Logger LOG = Logger.getLogger("genj.app");
   private final static ContextHook HOOK = new ContextHook();
 
+    /*
+     * lors de l'initialisation de la vue la taille du panel n'est pas correcte (0,0)
+     * donc le node n'est pas centre dans la vue. Ce flag permet de lancer un recentrage lorsque
+     * la taille a ete positionnee correctement et donc de refaire un centrage correct
+     * apres.
+     */
+    private boolean sizeIsCorrect = false;
+
     public View getView() {
         return view;
     }
 
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (!sizeIsCorrect) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    getView().setContext(getContext(), true);
+                }
+            });
+            sizeIsCorrect = true;
+        }
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -142,6 +164,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         return getViewFactory().getImage().getImage();
     }
 
+    @Override
     public boolean createPanel(){
         if (getViewFactory() == null)
            return false;
@@ -448,7 +471,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     setContext(context);
 
     if (context.getGedcom()!=null)
-      App.getRegistry(context.getGedcom()).put(context.getGedcom().getName()+".context", context.toString());
+        context.getGedcom().getRegistry().put("context", context.toString());
 
         if (view != null)
           view.setContext(context, isActionPerformed);
