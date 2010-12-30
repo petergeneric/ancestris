@@ -4,15 +4,9 @@
  */
 package genjfr.app;
 
-import genj.app.Workbench;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
-//import org.openide.util.ImageUtilities;
-import java.awt.Graphics;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -29,14 +23,6 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     private static TreeTopComponent factory;
     private static ViewFactory viewfactory = new TreeViewFactory();
     private static final String PREFERRED_ID = "TreeTopComponent";
-
-    /*
-     * lors de l'initialisation de la vue la taille du panel n'est pas correcte (0,0)
-     * donc le node n'est pas centre dans la vue. Ce flag permet de lancer un recentrage lorsque
-     * la taille a ete positionnee correctement et donc de refaire un centrage correct
-     * apres.
-     */
-    private boolean sizeIsCorrect = false;
 
     ViewFactory getViewFactory() {
         return viewfactory;
@@ -87,43 +73,25 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         super.writeProperties(p);
     }
 
-    @Override
-    public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
-        // FIXME: peut etre faut il le placer ailleurs ou faire autrement...
-        Entity root = ((TreeView) getView()).getRoot();
-        if (root != null){
-            genj.util.Registry r = App.getRegistry(gedcom);
-            r.put("tree.root", ((TreeView) getView()).getRoot().getId());
-            r.persist();
-        }
-        super.gedcomClosed(workbench, gedcom);
-    }
-
     Object readProperties(java.util.Properties p) {
         readPropertiesImpl(p);
         return this;
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        if (!sizeIsCorrect) {
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    String root = App.getRegistry(getContext().getGedcom()).get("tree.root", (String) null);
-                    TreeView v = (TreeView) getView();
-                    if (root != null) {
-                        v.setRoot(getContext().getGedcom().getEntity(root));
-                    }
-                    if (v.getRoot() == null){
-                        v.setRoot(getContext().getEntity());
-                    }
-                    getView().setContext(getContext(), true);
-                }
-            });
-            sizeIsCorrect = true;
+    public boolean createPanel() {
+        if (super.createPanel()) {
+            String root = getContext().getGedcom().getRegistry().get("tree.root", (String) null);
+            TreeView v = (TreeView) getView();
+            if (root != null) {
+                v.setRoot(getContext().getGedcom().getEntity(root));
+            }
+            if (v.getRoot() == null){
+                v.setRoot(getContext().getEntity());
+            }
+            return true;
         }
+        return false;
     }
 
     @Override
