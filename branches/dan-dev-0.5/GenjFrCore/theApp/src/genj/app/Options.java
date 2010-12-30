@@ -19,7 +19,6 @@
  */
 package genj.app;
 
-import genj.lnf.LnF;
 import genj.option.Option;
 import genj.option.OptionProvider;
 import genj.option.PropertyOption;
@@ -118,42 +117,43 @@ private final static String[] codes = {"en","de","fr","hu","es","nl","ru","it","
     return instance;
   }
 
-  /**
-   * Getter - looknfeel
-   */
-  public int getLookAndFeel() {
-    // this is invoked once on option introspection
-    if (lookAndFeel<0)
-      setLookAndFeel(0);
-    return lookAndFeel;
-  }
-
-  /**
-   * Setter - looknfeel
-   */
-  public void setLookAndFeel(int set) {
-
-    // Check against available LnFs
-    LnF[] lnfs = LnF.getLnFs();
-    if (set<0||set>lnfs.length-1)
-      set = 0;
-
-    // set it - 20091134 making this a restart only change
-    lnfs[set].apply(null);
-
-    // remember for restart
-    lookAndFeel = set;
-
-    // done
-  }
-
-  /**
-   * Getter - looknfeels
-   */
-  public LnF[] getLookAndFeels() {
-    return LnF.getLnFs();
-  }
-
+//FIXME: To be removed as LnF will be refactored
+//  /**
+//   * Getter - looknfeel
+//   */
+//  public int getLookAndFeel() {
+//    // this is invoked once on option introspection
+//    if (lookAndFeel<0)
+//      setLookAndFeel(0);
+//    return lookAndFeel;
+//  }
+//
+//  /**
+//   * Setter - looknfeel
+//   */
+//  public void setLookAndFeel(int set) {
+//
+//    // Check against available LnFs
+//    LnF[] lnfs = LnF.getLnFs();
+//    if (set<0||set>lnfs.length-1)
+//      set = 0;
+//
+//    // set it - 20091134 making this a restart only change
+//    lnfs[set].apply(null);
+//
+//    // remember for restart
+//    lookAndFeel = set;
+//
+//    // done
+//  }
+//
+//  /**
+//   * Getter - looknfeels
+//   */
+//  public LnF[] getLookAndFeels() {
+//    return LnF.getLnFs();
+//  }
+//
   /**
    * Setter - language
    */
