@@ -195,7 +195,7 @@ public class Context {
     StringBuffer result = new StringBuffer();
     result.append(gedcom.getName());
     for (Entity entity : entities) {
-      result.append(";");
+      result.append("|");
       result.append(entity.getId());
       
       for (Property prop : properties) {
@@ -214,7 +214,7 @@ public class Context {
     List<Entity> entities = new ArrayList<Entity>();
     List<Property> properties = new ArrayList<Property>();
 
-    String[] es = toString.split(";");
+    String[] es = toString.split("\\|");
     
     // first is gedcom name
     if (!es[0].equals(gedcom.getName()))
