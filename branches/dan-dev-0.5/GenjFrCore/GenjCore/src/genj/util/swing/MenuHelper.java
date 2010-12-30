@@ -152,8 +152,9 @@ public class MenuHelper  {
     if (action instanceof Action2)
       result.setMnemonic(((Action2)action).getMnemonic());
     
-    // add it to current menu on stack  
-    menus.peek().add(result);
+    // add it to current menu on stack
+    if (!menus.empty())
+        menus.peek().add(result);
       
     // done
     return result;
@@ -167,6 +168,8 @@ public class MenuHelper  {
    * Creates an separator
    */
   public MenuHelper createSeparator() {
+      if (menus.empty())
+          return this;
     // try to create one
     JComponent menu = menus.peek();
     if (menu instanceof JMenu) {

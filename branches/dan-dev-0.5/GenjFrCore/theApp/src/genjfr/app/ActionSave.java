@@ -17,7 +17,7 @@ import java.awt.event.ActionEvent;
 public class ActionSave extends Action2 {
 
     /** gedcom */
-    protected Gedcom gedcomBeingSaved;
+    private Context contextBeingSaved = null;
     private Resources RES = Resources.get("genj.app");
 
     public ActionSave() {
@@ -27,11 +27,20 @@ public class ActionSave extends Action2 {
         setImage(Images.imgSave);
     }
 
+    public ActionSave(Context context) {
+        this();
+        contextBeingSaved = context;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        Context context = App.center.getSelectedContext(true);
-        if (context != null)  {
-            App.workbenchHelper.saveGedcom(context);
+        if (contextBeingSaved != null){
+            App.workbenchHelper.saveGedcom(contextBeingSaved);
+        } else {
+            Context context = App.center.getSelectedContext(true);
+            if (context != null)  {
+                App.workbenchHelper.saveGedcom(context);
+            }
         }
     }
 } // ActionSave

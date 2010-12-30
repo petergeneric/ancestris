@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 public class ActionClose extends Action2 {
 
     private Resources RES = Resources.get("genj.app");
+    private Context contextBeingClosed = null;
 
     /** constructor */
     public ActionClose() {
@@ -30,13 +31,21 @@ public class ActionClose extends Action2 {
         setImage(Images.imgClose);
         setEnabled(enabled);
     }
+    public ActionClose(Context context) {
+        this();
+        contextBeingClosed = context;
+    }
 
     /** run */
     @Override
     public void actionPerformed(ActionEvent event) {
-        Context context = App.center.getSelectedContext(true);
-        if (context != null)
-            App.workbenchHelper.closeGedcom(context);
+        if (contextBeingClosed != null){
+            App.workbenchHelper.closeGedcom(contextBeingClosed);
+        } else {
+            Context context = App.center.getSelectedContext(true);
+            if (context != null)
+                App.workbenchHelper.closeGedcom(context);
+        }
     }
 } //ActionClose
 

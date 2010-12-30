@@ -27,7 +27,7 @@ import org.openide.windows.RetainLocation;
 @ConvertAsProperties(dtd = "-//genjfr.explorer//GedcomExplorer//EN",
 autostore = false)
 @RetainLocation("genjfr-explorer")
-public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider, ContextProvider{
+public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider/*, ContextProvider*/{
 
     private static GedcomExplorerTopComponent instance;
     /** path to the icon used by the component and its open action */

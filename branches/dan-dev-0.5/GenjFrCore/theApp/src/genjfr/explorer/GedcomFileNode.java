@@ -7,21 +7,15 @@ package genjfr.explorer;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.Action2;
-import genj.view.ActionProvider;
-import genj.view.ActionProvider.Purpose;
-import genj.view.ViewContext;
 import genjfr.app.ActionClose;
 import genjfr.app.ActionSave;
-import genjfr.app.pluginservice.GenjFrPlugin;
 import genjfr.util.MyContext;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -38,11 +32,15 @@ import org.openide.util.lookup.Lookups;
 class GedcomFileNode extends AbstractNode implements ExplorerNode {
 
     Context context;
+    Action2 closeAction = null;
+    Action2 saveAction = null;
 
     /** Creates a new instance of GedcomFileNode */
     public GedcomFileNode(Gedcom gedcom) {
         super(new EntitiesChildren(gedcom), Lookups.singleton(gedcom));
         context = new Context(gedcom);
+        closeAction = new ActionClose(context);
+        saveAction = new ActionSave(context);
         setDisplayName(gedcom.getName());
     }
 
@@ -91,8 +89,8 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
             return null;
         }
         List<Action2> nodeactions = new ArrayList<Action2>(8);
-        nodeactions.add(new ActionSave());
-        nodeactions.add(new ActionClose());
+        nodeactions.add(saveAction);
+        nodeactions.add(closeAction);
         nodeactions.addAll(vcontext.getPopupActions());
 
         // done

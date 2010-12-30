@@ -38,7 +38,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ActionPresenterProvider.class, position = 1)
 public class MyActionPresenter extends ActionPresenterProvider {
-    
+
+    private static MenuHelper mh = new MenuHelper();
+
     private ActionPresenterProvider getOther(){
        Collection<? extends ActionPresenterProvider> a = Lookup.getDefault().lookup(new Lookup.Template(ActionPresenterProvider.class)).allInstances();
        for (ActionPresenterProvider app: a) {
@@ -57,9 +59,6 @@ public class MyActionPresenter extends ActionPresenterProvider {
 
     public final JMenuItem createPopupPresenter(Action action) {
         if (action instanceof Action2) {
-            MenuHelper mh = new MenuHelper();
-
-            mh.createPopup();
             return mh.createItem(action);
         } else {
             return getOther().createPopupPresenter(action);
