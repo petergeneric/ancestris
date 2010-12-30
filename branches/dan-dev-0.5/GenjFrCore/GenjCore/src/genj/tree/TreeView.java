@@ -144,14 +144,11 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
 
   private Sticky sticky = new Sticky();
 
-  private boolean followSelection = false;
-  
   /**
    * Constructor
    */
   public TreeView() {
 
-      followSelection = isFollowSelection();
     // remember
     DPI dpi = Options.getInstance().getDPI();
     DPMM = new Point2D.Float(
@@ -244,8 +241,8 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
     
     // root    
-    if (model.getRoot()!=null) 
-      REGISTRY.put("root", model.getRoot().getId());
+    if (model.getRoot()!=null)
+        model.getRoot().getGedcom().getRegistry().put("tree.root", model.getRoot().getId());
     
     // stoppers
     REGISTRY.put("hide.ancestors"  , model.getHideAncestorsIDs());
@@ -254,7 +251,8 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     // done
     super.removeNotify();
   }
-// TreeViw Preferences
+
+  // TreeViw Preferences
     public static boolean isFollowSelection() {
         return REGISTRY.get("selection.follow",false);
     }
