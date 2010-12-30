@@ -350,10 +350,31 @@ public class DateWidget extends JPanel {
       WordBuffer result = new WordBuffer();
       result.append(newCalendar.getName());
       result.setFiller(" - ");
+
       try {
-        PointInTime pit = DateWidget.this.getValue().getPointInTime(newCalendar);
-        result.append(pit.getDayOfWeek(true));
-        result.append(pit);
+      PointInTime p = DateWidget.this.getValue();
+      if (p.isComplete()) {
+            PointInTime pit = p.getPointInTime(newCalendar);
+            result.append(pit.getDayOfWeek(true));
+            result.append(pit);
+      } else {
+          PointInTime from,to;
+          if (p.getMonth() == PointInTime.UNKNOWN){
+              from = new PointInTime(PointInTime.UNKNOWN,0,p.getYear(),p.getCalendar());
+              to = (new PointInTime());
+              to.set(from);
+              to.add(0,-1,1);
+              from.set(PointInTime.UNKNOWN,from.getMonth(),from.getYear());
+              to.set(PointInTime.UNKNOWN,to.getMonth(),to.getYear());
+          } else {
+              from = new PointInTime(0,p.getMonth(),p.getYear(),p.getCalendar());
+              to = new PointInTime();
+              to.set(from);
+              to.add(-1,1,0);
+          }
+              result.append(from.getPointInTime(newCalendar));
+              result.append(to.getPointInTime(newCalendar));
+      }
       } catch (Throwable t) {
       }
       setText(result.toString());

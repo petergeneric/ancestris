@@ -258,15 +258,32 @@ public class PointInTime implements Comparable<PointInTime> {
     // has to be valid
     if (!isValid())
       throw new GedcomException(resources.getString("pit.invalid"));
-    // has to be complete
-    if (!isComplete())
-      throw new GedcomException(resources.getString("pit.incomplete"));
-    // convert to julian date
-    int jd = getJulianDay();
-    // convert to new instance
-    set(cal.toPointInTime(jd));
+    set(convertIncomplete(cal));
+    return;
+//    // has to be complete
+//    if (!isComplete())
+//      throw new GedcomException(resources.getString("pit.incomplete"));
+//    // convert to julian date
+//    int jd = getJulianDay();
+//    // convert to new instance
+//    set(cal.toPointInTime(jd));
   }  
-  
+
+  PointInTime convertIncomplete(Calendar cal) throws GedcomException{
+      PointInTime pt;
+      if (day == UNKNOWN)
+          if (month  == UNKNOWN){
+              pt = new PointInTime(0,0,year,calendar);
+              pt.set(cal);
+              return new PointInTime(UNKNOWN,UNKNOWN,pt.getYear(),cal);
+          } else {
+              pt = new PointInTime(0,month,year,calendar);
+              pt.set(cal);
+              return new PointInTime(UNKNOWN,pt.getMonth(),pt.getYear(),cal);
+          }
+      else
+          return cal.toPointInTime(getJulianDay());
+  }
   /**
    * Setter
    */
