@@ -129,6 +129,8 @@ public class TableView extends View {
   }
   
   public Gedcom getGedcom() {
+    if (propertyTable == null)
+        return null;
     PropertyTableModel model = propertyTable.getModel();
     return model!=null ? model.getGedcom() : null;
   }
@@ -208,11 +210,14 @@ public class TableView extends View {
     if (old==null||old.getGedcom()!=context.getGedcom()) {
       propertyTable.setModel(new Model(context.getGedcom(), currentMode));
       propertyTable.setColumnLayout(currentMode.layout);
+      // refresh modes
+      for (Mode mode : modes.values())
+        mode.load();
+
     }
     
     // pick good mode
     Mode mode = getModeFor(context);
-    boolean followEntity = false;
     if (getFollowEntity())
         if (mode!=currentMode)
           mode.setSelected(true);
@@ -495,12 +500,18 @@ public class TableView extends View {
     /** load properties from registry */
     private void load() {
       
-      String[] ps = REGISTRY.get(tag+".paths" , (String[])null);
+      String[] ps = null;
+      Gedcom gedcom = getGedcom();
+      if (gedcom != null) {
+        ps = gedcom.getRegistry().get(tag + ".paths", (String[]) null);
+        layout = gedcom.getRegistry().get(tag+".layout", defaultLayouts.get(tag));
+      } else {
+          // Defaults values
+        ps = REGISTRY.get(tag + ".paths", (String[]) null);
+        layout = REGISTRY.get(tag+".layout", defaultLayouts.get(tag));
+      }
       if (ps!=null) 
-        paths = TagPath.toArray(ps);
-
-      layout = REGISTRY.get(tag+".layout", defaultLayouts.get(tag));
-      
+        paths = TagPath.toArray(ps);      
     }
     
     /** set paths */
@@ -521,9 +532,15 @@ public class TableView extends View {
       // grab current column widths & sort column
       if (currentMode==this && propertyTable.getModel()!=null) 
         layout = propertyTable.getColumnLayout();
-
+      Gedcom gedcom = getGedcom();
+      if (gedcom != null) {
+        gedcom.getRegistry().put(tag+".paths" , paths);
+	gedcom.getRegistry().put(tag+".layout", layout);
+      } else {
+          // Defaults values
 	    REGISTRY.put(tag+".paths" , paths);
 	    REGISTRY.put(tag+".layout", layout);
+      }
     }
     
     /** tag */
