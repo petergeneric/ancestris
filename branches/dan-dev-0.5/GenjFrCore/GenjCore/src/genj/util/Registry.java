@@ -64,13 +64,12 @@ public class Registry implements PropertyChangeListener {
     if (registry.prefix.length()>0)
       view = registry.prefix + "." + view;
     this.prefix = view;
-    LOG.info("set storage to registry storage");
     this.storage = registry.storage;
   }
 
 
     protected Registry(IRegistryStorage preference) {
-    LOG.info("set storage to preference storage");
+    LOG.fine("set storage to preference storage");
         this.storage = preference;
         this.prefix = "";
     }
@@ -133,19 +132,13 @@ public class Registry implements PropertyChangeListener {
   }
 
   public void addPreferenceChangeListener(PreferenceChangeListener pcl){
-      if (storage == null)
-          LOG.severe("try to add PreferenceChangeListner w/o storage");
-      else
-          storage.addPreferenceChangeListener(pcl);
+      storage.addPreferenceChangeListener(pcl);
   }
   /**
    * Remove keys
    */
   public void remove(String prefix) {
-      if (storage != null){
-          storage.remove(prefix);
-          return;
-      }
+     storage.remove(prefix);
   }
   
   /**
@@ -422,12 +415,7 @@ public class Registry implements PropertyChangeListener {
    */
   public String get(String key, String def) {
       LOG.log(Level.FINER, "get registry key {0}", key);
-      if (storage != null){
-          return storage.get(key,def);
-      } else {
-          Logger.getLogger("genj").severe("No storage set");
-      }
-      return def;
+      return storage.get(key,def);
   }
 
   /**
@@ -435,11 +423,7 @@ public class Registry implements PropertyChangeListener {
    */
   public void put(String key, String value) {
       LOG.log(Level.FINER, "put registry key {0}={1}", new String[]{key,value});
-      if (storage != null){
-          storage.put(key,value);
-      } else {
-          Logger.getLogger("genj").severe("No storage set");
-      }
+      storage.put(key,value);
   }
 
   /**
