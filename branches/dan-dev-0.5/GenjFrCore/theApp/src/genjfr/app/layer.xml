@@ -458,10 +458,34 @@
         </file>
     </folder>
     <folder name="Toolbars">
+        <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
+        <file name="Standard.xml" url="Standard.xml"/>
         <folder name="Nav">
             <file name="genjfr-app-ActionHistory.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-ActionHistory.instance"/>
-                <attr name="position" intvalue="900"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="genjfr-app-QuickSearch.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-quicksearch-QuickSearchAction.instance"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+        </folder>
+        <folder name="Help">
+            <file name="MyOptions.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="genjfr-app-ActionAPropos.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAPropos.instance"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="genjfr-tools-calc-SendAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-tools-calc-SendAction.instance"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="org-netbeans-modules-javahelp-HelpAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-javahelp-HelpAction.instance"/>
+                <attr name="position" intvalue="400"/>
             </file>
         </folder>
         <folder name="File">
