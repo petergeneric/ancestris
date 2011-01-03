@@ -286,7 +286,7 @@ public class Almanac {
     /** look into ./contrib/almanac */
     protected File getDirectory() {
       return new File(EnvironmentChecker.getProperty(
-          new String[]{ "genj.almanac.dir", "user.home.genj/contrib/almanac"},
+          new String[]{ "genj.almanac.dir", "user.home.genj/almanac"},
           "contrib/almanac",
           "find almanac files"
         ));
