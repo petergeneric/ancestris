@@ -23,6 +23,12 @@ import genj.gedcom.Context;
 
 public interface MySelectionListener extends SelectionListener{
 
+  /**
+   * Change le contexte de la vue dans laquelle le clic a ete fait. Cette action peut etre differente
+   * de celle effectuee par clic dans une autre vue (setContext)
+   * @param context
+   * @param isActionPerformed
+   */
   public void setMyContext(Context context, boolean isActionPerformed);
   
 }
