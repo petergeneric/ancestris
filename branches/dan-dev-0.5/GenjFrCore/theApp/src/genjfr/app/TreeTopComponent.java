@@ -99,7 +99,7 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     public void runWhenSizeIsCorrect() {
         TreeView v = (TreeView) getView();
         v.setRoot(v.getRoot());
-        super.runWhenSizeIsCorrect();
+        v.show(v.getContext().getEntity(), true);
     }
 
     @Override

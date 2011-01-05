@@ -396,11 +396,11 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     if (context.getEntity()==null)
       return;
 
-    show(context.getEntity(),false);
+    show(context.getEntity());
 
     // done
   }
-  
+
   /**
    * Set current entity
    */
@@ -427,13 +427,16 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   }
   
   /**
-   * Set current entity, force root if not shown
+   * Show current entity, show root if failed
    */
-  /*package*/ public boolean show(Entity entity, boolean forceRoot) {
-        // try to show - otherwise force setroot
-        if (!show(context.getEntity()) && forceRoot)
-          setRoot(context.getEntity());
-        return true;
+  /*package*/ public boolean show(Entity entity, boolean fallbackRoot) {
+        // try to show
+        if (show(context.getEntity()))
+          return true;
+        // otherwise try root
+        if (fallbackRoot)
+          return show(getRoot());
+        return false;
     }
       /**
    * Scroll to given position
