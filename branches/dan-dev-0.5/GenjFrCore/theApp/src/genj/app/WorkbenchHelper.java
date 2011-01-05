@@ -114,7 +114,10 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         if (context != null) {
             GedcomDirectory.getInstance().registerGedcom(context);
             openDefaultViews(context);
-            SelectionSink.Dispatcher.fireSelection((Component) null, context, true);
+            //FIXME: etait true. Cela faisait changer le root dans l'arbre
+            // bizarre car cela ne devrait pas etre le cas meme avec true...
+            // Voir si avec false il n'y a pas d'effet de bord et si cela corrige le pb de prise en compte du root
+            SelectionSink.Dispatcher.fireSelection((Component) null, context, false);
         }
         return context;
     }
