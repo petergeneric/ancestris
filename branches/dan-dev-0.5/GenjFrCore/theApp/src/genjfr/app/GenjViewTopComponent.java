@@ -115,11 +115,15 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
             SwingUtilities.invokeLater(new Runnable() {
 
                 public void run() {
-                    getView().setContext(getContext(), true);
+                    runWhenSizeIsCorrect();
                 }
             });
             sizeIsCorrect = true;
         }
+    }
+
+    public void runWhenSizeIsCorrect(){
+        getView().setContext(getContext(), true);
     }
 
     /** This method is called from within the constructor to

@@ -7,6 +7,7 @@ package genjfr.app;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
+import java.awt.Graphics;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -92,6 +93,13 @@ public final class TreeTopComponent extends GenjViewTopComponent {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void runWhenSizeIsCorrect() {
+        TreeView v = (TreeView) getView();
+        v.setRoot(v.getRoot());
+        super.runWhenSizeIsCorrect();
     }
 
     @Override
