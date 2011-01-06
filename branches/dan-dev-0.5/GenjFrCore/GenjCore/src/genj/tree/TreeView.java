@@ -382,7 +382,6 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     if (isFollowSelection()){
         if (isActionPerformed){
             setRoot(newContext.getEntity());
-            return;
         }
     }else {
         if (!isActionPerformed){
@@ -407,8 +406,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   /*package*/ public boolean show(Entity entity) {
     
     // allowed?
-    if (!(entity instanceof Indi||entity instanceof Fam)) 
-      return true;
+    if (!(entity instanceof Indi||entity instanceof Fam))
+        // FIXME: ne devrait-on pas plutot renvoyer false dans ce cas?
+        return true;
     
     // Node for it?
     TreeNode node = model.getNode(entity);
