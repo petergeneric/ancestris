@@ -5,6 +5,7 @@
 
 package genjfr.app;
 
+import genj.gedcom.Context;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
@@ -13,10 +14,6 @@ import java.util.Map;
 /** Opens a Genj top component.
  *
  * @author daniel
- */
-/** Opens a top component.
- *
- * @author Jaroslav Tulach
  */
 final class OpenGenjViewAction extends Action2  {
     private final Map<?,?> map;
@@ -35,13 +32,12 @@ final class OpenGenjViewAction extends Action2  {
     /** execute callback */
     @Override
   public void actionPerformed(ActionEvent e) {
-        AncestrisTopComponent win = component.create();
-        win.init(App.center.getSelectedContext(true));
-        win.open();
-        win.requestActive();
+        Context contextToOpen = App.center.getSelectedContext(true);
+        if (contextToOpen != null){
+            AncestrisTopComponent win = component.create();
+            win.init(contextToOpen);
+            win.open();
+            win.requestActive();
+        }
     }
-
-//    public void actionPerformed(ActionEvent e) {
-//        execute();
-//    }
 }
