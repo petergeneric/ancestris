@@ -552,6 +552,10 @@
         </folder>
     </folder>
     <folder name="OptionsExport">
+        <folder name="General">
+            <file name="Other_hidden"/>
+            <file name="Welcome_hidden"/>
+        </folder>
         <folder name="preferences">
             <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
             <attr name="position" intvalue="100"/>
@@ -589,7 +593,6 @@
             </file>
         </folder>
 
-        <folder name="General_hidden"/>
         <folder name="Advanced_hidden"/>
     </folder>
 
