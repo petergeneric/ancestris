@@ -72,13 +72,10 @@ import org.openide.loaders.DataObject;
 class GetStarted extends JPanel implements Constants {
 
     private int row;
-    private InstallConfig ic;
 
-    /** Creates a new instance of RecentProjects */
     public GetStarted() {
         super( new GridBagLayout() );
         setOpaque(false);
-        ic = InstallConfig.getDefault();
         buildContent();
     }
     
@@ -163,7 +160,7 @@ class GetStarted extends JPanel implements Constants {
                 }
                 return res;
             } catch( Exception e ) {
-                Logger.getLogger(SampleProjectAction.class.getName()).log( Level.INFO, null, e );
+                Logger.getLogger(SampleGedcomAction.class.getName()).log( Level.INFO, null, e );
             }
         }
         return null;

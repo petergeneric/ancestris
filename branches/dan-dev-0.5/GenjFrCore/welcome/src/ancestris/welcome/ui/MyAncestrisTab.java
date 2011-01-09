@@ -50,7 +50,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.ContentSection;
-import ancestris.welcome.content.RecentProjectsPanel;
+import ancestris.welcome.content.RecentFilesPanel;
 
 /**
  *
@@ -69,17 +69,27 @@ class MyAncestrisTab extends AbstractTab {
         main.setBorder(BorderFactory.createEmptyBorder());
         add( main, BorderLayout.CENTER );
 
-        main.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), //NOI18N
-                new RecentProjectsPanel(), false, false ) );
+        JPanel leftPanel = new JPanel( new GridLayout(0,1) );
+        leftPanel.setOpaque(false);
+        leftPanel.setBorder(BorderFactory.createEmptyBorder());
+        main.add(new ContentSection( leftPanel,false,false));
 
+        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), //NOI18N
+                new RecentFilesPanel(), false, false, false ) );
+//        ContentSection.addTitleToPanel(leftPanel, BundleSupport.getLabel( "SectionRecentFiles" ));
+//        leftPanel.add(new RecentFilesPanel() );
+        leftPanel.add( new ContentSection( new NewGedcomPanel(), false, false, false ) );
+//        leftPanel.add( new NewGedcomPanel() );
 
-        main.add( new ContentSection( new PluginsPanel(true), true, false ) );
+        JPanel rightPanel = new JPanel( new GridLayout(0,1) );
+        rightPanel.setOpaque(false);
+        rightPanel.setBorder(BorderFactory.createEmptyBorder());
+        main.add(new ContentSection( rightPanel,true,false));
 
-        InstallConfig ic = InstallConfig.getDefault();
-
-        if( ic.isErgonomicsEnabled() ) {
-            main.add( new ContentSection( new PluginsPanel(false), true, false ) );
-        }
+//        rightPanel.add( new PluginsPanel(true) );
+//        rightPanel.add( new PreferencesPanel() );
+        rightPanel.add( new ContentSection( new PluginsPanel(true), false, false, false ) );
+        rightPanel.add( new ContentSection( new PreferencesPanel(), false, false, false ) );
 
         add( new BottomBar(), BorderLayout.SOUTH );
     }

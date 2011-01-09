@@ -54,8 +54,9 @@ import org.openide.util.Exceptions;
  *
  * @author S. Aubrecht
  */
-public class SampleProjectAction extends AbstractAction {
+public class SampleGedcomAction extends AbstractAction {
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         SampleProvider sp = GenjFrPlugin.lookup(SampleProvider.class);
         URL url;

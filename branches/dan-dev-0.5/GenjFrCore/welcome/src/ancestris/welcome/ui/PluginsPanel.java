@@ -70,14 +70,7 @@ class PluginsPanel extends JPanel implements Constants {
         super( new GridBagLayout() );
         setOpaque(false);
         if( showInstallPlugins ) {
-            InstallConfig ic = InstallConfig.getDefault();
-
-            if( ic.isErgonomicsEnabled() ) {
-                addInstallPlugins(BundleSupport.getLabel("InstallPluginsFullIDE"), BundleSupport.getLabel("InstallPluginsDescrFullIDE"));
-            } else {
-                addInstallPlugins(BundleSupport.getLabel("InstallPlugins"), BundleSupport.getLabel("InstallPluginsDescr"));
-            }
-            
+            addInstallPlugins(BundleSupport.getLabel("InstallPlugins"), BundleSupport.getLabel("InstallPluginsDescr"));
         } else {
             addActivateFeatures( BundleSupport.getLabel("ActivateFeaturesFullIDE"), BundleSupport.getLabel("ActivateFeaturesDescrFullIDE"));
         }
