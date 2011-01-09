@@ -71,7 +71,11 @@ public class ContentSection extends JPanel implements Constants {
             BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, new float[] {1.0f, 1.0f}, 0.0f);
 
     public ContentSection( String title, JComponent content, boolean showSeparator, boolean maxSize ) {
-        this( content, showSeparator, maxSize, 0 );
+        this(title, content, true, showSeparator, maxSize );
+    }
+
+    public ContentSection( String title, JComponent content, boolean isTopLevel, boolean showSeparator, boolean maxSize ) {
+        this( content, isTopLevel, showSeparator, maxSize, 0 );
         JLabel lblTitle = new JLabel( title );
         lblTitle.setFont( SECTION_HEADER_FONT );
 
@@ -90,18 +94,25 @@ public class ContentSection extends JPanel implements Constants {
     }
 
     public ContentSection( JComponent content, boolean showSeparator, boolean maxSize ) {
-        this( content, showSeparator, maxSize, 0 );
+        this( content, true, showSeparator, maxSize);
+    }
+
+    public ContentSection( JComponent content, boolean isTopLevel, boolean showSeparator, boolean maxSize ) {
+        this( content, isTopLevel, showSeparator, maxSize, 0 );
     }
 
     private ContentSection( JComponent content, boolean showSeparator, boolean maxSize, int leftInsets ) {
+        this( content, true, showSeparator, maxSize, leftInsets);
+    }
+    private ContentSection( JComponent content, boolean isTopLevel,boolean showSeparator, boolean maxSize, int leftInsets ) {
         super( new GridBagLayout() );
         setOpaque(false);
         this.maxSize = maxSize;
         this.showSeparator = showSeparator;
         add( content, new GridBagConstraints(0,1,2,1,1.0,1.0,
                 GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,leftInsets,0,0),0,0) );
-        
-        setBorder( BorderFactory.createEmptyBorder(35,35,15,35) );
+        if (isTopLevel)
+            setBorder( BorderFactory.createEmptyBorder(35,35,15,35) );
     }
 
     @Override
