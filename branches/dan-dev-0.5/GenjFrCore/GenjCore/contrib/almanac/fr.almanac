@@ -1,5 +1,9 @@
+#=======================================================================
+#                    File for french events fr.almanac
+#=======================================================================
 #
-# Copyright (C) 2009 - 2011 Francois Massonneau <ancestris@ancestris.org>
+#
+# Copyright (C) 2009 - 2011 Francois Massonneau <support@ancestris.org>
 #                           Ancestris Team
 #
 # Permission is granted to copy, distribute and/or modify this document
@@ -29,6 +33,23 @@
 # Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
 #                YYYYMM and YYYY are allowed.      
 # Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
 # Parameter #4 : Importance of this event (a positive integer value, between
 #                0 to 9), with :
 #                0 = major important event. This event will be displayed, always.
@@ -86,6 +107,23 @@
 #                YYYYMMDD (année, mois et jour)
 #                Les formats YYYYMM et YYYY sont autorisés.
 # Paramètre #3 : Le pays(code iso) concerné par cet événement
+#                Vous pouvez consulter cette url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algérie
+#                de : Allemagne
+#                ad : Andorre
+#                be : Belgique
+#                ca : Canada
+#                es : Espagne
+#                us : Etats-Unis d'Amérique
+#                fr : France
+#                it : Italie
+#                lu : Luxembourg
+#                no : Norvege
+#                pl : Pologne
+#                gb : Royaume uni
+#                se : Suede
+#                ch : Suisse
 # Paramètre #4 : L'importance de cet événement (un chiffre positif à choisir entre 
 #                0 et 9), avec :
 #                0 = événement d'une importance majeure. Cet événénement sera 
@@ -141,8 +179,9 @@
 #                    Voici une liste des personnes ayant contribué à des ajouts 
 #                    modifications de ce fichier (par ordre alphabétique) :
 #                         . Lionel (lio-sand) : Tous les règnes des Rois de France
+#                         . Dominique (dacore) : Ajout pour les années 1600 à 1700
 #
-#                    Dernière mise à jour : 29/12/2010
+#                    Dernière mise à jour : 10/01/2011
 #
 #
 #==============================================================================
@@ -152,6 +191,8 @@
 #
 15880509;;fr;6;P;fr=Le Duc de Guise entre dans Paris.;de=Der Herzog von Guise betritt Paris.;en=The Duke of Guise enters Paris.
 15980413;;fr;3;P;fr=Le Roi Henri IV signe l'Edit de Nantes, il met fin à une série de huit conflits qui s'était ouverte en 1562. Ce texte marque la fin des guerres de religion. C'est le symbole de l'instauration d'une tolérance entre des confessions autrefois rivales et désormais prêtes à accepter la religion de l'autre. On établit une coexistance entre la majorité catholique et la minorité protestante.
+16030903;;fr;3;P;fr=Edit de Rouen, Henri IV autorise les jésuites à se réinstaller dans le royaume.
+16051212;;fr;9;P;fr=Attentat manqué d'un fou, Jacques des Isles contre le roi Henri IV sur le pont Neuf. Il prétend être le descendant de Pharamond, ancêtre mythique de la lignée des Mérovingiens. Il affirme aussi être le "roi de tout le monde". Il ne sera pas éxécuté, mais passera le reste de sa vie en prison.
 16100515;;fr;4;P;fr=Louis XIII nouveau Roi de France. Lors de l'assassinat de Henri IV, le dauphin devient Roi de France, il a neuf ans, et sa mère, Marie de Médicis, assure alors la Régence.
 16100527;;fr;8;P;fr=Supplice de Ravaillac qui a assassiné Henri IV.
 16100712;;fr;7;P;fr=Concini entre au Conseil des Finances.
@@ -161,14 +202,13 @@
 16131119;;fr;8;P;fr=Concini devient maréchal de France.
 16140515;;fr;7;P;fr=Suite à la révolte de la noblesse durant le mois d'avril (Condé, Longueville, Mayenne, Vendôme, etc...) contre la régente, par le Traité de Sainte-Menehould, la régente promet aux nobles la convocation des états généraux et les couvre d'or.
 16141002;;fr;7;P;fr=Le Parlement proclame la majorité du Roi.
-16141027;;fr;7;P;fr=Ouverture des états généraux. Ils prendront fin en mars 1615.
+16141027;;fr;7;P;fr=Ouverture des états généraux. Ils prendront fin le 23 février 1615.
 16160503;;fr;7;P;fr=Paix de Loudun entre le Roi et les princes.
 16160901;;fr;7;P;fr=Arrestation de Condé au Louvre.
 16161125;;fr;7;P;fr=Richelieu est nommé secrétaire d'Etat aux Affaires Etrangères.
 16190222;;fr;8;P;fr=Marie de Médicis s'enfuit de Blois.
 16190504;;fr;7;P;fr=Traité d'Angoulême entre Louis XIII et Marie de Médicis.
 16191020;;fr;7;P;fr=Libération de Condé.
-16200807;;fr;8;P;fr=Drolerie des Ponts de Cé, les troupes royales dispersent celles de la Reine Mère.
 16200810;;fr;8;P;fr=Paix d'Angers entre Louis XIII et la Reine Mère.
 16201014;;fr;9;P;fr=Louis XIII entre dans Pau.
 16210427;;fr;8;P;fr=Le Roi Louis XIII annonce qu'il ne veut pas révoquer l'Edit de Nantes. Luynes est nommé connétable.
@@ -185,7 +225,7 @@
 16290419;;fr;7;P;fr=Ligue entre la France, la Savoie, le Pape et Mantoue contre les Habsbourg.
 16290628;;fr;5;P;fr=Edit de grâce d'Alès. Les protestants peuvent pratiquer leur religion en toute liberté mais n'ont plus le droit de tenir d'assemblée politique. De plus, ils perdent leurs places de sûreté.
 16300103;;fr;8;P;fr=Louis XIII et son frère, Gaston d'Orléans se réconcilient.
-16301011;;fr;8;P;fr=Journée des Dupes. Marie de Médicis obtient de Louis XIII, malade, le renvoi de Richelieu, mais Louis XIII change d'avis et exile Marie de Médicis à Compiègne..
+16301110;;fr;8;P;fr=Journée des Dupes. Marie de Médicis obtient de Louis XIII, malade, le renvoi de Richelieu, mais Louis XIII change d'avis et exile Marie de Médicis à Compiègne..
 16310123;;fr;8;P;fr=Traité de Bärwald avec le Roi de Suède.
 16310130;;fr;8;P;fr=Gaston d'Orléans quitte le Royaume.
 16310331;;fr;8;P;fr=Traité d'alliance avec le duc de Savoie.
@@ -202,6 +242,7 @@
 16371210;;fr;9;P;fr=Exil du père Caussin, confesseur du roi Louis XIII, qui blâmait la politique de Richelieu.
 16380210;;fr;8;P;fr=Voeu de Louis XIII consacrant la France à Dieu.
 16380315;;fr;8;P;fr=Traité de Hambourg avec la Suède contre l'Autriche.
+16390616;;fr;9;P;fr=Révolte des va-nu-pieds en Normandie contre la gabelle.
 16401216;;fr;8;P;fr=Traité d'alliance entre la France et les Catalans révoltés contre Philippe IV d'Espagne.
 16410221;;fr;8;P;fr=Edit limitant le droit de remontrance du parlement.
 16420313;;fr;8;P;fr=Traité entre l'Espagne et Cinq-Mars allié au duc de Bouillon et soutenu par Gaston d'Orléans.
@@ -210,6 +251,7 @@
 16430420;;fr;7;P;fr=Déclaration du roi sur la future Régence qui est confiée à un conseil de sept membres.
 16430421;;fr;9;P;fr=Baptême du Dauphin Louis à Saint Germain.
 16430518;;fr;5;P;fr=Lit de justice où le parlement casse le testament de Louis XIII. La régente Anne d'Autriche, reçoit l'autorité suprême jusqu'à la majorité de son fils.
+16440915;;it;5;P;it=Début du pontificat d'Innocent X, Giovanni Battista Pamphiij (italien). Il est élu contre la volonté de Mazarin.
 16450907;;fr;8;P;fr=Lit de justice ordonnant au parlement l'enregistrement des édits.
 16460922;;fr;8;P;fr=Edit du tarif, fixant une taxe sur les marchandises entrant dans Paris.
 16461226;;fr;9;P;fr=A la mort de son père, le duc d'Enghien devient prince de Condé.
@@ -220,28 +262,44 @@
 16480826;;fr;9;P;fr=Arrestation de Pierre Broussel (conseiller au parlement de Paris). En apprenant cela, la population de Paris se révolte.
 16480827;;fr;9;P;fr=Journée des Barricades. La régente décide de libérer Broussel.
 16481022;;fr;8;P;fr=Signature par Anne d'Autriche de la déclaration royale qui reconnaît les articles de la Chambre de Saint Louis.
+16490208;;fr;5;P;fr=Condé assiège Paris avec 12 000 hommes.
+16490818;;fr;5;P;fr=Entrée triomphale du roi à Paris. La cour regagne le Palais-Royal. Condé, déçu de ne pas avoir la place de Mazarin rejoint la Fronde des Princes
 16500118;;fr;8;P;fr=Arrestation de Condé, Longueville et Conti sur ordre du roi.
 16510207;;fr;6;P;fr=Fuite de Mazarin hors de Paris.
 16510213;;fr;6;P;fr=Libération des princes et exil de Mazarin.
 16510907;;fr;5;P;fr=Louis XIV est déclaré majeur.
+16521113;;fr;5;P;fr=Condé et Conti sont déclarés par le roi coupable de lèse-majesté.
 16530203;;fr;7;P;fr=Retour de Mazarin à Paris.
 16530710;;fr;7;P;fr=Enregistrement de la bulle pontificale Augustinus, condamnant le jansénisme.
 16540607;;fr;4;P;fr=Sacre de Louis XIV à Reims.
 16551103;;fr;5;P;fr=La France conclût une entente commerciale avec l'Angleterre.
+16570526;;fr;7;P;fr=Louis XIV, roi de France, brigue la couronne d'empereur du Saint-Empire romain germanique, en faisant officiellement acte de candidature, mais c'est le candidat germanique - Léopold de Habsbourg - qui sera élu, après avoir accepté de signer les conditions définies par les électeurs, le 18 juillet 1658.
 16600127;;fr;5;P;fr=Soumission de Condé devant le roi Louis XIV. Condé reçoit l'absolution de ses fautes et récupère ses biens et ses titres.
 16600826;;fr;6;P;fr=Entrée solennelle de Louis XIV et Marie-Thérèse d'Autriche à Paris.
-16610817;;fr;8;P;fr=Fouquet reçoit fastueusement Louis XIV au Chateau de Vaux le Vicomte.
+16610817;;fr;8;P;fr=Fouquet reçoit fastueusement Louis XIV au Château de Vaux le Vicomte.
 16610905;;fr;8;P;fr=Louis XIV fait arrêter Fouquet à Nantes par d'Artagnan.
 16621027;;fr;8;P;fr=Rachat de Dunkerque aux Anglais.
+16630728;;fr;8;P;fr=Le parlement d’Aix-en-Provence décide l’annexion d'Avignon et du Comtat au royaume de France en représailles de l’incident du 20 août 1662.
 16641230;;fr;8;P;fr=Le surintendant Fouquet est condamné pour abus, malversations, et lèse-majesté, au bannissement et à la confiscation de ses biens. Louis XIV transforme le bannissement en prison perpétuelle. Fouquet sera interné à la forteresse de Pignerol, où il mourra.
+16670620;;it;5;P;fr=Début du pontificat de Clémént XI, Giulio Rospigliosi (italien).
+16690307;;fr;4;P;fr=Jean-Baptiste Colbert devient secrétaire d'État de la Marine. Réorganisation de la marine française, qui comprend seulement 600 vaisseaux.
+16740927;;fr;7;fr=Le roi se réserve le monopole de la vente du tabac.
+16760921;;it;5;P;fr=Début du pontificat d'Innocent XI, Benedetto Odescalchi (italien).
+16820409;;fr;4;P;fr=Cavelier de la Salle prend possession de la Louisiane au nom de la France.
+16820506;;fr;5;P;fr=Louis XIV s’installe à Versailles.
 16851018;;fr;3;P;fr=Révocation de l'Edit de Nantes par le Roi Louis XIV en son château de Fontainebleau. Cet édit avait été signé par son grand-père, le Roi Henri IV le 30 avril 1598 à Nantes. Ce texte marquait la fin des guerres de religion, et visait à "l'établissement d'une bonne paix et tranquille repos" selon les termes du Roi lui-même. C'était la première fois qu'était officialisée dans un même Etat, la coexistance de protestants et de catholiques. Louis XIV se voulait le champion du catholicisme. Avec cette révocation (Edit de Fontainebleau), le Roi supprime ce qui reste de tolérance religieuse héritée de Henri IV.
+16880802;;fr;6;P;fr=Avignon et le Comtat sont réunis au royaume de France.
+16910712;;it;6;P;fr=Début du pontificat d'Innocent XII, Antonio Pignatelli (italien). Pape dévot et charitable, il réconciliera le Vatican avec Louis XIV et l’Église de France.
+16980719;;fr;7;P;fr=traité d'amitié entre la France et la Suède.
+17000917;;fr;7;P;fr=Marie-Louise Gabrielle de Savoie, nièce de Louis XIV, en route pour l' Espagne, où elle doit épouser Philippe V, petit-fils du Roi-soleil, s'arrête une journée à Sospel, près de Nice.
+17001123;;it;5;P;fr=Début du pontificat de Clément XI, Gianfrancesco Albani (italien).
 17150902;;fr;4;P;fr=Le testament de Louis XIV organisant la régence pour son arrière petit fils, Louis XV (5 ans) est lu en public. Philippe d'Orléans s'impose en face de son rival, le duc du Maine (fils légitimé de Louis XIV), le 12 septembre suivant, le Parlement casse le testament et confie la régence à Philippe d'Orléans, en échange, il retrouve le droit de remontrance. Philiippe d'Orléans de 1715 à 1718 va gouverner au moyen de conseils délibératifs.
 17231203;;fr;5;P;fr=Le Duc de Bourbon (Louis Henri de Condé) devient 1er ministre à la mort du Régent (Philippe d'Orléans), sa maîtresse, la Marquise de Prie, gouverne en son nom : elle confie les finances à Joseph Pâris-Duverney, banquier partisan des dévaluations monétaires.
 17260611;;fr;5;P;fr=Disgrâce de Bourbon (exil de Pâris-Duverney et de Madame de Prie).
 17260615;;fr;5;P;fr=L'Abbé Fleury à l'age de 73 ans, entre au Conseil. Il sera nommé Cardinal le 20 août suivant, présidera le Conseil d'office. Il va réussir à stabiliser le cours des monnaies.
 17370220;;fr;7;P;fr=Disgrâce de Chauvelin. Le maréchal de Belle-Isle devient le chef du parti anti-autriche.
 17511223;;fr;6;P;fr=En 1750 le clergé avait refusé de payer les 1.500.000 livres, contribution réclamée par Machault d'Arnouville au titre de l'impôt dit du vingtième (impôt sur tous les biens, même nobles). Ce 23 décembre 1751 Louis XV cède au Clergé.
-17560501;;fr;7;P;fr=La France s'allie avec l'Autriche. C'est le traité de Jouy en Josas. Pour la première fois depuis 1498 la France s'allie avec la maison de Habsbourg.
+17560501;;fr;7;P;fr=La France s'allie avec l'Autriche. C'est le traité de Jouy-en-Josas. Pour la première fois depuis 1498 la France s'allie avec la maison de Habsbourg.
 17570105;;fr;9;P;fr=Louix XV est blessé par Robert-François Damiens d'un coup de couteau à la poitrine. L'auteur de cette tentative d'assassinat sera écartelé le 28 mars suivant. Louis XV profitera de ce fait et prétextant d'avoir perdu l'affection de ses sujets, renverra ses deux ministres réformateurs, à savoir Machault d'Arnouville et d'Argenson.
 17581003;;fr;5;P;fr=Choiseul remplace Bernis aux Affaires Etrangères. Il faut noter que Bernis en octobre 1758 avait été nommé Cardinal, puis disgracié. Il avait voulu traiter avec Frédéric II et abandonner l'alliance autrichienne. Choiseul sera premier ministre de fait, avec trois autres portefeuilles : les Postes le 28-06-1760, la Guerre le 27-01-1761 et la Marine le 13-10-1761.
 17610816;;fr;5;P;fr=Pacte de famille entre les Bourbons (France, Espagne, Naples, Parme). Cela réalise les vues de Louis XIV sur la succession d'Espagne (chaque Etat devient solidaire des trois autres).
@@ -441,6 +499,8 @@
 #
 # II - War Events (abbr. W)
 #
+16010117;;fr;9;WP;fr=Annexion par la France de La Bresse (Vosges) et du Bugey (sud-est de la France, entre Lyon et Genève.).
+16200807;;fr;9;WP;fr=Bataille des Ponts-de-Cé, commune du Maine-et-Loire situé dans la banlieue sud d'Angers. Les partisans de la reine mère Marie de Médicis sont défaits par les troupes royales (partisans de Louis XIII) aux Ponts-de-Cé. Cette bataille est aussi connue sous le nom des "Drôleries des Ponts-de-Cé" car les troupes de Marie de Médicis se présentent sans commandement sur le champ de bataille. L'armée royale n'eut plus qu'à disperser ses fantassins dans une "drôlerie" générale.
 16201108;;fr;9;WP;fr=Bataille de la Montagne Blanche.
 16210425;;fr;8;WP;fr=Traité de Madrid dans lequel l'Espagne s'engage à restituer la Valteline (Alpes) aux Grisons.
 16220511;;fr;7;WP;fr=Prise de Royan par les troupes du Roi.
@@ -455,13 +515,24 @@
 16360815;;fr;8;W;fr=Les espagnols prennent Corbie dans la Somme.
 16400809;;fr;7;W;fr=Prise d'Arras tenue par les espagnols, dont le siège avec débuté en juin.
 16420929;;fr;7;W;fr=Capitulation espagnole à Perpignan.
+16430519;;fr;9;WP;fr=Bataille de Rocroi (Ardennes). Suite au décès de Richelieu et le décès imminent de Louis XIII,le gouvreneur espagnol en Hollande décide d'envahir la France.Il sera arrété dans sa progression à Rocroi par le duc d'Enghien (le futur grand Condé) 
 16481024;;fr;4;WP;fr=Traité de Westphalie. La France reçoit les Trois-Evéchés (Metz, Toul et Verdun), l'Alsace (sauf quelques villes comme Strasbourg) et Pignerol (Italie).
 16501005;;fr;8;WP;fr=Capitulation de Bordeaux assiégée par les troupes royales.
 16501215;;fr;8;WP;fr=Défaite de Turenne à Rethel contre l'armée royale. Celui-ci marchait vers Paris pour libérer les princes.
-16590508;;fr;5;WP;fr=Armistice avec l'Espagne.
+16560716;;fr;8;WP;fr=Turenne est vaincu par Condé à Valenciennes.
+16590508;;fr;5;WP;fr=Armistice avec l'Espagne. Fin d'un conflit datant de 1618 (guerre de trente ans) qui emflamma toute l'Europe et qui en 1635 opposa l'Espagne et la France sur la fontière Roussillonnaise
 16591107;;fr;5;WP;fr=Traité des Pyrénées. La France reçoit le Roussillon, la Cerdagne, l'Artois, le Duché de Bar ainsi que quelques places.
-16680502;;fr;5;WP;fr=Paix d'Aix la Chapelle. L'Espagne récupère la Franche-Comté et la France obtient des villes des Pays-Bas, dont Tournai, Lille, etc..
+16670626;;fr;7;P;fr=Louis XIV prend Tournai. La ville est alors rattachée à la France jusqu'en 1709 par le traité d'Aix la Chapelle
+16680502;;fr;5;WP;fr=Traité d'Aix la Chapelle. L'Espagne récupère la Franche-Comté et la France obtient des villes des Pays-Bas, dont Tournai, Lille, Douai etc..
 16720406;;fr;5;W;fr=Début de la Guerre de Hollande.
+16770317;;fr;8;W;fr=Louis XIV, qui veut assurer à jamais le repos de ses frontières, décide de prendre d'assaut avec ses troupes, Valenciennes.
+16770419;;fr;8;W;fr=Louis XIV, qui veut assurer à jamais le repos de ses frontières, décide de prendre d'assaut avec ses troupes, Cambrai et Saint-Omer.
+16780810;16780917;fr;6;W;fr=Traité de Nimègue entre la France, l’Espagne et les Provinces-Unies mettant fin à la guerre de Hollande. L’Espagne doit céder la Franche-Comté et échanger les enclaves du nord contre 12 villes dont Saint-Omer, Cambrai, Valenciennes et Maubeuge qui ferment les voies d’invasions de la France par le nord. 
+16790629::fr;7;WP;fr=Traité de Saint-Germain. La paix est signée entre la France, la Suède et le Brandebourg. La Suède récupère la Poméranie.
+16890116;;fr;5;W;fr=La France déclare la guerre à l’Espagne.
+16890517;;fr;5;W;fr=Guillaume III d'Orange déclare la guerre à la France suite à un incident naval. En décembre, la « Grande Alliance » contre la France rassemble l’Empire, les Provinces-Unies, l’Espagne, la Savoie et l’Angleterre.
+16930527;;fr;7;WP;fr=Bataille de Lagos. La flotte Française commandé par Tourville intercepte au large de Lagos situé sur la côte portuguaise, un convoi de navires marchands composé de plusieurs nations du fait de l'état de guerre (guerre de la Ligue dausbourg) et escorté par la marine anglaise. L'attaque du convoi aura un grand retentissement, surtout qu'elle entraîne un désastre financier et une série de faillites à Londres. 
+17070425;;fr;5;WP;fr=Bataille d'Almanza dans le royaume de Valence (Espagne) ou l'armée des alliés (Anglais,Portuguais et Hollandais) fût défaite par celle des deux couronnes (Espagne et France). Cette bataille rendi à Philippe V d'Espagne son trône.
 17580707;;fr;5;W;fr=Le 7 juillet, devant le Fort Ticonderoga, l'armée Franco-Canadienne, placée sous le commandement du marquis de Montcalm et du Chevalier de Levis, remporte une victoire sur l'armée Britano-Américaine aux ordres du général Anglais Abercombry.
 17630210;;fr;6;WP;fr=Signature du traité de Paris mettant fin à la guerre de Sept Ans. L'Angleterre est devenu la puissance coloniale majeure. La France perd toutes ses positions en Inde hormis les comptoirs.
 17650215;;fr;6;WP;fr=Signature du traité d'Hubertsbourg entre la France, la Prusse, l'Autriche et les Princes Allemands.
@@ -493,6 +564,9 @@
 #
 # III - Founding Events (abbr. F)
 #
+1602;;fr;5;F;fr=Fondation à Paris de l'hôpital de la Charité par Marie de Médicis.
+16080708;;fr;0;F;fr=Fondation de Québec par le Français Samuel Champlain.
+160908;;fr;6;F;fr=Sully lève de nouveaux impôts impopulaires pour financer la guerre..
 16350125;;fr;5;F;fr=Fondation de l'Académie Française.
 16370107;;fr;8;F;fr=Première représentation du Cid de Corneille au théâtre du Marais à Paris.
 16400331;;fr;7;F;fr=Création d'une monnais, le Louis d'or.
@@ -528,6 +602,7 @@
 #
 # IV - Discovery Events (abbr. Y)
 #
+16130111;;fr;9;y;fr=Découverte non loin de Romans dans le bas dauphiné de theutobocus, géant cimbre (peuple germanique).
 17640712;;fr;8;Y;fr=Charles Messier découvre la première nébuleuse de l'histoire, et l'inscrit au n° 27 de son catalogue (M27 ou Dumbbell).
 17690101;;fr;2;Y;fr=Je n'ai pas la date précise, aussi j'ai mis le premier janvier, mais c'est au cours de l'année 1769 que l'Académie de Besançon ouvre un concours pour un nouvel aliment végétal. Le lauréat sera Antoine Augustin Parmentier (1737-1813) avec la pomme de terre.
 #
@@ -542,10 +617,16 @@
 #
 15531214;;fr;4;B;fr=Naissance d'Henri IV à Pau, fils d'Antoine de Bourbon et de Jeanne d'Albret, il fût Roi de France de 1589 à 1610.
 16010927;;fr;4;B;fr=Naissance du futur Louis XIII, à Fontainebleau. Fils d'Henri IV et de Marie de Médicis.
+16040104;;fr;9;B;fr=Naissance à Besançon (Doubs) du dramaturge Jean Mairet.
+16060606;;fr;6;B;fr=Naissance à Rouen (Seine-Maritime) de Pierre Corneille, dramaturge français.
+16230619;;fr;8;B;fr=Naissance à Clermont-Ferrand (Puy-de-Dôme) de Blaise Pascal mathématicien, philosophe et écrivain français. Inventeur de la machine à calculer.
 16321128;;fr;8;B;fr=Naissance de Jean-Baptiste Lully, musicien français d'origine italienne.
 16351124;;fr;8;B;fr=Naissance de Madame de Maintenon (Françoise d'Aubigné), maîtresse, puis épouse secrète de Louis XIV (le mariage eu lieu entre 1683 et 1686). Petite fille du poëte Agrippa d'Aubigné, fille d'un huguenot emprisonné pour intelligence avec l'Angleterre (née à la prison de Niort). Enfance à la Martinique, elle revient en France en 1647, orpheline, ruinée, mise chez les Ursulines. Elle épouse un paralytique, l'auteur comique Paul Scarron qui décède en 1660.
-16380905;;fr;5;B;fr=Naissance du Dauphin, futur Louix XIV à Saint Germain en Laye.
+16380905;;fr;5;B;fr=Naissance du Dauphin, futur Louix XIV à Saint Germain en Laye
+16390116;;fr;7;B;fr=Naissance à Sainte-Menehoud (Marne) de Dom Pierre Pérignon, moine Bénédictin et élaborateur du Champagne.
+16470822;;fr;7;B;fr=Naissance à Chitenay (Loir-et-Cher) de Denis Papin. Il est connu pour ses travaux sur la machine à vapeur.
 16850321;;fr;5;B;fr=Naissance de Jean-Sébastien Bach à Eisenach (Allemagne).;en=Johann Sebastian Bach, born March 21, 1685.
+16941121;;fr;4;B;fr=Naissance à Paris de l'écrivain et philosophe Francois Marie Arouet, dit Voltaire.
 17100215;;fr;6;B;fr=Naissance du futur Louis XV, à Versailles.
 17290904;;fr;7;B;fr=Naissance du Dauphin Louis, Dauphin du Viennois. Celui-ci se mariera avec Marie-Thérèse d'Espagne en 1744, mais elle décédera en couches. Ensuite, en 1747, le Dauphin du Viennois épousera Marie-Josèphe de Saxe, et ils auront plusieurs enfants, dont le futur Louis XVI qui sera leur troisième fils après Louis Joseph Xavier, duc de Bourgogne (13-09-1751/22-03-1761), et Xavier Marie Joseph, duc d'Aquitaine (08-09-1753/22-02-1754). Du fait de son décès (le Dauphin du Viennois) le 20 décembre 1765, c'est son troisième fils encore vivant qui deviendra Louis XVI.
 17540823;;fr;6;B;fr=Naissance du futur Louis XVI, à Versailles.
@@ -565,11 +646,16 @@
 #
 # VII - Weddings (abbr. X)
 #
+16001216;;fr;5;X;fr=Mariage de Henri IV et de Marie de Médicis à Lyon.Cette union permet un rapprochement avec l'Italie
+16121018;;fr;8;X;fr=Fiançailles de Louis XIII avec Anne d'Autriche.
 16151128;;fr;5;X;fr=Mariage de Louis XIII et de Anne d'Autriche (13 ans), fille du Roi d'Espagne, à Bordeaux.
 16250511;;fr;8;X;fr=Mariage de Charles Ier d'Angleterre et de Henriette de France, soeur du Roi Louis XIII.
 16260805;;fr;8;X;fr=Mariage de Gaston d'Orléans (frère du Roi Louis XIII) avec Mademoiselle de Montpensier.
 16320103;;fr;8;X;fr=Mariage secret de Gaston d'Orléans avec Marguerite de Lorraine.
 16600609;;fr;5;X;fr=Mariage de Louis XIV et de Marie Thérèse d'Autriche à Saint-Jean de Luz.
+16711121;;fr;7;X;fr=Monsieur, frère du roi, épouse la princesse Palatine, chroniqueuse du règne.
+16971207;;fr;7;X;fr=Noces de Marie-Adélaïde de Savoie et du duc de Bourgogne, petit-fils aîné de Louis XIV. Ils eurent trois enfants : Louis de France (25 juin 1704 † 13 avril 1705), duc de Bretagne, Louis de France (8 janvier 1707 † 8 mars 1712), duc de Bretagne puis dauphin de France, Louis de France (15 février 1710 † 10 mai 1774), duc d'Anjou, futur Louis XV.
+
 17250905;;fr;6;X;fr=Mariage de Louis XV et de Marie Leszczyñska (qui a 7 ans de plus) (fille de l'ex Roi de Pologne). L'infante d'Espagne est trop jeune : Louix XV ne pourrait l'épouser avant d'avoir 23 ans (et s'il mourait sans enfants, le trône irait au duc d'Orléans, fils du Régent, ennemi des Condé).
 17700513;;fr;6;X;fr=Le Dauphin Louis (futur Louis XVI, 3ème fils du Dauphin du Viennois (fils de Louis XV)) épouse l'archiduchesse Marie-Antoinette d'Autriche (C'est l'aboutissement de la politique de Bernis, soutenue à Paris par le Comte Mercy d'Argenteau, ambassadeur d'Autriche depuis 1766).
 17960309;;fr;6;X;fr=Mariage religieux entre Bonaparte et Joséphine Tascher de la Pagerie (de Beauharnais) - le mariage civil a eu lieu le 2 décembre 1804.
@@ -581,53 +667,72 @@
 #
 # VIII - Deaths (abbr. D)
 #
-16100514;;fr;3;D;fr=Mort d'Henri IV à Paris tué par Ravaillac.
-16170424;;fr;6;D;fr=Concini est assassiné en arrivant au Louvre sur ordre du Roi.
+16040213;;fr;9;D;fr=Décès à Nancy (Meurthe-et-Moselle) de Catherine de Bourbon, soeur de Henri IV.
+16100514;;fr;3;D;fr=Décès d'Henri IV à Paris tué par Ravaillac.
+16020729;;fr;9;D;fr=Exécution du duc de Biron, maréchal de France. Il fut un favori d'Henri IV.
+16031213;;fr;7;D;fr=Décès à Paris du mathématicien François Viète à l'âge de 63 ans. Initiateur des symboles alphabétiques en algèbre.
+16131022;;fr;9;D;fr=Décès à Rouen (Seine-Maritime) du poète satirique Mathurin Régnier à l'âge de 40 ans.
+16170424;;fr;5;D;fr=Sur ordre de Louis XIII, Concini est assassiné en arrivant au Louvre.
 16170708;;fr;7;D;fr=Exécution de Leonora Galigaï, femme de Concini et confidente de Marie de Médicis.
+16210128;;it;5;D;it=Décès du pape Paul V de son vrai nom Camillo Borghese (italien)
 16211215;;fr;7;D;fr=Décès du Duc de Luynes.
 16270512;;fr;8;D;fr=Duel entre le comte de Montmorency-Bouteville et le Baron de Beuvron.
 16270622;;fr;8;D;fr=Exécution en place de Grève des comtes de Montmorency-Bouteville et des Chapelles.
 16340818;;fr;8;D;fr=Supplice par le feu d'Urbain Grandier, prêtre à Loudun accusé de sorcellerie. Cette exécution, provoquée par Richelieu, suscita une vive émotion dans tout le Royaume.
 16411222;;fr;5;D;fr=Décès de Sully.
-16420108;;fr;5;D;fr=Mort de Galilée. Partisan de Copernic, Galilée enseigne notamment la théorie selon laquelle la Terre se trouve au centre de 9 sphères concentriques portant les planètes et les étoiles. Il critique ouvertement l'enseignement d'Aristote. Il est convoqué au Saint Office où va s'ouvrir son procès. Les audiences débutent en avril 1632. Galilée est accusé d’avoir enfreint l’interdiction de 1616 de défendre les théories de Copernic. Il est jugé coupable en juin, doit abjurer ses erreurs et est assigné à résidence. Il s’installe alors dans sa maison de la banlieue de Florence et y séjourne jusqu’à sa mort le 8 janvier 1642. Galilée ne sera réhabilité qu’en 1757 avec le retrait de l’interdiction de 1616.
-16420713;;fr;5;D;fr=Mort de Marie de Médicis à Cologne.
+16420108;;fr;5;D;fr=Décès de Galilée. Partisan de Copernic, Galilée enseigne notamment la théorie se lon laquelle la Terre se trouve au centre de 9 sphères concentriques portant les planètes et les étoiles. Il critique ouvertement l'enseignement d'Aristote. Il est convoqué au Saint Office où va s'ouvrir son procès. Les audiences débutent en avril 1632. Galilée est accusé d’avoir enfreint l’interdiction de 1616 de défendre les théories de Copernic. Il est jugé coupable en juin, doit abjurer ses erreurs et est assigné à résidence. Il s’installe alors dans sa maison de la banlieue de Florence et y séjourne jusqu’à sa mort le 8 janvier 1642. Galilée ne sera réhabilité qu’en 1757 avec le retrait de l’interdiction de 1616.
+16420713;;fr;5;D;fr=Décès de Marie de Médicis à Cologne.
 16420912;;fr;8;D;fr=Exécution à Lyon de Cinq-Mars et de Thou.
 16421204;;fr;5;D;fr=Décès de Richelieu à Paris. Louis XIII appelle Mazarin au conseil.
 16430514;;fr;5;D;fr=Décès de Louis XIII (dit Louis le Juste) d'une péritonite à Saint Germain en Laye.
 16600202;;fr;5;D;fr=Décès de "Monsieur" (Gaston d'Orléans, oncle du Roi). Le "petit Monsieur" (Philiippe, frère du Roi) devient Duc d'Orléans.
 16610308;;fr;6;D;fr=Décès de Mazarin à Vincennes (il lègue tous ses biens à Louis XIV, et il signe sur son lit de mort une ordonnance mettant hors la loi le cardinal de Retz, chef de la Fronde).
-16660120;;fr;6;D;fr=Mort de la Reine Anne d'Autriche, Mère de Louis XIV.
+16651119;;fr;6;D;fr=Décès à Rome de Nicolas Poussin à l'âge de 71 ans. Peintre classique français.
+16660120;;fr;6;D;fr=Décès de la Reine Anne d'Autriche à l'âge de 65 ans, Mère de Louis XIV.
 16700629;;fr;6;D;fr=Henriette d'Angleterre, duchesse d'Orléans (soeur du roi Charles II), meurt subitement, sans doute d'une péritonite, mais des contemporains ont cru à un empoisonnement (coupables présumés : l'entourage du chevalier de Lorraine, mignon de "Monsieur", mari d'Henriette). Louis XIV n'a pas admis la thèse du poison.
-16730217;;fr;6;D;fr=Mort de Molière.
-16810628;;fr;8;D;fr=Mort de Angélique de Fontanges (20 ans), maîtresse de Louis XIV (il avait alors 43 ans). (on a parlé d'empoisonnement (vengeance de Madame de Montespan, disgraciée ?), ... cette thèse semble écartée aujourd'hui).
+16710424;;fr;5;D;fr=Décès à Chantilly (Oise) de François Vatel, grand cuisinier, au cours d'un dîner chez le prince de Condé, qui recevait Louis XIV. Attendant la marée, et ne la voyant pas arriver, il s'est cru déshonoré et s'est transpercé le cœur avec une épée. Quelques minutes après sa mort, la marée arrivait… 
+16730217;;fr;6;D;fr=Décès de Molière à l'âge de 51 ans, après une représentation du "Malade imaginaire".
+16750418;16750902;fr;7;;fr=Soulèvement général en Bretagne, dit "des Bonnets rouges" et "du Papier timbré".
+16810628;;fr;8;D;fr=Décès de Angélique de Fontanges (20 ans), maîtresse de Louis XIV (il avait alors 43 ans). (on a parlé d'empoisonnement (vengeance de Madame de Montespan, disgraciée ?), ... cette thèse semble écartée aujourd'hui).
 16830730;;fr;6;D;fr=Décès de Marie-Thérèse d'Autriche épouse de Louis XIV.
 16830906;;fr;6;D;fr=Décès de Colbert.
+16840930;;fr;5;D;fr=Décès à Paris du tragédien Pierre Corneille, oublié du public. Mais sa réputation est bien établie.
+16900212;;fr;5;D;fr=Décès à Paris de Charles Le Brun à l'âge de 71 ans. Premier peintre du roi Louis XIV. Il s'est surtout illustré dans la décoration du château de Versailles et de la galerie des Glaces.
+16950413;;fr;7;D;fr=Décès à Paris de Jean de la Fontaine à l'âge de 74 ans. Il venait de publier son douzième livre de fables.
+16960417;;fr;4;D;fr=Décès à Grignan (Drôme) de la marquise de Sévigné à l'âge de 70 ans.
+16990421;;fr;6;D;fr=Décès à Paris de Jean Racine à l'âge de 60 ans.
 17031119;;fr;6;D;fr=Décès du "Masque de Fer". Prisonnier non identifié, surveillé par le même officier (M. de Saint-Mars) dans 3 lieux de détention successifs : Pignerol (1679-1687), île Sainte-Marguerite de Lérins (1687-1698), Bastille (1698-1703). Enterré au cimetière Saint-Paul sous le nom de "Marchiali". Toutes les hypothèses ont été avancées sur sa véritable identité.
 17150901;;fr;6;D;fr=Décès de Louis XIV à Versailles.
+17210718;;fr;5;D;fr=Décès à Nogent-sur-Marne (94) de Antoine Watteau.
 17231202;;fr;6;D;fr=Le Régent (Philippe d'Orléans) meurt.
+17320219,,fr;4;D;fr=Décès à Paris de l'ébésniste André Boulle "menuisier du roi", depuis 1672 il est l'auteur des aménagements intérieurs de Versailles.
+17430129;;fr;7;D;fr=Décès du cardinal Fleury. Aumônier de Louis XIV et précepteur du futur Louis XV.
 17550526;;fr;6;D;fr=Exécution par strangulation à Valence de Louis Mandrin, chef des faux sauniers et des contrebandiers opérant en Dauphiné et Savoie. Mandrin était devenu populaire car il attaquait les fermes générales et greniers à sel, mais en respectant grosso modo les propriétés privées.
 17580503;;fr;6;D;fr=Décès de Benoît XIV, Pape.;en=Death of Benoît XIV, Pope.
 17590414;;fr;7;D;fr=Décès de Georg Friedrich Händel, compositeur.;en=Death of Georg Friedrich Händel, composer.
 17590914;;fr;6;D;fr=Décès de Louis-Joseph de Montcalm, général français.;en=Death of Louis-Joseph de Montcalm, french general.
-17640417;;fr;8;D;fr=Décès de Madame de Pompadour, favorite de Louis XV.
+17640417;;fr;8;D;fr=Décès à Versailles de Madame de Pompadour, favorite de Louis XV.
 17640912;;fr;7;D;fr=Décès de Jean-Philippe Rameau, compositeur français.
 17660223;;fr;8;D;fr=Décès accidentel de Stanislas Leszczyñska (père de Marie Leszczyñska, femme de Louis XV), tombé dans sa cheminée.
 17660701;;fr;8;D;fr=Exécution du chevalier Lefebvre de La Barre (né en 1745), accusé de blasphèmes, de chansons infâmes, de profanation et de ne pas s'être découvert lors d'une procession de la Fête-Dieu. Il avait été condamné le 28 février à avoir la langue coupée, la tête tranchée et le corps réduit en cendres. Voltaire avait pris sa défense.
 17740510;;fr;4;D;fr=Décès de Louis XV à Versailles de la petite vérole, dans l'indifférence totale.
+17780530;;fr;6;D;fr=Décès à Paris de Voltaire à l'âge de 83 ans. Deux mois après une représentation triomphale de sa tragédie Irène, au cours de laquelle son buste, sur scène, fut couronné de lauriers.
+17780702;;fr;6;D;fr=Décès à Ermenonville (Oise) de Jean-Jacques Rousseau. Il meurt en solitaire dans un pavillon prôche du château d'Ermenonville.
+17890514;;fr;5;D;fr=Décès à Meudon (92) du Dauphin Louis, fils de Louis XVI.
 17910402;;fr;6;D;fr=Décès de Mirabeau.
 17930121;;fr;1;D;fr=Louis XVI est éxécuté place de la Révolution (actuellement, place de la Concorde) par Sanson, il veut parler au peuple mais les tambours de la Garde Nationale (commandés par Santerre) couvrent sa voix. Il est enterré cimetière de la Madeleine (actuellement Boulevard Haussmann).
 17930714;;fr;6;D;fr=Marat est assassiné dans son bain par Charlotte Corday (née en 1768 et guillotinée le 17 juillet 1793).
 17931016;;fr;2;D;fr=Marie-Antoinette est exécutée à 12h 15. Elle sera ensevelie à côté de Louis XVI.
 17931106;;fr;6;D;fr=Exécution de Philippe-Egalité (duc d'Orléans).
 17940510;;fr;6;D;fr=Madame Elisabeth, soeur de Louis XVI est exécutée.
-17950608;;fr;6;D;fr=Mort officielle au Temple, de Louis XVII (qui était le Dauphin, mais est devenu Louis XVII à la mort de son père (Louis XVI) guillotiné). Il a été enterré au cimetière Sainte-Marguerite le 10 juin suivant. De nombreux historiens soutiennent la thèse qu'il s'est en réalité évadé du Temple.
+17950608;;fr;6;D;fr=Décès officielle au Temple, de Louis XVII (qui était le Dauphin, mais est devenu Louis XVII à la mort de son père (Louis XVI) guillotiné). Il a été enterré au cimetière Sainte-Marguerite le 10 juin suivant. De nombreux historiens soutiennent la thèse qu'il s'est en réalité évadé du Temple.
 17960329;;fr;4;D;fr=Le Général Charette est exécuté.
 18210505;;fr;6;D;fr=Napoléon meurt à Sainte Hélène. Il sera enterré  avec les honneurs militaires dans la vallée "du géranium". Le 12 mai 1850 la chambre vote le retour des cendres. Le 15 octobre 1850, son corps est exhumé à Sainte Hélène, et ramené sur la Belle Poule par le Prince de Joinville (fils du roi Louis-Philippe). Il sera enseveli aux Invalides le 15 décembre 1850.
 18240916;;fr;6;D;fr=Louis XVIII meurt (hydropique, les deux jambes gangrénées).
 18361106;;fr;6;D;fr=Charles X meurt à Gorizia.
 18380517;;fr;8;D;fr=Décès de Talleyrand.
-18420713;;fr;8;D;fr=Mort accidentelle du Duc d'Orléans, fils de Louis-Philippe, il se brise les reins, près de la place des Ternes, en sautant d'un cabriolet dont le cheval s'était emballé.
-18500926;;fr;8;D;fr=Mort de Louis-Philippe (Monarchie de juillet) qui avait abdiqué le 24 février 1848, et s'était réfugié en Angleterre.
+18420713;;fr;8;D;fr=Décès accidentelle du Duc d'Orléans, fils de Louis-Philippe, il se brise les reins, près de la place des Ternes, en sautant d'un cabriolet dont le cheval s'était emballé.
+18500926;;fr;8;D;fr=Décès de Louis-Philippe (Monarchie de juillet) qui avait abdiqué le 24 février 1848, et s'était réfugié en Angleterre.
 18770903;;fr;6;D;fr=Décès de Adolphe Thiers (ancien Président de la République)
 18910909;;fr;6;D;fr=Décès de Jules Grévy (ancien Président de la République)
 18931017;;fr;6;D;fr=Décès du Maréchal de Mac-Mahon (ancien Président de la République) à Montcresson dans le Loiret
@@ -639,9 +744,25 @@
 #
 # IX - Misc. Events
 #
+1603;;fr;2;E;fr=Gelées d’oliviers en Provence. Le Rhône est gelé.
+16071027;;fr;2;E;fr=Passage de la Comète de Halley. En 1705 Edmond Halley prédit, en utilisant les lois nouvellement formulées de la mécanique céleste de Newton, que la comète vue en 1531, 1607, et en 1682 retournerait en 1758 (ce qui fut, malheureusement, après sa mort). La comète est en effet retournée comme prévu et plus tard elle fut nommé en son honneur. La comète de Halley reviendra à l'intérieur du système solaire en l'an 2061
+16180307;;fr;0;E;fr=Incendie du Palais de Justice de Paris. Longtemps demeure des rois de France, actuellement Conciergerie
+1649;1652;fr;2;E;fr=Mauvaise récolte de grains. Disettes et épidémies (1649-1652). La population rurale diminue.
 1651;1652;fr;2;E;fr=La Peste frappe la France (1.000.000 de morts). Mazarin a été accusé de l'avoir introduite.
-1693;1694;fr;2;E;fr=Mauvaises récoltes, famine.
+16580301;;fr;8;E;fr=Une grave crue de la Seine, la plus forte connue, se produit notamment à Paris où le pont Marie est emporté.
+16600621;;fr;6;E;fr=Dans la nuit un tremblement de terre est ressenti dans la région comprise entre Bordeaux et Bayonne. les secousses seront ensuite ressenti dans la région de Pau et surtout en Bigorre où les dommages sont conséquents et nombreux.
+1687;1703;fr;2;E;fr=Pessimum du Petit âge glaciaire : Hivers très rigoureux, printemps et étés froids, vendanges tardives. Le petit âge glaciaire correspond concrètement à un léger refroidissement climatique de l'ordre de moins de 1°C. Cette diminution peut paraître faible, mais elle était suffisante pour provoquer des hivers rigoureux et ralentir les activités humaines notamment la production agricole, en particulier au XVIIe siècle. Des archives historiques ou commerciales, des peintures de l'époque témoignent d'hivers rudes et enneigés. En Savoie, on organise même des processions dans l'espoir de conjurer l'avancée des glaces. 
+1692;;fr;2;E;fr=Disette en Auvergne.
+169211;;fr;2;E;fr=Désordres et famine dans la capitale.
+1692;1695;fr;2;E;fr=Mauvaises récoltes dans le Bordelais. Les négociants girondins font appel aux vins de Languedoc pour remplir leurs engagements commerciaux.
+1692;1700;fr;2;E;fr=Série de vendanges tardives dans le nord de la France.
+1693;1694;fr;2;E;fr=Mauvaises récoltes, famine. La grande famine de 1693-1694 est due à un hiver très rigoureux en 1692, suivi en 1693 d'une récolte très médiocre, causée par un printemps et un été trop pluvieux, causant une flambée des prix des céréales et une sous-alimentation qui favorise les épidémies comme le typhus, jusqu'en 1694. La France, qui avait alors 20 millions d’habitants, eut 1 300 000 morts en plus de la mortalité normale.Autant que durant la Première Guerre mondiale, mais pour une population deux fois moindre. C'est la grande purge des miséreux que la cherté du pain jette sur les chemins pour y mendier et qui meurent au hasard de leur errance.
+1700;;fr;5;E;fr=22,5 millions d’habitants en France. Paris compte 500 000 habitants. Lyon (100 000), Marseille (75 000), Rouen (60 000) et Lille (55 000) dépassent 50 000 habitants. 22 villes dépassent 20 000 habitants. 17% de la population vit dans des villes de plus de 2 000 habitants. 
+17160122;;fr;4;E;fr=-20° le 22 janvier. En Savoie la neige avait 20 pieds d'épaisseur : il en était de même en Alsace. Février - Glacial dans l'est de la France. Neiges abondantes dans l'est et le nord de la France, inondations dans l'Ouest.
 1720;;fr;5;E;fr=Peste de Marseille. 85.000 morts en Provence.
+1725;;fr;5;E;fr=Famine en Normandie, on vit d'herbe des champs.
+17500524;;fr;7;E;fr=Un tremblement de terre se fait sentir en Guyenne, aux alentours des villes de Toulouse, Narbonne et Montpellier.
+17501205;;fr;7;E;fr=le Var est sorti de son lit, suite aux pluies diluviennes s’étant abattues aux alentours de Nice. Les campagnes voisines sont inondées, plusieurs bâtiments entraînées et beaucoup d’arbres déracinés.
 178311;178403;fr;5;E;fr=Hiver exceptionnel qui détruit les semis de blé.
 18160606;;fr;8;E;fr=Naufrage de la Méduse.
 183203;183204;fr;5;E;fr=Epidémie de choléra à Paris. Plus de 18.500 morts.
