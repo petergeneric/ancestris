@@ -343,4 +343,11 @@ public class PropertyPlace extends PropertyChoiceValue {
       return result.toString();
   }
 
+    @Override
+    public int compareTo(Property that) {
+        return compare(this.getValueStartingWithCity(),((PropertyPlace)that).getValueStartingWithCity());
+//        return compare(this.format("1,2,3,4,5,6"),that.format("1,2,3,4,5,6"));
+//        return super.compareTo(that);
+    }
+
 } //PropertyPlace
