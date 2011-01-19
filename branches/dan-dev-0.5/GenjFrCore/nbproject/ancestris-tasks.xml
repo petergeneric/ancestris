@@ -6,16 +6,21 @@
                   <arg value="info"/>
             <arg value="--xml"/>
         </exec>
-        <xmlproperty>
-            <propertyresource name="buildversion"/>
-        </xmlproperty>
-        <property name="buildnumber" value="${info.entry.commit(revision)}" />
+        <echo message="erreur: ${svnerror}"/>
+        <antcall target="get-buildnumber-from-svn"/>
+        <property name="buildnumber" value="0" />
         <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Specification-Version" property="spec.version"/>
         <tempfile property="manifest.mf-temp" destDir="build" suffix="MF"/>
         <copy file="${manifest.mf}" tofile="${manifest.mf-temp}"/>
         <manifest file="${manifest.mf-temp}" mode="update">
           <attribute name="OpenIDE-Module-Specification-Version" value="${spec.version}.${buildnumber}"/>
         </manifest>
+    </target>
+    <target name="get-buildnumber-from-svn" unless="svnerror">
+        <xmlproperty>
+            <propertyresource name="buildversion"/>
+        </xmlproperty>
+        <property name="buildnumber" value="${info.entry.commit(revision)}" />
     </target>
     <target name="jar" depends="init,compile,-manifest-prep,jar-prep" unless="is.jar.uptodate">
         <copyfile src="${manifest.mf-temp}" dest="/tmp/manifest"/>
