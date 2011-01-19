@@ -35,11 +35,13 @@ import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import org.openide.util.Exceptions;
 
 /**
  * Generic component for editing dates
@@ -48,12 +50,13 @@ import javax.swing.text.PlainDocument;
  */
 public class DateWidget extends JPanel {
 
-  private final static NestedBlockLayout LAYOUT = new NestedBlockLayout("<row><x pad=\"0\"/><x/><x/><x pad=\"0\"/></row>");
+  private final static NestedBlockLayout LAYOUT = new NestedBlockLayout("<row><x pad=\"0\"/><x/><x/><x pad=\"0\"/><x pad=\"0\"/></row>");
 
   /** components */
   private PopupWidget widgetCalendar;
   private TextFieldWidget widgetDay, widgetYear;
   private ChoiceWidget widgetMonth;
+  private JLabel altDisplay;
 
   /** current calendar */
   private Calendar calendar;
@@ -108,6 +111,8 @@ public class DateWidget extends JPanel {
     widgetCalendar = new PopupWidget();
     widgetCalendar.addItems(switches);
 
+    altDisplay = new JLabel("test");
+
     // Setup Layout
     setLayout(LAYOUT.copy()); // reuse a copy of layout
 
@@ -145,6 +150,7 @@ public class DateWidget extends JPanel {
     }
 
     add(widgetCalendar);
+    add(altDisplay);
 
     widgetDay.setToolTipText(format);
     widgetMonth.setToolTipText(format);
@@ -301,6 +307,11 @@ public class DateWidget extends JPanel {
       // show current calendar on enabled button
       widgetCalendar.setEnabled(true);
       widgetCalendar.setIcon(calendar.getImage());
+        try {
+            altDisplay.setText(value.getPointInTime(PointInTime.FRENCHR).toString());
+        } catch (GedcomException ex) {
+            altDisplay.setText("Date non affichable");
+        }
     }
     for (SwitchCalendar switcher : switches) 
       switcher.preview();
