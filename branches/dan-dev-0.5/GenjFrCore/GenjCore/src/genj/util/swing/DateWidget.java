@@ -61,6 +61,8 @@ public class DateWidget extends JPanel {
   /** current calendar */
   private Calendar calendar;
   private List<SwitchCalendar> switches;
+  private Calendar preferedCalendar;
+  private Calendar alternateCalendar;
 
   /** change support */
   private ChangeSupport changeSupport = new ChangeSupport(this) {
@@ -161,6 +163,11 @@ public class DateWidget extends JPanel {
     updateStatus();
 
     // Done
+  }
+
+  public void setAlternateCalendar(Calendar prefered, Calendar alternate){
+      alternateCalendar = alternate;
+      preferedCalendar = prefered;
   }
 
   private class TabbingDoc extends PlainDocument {
@@ -307,10 +314,19 @@ public class DateWidget extends JPanel {
       // show current calendar on enabled button
       widgetCalendar.setEnabled(true);
       widgetCalendar.setIcon(calendar.getImage());
+      if (alternateCalendar == null || preferedCalendar == null){
+          altDisplay.setVisible(false);;
+      } else {
+        altDisplay.setVisible(true);
         try {
-            altDisplay.setText(value.getPointInTime(PointInTime.FRENCHR).toString());
+            if (value.getCalendar() == alternateCalendar){
+                altDisplay.setText(value.getPointInTime(preferedCalendar).toString());
+            } else {
+                altDisplay.setText(value.getPointInTime(alternateCalendar).toString());
+            }
         } catch (GedcomException ex) {
             altDisplay.setText("Date non affichable");
+        }
         }
     }
     for (SwitchCalendar switcher : switches) 

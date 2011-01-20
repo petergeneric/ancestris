@@ -21,6 +21,7 @@ package genj.edit.beans;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.Action2;
 import genj.util.swing.DateWidget;
@@ -88,12 +89,18 @@ public class DateBean extends PropertyBean {
     // do the layout and format
     setPreferHorizontal(false);
     setFormat(PropertyDate.FORMATS[0]);
+    setAlternateCalendar(PointInTime.GREGORIAN, PointInTime.FRENCHR);
     
     // setup default focus
     defaultFocus = date1;
     
     // Done
   }
+
+  public void setAlternateCalendar(Calendar prefered, Calendar alternate){
+      date1.setAlternateCalendar(prefered, alternate);
+      date2.setAlternateCalendar(prefered, alternate);
+    }
 
   @Override
   public void setPreferHorizontal(boolean set) {
