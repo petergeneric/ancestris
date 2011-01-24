@@ -247,7 +247,7 @@ public class App {
                 OptionProvider.getAllOptions();
 
                 // Setup File Logging and check environment
-                LOGFILE = new File(home, "genjfr.log");
+                LOGFILE = new File(home, "ancestris.log");
                 Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), Options.getInstance().getMaxLogSizeKB() * 1024, 1, true);
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
