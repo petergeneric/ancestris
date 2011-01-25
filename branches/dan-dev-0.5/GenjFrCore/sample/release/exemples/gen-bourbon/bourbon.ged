@@ -31,14 +31,14 @@
 1 SEX M
 1 BIRT
 2 DATE 27 SEP 1601
-2 PLAC ,Fontainebleau,77186,,Seine et Marne,,FRANCE
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
 1 DEAT
 2 DATE 14 MAY 1643
-2 PLAC ,Saint-Germain-en-Laye,78551,,Yvelines,,FRANCE
+2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
 1 EVEN
 2 TYPE Sacre
 2 DATE 17 OCT 1610
-2 PLAC ,Reims,51454,,Marne,,FRANCE
+2 PLAC ,Reims,51454,Marne,,FRANCE
 1 FAMS @F1@
 1 OBJE
 2 TITL Louis XIII par Rubens
@@ -54,10 +54,10 @@
 1 SEX F
 1 BIRT
 2 DATE 22 SEP 1601
-2 PLAC ,Valladolid,,,,,ESPAGNE
+2 PLAC ,Valladolid,,,,ESPAGNE
 1 DEAT
 2 DATE 20 JAN 1666
-2 PLAC ,Paris,75056,,Paris,,FRANCE
+2 PLAC ,Paris,75056,Paris,,FRANCE
 1 FAMS @F1@
 1 OBJE
 2 TITL Anne d'Autriche
@@ -72,7 +72,7 @@
 1 WIFE @I2@
 1 MARR
 2 DATE 21 NOV 1615
-2 PLAC ,Bordeaux,33063,,Gironde,,FRANCE
+2 PLAC ,Bordeaux,33063,Gironde,,FRANCE
 1 CHIL @I3@
 1 CHIL @I4@
 1 CHAN
@@ -83,7 +83,7 @@
 1 SEX M
 1 BIRT
 2 DATE 5 SEP 1638
-2 PLAC ,Saint-Germain-en-Laye,78551,,Yvelines,,FRANCE
+2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
 2 SOUR @S1@
 3 OBJE
 4 TITL Acte de Baptême de Louis XIV
@@ -113,7 +113,7 @@
 5 CONT Bailly
 1 DEAT
 2 DATE 1 SEP 1715
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 RESI
 2 DATE 6 MAY 1682
 2 ADDR Le Château
@@ -121,7 +121,7 @@
 3 POST 78000
 1 BURI
 2 DATE 9 SEP 1715
-2 PLAC Basilique,Saint-Denis,93066,,Seine-Saint-Denis,,FRANCE
+2 PLAC Basilique,Saint-Denis,93066,Seine-Saint-Denis,,FRANCE
 2 SOUR @S1@
 3 OBJE
 4 TITL Inhumation de Louis XIV
@@ -141,7 +141,7 @@
 1 EVEN
 2 TYPE Sacre
 2 DATE 7 JUN 1654
-2 PLAC ,Reims,51454,,Marne,,FRANCE
+2 PLAC ,Reims,51454,Marne,,FRANCE
 1 FAMC @F1@
 1 FAMS @F2@
 1 FAMS @F3@
@@ -159,10 +159,10 @@
 1 SEX M
 1 BIRT
 2 DATE 21 SEP 1640
-2 PLAC ,Saint-Germain-en-Laye,78551,,Yvelines,,FRANCE
+2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
 1 DEAT
 2 DATE 9 JUN 1701
-2 PLAC ,Saint-Cloud,92064,,Hauts-de-Seine,,FRANCE
+2 PLAC ,Saint-Cloud,92064,Hauts-de-Seine,,FRANCE
 1 FAMC @F1@
 1 FAMS @F6@
 1 OBJE
@@ -179,10 +179,10 @@
 1 SEX F
 1 BIRT
 2 DATE 20 SEP 1638
-2 PLAC ,Madrid,,,,,ESPAGNE
+2 PLAC ,Madrid,,,,ESPAGNE
 1 DEAT
 2 DATE 30 JUL 1683
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMS @F2@
 1 OBJE
 2 TITL Marie-Thérèse avec son fils, Louis
@@ -197,7 +197,7 @@
 1 WIFE @I5@
 1 MARR
 2 DATE 9 JUN 1660
-2 PLAC ,Saint-Jean-de-Luz,64483,,Pyrénées-Atlantiques,,FRANCE
+2 PLAC ,Saint-Jean-de-Luz,64483,Pyrénées-Atlantiques,,FRANCE
 1 CHIL @I6@
 1 CHAN
 2 DATE 24 JAN 2011
@@ -208,10 +208,10 @@
 1 SEX M
 1 BIRT
 2 DATE 1 NOV 1661
-2 PLAC Château,Fontainebleau,77186,,Seine et Marne,,FRANCE
+2 PLAC Château,Fontainebleau,77186,Seine-et-Marne,,FRANCE
 1 DEAT
 2 DATE 14 FEB 1711
-2 PLAC ,Meudon,92048,,Hauts-de-Seine,,FRANCE
+2 PLAC ,Meudon,92048,Hauts-de-Seine,,FRANCE
 1 FAMC @F2@
 1 FAMS @F4@
 1 OBJE
@@ -228,10 +228,10 @@
 1 SEX F
 1 BIRT
 2 DATE 27 NOV 1635
-2 PLAC ,Niort,79191,,Deux-Sèvres,,FRANCE
+2 PLAC ,Niort,79191,Deux-Sèvres,,FRANCE
 1 DEAT
 2 DATE 15 APR 1719
-2 PLAC ,Saint-Cyr-l'École,78545,,Yvelines,,FRANCE
+2 PLAC ,Saint-Cyr-l'École,78545,Yvelines,,FRANCE
 1 RESI
 2 DATE 1 JAN 1716
 2 ADDR Maison Royale de Saint-Louis
@@ -251,7 +251,7 @@
 1 WIFE @I7@
 1 MARR
 2 DATE 10 OCT 1683
-2 PLAC ,Fontainebleau,77186,,Seine et Marne,,FRANCE
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
 1 CHIL @I14@
 1 CHAN
 2 DATE 24 JAN 2011
@@ -261,10 +261,10 @@
 1 SEX F
 1 BIRT
 2 DATE 28 NOV 1660
-2 PLAC ,MUNICH,,,,,ALLEMAGNE
+2 PLAC ,Munich,,,,ALLEMAGNE
 1 DEAT
 2 DATE 20 APR 1690
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMS @F4@
 1 OBJE
 2 TITL Marie Anne DE BAVIÈRE
@@ -279,7 +279,7 @@
 1 WIFE @I8@
 1 MARR
 2 DATE 7 MAR 1680
-2 PLAC ,CHÂLONS,51108,,Marne,,FRANCE
+2 PLAC ,Châlons,51108,Marne,,FRANCE
 1 CHIL @I9@
 1 CHAN
 2 DATE 20 DEC 2010
@@ -290,10 +290,10 @@
 1 SEX M
 1 BIRT
 2 DATE 6 AUG 1682
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 DEAT
 2 DATE 18 FEB 1712
-2 PLAC ,Marly,78372,,Yvelines,,FRANCE
+2 PLAC ,Marly,78372,Yvelines,,FRANCE
 1 FAMC @F4@
 1 FAMS @F5@
 1 OBJE
@@ -309,10 +309,10 @@
 1 SEX F
 1 BIRT
 2 DATE 6 DEC 1685
-2 PLAC ,Turin,,,,,ITALIE
+2 PLAC ,Turin,,,,ITALIE
 1 DEAT
 2 DATE 12 FEB 1712
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMS @F5@
 1 OBJE
 2 TITL Marie-Adélaïde DE SAVOIE
@@ -327,7 +327,7 @@
 1 WIFE @I10@
 1 MARR
 2 DATE 7 DEC 1697
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 CHIL @I11@
 1 CHAN
 2 DATE 24 JAN 2011
@@ -337,14 +337,14 @@
 1 SEX M
 1 BIRT
 2 DATE 15 FEB 1710
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 DEAT
 2 DATE 10 MAY 1774
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 EVEN
 2 TYPE Sacre
 2 DATE 25 OCT 1722
-2 PLAC ,Reims,51454,,Marne,,FRANCE
+2 PLAC ,Reims,51454,Marne,,FRANCE
 2 OBJE
 3 TITL Louis XV en costume de sacre
 3 FILE photos/Louis_XV_sacre.jpg
@@ -369,7 +369,7 @@
 2 PLAC ,Heidelberg,,,Baden-Württemberg,ALLEMAGNE
 1 DEAT
 2 DATE 8 DEC 1722
-2 PLAC ,Saint-Cloud,92064,,Hauts-de-Seine,,FRANCE
+2 PLAC ,Saint-Cloud,92064,Hauts-de-Seine,,FRANCE
 1 FAMS @F6@
 1 OBJE
 2 TITL Charlotte-Élisabeth De Bavière
@@ -395,13 +395,13 @@
 1 SEX M
 1 BIRT
 2 DATE 2 AUG 1674
-2 PLAC ,Saint-Cloud,92064,,Hauts-de-Seine,,FRANCE
+2 PLAC ,Saint-Cloud,92064,Hauts-de-Seine,,FRANCE
 1 DEAT
 2 DATE 2 DEC 1723
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 OCCU Régent
 2 DATE BET 2 SEP 1715 AND 16 FEB 1723
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMC @F6@
 1 FAMS @F7@
 1 OBJE
@@ -417,10 +417,10 @@
 1 SEX F
 1 BIRT
 2 DATE 4 MAY 1677
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 DEAT
 2 DATE 1 FEB 1749
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMC @F3@
 1 FAMS @F7@
 1 OBJE
@@ -436,7 +436,7 @@
 1 WIFE @I14@
 1 MARR
 2 DATE 9 JAN 1692
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 CHAN
 2 DATE 24 JAN 2011
 3 TIME 19:31:25
@@ -464,10 +464,10 @@
 1 SEX F
 1 BIRT
 2 DATE 23 JUN 1703
-2 PLAC ,Trzebnica,,,,,POLOGNE
+2 PLAC ,Trzebnica,,,,POLOGNE
 1 DEAT
 2 DATE 24 JUN 1768
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMS @F8@
 1 OBJE
 2 TITL Marie LESZCZYNSKA
@@ -482,7 +482,7 @@
 1 WIFE @I15@
 1 MARR
 2 DATE 5 SEP 1725
-2 PLAC ,Fontainebleau,77186,,Seine et Marne,,FRANCE
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
 1 CHIL @I16@
 1 CHAN
 2 DATE 24 JAN 2011
@@ -492,10 +492,10 @@
 1 SEX M
 1 BIRT
 2 DATE 4 SEP 1729
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 DEAT
 2 DATE 20 DEC 1765
-2 PLAC ,Fontainebleau,77186,,Seine et Marne,,FRANCE
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
 1 FAMC @F8@
 1 FAMS @F9@
 1 OBJE
@@ -540,14 +540,14 @@
 1 SEX M
 1 BIRT
 2 DATE 23 AUG 1754
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 DEAT
 2 DATE @#DFRENCH R@ 2 PLUV 1
-2 PLAC ,Paris,75056,,Paris,,FRANCE
+2 PLAC ,Paris,75056,Paris,,FRANCE
 1 EVEN
 2 TYPE Sacre
 2 DATE 11 JUN 1775
-2 PLAC ,Reims,51454,,Marne,,FRANCE
+2 PLAC ,Reims,51454,Marne,,FRANCE
 1 FAMC @F9@
 1 FAMS @F10@
 1 OBJE
@@ -564,10 +564,10 @@
 1 SEX F
 1 BIRT
 2 DATE 2 NOV 1755
-2 PLAC ,Vienne,,,,,AUTRICHE
+2 PLAC ,Vienne,,,,AUTRICHE
 1 DEAT
 2 DATE @#DFRENCH R@ 25 VEND 2
-2 PLAC ,Paris,75056,,Paris,,FRANCE
+2 PLAC ,Paris,75056,Paris,,FRANCE
 1 FAMS @F10@
 1 OBJE
 2 TITL Marie Antoinette d'Autriche
@@ -582,7 +582,7 @@
 1 WIFE @I19@
 1 MARR
 2 DATE 16 MAY 1770
-2 PLAC ,Versailles,78646,,Yvelines,,FRANCE
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 SOUR @S1@
 2 OBJE
 3 TITL Acte de Mariage de Louis XVI et Marie Antoinette
@@ -601,7 +601,7 @@
 0 @R2@ REPO
 1 NAME Archives Départementales des Yvelines
 1 ADDR 2, Avenue de Lunca
-2 CITY MONTIGNY-LE-BRETONNEUX
+2 CITY Montigny-le-Bretonneux
 2 POST 78180
 2 STAE
 2 CTRY
