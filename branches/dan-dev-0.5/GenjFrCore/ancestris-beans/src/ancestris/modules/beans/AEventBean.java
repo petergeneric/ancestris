@@ -68,6 +68,7 @@ public final class AEventBean extends JPanel implements ABean {
     /** Creates new form NewGedcomVisualPanel2 */
     public AEventBean() {
         initComponents();
+        isKnown.setSelected(false);
         showOrHide();
     }
     private boolean showKnown = false;
@@ -101,7 +102,7 @@ public final class AEventBean extends JPanel implements ABean {
         aDateBean1 = new ancestris.modules.beans.ADateBean();
         jLabel2 = new javax.swing.JLabel();
         aPlaceBean1 = new ancestris.modules.beans.APlaceBean();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        isKnown = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
@@ -110,14 +111,14 @@ public final class AEventBean extends JPanel implements ABean {
         jLabel2.setMinimumSize(new java.awt.Dimension(76, 15));
         jLabel2.setPreferredSize(new java.awt.Dimension(76, 15));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, null);
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(isKnown, null);
+        isKnown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                isKnownActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 12));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -132,7 +133,7 @@ public final class AEventBean extends JPanel implements ABean {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(aPlaceBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                     .addComponent(aDateBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox1))
+                    .addComponent(isKnown))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -140,7 +141,7 @@ public final class AEventBean extends JPanel implements ABean {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox1))
+                    .addComponent(isKnown))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(aDateBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -151,20 +152,20 @@ public final class AEventBean extends JPanel implements ABean {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void isKnownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isKnownActionPerformed
         showOrHide();
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_isKnownActionPerformed
 
     private void showOrHide(){
         if (showKnown){
-            boolean checked = jCheckBox1.isSelected();
+            boolean checked = isKnown.isSelected();
             aDateBean1.setVisible(checked);
             jLabel1.setVisible(checked);
             aPlaceBean1.setVisible(checked);
-            jCheckBox1.setVisible(true);
+            isKnown.setVisible(true);
         } else {
-            jCheckBox1.setVisible(false);
-            jCheckBox1.setSelected(true);
+            isKnown.setVisible(false);
+//            isKnown.setSelected(true);
         }
     }
 
@@ -174,7 +175,7 @@ public final class AEventBean extends JPanel implements ABean {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean1;
     private ancestris.modules.beans.APlaceBean aPlaceBean1;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox isKnown;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

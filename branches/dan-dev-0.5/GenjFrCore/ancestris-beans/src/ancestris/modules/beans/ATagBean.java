@@ -13,16 +13,29 @@ package ancestris.modules.beans;
 
 import genj.edit.beans.ChoiceBean;
 import genj.edit.beans.SimpleValueBean;
+import genj.gedcom.Gedcom;
 import java.io.Serializable;
+import javax.swing.JLabel;
 
 /**
  *
  * @author daniel
  */
-public class ASimpleBean extends SimpleValueBean implements Serializable {
+public class ATagBean extends JLabel implements Serializable {
 
-    public ASimpleBean() {
+    public ATagBean() {
         super();
+    }
+    private String tag;
+
+    /**
+     * Set the value of tag
+     *
+     * @param tag new value of tag
+     */
+    public void setTag(String tag) {
+        this.tag = tag;
+        setText(Gedcom.getName(tag));
     }
 
 }

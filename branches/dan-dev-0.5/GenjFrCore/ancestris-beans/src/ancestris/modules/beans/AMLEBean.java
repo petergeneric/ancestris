@@ -12,6 +12,7 @@
 package ancestris.modules.beans;
 
 import genj.edit.beans.ChoiceBean;
+import genj.edit.beans.MLEBean;
 import genj.edit.beans.SimpleValueBean;
 import java.io.Serializable;
 
@@ -19,9 +20,9 @@ import java.io.Serializable;
  *
  * @author daniel
  */
-public class ASimpleBean extends SimpleValueBean implements Serializable {
+public class AMLEBean extends MLEBean implements Serializable {
 
-    public ASimpleBean() {
+    public AMLEBean() {
         super();
     }
 
