@@ -24,20 +24,18 @@ public final class NewGedcomVisualPanel2 extends JPanel {
     /** Creates new form NewGedcomVisualPanel2 */
     public NewGedcomVisualPanel2() {
         initComponents();
+        showSpouse.setSelected(false);
         Context c = GedcomDirectory.getInstance().getLastContext();
-        if (c == null) {
-            return;
-        }
-        if (c.getEntity() instanceof Indi){
-            Indi i = (Indi)c.getEntity();
-            aIndiBean1.setRoot(i);
-            fams = i.getFamiliesWhereSpouse()[0];
-            if (fams != null){
-                showSpouse.setSelected(true);
-                aIndiBean2.setRoot(fams.getOtherSpouse(i));
-                aEventBean1.setRoot(fams);
-            } else {
-                showSpouse.setSelected(false);
+        if (c != null) {
+            if (c.getEntity() instanceof Indi){
+                Indi i = (Indi)c.getEntity();
+                aIndiBean1.setRoot(i);
+                fams = i.getFamiliesWhereSpouse()[0];
+                if (fams != null){
+                    showSpouse.setSelected(true);
+                    aIndiBean2.setRoot(fams.getOtherSpouse(i));
+                    aEventBean1.setRoot(fams);
+                }
             }
         }
         showOrHide();

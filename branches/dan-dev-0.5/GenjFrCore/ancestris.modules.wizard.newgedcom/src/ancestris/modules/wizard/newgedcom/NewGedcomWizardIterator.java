@@ -22,7 +22,7 @@ import org.openide.WizardDescriptor;
 
 public final class NewGedcomWizardIterator implements WizardDescriptor.InstantiatingIterator {
 
-    private int index=1;
+    private int index=0;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;
 
