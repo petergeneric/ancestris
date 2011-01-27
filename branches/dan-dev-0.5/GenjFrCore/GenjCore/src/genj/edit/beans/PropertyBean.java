@@ -223,6 +223,13 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   /**
    * set property to look at
    */
+  public final PropertyBean setContext(Property root, TagPath path, Property property) {
+    return setContext(root, path, property, new ArrayList<PropertyBean>());
+  }
+
+  /**
+   * set property to look at
+   */
   public final PropertyBean setContext(Property root, TagPath path, Property property, List<PropertyBean> session) {
     
     if (root==null||path==null)
@@ -308,6 +315,8 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
    * Commit any changes made by the user
    */
   public final void commit() throws GedcomException {
+      if (!hasChanged())
+          return;
     // still need target?
     if (property==null)
       property = root.setValue(path, "");
