@@ -140,7 +140,9 @@ public class ChoiceBean extends PropertyBean {
       choices.setText(choice.isSecret() ? "" : choice.getDisplayValue());
       sameChoices = choice.getSameChoices();
     } else {
-      choices.setValues(PropertyChoiceValue.getSameChoices(getRoot().getGedcom(), getPath().getLast(), true));
+        //FIXME: pourquoi getsamevalues?
+//      choices.setValues(PropertyChoiceValue.getSameChoices(getRoot().getGedcom(), getPath().getLast(), true));
+      choices.setValues(PropertyChoiceValue.getChoices(getRoot().getGedcom(), getPath().getLast(), true));
       choices.setText("");
       sameChoices = new Property[0];
     }
