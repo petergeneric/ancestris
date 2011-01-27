@@ -89,7 +89,7 @@ public class DateBean extends PropertyBean {
     // do the layout and format
     setPreferHorizontal(false);
     setFormat(PropertyDate.FORMATS[0]);
-    setAlternateCalendar(PointInTime.GREGORIAN, PointInTime.FRENCHR);
+    setPreferedCalendar(PointInTime.GREGORIAN, PointInTime.FRENCHR);
     
     // setup default focus
     defaultFocus = date1;
@@ -97,9 +97,9 @@ public class DateBean extends PropertyBean {
     // Done
   }
 
-  public void setAlternateCalendar(Calendar prefered, Calendar alternate){
-      date1.setAlternateCalendar(prefered, alternate);
-      date2.setAlternateCalendar(prefered, alternate);
+  public void setPreferedCalendar(Calendar prefered, Calendar alternate){
+      date1.setPreferedCalendar(prefered, alternate);
+      date2.setPreferedCalendar(prefered, alternate);
     }
 
   @Override

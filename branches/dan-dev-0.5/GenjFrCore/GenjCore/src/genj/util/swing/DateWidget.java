@@ -164,8 +164,14 @@ public class DateWidget extends JPanel {
 
     // Done
   }
-
-  public void setAlternateCalendar(Calendar prefered, Calendar alternate){
+/**
+ * positionne les calendiers preferes. Ceux-ci, s'il sont non nuls, seront utilises pour afficher
+ * un equivalence de la date a cote du widget:
+ *
+ * @param prefered dans le cas ou le calendrier courant et different de prefered, alors prefered (si non nul) est utilise
+ * @param alternate si le calendrier courant est egal a prefered, alors alternate est utilise
+ */
+  public void setPreferedCalendar(Calendar prefered, Calendar alternate){
       alternateCalendar = alternate;
       preferedCalendar = prefered;
   }
@@ -314,16 +320,18 @@ public class DateWidget extends JPanel {
       // show current calendar on enabled button
       widgetCalendar.setEnabled(true);
       widgetCalendar.setIcon(calendar.getImage());
-      if (alternateCalendar == null || preferedCalendar == null){
+      Calendar helpCalendar;
+      if (value.getCalendar() == preferedCalendar) {
+          helpCalendar = alternateCalendar;
+      } else{
+          helpCalendar = preferedCalendar;
+      }
+      if (helpCalendar == null){
           altDisplay.setVisible(false);;
       } else {
         altDisplay.setVisible(true);
         try {
-            if (value.getCalendar() == alternateCalendar){
-                altDisplay.setText(value.getPointInTime(preferedCalendar).toString());
-            } else {
-                altDisplay.setText(value.getPointInTime(alternateCalendar).toString());
-            }
+            altDisplay.setText(value.getPointInTime(helpCalendar).toString());
         } catch (GedcomException ex) {
             altDisplay.setText("Date non affichable");
         }
