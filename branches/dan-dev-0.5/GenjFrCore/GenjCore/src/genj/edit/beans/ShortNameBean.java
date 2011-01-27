@@ -46,8 +46,8 @@ public class ShortNameBean extends PropertyBean {
 
   private final static NestedBlockLayout LAYOUT = new NestedBlockLayout(
       "<table>"+
-       "<row><l/><v wx=\"1\"/>"+
-       "<l/><row><v wx=\"1\"/><check pad=\"0\"/></row></row>"+
+       "<row><l/><v wx=\"1\"/></row>"+
+       "<row><l/><row><v wx=\"1\"/><check pad=\"0\"/></row></row>"+
       "</table>"
   );
   
