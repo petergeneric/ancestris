@@ -223,6 +223,13 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   /**
    * set property to look at
    */
+  public final PropertyBean setContext(Property root, String path) {
+      TagPath tpath = new TagPath(path);
+    return setContext(root, tpath, root.getProperty(tpath), new ArrayList<PropertyBean>());
+  }
+  /**
+   * set property to look at
+   */
   public final PropertyBean setContext(Property root, TagPath path, Property property) {
     return setContext(root, path, property, new ArrayList<PropertyBean>());
   }
