@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="Other">
+            <file name="newGedcom">
+                <attr name="displayName" bundlevalue="ancestris.modules.wizard.newgedcom.Bundle#Templates/Other/newGedcom"/>
+                <attr name="instantiatingIterator" newvalue="ancestris.modules.wizard.newgedcom.NewGedcomWizardIterator"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/ancestris/modules/wizard/newgedcom/newGedcom.html"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>
