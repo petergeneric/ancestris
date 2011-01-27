@@ -19,6 +19,7 @@
  */
 package ancestris.welcome.ui;
 
+import ancestris.api.newgedcom.NewGedcom;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -30,6 +31,8 @@ import ancestris.welcome.content.Constants;
 import ancestris.welcome.content.LinkButton;
 import ancestris.welcome.content.Utils;
 import genjfr.app.ActionNew;
+import javax.swing.AbstractAction;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -49,7 +52,11 @@ class NewGedcomPanel extends JPanel implements Constants {
             @Override
             public void actionPerformed(ActionEvent e) {
                 logUsage();
-                new ActionNew().actionPerformed(e); //NOI18N
+                NewGedcom wiz = (NewGedcom)Lookup.getDefault().lookup(NewGedcom.class);
+                if (wiz != null && wiz.create() != null){
+                } else {
+                    new ActionNew().actionPerformed(e); //NOI18N
+                }
             }
         };
         b.setFont(GET_STARTED_FONT);

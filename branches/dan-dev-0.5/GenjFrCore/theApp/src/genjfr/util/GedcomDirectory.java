@@ -44,6 +44,7 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
   
   private List<Listener> listeners = new ArrayList<Listener>();
   private Map<Gedcom,GedcomObject> gedcomsOpened = new HashMap<Gedcom, GedcomObject>(5);
+    private Context lastContext = null;;
   
   /** singleton constructor */
   private GedcomDirectory() {
@@ -94,6 +95,9 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
       return result;
   }
 
+    public Context getLastContext() {
+        return lastContext;
+    }
 
   
   /** listener */
@@ -107,6 +111,7 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
     public void setContext(Context context, boolean isActionPerformed) {
         try {
             gedcomsOpened.get(context.getGedcom()).setContext(context);
+            lastContext = context;
 
         } catch (NullPointerException e){}
     }
