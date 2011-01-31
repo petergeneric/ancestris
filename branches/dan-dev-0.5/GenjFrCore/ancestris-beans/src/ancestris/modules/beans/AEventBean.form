@@ -25,7 +25,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="aPlaceBean1" alignment="0" pref="410" max="32767" attributes="0"/>
                   <Component id="aDateBean1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="isKnown" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbIsKnown" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -36,7 +36,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="jLabel2" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="isKnown" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="cbIsKnown" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="aDateBean1" min="-2" max="-2" attributes="0"/>
@@ -74,14 +74,14 @@
     </Component>
     <Component class="ancestris.modules.beans.APlaceBean" name="aPlaceBean1">
     </Component>
-    <Component class="javax.swing.JCheckBox" name="isKnown">
+    <Component class="javax.swing.JCheckBox" name="cbIsKnown">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="null" type="code"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="isKnownActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbIsKnownActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">

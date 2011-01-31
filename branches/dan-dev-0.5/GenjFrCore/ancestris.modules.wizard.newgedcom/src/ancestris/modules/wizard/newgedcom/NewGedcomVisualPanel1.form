@@ -25,14 +25,14 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="aAddrBean1" pref="377" max="32767" attributes="0"/>
+                          <Component id="aAddrBean1" pref="370" max="32767" attributes="0"/>
                           <EmptySpace min="17" pref="17" max="17" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           <Component id="aTagBean1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                          <Component id="aSimpleBean1" pref="297" max="32767" attributes="0"/>
+                          <Component id="aSimpleBean1" pref="290" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>

@@ -11,18 +11,73 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
+import ancestris.modules.beans.ABluePrintBeans;
+import ancestris.modules.beans.AIndiBean;
+import genj.edit.actions.CreateParent;
+import genj.edit.actions.CreateSpouse;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.PropertySex;
+import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 
-public final class NewGedcomVisualPanel3 extends JPanel {
+public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomSteps {
+
+    private final static String EMPTY_BP = "<p align=center>Cliquez pour ajouter</p>";
+    private IndiBeans husbandBeans;
+    private IndiBeans wifeBeans;
 
     /** Creates new form NewGedcomVisualPanel3 */
     public NewGedcomVisualPanel3() {
         initComponents();
+        husbandBeans = new IndiBeans(husband, husbFather, husbMother);
+        wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
+        husband.setEmptyBluePrint(EMPTY_BP);
+        wife.setEmptyBluePrint(EMPTY_BP);
+        familySpouse.setEmptyBluePrint(EMPTY_BP);
+
+        setContext(CreateNewGedcom.getFirst(), true);
+    }
+
+    public void setContext(Entity entity, boolean getRelatives) {
+        Fam f = null;
+        Indi h = null;
+        Indi w = null;
+        if (entity instanceof Fam) {
+            f = ((Fam) entity);
+            if (getRelatives) {
+                h = f.getHusband();
+                w = f.getWife();
+            }
+        } else if (entity instanceof Indi) {
+            Indi i = (Indi) entity;
+            if (i.getSex() == PropertySex.FEMALE) {
+                w = i;
+            } else {
+                h = i;
+            }
+            if (getRelatives) {
+                if (i.getNoOfFams() > 0) {
+                    f = i.getFamiliesWhereSpouse()[0];
+                    h = f.getHusband();
+                    w = f.getWife();
+                }
+            }
+        }
+
+        familySpouse.setContext(f);
+        husbandBeans.setIndi(h, getRelatives);
+        wifeBeans.setIndi(w, getRelatives);
     }
 
     @Override
     public String getName() {
-        return "Step #3";
+        return "Completer le noyau familial";
     }
 
     /** This method is called from within the constructor to
@@ -33,17 +88,373 @@ public final class NewGedcomVisualPanel3 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        aBluePrintBeans2 = new ancestris.modules.beans.ABluePrintBeans();
+        aBluePrintBeans3 = new ancestris.modules.beans.ABluePrintBeans();
+        husband = new ancestris.modules.beans.ABluePrintBeans();
+        husbFather = new ancestris.modules.beans.ABluePrintBeans();
+        wifeFather = new ancestris.modules.beans.ABluePrintBeans();
+        familySpouse = new ancestris.modules.beans.ABluePrintBeans();
+        wifeMother = new ancestris.modules.beans.ABluePrintBeans();
+        husbMother = new ancestris.modules.beans.ABluePrintBeans();
+        wife = new ancestris.modules.beans.ABluePrintBeans();
+
+        aBluePrintBeans2.setMinimumSize(new java.awt.Dimension(120, 80));
+        aBluePrintBeans2.setPreferredSize(new java.awt.Dimension(120, 80));
+
+        javax.swing.GroupLayout aBluePrintBeans2Layout = new javax.swing.GroupLayout(aBluePrintBeans2);
+        aBluePrintBeans2.setLayout(aBluePrintBeans2Layout);
+        aBluePrintBeans2Layout.setHorizontalGroup(
+            aBluePrintBeans2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 384, Short.MAX_VALUE)
+        );
+        aBluePrintBeans2Layout.setVerticalGroup(
+            aBluePrintBeans2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 103, Short.MAX_VALUE)
+        );
+
+        aBluePrintBeans3.setMinimumSize(new java.awt.Dimension(120, 160));
+        aBluePrintBeans3.setPreferredSize(new java.awt.Dimension(120, 160));
+
+        javax.swing.GroupLayout aBluePrintBeans3Layout = new javax.swing.GroupLayout(aBluePrintBeans3);
+        aBluePrintBeans3.setLayout(aBluePrintBeans3Layout);
+        aBluePrintBeans3Layout.setHorizontalGroup(
+            aBluePrintBeans3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 393, Short.MAX_VALUE)
+        );
+        aBluePrintBeans3Layout.setVerticalGroup(
+            aBluePrintBeans3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 74, Short.MAX_VALUE)
+        );
+
+        husband.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                husbandMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
+        husband.setLayout(husbandLayout);
+        husbandLayout.setHorizontalGroup(
+            husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 308, Short.MAX_VALUE)
+        );
+        husbandLayout.setVerticalGroup(
+            husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
+        );
+
+        husbFather.setMinimumSize(new java.awt.Dimension(256, 80));
+        husbFather.setPreferredSize(new java.awt.Dimension(256, 80));
+        husbFather.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                husbFatherMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout husbFatherLayout = new javax.swing.GroupLayout(husbFather);
+        husbFather.setLayout(husbFatherLayout);
+        husbFatherLayout.setHorizontalGroup(
+            husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 308, Short.MAX_VALUE)
+        );
+        husbFatherLayout.setVerticalGroup(
+            husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 95, Short.MAX_VALUE)
+        );
+
+        wifeFather.setMinimumSize(new java.awt.Dimension(256, 80));
+        wifeFather.setPreferredSize(new java.awt.Dimension(256, 80));
+        wifeFather.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                wifeFatherMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout wifeFatherLayout = new javax.swing.GroupLayout(wifeFather);
+        wifeFather.setLayout(wifeFatherLayout);
+        wifeFatherLayout.setHorizontalGroup(
+            wifeFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 302, Short.MAX_VALUE)
+        );
+        wifeFatherLayout.setVerticalGroup(
+            wifeFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 95, Short.MAX_VALUE)
+        );
+
+        familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout familySpouseLayout = new javax.swing.GroupLayout(familySpouse);
+        familySpouse.setLayout(familySpouseLayout);
+        familySpouseLayout.setHorizontalGroup(
+            familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 616, Short.MAX_VALUE)
+        );
+        familySpouseLayout.setVerticalGroup(
+            familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 82, Short.MAX_VALUE)
+        );
+
+        wifeMother.setPreferredSize(new java.awt.Dimension(256, 80));
+        wifeMother.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                wifeMotherMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout wifeMotherLayout = new javax.swing.GroupLayout(wifeMother);
+        wifeMother.setLayout(wifeMotherLayout);
+        wifeMotherLayout.setHorizontalGroup(
+            wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 302, Short.MAX_VALUE)
+        );
+        wifeMotherLayout.setVerticalGroup(
+            wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
+        husbMother.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                husbMotherMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout husbMotherLayout = new javax.swing.GroupLayout(husbMother);
+        husbMother.setLayout(husbMotherLayout);
+        husbMotherLayout.setHorizontalGroup(
+            husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 308, Short.MAX_VALUE)
+        );
+        husbMotherLayout.setVerticalGroup(
+            husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        wife.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                wifeMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
+        wife.setLayout(wifeLayout);
+        wifeLayout.setHorizontalGroup(
+            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 302, Short.MAX_VALUE)
+        );
+        wifeLayout.setVerticalGroup(
+            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(wifeFather, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wifeMother, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(wifeFather, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(husbFather, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(wifeMother, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(husbMother, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void husbFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbFatherMouseClicked
+        createOrEditParent(husbandBeans, husbFather.getContext(), PropertySex.MALE);
+    }//GEN-LAST:event_husbFatherMouseClicked
+
+    private void wifeFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeFatherMouseClicked
+        createOrEditParent(wifeBeans, wifeFather.getContext(), PropertySex.MALE);
+    }//GEN-LAST:event_wifeFatherMouseClicked
+
+    private void husbMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbMotherMouseClicked
+        createOrEditParent(husbandBeans, husbMother.getContext(), PropertySex.FEMALE);
+    }//GEN-LAST:event_husbMotherMouseClicked
+
+    private void wifeMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMotherMouseClicked
+        createOrEditParent(wifeBeans, wifeMother.getContext(), PropertySex.FEMALE);
+    }//GEN-LAST:event_wifeMotherMouseClicked
+
+    private void husbandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbandMouseClicked
+        createOrEditSpouse(husbandBeans, wife.getContext());
+    }//GEN-LAST:event_husbandMouseClicked
+
+    private void wifeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMouseClicked
+        createOrEditSpouse(wifeBeans, husband.getContext());
+    }//GEN-LAST:event_wifeMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.beans.ABluePrintBeans aBluePrintBeans2;
+    private ancestris.modules.beans.ABluePrintBeans aBluePrintBeans3;
+    private ancestris.modules.beans.ABluePrintBeans familySpouse;
+    private ancestris.modules.beans.ABluePrintBeans husbFather;
+    private ancestris.modules.beans.ABluePrintBeans husbMother;
+    private ancestris.modules.beans.ABluePrintBeans husband;
+    private ancestris.modules.beans.ABluePrintBeans wife;
+    private ancestris.modules.beans.ABluePrintBeans wifeFather;
+    private ancestris.modules.beans.ABluePrintBeans wifeMother;
     // End of variables declaration//GEN-END:variables
+
+    private void createOrEditParent(IndiBeans destBean, Entity parent, int sex) {
+        Indi indi = (Indi) destBean.getIndi();
+        if (indi == null) {
+            return;
+        }
+        if (parent != null) {
+            editIndi(parent);
+        } else {
+            CreateParent cpAction = new CreateParent(indi);
+            cpAction.actionPerformed(new ActionEvent(this, 0, ""));
+
+            if (cpAction.isNew()) {
+                Fam fam = indi.getFamilyWhereBiologicalChild();
+                if (sex == PropertySex.FEMALE) {
+                    editIndi(indi.getBiologicalMother());
+                } else {
+                    editIndi(indi.getBiologicalFather());
+                }
+            }
+        }
+        destBean.setIndi(indi, true);
+    }
+
+    private void createOrEditSpouse(IndiBeans destBean, Entity spouse) {
+        Indi indi = (Indi) destBean.getIndi();
+        if (indi != null) {
+            editIndi(indi);
+        } else {
+            CreateSpouse csAction = new CreateSpouse((Indi) spouse);
+            csAction.actionPerformed(new ActionEvent(this, 0, ""));
+            indi = (Indi) csAction.getCreated();
+            if (csAction.isNew()) {
+                editIndi(indi);
+            }
+        }
+        destBean.setIndi(indi, true);
+        familySpouse.setContext(getFams(indi, (Indi) spouse));
+    }
+
+    private void editIndi(Entity indi) {
+        if (!(indi instanceof Indi)) {
+            return;
+        }
+        AIndiBean bean = new AIndiBean();
+        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(indi), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        DialogDisplayer.getDefault().notify(nd);
+        if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
+            return;
+        }
+        try {
+            bean.commit();
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    @Override
+    public void applyNext() {
+    }
+
+    private class IndiBeans {
+
+        ABluePrintBeans indiBean;
+        ABluePrintBeans fatherBean;
+        ABluePrintBeans motherBean;
+        ABluePrintBeans spouseBean;
+        Indi indi;
+
+        public IndiBeans(ABluePrintBeans i, ABluePrintBeans f, ABluePrintBeans m) {
+            indiBean = i;
+            fatherBean = f;
+            motherBean = m;
+        }
+
+        public ABluePrintBeans getFatherBean() {
+            return fatherBean;
+        }
+
+        public ABluePrintBeans getIndiBean() {
+            return indiBean;
+        }
+
+        public ABluePrintBeans getMotherBean() {
+            return motherBean;
+        }
+
+        public ABluePrintBeans getSpouseBean() {
+            return spouseBean;
+        }
+
+        public Indi getIndi() {
+            return indi;
+        }
+
+        public void setIndi(Indi indi, boolean getRelatives) {
+            this.indi = indi;
+            if (indiBean == null) {
+                return;
+            }
+            indiBean.setEmptyBluePrint(EMPTY_BP);
+            if (indi == null) {
+                fatherBean.setEmptyBluePrint(null);
+                motherBean.setEmptyBluePrint(null);
+            } else {
+                fatherBean.setEmptyBluePrint(EMPTY_BP);
+                motherBean.setEmptyBluePrint(EMPTY_BP);
+            }
+            indiBean.setContext(indi);
+
+            if (indi != null && getRelatives) {
+                fatherBean.setContext(indi.getBiologicalFather());
+                motherBean.setContext(indi.getBiologicalMother());
+            }
+
+        }
+    }
+
+    private Fam getFams(Indi indi, Indi spouse) {
+        if (indi.getNoOfFams() == 0) {
+            return null;
+        }
+        Fam[] fams = indi.getFamiliesWhereSpouse();
+        if (spouse == null) {
+            return fams[0];
+        }
+        for (Fam fam : fams) {
+            if (fam.getOtherSpouse(indi) == spouse) {
+                return fam;
+            }
+        }
+        return null;
+    }
 }

@@ -15,11 +15,13 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyEvent;
 import javax.swing.JPanel;
 
 public final class AEventBean extends JPanel implements ABean {
 
     private String tag = "";
+    private PropertyEvent event;
 
     /**
      * Get the value of tag
@@ -57,18 +59,40 @@ public final class AEventBean extends JPanel implements ABean {
      * @param root new value of root
      */
     public AEventBean setRoot(Property root) {
-        if (root instanceof Entity) {
-            this.root = (Entity)root;
-            aDateBean1.setRoot(root.getProperty(tag));
-            aPlaceBean1.setRoot(root.getProperty(tag));
+        if (!(root instanceof Entity)) {
+            return this;
+        }
+        Property event = null;
+        if (root != null) {
+            event = root.getProperty(tag);
+        }
+        return setRoot(root, event);
+    }
+
+    public AEventBean setRoot(Property root, Property event) {
+        this.root = (Entity) root;
+        this.event = (PropertyEvent) event;
+        if (root != null) {
+            cbIsKnown.setSelected(event != null);//Boolean.TRUE.equals(getKnownStatus()));
+            aDateBean1.setContext(root, tag);
+            aPlaceBean1.setContext(root, tag);
+            showOrHide();
         }
         return this;
+    }
+
+    private Boolean getKnownStatus() {
+        // show event-has-happened?
+        if (event != null && !"EVEN".equals(event.getTag())) {
+            return event.isKnownToHaveHappened();
+        }
+        return null;
     }
 
     /** Creates new form NewGedcomVisualPanel2 */
     public AEventBean() {
         initComponents();
-        isKnown.setSelected(false);
+        cbIsKnown.setSelected(false);
         showOrHide();
     }
     private boolean showKnown = false;
@@ -102,7 +126,7 @@ public final class AEventBean extends JPanel implements ABean {
         aDateBean1 = new ancestris.modules.beans.ADateBean();
         jLabel2 = new javax.swing.JLabel();
         aPlaceBean1 = new ancestris.modules.beans.APlaceBean();
-        isKnown = new javax.swing.JCheckBox();
+        cbIsKnown = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
@@ -111,10 +135,10 @@ public final class AEventBean extends JPanel implements ABean {
         jLabel2.setMinimumSize(new java.awt.Dimension(76, 15));
         jLabel2.setPreferredSize(new java.awt.Dimension(76, 15));
 
-        org.openide.awt.Mnemonics.setLocalizedText(isKnown, null);
-        isKnown.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, null);
+        cbIsKnown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                isKnownActionPerformed(evt);
+                cbIsKnownActionPerformed(evt);
             }
         });
 
@@ -133,7 +157,7 @@ public final class AEventBean extends JPanel implements ABean {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(aPlaceBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                     .addComponent(aDateBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isKnown))
+                    .addComponent(cbIsKnown))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -141,7 +165,7 @@ public final class AEventBean extends JPanel implements ABean {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isKnown))
+                    .addComponent(cbIsKnown))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(aDateBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -152,20 +176,20 @@ public final class AEventBean extends JPanel implements ABean {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void isKnownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isKnownActionPerformed
+    private void cbIsKnownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbIsKnownActionPerformed
         showOrHide();
-    }//GEN-LAST:event_isKnownActionPerformed
+    }//GEN-LAST:event_cbIsKnownActionPerformed
 
-    private void showOrHide(){
-        if (showKnown){
-            boolean checked = isKnown.isSelected();
+    private void showOrHide() {
+        if (showKnown) {
+            boolean checked = cbIsKnown.isSelected();
             aDateBean1.setVisible(checked);
             jLabel1.setVisible(checked);
             aPlaceBean1.setVisible(checked);
-            isKnown.setVisible(true);
+            cbIsKnown.setVisible(true);
         } else {
-            isKnown.setVisible(false);
-//            isKnown.setSelected(true);
+            cbIsKnown.setVisible(false);
+//            cbIsKnown.setSelected(true);
         }
     }
 
@@ -175,7 +199,7 @@ public final class AEventBean extends JPanel implements ABean {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean1;
     private ancestris.modules.beans.APlaceBean aPlaceBean1;
-    private javax.swing.JCheckBox isKnown;
+    private javax.swing.JCheckBox cbIsKnown;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

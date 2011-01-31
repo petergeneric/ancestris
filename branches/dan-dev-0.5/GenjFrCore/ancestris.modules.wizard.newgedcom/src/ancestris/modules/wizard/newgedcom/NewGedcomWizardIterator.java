@@ -22,7 +22,7 @@ import org.openide.WizardDescriptor;
 
 public final class NewGedcomWizardIterator implements WizardDescriptor.InstantiatingIterator {
 
-    private int index=0;
+    private int index = 0;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;
 
@@ -97,6 +97,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
+        ((NewGedcomSteps) panels[index].getComponent()).applyNext();
         index++;
     }
 

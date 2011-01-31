@@ -13,7 +13,6 @@ package ancestris.modules.beans;
 
 import genj.edit.beans.DateBean;
 import genj.gedcom.Property;
-import genj.gedcom.TagPath;
 import java.io.Serializable;
 
 /**
@@ -32,8 +31,8 @@ public class ADateBean extends DateBean implements Serializable {
      * set root gedcom property for this bean
      * @param property
      */
-    public ADateBean setRoot(Property property) {
-        setContext(property, new TagPath(PATH), property.getProperty(PATH));
+    public ADateBean setContext(Property root, String path) {
+        super.setContext(root, path + ":" + PATH);
         return this;
     }
 }

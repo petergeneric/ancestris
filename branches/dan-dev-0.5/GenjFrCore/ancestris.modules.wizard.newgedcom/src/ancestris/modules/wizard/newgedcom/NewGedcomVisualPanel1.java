@@ -17,14 +17,16 @@ import genj.gedcom.TagPath;
 import genjfr.util.GedcomDirectory;
 import javax.swing.JPanel;
 
-public final class NewGedcomVisualPanel1 extends JPanel {
+public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomSteps {
 
     /** Creates new form NewGedcomVisualPanel1 */
     public NewGedcomVisualPanel1() {
         initComponents();
+        //FIXME: ce n'est pas sa place
+
         Context c = GedcomDirectory.getInstance().getLastContext();
         if (c != null) {
-            Submitter subm = c.getGedcom().getSubmitter();
+            Submitter subm = CreateNewGedcom.getGedcom().getSubmitter();
             aAddrBean1.setRoot(subm);
             aSimpleBean1.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
         }
@@ -32,7 +34,7 @@ public final class NewGedcomVisualPanel1 extends JPanel {
 
     @Override
     public String getName() {
-        return "Step #1";
+        return "Creation du gedcom";
     }
 
     /** This method is called from within the constructor to
@@ -99,4 +101,8 @@ public final class NewGedcomVisualPanel1 extends JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void applyNext() {
+    }
 }

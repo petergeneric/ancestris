@@ -12,10 +12,7 @@
 package ancestris.modules.beans;
 
 import genj.edit.beans.ChoiceBean;
-import genj.edit.beans.PlaceBean;
-import genj.edit.beans.SimpleValueBean;
 import genj.gedcom.Property;
-import genj.gedcom.TagPath;
 import java.io.Serializable;
 
 /**
@@ -35,8 +32,8 @@ public class APlaceBean extends ChoiceBean implements Serializable {
      * set root gedcom property for this bean
      * @param property
      */
-    public APlaceBean setRoot(Property property) {
-        this.setContext(property,new TagPath(PATH),property.getProperty(PATH));
+    public APlaceBean setContext(Property root, String tag) {
+        super.setContext(root, tag + ":" + PATH);
         return this;
     }
 }

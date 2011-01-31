@@ -15,14 +15,12 @@
  *
  * Created on 15 janv. 2011, 23:31:08
  */
-
 package ancestris.modules.beans;
 
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
-import genj.gedcom.TagPath;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +30,11 @@ import java.awt.event.ActionListener;
  * @author daniel
  */
 public class ASexBean extends PropertyBean {
-    public enum Dir {X_AXIS, Y_AXIS};
+
+    public enum Dir {
+
+        X_AXIS, Y_AXIS
+    };
 
     /** Creates new form ASexBean */
     public ASexBean() {
@@ -106,72 +108,72 @@ public class ASexBean extends PropertyBean {
 //
     @Override
     protected void setPropertyImpl(Property prop) {
-    defaultFocus = male;
-    group.clearSelection();
+        defaultFocus = male;
+        group.clearSelection();
 
-    PropertySex sex = (PropertySex)prop;
-    if (sex!=null)
-      switch (sex.getSex()) {
-        case PropertySex.MALE:
-          male.doClick();
-          defaultFocus = male;
-          break;
-        case PropertySex.FEMALE:
-          female.doClick();
-          defaultFocus = female;
-          break;
-        case PropertySex.UNKNOWN:
-          unknown.doClick();
-          defaultFocus = unknown;
-          break;
-      }
+        PropertySex sex = (PropertySex) prop;
+        if (sex != null) {
+            switch (sex.getSex()) {
+                case PropertySex.MALE:
+                    male.doClick();
+                    defaultFocus = male;
+                    break;
+                case PropertySex.FEMALE:
+                    female.doClick();
+                    defaultFocus = female;
+                    break;
+                case PropertySex.UNKNOWN:
+                    unknown.doClick();
+                    defaultFocus = unknown;
+                    break;
+            }
+        }
 
-    // Done
+        // Done
     }
 
     @Override
     protected void commitImpl(Property property) throws GedcomException {
-        PropertySex sex = (PropertySex)property;
+        PropertySex sex = (PropertySex) property;
         sex.setSex(getSex());
     }
-  /**
-   * Get current sex
-   */
-  private int getSex() {
 
-    if (male.isSelected())
-      return PropertySex.MALE;
-    if (female.isSelected())
-      return PropertySex.FEMALE;
-    return PropertySex.UNKNOWN;
+    /**
+     * Get current sex
+     */
+    private int getSex() {
 
-  }
+        if (male.isSelected()) {
+            return PropertySex.MALE;
+        }
+        if (female.isSelected()) {
+            return PropertySex.FEMALE;
+        }
+        return PropertySex.UNKNOWN;
+
+    }
 
     public void setRoot(Property root) {
-        setContext(root, new TagPath("SEX"),root.getProperty("SEX"));
+        setContext(root, "SEX");
 
     }
 
+    @Override
+    public Dimension getMaximumSize() {
+        return getPreferredSize();
+    }
 
+    private class ActionHandler implements ActionListener {
 
-  @Override
-  public Dimension getMaximumSize() {
-    return getPreferredSize();
-  }
-
-  private class ActionHandler implements ActionListener {
         @Override
-    public void actionPerformed(ActionEvent e) {
-      changeSupport.fireChangeEvent();
+        public void actionPerformed(ActionEvent e) {
+            changeSupport.fireChangeEvent();
+        }
     }
-  }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton female;
     private javax.swing.ButtonGroup group;
     private javax.swing.JRadioButton male;
     private javax.swing.JRadioButton unknown;
     // End of variables declaration//GEN-END:variables
-
 }

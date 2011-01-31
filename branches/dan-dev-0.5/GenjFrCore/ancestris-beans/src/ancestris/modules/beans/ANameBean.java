@@ -13,7 +13,6 @@ package ancestris.modules.beans;
 
 import genj.edit.beans.ShortNameBean;
 import genj.gedcom.Property;
-import genj.gedcom.TagPath;
 import java.io.Serializable;
 
 /**
@@ -31,7 +30,6 @@ public class ANameBean extends ShortNameBean implements Serializable {
      * @param property
      */
     public void setRoot(Property property) {
-        setContext(property,new TagPath("NAME"),property.getProperty("NAME"));
+        setContext(property, "NAME");
     }
-
 }
