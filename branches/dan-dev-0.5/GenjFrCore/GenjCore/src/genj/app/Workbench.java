@@ -315,6 +315,9 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
 
     if (context.getGedcom() == null)
       return false;
+
+    if (context.getGedcom().getOrigin() == null)
+        return saveAsGedcom(context);
     
     // ask everyone to commit their data
     fireCommit(context);
@@ -424,7 +427,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
       if (rc == 0) 
         if (!saveGedcom(context))
           return false;
-
+      
     }
     
     // tell 
