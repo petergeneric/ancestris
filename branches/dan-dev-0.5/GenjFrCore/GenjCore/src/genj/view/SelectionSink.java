@@ -36,6 +36,8 @@ public interface SelectionSink {
         }
 
     public static void fireSelection(AWTEvent event, Context context) {
+        if (event == null)
+            fireSelection((Component)null, context, false);
       boolean isActionPerformed = false;
       if (event instanceof ActionEvent)
         isActionPerformed |= (((ActionEvent)event).getModifiers()&ActionEvent.CTRL_MASK)!=0;
