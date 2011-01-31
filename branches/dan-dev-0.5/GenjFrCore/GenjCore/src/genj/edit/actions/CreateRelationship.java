@@ -52,6 +52,7 @@ public abstract class CreateRelationship extends AbstractChange {
 
   /** the referenced entity */
   private Entity existing;
+  private Entity created;
 
   /** check for forcing id */
   private JCheckBox checkID;
@@ -61,6 +62,7 @@ public abstract class CreateRelationship extends AbstractChange {
   
   /** the target type of the relationship (where it points to) */
   protected String targetType;
+    private boolean isNew;
   
   /**
    * Constructor
@@ -162,7 +164,7 @@ public abstract class CreateRelationship extends AbstractChange {
    */
   protected final Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
     // create the entity if necessary
-    Entity change;
+      Entity change;
     if (existing!=null) {
       change = existing;
     } else {
@@ -179,15 +181,24 @@ public abstract class CreateRelationship extends AbstractChange {
     }
     
     // perform the change
+      isNew = change!=existing;
     Property focus = change(change, change!=existing);
     
     // remember target of relationship as next time target
     REGISTRY.put("select."+gedcom.getName()+"."+targetType, change.getId());
-    
+
+    created = focus.getEntity();
     // done
     return new Context(focus.getEntity());
   }
-  
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+  public Entity getCreated(){
+      return created;
+  }
   /**
    * Apply the relationship
    * @param target the entity that the resulting relationship has to point to
