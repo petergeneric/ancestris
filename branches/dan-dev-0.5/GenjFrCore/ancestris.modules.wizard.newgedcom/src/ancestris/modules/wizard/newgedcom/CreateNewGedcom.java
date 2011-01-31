@@ -15,6 +15,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.util.Origin;
 import genjfr.util.GedcomDirectory;
 import org.openide.util.Exceptions;
 
@@ -34,6 +35,7 @@ public class CreateNewGedcom {
             if (gedcom == null) {
                 return null;
             }
+            gedcom.setName("Nouveau Gedcom");
             try {
                 gedcom.createEntity(Gedcom.SUBM);
 

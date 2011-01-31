@@ -200,6 +200,9 @@ public class Gedcom implements Comparable {
   /** password for private information */
   private String password = null;
 
+  /** name for unnamed gedcom */
+  private String noName = null;
+
   /**
    * Gedcom's Constructor
    */
@@ -1194,9 +1197,12 @@ public class Gedcom implements Comparable {
    * Returns the name of this gedcom or null if unnamed
    */
   public String getName() {
-    return origin==null ? null : origin.getName();
+    return origin==null ? noName : origin.getName();
   }
 
+  public void setName(String noName){
+      this.noName = noName;
+  }
   /**
    * Returns a readable name for the given tag
    */
