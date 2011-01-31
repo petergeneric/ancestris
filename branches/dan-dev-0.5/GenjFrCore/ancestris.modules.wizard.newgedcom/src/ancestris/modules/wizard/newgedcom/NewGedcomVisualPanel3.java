@@ -443,6 +443,8 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     }
 
     private Fam getFams(Indi indi, Indi spouse) {
+        if (indi==null)
+            return null;
         if (indi.getNoOfFams() == 0) {
             return null;
         }
