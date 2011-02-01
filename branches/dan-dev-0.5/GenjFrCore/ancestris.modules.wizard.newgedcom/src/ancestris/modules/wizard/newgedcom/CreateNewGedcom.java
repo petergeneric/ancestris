@@ -15,7 +15,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.util.Origin;
 import genjfr.util.GedcomDirectory;
 import org.openide.util.Exceptions;
 

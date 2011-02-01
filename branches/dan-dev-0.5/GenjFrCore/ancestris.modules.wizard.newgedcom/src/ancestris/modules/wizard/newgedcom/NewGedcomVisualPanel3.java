@@ -339,7 +339,6 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
             cpAction.actionPerformed(new ActionEvent(this, 0, ""));
 
             if (cpAction.isNew()) {
-                Fam fam = indi.getFamilyWhereBiologicalChild();
                 if (sex == PropertySex.FEMALE) {
                     editIndi(indi.getBiologicalMother());
                 } else {
@@ -387,12 +386,11 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     public void applyNext() {
     }
 
-    private class IndiBeans {
+    private static class IndiBeans {
 
         ABluePrintBeans indiBean;
         ABluePrintBeans fatherBean;
         ABluePrintBeans motherBean;
-        ABluePrintBeans spouseBean;
         Indi indi;
 
         public IndiBeans(ABluePrintBeans i, ABluePrintBeans f, ABluePrintBeans m) {
@@ -411,10 +409,6 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
 
         public ABluePrintBeans getMotherBean() {
             return motherBean;
-        }
-
-        public ABluePrintBeans getSpouseBean() {
-            return spouseBean;
         }
 
         public Indi getIndi() {
