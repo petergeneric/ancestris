@@ -340,10 +340,12 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
 
             if (cpAction.isNew()) {
                 if (sex == PropertySex.FEMALE) {
-                    editIndi(indi.getBiologicalMother());
+                    parent = indi.getBiologicalMother();
                 } else {
-                    editIndi(indi.getBiologicalFather());
+                    parent = indi.getBiologicalFather();
                 }
+                if (!editIndi(parent))
+                    indi.getGedcom().undoUnitOfWork(false);
             }
         }
         destBean.setIndi(indi, true);
@@ -358,28 +360,31 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
             csAction.actionPerformed(new ActionEvent(this, 0, ""));
             indi = (Indi) csAction.getCreated();
             if (csAction.isNew()) {
-                editIndi(indi);
+                if (!editIndi(indi))
+                    spouse.getGedcom().undoUnitOfWork(false);
             }
         }
         destBean.setIndi(indi, true);
         familySpouse.setContext(getFams(indi, (Indi) spouse));
     }
 
-    private void editIndi(Entity indi) {
+    private boolean  editIndi(Entity indi) {
         if (!(indi instanceof Indi)) {
-            return;
+            return false;
         }
         AIndiBean bean = new AIndiBean();
         NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(indi), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
-            return;
+            return false;
         }
         try {
             bean.commit();
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
+            return false;
         }
+        return true;
     }
 
     @Override
