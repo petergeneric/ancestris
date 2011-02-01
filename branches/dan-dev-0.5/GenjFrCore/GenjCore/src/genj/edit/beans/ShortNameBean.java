@@ -46,8 +46,8 @@ public class ShortNameBean extends PropertyBean {
 
   private final static NestedBlockLayout LAYOUT = new NestedBlockLayout(
       "<table>"+
-       "<row><l/><v wx=\"1\"/></row>"+
        "<row><l/><row><v wx=\"1\"/><check pad=\"0\"/></row></row>"+
+       "<row><l/><v wx=\"1\"/></row>"+
       "</table>"
   );
   
@@ -96,12 +96,12 @@ public class ShortNameBean extends PropertyBean {
     cAll.setVisible(false);
     cAll.setRequestFocusEnabled(false);
     
-    add(new JLabel(PropertyName.getLabelForFirstName()));
-    add(cFirst);
-
     add(new JLabel(PropertyName.getLabelForLastName()));
     add(cLast);
     add(cAll);
+
+    add(new JLabel(PropertyName.getLabelForFirstName()));
+    add(cFirst);
 
     // listen to selection of global and ask for confirmation
     cAll.addActionListener(new ActionListener() {
