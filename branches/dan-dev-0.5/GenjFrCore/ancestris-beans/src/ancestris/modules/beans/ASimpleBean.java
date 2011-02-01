@@ -11,7 +11,6 @@
  */
 package ancestris.modules.beans;
 
-import genj.edit.beans.ChoiceBean;
 import genj.edit.beans.SimpleValueBean;
 import java.io.Serializable;
 

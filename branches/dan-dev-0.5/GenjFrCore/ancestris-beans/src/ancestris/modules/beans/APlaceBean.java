@@ -32,6 +32,7 @@ public class APlaceBean extends ChoiceBean implements Serializable {
      * set root gedcom property for this bean
      * @param property
      */
+    @Override
     public APlaceBean setContext(Property root, String tag) {
         super.setContext(root, tag + ":" + PATH);
         return this;

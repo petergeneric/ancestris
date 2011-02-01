@@ -11,7 +11,6 @@
  */
 package ancestris.modules.beans;
 
-import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -41,6 +40,7 @@ public final class AIndiBean extends JPanel implements ABean {
      *
      * @param entity new value of indi
      */
+    @Override
     public AIndiBean setRoot(Property entity) {
         if (!(entity instanceof Indi))
             return this;
@@ -57,6 +57,7 @@ public final class AIndiBean extends JPanel implements ABean {
     /**
      * commit beans - transaction has to be running already
      */
+    @Override
     public void commit() throws GedcomException {
         aEventBean1.commit();
         aEventBean2.commit();

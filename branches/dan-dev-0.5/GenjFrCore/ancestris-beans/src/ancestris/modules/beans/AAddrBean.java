@@ -11,11 +11,8 @@
  */
 package ancestris.modules.beans;
 
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyMultilineValue;
 import javax.swing.JPanel;
 
 public final class AAddrBean extends JPanel implements ABean {

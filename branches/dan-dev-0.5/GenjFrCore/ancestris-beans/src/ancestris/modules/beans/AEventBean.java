@@ -58,35 +58,28 @@ public final class AEventBean extends JPanel implements ABean {
      *
      * @param root new value of root
      */
+    @Override
     public AEventBean setRoot(Property root) {
         if (!(root instanceof Entity)) {
             return this;
         }
-        Property event = null;
+        Property eventProp = null;
         if (root != null) {
-            event = root.getProperty(tag);
+            eventProp = root.getProperty(tag);
         }
-        return setRoot(root, event);
+        return setRoot(root, eventProp);
     }
 
     public AEventBean setRoot(Property root, Property event) {
         this.root = (Entity) root;
         this.event = (PropertyEvent) event;
         if (root != null) {
-            cbIsKnown.setSelected(event != null);//Boolean.TRUE.equals(getKnownStatus()));
+            cbIsKnown.setSelected(event != null);
             aDateBean1.setContext(root, tag);
             aPlaceBean1.setContext(root, tag);
             showOrHide();
         }
         return this;
-    }
-
-    private Boolean getKnownStatus() {
-        // show event-has-happened?
-        if (event != null && !"EVEN".equals(event.getTag())) {
-            return event.isKnownToHaveHappened();
-        }
-        return null;
     }
 
     /** Creates new form NewGedcomVisualPanel2 */
@@ -110,6 +103,7 @@ public final class AEventBean extends JPanel implements ABean {
     /**
      * commit beans - transaction has to be running already
      */
+    @Override
     public void commit() throws GedcomException {
         aDateBean1.commit();
         aPlaceBean1.commit();
