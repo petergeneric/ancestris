@@ -18,15 +18,15 @@ import org.openide.util.Exceptions;
 public final class NewGedcomVisualPanel2 extends JPanel implements NewGedcomSteps {
 
     /** Creates new form NewGedcomVisualPanel2 */
-    public NewGedcomVisualPanel2() {
+    public NewGedcomVisualPanel2(CreateNewGedcom newGedcom) {
         initComponents();
         //FIXME: ce n'est pas sa place
-        aIndiBean1.setRoot(CreateNewGedcom.getFirst());
+        aIndiBean1.setRoot(newGedcom.getFirst());
     }
 
     @Override
     public String getName() {
-        return "Creation du premier individu";
+        return org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel2.class, "create.first.title");
     }
 
     /** This method is called from within the constructor to

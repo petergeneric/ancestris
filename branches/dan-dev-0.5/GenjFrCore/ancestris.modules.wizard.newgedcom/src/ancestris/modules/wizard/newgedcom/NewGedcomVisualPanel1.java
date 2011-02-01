@@ -20,21 +20,18 @@ import javax.swing.JPanel;
 public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomSteps {
 
     /** Creates new form NewGedcomVisualPanel1 */
-    public NewGedcomVisualPanel1() {
+    public NewGedcomVisualPanel1(CreateNewGedcom newGedcom) {
         initComponents();
         //FIXME: ce n'est pas sa place
 
-        Context c = GedcomDirectory.getInstance().getLastContext();
-        if (c != null) {
-            Submitter subm = CreateNewGedcom.getGedcom().getSubmitter();
+            Submitter subm = newGedcom.getContext().getGedcom().getSubmitter();
             aAddrBean1.setRoot(subm);
             aSimpleBean1.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
-        }
     }
 
     @Override
     public String getName() {
-        return "Creation du gedcom";
+        return org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "create.file.title");
     }
 
     /** This method is called from within the constructor to
@@ -46,41 +43,41 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        aTagBean1 = new ancestris.modules.beans.ATagBean();
         aSimpleBean1 = new ancestris.modules.beans.ASimpleBean();
         aAddrBean1 = new ancestris.modules.beans.AAddrBean();
+        jLabel1 = new javax.swing.JLabel();
         jTextPane1 = new javax.swing.JTextPane();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
-        aTagBean1.setTag(org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "NewGedcomVisualPanel1.aTagBean1.tag")); // NOI18N
-
         aAddrBean1.setPreferredSize(new java.awt.Dimension(580, 285));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "NewGedcomVisualPanel1.jLabel1.text")); // NOI18N
+        jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "NewGedcomVisualPanel1.jLabel1.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+                        .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
                         .addGap(17, 17, 17))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(aTagBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52)
-                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)))
+                        .addComponent(jLabel1)
+                        .addGap(10, 10, 10)
+                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(aSimpleBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(aTagBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(aAddrBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(158, Short.MAX_VALUE))
@@ -97,7 +94,7 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.AAddrBean aAddrBean1;
     private ancestris.modules.beans.ASimpleBean aSimpleBean1;
-    private ancestris.modules.beans.ATagBean aTagBean1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables

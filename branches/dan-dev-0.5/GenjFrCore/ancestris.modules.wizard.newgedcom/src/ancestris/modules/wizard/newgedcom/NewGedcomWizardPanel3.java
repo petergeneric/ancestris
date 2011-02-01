@@ -23,6 +23,11 @@ public class NewGedcomWizardPanel3 implements WizardDescriptor.Panel {
      * component from this class, just use getComponent().
      */
     private Component component;
+    private NewGedcomWizardIterator iterator;
+
+    public NewGedcomWizardPanel3(NewGedcomWizardIterator iterator) {
+        this.iterator = iterator;
+    }
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -31,7 +36,7 @@ public class NewGedcomWizardPanel3 implements WizardDescriptor.Panel {
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new NewGedcomVisualPanel3();
+            component = new NewGedcomVisualPanel3(iterator.getNewGedcom());
         }
         return component;
     }

@@ -35,7 +35,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     private IndiBeans wifeBeans;
 
     /** Creates new form NewGedcomVisualPanel3 */
-    public NewGedcomVisualPanel3() {
+    public NewGedcomVisualPanel3(CreateNewGedcom newGedcom) {
         initComponents();
         husbandBeans = new IndiBeans(husband, husbFather, husbMother);
         wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
@@ -43,7 +43,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         wife.setEmptyBluePrint(EMPTY_BP);
         familySpouse.setEmptyBluePrint("");
 
-        setContext(CreateNewGedcom.getFirst(), true);
+        setContext(newGedcom.getFirst(), true);
     }
 
     public void setContext(Entity entity, boolean getRelatives) {

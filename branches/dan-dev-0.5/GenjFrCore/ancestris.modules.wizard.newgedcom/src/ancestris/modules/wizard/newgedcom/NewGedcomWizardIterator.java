@@ -25,6 +25,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
     private int index = 0;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;
+    private CreateNewGedcom newGedcom = new CreateNewGedcom();
 
     /**
      * Initialize panels representing individual wizard's steps and sets
@@ -33,9 +34,9 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
     private WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                        new NewGedcomWizardPanel1(),
-                        new NewGedcomWizardPanel2(),
-                        new NewGedcomWizardPanel3()
+                        new NewGedcomWizardPanel1(this),
+                        new NewGedcomWizardPanel2(this),
+                        new NewGedcomWizardPanel3(this)
                     };
             String[] steps = createSteps();
             for (int i = 0; i < panels.length; i++) {
@@ -50,19 +51,23 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
                     // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-                    jc.putClientProperty("WizardPanel_contentSelectedIndex", Integer.valueOf(i));
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
                     // Sets steps names for a panel
-                    jc.putClientProperty("WizardPanel_contentData", steps);
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
                     // Turn on subtitle creation on each step
-                    jc.putClientProperty("WizardPanel_autoWizardStyle", Boolean.TRUE);
+                    jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
                     // Show steps on the left side with the image on the background
-                    jc.putClientProperty("WizardPanel_contentDisplayed", Boolean.TRUE);
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.TRUE);
                     // Turn on numbering of all steps
-                    jc.putClientProperty("WizardPanel_contentNumbered", Boolean.TRUE);
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, Boolean.TRUE);
                 }
             }
         }
         return panels;
+    }
+
+    public CreateNewGedcom getNewGedcom() {
+        return newGedcom;
     }
 
     @Override
@@ -87,7 +92,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
     @Override
     public String name() {
-        return index + 1 + ". from " + getPanels().length;
+        return index + 1 + ". sur " + getPanels().length;
     }
 
     @Override

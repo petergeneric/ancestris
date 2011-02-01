@@ -35,8 +35,9 @@ public class NewGedcomImpl implements NewGedcom{
         WizardDescriptor wizardDescriptor = new WizardDescriptor(iterator);
         // {0} will be replaced by WizardDescriptor.Panel.getComponent().getName()
         // {1} will be replaced by WizardDescriptor.Iterator.name()
-        wizardDescriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
-        wizardDescriptor.setTitle("Your wizard dialog title here");
+        //wizardDescriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
+        wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
+        wizardDescriptor.setTitle(org.openide.util.NbBundle.getMessage(NewGedcomImpl.class, "wizard.title"));
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
         dialog.setVisible(true);
         dialog.toFront();

@@ -24,38 +24,37 @@ import org.openide.util.Exceptions;
  */
 public class CreateNewGedcom {
 
-    private static Gedcom gedcom = null;
-    private static Indi first = null;
+    private Context context = null;
+    private Indi first = null;
 
-    static Gedcom getGedcom() {
-        if (gedcom == null) {
-            gedcom = new Gedcom();
-            //FIXME: raise exception?
-            if (gedcom == null) {
-                return null;
-            }
-            gedcom.setName("Nouveau Gedcom");
+    public CreateNewGedcom() {
+            Gedcom gedcom = new Gedcom();
+            gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
             try {
                 gedcom.createEntity(Gedcom.SUBM);
 
                 // Create place format
+                // FIXME: mettre ici l'appel a l'option
                 gedcom.setPlaceFormat("Lieudit,Commune,Code_INSEE,Département,Région,Pays");
 
                 // remember
-                GedcomDirectory.getInstance().registerGedcom(new Context(gedcom));
+                context = new Context(gedcom);
+                GedcomDirectory.getInstance().registerGedcom(context);
 //            openDefaultViews(context);
 //            SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
             } catch (Exception e) {
                 Exceptions.printStackTrace(e);
             }
-        }
-        return gedcom;
     }
 
-    static Indi getFirst() {
+    Context getContext() {
+        return context;
+    }
+
+    Indi getFirst() {
         if (first == null) {
             try {
-                first = (Indi) getGedcom().createEntity(Gedcom.INDI);
+                first = (Indi) getContext().getGedcom().createEntity(Gedcom.INDI);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
