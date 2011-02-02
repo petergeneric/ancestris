@@ -28,9 +28,10 @@ import org.openide.util.Exceptions;
 
 public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomSteps {
 
-    private final static String EMPTY_BP = "<p align=center>Cliquez pour ajouter</p>";
-    private final static String FATHER_EMPTY_BP = "<p align=center>Cliquez pour ajouter le pere</p>";
-    private final static String MOTHER_EMPTY_BP = "<p align=center>Cliquez pour ajouter la mere</p>";
+    private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.empty");
+    private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.father.empty");
+    private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.mother.empty");
+    private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.fams.empty");
     private IndiBeans husbandBeans;
     private IndiBeans wifeBeans;
 
@@ -41,7 +42,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
         husband.setEmptyBluePrint(EMPTY_BP);
         wife.setEmptyBluePrint(EMPTY_BP);
-        familySpouse.setEmptyBluePrint("");
+        familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
 
         setContext(newGedcom.getFirst(), true);
     }
