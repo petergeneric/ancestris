@@ -22,6 +22,7 @@ package genj.gedcom;
 import genj.option.Option;
 import genj.option.OptionProvider;
 import genj.option.PropertyOption;
+import genj.util.Registry;
 import genj.util.Resources;
 
 import java.util.Arrays;
@@ -189,5 +190,21 @@ public class Options extends OptionProvider {
   public static String[] getDefaultEncodings() {
     return Gedcom.ENCODINGS;
   }
+
+  /**
+   * Ancestris way
+   */
+    private Registry getPreferences() {
+        return Registry.get(genj.gedcom.Options.class);
+    }
+    private static final String CREATE_SPOUSE   = "gedcom.create_spouse";         // NOI18N
+
+    public void setCreateSpouse(boolean createSpouse) {
+        getPreferences().put(CREATE_SPOUSE, createSpouse);
+    }
+    public boolean getCreateSpouse() {
+        return getPreferences().get(CREATE_SPOUSE, false);
+    }
+
 
 } //Options

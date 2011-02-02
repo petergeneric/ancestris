@@ -122,7 +122,7 @@ public class CreateParent extends CreateRelationship {
       
       // 20040619 adding missing spouse automatically now
       // 20050405 whether we created a new family or the family didn't have all parents
-      if (family.getNoOfSpouses()<2) {
+      if (genj.gedcom.Options.getInstance().getCreateSpouse() && family.getNoOfSpouses()<2) {
         Indi spouse = (Indi)ged.createEntity(Gedcom.INDI);
         spouse.addDefaultProperties();
         family.setSpouse(spouse);
