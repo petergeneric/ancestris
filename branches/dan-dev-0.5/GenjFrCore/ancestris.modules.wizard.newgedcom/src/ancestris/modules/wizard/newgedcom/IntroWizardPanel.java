@@ -12,11 +12,12 @@
 package ancestris.modules.wizard.newgedcom;
 
 import java.awt.Component;
+import java.net.URL;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class IntroWizardPanel implements WizardDescriptor.Panel {
+public class IntroWizardPanel implements WizardDescriptor.Panel, IHelpPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -68,5 +69,10 @@ public class IntroWizardPanel implements WizardDescriptor.Panel {
 
     @Override
     public void storeSettings(Object settings) {
+    }
+
+    @Override
+    public URL getHelpUrl() {
+        return null;
     }
 }

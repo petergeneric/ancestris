@@ -11,12 +11,15 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
+import ancestris.util.Utilities;
 import java.awt.Component;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class NewGedcomWizardPanel3 implements WizardDescriptor.Panel {
+public class NewGedcomWizardPanel3 implements WizardDescriptor.Panel, IHelpPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -101,5 +104,13 @@ public class NewGedcomWizardPanel3 implements WizardDescriptor.Panel {
 
     @Override
     public void storeSettings(Object settings) {
+    }
+
+    @Override
+    public URL getHelpUrl() {
+        try {
+           return new URL("nbresloc:"+Utilities.getClassName(this)+"-help.html");
+        } catch (MalformedURLException r){}
+        return null;
     }
 }

@@ -12,6 +12,7 @@
 package ancestris.modules.wizard.newgedcom;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +35,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
      */
     private WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
-            ArrayList<WizardDescriptor.Panel> _panels = new ArrayList(4);;
+            ArrayList<WizardDescriptor.Panel> _panels = new ArrayList(4);
             panels = new WizardDescriptor.Panel[]{};
             if (!NewGedcomOptions.getInstance().getSkipIntro()) {
                 _panels.add(new IntroWizardPanel());
@@ -47,6 +48,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
             String[] steps = createSteps();
             for (int i = 0; i < panels.length; i++) {
                 Component c = panels[i].getComponent();
+
                 if (steps[i] == null) {
                     // Default step name to component name of panel. Mainly
                     // useful for getting the name of the target chooser to
@@ -66,6 +68,12 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.TRUE);
                     // Turn on numbering of all steps
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, Boolean.TRUE);
+
+                    jc.putClientProperty(WizardDescriptor.PROP_LEFT_DIMENSION, new Dimension(300, 400));
+
+                    jc.putClientProperty(WizardDescriptor.PROP_HELP_DISPLAYED, Boolean.TRUE);
+
+                    jc.putClientProperty(WizardDescriptor.PROP_HELP_URL, ((IHelpPanel)panels[i]).getHelpUrl());
                 }
             }
         }
