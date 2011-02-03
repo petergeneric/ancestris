@@ -99,6 +99,13 @@ made subject to such option by the copyright holder.
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="400"/>
             </file>
+
+            <file name="newgedcom.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
+                <attr name="instanceClass" stringvalue="ancestris.welcome.ui.NewGedcomAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                <attr name="position" intvalue="500"/>
+            </file>
         </folder>
 
         <folder name="TutorialsLinks">

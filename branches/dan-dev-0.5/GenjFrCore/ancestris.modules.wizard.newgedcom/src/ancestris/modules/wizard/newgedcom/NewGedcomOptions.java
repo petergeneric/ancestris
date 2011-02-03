@@ -35,7 +35,7 @@ public class NewGedcomOptions {
    * Ancestris way
    */
     private AncestrisPreferences getPreferences() {
-        return AncestrisPreferences.get(genj.gedcom.Options.class);
+        return AncestrisPreferences.get(NewGedcomOptions.class);
     }
     private static final String SKIP_INTRO   = "newgedcom.skip_intro";         // NOI18N
 
