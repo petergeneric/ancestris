@@ -46,6 +46,9 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
         aAddrBean1 = new ancestris.modules.beans.AAddrBean();
         jLabel1 = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(622, 380));
+        setRequestFocusEnabled(false);
+
         aAddrBean1.setPreferredSize(new java.awt.Dimension(580, 285));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "NewGedcomVisualPanel1.jLabel1.text")); // NOI18N
@@ -59,12 +62,12 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                        .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
                         .addGap(17, 17, 17))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(10, 10, 10)
-                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)))
+                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -75,7 +78,7 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
                     .addComponent(aSimpleBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

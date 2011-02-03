@@ -129,6 +129,8 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
             .addGap(0, 74, Short.MAX_VALUE)
         );
 
+        setPreferredSize(new java.awt.Dimension(622, 380));
+
         husband.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 husbandMouseClicked(evt);

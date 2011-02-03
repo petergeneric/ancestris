@@ -50,6 +50,8 @@ public class IntroVisualPanel extends JPanel implements NewGedcomSteps{
         jTextPane1 = new javax.swing.JTextPane();
         cbSkipIntro = new javax.swing.JCheckBox();
 
+        setPreferredSize(new java.awt.Dimension(622, 380));
+
         jTextPane1.setContentType("text/html"); // NOI18N
         jTextPane1.setEditable(false);
         jTextPane1.setText(org.openide.util.NbBundle.getMessage(IntroVisualPanel.class, "IntroVisualPanel.jTextPane1.text")); // NOI18N
@@ -64,7 +66,7 @@ public class IntroVisualPanel extends JPanel implements NewGedcomSteps{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
                     .addComponent(cbSkipIntro))
                 .addContainerGap())
         );
@@ -72,7 +74,7 @@ public class IntroVisualPanel extends JPanel implements NewGedcomSteps{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbSkipIntro)
                 .addContainerGap())
