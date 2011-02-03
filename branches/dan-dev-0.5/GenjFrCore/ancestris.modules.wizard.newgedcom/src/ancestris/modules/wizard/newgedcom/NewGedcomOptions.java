@@ -1,0 +1,51 @@
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2011 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
+package ancestris.modules.wizard.newgedcom;
+
+import ancestris.util.AncestrisPreferences;
+
+/**
+ *
+ * @author daniel
+ */
+public class NewGedcomOptions {
+
+    private static NewGedcomOptions instance = null;
+
+        private NewGedcomOptions() { }
+
+    public static NewGedcomOptions getInstance() {
+        if(instance == null) {
+            instance = new NewGedcomOptions();
+        }
+        return instance;
+    }
+
+  /**
+   * Ancestris way
+   */
+    private AncestrisPreferences getPreferences() {
+        return AncestrisPreferences.get(genj.gedcom.Options.class);
+    }
+    private static final String SKIP_INTRO   = "newgedcom.skip_intro";         // NOI18N
+
+    public void setSkipIntro(boolean skipIntro) {
+        getPreferences().put(SKIP_INTRO, skipIntro);
+    }
+    public boolean getSkipIntro() {
+        return getPreferences().get(SKIP_INTRO, false);
+    }
+
+
+
+}

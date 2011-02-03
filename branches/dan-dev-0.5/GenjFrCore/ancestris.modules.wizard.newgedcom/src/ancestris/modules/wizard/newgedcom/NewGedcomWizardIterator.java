@@ -13,6 +13,7 @@ package ancestris.modules.wizard.newgedcom;
 
 import java.awt.Component;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -33,11 +34,16 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
      */
     private WizardDescriptor.Panel[] getPanels() {
         if (panels == null) {
-            panels = new WizardDescriptor.Panel[]{
-                        new NewGedcomWizardPanel1(this),
-                        new NewGedcomWizardPanel2(this),
-                        new NewGedcomWizardPanel3(this)
-                    };
+            ArrayList<WizardDescriptor.Panel> _panels = new ArrayList(4);;
+            panels = new WizardDescriptor.Panel[]{};
+            if (!NewGedcomOptions.getInstance().getSkipIntro()) {
+                _panels.add(new IntroWizardPanel());
+            }
+            _panels.add(new NewGedcomWizardPanel1(this));
+            _panels.add(new NewGedcomWizardPanel2(this));
+            _panels.add(new NewGedcomWizardPanel3(this));
+            panels = _panels.toArray(panels);
+
             String[] steps = createSteps();
             for (int i = 0; i < panels.length; i++) {
                 Component c = panels[i].getComponent();
