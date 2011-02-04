@@ -237,7 +237,7 @@ public class CalculatorEngine {
             case '/':
                 if( value != 0 ){           // ignore divide by zero
                     value = keep / value;
-                }
+                } break;
             case '&':   value = (int)keep & (int)value;     break;
             case '|':   value = (int)keep | (int)value;     break;
             case '^':   value = (int)keep ^ (int)value;     break;

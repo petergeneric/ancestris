@@ -104,10 +104,10 @@ public class Calculator extends JPanel implements KeyListener{
 		case '7':
 		case '8':
 		case '9':
-			engine.digit(new Integer( key).intValue()-new Integer('0').intValue());
+			engine.digit(Integer.valueOf(key)-Integer.valueOf('0'));
 			break;
 		case '.':
-			engine.digit(new Integer( key).intValue());
+			engine.digit(Integer.valueOf(key));
 			break;
 		case '/':engine.divide();break;
 		case '*':engine.multiply();break;
@@ -330,7 +330,7 @@ public class Calculator extends JPanel implements KeyListener{
 						ENGINE.getMethod("digit", new Class[] { int.class });
 
 					if (methodName.equals(".")) {
-						method.invoke(engine, new Object[] { new Integer( '.' )});
+						method.invoke(engine, new Object[] { Integer.valueOf( '.' )});
 					} else {
 						method.invoke(engine, new Object[] { 
 								new Integer( methodName )});

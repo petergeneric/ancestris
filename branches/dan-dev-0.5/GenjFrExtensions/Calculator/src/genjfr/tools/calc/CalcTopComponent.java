@@ -129,7 +129,7 @@ public final class CalcTopComponent extends TopComponent {
     }
 
     private void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
+//        String version = p.getProperty("version");
     }
 
     @Override
