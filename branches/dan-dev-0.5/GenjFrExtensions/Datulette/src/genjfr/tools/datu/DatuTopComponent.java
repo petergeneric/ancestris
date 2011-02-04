@@ -74,7 +74,7 @@ public final class DatuTopComponent extends TopComponent {
                             jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.others.toolTipText")); // NOI18N
                         }
                         jPanel5.repaint();
-                        Update();
+                        update();
                     }
                     updateInProgress = false;
                 }
@@ -82,7 +82,7 @@ public final class DatuTopComponent extends TopComponent {
         });
     }
 
-    public void Update() {
+    public void update() {
         if (dw1.getValue() != null) {
             PointInTime Pit = dw1.getValue();
             if (Pit.isComplete()) {
@@ -455,14 +455,14 @@ public final class DatuTopComponent extends TopComponent {
         if (!jSliderGap.getValueIsAdjusting()) {
             // Gap  value
             gap = jSliderGap.getValue();
-            String texte = new String();
+            String texte = "";
             if (gap == 1) {
                 texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.year"), gap);
             } else if (gap != 0) {
                 texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.years"), gap);
             }
             jTextFieldGap.setText(texte);
-            Update();
+            update();
         }
     }//GEN-LAST:event_jSliderGapStateChanged
 
@@ -480,7 +480,7 @@ public final class DatuTopComponent extends TopComponent {
         } else if (gap != 0) {
             jLabel4.setText(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.months"));
         }
-        Update();
+        update();
     }//GEN-LAST:event_jTextFieldGap1KeyTyped
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -498,13 +498,13 @@ public final class DatuTopComponent extends TopComponent {
             } catch (GedcomException ex) {
                 jComboBox1.setSelectedItem(pit.getCalendar());
             }
-            Update();
+            update();
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         to = (Calendar) jComboBox2.getSelectedItem();
-        Update();
+        update();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -597,7 +597,7 @@ public final class DatuTopComponent extends TopComponent {
     }
 
     private void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
+//        String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
 
