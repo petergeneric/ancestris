@@ -18,7 +18,7 @@ import org.openide.util.Exceptions;
 public final class NewGedcomVisualPanel2 extends JPanel implements NewGedcomSteps {
 
     /** Creates new form NewGedcomVisualPanel2 */
-    public NewGedcomVisualPanel2(CreateNewGedcom newGedcom) {
+    public NewGedcomVisualPanel2(INewGedcomProvider newGedcom) {
         initComponents();
         //FIXME: ce n'est pas sa place
         aIndiBean1.setRoot(newGedcom.getFirst());

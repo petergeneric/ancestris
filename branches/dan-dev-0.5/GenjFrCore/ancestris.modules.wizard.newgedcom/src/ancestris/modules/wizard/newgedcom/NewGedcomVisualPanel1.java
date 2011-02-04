@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomSteps {
 
     /** Creates new form NewGedcomVisualPanel1 */
-    public NewGedcomVisualPanel1(CreateNewGedcom newGedcom) {
+    public NewGedcomVisualPanel1(INewGedcomProvider newGedcom) {
         initComponents();
         //FIXME: ce n'est pas sa place
 

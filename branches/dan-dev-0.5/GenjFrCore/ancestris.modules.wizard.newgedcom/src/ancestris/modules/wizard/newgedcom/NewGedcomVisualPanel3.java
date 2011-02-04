@@ -36,7 +36,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     private IndiBeans wifeBeans;
 
     /** Creates new form NewGedcomVisualPanel3 */
-    public NewGedcomVisualPanel3(CreateNewGedcom newGedcom) {
+    public NewGedcomVisualPanel3(INewGedcomProvider newGedcom) {
         initComponents();
         husbandBeans = new IndiBeans(husband, husbFather, husbMother);
         wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);

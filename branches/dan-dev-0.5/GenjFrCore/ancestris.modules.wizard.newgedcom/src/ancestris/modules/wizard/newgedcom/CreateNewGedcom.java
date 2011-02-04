@@ -22,7 +22,7 @@ import org.openide.util.Exceptions;
  *
  * @author daniel
  */
-public class CreateNewGedcom {
+public class CreateNewGedcom implements INewGedcomProvider {
 
     private Context context = null;
     private Indi first = null;
@@ -47,11 +47,11 @@ public class CreateNewGedcom {
             }
     }
 
-    Context getContext() {
+    public Context getContext() {
         return context;
     }
 
-    Indi getFirst() {
+    public Indi getFirst() {
         if (first == null) {
             try {
                 first = (Indi) getContext().getGedcom().createEntity(Gedcom.INDI);

@@ -27,7 +27,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
     private int index = 0;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;
-    private CreateNewGedcom newGedcom = new CreateNewGedcom();
+    private INewGedcomProvider newGedcom = new CreateNewGedcom();
 
     /**
      * Initialize panels representing individual wizard's steps and sets
@@ -40,9 +40,9 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
             if (!NewGedcomOptions.getInstance().getSkipIntro()) {
                 _panels.add(new IntroWizardPanel());
             }
-            _panels.add(new NewGedcomWizardPanel1(this));
-            _panels.add(new NewGedcomWizardPanel2(this));
-            _panels.add(new NewGedcomWizardPanel3(this));
+            _panels.add(new NewGedcomWizardPanel1(newGedcom));
+            _panels.add(new NewGedcomWizardPanel2(newGedcom));
+            _panels.add(new NewGedcomWizardPanel3(newGedcom));
             panels = _panels.toArray(panels);
 
             String[] steps = createSteps();
@@ -78,10 +78,6 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
             }
         }
         return panels;
-    }
-
-    public CreateNewGedcom getNewGedcom() {
-        return newGedcom;
     }
 
     @Override

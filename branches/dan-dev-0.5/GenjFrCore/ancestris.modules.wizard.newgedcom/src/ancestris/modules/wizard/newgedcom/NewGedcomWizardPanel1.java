@@ -26,10 +26,10 @@ public class NewGedcomWizardPanel1 implements WizardDescriptor.Panel, IHelpPanel
      * component from this class, just use getComponent().
      */
     private Component component;
-    private NewGedcomWizardIterator iterator;
+    private INewGedcomProvider gedcomProvider;
 
-    public NewGedcomWizardPanel1(NewGedcomWizardIterator iterator) {
-        this.iterator = iterator;
+    public NewGedcomWizardPanel1(INewGedcomProvider gedcomProvider) {
+        this.gedcomProvider = gedcomProvider;
     }
 
     // Get the visual component for the panel. In this template, the component
@@ -39,7 +39,7 @@ public class NewGedcomWizardPanel1 implements WizardDescriptor.Panel, IHelpPanel
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new NewGedcomVisualPanel1(iterator.getNewGedcom());
+            component = new NewGedcomVisualPanel1(gedcomProvider);
         }
         return component;
     }
