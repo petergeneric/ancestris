@@ -13,6 +13,7 @@ package ancestris.modules.wizard.newgedcom;
 
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AIndiBean;
+import genj.edit.actions.CreateChild;
 import genj.edit.actions.CreateParent;
 import genj.edit.actions.CreateSpouse;
 import genj.gedcom.Entity;
@@ -20,6 +21,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import org.openide.DialogDisplayer;
@@ -34,17 +36,22 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.fams.empty");
     private IndiBeans husbandBeans;
     private IndiBeans wifeBeans;
+    private Indi firstIndi;
 
     /** Creates new form NewGedcomVisualPanel3 */
     public NewGedcomVisualPanel3(INewGedcomProvider newGedcom) {
         initComponents();
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
         husbandBeans = new IndiBeans(husband, husbFather, husbMother);
         wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
         husband.setEmptyBluePrint(EMPTY_BP);
         wife.setEmptyBluePrint(EMPTY_BP);
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
 
-        setContext(newGedcom.getFirst(), true);
+        firstIndi = newGedcom.getFirst();
+        setContext(firstIndi, true);
+
+        updatechildrenPanel();
     }
 
     public void setContext(Entity entity, boolean getRelatives) {
@@ -100,6 +107,8 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         wifeMother = new ancestris.modules.beans.ABluePrintBeans();
         husbMother = new ancestris.modules.beans.ABluePrintBeans();
         wife = new ancestris.modules.beans.ABluePrintBeans();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        childrenPanel = new javax.swing.JPanel();
 
         aBluePrintBeans2.setMinimumSize(new java.awt.Dimension(120, 80));
         aBluePrintBeans2.setPreferredSize(new java.awt.Dimension(120, 80));
@@ -129,7 +138,8 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
             .addGap(0, 74, Short.MAX_VALUE)
         );
 
-        setPreferredSize(new java.awt.Dimension(622, 380));
+        setPreferredSize(new java.awt.Dimension(622, 500));
+        setRequestFocusEnabled(false);
 
         husband.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -141,11 +151,11 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         husband.setLayout(husbandLayout);
         husbandLayout.setHorizontalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
+            .addGap(0, 299, Short.MAX_VALUE)
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGap(0, 108, Short.MAX_VALUE)
         );
 
         husbFather.setMinimumSize(new java.awt.Dimension(256, 80));
@@ -160,7 +170,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         husbFather.setLayout(husbFatherLayout);
         husbFatherLayout.setHorizontalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
+            .addGap(0, 299, Short.MAX_VALUE)
         );
         husbFatherLayout.setVerticalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,7 +189,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         wifeFather.setLayout(wifeFatherLayout);
         wifeFatherLayout.setHorizontalGroup(
             wifeFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 302, Short.MAX_VALUE)
+            .addGap(0, 293, Short.MAX_VALUE)
         );
         wifeFatherLayout.setVerticalGroup(
             wifeFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,11 +202,11 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         familySpouse.setLayout(familySpouseLayout);
         familySpouseLayout.setHorizontalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 616, Short.MAX_VALUE)
+            .addGap(0, 598, Short.MAX_VALUE)
         );
         familySpouseLayout.setVerticalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 82, Short.MAX_VALUE)
+            .addGap(0, 45, Short.MAX_VALUE)
         );
 
         wifeMother.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -210,7 +220,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         wifeMother.setLayout(wifeMotherLayout);
         wifeMotherLayout.setHorizontalGroup(
             wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 302, Short.MAX_VALUE)
+            .addGap(0, 293, Short.MAX_VALUE)
         );
         wifeMotherLayout.setVerticalGroup(
             wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,7 +238,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         husbMother.setLayout(husbMotherLayout);
         husbMotherLayout.setHorizontalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
+            .addGap(0, 299, Short.MAX_VALUE)
         );
         husbMotherLayout.setVerticalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,33 +255,39 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         wife.setLayout(wifeLayout);
         wifeLayout.setHorizontalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 302, Short.MAX_VALUE)
+            .addGap(0, 293, Short.MAX_VALUE)
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGap(0, 108, Short.MAX_VALUE)
         );
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        childrenPanel.setLayout(new java.awt.GridLayout(0, 3, 5, 5));
+        jScrollPane1.setViewportView(childrenPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+                    .addComponent(familySpouse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
+                            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(wifeFather, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                            .addComponent(wifeFather, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wifeMother, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)))
+                        .addComponent(wifeMother, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -290,7 +306,9 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
                     .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -321,10 +339,12 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ABluePrintBeans aBluePrintBeans2;
     private ancestris.modules.beans.ABluePrintBeans aBluePrintBeans3;
+    private javax.swing.JPanel childrenPanel;
     private ancestris.modules.beans.ABluePrintBeans familySpouse;
     private ancestris.modules.beans.ABluePrintBeans husbFather;
     private ancestris.modules.beans.ABluePrintBeans husbMother;
     private ancestris.modules.beans.ABluePrintBeans husband;
+    private javax.swing.JScrollPane jScrollPane1;
     private ancestris.modules.beans.ABluePrintBeans wife;
     private ancestris.modules.beans.ABluePrintBeans wifeFather;
     private ancestris.modules.beans.ABluePrintBeans wifeMother;
@@ -347,8 +367,9 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
                 } else {
                     parent = indi.getBiologicalFather();
                 }
-                if (!editIndi(parent))
+                if (!editIndi(parent)) {
                     indi.getGedcom().undoUnitOfWork(false);
+                }
             }
         }
         destBean.setIndi(indi, true);
@@ -363,15 +384,55 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
             csAction.actionPerformed(new ActionEvent(this, 0, ""));
             indi = (Indi) csAction.getCreated();
             if (csAction.isNew()) {
-                if (!editIndi(indi))
+                if (!editIndi(indi)) {
                     spouse.getGedcom().undoUnitOfWork(false);
+                }
             }
         }
         destBean.setIndi(indi, true);
         familySpouse.setContext(getFams(indi, (Indi) spouse));
     }
 
-    private boolean  editIndi(Entity indi) {
+    private void createOrEditChild(ABluePrintBeans destBean) {
+        Indi indi = (Indi) destBean.getContext();
+        if (indi != null) {
+            editIndi(indi);
+        } else {
+            CreateChild ccAction;
+            // tries to guess entity to attach new child to
+            // Familly knows?
+            if (familySpouse.getContext() != null) {
+                ccAction = new CreateChild((Fam) (familySpouse.getContext().getEntity()), true);
+                ccAction.actionPerformed(new ActionEvent(this, 0, ""));
+            } else {
+                // Tries spouses
+                // wife
+                Indi parent = (Indi) wife.getContext();
+                // or husband
+                if (parent == null) {
+                    parent = (Indi) husband.getContext();
+                }
+                //
+                if (parent == null) {
+                    throw new UnsupportedOperationException("no entity to attach new child to");
+                }
+                ccAction = new CreateChild(parent, true);
+                ccAction.actionPerformed(new ActionEvent(this, 0, ""));
+            }
+            indi = (Indi) ccAction.getCreated();
+            if (ccAction.isNew()) {
+                if (!editIndi(indi)) {
+                    firstIndi.getGedcom().undoUnitOfWork(false);
+                    return;
+                }
+            }
+            familySpouse.setContext(indi.getFamilyWhereBiologicalChild());
+        }
+        destBean.setContext(indi);
+        updatechildrenPanel();
+    }
+
+    private boolean editIndi(Entity indi) {
         if (!(indi instanceof Indi)) {
             return false;
         }
@@ -392,6 +453,19 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
 
     @Override
     public void applyNext() {
+    }
+
+    private void updatechildrenPanel() {
+        childrenPanel.removeAll();
+        childrenPanel.repaint();
+        Fam f = familySpouse.getContext() == null ? null : (Fam) (familySpouse.getContext().getEntity());
+        if (f != null) {
+            for (Indi child : f.getChildren()) {
+                childrenPanel.add(new ChildBean(child));
+            }
+        }
+        childrenPanel.add(new ChildBean());
+        childrenPanel.revalidate();
     }
 
     private static class IndiBeans {
@@ -447,8 +521,9 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     }
 
     private Fam getFams(Indi indi, Indi spouse) {
-        if (indi==null)
+        if (indi == null) {
             return null;
+        }
         if (indi.getNoOfFams() == 0) {
             return null;
         }
@@ -462,5 +537,34 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
             }
         }
         return null;
+    }
+
+    private class ChildBean extends ABluePrintBeans {
+
+        public ChildBean() {
+            this(null);
+        }
+
+        public ChildBean(Indi child) {
+            super();
+            setEmptyBluePrint(EMPTY_BP);
+            this.setContext(child);
+            addMouseListener(new java.awt.event.MouseAdapter() {
+
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    createOrEditChild(ChildBean.this);
+                }
+            });
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new java.awt.Dimension(150, 35);
+        }
+
+        public void addToPanel(JPanel panel) {
+            panel.add(this);
+        }
     }
 }
