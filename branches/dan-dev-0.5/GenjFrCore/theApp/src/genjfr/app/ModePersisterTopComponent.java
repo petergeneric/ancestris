@@ -85,7 +85,7 @@ public final class ModePersisterTopComponent extends TopComponent {
     }
 
     private void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
+//        String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
 

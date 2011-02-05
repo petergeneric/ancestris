@@ -56,7 +56,7 @@ class GedcomFileChildren extends Children.Keys {
     /**
      * our model
      */
-    private class GedcomFileListener implements GedcomDirectory.Listener, GedcomMetaListener {
+    private static class GedcomFileListener implements GedcomDirectory.Listener, GedcomMetaListener {
 
         GedcomFileChildren children;
 

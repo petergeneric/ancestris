@@ -145,7 +145,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     }
 
     private void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
+//        String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
 

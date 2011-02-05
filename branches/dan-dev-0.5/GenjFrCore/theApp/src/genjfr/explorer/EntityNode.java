@@ -33,7 +33,6 @@ import org.openide.util.lookup.Lookups;
 class EntityNode extends AbstractNode implements Comparable<EntityNode>, ExplorerNode {
 
     Entity entity;
-    private boolean isDoubleClicked;
 
     public EntityNode(Entity e) {
         super(Children.LEAF, Lookups.fixed(new Object[]{e}));

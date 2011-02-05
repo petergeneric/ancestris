@@ -67,7 +67,7 @@ import org.openide.windows.WindowManager;
 public class AncestrisTopComponent extends TopComponent implements GenjViewInterface{
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
-    private static javax.swing.JPanel panel;
+    private javax.swing.JPanel panel;
     private boolean isRestored = false;
     private final static Logger LOG = Logger.getLogger("genj.app");
     private Context context;
@@ -241,7 +241,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     }
 
     void readPropertiesImpl(java.util.Properties p) {
-        String version = p.getProperty("version");
+// version not used        String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
 //        if (gedName==null) return;
         if (gedName==null)

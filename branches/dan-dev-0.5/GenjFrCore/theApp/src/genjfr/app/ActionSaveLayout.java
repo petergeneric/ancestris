@@ -24,14 +24,13 @@ import org.openide.windows.WindowManager;
 public final class ActionSaveLayout implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
-        StringBuilder sb = new StringBuilder("fenetres");
         Context selected = App.center.getSelectedContext(true);
         if (selected == null){
             return;
         }
         AncestrisPreferences prefs = AncestrisPreferences.get(AncestrisTopComponent.class);
         Object date = prefs.get("openViews.date", (String)null) == null?
-            new String(NbBundle.getMessage(this.getClass(), "TXT_ASL_never")):
+            NbBundle.getMessage(this.getClass(), "TXT_ASL_never"):
             new Date(new Long(prefs.get("openViews.date", "0")));
 
         NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
@@ -42,7 +41,6 @@ public final class ActionSaveLayout implements ActionListener {
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION))
             return;
 
-        WindowManager wm = WindowManager.getDefault() ;
         saveDefaultLayout(selected.getGedcom(), prefs);
     }
 

@@ -47,7 +47,7 @@ public class RecentFiles {
           return result;
     }
 
-    public class GedcomFileInformation{
+    public static class GedcomFileInformation{
 
         URL url;
         public GedcomFileInformation(String url) {

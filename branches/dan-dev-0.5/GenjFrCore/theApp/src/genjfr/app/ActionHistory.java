@@ -37,7 +37,7 @@ public final class ActionHistory implements Presenter.Toolbar {
       return history;
     }
 
-private class HistoryCombo extends JPanel {
+private static class HistoryCombo extends JPanel {
   private final Icon POPUP =  GraphicsHelper.getIcon(Color.BLACK, 0, 0, 8, 0, 4, 4);
 
   private List<Entity> history = new ArrayList<Entity>();
