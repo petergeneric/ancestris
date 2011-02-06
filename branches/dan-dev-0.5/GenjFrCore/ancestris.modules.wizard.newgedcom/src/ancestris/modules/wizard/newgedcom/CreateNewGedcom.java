@@ -15,6 +15,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.UnitOfWork;
 import genjfr.util.GedcomDirectory;
 import org.openide.util.Exceptions;
 
@@ -28,29 +29,39 @@ public class CreateNewGedcom implements INewGedcomProvider {
     private Indi first = null;
 
     public CreateNewGedcom() {
-            Gedcom gedcom = new Gedcom();
-            gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
-            try {
-                gedcom.createEntity(Gedcom.SUBM);
+        Gedcom gedcom = new Gedcom();
+        try {
+            // note: dan ce cas pas besoin de memoriser dans le undo history mais cela
+            // permet de positionner le gedcom dans l'etat change
+            gedcom.doUnitOfWork(new UnitOfWork() {
 
-                // Create place format
-                // FIXME: mettre ici l'appel a l'option
-                gedcom.setPlaceFormat("Lieudit,Commune,Code_INSEE,Département,Région,Pays");
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
+                    gedcom.createEntity(Gedcom.SUBM);
 
-                // remember
-                context = new Context(gedcom);
-                GedcomDirectory.getInstance().registerGedcom(context);
+                    // Create place format
+                    // FIXME: mettre ici l'appel a l'option
+                    gedcom.setPlaceFormat("Lieudit,Commune,Code_INSEE,Département,Région,Pays");
+                }
+            });
+
+            // remember
+            context = new Context(gedcom);
+            GedcomDirectory.getInstance().registerGedcom(context);
 //            openDefaultViews(context);
 //            SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
-            } catch (Exception e) {
-                Exceptions.printStackTrace(e);
-            }
+        } catch (Exception e) {
+            Exceptions.printStackTrace(e);
+        }
     }
 
+    @Override
     public Context getContext() {
         return context;
     }
 
+    @Override
     public Indi getFirst() {
         if (first == null) {
             try {
