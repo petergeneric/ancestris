@@ -47,6 +47,10 @@ public final class DatuTopComponent extends TopComponent {
 
     public DatuTopComponent() {
         initComponents();
+        jSliderGap.setMajorTickSpacing(50);
+        jSliderGap.setMinorTickSpacing(10);
+        jSliderGap.setPaintTicks(true);
+        jSliderGap.setPaintLabels(true);
         jComboBox1.setSelectedItem(from);
         jComboBox2.setSelectedItem(to);
         Border PanelBorder = jPanel5.getBorder();
@@ -252,17 +256,17 @@ public final class DatuTopComponent extends TopComponent {
         jPanel3.setPreferredSize(new java.awt.Dimension(0, 0));
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
+        jSliderGap.setFont(new java.awt.Font("Dialog", 1, 8)); // NOI18N
         jSliderGap.setMinimum(-100);
         jSliderGap.setValue(0);
-        jSliderGap.setMaximumSize(null);
-        jSliderGap.setMinimumSize(null);
         jSliderGap.setOpaque(false);
-        jSliderGap.setPreferredSize(null);
         jSliderGap.addChangeListener(formListener);
         jPanel3.add(jSliderGap);
 
         jTextFieldGap.setColumns(9);
         jTextFieldGap.setEditable(false);
+        jTextFieldGap.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jTextFieldGap.setForeground(java.awt.Color.lightGray);
         jTextFieldGap.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldGap.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap.text")); // NOI18N
         jTextFieldGap.setBorder(null);
@@ -278,9 +282,10 @@ public final class DatuTopComponent extends TopComponent {
         jPanel7.add(jLabel5);
 
         jTextFieldGap1.setColumns(2);
+        jTextFieldGap1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jTextFieldGap1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldGap1.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap1.text")); // NOI18N
-        jTextFieldGap1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jTextFieldGap1.setBorder(null);
         jTextFieldGap1.setOpaque(false);
         jTextFieldGap1.addKeyListener(formListener);
         jPanel7.add(jTextFieldGap1);
@@ -295,7 +300,8 @@ public final class DatuTopComponent extends TopComponent {
         jPanel6.setPreferredSize(new java.awt.Dimension(196, 93));
 
         jDisplay1.setEditable(false);
-        jDisplay1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jDisplay1.setFont(new java.awt.Font("Dialog", 1, 14));
+        jDisplay1.setForeground(java.awt.Color.red);
         jDisplay1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jDisplay1.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jDisplay1.text")); // NOI18N
         jDisplay1.setOpaque(false);
@@ -319,6 +325,8 @@ public final class DatuTopComponent extends TopComponent {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/genjfr/tools/datu/information.png"))); // NOI18N
         jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jButton1.toolTipText")); // NOI18N
+        jButton1.setBorder(null);
+        jButton1.setOpaque(false);
         jButton1.addActionListener(formListener);
 
         jPanel4.setOpaque(false);
@@ -328,7 +336,7 @@ public final class DatuTopComponent extends TopComponent {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jLabel1.text")); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24));
         jLabel2.setForeground(new java.awt.Color(51, 51, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jLabel2.text")); // NOI18N
@@ -340,8 +348,8 @@ public final class DatuTopComponent extends TopComponent {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -372,7 +380,7 @@ public final class DatuTopComponent extends TopComponent {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(12, 12, 12)
                 .addComponent(jButton1)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -392,14 +400,12 @@ public final class DatuTopComponent extends TopComponent {
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jButton1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(jButton1)
+                        .addContainerGap())))
         );
 
         jScrollPane1.setViewportView(jPanel1);
