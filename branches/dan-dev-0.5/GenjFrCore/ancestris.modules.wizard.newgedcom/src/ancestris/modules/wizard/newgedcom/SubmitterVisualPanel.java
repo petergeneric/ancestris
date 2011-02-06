@@ -17,10 +17,10 @@ import genj.gedcom.TagPath;
 import genjfr.util.GedcomDirectory;
 import javax.swing.JPanel;
 
-public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomSteps {
+public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps {
 
-    /** Creates new form NewGedcomVisualPanel1 */
-    public NewGedcomVisualPanel1(INewGedcomProvider newGedcom) {
+    /** Creates new form SubmitterVisualPanel */
+    public SubmitterVisualPanel(INewGedcomProvider newGedcom) {
         initComponents();
         //FIXME: ce n'est pas sa place
 
@@ -31,7 +31,7 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
 
     @Override
     public String getName() {
-        return org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "create.file.title");
+        return org.openide.util.NbBundle.getMessage(SubmitterVisualPanel.class, "create.file.title");
     }
 
     /** This method is called from within the constructor to
@@ -51,8 +51,8 @@ public final class NewGedcomVisualPanel1 extends JPanel implements NewGedcomStep
 
         aAddrBean1.setPreferredSize(new java.awt.Dimension(580, 285));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "NewGedcomVisualPanel1.jLabel1.text")); // NOI18N
-        jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel1.class, "NewGedcomVisualPanel1.jLabel1.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SubmitterVisualPanel.class, "SubmitterVisualPanel.jLabel1.text")); // NOI18N
+        jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(SubmitterVisualPanel.class, "SubmitterVisualPanel.jLabel1.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

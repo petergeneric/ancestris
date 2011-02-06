@@ -15,10 +15,10 @@ import genj.gedcom.GedcomException;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
-public final class NewGedcomVisualPanel2 extends JPanel implements NewGedcomSteps {
+public final class FirstIndiVisualPanel extends JPanel implements NewGedcomSteps {
 
-    /** Creates new form NewGedcomVisualPanel2 */
-    public NewGedcomVisualPanel2(INewGedcomProvider newGedcom) {
+    /** Creates new form FirstIndiVisualPanel */
+    public FirstIndiVisualPanel(INewGedcomProvider newGedcom) {
         initComponents();
         //FIXME: ce n'est pas sa place
         aIndiBean1.setRoot(newGedcom.getFirst());
@@ -26,7 +26,7 @@ public final class NewGedcomVisualPanel2 extends JPanel implements NewGedcomStep
 
     @Override
     public String getName() {
-        return org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel2.class, "create.first.title");
+        return org.openide.util.NbBundle.getMessage(FirstIndiVisualPanel.class, "create.first.title");
     }
 
     /** This method is called from within the constructor to

@@ -40,9 +40,9 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
             if (!NewGedcomOptions.getInstance().getSkipIntro()) {
                 _panels.add(new IntroWizardPanel());
             }
-            _panels.add(new NewGedcomWizardPanel1(newGedcom));
-            _panels.add(new NewGedcomWizardPanel2(newGedcom));
-            _panels.add(new NewGedcomWizardPanel3(newGedcom));
+            _panels.add(new SubmitterWizardPanel(newGedcom));
+            _panels.add(new FirstIndiWizardPanel(newGedcom));
+            _panels.add(new FamillyWizardPanel(newGedcom));
             panels = _panels.toArray(panels);
 
             String[] steps = createSteps();

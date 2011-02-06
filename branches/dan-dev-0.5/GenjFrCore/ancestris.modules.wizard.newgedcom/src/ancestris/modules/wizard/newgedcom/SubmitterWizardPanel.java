@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class NewGedcomWizardPanel1 implements WizardDescriptor.Panel, IHelpPanel {
+public class SubmitterWizardPanel implements WizardDescriptor.Panel, IHelpPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -28,7 +28,7 @@ public class NewGedcomWizardPanel1 implements WizardDescriptor.Panel, IHelpPanel
     private Component component;
     private INewGedcomProvider gedcomProvider;
 
-    public NewGedcomWizardPanel1(INewGedcomProvider gedcomProvider) {
+    public SubmitterWizardPanel(INewGedcomProvider gedcomProvider) {
         this.gedcomProvider = gedcomProvider;
     }
 
@@ -39,7 +39,7 @@ public class NewGedcomWizardPanel1 implements WizardDescriptor.Panel, IHelpPanel
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new NewGedcomVisualPanel1(gedcomProvider);
+            component = new SubmitterVisualPanel(gedcomProvider);
         }
         return component;
     }

@@ -29,18 +29,18 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 
-public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomSteps {
+public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
-    private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.empty");
-    private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.father.empty");
-    private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.mother.empty");
-    private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(NewGedcomVisualPanel3.class, "blueprint.fams.empty");
+    private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.empty");
+    private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.father.empty");
+    private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.mother.empty");
+    private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.fams.empty");
     private IndiBeans husbandBeans;
     private IndiBeans wifeBeans;
     private Indi firstIndi;
 
-    /** Creates new form NewGedcomVisualPanel3 */
-    public NewGedcomVisualPanel3(INewGedcomProvider newGedcom) {
+    /** Creates new form FamillyVisualPanel */
+    public FamillyVisualPanel(INewGedcomProvider newGedcom) {
         initComponents();
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
         husbandBeans = new IndiBeans(husband, husbFather, husbMother);
