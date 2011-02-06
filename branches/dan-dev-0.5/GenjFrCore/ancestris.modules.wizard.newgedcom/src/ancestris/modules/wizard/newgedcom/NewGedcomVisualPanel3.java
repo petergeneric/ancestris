@@ -398,6 +398,8 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
                     return;
                 }
             }
+            if (indi == null)
+                return;
             familySpouse.setContext(indi.getFamilyWhereBiologicalChild());
         }
         destBean.setContext(indi);
@@ -434,6 +436,8 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     }
 
     private boolean editEntity(Indi indi) {
+        if (indi == null)
+            return false;
         AIndiBean bean = new AIndiBean();
         NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(indi), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
