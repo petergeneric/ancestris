@@ -11,7 +11,7 @@
  */
 package ancestris.modules.beans;
 
-import genj.edit.beans.ChoiceBean;
+import genj.edit.beans.PlaceBean;
 import genj.gedcom.Property;
 import java.io.Serializable;
 
@@ -19,8 +19,8 @@ import java.io.Serializable;
  *
  * @author daniel
  */
-//public class APlaceBean extends PlaceBean implements Serializable {
-public class APlaceBean extends ChoiceBean implements Serializable {
+public class APlaceBean extends PlaceBean implements Serializable {
+//public class APlaceBean extends ChoiceBean implements Serializable {
 
     private static final String PATH = "PLAC";
 

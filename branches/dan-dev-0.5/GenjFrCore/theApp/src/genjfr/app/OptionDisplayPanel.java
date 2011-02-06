@@ -36,7 +36,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBox4 = new javax.swing.JCheckBox();
+        cbSplitJuridictions = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(10, 10, 300, 5));
@@ -57,8 +57,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox4, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox4.text")); // NOI18N
-        jCheckBox4.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox4.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbSplitJuridictions, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbSplitJuridictions.text")); // NOI18N
+        cbSplitJuridictions.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbSplitJuridictions.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jCheckBox2.toolTipText")); // NOI18N
@@ -165,7 +165,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                         .addGap(79, 79, 79)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBox2)
-                            .addComponent(jCheckBox4)
+                            .addComponent(cbSplitJuridictions)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -208,7 +208,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox4)
+                .addComponent(cbSplitJuridictions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox2)
                 .addGap(79, 79, 79))
@@ -230,7 +230,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         setRestoreWindows(appPrefs.get("isRestoreViews", ""));
         setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
-        setSplitJurisdictions(editPrefs.get("isSplitJurisdictions", ""));
+        cbSplitJuridictions.setSelected(Boolean.valueOf(editPrefs.get("isSplitJurisdictions", "")));
         setOpenEditor(editPrefs.get("isOpenEditor", ""));
         cbTreeFollowSelection.setSelected(TreeView.isFollowSelection());
         cbTableFollowEntity.setSelected(TableView.getFollowEntity());
@@ -246,7 +246,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         appPrefs.put("isRestoreViews", getRestoreWindows());
         editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
-        editPrefs.put("isSplitJurisdictions", getSplitJurisdictions());
+
+        genj.edit.Options.getInstance().isSplitJurisdictions = cbSplitJuridictions.isSelected();
+        editPrefs.put("isSplitJurisdictions", String.valueOf(cbSplitJuridictions.isSelected()));
+
         editPrefs.put("isOpenEditor", getOpenEditor());
         TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
         TableView.setFollowEntity(cbTableFollowEntity.isSelected());
@@ -259,12 +262,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbSplitJuridictions;
     private javax.swing.JCheckBox cbTableFollowEntity;
     private javax.swing.JCheckBox cbTreeFollowSelection;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -379,14 +382,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     String getUndos() {
         return jSpinner1.getValue().toString();
-    }
-
-    void setSplitJurisdictions(String str) {
-        jCheckBox4.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getSplitJurisdictions() {
-        return jCheckBox4.isSelected() ? "true" : "false";
     }
 
     void setOpenEditor(String str) {
