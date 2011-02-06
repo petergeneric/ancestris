@@ -182,12 +182,12 @@ public abstract class CreateRelationship extends AbstractChange {
     
     // perform the change
       isNew = change!=existing;
+      created = change;
     Property focus = change(change, change!=existing);
     
     // remember target of relationship as next time target
     REGISTRY.put("select."+gedcom.getName()+"."+targetType, change.getId());
 
-    created = focus.getEntity();
     // done
     return new Context(focus.getEntity());
   }
