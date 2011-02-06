@@ -290,19 +290,19 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     }// </editor-fold>//GEN-END:initComponents
 
     private void husbFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbFatherMouseClicked
-        createOrEditParent(husbandBeans, husbFather.getContext(), PropertySex.MALE);
+        createOrEditParent(husbandBeans, (Indi)husbFather.getContext(), PropertySex.MALE);
     }//GEN-LAST:event_husbFatherMouseClicked
 
     private void wifeFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeFatherMouseClicked
-        createOrEditParent(wifeBeans, wifeFather.getContext(), PropertySex.MALE);
+        createOrEditParent(wifeBeans, (Indi)wifeFather.getContext(), PropertySex.MALE);
     }//GEN-LAST:event_wifeFatherMouseClicked
 
     private void husbMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbMotherMouseClicked
-        createOrEditParent(husbandBeans, husbMother.getContext(), PropertySex.FEMALE);
+        createOrEditParent(husbandBeans, (Indi)husbMother.getContext(), PropertySex.FEMALE);
     }//GEN-LAST:event_husbMotherMouseClicked
 
     private void wifeMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMotherMouseClicked
-        createOrEditParent(wifeBeans, wifeMother.getContext(), PropertySex.FEMALE);
+        createOrEditParent(wifeBeans, (Indi)wifeMother.getContext(), PropertySex.FEMALE);
     }//GEN-LAST:event_wifeMotherMouseClicked
 
     private void husbandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbandMouseClicked
@@ -328,7 +328,7 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
     private ancestris.modules.beans.ABluePrintBeans wifeMother;
     // End of variables declaration//GEN-END:variables
 
-    private void createOrEditParent(IndiBeans destBean, Entity parent, int sex) {
+    private void createOrEditParent(IndiBeans destBean, Indi parent, int sex) {
         Indi indi = (Indi) destBean.getIndi();
         if (indi == null) {
             return;
@@ -336,15 +336,11 @@ public final class NewGedcomVisualPanel3 extends JPanel implements NewGedcomStep
         if (parent != null) {
             editEntity(parent);
         } else {
-            CreateParent cpAction = new CreateParent(indi);
+            CreateParent cpAction = new CreateParent(indi,sex);
             cpAction.actionPerformed(new ActionEvent(this, 0, ""));
 
             if (cpAction.isNew()) {
-                if (sex == PropertySex.FEMALE) {
-                    parent = indi.getBiologicalMother();
-                } else {
-                    parent = indi.getBiologicalFather();
-                }
+                parent = (Indi)cpAction.getCreated();
                 if (!editEntity(parent)) {
                     indi.getGedcom().undoUnitOfWork(false);
                 }
