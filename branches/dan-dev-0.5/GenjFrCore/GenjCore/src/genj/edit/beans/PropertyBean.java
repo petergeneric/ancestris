@@ -134,7 +134,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
         return getBeanImpl((Class<? extends PropertyBean>)PROPERTY2BEANTYPE[i+1]);
     }
 
-    LOG.warning("Can't find declared bean for property type "+property.getName()+")");
+    LOG.log(Level.WARNING, "Can''t find declared bean for property type {0})", property.getName());
     return getBeanImpl(SimpleValueBean.class);
   }
   
@@ -156,7 +156,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
         PropertyBean bean = cache.remove(cache.size()-1);
         if (bean.getParent()==null)
           return bean;
-        LOG.log(Level.FINE, "Bean has parent coming out of cache "+bean);
+        LOG.log(Level.FINE, "Bean has parent coming out of cache {0}", bean);
       }
       return ((PropertyBean)clazz.newInstance());
     } catch (Throwable t) {
@@ -260,6 +260,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   /**
    * ContextProvider callback 
    */
+    @Override
   public ViewContext getContext() {
     // ok, this is tricky since some beans might not
     // want to expose a property (is null) and the one
@@ -347,6 +348,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   /** 
    * overridden requestFocusInWindow()
    */
+    @Override
   public boolean requestFocusInWindow() {
     // delegate to default focus
     if (defaultFocus!=null)
@@ -357,6 +359,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   /** 
    * overridden requestFocus()
    */
+    @Override
   public void requestFocus() {
     // delegate to default focus
     if (defaultFocus!=null)
@@ -375,7 +378,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   /**
    * A preview component using EntityRenderer for an entity
    */
-  public class Preview extends JComponent {
+  public static class Preview extends JComponent {
     /** entity */
     private Entity entity;
     /** the blueprint renderer we're using */
@@ -389,6 +392,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
     /**
      * @see genj.edit.ProxyXRef.Content#paintComponent(java.awt.Graphics)
      */
+        @Override
     protected void paintComponent(Graphics g) {
       Insets insets = getInsets();
       Rectangle box = new Rectangle(insets.left,insets.top,getWidth()-insets.left-insets.right,getHeight()-insets.top-insets.bottom);     
