@@ -41,21 +41,32 @@ public class CreateParent extends CreateRelationship {
   /** the child and family we're creating a parent for */
   private Indi child;
   private Fam family;
+  private int sex = -1;
   
   /** constructor */
   public CreateParent(Fam family) {
+      this(family,-1);
+  }
+
+  public CreateParent(Fam family,int sex) {
     super(resources.getString("create.parent"), family.getGedcom(), Gedcom.INDI);
     if (family.getNoOfSpouses()>=2)
       throw new IllegalArgumentException("can't create additional parent in family with husband and wife");
     this.family = family;
     this.child = null;
+    this.sex = sex;
     setImage(IMG);
   }
   
   /** constructor */
   public CreateParent(Indi child) {
+      this(child,-1);
+  }
+
+  public CreateParent(Indi child, int sex) {
     super(resources.getString("create.parent"), child.getGedcom(), Gedcom.INDI);
     this.child = child;
+    this.sex = sex;
     setImage(IMG);
     
     // check if the child already is part of a family without spouse
@@ -99,6 +110,9 @@ public class CreateParent extends CreateRelationship {
     String lastname;
     Gedcom ged = parent.getGedcom();
     PropertyXRef FAMS;
+
+    if (parentIsNew && sex>=0)
+        ((Indi)parent).setSex(sex);
     
     // know the family already?
     if (family!=null) {
