@@ -35,123 +35,130 @@ import genj.util.swing.ImageIcon;
  * Create a child of a family or person
  */
 public class CreateParent extends CreateRelationship {
-	
-  private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");
-  
-  /** the child and family we're creating a parent for */
-  private Indi child;
-  private Fam family;
-  private int sex = -1;
-  
-  /** constructor */
-  public CreateParent(Fam family) {
-      this(family,-1);
-  }
 
-  public CreateParent(Fam family,int sex) {
-    super(resources.getString("create.parent"), family.getGedcom(), Gedcom.INDI);
-    if (family.getNoOfSpouses()>=2)
-      throw new IllegalArgumentException("can't create additional parent in family with husband and wife");
-    this.family = family;
-    this.child = null;
-    this.sex = sex;
-    setImage(IMG);
-  }
-  
-  /** constructor */
-  public CreateParent(Indi child) {
-      this(child,-1);
-  }
+    private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");
+    /** the child and family we're creating a parent for */
+    private Indi child;
+    private Fam family;
+    private int sex = -1;
 
-  public CreateParent(Indi child, int sex) {
-    super(resources.getString("create.parent"), child.getGedcom(), Gedcom.INDI);
-    this.child = child;
-    this.sex = sex;
-    setImage(IMG);
-    
-    // check if the child already is part of a family without spouse
-    Fam[] fams = child.getFamiliesWhereChild();
-    for (int f = 0; f < fams.length; f++) {
-      if (fams[f].getNoOfSpouses()<2) {
-        family = fams[f];
-        break;
-      }
+    /** constructor */
+    public CreateParent(Fam family) {
+        this(family, -1);
     }
-    
-    // done
-  }
 
-  /** description of what this'll do */
-  public String getDescription() {
-    // "Parent of Meier, Nils (I1)"
-    if (child!=null)
-      return resources.getString("create.parent.of", child);
-    // "Parent in Meier, Sven (I1) + Radovcic Sandra (I2) (F1)"
-    return resources.getString("create.parent.in", family);
-  }
-
-  /** a warning in case the target indi is already a child of another family */
-  public String getWarning(Entity indi) {
-    
-    // do we have a child which already has parents?
-    if (child!=null&&family==null) {
-      Fam fam =child.getFamilyWhereBiologicalChild();
-      if (fam!=null)
-        return PropertyChild.getLabelChildAlreadyinFamily(child, fam);
+    public CreateParent(Fam family, int sex) {
+        super(resources.getString("create.parent"), family.getGedcom(), Gedcom.INDI);
+        if (family.getNoOfSpouses() >= 2) {
+            throw new IllegalArgumentException("can't create additional parent in family with husband and wife");
+        }
+        this.family = family;
+        this.child = null;
+        this.sex = sex;
+        setImage(IMG);
     }
-    // no problem
-    return null;
-    
-  }
 
-  /** change impl */
-  protected Property change(Entity parent, boolean parentIsNew) throws GedcomException {
-    
-    String lastname;
-    Gedcom ged = parent.getGedcom();
-    PropertyXRef FAMS;
-
-    if (parentIsNew && sex>=0)
-        ((Indi)parent).setSex(sex);
-    
-    // know the family already?
-    if (family!=null) {
-
-      FAMS = family.setSpouse((Indi)parent).getTarget();
-      Indi other = family.getOtherSpouse((Indi)parent);
-      lastname = other!=null ? other.getLastName() : "";
-      
-    } else { // need new family
-
-      // lastname will match that of child
-      lastname = child.getLastName();
-
-      // create new family with child
-      family = (Fam)ged.createEntity(Gedcom.FAM);
-      family.addChild(child);
-      family.addDefaultProperties();
-      
-      // set spouse
-      FAMS = family.setSpouse((Indi)parent).getTarget();
-      
-      // 20040619 adding missing spouse automatically now
-      // 20050405 whether we created a new family or the family didn't have all parents
-      if (genj.gedcom.Options.getInstance().getCreateSpouse() && family.getNoOfSpouses()<2) {
-        Indi spouse = (Indi)ged.createEntity(Gedcom.INDI);
-        spouse.addDefaultProperties();
-        family.setSpouse(spouse);
-        if ( Options.getInstance().setWifeLastname || spouse.getSex() == PropertySex.MALE)  
-        spouse.setName("", lastname);
-      }
-      
+    /** constructor */
+    public CreateParent(Indi child) {
+        this(child, -1);
     }
-    
-    // set name of parent if new
-    if (parentIsNew && (((Indi)parent).getSex() == PropertySex.MALE||Options.getInstance().setWifeLastname)) 
-      ((Indi)parent).setName("", lastname);
 
-    // focus goes to new parent
-    return FAMS;      
-  }
+    public CreateParent(Indi child, int sex) {
+        super(resources.getString("create.parent"), child.getGedcom(), Gedcom.INDI);
+        this.child = child;
+        this.sex = sex;
+        setImage(IMG);
 
+        // check if the child already is part of a family without spouse
+        Fam[] fams = child.getFamiliesWhereChild();
+        for (int f = 0; f < fams.length; f++) {
+            if (fams[f].getNoOfSpouses() < 2) {
+                family = fams[f];
+                break;
+            }
+        }
+
+        // done
+    }
+
+    /** description of what this'll do */
+    @Override
+    public String getDescription() {
+        // "Parent of Meier, Nils (I1)"
+        if (child != null) {
+            return resources.getString("create.parent.of", child);
+        }
+        // "Parent in Meier, Sven (I1) + Radovcic Sandra (I2) (F1)"
+        return resources.getString("create.parent.in", family);
+    }
+
+    /** a warning in case the target indi is already a child of another family */
+    @Override
+    public String getWarning(Entity indi) {
+
+        // do we have a child which already has parents?
+        if (child != null && family == null) {
+            Fam fam = child.getFamilyWhereBiologicalChild();
+            if (fam != null) {
+                return PropertyChild.getLabelChildAlreadyinFamily(child, fam);
+            }
+        }
+        // no problem
+        return null;
+
+    }
+
+    /** change impl */
+    @Override
+    protected Property change(Entity parent, boolean parentIsNew) throws GedcomException {
+
+        String lastname;
+        Gedcom ged = parent.getGedcom();
+        PropertyXRef FAMS;
+
+        if (parentIsNew && sex >= 0) {
+            ((Indi) parent).setSex(sex);
+        }
+
+        // know the family already?
+        if (family != null) {
+
+            FAMS = family.setSpouse((Indi) parent).getTarget();
+            Indi other = family.getOtherSpouse((Indi) parent);
+            lastname = other != null ? other.getLastName() : "";
+
+        } else { // need new family
+
+            // lastname will match that of child
+            lastname = child.getLastName();
+
+            // create new family with child
+            family = (Fam) ged.createEntity(Gedcom.FAM);
+            family.addChild(child);
+            family.addDefaultProperties();
+
+            // set spouse
+            FAMS = family.setSpouse((Indi) parent).getTarget();
+
+            // 20040619 adding missing spouse automatically now
+            // 20050405 whether we created a new family or the family didn't have all parents
+            if (genj.gedcom.Options.getInstance().getCreateSpouse() && family.getNoOfSpouses() < 2) {
+                Indi spouse = (Indi) ged.createEntity(Gedcom.INDI);
+                spouse.addDefaultProperties();
+                family.setSpouse(spouse);
+                if (Options.getInstance().setWifeLastname || spouse.getSex() == PropertySex.MALE) {
+                    spouse.setName("", lastname);
+                }
+            }
+
+        }
+
+        // set name of parent if new
+        if (parentIsNew && (((Indi) parent).getSex() == PropertySex.MALE || Options.getInstance().setWifeLastname)) {
+            ((Indi) parent).setName("", lastname);
+        }
+
+        // focus goes to new parent
+        return FAMS;
+    }
 }
