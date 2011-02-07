@@ -129,6 +129,7 @@ public final class AEventBean extends JPanel implements ABean {
         jLabel2.setMinimumSize(new java.awt.Dimension(76, 15));
         jLabel2.setPreferredSize(new java.awt.Dimension(76, 15));
 
+        cbIsKnown.setFont(new java.awt.Font("DejaVu Sans", 2, 10)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
         cbIsKnown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
