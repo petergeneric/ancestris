@@ -129,7 +129,7 @@ public final class AEventBean extends JPanel implements ABean {
         jLabel2.setMinimumSize(new java.awt.Dimension(76, 15));
         jLabel2.setPreferredSize(new java.awt.Dimension(76, 15));
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, null);
+        org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
         cbIsKnown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbIsKnownActionPerformed(evt);
@@ -181,6 +181,10 @@ public final class AEventBean extends JPanel implements ABean {
             jLabel1.setVisible(checked);
             aPlaceBean1.setVisible(checked);
             cbIsKnown.setVisible(true);
+            if (checked)
+                cbIsKnown.setText(null);
+            else
+                org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
         } else {
             cbIsKnown.setVisible(false);
 //            cbIsKnown.setSelected(true);
