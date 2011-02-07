@@ -331,9 +331,12 @@ public class DateWidget extends JPanel {
       } else {
         altDisplay.setVisible(true);
         try {
-            altDisplay.setText(value.getPointInTime(helpCalendar).toString());
+            String dispValue = value.getPointInTime(helpCalendar).toString();
+            if ("?".equals(dispValue))
+                dispValue = "";
+            altDisplay.setText(dispValue);
+
         } catch (GedcomException ex) {
-            altDisplay.setText("Date non affichable");
         }
         }
     }
