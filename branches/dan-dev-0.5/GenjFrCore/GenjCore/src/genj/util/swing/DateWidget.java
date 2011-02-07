@@ -50,7 +50,7 @@ import org.openide.util.Exceptions;
  */
 public class DateWidget extends JPanel {
 
-  private final static NestedBlockLayout LAYOUT = new NestedBlockLayout("<row><x pad=\"0\"/><x/><x/><x pad=\"0\"/><x pad=\"0\"/></row>");
+  private final static NestedBlockLayout LAYOUT = new NestedBlockLayout("<row><x pad=\"0\"/><x/><x/><x pad=\"0\"/><x pad=\"0,10,0,0\"/></row>");
 
   /** components */
   private PopupWidget widgetCalendar;
