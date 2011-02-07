@@ -37,10 +37,11 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.fams.empty");
     private IndiBeans husbandBeans;
     private IndiBeans wifeBeans;
-    private Indi firstIndi;
+    private INewGedcomProvider gedcomProvider;
 
     /** Creates new form FamillyVisualPanel */
     public FamillyVisualPanel(INewGedcomProvider newGedcom) {
+        gedcomProvider = newGedcom;
         initComponents();
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
         husbandBeans = new IndiBeans(husband, husbFather, husbMother);
@@ -49,8 +50,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
         wife.setEmptyBluePrint(EMPTY_BP);
         familySpouse.setEmptyBluePrint("");
 
-        firstIndi = newGedcom.getFirst();
-        setContext(firstIndi, true);
+        setContext(newGedcom.getFirst(), true);
 
         updatechildrenPanel();
     }
@@ -290,19 +290,19 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }// </editor-fold>//GEN-END:initComponents
 
     private void husbFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbFatherMouseClicked
-        createOrEditParent(husbandBeans, (Indi)husbFather.getContext(), PropertySex.MALE);
+        createOrEditParent(husbandBeans, (Indi) husbFather.getContext(), PropertySex.MALE);
     }//GEN-LAST:event_husbFatherMouseClicked
 
     private void wifeFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeFatherMouseClicked
-        createOrEditParent(wifeBeans, (Indi)wifeFather.getContext(), PropertySex.MALE);
+        createOrEditParent(wifeBeans, (Indi) wifeFather.getContext(), PropertySex.MALE);
     }//GEN-LAST:event_wifeFatherMouseClicked
 
     private void husbMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbMotherMouseClicked
-        createOrEditParent(husbandBeans, (Indi)husbMother.getContext(), PropertySex.FEMALE);
+        createOrEditParent(husbandBeans, (Indi) husbMother.getContext(), PropertySex.FEMALE);
     }//GEN-LAST:event_husbMotherMouseClicked
 
     private void wifeMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMotherMouseClicked
-        createOrEditParent(wifeBeans, (Indi)wifeMother.getContext(), PropertySex.FEMALE);
+        createOrEditParent(wifeBeans, (Indi) wifeMother.getContext(), PropertySex.FEMALE);
     }//GEN-LAST:event_wifeMotherMouseClicked
 
     private void husbandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbandMouseClicked
@@ -336,11 +336,11 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
         if (parent != null) {
             editEntity(parent);
         } else {
-            CreateParent cpAction = new CreateParent(indi,sex);
+            CreateParent cpAction = new CreateParent(indi, sex);
             cpAction.actionPerformed(new ActionEvent(this, 0, ""));
 
             if (cpAction.isNew()) {
-                parent = (Indi)cpAction.getCreated();
+                parent = (Indi) cpAction.getCreated();
                 if (!editEntity(parent)) {
                     indi.getGedcom().undoUnitOfWork(false);
                 }
@@ -390,12 +390,13 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
             indi = (Indi) ccAction.getCreated();
             if (ccAction.isNew()) {
                 if (!editEntity(indi)) {
-                    firstIndi.getGedcom().undoUnitOfWork(false);
+                    gedcomProvider.getContext().getGedcom().undoUnitOfWork(false);
                     return;
                 }
             }
-            if (indi == null)
+            if (indi == null) {
                 return;
+            }
             familySpouse.setContext(indi.getFamilyWhereBiologicalChild());
         }
         destBean.setContext(indi);
@@ -404,13 +405,15 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
     private void createOrEditFam(ABluePrintBeans destBean) {
         Fam fam = (Fam) destBean.getContext();
-        if (fam == null)
+        if (fam == null) {
             return;
+        }
 
         editEntity(fam);
         destBean.setContext(fam);
         updatechildrenPanel();
     }
+
     private boolean editEntity(Entity entity) {
         return false;
     }
@@ -432,8 +435,9 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }
 
     private boolean editEntity(Indi indi) {
-        if (indi == null)
+        if (indi == null) {
             return false;
+        }
         AIndiBean bean = new AIndiBean();
         NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(indi), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);

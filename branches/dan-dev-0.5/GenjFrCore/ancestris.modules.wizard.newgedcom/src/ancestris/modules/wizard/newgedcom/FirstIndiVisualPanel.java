@@ -12,16 +12,23 @@
 package ancestris.modules.wizard.newgedcom;
 
 import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
 public final class FirstIndiVisualPanel extends JPanel implements NewGedcomSteps {
 
+    private INewGedcomProvider gedcomProvider ;
     /** Creates new form FirstIndiVisualPanel */
     public FirstIndiVisualPanel(INewGedcomProvider newGedcom) {
+        gedcomProvider = newGedcom;
         initComponents();
-        //FIXME: ce n'est pas sa place
-        aIndiBean1.setRoot(newGedcom.getFirst());
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        aIndiBean1.setRoot(gedcomProvider.getFirst());
     }
 
     @Override

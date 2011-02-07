@@ -26,7 +26,6 @@ import org.openide.util.Exceptions;
 public class CreateNewGedcom implements INewGedcomProvider {
 
     private Context context = null;
-    private Indi first = null;
 
     public CreateNewGedcom() {
         Gedcom gedcom = new Gedcom();
@@ -63,13 +62,12 @@ public class CreateNewGedcom implements INewGedcomProvider {
 
     @Override
     public Indi getFirst() {
-        if (first == null) {
+        if (getContext().getGedcom().getFirstEntity(Gedcom.INDI)==null)
             try {
-                first = (Indi) getContext().getGedcom().createEntity(Gedcom.INDI);
+                getContext().getGedcom().createEntity(Gedcom.INDI);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        }
-        return first;
+        return (Indi)getContext().getGedcom().getFirstEntity(Gedcom.INDI);
     }
 }

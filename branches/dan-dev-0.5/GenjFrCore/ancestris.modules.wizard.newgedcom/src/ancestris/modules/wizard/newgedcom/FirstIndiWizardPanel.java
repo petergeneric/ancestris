@@ -25,7 +25,7 @@ public class FirstIndiWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private FirstIndiVisualPanel component;
     private INewGedcomProvider gedcomProvider;
 
     public FirstIndiWizardPanel(INewGedcomProvider provider) {
