@@ -222,7 +222,6 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
   
   /**
    * set property to look at
-   * FIXME: il faudra plustot utiliser un path relatif
    */
   public PropertyBean setContext(Property root, String path) {
       TagPath tpath = new TagPath(root.getPath()+":"+path);
