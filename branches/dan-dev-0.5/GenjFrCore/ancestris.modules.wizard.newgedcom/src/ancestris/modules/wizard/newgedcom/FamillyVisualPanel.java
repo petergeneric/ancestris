@@ -32,6 +32,7 @@ import org.openide.util.Exceptions;
 public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.empty");
+    private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.child.empty");
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.fams.empty");
@@ -48,10 +49,9 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
         wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
         husband.setEmptyBluePrint(EMPTY_BP);
         wife.setEmptyBluePrint(EMPTY_BP);
-        familySpouse.setEmptyBluePrint("");
+        familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
 
         setContext(newGedcom.getFirst(), true);
-
         updatechildrenPanel();
     }
 
@@ -562,7 +562,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
         public ChildBean(Indi child) {
             super();
-            setEmptyBluePrint(EMPTY_BP);
+            setEmptyBluePrint(CHILD_EMPTY_BP);
             this.setContext(child);
             addMouseListener(new java.awt.event.MouseAdapter() {
 

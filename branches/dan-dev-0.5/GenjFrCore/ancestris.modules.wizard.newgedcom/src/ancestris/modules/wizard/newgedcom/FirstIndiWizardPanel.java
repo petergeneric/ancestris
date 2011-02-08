@@ -109,7 +109,7 @@ public class FirstIndiWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
     @Override
     public URL getHelpUrl() {
         try {
-           return new URL("nbresloc:"+Utilities.getClassName(this)+"-help.html");
+           return new URL("nbresloc:/"+Utilities.getClassName(this)+"-help.html");
         } catch (MalformedURLException r){}
         return null;
     }
