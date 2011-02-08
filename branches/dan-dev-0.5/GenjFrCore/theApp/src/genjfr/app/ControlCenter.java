@@ -265,6 +265,8 @@ public class ControlCenter extends JPanel{
         for (Context context: GedcomDirectory.getInstance().getContexts()){
             // next gedcom
             Gedcom gedcom = context.getGedcom();
+            if (gedcom.getOrigin() == null)
+                continue;
             // remember as being open, password and open views
             File file = gedcom.getOrigin().getFile();
             if (file == null || file.exists()) {
