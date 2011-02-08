@@ -11,22 +11,26 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
-import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
-import genjfr.util.GedcomDirectory;
 import javax.swing.JPanel;
 
 public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps {
 
+    private Gedcom gedcom;
+    private SubmitterWizardPanel changeListener;
+
     /** Creates new form SubmitterVisualPanel */
-    public SubmitterVisualPanel(INewGedcomProvider newGedcom) {
+    public SubmitterVisualPanel(INewGedcomProvider newGedcom, SubmitterWizardPanel changeListner) {
         initComponents();
         //FIXME: ce n'est pas sa place
+        gedcom = newGedcom.getContext().getGedcom();
+        this.changeListener = changeListner;
 
-            Submitter subm = newGedcom.getContext().getGedcom().getSubmitter();
-            aAddrBean1.setRoot(subm);
-            aSimpleBean1.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
+        Submitter subm = gedcom.getSubmitter();
+        submitterAddress.setRoot(subm);
+        submitterName.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
     }
 
     @Override
@@ -42,17 +46,27 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        aSimpleBean1 = new ancestris.modules.beans.ASimpleBean();
-        aAddrBean1 = new ancestris.modules.beans.AAddrBean();
+        submitterName = new ancestris.modules.beans.ASimpleBean();
+        submitterAddress = new ancestris.modules.beans.AAddrBean();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setPreferredSize(new java.awt.Dimension(622, 380));
         setRequestFocusEnabled(false);
 
-        aAddrBean1.setPreferredSize(new java.awt.Dimension(580, 285));
+        submitterName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                submitterNameKeyReleased(evt);
+            }
+        });
+
+        submitterAddress.setPreferredSize(new java.awt.Dimension(580, 285));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SubmitterVisualPanel.class, "SubmitterVisualPanel.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(SubmitterVisualPanel.class, "SubmitterVisualPanel.jLabel1.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(SubmitterVisualPanel.class, "SubmitterVisualPanel.jLabel2.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -61,13 +75,14 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
-                        .addGap(17, 17, 17))
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                    .addComponent(submitterAddress, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(10, 10, 10)
-                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)))
+                        .addComponent(submitterName, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                        .addGap(13, 13, 13)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -75,20 +90,39 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(aSimpleBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(submitterName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(aAddrBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addComponent(submitterAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void submitterNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_submitterNameKeyReleased
+        // Add a keyreleased listner. The typed listener is call before updating the jtextfield
+        // resulting in incorect result returned to caller
+        if (changeListener != null) {
+            changeListener.fireChangeEvent();
+        }
+}//GEN-LAST:event_submitterNameKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.beans.AAddrBean aAddrBean1;
-    private ancestris.modules.beans.ASimpleBean aSimpleBean1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JSeparator jSeparator1;
+    private ancestris.modules.beans.AAddrBean submitterAddress;
+    private ancestris.modules.beans.ASimpleBean submitterName;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void applyNext() {
+    }
+
+    String getSubmitterName() {
+        return submitterName.getValue();
     }
 }

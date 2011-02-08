@@ -23,6 +23,7 @@ import genj.gedcom.Property;
 import genj.util.swing.TextFieldWidget;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyListener;
 
 /**
  * A Proxy knows how to generate interaction components that the user
@@ -77,5 +78,14 @@ public class SimpleValueBean extends PropertyBean {
     // not changed
     changeSupport.setChanged(false);
   }
-  
+
+      @Override
+    public synchronized void addKeyListener(KeyListener l) {
+          tfield.addKeyListener(l);
+    }
+
+      public String getValue(){
+          return tfield.getText();
+      }
+
 }

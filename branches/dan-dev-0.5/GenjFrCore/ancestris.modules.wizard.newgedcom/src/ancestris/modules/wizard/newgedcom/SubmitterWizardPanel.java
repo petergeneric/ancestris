@@ -15,6 +15,10 @@ import ancestris.util.Utilities;
 import java.awt.Component;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -39,7 +43,7 @@ public class SubmitterWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new SubmitterVisualPanel(gedcomProvider);
+            component = new SubmitterVisualPanel(gedcomProvider,this);
         }
         return component;
     }
@@ -54,46 +58,36 @@ public class SubmitterWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
 
     @Override
     public boolean isValid() {
-        // If it is always OK to press Next or Finish, then:
-        return true;
-        // If it depends on some condition (form filled out...), then:
-        // return someCondition();
-        // and when this condition changes (last form field filled in...) then:
-        // fireChangeEvent();
-        // and uncomment the complicated stuff below.
+        return !((SubmitterVisualPanel)component).getSubmitterName().isEmpty();
     }
 
-    @Override
-    public final void addChangeListener(ChangeListener l) {
-    }
-
-    @Override
-    public final void removeChangeListener(ChangeListener l) {
-    }
-    /*
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
-    public final void addChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.add(l);
-    }
-    }
-    public final void removeChangeListener(ChangeListener l) {
-    synchronized (listeners) {
-    listeners.remove(l);
-    }
-    }
-    protected final void fireChangeEvent() {
-    Iterator<ChangeListener> it;
-    synchronized (listeners) {
-    it = new HashSet<ChangeListener>(listeners).iterator();
-    }
-    ChangeEvent ev = new ChangeEvent(this);
-    while (it.hasNext()) {
-    it.next().stateChanged(ev);
-    }
-    }
-     */
 
+    @Override
+    public final void addChangeListener(ChangeListener l) {
+        synchronized (listeners) {
+            listeners.add(l);
+        }
+    }
+
+    @Override
+    public final void removeChangeListener(ChangeListener l) {
+        synchronized (listeners) {
+            listeners.remove(l);
+        }
+    }
+
+    protected final void fireChangeEvent() {
+        Iterator<ChangeListener> it;
+        synchronized (listeners) {
+            it = new HashSet<ChangeListener>(listeners).iterator();
+        }
+        ChangeEvent ev = new ChangeEvent(this);
+        while (it.hasNext()) {
+            it.next().stateChanged(ev);
+        }
+    }
+     
     // You can use a settings object to keep track of state. Normally the
     // settings object will be the WizardDescriptor, so you can use
     // WizardDescriptor.getProperty & putProperty to store information entered
@@ -109,7 +103,7 @@ public class SubmitterWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
     @Override
     public URL getHelpUrl() {
         try {
-           return new URL("nbresloc:"+Utilities.getClassName(this)+"-help.html");
+           return new URL("nbresloc:/"+Utilities.getClassName(this)+"-help.html");
         } catch (MalformedURLException r){}
         return null;
     }
