@@ -113,7 +113,7 @@ public class DateWidget extends JPanel {
     widgetCalendar = new PopupWidget();
     widgetCalendar.addItems(switches);
 
-    altDisplay = new JLabel("test");
+    altDisplay = new JLabel("");
 
     // Setup Layout
     setLayout(LAYOUT.copy()); // reuse a copy of layout
