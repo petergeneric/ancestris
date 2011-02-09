@@ -50,7 +50,7 @@ public final class AIndiBean extends JPanel implements ABean {
         aSexBean1.setRoot(indi);
         aNameBean2.setRoot(indi);
         aSimpleBean1.setContext(indi,"OCCU");
-        aPlaceBean2.setContext(entity, new TagPath("RESI:PLAC"), indi.getPropertyByPath("RESI:PLAC"));
+        aPlaceBean2.setContext(indi, "RESI");
         return this;
     }
 
