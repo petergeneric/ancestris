@@ -32,6 +32,8 @@ import org.openide.util.Exceptions;
 public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.empty");
+    private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.wife.empty");
+    private final static String HUSBAND_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.husband.empty");
     private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.child.empty");
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "blueprint.mother.empty");
@@ -47,8 +49,8 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
         husbandBeans = new IndiBeans(husband, husbFather, husbMother);
         wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
-        husband.setEmptyBluePrint(EMPTY_BP);
-        wife.setEmptyBluePrint(EMPTY_BP);
+        husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
+        wife.setEmptyBluePrint(WIFE_EMPTY_BP);
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
 
         setContext(newGedcom.getFirst(), true);
