@@ -25,6 +25,7 @@ import genj.gedcom.PropertySex;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
@@ -441,7 +442,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
             return false;
         }
         AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(indi), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
