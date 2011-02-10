@@ -197,8 +197,8 @@ public class Options extends OptionProvider {
     private Registry getPreferences() {
         return Registry.get(genj.gedcom.Options.class);
     }
-    private static final String CREATE_SPOUSE   = "gedcom.create_spouse";         // NOI18N
 
+    private static final String CREATE_SPOUSE   = "gedcom.create_spouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
     }
@@ -206,5 +206,13 @@ public class Options extends OptionProvider {
         return getPreferences().get(CREATE_SPOUSE, false);
     }
 
+    private static final String PLACE_FORMAT = "gedcom.place_format";         // NOI18N
+    public void setPlaceFormat(String placeFormatString) {
+        getPreferences().put(PLACE_FORMAT,placeFormatString);
+    }
+
+    public String getPlaceFormat() {
+        return getPreferences().get(PLACE_FORMAT,RESOURCES.getString("option.default_format_string"));
+    }
 
 } //Options
