@@ -197,7 +197,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                     submitter.setWeb(submPref.get("submWeb", ""));
 
                     // Create place format
-                    gedcom.setPlaceFormat(getPlaceFormatFromOptions());
+                    gedcom.setPlaceFormat(genj.gedcom.Options.getInstance().getPlaceFormat());
 
                     //Create first INDI entity
                     Indi adam = (Indi) gedcom.createEntity(Gedcom.INDI);
@@ -216,44 +216,44 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         return context;
     }
 
-    String getPlaceFormatFromOptions() {
-        String format = "";
-        String jur = "";
-        AncestrisPreferences formatPref = AncestrisPreferences.get(App.class);
-        final boolean USE_SPACES = formatPref.get("address_splitspaces", "").equals("true");
-
-        String space = USE_SPACES ? " " : "";
-        // go through all jursidictions
-        jur = formatPref.get("fmt_address1", "");
-        if (!jur.equals("0")) {
-            format += NbBundle.getMessage(App.class, "OptionDataPanel.jLabel13.text");
-        }
-        jur = formatPref.get("fmt_address2", "");
-        if (!jur.equals("0")) {
-            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel14.text");
-        }
-        jur = formatPref.get("fmt_address3", "");
-        if (!jur.equals("0")) {
-            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel15.text");
-        }
-        jur = formatPref.get("fmt_address4", "");
-        if (!jur.equals("0")) {
-            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel16.text");
-        }
-        jur = formatPref.get("fmt_address5", "");
-        if (!jur.equals("0")) {
-            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel17.text");
-        }
-        jur = formatPref.get("fmt_address6", "");
-        if (!jur.equals("0")) {
-            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel18.text");
-        }
-        jur = formatPref.get("fmt_address7", "");
-        if (!jur.equals("0")) {
-            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel19.text");
-        }
-        return format;
-    }
+//FIXME    String getPlaceFormatFromOptions() {
+//        String format = "";
+//        String jur = "";
+//        AncestrisPreferences formatPref = AncestrisPreferences.get(App.class);
+//        final boolean USE_SPACES = formatPref.get("address_splitspaces", "").equals("true");
+//
+//        String space = USE_SPACES ? " " : "";
+//        // go through all jursidictions
+//        jur = formatPref.get("fmt_address1", "");
+//        if (!jur.equals("0")) {
+//            format += NbBundle.getMessage(App.class, "OptionDataPanel.jLabel13.text");
+//        }
+//        jur = formatPref.get("fmt_address2", "");
+//        if (!jur.equals("0")) {
+//            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel14.text");
+//        }
+//        jur = formatPref.get("fmt_address3", "");
+//        if (!jur.equals("0")) {
+//            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel15.text");
+//        }
+//        jur = formatPref.get("fmt_address4", "");
+//        if (!jur.equals("0")) {
+//            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel16.text");
+//        }
+//        jur = formatPref.get("fmt_address5", "");
+//        if (!jur.equals("0")) {
+//            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel17.text");
+//        }
+//        jur = formatPref.get("fmt_address6", "");
+//        if (!jur.equals("0")) {
+//            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel18.text");
+//        }
+//        jur = formatPref.get("fmt_address7", "");
+//        if (!jur.equals("0")) {
+//            format += "," + space + NbBundle.getMessage(App.class, "OptionDataPanel.jLabel19.text");
+//        }
+//        return format;
+//    }
 
     public boolean closeGedcom(Context context) {
         return closeGedcom(context, true);

@@ -5,6 +5,8 @@
 package genjfr.app;
 
 import ancestris.util.AncestrisPreferences;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import org.openide.awt.StatusDisplayer;
 
 final class OptionDataPanel extends javax.swing.JPanel {
@@ -12,7 +14,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private final OptionDataOptionsPanelController controller;
     // Values
     String[] encodings = new String[]{"ANSEL", "Unicode", "ASCII", "Latin1", "ANSI", "UTF-8"};
-    String[] fields = new String[]{"0", "1", "2", "3", "4", "5", "6", "7"};
 
     OptionDataPanel(OptionDataOptionsPanelController controller) {
         this.controller = controller;
@@ -31,37 +32,14 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel9 = new javax.swing.JLabel();
-        jCheckBox19 = new javax.swing.JCheckBox();
-        jComboBox1 = new javax.swing.JComboBox(encodings);
-        jLabel21 = new javax.swing.JLabel();
-        jCheckBox18 = new javax.swing.JCheckBox();
-        jLabel12 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
+        jtSubmitterName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jCheckBox17 = new javax.swing.JCheckBox();
-        jLabel10 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jCheckBox16 = new javax.swing.JCheckBox();
         jLabel5 = new javax.swing.JLabel();
-        jCheckBox15 = new javax.swing.JCheckBox();
         jTextField3 = new javax.swing.JTextField();
-        jCheckBox14 = new javax.swing.JCheckBox();
-        jCheckBox13 = new javax.swing.JCheckBox();
-        jCheckBox12 = new javax.swing.JCheckBox();
-        jCheckBox11 = new javax.swing.JCheckBox();
-        jCheckBox10 = new javax.swing.JCheckBox();
         jTextField4 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
@@ -69,17 +47,16 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jTextField6 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox(fields);
-        jComboBox3 = new javax.swing.JComboBox(fields);
-        jComboBox4 = new javax.swing.JComboBox(fields);
-        jComboBox5 = new javax.swing.JComboBox(fields);
-        jComboBox6 = new javax.swing.JComboBox(fields);
-        jComboBox7 = new javax.swing.JComboBox(fields);
-        jComboBox8 = new javax.swing.JComboBox(fields);
         jLabel22 = new javax.swing.JLabel();
         cbCreateSpouse = new javax.swing.JCheckBox();
-
-        setPreferredSize(new java.awt.Dimension(791, 503));
+        jPanel1 = new javax.swing.JPanel();
+        jLabel20 = new javax.swing.JLabel();
+        jCheckBox18 = new javax.swing.JCheckBox();
+        jLabel21 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox(encodings);
+        jCheckBox19 = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
+        placeFormat = new ancestris.modules.beans.APlaceFormatBean();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.toolTipText")); // NOI18N
@@ -90,80 +67,26 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel9.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox19, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.text")); // NOI18N
-        jCheckBox19.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.toolTipText")); // NOI18N
-
-        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jComboBox1.toolTipText")); // NOI18N
-
-        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel21.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox18, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.text")); // NOI18N
-        jCheckBox18.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel12, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel12.text")); // NOI18N
-        jLabel12.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel12.toolTipText")); // NOI18N
-
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField1.text")); // NOI18N
-        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField1.toolTipText")); // NOI18N
-
-        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel20, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel20.text")); // NOI18N
+        jtSubmitterName.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtSubmitterName.text")); // NOI18N
+        jtSubmitterName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtSubmitterName.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel3.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox17, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox17.text")); // NOI18N
-        jCheckBox17.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox17.toolTipText")); // NOI18N
-
-        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel10.text")); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel1.text")); // NOI18N
         jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel1.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel19, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel19.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel11, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel11.text")); // NOI18N
-        jLabel11.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel11.toolTipText")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel2.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel18, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel18.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel15, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel15.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel17, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel17.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel16, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel16.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel14.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel4.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel13, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel13.text")); // NOI18N
 
         jTextField2.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField2.text")); // NOI18N
         jTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField2.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox16, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox16.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel5.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox15, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox15.text")); // NOI18N
 
         jTextField3.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField3.text")); // NOI18N
         jTextField3.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField3.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox14, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox14.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox13, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox13.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox12, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox12.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox11, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox11.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox10, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox10.text")); // NOI18N
 
         jTextField4.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField4.text")); // NOI18N
         jTextField4.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField4.toolTipText")); // NOI18N
@@ -183,59 +106,80 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jTextField7.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField7.text")); // NOI18N
         jTextField7.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jTextField7.toolTipText")); // NOI18N
 
-        jComboBox2.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
-            }
-        });
-
-        jComboBox3.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
-            }
-        });
-
-        jComboBox4.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox4ActionPerformed(evt);
-            }
-        });
-
-        jComboBox5.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox5ActionPerformed(evt);
-            }
-        });
-
-        jComboBox6.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox6ActionPerformed(evt);
-            }
-        });
-
-        jComboBox7.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox7ActionPerformed(evt);
-            }
-        });
-
-        jComboBox8.setPreferredSize(new java.awt.Dimension(59, 26));
-        jComboBox8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox8ActionPerformed(evt);
-            }
-        });
-
-        jLabel22.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel22.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel22, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel22.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbCreateSpouse, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.text_1")); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jPanel1.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+
+        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel20, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel20.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox18, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.text")); // NOI18N
+        jCheckBox18.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.toolTipText")); // NOI18N
+
+        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel21.text")); // NOI18N
+
+        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jComboBox1.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox19, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.text")); // NOI18N
+        jCheckBox19.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.toolTipText")); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jCheckBox18))
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel21)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox19)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBox18)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBox19)
+                .addContainerGap(71, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jPanel2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -246,7 +190,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
                             .addComponent(jLabel9)
                             .addComponent(jLabel22))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -271,66 +215,17 @@ final class OptionDataPanel extends javax.swing.JPanel {
                                             .addComponent(jLabel8))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)))
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)))
+                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)))
+                                    .addComponent(jtSubmitterName, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)))
                             .addComponent(jCheckBox1)
                             .addComponent(jCheckBox2)
                             .addComponent(cbCreateSpouse)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel20)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel10)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel12))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jCheckBox10)
-                                    .addComponent(jLabel13))
-                                .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel14)
-                                    .addComponent(jCheckBox11)
-                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jCheckBox12)
-                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jCheckBox13))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox14)
-                                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel17))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jCheckBox15))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox16)
-                                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel19)))
-                            .addComponent(jCheckBox17)
-                            .addComponent(jCheckBox18)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox19)))))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -340,7 +235,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtSubmitterName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -371,78 +266,13 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbCreateSpouse)
                     .addComponent(jLabel22))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel17)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel19)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel14))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jCheckBox10)
-                    .addComponent(jLabel12)
-                    .addComponent(jCheckBox11)
-                    .addComponent(jCheckBox12)
-                    .addComponent(jCheckBox14)
-                    .addComponent(jCheckBox15)
-                    .addComponent(jCheckBox16)
-                    .addComponent(jCheckBox13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox17)
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(jCheckBox18))
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox19))
-                .addGap(20, 20, 20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox2ActionPerformed
-
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox3ActionPerformed
-
-    private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox4ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox4ActionPerformed
-
-    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox5ActionPerformed
-
-    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox6ActionPerformed
-
-    private void jComboBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox7ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox7ActionPerformed
-
-    private void jComboBox8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox8ActionPerformed
-        controller.changed();
-    }//GEN-LAST:event_jComboBox8ActionPerformed
 
     void load() {
         AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
@@ -458,21 +288,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setNamesUppercase(gedcomPrefs.get("isUpperCaseNames", ""));
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
         cbCreateSpouse.setSelected(genj.gedcom.Options.getInstance().getCreateSpouse());
-        setAddress1(gedcomPrefs.get("fmt_address1", ""));
-        setAddress2(gedcomPrefs.get("fmt_address2", ""));
-        setAddress3(gedcomPrefs.get("fmt_address3", ""));
-        setAddress4(gedcomPrefs.get("fmt_address4", ""));
-        setAddress5(gedcomPrefs.get("fmt_address5", ""));
-        setAddress6(gedcomPrefs.get("fmt_address6", ""));
-        setAddress7(gedcomPrefs.get("fmt_address7", ""));
-        setAddress1Mand(gedcomPrefs.get("fmt_address1_mand", ""));
-        setAddress2Mand(gedcomPrefs.get("fmt_address2_mand", ""));
-        setAddress3Mand(gedcomPrefs.get("fmt_address3_mand", ""));
-        setAddress4Mand(gedcomPrefs.get("fmt_address4_mand", ""));
-        setAddress5Mand(gedcomPrefs.get("fmt_address5_mand", ""));
-        setAddress6Mand(gedcomPrefs.get("fmt_address6_mand", ""));
-        setAddress7Mand(gedcomPrefs.get("fmt_address7_mand", ""));
-        setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
+        placeFormat.setFormatString(genj.gedcom.Options.getInstance().getPlaceFormat());
+//FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
         setBOM(appPrefs.get("isWriteBOM", ""));
@@ -481,6 +298,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     void store() {
         AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+        genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
 
         gedcomPrefs.put("submName", getSubmName());
         gedcomPrefs.put("submCity", getSubmCity());
@@ -491,22 +309,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("submWeb", getSubmWeb());
         gedcomPrefs.put("isUpperCaseNames", getNamesUppercase());
         gedcomPrefs.put("setWifeLastname", getNamesSpouse());
-        genj.gedcom.Options.getInstance().setCreateSpouse(cbCreateSpouse.isSelected());
-        gedcomPrefs.put("fmt_address1", getAddress1());
-        gedcomPrefs.put("fmt_address2", getAddress2());
-        gedcomPrefs.put("fmt_address3", getAddress3());
-        gedcomPrefs.put("fmt_address4", getAddress4());
-        gedcomPrefs.put("fmt_address5", getAddress5());
-        gedcomPrefs.put("fmt_address6", getAddress6());
-        gedcomPrefs.put("fmt_address7", getAddress7());
-        gedcomPrefs.put("fmt_address1_mand", getAddress1Mand());
-        gedcomPrefs.put("fmt_address2_mand", getAddress2Mand());
-        gedcomPrefs.put("fmt_address3_mand", getAddress3Mand());
-        gedcomPrefs.put("fmt_address4_mand", getAddress4Mand());
-        gedcomPrefs.put("fmt_address5_mand", getAddress5Mand());
-        gedcomPrefs.put("fmt_address6_mand", getAddress6Mand());
-        gedcomPrefs.put("fmt_address7_mand", getAddress7Mand());
-        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
+
+        gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
+        gedcomOptions.setPlaceFormat(placeFormat.getFormatString());
+
+//FIXME:        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
         gedcomPrefs.put("defaultEncoding", getEncoding());
         appPrefs.put("isWriteBOM", getBOM());
@@ -515,52 +322,16 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }
 
     public boolean valid() {
-        int i1 = jComboBox2.getSelectedIndex();
-        int i2 = jComboBox3.getSelectedIndex();
-        int i3 = jComboBox4.getSelectedIndex();
-        int i4 = jComboBox5.getSelectedIndex();
-        int i5 = jComboBox6.getSelectedIndex();
-        int i6 = jComboBox7.getSelectedIndex();
-        int i7 = jComboBox8.getSelectedIndex();
-        int sum = i1 + i2 + i3 + i4 + i5 + i6 + i7;
-        int pro = (i1 == 0 ? 1 : i1) * (i2 == 0 ? 1 : i2) * (i3 == 0 ? 1 : i3) * (i4 == 0 ? 1 : i4) * (i5 == 0 ? 1 : i5) * (i6 == 0 ? 1 : i6) * (i7 == 0 ? 1 : i7);
-        if (sum != 1 && sum != 3 && sum != 6 && sum != 10 && sum != 15 && sum != 21 && sum != 28) return false;
-        if (pro != 1 && pro != 2 && pro != 6 && pro != 24 && pro != 120 && pro != 720 && pro != 5040) return false;
-        return true;
+        return !jtSubmitterName.getText().isEmpty();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox10;
-    private javax.swing.JCheckBox jCheckBox11;
-    private javax.swing.JCheckBox jCheckBox12;
-    private javax.swing.JCheckBox jCheckBox13;
-    private javax.swing.JCheckBox jCheckBox14;
-    private javax.swing.JCheckBox jCheckBox15;
-    private javax.swing.JCheckBox jCheckBox16;
-    private javax.swing.JCheckBox jCheckBox17;
     private javax.swing.JCheckBox jCheckBox18;
     private javax.swing.JCheckBox jCheckBox19;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JComboBox jComboBox4;
-    private javax.swing.JComboBox jComboBox5;
-    private javax.swing.JComboBox jComboBox6;
-    private javax.swing.JComboBox jComboBox7;
-    private javax.swing.JComboBox jComboBox8;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
@@ -572,21 +343,24 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jtSubmitterName;
+    private ancestris.modules.beans.APlaceFormatBean placeFormat;
     // End of variables declaration//GEN-END:variables
 
     void setSubmName(String str) {
-        jTextField1.setText(str);
+        jtSubmitterName.setText(str);
     }
 
     String getSubmName() {
-        return jTextField1.getText();
+        return jtSubmitterName.getText();
     }
 
     void setSubmCity(String str) {
@@ -654,163 +428,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     String getNamesSpouse() {
         return jCheckBox2.isSelected() ? "true" : "false";
-    }
-
-    void setAddress1(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "1";
-        }
-        str = str.trim();
-        jComboBox2.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress1() {
-        return String.valueOf(jComboBox2.getSelectedIndex());
-    }
-
-    void setAddress2(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "2";
-        }
-        str = str.trim();
-        jComboBox3.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress2() {
-        return String.valueOf(jComboBox3.getSelectedIndex());
-    }
-
-    void setAddress3(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "3";
-        }
-        str = str.trim();
-        jComboBox4.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress3() {
-        return String.valueOf(jComboBox4.getSelectedIndex());
-    }
-
-    void setAddress4(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "4";
-        }
-        str = str.trim();
-        jComboBox5.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress4() {
-        return String.valueOf(jComboBox5.getSelectedIndex());
-    }
-
-    void setAddress5(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "5";
-        }
-        str = str.trim();
-        jComboBox6.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress5() {
-        return String.valueOf(jComboBox6.getSelectedIndex());
-    }
-
-    void setAddress6(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "6";
-        }
-        str = str.trim();
-        jComboBox7.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress6() {
-        return String.valueOf(jComboBox7.getSelectedIndex());
-    }
-
-    void setAddress7(String str) {
-        if (str.equals("") || getIntFromStr(str) == -1) {
-            str = "7";
-        }
-        str = str.trim();
-        jComboBox8.setSelectedIndex(Integer.valueOf(str));
-    }
-
-    String getAddress7() {
-        return String.valueOf(jComboBox8.getSelectedIndex());
-    }
-
-
-
-
-    void setAddress1Mand(String str) {
-        jCheckBox10.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress1Mand() {
-        return jCheckBox10.isSelected() ? "true" : "false";
-    }
-
-    void setAddress2Mand(String str) {
-        if (str.equals("")) {
-            str = "false";
-        }
-        jCheckBox11.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress2Mand() {
-        return jCheckBox11.isSelected() ? "true" : "false";
-    }
-
-    void setAddress3Mand(String str) {
-        jCheckBox12.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress3Mand() {
-        return jCheckBox12.isSelected() ? "true" : "false";
-    }
-
-    void setAddress4Mand(String str) {
-        jCheckBox13.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress4Mand() {
-        return jCheckBox13.isSelected() ? "true" : "false";
-    }
-
-    void setAddress5Mand(String str) {
-        jCheckBox14.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress5Mand() {
-        return jCheckBox14.isSelected() ? "true" : "false";
-    }
-
-    void setAddress6Mand(String str) {
-        jCheckBox15.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress6Mand() {
-        return jCheckBox15.isSelected() ? "true" : "false";
-    }
-
-    void setAddress7Mand(String str) {
-        jCheckBox16.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddress7Mand() {
-        return jCheckBox16.isSelected() ? "true" : "false";
-    }
-
-    void setAddressSpaces(String str) {
-        if (str.equals("")) {
-            str = "true";
-        }
-        jCheckBox17.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getAddressSpaces() {
-        return jCheckBox17.isSelected() ? "true" : "false";
     }
 
     void setIDFilling(String str) {
