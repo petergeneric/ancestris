@@ -38,10 +38,14 @@ public class FirstIndiWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
     // create only those which really need to be visible.
     @Override
     public Component getComponent() {
-        if (component == null) {
-            component = new FirstIndiVisualPanel(gedcomProvider);
-        }
-        return component;
+//        if (component == null) {
+//            component = new FirstIndiVisualPanel(gedcomProvider);
+//        }
+//        return component;
+        // On cree a chaque fois un nuveau composant pour etre certain que les juridications sont
+        // correctement mises a jour
+        // FIXME: peut etre faudra t il jouer avec les propertychangelistner entre le bean formatplace et place
+        return new FirstIndiVisualPanel(gedcomProvider);
     }
 
     @Override
