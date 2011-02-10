@@ -41,7 +41,7 @@ public class CreateNewGedcom implements INewGedcomProvider {
 
                     // Create place format
                     // FIXME: mettre ici l'appel a l'option
-                    gedcom.setPlaceFormat("Lieudit,Commune,Code_INSEE,Département,Région,Pays");
+                    gedcom.setPlaceFormat(genj.gedcom.Options.getInstance().getPlaceFormat());
                 }
             });
 
