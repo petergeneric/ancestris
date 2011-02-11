@@ -124,10 +124,10 @@ public class PlaceBean extends PropertyBean {
   public void setPropertyImpl(Property prop) {
     
     // remove all current fields and clear current default focus - this is all dynamic for each context
-    int old = rows;
+    removeAll();
     rows = 0;
     defaultFocus = null;
-    
+
     Gedcom ged = getRoot().getGedcom();
     PropertyPlace place = (PropertyPlace)prop;
     String value;
@@ -167,10 +167,6 @@ public class PlaceBean extends PropertyBean {
     
     // add filler
     gh.addFiller(1,++rows);
-    
-    // remove leftovers now - this means a focus change occurs back to first available field within bean
-    for (int i=0;i<old;i++)
-      remove(0);
     
     // Done
   }
