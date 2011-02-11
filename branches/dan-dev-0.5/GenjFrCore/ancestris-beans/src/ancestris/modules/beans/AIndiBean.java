@@ -45,8 +45,8 @@ public final class AIndiBean extends JPanel implements ABean {
         if (!(entity instanceof Indi))
             return this;
         this.indi = (Indi)entity;
-        aEventBean1.setRoot(indi);
-        aEventBean2.setRoot(indi);
+        deathBean.setRoot(indi);
+        birthBean.setRoot(indi);
         aSexBean1.setRoot(indi);
         aNameBean2.setRoot(indi);
         aSimpleBean1.setContext(indi,"OCCU");
@@ -59,8 +59,8 @@ public final class AIndiBean extends JPanel implements ABean {
      */
     @Override
     public void commit() throws GedcomException {
-        aEventBean1.commit();
-        aEventBean2.commit();
+        deathBean.commit();
+        birthBean.commit();
         aSexBean1.commit();
         aNameBean2.commit();
         aSimpleBean1.commit();
@@ -81,8 +81,8 @@ public final class AIndiBean extends JPanel implements ABean {
         aPlaceBean2 = new ancestris.modules.beans.APlaceBean();
         jLabel5 = new javax.swing.JLabel();
         aSexBean1 = new ancestris.modules.beans.ASexBean();
-        aEventBean1 = new ancestris.modules.beans.AEventBean();
-        aEventBean2 = new ancestris.modules.beans.AEventBean();
+        deathBean = new ancestris.modules.beans.AEventBean();
+        birthBean = new ancestris.modules.beans.AEventBean();
         aSimpleBean1 = new ancestris.modules.beans.AChoiceBean();
 
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
@@ -97,11 +97,11 @@ public final class AIndiBean extends JPanel implements ABean {
         jLabel5.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(AIndiBean.class, "AIndiBean.jLabel5.text")); // NOI18N
 
-        aEventBean1.setRequestFocusEnabled(false);
-        aEventBean1.setShowKnown(true);
-        aEventBean1.setTag("DEAT"); // NOI18N
+        deathBean.setRequestFocusEnabled(false);
+        deathBean.setShowKnown(true);
+        deathBean.setTag("DEAT"); // NOI18N
 
-        aEventBean2.setTag("BIRT"); // NOI18N
+        birthBean.setTag("BIRT"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -110,22 +110,22 @@ public final class AIndiBean extends JPanel implements ABean {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(aEventBean2, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
+                    .addComponent(birthBean, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(32, 32, 32)
-                        .addComponent(aNameBean2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                        .addComponent(aNameBean2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(aSexBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aPlaceBean2, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE))
-                    .addComponent(aEventBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
+                        .addComponent(aPlaceBean2, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE))
+                    .addComponent(deathBean, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)))
+                        .addComponent(aSimpleBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -141,9 +141,9 @@ public final class AIndiBean extends JPanel implements ABean {
                             .addComponent(aNameBean2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(aSexBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(aEventBean2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(birthBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(aEventBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(deathBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,12 +157,12 @@ public final class AIndiBean extends JPanel implements ABean {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.beans.AEventBean aEventBean1;
-    private ancestris.modules.beans.AEventBean aEventBean2;
     private ancestris.modules.beans.ANameBean aNameBean2;
     private ancestris.modules.beans.APlaceBean aPlaceBean2;
     private ancestris.modules.beans.ASexBean aSexBean1;
     private ancestris.modules.beans.AChoiceBean aSimpleBean1;
+    private ancestris.modules.beans.AEventBean birthBean;
+    private ancestris.modules.beans.AEventBean deathBean;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

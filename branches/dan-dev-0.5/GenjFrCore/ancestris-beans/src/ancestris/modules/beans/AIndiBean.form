@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="aEventBean2" alignment="0" pref="529" max="32767" attributes="0"/>
+                  <Component id="birthBean" alignment="0" pref="529" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
@@ -32,7 +32,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="aPlaceBean2" pref="441" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="aEventBean1" alignment="0" pref="529" max="32767" attributes="0"/>
+                  <Component id="deathBean" alignment="0" pref="529" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -60,9 +60,9 @@
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="aEventBean2" min="-2" max="-2" attributes="0"/>
+              <Component id="birthBean" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="aEventBean1" min="-2" max="-2" attributes="0"/>
+              <Component id="deathBean" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -124,14 +124,14 @@
     </Component>
     <Component class="ancestris.modules.beans.ASexBean" name="aSexBean1">
     </Component>
-    <Component class="ancestris.modules.beans.AEventBean" name="aEventBean1">
+    <Component class="ancestris.modules.beans.AEventBean" name="deathBean">
       <Properties>
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
         <Property name="showKnown" type="boolean" value="true"/>
         <Property name="tag" type="java.lang.String" value="DEAT" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="ancestris.modules.beans.AEventBean" name="aEventBean2">
+    <Component class="ancestris.modules.beans.AEventBean" name="birthBean">
       <Properties>
         <Property name="tag" type="java.lang.String" value="BIRT" noResource="true"/>
       </Properties>
