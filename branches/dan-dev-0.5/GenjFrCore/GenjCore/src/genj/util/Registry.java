@@ -31,7 +31,6 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ public class Registry implements PropertyChangeListener {
   private String prefix;
   
   private static Map<File, Registry> file2registry = new HashMap<File, Registry>();
-  private static Logger LOG =Logger.getLogger("genj");
+  private final static Logger LOG =Logger.getLogger("genj");
 
   private IRegistryStorage storage = null;
 
@@ -178,6 +177,26 @@ public class Registry implements PropertyChangeListener {
     int result[] = new int[size];
     for (int i=0;i<size;i++) {
       result[i] = get(key+"."+(i+1),-1);
+    }
+
+    // Done
+    return result;
+  }
+
+  /**
+   * Returns array of Boolean by key
+   */
+  public Boolean[] get(String key, Boolean[] def) {
+
+    // Get size of array
+    int size = get(key,-1);
+    if (size<0)
+      return def;
+
+    // Gather array
+    Boolean result[] = new Boolean[size];
+    for (int i=0;i<size;i++) {
+      result[i] = get(key+"."+(i+1),false);
     }
 
     // Done
@@ -651,6 +670,7 @@ public class Registry implements PropertyChangeListener {
     return frame;
   }
  
+    @Override
   public void propertyChange(PropertyChangeEvent evt) {
     String key = evt.getPropertyName();
     Object val = evt.getNewValue();
