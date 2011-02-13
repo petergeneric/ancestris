@@ -42,7 +42,13 @@
 package ancestris.welcome.ui;
 
 import ancestris.api.newgedcom.NewGedcom;
+import genj.app.WorkbenchHelper;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
+import genj.view.SelectionSink;
 import genjfr.app.ActionNew;
+import genjfr.util.GedcomDirectory;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.openide.util.Lookup;
@@ -56,7 +62,13 @@ public class NewGedcomAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         NewGedcom wiz = (NewGedcom) Lookup.getDefault().lookup(NewGedcom.class);
-        if (wiz != null && wiz.create() != null) {
+        if (wiz != null){
+            Context context = wiz.create();
+            if ( context != null){
+                GedcomDirectory.getInstance().registerGedcom(context);
+                WorkbenchHelper.openDefaultViews(context);
+                SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
+            }
         } else {
             new ActionNew().actionPerformed(e); //NOI18N
         }

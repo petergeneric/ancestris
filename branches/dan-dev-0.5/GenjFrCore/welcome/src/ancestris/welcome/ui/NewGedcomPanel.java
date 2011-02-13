@@ -52,11 +52,7 @@ class NewGedcomPanel extends JPanel implements Constants {
             @Override
             public void actionPerformed(ActionEvent e) {
                 logUsage();
-                NewGedcom wiz = (NewGedcom)Lookup.getDefault().lookup(NewGedcom.class);
-                if (wiz != null && wiz.create() != null){
-                } else {
-                    new ActionNew().actionPerformed(e); //NOI18N
-                }
+                new NewGedcomAction().actionPerformed(e);
             }
         };
         b.setFont(GET_STARTED_FONT);

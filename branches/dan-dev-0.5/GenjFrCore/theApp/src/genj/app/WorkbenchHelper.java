@@ -122,7 +122,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         return context;
     }
 
-    private static void openDefaultViews(Context context) {
+    public static void openDefaultViews(Context context) {
 
         AncestrisPreferences prefs = AncestrisPreferences.get(GenjViewTopComponent.class);
         List<Class> openedViews = new ArrayList<Class>();
