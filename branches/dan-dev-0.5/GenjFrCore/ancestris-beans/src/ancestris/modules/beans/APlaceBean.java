@@ -20,7 +20,6 @@ import java.io.Serializable;
  * @author daniel
  */
 public class APlaceBean extends PlaceBean implements Serializable {
-//public class APlaceBean extends ChoiceBean implements Serializable {
 
     private static final String PATH = "PLAC";
 
