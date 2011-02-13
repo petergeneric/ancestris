@@ -11,6 +11,13 @@
  super - what 'super element' to inherit properties and nested elements from
 
  *************************************
+ ************ Header *****************
+ *************************************
+ <HEAD type="Entity">
+     <NOTE default="0" xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+ </HEAD>
+
+ *************************************
  ************ Individuals ************
  *************************************
  <INDI type="Indi" img="Indi" img.male="IndiMale" img.female="IndiFemale">

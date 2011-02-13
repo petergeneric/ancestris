@@ -23,6 +23,7 @@ import genj.Version;
 import genj.crypto.Enigma;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.time.PointInTime;
 import genj.util.Resources;
@@ -224,31 +225,59 @@ public class GedcomWriter implements IGedcomWriter {
    * Write Header information
    * @exception IOException
    */
-  private void writeHeader() throws IOException {
-    
+  private Entity writeHeader() throws IOException, GedcomException {
     // Header
-    writeLine( "0 HEAD");
-    writeLine( "1 SOUR ANCESTRIS");
-    writeLine( "2 VERS "+Version.getInstance());
-    writeLine( "2 NAME Ancestris");
-    writeLine( "2 CORP "+RESOURCES.getString("header.corp","Ancestris"));
-    writeLine( "3 ADDR http://www.ancestris.org, http://www.ancestris.com");
-    writeLine( "1 DEST ANY");
-    writeLine( "1 DATE "+date);
-    writeLine( "2 TIME "+time);
+      Entity header = gedcom.getFirstEntity("HEAD");
+      if (header == null)
+          header = gedcom.createEntity("HEAD", "");
+      Property prop;
+      prop = header.addProperty("SOUR", "ANCESTRIS");
+      prop.addProperty("VERS", Version.getInstance().toString());
+      prop.addProperty("NAME", "Ancestris");
+      prop.addProperty("CORP",RESOURCES.getString("header.corp","Ancestris")).
+              addProperty("ADDR", "http://www.ancestris.org, http://www.ancestris.com");
+      prop.addProperty("DEST","ANY");
+      header.addProperty("DATE", date).
+              addProperty("TIME", time);
     if (gedcom.getSubmitter()!=null)
-      writeLine( "1 SUBM @"+gedcom.getSubmitter().getId()+'@');
-    writeLine( "1 FILE "+file);
-    writeLine( "1 GEDC");
-    writeLine( "2 VERS "+gedcom.getGrammar().getVersion());
-    writeLine( "2 FORM Lineage-Linked");
-    writeLine( "1 CHAR "+gedcom.getEncoding());
+      header.addProperty("SUBM","@"+gedcom.getSubmitter().getId()+'@');
+      header.addProperty("FILE", file);
+      prop = header.addProperty("GEDC", "");
+      prop.addProperty("VERS",gedcom.getGrammar().getVersion());
+      prop.addProperty("FORM", "Lineage-Linked");
+      header.addProperty("CHAR", gedcom.getEncoding());
+
     if (gedcom.getLanguage()!=null)
-      writeLine( "1 LANG "+gedcom.getLanguage());
+      header.addProperty("LANG",gedcom.getLanguage());
     if (gedcom.getPlaceFormat().length()>0) {
-      writeLine( "1 PLAC");
-      writeLine( "2 FORM "+gedcom.getPlaceFormat());
+      header.addProperty("PLAC","").
+              addProperty("FORM",gedcom.getPlaceFormat());
     }
+
+//    writeLine( "0 HEAD");
+//    writeLine( "1 SOUR ANCESTRIS");;
+//    writeLine( "2 VERS "+Version.getInstance());
+//    writeLine( "2 NAME Ancestris");
+//    writeLine( "2 CORP "+RESOURCES.getString("header.corp","Ancestris"));
+//    writeLine( "3 ADDR http://www.ancestris.org, http://www.ancestris.com");
+//    writeLine( "1 DEST ANY");
+//    writeLine( "1 DATE "+date);
+//    writeLine( "2 TIME "+time);
+//    if (gedcom.getSubmitter()!=null)
+//      writeLine( "1 SUBM @"+gedcom.getSubmitter().getId()+'@');
+//    writeLine( "1 FILE "+file);
+//    writeLine( "1 GEDC");
+//    writeLine( "2 VERS "+gedcom.getGrammar().getVersion());
+//    writeLine( "2 FORM Lineage-Linked");
+//    writeLine( "1 CHAR "+gedcom.getEncoding());
+//    if (gedcom.getLanguage()!=null)
+//      writeLine( "1 LANG "+gedcom.getLanguage());
+//    if (gedcom.getPlaceFormat().length()>0) {
+//      writeLine( "1 PLAC");
+//      writeLine( "2 FORM "+gedcom.getPlaceFormat());
+//    }
+      new EntityWriter().write(0, header);
+      return header;
     // done
   }
 
@@ -260,6 +289,9 @@ public class GedcomWriter implements IGedcomWriter {
 
     // Loop through entities
     es: for (Entity e : entities) {
+        // Don't output header twice
+        if ("HEAD".equals(e.getTag()))
+            continue;
       // .. check op
       if (cancel) 
         throw new GedcomIOException("Operation cancelled", line);
