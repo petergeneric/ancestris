@@ -198,7 +198,7 @@ public class Options extends OptionProvider {
         return Registry.get(genj.gedcom.Options.class);
     }
 
-    private static final String CREATE_SPOUSE   = "gedcom.create_spouse";         // NOI18N
+    private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
     }
@@ -206,13 +206,31 @@ public class Options extends OptionProvider {
         return getPreferences().get(CREATE_SPOUSE, false);
     }
 
-    private static final String PLACE_FORMAT = "gedcom.place_format";         // NOI18N
+    private static final String PLACE_FORMAT = "gedcom.placeFormat";         // NOI18N
     public void setPlaceFormat(String placeFormatString) {
         getPreferences().put(PLACE_FORMAT,placeFormatString);
     }
 
     public String getPlaceFormat() {
-        return getPreferences().get(PLACE_FORMAT,RESOURCES.getString("option.default_format_string"));
+        return getPreferences().get(PLACE_FORMAT,RESOURCES.getString("option.placeFormat"));
     }
 
+    public static final String SHOW_PLACE_FORMAT = "gedcom.showJuridictions";         // NOI18N
+    public void setShowJuridictions(Boolean [] showFormatString) {
+        getPreferences().put(SHOW_PLACE_FORMAT,showFormatString);
+    }
+
+    public Boolean[] getShowJuridictions(){
+        return getPreferences().get(SHOW_PLACE_FORMAT, getDefaultShowJuridictions() );
+    }
+    private Boolean [] getDefaultShowJuridictions(){
+        String showJuri[] = RESOURCES.getString("option.showJuridictions").split(",");
+        if (showJuri.length == 1)
+            return new Boolean[]{true, true,true,true, true,true,true, true,true,true} ;
+        Boolean result[] = new Boolean[showJuri.length];
+        for (int i = 0; i<showJuri.length;i++){
+            result[i] = Boolean.valueOf(showJuri[i].trim());
+        }
+        return result;
+    }
 } //Options

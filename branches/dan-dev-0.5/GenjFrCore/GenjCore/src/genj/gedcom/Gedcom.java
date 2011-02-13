@@ -203,6 +203,8 @@ public class Gedcom implements Comparable {
   /** name for unnamed gedcom */
   private String noName = null;
 
+  /** registry for this gedcom */
+  private Registry registry = null;
   /**
    * Gedcom's Constructor
    */
@@ -1261,7 +1263,7 @@ public class Gedcom implements Comparable {
 
   /**
    * Helper that returns registry for gedcom
-   * TODO: getRegistry(gedcom) a mettre ailleurs
+   * <p>TODO: getRegistry(gedcom) a mettre ailleurs
    * le fichier gedcom.properties est maintenant dans le home user dir
    * DAN 20101230: now in PreferencesRoot/gedcoms/settings/...
    * TODO: Attention cela a pour inconvenient de ne par pouvoir ouvrir (dans la vie d'ancestris)
@@ -1271,7 +1273,10 @@ public class Gedcom implements Comparable {
    * FIXME: mettre dans ancestrispreferences
    */
   public Registry getRegistry(){
-    return Registry.get("gedcoms/settings/"+getName());
+      if (registry == null){
+          registry = Registry.get("gedcoms/settings/"+getName());
+      }
+    return registry;
   }
   /**
    * Accessor - encoding
@@ -1299,6 +1304,15 @@ public class Gedcom implements Comparable {
    */
   public void setPlaceFormat(String set) {
     placeFormat = set.trim();
+  }
+
+  /** show place fomat getter and setter (thru registry) */
+  public void setShowJuridictions(Boolean[] showFormat){
+      getRegistry().put(Options.SHOW_PLACE_FORMAT,showFormat);
+  }
+
+  public Boolean[] getShowJuridictions(){
+      return getRegistry().get(Options.SHOW_PLACE_FORMAT, Options.getInstance().getShowJuridictions());
   }
   
   /**

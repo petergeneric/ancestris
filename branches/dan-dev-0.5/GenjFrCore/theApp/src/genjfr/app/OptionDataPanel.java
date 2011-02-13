@@ -289,7 +289,9 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
         cbCreateSpouse.setSelected(genj.gedcom.Options.getInstance().getCreateSpouse());
         placeFormat.setFormatString(genj.gedcom.Options.getInstance().getPlaceFormat());
-//FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
+        placeFormat.setShowJuridcitions(genj.gedcom.Options.getInstance().getShowJuridictions());
+
+        //FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
         setBOM(appPrefs.get("isWriteBOM", ""));
@@ -312,6 +314,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
         gedcomOptions.setPlaceFormat(placeFormat.getFormatString());
+        gedcomOptions.setShowJuridictions(placeFormat.getShowJuridictions());
 
 //FIXME:        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());

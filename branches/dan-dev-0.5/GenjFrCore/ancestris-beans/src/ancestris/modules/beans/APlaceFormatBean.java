@@ -11,6 +11,8 @@
  */
 package ancestris.modules.beans;
 
+import java.util.ArrayList;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -18,6 +20,7 @@ public final class APlaceFormatBean extends JPanel {
 
     private String tag = "";
     private final JTextField JURIS[];
+    private final JCheckBox SHOW_JURIS[];
 
 
     /**
@@ -43,7 +46,7 @@ public final class APlaceFormatBean extends JPanel {
     public APlaceFormatBean() {
         initComponents();
         JURIS = new JTextField[] {jtJuri1,jtJuri2,jtJuri3,jtJuri4,jtJuri5,jtJuri6,jtJuri7,jtJuri8};
-
+        SHOW_JURIS = new JCheckBox[] {cbJuri1,cbJuri2,cbJuri3,cbJuri4,cbJuri5,cbJuri6,cbJuri7,cbJuri8};
     }
 
     /** This method is called from within the constructor to
@@ -286,11 +289,57 @@ public final class APlaceFormatBean extends JPanel {
         String juris[] = format.split(",");
 
         for (JTextField juri:JURIS){
-            juri.setText("");;
+            juri.setText("");
         }
         for (int i=0;i<juris.length;i++){
             JURIS[i].setText(juris[i].trim());
         }
+
+        for (int i = 0; i< JURIS.length; i++) {
+            if (i<juris.length){
+                JURIS[i].setText(juris[i].trim());
+                SHOW_JURIS[i].setSelected(juris[i].trim().length() == 0);
+            } else {
+                JURIS[i].setText("");
+                SHOW_JURIS[i].setSelected(false);
+            }
+        }
     }
+
+
+
+    public Boolean[] getShowJuridictions() {
+        ArrayList<Boolean> showJuri = new ArrayList<Boolean>();
+
+        for (int i = 0; i<JURIS.length;i++){
+           if (JURIS[i].getText().trim().isEmpty()) {
+                continue;
+            }
+            showJuri.add(SHOW_JURIS[i].isSelected());
+        }
+        return showJuri.toArray(new Boolean[0]);
+    }
+
+    /**
+     * Note: must be called after setFormatString
+     * @param show
+     */
+    public void setShowJuridcitions(Boolean show[]){
+        for (JCheckBox showJuri:SHOW_JURIS){
+            showJuri.setSelected(true);
+        }
+
+        for (int i=0;i<SHOW_JURIS.length;i++){
+            if (i<show.length)
+                SHOW_JURIS[i].setSelected(show[i]);
+            else
+                SHOW_JURIS[i].setSelected(false);
+            if (JURIS[i].getText().length() == 0){
+                SHOW_JURIS[i].setSelected(false);
+            }
+        }
+    }
+
+
 
 }

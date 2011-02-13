@@ -133,6 +133,7 @@ public class PlaceBean extends PropertyBean {
     String value;
     String formatAsString;
     String[] jurisdictions;
+    Boolean showJuridictions[] = ged.getShowJuridictions();
     
     if (place==null) {
       sameChoices = new Property[0];
@@ -156,7 +157,8 @@ public class PlaceBean extends PropertyBean {
     } else {
       String[] format = PropertyPlace.getFormat(ged);
       for (int i=0;i<Math.max(format.length, jurisdictions.length); i++) {
-        createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", PropertyPlace.getAllJurisdictions(ged, i, true), null);
+          if (i>=showJuridictions.length || showJuridictions[i])
+            createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", PropertyPlace.getAllJurisdictions(ged, i, true), null);
       }
     }
     
