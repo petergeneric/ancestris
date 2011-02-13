@@ -11,7 +11,10 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import javax.swing.JPanel;
+import org.openide.util.Exceptions;
 
 public final class JuridictionsVisualPanel extends JPanel implements NewGedcomSteps {
 
@@ -26,7 +29,11 @@ public final class JuridictionsVisualPanel extends JPanel implements NewGedcomSt
     @Override
     public void addNotify() {
         super.addNotify();
-        placeFormat.setFormatString(gedcomProvider.getContext().getGedcom().getPlaceFormat());
+        Gedcom gedcom = gedcomProvider.getContext().getGedcom();
+        placeFormat.setFormatString(gedcom.getPlaceFormat());
+        placeFormat.setShowJuridcitions(gedcom.getRegistry().get(genj.gedcom.Options.SHOW_PLACE_FORMAT,genj.gedcom.Options.getInstance().getShowJuridictions()));
+        aMLEBean1.setTag("NOTE");
+        aMLEBean1.setRoot(gedcom.getFirstEntity("HEAD"));
     }
 
     @Override
@@ -43,9 +50,13 @@ public final class JuridictionsVisualPanel extends JPanel implements NewGedcomSt
     private void initComponents() {
 
         placeFormat = new ancestris.modules.beans.APlaceFormatBean();
+        jLabel1 = new javax.swing.JLabel();
+        aMLEBean1 = new ancestris.modules.beans.AMLEBean();
 
-        setPreferredSize(new java.awt.Dimension(622, 500));
-        setRequestFocusEnabled(false);
+        placeFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(JuridictionsVisualPanel.class, "JuridictionsVisualPanel.placeFormat.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JuridictionsVisualPanel.class, "JuridictionsVisualPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -53,23 +64,40 @@ public final class JuridictionsVisualPanel extends JPanel implements NewGedcomSt
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(aMLEBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(12, 12, 12)
+                        .addComponent(aMLEBean1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.beans.AMLEBean aMLEBean1;
+    private javax.swing.JLabel jLabel1;
     private ancestris.modules.beans.APlaceFormatBean placeFormat;
     // End of variables declaration//GEN-END:variables
     @Override
     public void applyNext() {
         gedcomProvider.getContext().getGedcom().setPlaceFormat(placeFormat.getFormatString());
+        gedcomProvider.getContext().getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
+        try {
+            aMLEBean1.commit();
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

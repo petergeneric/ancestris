@@ -11,26 +11,56 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
+import ancestris.api.newgedcom.NewGedcom;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.UnitOfWork;
-import genjfr.util.GedcomDirectory;
+import java.awt.Dialog;
+import java.text.MessageFormat;
+import org.openide.DialogDisplayer;
+import org.openide.WizardDescriptor;
 import org.openide.util.Exceptions;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author daniel
  */
-public class CreateNewGedcom implements INewGedcomProvider {
-
+@ServiceProvider(service=NewGedcom.class)
+public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
+    
+    private static final genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
     private Context context = null;
 
-    public CreateNewGedcom() {
+    @Override
+    public Context create() {
+        // To invoke this wizard, copy-paste and run the following code, e.g. from
+        // SomeAction.performAction():
+        WizardDescriptor.Iterator iterator = new NewGedcomWizardIterator();
+        WizardDescriptor wizardDescriptor = new WizardDescriptor(iterator);
+        // {0} will be replaced by WizardDescriptor.Panel.getComponent().getName()
+        // {1} will be replaced by WizardDescriptor.Iterator.name()
+        //wizardDescriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
+        wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
+        wizardDescriptor.setTitle(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "wizard.title"));
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
+        dialog.setVisible(true);
+        dialog.toFront();
+        boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
+        if (!cancelled) {
+            return context;
+        }
+        return null;
+    }
+
+    @Override
+    public Context getContext() {
+        if (context == null){
         Gedcom gedcom = new Gedcom();
         try {
-            // note: dan ce cas pas besoin de memoriser dans le undo history mais cela
+            // note: dans ce cas pas besoin de memoriser dans le undo history mais cela
             // permet de positionner le gedcom dans l'etat change
             gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -38,25 +68,21 @@ public class CreateNewGedcom implements INewGedcomProvider {
                 public void perform(Gedcom gedcom) throws GedcomException {
                     gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
                     gedcom.createEntity(Gedcom.SUBM);
+                    gedcom.createEntity("HEAD","");
 
                     // Create place format
                     // FIXME: mettre ici l'appel a l'option
-                    gedcom.setPlaceFormat(genj.gedcom.Options.getInstance().getPlaceFormat());
+                    gedcom.setPlaceFormat(gedcomOptions.getPlaceFormat());
+                    gedcom.setShowJuridictions(gedcomOptions.getShowJuridictions());
                 }
             });
 
             // remember
             context = new Context(gedcom);
-            GedcomDirectory.getInstance().registerGedcom(context);
-//            openDefaultViews(context);
-//            SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
-    }
-
-    @Override
-    public Context getContext() {
+        }
         return context;
     }
 
