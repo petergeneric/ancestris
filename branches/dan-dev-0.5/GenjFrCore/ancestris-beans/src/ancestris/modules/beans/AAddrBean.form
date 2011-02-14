@@ -21,23 +21,23 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cpostLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="stateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="address" pref="241" max="32767" attributes="3"/>
-                          <Component id="country" alignment="0" pref="241" max="32767" attributes="2"/>
-                          <Component id="state" alignment="0" pref="241" max="32767" attributes="2"/>
-                          <Component id="city" alignment="0" pref="241" max="32767" attributes="2"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="city" alignment="1" pref="241" max="32767" attributes="2"/>
+                          <Component id="address" alignment="0" pref="241" max="32767" attributes="3"/>
+                          <Component id="cpost" alignment="0" pref="241" max="32767" attributes="2"/>
+                          <Component id="country" alignment="1" pref="241" max="32767" attributes="2"/>
                       </Group>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="cpostLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="cpost" pref="241" max="32767" attributes="2"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="stateLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                      <Component id="state" pref="241" max="32767" attributes="2"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -50,34 +50,29 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="addressLabel" min="-2" max="-2" attributes="0"/>
-                  <Component id="address" pref="95" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cpostLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="cpost" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="city" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="cityLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="state" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="stateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="country" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="address" pref="99" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cpostLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="cpost" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cityLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="city" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="state" min="-2" max="-2" attributes="0"/>
+                  <Component id="stateLabel" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="country" min="-2" max="-2" attributes="0"/>
+                  <Component id="countryLabel" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
