@@ -17,18 +17,10 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <Component id="aMLEBean1" pref="450" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                      <Component id="aDateBean1" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="aMLEBean1" pref="450" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="placeFormat" min="-2" max="-2" attributes="0"/>
@@ -45,8 +37,6 @@
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="aMLEBean1" min="-2" pref="163" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                      <Component id="aDateBean1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="placeFormat" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -79,8 +69,6 @@
       </Properties>
     </Component>
     <Component class="ancestris.modules.beans.AMLEBean" name="aMLEBean1">
-    </Component>
-    <Component class="ancestris.modules.beans.ADateBean" name="aDateBean1">
     </Component>
   </SubComponents>
 </Form>
