@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="org-ancestris-FamilyGroups-FamilyGroupsAction.instance">
+                <attr name="component" methodvalue="org.ancestris.FamilyGroups.FamilyGroupsTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="org.ancestris.FamilyGroups.Bundle#CTL_FamilyGroupsAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/FamilyGroups/FamilyGroups.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="FamilyGroupsAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-FamilyGroups-FamilyGroupsAction.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="FamilyGroupsTopComponent.settings" url="FamilyGroupsTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="FamilyGroupsTopComponent.wstcref" url="FamilyGroupsTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
