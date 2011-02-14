@@ -153,12 +153,12 @@ public class PlaceBean extends PropertyBean {
    
     // either a simple value or broken down into comma separated jurisdictions
     if (!Options.getInstance().isSplitJurisdictions || formatAsString.length()==0) {
-      createChoice(null, value, PropertyPlace.getAllJurisdictions(ged, -1, true), formatAsString);
+      createChoice(null, value, PropertyPlace.getAllJurisdictions(ged, -1, true), formatAsString,true);
     } else {
       String[] format = PropertyPlace.getFormat(ged);
       for (int i=0;i<Math.max(format.length, jurisdictions.length); i++) {
-          if (i>=showJuridictions.length || showJuridictions[i])
-            createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", PropertyPlace.getAllJurisdictions(ged, i, true), null);
+          boolean showIt = (i>=showJuridictions.length || showJuridictions[i]);
+          createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", PropertyPlace.getAllJurisdictions(ged, i, true), null,showIt);
       }
     }
     
@@ -173,11 +173,11 @@ public class PlaceBean extends PropertyBean {
     // Done
   }
   
-  private void createChoice(String label, String value, String[] values, String tip) {
+  private void createChoice(String label, String value, String[] values, String tip,boolean showIt) {
     // next row
     rows++;
     // add a label for the jurisdiction name?
-    if (label!=null) 
+    if (label!=null && showIt)
       gh.add(new JLabel(label, SwingConstants.RIGHT), 0, rows, 1, 1, GridBagHelper.FILL_HORIZONTAL);
     // and a textfield
     ChoiceWidget choice = new ChoiceWidget();
@@ -196,6 +196,7 @@ public class PlaceBean extends PropertyBean {
     gh.add(choice, 1, rows, 1, 1, GridBagHelper.GROWFILL_HORIZONTAL);
     // set default focus if not done yet
     if (defaultFocus==null) defaultFocus = choice;
+    choice.setVisible(showIt);
     // done
   }
 
