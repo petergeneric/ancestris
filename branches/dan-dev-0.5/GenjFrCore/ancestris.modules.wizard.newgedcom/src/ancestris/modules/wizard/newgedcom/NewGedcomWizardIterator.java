@@ -27,7 +27,12 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
     private int index = 0;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;
-    private INewGedcomProvider newGedcom = new CreateNewGedcom();
+    private final INewGedcomProvider newGedcom;
+
+    NewGedcomWizardIterator(INewGedcomProvider newGedcom) {
+        super();
+        this.newGedcom = newGedcom;
+    }
 
     /**
      * Initialize panels representing individual wizard's steps and sets
