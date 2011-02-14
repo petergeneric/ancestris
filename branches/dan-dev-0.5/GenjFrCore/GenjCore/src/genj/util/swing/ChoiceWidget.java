@@ -513,6 +513,7 @@ public class ChoiceWidget extends JComboBox {
       if (e.getKeyCode()==KeyEvent.VK_ENTER&&isPopupVisible()) {
         model.setSelectedItem(model.getSelectedItem());
         setPopupVisible(false);
+        e.consume();
       }
       // done
     }
