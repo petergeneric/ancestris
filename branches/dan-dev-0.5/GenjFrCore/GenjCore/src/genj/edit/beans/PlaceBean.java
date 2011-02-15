@@ -157,7 +157,7 @@ public class PlaceBean extends PropertyBean {
     } else {
       String[] format = PropertyPlace.getFormat(ged);
       for (int i=0;i<Math.max(format.length, jurisdictions.length); i++) {
-          boolean showIt = (i>=showJuridictions.length || showJuridictions[i]);
+          boolean showIt = (showJuridictions == null||i>=showJuridictions.length || showJuridictions[i]);
           createChoice(i<format.length ? format[i] : "?", i<jurisdictions.length ? jurisdictions[i] : "", PropertyPlace.getAllJurisdictions(ged, i, true), null,showIt);
       }
     }

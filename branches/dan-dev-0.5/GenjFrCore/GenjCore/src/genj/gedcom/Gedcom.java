@@ -1311,8 +1311,9 @@ public class Gedcom implements Comparable {
       getRegistry().put(Options.SHOW_PLACE_FORMAT,showFormat);
   }
 
+  /** if no show-place-juridiction in gedcom registry then returns null that means show everything */
   public Boolean[] getShowJuridictions(){
-      return getRegistry().get(Options.SHOW_PLACE_FORMAT, Options.getInstance().getShowJuridictions());
+      return getRegistry().get(Options.SHOW_PLACE_FORMAT, (Boolean[])null);
   }
   
   /**
