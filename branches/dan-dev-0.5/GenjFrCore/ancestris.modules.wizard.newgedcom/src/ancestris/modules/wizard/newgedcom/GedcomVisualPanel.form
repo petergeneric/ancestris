@@ -38,7 +38,9 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="aMLEBean1" min="-2" pref="163" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="placeFormat" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="placeFormat" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -51,7 +53,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Juridictions">
-              <ResourceString PropertyName="titleX" bundle="ancestris/modules/wizard/newgedcom/Bundle.properties" key="JuridictionsVisualPanel.placeFormat.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="ancestris/modules/wizard/newgedcom/Bundle.properties" key="GedcomVisualPanel.placeFormat.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
               <Font PropertyName="font" name="Dialog" size="12" style="1"/>
             </TitledBorder>
           </Border>
@@ -64,7 +66,7 @@
           <Font name="DejaVu Sans" size="13" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/wizard/newgedcom/Bundle.properties" key="JuridictionsVisualPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/wizard/newgedcom/Bundle.properties" key="GedcomVisualPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

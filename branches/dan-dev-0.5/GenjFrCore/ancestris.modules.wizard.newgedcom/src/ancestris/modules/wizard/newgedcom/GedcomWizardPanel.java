@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class JuridictionsWizardPanel implements WizardDescriptor.Panel, IHelpPanel {
+public class GedcomWizardPanel implements WizardDescriptor.Panel, IHelpPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -28,7 +28,7 @@ public class JuridictionsWizardPanel implements WizardDescriptor.Panel, IHelpPan
     private Component component;
     private INewGedcomProvider gedcomProvider;
 
-    public JuridictionsWizardPanel(INewGedcomProvider provider) {
+    public GedcomWizardPanel(INewGedcomProvider provider) {
         this.gedcomProvider = provider;
     }
 
@@ -39,7 +39,7 @@ public class JuridictionsWizardPanel implements WizardDescriptor.Panel, IHelpPan
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new JuridictionsVisualPanel(gedcomProvider);
+            component = new GedcomVisualPanel(gedcomProvider);
         }
         return component;
     }

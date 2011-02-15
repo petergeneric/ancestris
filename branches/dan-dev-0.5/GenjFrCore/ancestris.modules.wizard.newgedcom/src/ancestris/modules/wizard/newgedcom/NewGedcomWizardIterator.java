@@ -46,7 +46,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
                 _panels.add(new IntroWizardPanel());
             }
             _panels.add(new SubmitterWizardPanel(newGedcom));
-            _panels.add(new JuridictionsWizardPanel(newGedcom));
+            _panels.add(new GedcomWizardPanel(newGedcom));
             _panels.add(new FirstIndiWizardPanel(newGedcom));
             _panels.add(new FamillyWizardPanel(newGedcom));
             panels = _panels.toArray(panels);
