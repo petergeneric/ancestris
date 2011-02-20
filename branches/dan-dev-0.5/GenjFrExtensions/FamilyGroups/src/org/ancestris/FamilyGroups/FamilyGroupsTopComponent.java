@@ -1,21 +1,13 @@
 package org.ancestris.FamilyGroups;
 
 import genj.gedcom.Context;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
+import java.awt.Font;
+import java.awt.event.MouseEvent;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -25,7 +17,10 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.view.SelectionSink;
 import genjfr.app.App;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 /**
  * Top component which displays something.
@@ -43,19 +40,128 @@ autostore = false)
 public final class FamilyGroupsTopComponent extends TopComponent {
 
     private static FamilyGroupsTopComponent instance;
-    private Context context;
-    /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "org/ancestris/FamilyGroups/FamilyGroups.png";
-    private static final String PREFERRED_ID = "FamilyGroupsTopComponent";
-    private int minGroupSize = 2;  // Don't print groups with size less than this
-    private int maxGroupSize = 20;
     /** alignment options */
     protected final static int ALIGN_LEFT = 0;
     protected final static int ALIGN_CENTER = 1;
     protected final static int ALIGN_RIGHT = 2;
+    private Context context;
+    /** path to the icon used by the component and its open action */
+    static final String ICON_PATH = "org/ancestris/FamilyGroups/FamilyGroups.png";
+    private static final String PREFERRED_ID = "FamilyGroupsTopComponent";
+    private int minGroupSize = 0;  // Don't print groups with size less than this
+    private int maxGroupSize = 0;
+    private String CurrentId = null;
+
+    private class myMouseListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Gedcom myGedcom = context.getGedcom();
+            if (CurrentId != null && myGedcom != null) {
+                Entity entity = myGedcom.getEntity(CurrentId);
+                if (entity != null) {
+                    SelectionSink.Dispatcher.fireSelection(e, new Context(entity));
+                }
+            }
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+    }
+
+    private class MyMouseMotionListener implements MouseMotionListener {
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            Document doc = familyGroupsTextArea.getDocument();
+            String NewId = null;
+            Gedcom myGedcom = context.getGedcom();
+
+            if (myGedcom != null) {
+                try {
+                    // do we get a position in the model?
+                    int pos = familyGroupsTextArea.viewToModel(e.getPoint());
+                    if (pos >= 0) {
+
+                        // scan doc
+                        // find ' ' to the left
+                        for (int i = 0;; i++) {
+                            // stop looking after 10
+                            if (i == 10) {
+                                return;
+                            }
+
+                            // check for starting line or non digit/character
+                            if (pos == 0 || !Character.isLetterOrDigit(doc.getText(pos - 1, 1).charAt(0))) {
+                                break;
+                            }
+
+                            // continue
+                            pos--;
+                        }
+
+                        // find ' ' to the right
+                        int len = 0;
+                        while (true) {
+                            // stop looking after 10
+                            if (len == 10) {
+                                return;
+                            }
+                            // stop at end of doc
+                            if (pos + len == doc.getLength()) {
+                                break;
+                            }
+                            // or non digit/character
+                            if (!Character.isLetterOrDigit(doc.getText(pos + len, 1).charAt(0))) {
+                                break;
+                            }
+                            // continue
+                            len++;
+                        }
+
+                        // check if it's an ID
+                        if (len < 2) {
+                            return;
+                        }
+                        NewId = doc.getText(pos, len);
+                        if (myGedcom.getEntity(NewId) == null) {
+                            return;
+                        }
+                        CurrentId = NewId;
+
+                        // mark it
+                        // requestFocusInWindow();
+                        familyGroupsTextArea.setCaretPosition(pos);
+                        familyGroupsTextArea.moveCaretPosition(pos + len);
+
+                        // done
+                    }
+                } catch (BadLocationException ble) {
+                }
+            }
+        }
+    }
 
     private void println(String string) {
-        jTextArea1.append(string + "\n");
+        familyGroupsTextArea.append(string + "\n");
     }
 
     /**
@@ -74,7 +180,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         n = length - n;
 
         // prepare result
-        StringBuffer buffer = new StringBuffer(length);
+        StringBuilder buffer = new StringBuilder(length);
 
         int before, after;
         switch (alignment) {
@@ -189,15 +295,15 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         setName(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsTopComponent"));
         setToolTipText(NbBundle.getMessage(FamilyGroupsTopComponent.class, "HINT_FamilyGroupsTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-        jFormattedTextField1.setValue(minGroupSize);
-        jFormattedTextField2.setValue(maxGroupSize);
+        familyGroupsTextArea.addMouseMotionListener(new MyMouseMotionListener());
+        familyGroupsTextArea.addMouseListener(new myMouseListener ());
     }
 
     public void start(Entity[] indis, HashSet allIndis) {
         HashSet unvisited = new HashSet(Arrays.asList(indis));
         List trees = new ArrayList();
 
-        jTextArea1.setText("");
+        familyGroupsTextArea.setText("");
 //        println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.fileheader"), myGedcom.getName()));
         while (!unvisited.isEmpty()) {
             Indi indi = (Indi) unvisited.iterator().next();
@@ -337,136 +443,40 @@ public final class FamilyGroupsTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jLabel2 = new JLabel();
-        jFormattedTextField1 = new JFormattedTextField();
-        jFormattedTextField2 = new JFormattedTextField();
-        jScrollPane1 = new JScrollPane();
-        jTextArea1 = new JTextArea();
-
-        FormListener formListener = new FormListener();
+        familyGroupsScrollPane = new JScrollPane();
+        familyGroupsTextArea = new JTextArea();
 
         setName("Form"); // NOI18N
 
-        jPanel1.setName("jPanel1"); // NOI18N
+        familyGroupsScrollPane.setName("familyGroupsScrollPane"); // NOI18N
 
-        Mnemonics.setLocalizedText(jLabel1, NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        Mnemonics.setLocalizedText(jLabel2, NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-
-        jFormattedTextField1.setColumns(3);
-        jFormattedTextField1.setToolTipText(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.minGroupSize")); // NOI18N
-        jFormattedTextField1.setName("jFormattedTextField1"); // NOI18N
-        jFormattedTextField1.addActionListener(formListener);
-
-        jFormattedTextField2.setColumns(3);
-        jFormattedTextField2.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(new DecimalFormat("#0"))));
-        jFormattedTextField2.setToolTipText(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.maxGroupSize")); // NOI18N
-        jFormattedTextField2.setName("jFormattedTextField2"); // NOI18N
-        jFormattedTextField2.addActionListener(formListener);
-
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING, false)
-                    .addComponent(jFormattedTextField2, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(103, 103, 103))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jFormattedTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jFormattedTextField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane1.setViewportView(jTextArea1);
+        familyGroupsTextArea.setColumns(20);
+        familyGroupsTextArea.setEditable(false);
+        familyGroupsTextArea.setFont(new Font("Monospaced", 0, 12));
+        familyGroupsTextArea.setRows(5);
+        familyGroupsTextArea.setName("familyGroupsTextArea"); // NOI18N
+        familyGroupsScrollPane.setViewportView(familyGroupsTextArea);
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                    .addComponent(jPanel1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE))
+                .addComponent(familyGroupsScrollPane, GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                .addComponent(familyGroupsScrollPane, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addContainerGap())
         );
-    }
-
-    // Code for dispatching events from components to event handlers.
-
-    private class FormListener implements ActionListener {
-        FormListener() {}
-        public void actionPerformed(ActionEvent evt) {
-            if (evt.getSource() == jFormattedTextField1) {
-                FamilyGroupsTopComponent.this.jFormattedTextField1ActionPerformed(evt);
-            }
-            else if (evt.getSource() == jFormattedTextField2) {
-                FamilyGroupsTopComponent.this.jFormattedTextField2ActionPerformed(evt);
-            }
-        }
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jFormattedTextField1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
-        setMinGroupSize((Integer) jFormattedTextField1.getValue());
-        if (context != null) {
-            Gedcom myGedcom = context.getGedcom();
-            Entity[] indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-            HashSet unvisited = new HashSet(Arrays.asList(indis));
-            start(indis, unvisited);
-        }
-    }//GEN-LAST:event_jFormattedTextField1ActionPerformed
-
-    private void jFormattedTextField2ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField2ActionPerformed
-        setMaxGroupSize((Integer) jFormattedTextField1.getValue());
-        if (context != null) {
-            Gedcom myGedcom = context.getGedcom();
-            Entity[] indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-            HashSet unvisited = new HashSet(Arrays.asList(indis));
-            start(indis, unvisited);
-        }
-    }//GEN-LAST:event_jFormattedTextField2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JFormattedTextField jFormattedTextField1;
-    private JFormattedTextField jFormattedTextField2;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    private JPanel jPanel1;
-    private JScrollPane jScrollPane1;
-    private JTextArea jTextArea1;
+    private JScrollPane familyGroupsScrollPane;
+    private JTextArea familyGroupsTextArea;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -502,7 +512,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_NEVER;
+        return TopComponent.PERSISTENCE_ALWAYS;
     }
 
     @Override
