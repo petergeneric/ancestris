@@ -34,7 +34,7 @@ public final class SearchTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-properties";}
+    public String getDefaultFactoryMode() {return "genjfr-properties";}
 
     /** This method is called from within the constructor to
      * initialize the form.

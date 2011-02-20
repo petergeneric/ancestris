@@ -4,6 +4,7 @@
  */
 package genjfr.app;
 
+import genj.gedcom.Context;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
@@ -30,7 +31,7 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    String getDefaultFactoryMode() {
+    public String getDefaultFactoryMode() {
         return "genjfr-output";
     }
 
@@ -80,8 +81,8 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public boolean createPanel() {
-        if (super.createPanel()) {
+    public void setContext(Context context) {
+        super.setContex(context);
             String root = getContext().getGedcom().getRegistry().get("tree.root", (String) null);
             TreeView v = (TreeView) getView();
             if (root != null) {
@@ -90,9 +91,6 @@ public final class TreeTopComponent extends GenjViewTopComponent {
             if (v.getRoot() == null){
                 v.setRoot(getContext().getEntity());
             }
-            return true;
-        }
-        return false;
     }
 
     @Override

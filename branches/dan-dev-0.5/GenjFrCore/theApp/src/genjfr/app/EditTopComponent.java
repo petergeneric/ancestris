@@ -32,7 +32,7 @@ public final class EditTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-editor";}
+    public String getDefaultFactoryMode() {return "genjfr-editor";}
 
     /** This method is called from within the constructor to
      * initialize the form.

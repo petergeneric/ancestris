@@ -30,7 +30,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-table";}
+    public String getDefaultFactoryMode() {return "genjfr-table";}
 
     /** This method is called from within the constructor to
      * initialize the form.

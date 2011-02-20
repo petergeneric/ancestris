@@ -30,7 +30,7 @@ public final class ReportTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-output";}
+    public String getDefaultFactoryMode() {return "genjfr-output";}
 
     /** This method is called from within the constructor to
      * initialize the form.

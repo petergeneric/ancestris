@@ -26,7 +26,7 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    String getDefaultFactoryMode() {return "genjfr-nav";}
+    public String getDefaultFactoryMode() {return "genjfr-nav";}
 
     ViewFactory getViewFactory() {
         return viewfactory;

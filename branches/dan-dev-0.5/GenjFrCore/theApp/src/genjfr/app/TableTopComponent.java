@@ -28,7 +28,7 @@ public final class TableTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    String getDefaultFactoryMode() {
+    public String getDefaultFactoryMode() {
         return "genjfr-table";
     }
 
