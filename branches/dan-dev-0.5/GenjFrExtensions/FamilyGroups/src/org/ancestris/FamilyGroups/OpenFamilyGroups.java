@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.util.NbBundle;
 
 public final class OpenFamilyGroups implements ActionListener {
 
@@ -27,7 +28,7 @@ public final class OpenFamilyGroups implements ActionListener {
         familyGroupsOptionsPanel = new FamilyGroupsOptionsPanel(minGroupSize, maxGroupSize);
         familyGroupsOptionsPanelDescriptor = new DialogDescriptor(
                 familyGroupsOptionsPanel,
-                "test",
+                NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"),
                 true,
                 new FamilyGroupsOptionsPanelDescriptorActionListener());
 

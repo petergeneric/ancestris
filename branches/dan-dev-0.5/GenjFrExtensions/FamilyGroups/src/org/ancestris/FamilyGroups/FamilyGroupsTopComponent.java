@@ -56,11 +56,14 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            Gedcom myGedcom = context.getGedcom();
-            if (CurrentId != null && myGedcom != null) {
-                Entity entity = myGedcom.getEntity(CurrentId);
-                if (entity != null) {
-                    SelectionSink.Dispatcher.fireSelection(e, new Context(entity));
+            Gedcom myGedcom = null;
+            if (context != null) {
+                myGedcom = context.getGedcom();
+                if (CurrentId != null && myGedcom != null) {
+                    Entity entity = myGedcom.getEntity(CurrentId);
+                    if (entity != null) {
+                        SelectionSink.Dispatcher.fireSelection(e, new Context(entity));
+                    }
                 }
             }
 
@@ -92,69 +95,74 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         @Override
         public void mouseMoved(MouseEvent e) {
             Document doc = familyGroupsTextArea.getDocument();
+            Gedcom myGedcom = null;
             String NewId = null;
-            Gedcom myGedcom = context.getGedcom();
 
-            if (myGedcom != null) {
-                try {
-                    // do we get a position in the model?
-                    int pos = familyGroupsTextArea.viewToModel(e.getPoint());
-                    if (pos >= 0) {
+            if (context != null) {
 
-                        // scan doc
-                        // find ' ' to the left
-                        for (int i = 0;; i++) {
-                            // stop looking after 10
-                            if (i == 10) {
+                myGedcom = context.getGedcom();
+
+                if (myGedcom != null) {
+                    try {
+                        // do we get a position in the model?
+                        int pos = familyGroupsTextArea.viewToModel(e.getPoint());
+                        if (pos >= 0) {
+
+                            // scan doc
+                            // find ' ' to the left
+                            for (int i = 0;; i++) {
+                                // stop looking after 10
+                                if (i == 10) {
+                                    return;
+                                }
+
+                                // check for starting line or non digit/character
+                                if (pos == 0 || !Character.isLetterOrDigit(doc.getText(pos - 1, 1).charAt(0))) {
+                                    break;
+                                }
+
+                                // continue
+                                pos--;
+                            }
+
+                            // find ' ' to the right
+                            int len = 0;
+                            while (true) {
+                                // stop looking after 10
+                                if (len == 10) {
+                                    return;
+                                }
+                                // stop at end of doc
+                                if (pos + len == doc.getLength()) {
+                                    break;
+                                }
+                                // or non digit/character
+                                if (!Character.isLetterOrDigit(doc.getText(pos + len, 1).charAt(0))) {
+                                    break;
+                                }
+                                // continue
+                                len++;
+                            }
+
+                            // check if it's an ID
+                            if (len < 2) {
                                 return;
                             }
-
-                            // check for starting line or non digit/character
-                            if (pos == 0 || !Character.isLetterOrDigit(doc.getText(pos - 1, 1).charAt(0))) {
-                                break;
-                            }
-
-                            // continue
-                            pos--;
-                        }
-
-                        // find ' ' to the right
-                        int len = 0;
-                        while (true) {
-                            // stop looking after 10
-                            if (len == 10) {
+                            NewId = doc.getText(pos, len);
+                            if (myGedcom.getEntity(NewId) == null) {
                                 return;
                             }
-                            // stop at end of doc
-                            if (pos + len == doc.getLength()) {
-                                break;
-                            }
-                            // or non digit/character
-                            if (!Character.isLetterOrDigit(doc.getText(pos + len, 1).charAt(0))) {
-                                break;
-                            }
-                            // continue
-                            len++;
-                        }
+                            CurrentId = NewId;
 
-                        // check if it's an ID
-                        if (len < 2) {
-                            return;
-                        }
-                        NewId = doc.getText(pos, len);
-                        if (myGedcom.getEntity(NewId) == null) {
-                            return;
-                        }
-                        CurrentId = NewId;
+                            // mark it
+                            // requestFocusInWindow();
+                            familyGroupsTextArea.setCaretPosition(pos);
+                            familyGroupsTextArea.moveCaretPosition(pos + len);
 
-                        // mark it
-                        // requestFocusInWindow();
-                        familyGroupsTextArea.setCaretPosition(pos);
-                        familyGroupsTextArea.moveCaretPosition(pos + len);
-
-                        // done
+                            // done
+                        }
+                    } catch (BadLocationException ble) {
                     }
-                } catch (BadLocationException ble) {
                 }
             }
         }
@@ -292,11 +300,11 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
     public FamilyGroupsTopComponent() {
         initComponents();
-        setName(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsTopComponent"));
+        setName(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"));
         setToolTipText(NbBundle.getMessage(FamilyGroupsTopComponent.class, "HINT_FamilyGroupsTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         familyGroupsTextArea.addMouseMotionListener(new MyMouseMotionListener());
-        familyGroupsTextArea.addMouseListener(new myMouseListener ());
+        familyGroupsTextArea.addMouseListener(new myMouseListener());
     }
 
     public void start(Entity[] indis, HashSet allIndis) {
@@ -364,7 +372,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
             println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.grandtotal"), grandtotal));
 
             if (loners > 0) {
-                println("\n" + String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.loners"), loners, getMinGroupSize()));
+                println("\n" + String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"), loners, getMinGroupSize()));
             }
 
         }
