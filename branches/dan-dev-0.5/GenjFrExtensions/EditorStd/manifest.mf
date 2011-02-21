@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: genjfr.app.editorstd
 OpenIDE-Module-Layer: genjfr/app/editorstd/layer.xml
 OpenIDE-Module-Localizing-Bundle: genjfr/app/editorstd/Bundle.properties
