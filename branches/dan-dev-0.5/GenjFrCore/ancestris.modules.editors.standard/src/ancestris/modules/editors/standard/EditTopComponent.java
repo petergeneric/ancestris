@@ -99,14 +99,15 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         if (context == null) {
             return;
         }
-        if (context.getEntity() != null && context.getEntity() instanceof Indi) {
+        if (context.getEntity() != null && !context.getEntities().isEmpty()) {
             setPanel(familyPanel);
             familyPanel.setContext(context);
             return;
         }
         // Default to gedcom
-        setPanel(gedcomPanel);
         gedcomPanel.setContext(context);
+        setPanel(gedcomPanel);
+        repaint();
     }
 
     private class OpenInEditor extends Action2 {
