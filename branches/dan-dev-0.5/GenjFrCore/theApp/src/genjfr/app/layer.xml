@@ -68,7 +68,7 @@
             <file name="MyOptions.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="delegate" newvalue="org.netbeans.modules.options.OptionsWindowAction"/>  <!-- the name of the options menuitem (FL) -->
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_AncestrisPreference"/>
                 <attr name="iconBase" stringvalue="genjfr/app/Options.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
@@ -557,38 +557,34 @@
             <file name="Welcome_hidden"/>
         </folder>
         <folder name="preferences">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference"/>
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences"/>
             <attr name="position" intvalue="100"/>
             <file name="optionsAncestris">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_GenjPreference"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/optionsAncestris"/>
                 <attr name="include" stringvalue="config/Preferences/genjfr/.*|config/Preferences/ancestris/.*"/>
             </file>
             <file name="ui">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WinPreference"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/ui"/>
                 <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
             </file>
-            <file name="option3">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_WorkPreference"/>
-                <attr name="include" stringvalue="config/Windows2Local/Components/.*"/>
-            </file>
             <file name="reports">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_RepPreference"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/reports"/>
                 <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*"/>
                 <attr name="exclude" stringvalue="ancestris/genjfr.log.*"/>
             </file>
         </folder>
         <folder name="other">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_GenjPreference2"/>
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/other"/>
             <attr name="position" intvalue="200"/>
             <file name="internal">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_AppPreference"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/other/internal"/>
                 <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
             </file>
         </folder>
         <folder name="blueprints">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
+            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/blueprints"/>
             <file name="blueprint">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Name_BluePrints"/>
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/blueprints"/>
                 <attr name="include" stringvalue="ancestris/blueprints/[^/]*/([^/]*)\.html"/>
             </file>
         </folder>
