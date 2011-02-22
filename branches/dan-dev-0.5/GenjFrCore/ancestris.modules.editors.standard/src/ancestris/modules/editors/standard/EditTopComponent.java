@@ -12,6 +12,7 @@
 
 package ancestris.modules.editors.standard;
 
+import genj.app.Images;
 import genj.gedcom.Context;
 import genj.gedcom.Indi;
 import genj.util.swing.Action2;
@@ -20,6 +21,7 @@ import genj.view.ActionProvider;
 import genj.view.SelectionListener;
 import genjfr.app.AncestrisTopComponent;
 import genjfr.app.GenjViewInterface;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -90,6 +92,12 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     }
 
     @Override
+    public Image getImageIcon() {
+        return ResourcesSupport.icon.getImage();
+    }
+
+
+    @Override
     public void setContext(Context context) {
         super.setContext(context);
         setContext(context, true);
@@ -116,8 +124,8 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
 
         public OpenInEditor(Context context) {
             this.context = context;
-            setText("Modifier");
-            //setImage(Images.imgView);
+            setText(ResourcesSupport.getTitle("OpenInEditor"));
+            setImage(ResourcesSupport.icon);
         }
 
         @Override
