@@ -202,6 +202,10 @@ private final static String[] codes = {"en","de","fr","hu","es","nl","ru","it","
   public int getLanguage() {
     return language;
   }
+  
+  public String getLanguageCode() {
+    return codes[language];
+  }
 
   /**
    * Getter - languages
