@@ -570,7 +570,11 @@
             <file name="reports">
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/reports"/>
                 <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*"/>
-                <attr name="exclude" stringvalue="ancestris/genjfr.log.*"/>
+                <attr name="exclude" stringvalue="ancestris/ancestris.log.*"/>
+            </file>
+            <file name="gedcoms">
+                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/gedcoms"/>
+                <attr name="include" stringvalue="config/Preferences/gedcoms/.*|config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
             </file>
         </folder>
         <folder name="other">
