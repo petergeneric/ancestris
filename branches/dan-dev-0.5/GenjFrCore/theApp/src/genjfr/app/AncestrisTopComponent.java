@@ -129,7 +129,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     }
 
     public Gedcom getGedcom() {
-        return context.getGedcom();
+        return context==null?null:context.getGedcom();
     }
     public void setContext(Context context){
         this.context=context;

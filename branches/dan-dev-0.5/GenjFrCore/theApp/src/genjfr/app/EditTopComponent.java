@@ -85,8 +85,12 @@ public final class EditTopComponent extends GenjViewTopComponent {
         return PREFERRED_ID;
     }
 
+    /**
+     * @deprecated use getContext().getEntity()
+     * @return
+     */
     public Entity getCurrentEntity() {
-        return ((EditView)getView()).getEntity();
+        return getContext().getEntity();
 }
 
     public void setCurrentEntity(Property property) {
