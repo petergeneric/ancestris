@@ -206,6 +206,11 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         });
 
         jTextField1.setText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jTextField1.text")); // NOI18N
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton2.text")); // NOI18N
         jButton2.setToolTipText(org.openide.util.NbBundle.getMessage(GeoPlaceEditor.class, "GeoPlaceEditor.jButton2.toolTipText")); // NOI18N
@@ -435,7 +440,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
                             .addComponent(jLabel34)
                             .addComponent(jLabel35)
                             .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton5)
                             .addComponent(jButton3)
@@ -547,6 +552,11 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         getHelp();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        jButton1ActionPerformed(evt);
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

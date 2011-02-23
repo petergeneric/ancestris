@@ -59,7 +59,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
-import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
@@ -143,11 +142,16 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         setMouseListener();
         setPopuMenu();
 
+        return true;
+    }
+
+    @Override
+    public void setContext(Context context) {
+        super.setContext(context);
         // Calculate and display markers
         jButton6.setEnabled(false);
         initMarkersList();
         applyFilters();
-        return true;
     }
 
     private void initMarkersList() {
@@ -1277,7 +1281,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                         topoList = WebService.findNearbyPlaceName(localGeoPoint.getLatitude(), localGeoPoint.getLongitude(),
                                 8, 15, // radius, maxrows
                                 Style.FULL, // style
-                                NbPreferences.forModule(App.class).get("language", "").equals("2") ? "fr" : "en"); // language
+                                genj.app.Options.getInstance().getLanguageCode()); // language
                     } catch (Exception ex) {
                         return null;
                     }

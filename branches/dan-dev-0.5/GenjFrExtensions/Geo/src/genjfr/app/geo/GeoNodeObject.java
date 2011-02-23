@@ -13,7 +13,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
-import genjfr.app.App;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -387,7 +386,7 @@ class GeoNodeObject {
             topo = null;
             ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
             searchCriteria.setMaxRows(1);
-            searchCriteria.setLanguage(NbPreferences.forModule(App.class).get("language", "").equals("2") ? "fr" : "en");
+            searchCriteria.setLanguage(genj.app.Options.getInstance().getLanguageCode());
             searchCriteria.setStyle(Style.FULL);
             ToponymSearchResult searchResult;
             //
@@ -432,7 +431,7 @@ class GeoNodeObject {
         }
         ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
         searchCriteria.setMaxRows(max);
-        searchCriteria.setLanguage(NbPreferences.forModule(App.class).get("language", "").equals("2") ? "fr" : "en");
+        searchCriteria.setLanguage(genj.app.Options.getInstance().getLanguageCode());
         searchCriteria.setStyle(Style.FULL);
         ToponymSearchResult searchResult;
         List<Toponym> topo = new ArrayList<Toponym>();
@@ -673,39 +672,29 @@ class GeoNodeObject {
         }
     };
 
-    private String getBit(PropertyPlace place, String jur, String str) {
-        String bit = "";
-
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            return (bit != null ? bit + str : "");
-        }
-        return "";
-    }
-
     public String getPlaceAsLongString() {
         return getPlaceAsLongString(this.getPlace(), true, true);
     }
 
+    // FIXME: must be taken from gedcom preference
     public String getPlaceAsLongString(PropertyPlace place, boolean compress, boolean complete) {
-        String result = "";
-        String str = "," + (compress ? "" : " ");
-
         if (place == null) {
             return "";
         }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address2", ""), str);  // commune
-        if (complete) {
-            result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address1", ""), str);  // lieudit
-        }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address3", ""), str);  // code insee
-        if (complete) {
-            result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address4", ""), str);  // code postal
-        }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address5", ""), str);  // dept
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address6", ""), str);  // region
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address7", ""), "");  // region
-        return result;
+
+        String format;
+        if (complete)
+            if (compress)
+                format = "1,0,2,3,4,5,6";
+            else
+                // FIXME: should we use format.replaceall(',',', ') ?
+                format = "1, 0, 2, 3, 4, 5, 6";
+        else
+            if (compress)
+                format = "1,2,4,5,6";
+            else
+                format = "1, 2, 4, 5, 6";
+        return place.format(format);
     }
 
     private String getPlaceAsShortString(PropertyPlace place) {
@@ -714,8 +703,6 @@ class GeoNodeObject {
         if (place == null) {
             return "";
         }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address2", ""), " ");  // commune
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address7", ""), "");  // region
-        return result;
+        return place.format("2 7");
     }
 }
