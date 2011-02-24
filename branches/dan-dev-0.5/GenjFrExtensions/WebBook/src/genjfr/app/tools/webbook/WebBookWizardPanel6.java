@@ -5,6 +5,7 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
+import genj.util.Registry;
 import java.awt.Component;
 import java.io.File;
 import javax.swing.event.ChangeListener;
@@ -12,7 +13,6 @@ import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel6 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -97,17 +97,18 @@ public class WebBookWizardPanel6 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        ((WebBookVisualPanel6) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_upload", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_site", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_dir", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_user", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_password", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_siteDesc", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_transfertType", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_resetHistory", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_exec", ""));
-        ((WebBookVisualPanel6) getComponent()).setPref10(NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_log", ""));
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        ((WebBookVisualPanel6) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_upload", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_site", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_dir", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_user", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_password", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_siteDesc", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_transfertType", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_resetHistory", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref09(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_exec", ""));
+        ((WebBookVisualPanel6) getComponent()).setPref10(gedcomSettings.get(WebBookParams.WB_PREFIX + ".FTP_log", ""));
         component.setComponents();
     }
 
@@ -115,17 +116,18 @@ public class WebBookWizardPanel6 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_upload", ((WebBookVisualPanel6) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_site", ((WebBookVisualPanel6) getComponent()).getPref02());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_dir", ((WebBookVisualPanel6) getComponent()).getPref03());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_user", ((WebBookVisualPanel6) getComponent()).getPref04());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_password", ((WebBookVisualPanel6) getComponent()).getPref05());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_siteDesc", ((WebBookVisualPanel6) getComponent()).getPref06());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_transfertType", ((WebBookVisualPanel6) getComponent()).getPref07());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_resetHistory", ((WebBookVisualPanel6) getComponent()).getPref08());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_exec", ((WebBookVisualPanel6) getComponent()).getPref09());
-        NbPreferences.forModule(WebBookWizardPanel6.class).put(gedName + ".FTP_log", ((WebBookVisualPanel6) getComponent()).getPref10());
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_upload", ((WebBookVisualPanel6) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_site", ((WebBookVisualPanel6) getComponent()).getPref02());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_dir", ((WebBookVisualPanel6) getComponent()).getPref03());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_user", ((WebBookVisualPanel6) getComponent()).getPref04());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_password", ((WebBookVisualPanel6) getComponent()).getPref05());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_siteDesc", ((WebBookVisualPanel6) getComponent()).getPref06());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_transfertType", ((WebBookVisualPanel6) getComponent()).getPref07());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_resetHistory", ((WebBookVisualPanel6) getComponent()).getPref08());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_exec", ((WebBookVisualPanel6) getComponent()).getPref09());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".FTP_log", ((WebBookVisualPanel6) getComponent()).getPref10());
     }
 
     /*

@@ -5,14 +5,13 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
+import genj.util.Registry;
 import java.awt.Component;
-import java.io.File;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel7 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -97,18 +96,19 @@ public class WebBookWizardPanel7 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        ((WebBookVisualPanel7) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Support", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Profil", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Code", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Integrate", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Test", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Init", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_MyScript", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadStart", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadCSS", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref10(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadEnd", ""));
-        ((WebBookVisualPanel7) getComponent()).setPref11(NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Footer", ""));
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        ((WebBookVisualPanel7) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Support", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Profil", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Code", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Integrate", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Test", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Init", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_MyScript", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_HeadStart", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref09(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_HeadCSS", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref10(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_HeadEnd", ""));
+        ((WebBookVisualPanel7) getComponent()).setPref11(gedcomSettings.get(WebBookParams.WB_PREFIX + ".PHP_Footer", ""));
         component.setComponents();
     }
 
@@ -116,18 +116,19 @@ public class WebBookWizardPanel7 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Support", ((WebBookVisualPanel7) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Profil", ((WebBookVisualPanel7) getComponent()).getPref02());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Code", ((WebBookVisualPanel7) getComponent()).getPref03());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Integrate", ((WebBookVisualPanel7) getComponent()).getPref04());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Test", ((WebBookVisualPanel7) getComponent()).getPref05());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Init", ((WebBookVisualPanel7) getComponent()).getPref06());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_MyScript", ((WebBookVisualPanel7) getComponent()).getPref07());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadStart", ((WebBookVisualPanel7) getComponent()).getPref08());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadCSS", ((WebBookVisualPanel7) getComponent()).getPref09());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_HeadEnd", ((WebBookVisualPanel7) getComponent()).getPref10());
-        NbPreferences.forModule(WebBookWizardPanel7.class).put(gedName + ".PHP_Footer", ((WebBookVisualPanel7) getComponent()).getPref11());
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Support", ((WebBookVisualPanel7) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Profil", ((WebBookVisualPanel7) getComponent()).getPref02());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Code", ((WebBookVisualPanel7) getComponent()).getPref03());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Integrate", ((WebBookVisualPanel7) getComponent()).getPref04());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Test", ((WebBookVisualPanel7) getComponent()).getPref05());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Init", ((WebBookVisualPanel7) getComponent()).getPref06());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_MyScript", ((WebBookVisualPanel7) getComponent()).getPref07());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_HeadStart", ((WebBookVisualPanel7) getComponent()).getPref08());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_HeadCSS", ((WebBookVisualPanel7) getComponent()).getPref09());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_HeadEnd", ((WebBookVisualPanel7) getComponent()).getPref10());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".PHP_Footer", ((WebBookVisualPanel7) getComponent()).getPref11());
     }
 
     /*

@@ -5,6 +5,7 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
+import genj.util.Registry;
 import genjfr.app.pluginservice.PluginInterface;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
@@ -13,7 +14,6 @@ import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -99,15 +99,16 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        ((WebBookVisualPanel3) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GeneSources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_DisplaySources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_CopySources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GeneMedia", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_CopyMedia", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GeneMap", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_DispUnknownLoc", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName+".media_GoogleKey", ""));
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        ((WebBookVisualPanel3) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GeneSources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_DisplaySources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_CopySources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GeneMedia", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_CopyMedia", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GeneMap", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_DispUnknownLoc", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GoogleKey", ""));
         component.setComponents();
     }
 
@@ -115,15 +116,16 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GeneSources", ((WebBookVisualPanel3) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_DisplaySources", ((WebBookVisualPanel3) getComponent()).getPref02());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_CopySources", ((WebBookVisualPanel3) getComponent()).getPref03());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GeneMedia", ((WebBookVisualPanel3) getComponent()).getPref04());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_CopyMedia", ((WebBookVisualPanel3) getComponent()).getPref05());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GeneMap", ((WebBookVisualPanel3) getComponent()).getPref06());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_DispUnknownLoc", ((WebBookVisualPanel3) getComponent()).getPref07());
-        NbPreferences.forModule(WebBookWizardPanel3.class).put(gedName+".media_GoogleKey", ((WebBookVisualPanel3) getComponent()).getPref08());
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GeneSources", ((WebBookVisualPanel3) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_DisplaySources", ((WebBookVisualPanel3) getComponent()).getPref02());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_CopySources", ((WebBookVisualPanel3) getComponent()).getPref03());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GeneMedia", ((WebBookVisualPanel3) getComponent()).getPref04());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_CopyMedia", ((WebBookVisualPanel3) getComponent()).getPref05());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GeneMap", ((WebBookVisualPanel3) getComponent()).getPref06());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_DispUnknownLoc", ((WebBookVisualPanel3) getComponent()).getPref07());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GoogleKey", ((WebBookVisualPanel3) getComponent()).getPref08());
     }
 
     /*

@@ -15,7 +15,6 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
 import genj.gedcom.GedcomException;
-import genjfr.app.App;
 
 import genjfr.app.pluginservice.PluginInterface;
 import genjfr.app.tools.webbook.WebBook;
@@ -364,35 +363,26 @@ public class WebMap extends WebSection {
 
     }
 
+    // FIXME: must be taken from gedcom preference
+    //FIXME: duplicate from geo
     public String getPlaceAsLongString(PropertyPlace place, boolean compress, boolean complete) {
-        String result = "";
-        String str = "," + (compress ? "" : " ");
-
         if (place == null) {
             return "";
         }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address2", ""), str);  // commune
-        if (complete) {
-            result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address1", ""), str);  // lieudit
-        }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address3", ""), str);  // code insee
-        if (complete) {
-            result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address4", ""), str);  // code postal
-        }
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address5", ""), str);  // dept
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address6", ""), str);  // region
-        result += getBit(place, NbPreferences.forModule(App.class).get("fmt_address7", ""), "");  // region
-        return result;
-    }
 
-    private String getBit(PropertyPlace place, String jur, String str) {
-        String bit = "";
-
-        if (!jur.equals("0")) {
-            bit = place.getJurisdiction(Integer.valueOf(jur) - 1);
-            return (bit != null ? bit + str : "");
-        }
-        return "";
+        String format;
+        if (complete)
+            if (compress)
+                format = "1,0,2,3,4,5,6";
+            else
+                // FIXME: should we use format.replaceall(',',', ') ?
+                format = "1, 0, 2, 3, 4, 5, 6";
+        else
+            if (compress)
+                format = "1,2,4,5,6";
+            else
+                format = "1, 2, 4, 5, 6";
+        return place.format(format);
     }
 
     /**

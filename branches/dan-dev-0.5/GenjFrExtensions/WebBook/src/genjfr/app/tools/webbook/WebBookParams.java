@@ -4,13 +4,16 @@
  */
 package genjfr.app.tools.webbook;
 
-import org.openide.util.NbPreferences;
+import genj.gedcom.Gedcom;
+import genj.util.Registry;
 
 /**
  *
  * @author frederic
  */
 public class WebBookParams {
+
+    public static final String WB_PREFIX = "webbook";
 
     //
     // WebBook wizard panels parameters
@@ -79,74 +82,74 @@ public class WebBookParams {
      * Constructor
      * @param gedName
      */
-    public WebBookParams(String gedName) {
-        
+    public WebBookParams(Gedcom gedcom) {
+        Registry gedcomSettings = gedcom.getRegistry();
         // panel 1
-        param_title = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".title", "");
-        param_author = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".author", "");
-        param_address = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".address", "");
-        param_phone = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".phone", "");
-        param_email = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".email", "");
-        param_dispMsg = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".dispMsg", "");
-        param_dispStatAncestor = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".dispStatAncestor", "");
-        param_dispStatLoc = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".dispStatLoc", "");
-        param_message = NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".message", "");
+        param_title = gedcomSettings.get(WB_PREFIX + ".title", "");
+        param_author = gedcomSettings.get(WB_PREFIX + ".author", "");
+        param_address = gedcomSettings.get(WB_PREFIX + ".address", "");
+        param_phone = gedcomSettings.get(WB_PREFIX + ".phone", "");
+        param_email = gedcomSettings.get(WB_PREFIX + ".email", "");
+        param_dispMsg = gedcomSettings.get(WB_PREFIX + ".dispMsg", "");
+        param_dispStatAncestor = gedcomSettings.get(WB_PREFIX + ".dispStatAncestor", "");
+        param_dispStatLoc = gedcomSettings.get(WB_PREFIX + ".dispStatLoc", "");
+        param_message = gedcomSettings.get(WB_PREFIX + ".message", "");
 
         // panel 2
-        param_decujus = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".decujus", "");
-        param_unknown = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".unknown", "");
-        param_dispSpouse = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispSpouse", "");
-        param_dispKids = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispKids", "");
-        param_dispSiblings = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispSiblings", "");
-        param_dispRelations = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispRelations", "");
-        param_dispNotes = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispNotes", "");
-        param_dispId = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispId", "");
-        param_dispEmailButton = NbPreferences.forModule(WebBookWizardPanel2.class).get(gedName + ".dispEmailButton", "");
+        param_decujus = gedcomSettings.get(WB_PREFIX + ".decujus", "");
+        param_unknown = gedcomSettings.get(WB_PREFIX + ".unknown", "");
+        param_dispSpouse = gedcomSettings.get(WB_PREFIX + ".dispSpouse", "");
+        param_dispKids = gedcomSettings.get(WB_PREFIX + ".dispKids", "");
+        param_dispSiblings = gedcomSettings.get(WB_PREFIX + ".dispSiblings", "");
+        param_dispRelations = gedcomSettings.get(WB_PREFIX + ".dispRelations", "");
+        param_dispNotes = gedcomSettings.get(WB_PREFIX + ".dispNotes", "");
+        param_dispId = gedcomSettings.get(WB_PREFIX + ".dispId", "");
+        param_dispEmailButton = gedcomSettings.get(WB_PREFIX + ".dispEmailButton", "");
 
         // panel 3
-        param_media_GeneSources = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_GeneSources", "");
-        param_media_DisplaySources = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_DisplaySources", "");
-        param_media_CopySources = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_CopySources", "");
-        param_media_GeneMedia = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_GeneMedia", "");
-        param_media_CopyMedia = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_CopyMedia", "");
-        param_media_GeneMap = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_GeneMap", "");
-        param_media_DispUnknownLoc = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_DispUnknownLoc", "");
-        param_media_GoogleKey = NbPreferences.forModule(WebBookWizardPanel3.class).get(gedName + ".media_GoogleKey", "");
+        param_media_GeneSources = gedcomSettings.get(WB_PREFIX + ".media_GeneSources", "");
+        param_media_DisplaySources = gedcomSettings.get(WB_PREFIX + ".media_DisplaySources", "");
+        param_media_CopySources = gedcomSettings.get(WB_PREFIX + ".media_CopySources", "");
+        param_media_GeneMedia = gedcomSettings.get(WB_PREFIX + ".media_GeneMedia", "");
+        param_media_CopyMedia = gedcomSettings.get(WB_PREFIX + ".media_CopyMedia", "");
+        param_media_GeneMap = gedcomSettings.get(WB_PREFIX + ".media_GeneMap", "");
+        param_media_DispUnknownLoc = gedcomSettings.get(WB_PREFIX + ".media_DispUnknownLoc", "");
+        param_media_GoogleKey = gedcomSettings.get(WB_PREFIX + ".media_GoogleKey", "");
 
         // panel 4
-        param_dispAncestors = NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName + ".dispAncestors", "");
-        param_ancestorMinGen = NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName + ".ancestorMinGen", "");
-        param_ancestorMaxGen = NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName + ".ancestorMaxGen", "");
-        param_ancestorSource = NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName + ".ancestorSource", "");
+        param_dispAncestors = gedcomSettings.get(WB_PREFIX + ".dispAncestors", "");
+        param_ancestorMinGen = gedcomSettings.get(WB_PREFIX + ".ancestorMinGen", "");
+        param_ancestorMaxGen = gedcomSettings.get(WB_PREFIX + ".ancestorMaxGen", "");
+        param_ancestorSource = gedcomSettings.get(WB_PREFIX + ".ancestorSource", "");
 
         // panel 5
-        param_localWebDir = NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName + ".localWebDir", "");
-        param_logFile = NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName + ".logFile", "");
+        param_localWebDir = gedcomSettings.get(WB_PREFIX + ".localWebDir", "");
+        param_logFile = gedcomSettings.get(WB_PREFIX + ".logFile", "");
 
         // panel 6
-        param_FTP_upload = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_upload", "");
-        param_FTP_site = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_site", "");
-        param_FTP_dir = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_dir", "");
-        param_FTP_user = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_user", "");
-        param_FTP_password = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_password", "");
-        param_FTP_siteDesc = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_siteDesc", "");
-        param_FTP_transfertType = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_transfertType", "");
-        param_FTP_resetHistory = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_resetHistory", "");
-        param_FTP_exec = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_exec", "");
-        param_FTP_log = NbPreferences.forModule(WebBookWizardPanel6.class).get(gedName + ".FTP_log", "");
+        param_FTP_upload = gedcomSettings.get(WB_PREFIX + ".FTP_upload", "");
+        param_FTP_site = gedcomSettings.get(WB_PREFIX + ".FTP_site", "");
+        param_FTP_dir = gedcomSettings.get(WB_PREFIX + ".FTP_dir", "");
+        param_FTP_user = gedcomSettings.get(WB_PREFIX + ".FTP_user", "");
+        param_FTP_password = gedcomSettings.get(WB_PREFIX + ".FTP_password", "");
+        param_FTP_siteDesc = gedcomSettings.get(WB_PREFIX + ".FTP_siteDesc", "");
+        param_FTP_transfertType = gedcomSettings.get(WB_PREFIX + ".FTP_transfertType", "");
+        param_FTP_resetHistory = gedcomSettings.get(WB_PREFIX + ".FTP_resetHistory", "");
+        param_FTP_exec = gedcomSettings.get(WB_PREFIX + ".FTP_exec", "");
+        param_FTP_log = gedcomSettings.get(WB_PREFIX + ".FTP_log", "");
 
         // panel 7
-        param_PHP_Support = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Support", "");
-        param_PHP_Profil = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Profil", "");
-        param_PHP_Code = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Code", "");
-        param_PHP_Integrate = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Integrate", "");
-        param_PHP_Test = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Test", "");
-        param_PHP_Init = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Init", "");
-        param_PHP_MyScript = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_MyScript", "");
-        param_PHP_HeadStart = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadStart", "");
-        param_PHP_HeadCSS = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadCSS", "");
-        param_PHP_HeadEnd = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_HeadEnd", "");
-        param_PHP_Footer = NbPreferences.forModule(WebBookWizardPanel7.class).get(gedName + ".PHP_Footer", "");
+        param_PHP_Support = gedcomSettings.get(WB_PREFIX + ".PHP_Support", "");
+        param_PHP_Profil = gedcomSettings.get(WB_PREFIX + ".PHP_Profil", "");
+        param_PHP_Code = gedcomSettings.get(WB_PREFIX + ".PHP_Code", "");
+        param_PHP_Integrate = gedcomSettings.get(WB_PREFIX + ".PHP_Integrate", "");
+        param_PHP_Test = gedcomSettings.get(WB_PREFIX + ".PHP_Test", "");
+        param_PHP_Init = gedcomSettings.get(WB_PREFIX + ".PHP_Init", "");
+        param_PHP_MyScript = gedcomSettings.get(WB_PREFIX + ".PHP_MyScript", "");
+        param_PHP_HeadStart = gedcomSettings.get(WB_PREFIX + ".PHP_HeadStart", "");
+        param_PHP_HeadCSS = gedcomSettings.get(WB_PREFIX + ".PHP_HeadCSS", "");
+        param_PHP_HeadEnd = gedcomSettings.get(WB_PREFIX + ".PHP_HeadEnd", "");
+        param_PHP_Footer = gedcomSettings.get(WB_PREFIX + ".PHP_Footer", "");
     }
 
     void logParameters(Log log) {

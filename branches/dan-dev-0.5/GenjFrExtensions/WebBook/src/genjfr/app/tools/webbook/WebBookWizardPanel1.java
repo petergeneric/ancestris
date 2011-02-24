@@ -5,13 +5,13 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
+import genj.util.Registry;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel1 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -96,16 +96,17 @@ public class WebBookWizardPanel1 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        ((WebBookVisualPanel1) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".title", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".author", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".address", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".phone", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref05(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".email", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref06(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".dispMsg", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref07(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".dispStatAncestor", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref08(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".dispStatLoc", ""));
-        ((WebBookVisualPanel1) getComponent()).setPref09(NbPreferences.forModule(WebBookWizardPanel1.class).get(gedName + ".message", ""));
+        Registry gedcomSettings = gedcom.getRegistry();
+        
+        ((WebBookVisualPanel1) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".title", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".author", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX + ".address", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX + ".phone", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX + ".email", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".dispMsg", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".dispStatAncestor", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX + ".dispStatLoc", ""));
+        ((WebBookVisualPanel1) getComponent()).setPref09(gedcomSettings.get(WebBookParams.WB_PREFIX + ".message", ""));
         component.setComponents();
     }
 
@@ -113,16 +114,17 @@ public class WebBookWizardPanel1 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".title", ((WebBookVisualPanel1) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".author", ((WebBookVisualPanel1) getComponent()).getPref02());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".address", ((WebBookVisualPanel1) getComponent()).getPref03());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".phone", ((WebBookVisualPanel1) getComponent()).getPref04());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".email", ((WebBookVisualPanel1) getComponent()).getPref05());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".dispMsg", ((WebBookVisualPanel1) getComponent()).getPref06());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".dispStatAncestor", ((WebBookVisualPanel1) getComponent()).getPref07());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".dispStatLoc", ((WebBookVisualPanel1) getComponent()).getPref08());
-        NbPreferences.forModule(WebBookWizardPanel1.class).put(gedName + ".message", ((WebBookVisualPanel1) getComponent()).getPref09());
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".title", ((WebBookVisualPanel1) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".author", ((WebBookVisualPanel1) getComponent()).getPref02());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".address", ((WebBookVisualPanel1) getComponent()).getPref03());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".phone", ((WebBookVisualPanel1) getComponent()).getPref04());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".email", ((WebBookVisualPanel1) getComponent()).getPref05());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".dispMsg", ((WebBookVisualPanel1) getComponent()).getPref06());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".dispStatAncestor", ((WebBookVisualPanel1) getComponent()).getPref07());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".dispStatLoc", ((WebBookVisualPanel1) getComponent()).getPref08());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".message", ((WebBookVisualPanel1) getComponent()).getPref09());
     }
 
     /*

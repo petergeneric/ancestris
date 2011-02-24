@@ -35,7 +35,6 @@ import java.nio.charset.Charset;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -1348,9 +1347,12 @@ public class WebHelper {
     public PrivacyPolicy getPrivacyPolicy() {
         if (privacyPolicy == null) {
             privacyPolicy = new PrivacyPolicy(
-                    new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
-                    NbPreferences.forModule(App.class).get("privFlag", ""), // string
-                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
+                    genj.report.Options.getInstance().yearsEventsArePrivate,
+                    genj.report.Options.getInstance().privateTag,
+                    genj.report.Options.getInstance().deceasedIsPublic,
+// FIXME: controler que c'est ca                   new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
+//                    NbPreferences.forModule(App.class).get("privFlag", ""), // string
+//                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
                     null, //  TODO events, not used yet
                     false); // TODO infoOfDeceasedisPublic, not used yet
         }
@@ -1383,7 +1385,7 @@ public class WebHelper {
     }
 
     public String getPrivDisplay() {
-        return NbPreferences.forModule(App.class).get("privDisplay", "");
+        return genj.gedcom.Options.getInstance().maskPrivate; //FIXME: controler NbPreferences.forModule(App.class).get("privDisplay", "");
     }
 } // End_of_Report
 

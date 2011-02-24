@@ -5,13 +5,13 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
+import genj.util.Registry;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel4 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -101,11 +101,12 @@ public class WebBookWizardPanel4 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        ((WebBookVisualPanel4) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".dispAncestors", ""));
-        ((WebBookVisualPanel4) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorMinGen", ""));
-        ((WebBookVisualPanel4) getComponent()).setPref03(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorMaxGen", ""));
-        ((WebBookVisualPanel4) getComponent()).setPref04(NbPreferences.forModule(WebBookWizardPanel4.class).get(gedName+".ancestorSource", ""));
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        ((WebBookVisualPanel4) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX+".dispAncestors", ""));
+        ((WebBookVisualPanel4) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX+".ancestorMinGen", ""));
+        ((WebBookVisualPanel4) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX+".ancestorMaxGen", ""));
+        ((WebBookVisualPanel4) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX+".ancestorSource", ""));
         component.setComponents();
     }
 
@@ -113,11 +114,12 @@ public class WebBookWizardPanel4 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".dispAncestors", ((WebBookVisualPanel4) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".ancestorMinGen", ((WebBookVisualPanel4) getComponent()).getPref02());
-        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".ancestorMaxGen", ((WebBookVisualPanel4) getComponent()).getPref03());
-        NbPreferences.forModule(WebBookWizardPanel4.class).put(gedName+".ancestorSource", ((WebBookVisualPanel4) getComponent()).getPref04());
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".dispAncestors", ((WebBookVisualPanel4) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".ancestorMinGen", ((WebBookVisualPanel4) getComponent()).getPref02());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".ancestorMaxGen", ((WebBookVisualPanel4) getComponent()).getPref03());
+        gedcomSettings.put(WebBookParams.WB_PREFIX+".ancestorSource", ((WebBookVisualPanel4) getComponent()).getPref04());
     }
 
     /*

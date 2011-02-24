@@ -5,16 +5,14 @@
 package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
+import genj.util.Registry;
 import java.awt.Component;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, WizardDescriptor.FinishablePanel {
 
@@ -99,9 +97,10 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        ((WebBookVisualPanel5) getComponent()).setPref01(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName + ".localWebDir", ""));
-        ((WebBookVisualPanel5) getComponent()).setPref02(NbPreferences.forModule(WebBookWizardPanel5.class).get(gedName + ".logFile", ""));
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        ((WebBookVisualPanel5) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".localWebDir", ""));
+        ((WebBookVisualPanel5) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".logFile", ""));
         component.setComponents();
     }
 
@@ -109,9 +108,10 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
         if (gedcom == null) {
             return;
         }
-        String gedName = gedcom.getName();
-        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName + ".localWebDir", ((WebBookVisualPanel5) getComponent()).getPref01());
-        NbPreferences.forModule(WebBookWizardPanel5.class).put(gedName + ".logFile", ((WebBookVisualPanel5) getComponent()).getPref02());
+        Registry gedcomSettings = gedcom.getRegistry();
+
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".localWebDir", ((WebBookVisualPanel5) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".logFile", ((WebBookVisualPanel5) getComponent()).getPref02());
     }
 
     /*

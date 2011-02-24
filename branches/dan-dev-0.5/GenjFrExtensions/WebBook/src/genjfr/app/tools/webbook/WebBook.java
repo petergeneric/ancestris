@@ -104,7 +104,7 @@ public class WebBook {
     public WebBook(Gedcom gedcom, Log log) throws InterruptedException {
         this.gedcom = gedcom;
         this.log = log;
-        wp = new WebBookParams(gedcom.getName());
+        wp = new WebBookParams(gedcom);
         wh = new WebHelper(gedcom, log, wp);
         // Opens up the register that stores which files have been changed locally and uploaded
         uploadRegister = new FTPRegister(wp, wh);

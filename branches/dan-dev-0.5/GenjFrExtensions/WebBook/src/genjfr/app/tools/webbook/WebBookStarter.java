@@ -9,7 +9,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -28,7 +27,7 @@ public class WebBookStarter {
     // Constructor
     public WebBookStarter(Gedcom gedcom) {
         this.gedcom = gedcom;
-        String logname = NbPreferences.forModule(WebBookWizardPanel5.class).get(gedcom.getName() + ".logFile", "");
+        String logname = gedcom.getRegistry().get("webbook.logFile", "");
         log = new Log(logname, NbBundle.getMessage(WebBookStarter.class, "OpenIDE-Module-Name") + " " + gedcom.getName());
     }
 
