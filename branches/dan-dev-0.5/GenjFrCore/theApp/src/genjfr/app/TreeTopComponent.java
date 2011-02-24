@@ -81,8 +81,8 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public void setContext(Context context) {
-        super.setContex(context);
+    public void viewContext() {
+        super.viewContext();
             String root = getContext().getGedcom().getRegistry().get("tree.root", (String) null);
             TreeView v = (TreeView) getView();
             if (root != null) {

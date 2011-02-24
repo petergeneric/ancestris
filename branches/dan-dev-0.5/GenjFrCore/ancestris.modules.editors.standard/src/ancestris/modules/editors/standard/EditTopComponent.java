@@ -39,6 +39,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
 
     @Override
     public boolean createPanel() {
+        setContext(getContext(), true);
         return true;
     }
 
@@ -96,13 +97,6 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         return ResourcesSupport.icon.getImage();
     }
 
-
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
-        setContext(context, true);
-    }
-
     public void setContext(Context context, boolean isActionPerformed) {
         if (context == null) {
             return;
@@ -130,7 +124,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            setContext(context);
+            setContext(context,true);
         }
     }
 }

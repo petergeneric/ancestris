@@ -294,6 +294,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     public void init(Context context) {
         setName();
         setToolTipText();
+        setContext(context);
         if (getImageIcon() != null)
             setIcon(getImageIcon());
         if (context == null || context.getGedcom() == null) {
@@ -302,7 +303,6 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         if (!createPanel())
             return;
         GenjFrPlugin.register(this);
-        setContext(context);
 
         String gedcomName;
         if ((getGedcom() != null) && ((gedcomName = getGedcom().getName())!=null)){
