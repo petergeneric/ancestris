@@ -70,15 +70,10 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         ((BeanTreeView) jScrollPane1).setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         ((MyBeanTreeView) jScrollPane1).setUseSubstringInQuickSearch(true);
 
-        return true;
-    }
-
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
         // Init tree
         initTree();
         isInitialised = true;
+        return true;
     }
 
     private void initTree() {

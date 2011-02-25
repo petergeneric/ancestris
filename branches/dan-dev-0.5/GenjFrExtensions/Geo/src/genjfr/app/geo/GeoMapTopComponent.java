@@ -142,16 +142,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         setMouseListener();
         setPopuMenu();
 
-        return true;
-    }
-
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
         // Calculate and display markers
         jButton6.setEnabled(false);
         initMarkersList();
         applyFilters();
+        return true;
     }
 
     private void initMarkersList() {
