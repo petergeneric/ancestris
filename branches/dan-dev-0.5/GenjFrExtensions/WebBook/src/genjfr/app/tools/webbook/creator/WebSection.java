@@ -788,8 +788,8 @@ public class WebSection {
         String date = "";
         PropertyDate bdate = indi.getBirthDate();
         PropertyDate ddate = indi.getDeathDate();
-        String birthdate = (bdate == null) ? "." : bdate.toString();
-        String deathdate = (ddate == null) ? "" : " - " + ddate.toString();
+        String birthdate = (bdate == null) ? "." : bdate.getDisplayValue();
+        String deathdate = (ddate == null) ? "" : " - " + ddate.getDisplayValue();
         date = (birthdate + deathdate).trim();
         if (!date.equals(".")) {
             strClear = SPACE + (parenthesis ? "(" : "") + htmlText(date) + (parenthesis ? ")" : "");
@@ -1344,7 +1344,7 @@ public class WebSection {
 
         String str = trs("place_nodate");
         if (date != null) {
-            str = date.toString();
+            str = date.getDisplayValue();
         }
 
         // Return string filtered by php and privacy needs
