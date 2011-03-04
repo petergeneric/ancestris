@@ -127,8 +127,9 @@ public class SelectEntityWidget extends JPanel {
       if (!path.startsWith(type))
         continue;
       TagPath p = new TagPath(path);
-      if (!gedcom.getGrammar().isValid(p))
-        continue;
+//FIXME: ce test ne fonctionne pas pour un tagpath du type "FAM:HUSB:*:..:NAME",
+//      if (!gedcom.getGrammar().isValid(p))
+//        continue;
       sorts.add(p);
       if (sort==null||path.equals(REGISTRY.get("select.sort."+type, ""))) sort = p;
     }
