@@ -359,7 +359,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             return;
         }
         if (evt.getClickCount() == 1) {
-            fireSelection(spouse);
+            fireSelection(destBean.getIndi());
         } else {
             Indi indi = (Indi) destBean.getIndi();
             if (indi != null) {
