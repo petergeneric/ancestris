@@ -44,6 +44,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
+    private final static String VOID_BP = "";
     private IndiBeans husbandBeans;
     private IndiBeans wifeBeans;
     private Context context;
@@ -536,15 +537,18 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             }
             indiBean.setEmptyBluePrint(EMPTY_BP);
             if (indi == null) {
-                fatherBean.setEmptyBluePrint(null);
-                motherBean.setEmptyBluePrint(null);
+                fatherBean.setEmptyBluePrint(VOID_BP);
+                motherBean.setEmptyBluePrint(VOID_BP);
             } else {
                 fatherBean.setEmptyBluePrint(FATHER_EMPTY_BP);
                 motherBean.setEmptyBluePrint(MOTHER_EMPTY_BP);
             }
             indiBean.setContext(indi);
 
-            if (indi != null) {
+            if (indi == null) {
+                fatherBean.setContext(null);
+                motherBean.setContext(null);
+            } else {
                 fatherBean.setContext(indi.getBiologicalFather());
                 motherBean.setContext(indi.getBiologicalMother());
             }
