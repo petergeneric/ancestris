@@ -156,8 +156,19 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
         } catch (NullPointerException e) {}
   }
 
+    /**
+     * interface for gedcom directory
+     */
   public interface Listener {
+      /**
+       * callback for new gedcom registration
+       * @param context
+       */
     public void gedcomRegistered(Context context);
+    /**
+     * callback for gedcom removal from directory
+     * @param context
+     */
     public void gedcomUnregistered(Context context);
   }
 

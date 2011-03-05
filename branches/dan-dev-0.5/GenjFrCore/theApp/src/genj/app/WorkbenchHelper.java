@@ -98,11 +98,20 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
     }
 
     public boolean saveGedcom(Context context) {
+        if (context != null && context.getGedcom().getOrigin() == null)
+            return saveAsGedcom(context);
         return workbench.saveGedcom(context);
     }
 
     public boolean saveAsGedcom(Context context) {
-        return workbench.saveAsGedcom(context);
+        if (workbench.saveAsGedcom(context)) {
+            if (context != null) {
+                GedcomDirectory.getInstance().unregisterGedcom(context);
+                GedcomDirectory.getInstance().registerGedcom(context);
+            }
+            return true;
+        }
+        return false;
     }
 
     public Context openGedcom() {
