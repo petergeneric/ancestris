@@ -271,16 +271,16 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     if (file == null)
       return false;
   
+    // .. take chosen one & filters
+    if (!file.getName().endsWith(".ged"))
+      file = new File(file.getAbsolutePath() + ".ged");
+
     // Need confirmation if File exists?
     if (file.exists()) {
       int rc = DialogHelper.openDialog(RES.getString("cc.save.title"), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
       if (rc != 0) 
         return false;
     }
-    
-    // .. take chosen one & filters
-    if (!file.getName().endsWith(".ged"))
-      file = new File(file.getAbsolutePath() + ".ged");
     
     Gedcom gedcom = context.getGedcom();
     gedcom.setPassword(textPassword.getText());
