@@ -230,27 +230,34 @@ public class GedcomWriter implements IGedcomWriter {
       Entity header = gedcom.getFirstEntity("HEAD");
       if (header == null)
           header = gedcom.createEntity("HEAD", "");
+
+      // replace HEAD:SOUR
       Property prop;
-      prop = header.addProperty("SOUR", "ANCESTRIS");
+      prop = replaceProperties(header, "SOUR", "ANCESTRIS");
       prop.addProperty("VERS", Version.getInstance().toString());
       prop.addProperty("NAME", "Ancestris");
       prop.addProperty("CORP",RESOURCES.getString("header.corp","Ancestris")).
               addProperty("ADDR", "http://www.ancestris.org, http://www.ancestris.com");
       prop.addProperty("DEST","ANY");
-      header.addProperty("DATE", date).
+
+      // Replace HEAD:DATE
+      replaceProperties(header,"DATE", date).
               addProperty("TIME", time);
-    if (gedcom.getSubmitter()!=null)
-      header.addProperty("SUBM","@"+gedcom.getSubmitter().getId()+'@');
-      header.addProperty("FILE", file);
-      prop = header.addProperty("GEDC", "");
-      prop.addProperty("VERS",gedcom.getGrammar().getVersion());
-      prop.addProperty("FORM", "Lineage-Linked");
-      header.addProperty("CHAR", gedcom.getEncoding());
+    if (gedcom.getSubmitter()!=null){
+        replaceProperties(header,"SUBM","@"+gedcom.getSubmitter().getId()+'@');
+    }
+    replaceProperties(header,"FILE", file);
+
+    prop = replaceProperties(header,"GEDC", "");
+    prop.addProperty("VERS",gedcom.getGrammar().getVersion());
+    prop.addProperty("FORM", "Lineage-Linked");
+    
+    replaceProperties(header,"CHAR", gedcom.getEncoding());
 
     if (gedcom.getLanguage()!=null)
-      header.addProperty("LANG",gedcom.getLanguage());
+      replaceProperties(header,"LANG",gedcom.getLanguage());
     if (gedcom.getPlaceFormat().length()>0) {
-      header.addProperty("PLAC","").
+      replaceProperties(header,"PLAC","").
               addProperty("FORM",gedcom.getPlaceFormat());
     }
 
@@ -279,6 +286,12 @@ public class GedcomWriter implements IGedcomWriter {
       new EntityWriter().write(0, header);
       return header;
     // done
+  }
+
+  // FIXME: should we put this in property class?
+  private Property replaceProperties(Property prop, String tag, String value){
+      prop.delProperties(tag);
+      return prop.addProperty(tag, value);
   }
 
   /**
