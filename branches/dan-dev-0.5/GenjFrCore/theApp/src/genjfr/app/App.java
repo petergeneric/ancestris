@@ -466,20 +466,6 @@ public class App {
         }
     }
 
-  /**
-   * Helper that returns registry for gedcom
-   * TODO: getRegistry(gedcom) a mettre ailleurs
-   * le fichier gedcom.properties est maintenant dans le home user dir
-   * TODO: Attention cela a pour inconvenient de ne par pouvoir ouvrir (dans la vie d'ancestris)
-   * TODO: deux fichiers portant le meme nom sans collision des reglages.
-   * TODO: dans l'avenir on pourra marquer les proprietes par un id que l'on attachera au
-   * TODO: fichier gedcom dans une des proprietes.
-   * FIXME: mettre dans ancestrispreferences
-   */
-  public static Registry getRegistry(Gedcom gedcom) {
-      return gedcom.getRegistry();
-  }
-
   private static class AppPlugin extends GenjFrPlugin{
   }
 
