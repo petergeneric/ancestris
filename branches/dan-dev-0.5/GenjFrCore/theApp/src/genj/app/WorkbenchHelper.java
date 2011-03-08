@@ -140,7 +140,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         GedcomExplorerTopComponent.getDefault().open();
 
         // try gedcom properties
-        Registry gedcomSettings = App.getRegistry(context.getGedcom());
+        Registry gedcomSettings = context.getGedcom().getRegistry();
 
         // FIXME: a reecrire plus proprement
         String ovs[] = gedcomSettings.get("openViews",(String[])null);

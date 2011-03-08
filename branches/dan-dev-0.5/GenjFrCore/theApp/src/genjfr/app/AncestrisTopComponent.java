@@ -118,7 +118,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         if (context == null)
             return;
         if (!isRestored) {
-            String modeName = App.getRegistry(getGedcom()).get(preferredID()+".dockMode", getDefaultMode()) ;
+            String modeName = getGedcom().getRegistry().get(preferredID()+".dockMode", getDefaultMode()) ;
             
              Mode m = WindowManager.getDefault().findMode (modeName);
              if (m != null) {

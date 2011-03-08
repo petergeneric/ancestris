@@ -62,7 +62,7 @@ public final class ActionSaveLayout implements ActionListener {
     public static void saveLayout(Gedcom gedcom) {
         List<String> openedViews = new ArrayList<String>();
         List<String> focusViews = new ArrayList<String>();
-        Registry prefs = App.getRegistry(gedcom);
+        Registry prefs = gedcom.getRegistry();
 
         TopComponent tcHasFocus = TopComponent.getRegistry().getActivated();
         
