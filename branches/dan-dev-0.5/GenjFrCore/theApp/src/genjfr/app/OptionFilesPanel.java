@@ -455,7 +455,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
     void setGedcomFile(String str) {
         if (str.equals("")) {
-            str = ""; //System.getProperty("user.dir") + File.separator + "maGenealogie.ged";
+            str = ""; //System.getProperty("user.home") + File.separator + "maGenealogie.ged";
         }
         jTextField2.setText(str);
     }
@@ -466,7 +466,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
     void setReportDir(String str) {
         if (str.equals("")) {
-            str = System.getProperty("user.dir") + File.separator + "report";
+            str = System.getProperty("user.home") + File.separator + "report";
         }
         jTextField3.setText(str);
     }

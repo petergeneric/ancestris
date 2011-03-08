@@ -99,7 +99,7 @@ public class ReportLoader {
     
     // where are the reports 
     return new File(EnvironmentChecker.getProperty(
-      new String[]{ "genj.report.dir", "user.dir/report"},
+      new String[]{ "genj.report.dir", "user.home.genj/report"},
       "report",
       "find report class-files"
     ));

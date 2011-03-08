@@ -397,7 +397,7 @@ public class Almanac {
       
       // we know were those are
       File result = new File(EnvironmentChecker.getProperty(
-          new String[]{ "genj.wikipedia.dir", "user.dir/contrib/wikipedia"}, "contrib/wikipedia",
+          new String[]{ "genj.wikipedia.dir", "user.home.genj/contrib/wikipedia"}, "contrib/wikipedia",
           "find wikipedia files"
         ));
       
