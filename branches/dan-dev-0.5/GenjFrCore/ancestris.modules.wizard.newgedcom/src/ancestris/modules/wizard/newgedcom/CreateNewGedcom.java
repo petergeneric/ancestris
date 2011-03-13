@@ -12,6 +12,7 @@
 package ancestris.modules.wizard.newgedcom;
 
 import ancestris.api.newgedcom.NewGedcom;
+import genj.app.WorkbenchHelper;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -58,30 +59,12 @@ public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
     @Override
     public Context getContext() {
         if (context == null){
-        Gedcom gedcom = new Gedcom();
-        try {
-            // note: dans ce cas pas besoin de memoriser dans le undo history mais cela
-            // permet de positionner le gedcom dans l'etat change
-            gedcom.doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
-                    gedcom.createEntity(Gedcom.SUBM);
-                    gedcom.createEntity("HEAD","");
-
-                    // Create place format
-                    // FIXME: mettre ici l'appel a l'option
-                    gedcom.setPlaceFormat(gedcomOptions.getPlaceFormat());
-                    gedcom.setShowJuridictions(gedcomOptions.getShowJuridictions());
-                }
-            });
+            Gedcom gedcom = new Gedcom();
+            gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
+            WorkbenchHelper.getinstance().setDefault(gedcom);
 
             // remember
             context = new Context(gedcom);
-        } catch (Exception e) {
-            Exceptions.printStackTrace(e);
-        }
         }
         return context;
     }

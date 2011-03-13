@@ -83,6 +83,10 @@ public final class APlaceFormatBean extends JPanel {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jtDisplayFormat = new javax.swing.JTextField();
+        jtSortOrder = new javax.swing.JTextField();
 
         jtJuri6.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtJuri6.text")); // NOI18N
 
@@ -138,34 +142,42 @@ public final class APlaceFormatBean extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel8.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel9.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel10.text")); // NOI18N
+
+        jtDisplayFormat.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtDisplayFormat.text")); // NOI18N
+
+        jtSortOrder.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtSortOrder.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbSpaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbSpaces, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jtJuri1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtJuri3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtJuri4, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtJuri2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtJuri6, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtJuri7, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtJuri5, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtJuri8, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jtJuri8, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtJuri4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbJuri8)
@@ -176,12 +188,19 @@ public final class APlaceFormatBean extends JPanel {
                             .addComponent(cbJuri5)
                             .addComponent(cbJuri6)
                             .addComponent(cbJuri7)
-                            .addComponent(jLabel12))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel12)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtSortOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                            .addComponent(jtDisplayFormat, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 340, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel12)
@@ -229,13 +248,20 @@ public final class APlaceFormatBean extends JPanel {
                     .addComponent(cbJuri7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jtJuri8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbJuri8))
-                        .addGap(18, 18, 18)
-                        .addComponent(cbSpaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jtJuri8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbJuri8))
                     .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addComponent(cbSpaces)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jtSortOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jtDisplayFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -251,6 +277,7 @@ public final class APlaceFormatBean extends JPanel {
     private javax.swing.JCheckBox cbJuri8;
     private javax.swing.JCheckBox cbSpaces;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -259,6 +286,8 @@ public final class APlaceFormatBean extends JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField jtDisplayFormat;
     private javax.swing.JTextField jtJuri1;
     private javax.swing.JTextField jtJuri2;
     private javax.swing.JTextField jtJuri3;
@@ -267,9 +296,10 @@ public final class APlaceFormatBean extends JPanel {
     private javax.swing.JTextField jtJuri6;
     private javax.swing.JTextField jtJuri7;
     private javax.swing.JTextField jtJuri8;
+    private javax.swing.JTextField jtSortOrder;
     // End of variables declaration//GEN-END:variables
 
-    public String getFormatString() {
+    public String getJurisdictions() {
         StringBuilder sb = new StringBuilder();
         final String SEP = cbSpaces.isSelected() ? ", " : ",";
 
@@ -285,7 +315,7 @@ public final class APlaceFormatBean extends JPanel {
         return sb.toString();
     }
 
-    public void setFormatString(String format){
+    public void setJurisdictions(String format){
         String juris[] = format.split(",");
 
         for (JTextField juri:JURIS){
@@ -321,7 +351,7 @@ public final class APlaceFormatBean extends JPanel {
     }
 
     /**
-     * Note: must be called after setFormatString
+     * Note: must be called after setJurisdictions
      * @param show
      */
     public void setShowJuridcitions(Boolean show[]){
@@ -330,7 +360,9 @@ public final class APlaceFormatBean extends JPanel {
         }
 
         for (int i=0;i<SHOW_JURIS.length;i++){
-            if (i<show.length)
+            if (show == null)
+                SHOW_JURIS[i].setSelected(true);
+            else if (i<show.length)
                 SHOW_JURIS[i].setSelected(show[i]);
             else
                 SHOW_JURIS[i].setSelected(false);
@@ -338,6 +370,25 @@ public final class APlaceFormatBean extends JPanel {
                 SHOW_JURIS[i].setSelected(false);
             }
         }
+    }
+
+    public String getDisplayFormat() {
+        String displayFormat = jtDisplayFormat.getText();
+        if (displayFormat.length() == 0)
+            return null;
+        return displayFormat;
+    }
+
+    public void setDisplayFormat(String format) {
+        this.jtDisplayFormat.setText(format);
+    }
+
+    public String getSortOrder() {
+        return jtSortOrder.getText();
+    }
+
+    public void setSortOrder(String order) {
+        this.jtSortOrder.setText(order);
     }
 
 

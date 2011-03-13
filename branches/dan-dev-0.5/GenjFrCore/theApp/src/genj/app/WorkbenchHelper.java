@@ -83,10 +83,18 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 
     private ProgressBar progress;
 
-    public WorkbenchHelper() {
+    private static WorkbenchHelper instance = null;
+
+    private WorkbenchHelper() {
         this.workbench = Workbench.getInstance(this);
         progress = new ProgressBar();
         GenjFrPlugin.register(progress);
+    }
+
+    public static WorkbenchHelper getinstance(){
+        if (instance == null)
+            instance = new WorkbenchHelper();
+        return instance;
     }
 
     public Workbench getWorkbench() {
@@ -183,13 +191,10 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         }
     }
 
-    public Context newGedcom() {
-        //FIXME: changer le nouveau gedcom cree par defaut!
-        Context context = workbench.newGedcom();
-        if (context == null)
-            return null;
-        Gedcom gedcom = context.getGedcom();
-        try {
+    public void setDefault(Gedcom gedcom){
+        try{
+            // note: dans ce cas pas besoin de memoriser dans le undo history mais cela
+            // permet de positionner le gedcom dans l'etat change
             gedcom.doUnitOfWork(new UnitOfWork() {
 
                 public void perform(Gedcom gedcom) throws GedcomException {
@@ -205,16 +210,28 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
                     submitter.setCountry(submPref.get("submCountry", ""));
                     submitter.setWeb(submPref.get("submWeb", ""));
 
+                    gedcom.createEntity("HEAD","");
+
                     // Create place format
                     gedcom.setPlaceFormat(genj.gedcom.Options.getInstance().getPlaceFormat());
-
-                    //Create first INDI entity
-                    Indi adam = (Indi) gedcom.createEntity(Gedcom.INDI);
-                    adam.addDefaultProperties();
-                    adam.setName("Adam", "");
-                    adam.setSex(PropertySex.MALE);
+                    gedcom.setShowJuridictions(genj.gedcom.Options.getInstance().getShowJuridictions());
+                    gedcom.setPlaceSortOrder(genj.gedcom.Options.getInstance().getPlaceSortOrder());
+                    gedcom.setPlaceDisplayFormat(genj.gedcom.Options.getInstance().getPlaceDisplayFormat());
                 }
             });
+        } catch (GedcomException e){
+            Exceptions.printStackTrace(e);
+        }
+    }
+
+    public Context newGedcom() {
+        //FIXME: changer le nouveau gedcom cree par defaut!
+        Context context = workbench.newGedcom();
+        if (context == null)
+            return null;
+        Gedcom gedcom = context.getGedcom();
+        try {
+            setDefault(gedcom);
             // remember
             GedcomDirectory.getInstance().registerGedcom(context);
             openDefaultViews(context);

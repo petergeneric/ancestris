@@ -38,8 +38,10 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
             return;
         }
         Gedcom gedcom = context.getGedcom();
-        placeFormat.setFormatString(gedcom.getPlaceFormat());
-        placeFormat.setShowJuridcitions(gedcom.getRegistry().get(genj.gedcom.Options.SHOW_PLACE_FORMAT, genj.gedcom.Options.getInstance().getShowJuridictions()));
+        placeFormat.setJurisdictions(gedcom.getPlaceFormat());
+        placeFormat.setShowJuridcitions(gedcom.getShowJuridictions());
+        placeFormat.setDisplayFormat(gedcom.getPlaceDisplayFormat());
+        placeFormat.setSortOrder(gedcom.getPlaceSortOrder());
         gedcomDescription.setTag("NOTE");
         gedcomDescription.setRoot(gedcom.getFirstEntity("HEAD"));
     }
@@ -100,8 +102,10 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
 
     @Override
     public void commit() {
-        context.getGedcom().setPlaceFormat(placeFormat.getFormatString());
+        context.getGedcom().setPlaceFormat(placeFormat.getJurisdictions());
         context.getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
+        context.getGedcom().setPlaceDisplayFormat(placeFormat.getDisplayFormat());
+        context.getGedcom().setPlaceSortOrder(placeFormat.getSortOrder());
         try {
             gedcomDescription.commit();
         } catch (GedcomException ex) {

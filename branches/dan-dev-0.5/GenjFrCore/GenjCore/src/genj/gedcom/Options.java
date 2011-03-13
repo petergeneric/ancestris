@@ -215,6 +215,30 @@ public class Options extends OptionProvider {
         return getPreferences().get(PLACE_FORMAT,RESOURCES.getString("option.placeFormat"));
     }
 
+    /**
+     * Display Format
+     */
+    public static final String PLACE_DISPLAY_FORMAT = "gedcom.placeDisplayFormat";         // NOI18N
+    public void setPlaceDisplayFormat(String format) {
+        getPreferences().put(PLACE_DISPLAY_FORMAT,format);
+    }
+
+    public String getPlaceDisplayFormat(){
+        return getPreferences().get(PLACE_DISPLAY_FORMAT, (String) null );
+    }
+
+    /**
+     * Sort order
+     */
+    public static final String PLACE_SORT_ORDER = "gedcom.placeSortOrder";         // NOI18N
+    public void setPlaceSortOrder(String order) {
+        getPreferences().put(PLACE_SORT_ORDER,order);
+    }
+
+    public String getPlaceSortOrder(){
+        return getPreferences().get(PLACE_SORT_ORDER, (String) null );
+    }
+
     public static final String SHOW_PLACE_FORMAT = "gedcom.showJuridictions";         // NOI18N
     public void setShowJuridictions(Boolean [] showFormatString) {
         getPreferences().put(SHOW_PLACE_FORMAT,showFormatString);

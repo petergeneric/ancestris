@@ -317,6 +317,8 @@ public class PropertyPlace extends PropertyChoiceValue {
   public String format(String format) {
       
       if (format == null)
+          format = getGedcom().getPlaceDisplayFormat();
+      if (format == null)
        return getFirstAvailableJurisdiction();
       
       String f = format.trim();
@@ -345,9 +347,11 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     @Override
     public int compareTo(Property that) {
-        return compare(this.getValueStartingWithCity(),((PropertyPlace)that).getValueStartingWithCity());
-//        return compare(this.format("1,2,3,4,5,6"),that.format("1,2,3,4,5,6"));
-//        return super.compareTo(that);
+        String sortFormat = getGedcom().getRegistry().get("place.sort.format",(String) null);
+        if (sortFormat ==null)
+            return compare(this.getValueStartingWithCity(),((PropertyPlace)that).getValueStartingWithCity());
+        else
+            return compare(this.format(sortFormat),that.format(sortFormat));
     }
 
 } //PropertyPlace

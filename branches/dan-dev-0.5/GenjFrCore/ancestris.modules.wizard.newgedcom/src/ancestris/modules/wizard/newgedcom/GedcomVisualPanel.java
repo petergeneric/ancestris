@@ -30,8 +30,10 @@ public final class GedcomVisualPanel extends JPanel implements NewGedcomSteps {
     public void addNotify() {
         super.addNotify();
         Gedcom gedcom = gedcomProvider.getContext().getGedcom();
-        placeFormat.setFormatString(gedcom.getPlaceFormat());
-        placeFormat.setShowJuridcitions(gedcom.getRegistry().get(genj.gedcom.Options.SHOW_PLACE_FORMAT,genj.gedcom.Options.getInstance().getShowJuridictions()));
+        placeFormat.setJurisdictions(gedcom.getPlaceFormat());
+        placeFormat.setShowJuridcitions(gedcom.getShowJuridictions());
+        placeFormat.setDisplayFormat(gedcom.getPlaceDisplayFormat());
+        placeFormat.setSortOrder(gedcom.getPlaceSortOrder());
         aMLEBean1.setTag("NOTE");
         aMLEBean1.setRoot(gedcom.getFirstEntity("HEAD"));
     }
@@ -93,8 +95,10 @@ public final class GedcomVisualPanel extends JPanel implements NewGedcomSteps {
     // End of variables declaration//GEN-END:variables
     @Override
     public void applyNext() {
-        gedcomProvider.getContext().getGedcom().setPlaceFormat(placeFormat.getFormatString());
+        gedcomProvider.getContext().getGedcom().setPlaceFormat(placeFormat.getJurisdictions());
         gedcomProvider.getContext().getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
+        gedcomProvider.getContext().getGedcom().setPlaceDisplayFormat(placeFormat.getDisplayFormat());
+        gedcomProvider.getContext().getGedcom().setPlaceSortOrder(placeFormat.getSortOrder());
         try {
             aMLEBean1.commit();
         } catch (GedcomException ex) {

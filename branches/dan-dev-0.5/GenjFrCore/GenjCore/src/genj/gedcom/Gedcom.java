@@ -1315,7 +1315,38 @@ public class Gedcom implements Comparable {
   public Boolean[] getShowJuridictions(){
       return getRegistry().get(Options.SHOW_PLACE_FORMAT, (Boolean[])null);
   }
-  
+
+  /**
+   * Set place sort order. helper method to put it in gedcoms registry.
+   * @param placeSortOrder if format 1,0,2 for example which means 2nd jurisdiction, then 1rst and 3rd
+   */
+    public void setPlaceSortOrder(String placeSortOrder) {
+        getRegistry().put(Options.PLACE_SORT_ORDER, placeSortOrder);
+    }
+    /**
+     * get Place sort order. Null means default, @see PropertyPlace.getValueStartingWithCity()
+     * @return
+     */
+    public String getPlaceSortOrder() {
+        return getRegistry().get(Options.PLACE_SORT_ORDER, (String)null);
+    }
+
+    /**
+     * set default place display format. @see PropertyPlace.format
+     * @param placeDisplayFormat
+     */
+    public void setPlaceDisplayFormat(String placeDisplayFormat) {
+        getRegistry().put(Options.PLACE_DISPLAY_FORMAT, placeDisplayFormat);
+    }
+
+    /**
+     * getter
+     * @return
+     */
+    public String getPlaceDisplayFormat() {
+        return getRegistry().get(Options.PLACE_DISPLAY_FORMAT, (String)null);
+    }
+
   /**
    * Accessor - language
    */
@@ -1418,7 +1449,7 @@ public class Gedcom implements Comparable {
     Gedcom that = (Gedcom)other;
     return getName().compareTo(that.getName());
   };
-  
+
   /**
    * Undo
    */

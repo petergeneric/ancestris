@@ -303,8 +303,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setNamesUppercase(gedcomPrefs.get("isUpperCaseNames", ""));
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
         cbCreateSpouse.setSelected(genj.gedcom.Options.getInstance().getCreateSpouse());
-        placeFormat.setFormatString(genj.gedcom.Options.getInstance().getPlaceFormat());
+        placeFormat.setJurisdictions(genj.gedcom.Options.getInstance().getPlaceFormat());
         placeFormat.setShowJuridcitions(genj.gedcom.Options.getInstance().getShowJuridictions());
+        placeFormat.setSortOrder(genj.gedcom.Options.getInstance().getPlaceSortOrder());
+        placeFormat.setDisplayFormat(genj.gedcom.Options.getInstance().getPlaceDisplayFormat());
 
         //FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
@@ -328,8 +330,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("setWifeLastname", getNamesSpouse());
 
         gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
-        gedcomOptions.setPlaceFormat(placeFormat.getFormatString());
+        gedcomOptions.setPlaceFormat(placeFormat.getJurisdictions());
         gedcomOptions.setShowJuridictions(placeFormat.getShowJuridictions());
+        gedcomOptions.setPlaceSortOrder(placeFormat.getSortOrder());
+        gedcomOptions.setPlaceDisplayFormat(placeFormat.getDisplayFormat());
 
 //FIXME:        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
