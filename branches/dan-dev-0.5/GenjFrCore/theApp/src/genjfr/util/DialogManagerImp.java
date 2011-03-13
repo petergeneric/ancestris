@@ -55,8 +55,19 @@ public class DialogManagerImp implements DialogManager{
     }
 
     private static int getResult(Object returnValue,Object[] options){
-      for (int a=0; a<options.length; a++)
-        if (returnValue==options[a]) return a;
+        // close w/o any button means cancel
+        if (NotifyDescriptor.CLOSED_OPTION.equals(returnValue))
+            returnValue = NotifyDescriptor.CANCEL_OPTION;
+
+        for (int a=0; a<options.length; a++)
+            if (returnValue==options[a])
+                return a;
+
+        // None found: tries with cancel
+        returnValue = NotifyDescriptor.CANCEL_OPTION;
+        for (int a=0; a<options.length; a++)
+            if (returnValue==options[a])
+                return a;
       return -1;
     }
 
