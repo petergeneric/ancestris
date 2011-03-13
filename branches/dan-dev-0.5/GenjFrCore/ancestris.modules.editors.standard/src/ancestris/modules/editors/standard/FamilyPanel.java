@@ -34,6 +34,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 public final class FamilyPanel extends JPanel implements IEditorPanel {
 
@@ -331,14 +332,14 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 return;
             }
             if (parent != null) {
-                editEntity(parent);
+                editEntity(parent,false);
             } else {
                 CreateParent cpAction = new CreateParent(indi, sex);
                 cpAction.actionPerformed(new ActionEvent(this, 0, ""));
 
                 if (cpAction.isNew()) {
                     parent = (Indi) cpAction.getCreated();
-                    if (!editEntity(parent)) {
+                    if (!editEntity(parent,true)) {
                         indi.getGedcom().undoUnitOfWork(false);
                     }
                 }
@@ -347,12 +348,6 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         } else if (evt.getClickCount() == 1) {
             fireSelection(parent);
         }
-    }
-
-    private boolean isDbleClick(MouseEvent me) {
-        return me.getButton() == MouseEvent.BUTTON1
-                && me.getID() == MouseEvent.MOUSE_CLICKED
-                && me.getClickCount() == 2;
     }
 
     private void createOrEditSpouse(MouseEvent evt, IndiBeans destBean, Entity spouse) {
@@ -364,13 +359,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         } else {
             Indi indi = (Indi) destBean.getIndi();
             if (indi != null) {
-                editEntity(indi);
+                editEntity(indi,false);
             } else {
                 CreateSpouse csAction = new CreateSpouse((Indi) spouse);
                 csAction.actionPerformed(new ActionEvent(this, 0, ""));
                 indi = (Indi) csAction.getCreated();
                 if (csAction.isNew()) {
-                    if (!editEntity(indi)) {
+                    if (!editEntity(indi,true)) {
                         spouse.getGedcom().undoUnitOfWork(false);
                     }
                 }
@@ -389,7 +384,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         } else {
             Indi indi = (Indi) destBean.getContext();
             if (indi != null) {
-                editEntity(indi);
+                editEntity(indi,false);
             } else {
                 CreateChild ccAction;
                 // tries to guess entity to attach new child to
@@ -408,7 +403,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 }
                 indi = (Indi) ccAction.getCreated();
                 if (ccAction.isNew()) {
-                    if (!editEntity(indi)) {
+                    if (!editEntity(indi,true)) {
                         if (context != null) {
                             context.getGedcom().undoUnitOfWork(false);
                         }
@@ -434,7 +429,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             return;
         }
 
-        editEntity(fam);
+        editEntity(fam,false);
         destBean.setContext(fam);
         updatechildrenPanel();
     }
@@ -445,13 +440,18 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private boolean editEntity(Entity entity) {
+    private boolean editEntity(Entity entity, boolean isNew) {
         return false;
     }
 
-    private boolean editEntity(Fam fam) {
+    private boolean editEntity(Fam fam,boolean isNew) {
+        String title;
+        if (isNew)
+            title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
+        else
+            title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.edit.title", fam);
         AFamBean bean = new AFamBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -465,12 +465,17 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return true;
     }
 
-    private boolean editEntity(Indi indi) {
+    private boolean editEntity(Indi indi,boolean isNew) {
+        String title;
+        if (isNew)
+            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", indi);
+        else
+            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.edit.title", indi);
         if (indi == null) {
             return false;
         }
         AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
