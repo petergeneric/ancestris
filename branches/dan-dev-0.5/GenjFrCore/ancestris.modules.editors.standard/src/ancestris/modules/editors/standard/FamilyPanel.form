@@ -53,13 +53,13 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="wifeFather" pref="95" max="32767" attributes="1"/>
-                  <Component id="husbFather" alignment="0" pref="95" max="32767" attributes="1"/>
+                  <Component id="wifeFather" pref="80" max="32767" attributes="1"/>
+                  <Component id="husbFather" alignment="0" pref="80" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="wifeMother" min="-2" pref="100" max="-2" attributes="1"/>
-                  <Component id="husbMother" min="-2" pref="100" max="-2" attributes="1"/>
+                  <Component id="wifeMother" min="-2" pref="80" max="-2" attributes="1"/>
+                  <Component id="husbMother" min="-2" pref="80" max="-2" attributes="1"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -86,16 +86,13 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="108" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="143" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
     </Container>
     <Container class="ancestris.modules.beans.ABluePrintBeans" name="husbFather">
       <Properties>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[256, 80]"/>
-        </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[256, 80]"/>
         </Property>
@@ -109,16 +106,13 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="95" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="80" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
     </Container>
     <Container class="ancestris.modules.beans.ABluePrintBeans" name="wifeFather">
       <Properties>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[256, 80]"/>
-        </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[256, 80]"/>
         </Property>
@@ -132,7 +126,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="95" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="80" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -172,7 +166,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="100" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="80" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -192,7 +186,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="100" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="80" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -207,7 +201,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="108" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="143" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
