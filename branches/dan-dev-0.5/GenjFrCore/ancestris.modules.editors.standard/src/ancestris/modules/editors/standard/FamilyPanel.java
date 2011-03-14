@@ -123,6 +123,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     public void setContext(Context context) {
         if (muteContext)
             return;
+        if (context == null || context.getGedcom() == null)
+            return;
+        if (this.context != null && !context.getGedcom().equals(this.context.getGedcom()))
+            return;
         Entity entity = context.getEntity();
         this.context = context;
         Fam f = null;

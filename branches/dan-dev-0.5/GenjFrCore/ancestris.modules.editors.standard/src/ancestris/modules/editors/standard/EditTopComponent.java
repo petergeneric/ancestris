@@ -87,7 +87,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     }
 
     public void createActions(Context context, Purpose purpose, Group into) {
-        if (purpose == Purpose.CONTEXT) {
+        if (purpose == Purpose.CONTEXT && getContext().getGedcom().equals(context.getGedcom())) {
             into.add(new OpenInEditor(context));
         }
     }
