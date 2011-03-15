@@ -14,6 +14,7 @@ package ancestris.modules.editors.standard;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.UnitOfWork;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
@@ -31,6 +32,16 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
         super.addNotify();
         setContext(context);
     }
+
+    /**
+     * Fire a commit
+     */
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        commit();
+    }
+
 
     public void setContext(Context context) {
         this.context = context;
@@ -90,7 +101,8 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
                         .addComponent(jLabel1)
                         .addGap(12, 12, 12)
                         .addComponent(gedcomDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -102,12 +114,16 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
 
     @Override
     public void commit() {
-        context.getGedcom().setPlaceFormat(placeFormat.getJurisdictions());
-        context.getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
-        context.getGedcom().setPlaceDisplayFormat(placeFormat.getDisplayFormat());
-        context.getGedcom().setPlaceSortOrder(placeFormat.getSortOrder());
         try {
-            gedcomDescription.commit();
+//            context.getGedcom().doUnitOfWork(new UnitOfWork() {
+//                public void perform(Gedcom gedcom) throws GedcomException {
+                    context.getGedcom().setPlaceFormat(placeFormat.getJurisdictions());
+                    context.getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
+                    context.getGedcom().setPlaceDisplayFormat(placeFormat.getDisplayFormat());
+                    context.getGedcom().setPlaceSortOrder(placeFormat.getSortOrder());
+                    gedcomDescription.commit();
+//                }
+//            });
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }

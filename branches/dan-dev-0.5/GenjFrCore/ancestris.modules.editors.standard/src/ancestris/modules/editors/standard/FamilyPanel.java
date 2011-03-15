@@ -21,9 +21,11 @@ import genj.edit.actions.CreateSpouse;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
+import genj.gedcom.UnitOfWork;
 import genj.view.SelectionSink;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -473,14 +475,18 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
         else
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.edit.title", fam);
-        AFamBean bean = new AFamBean();
+        final AFamBean bean = new AFamBean();
         NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
         }
         try {
-            bean.commit();
+            fam.getGedcom().doUnitOfWork(new UnitOfWork() {
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    bean.commit();
+                }
+            });
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return false;
@@ -497,14 +503,18 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         if (indi == null) {
             return false;
         }
-        AIndiBean bean = new AIndiBean();
+        final AIndiBean bean = new AIndiBean();
         NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
         }
         try {
-            bean.commit();
+            indi.getGedcom().doUnitOfWork(new UnitOfWork() {
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    bean.commit();
+                }
+            });
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return false;
