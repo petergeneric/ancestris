@@ -88,10 +88,8 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
     private static final String PREFERRED_ID = "GenjViewTopComponent";
-    private static javax.swing.JPanel panel;
     private View view=null;
     AToolBar bar = null;
-    private boolean isRestored = false;
   private final static Logger LOG = Logger.getLogger("genj.app");
   private final static ContextHook HOOK = new ContextHook();
 
@@ -148,12 +146,6 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    /**
-     * Obtain the panel for this view
-     */
-//    static public JPanel getPanel() {
-//        return panel;
-//    }
 
     @Override
     protected String preferredID() {
@@ -164,6 +156,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         return null;
     }
 
+    @Override
     public Image getImageIcon(){
         return getViewFactory().getImage().getImage();
     }
@@ -186,9 +179,11 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         }
     }
 
+    @Override
     public void setName() {
         setName(getViewFactory().getTitle());
     }
+    @Override
     public void setToolTipText(){
         setToolTipText(getViewFactory().getTitle());
     }
@@ -211,7 +206,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
 
         //    add(bar, viewHandle.getRegistry().get("toolbar", BorderLayout.WEST));
         if ((bar != null) && (bar.getToolBar() != null)){
-            add(bar.getToolBar(), AncestrisPreferences.get(view).get("toolbar",BorderLayout.WEST));;
+            add(bar.getToolBar(), AncestrisPreferences.get(view).get("toolbar",BorderLayout.WEST));
         }
     // done
     }
@@ -246,7 +241,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
             ((ActionProvider)view).createActions(context, purpose, into);
     }
 
-    private class AToolBar implements ToolBar{
+    static private class AToolBar implements ToolBar{
         AtomicBoolean notEmpty = new AtomicBoolean(false);
         JToolBar bar = new JToolBar();
 
@@ -322,6 +317,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     /**
      * A Key press initiation of the context menu
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       // only for jcomponents with focus
       Component focus = FocusManager.getCurrentManager().getFocusOwner();
@@ -475,7 +471,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     if (!isActionPerformed && getContext().equals(context))
       return;
 
-    LOG.finer("fireSelection("+context+","+isActionPerformed+")");
+    LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context, isActionPerformed});
 
     // remember
     setContext(context);
