@@ -20,6 +20,7 @@
 package genj.edit.actions;
 
 import genj.gedcom.PropertyFile;
+import genj.util.Resources;
 import genj.util.swing.Action2;
 
 import java.awt.Desktop;
@@ -35,6 +36,9 @@ public class RunExternal extends Action2 {
   
   /** the wrapped file */
   private File file;
+
+
+  private final static Resources RESOURCES = Resources.get(RunExternal.class);
   
   /**
    * Constructor
@@ -42,7 +46,7 @@ public class RunExternal extends Action2 {
   public RunExternal(File file) {
     this.file = file;
     super.setImage(PropertyFile.DEFAULT_IMAGE);
-    super.setText("Open");
+    super.setText(RESOURCES.getString("file.open"));
     setEnabled(file.exists());
   }
   
