@@ -115,15 +115,15 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
     @Override
     public void commit() {
         try {
-//            context.getGedcom().doUnitOfWork(new UnitOfWork() {
-//                public void perform(Gedcom gedcom) throws GedcomException {
+            context.getGedcom().doUnitOfWork(new UnitOfWork() {
+                public void perform(Gedcom gedcom) throws GedcomException {
                     context.getGedcom().setPlaceFormat(placeFormat.getJurisdictions());
                     context.getGedcom().setShowJuridictions(placeFormat.getShowJuridictions());
                     context.getGedcom().setPlaceDisplayFormat(placeFormat.getDisplayFormat());
                     context.getGedcom().setPlaceSortOrder(placeFormat.getSortOrder());
                     gedcomDescription.commit();
-//                }
-//            });
+                }
+            });
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }

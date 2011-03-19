@@ -465,11 +465,11 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private boolean editEntity(Entity entity, boolean isNew) {
+    static boolean editEntity(Entity entity, boolean isNew) {
         return false;
     }
 
-    private boolean editEntity(Fam fam,boolean isNew) {
+    static boolean editEntity(Fam fam,boolean isNew) {
         String title;
         if (isNew)
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
@@ -494,7 +494,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return true;
     }
 
-    private boolean editEntity(Indi indi,boolean isNew) {
+    static boolean editEntity(Indi indi,boolean isNew) {
         String title;
         if (isNew)
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", indi);

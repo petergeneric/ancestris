@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: ancestris.modules.editors.standard
+OpenIDE-Module-Install: ancestris/modules/editors/standard/Installer.class
 OpenIDE-Module-Layer: ancestris/modules/editors/standard/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/editors/standard/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0

@@ -28,5 +28,4 @@ public class EditorPlugin extends GenjFrPlugin{
     public Collection<Class> getDefaultOpenedViews() {
         return Arrays.asList(new Class[]{EditTopComponent.class});
     }
-
 }
