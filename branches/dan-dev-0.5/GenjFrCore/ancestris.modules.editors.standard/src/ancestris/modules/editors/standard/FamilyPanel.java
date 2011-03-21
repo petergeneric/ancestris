@@ -41,17 +41,24 @@ import org.openide.util.NbBundle;
 public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.empty");
-    private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
+    private final static String WIFE_EMPTY_BP= org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
     private final static String HUSBAND_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.husband.empty");
     private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.child.empty");
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
     private final static String VOID_BP = "";
-    private IndiBeans husbandBeans;
-    private IndiBeans wifeBeans;
+//    private IndiBeans husbandBeans;
+//    private IndiBeans wifeBeans;
     private Context context;
+    private Indi focusIndi;
+    private Fam focusFam;
     private boolean muteContext = false;
+    private EntityHandler indiHandler;
+    private EntityHandler spouseHandler;
+    private EntityHandler fatherHandler;
+    private EntityHandler motherHandler;
+    private EntityHandler famHandler;
 
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
@@ -59,102 +66,88 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
         // Add listners
-        husband.addMouseListener(new FilteredMouseAdapter() {
+        indiHandler = new SpouseHandler(husband, null);
+        indiHandler.setEditOnClick(true);
+        spouseHandler = new SpouseHandler(wife, husband);
+        fatherHandler = new ParentHandler(husbFather, husband, PropertySex.MALE);
+        motherHandler = new ParentHandler(husbMother, husband, PropertySex.FEMALE);
+        famHandler = new FamHandler(familySpouse, husband);
+        famHandler.setEditOnClick(true);
 
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditSpouse(evt, husbandBeans, wife.getContext());
-            }
-        });
-        husbFather.addMouseListener(new FilteredMouseAdapter() {
-
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditParent(evt, husbandBeans, (Indi) husbFather.getContext(), PropertySex.MALE);
-            }
-        });
-        husbMother.addMouseListener(new FilteredMouseAdapter() {
-
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditParent(evt, husbandBeans, (Indi) husbMother.getContext(), PropertySex.FEMALE);
-            }
-        });
-
-        wife.addMouseListener(new FilteredMouseAdapter() {
-
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditSpouse(evt, wifeBeans, husband.getContext());
-            }
-        });
-        wifeFather.addMouseListener(new FilteredMouseAdapter() {
-
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditParent(evt, wifeBeans, (Indi) wifeFather.getContext(), PropertySex.MALE);
-            }
-        });
-        wifeMother.addMouseListener(new FilteredMouseAdapter() {
-
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditParent(evt, wifeBeans, (Indi) wifeMother.getContext(), PropertySex.FEMALE);
-            }
-        });
-
-        familySpouse.addMouseListener(new FilteredMouseAdapter() {
-
-            @Override
-            public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                createOrEditFam(evt, familySpouse);
-            }
-        });
-
-        husbandBeans = new IndiBeans(husband, husbFather, husbMother);
-        wifeBeans = new IndiBeans(wife, wifeFather, wifeMother);
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
+        husband.setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
+        wife.setBlueprint(Gedcom.INDI,
+                NbBundle.getMessage(FamilyPanel.class, "blueprint.spouse.title")+
+                NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+
+        husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
+        husbFather.setBlueprint(Gedcom.INDI,
+                NbBundle.getMessage(FamilyPanel.class, "blueprint.father.title")+
+                NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+
+        husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
+        husbMother.setBlueprint(Gedcom.INDI,
+                NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.title")+
+                NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
+        familySpouse.setBlueprint(Gedcom.FAM,NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
     }
 
     private void muteContext(boolean b) {
-        muteContext=b;
+        muteContext = b;
     }
 
     public void setContext(Context context) {
-        if (muteContext)
+        if (muteContext) {
             return;
-        if (context == null || context.getGedcom() == null)
+        }
+        if (context == null || context.getGedcom() == null) {
             return;
-        if (this.context != null && !context.getGedcom().equals(this.context.getGedcom()))
+        }
+        if (this.context != null && !context.getGedcom().equals(this.context.getGedcom())) {
             return;
+        }
         Entity entity = context.getEntity();
-        this.context = context;
-        Fam f = null;
-        Indi h = null;
-        Indi w = null;
-        if (entity instanceof Fam) {
-            f = ((Fam) entity);
-            h = f.getHusband();
-            w = f.getWife();
-        } else if (entity instanceof Indi) {
-            Indi i = (Indi) entity;
-            if (i.getSex() == PropertySex.FEMALE) {
-                w = i;
-            } else {
-                h = i;
-            }
-            if (i.getNoOfFams() > 0) {
-                f = i.getFamiliesWhereSpouse()[0];
-                h = f.getHusband();
-                w = f.getWife();
-            }
+        if (entity == null) {
+            return;
         }
 
-        familySpouse.setContext(f);
-        husbandBeans.setIndi(h);
-        wifeBeans.setIndi(w);
+        this.context = context;
+        if (entity instanceof Fam) {
+            if (((Fam) entity).getNoOfSpouses() == 0) {
+                return;
+            }
+            focusFam = ((Fam) entity);
+            focusIndi = focusFam.getHusband();
+            if (focusIndi == null) {
+                focusIndi = focusFam.getWife();
+            }
+        } else if (entity instanceof Indi) {
+            focusIndi = (Indi) entity;
+            focusFam = null;
+        } else {
+            return;
+        }
+        refresh();
+    }
+
+    private void refresh() {
+
+        if (focusFam == null && focusIndi.getNoOfFams() > 0) {
+            focusFam = focusIndi.getFamiliesWhereSpouse()[0];
+        }
+        husband.setContext(focusIndi);
+        husbFather.setContext(focusIndi.getBiologicalFather());
+        husbMother.setContext(focusIndi.getBiologicalMother());
+        familySpouse.setContext(focusFam);
+        if (focusFam == null) {
+            wife.setContext(null);
+        } else {
+            wife.setContext(focusFam.getOtherSpouse(focusIndi));
+        }
         updatechildrenPanel();
     }
 
@@ -171,24 +164,53 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        wifeMother = new ancestris.modules.beans.ABluePrintBeans();
+        aBluePrintBeans1 = new ancestris.modules.beans.ABluePrintBeans();
         husband = new ancestris.modules.beans.ABluePrintBeans();
         husbFather = new ancestris.modules.beans.ABluePrintBeans();
         wifeFather = new ancestris.modules.beans.ABluePrintBeans();
         familySpouse = new ancestris.modules.beans.ABluePrintBeans();
-        wifeMother = new ancestris.modules.beans.ABluePrintBeans();
-        husbMother = new ancestris.modules.beans.ABluePrintBeans();
         wife = new ancestris.modules.beans.ABluePrintBeans();
         jScrollPane1 = new javax.swing.JScrollPane();
         childrenPanel = new javax.swing.JPanel();
+        wifeFather1 = new ancestris.modules.beans.ABluePrintBeans();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        husbMother = new ancestris.modules.beans.ABluePrintBeans();
 
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
+
+        wifeMother.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout wifeMotherLayout = new javax.swing.GroupLayout(wifeMother);
+        wifeMother.setLayout(wifeMotherLayout);
+        wifeMotherLayout.setHorizontalGroup(
+            wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 296, Short.MAX_VALUE)
+        );
+        wifeMotherLayout.setVerticalGroup(
+            wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        aBluePrintBeans1.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout aBluePrintBeans1Layout = new javax.swing.GroupLayout(aBluePrintBeans1);
+        aBluePrintBeans1.setLayout(aBluePrintBeans1Layout);
+        aBluePrintBeans1Layout.setHorizontalGroup(
+            aBluePrintBeans1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 296, Short.MAX_VALUE)
+        );
+        aBluePrintBeans1Layout.setVerticalGroup(
+            aBluePrintBeans1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
         husband.setLayout(husbandLayout);
         husbandLayout.setHorizontalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +223,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         husbFather.setLayout(husbFatherLayout);
         husbFatherLayout.setHorizontalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
         husbFatherLayout.setVerticalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,11 +236,11 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         wifeFather.setLayout(wifeFatherLayout);
         wifeFatherLayout.setHorizontalGroup(
             wifeFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
         wifeFatherLayout.setVerticalGroup(
             wifeFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -234,17 +256,33 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             .addGap(0, 45, Short.MAX_VALUE)
         );
 
-        wifeMother.setPreferredSize(new java.awt.Dimension(256, 80));
-
-        javax.swing.GroupLayout wifeMotherLayout = new javax.swing.GroupLayout(wifeMother);
-        wifeMother.setLayout(wifeMotherLayout);
-        wifeMotherLayout.setHorizontalGroup(
-            wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
+        javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
+        wife.setLayout(wifeLayout);
+        wifeLayout.setHorizontalGroup(
+            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
-        wifeMotherLayout.setVerticalGroup(
-            wifeMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
+        wifeLayout.setVerticalGroup(
+            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        childrenPanel.setLayout(new javax.swing.BoxLayout(childrenPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        jScrollPane1.setViewportView(childrenPanel);
+
+        wifeFather1.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout wifeFather1Layout = new javax.swing.GroupLayout(wifeFather1);
+        wifeFather1.setLayout(wifeFather1Layout);
+        wifeFather1Layout.setHorizontalGroup(
+            wifeFather1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 296, Short.MAX_VALUE)
+        );
+        wifeFather1Layout.setVerticalGroup(
+            wifeFather1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -253,50 +291,37 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         husbMother.setLayout(husbMotherLayout);
         husbMotherLayout.setHorizontalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
         husbMotherLayout.setVerticalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 80, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
-        wife.setLayout(wifeLayout);
-        wifeLayout.setHorizontalGroup(
-            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
-        );
-        wifeLayout.setVerticalGroup(
-            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 143, Short.MAX_VALUE)
-        );
-
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        childrenPanel.setLayout(new java.awt.GridLayout(0, 3, 5, 5));
-        jScrollPane1.setViewportView(childrenPanel);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
-                    .addComponent(familySpouse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(wifeFather, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(familySpouse, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(wifeMother, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                            .addComponent(aBluePrintBeans1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                            .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(wifeMother, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                            .addComponent(wifeFather1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                            .addComponent(wifeFather, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(husbFather, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -304,15 +329,22 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(wifeFather, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                    .addComponent(husbFather, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                    .addComponent(wifeMother, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(wifeFather, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(aBluePrintBeans1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wifeFather1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(wifeMother, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(husbMother, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                    .addComponent(husbFather, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -322,76 +354,19 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.beans.ABluePrintBeans aBluePrintBeans1;
     private javax.swing.JPanel childrenPanel;
     private ancestris.modules.beans.ABluePrintBeans familySpouse;
     private ancestris.modules.beans.ABluePrintBeans husbFather;
     private ancestris.modules.beans.ABluePrintBeans husbMother;
     private ancestris.modules.beans.ABluePrintBeans husband;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private ancestris.modules.beans.ABluePrintBeans wife;
     private ancestris.modules.beans.ABluePrintBeans wifeFather;
+    private ancestris.modules.beans.ABluePrintBeans wifeFather1;
     private ancestris.modules.beans.ABluePrintBeans wifeMother;
     // End of variables declaration//GEN-END:variables
-
-    private void createOrEditParent(MouseEvent evt, IndiBeans destBean, Indi parent, int sex) {
-        if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
-            return;
-        }
-        if (MouseUtils.isDoubleClick(evt)) {
-            Indi indi = (Indi) destBean.getIndi();
-            muteContext(true);
-            try{
-                if (indi == null) {
-                    return;
-                }
-                if (parent != null) {
-                    editEntity(parent,false);
-                } else {
-                    CreateParent cpAction = new CreateParent(indi, sex);
-                    cpAction.actionPerformed(new ActionEvent(this, 0, ""));
-
-                    if (cpAction.isNew()) {
-                        parent = (Indi) cpAction.getCreated();
-                        if (!editEntity(parent,true)) {
-                            indi.getGedcom().undoUnitOfWork(false);
-                        }
-                    }
-                }
-            } finally{
-                muteContext(false);
-            }
-            destBean.setIndi(indi);
-        } else if (evt.getClickCount() == 1) {
-            fireSelection(parent);
-        }
-    }
-
-    private void createOrEditSpouse(MouseEvent evt, IndiBeans destBean, Entity spouse) {
-        if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
-            return;
-        }
-        if (evt.getClickCount() == 1) {
-            fireSelection(destBean.getIndi());
-        } else {
-            muteContext(true);
-            Indi indi = (Indi) destBean.getIndi();
-            if (indi != null) {
-                editEntity(indi,false);
-            } else {
-                CreateSpouse csAction = new CreateSpouse((Indi) spouse);
-                csAction.actionPerformed(new ActionEvent(this, 0, ""));
-                indi = (Indi) csAction.getCreated();
-                if (csAction.isNew()) {
-                    if (!editEntity(indi,true)) {
-                        spouse.getGedcom().undoUnitOfWork(false);
-                    }
-                }
-            }
-            destBean.setIndi(indi);
-            familySpouse.setContext(getFams(indi, (Indi) spouse));
-            muteContext(false);
-        }
-    }
 
     private void createOrEditChild(MouseEvent evt, ABluePrintBeans destBean) {
         if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
@@ -402,9 +377,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         } else {
             Indi indi = (Indi) destBean.getContext();
             muteContext(true);
-            try{
+            try {
                 if (indi != null) {
-                    editEntity(indi,false);
+                    editEntity(indi, false);
                 } else {
                     CreateChild ccAction;
                     // tries to guess entity to attach new child to
@@ -423,7 +398,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                     }
                     indi = (Indi) ccAction.getCreated();
                     if (ccAction.isNew()) {
-                        if (!editEntity(indi,true)) {
+                        if (!editEntity(indi, true)) {
                             if (context != null) {
                                 context.getGedcom().undoUnitOfWork(false);
                             }
@@ -435,28 +410,12 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                     }
                     familySpouse.setContext(indi.getFamilyWhereBiologicalChild());
                 }
-            } finally{
+            } finally {
                 muteContext(false);
             }
             destBean.setContext(indi);
             updatechildrenPanel();
         }
-    }
-
-    private void createOrEditFam(MouseEvent evt, ABluePrintBeans destBean) {
-        if (evt.getClickCount() != 2) {
-            return;
-        }
-        Fam fam = (Fam) destBean.getContext();
-        if (fam == null) {
-            return;
-        }
-
-        muteContext(true);
-        editEntity(fam,false);
-        destBean.setContext(fam);
-        updatechildrenPanel();
-        muteContext(false);
     }
 
     private void fireSelection(Entity entity) {
@@ -469,12 +428,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return false;
     }
 
-    static boolean editEntity(Fam fam,boolean isNew) {
+    static boolean editEntity(Fam fam, boolean isNew) {
         String title;
-        if (isNew)
+        if (isNew) {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
-        else
+        } else {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.edit.title", fam);
+        }
         final AFamBean bean = new AFamBean();
         NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
@@ -483,6 +443,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
         try {
             fam.getGedcom().doUnitOfWork(new UnitOfWork() {
+
                 public void perform(Gedcom gedcom) throws GedcomException {
                     bean.commit();
                 }
@@ -494,12 +455,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return true;
     }
 
-    static boolean editEntity(Indi indi,boolean isNew) {
+    static boolean editEntity(Indi indi, boolean isNew) {
         String title;
-        if (isNew)
+        if (isNew) {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", indi);
-        else
+        } else {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.edit.title", indi);
+        }
         if (indi == null) {
             return false;
         }
@@ -511,6 +473,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
         try {
             indi.getGedcom().doUnitOfWork(new UnitOfWork() {
+
                 public void perform(Gedcom gedcom) throws GedcomException {
                     bean.commit();
                 }
@@ -539,61 +502,6 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     public void commit() {
     }
 
-    private static class IndiBeans {
-
-        ABluePrintBeans indiBean;
-        ABluePrintBeans fatherBean;
-        ABluePrintBeans motherBean;
-        Indi indi;
-
-        public IndiBeans(ABluePrintBeans i, ABluePrintBeans f, ABluePrintBeans m) {
-            indiBean = i;
-            fatherBean = f;
-            motherBean = m;
-        }
-
-        public ABluePrintBeans getFatherBean() {
-            return fatherBean;
-        }
-
-        public ABluePrintBeans getIndiBean() {
-            return indiBean;
-        }
-
-        public ABluePrintBeans getMotherBean() {
-            return motherBean;
-        }
-
-        public Indi getIndi() {
-            return indi;
-        }
-
-        public void setIndi(Indi indi) {
-            this.indi = indi;
-            if (indiBean == null) {
-                return;
-            }
-            indiBean.setEmptyBluePrint(EMPTY_BP);
-            if (indi == null) {
-                fatherBean.setEmptyBluePrint(VOID_BP);
-                motherBean.setEmptyBluePrint(VOID_BP);
-            } else {
-                fatherBean.setEmptyBluePrint(FATHER_EMPTY_BP);
-                motherBean.setEmptyBluePrint(MOTHER_EMPTY_BP);
-            }
-            indiBean.setContext(indi);
-
-            if (indi == null) {
-                fatherBean.setContext(null);
-                motherBean.setContext(null);
-            } else {
-                fatherBean.setContext(indi.getBiologicalFather());
-                motherBean.setContext(indi.getBiologicalMother());
-            }
-
-        }
-    }
-
     /**
      * return wife if wifeBean's indi is not null, husband otherwise
      */
@@ -607,23 +515,141 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return parent;
     }
 
-    private Fam getFams(Indi indi, Indi spouse) {
-        if (indi == null) {
-            return null;
+//    private Fam getFams(Indi indi, Indi spouse) {
+//        if (indi == null) {
+//            return null;
+//        }
+//        if (indi.getNoOfFams() == 0) {
+//            return null;
+//        }
+//        Fam[] fams = indi.getFamiliesWhereSpouse();
+//        if (spouse == null) {
+//            return fams[0];
+//        }
+//        for (Fam fam : fams) {
+//            if (fam.getOtherSpouse(indi) == spouse) {
+//                return fam;
+//            }
+//        }
+//        return null;
+//    }
+    private abstract class EntityHandler {
+
+        private ABluePrintBeans bean;
+        private ABluePrintBeans beanRelated;
+        private boolean editOnClick=false;
+
+        public EntityHandler(ABluePrintBeans bean, ABluePrintBeans beanRelated) {
+            this.bean = bean;
+            this.beanRelated = beanRelated;
+            bean.addMouseListener(new FilteredMouseAdapter() {
+
+                @Override
+                public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
+                    createOrEdit(evt);
+                }
+            });
         }
-        if (indi.getNoOfFams() == 0) {
-            return null;
+
+        /**
+         *
+         * @param edit true if single click mouse must launch editor
+         */
+
+        void setEditOnClick(boolean edit){
+            editOnClick = edit;
         }
-        Fam[] fams = indi.getFamiliesWhereSpouse();
-        if (spouse == null) {
-            return fams[0];
-        }
-        for (Fam fam : fams) {
-            if (fam.getOtherSpouse(indi) == spouse) {
-                return fam;
+
+        private void createOrEdit(MouseEvent evt) {
+            if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
+                return;
+            }
+            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean.getContext() == null) {
+                muteContext(true);
+                Indi indi = (Indi) bean.getContext();
+                try {
+                    if (indi != null) {
+                        editEntity(indi, false);
+                    } else {
+                        create(beanRelated.getContext());
+                    }
+                    refresh();
+                } finally {
+                    muteContext(false);
+                }
+            } else if (evt.getClickCount() == 1) {
+                // FIXME: test click count necessaire?
+                fireSelection(bean.getContext());
             }
         }
-        return null;
+
+        ABluePrintBeans getBean() {
+            return bean;
+        }
+
+        public abstract Entity create(Entity from);
+    }
+
+    private class SpouseHandler extends EntityHandler {
+
+        public SpouseHandler(ABluePrintBeans bean, ABluePrintBeans beanRelated) {
+            super(bean, beanRelated);
+        }
+
+        @Override
+        public Entity create(Entity from) {
+            CreateSpouse csAction = new CreateSpouse((Indi) from);
+            csAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
+            Indi indi = (Indi) csAction.getCreated();
+            if (csAction.isNew()) {
+                if (!editEntity(indi, true)) {
+                    from.getGedcom().undoUnitOfWork(false);
+                    indi = null;
+                }
+            }
+            return indi;
+        }
+    }
+
+    private class ParentHandler extends EntityHandler {
+
+        int sex;
+
+        public ParentHandler(ABluePrintBeans bean, ABluePrintBeans related, int sex) {
+            super(bean, related);
+            this.sex = sex;
+        }
+
+        public Entity create(Entity from, int sex) {
+            CreateParent cpAction = new CreateParent((Indi) from, sex);
+            cpAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
+            Indi parent = (Indi) cpAction.getCreated();
+
+            if (cpAction.isNew()) {
+                if (!editEntity(parent, true)) {
+                    from.getGedcom().undoUnitOfWork(false);
+                    return null;
+                }
+            }
+            return parent;
+        }
+
+        @Override
+        public Entity create(Entity from) {
+            return create(from, sex);
+        }
+    }
+
+    private class FamHandler extends EntityHandler {
+
+        public FamHandler(ABluePrintBeans bean, ABluePrintBeans beanRelated) {
+            super(bean, beanRelated);
+        }
+
+        @Override
+        public Entity create(Entity from) {
+            return null;
+        }
     }
 
     private class ChildBean extends ABluePrintBeans {
@@ -635,6 +661,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         public ChildBean(Indi child) {
             super();
             setEmptyBluePrint(CHILD_EMPTY_BP);
+            setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
             this.setContext(child);
             addMouseListener(new FilteredMouseAdapter() {
 
@@ -647,7 +674,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         @Override
         public Dimension getPreferredSize() {
-            return new java.awt.Dimension(150, 35);
+            return new java.awt.Dimension(150, 16);
         }
 
         public void addToPanel(JPanel panel) {

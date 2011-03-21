@@ -165,6 +165,24 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
     }
 
     /**
+     * Set blueprint for tag
+     * FIXME: use blueprintmanager or same mecanisme for that!
+     * @param tag
+     * @param bp
+     */
+    public void setBlueprint(String tag, Blueprint bp){
+        if (bp == null)
+            return;
+        type2blueprint.put(tag, bp);
+    }
+
+    public void setBlueprint(String tag, String bp){
+        if (bp == null)
+            return;
+        type2blueprint.put(tag, new Blueprint(bp));
+    }
+
+    /**
      * Sets isAntialiasing   */
     public void setAntialiasing(boolean set) {
         isAntialiasing = set;
