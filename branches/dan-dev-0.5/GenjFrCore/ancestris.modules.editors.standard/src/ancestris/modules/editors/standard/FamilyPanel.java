@@ -214,9 +214,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 143, Short.MAX_VALUE)
+            .addGap(0, 173, Short.MAX_VALUE)
         );
 
+        husbFather.setMinimumSize(new java.awt.Dimension(0, 80));
         husbFather.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout husbFatherLayout = new javax.swing.GroupLayout(husbFather);
@@ -264,7 +265,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGap(0, 80, Short.MAX_VALUE)
         );
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -285,6 +286,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
+        husbMother.setMinimumSize(new java.awt.Dimension(0, 80));
         husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout husbMotherLayout = new javax.swing.GroupLayout(husbMother);
@@ -336,9 +338,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                     .addComponent(aBluePrintBeans1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(wifeFather1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                    .addComponent(husbFather, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(husbFather, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
