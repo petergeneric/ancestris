@@ -426,11 +426,16 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    static boolean editEntity(Entity entity, boolean isNew) {
+    boolean editEntity(Entity entity, boolean isNew) {
+        // FIXME: Horror!
+        if (entity instanceof Indi)
+            return editEntity((Indi)entity,isNew);
+        if (entity instanceof Fam)
+            return editEntity((Fam)entity,isNew);
         return false;
     }
 
-    static boolean editEntity(Fam fam, boolean isNew) {
+    boolean editEntity(Fam fam, boolean isNew) {
         String title;
         if (isNew) {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
@@ -457,7 +462,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return true;
     }
 
-    static boolean editEntity(Indi indi, boolean isNew) {
+    boolean editEntity(Indi indi, boolean isNew) {
         String title;
         if (isNew) {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", indi);
@@ -568,10 +573,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             }
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean.getContext() == null) {
                 muteContext(true);
-                Indi indi = (Indi) bean.getContext();
+                Entity entity = bean.getContext();
                 try {
-                    if (indi != null) {
-                        editEntity(indi, false);
+                    if (entity != null) {
+                        editEntity(entity, false);
                     } else {
                         create(beanRelated.getContext());
                     }
