@@ -56,7 +56,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
         into.add(new OpenInEditor(null,context));
     }
 
-    private class OpenInEditor extends Action2 {
+    private static class OpenInEditor extends Action2 {
 
         EditTopComponent editor;
         Context context;
