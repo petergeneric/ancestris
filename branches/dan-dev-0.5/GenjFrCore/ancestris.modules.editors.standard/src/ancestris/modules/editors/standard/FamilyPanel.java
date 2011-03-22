@@ -41,24 +41,18 @@ import org.openide.util.NbBundle;
 public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.empty");
-    private final static String WIFE_EMPTY_BP= org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
+    private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
     private final static String HUSBAND_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.husband.empty");
     private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.child.empty");
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
     private final static String VOID_BP = "";
-//    private IndiBeans husbandBeans;
-//    private IndiBeans wifeBeans;
+
     private Context context;
     private Indi focusIndi;
     private Fam focusFam;
     private boolean muteContext = false;
-    private EntityHandler indiHandler;
-    private EntityHandler spouseHandler;
-    private EntityHandler fatherHandler;
-    private EntityHandler motherHandler;
-    private EntityHandler famHandler;
 
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
@@ -66,28 +60,32 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
         // Add listners
-        indiHandler = new SpouseHandler(husband, null);
-        indiHandler.setEditOnClick(true);
-        spouseHandler = new SpouseHandler(wife, husband);
-        fatherHandler = new ParentHandler(husbFather, husband, PropertySex.MALE);
-        motherHandler = new ParentHandler(husbMother, husband, PropertySex.FEMALE);
-        famHandler = new FamHandler(familySpouse, husband);
-        famHandler.setEditOnClick(true);
+        ABeanHandler handler;
+        handler = new EditOnlyHandler(husband);
+        handler.setEditOnClick(true);
+        husband.addMouseListener(handler);
+
+        wife.addMouseListener(new SpouseHandler(wife, (Indi)husband.getContext()));
+        husbFather.addMouseListener(new ParentHandler(husbFather, (Indi)husband.getContext(), PropertySex.MALE));
+        husbMother.addMouseListener(new ParentHandler(husbMother, (Indi)husband.getContext(), PropertySex.FEMALE));
+        handler = new EditOnlyHandler(familySpouse);
+        handler.setEditOnClick(true);
+        familySpouse.addMouseListener(handler);
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husband.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
-        wife.setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        wife.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
-        husbFather.setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbFather.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
-        husbMother.setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbMother.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
-        familySpouse.setBlueprint(Gedcom.FAM,NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
+        familySpouse.setBlueprint(Gedcom.FAM, NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
     }
 
     private void muteContext(boolean b) {
@@ -143,6 +141,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             wife.setContext(focusFam.getOtherSpouse(focusIndi));
         }
         updatechildrenPanel();
+        updateSiblingsPanel();
     }
 
     @Override
@@ -164,7 +163,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         familySpouse = new ancestris.modules.beans.ABluePrintBeans();
         jScrollPane1 = new javax.swing.JScrollPane();
         childrenPanel = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        siblingsPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         husbFather = new ancestris.modules.beans.ABluePrintBeans();
@@ -220,18 +220,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 592, Short.MAX_VALUE)
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 157, Short.MAX_VALUE)
-        );
+        siblingsPanel.setLayout(new javax.swing.BoxLayout(siblingsPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        jScrollPane3.setViewportView(siblingsPanel);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel7.TabConstraints.tabTitle"), jPanel7); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane3.TabConstraints.tabTitle"), jScrollPane3); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -386,7 +378,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -401,13 +393,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel siblingsPanel;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
-
 
     private void fireSelection(Entity entity) {
         if (entity != null) {
@@ -417,10 +409,12 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     boolean editEntity(Entity entity, boolean isNew) {
         // FIXME: Horror!
-        if (entity instanceof Indi)
-            return editEntity((Indi)entity,isNew);
-        if (entity instanceof Fam)
-            return editEntity((Fam)entity,isNew);
+        if (entity instanceof Indi) {
+            return editEntity((Indi) entity, isNew);
+        }
+        if (entity instanceof Fam) {
+            return editEntity((Fam) entity, isNew);
+        }
         return false;
     }
 
@@ -486,65 +480,72 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         childrenPanel.repaint();
         Fam f = familySpouse.getContext() == null ? null : (Fam) (familySpouse.getContext().getEntity());
         if (f != null) {
-            for (Indi child : f.getChildren()) {
-                childrenPanel.add(new ChildBean(child));
-            }
+            addEntitiesToPanel(childrenPanel, f.getChildren(), null);
         }
-        childrenPanel.add(new ChildBean());
+        ChildBean childBean = new ChildBean();
+        childBean.addMouseListener(new ChildHandler(childBean, (Indi)husband.getContext(), (Fam)familySpouse.getContext()));
+        childrenPanel.add(childBean);
         childrenPanel.revalidate();
     }
+
+    private void updateSiblingsPanel() {
+        siblingsPanel.removeAll();
+        siblingsPanel.repaint();
+        Indi indi = (Indi)husband.getContext();
+        Fam f = indi == null ? null : ((Indi) (husband.getContext())).getFamilyWhereBiologicalChild();
+        if (f != null) {
+            addEntitiesToPanel(siblingsPanel, f.getChildren(), indi);
+        }
+//        ChildBean childBean = new ChildBean();
+//        childBean.addMouseListener(new ChildHandler(childBean, husband, familySpouse));
+//        siblingsPanel.add(childBean);
+        siblingsPanel.revalidate();
+    }
+
+        public void addEntitiesToPanel(JPanel panel, Entity[] entities, Entity exclude) {
+        if (entities == null)
+            return;
+        for (Entity entity: entities) {
+            if (entity.equals(exclude))
+                continue;
+            ChildBean bean = new ChildBean(entity);
+            bean.addMouseListener(new EditOnlyHandler(bean));
+
+            panel.add(bean);
+        }
+    }
+
 
     @Override
     public void commit() {
     }
 
-    /**
-     * return wife if wifeBean's indi is not null, husband otherwise
-     */
-    private Indi getWifeOrHusband() {
-        // return wife
-        Indi parent = (Indi) wife.getContext();
-        // or husband
-        if (parent == null) {
-            parent = (Indi) husband.getContext();
-        }
-        return parent;
-    }
+    private abstract class ABeanHandler extends FilteredMouseAdapter {
 
-    private abstract class EntityHandler {
+        ABluePrintBeans destBean;
+        private boolean editOnClick = false;
 
-        ABluePrintBeans bean;
-        ABluePrintBeans beanRelated;
-        private boolean editOnClick=false;
-
-        public EntityHandler(ABluePrintBeans bean, ABluePrintBeans beanRelated) {
-            this.bean = bean;
-            this.beanRelated = beanRelated;
-            bean.addMouseListener(new FilteredMouseAdapter() {
-
-                @Override
-                public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
-                    createOrEdit(evt);
-                }
-            });
+        public ABeanHandler(ABluePrintBeans destBean) {
+            super();
+            this.destBean = destBean;
         }
 
         /**
          *
          * @param edit true if single click mouse must launch editor
          */
-
-        void setEditOnClick(boolean edit){
+        void setEditOnClick(boolean edit) {
             editOnClick = edit;
         }
 
-        private void createOrEdit(MouseEvent evt) {
+        @Override
+        public void filteredMouseClicked(java.awt.event.MouseEvent evt) {
             if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
                 return;
             }
-            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean.getContext() == null) {
+            if (editOnClick || MouseUtils.isDoubleClick(evt) || destBean.getContext() == null) {
                 muteContext(true);
-                Entity entity = bean.getContext();
+                Entity entity = destBean.getContext();
                 try {
                     if (entity != null) {
                         editEntity(entity, false);
@@ -557,26 +558,28 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 }
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
-                fireSelection(bean.getContext());
+                fireSelection(destBean.getContext());
             }
         }
 
         ABluePrintBeans getBean() {
-            return bean;
+            return destBean;
         }
 
         public abstract Entity create();
     }
 
-    private class SpouseHandler extends EntityHandler {
+    private class SpouseHandler extends ABeanHandler {
 
-        public SpouseHandler(ABluePrintBeans bean, ABluePrintBeans beanRelated) {
-            super(bean, beanRelated);
+        private final Indi from;
+
+        public SpouseHandler(ABluePrintBeans bean, Indi spouse) {
+            super(bean);
+            this.from = spouse;
         }
 
         @Override
         public Entity create() {
-            Indi from = (Indi) beanRelated.getContext();
             CreateSpouse csAction = new CreateSpouse((Indi) from);
             csAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
             Indi indi = (Indi) csAction.getCreated();
@@ -590,17 +593,18 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private class ParentHandler extends EntityHandler {
+    private class ParentHandler extends ABeanHandler {
 
         int sex;
+        private final Indi from;
 
-        public ParentHandler(ABluePrintBeans bean, ABluePrintBeans related, int sex) {
-            super(bean, related);
+        public ParentHandler(ABluePrintBeans bean, Indi other, int sex) {
+            super(bean);
+            this.from = other;
             this.sex = sex;
         }
 
         public Entity create() {
-            Indi from = (Indi) beanRelated.getContext();
             CreateParent cpAction = new CreateParent(from, sex);
             cpAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
             Indi parent = (Indi) cpAction.getCreated();
@@ -615,48 +619,49 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private class ChildHandler extends EntityHandler {
+    private class ChildHandler extends ABeanHandler {
 
-        ABluePrintBeans famc;
+        Fam famc;
+        private final Indi parent;
 
-        public ChildHandler(ABluePrintBeans bean, ABluePrintBeans parent, ABluePrintBeans famc) {
-            super(bean, parent);
+        public ChildHandler(ABluePrintBeans bean, Indi parentBean, Fam famc) {
+            super(bean);
+            this.parent = parentBean;
             this.famc = famc;
         }
 
         public Entity create() {
             CreateChild ccAction;
-                    // tries to guess entity to attach new child to
-                    // Familly knows?
-                    if (famc.getContext() != null) {
-                        ccAction = new CreateChild((Fam) (famc.getContext().getEntity()), true);
-                        ccAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
-                    } else {
-                        Indi parent = (Indi)beanRelated.getContext();
-                        // must not be null
-                        if (parent == null) {
-                            throw new UnsupportedOperationException("no entity to attach new child to");
-                        }
-                        ccAction = new CreateChild(parent, true);
-                        ccAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
+            // tries to guess entity to attach new child to
+            // Familly knows?
+            if (famc != null) {
+                ccAction = new CreateChild((Fam) (famc.getEntity()), true);
+                ccAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
+            } else {
+                // must not be null
+                if (parent == null) {
+                    throw new UnsupportedOperationException("no entity to attach new child to");
+                }
+                ccAction = new CreateChild(parent, true);
+                ccAction.actionPerformed(new ActionEvent(getBean(), 0, ""));
+            }
+            Indi indi = (Indi) ccAction.getCreated();
+            if (ccAction.isNew()) {
+                if (!editEntity(indi, true)) {
+                    if (context != null) {
+                        context.getGedcom().undoUnitOfWork(false);
                     }
-                    Indi indi = (Indi) ccAction.getCreated();
-                    if (ccAction.isNew()) {
-                        if (!editEntity(indi, true)) {
-                            if (context != null) {
-                                context.getGedcom().undoUnitOfWork(false);
-                            }
-                            return null;
-                        }
-                    }
-                    return indi;
-    }
+                    return null;
+                }
+            }
+            return indi;
+        }
     }
 
-    private class FamHandler extends EntityHandler {
+    private class EditOnlyHandler extends ABeanHandler {
 
-        public FamHandler(ABluePrintBeans bean, ABluePrintBeans beanRelated) {
-            super(bean, beanRelated);
+        public EditOnlyHandler(ABluePrintBeans bean) {
+            super(bean);
         }
 
         @Override
@@ -665,19 +670,17 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private class ChildBean extends ABluePrintBeans {
-        private EntityHandler handler;
+    private static class ChildBean extends ABluePrintBeans {
 
         public ChildBean() {
             this(null);
         }
 
-        public ChildBean(Indi child) {
+        public ChildBean(Entity child) {
             super();
             setEmptyBluePrint(CHILD_EMPTY_BP);
-            setBlueprint(Gedcom.INDI,NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
+            setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
             this.setContext(child);
-            handler = new ChildHandler(this,husband, familySpouse);
         }
 
         @Override
@@ -688,9 +691,6 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         @Override
         public Dimension getPreferredSize() {
             return new java.awt.Dimension(150, 32);
-        }
-        public void addToPanel(JPanel panel) {
-            panel.add(this);
         }
     }
 }
