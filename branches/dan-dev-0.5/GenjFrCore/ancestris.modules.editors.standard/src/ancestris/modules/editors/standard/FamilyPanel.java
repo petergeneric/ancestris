@@ -73,19 +73,19 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         familySpouse.addMouseListener(handler);
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#C0F0F0>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
-        wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#FF9090>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1ff>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
-        husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#C0C0C0>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
-        husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#C0C0C0>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
-        familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#FFC0FF>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
+        familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
     }
 
     private void muteContext(boolean b) {
@@ -697,8 +697,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         public ChildBean(Entity child) {
             super();
             setEmptyBluePrint(CHILD_EMPTY_BP);
-            setBlueprint(Gedcom.INDI, "<body bgcolor=#F0F00F>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
-            setBlueprint(Gedcom.FAM, "<body bgcolor=#FFC0FF>"+"<prop path=FAM:HUSB> - <prop path=FAM:WIFE>");
+            setBlueprint(Gedcom.INDI, "<body bgcolor=#ffffe3>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
+            setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>"+"<prop path=FAM:HUSB> - <prop path=FAM:WIFE>");
         this.setContext(child);
         }
 
