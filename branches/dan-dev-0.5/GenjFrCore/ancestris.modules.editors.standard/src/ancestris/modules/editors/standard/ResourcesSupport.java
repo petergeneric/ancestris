@@ -20,7 +20,7 @@ import org.openide.util.NbBundle;
  * @author daniel
  */
 public class ResourcesSupport {
-    static ImageIcon icon = new ImageIcon(ResourcesSupport.class,"editeur_familial");
+    static ImageIcon icon = new ImageIcon(ResourcesSupport.class,"editeur_standard");
 
     public static String getTitle(String bundleKey) {
         return NbBundle.getBundle(ResourcesSupport.class).getString(bundleKey+".title");

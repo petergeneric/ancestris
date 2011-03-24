@@ -77,18 +77,26 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder position="3" title="Autres conjoints">
+            <TitledBorder position="3" title="Autres unions">
               <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder/>
               </Border>
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/standard/Bundle.properties" key="FamilyPanel.jScrollPane2.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-              <Font PropertyName="font" name="Dialog" size="16" style="3"/>
+              <Font PropertyName="font" name="Dialog" size="14" style="3"/>
             </TitledBorder>
           </Border>
         </Property>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="oFamsPanel">
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
+            <Property name="axis" type="int" value="3"/>
+          </Layout>
+        </Container>
+      </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
       <Properties>
@@ -98,7 +106,7 @@
           </Border>
         </Property>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Dialog" size="16" style="3"/>
+          <Font name="Dialog" size="14" style="3"/>
         </Property>
       </Properties>
 
@@ -127,7 +135,7 @@
                   <Group type="102" attributes="0">
                       <Component id="familySpouse" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="121" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="124" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -220,7 +228,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="157" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="160" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -236,7 +244,7 @@
                 <EtchetBorder/>
               </Border>
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/standard/Bundle.properties" key="FamilyPanel.jPanel3.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-              <Font PropertyName="font" name="Dialog" size="16" style="3"/>
+              <Font PropertyName="font" name="Dialog" size="14" style="3"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -289,7 +297,7 @@
                 <EtchetBorder/>
               </Border>
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/standard/Bundle.properties" key="FamilyPanel.jPanel4.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-              <Font PropertyName="font" name="Dialog" size="16" style="3"/>
+              <Font PropertyName="font" name="Dialog" size="14" style="3"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -371,7 +379,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="249" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="126" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -387,7 +395,7 @@
                 <LineBorder/>
               </Border>
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/standard/Bundle.properties" key="FamilyPanel.jPanel6.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-              <Font PropertyName="font" name="Dialog" size="16" style="3"/>
+              <Font PropertyName="font" name="Dialog" size="14" style="3"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -416,7 +424,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="160" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="40" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

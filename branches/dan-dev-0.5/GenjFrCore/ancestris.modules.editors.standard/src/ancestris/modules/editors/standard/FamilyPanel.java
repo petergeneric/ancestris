@@ -73,19 +73,19 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         familySpouse.addMouseListener(handler);
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#C0F0F0>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
-        wife.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#FF9090>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
-        husbFather.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#C0C0C0>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
-        husbMother.setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#C0C0C0>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
 
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
-        familySpouse.setBlueprint(Gedcom.FAM, NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
+        familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#FFC0FF>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
     }
 
     private void muteContext(boolean b) {
@@ -142,6 +142,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
         updatechildrenPanel();
         updateSiblingsPanel();
+        updateFamsPanel();
     }
 
     @Override
@@ -158,6 +159,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
+        oFamsPanel = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         familySpouse = new ancestris.modules.beans.ABluePrintBeans();
@@ -178,10 +180,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Dialog", 3, 16))); // NOI18N
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Dialog", 3, 14))); // NOI18N
+
+        oFamsPanel.setLayout(new javax.swing.BoxLayout(oFamsPanel, javax.swing.BoxLayout.PAGE_AXIS));
+        jScrollPane2.setViewportView(oFamsPanel);
 
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 16));
+        jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 14)); // NOI18N
 
         familySpouse.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -215,7 +220,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -233,12 +238,12 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 157, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel3.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 16))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel3.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
         husbFather.setMinimumSize(new java.awt.Dimension(0, 80));
         husbFather.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -265,7 +270,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel4.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 16))); // NOI18N
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel4.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
         husbMother.setMinimumSize(new java.awt.Dimension(0, 80));
         husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -302,7 +307,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 249, Short.MAX_VALUE)
+            .addGap(0, 126, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -316,7 +321,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel6.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 16))); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel6.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
         javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
         wife.setLayout(wifeLayout);
@@ -326,7 +331,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -397,6 +402,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel oFamsPanel;
     private javax.swing.JPanel siblingsPanel;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
@@ -492,14 +498,26 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         siblingsPanel.removeAll();
         siblingsPanel.repaint();
         Indi indi = (Indi)husband.getContext();
-        Fam f = indi == null ? null : ((Indi) (husband.getContext())).getFamilyWhereBiologicalChild();
-        if (f != null) {
-            addEntitiesToPanel(siblingsPanel, f.getChildren(), indi);
+        if (indi != null) {
+            addEntitiesToPanel(siblingsPanel, indi.getSiblings(false), null);
         }
 //        ChildBean childBean = new ChildBean();
 //        childBean.addMouseListener(new ChildHandler(childBean, husband, familySpouse));
 //        siblingsPanel.add(childBean);
         siblingsPanel.revalidate();
+    }
+
+    private void updateFamsPanel() {
+        oFamsPanel.removeAll();
+        oFamsPanel.repaint();
+        Indi indi = (Indi)husband.getContext();
+        if (indi != null) {
+            addEntitiesToPanel(oFamsPanel, indi.getFamiliesWhereSpouse(), familySpouse == null?null:familySpouse.getContext());
+        }
+//        ChildBean childBean = new ChildBean();
+//        childBean.addMouseListener(new ChildHandler(childBean, husband, familySpouse));
+//        siblingsPanel.add(childBean);
+        oFamsPanel.revalidate();
     }
 
         public void addEntitiesToPanel(JPanel panel, Entity[] entities, Entity exclude) {
@@ -679,8 +697,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         public ChildBean(Entity child) {
             super();
             setEmptyBluePrint(CHILD_EMPTY_BP);
-            setBlueprint(Gedcom.INDI, NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
-            this.setContext(child);
+            setBlueprint(Gedcom.INDI, "<body bgcolor=#F0F00F>"+NbBundle.getMessage(FamilyPanel.class, "blueprint.CHILD"));
+            setBlueprint(Gedcom.FAM, "<body bgcolor=#FFC0FF>"+"<prop path=FAM:HUSB> - <prop path=FAM:WIFE>");
+        this.setContext(child);
         }
 
         @Override
