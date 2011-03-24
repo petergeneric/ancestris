@@ -180,13 +180,14 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BELOW_TOP, new java.awt.Font("Dialog", 3, 14))); // NOI18N
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
+        oFamsPanel.setBackground(java.awt.Color.white);
         oFamsPanel.setLayout(new javax.swing.BoxLayout(oFamsPanel, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane2.setViewportView(oFamsPanel);
 
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 14)); // NOI18N
+        jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 14));
 
         familySpouse.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
@@ -205,6 +206,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        childrenPanel.setBackground(java.awt.Color.white);
         childrenPanel.setLayout(new javax.swing.BoxLayout(childrenPanel, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(childrenPanel);
 
@@ -225,10 +227,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
 
+        siblingsPanel.setBackground(java.awt.Color.white);
         siblingsPanel.setLayout(new javax.swing.BoxLayout(siblingsPanel, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane3.setViewportView(siblingsPanel);
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane3.TabConstraints.tabTitle"), jScrollPane3); // NOI18N
+
+        jPanel2.setBackground(java.awt.Color.white);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
