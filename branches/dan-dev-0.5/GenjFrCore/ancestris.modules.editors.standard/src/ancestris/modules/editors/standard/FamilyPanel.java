@@ -39,6 +39,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import ancestris.modules.editors.standard.actions.AActions;
+import javax.swing.border.EmptyBorder;
 import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -56,14 +58,36 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private Context context;
     private Indi focusIndi;
     private Fam focusFam;
-    private boolean muteContext = false;
+    private int muteContext = 0;
     private final EntitiesPanel childrenPanel;
     private final EntitiesPanel oFamsPanel;
     private final EntitiesPanel siblingsPanel;
+    private ActionListener NoOpAction = new ActionListener() {
+
+        public void actionPerformed(ActionEvent e) {
+        }
+    };
+    private javax.swing.JButton btAddSpouse;
+    private javax.swing.JButton btUnlinkSpouse;
+    private javax.swing.JButton btAddChild;
+    private javax.swing.JButton btUnlinkFamc;
 
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
         initComponents();
+
+        // Adds spouse toolbar buttons
+        btAddSpouse = new EditorButton();
+        toolSpouse.add(btAddSpouse);
+        btUnlinkSpouse = new EditorButton();
+        toolSpouse.add(btUnlinkSpouse);
+
+        // Adds indi toolbar buttons
+        btAddChild = new EditorButton();
+        toolIndi.add(btAddChild);
+        btUnlinkFamc = new EditorButton();
+        toolIndi.add(btUnlinkFamc);
+
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
         // Add listners
@@ -99,8 +123,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
             @Override
             public Entity[] getEntities(Entity entity) {
-                if (entity != null && entity instanceof Fam){
-                    return ((Fam)entity).getChildren();
+                if (entity != null && entity instanceof Fam) {
+                    return ((Fam) entity).getChildren();
                 }
                 return null;
             }
@@ -111,8 +135,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
             @Override
             public Entity[] getEntities(Entity entity) {
-                if (entity != null && entity instanceof Indi){
-                    return ((Indi)entity).getFamiliesWhereSpouse();
+                if (entity != null && entity instanceof Indi) {
+                    return ((Indi) entity).getFamiliesWhereSpouse();
                 }
                 return null;
             }
@@ -123,8 +147,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
             @Override
             public Entity[] getEntities(Entity entity) {
-                if (entity != null && entity instanceof Indi){
-                    return ((Indi)entity).getSiblings(false);
+                if (entity != null && entity instanceof Indi) {
+                    return ((Indi) entity).getSiblings(false);
                 }
                 return null;
             }
@@ -133,11 +157,22 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     }
 
     private void muteContext(boolean b) {
-        muteContext = b;
+        if (b) {
+            muteContext++;
+        } else {
+            muteContext--;
+        }
+        if (muteContext < 0) {
+            muteContext = 0;
+        }
+    }
+
+    private boolean isMuted() {
+        return muteContext != 0;
     }
 
     public void setContext(Context context) {
-        if (muteContext) {
+        if (isMuted()) {
             return;
         }
         if (context == null || context.getGedcom() == null) {
@@ -187,12 +222,38 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         childrenPanel.update(
                 familySpouse.getContext() == null ? null : (Fam) (familySpouse.getContext().getEntity()),
                 null,
-                new ChildHandler(husband, familySpouse));
+                null);
+        btAddChild.setAction(AActions.alwaysEnabled(
+                new ACreateChild((Fam) familySpouse.getContext()),
+                "",
+                "Ajouter un enfant",
+                "ancestris/modules/editors/standard/images/add-child.png",
+                true));
 
-        Fam famChild = ((Indi)husband.getContext()).getFamilyWhereBiologicalChild();
-        siblingsPanel.update(husband.getContext(),null, new ABeanHandler(new ACreateChild(famChild)));
+        Fam famChild = ((Indi) husband.getContext()).getFamilyWhereBiologicalChild();
+        familyParent.setContext(famChild);
+        siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild)));
 
-        oFamsPanel.update(husband.getContext(),familySpouse == null ? null : familySpouse.getContext(), new SpouseHandler(husband));
+        oFamsPanel.update(husband.getContext(), familySpouse == null ? null : familySpouse.getContext(), null);
+        btAddSpouse.setAction(AActions.alwaysEnabled(
+                new ACreateSpouse((Indi) husband.getContext()),
+                "",
+                "Ajouter un conjoint",
+                "ancestris/modules/editors/standard/images/add-spouse.png",
+                true));
+        btUnlinkSpouse.setAction(AActions.alwaysEnabled(
+                NoOpAction,
+                "",
+                "Supprimer le liens vers un conjoint",
+                "ancestris/modules/editors/standard/images/unlink-spouse.png",
+                true));
+
+        btUnlinkFamc.setAction(AActions.alwaysEnabled(
+                NoOpAction,
+                "",
+                "Supprimer le liens vers un conjoint",
+                "ancestris/modules/editors/standard/images/unlink-famc.png",
+                true));
     }
 
     @Override
@@ -208,12 +269,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         familySpouse = new ancestris.modules.beans.ABluePrintBeans();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel8 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
+        familyParent = new ancestris.modules.beans.ABluePrintBeans();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         husbFather = new ancestris.modules.beans.ABluePrintBeans();
@@ -221,13 +283,18 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         husbMother = new ancestris.modules.beans.ABluePrintBeans();
         jPanel5 = new javax.swing.JPanel();
         husband = new ancestris.modules.beans.ABluePrintBeans();
+        jLabel3 = new javax.swing.JLabel();
+        toolIndi = new javax.swing.JToolBar();
         jPanel6 = new javax.swing.JPanel();
         wife = new ancestris.modules.beans.ABluePrintBeans();
+        jLabel2 = new javax.swing.JLabel();
+        toolSpouse = new javax.swing.JToolBar();
+        jPanel7 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jLabel1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
-
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 14));
@@ -243,7 +310,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
         familySpouseLayout.setVerticalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 28, Short.MAX_VALUE)
+            .addGap(0, 31, Short.MAX_VALUE)
         );
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -253,19 +320,49 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jScrollPane3.TabConstraints.tabTitle"), jScrollPane3); // NOI18N
+
+        familyParent.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        familyParent.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout familyParentLayout = new javax.swing.GroupLayout(familyParent);
+        familyParent.setLayout(familyParentLayout);
+        familyParentLayout.setHorizontalGroup(
+            familyParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 590, Short.MAX_VALUE)
+        );
+        familyParentLayout.setVerticalGroup(
+            familyParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 31, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(familyParent, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(familyParent, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
 
         jPanel2.setBackground(java.awt.Color.white);
 
@@ -291,7 +388,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         husbFather.setLayout(husbFatherLayout);
         husbFatherLayout.setHorizontalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 286, Short.MAX_VALUE)
+            .addGap(0, 284, Short.MAX_VALUE)
         );
         husbFatherLayout.setVerticalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -302,7 +399,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +415,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         husbMother.setLayout(husbMotherLayout);
         husbMotherLayout.setHorizontalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 282, Short.MAX_VALUE)
+            .addGap(0, 284, Short.MAX_VALUE)
         );
         husbMotherLayout.setVerticalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -329,59 +426,111 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel5.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 16))); // NOI18N
+        jPanel5.setBorder(null);
 
         javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
         husband.setLayout(husbandLayout);
         husbandLayout.setHorizontalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 126, Short.MAX_VALUE)
+            .addGap(0, 135, Short.MAX_VALUE)
         );
+
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 3, 16));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
+
+        toolIndi.setFloatable(false);
+        toolIndi.setRollover(true);
+        toolIndi.setPreferredSize(new java.awt.Dimension(100, 18));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addComponent(toolIndi, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(toolIndi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel6.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
+        jPanel6.setBorder(null);
 
         javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
         wife.setLayout(wifeLayout);
         wifeLayout.setHorizontalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
+            .addGap(0, 39, Short.MAX_VALUE)
         );
+
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 3, 14));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
+
+        toolSpouse.setFloatable(false);
+        toolSpouse.setRollover(true);
+        toolSpouse.setPreferredSize(new java.awt.Dimension(100, 18));
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                .addComponent(toolSpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(wife, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(toolSpouse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 3, 14));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel1.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(173, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(7, 7, 7)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -398,8 +547,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -418,7 +567,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -426,20 +575,28 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.modules.beans.ABluePrintBeans familyParent;
     private ancestris.modules.beans.ABluePrintBeans familySpouse;
     private ancestris.modules.beans.ABluePrintBeans husbFather;
     private ancestris.modules.beans.ABluePrintBeans husbMother;
     private ancestris.modules.beans.ABluePrintBeans husband;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JToolBar toolIndi;
+    private javax.swing.JToolBar toolSpouse;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
 
@@ -604,7 +761,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     /*
      * Special create actions for ancestris editor
      */
-    private static class ACreateSpouse extends AbstractAction {
+    private class ACreateSpouse extends AbstractAction {
 
         private Indi other;
 
@@ -614,16 +771,21 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (other == null) {
-                return;
-            }
-            CreateSpouse csAction = new CreateSpouse(other);
-            csAction.actionPerformed(e);
-            Indi indi = (Indi) csAction.getCreated();
-            if (csAction.isNew()) {
-                if (!editEntity(indi, true)) {
-                    other.getGedcom().undoUnitOfWork(false);
+            try {
+                muteContext(true);
+                if (other == null) {
+                    return;
                 }
+                CreateSpouse csAction = new CreateSpouse(other);
+                csAction.actionPerformed(e);
+                Indi indi = (Indi) csAction.getCreated();
+                if (csAction.isNew()) {
+                    if (!editEntity(indi, true)) {
+                        other.getGedcom().undoUnitOfWork(false);
+                    }
+                }
+            } finally {
+                muteContext(false);
             }
         }
     }
@@ -655,7 +817,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private static class ACreateChild extends AbstractAction {
+    private class ACreateChild extends AbstractAction {
 
         private Indi parent;
         private Fam famc;
@@ -665,6 +827,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             super();
             this.parent = parent;
             this.famc = null;
+            setToolTipText("Ajouter un enfant");
         }
 
         ACreateChild(Fam famc) {
@@ -674,32 +837,38 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (parent == null && famc == null) {
-                return;
-            }
-            Gedcom gedcom;
-            CreateChild ccAction;
-            // tries to guess entity to attach new child to
-            // Familly knows?
-            if (famc != null) {
-                gedcom = famc.getGedcom();
-                ccAction = new CreateChild(famc, true);
-                ccAction.actionPerformed(e);
-            } else if (parent != null) {
-                gedcom = parent.getGedcom();
-                ccAction = new CreateChild(parent, true);
-                ccAction.actionPerformed(e);
-            } else {
-                return;
-            }
-            Indi indi = (Indi) ccAction.getCreated();
-            if (ccAction.isNew()) {
-                if (!editEntity(indi, true)) {
-                    if (gedcom != null) {
-                        gedcom.undoUnitOfWork(false);
+            try {
+                muteContext(true);
+                if (parent == null && famc == null) {
+                    return;
+                }
+                Gedcom gedcom;
+                CreateChild ccAction;
+                // tries to guess entity to attach new child to
+                // Familly knows?
+                if (famc != null) {
+                    gedcom = famc.getGedcom();
+                    ccAction = new CreateChild(famc, true);
+                    ccAction.actionPerformed(e);
+                } else if (parent != null) {
+                    gedcom = parent.getGedcom();
+                    ccAction = new CreateChild(parent, true);
+                    ccAction.actionPerformed(e);
+                } else {
+                    return;
+                }
+                Indi indi = (Indi) ccAction.getCreated();
+                if (ccAction.isNew()) {
+                    if (!editEntity(indi, true)) {
+                        if (gedcom != null) {
+                            gedcom.undoUnitOfWork(false);
+                        }
                     }
                 }
+            } finally {
+                muteContext(false);
             }
+
         }
     }
 
@@ -746,7 +915,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    private abstract class EntitiesPanel extends AListBean{
+    private abstract class EntitiesPanel extends AListBean {
 
         public EntitiesPanel(JScrollPane pane) {
             super();
@@ -759,11 +928,11 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         public abstract Entity[] getEntities(Entity entity);
 
-        public void update(Entity entity,Entity exclude,MouseListener listener){
+        public void update(Entity entity, Entity exclude, MouseListener listener) {
             removeAll();
             repaint();
             if (entity != null) {
-                add(getEntities(entity),exclude, new ABeanHandler());
+                add(getEntities(entity), exclude, new ABeanHandler());
             }
             if (listener != null) {
                 JButton createBtn = new JButton("Ajouter");
@@ -771,6 +940,16 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 add(createBtn);
             }
             revalidate();
+        }
+    }
+
+    private static class EditorButton extends JButton {
+
+        public EditorButton() {
+            super();
+            setBorderPainted(false);
+            setFocusPainted(false);
+            setBorder(new EmptyBorder(0, 0, 0, 0));
         }
     }
 }

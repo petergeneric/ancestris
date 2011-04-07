@@ -65,7 +65,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
             this.editor = editor;
             this.context = context;
             setText(ResourcesSupport.getTitle("OpenInEditor"));
-            setImage(ResourcesSupport.icon);
+            setImage(ResourcesSupport.editorIcon);
         }
 
         @Override

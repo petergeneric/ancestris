@@ -94,7 +94,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
 
     @Override
     public Image getImageIcon() {
-        return ResourcesSupport.icon.getImage();
+        return ResourcesSupport.editorIcon.getImage();
     }
 
     public void setContext(Context context, boolean isActionPerformed) {
@@ -119,7 +119,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         public OpenInEditor(Context context) {
             this.context = context;
             setText(ResourcesSupport.getTitle("OpenInEditor"));
-            setImage(ResourcesSupport.icon);
+            setImage(ResourcesSupport.editorIcon);
         }
 
         @Override
