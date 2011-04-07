@@ -9,6 +9,7 @@ import genj.gedcom.Gedcom;
 import genj.util.swing.Action2;
 import genjfr.app.ActionClose;
 import genjfr.app.ActionSave;
+import genjfr.util.GedcomDirectory;
 import genjfr.util.MyContext;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
@@ -66,13 +67,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
     }
 
     public Cookie getCookie(Class clazz) {
-        Children ch = getChildren();
-
-        if (clazz.isInstance(ch)) {
-            return (Cookie) ch;
-        }
-
-        return super.getCookie(clazz);
+        return GedcomDirectory.getInstance().getDummyNode(context).getCookie(clazz);
     }
 
     protected void createPasteTypes(Transferable t, List s) {
@@ -114,4 +109,5 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
     public Context getContext() {
         return context;
     }
-    }
+
+}
