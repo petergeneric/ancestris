@@ -25,6 +25,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import genj.io.BackupFile;
+import genj.io.Filter;
 import genj.io.GedcomEncodingException;
 import genj.io.GedcomIOException;
 import genj.io.GedcomReader;
@@ -45,6 +46,7 @@ import genj.view.SelectionSink;
 import genj.view.View;
 import genj.view.ViewContext;
 import genj.view.ViewFactory;
+import genjfr.app.pluginservice.GenjFrPlugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,6 +54,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -253,20 +256,21 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     fireCommit(context);
     
     // .. choose file
-    Box options = new Box(BoxLayout.Y_AXIS);
-    options.add(new JLabel(RES.getString("save.options.encoding")));
+//FIXME: DAN    Box options = new Box(BoxLayout.Y_AXIS);
+//    options.add(new JLabel(RES.getString("save.options.encoding")));
+//
+//    ChoiceWidget comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
+//    comboEncodings.setEditable(false);
+//    comboEncodings.setSelectedItem(context.getGedcom().getEncoding());
+//    options.add(comboEncodings);
+//
+//    options.add(new JLabel(RES.getString("save.options.password")));
+//    String pwd = context.getGedcom().getPassword();
+//    TextFieldWidget textPassword = new TextFieldWidget(context.getGedcom().hasPassword() ? pwd : "", 10);
+//    textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
+//    options.add(textPassword);
 
-    ChoiceWidget comboEncodings = new ChoiceWidget(Gedcom.ENCODINGS, Gedcom.ANSEL);
-    comboEncodings.setEditable(false);
-    comboEncodings.setSelectedItem(context.getGedcom().getEncoding());
-    options.add(comboEncodings);
-
-    options.add(new JLabel(RES.getString("save.options.password")));
-    String pwd = context.getGedcom().getPassword();
-    TextFieldWidget textPassword = new TextFieldWidget(context.getGedcom().hasPassword() ? pwd : "", 10);
-    textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
-    options.add(textPassword);
-
+    SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(),GenjFrPlugin.lookupAll(Filter.class));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
     File file = helper.chooseFile(RES.getString("cc.save.title"), RES.getString("cc.save.action"), options);
     if (file == null)
       return false;
@@ -283,8 +287,8 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     }
     
     Gedcom gedcom = context.getGedcom();
-    gedcom.setPassword(textPassword.getText());
-    gedcom.setEncoding((String)comboEncodings.getSelectedItem());
+    gedcom.setPassword(options.getPassword());
+    gedcom.setEncoding(options.getEncoding());
     
     // .. create new origin
     try {

@@ -35,7 +35,7 @@ import java.util.Set;
  */
 public interface Filter {
 
-  public String getName();
+  public String getFilterName();
   
   public boolean veto(Property property);
 
@@ -94,7 +94,7 @@ public interface Filter {
       return false;
     }
 
-    public String getName() {
+    public String getFilterName() {
       return "Union";
     }
 

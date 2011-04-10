@@ -19,12 +19,16 @@
  */
 package genj.tree;
 
+import genj.app.Workbench;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
+import genj.io.Filter;
 import genj.print.PrintAction;
 import genj.print.PrintRenderer;
 import genj.renderer.Blueprint;
@@ -56,6 +60,7 @@ import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
+import genjfr.app.pluginservice.GenjFrPlugin;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -78,10 +83,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.Box;
+import java.util.Set;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JViewport;
@@ -91,7 +95,7 @@ import javax.swing.event.ChangeListener;
 /**
  * TreeView
  */
-public class TreeView extends View implements ContextProvider, ActionProvider, MySelectionListener {
+public class TreeView extends View implements ContextProvider, ActionProvider, MySelectionListener, Filter {
   
   protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");      
   protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -212,6 +216,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
 //    });
     
     // done
+        GenjFrPlugin.register(this);
   }
   
   /**
@@ -1231,5 +1236,57 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       return new TreeViewPrinter(TreeView.this);
     }
   }
-  
+// Filter interface
+    @Override
+  public boolean veto(Property prop) {
+    // all non-entities are fine
+      return false;
+    }
+    @Override
+  public boolean veto(Entity ent) {
+        // FIXEME: must be checked before calling veto
+        if (ent.getGedcom().equals(getContext().getGedcom())){
+            return false;
+        }
+    Set ents = model.getEntities();
+    // indi?
+    if (ent instanceof Indi)
+      return ents.contains(ent);
+    // fam?
+    if (ent instanceof Fam) {
+      boolean b = ents.contains(ent);
+      if (model.isFamilies()||b) return b;
+      Fam fam = (Fam)ent;
+      boolean
+        father = ents.contains(fam.getHusband()),
+        mother = ents.contains(fam.getWife()),
+        child = false;
+      Indi[] children = fam.getChildren();
+      for (int i = 0; child==false && i<children.length; i++) {
+        if (ents.contains(children[i])) child = true;
+      }
+      // father and mother or parent and child
+      return (father&&mother) || (father&&child) || (mother&&child);
+    }
+    // let submitter through if it's THE one
+    if (model.getRoot().getGedcom().getSubmitter()==ent)
+      return true;
+    // maybe a referenced other type?
+    Entity[] refs = PropertyXRef.getReferences(ent);
+    for (int r=0; r<refs.length; r++) {
+      if (ents.contains(refs[r])) return true;
+    }
+    // not
+    return false;
+  }
+
+  /**
+   * A string representation of this view as a filter
+   */
+    @Override
+  public String getFilterName() {
+    return model.getEntities().size()+" nodes in "+TITLE;
+  }
+
+
 } //TreeView
