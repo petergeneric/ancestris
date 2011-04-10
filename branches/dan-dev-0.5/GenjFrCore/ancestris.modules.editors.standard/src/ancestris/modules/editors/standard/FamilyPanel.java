@@ -11,14 +11,13 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.modules.editors.standard.actions.ACreateChild;
+import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AFamBean;
 import ancestris.modules.beans.AIndiBean;
 import ancestris.modules.beans.AListBean;
-import genj.edit.actions.CreateChild;
-import genj.edit.actions.CreateParent;
-import genj.edit.actions.CreateSpouse;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -32,7 +31,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -71,6 +69,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private javax.swing.JButton btUnlinkSpouse;
     private javax.swing.JButton btAddChild;
     private javax.swing.JButton btUnlinkFamc;
+    private javax.swing.JButton btAddSibling;
 
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
@@ -85,6 +84,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         // Adds indi toolbar buttons
         btAddChild = new EditorButton();
         toolIndi.add(btAddChild);
+        btAddSibling = new EditorButton();
+        toolIndi.add(btAddSibling);
         btUnlinkFamc = new EditorButton();
         toolIndi.add(btUnlinkFamc);
 
@@ -156,25 +157,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     }
 
-    private void muteContext(boolean b) {
-        if (b) {
-            muteContext++;
-        } else {
-            muteContext--;
-        }
-        if (muteContext < 0) {
-            muteContext = 0;
-        }
-    }
-
-    private boolean isMuted() {
-        return muteContext != 0;
-    }
-
     public void setContext(Context context) {
-        if (isMuted()) {
-            return;
-        }
         if (context == null || context.getGedcom() == null) {
             return;
         }
@@ -223,42 +206,64 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 familySpouse.getContext() == null ? null : (Fam) (familySpouse.getContext().getEntity()),
                 null,
                 null);
-        btAddChild.setAction(AActions.alwaysEnabled(
-                new ACreateChild((Fam) familySpouse.getContext()),
-                "",
-                "Ajouter un enfant",
-                "ancestris/modules/editors/standard/images/add-child.png",
-                true));
+        btAddChild.setAction(getCreateChildAction());
 
         Fam famChild = ((Indi) husband.getContext()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
-        siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild)));
+        siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild, this)));
 
         oFamsPanel.update(husband.getContext(), familySpouse == null ? null : familySpouse.getContext(), null);
-        btAddSpouse.setAction(AActions.alwaysEnabled(
-                new ACreateSpouse((Indi) husband.getContext()),
-                "",
-                "Ajouter un conjoint",
-                "ancestris/modules/editors/standard/images/add-spouse.png",
-                true));
-        btUnlinkSpouse.setAction(AActions.alwaysEnabled(
-                NoOpAction,
-                "",
-                "Supprimer le liens vers un conjoint",
-                "ancestris/modules/editors/standard/images/unlink-spouse.png",
-                true));
-
-        btUnlinkFamc.setAction(AActions.alwaysEnabled(
-                NoOpAction,
-                "",
-                "Supprimer le liens vers un conjoint",
-                "ancestris/modules/editors/standard/images/unlink-famc.png",
-                true));
+        btAddSpouse.setAction(getCreateSpouseActions());
+        btUnlinkSpouse.setAction(getUnlinkSpouseAction());
+        btUnlinkFamc.setAction(getUnlinkFamcAction());
+        btAddSibling.setAction(getAddSiblingAction());
     }
 
     @Override
     public String getName() {
         return "Completer le noyau familial";
+    }
+
+    private Action getCreateChildAction(){
+        return AActions.alwaysEnabled(
+                new ACreateChild((Fam) familySpouse.getContext(), this),
+                "",
+                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getContext()),
+                "ancestris/modules/editors/standard/images/add-child.png",
+                true);
+    }
+    private Action getCreateSpouseActions(){
+        return AActions.alwaysEnabled(
+                new ACreateSpouse((Indi) husband.getContext(), this),
+                "",
+                "Ajouter un conjoint",
+                "ancestris/modules/editors/standard/images/add-spouse.png",
+                true);
+    }
+    private Action getUnlinkSpouseAction(){
+        return AActions.alwaysEnabled(
+                NoOpAction,
+                "",
+                "Supprimer le liens vers un conjoint",
+                "ancestris/modules/editors/standard/images/unlink-spouse.png",
+                true);
+    }
+    private Action getUnlinkFamcAction(){
+        return AActions.alwaysEnabled(
+                NoOpAction,
+                "",
+                "Supprimer le liens avec les parents",
+                "ancestris/modules/editors/standard/images/unlink-famc.png",
+                true);
+    }
+
+    private Action getAddSiblingAction(){
+        return AActions.alwaysEnabled(
+                NoOpAction,
+                "",
+                "Ajouter un frère ou un soeur",
+                "ancestris/modules/editors/standard/images/add-sibling.png",
+                true);
     }
 
     /** This method is called from within the constructor to
@@ -606,7 +611,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    boolean editEntity(Entity entity, boolean isNew) {
+    public boolean editEntity(Entity entity, boolean isNew) {
         // FIXME: Horror!
         if (entity instanceof Indi) {
             return editEntity((Indi) entity, isNew);
@@ -617,7 +622,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return false;
     }
 
-    boolean editEntity(Fam fam, boolean isNew) {
+    public boolean editEntity(Fam fam, boolean isNew) {
         String title;
         if (isNew) {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
@@ -644,7 +649,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return true;
     }
 
-    static boolean editEntity(Indi indi, boolean isNew) {
+    public static boolean editEntity(Indi indi, boolean isNew) {
         String title;
         if (isNew) {
             title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", indi);
@@ -716,7 +721,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 bean = (ABluePrintBeans) src;
             }
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getContext() == null) {
-                muteContext(true);
+                SelectionSink.Dispatcher.muteSelection(true);
                 try {
                     if (bean != null && bean.getContext() != null) {
                         editEntity(bean.getContext(), false);
@@ -725,7 +730,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                     }
                     refresh();
                 } finally {
-                    muteContext(false);
+                    SelectionSink.Dispatcher.muteSelection(false);
                 }
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
@@ -752,123 +757,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         @Override
         public ActionListener getCreateAction() {
             if (otherBean == null || otherBean.getContext() == null) {
-                return new ACreateSpouse(null);
+                return new ACreateSpouse(null, ancestris.modules.editors.standard.FamilyPanel.this);
             }
-            return new ACreateSpouse((Indi) otherBean.getContext());
-        }
-    }
-
-    /*
-     * Special create actions for ancestris editor
-     */
-    private class ACreateSpouse extends AbstractAction {
-
-        private Indi other;
-
-        ACreateSpouse(Indi indi) {
-            super();
-            other = indi;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            try {
-                muteContext(true);
-                if (other == null) {
-                    return;
-                }
-                CreateSpouse csAction = new CreateSpouse(other);
-                csAction.actionPerformed(e);
-                Indi indi = (Indi) csAction.getCreated();
-                if (csAction.isNew()) {
-                    if (!editEntity(indi, true)) {
-                        other.getGedcom().undoUnitOfWork(false);
-                    }
-                }
-            } finally {
-                muteContext(false);
-            }
-        }
-    }
-
-    private static class ACreateParent extends AbstractAction {
-
-        private Indi child;
-        private int sex;
-
-        ACreateParent(Indi child, int sex) {
-            super();
-            this.child = child;
-            this.sex = sex;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            if (child == null) {
-                return;
-            }
-            CreateParent cpAction = new CreateParent(child, sex);
-            cpAction.actionPerformed(e);
-            Indi parent = (Indi) cpAction.getCreated();
-
-            if (cpAction.isNew()) {
-                if (!editEntity(parent, true)) {
-                    child.getGedcom().undoUnitOfWork(false);
-                }
-            }
-        }
-    }
-
-    private class ACreateChild extends AbstractAction {
-
-        private Indi parent;
-        private Fam famc;
-        private int sex;
-
-        ACreateChild(Indi parent) {
-            super();
-            this.parent = parent;
-            this.famc = null;
-            setToolTipText("Ajouter un enfant");
-        }
-
-        ACreateChild(Fam famc) {
-            super();
-            this.parent = null;
-            this.famc = famc;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            try {
-                muteContext(true);
-                if (parent == null && famc == null) {
-                    return;
-                }
-                Gedcom gedcom;
-                CreateChild ccAction;
-                // tries to guess entity to attach new child to
-                // Familly knows?
-                if (famc != null) {
-                    gedcom = famc.getGedcom();
-                    ccAction = new CreateChild(famc, true);
-                    ccAction.actionPerformed(e);
-                } else if (parent != null) {
-                    gedcom = parent.getGedcom();
-                    ccAction = new CreateChild(parent, true);
-                    ccAction.actionPerformed(e);
-                } else {
-                    return;
-                }
-                Indi indi = (Indi) ccAction.getCreated();
-                if (ccAction.isNew()) {
-                    if (!editEntity(indi, true)) {
-                        if (gedcom != null) {
-                            gedcom.undoUnitOfWork(false);
-                        }
-                    }
-                }
-            } finally {
-                muteContext(false);
-            }
-
+            return new ACreateSpouse((Indi) otherBean.getContext(), ancestris.modules.editors.standard.FamilyPanel.this);
         }
     }
 
@@ -906,12 +797,12 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         @Override
         public ActionListener getCreateAction() {
             if (parentBean != null && parentBean.getContext() != null) {
-                return new ACreateChild((Indi) parentBean.getContext());
+                return new ACreateChild((Indi) parentBean.getContext(), ancestris.modules.editors.standard.FamilyPanel.this);
             }
             if (famcBean != null && famcBean.getContext() != null) {
-                return new ACreateChild((Fam) famcBean.getContext());
+                return new ACreateChild((Fam) famcBean.getContext(), ancestris.modules.editors.standard.FamilyPanel.this);
             }
-            return new ACreateSpouse(null);
+            return new ACreateSpouse(null, ancestris.modules.editors.standard.FamilyPanel.this);
         }
     }
 

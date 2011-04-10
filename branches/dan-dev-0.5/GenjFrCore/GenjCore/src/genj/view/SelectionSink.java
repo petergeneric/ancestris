@@ -30,6 +30,28 @@ public interface SelectionSink {
 
 // TODO: faire autrement
 
+      private static Integer muteSelection = 0;
+
+    public static void muteSelection(boolean b) {
+        synchronized(muteSelection) {
+            if (b) {
+                muteSelection++;
+            } else {
+                muteSelection--;
+            }
+            if (muteSelection < 0) {
+                muteSelection = 0;
+            }
+        }
+    }
+
+    private static boolean isMuted() {
+        synchronized(muteSelection) {
+            return muteSelection != 0;
+        }
+    }
+
+
       static SelectionSink theSink;
         public static void setSink(SelectionSink sink) {
            theSink = sink;
@@ -58,8 +80,8 @@ public interface SelectionSink {
           return parent instanceof MySelectionListener ? parent : null;
         }
       });
-      
-      theSink.fireSelection(listener,context, isActionPerformed);
+      if (!isMuted())
+        theSink.fireSelection(listener,context, isActionPerformed);
     }
 
     public static void fireSelection(Workbench w, Context context, boolean isActionPerformed) {
