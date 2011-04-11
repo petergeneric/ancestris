@@ -34,8 +34,8 @@ final class OpenGenjViewAction extends Action2  {
   public void actionPerformed(ActionEvent e) {
         Context contextToOpen = App.center.getSelectedContext(true);
         if (contextToOpen != null){
-            AncestrisTopComponent win = component.create();
-            win.init(contextToOpen);
+            AncestrisTopComponent win = component.create(contextToOpen);
+//            win.init(contextToOpen);
             win.open();
             win.requestActive();
         }

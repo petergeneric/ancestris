@@ -256,16 +256,27 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         return PREFERRED_ID;
     }
 
-    public AncestrisTopComponent create() {
+    public AncestrisTopComponent create(Context context) {
+        Gedcom gedcom = context == null?null:context.getGedcom();
+        AncestrisTopComponent topComponent = null;
+        if (gedcom != null)
+            for (AncestrisTopComponent tc:GenjFrPlugin.lookupAll(this.getClass()))
+                if (gedcom.equals(tc.getGedcom())){
+                    topComponent = tc;
+                    break;
+                }
+        if (topComponent != null)
+            return topComponent;
         try {
-            return this.getClass().newInstance();
+            topComponent = this.getClass().newInstance();
             //return Constructor.newInstance(this);
         } catch (InstantiationException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return null;
+            topComponent.init(context);
+            return topComponent;
     }
 
     /**
