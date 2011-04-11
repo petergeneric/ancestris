@@ -270,7 +270,13 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
 //    textPassword.setEditable(pwd!=Gedcom.PASSWORD_UNKNOWN);
 //    options.add(textPassword);
 
-    SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(),GenjFrPlugin.lookupAll(Filter.class));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
+    Collection<? extends Filter> filters = GenjFrPlugin.lookupAll(Filter.class);
+    ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
+    for (Filter f:filters) {
+        if (f.canApplyTo(context.getGedcom()))
+            theFilters.add(f);
+    }
+    SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(),theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
     File file = helper.chooseFile(RES.getString("cc.save.title"), RES.getString("cc.save.action"), options);
     if (file == null)
       return false;
@@ -299,7 +305,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     }
   
     // save
-    if (!saveGedcomImpl(gedcom))
+    if (!saveGedcomImpl(gedcom,options.getFilters()))
     	return false;
     
     // close and reset
@@ -324,14 +330,14 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     fireCommit(context);
     
     // do it
-    return saveGedcomImpl(context.getGedcom());
+    return saveGedcomImpl(context.getGedcom(),null);
     
   }
   
   /**
    * save gedcom file
    */
-  public boolean saveGedcomImpl(Gedcom gedcom) {
+  public boolean saveGedcomImpl(Gedcom gedcom,Collection<Filter> filters) {
   
 //  // .. open progress dialog
 //  progress = WindowManager.openNonModalDialog(null, RES.getString("cc.save.saving", file.getName()), WindowManager.INFORMATION_MESSAGE, new ProgressWidget(gedWriter, getThread()), Action2.cancelOnly(), getTarget());
@@ -360,6 +366,9 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
         DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.open_error", gedcom.getOrigin().getFile().getAbsolutePath()), Action2.okOnly(), null);
         return false;
       }
+
+      if (filters!=null)
+          writer.setFilters(filters);
 
       // .. write it
     try {

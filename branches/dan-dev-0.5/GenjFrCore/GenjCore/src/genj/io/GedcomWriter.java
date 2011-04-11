@@ -350,9 +350,9 @@ public class GedcomWriter implements IGedcomWriter {
 
     /** intercept prop decoding to check filters */
     protected void writeProperty(int level, Property prop) throws IOException {
-      
+
       // check against filters
-      if (!prop.isTransient() ) {
+      if (!prop.getTag().equalsIgnoreCase("HEAD") && !prop.isTransient() ) {
         if (filter.veto(prop))
           return;
       }

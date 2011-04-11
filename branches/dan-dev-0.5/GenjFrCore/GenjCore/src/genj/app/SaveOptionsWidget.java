@@ -152,7 +152,7 @@ import javax.swing.JTextField;
   /**
    * The choosen filters
    */
-  public Filter[] getFilters() {
+  public Collection<Filter> getFilters() {
     
     // Result
     List result = new ArrayList(10);
@@ -191,7 +191,7 @@ import javax.swing.JTextField;
     }
     
     // done
-    return (Filter[])result.toArray(new Filter[result.size()]);
+    return result;
   }
   
   /**
@@ -217,7 +217,11 @@ import javax.swing.JTextField;
         public boolean veto(Entity entity) {
             return false;
         }
-    
+
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
+        }
   }
 
   /**
@@ -254,6 +258,10 @@ import javax.swing.JTextField;
         public boolean veto(Property property) {
             return false;
         }
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
+        }
   }
   
   /**
@@ -283,6 +291,10 @@ import javax.swing.JTextField;
         public boolean veto(Property property) {
             return false;
         }
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
+        }
  }
 
   /**
@@ -311,6 +323,10 @@ import javax.swing.JTextField;
         @Override
         public boolean veto(Entity entity) {
             return false;
+        }
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
         }
   }
   
@@ -402,6 +418,10 @@ import javax.swing.JTextField;
       return toString();
     }
 
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
+        }
   } //FilterProperty
   
   /**
@@ -445,6 +465,10 @@ import javax.swing.JTextField;
             return false;
         }
 
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            return true;
+        }
   } //FilterByType
 
 } //SaveOptionsWidget

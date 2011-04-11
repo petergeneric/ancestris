@@ -1244,18 +1244,14 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
     @Override
   public boolean veto(Entity ent) {
-        // FIXEME: must be checked before calling veto
-        if (ent.getGedcom().equals(getContext().getGedcom())){
-            return false;
-        }
     Set ents = model.getEntities();
     // indi?
     if (ent instanceof Indi)
-      return ents.contains(ent);
+      return !ents.contains(ent);
     // fam?
     if (ent instanceof Fam) {
       boolean b = ents.contains(ent);
-      if (model.isFamilies()||b) return b;
+      if (model.isFamilies()||b) return !b;
       Fam fam = (Fam)ent;
       boolean
         father = ents.contains(fam.getHusband()),
@@ -1266,18 +1262,18 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
         if (ents.contains(children[i])) child = true;
       }
       // father and mother or parent and child
-      return (father&&mother) || (father&&child) || (mother&&child);
+      return !((father&&mother) || (father&&child) || (mother&&child));
     }
     // let submitter through if it's THE one
     if (model.getRoot().getGedcom().getSubmitter()==ent)
-      return true;
+      return false;
     // maybe a referenced other type?
     Entity[] refs = PropertyXRef.getReferences(ent);
     for (int r=0; r<refs.length; r++) {
-      if (ents.contains(refs[r])) return true;
+      if (ents.contains(refs[r])) return false;
     }
     // not
-    return false;
+    return true;
   }
 
   /**
@@ -1287,6 +1283,11 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   public String getFilterName() {
     return model.getEntities().size()+" nodes in "+TITLE;
   }
+
+    @Override
+    public boolean canApplyTo(Gedcom gedcom) {
+        return (gedcom != null && gedcom.equals(getContext().getGedcom()));
+    }
 
 
 } //TreeView

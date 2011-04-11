@@ -58,6 +58,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -376,8 +377,8 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         return file;
     }
 
-    public void saveGedcomImpl(Gedcom gedcom, Filter[] filter) {
-        workbench.saveGedcomImpl(gedcom);
+    public void saveGedcomImpl(Gedcom gedcom, Collection<Filter> filter) {
+        workbench.saveGedcomImpl(gedcom,filter);
     }
 
     // IWorkbenchHelper Implementation

@@ -40,6 +40,8 @@ public interface Filter {
   public boolean veto(Property property);
 
   public boolean veto(Entity entity);
+
+  public boolean canApplyTo(Gedcom gedcom);
   
   public static class Union implements Filter {
 
@@ -104,6 +106,11 @@ public interface Filter {
 
     public boolean veto(Entity entity) {
       return vetoed.contains(entity);
+    }
+
+        @Override
+    public boolean canApplyTo(Gedcom gedcom) {
+        return true;
     }
 
   }

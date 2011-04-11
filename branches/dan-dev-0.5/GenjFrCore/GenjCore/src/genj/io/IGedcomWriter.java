@@ -6,6 +6,7 @@
 package genj.io;
 
 import genj.util.Trackable;
+import java.util.Collection;
 
 /**
  *
@@ -13,4 +14,5 @@ import genj.util.Trackable;
  */
 public interface IGedcomWriter extends Trackable {
   public void write() throws GedcomIOException;
+  public void setFilters(Collection<Filter> filters);
 }
