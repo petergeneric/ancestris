@@ -20,6 +20,7 @@ public interface GenjViewInterface {
     public void setDefaultMode(String mode);
     public void setDefaultMode(Mode mode);
     public void init(Context context);
+    public AncestrisTopComponent create(Context context);
 
     public boolean close();
 }

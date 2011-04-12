@@ -253,6 +253,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     REGISTRY.put("hide.ancestors"  , model.getHideAncestorsIDs());
     REGISTRY.put("hide.descendants", model.getHideDescendantsIDs());
     
+    GenjFrPlugin.unregister(this);
     // done
     super.removeNotify();
   }
@@ -376,7 +377,11 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
    */
   @Override
   public void setContext(Context newContext, boolean isActionPerformed) {
-    
+
+      if (newContext == null)
+          return;
+      if (context.getGedcom() != null && ! newContext.getGedcom().equals(context.getGedcom()))
+          return;
     // ignored?
     if (ignoreContextChange)
       return;

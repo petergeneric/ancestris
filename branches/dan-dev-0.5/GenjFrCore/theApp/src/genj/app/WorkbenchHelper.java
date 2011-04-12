@@ -172,8 +172,9 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         for (Class clazz : openedViews) {
             try {
                 tc = (TopComponent) clazz.newInstance();
+
                 if (tc instanceof GenjViewInterface) {
-                    ((GenjViewInterface) tc).init(context);
+                    tc = ((GenjViewInterface) tc).create(context);
                 }
                 tc.open();
                 name2tc.put(clazz.getCanonicalName(), tc);
