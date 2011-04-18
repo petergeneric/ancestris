@@ -316,8 +316,9 @@ public class PropertyPlace extends PropertyChoiceValue {
    */
   public String format(String format) {
       
-      if (format == null)
-          format = getGedcom().getPlaceDisplayFormat();
+      if (format == null){
+          format = getGedcom() == null?null:getGedcom().getPlaceDisplayFormat();
+      }
       if (format == null)
        return getFirstAvailableJurisdiction();
       
