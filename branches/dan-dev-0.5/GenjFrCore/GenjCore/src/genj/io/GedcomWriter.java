@@ -67,6 +67,7 @@ public class GedcomWriter implements IGedcomWriter {
   private int entity;
   private boolean cancel = false;
   private Filter filter;
+  private boolean hasVetoed = false;
   private Enigma enigma = null;
 
   /**
@@ -309,8 +310,10 @@ public class GedcomWriter implements IGedcomWriter {
       if (cancel) 
         throw new GedcomIOException("Operation cancelled", line);
       // .. filtered?
-      if (filter.veto(e))
+      if (filter.veto(e)){
+          hasVetoed=true;
         continue es;
+      }
       // .. writing it and its subs
       try {
         line += new EntityWriter().write(0, e);
@@ -338,6 +341,11 @@ public class GedcomWriter implements IGedcomWriter {
             return RESOURCES.getString("writer.title",gedcom.getName());
     }
 
+    @Override
+    public boolean hasFiltersVetoed() {
+        return hasVetoed;
+    }
+
   /**
    * our entity writer
    */
@@ -353,8 +361,10 @@ public class GedcomWriter implements IGedcomWriter {
 
       // check against filters
       if (!prop.getTag().equalsIgnoreCase("HEAD") && !prop.isTransient() ) {
-        if (filter.veto(prop))
+        if (filter.veto(prop)){
+            hasVetoed=true;
           return;
+        }
       }
       // cont
       super.writeProperty(level, prop);

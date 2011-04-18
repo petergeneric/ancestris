@@ -83,7 +83,8 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
       private static Workbench instance = null;
 
       /** members */
-  
+        private IGedcomWriter writer = null;
+
   private Workbench(IWorkbenchHelper callback) {
       this.helper = callback;
     // plugins
@@ -219,7 +220,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     return context;
   }
   
-  private Context setGedcom(Gedcom gedcom) {
+  public Context setGedcom(Gedcom gedcom) {
       Context context = new Context();
     
     // restore context
@@ -245,12 +246,13 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
   }
   
   /**
-   * save gedcom file
+   * save gedcom to a new file
+   * @return new origin if filters applied (ie exported to a new file), null otherwise
    */
-  public boolean saveAsGedcom(Context context) {
+  public Origin saveAsGedcom(Context context) {
     
     if (context == null || context.getGedcom() == null)
-      return false;
+      return null;
     
     // ask everyone to commit their data
     fireCommit(context);
@@ -279,7 +281,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(),theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
     File file = helper.chooseFile(RES.getString("cc.save.title"), RES.getString("cc.save.action"), options);
     if (file == null)
-      return false;
+      return null;
   
     // .. take chosen one & filters
     if (!file.getName().endsWith(".ged"))
@@ -289,33 +291,58 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     if (file.exists()) {
       int rc = DialogHelper.openDialog(RES.getString("cc.save.title"), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
       if (rc != 0) 
-        return false;
+        return null;
     }
-    
+
     Gedcom gedcom = context.getGedcom();
+
+    // Remember some previous values before setting them
+    String prevPassword = gedcom.getPassword();
+    String prevEncoding = gedcom.getEncoding();
+    Origin prevOrigin = gedcom.getOrigin();
+
     gedcom.setPassword(options.getPassword());
     gedcom.setEncoding(options.getEncoding());
-    
+
+    Origin newOrigin = null;
     // .. create new origin
     try {
-      gedcom.setOrigin(Origin.create(new URL("file", "", file.getAbsolutePath())));
+        newOrigin = Origin.create(new URL("file", "", file.getAbsolutePath()));
+        gedcom.setOrigin(newOrigin);
     } catch (Throwable t) {
       LOG.log(Level.FINER, "Failed to create origin for file "+file, t);
-      return false;
+      // restore
+        gedcom.setEncoding(prevEncoding);
+        gedcom.setPassword(prevPassword);
+        gedcom.setOrigin(prevOrigin);
+      return null;
     }
   
     // save
-    if (!saveGedcomImpl(gedcom,options.getFilters()))
-    	return false;
+    if (!saveGedcomImpl(gedcom,options.getFilters())){
+        gedcom.setEncoding(prevEncoding);
+        gedcom.setPassword(prevPassword);
+        gedcom.setOrigin(prevOrigin);
+    	return null;
+    }
+    if (writer.hasFiltersVetoed()){
+        gedcom.setEncoding(prevEncoding);
+        gedcom.setPassword(prevPassword);
+        gedcom.setOrigin(prevOrigin);
+    	return newOrigin;
+    }
     
-    // close and reset
-    if (!closeGedcom(context))
-    	return false;
+    // .. note changes are saved now
+    if (gedcom.hasChanged())
+      gedcom.doMuteUnitOfWork(new UnitOfWork() {
+            @Override
+        public void perform(Gedcom gedcom) throws GedcomException {
+          gedcom.setUnchanged();
+        }
+      });
 
-    // new set
-    setGedcom(gedcom);
-    
-    return true;
+    // .. done
+    return null;
   }
   
   /**
@@ -330,22 +357,35 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
     fireCommit(context);
     
     // do it
-    return saveGedcomImpl(context.getGedcom(),null);
+    Gedcom gedcom = context.getGedcom();
+    if (!saveGedcomImpl(gedcom, null)){
+        return false;
+    }
+    // .. note changes are saved now
+    if (gedcom.hasChanged())
+      gedcom.doMuteUnitOfWork(new UnitOfWork() {
+        public void perform(Gedcom gedcom) throws GedcomException {
+          gedcom.setUnchanged();
+        }
+      });
+
+    // .. done
+    return true;
     
   }
-  
+
   /**
    * save gedcom file
    */
   public boolean saveGedcomImpl(Gedcom gedcom,Collection<Filter> filters) {
-  
+
 //  // .. open progress dialog
 //  progress = WindowManager.openNonModalDialog(null, RES.getString("cc.save.saving", file.getName()), WindowManager.INFORMATION_MESSAGE, new ProgressWidget(gedWriter, getThread()), Action2.cancelOnly(), getTarget());
 
     try {
-      
+
       // prep files and writer
-      IGedcomWriter writer = null;
+      writer = null;
       File file = null, temp = null;
       try {
         // .. resolve to canonical file now to make sure we're writing to the
@@ -399,20 +439,12 @@ public class Workbench /*extends JPanel*/ implements SelectionSink {
 
 //  // close progress
 //  WindowManager.close(progress);
-    
-    // .. note changes are saved now
-    if (gedcom.hasChanged())
-      gedcom.doMuteUnitOfWork(new UnitOfWork() {
-        public void perform(Gedcom gedcom) throws GedcomException {
-          gedcom.setUnchanged();
-        }
-      });
 
     // .. done
     return true;
   }
-  
-  
+
+
   /**
    * closes gedcom file
    */

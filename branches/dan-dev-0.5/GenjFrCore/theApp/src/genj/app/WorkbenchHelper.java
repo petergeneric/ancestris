@@ -36,6 +36,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import genj.util.EnvironmentChecker;
+import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.FileChooser;
@@ -66,6 +67,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import org.netbeans.api.javahelp.Help;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -106,21 +108,27 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         commitRequested(workbench, context);
     }
 
-    public boolean saveGedcom(Context context) {
+    public void saveGedcom(Context context) {
         if (context != null && context.getGedcom().getOrigin() == null)
-            return saveAsGedcom(context);
-        return workbench.saveGedcom(context);
+            saveAsGedcom(context);
+        workbench.saveGedcom(context);
     }
 
-    public boolean saveAsGedcom(Context context) {
-        if (workbench.saveAsGedcom(context)) {
+    public void saveAsGedcom(Context context) {
+        Origin o = workbench.saveAsGedcom(context);
+        if (o != null) {
+            try {
+                openGedcom(o.getFile().toURL());
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+
             if (context != null) {
                 GedcomDirectory.getInstance().unregisterGedcom(context);
                 GedcomDirectory.getInstance().registerGedcom(context);
             }
-            return true;
         }
-        return false;
     }
 
     public Context openGedcom() {
@@ -129,15 +137,18 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
 
     public Context openGedcom(URL url) {
         Context context = workbench.openGedcom(url);
-        if (context != null) {
+        setContext(context);
+        return context;
+    }
+    private void setContext(Context context){
+        if (context == null)
+            return;
             GedcomDirectory.getInstance().registerGedcom(context);
             openDefaultViews(context);
             //FIXME: etait true. Cela faisait changer le root dans l'arbre
             // bizarre car cela ne devrait pas etre le cas meme avec true...
             // Voir si avec false il n'y a pas d'effet de bord et si cela corrige le pb de prise en compte du root
             SelectionSink.Dispatcher.fireSelection((Component) null, context, false);
-        }
-        return context;
     }
 
     public static void openDefaultViews(Context context) {
