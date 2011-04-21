@@ -62,7 +62,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * An editor component for changing a rendering scheme */
+ * An editor component for changing a rendering scheme
+ */
 public class BlueprintEditor extends JSplitPane {
   
   /** faked values */
@@ -106,7 +107,8 @@ public class BlueprintEditor extends JSplitPane {
   private BlueprintManager blueprintManager = BlueprintManager.getInstance();
     
   /**
-   * Constructor   */
+   * Constructor
+   */
   public BlueprintEditor(Entity recipient) { 
     example = recipient;
     grammar = recipient.getGedcom().getGrammar();
@@ -172,7 +174,8 @@ public class BlueprintEditor extends JSplitPane {
   }
   
   /**
-   * Commits changes   */
+   * Commits changes
+   */
   public void commit() {
     if (blueprint!=null&&isChanged) {
       blueprint.setSource(source.getText());
@@ -205,7 +208,8 @@ public class BlueprintEditor extends JSplitPane {
   }
   
   /**
-   * The preview   */
+   * The preview
+   */
   private class Preview extends JComponent implements DocumentListener {
     /**
      * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
@@ -251,7 +255,7 @@ public class BlueprintEditor extends JSplitPane {
       g.setFont(getFont());
       BlueprintRenderer renderer = new BlueprintRenderer(new Blueprint(source.getText())) {
         @Override
-        protected Property getProperty(Entity entity, TagPath path) {
+        protected Property getProperty(Property entity, TagPath path) {
           
           // try to lookup from entity
           Property result = super.getProperty(entity, path);
@@ -280,7 +284,8 @@ public class BlueprintEditor extends JSplitPane {
   } //Preview
 
   /**
-   * Insert a property   */
+   * Insert a property
+   */
   private class Insert extends Action2 {
     /** constructor */
     private Insert() {

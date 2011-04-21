@@ -59,7 +59,7 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
     private final static Registry REGISTRY = Registry.get(ABluePrintBeans.class);
     /** the renderer we're using */
     private BlueprintRenderer renderer = null;
-    private Entity entity;
+    private Property property;
     /** the blueprints we're using */
     private Map<String, Blueprint> type2blueprint = new HashMap<String, Blueprint>();
     /** whether we do antialiasing */
@@ -88,26 +88,26 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
     /**
      * Context getter (Entity)
      */
-    public Entity getContext() {
-        return entity;
+    public Property getContext() {
+        return property;
     }
 
     /**
      * our context setter
      */
-    public void setContext(Entity newEntity) {
+    public void setContext(Property newProperty) {
 
         renderer = null;
 
         // keep new
-        entity = newEntity;
+        property = newProperty;
 
         // resolve blueprint & renderer
         Blueprint blueprint;
-        if (entity == null) {
+        if (property == null) {
             blueprint = emptyBluePrint;
         } else {
-            blueprint = getBlueprint(entity.getTag());
+            blueprint = getBlueprint(property.getTag());
         }
         renderer = new BlueprintRenderer(blueprint);
 
@@ -149,7 +149,7 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
                 RenderingHints.KEY_ANTIALIASING,
                 isAntialiasing ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
 
-        renderer.render(g, entity, new Rectangle(0, 0, bounds.width, bounds.height));
+        renderer.render(g, property, new Rectangle(0, 0, bounds.width, bounds.height));
     }
 
     /**
@@ -210,14 +210,14 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        if (this.entity == entity) {
+        if (this.property == entity) {
             setContext(null);
         }
     }
 
     @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        if (this.entity == property.getEntity()) {
+        if (this.property == property.getEntity()) {
             repaint();
         }
     }

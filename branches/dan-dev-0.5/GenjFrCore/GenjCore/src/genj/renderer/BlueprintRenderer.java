@@ -123,7 +123,7 @@ public class BlueprintRenderer {
   private static DTD dtd = null;
   
   /** the entity we're looking at */
-  private Entity entity;
+  private Property entity;
   
   /** all views that need to be invalidated per repaint */
   private List<MyView> volatileViews = new ArrayList<MyView>(64);
@@ -185,7 +185,7 @@ public class BlueprintRenderer {
   /**
    * Render the entity on given context
    */
-  public void render(Graphics g, Entity e, Rectangle r) {
+  public void render(Graphics g, Property e, Rectangle r) {
 
     // keep the entity and graphics
     entity = e;
@@ -244,7 +244,7 @@ public class BlueprintRenderer {
   /**
    * Default implementation to lookup property from entity
    */
-  protected Property getProperty(Entity entity, TagPath path) {
+  protected Property getProperty(Property entity, TagPath path) {
     return entity.getProperty(path);
   }
   
@@ -665,6 +665,7 @@ public class BlueprintRenderer {
     
     /** the text to paint */
     private String txt = "?";
+    private TagPath path = null;
     
     /**
      * Constructor
@@ -674,6 +675,9 @@ public class BlueprintRenderer {
       // resolve and localize text .. tag|entity
       Object o = elem.getAttributes().getAttribute("tag");
       if (o!=null) txt = Gedcom.getName(o.toString());
+      else if ((o = elem.getAttributes().getAttribute("path")) != null){
+          path = new TagPath(o.toString());
+      }
       else {
         o = elem.getAttributes().getAttribute("entity");
         if (o!=null) txt = Gedcom.getName(o.toString());
@@ -687,7 +691,7 @@ public class BlueprintRenderer {
       Rectangle r = (allocation instanceof Rectangle) ? (Rectangle)allocation : allocation.getBounds();
       g.setFont(getFont());
       g.setColor(getForeground());
-      render(txt,(Graphics2D)g,r);
+      render(getRenderedText(),(Graphics2D)g,r);
     }
     /**
      * @see genj.renderer.EntityRenderer.MyView#getPreferredSpan()
@@ -695,10 +699,25 @@ public class BlueprintRenderer {
     protected Dimension2D getPreferredSpan() {
       FontMetrics fm = graphics.getFontMetrics(getFont());
       return new Dimension(
-        fm.stringWidth(txt),
+        fm.stringWidth(getRenderedText()),
         fm.getAscent() + fm.getDescent()
       );
     }
+
+    private String getRenderedText(){
+      if (path != null){
+          String txt = entity.getProperty(path).getTag();
+          if ("EVEN".equals(txt)){
+              txt = entity.getProperty(path).getPropertyValue("TYPE");
+              if (txt.isEmpty())
+                  txt = Gedcom.getName("EVEN");
+              return txt;
+          }
+          return Gedcom.getName(entity.getProperty(path).getTag());
+      }
+      return txt;
+    }
+
   } //LocalizeView
 
   /**

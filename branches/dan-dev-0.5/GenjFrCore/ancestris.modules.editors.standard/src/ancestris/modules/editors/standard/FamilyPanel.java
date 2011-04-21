@@ -38,6 +38,9 @@ import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import ancestris.modules.editors.standard.actions.AActions;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyEvent;
+import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
 import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
@@ -60,6 +63,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private final EntitiesPanel childrenPanel;
     private final EntitiesPanel oFamsPanel;
     private final EntitiesPanel siblingsPanel;
+    private final EntitiesPanel eventsPanel;
     private ActionListener NoOpAction = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
@@ -123,9 +127,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         childrenPanel = new EntitiesPanel(jScrollPane1) {
 
             @Override
-            public Entity[] getEntities(Entity entity) {
-                if (entity != null && entity instanceof Fam) {
-                    return ((Fam) entity).getChildren();
+            public Entity[] getEntities(Property rootProperty) {
+                if (rootProperty != null && rootProperty instanceof Fam) {
+                    return ((Fam) rootProperty).getChildren();
                 }
                 return null;
             }
@@ -135,9 +139,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         oFamsPanel = new EntitiesPanel(jScrollPane2) {
 
             @Override
-            public Entity[] getEntities(Entity entity) {
-                if (entity != null && entity instanceof Indi) {
-                    return ((Indi) entity).getFamiliesWhereSpouse();
+            public Entity[] getEntities(Property rootProperty) {
+                if (rootProperty != null && rootProperty instanceof Indi) {
+                    return ((Indi) rootProperty).getFamiliesWhereSpouse();
                 }
                 return null;
             }
@@ -147,14 +151,31 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         siblingsPanel = new EntitiesPanel(jScrollPane3) {
 
             @Override
-            public Entity[] getEntities(Entity entity) {
-                if (entity != null && entity instanceof Indi) {
-                    return ((Indi) entity).getSiblings(false);
+            public Entity[] getEntities(Property rootProperty) {
+                if (rootProperty != null && rootProperty instanceof Indi) {
+                    return ((Indi) rootProperty).getSiblings(false);
                 }
                 return null;
             }
         };
 
+        // Events
+        eventsPanel = new EntitiesPanel(jsEvents) {
+
+            @Override
+            public Property[] getEntities(Property rootProperty) {
+                if (rootProperty != null && rootProperty instanceof Indi) {
+                    ArrayList<Property> result = new ArrayList<Property>(5);
+                    for (Property p:rootProperty.getProperties()){
+                        if (p instanceof PropertyEvent)
+                            result.add(p);
+                    }
+                    return result.toArray(new Property[] {});
+                }
+                return null;
+            }
+        };
+        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");
     }
 
     public void setContext(Context context) {
@@ -210,13 +231,17 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         Fam famChild = ((Indi) husband.getContext()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
-        siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild, this)));
+        //siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild, this)));
+        siblingsPanel.update(husband.getContext(), null, null);
 
         oFamsPanel.update(husband.getContext(), familySpouse == null ? null : familySpouse.getContext(), null);
         btAddSpouse.setAction(getCreateSpouseActions());
         btUnlinkSpouse.setAction(getUnlinkSpouseAction());
         btUnlinkFamc.setAction(getUnlinkFamcAction());
         btAddSibling.setAction(getAddSiblingAction());
+
+        eventsPanel.update(husband.getContext(), null, null);
+
     }
 
     @Override
@@ -282,6 +307,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         familyParent = new ancestris.modules.beans.ABluePrintBeans();
         jPanel2 = new javax.swing.JPanel();
+        eventsTab = new javax.swing.JPanel();
+        jsEvents = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         husbFather = new ancestris.modules.beans.ABluePrintBeans();
         jPanel4 = new javax.swing.JPanel();
@@ -383,6 +410,28 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+
+        eventsTab.setBackground(java.awt.Color.white);
+
+        jsEvents.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jsEvents.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        javax.swing.GroupLayout eventsTabLayout = new javax.swing.GroupLayout(eventsTab);
+        eventsTab.setLayout(eventsTabLayout);
+        eventsTabLayout.setHorizontalGroup(
+            eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 592, Short.MAX_VALUE)
+            .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jsEvents, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE))
+        );
+        eventsTabLayout.setVerticalGroup(
+            eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
+            .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.eventsTab.TabConstraints.tabTitle"), eventsTab); // NOI18N
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel3.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
@@ -580,6 +629,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel eventsTab;
     private ancestris.modules.beans.ABluePrintBeans familyParent;
     private ancestris.modules.beans.ABluePrintBeans familySpouse;
     private ancestris.modules.beans.ABluePrintBeans husbFather;
@@ -600,6 +650,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JScrollPane jsEvents;
     private javax.swing.JToolBar toolIndi;
     private javax.swing.JToolBar toolSpouse;
     private ancestris.modules.beans.ABluePrintBeans wife;
@@ -611,7 +662,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    public boolean editEntity(Entity entity, boolean isNew) {
+    public boolean editProperty(Property entity, boolean isNew) {
         // FIXME: Horror!
         if (entity instanceof Indi) {
             return editEntity((Indi) entity, isNew);
@@ -724,7 +775,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 SelectionSink.Dispatcher.muteSelection(true);
                 try {
                     if (bean != null && bean.getContext() != null) {
-                        editEntity(bean.getContext(), false);
+                        editProperty(bean.getContext(), false);
                     } else {
                         getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
                     }
@@ -734,7 +785,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 }
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
-                fireSelection(bean.getContext());
+                Property prop = bean.getContext();
+                if (prop instanceof Entity)
+                    fireSelection((Entity)prop);
             }
         }
 
@@ -817,13 +870,13 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             pane.setViewportView(this);
         }
 
-        public abstract Entity[] getEntities(Entity entity);
+        public abstract Property[] getEntities(Property rootProperty);
 
-        public void update(Entity entity, Entity exclude, MouseListener listener) {
+        public void update(Property rootProperty, Property exclude, MouseListener listener) {
             removeAll();
             repaint();
-            if (entity != null) {
-                add(getEntities(entity), exclude, new ABeanHandler());
+            if (rootProperty != null) {
+                add(getEntities(rootProperty), exclude, new ABeanHandler());
             }
             if (listener != null) {
                 JButton createBtn = new JButton("Ajouter");

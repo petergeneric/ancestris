@@ -13,6 +13,7 @@ package ancestris.modules.beans;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
 import genj.renderer.Blueprint;
 import genj.renderer.BlueprintManager;
 import java.awt.Dimension;
@@ -43,6 +44,11 @@ public class AListBean extends JPanel {
      */
     private Blueprint getBlueprint(String tag) {
         Blueprint result = (Blueprint) type2blueprint.get(tag);
+        // try fallback
+        if (result == null) {
+            result =  (Blueprint) type2blueprint.get("");
+        }
+        // fallback to global
         if (result == null) {
             result = BlueprintManager.getInstance().getBlueprint(tag, "");
             type2blueprint.put(tag, result);
@@ -69,7 +75,7 @@ public class AListBean extends JPanel {
         }
         setBlueprint(tag, new Blueprint(bp));
     }
-    public void add(Entity entity, MouseListener listener) {
+    public void add(Property property, MouseListener listener) {
         ABluePrintBeans bean = new ABluePrintBeans(){
 
             @Override
@@ -82,23 +88,23 @@ public class AListBean extends JPanel {
                 return defaultPreferedSize;
             }
         };
-        String tag = entity.getTag();
+        String tag = property.getTag();
         bean.setBlueprint(tag, getBlueprint(tag));
-        bean.setContext(entity);
+        bean.setContext(property);
         if (listener != null)
             bean.addMouseListener(listener);
         add(bean);
     }
 
-    public void add(Entity[] entities, Entity exclude,MouseListener listener) {
-        if (entities == null) {
+    public void add(Property[] properties, Property exclude,MouseListener listener) {
+        if (properties == null) {
             return;
         }
-        for (Entity entity : entities) {
-            if (entity.equals(exclude)) {
+        for (Property property : properties) {
+            if (property.equals(exclude)) {
                 continue;
             }
-            add(entity, listener);
+            add(property, listener);
         }
     }
 }

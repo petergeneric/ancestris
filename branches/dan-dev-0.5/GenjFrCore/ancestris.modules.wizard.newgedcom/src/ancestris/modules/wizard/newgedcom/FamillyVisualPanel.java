@@ -309,11 +309,11 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }//GEN-LAST:event_wifeMotherMouseClicked
 
     private void husbandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbandMouseClicked
-        createOrEditSpouse(husbandBeans, wife.getContext());
+        createOrEditSpouse(husbandBeans, (Indi)wife.getContext());
     }//GEN-LAST:event_husbandMouseClicked
 
     private void wifeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMouseClicked
-        createOrEditSpouse(wifeBeans, husband.getContext());
+        createOrEditSpouse(wifeBeans, (Indi)husband.getContext());
     }//GEN-LAST:event_wifeMouseClicked
 
     private void familySpouseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familySpouseMouseClicked
