@@ -35,8 +35,69 @@ import org.openide.util.NbBundle;
 
 public final class GeneanetExportAction implements ActionListener {
 
+    private class GwIndi {
+
+        private boolean alreadyDescribed = false;
+        private String firstName = null;
+        private String lastName = null;
+        private int occurence = 0;
+        private String description = null;
+
+        public GwIndi() {
+        }
+
+        private GwIndi(String lastName, String firstName, int occurence) {
+            this.lastName = lastName;
+            this.firstName = firstName;
+            this.occurence = occurence;
+        }
+
+        public String getFullName() {
+            return lastName + " " + firstName;
+        }
+
+        public String getFullNameOccurenced() {
+            if (occurence > 0) {
+                return lastName + " " + firstName + "." + occurence;
+            } else {
+                return lastName + " " + firstName;
+            }
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getFirstNameOccurenced() {
+            if (occurence > 0) {
+                return firstName + "." + occurence;
+            } else {
+                return firstName;
+            }
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        void setAlreadyDescribed() {
+            alreadyDescribed = true;
+        }
+
+        public boolean isDescribed() {
+            return alreadyDescribed;
+        }
+    }
     Map<String, Integer> indiNameOccurence = new HashMap<String, Integer>();
-    Map<String, String> indiMap = new HashMap<String, String>();
+    Map<String, GwIndi> indiMap = new HashMap<String, GwIndi>();
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -61,229 +122,333 @@ public final class GeneanetExportAction implements ActionListener {
                     String fileName = fc.getSelectedFile() + ".gw";
                     file = new File(fileName);
                 }
-                try {
-                    analyzeIndi(myGedcom.getIndis());
-                    analyzeFam(myGedcom.getFamilies(), file);
-                } catch (FileNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (UnsupportedEncodingException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                analyzeIndis(myGedcom.getIndis());
+                analyzeFam(myGedcom.getFamilies(), file);
             }
         }
     }
 
-    void analyzeFam(Collection<Fam> familys, File file) throws FileNotFoundException, UnsupportedEncodingException, IOException {
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
+    void analyzeFam(Collection<Fam> familys, File file) {
+        BufferedWriter out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
 
-        out.write("encoding: utf-8\n\n");
-        Iterator familysIterator = familys.iterator();
-        while (familysIterator.hasNext()) {
-            Fam family = (Fam) familysIterator.next();
-
-            /*
-             * fam HusbandLastName FirstName[.Number]
-             */
-            out.write("fam ");
-            Indi husband = family.getHusband();
-            if (husband != null) {
-                /*
-                 *  LastName FirstName.Occurence
-                 */
-                out.write(indiMap.get(husband.getId()));
-                if (husband.getFamiliesWhereChild() == null) {
-                    analyzeIndi(family.getHusband(), out);
-                }
-            } else {
-                out.write("? ?");
-            }
-
-            /*
-             * +[WeddingDate] [#mp WeddingPlace] [#ms WeddingSource]
-             *
-             */
-            out.write(" +");
-            Property marriage = family.getProperty("MARR");
-            if (marriage != null) {
-                PropertyDate marriageDate = (PropertyDate) marriage.getProperty("DATE");
-                if (marriageDate != null) {
-                    out.write(analyzeDate(marriageDate) + " ");
-                } else {
-                    out.write("0 ");
-                }
+            out.write("encoding: utf-8\n\n");
+            Iterator familysIterator = familys.iterator();
+            while (familysIterator.hasNext()) {
+                Fam family = (Fam) familysIterator.next();
 
                 /*
-                 * [#sep | - DivorceDate]
-                 *
+                 * fam HusbandLastName FirstName[.Number]
                  */
-                /*                Property divorce = family.getProperty("DIV");
-                if (divorce != null) {
-                PropertyDate divorceDate = (PropertyDate) divorce.getProperty("DATE");
-                if (divorceDate != null) {
-                out.write("- " + analyzeDate(divorceDate) + " ");
-                } else {
-                out.write("- 0 ");
-                }
-                }
-                 */
-                PropertyPlace marriagePlace = (PropertyPlace) marriage.getProperty("PLAC");
-                if (marriagePlace != null && marriagePlace.getValue().isEmpty() != true) {
-                    if (marriagePlace.getValue().length() > 0) {
-                        out.write("#mp " + marriagePlace.getValue().replaceAll(" ", "_") + " ");
-                    }
-                }
-
-                PropertySource marriageSource = (PropertySource) marriage.getProperty("SOUR");
-                if (marriageSource != null) {
-                    Source entitySource = (Source) marriageSource.getTargetEntity();
-                    out.write("#ms " + entitySource.getTitle().replaceAll(" ", "_") + " ");
-                }
-
-            } else {
-                /*
-                 * not married
-                 * [#nm | #eng]
-                 *
-                 */
-                out.write(" #nm ");
-            }
-
-            /*
-             * WifeLastName FirstName[.Number]
-             *
-             */
-            Indi wife = family.getWife();
-            if (wife != null) {
-                /*
-                 *  LastName FirstName.Occurence
-                 */
-                out.write(indiMap.get(wife.getId()));
-                if (family.getWife().getFamiliesWhereChild() == null) {
-                    analyzeIndi(family.getWife(), out);
-                }
-            } else {
-                out.write("? ?");
-            }
-
-            out.write("\n");
-
-            /*
-             * [src Family source]
-             */
-            PropertySource familyPropertySource = (PropertySource) family.getProperty("SOUR");
-            if (familyPropertySource != null) {
-                Source familySource = (Source) familyPropertySource.getTargetEntity();
-                out.write("src " + familySource.getTitle().replaceAll(" ", "_") + "\n");
-            }
-
-            /*
-             * [comm Family comments in free format]
-             */
-
-            /*
-             * [wit: Witness (use Person format, see Person Information section) ]
-             */
-
-            /*
-             * beg
-             * - [h | f | ] Person (see detailed description at the next section)
-             * end
-             */
-            Collection<Indi> childrens = Arrays.asList(family.getChildren());
-            Iterator childrensIterator = childrens.iterator();
-            if (childrensIterator.hasNext()) {
-                out.write("beg\n");
-                while (childrensIterator.hasNext()) {
-                    Indi children = (Indi) childrensIterator.next();
-                    switch (children.getSex()) {
-                        case PropertySex.FEMALE:
-                            out.write("- f ");
-                            break;
-
-                        case PropertySex.MALE:
-                            out.write("- h ");
-                            break;
-
-                        default:
-                            out.write("- ");
-                            break;
-                    }
-                    if (husband != null) {
-                        if (children.getLastName().equals(husband.getLastName())) {
-                            /*
-                             * FirstName.Occurence
-                             */
-                            String childFullName = indiMap.get(children.getId());
-                            out.write(childFullName.substring(childFullName.indexOf(' ') + 1) + " ");
-                        } else {
-                            /*
-                             *  LastName FirstName.Occurence
-                             */
-                            out.write(indiMap.get(children.getId()) + " ");
+                out.write("fam ");
+                Indi husband = family.getHusband();
+                if (husband != null) {
+                    /*
+                     *  LastName FirstName.Occurence
+                     */
+                    out.write(indiMap.get(husband.getId()).getFullNameOccurenced() + " ");
+                    Fam[] husbandFamc = husband.getFamiliesWhereChild();
+                    if (husbandFamc.length == 0) {
+                        GwIndi gwIndi = indiMap.get(husband.getId());
+                        if (gwIndi.isDescribed() == false) {
+                            gwIndi.setAlreadyDescribed();
+                            indiMap.put(husband.getId(), gwIndi);
+                            out.write(gwIndi.getDescription() + " ");
                         }
+                    }
+                } else {
+                    out.write("? ? ");
+                }
+
+                /*
+                 * +[WeddingDate] [#mp WeddingPlace] [#ms WeddingSource]
+                 *
+                 */
+                out.write("+");
+                Property marriage = family.getProperty("MARR");
+                if (marriage != null) {
+                    PropertyDate marriageDate = (PropertyDate) marriage.getProperty("DATE");
+                    if (marriageDate != null) {
+                        out.write(analyzeDate(marriageDate) + " ");
                     } else {
-                        if (children.getLastName().equals(wife.getLastName())) {
+                        out.write("0 ");
+                    }
+
+                    PropertyPlace marriagePlace = (PropertyPlace) marriage.getProperty("PLAC");
+                    if (marriagePlace != null && marriagePlace.getValue().isEmpty() != true) {
+                        if (marriagePlace.getValue().length() > 0) {
+                            out.write("#mp " + marriagePlace.getValue().replaceAll(" ", "_") + " ");
+                        }
+                    }
+
+                    Property marriageSource = marriage.getProperty("SOUR");
+                    if (marriageSource != null) {
+                        out.write("#ms " + source2String(marriageSource) + " ");
+                    }
+
+                    /*
+                     * [#sep | - DivorceDate]
+                     *
+                     */
+                    Property divorce = family.getProperty("DIV");
+                    if (divorce != null) {
+                        PropertyDate divorceDate = (PropertyDate) divorce.getProperty("DATE");
+                        if (divorceDate != null) {
+                            out.write("-" + analyzeDate(divorceDate) + " ");
+                        } else {
+                            out.write("- 0 ");
+                        }
+                    }
+                } else {
+                    /*
+                     * not married
+                     * [#nm | #eng]
+                     *
+                     */
+                    out.write(" #nm ");
+                }
+
+                /*
+                 * WifeLastName FirstName[.Number]
+                 *
+                 */
+                Indi wife = family.getWife();
+                if (wife != null) {
+                    /*
+                     *  LastName FirstName.Occurence
+                     */
+                    out.write(indiMap.get(wife.getId()).getFullNameOccurenced());
+                    Fam[] wifeFamc = wife.getFamiliesWhereChild();
+                    if (wifeFamc.length == 0) {
+                        GwIndi gwIndi = indiMap.get(wife.getId());
+                        if (gwIndi.isDescribed() == false) {
+                            gwIndi.setAlreadyDescribed();
+                            indiMap.put(wife.getId(), gwIndi);
+                            out.write(" " + gwIndi.getDescription());
+                        }
+                    }
+                } else {
+                    out.write("? ?");
+                }
+
+                out.write("\n");
+
+                /*
+                 * [src Family source]
+                 */
+                Property familySource = family.getProperty("SOUR");
+                if (familySource != null) {
+                    out.write("src " + source2String(familySource) + "\n");
+                }
+
+                /*
+                 * [comm Family comments in free format]
+                 */
+
+                /*
+                 * [wit: Witness (use Person format, see Person Information section) ]
+                 */
+                if (marriage != null) {
+                    Property[] witnesses = marriage.getProperties("RELA");
+                    if (witnesses.length > 0) {
+                        for (Property witness : witnesses) {
+                            out.write("wit: " + witness.getDisplayValue() + "\n");
+                        }
+
+                    }
+                }
+
+                /*
+                 * beg
+                 * - [h | f | ] Person (see detailed description at the next section)
+                 * end
+                 */
+                Collection<Indi> childrens = Arrays.asList(family.getChildren());
+                Iterator childrensIterator = childrens.iterator();
+                if (childrensIterator.hasNext()) {
+                    out.write("beg\n");
+                    while (childrensIterator.hasNext()) {
+                        Indi children = (Indi) childrensIterator.next();
+                        switch (children.getSex()) {
+                            case PropertySex.FEMALE:
+                                out.write("- f ");
+                                break;
+
+                            case PropertySex.MALE:
+                                out.write("- h ");
+                                break;
+
+                            default:
+                                out.write("- ");
+                                break;
+                        }
+                        if (husband != null) {
                             /*
                              * FirstName.Occurence
                              */
-                            String childFullName = indiMap.get(children.getId());
-                            out.write(childFullName.substring(childFullName.indexOf(' ')) + " ");
+                            out.write(indiMap.get(children.getId()).getFirstNameOccurenced() + " ");
+                            if (children.getLastName().equals(husband.getLastName()) != true) {
+                                /*
+                                 *  LastName FirstName.Occurence
+                                 */
+                                out.write(indiMap.get(children.getId()).getLastName() + " ");
+                            }
                         } else {
                             /*
-                             *  LastName FirstName.Occurence
+                             * FirstName.Occurence
                              */
-                            out.write(indiMap.get(children.getId()) + " ");
+                            out.write(indiMap.get(children.getId()).getFirstNameOccurenced() + " ");
+                            if (children.getLastName().equals(wife.getLastName())) {
+                                /*
+                                 *  LastName
+                                 */
+                                out.write(indiMap.get(children.getId()).getLastName() + " ");
+                            }
                         }
+                        out.write(indiMap.get(children.getId()).getDescription());
+                        out.write("\n");
                     }
-                    analyzeIndi(children, out);
+                    out.write("end\n");
                 }
-                out.write("end\n");
+                out.write("\n");
             }
-            out.write("\n");
+        } catch (FileNotFoundException ex) {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex1) {
+                    Exceptions.printStackTrace(ex1);
+                }
+            }
+
+            Exceptions.printStackTrace(ex);
+        } catch (UnsupportedEncodingException ex) {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex1) {
+                    Exceptions.printStackTrace(ex1);
+                }
+            }
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex1) {
+                    Exceptions.printStackTrace(ex1);
+                }
+            }
+            Exceptions.printStackTrace(ex);
+        } catch (Exception ex) {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex1) {
+                    Exceptions.printStackTrace(ex1);
+                }
+            }
+            Exceptions.printStackTrace(ex);
         }
-        out.close();
+        if (out != null) {
+            try {
+                out.close();
+            } catch (IOException ex1) {
+                Exceptions.printStackTrace(ex1);
+            }
+        }
     }
 
-    private void analyzeIndi(Collection<Indi> indis) {
+    private void analyzeIndis(Collection<Indi> indis) {
         for (Iterator<Indi> indisIterator = indis.iterator(); indisIterator.hasNext();) {
             String indiKey;
             Indi indi = indisIterator.next();
+            GwIndi gwindi;
+            String firstName = null;
+            String lastName = null;
 
             PropertyName pIndiName = (PropertyName) indi.getProperty("NAME");
             if (pIndiName != null) {
                 if (pIndiName.getLastName().length() > 0) {
-                    indiKey = pIndiName.getLastName().replaceAll(" ", "_");
+                    lastName = pIndiName.getLastName().replaceAll(" ", "_");
                 } else {
-                    indiKey = " ?";
+                    lastName = " ?";
                 }
                 if (pIndiName.getFirstName().length() > 0) {
-                    indiKey += " " + pIndiName.getFirstName().replaceAll(" ", "_");
+                    firstName = pIndiName.getFirstName().replaceAll(" ", "_");
                 } else {
-                    indiKey += " ?";
+                    firstName = " ?";
                 }
             } else {
-                indiKey = "? ?";
+                firstName = "?";
+                lastName = "?";
             }
 
-            Integer NameOccurence = indiNameOccurence.get(indiKey.toLowerCase());
-            indiNameOccurence.put(indiKey.toLowerCase(), (NameOccurence == null) ? 1 : NameOccurence + 1);
-
+            indiKey = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
+            Integer NameOccurence = indiNameOccurence.get(indiKey);
+            indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);
+            GwIndi gwIndi = null;
             if (NameOccurence == null) {
-                indiMap.put(indi.getId(), indiKey);
+                gwIndi = new GwIndi(lastName, firstName, 0);
             } else {
-                indiMap.put(indi.getId(), (indiKey + "." + NameOccurence));
+                gwIndi = new GwIndi(lastName, firstName, NameOccurence);
             }
+
+            gwIndi.setDescription(analyzeIndi(indi));
+            indiMap.put(indi.getId(), gwIndi);
         }
     }
 
-    void analyzeIndi(Indi indi, BufferedWriter out) throws IOException {
+    /*
+     * n @XREF:INDI@ INDI
+    +1 RESN <RESTRICTION_NOTICE>
+    +1 <<PERSONAL_NAME_STRUCTURE>>
+    +1 SEX <SEX_VALUE>
+    +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
+    +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
+    +1 <<LDS_INDIVIDUAL_ORDINANCE>>
+    +1 <<CHILD_TO_FAMILY_LINK>>
+    +1 <<SPOUSE_TO_FAMILY_LINK>>
+    +1 SUBM @<XREF:SUBM>@
+    +1 <<ASSOCIATION_STRUCTURE>>
+    +1 ALIA @<XREF:INDI>@
+    +1 ANCI @<XREF:SUBM>@
+    +1 DESI @<XREF:SUBM>@
+    +1 RFN <PERMANENT_RECORD_FILE_NUMBER>
+    +1 AFN <ANCESTRAL_FILE_NUMBER>
+    +1 REFN <USER_REFERENCE_NUMBER>
+    +2 TYPE <USER_REFERENCE_TYPE>
+    +1 RIN <AUTOMATED_RECORD_ID>
+    +1 <<CHANGE_DATE>>
+    +1 <<NOTE_STRUCTURE>>
+    +1 <<SOURCE_CITATION>>
+    +1 <<MULTIMEDIA_LINK>>
+    PERSONAL_NAME_STRUCTURE: =
+    n  NAME <IDENTITE>  {1:1}
+    +1 NPFX <PREFIXE>  {0:1}
+    +1 GIVN <PRENOMs>  {0:1}
+    +1 NICK <SURNOM>  {0:1}
+    +1 SPFX <PARTICULE>  {0:1}
+    +1 SURN <NOM_DE_FAMILLE>  {0:1}
+    +1 NSFX <SUFFIXE>  {0:1}
+    +1 <<CITATION_D'UNE_SOURCE>>  {0:M}
+    +2 <<STRUCTURE_NOTE>>  {0:M}
+    +2 <<LIEN_MULTIMEDIA>>  {0:M}
+    +1 <<STRUCTURE_NOTE>>  {0:M}
+     */
+    String analyzeIndi(Indi indi) {
+        String indiDescription = "";
         /*
          * [{FirstNameAlias}] [#salias SurnameAlias] [(PublicName)]
          * [#image ImageFilePath] [#nick Qualifier] [#alias Alias]
          */
-
+        Property[] indiPropertyNames = indi.getProperties("NAME");
+        if (indiPropertyNames != null) {
+            for (Property indiPropertyName : indiPropertyNames) {
+                indiPropertyName.getProperty("");
+            }
+        }
         /*
          * [Titles (see Title section)]
          */
@@ -292,9 +457,9 @@ public final class GeneanetExportAction implements ActionListener {
          * [#apubl | #apriv]
          */
         if (indi.isPrivate() == true) {
-            out.write("#apriv ");
+            indiDescription += ("#apriv ");
         } else {
-            out.write("#apubl ");
+            indiDescription += ("#apubl ");
         }
 
         /*
@@ -306,37 +471,48 @@ public final class GeneanetExportAction implements ActionListener {
             String occuString = new String();
 
             for (Property occu : indiOccu) {
+
                 if (occuString.length() > 0) {
                     occuString += "_" + occu.getDisplayValue().replaceAll(" ", "_");
                 } else {
                     occuString = occu.getDisplayValue().replaceAll(" ", "_");
                 }
+
+                Property[] occuProperties = occu.getProperties();
+                for (Property occuProperty : occuProperties) {
+                    occuProperty.getValue();
+                    if (occuString.length() > 0) {
+                        occuString += "_" + occuProperty.getDisplayValue().replaceAll(" ", "_");
+                    } else {
+                        occuString = occuProperty.getDisplayValue().replaceAll(" ", "_");
+                    }
+                }
             }
+
             if (occuString.length() > 0) {
-                out.write("#occu " + occuString + " ");
+                indiDescription += "#occu " + occuString + " ";
             }
         }
 
         /*
          * [#src PersonSource]
          */
-        PropertySource indiPropertySource = (PropertySource) indi.getProperty("SOUR");
-        if (indiPropertySource != null) {
-            Source indiSource = (Source) indiPropertySource.getTargetEntity();
-            out.write("#src " + indiSource.getTitle().replaceAll(" ", "_") + " ");
+        Property indiSource = indi.getProperty("SOUR");
+        if (indiSource != null) {
+            indiDescription += "#src " + source2String(indiSource) + " ";
         }
 
         Property birth = indi.getProperty("BIRT");
         if (birth != null) {
-            out.write(analyzeBirth(birth) + " ");
+            indiDescription += analyzeBirth(birth) + " ";
         }
 
         Property death = indi.getProperty("DEATH");
         if (death != null) {
-            out.write(analyzeDeath(death) + " ");
+            indiDescription += analyzeDeath(death) + " ";
         }
 
-        out.write("\n");
+        return indiDescription;
     }
 
     /*
@@ -355,10 +531,9 @@ public final class GeneanetExportAction implements ActionListener {
         }
 
         // [#bs BirthSource]
-        PropertySource birthSource = (PropertySource) birth.getProperty("SOUR");
+        Property birthSource = birth.getProperty("SOUR");
         if (birthSource != null) {
-            Source entitySource = (Source) birthSource.getTargetEntity();
-            birthString += "#bs " + entitySource.getValue().replaceAll(" ", "_") + " ";
+            birthString += "#bs " + source2String(birthSource) + " ";
         }
 
         // [#bp PlaceOfBirth]
@@ -403,10 +578,9 @@ public final class GeneanetExportAction implements ActionListener {
         }
 
         // [#ds DeathSource]
-        PropertySource deathSource = (PropertySource) death.getProperty("SOUR");
+        Property deathSource = death.getProperty("SOUR");
         if (deathSource != null) {
-            Source entitySource = (Source) deathSource.getTargetEntity();
-            deathString += "#ds " + entitySource.getTitle().replaceAll(" ", "_");
+            deathString += "#ds " + source2String(deathSource) + " ";
         }
 
         // [#buri | #crem [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
@@ -414,7 +588,8 @@ public final class GeneanetExportAction implements ActionListener {
     }
 
     String date2String(PointInTime date) {
-        String stringDate = new String();
+        String stringDate =
+                new String();
         if (date.isValid()) {
             if (!date.getCalendar().equals(PointInTime.GREGORIAN)) {
                 try {
@@ -491,5 +666,20 @@ public final class GeneanetExportAction implements ActionListener {
         }
 
         return filename.substring(0, extensionIndex);
+    }
+
+    private String source2String(Property source) {
+        String srcString = "";
+        if (source instanceof PropertySource) {
+            Source entitySource = (Source) ((PropertySource) source).getTargetEntity();
+            srcString = entitySource.getTitle().replaceAll(" ", "_");
+            srcString += entitySource.getText().replaceAll(" ", "_");
+        } else if (source instanceof Source) {
+            srcString = ((Source) source).getTitle().replaceAll(" ", "_");
+            srcString += ((Source) source).getText().replaceAll(" ", "_");
+        } else {
+            srcString = source.getValue().replaceAll(" ", "_");
+        }
+        return srcString;
     }
 }
