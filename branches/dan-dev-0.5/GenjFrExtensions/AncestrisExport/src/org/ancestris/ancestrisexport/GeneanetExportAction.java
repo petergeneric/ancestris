@@ -400,55 +400,30 @@ public final class GeneanetExportAction implements ActionListener {
         }
     }
 
-    /*
-     * n @XREF:INDI@ INDI
-    +1 RESN <RESTRICTION_NOTICE>
-    +1 <<PERSONAL_NAME_STRUCTURE>>
-    +1 SEX <SEX_VALUE>
-    +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
-    +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
-    +1 <<LDS_INDIVIDUAL_ORDINANCE>>
-    +1 <<CHILD_TO_FAMILY_LINK>>
-    +1 <<SPOUSE_TO_FAMILY_LINK>>
-    +1 SUBM @<XREF:SUBM>@
-    +1 <<ASSOCIATION_STRUCTURE>>
-    +1 ALIA @<XREF:INDI>@
-    +1 ANCI @<XREF:SUBM>@
-    +1 DESI @<XREF:SUBM>@
-    +1 RFN <PERMANENT_RECORD_FILE_NUMBER>
-    +1 AFN <ANCESTRAL_FILE_NUMBER>
-    +1 REFN <USER_REFERENCE_NUMBER>
-    +2 TYPE <USER_REFERENCE_TYPE>
-    +1 RIN <AUTOMATED_RECORD_ID>
-    +1 <<CHANGE_DATE>>
-    +1 <<NOTE_STRUCTURE>>
-    +1 <<SOURCE_CITATION>>
-    +1 <<MULTIMEDIA_LINK>>
-    PERSONAL_NAME_STRUCTURE: =
-    n  NAME <IDENTITE>  {1:1}
-    +1 NPFX <PREFIXE>  {0:1}
-    +1 GIVN <PRENOMs>  {0:1}
-    +1 NICK <SURNOM>  {0:1}
-    +1 SPFX <PARTICULE>  {0:1}
-    +1 SURN <NOM_DE_FAMILLE>  {0:1}
-    +1 NSFX <SUFFIXE>  {0:1}
-    +1 <<CITATION_D'UNE_SOURCE>>  {0:M}
-    +2 <<STRUCTURE_NOTE>>  {0:M}
-    +2 <<LIEN_MULTIMEDIA>>  {0:M}
-    +1 <<STRUCTURE_NOTE>>  {0:M}
-     */
     String analyzeIndi(Indi indi) {
         String indiDescription = "";
         /*
          * [{FirstNameAlias}] [#salias SurnameAlias] [(PublicName)]
          * [#image ImageFilePath] [#nick Qualifier] [#alias Alias]
          */
-        Property[] indiPropertyNames = indi.getProperties("NAME");
-        if (indiPropertyNames != null) {
-            for (Property indiPropertyName : indiPropertyNames) {
-                indiPropertyName.getProperty("");
-            }
+        /*
+         * <NAME default="1" type="PropertyName" img="Name">
+         *   <NPFX type="PropertySimpleValue" img="Name"/>
+         *   <GIVN type="PropertySimpleValue" img="Name"/>
+         *   <NICK type="PropertySimpleValue" img="Name"/>
+         *   <SPFX type="PropertySimpleValue" img="Name"/>
+         *   <SURN type="PropertySimpleValue" img="Name"/>
+         *   <NSFX type="PropertySimpleValue" img="Name"/>
+         *   <SOUR/>
+         *   <NOTE>
+         *      <SOUR/>
+         *   </NOTE>
+         *</NAME>
+         */
+        if (indi.getProperty("NICK") != null) {
+            indiDescription += "{" + indi.getProperty("NICK").getValue().replaceAll(" ", "_") + "}";
         }
+        
         /*
          * [Titles (see Title section)]
          */
@@ -457,9 +432,9 @@ public final class GeneanetExportAction implements ActionListener {
          * [#apubl | #apriv]
          */
         if (indi.isPrivate() == true) {
-            indiDescription += ("#apriv ");
+            indiDescription += "#apriv ";
         } else {
-            indiDescription += ("#apubl ");
+            indiDescription += "#apubl ";
         }
 
         /*
@@ -507,7 +482,7 @@ public final class GeneanetExportAction implements ActionListener {
             indiDescription += analyzeBirth(birth) + " ";
         }
 
-        Property death = indi.getProperty("DEATH");
+        Property death = indi.getProperty("DEAT");
         if (death != null) {
             indiDescription += analyzeDeath(death) + " ";
         }
@@ -530,18 +505,18 @@ public final class GeneanetExportAction implements ActionListener {
             birthString = "0 ";
         }
 
-        // [#bs BirthSource]
-        Property birthSource = birth.getProperty("SOUR");
-        if (birthSource != null) {
-            birthString += "#bs " + source2String(birthSource) + " ";
-        }
-
         // [#bp PlaceOfBirth]
         PropertyPlace birthPlace = (PropertyPlace) birth.getProperty("PLAC");
         if (birthPlace != null) {
             if (birthPlace.getValue().length() > 0) {
-                birthString += "#bp " + birthPlace.getValue().replaceAll(" ", "_");
+                birthString += "#bp " + birthPlace.getValue().replaceAll(" ", "_") + " ";
             }
+        }
+
+        // [#bs BirthSource]
+        Property birthSource = birth.getProperty("SOUR");
+        if (birthSource != null) {
+            birthString += "#bs " + source2String(birthSource);
         }
 
         //  [!BaptizeDate]
@@ -670,16 +645,48 @@ public final class GeneanetExportAction implements ActionListener {
 
     private String source2String(Property source) {
         String srcString = "";
+        Property src = null;
+        /*
+         *   <SOUR>
+         *       <PAGE/>
+         *       <EVEN>
+         *           <ROLE/>
+         *       </EVEN>
+         *       <DATA>
+         *           <DATE/>
+         *       <TEXT/>
+         *       </DATA>
+         *       <QUAY/>
+         *       <OBJE>
+         *           <TITL/>
+         *           <FILE>
+         *           <FORM/>
+         *           </FILE>
+         *           <NOTE/>
+         *       </OBJE>
+         *       <TEXT/>
+         *       <NOTE/>
+         *   </SOUR>
+         */
         if (source instanceof PropertySource) {
-            Source entitySource = (Source) ((PropertySource) source).getTargetEntity();
-            srcString = entitySource.getTitle().replaceAll(" ", "_");
-            srcString += entitySource.getText().replaceAll(" ", "_");
+            src = ((PropertySource) source).getTargetEntity();
+            srcString = ((Source) src).getTitle().replaceAll(" ", "_");
         } else if (source instanceof Source) {
-            srcString = ((Source) source).getTitle().replaceAll(" ", "_");
-            srcString += ((Source) source).getText().replaceAll(" ", "_");
+            src = source;
+            srcString = ((Source) src).getTitle().replaceAll(" ", "_");
         } else {
+            src = source;
             srcString = source.getValue().replaceAll(" ", "_");
         }
+
+        if (src.getProperty("PAGE") != null) {
+            srcString += src.getProperty("PAGE").getValue().replaceAll(" ", "_");
+        }
+
+        if (src.getProperty("NOTE") != null) {
+            srcString += src.getProperty("NOTE").getValue().replaceAll(" ", "_");
+        }
+
         return srcString;
     }
 }
