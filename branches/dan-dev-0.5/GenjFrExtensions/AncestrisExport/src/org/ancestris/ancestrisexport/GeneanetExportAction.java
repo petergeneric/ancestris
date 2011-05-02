@@ -6,11 +6,14 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
+import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
+import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.time.PointInTime;
 import genjfr.app.App;
@@ -24,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,11 +56,11 @@ public final class GeneanetExportAction implements ActionListener {
             this.occurence = occurence;
         }
 
-        public String getFullName() {
+        public String getName() {
             return lastName + " " + firstName;
         }
 
-        public String getFullNameOccurenced() {
+        public String getNameOccurenced() {
             if (occurence > 0) {
                 return lastName + " " + firstName + "." + occurence;
             } else {
@@ -147,7 +151,7 @@ public final class GeneanetExportAction implements ActionListener {
                     /*
                      *  LastName FirstName.Occurence
                      */
-                    out.write(indiMap.get(husband.getId()).getFullNameOccurenced() + " ");
+                    out.write(indiMap.get(husband.getId()).getNameOccurenced() + " ");
                     Fam[] husbandFamc = husband.getFamiliesWhereChild();
                     if (husbandFamc.length == 0) {
                         GwIndi gwIndi = indiMap.get(husband.getId());
@@ -218,7 +222,7 @@ public final class GeneanetExportAction implements ActionListener {
                     /*
                      *  LastName FirstName.Occurence
                      */
-                    out.write(indiMap.get(wife.getId()).getFullNameOccurenced());
+                    out.write(indiMap.get(wife.getId()).getNameOccurenced());
                     Fam[] wifeFamc = wife.getFamiliesWhereChild();
                     if (wifeFamc.length == 0) {
                         GwIndi gwIndi = indiMap.get(wife.getId());
@@ -245,15 +249,42 @@ public final class GeneanetExportAction implements ActionListener {
                 /*
                  * [comm Family comments in free format]
                  */
+                Property[] familyNotes = family.getProperties("NOTE");
+                if (familyNotes.length > 0) {
+                    // PropertyNote|PropertyMultilineValue
+                    out.write("comm ");
+                    for (Property note : familyNotes) {
+                        boolean first = true;
+                        if (note instanceof PropertyNote) {
+                            note = ((PropertyNote) note).getTargetEntity();
+                        }
+                        if (first == true) {
+                            first = false;
+                            out.write(note.getValue().replaceAll("\n", " "));
+                        } else {
+                            out.write("<br>" + note.getValue().replaceAll("\n", " "));
+                        }
+                    }
+                    out.write("\n");
+                }
 
                 /*
                  * [wit: Witness (use Person format, see Person Information section) ]
                  */
                 if (marriage != null) {
-                    Property[] witnesses = marriage.getProperties("RELA");
-                    if (witnesses.length > 0) {
-                        for (Property witness : witnesses) {
-                            out.write("wit: " + witness.getDisplayValue() + "\n");
+                    Property[] propertiesXRef = marriage.getProperties("XREF");
+                    if (propertiesXRef.length > 0) {
+                        for (Property xrefProperty : propertiesXRef) {
+                            if (xrefProperty instanceof PropertyXRef) {
+                                if (((PropertyXRef)xrefProperty).getTarget() instanceof PropertyAssociation) {
+                                    PropertyAssociation association = (PropertyAssociation)((PropertyXRef)xrefProperty).getTarget();
+                                    if (association.getParent() instanceof Indi) {
+                                        Indi witness = (Indi) association.getParent();
+                                        out.write("wit: " +indiMap.get(witness.getId()).getNameOccurenced() + "\n");
+                                    }
+                                    
+                                }
+                            }
                         }
 
                     }
@@ -423,7 +454,7 @@ public final class GeneanetExportAction implements ActionListener {
         if (indi.getProperty("NICK") != null) {
             indiDescription += "{" + indi.getProperty("NICK").getValue().replaceAll(" ", "_") + "}";
         }
-        
+
         /*
          * [Titles (see Title section)]
          */
@@ -431,7 +462,7 @@ public final class GeneanetExportAction implements ActionListener {
         /*
          * [#apubl | #apriv]
          */
-        if (indi.isPrivate() == true) {
+        if ((indi.isPrivate() == true)) {
             indiDescription += "#apriv ";
         } else {
             indiDescription += "#apubl ";
@@ -600,19 +631,19 @@ public final class GeneanetExportAction implements ActionListener {
         if (dateFormat.equals(PropertyDate.DATE)) {
             return startDate;
         } else if (dateFormat.equals(PropertyDate.FROM_TO)) {
-            return startDate + ".." + endDate;
+            return date.getStart().getYear() + ".." + date.getEnd().getYear();
         } else if (dateFormat.equals(PropertyDate.FROM)) {
-            return ">" + startDate;
+            return ">" + date.getStart().getYear();
         } else if (dateFormat.equals(PropertyDate.TO)) {
-            return "<" + startDate;
+            return "<" + date.getStart().getYear();
         } else if (dateFormat.equals(PropertyDate.BETWEEN_AND)) {
-            return startDate + ".." + endDate;
+            return date.getStart().getYear() + ".." + date.getEnd().getYear();
         } else if (dateFormat.equals(PropertyDate.BEFORE)) {
-            return "<" + startDate;
+            return "<" + date.getStart().getYear();
         } else if (dateFormat.equals(PropertyDate.AFTER)) {
-            return ">" + startDate;
+            return ">" + date.getStart().getYear();
         } else if (dateFormat.equals(PropertyDate.ABOUT)) {
-            return "~" + startDate;
+            return "~" + date.getStart().getYear();
         } else if (dateFormat.equals(PropertyDate.CALCULATED)) {
             return "~" + startDate;
         } else if (dateFormat.equals(PropertyDate.ESTIMATED)) {
@@ -645,7 +676,6 @@ public final class GeneanetExportAction implements ActionListener {
 
     private String source2String(Property source) {
         String srcString = "";
-        Property src = null;
         /*
          *   <SOUR>
          *       <PAGE/>
@@ -668,23 +698,26 @@ public final class GeneanetExportAction implements ActionListener {
          *       <NOTE/>
          *   </SOUR>
          */
-        if (source instanceof PropertySource) {
-            src = ((PropertySource) source).getTargetEntity();
-            srcString = ((Source) src).getTitle().replaceAll(" ", "_");
-        } else if (source instanceof Source) {
-            src = source;
-            srcString = ((Source) src).getTitle().replaceAll(" ", "_");
+        if (source instanceof PropertySource || source instanceof Source) {
+            if (source instanceof PropertySource) {
+                source = ((PropertySource) source).getTargetEntity();
+            }
+            srcString = ((Source) source).getTitle().replaceAll(" ", "_");
         } else {
-            src = source;
             srcString = source.getValue().replaceAll(" ", "_");
         }
 
-        if (src.getProperty("PAGE") != null) {
-            srcString += src.getProperty("PAGE").getValue().replaceAll(" ", "_");
+        if (source.getProperty("PAGE") != null) {
+            srcString += "_" + source.getProperty("PAGE").getValue().replaceAll(" ", "_");
         }
 
-        if (src.getProperty("NOTE") != null) {
-            srcString += src.getProperty("NOTE").getValue().replaceAll(" ", "_");
+        Property sourceNote = source.getProperty("NOTE");
+        if (sourceNote != null) {
+            if (sourceNote instanceof PropertyNote) {
+                sourceNote = ((PropertyNote) sourceNote).getTargetEntity();
+            }
+            String stringNote = source.getProperty("NOTE").getValue();
+            srcString += "_" + stringNote.replaceAll(" |\n", "_");
         }
 
         return srcString;
