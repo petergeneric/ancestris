@@ -32,7 +32,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -46,6 +48,7 @@ public final class GeneanetExportAction implements ActionListener {
         private String lastName = null;
         private int occurence = 0;
         private String description = null;
+        private String notes = null;
 
         public GwIndi() {
         }
@@ -92,6 +95,14 @@ public final class GeneanetExportAction implements ActionListener {
             return description;
         }
 
+        public void setNotes(String notes) {
+            this.notes = notes;
+        }
+
+        public String getNotes() {
+            return notes;
+        }
+
         void setAlreadyDescribed() {
             alreadyDescribed = true;
         }
@@ -108,7 +119,27 @@ public final class GeneanetExportAction implements ActionListener {
         // Create the file chooser
         Context context;
         FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.fileType"), "gw");
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser() {
+
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            return;
+                        case JOptionPane.CANCEL_OPTION:
+                            super.cancelSelection();
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
 
         fc.setFileFilter(filter);
         fc.setAcceptAllFileFilterUsed(false);
@@ -276,13 +307,13 @@ public final class GeneanetExportAction implements ActionListener {
                     if (propertiesXRef.length > 0) {
                         for (Property xrefProperty : propertiesXRef) {
                             if (xrefProperty instanceof PropertyXRef) {
-                                if (((PropertyXRef)xrefProperty).getTarget() instanceof PropertyAssociation) {
-                                    PropertyAssociation association = (PropertyAssociation)((PropertyXRef)xrefProperty).getTarget();
+                                if (((PropertyXRef) xrefProperty).getTarget() instanceof PropertyAssociation) {
+                                    PropertyAssociation association = (PropertyAssociation) ((PropertyXRef) xrefProperty).getTarget();
                                     if (association.getParent() instanceof Indi) {
                                         Indi witness = (Indi) association.getParent();
-                                        out.write("wit: " +indiMap.get(witness.getId()).getNameOccurenced() + "\n");
+                                        out.write("wit: " + indiMap.get(witness.getId()).getNameOccurenced() + "\n");
                                     }
-                                    
+
                                 }
                             }
                         }
@@ -295,12 +326,10 @@ public final class GeneanetExportAction implements ActionListener {
                  * - [h | f | ] Person (see detailed description at the next section)
                  * end
                  */
-                Collection<Indi> childrens = Arrays.asList(family.getChildren());
-                Iterator childrensIterator = childrens.iterator();
-                if (childrensIterator.hasNext()) {
+                Indi[] childrens = family.getChildren();
+                if (childrens.length > 0) {
                     out.write("beg\n");
-                    while (childrensIterator.hasNext()) {
-                        Indi children = (Indi) childrensIterator.next();
+                    for (Indi children : childrens) {
                         switch (children.getSex()) {
                             case PropertySex.FEMALE:
                                 out.write("- f ");
@@ -344,6 +373,24 @@ public final class GeneanetExportAction implements ActionListener {
                 }
                 out.write("\n");
             }
+
+            /*
+             * indi Notes
+             * notes LastName FirstName[.Number]
+             * beg
+             * Notes go here in a free format
+             * end notes
+             */
+            Iterator it = indiMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry)it.next();
+                GwIndi indi = (GwIndi)entry.getValue();
+                if (indi.getNotes() != null) {
+                out.write("notes " + indi.getNameOccurenced() + "\n");
+                out.write("beg\n" + indi.getNotes() + "\nend notes\n");
+                }
+            }
+
         } catch (FileNotFoundException ex) {
             if (out != null) {
                 try {
@@ -427,6 +474,29 @@ public final class GeneanetExportAction implements ActionListener {
             }
 
             gwIndi.setDescription(analyzeIndi(indi));
+
+            /*
+             * indi Notes
+             */
+            Property[] indiNotes = indi.getProperties("NOTE");
+            if (indiNotes.length > 0) {
+                String notes = "";
+                // PropertyNote | PropertyMultilineValue
+                for (Property note : indiNotes) {
+                    boolean first = true;
+                    if (note instanceof PropertyNote) {
+                        note = ((PropertyNote) note).getTargetEntity();
+                    }
+                    if (first == true) {
+                        first = false;
+                        notes = note.getValue().replaceAll("\n", " ");
+                    } else {
+                        notes += "<br>" + note.getValue().replaceAll("\n", " ");
+                    }
+                }
+
+                gwIndi.setNotes(notes);
+            }
             indiMap.put(indi.getId(), gwIndi);
         }
     }
@@ -508,11 +578,19 @@ public final class GeneanetExportAction implements ActionListener {
             indiDescription += "#src " + source2String(indiSource) + " ";
         }
 
+        /*
+         * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate]
+         * [#pp BaptizePlace] [#ps BaptizeSource]
+         */
         Property birth = indi.getProperty("BIRT");
         if (birth != null) {
             indiDescription += analyzeBirth(birth) + " ";
         }
 
+        /*
+         * [DateOfDeath] [#dp PlaceOfDeath] [#ds DeathSource]
+         * [#buri | #crem [BurialDate]] [#rp BurialPlace] [#rs BurialSource]
+         */
         Property death = indi.getProperty("DEAT");
         if (death != null) {
             indiDescription += analyzeDeath(death) + " ";
