@@ -313,7 +313,7 @@ import javax.swing.JTextField;
         @Override
     public boolean veto(Property property) {
       PropertyDate when = property.getWhen();
-      return when!=null || when.getStart().compareTo(after)>=0;
+      return !(when==null || when.getStart().compareTo(after)<=0);
     }
         @Override
     public String getFilterName() {
