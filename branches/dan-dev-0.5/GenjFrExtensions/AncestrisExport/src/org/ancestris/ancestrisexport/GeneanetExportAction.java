@@ -26,13 +26,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -118,14 +115,14 @@ public final class GeneanetExportAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // Create the file chooser
         Context context;
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.fileType"), "gw");
+        final FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.fileType"), "gw");
         JFileChooser fc = new JFileChooser() {
 
             @Override
             public void approveSelection() {
                 File f = getSelectedFile();
                 if (f.exists() && getDialogType() == SAVE_DIALOG) {
-                    int result = JOptionPane.showConfirmDialog(this, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+                    int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Overwrite.Text"), NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Overwrite.Title"), JOptionPane.YES_NO_CANCEL_OPTION);
                     switch (result) {
                         case JOptionPane.YES_OPTION:
                             super.approveSelection();
@@ -135,6 +132,10 @@ public final class GeneanetExportAction implements ActionListener {
                         case JOptionPane.CANCEL_OPTION:
                             super.cancelSelection();
                             return;
+                    }
+                } else {
+                    if (filter.accept(f) == false) {
+                        setSelectedFile(new File(f.getName() + ".gw"));
                     }
                 }
                 super.approveSelection();
@@ -153,10 +154,6 @@ public final class GeneanetExportAction implements ActionListener {
 
             if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                if (file.exists() == false) {
-                    String fileName = fc.getSelectedFile() + ".gw";
-                    file = new File(fileName);
-                }
                 analyzeIndis(myGedcom.getIndis());
                 analyzeFam(myGedcom.getFamilies(), file);
             }
@@ -197,12 +194,14 @@ public final class GeneanetExportAction implements ActionListener {
                 }
 
                 /*
-                 * +[WeddingDate] [#mp WeddingPlace] [#ms WeddingSource]
-                 *
+                 * +
                  */
                 out.write("+");
                 Property marriage = family.getProperty("MARR");
                 if (marriage != null) {
+                    /*
+                     * [WeddingDate] [#mp WeddingPlace] [#ms WeddingSource]
+                     */
                     PropertyDate marriageDate = (PropertyDate) marriage.getProperty("DATE");
                     if (marriageDate != null) {
                         out.write(analyzeDate(marriageDate) + " ");
@@ -232,7 +231,7 @@ public final class GeneanetExportAction implements ActionListener {
                         if (divorceDate != null) {
                             out.write("-" + analyzeDate(divorceDate) + " ");
                         } else {
-                            out.write("- 0 ");
+                            out.write("-0 ");
                         }
                     }
                 } else {
@@ -383,11 +382,11 @@ public final class GeneanetExportAction implements ActionListener {
              */
             Iterator it = indiMap.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry)it.next();
-                GwIndi indi = (GwIndi)entry.getValue();
+                Map.Entry entry = (Map.Entry) it.next();
+                GwIndi indi = (GwIndi) entry.getValue();
                 if (indi.getNotes() != null) {
-                out.write("notes " + indi.getNameOccurenced() + "\n");
-                out.write("beg\n" + indi.getNotes() + "\nend notes\n");
+                    out.write("notes " + indi.getNameOccurenced() + "\n");
+                    out.write("beg\n" + indi.getNotes() + "\nend notes\n");
                 }
             }
 
@@ -440,21 +439,30 @@ public final class GeneanetExportAction implements ActionListener {
 
     private void analyzeIndis(Collection<Indi> indis) {
         for (Iterator<Indi> indisIterator = indis.iterator(); indisIterator.hasNext();) {
-            String indiKey;
             Indi indi = indisIterator.next();
-            GwIndi gwindi;
             String firstName = null;
             String lastName = null;
 
-            PropertyName pIndiName = (PropertyName) indi.getProperty("NAME");
-            if (pIndiName != null) {
-                if (pIndiName.getLastName().length() > 0) {
-                    lastName = pIndiName.getLastName().replaceAll(" ", "_");
+            Property[] pIndiNames = (Property[]) indi.getProperties("NAME");
+            if (pIndiNames.length > 0) {
+                // extract First and last Name of the first property
+                // name found for key generation
+                if (((PropertyName) pIndiNames[0]).getLastName().length() > 0) {
+                    lastName = ((PropertyName) pIndiNames[0]).getLastName().replaceAll(" ", "_");
                 } else {
                     lastName = " ?";
                 }
-                if (pIndiName.getFirstName().length() > 0) {
-                    firstName = pIndiName.getFirstName().replaceAll(" ", "_");
+                Property pGivenName = pIndiNames[0].getProperty("GIVN");
+                if (pGivenName != null) {
+                    firstName = pGivenName.getValue();
+                } else if (((PropertyName) pIndiNames[0]).getFirstName().length() > 0) {
+
+                    firstName = ((PropertyName) pIndiNames[0]).getFirstName();
+                    int index = firstName.indexOf(" ");
+                    if (index > 0) {
+                        firstName = firstName.substring(0, index);
+                    } else {
+                    }
                 } else {
                     firstName = " ?";
                 }
@@ -463,7 +471,15 @@ public final class GeneanetExportAction implements ActionListener {
                 lastName = "?";
             }
 
-            indiKey = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
+            // create the Key
+            String indiKey = null;
+            String tmpString = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
+            try {
+                byte[] byteString = tmpString.getBytes("US-ASCII");
+                indiKey = new String(byteString);
+            } catch (UnsupportedEncodingException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             Integer NameOccurence = indiNameOccurence.get(indiKey);
             indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);
             GwIndi gwIndi = null;
@@ -498,31 +514,15 @@ public final class GeneanetExportAction implements ActionListener {
                 gwIndi.setNotes(notes);
             }
             indiMap.put(indi.getId(), gwIndi);
-        }
+       }
     }
 
     String analyzeIndi(Indi indi) {
         String indiDescription = "";
-        /*
-         * [{FirstNameAlias}] [#salias SurnameAlias] [(PublicName)]
-         * [#image ImageFilePath] [#nick Qualifier] [#alias Alias]
-         */
-        /*
-         * <NAME default="1" type="PropertyName" img="Name">
-         *   <NPFX type="PropertySimpleValue" img="Name"/>
-         *   <GIVN type="PropertySimpleValue" img="Name"/>
-         *   <NICK type="PropertySimpleValue" img="Name"/>
-         *   <SPFX type="PropertySimpleValue" img="Name"/>
-         *   <SURN type="PropertySimpleValue" img="Name"/>
-         *   <NSFX type="PropertySimpleValue" img="Name"/>
-         *   <SOUR/>
-         *   <NOTE>
-         *      <SOUR/>
-         *   </NOTE>
-         *</NAME>
-         */
-        if (indi.getProperty("NICK") != null) {
-            indiDescription += "{" + indi.getProperty("NICK").getValue().replaceAll(" ", "_") + "}";
+
+        Property[] indiNames = indi.getProperties("NAME");
+        if (indiNames != null) {
+            indiDescription += analyseName(indiNames);
         }
 
         /*
@@ -533,9 +533,9 @@ public final class GeneanetExportAction implements ActionListener {
          * [#apubl | #apriv]
          */
         if ((indi.isPrivate() == true)) {
-            indiDescription += "#apriv ";
+            indiDescription += " #apriv ";
         } else {
-            indiDescription += "#apubl ";
+            indiDescription += " #apubl ";
         }
 
         /*
@@ -600,10 +600,76 @@ public final class GeneanetExportAction implements ActionListener {
     }
 
     /*
+     *  
+     * LastName FirstName [{FirstNameAlias}] [#salias SurnameAlias] [(PublicName)]
+     * [#image ImageFilePath] [#nick Qualifier] [#alias Alias]
+     * 
+     * NB LastName FirstName already inserted by analyseFamily.
+     */
+    String analyseName(Property[] indiNames) {
+        String nameDescription = "";
+        /*
+         * <NAME default="1" type="PropertyName" img="Name">
+         *   <NPFX type="PropertySimpleValue" img="Name"/>
+         *   <GIVN type="PropertySimpleValue" img="Name"/>
+         *   <NICK type="PropertySimpleValue" img="Name"/>
+         *   <SPFX type="PropertySimpleValue" img="Name"/>
+         *   <SURN type="PropertySimpleValue" img="Name"/>
+         *   <NSFX type="PropertySimpleValue" img="Name"/>
+         *   <SOUR/>
+         *   <NOTE>
+         *      <SOUR/>
+         *   </NOTE>
+         *</NAME>
+         */
+
+        /*
+         * Extract [{FirstNameAlias}] from the fisrt PropertyName found
+         */
+        if (((PropertyName) indiNames[0]).getFirstName().indexOf(" ") > 0) {
+            nameDescription += "{" + ((PropertyName) indiNames[0]).getFirstName().replaceAll(" ", "_") + "} ";
+        }
+
+        /*
+         * loop over other Propertyname and extract [#salias SurnameAlias]
+         */
+        for (int index = 1; index < indiNames.length; index++) {
+            PropertyName indiname = (PropertyName) indiNames[index];
+            if (indiname.getFirstName().length() <= 0) {
+                nameDescription += "#salias " + indiname.getLastName().replaceAll(" ", "_") + " ";
+            }
+        }
+
+        /*
+         * Extract [(PublicName)]  from the fisrt PropertyName found
+         */
+        if (indiNames[0].getProperty("NICK") != null) {
+            nameDescription += "(" + indiNames[0].getProperty("NICK").getValue().replaceAll(" ", "_") + ") ";
+        }
+
+        /*
+         * [#image ImageFilePath] [#nick Qualifier]
+         */
+
+        /*
+         * loop over other Propertyname and extract [#alias Alias]
+         */
+        for (int index = 1; index < indiNames.length; index++) {
+            PropertyName indiname = (PropertyName) indiNames[index];
+            if (indiname.getFirstName().length() > 0) {
+                nameDescription += "#alias" + indiname.getName().replaceAll(" ", "_") + " ";
+            }
+        }
+        return nameDescription;
+
+    }
+
+    /*
      * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate]
      * [#pp BaptizePlace] [#ps BaptizeSource]
      */
-    String analyzeBirth(Property birth) {
+    String analyzeBirth(
+            Property birth) {
 
         // DateOfBirth
         String birthString = new String();
