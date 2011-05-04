@@ -452,16 +452,11 @@ public final class GeneanetExportAction implements ActionListener {
                 } else {
                     lastName = " ?";
                 }
-                Property pGivenName = pIndiNames[0].getProperty("GIVN");
-                if (pGivenName != null) {
-                    firstName = pGivenName.getValue();
-                } else if (((PropertyName) pIndiNames[0]).getFirstName().length() > 0) {
-
+                if (((PropertyName) pIndiNames[0]).getFirstName().length() > 0) {
                     firstName = ((PropertyName) pIndiNames[0]).getFirstName();
                     int index = firstName.indexOf(" ");
                     if (index > 0) {
                         firstName = firstName.substring(0, index);
-                    } else {
                     }
                 } else {
                     firstName = " ?";
@@ -514,7 +509,7 @@ public final class GeneanetExportAction implements ActionListener {
                 gwIndi.setNotes(notes);
             }
             indiMap.put(indi.getId(), gwIndi);
-       }
+        }
     }
 
     String analyzeIndi(Indi indi) {
@@ -643,8 +638,9 @@ public final class GeneanetExportAction implements ActionListener {
         /*
          * Extract [(PublicName)]  from the fisrt PropertyName found
          */
-        if (indiNames[0].getProperty("NICK") != null) {
-            nameDescription += "(" + indiNames[0].getProperty("NICK").getValue().replaceAll(" ", "_") + ") ";
+        Property pGivenName = indiNames[0].getProperty("GIVN");
+        if (pGivenName != null) {
+            nameDescription += "(" + indiNames[0].getProperty("GIVN").getValue().replaceAll(" ", "_") + ") ";
         }
 
         /*
@@ -654,12 +650,16 @@ public final class GeneanetExportAction implements ActionListener {
         /*
          * loop over other Propertyname and extract [#alias Alias]
          */
-        for (int index = 1; index < indiNames.length; index++) {
+        if (indiNames[0].getProperty("NICK") != null) {
+            nameDescription += "#alias " + indiNames[0].getProperty("NICK").getValue().replaceAll(" ", "_") + " ";
+        }
+/*        for (int index = 1; index < indiNames.length; index++) {
             PropertyName indiname = (PropertyName) indiNames[index];
             if (indiname.getFirstName().length() > 0) {
-                nameDescription += "#alias" + indiname.getName().replaceAll(" ", "_") + " ";
+                nameDescription += "#alias " + indiname.getName().replaceAll(" ", "_") + " ";
             }
         }
+*/
         return nameDescription;
 
     }
