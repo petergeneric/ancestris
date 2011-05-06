@@ -104,8 +104,10 @@ public class ReportLinesFan extends Report {
 	    //indiList.remove(0);
 	    if (genIndex != null){
 		writer.println("gsave");
+		writer.println("%%Page "+pageNo);
 		pedigree(1,genIndex.intValue(),1,1,indiIterator);
 		writer.println("showpage");
+                writer.println("%%PageTrailer");
 		pageNo++;
 		writer.println("grestore");
 	    }
