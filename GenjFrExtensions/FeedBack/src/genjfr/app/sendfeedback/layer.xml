@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Help">
+            <file name="genjfr-tools-calc-SendAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled" />
+                <attr name="delegate"       newvalue="genjfr.app.sendfeedback.SendAction" />
+                <attr name="displayName" bundlevalue="genjfr.app.sendfeedback.Bundle#CTL_SendAction"/>
+               <attr name="iconBase" stringvalue="genjfr/app/sendfeedback/SendAction.png" />
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="Help">
+            <file name="SeparatorFeedBack.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="39"/>
+            </file>
+            <file name="SendFeedbackAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/genjfr-tools-calc-SendAction.instance"/>
+                <attr name="position" intvalue="40"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

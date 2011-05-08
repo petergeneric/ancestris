@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ancestris.ancestrisexport
+OpenIDE-Module-Layer: org/ancestris/ancestrisexport/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/ancestris/ancestrisexport/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
