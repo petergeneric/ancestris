@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+    
+<LinearLayout android:id="@+id/layoutTitle" android:layout_height="wrap_content" android:layout_width="fill_parent">
+<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/imgIOU" android:src="@drawable/icon" android:layout_marginBottom="10px" android:layout_marginRight="10px" android:layout_marginTop="10px"></ImageView>
+<TextView  android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/ioweyou" android:layout_gravity="center_vertical" android:textAppearance="@style/TitleTextAppearance"/>
+</LinearLayout>
+    
+<LinearLayout android:id="@+id/layoutWhatIAmOwed" android:layout_height="wrap_content" android:layout_width="fill_parent">
+<TextView  android:id="@+id/labelWhatIAmOwed" android:text="@string/whatiamowed" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1"></TextView>
+<Button android:id="@+id/buttonWhatIAmOwed" android:text="$3.50" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+</LinearLayout>
+
+<LinearLayout android:id="@+id/layoutWhatIOwe" android:layout_height="wrap_content" android:layout_width="fill_parent">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/labelWhatIOwe" android:text="@string/whatiowe" android:layout_gravity="left|center_vertical" android:layout_weight="1"></TextView>
+<Button android:id="@+id/buttonWhatIOwe" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="$3.50"></Button>
+</LinearLayout>
+
+<LinearLayout android:id="@+id/transactions" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="fill_horizontal">
+<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/buttonBorrow" android:text="@string/Borrow"></Button>
+<Button android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="wrap_content" android:text="@string/Lend" android:id="@+id/buttonLend"></Button>
+
+<Button android:id="@+id/buttonRepay" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="wrap_content" android:text="@string/Repay"></Button>
+</LinearLayout>
+
+
+</LinearLayout>

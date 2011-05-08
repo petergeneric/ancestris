@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+   GenJ - GenealogyJ
+ 
+   Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+
+   This piece of code is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   This code is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+-->
+</head>
+<body>
+
+Reports are simple, plug-able Java Types which are executed in the context 
+of GenealogyJ. They can access the underlying object-representation of 
+Gedcom-files opened by the user. 
+
+<p>
+A selection of reports comes with the GenealogyJ distribution and can be
+found in the report-directory inside the GenJ installation directory.
+</p>
+
+<h2>Running Reports</h2>
+
+<p>There are multiple ways of intergrating a report with GenJ. Generally every 
+report found in the report-directory (or one of its sub-directories) will be
+loaded and displayed in ReportView. There the user can read about the
+report's author and operation description, set report-options and run 
+them individually. </p>
+
+<p>A report can also be run by opening the context-menu for a Gedcom element
+in the UI. Depending on the selected element (for example an entity, a
+property or a Gedcom-file itself) reports that can accept this context as
+input are presented. A report declares whether it can run on a given
+context by overriding 
+ <pre> <a href=./Report.html#accepts(java.lang.Object)>String accepts(Object context)</a> </pre>
+and returning a textual description of the action the report will do if
+executed (if applicable - null otherwise). 
+</p>
+
+<p>
+By default it's assumed that a report can be executed on instances of the 
+<a href=../gedcom/Gedcom.html>Gedcom</a> type - when run the report is 
+called with a reference to the instance of the corresponding type.
+</p>
+
+<h2>Report In/Output</h2>
+
+<p>
+Reports have several ways of interacting with the user - they can generate output:
+ <ul>
+  <li>print text to a stream that is displayed in ReportView's report output widget
+   (see <a href=./Report.html#println()>println()</a>)
+  <li>open a browser on a URL
+   (see <a href=./Report.html#showBrowserToUser(java.net.URL)>showBrowserToUser()</a>)
+  <li>show a chart to the user
+   (see <a href=./Report.html#showChartToUser(genj.chart.Chart)>showChartToUser()</a>)
+  <li>show a Java Swing component to the user
+   (see <a href=./Report.html#showComponentToUser(javax.swing.JComponent)>showComponentToUser()</a>)
+  <li>show a list of predefined items containing references to Gedcom objects to the user
+   (see <a href=./Report.html#showItemsToUser(java.lang.String,%20genj.gedcom.Gedcom,%20java.util.List)>showItemsToUser()</a>)
+ </ul>
+</p>
+
+<p>
+And they can ask for input:
+ <ul>
+  <li>ask the user for a directory
+    (see <a href=./Report.html#getDirectoryFromUser(java.lang.String,%20java.lang.String)>getDirectoryFromUser()</a>)
+  <li>ask the user to select an entity (e.g. Individuals, 
+    see <a href=./Report.html##getEntityFromUser(java.lang.String,%20genj.gedcom.Gedcom,%20java.lang.String)>getEntityFromUser()</a>)
+  <li>ask the user to make a choice (e.g. yes/no, 
+    see <a href=./Report.html#getOptionFromUser(java.lang.String,%20int)>getOptionFromUser()</a>)
+  <li>ask the user to enter a value (e.g. name as text,
+    see <a href=./Report.html#getValueFromUser(java.lang.String,%20java.lang.Object[],%20java.lang.Object)>getValueFromUser()</a>)
+ </ul>
+</p>
+
+<p>
+ All of these methods are defined in the super-class <a href=./Report.html>Report</a> that every
+ custom Report needs to extend.
+</p>
+
+<h2>Compiling Reports</h2>
+
+<p>
+ Since Reports are written in Java they have to be (manually) compiled before they
+ can be used through GenJ. Run one of the compile scripts in the directory containing
+ all reports for that.
+</p>
+
+</body>
+</html>
