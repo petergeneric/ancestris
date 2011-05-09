@@ -584,9 +584,9 @@ public final class GeneanetExportAction implements ActionListener {
          */
         /*
         if ((indi.isPrivate() == true)) {
-            indiDescription += " #apriv ";
+        indiDescription += " #apriv ";
         } else {
-            indiDescription += " #apubl ";
+        indiDescription += " #apubl ";
         }
          */
 
@@ -687,7 +687,7 @@ public final class GeneanetExportAction implements ActionListener {
          */
         for (int index = 1; index < indiNames.length; index++) {
             PropertyName indiname = (PropertyName) indiNames[index];
-            if (indiname.getFirstName().length() <= 0) {
+            if (indiname.getFirstName().length() > 0) {
                 nameDescription += "#salias " + indiname.getLastName().replaceAll(" ", "_") + " ";
             }
         }
@@ -705,18 +705,14 @@ public final class GeneanetExportAction implements ActionListener {
          */
 
         /*
-         * loop over other Propertyname and extract [#alias Alias]
+         * extract [#alias Alias]
          */
         if (indiNames[0].getProperty("NICK") != null) {
-            nameDescription += "#alias " + indiNames[0].getProperty("NICK").getValue().replaceAll(" ", "_") + " ";
+            if (indiNames[0].getProperty("NICK").getValue().length() > 0) {
+                nameDescription += "#alias " + indiNames[0].getProperty("NICK").getValue().replaceAll(" ", "_") + " ";
+            }
         }
-        /*        for (int index = 1; index < indiNames.length; index++) {
-        PropertyName indiname = (PropertyName) indiNames[index];
-        if (indiname.getFirstName().length() > 0) {
-        nameDescription += "#alias " + indiname.getName().replaceAll(" ", "_") + " ";
-        }
-        }
-         */
+
         return nameDescription;
 
     }
