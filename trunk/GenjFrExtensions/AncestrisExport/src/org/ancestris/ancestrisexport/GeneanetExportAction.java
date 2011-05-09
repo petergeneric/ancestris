@@ -46,6 +46,7 @@ public final class GeneanetExportAction implements ActionListener {
         private int occurence = 0;
         private String description = null;
         private String notes = null;
+        private String relations = null;
 
         public GwIndi() {
         }
@@ -98,6 +99,14 @@ public final class GeneanetExportAction implements ActionListener {
 
         public String getNotes() {
             return notes;
+        }
+
+        public void setRelations(String relations) {
+            this.relations = relations;
+        }
+
+        public String getRelations() {
+            return relations;
         }
 
         void setAlreadyDescribed() {
@@ -212,7 +221,7 @@ public final class GeneanetExportAction implements ActionListener {
                     PropertyPlace marriagePlace = (PropertyPlace) marriage.getProperty("PLAC");
                     if (marriagePlace != null && marriagePlace.getValue().isEmpty() != true) {
                         if (marriagePlace.getValue().length() > 0) {
-                            out.write("#mp " + marriagePlace.getValue().replaceAll(" ", "_") + " ");
+                            out.write("#mp " + marriagePlace.getValue().replaceAll(" |\n", "_") + " ");
                         }
                     }
 
@@ -386,7 +395,21 @@ public final class GeneanetExportAction implements ActionListener {
                 GwIndi indi = (GwIndi) entry.getValue();
                 if (indi.getNotes() != null) {
                     out.write("notes " + indi.getNameOccurenced() + "\n");
-                    out.write("beg\n" + indi.getNotes() + "\nend notes\n");
+                    out.write(indi.getNotes());
+                }
+            }
+
+            /*
+             * indi Relations
+             * rel LastName FirstName[.Number]
+             */
+            it = indiMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                GwIndi indi = (GwIndi) entry.getValue();
+                if (indi.getRelations() != null) {
+                    out.write("rel " + indi.getNameOccurenced() + "\n");
+                    out.write(indi.getRelations());
                 }
             }
 
@@ -448,7 +471,7 @@ public final class GeneanetExportAction implements ActionListener {
                 // extract First and last Name of the first property
                 // name found for key generation
                 if (((PropertyName) pIndiNames[0]).getLastName().length() > 0) {
-                    lastName = ((PropertyName) pIndiNames[0]).getLastName().replaceAll(" ", "_");
+                    lastName = ((PropertyName) pIndiNames[0]).getLastName().replaceAll(" |\n", "_");
                 } else {
                     lastName = " ?";
                 }
@@ -475,6 +498,7 @@ public final class GeneanetExportAction implements ActionListener {
             } catch (UnsupportedEncodingException ex) {
                 Exceptions.printStackTrace(ex);
             }
+
             Integer NameOccurence = indiNameOccurence.get(indiKey);
             indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);
             GwIndi gwIndi = null;
@@ -491,7 +515,8 @@ public final class GeneanetExportAction implements ActionListener {
              */
             Property[] indiNotes = indi.getProperties("NOTE");
             if (indiNotes.length > 0) {
-                String notes = "";
+                String stringNotes = "";
+                stringNotes = "beg\n";
                 // PropertyNote | PropertyMultilineValue
                 for (Property note : indiNotes) {
                     boolean first = true;
@@ -500,14 +525,44 @@ public final class GeneanetExportAction implements ActionListener {
                     }
                     if (first == true) {
                         first = false;
-                        notes = note.getValue().replaceAll("\n", " ");
+                        stringNotes += note.getValue().replaceAll("\n", " ");
                     } else {
-                        notes += "<br>" + note.getValue().replaceAll("\n", " ");
+                        stringNotes += "<br>" + note.getValue().replaceAll("\n", " ");
                     }
                 }
-
-                gwIndi.setNotes(notes);
+                stringNotes += "\nend notes\n";
+                gwIndi.setNotes(stringNotes);
             }
+
+            /*
+             * rel LastName FirstName[.Number]
+             * beg
+             * - adop: AdoptiveFather + AdoptiveMother
+             * - adop fath : AdoptiveFather
+             * - adop moth : AdoptiveMother
+             * - reco: RecognizingFather + RecognizingMother
+             * - reco fath : RecognizingFather
+             * - reco moth : RecognizingMother
+             * - cand: CandidateFather + CandidateMother
+             * - cand fath : CandidateFather
+             * - cand moth : CandidateMother
+             * - godp: GodFather + GodMother
+             * - godp fath : GodFather
+             * - godp moth : GodMother
+             * - fost: FosterFather + FosterMother
+             * - fost fath : FosterFather
+             * - fost moth : FosterMother
+             * end
+             */
+            /*
+            Property propertyBapm = indi.getProperty("BAPM");
+            if(propertyBapm != null) {
+            Property[] PropertiesXREF = propertyBapm.getProperties("XREF");
+            for (Property property : PropertiesXREF) {
+            System.out.println (((PropertyXRef)property).getTargetType());
+            }
+            }
+             */
             indiMap.put(indi.getId(), gwIndi);
         }
     }
@@ -521,17 +576,19 @@ public final class GeneanetExportAction implements ActionListener {
         }
 
         /*
-         * [Titles (see Title section)]
+         * [ TitleName:Title:TitlePlace:StartDate:EndDate:Nth]
          */
 
         /*
          * [#apubl | #apriv]
          */
+        /*
         if ((indi.isPrivate() == true)) {
             indiDescription += " #apriv ";
         } else {
             indiDescription += " #apubl ";
         }
+         */
 
         /*
          * [#occu Occupation]
@@ -544,18 +601,18 @@ public final class GeneanetExportAction implements ActionListener {
             for (Property occu : indiOccu) {
 
                 if (occuString.length() > 0) {
-                    occuString += "_" + occu.getDisplayValue().replaceAll(" ", "_");
+                    occuString += "_" + occu.getDisplayValue().replaceAll(" |\n", "_");
                 } else {
-                    occuString = occu.getDisplayValue().replaceAll(" ", "_");
+                    occuString = occu.getDisplayValue().replaceAll(" |\n", "_");
                 }
 
                 Property[] occuProperties = occu.getProperties();
                 for (Property occuProperty : occuProperties) {
                     occuProperty.getValue();
                     if (occuString.length() > 0) {
-                        occuString += "_" + occuProperty.getDisplayValue().replaceAll(" ", "_");
+                        occuString += "_" + occuProperty.getDisplayValue().replaceAll(" |\n", "_");
                     } else {
-                        occuString = occuProperty.getDisplayValue().replaceAll(" ", "_");
+                        occuString = occuProperty.getDisplayValue().replaceAll(" |\n", "_");
                     }
                 }
             }
@@ -653,13 +710,13 @@ public final class GeneanetExportAction implements ActionListener {
         if (indiNames[0].getProperty("NICK") != null) {
             nameDescription += "#alias " + indiNames[0].getProperty("NICK").getValue().replaceAll(" ", "_") + " ";
         }
-/*        for (int index = 1; index < indiNames.length; index++) {
-            PropertyName indiname = (PropertyName) indiNames[index];
-            if (indiname.getFirstName().length() > 0) {
-                nameDescription += "#alias " + indiname.getName().replaceAll(" ", "_") + " ";
-            }
+        /*        for (int index = 1; index < indiNames.length; index++) {
+        PropertyName indiname = (PropertyName) indiNames[index];
+        if (indiname.getFirstName().length() > 0) {
+        nameDescription += "#alias " + indiname.getName().replaceAll(" ", "_") + " ";
         }
-*/
+        }
+         */
         return nameDescription;
 
     }
@@ -684,7 +741,7 @@ public final class GeneanetExportAction implements ActionListener {
         PropertyPlace birthPlace = (PropertyPlace) birth.getProperty("PLAC");
         if (birthPlace != null) {
             if (birthPlace.getValue().length() > 0) {
-                birthString += "#bp " + birthPlace.getValue().replaceAll(" ", "_") + " ";
+                birthString += "#bp " + birthPlace.getValue().replaceAll(" |\n", "_") + " ";
             }
         }
 
@@ -723,7 +780,7 @@ public final class GeneanetExportAction implements ActionListener {
         PropertyPlace deathPlace = (PropertyPlace) death.getProperty("PLAC");
         if (deathPlace != null) {
             if (deathPlace.getValue().length() > 0) {
-                deathString += "#dp " + deathPlace.getValue().replaceAll(" ", "_") + " ";
+                deathString += "#dp " + deathPlace.getValue().replaceAll(" |\n", "_") + " ";
             }
         }
 
@@ -846,13 +903,13 @@ public final class GeneanetExportAction implements ActionListener {
             if (source instanceof PropertySource) {
                 source = ((PropertySource) source).getTargetEntity();
             }
-            srcString = ((Source) source).getTitle().replaceAll(" ", "_");
+            srcString = ((Source) source).getTitle().replaceAll(" |\n", "_");
         } else {
-            srcString = source.getValue().replaceAll(" ", "_");
+            srcString = source.getValue().replaceAll(" |\n", "_");
         }
 
         if (source.getProperty("PAGE") != null) {
-            srcString += "_" + source.getProperty("PAGE").getValue().replaceAll(" ", "_");
+            srcString += "_" + source.getProperty("PAGE").getValue().replaceAll(" |\n", "_");
         }
 
         Property sourceNote = source.getProperty("NOTE");
