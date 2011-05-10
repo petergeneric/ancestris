@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -461,10 +462,14 @@ public final class GeneanetExportAction implements ActionListener {
     }
 
     private void analyzeIndis(Collection<Indi> indis) {
+        int indisAnalysed = 0;
+
         for (Iterator<Indi> indisIterator = indis.iterator(); indisIterator.hasNext();) {
-            Indi indi = indisIterator.next();
             String firstName = null;
             String lastName = null;
+            Indi indi = indisIterator.next();
+
+            indisAnalysed += 1;
 
             Property[] pIndiNames = (Property[]) indi.getProperties("NAME");
             if (pIndiNames.length > 0) {
@@ -490,14 +495,8 @@ public final class GeneanetExportAction implements ActionListener {
             }
 
             // create the Key
-            String indiKey = null;
-            String tmpString = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
-            try {
-                byte[] byteString = tmpString.getBytes("US-ASCII");
-                indiKey = new String(byteString);
-            } catch (UnsupportedEncodingException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            String fullName = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
+            String indiKey = Normalizer.normalize(fullName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 
             Integer NameOccurence = indiNameOccurence.get(indiKey);
             indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);
