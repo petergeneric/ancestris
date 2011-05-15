@@ -36,6 +36,9 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
 
 public final class GeneanetExportAction implements ActionListener {
 
@@ -120,6 +123,7 @@ public final class GeneanetExportAction implements ActionListener {
     }
     Map<String, Integer> indiNameOccurence = new HashMap<String, Integer>();
     Map<String, GwIndi> indiMap = new HashMap<String, GwIndi>();
+    InputOutput io = null;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -152,26 +156,56 @@ public final class GeneanetExportAction implements ActionListener {
             }
         };
 
-        fc.setFileFilter(filter);
-        fc.setAcceptAllFileFilterUsed(false);
-
         indiNameOccurence.clear();
         indiMap.clear();
 
         if ((context = App.center.getSelectedContext(true)) != null) {
             Gedcom myGedcom = context.getGedcom();
-            fc.setSelectedFile(new File(removeExtension(myGedcom.getOrigin().getFile().toString()) + ".gw"));
+            String gedcomName = removeExtension(myGedcom.getName());
+            String FileName = myGedcom.getOrigin().getFile().toString();
+
+            // get export directoty
+            String exportDir = NbPreferences.forModule(GeneanetExportAction.class).get("Dossier Export " + gedcomName, "");
+            String exportFile = NbPreferences.forModule(GeneanetExportAction.class).get("Fichier Export " + gedcomName, gedcomName + ".gw");
+
+            if (exportDir.length() > 0) {
+                File initialDir = new File(exportDir);
+                // Set the current directory
+                fc.setCurrentDirectory(initialDir);
+            }
+            fc.setFileFilter(filter);
+            fc.setAcceptAllFileFilterUsed(false);
+
+            fc.setSelectedFile(new File(exportFile));
 
             if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
+                // Get current directory
+                try {
+                    exportDir = fc.getCurrentDirectory().getCanonicalPath();
+                } catch (IOException ex) {
+                    exportDir = "";
+                }
+                // save export directory
+                NbPreferences.forModule(GeneanetExportAction.class).put("Dossier Export " + gedcomName, exportDir);
+                NbPreferences.forModule(GeneanetExportAction.class).put("Fichier Export " + gedcomName, file.getName());
+
+                io = IOProvider.getDefault().getIO(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle"), false);
+                io.getOut().println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), gedcomName));
                 analyzeIndis(myGedcom.getIndis());
                 analyzeFam(myGedcom.getFamilies(), file);
+                io.getOut().println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.End"));
+                io.getOut().close();
+                io.getErr().close();
             }
         }
     }
 
     void analyzeFam(Collection<Fam> familys, File file) {
         BufferedWriter out = null;
+        int nbExportedFamilys = 0;
+        int nbExportedindis = 0;
+
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
 
@@ -179,6 +213,8 @@ public final class GeneanetExportAction implements ActionListener {
             Iterator familysIterator = familys.iterator();
             while (familysIterator.hasNext()) {
                 Fam family = (Fam) familysIterator.next();
+
+                nbExportedFamilys += 1;
 
                 /*
                  * fam HusbandLastName FirstName[.Number]
@@ -193,8 +229,10 @@ public final class GeneanetExportAction implements ActionListener {
                     Fam[] husbandFamc = husband.getFamiliesWhereChild();
                     if (husbandFamc.length == 0) {
                         GwIndi gwIndi = indiMap.get(husband.getId());
+
                         if (gwIndi.isDescribed() == false) {
                             gwIndi.setAlreadyDescribed();
+                            nbExportedindis += 1;
                             indiMap.put(husband.getId(), gwIndi);
                             out.write(gwIndi.getDescription() + " ");
                         }
@@ -266,8 +304,10 @@ public final class GeneanetExportAction implements ActionListener {
                     Fam[] wifeFamc = wife.getFamiliesWhereChild();
                     if (wifeFamc.length == 0) {
                         GwIndi gwIndi = indiMap.get(wife.getId());
+
                         if (gwIndi.isDescribed() == false) {
                             gwIndi.setAlreadyDescribed();
+                            nbExportedindis += 1;
                             indiMap.put(wife.getId(), gwIndi);
                             out.write(" " + gwIndi.getDescription());
                         }
@@ -322,7 +362,6 @@ public final class GeneanetExportAction implements ActionListener {
                                         Indi witness = (Indi) association.getParent();
                                         out.write("wit: " + indiMap.get(witness.getId()).getNameOccurenced() + "\n");
                                     }
-
                                 }
                             }
                         }
@@ -339,6 +378,8 @@ public final class GeneanetExportAction implements ActionListener {
                 if (childrens.length > 0) {
                     out.write("beg\n");
                     for (Indi children : childrens) {
+                        nbExportedindis += 1;
+
                         switch (children.getSex()) {
                             case PropertySex.FEMALE:
                                 out.write("- f ");
@@ -459,17 +500,18 @@ public final class GeneanetExportAction implements ActionListener {
                 Exceptions.printStackTrace(ex1);
             }
         }
+
+        io.getOut().println("Nombre de familles exportées " + nbExportedFamilys);
+        io.getOut().println("Nombre d'individus exportés " + nbExportedindis);
+
     }
 
     private void analyzeIndis(Collection<Indi> indis) {
-        int indisAnalysed = 0;
 
         for (Iterator<Indi> indisIterator = indis.iterator(); indisIterator.hasNext();) {
             String firstName = null;
             String lastName = null;
             Indi indi = indisIterator.next();
-
-            indisAnalysed += 1;
 
             Property[] pIndiNames = (Property[]) indi.getProperties("NAME");
             if (pIndiNames.length > 0) {
