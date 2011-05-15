@@ -194,6 +194,15 @@ public final class GeneanetExportAction implements ActionListener {
                 io.getOut().println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), gedcomName));
                 analyzeIndis(myGedcom.getIndis());
                 analyzeFam(myGedcom.getFamilies(), file);
+                Iterator iterator = indiMap.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String key = (String) iterator.next();
+                    GwIndi indi = indiMap.get(key);
+
+                    if (indi.isDescribed() == false) {
+                        io.getOut().println(key + " " + indi.getName());
+                    }
+                }
                 io.getOut().println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.End"));
                 io.getOut().close();
                 io.getErr().close();
@@ -417,6 +426,7 @@ public final class GeneanetExportAction implements ActionListener {
                             }
                         }
                         out.write(indiMap.get(children.getId()).getDescription());
+                        indiMap.get(children.getId()).setAlreadyDescribed();
                         out.write("\n");
                     }
                     out.write("end\n");
