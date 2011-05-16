@@ -26,7 +26,7 @@
         <property name="buildnumber" value="${info.entry.commit(revision)}" />
     </target>
     <target name="jar" depends="init,compile,-manifest-prep,jar-prep" unless="is.jar.uptodate">
-        <copyfile src="${manifest.mf-temp}" dest="/tmp/manifest"/>
+        <copy file="${manifest.mf-temp}" tofile="/tmp/manifest"/>
         <!-- XXX it seems that using <manifest> forces the JAR to be recreated each time -->
         <!-- (presumably due to the variable OIDE-M-I-V) -->
         <!-- so might have to use e.g. <manifest> task (created in build/ somewhere)? -->
