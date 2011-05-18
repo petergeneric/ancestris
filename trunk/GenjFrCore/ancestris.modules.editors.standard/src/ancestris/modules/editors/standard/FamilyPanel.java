@@ -11,6 +11,7 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.modules.editors.standard.actions.ACreateParent;
 import ancestris.modules.editors.standard.actions.ACreateChild;
 import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import ancestris.util.FilteredMouseAdapter;

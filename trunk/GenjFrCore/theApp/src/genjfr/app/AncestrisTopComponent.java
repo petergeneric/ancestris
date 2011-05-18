@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -67,7 +68,7 @@ import org.openide.windows.WindowManager;
 public class AncestrisTopComponent extends TopComponent implements GenjViewInterface{
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
-    private javax.swing.JPanel panel;
+    private javax.swing.JComponent panel;
     private boolean isRestored = false;
     private final static Logger LOG = Logger.getLogger("genj.app");
     private Context context;
@@ -164,7 +165,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         GenjFrPlugin.register(this);
     }
 
-    public void setPanel(JPanel jpanel) {
+    public void setPanel(JComponent jpanel) {
         removeAll();
         repaint();
         panel = jpanel;
