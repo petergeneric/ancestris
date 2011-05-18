@@ -23,6 +23,8 @@ import genjfr.app.AncestrisTopComponent;
 import genjfr.app.GenjViewInterface;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -35,10 +37,16 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     private static final String PREFERRED_ID = "EditTopComponent";
     private static EditTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
+    EventsPanel eventsPanel = new EventsPanel();
     GedcomPanel gedcomPanel = new GedcomPanel();
+    JTabbedPane editorPanel;
 
     @Override
     public boolean createPanel() {
+        editorPanel = new JTabbedPane();
+        editorPanel.addTab("Entity", familyPanel);
+        editorPanel.addTab("Event", eventsPanel);
+        editorPanel.addTab("Gedcom", gedcomPanel);
         setContext(getContext(), true);
         return true;
     }
@@ -101,14 +109,18 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         if (context == null) {
             return;
         }
-        if (context.getEntity() != null && !context.getEntities().isEmpty()) {
-            setPanel(familyPanel);
-            familyPanel.setContext(context);
-            return;
-        }
-        // Default to gedcom
+        familyPanel.setContext(context);
         gedcomPanel.setContext(context);
-        setPanel(gedcomPanel);
+        eventsPanel.setContext(context);
+        setPanel(editorPanel);
+//        if (context.getEntity() != null && !context.getEntities().isEmpty()) {
+//            setPanel(familyPanel);
+//            familyPanel.setContext(context);
+//            return;
+//        }
+//        // Default to gedcom
+//        gedcomPanel.setContext(context);
+//        setPanel(gedcomPanel);
         repaint();
     }
 

@@ -1,5 +1,6 @@
-package ancestris.modules.editors.standard;
+package ancestris.modules.editors.standard.actions;
 
+import ancestris.modules.editors.standard.FamilyPanel;
 import genj.edit.actions.CreateParent;
 import genj.gedcom.Indi;
 import java.awt.event.ActionEvent;
