@@ -140,7 +140,12 @@ public final class GeneanetExportAction implements ActionListener {
                 return true;
             }
         } else {
-            return true;
+            // dans le doute on s'abstien
+            if (lessThan100Exported == false) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
@@ -518,102 +523,100 @@ public final class GeneanetExportAction implements ActionListener {
             String lastName = null;
             Indi indi = indisIterator.next();
 
-            if (lessThan100Exported == true || CanbeExported(indi)) {
-                Property[] pIndiNames = (Property[]) indi.getProperties("NAME");
-                if (pIndiNames.length > 0) {
-                    // extract First and last Name of the first property
-                    // name found for key generation
-                    if (((PropertyName) pIndiNames[0]).getLastName().length() > 0) {
-                        lastName = ((PropertyName) pIndiNames[0]).getLastName().replaceAll(" |\n", "_");
-                    } else {
-                        lastName = " ?";
-                    }
-                    if (((PropertyName) pIndiNames[0]).getFirstName().length() > 0) {
-                        firstName = ((PropertyName) pIndiNames[0]).getFirstName();
-                        int index = firstName.indexOf(" ");
-                        if (index > 0) {
-                            firstName = firstName.substring(0, index);
-                        }
-                    } else {
-                        firstName = " ?";
+            Property[] pIndiNames = (Property[]) indi.getProperties("NAME");
+            if (pIndiNames.length > 0) {
+                // extract First and last Name of the first property
+                // name found for key generation
+                if (((PropertyName) pIndiNames[0]).getLastName().length() > 0) {
+                    lastName = ((PropertyName) pIndiNames[0]).getLastName().replaceAll(" |\n", "_");
+                } else {
+                    lastName = " ?";
+                }
+                if (((PropertyName) pIndiNames[0]).getFirstName().length() > 0) {
+                    firstName = ((PropertyName) pIndiNames[0]).getFirstName();
+                    int index = firstName.indexOf(" ");
+                    if (index > 0) {
+                        firstName = firstName.substring(0, index);
                     }
                 } else {
-                    firstName = "?";
-                    lastName = "?";
+                    firstName = " ?";
                 }
-
-                // create the Key
-                String fullName = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
-                String indiKey = Normalizer.normalize(fullName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-
-                Integer NameOccurence = indiNameOccurence.get(indiKey);
-                indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);
-                GwIndi gwIndi = null;
-                if (NameOccurence == null) {
-                    gwIndi = new GwIndi(lastName, firstName, 0);
-                } else {
-                    gwIndi = new GwIndi(lastName, firstName, NameOccurence);
-                }
-
-                gwIndi.setDescription(analyzeIndi(indi));
-
-                /*
-                 * indi Notes
-                 */
-                if (notesExported == true) {
-                    Property[] indiNotes = indi.getProperties("NOTE");
-                    if (indiNotes.length > 0) {
-                        String stringNotes = "";
-                        stringNotes = "beg\n";
-                        // PropertyNote | PropertyMultilineValue
-                        for (Property note : indiNotes) {
-                            boolean first = true;
-                            if (note instanceof PropertyNote) {
-                                note = ((PropertyNote) note).getTargetEntity();
-                            }
-                            if (first == true) {
-                                first = false;
-                                stringNotes += note.getValue().replaceAll("\n", " ");
-                            } else {
-                                stringNotes += "<br>" + note.getValue().replaceAll("\n", " ");
-                            }
-                        }
-                        stringNotes += "\nend notes\n";
-                        gwIndi.setNotes(stringNotes);
-                    }
-                }
-
-                /*
-                 * rel LastName FirstName[.Number]
-                 * beg
-                 * - adop: AdoptiveFather + AdoptiveMother
-                 * - adop fath : AdoptiveFather
-                 * - adop moth : AdoptiveMother
-                 * - reco: RecognizingFather + RecognizingMother
-                 * - reco fath : RecognizingFather
-                 * - reco moth : RecognizingMother
-                 * - cand: CandidateFather + CandidateMother
-                 * - cand fath : CandidateFather
-                 * - cand moth : CandidateMother
-                 * - godp: GodFather + GodMother
-                 * - godp fath : GodFather
-                 * - godp moth : GodMother
-                 * - fost: FosterFather + FosterMother
-                 * - fost fath : FosterFather
-                 * - fost moth : FosterMother
-                 * end
-                 */
-                /*
-                Property propertyBapm = indi.getProperty("BAPM");
-                if(propertyBapm != null) {
-                Property[] PropertiesXREF = propertyBapm.getProperties("XREF");
-                for (Property property : PropertiesXREF) {
-                System.out.println (((PropertyXRef)property).getTargetType());
-                }
-                }
-                 */
-                indiMap.put(indi.getId(), gwIndi);
+            } else {
+                firstName = "?";
+                lastName = "?";
             }
+
+            // create the Key
+            String fullName = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
+            String indiKey = Normalizer.normalize(fullName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+            Integer NameOccurence = indiNameOccurence.get(indiKey);
+            indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);
+            GwIndi gwIndi = null;
+            if (NameOccurence == null) {
+                gwIndi = new GwIndi(lastName, firstName, 0);
+            } else {
+                gwIndi = new GwIndi(lastName, firstName, NameOccurence);
+            }
+
+            gwIndi.setDescription(analyzeIndi(indi));
+
+            /*
+             * indi Notes
+             */
+            if (notesExported == true) {
+                Property[] indiNotes = indi.getProperties("NOTE");
+                if (indiNotes.length > 0) {
+                    String stringNotes = "";
+                    stringNotes = "beg\n";
+                    // PropertyNote | PropertyMultilineValue
+                    for (Property note : indiNotes) {
+                        boolean first = true;
+                        if (note instanceof PropertyNote) {
+                            note = ((PropertyNote) note).getTargetEntity();
+                        }
+                        if (first == true) {
+                            first = false;
+                            stringNotes += note.getValue().replaceAll("\n", " ");
+                        } else {
+                            stringNotes += "<br>" + note.getValue().replaceAll("\n", " ");
+                        }
+                    }
+                    stringNotes += "\nend notes\n";
+                    gwIndi.setNotes(stringNotes);
+                }
+            }
+
+            /*
+             * rel LastName FirstName[.Number]
+             * beg
+             * - adop: AdoptiveFather + AdoptiveMother
+             * - adop fath : AdoptiveFather
+             * - adop moth : AdoptiveMother
+             * - reco: RecognizingFather + RecognizingMother
+             * - reco fath : RecognizingFather
+             * - reco moth : RecognizingMother
+             * - cand: CandidateFather + CandidateMother
+             * - cand fath : CandidateFather
+             * - cand moth : CandidateMother
+             * - godp: GodFather + GodMother
+             * - godp fath : GodFather
+             * - godp moth : GodMother
+             * - fost: FosterFather + FosterMother
+             * - fost fath : FosterFather
+             * - fost moth : FosterMother
+             * end
+             */
+            /*
+            Property propertyBapm = indi.getProperty("BAPM");
+            if(propertyBapm != null) {
+            Property[] PropertiesXREF = propertyBapm.getProperties("XREF");
+            for (Property property : PropertiesXREF) {
+            System.out.println (((PropertyXRef)property).getTargetType());
+            }
+            }
+             */
+            indiMap.put(indi.getId(), gwIndi);
         }
     }
 
