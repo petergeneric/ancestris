@@ -38,7 +38,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     private static EditTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
     EventsPanel eventsPanel = new EventsPanel();
-    GedcomPanel gedcomPanel = new GedcomPanel();
+//    GedcomPanel gedcomPanel = new GedcomPanel();
     JTabbedPane editorPanel;
 
     @Override
@@ -46,7 +46,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         editorPanel = new JTabbedPane();
         editorPanel.addTab("Entity", familyPanel);
         editorPanel.addTab("Event", eventsPanel);
-        editorPanel.addTab("Gedcom", gedcomPanel);
+//        editorPanel.addTab("Gedcom", gedcomPanel);
         setContext(getContext(), true);
         return true;
     }
@@ -110,7 +110,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
             return;
         }
         familyPanel.setContext(context);
-        gedcomPanel.setContext(context);
+//        gedcomPanel.setContext(context);
         eventsPanel.setContext(context);
         setPanel(editorPanel);
 //        if (context.getEntity() != null && !context.getEntities().isEmpty()) {
