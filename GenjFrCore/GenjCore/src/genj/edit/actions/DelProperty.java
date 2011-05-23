@@ -84,6 +84,10 @@ public class DelProperty extends AbstractChange {
     Property parent = null;
 
     for (Property prop : candidates) {
+        if (prop instanceof Entity){
+            gedcom.deleteEntity(((Entity)prop));
+            continue;
+        }
       
       if (prop instanceof PropertyXRef && prop.isValid()) {
         orphans.add( ((PropertyXRef)prop).getTargetEntity() );
