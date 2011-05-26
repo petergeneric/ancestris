@@ -102,25 +102,25 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         if (NbPreferences.forModule(GenenanetExportPanel.class).get("ExportEvents", "true").equals("true")) {
             jCheckBoxExportEvents.setSelected(true);
         } else {
-            jCheckBoxExportEvents.setSelected(true);
+            jCheckBoxExportEvents.setSelected(false);
         }
 
         if (NbPreferences.forModule(GenenanetExportPanel.class).get("ExportNotes", "true").equals("true")) {
             jCheckBoxExportNotes.setSelected(true);
         } else {
-            jCheckBoxExportNotes.setSelected(true);
+            jCheckBoxExportNotes.setSelected(false);
         }
 
         if (NbPreferences.forModule(GenenanetExportPanel.class).get("ExportSources", "true").equals("true")) {
             jCheckBoxExportSources.setSelected(true);
         } else {
-            jCheckBoxExportSources.setSelected(true);
+            jCheckBoxExportSources.setSelected(false);
         }
 
-        if (NbPreferences.forModule(GenenanetExportPanel.class).get("LogEnable", "true").equals("true")) {
+        if (NbPreferences.forModule(GenenanetExportPanel.class).get("LogEnable", "false").equals("true")) {
             jCheckBoxLogEnable.setSelected(true);
         } else {
-            jCheckBoxLogEnable.setSelected(true);
+            jCheckBoxLogEnable.setSelected(false);
         }
     }
 
@@ -391,7 +391,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         if (jCheckBoxExportEvents.isSelected() == true) {
             NbPreferences.forModule(GenenanetExportPanel.class).put("ExportEvents", "true");
         } else {
-            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportEvents", "true");
+            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportEvents", "false");
         }
     }//GEN-LAST:event_jCheckBoxExportEventsActionPerformed
 
@@ -399,7 +399,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         if (jCheckBoxExportEvents.isSelected() == true) {
             NbPreferences.forModule(GenenanetExportPanel.class).put("ExportSourcess", "true");
         } else {
-            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportSources", "true");
+            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportSources", "false");
         }
     }//GEN-LAST:event_jCheckBoxExportSourcesActionPerformed
 
@@ -407,7 +407,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         if (jCheckBoxExportEvents.isSelected() == true) {
             NbPreferences.forModule(GenenanetExportPanel.class).put("ExportNotes", "true");
         } else {
-            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportNotess", "true");
+            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportNotess", "false");
         }
     }//GEN-LAST:event_jCheckBoxExportNotesActionPerformed
 
@@ -415,7 +415,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         if (jCheckBoxExportEvents.isSelected() == true) {
             NbPreferences.forModule(GenenanetExportPanel.class).put("LogEnable", "true");
         } else {
-            NbPreferences.forModule(GenenanetExportPanel.class).put("LogEnable", "true");
+            NbPreferences.forModule(GenenanetExportPanel.class).put("LogEnable", "false");
         }
     }//GEN-LAST:event_jCheckBoxLogEnableActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
