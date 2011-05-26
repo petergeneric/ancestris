@@ -197,7 +197,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
 
         jLabel1.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jLabel1.text")); // NOI18N
 
-        jFormattedTextFieldDuration.setColumns(4);
+        jFormattedTextFieldDuration.setColumns(5);
 
         jFormattedTextFieldDuration.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(new DecimalFormat("#0"))));
         jFormattedTextFieldDuration.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jFormattedTextFieldDuration.text")); // NOI18N
@@ -268,7 +268,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
                     .addComponent(jCheckBoxExportSources)
                     .addComponent(jCheckBoxExportNotes)
                     .addComponent(jCheckBoxLogEnable))
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(Alignment.LEADING)
@@ -302,11 +302,11 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(jTabbedPaneNotes, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
+                    .addComponent(jTabbedPaneNotes, Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelExportFileName)
                         .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldExportFileName, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                        .addComponent(jTextFieldExportFileName, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                         .addPreferredGap(ComponentPlacement.RELATED)
                         .addComponent(jButtonChooseFile)))
                 .addContainerGap())

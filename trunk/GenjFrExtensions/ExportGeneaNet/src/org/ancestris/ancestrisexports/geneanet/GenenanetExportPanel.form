@@ -36,11 +36,11 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPaneNotes" alignment="1" pref="338" max="32767" attributes="0"/>
+                  <Component id="jTabbedPaneNotes" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabelExportFileName" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldExportFileName" pref="138" max="32767" attributes="0"/>
+                      <Component id="jTextFieldExportFileName" pref="149" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButtonChooseFile" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -130,7 +130,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="jFormattedTextFieldDuration">
               <Properties>
-                <Property name="columns" type="int" value="4"/>
+                <Property name="columns" type="int" value="5"/>
                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                   <Format format="#0" subtype="-1" type="0"/>
                 </Property>
@@ -163,7 +163,7 @@
                           <Component id="jCheckBoxExportNotes" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jCheckBoxLogEnable" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="131" max="32767" attributes="0"/>
+                      <EmptySpace pref="142" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
