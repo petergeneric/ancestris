@@ -1,3 +1,26 @@
+/*
+ *  Copyright (C) 2011 lemovice
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+/*
+ * GeneanetExportAction.java
+ *
+ * Created on 23 mai 2011, 21:34:49
+ */
 package org.ancestris.ancestrisexports.geneanet;
 
 import genj.gedcom.Context;
@@ -32,6 +55,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.Exceptions;
@@ -50,6 +75,7 @@ public final class GeneanetExportAction implements ActionListener {
         private String description = null;
         private String notes = null;
         private String relations = null;
+        private boolean canBeExported = false;
 
         public GwIndi() {
         }
@@ -119,32 +145,44 @@ public final class GeneanetExportAction implements ActionListener {
         public boolean isDescribed() {
             return alreadyDescribed;
         }
+
+        public boolean canBeExported () {
+            return canBeExported;
+        }
+
+        public void setCanBeExported (boolean canBeExported) {
+            this.canBeExported = canBeExported;
+        }
     }
+
     Map<String, Integer> indiNameOccurence = new HashMap<String, Integer>();
     Map<String, GwIndi> indiMap = new HashMap<String, GwIndi>();
+    private final static Logger LOG = Logger.getLogger("genj.app", null);
     InputOutput io = null;
     File file = null;
     boolean notesExported = true;
     boolean sourcesExported = true;
-    boolean lessThan100Exported = false;
+    boolean exportedRestricted = true;
+    boolean logEnabled = false;
+    int ExportRestriction = 100;
 
-    boolean CanbeExported(Indi indi) {
+    boolean canbeExported(Indi indi) {
         PointInTime CurrentDate = PointInTime.getNow();
         PropertyDate birthDate = indi != null ? indi.getBirthDate() : null;
         PointInTime date = birthDate != null ? birthDate.getStart() : null;
 
         if (date != null) {
-            if (lessThan100Exported == false) {
-                return CurrentDate.getYear() - date.getYear() > 100;
+            if (exportedRestricted == true) {
+                return CurrentDate.getYear() - date.getYear() > ExportRestriction;
             } else {
                 return true;
             }
         } else {
-            // dans le doute on s'abstien
-            if (lessThan100Exported == false) {
-                return false;
-            } else {
+            // dans le doute on s'abstient
+            if (exportedRestricted == true) {
                 return true;
+            } else {
+                return false;
             }
         }
     }
@@ -167,6 +205,9 @@ public final class GeneanetExportAction implements ActionListener {
                     file = genenanetExportPanel.getFile();
                     notesExported = genenanetExportPanel.isNotesExported();
                     sourcesExported = genenanetExportPanel.isSourcesExported();
+                    exportedRestricted = genenanetExportPanel.isExportRestricited();
+                    ExportRestriction = genenanetExportPanel.getRestrictionYears();
+                    logEnabled = genenanetExportPanel.isLogEnable();
                 }
             }
             DialogDescriptor GeneanetExportActionDescriptor = new DialogDescriptor(
@@ -189,7 +230,7 @@ public final class GeneanetExportAction implements ActionListener {
                     String key = (String) iterator.next();
                     GwIndi indi = indiMap.get(key);
 
-                    if (indi.isDescribed() == false) {
+                    if (indi.canBeExported() == true && indi.isDescribed() == false) {
                         io.getOut().println(key + " " + indi.getName());
                     }
                 }
@@ -215,7 +256,10 @@ public final class GeneanetExportAction implements ActionListener {
                 Indi husband = family.getHusband();
                 Indi wife = family.getWife();
 
-                if (CanbeExported(husband) && CanbeExported(wife)) {
+                if (canbeExported(husband) && canbeExported(wife)) {
+                    if (logEnabled == true) {
+                        LOG.log(Level.INFO, "export famille {0}", family.toString(true));
+                    }
                     nbExportedFamilys += 1;
 
                     /*
@@ -232,6 +276,9 @@ public final class GeneanetExportAction implements ActionListener {
                             GwIndi gwIndi = indiMap.get(husband.getId());
 
                             if (gwIndi.isDescribed() == false) {
+                                if (logEnabled == true) {
+                                    LOG.log(Level.INFO, "export individu {0}", husband.toString(true));
+                                }
                                 gwIndi.setAlreadyDescribed();
                                 nbExportedindis += 1;
                                 indiMap.put(husband.getId(), gwIndi);
@@ -308,6 +355,9 @@ public final class GeneanetExportAction implements ActionListener {
                             GwIndi gwIndi = indiMap.get(wife.getId());
 
                             if (gwIndi.isDescribed() == false) {
+                                if (logEnabled == true) {
+                                    LOG.log(Level.INFO, "export individu {0}", wife.toString(true));
+                                }
                                 gwIndi.setAlreadyDescribed();
                                 nbExportedindis += 1;
                                 indiMap.put(wife.getId(), gwIndi);
@@ -384,8 +434,11 @@ public final class GeneanetExportAction implements ActionListener {
                     if (childrens.length > 0) {
                         out.write("beg\n");
                         for (Indi children : childrens) {
-                            if (CanbeExported(children) == true) {
+                            if (canbeExported(children) == true) {
                                 nbExportedindis += 1;
+                                if (logEnabled == true) {
+                                    LOG.log(Level.INFO, "export individu {0}", children.toString(true));
+                                }
 
                                 switch (children.getSex()) {
                                     case PropertySex.FEMALE:
@@ -559,6 +612,7 @@ public final class GeneanetExportAction implements ActionListener {
                 gwIndi = new GwIndi(lastName, firstName, NameOccurence);
             }
 
+            gwIndi.setCanBeExported(canbeExported(indi));
             gwIndi.setDescription(analyzeIndi(indi));
 
             /*
