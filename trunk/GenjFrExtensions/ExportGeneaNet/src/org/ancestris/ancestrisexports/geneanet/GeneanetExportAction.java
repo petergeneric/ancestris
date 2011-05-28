@@ -146,15 +146,14 @@ public final class GeneanetExportAction implements ActionListener {
             return alreadyDescribed;
         }
 
-        public boolean canBeExported () {
+        public boolean canBeExported() {
             return canBeExported;
         }
 
-        public void setCanBeExported (boolean canBeExported) {
+        public void setCanBeExported(boolean canBeExported) {
             this.canBeExported = canBeExported;
         }
     }
-
     Map<String, Integer> indiNameOccurence = new HashMap<String, Integer>();
     Map<String, GwIndi> indiMap = new HashMap<String, GwIndi>();
     private final static Logger LOG = Logger.getLogger("genj.app", null);
@@ -258,7 +257,7 @@ public final class GeneanetExportAction implements ActionListener {
 
                 if (canbeExported(husband) && canbeExported(wife)) {
                     if (logEnabled == true) {
-                        LOG.log(Level.INFO, "export famille {0}", family.toString(true));
+                        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportFamilleText"), family.toString(true));
                     }
                     nbExportedFamilys += 1;
 
@@ -277,7 +276,7 @@ public final class GeneanetExportAction implements ActionListener {
 
                             if (gwIndi.isDescribed() == false) {
                                 if (logEnabled == true) {
-                                    LOG.log(Level.INFO, "export individu {0}", husband.toString(true));
+                                    LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), husband.toString(true));
                                 }
                                 gwIndi.setAlreadyDescribed();
                                 nbExportedindis += 1;
@@ -356,7 +355,7 @@ public final class GeneanetExportAction implements ActionListener {
 
                             if (gwIndi.isDescribed() == false) {
                                 if (logEnabled == true) {
-                                    LOG.log(Level.INFO, "export individu {0}", wife.toString(true));
+                                    LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), wife.toString(true));
                                 }
                                 gwIndi.setAlreadyDescribed();
                                 nbExportedindis += 1;
@@ -437,7 +436,7 @@ public final class GeneanetExportAction implements ActionListener {
                             if (canbeExported(children) == true) {
                                 nbExportedindis += 1;
                                 if (logEnabled == true) {
-                                    LOG.log(Level.INFO, "export individu {0}", children.toString(true));
+                                    LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ExportIndividuText"), children.toString(true));
                                 }
 
                                 switch (children.getSex()) {
@@ -566,6 +565,10 @@ public final class GeneanetExportAction implements ActionListener {
 
         io.getOut().println("Nombre de familles exportées " + nbExportedFamilys);
         io.getOut().println("Nombre d'individus exportés " + nbExportedindis);
+        if (logEnabled == true) {
+            LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbFamillesExportText"), nbExportedFamilys);
+            LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbIndividusExportText"), nbExportedindis);
+        }
 
     }
 
