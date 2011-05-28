@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -161,78 +162,61 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+
         jPanel2 = new JPanel();
+        jPanel4 = new JPanel();
         jTabbedPaneNotes = new JTabbedPane();
+        jPanel3 = new JPanel();
+        jCheckBoxLogEnable = new JCheckBox();
+        jPanel5 = new JPanel();
+        jCheckBoxExportSources = new JCheckBox();
+        jCheckBoxExportNotes = new JCheckBox();
         jPanel1 = new JPanel();
+        jCheckBoxExportEvents = new JCheckBox();
         jCheckBoxExportRestricited = new JCheckBox();
         jLabel1 = new JLabel();
         jFormattedTextFieldDuration = new JFormattedTextField();
-        jPanel3 = new JPanel();
-        jCheckBoxExportEvents = new JCheckBox();
-        jCheckBoxExportSources = new JCheckBox();
-        jCheckBoxExportNotes = new JCheckBox();
-        jCheckBoxLogEnable = new JCheckBox();
         jLabelExportFileName = new JLabel();
         jTextFieldExportFileName = new JTextField();
         jButtonChooseFile = new JButton();
+
+        jPanel4.setBorder(BorderFactory.createTitledBorder(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanel4.border.title"))); // NOI18N
+        GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(Alignment.LEADING)
+            .addGap(0, 299, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(Alignment.LEADING)
+            .addGap(0, 88, Short.MAX_VALUE)
+        );
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(Alignment.LEADING)
-            .addGap(0, 333, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
+            .addGroup(Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jCheckBoxExportRestricited.setSelected(true);
-        jCheckBoxExportRestricited.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jRadioButtonLess100Yes.text")); // NOI18N
-        jCheckBoxExportRestricited.addActionListener(new ActionListener() {
+        jCheckBoxLogEnable.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxLogEnable.text")); // NOI18N
+        jCheckBoxLogEnable.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                jCheckBoxExportRestricitedActionPerformed(evt);
+                jCheckBoxLogEnableActionPerformed(evt);
             }
         });
 
-        jLabel1.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jLabel1.text")); // NOI18N
-
-        jFormattedTextFieldDuration.setColumns(5);
-
-        jFormattedTextFieldDuration.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(new DecimalFormat("#0"))));
-        jFormattedTextFieldDuration.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jFormattedTextFieldDuration.text")); // NOI18N
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBoxExportRestricited)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jFormattedTextFieldDuration, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
-                    .addComponent(jCheckBoxExportRestricited)
-                    .addComponent(jFormattedTextFieldDuration, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(77, Short.MAX_VALUE))
-        );
-
-        jTabbedPaneNotes.addTab(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
-        jCheckBoxExportEvents.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxExportEvents.text")); // NOI18N
-        jCheckBoxExportEvents.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jCheckBoxExportEventsActionPerformed(evt);
-            }
-        });
+        jPanel5.setBorder(BorderFactory.createTitledBorder(""));
 
         jCheckBoxExportSources.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxExportSources.text")); // NOI18N
         jCheckBoxExportSources.addActionListener(new ActionListener() {
@@ -248,43 +232,105 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
             }
         });
 
-        jCheckBoxLogEnable.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxLogEnable.text")); // NOI18N
-        jCheckBoxLogEnable.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                jCheckBoxLogEnableActionPerformed(evt);
-            }
-        });
+        GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(Alignment.LEADING)
+                    .addComponent(jCheckBoxExportSources)
+                    .addComponent(jCheckBoxExportNotes))
+                .addContainerGap(194, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxExportSources)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBoxExportNotes)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
-
 
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(jCheckBoxExportEvents)
-                    .addComponent(jCheckBoxExportSources)
-                    .addComponent(jCheckBoxExportNotes)
-                    .addComponent(jCheckBoxLogEnable))
-                .addContainerGap(142, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jCheckBoxLogEnable))
+                    .addComponent(jPanel5, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCheckBoxExportEvents)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxExportSources)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxExportNotes)
-                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(jPanel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBoxLogEnable)
-                .addContainerGap())
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jTabbedPaneNotes.addTab(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
+        jCheckBoxExportEvents.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxExportEvents.text")); // NOI18N
+        jCheckBoxExportEvents.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jCheckBoxExportEventsActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxExportRestricited.setSelected(true);
+        jCheckBoxExportRestricited.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jRadioButtonLess100Yes.text")); // NOI18N
+        jCheckBoxExportRestricited.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jCheckBoxExportRestricitedActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jLabel1.text")); // NOI18N
+
+        jFormattedTextFieldDuration.setColumns(4);
+
+        jFormattedTextFieldDuration.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(new DecimalFormat("#0"))));
+        jFormattedTextFieldDuration.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jFormattedTextFieldDuration.text")); // NOI18N
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+
+
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jCheckBoxExportRestricited)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jFormattedTextFieldDuration, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jLabel1))
+                    .addComponent(jCheckBoxExportEvents))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(jCheckBoxExportRestricited)
+                    .addComponent(jFormattedTextFieldDuration, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBoxExportEvents)
+                .addContainerGap(72, Short.MAX_VALUE))
+        );
+
+        jTabbedPaneNotes.addTab(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
         jLabelExportFileName.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jLabelExportFileName.text")); // NOI18N
         jTextFieldExportFileName.setText(exportDirName + System.getProperty("file.separator") + exportFileName);
 
@@ -302,11 +348,11 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(jTabbedPaneNotes, Alignment.TRAILING)
+                    .addComponent(jTabbedPaneNotes, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelExportFileName)
                         .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldExportFileName, GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                        .addComponent(jTextFieldExportFileName, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                         .addPreferredGap(ComponentPlacement.RELATED)
                         .addComponent(jButtonChooseFile)))
                 .addContainerGap())
@@ -407,7 +453,7 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         if (jCheckBoxExportEvents.isSelected() == true) {
             NbPreferences.forModule(GenenanetExportPanel.class).put("ExportNotes", "true");
         } else {
-            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportNotess", "false");
+            NbPreferences.forModule(GenenanetExportPanel.class).put("ExportNotes", "false");
         }
     }//GEN-LAST:event_jCheckBoxExportNotesActionPerformed
 
@@ -431,6 +477,8 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
     private JPanel jPanel1;
     private JPanel jPanel2;
     private JPanel jPanel3;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
     private JTabbedPane jTabbedPaneNotes;
     private JTextField jTextFieldExportFileName;
     // End of variables declaration//GEN-END:variables
