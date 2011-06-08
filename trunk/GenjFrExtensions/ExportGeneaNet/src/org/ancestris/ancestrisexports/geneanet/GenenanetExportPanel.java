@@ -23,6 +23,7 @@
  */
 package org.ancestris.ancestrisexports.geneanet;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -218,6 +219,8 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         jTextFieldExportFileName = new JTextField();
         jButtonChooseFile = new JButton();
 
+        jPanelGeneral.setMinimumSize(new Dimension(526, 99));
+
         jCheckBoxExportRestricited.setSelected(true);
         jCheckBoxExportRestricited.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jRadioButtonLess100Yes.text")); // NOI18N
         jCheckBoxExportRestricited.addActionListener(new ActionListener() {
@@ -280,6 +283,8 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         );
 
         jTabbedPaneNotes.addTab(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanelGeneral.TabConstraints.tabTitle"), jPanelGeneral); // NOI18N
+        jPanelIndis.setMinimumSize(new Dimension(526, 99));
+
         jCheckBoxExportAlive.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxExportAlive.text")); // NOI18N
         jCheckBoxExportAlive.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -327,6 +332,8 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         );
 
         jTabbedPaneNotes.addTab(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanelIndis.TabConstraints.tabTitle"), jPanelIndis); // NOI18N
+        jPanelFam.setMinimumSize(new Dimension(526, 99));
+
         jCheckBoxExportWeddingDetails.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxExportWeddingDetails.text")); // NOI18N
         jCheckBoxExportWeddingDetails.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -364,6 +371,8 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
         );
 
         jTabbedPaneNotes.addTab(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jPanelFam.TabConstraints.tabTitle"), jPanelFam); // NOI18N
+        jPanelOther.setMinimumSize(new Dimension(526, 99));
+
         jCheckBoxLogEnable.setText(NbBundle.getMessage(GenenanetExportPanel.class, "GenenanetExportPanel.jCheckBoxLogEnable.text")); // NOI18N
         jCheckBoxLogEnable.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -421,13 +430,13 @@ public class GenenanetExportPanel extends javax.swing.JPanel {
             layout.createParallelGroup(Alignment.LEADING)
             .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPaneNotes, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPaneNotes, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(jLabelExportFileName)
                     .addComponent(jTextFieldExportFileName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonChooseFile))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
