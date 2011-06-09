@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -1276,7 +1277,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                         topoList = WebService.findNearbyPlaceName(localGeoPoint.getLatitude(), localGeoPoint.getLongitude(),
                                 8, 15, // radius, maxrows
                                 Style.FULL, // style
-                                genj.app.Options.getInstance().getLanguageCode()); // language
+                                Locale.getDefault().toString()); // language
                     } catch (Exception ex) {
                         return null;
                     }
