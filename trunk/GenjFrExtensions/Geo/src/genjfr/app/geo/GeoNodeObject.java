@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
@@ -386,7 +387,7 @@ class GeoNodeObject {
             topo = null;
             ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
             searchCriteria.setMaxRows(1);
-            searchCriteria.setLanguage(genj.app.Options.getInstance().getLanguageCode());
+            searchCriteria.setLanguage(Locale.getDefault().toString());
             searchCriteria.setStyle(Style.FULL);
             ToponymSearchResult searchResult;
             //
@@ -431,7 +432,7 @@ class GeoNodeObject {
         }
         ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
         searchCriteria.setMaxRows(max);
-        searchCriteria.setLanguage(genj.app.Options.getInstance().getLanguageCode());
+        searchCriteria.setLanguage(Locale.getDefault().toString());
         searchCriteria.setStyle(Style.FULL);
         ToponymSearchResult searchResult;
         List<Toponym> topo = new ArrayList<Toponym>();
