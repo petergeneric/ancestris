@@ -95,7 +95,7 @@
         <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
         <echo message="${app.name}: update zip-distribution with own stuff"/>
         <zip destfile="${dist.dir}/${app.name}.zip" update="true">
-            <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>
+<!--            <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>-->
             <zipfileset dir="${harness.dir}/../platform/core/locale" prefix="${app.name}/platform/core/locale"/>
             <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
             <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
