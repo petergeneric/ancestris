@@ -4,9 +4,13 @@
  */
 package genjfr.app;
 
+import ancestris.startup.settings.StartupOptions;
 import ancestris.util.AncestrisPreferences;
+import ancestris.util.Lifecycle;
 import genj.table.TableView;
 import genj.tree.TreeView;
+import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
@@ -16,12 +20,25 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     private final OptionDisplayOptionsPanelController controller;
     // Values
-    String[] languages = new String[13];
+    Locale[] locales = {
+        Locale.FRENCH,
+        Locale.ENGLISH,
+        Locale.ITALIAN,
+        Locale.GERMAN,
+        new Locale("hu"),
+        new Locale("es"),
+        new Locale("nl"),
+        new Locale("ru"),
+        new Locale("ja"),
+        new Locale("pt","BR"),
+        new Locale("cs"),
+        new Locale("pl"),
+        new Locale("fi")
+    };
     String[] skins = new String[9];
 
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
         this.controller = controller;
-        initLanguages();
         initSkins();
         initComponents();
         ToolTipManager.sharedInstance().setDismissDelay(10000); // sets it for the other panels...
@@ -44,7 +61,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox(skins);
-        jComboBox1 = new javax.swing.JComboBox(languages);
+        jComboBox1 = new javax.swing.JComboBox(initLanguages());
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -157,9 +174,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(3, 3, 3)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cbTreeFollowSelection, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
-                            .addComponent(cbTableFollowEntity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)))
+                            .addComponent(cbTreeFollowSelection, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                            .addComponent(cbTableFollowEntity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(79, 79, 79)
@@ -237,11 +254,18 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     }
 
     void store() {
+        boolean needRestart = false;
+
         AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
         AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
 
+        needRestart = !appPrefs.get("language","").equals(getLanguage());
         appPrefs.put("language", getLanguage());
+        StartupOptions stopts = new StartupOptions();
+        stopts.setJvmParameter("-J-Duser.language", locales[Integer.valueOf(getLanguage())].toString());
+        stopts.applyChanges();
+
         appPrefs.put("lookAndFeel", getSkin());
         appPrefs.put("isRestoreViews", getRestoreWindows());
         editPrefs.put("isAutoCommit", getAutoCommit());
@@ -255,6 +279,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         TableView.setFollowEntity(cbTableFollowEntity.isSelected());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
+        if (needRestart)
+            Lifecycle.askForRestart();
     }
 
     boolean valid() {
@@ -282,21 +308,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables
 
-    private void initLanguages() {
-        languages[0] = NbBundle.getMessage(App.class, "option.language.EN");
-        languages[1] = NbBundle.getMessage(App.class, "option.language.DE");
-        languages[2] = NbBundle.getMessage(App.class, "option.language.FR");
-        languages[3] = NbBundle.getMessage(App.class, "option.language.HU");
-        languages[4] = NbBundle.getMessage(App.class, "option.language.ES");
-        languages[5] = NbBundle.getMessage(App.class, "option.language.NL");
-        languages[6] = NbBundle.getMessage(App.class, "option.language.RU");
-        languages[7] = NbBundle.getMessage(App.class, "option.language.IT");
-        languages[8] = NbBundle.getMessage(App.class, "option.language.JA");
-        languages[9] = NbBundle.getMessage(App.class, "option.language.PT_BR");
-        languages[10] = NbBundle.getMessage(App.class, "option.language.CS");
-        languages[11] = NbBundle.getMessage(App.class, "option.language.PL");
-        languages[12] = NbBundle.getMessage(App.class, "option.language.FI");
-
+    private String[] initLanguages() {
+        ArrayList<String> langDescr = new ArrayList<String>(locales.length);
+        for (Locale locale:locales){
+            langDescr.add(locale.getDisplayName(locale));
+        }
+        return langDescr.toArray(new String[0]);
     }
 
     private void initSkins() {
@@ -311,16 +328,13 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         skins[8] = NbBundle.getMessage(App.class, "option.skin.AR");
     }
 
+    // FIXME: Language setting should not be an index but a locale code
     void setLanguage(String str) {
-        if (str.equals("-1")) {
-            str = "2";
-        }
         Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 2;
-        }
-        if (i > languages.length) {
-            i = languages.length;
+        if ((i > -1) && (i<locales.length)) {
+            jComboBox1.setSelectedIndex(i);
+        } else{
+            jComboBox1.setSelectedIndex(0);
         }
         jComboBox1.setSelectedIndex(i);
     }

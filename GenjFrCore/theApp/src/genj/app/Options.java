@@ -56,59 +56,8 @@ public class Options extends OptionProvider {
   /** the current looknfeel */
   private int lookAndFeel = -1;
 
-  /** the current language code */
-  private int language = -1;
-
   /** write BOM on save */
   public boolean isWriteBOM = false;
-
-  /** all available language codes */
-  private static String[] languages;
-
-  /** all available language codes */
-  //private final static String[] codes = findCodes();
-private final static String[] codes = {"en","de","fr","hu","es","nl","ru","it","ja","pt_BR","cs","pl","fi"};
- 
-  private static String[] findCodes() {
-
-    // Check available language libraries
-    // prepare result with default "en"
-    TreeSet<String> result = new TreeSet<String>();
-    result.add("en");
-
-    // look for development mode -Dgenj.language.dir or in  ./language/xy (except 'CVS')
-    File[] dirs = new File(EnvironmentChecker.getProperty("genj.language.dir", "language", "Dev-time language directory switch")).listFiles();
-    if (dirs!=null) {
-      for (int i = 0; i < dirs.length; i++) {
-        String dir = dirs[i].getName();
-        LOG.fine("Found language directory "+dirs[i].getAbsolutePath());
-          result.add(dir);
-      }
-    }
-
-    // look for language libraries (./lib/genj_pt_BR.jar)
-    // NOTE without getAbsoluteFile() the user.home directory change
-    // in the launcher doesn't pull here (native code apparently doesn't
-    // follow/respect the user.dir change)
-    File dir = new File("lib").getAbsoluteFile();
-    File[] libs = dir.listFiles();
-    if (libs!=null) {
-      LOG.fine("Looking for language archives in "+dir.getAbsolutePath());
-      for (File lib : libs) {
-        String name = lib.getName();
-        if (!name.startsWith("genj_")) continue;
-        if (!name.endsWith  (".jar" )) continue;
-        LOG.fine("Found language archive "+lib.getAbsolutePath());
-        
-        result.add(name.substring(5, name.length()-4));
-      }
-    } else {
-      LOG.fine("No language archives in "+dir.getAbsolutePath());
-      }
-
-    // done
-    return (String[])result.toArray(new String[result.size()]);
-  }
 
   /**
    * Instance access
@@ -154,80 +103,6 @@ private final static String[] codes = {"en","de","fr","hu","es","nl","ru","it","
 //    return LnF.getLnFs();
 //  }
 //
-  /**
-   * Setter - language
-   */
-  public void setLanguage(int language) {
-
-    // set locale if applicable
-    if (language>=0&&language<codes.length) {
-      String lang = codes[language];
-      if (lang.length()>0) {
-//FIXME: fait planter la fonction!        Logger.getLogger(Options.class.getPackage().getName()).info("Switching language to "+lang);
-        String country = Locale.getDefault().getCountry();
-        int i = lang.indexOf('_');
-        if (i>0) {
-          country = lang.substring(i+1);
-          lang = lang.substring(0, i);
-        }
-        try {
-          Locale.setDefault(new Locale(lang,country));
-        } catch (Throwable t) {}
-      }
-    }
-
-    // remember
-    this.language = language;
-
-    // reset already read resources
-    Resources.clearResources();
-
-    // set swing resource strings (ok, cancel, etc.)
-    Resources resources = Resources.get(this);
-    for (String key : resources.getKeys()) {
-      if (key.indexOf(SWING_RESOURCES_KEY_PREFIX)==0) {
-        UIManager.put(
-          key.substring(SWING_RESOURCES_KEY_PREFIX.length()),
-          resources.getString(key)
-        );
-      }
-    }
-
-    // done
-  }
-
-  /**
-   * Getter - language
-   */
-  public int getLanguage() {
-    return language>0?language:2;
-  }
-  
-  public String getLanguageCode() {
-    return codes[getLanguage()];
-  }
-
-  /**
-   * Getter - languages
-   */
-  public String[] getLanguages() {
-    // not known yet?
-    if (languages==null) {
-
-      Resources resources = getResources();
-
-      // init 'em
-      String[] ss = new String[codes.length];
-      for (int i=0;i<ss.length;i++) {
-        String language = resources.getString("option.language."+codes[i], false);
-        ss[i] = language!=null ? language : codes[i];
-      }
-      
-      languages = ss;
-    }
-    // done
-    return languages;
-  }
 
   /**
    * Getter - maximum log size
