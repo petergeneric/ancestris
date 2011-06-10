@@ -12,6 +12,7 @@
 package ancestris.util;
 
 import genjfr.app.App;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import org.openide.DialogDisplayer;
 import org.openide.LifecycleManager;
@@ -41,8 +42,10 @@ public class Lifecycle {
         askForRestart(null);
     }
 
-    public static void askForStopAndStart(String message) {
-        ResourceBundle bundle = NbBundle.getBundle(App.class);
+    public static void askForStopAndStart(String message, Locale locale) {
+        ResourceBundle bundle= locale == null?
+            NbBundle.getBundle(App.class):
+            NbBundle.getBundle(findName(App.class), locale,App.class.getClassLoader());
 
         String msg = message==null?bundle.getString("NeedStopStart.text"):message;
 
@@ -54,6 +57,23 @@ public class Lifecycle {
     }
 
     public static void askForStopAndStart() {
-        askForStopAndStart(null);
+        askForStopAndStart(null,null);
     }
+
+    // Code from NbBundel source
+    /** Finds package name for given class */
+    private static String findName(Class clazz) {
+        String pref = clazz.getName();
+        int last = pref.lastIndexOf('.');
+
+        if (last >= 0) {
+            pref = pref.substring(0, last + 1);
+
+            return pref + "Bundle"; // NOI18N
+        } else {
+            // base package, search for bundle
+            return "Bundle"; // NOI18N
+        }
+    }
+
 }
