@@ -285,7 +285,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             // W/O modifying nbexec and windows dll, the startup  settings are not re-read
             // So, as in a basic usage of ancestris the language preference will not be set by the user,
             // we tell the user to stop the start again ancestris. This way all the new startup settings are correctly read
-            Lifecycle.askForStopAndStart();
+            Lifecycle.askForStopAndStart(null,locales[Integer.valueOf(getLanguage())]);
     }
 
     boolean valid() {
