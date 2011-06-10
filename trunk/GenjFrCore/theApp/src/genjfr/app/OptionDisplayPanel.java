@@ -280,7 +280,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
         if (needRestart)
-            Lifecycle.askForRestart();
+            // the markForRestart is not applicable here as the restart process loop done in nbexec file
+            // doesn't reread app.conf file wich is read once before the loop.
+            // W/O modifying nbexec and windows dll, the startup  settings are not re-read
+            // So, as in a basic usage of ancestris the language preference will not be set by the user,
+            // we tell the user to stop the start again ancestris. This way all the new startup settings are correctly read
+            Lifecycle.askForStopAndStart();
     }
 
     boolean valid() {
@@ -314,6 +319,27 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             langDescr.add(locale.getDisplayName(locale));
         }
         return langDescr.toArray(new String[0]);
+    }
+
+    /**
+     * Find the index in languagesfor the language string lang. If not found returns -1
+     * @param lang
+     * @return
+     */
+    private int findLanguageIndex(String lang){
+        String[] langCodes = (lang+"__").split("_",3);
+        Locale locale = new Locale(langCodes[0],langCodes[1],langCodes[2]);
+        for (int i=0;i<locales.length;i++){
+            if (locale.equals(locales[i]))
+                return i;
+        }
+        // tries only language
+        locale = new Locale(langCodes[0],langCodes[1]);
+        for (int i=0;i<locales.length;i++){
+            if (locale.getLanguage().equals(locales[i].getLanguage()))
+                return i;
+        }
+        return -1;
     }
 
     private void initSkins() {
