@@ -40,4 +40,20 @@ public class Lifecycle {
     public static void askForRestart() {
         askForRestart(null);
     }
+
+    public static void askForStopAndStart(String message) {
+        ResourceBundle bundle = NbBundle.getBundle(App.class);
+
+        String msg = message==null?bundle.getString("NeedStopStart.text"):message;
+
+        NotifyDescriptor nd = new NotifyDescriptor(msg,bundle.getString("NeedStopStart.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        DialogDisplayer.getDefault().notify(nd);
+        if (nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
+            LifecycleManager.getDefault().exit();
+        }
+    }
+
+    public static void askForStopAndStart() {
+        askForStopAndStart(null);
+    }
 }
