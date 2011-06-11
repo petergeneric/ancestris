@@ -375,17 +375,10 @@ public final class OptionsWizardVisualPanel1 extends JPanel {
         languages[0] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.EN");
         languages[1] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.DE");
         languages[2] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.FR");
-        languages[3] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.HU");
-        languages[4] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.ES");
-        languages[5] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.NL");
-        languages[6] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.RU");
-        languages[7] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.IT");
-        languages[8] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.JA");
-        languages[9] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.PT_BR");
-        languages[10] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.CS");
-        languages[11] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.PL");
-        languages[12] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.FI");
-
+        languages[3] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.ES");
+        languages[4] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.NL");
+        languages[5] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.IT");
+        languages[6] = NbBundle.getMessage(OptionsWizardWizardAction.class, "option.language.PL");
     }
 
     private void initSkins() {
