@@ -53,6 +53,19 @@ public class Util {
         return loadProperties(fromFile.getAbsolutePath(), false);
     }
 
+    /**
+     * Create file and parent dir if non existent
+     * @param file
+     * @return same as createNewFile
+     */
+    public static boolean createRecursively(File file) throws IOException {
+        File fileDir = file.getParentFile();
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
+        }
+        return file.createNewFile();
+    }
+
     public static boolean copy(File from, File to) {
         // test if files has permissions to read and write
         if (!from.exists() || !from.isFile() || !from.canRead()) {

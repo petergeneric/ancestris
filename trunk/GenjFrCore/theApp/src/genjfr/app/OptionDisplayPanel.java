@@ -21,19 +21,13 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private final OptionDisplayOptionsPanelController controller;
     // Values
     Locale[] locales = {
-        Locale.FRENCH,
         Locale.ENGLISH,
-        Locale.ITALIAN,
+        Locale.FRENCH,
         Locale.GERMAN,
-        new Locale("hu"),
         new Locale("es"),
         new Locale("nl"),
-        new Locale("ru"),
-        new Locale("ja"),
-        new Locale("pt","BR"),
-        new Locale("cs"),
-        new Locale("pl"),
-        new Locale("fi")
+        Locale.ITALIAN,
+        new Locale("pl")
     };
     String[] skins = new String[9];
 
@@ -242,7 +236,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
         AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
 
-        setLanguage(appPrefs.get("language", ""));
+        StartupOptions stopts = new StartupOptions();
+        setLanguage(stopts.getJvmLocale());
+
         setSkin(appPrefs.get("lookAndFeel", ""));
         setRestoreWindows(appPrefs.get("isRestoreViews", ""));
         setAutoCommit(editPrefs.get("isAutoCommit", ""));
@@ -260,10 +256,16 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
         AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
 
-        needRestart = !appPrefs.get("language","").equals(getLanguage());
-        appPrefs.put("language", getLanguage());
         StartupOptions stopts = new StartupOptions();
-        stopts.setJvmParameter("-J-Duser.language", locales[Integer.valueOf(getLanguage())].toString());
+
+        Locale oldLocale = stopts.getJvmLocale();
+
+        Locale newLocale = getLanguage();
+        if (oldLocale == null)
+            needRestart = (newLocale != null);
+        else
+            needRestart = ! oldLocale.equals(newLocale);
+        stopts.setJvmLocale(newLocale);
         stopts.applyChanges();
 
         appPrefs.put("lookAndFeel", getSkin());
@@ -285,7 +287,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             // W/O modifying nbexec and windows dll, the startup  settings are not re-read
             // So, as in a basic usage of ancestris the language preference will not be set by the user,
             // we tell the user to stop the start again ancestris. This way all the new startup settings are correctly read
-            Lifecycle.askForStopAndStart(null,locales[Integer.valueOf(getLanguage())]);
+            Lifecycle.askForStopAndStart(null,getLanguage());
     }
 
     boolean valid() {
@@ -315,6 +317,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     private String[] initLanguages() {
         ArrayList<String> langDescr = new ArrayList<String>(locales.length);
+        langDescr.add(NbBundle.getMessage(App.class, "options.lang.system"));
         for (Locale locale:locales){
             langDescr.add(locale.getDisplayName(locale));
         }
@@ -326,15 +329,15 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
      * @param lang
      * @return
      */
-    private int findLanguageIndex(String lang){
-        String[] langCodes = (lang+"__").split("_",3);
-        Locale locale = new Locale(langCodes[0],langCodes[1],langCodes[2]);
+    private int findLanguageIndex(Locale locale){
+        if (locale == null)
+            return -1;
         for (int i=0;i<locales.length;i++){
             if (locale.equals(locales[i]))
                 return i;
         }
         // tries only language
-        locale = new Locale(langCodes[0],langCodes[1]);
+        locale = new Locale(locale.getLanguage(),locale.getCountry());
         for (int i=0;i<locales.length;i++){
             if (locale.getLanguage().equals(locales[i].getLanguage()))
                 return i;
@@ -354,19 +357,23 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         skins[8] = NbBundle.getMessage(App.class, "option.skin.AR");
     }
 
-    // FIXME: Language setting should not be an index but a locale code
-    void setLanguage(String str) {
-        Integer i = getIntFromStr(str);
-        if ((i > -1) && (i<locales.length)) {
-            jComboBox1.setSelectedIndex(i);
-        } else{
-            jComboBox1.setSelectedIndex(0);
-        }
+    /**
+     * Set the language selector accorgingly to the locale setting passed in parameter
+     * @param str
+     */
+    void setLanguage(Locale locale) {
+        int i = findLanguageIndex(locale);
+        // Index in combo is one more this value
+        i += 1;
         jComboBox1.setSelectedIndex(i);
     }
 
-    String getLanguage() {
-        return jComboBox1.getSelectedIndex() + "";
+    // null means default locale from system
+    Locale getLanguage() {
+        int i = jComboBox1.getSelectedIndex()-1;
+        if (i<0 || i>=locales.length)
+            return null;
+        return locales[i];
     }
 
     void setSkin(String str) {
