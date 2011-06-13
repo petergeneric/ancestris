@@ -11,38 +11,52 @@ package ancestris.startup.settings;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+import org.openide.util.Utilities;
 
 /**
  *
  * @author claudio, daniel
- * This code is borrowed from http://nbmodules.javaforge.com/
+ * Some of this code is borrowed from http://nbmodules.javaforge.com/
  */
 public class StartupOptions {
 
-    private JVMSettings jvmSetting = null;
+    private String jdkHomePath = "";
+    private String userDirPath = "";
+    private String macuserDirPath = "";
+    private Map<String, String> hParam = new HashMap<String, String>(10);
+
     private File ancestrisUserConfFile = new File(System.getProperty("netbeans.user") + "/etc/ancestris.conf");
     private Properties ancestrisConfProps;
 
     public StartupOptions() {
-        copyToUserDir();
+        String prefix = "";
+        // Tries user conf file
         ancestrisConfProps = Util.loadProperties(ancestrisUserConfFile);
-        if (ancestrisConfProps != null) {
-            jvmSetting = new JVMSettings(ancestrisConfProps);
+        // No user file? tries ancestris system
+        if (ancestrisConfProps == null) {
+            ancestrisConfProps = Util.loadProperties(new File(System.getProperty("netbeans.home") + "/../etc/ancestris.conf"));
         }
+        // No ancestris system? tries netbeans system (for run from netbeans ide)
+        if (ancestrisConfProps == null) {
+            ancestrisConfProps = Util.loadProperties(new File(System.getProperty("netbeans.home") + "/../etc/netbeans.conf"));
+            prefix = "netbeans_";
+        }
+        loadConf(ancestrisConfProps, prefix);
     }
 
     public void applyChanges() {
-        if (jvmSetting == null) {
-            return;
-        }
-        ancestrisConfProps = jvmSetting.getProperties();
+        ancestrisConfProps = getProperties();
         persistSettings();
     }
 
     private void persistSettings() {
         FileOutputStream fileOut = null;
         try {
+            Util.createRecursively(ancestrisUserConfFile);
             fileOut = new FileOutputStream(ancestrisUserConfFile);
             ancestrisConfProps.store(fileOut, "properties written ancestris");
         } catch (IOException ex) {
@@ -52,28 +66,93 @@ public class StartupOptions {
         }
     }
 
-    private void copyToUserDir() {
-        if (!ancestrisUserConfFile.exists()) {
-            // use InstalledFileLocator ?
-            File netbeansConfFile = new File(System.getProperty("netbeans.home") + "/../etc/ancestris.conf");
-            System.out.println("system" + System.getProperties());
-            System.out.println("file:" + netbeansConfFile);
-            //InstalledFileLocator.getDefault().locate("../etc/ancestris.conf",null, false);
-            Util.copy(netbeansConfFile, ancestrisUserConfFile);
-        } else {
+    /**
+     * Gets startup settings as Property oblect. prefix is not used as user setup file must not have this prefix set.
+     * @return
+     */
+    private Properties getProperties() {
+        Properties props = new PropertiesLike();
+
+        if (userDirPath.length() > 0) {
+            props.setProperty("default_userdir", "\"" + userDirPath + "\"");
+        }
+        if (macuserDirPath.length() > 0) {
+            props.setProperty("default_mac_userdir", "\"" + macuserDirPath + "\"");
+        }
+        if (jdkHomePath.length() > 0) {
+            props.setProperty("jdkhome", "\"" + jdkHomePath + "\"");
+        }
+        props.setProperty("default_options", "\"" + getJvmParametersAsString() + "\"");
+        return props;
+    }
+
+    private void loadConf(Properties confProperties,String prefix) {
+        jdkHomePath = confProperties.getProperty(prefix+"jdkhome", "");
+        if (Utilities.isWindows()) {
+            jdkHomePath = jdkHomePath.replace('\\', '/');
+        }
+        if (jdkHomePath.indexOf('\"') > -1) {
+            jdkHomePath = jdkHomePath.substring(1, jdkHomePath.length() - 1);
+        }
+
+        userDirPath = confProperties.getProperty(prefix+"default_userdir", "");
+        if (userDirPath.indexOf('\"') > -1) {
+            userDirPath = userDirPath.substring(1, userDirPath.length() - 1);
+        }
+
+        macuserDirPath = confProperties.getProperty(prefix+"default_mac_userdir", "");
+        if (macuserDirPath.indexOf('\"') > -1) {
+            macuserDirPath = macuserDirPath.substring(1, macuserDirPath.length() - 1);
+        }
+        loadJvmParameters(confProperties,prefix);
+    }
+
+    private void loadJvmParameters(final Properties confProperties,String prefix) {
+        String val = confProperties.getProperty(prefix+"default_options", "");
+        if (val.indexOf('\"') > -1) {
+            val = val.substring(1, val.length() - 1).trim();
+        }
+        if (val.length() == 0)
+            return;
+        String[] _v = val.split("\\s+");
+        for (int j = 0; j < _v.length; j++) {
+            String parameter = _v[j];
+            if (parameter.substring(0, 2).equals("--")) {
+                // if parameter starts with --
+                // as --fontsize 10
+                // it is a parameter and its value. They need to be displayed on the same table line
+                j++;
+                hParam.put(parameter, _v[j]);
+            } else if (parameter.startsWith("-J-Xm")) {
+                // case -J-Xms and -J-Xmx
+                hParam.put(parameter.substring(0, 6), parameter.substring(6));
+            } else if (parameter.startsWith("-J-D")) {
+                String kv[] = parameter.split("=");
+                hParam.put(kv[0], kv[1]);
+            } else {
+                hParam.put(parameter, "");
+            }
         }
     }
 
+    public String getUserDir() {
+        return userDirPath;
+    }
+
+    public String getJdkHomeDir() {
+        return jdkHomePath;
+    }
+
     /**
-     * Set JVM Parameter value
+     * Set JVM Parameter value. If value == null, remove parameter
      * @param parameter
      * @param value
      */
     public void setJvmParameter(String parameter, String value) {
-        if (jvmSetting == null) {
-            return;
-        }
-        jvmSetting.setJvmParameter(parameter, value);
+        if (value == null){
+            hParam.remove(parameter);
+        } else
+        hParam.put(parameter, value);
     }
 
     /**
@@ -82,6 +161,45 @@ public class StartupOptions {
      * @return
      */
     public String getJvmParameter(String parameter) {
-        return (jvmSetting == null) ? null : jvmSetting.getJvmParameter(parameter);
+        return hParam.get(parameter);
     }
+
+    public void setJvmLocale(Locale locale){
+        setJvmParameter("--locale",locale == null?null:locale.toString().replace('_', ':'));
+    }
+    /**
+     * return Locale from jvm settings, null if no --locale parameter which means defult from system
+     * @return
+     */
+    public Locale getJvmLocale(){
+        return getLocaleFromString(getJvmParameter("--locale"));
+    }
+
+    private Locale getLocaleFromString(String str){
+        if (str == null || str.length() == 0)
+            return null;
+        String locale[] = (str+"::").split(":",3);
+
+        return new Locale (locale[0],locale[1],locale[2]);
+    }
+
+    public String getJvmParametersAsString() {
+        StringBuilder sb = new StringBuilder(120);
+        for (String key : hParam.keySet()) {
+            // remove old language setting, replaced by --locale
+            if (key.contentEquals("-J-Duser.language"))
+                continue;
+            sb.append(" ").append(key);
+            if (key.startsWith("--")) {
+                sb.append(" ").append(hParam.get(key));
+            } else if (key.startsWith("-J-D")) {
+                sb.append("=").append(hParam.get(key));
+            } else {
+                sb.append(hParam.get(key));
+            }
+        }
+        // strip leading space character
+        return sb.length()>0? sb.substring(1):"";
+    }
+
 }
