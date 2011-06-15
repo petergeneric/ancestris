@@ -109,7 +109,7 @@ public final class EditorTopComponent extends TopComponent {
                     public void save() throws IOException {
                         change = false;
                         fire();
-                        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        if (fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
                             File file = fileChooser.getSelectedFile();
                             if (file != null) {
                                 try {

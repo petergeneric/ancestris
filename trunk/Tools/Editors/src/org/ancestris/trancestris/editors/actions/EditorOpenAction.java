@@ -21,7 +21,7 @@ public final class EditorOpenAction implements ActionListener {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
         fileChooser.setAcceptAllFileFilterUsed(false);
-        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             Locale defaultLocale = Locale.getDefault();
             File defaultBundleFile = fileChooser.getSelectedFile();
             String defaultBundleFileName = defaultBundleFile.getName();
@@ -32,7 +32,7 @@ public final class EditorOpenAction implements ActionListener {
                 translatedBundleFileName += defaultBundleFileName.substring(0, extensionIndex);
                 translatedBundleFileName += "_" + defaultLocale.getLanguage();
                 translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
-                File translatedBundleFile = new File (translatedBundleFileName);
+                File translatedBundleFile = new File(translatedBundleFileName);
                 if (translatedBundleFile.exists() == false) {
                     translatedBundleFile.createNewFile();
                 }
