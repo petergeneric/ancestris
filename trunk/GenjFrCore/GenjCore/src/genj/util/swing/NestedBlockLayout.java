@@ -180,7 +180,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       }
       throw new RuntimeException(sax);
     } catch (IOException ioe) {
-      throw (IOException)ioe;
+      throw ioe;
     } catch (Exception e) {
       throw e instanceof RuntimeException ? (RuntimeException)e : new RuntimeException(e);
     }
@@ -219,7 +219,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       if (endsWithSpace) { length++; }
       String s = new String(ch,start,length);
             
-      Block parent = (Block)stack.peek();
+      Block parent = stack.peek();
       parent.add(new Cell(s));
     }
     
@@ -230,7 +230,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       if (stack.isEmpty()) {
         root = block;
       } else {
-        Block parent = (Block)stack.peek();
+        Block parent = stack.peek();
 	      parent.add(block);
       }
       // throw on stack
@@ -409,7 +409,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
     Dimension preferredFolder() {
       Dimension result = new Dimension();
       for (int i=0;i<subs.size();i++) {
-        Dimension sub = ((Block)subs.get(i)).preferred();
+        Dimension sub = (subs.get(i)).preferred();
         result.width += sub.width;
         result.height = Math.max(result.height, sub.height);
       }
@@ -421,7 +421,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
     Point weightFolder() {
       Point result = new Point();
       for (int i=0;i<subs.size();i++) {
-        Block sub = (Block)subs.get(i);
+        Block sub = subs.get(i);
         result.x += sub.weight().x;
         result.y = Math.max(result.y, sub.weight().y);
       }      
@@ -437,7 +437,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       int grow = 0;
       int spare = in.width;
       for (int i=0;i<subs.size();i++) {
-        Block sub = (Block)subs.get(i);
+        Block sub = subs.get(i);
         spare -= sub.preferred().width;
         weight += sub.weight().getX();
         grow += sub.grow().x;
@@ -449,7 +449,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       Rectangle avail = new Rectangle(in.x, in.y, 0, 0);
       for (int i=0;i<subs.size();i++) {
         
-        Block sub = (Block)subs.get(i);
+        Block sub = subs.get(i);
         
         avail.width = sub.preferred().width + (int)(sub.weight().getX() * weightFactor) + (sub.grow().x*growFactor);
         avail.height = in.height;
@@ -497,7 +497,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       Folder clone = (Folder)super.clone();
       clone.subs = new ArrayList<Block>(subs.size());
       for (int i=0;i<subs.size();i++)
-        clone.subs.add( (Block)subs.get(i).clone() );
+        clone.subs.add( subs.get(i).clone() );
       return clone;
     }
     
@@ -509,7 +509,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       
       // look for it
       for (int i=0;i<subs.size();i++) {
-        Block sub = (Block)subs.get(i);
+        Block sub = subs.get(i);
         if (sub.removeContent(component)) {
           invalidate(false);
           return true;
@@ -526,14 +526,14 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       super.invalidate(recurse);
       // recurse
       if (recurse) for (int i=0;i<subs.size();i++) {
-        ((Block)subs.get(i)).invalidate(true);
+        (subs.get(i)).invalidate(true);
       }
     }
     
     /** all cells */
     Collection<Cell> getCells(Collection<Cell> collect) {
       for (int i=0;i<subs.size();i++) 
-        ((Block)subs.get(i)).getCells(collect);
+        (subs.get(i)).getCells(collect);
       return collect;
     }
     
@@ -641,7 +641,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
     Dimension preferredFolder() {
       Dimension result = new Dimension();
       for (int i=0;i<subs.size();i++) {
-        Dimension sub = ((Block)subs.get(i)).preferred();
+        Dimension sub = (subs.get(i)).preferred();
         result.width = Math.max(result.width, sub.width);
         result.height += sub.height;
       }
@@ -653,7 +653,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
     Point weightFolder() {
       Point result = new Point();
       for (int i=0;i<subs.size();i++) {
-        Point sub = ((Block)subs.get(i)).weight();
+        Point sub = (subs.get(i)).weight();
         result.x = Math.max(result.x, sub.x);
         result.y += sub.y;
       }      
@@ -680,7 +680,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
       Rectangle avail = new Rectangle(in.x, in.y, 0, 0);
       for (int i=0;i<subs.size();i++) {
         
-        Block sub = (Block)subs.get(i);
+        Block sub = subs.get(i);
         avail.x = in.x;
         avail.width = in.width;
         avail.height = sub.preferred().height + (int)(sub.weight().getY() * weightFactor) + (sub.grow().y*growFactor);
@@ -776,7 +776,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
     
     /** attribute */
     public String getAttribute(String attr) {
-      return (String)attrs.get(attr);
+      return attrs.get(attr);
     }
     
     /** remove */
@@ -987,7 +987,7 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
   public NestedBlockLayout copy() {
     try {
       NestedBlockLayout clone = (NestedBlockLayout)super.clone();
-      clone.root = (Block)clone.root.clone();
+      clone.root = clone.root.clone();
       clone.components = new HashSet<Component>();
       clone.invalidated = false;
       return clone;

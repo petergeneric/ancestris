@@ -119,7 +119,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
    * Super 
    */
   public MetaProperty getSuper() {
-    String path = (String)attrs.get("super");
+    String path = attrs.get("super");
     return path == null  ? null : grammar.getMetaRecursively(new TagPath(path), false);
   }
   
@@ -134,7 +134,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     tag2nested.put(sub.tag, sub);
     // keep list (replace existing!)
     for (int i=0; i<nested.size(); i++) {
-      MetaProperty other = (MetaProperty)nested.get(i);
+      MetaProperty other = nested.get(i);
       if (other.tag.equals(sub.tag)) {
         sub.copyAttributesFrom(other);
         nested.set(i, sub);
@@ -157,7 +157,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     for (int s=0;s<nested.size();s++) {
       
       // .. next sub
-      MetaProperty sub = (MetaProperty)nested.get(s);
+      MetaProperty sub = nested.get(s);
 
       // default only?
       if ((filter&WHERE_DEFAULT)!=0) {
@@ -181,14 +181,14 @@ public class MetaProperty implements Comparable<MetaProperty> {
       result.add(sub);
     }
     // done
-    return (MetaProperty[])result.toArray(new MetaProperty[result.size()]);
+    return result.toArray(new MetaProperty[result.size()]);
   }
   
   /**
    * Lookup an attribute
    */
   /*package*/ String getAttribute(String key) {
-    return (String)attrs.get(key);
+    return attrs.get(key);
   }
   
   /**
@@ -246,7 +246,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
    */
   public boolean allows(String sub) {
     // has to be defined as sub with isGrammar==true
-    MetaProperty meta = (MetaProperty)tag2nested.get(sub);
+    MetaProperty meta = tag2nested.get(sub);
     return meta==null ? false : meta.isGrammar;
   }
   
@@ -255,7 +255,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
    */
   public boolean allows(String sub, Class<? extends Property> type) {
     // has to be defined as sub with isGrammar==true
-    MetaProperty meta = (MetaProperty)tag2nested.get(sub);
+    MetaProperty meta = tag2nested.get(sub);
     return meta!=null && type.isAssignableFrom(meta.getType());
   }
   
@@ -392,7 +392,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
    * Accessor - cardinality
    */
   public String getCardinality() {
-    return (String)attrs.get("cardinality");
+    return attrs.get("cardinality");
   }
   
   /**
@@ -463,7 +463,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     if (tag==null||tag.length()==0)
       throw new IllegalArgumentException("tag can't be empty");
     // current tag in map?
-    MetaProperty result = (MetaProperty)tag2nested.get(tag);
+    MetaProperty result = tag2nested.get(tag);
     if (result==null) {
       result = new MetaProperty(grammar, tag, new HashMap<String,String>(), false);
       if (persist) addNested(result);
@@ -482,7 +482,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
       return Integer.MAX_VALUE;
     // look through grammar defined subs
     for (int i=0;i<nested.size();i++) {
-      if (((MetaProperty)nested.get(i)).getTag().equals(subtag))
+      if ((nested.get(i)).getTag().equals(subtag))
         return i;
     }
     //20040518 make the index of an unknown subtag as large as possible
@@ -494,7 +494,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
    */
   private static ImageIcon loadImage(String name) {
     // look up
-    ImageIcon result = (ImageIcon)name2images.get(name);
+    ImageIcon result = name2images.get(name);
     if (result==null) {
       try {
         // this could potentially be interrupted - we'll have to try again in that case

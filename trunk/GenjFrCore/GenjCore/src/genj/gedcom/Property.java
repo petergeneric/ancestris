@@ -313,7 +313,7 @@ public abstract class Property implements Comparable<Property> {
    */
   public void delProperties(String tag) {
     if (children!=null) {
-      Property[] cs = (Property[])children.toArray(new Property[children.size()]);
+      Property[] cs = children.toArray(new Property[children.size()]);
       for (int c = 0; c < cs.length; c++) {
         if (cs[c].getTag().equals(tag))
           delProperty(cs[c]);
@@ -353,7 +353,7 @@ public abstract class Property implements Comparable<Property> {
     // range check
     if (children==null||pos<0||pos>=children.size())
       throw new IndexOutOfBoundsException("No property "+pos);
-    Property removed = (Property)children.get(pos);
+    Property removed = children.get(pos);
 
     // tell to removed first so it has some chance for cleanup
     removed.beforeDelNotify(); 
@@ -375,7 +375,7 @@ public abstract class Property implements Comparable<Property> {
     
     // move children around
     for (int i = 0; i < properties.size(); i++) {
-      Property prop = (Property)properties.get(i);
+      Property prop = properties.get(i);
       pos = moveProperty(prop, pos);
     }
     
@@ -392,7 +392,7 @@ public abstract class Property implements Comparable<Property> {
    * Move a property
    */
   public int moveProperty(int from, int to) {
-    Property prop = (Property)children.remove(from);
+    Property prop = children.remove(from);
     if (from<to) to--;
     children.add(to, prop);
     // propagate moved
@@ -535,7 +535,7 @@ public abstract class Property implements Comparable<Property> {
     if (children==null)
       return false;
     for (int c = 0; c < children.size(); c++) {
-      Property child = (Property)children.get(c);
+      Property child = children.get(c);
       if (child==prop||child.contains(prop))
         return true;
     }
@@ -662,7 +662,7 @@ public abstract class Property implements Comparable<Property> {
   public Property getProperty(int n) {
     if (children==null)
       throw new IndexOutOfBoundsException("no property "+n);
-    return (Property)children.get(n);
+    return children.get(n);
   }
 
   /**
@@ -683,7 +683,7 @@ public abstract class Property implements Comparable<Property> {
     // NM 20070128 use direct field access - it's less expensive
     if (children!=null) {
       for (int i=0, j=children.size();i<j;i++) {
-        Property child = (Property)children.get(i);
+        Property child = children.get(i);
         if (!child.getTag().equals(tag)) continue;
         if (validOnly&&!child.isValid()) continue;
         return child;

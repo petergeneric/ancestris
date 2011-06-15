@@ -69,7 +69,7 @@ public class PropertyMultilineValue extends Property implements MultiLinePropert
      do {
        result.add(it.getValue());
      } while (it.next());
-     return (String[])result.toArray(new String[result.size()]);
+     return result.toArray(new String[result.size()]);
   }
   
   /**

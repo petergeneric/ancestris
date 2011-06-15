@@ -110,7 +110,7 @@ public class PathTreeWidget extends JScrollPane {
    */
   private void fireSelectionChanged(TagPath path, boolean on) {
     // Go through listeners
-    Listener[] ls = (Listener[])listeners.toArray(new Listener[listeners.size()]);
+    Listener[] ls = listeners.toArray(new Listener[listeners.size()]);
     for (int l=0;l<ls.length;l++)
       ls[l].handleSelection(path,on);
     // done
@@ -157,7 +157,7 @@ public class PathTreeWidget extends JScrollPane {
    * Returns the selected TagPaths
    */
   public TagPath[] getSelection() {
-    return (TagPath[])model.getSelection().toArray(new TagPath[0]);
+    return model.getSelection().toArray(new TagPath[0]);
   }
 
   /**

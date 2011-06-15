@@ -245,7 +245,7 @@ public abstract class PropertyXRef extends Property {
       if (target!=null) result.add(target.getEntity());
     }
     // done
-    return (Entity[])result.toArray(new Entity[result.size()]);
+    return result.toArray(new Entity[result.size()]);
   }
 
   /**
