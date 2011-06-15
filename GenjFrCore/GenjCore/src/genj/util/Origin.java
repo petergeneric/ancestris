@@ -357,7 +357,7 @@ public abstract class Origin {
      * list directory of origin if file
      */
     public String[] list() throws IOException {
-      ArrayList result = new ArrayList();
+      ArrayList<String> result = new ArrayList();
       ZipInputStream in  = openImpl();
       while (true) {
         ZipEntry entry = in.getNextEntry();
@@ -365,7 +365,7 @@ public abstract class Origin {
         result.add(entry.getName());
       }
       in.close();
-      return (String[]) result.toArray(new String[result.size()]);
+      return result.toArray(new String[result.size()]);
     }
     
     /**

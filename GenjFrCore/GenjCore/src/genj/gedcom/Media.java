@@ -64,7 +64,7 @@ public class Media extends Entity {
     if (blobs.isEmpty()) {
       blob = (PropertyBlob)addProperty("BLOB", "");
     } else {
-      blob = (PropertyBlob)blobs.get(0);
+      blob = blobs.get(0);
     }
     // keep it
     return blob.addFile(file);

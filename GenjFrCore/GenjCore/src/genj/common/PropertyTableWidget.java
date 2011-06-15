@@ -284,7 +284,7 @@ public class PropertyTableWidget extends JPanel  {
       result.append(columns.getColumn(c).getWidth());
     
     for (int d=0;d<directives.size();d++) {
-      SortableTableModel.Directive dir = (SortableTableModel.Directive)directives.get(d);
+      SortableTableModel.Directive dir = directives.get(d);
       result.append(dir.getColumn());
       result.append(dir.getDirection());
     }
@@ -526,7 +526,7 @@ public class PropertyTableWidget extends JPanel  {
       if (!sortableModel.isSorting())
         return;
       
-      SortableTableModel.Directive directive = (SortableTableModel.Directive)sortableModel.getDirectives().get(0);
+      SortableTableModel.Directive directive = sortableModel.getDirectives().get(0);
 //      if (directive.getDirection()<=0)
 //        return;
       

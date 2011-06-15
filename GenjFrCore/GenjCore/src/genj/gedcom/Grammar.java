@@ -165,7 +165,7 @@ public class Grammar {
     
     String tag = path.get(0);
     
-    MetaProperty root = (MetaProperty)tag2root.get(tag);
+    MetaProperty root = tag2root.get(tag);
     
     // something we didn't know about yet?
     if (root==null) {
@@ -217,7 +217,7 @@ public class Grammar {
         meta.isInstantiated = true;
         tag2root.put(qName, meta);
       } else
-        ((MetaProperty)stack.peek()).addNested(meta);
+        (stack.peek()).addNested(meta);
         
       // push on stack
       stack.push(meta);
@@ -241,7 +241,7 @@ public class Grammar {
   public boolean isValid(TagPath path) {
     
     String tag = path.get(0);
-    MetaProperty root = (MetaProperty)tag2root.get(tag);
+    MetaProperty root = tag2root.get(tag);
     if (root==null)
       return false;
     

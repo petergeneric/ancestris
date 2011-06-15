@@ -302,7 +302,7 @@ public class Indi extends Entity {
     List<PropertyFamilyChild> famcs = getProperties(PropertyFamilyChild.class);
     List<Fam> result = new ArrayList<Fam>(famcs.size());
     for (int i=0; i<famcs.size(); i++) {
-      PropertyFamilyChild famc = (PropertyFamilyChild)famcs.get(i);
+      PropertyFamilyChild famc = famcs.get(i);
       if (famc.isValid()&&!result.contains(famc))
         result.add((Fam)famc.getTargetEntity());
     }
@@ -320,7 +320,7 @@ public class Indi extends Entity {
     Fam result = null;
     List<PropertyFamilyChild> famcs = getProperties(PropertyFamilyChild.class);
     for (int i=0; i<famcs.size(); i++) {
-      PropertyFamilyChild famc = (PropertyFamilyChild)famcs.get(i);
+      PropertyFamilyChild famc = famcs.get(i);
       // not valid - not interesting
       if (!famc.isValid()) continue;
       Boolean biological = famc.isBiological();
@@ -445,7 +445,7 @@ public class Indi extends Entity {
     List<PropertyFamilyChild> famcs = indi.getProperties(PropertyFamilyChild.class);
     for (int i=0; i<famcs.size(); i++) {
       
-      PropertyFamilyChild famc = (PropertyFamilyChild)famcs.get(i);
+      PropertyFamilyChild famc = famcs.get(i);
       
       // not valid or not biological- not interesting
       if (!famc.isValid()||Boolean.FALSE.equals(famc.isBiological())) continue;
@@ -535,7 +535,7 @@ public class Indi extends Entity {
    * list of indis to array
    */
   /*package*/ static Indi[] toIndiArray(Collection<Indi> c) {
-    return (Indi[])c.toArray(new Indi[c.size()]);    
+    return c.toArray(new Indi[c.size()]);    
   }
 
   /**

@@ -155,7 +155,7 @@ import javax.swing.JTextField;
   public Collection<Filter> getFilters() {
     
     // Result
-    List result = new ArrayList(10);
+    List<Filter> result = new ArrayList(10);
     
     // create one for the types
     FilterByType fbt = FilterByType.get(checkEntities);
@@ -360,8 +360,8 @@ import javax.swing.JTextField;
     protected static FilterProperties get(String sTags, String sValues) {
       
       // calculate tags
-      Set tags = new HashSet();
-      Set paths = new HashSet();
+      Set<String> tags = new HashSet();
+      Set<TagPath> paths = new HashSet();
       
       StringTokenizer tokens = new StringTokenizer(sTags, ",");
       while (tokens.hasMoreTokens()) {

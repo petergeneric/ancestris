@@ -110,7 +110,7 @@ public class Fam extends Entity {
     // grab children now
     List<Indi> children = new ArrayList<Indi>(CHILs.size());
     for (int i=0;i<CHILs.size();i++) {
-      Indi child = ((PropertyChild)CHILs.get(i)).getChild();
+      Indi child = (CHILs.get(i)).getChild();
       if (!children.contains(child))
           children.add(child);
     }
@@ -346,7 +346,7 @@ public class Fam extends Entity {
    * list of famas to array
    */
   /*package*/ static Fam[] toFamArray(Collection<Fam> c) {
-    return (Fam[])c.toArray(new Fam[c.size()]);    
+    return c.toArray(new Fam[c.size()]);    
   }
 
   /**
