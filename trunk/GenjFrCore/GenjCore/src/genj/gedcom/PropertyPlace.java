@@ -164,7 +164,7 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
     if (JURISDICTION_SEPARATOR.equals(lastToken))
       result.add("");
-    return (String[])result.toArray(new String[result.size()]);
+    return result.toArray(new String[result.size()]);
   }  
   
   /**
@@ -205,7 +205,7 @@ public class PropertyPlace extends PropertyChoiceValue {
     if (jurisdiction==null)
       return null;
     Collection<Property> places = getGedcom().getReferenceSet(TAG+"."+hierarchyLevel).getReferences(jurisdiction);
-    return (PropertyPlace[])places.toArray(new PropertyPlace[places.size()]);
+    return places.toArray(new PropertyPlace[places.size()]);
   }
 
   /**
@@ -225,7 +225,7 @@ public class PropertyPlace extends PropertyChoiceValue {
   public static String[] getAllJurisdictions(Gedcom gedcom, int hierarchyLevel, boolean sort) {
     ReferenceSet<String,Property> refset = gedcom.getReferenceSet( hierarchyLevel<0 ? TAG : TAG+"."+hierarchyLevel);
     Collection<String> jurisdictions = refset.getKeys(sort ? gedcom.getCollator() : null);
-    return (String[])jurisdictions.toArray(new String[jurisdictions.size()]);
+    return jurisdictions.toArray(new String[jurisdictions.size()]);
   }
 
   /**

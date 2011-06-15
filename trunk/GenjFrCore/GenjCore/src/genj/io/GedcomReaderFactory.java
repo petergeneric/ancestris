@@ -252,11 +252,11 @@ public class GedcomReaderFactory {
   
       // loop over kept references
       for (int i=0,n=lazyLinks.size(); i<n; i++) {
-        LazyLink lazyLink = (LazyLink)lazyLinks.get(i);
+        LazyLink lazyLink = lazyLinks.get(i);
         try {
           if (lazyLink.xref.getParent()!=null && lazyLink.xref.getTarget()==null)
             lazyLink.xref.link();
-          progress = Math.min(100,(int)(i*(100*2)/n));  // 100*2 because Links are probably backref'd
+          progress = Math.min(100,(i*(100*2)/n));  // 100*2 because Links are probably backref'd
         } catch (GedcomException ex) {
           context.handleWarning(lazyLink.line, ex.getMessage(), new Context(lazyLink.xref));
         } catch (Throwable t) {

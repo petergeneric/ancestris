@@ -115,12 +115,12 @@ public class Base64 {
       return (char)( '0' + (i - 52) );
     }
     if (i == 62) {
-      return (char)( '+' );
+      return '+' ;
     }
     if (i == 63) {
-      return (char)( '/' );
+      return '/';
     }
-    return (char)( '?' );
+    return '?' ;
   }
 
   /**

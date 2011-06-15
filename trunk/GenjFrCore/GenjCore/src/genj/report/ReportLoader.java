@@ -212,7 +212,7 @@ public class ReportLoader {
    * Which reports do we have
    */
   public Report[] getReports() {
-    return (Report[])instances.toArray(new Report[instances.size()]);
+    return instances.toArray(new Report[instances.size()]);
   }
 
   /**

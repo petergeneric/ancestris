@@ -772,7 +772,7 @@ public class ThumbnailWidget extends JComponent {
         if (!iter.hasNext())
           throw new IOException("no suiteable image reader for " + source.getName());
 
-        reader = (ImageReader) iter.next();
+        reader =  iter.next();
         reader.setInput(iin, false, false);
         reader.addIIOReadUpdateListener(this);
 

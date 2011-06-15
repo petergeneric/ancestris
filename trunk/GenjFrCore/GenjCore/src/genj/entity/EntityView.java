@@ -202,7 +202,7 @@ public class EntityView extends View implements ContextProvider {
    * Get blueprint used for given type
    */
   private Blueprint getBlueprint(String tag) {
-    Blueprint result = (Blueprint)type2blueprint.get(tag);
+    Blueprint result = type2blueprint.get(tag);
     if (result==null) {
       result = BlueprintManager.getInstance().getBlueprint(tag, "");
       type2blueprint.put(tag, result);
@@ -211,7 +211,8 @@ public class EntityView extends View implements ContextProvider {
   }
   
   /**
-   * Sets isAntialiasing   */
+   * Sets isAntialiasing
+   */
   public void setAntialiasing(boolean set) {
     isAntialiasing = set;
     repaint();

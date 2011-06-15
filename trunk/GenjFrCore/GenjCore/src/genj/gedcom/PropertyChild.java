@@ -106,7 +106,7 @@ public class PropertyChild extends PropertyXRef {
     List<PropertyFamilyChild> famcs = child.getProperties(PropertyFamilyChild.class);
     for (int i=0, j=famcs.size(); i<j; i++) {
       
-      PropertyFamilyChild pfc = (PropertyFamilyChild)famcs.get(i);
+      PropertyFamilyChild pfc = famcs.get(i);
       if (pfc.isCandidate(fam)) {
         link(pfc);
         return;

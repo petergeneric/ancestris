@@ -79,7 +79,7 @@ public class PropertyChoiceValue extends PropertySimpleValue {
     List<String> choices = gedcom.getReferenceSet(tag).getKeys(sort ? gedcom.getCollator() : null);
 
     // done
-    return (String[])choices.toArray(new String[choices.size()]);
+    return choices.toArray(new String[choices.size()]);
     
   }
   

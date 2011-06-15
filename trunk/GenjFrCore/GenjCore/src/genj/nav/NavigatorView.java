@@ -248,7 +248,7 @@ public class NavigatorView extends View {
    * Return popup by key
    */
   private PopupWidget getPopup(String key) {
-    return (PopupWidget)key2popup.get(key);  
+    return key2popup.get(key);  
   }
 
   /**

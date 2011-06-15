@@ -91,7 +91,7 @@ public abstract class Option {
     if (listeners==null)
       return;
     for (int i = 0; i < listeners.size(); i++)
-      ((OptionListener)listeners.get(i)).optionChanged(this);
+      (listeners.get(i)).optionChanged(this);
   }
 
 } //Option

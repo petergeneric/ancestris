@@ -102,7 +102,7 @@ public class FileChooserWidget extends JPanel {
    */
   private void fireActionEvent() {
     ActionEvent e = new ActionEvent(this, 0, "");
-    ActionListener[] ls = (ActionListener[])listeners.toArray(new ActionListener[listeners.size()]);
+    ActionListener[] ls = listeners.toArray(new ActionListener[listeners.size()]);
     for (int i = 0; i < ls.length; i++)
       ls[i].actionPerformed(e);
   }

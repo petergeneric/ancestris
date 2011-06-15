@@ -162,14 +162,14 @@ public class Context {
    * Accessor - last entity selected
    */
   public Entity getEntity() {
-    return entities.isEmpty() ? null : (Entity)entities.get(0);
+    return entities.isEmpty() ? null : entities.get(0);
   }
 
   /**
    * Accessor - last property selected
    */
   public Property getProperty() {
-    return properties.isEmpty() ? null : (Property)properties.get(0);
+    return properties.isEmpty() ? null : properties.get(0);
   }
 
   /**

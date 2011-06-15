@@ -381,7 +381,7 @@ public abstract class AbstractTreeModel implements TreeModel {
      * @since 1.4
      */
     public TreeModelListener[] getTreeModelListeners() {
-        return (TreeModelListener[])listenerList.getListeners(
+        return listenerList.getListeners(
                 TreeModelListener.class);
     }
 }

@@ -849,7 +849,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
      */
     public void paint(Graphics g) {
       // fill backgound
-      g.setColor((Color)colors.get("background"));
+      g.setColor(colors.get("background"));
       Rectangle r = g.getClipBounds();
       g.fillRect(r.x,r.y,r.width,r.height);
       // resolve our Graphics
@@ -863,10 +863,10 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       
       // init renderer
       contentRenderer.font           = contentFont;
-      contentRenderer.cIndiShape     = (Color)colors.get("indis");
-      contentRenderer.cFamShape      = (Color)colors.get("fams");
-      contentRenderer.cArcs          = (Color)colors.get("arcs");
-      contentRenderer.cSelectedShape = (Color)colors.get("selects");
+      contentRenderer.cIndiShape     = colors.get("indis");
+      contentRenderer.cFamShape      = colors.get("fams");
+      contentRenderer.cArcs          = colors.get("arcs");
+      contentRenderer.cSelectedShape = colors.get("selects");
       contentRenderer.cRootShape     = Color.GREEN;
       contentRenderer.selected       = selection ? context.getEntities() : new ArrayList<Entity>() ;
       contentRenderer.root           = getRoot();

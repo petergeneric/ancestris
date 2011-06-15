@@ -553,7 +553,7 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
         ged.doMuteUnitOfWork(new UnitOfWork() {
           public void perform(Gedcom gedcom) {
             for (int i=0;i<children.size();i++) {
-              Property child = (Property)children.get(i);
+              Property child = children.get(i);
               child.getParent().delProperty(child);
             }
           }
