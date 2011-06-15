@@ -17,7 +17,7 @@ public class ActionOpen extends Action2 {
 
     /** constructor - good for button or menu item */
     public ActionOpen() {
-        setTip(RES, "cc.tip.open_file");
+        setTip(RES, "cc.tip.open");
         setText(RES, "cc.menu.open");
         setImage(Images.imgOpen);
     }
