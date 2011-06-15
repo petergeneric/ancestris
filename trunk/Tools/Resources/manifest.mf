@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ancestris.trancestris.resources
+OpenIDE-Module-Localizing-Bundle: org/ancestris/trancestris/resources/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
