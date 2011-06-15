@@ -14,8 +14,8 @@
         <folder name="Window">
             <file name="org-ancestris-trancestris-editors-EditorAction.instance">
                 <attr name="component" methodvalue="org.ancestris.trancestris.editors.EditorTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.Bundle#CTL_EditorAction"/>
-                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editor/Advanced.png"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.Bundle#CTL_EditorTopComponent"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/Advanced.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
         </folder>
@@ -31,6 +31,9 @@
             <file name="EditorAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-EditorAction.instance"/>
             </file>
+            <file name="testAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-testAction.instance"/>
+            </file>
         </folder>
     </folder>
     <folder name="Toolbars">
@@ -44,10 +47,14 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="EditorTopComponent.settings" url="EditorTopComponentSettings.xml"/>
+            <file name="testTopComponent.settings" url="testTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="editor">
                 <file name="EditorTopComponent.wstcref" url="EditorTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="explorer">
+                <file name="testTopComponent.wstcref" url="testTopComponentWstcref.xml"/>
             </folder>
         </folder>
     </folder>
