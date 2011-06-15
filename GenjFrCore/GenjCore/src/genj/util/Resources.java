@@ -98,7 +98,7 @@ public class Resources {
    */
   public static Resources get(String packge) {
     synchronized (instances) {
-      Resources result = (Resources)instances.get(packge);
+      Resources result = instances.get(packge);
       if (result==null) {
         result = new Resources(packge);
         instances.put(packge, result);
@@ -242,7 +242,7 @@ public class Resources {
           }
           // \ssomething -> ....
           if (line.indexOf(trimmed)>indent) {
-            String appendto = (String)key2string.get(last);
+            String appendto = key2string.get(last);
             if (!(appendto.endsWith(" ")||appendto.endsWith("\n"))) appendto += " ";
             key2string.put(last, appendto + breakify(trimmed));
             continue;
@@ -347,7 +347,7 @@ public class Resources {
    * @param notNull will return key if resource is not defined
    */
   public String getString(String key, boolean notNull) {
-    String result = (String)getKey2String().get(key.toLowerCase());
+    String result = getKey2String().get(key.toLowerCase());
     if (result==null&&notNull) result = key;
     return result;
   }
@@ -368,7 +368,7 @@ public class Resources {
   public String getString(String key, Object... substitutes) {
 
     // do we have a message format already?
-    MessageFormat format = (MessageFormat)msgFormats.get(key);
+    MessageFormat format = msgFormats.get(key);
     if (format==null) {
       String string = getString(key, false);
       if (string==null)

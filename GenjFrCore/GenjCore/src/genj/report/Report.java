@@ -821,7 +821,7 @@ public abstract class Report implements Cloneable {
     try {
       return getStartMethod(context).invoke(this, new Object[]{ context });
     } catch (InvocationTargetException t) {
-      throw ((InvocationTargetException)t).getTargetException();
+      throw (t).getTargetException();
     }
   }
 

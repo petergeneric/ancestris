@@ -596,7 +596,7 @@ import javax.swing.tree.TreePath;
       if (presetParent!=null) 
         parent = presetParent;
       else if (tree.getSelectionCount()==1)
-        parent = (Property)tree.getSelection().get(0);
+        parent = tree.getSelection().get(0);
       else 
         return;
       
@@ -694,7 +694,7 @@ import javax.swing.tree.TreePath;
       });
     
       // .. select added
-      Property newProp = newProps.isEmpty() ? null : (Property)newProps.get(0);
+      Property newProp = newProps.isEmpty() ? null : newProps.get(0);
       if (newProp instanceof PropertyEvent) {
         Property pdate = ((PropertyEvent)newProp).getDate(false);
         if (pdate!=null) newProp = pdate;
@@ -817,11 +817,11 @@ import javax.swing.tree.TreePath;
         result.addAction(new Copy(selection));
       }
       if (selection.size()==1) {
-        result.addAction(new Paste((Property)selection.get(0)));
+        result.addAction(new Paste(selection.get(0)));
         
         // add
         result.addAction(new ActionProvider.SeparatorAction());
-        Property prop = (Property)selection.get(0);
+        Property prop = selection.get(0);
         if (!prop.isTransient()) {
           result.addAction(new Add(prop));
           Action2.Group group = new Action2.Group(resources.getString("action.add"));

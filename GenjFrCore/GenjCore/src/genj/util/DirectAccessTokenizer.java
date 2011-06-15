@@ -57,13 +57,13 @@ public class DirectAccessTokenizer {
    * Tokens
    */
   public String[] getTokens(boolean trim) {
-    ArrayList result = new ArrayList();
+    ArrayList<String> result = new ArrayList<String>();
     for (int i=0;;i++) {
       String token = get(i, trim);
       if (token==null) break;
       result.add(token);
     }
-    return (String[])result.toArray(new String[result.size()]);
+    return result.toArray(new String[result.size()]);
   }
   
   /**

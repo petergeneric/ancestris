@@ -161,7 +161,7 @@ public abstract class Property implements Comparable<Property> {
     if (pfiles.isEmpty()) {
       pfile = (PropertyFile)addProperty("FILE", "");
     } else {
-      pfile = (PropertyFile)pfiles.get(0);
+      pfile = pfiles.get(0);
     }
     // set title
     Property ptitle = getProperty("TITL");
@@ -301,7 +301,7 @@ public abstract class Property implements Comparable<Property> {
   public void delProperties() {
     if (children!=null) {
       // grab list of children once - subsequent dels might lead to changes to the array
-      Property[] cs = (Property[])children.toArray(new Property[children.size()]);
+      Property[] cs = children.toArray(new Property[children.size()]);
       for (int c = cs.length-1; c>=0; c--) 
         delProperty(cs[c]);
       if (children.isEmpty()) children = null;

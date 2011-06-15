@@ -47,7 +47,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A manager for our blueprints */
+ * A manager for our blueprints
+ */
 public class BlueprintManager {
   
   private final static String SUFFIX = ".html";
@@ -84,7 +85,8 @@ public class BlueprintManager {
   }
   
   /**
-   * Constructor   */
+   * Constructor
+   */
   private BlueprintManager() {
     
     // load readonly/predefined blueprints (from resources)
@@ -245,7 +247,8 @@ public class BlueprintManager {
    * Blueprint for given type with given name
    * @param origin an optional context that blueprints are loaded from if necessary
    * @param tag the entity tag the blueprint is supposed to be for
-   * @param the name of the blueprint   */
+   * @param the name of the blueprint
+   */
   public Blueprint getBlueprint(String tag, String name) {
     // patch name if default
     if (name.length()==0)
@@ -253,17 +256,18 @@ public class BlueprintManager {
     // look through global blueprints for that type
     List<Blueprint> bps = getBlueprints(tag);
     for (int i=0; i<bps.size(); i++) {
-      Blueprint bp = (Blueprint)bps.get(i);
+      Blueprint bp = bps.get(i);
       // .. found! return
       if (bp.getName().equals(name)) 
         return bp;   	
     }
     // fallback try first
-    return (Blueprint)bps.get(0);
+    return bps.get(0);
   }
   
   /**
-   * Blueprints for a given type   */
+   * Blueprints for a given type
+   */
   public List<Blueprint> getBlueprints(String tag) {
     return Collections.unmodifiableList(getBlueprintsInternal(tag));
   }
@@ -278,7 +282,8 @@ public class BlueprintManager {
   }
   
   /**
-   * Adds a blueprint   */
+   * Adds a blueprint
+   */
   public Blueprint addBlueprint(Blueprint blueprint) throws IOException {
     
     // try calculating its filename - just for test in case it's !readOnly
@@ -288,7 +293,7 @@ public class BlueprintManager {
     // keep it overriding same name unless read-only
     List<Blueprint> blueprints = getBlueprintsInternal(blueprint.getTag());
     for (ListIterator<Blueprint> it=blueprints.listIterator(); it.hasNext(); ) {
-      Blueprint other = (Blueprint)it.next();
+      Blueprint other = it.next();
       // found one with same name?
       if (other.getName().equalsIgnoreCase(blueprint.getName())) {
         // don't allow if read only
@@ -312,7 +317,8 @@ public class BlueprintManager {
   }
   
   /**
-   * Deletes a blueprint   */
+   * Deletes a blueprint
+   */
   public void delBlueprint(Blueprint blueprint) throws IOException {
     // allowed?
     if (blueprint.isReadOnly()) 

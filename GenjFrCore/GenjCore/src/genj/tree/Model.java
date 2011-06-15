@@ -321,7 +321,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
    * A node for entity (might be null)
    */
   public TreeNode getNode(Entity e) {
-    return (TreeNode)entities2nodes.get(e);
+    return entities2nodes.get(e);
   }
   
   /**
@@ -415,7 +415,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
     // only one?
     if (fams.length>0) {
       // lookup map
-      Fam fam = (Fam)indi2fam.get(indi);
+      Fam fam = indi2fam.get(indi);
       if (fam==null) fam = fams[0];
       for (int f=0;f<fams.length;f++) {
         if (fams[f]==fam) 
@@ -533,7 +533,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
    */
   private void fireStructureChanged() {
     for (int l=listeners.size()-1; l>=0; l--) {
-      ((ModelListener)listeners.get(l)).structureChanged(this);
+      (listeners.get(l)).structureChanged(this);
     }
   }
   
@@ -542,7 +542,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
    */
   private void fireNodesChanged(Collection nodes) {
     for (int l=listeners.size()-1; l>=0; l--) {
-      ((ModelListener)listeners.get(l)).nodesChanged(this, nodes);
+      (listeners.get(l)).nodesChanged(this, nodes);
     }
   }
   

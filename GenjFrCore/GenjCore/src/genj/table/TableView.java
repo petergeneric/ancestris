@@ -161,7 +161,7 @@ public class TableView extends View {
      */
     /*package*/ Mode getMode(String tag) {
         // known mode?
-        Mode mode = (Mode) modes.get(tag);
+        Mode mode = modes.get(tag);
         if (mode == null) {
             mode = new Mode(tag, new String[0]);
             modes.put(tag, mode);

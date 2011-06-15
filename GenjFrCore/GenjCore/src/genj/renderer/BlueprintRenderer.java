@@ -900,7 +900,7 @@ public class BlueprintRenderer {
       MultiLineProperty.Iterator line = mle.getLineIterator();
       
       // paint
-      Graphics2D graphics = (Graphics2D)g;
+      Graphics2D graphics = g;
       Font font = g.getFont();
       FontRenderContext context = graphics.getFontRenderContext();
 

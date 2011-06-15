@@ -485,10 +485,10 @@ public class TimelineView extends View {
      */
     protected void paintComponent(Graphics g) {
       // let the renderer do its work
-      rulerRenderer.cBackground = (Color)colors.get("background");
-      rulerRenderer.cText = (Color)colors.get("text");
+      rulerRenderer.cBackground = colors.get("background");
+      rulerRenderer.cText = colors.get("text");
       rulerRenderer.cTick = rulerRenderer.cText;
-      rulerRenderer.cTimespan = (Color)colors.get("timespan");
+      rulerRenderer.cTimespan = colors.get("timespan");
       rulerRenderer.acats = getAlmanacCategories();
       // prepare UnitGraphics
       UnitGraphics graphics = new UnitGraphics(
@@ -603,13 +603,13 @@ public class TimelineView extends View {
       
       // let the renderer do its work
       contentRenderer.selection = rsel ? selection : Collections.<Model.Event>emptySet();
-      contentRenderer.cBackground = (Color)colors.get("background" );
-      contentRenderer.cText       = (Color)colors.get("text"    );
-      contentRenderer.cDate       = (Color)colors.get("date"    );
-      contentRenderer.cTag        = (Color)colors.get("tag"     );
-      contentRenderer.cTimespan   = (Color)colors.get("timespan");
-      contentRenderer.cGrid       = (Color)colors.get("grid"    );
-      contentRenderer.cSelected   = (Color)colors.get("selected");
+      contentRenderer.cBackground = colors.get("background" );
+      contentRenderer.cText       = colors.get("text"    );
+      contentRenderer.cDate       = colors.get("date"    );
+      contentRenderer.cTag        = colors.get("tag"     );
+      contentRenderer.cTimespan   = colors.get("timespan");
+      contentRenderer.cGrid       = colors.get("grid"    );
+      contentRenderer.cSelected   = colors.get("selected");
       contentRenderer.paintDates = isPaintDates;
       contentRenderer.paintGrid = isPaintGrid;
       contentRenderer.paintTags = isPaintTags;

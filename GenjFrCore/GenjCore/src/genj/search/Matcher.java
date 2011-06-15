@@ -38,7 +38,7 @@ public abstract class Matcher {
   public final Match[] match(String value) {
     List<Match> result = new ArrayList<Match>(100);
     match(value, result);
-    return (Match[])result.toArray(new Match[result.size()]);
+    return result.toArray(new Match[result.size()]);
   }
 
   /**

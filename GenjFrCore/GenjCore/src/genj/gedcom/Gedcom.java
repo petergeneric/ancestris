@@ -839,7 +839,7 @@ public class Gedcom implements Comparable {
    */
   public Entity[] getEntities(String tag, Comparator<Property> comparator) {
     Collection<Entity> ents = getEntityMap(tag).values();
-    Entity[] result = (Entity[])ents.toArray(new Entity[ents.size()]);
+    Entity[] result = ents.toArray(new Entity[ents.size()]);
     // sort by comparator or entity
     if (comparator!=null) 
       Arrays.sort(result, comparator);
@@ -869,7 +869,7 @@ public class Gedcom implements Comparable {
    */
   public Entity getEntity(String tag, String id) {
     // check back in appropriate type map
-    return (Entity)getEntityMap(tag).get(id);
+    return getEntityMap(tag).get(id);
   }
   
   /**
@@ -1095,7 +1095,7 @@ public class Gedcom implements Comparable {
     // run through undos
     List<Undo> todo = undoHistory.remove(undoHistory.size()-1);
     for (int i=todo.size()-1;i>=0;i--) {
-      Undo undo = (Undo)todo.remove(i);
+      Undo undo = todo.remove(i);
       try {
         undo.undo();
       } catch (Throwable t) {
@@ -1149,7 +1149,7 @@ public class Gedcom implements Comparable {
     // run the redos
     List<Undo> todo = redoHistory.remove(redoHistory.size()-1);
     for (int i=todo.size()-1;i>=0;i--) {
-      Undo undo = (Undo)todo.remove(i);
+      Undo undo = todo.remove(i);
       try {
         undo.undo();
       } catch (Throwable t) {
@@ -1229,7 +1229,7 @@ public class Gedcom implements Comparable {
    * Returns the prefix of the given entity
    */
   public static String getEntityPrefix(String tag) {
-    String result = (String)E2PREFIX.get(tag);
+    String result = E2PREFIX.get(tag);
     if (result==null)
       result = "X";
     return result;
@@ -1246,7 +1246,7 @@ public class Gedcom implements Comparable {
    * Returns an image for given entity type
    */
   public static ImageIcon getEntityImage(String tag) {
-    ImageIcon result = (ImageIcon)E2IMAGE.get(tag);
+    ImageIcon result = E2IMAGE.get(tag);
     if (result==null) {
       result = Grammar.V55.getMeta(new TagPath(tag)).getImage();
       E2IMAGE.put(tag, result);

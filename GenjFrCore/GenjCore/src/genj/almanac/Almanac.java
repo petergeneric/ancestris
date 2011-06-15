@@ -155,7 +155,7 @@ public class Almanac {
    */
   protected void fireStateChanged() {
     ChangeEvent e = new ChangeEvent(this);
-    ChangeListener[] ls = (ChangeListener[])listeners.toArray(new ChangeListener[listeners.size()]);
+    ChangeListener[] ls = listeners.toArray(new ChangeListener[listeners.size()]);
     for (int l = 0; l < ls.length; l++) {
       ls[l].stateChanged(e);
     }
@@ -552,7 +552,7 @@ public class Almanac {
 	        if (start==end)
 	          return end();
 	        // here's the next
-		      next = (Event)events.get(start++);
+		      next = events.get(start++);
 		      // good category?
 		      if (cats!=null&&!next.isCategory(cats)) 
 	          continue;
@@ -612,7 +612,7 @@ public class Almanac {
 
       int pivot = (start + end)/2;
 
-      int y = ((Event)events.get(pivot)).getTime().getYear();
+      int y = (events.get(pivot)).getTime().getYear();
       if (y<year)
         return getStartIndex(year, pivot+1, end);
       return getStartIndex(year, start, pivot);

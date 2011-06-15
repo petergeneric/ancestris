@@ -536,7 +536,7 @@ public class SearchView extends View {
      * access to property
      */
     private Hit getHit(int i) {
-      return (Hit)hits.get(i);
+      return hits.get(i);
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
@@ -553,7 +553,7 @@ public class SearchView extends View {
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property prop) {
       for (int i=0;i<hits.size();i++) {
-        Hit hit = (Hit)hits.get(i);
+        Hit hit = hits.get(i);
         if (hit.getProperty()==prop) 
           fireContentsChanged(this, i, i);
       }
@@ -561,7 +561,7 @@ public class SearchView extends View {
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property removed) {
       for (int i=0;i<hits.size();) {
-        Hit hit = (Hit)hits.get(i);
+        Hit hit = hits.get(i);
         if (hit.getProperty()==removed) {
           hits.remove(i);
           fireIntervalRemoved(this, i, i);

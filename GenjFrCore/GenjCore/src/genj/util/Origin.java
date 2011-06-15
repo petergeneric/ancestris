@@ -356,8 +356,9 @@ public abstract class Origin {
     /**
      * list directory of origin if file
      */
+        @Override
     public String[] list() throws IOException {
-      ArrayList<String> result = new ArrayList();
+      ArrayList<String> result = new ArrayList<String>();
       ZipInputStream in  = openImpl();
       while (true) {
         ZipEntry entry = in.getNextEntry();
