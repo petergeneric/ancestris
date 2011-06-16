@@ -61,7 +61,7 @@ public class NewGedcomAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        NewGedcom wiz = (NewGedcom) Lookup.getDefault().lookup(NewGedcom.class);
+        NewGedcom wiz = Lookup.getDefault().lookup(NewGedcom.class);
         if (wiz != null){
             Context context = wiz.create();
             if ( context != null){
