@@ -224,12 +224,14 @@ public class WelcomeComponent extends TopComponent {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void requestFocus() {
         if( null != content )
             content.requestFocus();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean requestFocusInWindow() {
         if( null != content )
             return content.requestFocusInWindow();
