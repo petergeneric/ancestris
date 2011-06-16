@@ -38,22 +38,24 @@ public abstract class GenjFrPlugin implements PluginInterface {
         return abstractLookup.lookup(clazz);
     }
 
-    public static Class lookupForName(Class clazz,String name){
-        for (Object sInterface : Lookup.getDefault().lookupAll(clazz)) {
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> lookupForName(Class<T> clazz,String name){
+        for (T sInterface : Lookup.getDefault().lookupAll(clazz)) {
                 if (sInterface.getClass().getCanonicalName().equals(name))
-                    return sInterface.getClass();
+                    return (Class<T>)sInterface.getClass();
             }
         return null;
     }
 
-    public static Collection<Class> lookupForName(Class clazz,String[] names){
-        List<Class> openedViews = new ArrayList<Class>();
+    @SuppressWarnings("unchecked")
+    public static <T> Collection<Class<T>> lookupForName(Class<T> clazz,String[] names){
+        List<Class<T>> openedViews = new ArrayList<Class<T>>();
 
         if (names != null){
             List<String> namesList = Arrays.asList(names);
-            for (Object sInterface : Lookup.getDefault().lookupAll(clazz)) {
+            for (T sInterface : Lookup.getDefault().lookupAll(clazz)) {
                     if (namesList.contains(sInterface.getClass().getCanonicalName()))
-                        openedViews.add(sInterface.getClass());
+                        openedViews.add((Class<T>)(sInterface.getClass()));
                 }
         }
         return openedViews;
