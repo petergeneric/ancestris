@@ -44,7 +44,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
     public void createActions(Context context, Purpose purpose, Group into) {
         if (purpose != Purpose.CONTEXT)
             return;
-        for (EditTopComponent edit : (List<EditTopComponent>) GenjFrPlugin.lookupAll(EditTopComponent.class) ) {
+        for (EditTopComponent edit : GenjFrPlugin.lookupAll(EditTopComponent.class) ) {
             Context viewContext = edit.getContext();
             if (viewContext == null)
                 continue;
