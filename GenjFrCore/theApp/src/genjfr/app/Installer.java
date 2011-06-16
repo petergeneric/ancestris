@@ -35,7 +35,7 @@ public class Installer extends ModuleInstall {
 
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             public void run() {
-            Collection pfiles = AncestrisPreferences.get(App.class).get("gedcoms", (Collection) null);
+            Collection<String> pfiles = AncestrisPreferences.get(App.class).get("gedcoms", (Collection<String>) null);
             App.center.load(pfiles);
             }
         });

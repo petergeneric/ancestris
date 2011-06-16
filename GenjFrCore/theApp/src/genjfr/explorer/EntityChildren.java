@@ -33,7 +33,7 @@ class EntityChildren extends Children.SortedArray implements GedcomListener{
 
     @Override
     public Collection<Node> initCollection(){
-        ArrayList<Node> result = new ArrayList();
+        ArrayList<Node> result = new ArrayList<Node>();
         for (Entity e:entities.getEntities())
             result.add(new EntityNode(e));
         return result;

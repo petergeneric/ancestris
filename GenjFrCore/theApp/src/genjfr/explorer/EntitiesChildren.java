@@ -12,7 +12,7 @@ import org.openide.nodes.Node;
  *
  * @author daniel
  */
-public class EntitiesChildren extends Children.Keys {
+public class EntitiesChildren extends Children.Keys<GedcomEntities> {
 
     private String[] entityNames = new String[]{
         "INDI",
@@ -29,11 +29,11 @@ public class EntitiesChildren extends Children.Keys {
         this.gedcom = gedcom;
     }
 
-    protected Node[] createNodes(Object key) {
-        GedcomEntities obj = (GedcomEntities) key;
-        return new Node[]{new EntitiesNode(gedcom, obj)};
+    protected Node[] createNodes(GedcomEntities key) {
+        return new Node[]{new EntitiesNode(gedcom, key)};
     }
 
+    @Override
     protected void addNotify() {
         super.addNotify();
         GedcomEntities[] objs = new GedcomEntities[entityNames.length];

@@ -152,6 +152,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
  * @param gedcom
  * @deprecated
  */
+    @Deprecated
     public void setGedcom(Gedcom gedcom) {
         LOG.warning("setGedcom obsolete, try workaround...");
         setContext(new Context(gedcom));
@@ -161,6 +162,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
     /**
      * @deprecated : use GenjFrPlugin.register(this)
      */
+    @Deprecated
     public void addLookup() {
         GenjFrPlugin.register(this);
     }

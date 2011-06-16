@@ -193,6 +193,7 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
    * @param g
    * @param modified
    */
+  @Deprecated
   public void setModified(Gedcom g, boolean  modified){
           gedcomsOpened.get(g).getDummyNode().fire(modified);
     }

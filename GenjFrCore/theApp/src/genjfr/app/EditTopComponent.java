@@ -89,6 +89,7 @@ public final class EditTopComponent extends GenjViewTopComponent {
      * @deprecated use getContext().getEntity()
      * @return
      */
+    @Deprecated
     public Entity getCurrentEntity() {
         return getContext().getEntity();
 }

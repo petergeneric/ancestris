@@ -49,7 +49,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         final Node dropNode = NodeTransfer.node(t,
                 DnDConstants.ACTION_COPY_OR_MOVE + NodeTransfer.CLIPBOARD_CUT);
         if (null != dropNode) {
-            final GedcomEntities movie = (GedcomEntities) dropNode.getLookup().lookup(GedcomEntities.class);
+            final GedcomEntities movie = dropNode.getLookup().lookup(GedcomEntities.class);
             if (null != movie && !this.equals(dropNode.getParentNode())) {
                 return new PasteType() {
 
@@ -70,7 +70,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         return GedcomDirectory.getInstance().getDummyNode(context).getCookie(clazz);
     }
 
-    protected void createPasteTypes(Transferable t, List s) {
+    protected void createPasteTypes(Transferable t, List<PasteType> s) {
         super.createPasteTypes(t, s);
         PasteType paste = getDropType(t, DnDConstants.ACTION_COPY, -1);
         if (null != paste) {
