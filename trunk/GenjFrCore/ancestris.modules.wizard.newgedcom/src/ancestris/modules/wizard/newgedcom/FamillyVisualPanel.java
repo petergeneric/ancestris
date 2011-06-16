@@ -332,7 +332,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     // End of variables declaration//GEN-END:variables
 
     private void createOrEditParent(IndiBeans destBean, Indi parent, int sex) {
-        Indi indi = (Indi) destBean.getIndi();
+        Indi indi = destBean.getIndi();
         if (indi == null) {
             return;
         }
@@ -353,7 +353,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }
 
     private void createOrEditSpouse(IndiBeans destBean, Entity spouse) {
-        Indi indi = (Indi) destBean.getIndi();
+        Indi indi = destBean.getIndi();
         if (indi != null) {
             editEntity(indi);
         } else {

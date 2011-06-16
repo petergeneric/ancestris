@@ -39,7 +39,7 @@ public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
     public Context create() {
         // To invoke this wizard, copy-paste and run the following code, e.g. from
         // SomeAction.performAction():
-        WizardDescriptor.Iterator iterator = new NewGedcomWizardIterator(this);
+        WizardDescriptor.Iterator<WizardDescriptor> iterator = new NewGedcomWizardIterator(this);
         WizardDescriptor wizardDescriptor = new WizardDescriptor(iterator);
         // {0} will be replaced by WizardDescriptor.Panel.getComponent().getName()
         // {1} will be replaced by WizardDescriptor.Iterator.name()

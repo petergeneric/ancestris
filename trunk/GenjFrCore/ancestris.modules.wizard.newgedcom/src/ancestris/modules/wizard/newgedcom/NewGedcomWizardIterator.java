@@ -22,11 +22,11 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 
-public final class NewGedcomWizardIterator implements WizardDescriptor.InstantiatingIterator {
+public final class NewGedcomWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
     private int index = 0;
     private WizardDescriptor wizard;
-    private WizardDescriptor.Panel[] panels;
+    private WizardDescriptor.Panel<WizardDescriptor>[] panels;
     private final INewGedcomProvider newGedcom;
 
     NewGedcomWizardIterator(INewGedcomProvider newGedcom) {
@@ -38,9 +38,9 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private WizardDescriptor.Panel[] getPanels() {
+    private WizardDescriptor.Panel<WizardDescriptor>[] getPanels() {
         if (panels == null) {
-            ArrayList<WizardDescriptor.Panel> _panels = new ArrayList(4);
+            ArrayList<WizardDescriptor.Panel> _panels = new ArrayList<WizardDescriptor.Panel>(4);
             panels = new WizardDescriptor.Panel[]{};
             if (!NewGedcomOptions.getInstance().getSkipIntro()) {
                 _panels.add(new IntroWizardPanel());
@@ -102,7 +102,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
     }
 
     @Override
-    public WizardDescriptor.Panel current() {
+    public WizardDescriptor.Panel<WizardDescriptor> current() {
         return getPanels()[index];
     }
 
