@@ -34,7 +34,7 @@ public class AncestrisPreferences extends Registry {
     /**
      * Returns a collection of strings by key
      */
-    public Collection get(String key, Collection def) {
+    public Collection<String> get(String key, Collection<String> def) {
 
         // Get size of array
         int size = get(key, -1);
@@ -43,13 +43,13 @@ public class AncestrisPreferences extends Registry {
         }
 
         // Create result
-        Collection result;
+        Collection<String> result;
         if (def == null) {
-            def = new HashSet();
+            def = new HashSet<String>();
         }
 
         try {
-            result = (Collection) def.getClass().newInstance();
+            result = def.getClass().newInstance();
         } catch (Throwable t) {
             return def;
         }

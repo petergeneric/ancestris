@@ -58,7 +58,7 @@ public class ControlCenter extends JPanel{
      * - otherwise load files
      *
      */
-    public void load(Collection files) {
+    public void load(Collection<String> files) {
         SwingUtilities.invokeLater(new ActionAutoOpen(files));
     }  
 
@@ -253,6 +253,7 @@ public class ControlCenter extends JPanel{
     /**
      * @deprecated use getSelectedContext().getGedcom()
      */
+    @Deprecated
     public Gedcom getSelectedGedcom(boolean firstIfNoneSelected) {
         Context ctx = getSelectedContext(firstIfNoneSelected);
         return ctx==null?null:ctx.getGedcom();
@@ -261,7 +262,7 @@ public class ControlCenter extends JPanel{
 
     public Collection<String> getOpenedGedcoms() {
         // Remember open gedcoms
-        Collection<String> save = new ArrayList();
+        Collection<String> save = new ArrayList<String>();
         for (Context context: GedcomDirectory.getInstance().getContexts()){
             // next gedcom
             Gedcom gedcom = context.getGedcom();
@@ -287,6 +288,7 @@ public class ControlCenter extends JPanel{
     /**
      * @deprecated use getOpenedContext()
      */
+    @Deprecated
     public Gedcom getOpenedGedcom(String gedName) {
         Context c = getOpenedContext(gedName);
         return c == null?null:c.getGedcom();

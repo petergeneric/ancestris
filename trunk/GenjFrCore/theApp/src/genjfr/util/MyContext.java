@@ -62,7 +62,7 @@ public class MyContext extends Context {
     private static Action2.Group getProvidedActions(Context context) {
         Action2.Group group = new Action2.Group("");
         // ask the action providers
-        for (ActionProvider provider : (List<ActionProvider>) GenjFrPlugin.lookupAll(ActionProvider.class)) {
+        for (ActionProvider provider : GenjFrPlugin.lookupAll(ActionProvider.class)) {
             provider.createActions(context, Purpose.CONTEXT, group);
         }
         // done

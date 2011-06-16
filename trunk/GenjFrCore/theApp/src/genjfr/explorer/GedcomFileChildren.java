@@ -20,7 +20,7 @@ import org.openide.nodes.Node;
  *
  * @author daniel
  */
-class GedcomFileChildren extends Children.Keys {
+class GedcomFileChildren extends Children.Keys<Gedcom> {
 
     private GedcomFileListener model;
 
@@ -28,7 +28,7 @@ class GedcomFileChildren extends Children.Keys {
         model = new GedcomFileListener(this);
     }
 
-    protected Node[] createNodes(Object key) {
+    protected Node[] createNodes(Gedcom key) {
         Gedcom obj = (Gedcom) key;
         return new Node[]{new GedcomFileNode(obj)};
     }
