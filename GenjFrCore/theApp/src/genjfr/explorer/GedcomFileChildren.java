@@ -29,8 +29,7 @@ class GedcomFileChildren extends Children.Keys<Gedcom> {
     }
 
     protected Node[] createNodes(Gedcom key) {
-        Gedcom obj = (Gedcom) key;
-        return new Node[]{new GedcomFileNode(obj)};
+        return new Node[]{new GedcomFileNode(key)};
     }
 
     protected void addNotify() {

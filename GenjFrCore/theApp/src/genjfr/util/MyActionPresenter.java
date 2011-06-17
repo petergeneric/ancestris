@@ -42,7 +42,7 @@ public class MyActionPresenter extends ActionPresenterProvider {
     private static MenuHelper mh = new MenuHelper();
 
     private ActionPresenterProvider getOther(){
-       Collection<? extends ActionPresenterProvider> a = Lookup.getDefault().lookup(new Lookup.Template(ActionPresenterProvider.class)).allInstances();
+       Collection<? extends ActionPresenterProvider> a = Lookup.getDefault().lookupAll(ActionPresenterProvider.class);
        for (ActionPresenterProvider app: a) {
            if (app != this) {
                return app;

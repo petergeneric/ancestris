@@ -176,6 +176,7 @@ public class App {
      * http://bugs.sun.com/view_bug.do?bug_id=6678385
      * TODO: voir http://www.netbeans.org/issues/show_bug.cgi?id=115606
      */
+    @SuppressWarnings("unchecked")
     private static void initX11ErrorHandlerFix() {
         assert EventQueue.isDispatchThread();
 

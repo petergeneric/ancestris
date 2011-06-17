@@ -45,7 +45,7 @@ public class MyLifecycleManager extends LifecycleManager {
 
     private void hookedExit() {
 
-       Collection<? extends LifecycleManager> c = Lookup.getDefault().lookup(new Lookup.Template(LifecycleManager.class)).allInstances();
+       Collection<? extends LifecycleManager> c = Lookup.getDefault().lookupAll(LifecycleManager.class);
        for (LifecycleManager lm: c) {
            if (lm != this) {
                lm.exit();
@@ -55,7 +55,7 @@ public class MyLifecycleManager extends LifecycleManager {
 
     @Override
     public void saveAll() {
-       Collection<? extends LifecycleManager> c = Lookup.getDefault().lookup(new Lookup.Template(LifecycleManager.class)).allInstances();
+       Collection<? extends LifecycleManager> c = Lookup.getDefault().lookupAll(LifecycleManager.class);
        for (LifecycleManager lm: c) {
            if (lm != this) {
                lm.saveAll();
@@ -65,7 +65,7 @@ public class MyLifecycleManager extends LifecycleManager {
 
     @Override
     public void markForRestart() {
-       Collection<? extends LifecycleManager> c = Lookup.getDefault().lookup(new Lookup.Template(LifecycleManager.class)).allInstances();
+       Collection<? extends LifecycleManager> c = Lookup.getDefault().lookupAll(LifecycleManager.class);
        for (LifecycleManager lm: c) {
            if (lm != this) {
                lm.markForRestart();
