@@ -49,7 +49,7 @@ public class AncestrisPreferences extends Registry {
         }
 
         try {
-            result = def.getClass().newInstance();
+            result = (Collection<String>) def.getClass().newInstance();
         } catch (Throwable t) {
             return def;
         }
