@@ -30,6 +30,7 @@ import java.util.TreeSet;
 /**
  * GenJ - ReportSosa
  */
+@SuppressWarnings("unchecked")
 public class ReportSosa extends Report {
 
   /** option - our report types defined, the value and choices */

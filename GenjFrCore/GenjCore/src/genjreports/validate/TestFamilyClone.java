@@ -20,6 +20,7 @@ import java.util.Set;
 /**
  * Test for a bad merge where dupe families contain the same parents but different children
  */
+@SuppressWarnings("unchecked")
 public class TestFamilyClone extends Test {
   
   // keeping some state here

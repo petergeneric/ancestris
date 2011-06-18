@@ -60,6 +60,7 @@ import java.util.Map;
  * @author Yann L'Henoret <yann.lhenoret@gmail.com>
  * @version 0.6
  */
+@SuppressWarnings("unchecked")
 public class ReportGedcom2Geneanet extends Report {
 
     /** Map with Location elements codes as keys and index of the corresponding element in gedcom file as value <br/>

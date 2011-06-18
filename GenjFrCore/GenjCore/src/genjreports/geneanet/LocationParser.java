@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 
  * 
  */
+@SuppressWarnings("unchecked")
    public class LocationParser
     {
     	/**

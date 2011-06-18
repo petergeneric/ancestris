@@ -116,9 +116,9 @@ public class ReportEventsByMonths extends Report {
 
     JTabbedPane charts = new JTabbedPane();
     for (Iterator<IndexedSeries> it=series.iterator(); it.hasNext(); ) {
-      IndexedSeries is = (IndexedSeries)it.next();
+      IndexedSeries is = it.next();
       //String label = Gedcom.getName(is.getName());
-      String label = (String)labels.get(is.getName());
+      String label = labels.get(is.getName());
       // the chart title
       Chart chart = new Chart(translate("chart.title",label, new Integer(inferiorYearLimit).toString(),new Integer(superiorYearLimit).toString()), is, categories, false);
       

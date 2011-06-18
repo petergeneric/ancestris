@@ -158,7 +158,7 @@ public class ReportRelatives extends Report {
     // a recursive path?
     int colon = expression.indexOf(':');
     if (colon<0) {
-      Relative relative = (Relative)key2relative.get(expression.trim());
+      Relative relative = key2relative.get(expression.trim());
       return find(root, relative.expression, relative.sex, key2relative);
     }
 

@@ -76,6 +76,7 @@ public class FooterRenderer implements GraphicsRenderer
      * Initializes the date to be displayed from the given tree data.
      * @param firstIndi  first individual in the tree
      */
+    @SuppressWarnings("fallthrough")
     public void setFirstIndi(IndiBox firstIndi)
     {
         displayDate = null;

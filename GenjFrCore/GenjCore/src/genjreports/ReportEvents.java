@@ -38,6 +38,7 @@ import java.util.TimeZone;
  * @author Nils Meier nils@meiers.net
  * @author Carsten Muessig carsten.muessig@gmx.net
  */
+@SuppressWarnings("unchecked")
 public class ReportEvents extends Report {
   
     /** whether we sort by day-of-month or date */

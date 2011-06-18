@@ -29,6 +29,7 @@ import java.util.Map;
 /**
  * Show a chart of places over time
  */
+@SuppressWarnings("unchecked")
 public class ReportPlaceHistory extends Report {
 
   private final static String

@@ -172,8 +172,8 @@ public class IndexedSeries {
    * Convenient converter to get a list of series from
    * a dynamic collection containing indexed series
    */
-  public static IndexedSeries[] toArray(Collection c) {
-    return (IndexedSeries[])c.toArray(new IndexedSeries[c.size()]);
+  public static IndexedSeries[] toArray(Collection<IndexedSeries> c) {
+    return c.toArray(new IndexedSeries[c.size()]);
   }
 
   /**
@@ -361,8 +361,8 @@ public class IndexedSeries {
     }
 
     /** all row keys  */
-    public List getRowKeys() {
-      ArrayList result = new ArrayList();
+    public List<String> getRowKeys() {
+      ArrayList<String> result = new ArrayList<String>();
       for (int i=0;i<series.length;i++)
         result.add(series[i].name);
       return result;

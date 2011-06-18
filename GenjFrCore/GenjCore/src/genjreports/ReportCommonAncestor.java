@@ -651,7 +651,7 @@ public class ReportCommonAncestor extends Report {
 	        	if(step.famWhereSpouse != null 
 	        			&& step.famWhereSpouse.getMarriageDate()!=null){
 
-	        		centerString(graphics, getMarriageLine(step),(int)cxStep, (int)cy + SPACE_BETWEEN_LINES*5);
+	        		centerString(graphics, getMarriageLine(step),cxStep, (int)cy + SPACE_BETWEEN_LINES*5);
 	        	}
 	        }
 
@@ -785,7 +785,7 @@ public class ReportCommonAncestor extends Report {
 	         */
 	        private String getTitleLine(Indi indi, Indi other, int generationCount){
 	        	//TODO deal with cases when generationCount =1 or 2 or when one is ascendant from the other
-	        	String[] args = {getNameLine(indi), getNameLine(other)};
+	        	Object[] args = {getNameLine(indi), getNameLine(other)};
 	        	return translate("title",args);
 	        }
 	        

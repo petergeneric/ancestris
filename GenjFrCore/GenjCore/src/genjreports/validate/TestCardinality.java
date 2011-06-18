@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  * Test whether properties adhere to their cardinalities
  */
+@SuppressWarnings("unchecked")
 public class TestCardinality extends Test {
 
   /**

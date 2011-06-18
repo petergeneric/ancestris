@@ -32,6 +32,8 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.ListTool;
 
+// FIXME: refactor this class, remove @suppresswarning
+@SuppressWarnings("unchecked")
 public class DocReport {
 	private VelocityContext context;
 	private Writer out;
@@ -143,8 +145,8 @@ public class DocReport {
 		} catch (Exception e) {
 		}
 	}
-	
-	public class reportIndex {
+
+        public class reportIndex {
 		  private Map index2primary2secondary2elements = new TreeMap();
 
 			private String getKey(Entity e, String tagPath){

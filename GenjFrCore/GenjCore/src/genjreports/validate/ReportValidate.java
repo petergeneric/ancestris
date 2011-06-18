@@ -193,7 +193,7 @@ public class ReportValidate extends Report {
   private void test(Property prop, TagPath path, MetaProperty meta, List<Test> tests, List<ViewContext> issues) {
     // test tests
     for (int i=0, j=tests.size(); i<j; i++) {
-      Test tst = (Test)tests.get(i);
+      Test tst = tests.get(i);
       // applicable?
       if (!tst.applies(prop, path))
         continue;

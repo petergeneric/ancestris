@@ -10,6 +10,7 @@ import java.util.Vector;
  * it was origionally Licensed under the BSD license
  * see http://www.generationjava.com/licencing.shtml
  */
+@SuppressWarnings("unchecked")
 public class Soundex implements Phonetics {
   
     // Soundex substitutions (one character unicode followed by string of substitution)

@@ -124,6 +124,7 @@ public class ShortNameBean extends PropertyBean {
    * Finish editing a property through proxy
    */
   @Override
+  @SuppressWarnings("fallthrough")
   protected void commitImpl(Property property) {
 
     PropertyName p = (PropertyName) property;

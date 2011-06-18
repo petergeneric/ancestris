@@ -1,5 +1,4 @@
 package genjreports;
-
 /**
  * Reports are Freeware Code Snippets
  *
@@ -34,6 +33,7 @@ import java.util.Iterator;
  * @author Carsten Muessig <carsten.muessig@gmx.net>
  * @version 2.2
  */
+@SuppressWarnings("unchecked")
 public class ReportGedcomStatistics extends Report {
 
     /** if individuals should be analyzed */
@@ -411,7 +411,7 @@ public class ReportGedcomStatistics extends Report {
                     break;
 
                 case BAPTISM:
-                    ArrayList baps = new ArrayList();
+                    ArrayList<Property> baps = new ArrayList<Property>();
                     prop = e[i].getProperty("BAPM");
                     if (prop!=null) {
                         prop = e[i].getProperty(new TagPath("INDI:BAPM:PLAC"));
@@ -432,7 +432,7 @@ public class ReportGedcomStatistics extends Report {
                         prop = e[i].getProperty(new TagPath("INDI:CHRA:PLAC"));
                         baps.add(prop);
                     }
-                    props = (Property[])baps.toArray(new Property[baps.size()]);
+                    props = baps.toArray(new Property[baps.size()]);
                     break;
 
                 case EMIGRATION:
@@ -822,7 +822,7 @@ public class ReportGedcomStatistics extends Report {
             indent=3;
         }
         else {
-            println(getIndent(2)+"\""+lastName+"\""+": "+all.number+" ("+roundNumber((double)all.number/(double)numberAllIndis*100, OPTIONS.getPositions())+"%)");
+            println(getIndent(2)+"\""+lastName+"\""+": "+all.number+" ("+roundNumber((double)all.number/numberAllIndis*100, OPTIONS.getPositions())+"%)");
             println(getIndent(3)+translate("ages"));
             println(getIndent(4)+translate("all"));
             indent=5;

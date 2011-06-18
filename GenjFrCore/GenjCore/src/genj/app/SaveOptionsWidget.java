@@ -347,10 +347,10 @@ import javax.swing.JTextField;
     /**
      * Constructor
      */
-    private FilterProperties(Set tags, Set paths, List values) {
+    private FilterProperties(Set tags, Set paths, List<String> values) {
       this.tags = tags;
       this.paths = paths;
-      this.values = (String[])values.toArray(new String[0]);
+      this.values = values.toArray(new String[0]);
       // done
     }
     
@@ -376,7 +376,7 @@ import javax.swing.JTextField;
         }
       }
       // calculate values
-      List values = new ArrayList();
+      List<String> values = new ArrayList<String>();
       tokens = new StringTokenizer(sValues, ",");
       while (tokens.hasMoreTokens()) {
         values.add(tokens.nextToken().trim());
@@ -430,7 +430,7 @@ import javax.swing.JTextField;
   private static class FilterByType implements Filter {
     
     /** the enabled types */
-    private Set types = new HashSet();
+    private Set<String> types = new HashSet<String>();
     
     /**
      * Create an instance

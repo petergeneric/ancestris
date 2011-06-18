@@ -38,6 +38,8 @@ import javax.swing.JOptionPane;
  * @version 1.0
  *
  */
+// FIXME: remove @suppresswranings
+@SuppressWarnings("unchecked")
 public class ReportToolBox extends Report {
 
   /** option - Tool to run */
@@ -204,7 +206,7 @@ public class ReportToolBox extends Report {
        if ((i == 0) || ((settings.entToDo != 0) && (settings.entToDo != i))) continue;
        Collection<? extends Entity> entities = gedcom.getEntities(entityTypes[i]);
        final String entityIDPrefix = gedcom.getNextAvailableID(entityTypes[i]).substring(0,1);
-       final Map listID = new TreeMap(); // sorted mapping list
+       final Map<String,String> listID = new TreeMap<String,String>(); // sorted mapping list
        String oldID, newID = "";
        int iCounter = 0;
        String key, ID;
@@ -226,7 +228,7 @@ public class ReportToolBox extends Report {
        int iCounter = 0;
        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
          String key = (String)it.next();
-         String oldID = (String)listID.get(key);
+         String oldID = listID.get(key);
          Entity entity = gedcom.getEntity(oldID);
          iCounter++;       
          log.write(oldID+" --> "+entityIDPrefix+settings.prefixID+formatNbrs.format(iCounter)+settings.suffixID, false);
@@ -243,7 +245,7 @@ public class ReportToolBox extends Report {
        iCounter = 0;
        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
          String key = (String)it.next();
-         String oldID = (String)listID.get(key);
+         String oldID = listID.get(key);
          Entity entity = gedcom.getEntity(oldID);
          iCounter++;
          String newID = entityIDPrefix+settings.prefixID+formatNbrs.format(iCounter)+settings.suffixID;
@@ -299,7 +301,7 @@ public class ReportToolBox extends Report {
     // Clean gedcom file for all tags
     deleteTags(gedcom, tagStr, ENT_INDI);
 
-    List sosaList = new ArrayList();   // list only used to store ids of sosas
+    List<Pair> sosaList = new ArrayList<Pair>();   // list only used to store ids of sosas
     Pair pair = new Pair("",0);
     String indiID = "";
     Indi indi, indiOther;
@@ -338,8 +340,8 @@ public class ReportToolBox extends Report {
     // Update sosa tag according to action required
     // Store both parents in list
     try {
-    for (ListIterator listIter = sosaList.listIterator(); listIter.hasNext();) {
-       pair = (Pair) listIter.next();
+    for (ListIterator<Pair> listIter = sosaList.listIterator(); listIter.hasNext();) {
+       pair = listIter.next();
        indiID = pair.ID;
        sosaCounter = pair.sosa;
        indi = (Indi)gedcom.getEntity(indiID);
@@ -616,9 +618,9 @@ public class ReportToolBox extends Report {
           }
        
        for (int i = 0; i < tags1.length; i++) {
-          String tag = (String)tags1[i];
+          String tag = tags1[i];
           String msg2 = translate("placeAskMapping", tag);
-          String selection = (String)getValueFromUser(msg2, (Object[])tags2.toArray(), tags2.get(0));
+          String selection = (String)getValueFromUser(msg2, tags2.toArray(), tags2.get(0));
           int iSel = 0;
           if (selection == null) selection = (String)tags2.get(0);
           iSel = tags2.indexOf(selection); 
@@ -817,7 +819,7 @@ public class ReportToolBox extends Report {
                  }
               }
            out.close();
-           log.write(translate("ExportFile", new String[] { exportFile, String.valueOf(recCount) }));
+           log.write(translate("ExportFile", new Object[] { exportFile, String.valueOf(recCount) }));
            }
           } catch (IOException e) { 
           e.printStackTrace(); 
@@ -1187,7 +1189,7 @@ public class ReportToolBox extends Report {
     boolean afterDeath = false;
     Property evenProp = evenProp = indi.getPropertyByPath("INDI:"+eventTag);
     if (evenProp != null) {
-       Property prop = (Property) indi.getPropertyByPath("INDI:"+eventTag+":DATE");
+       Property prop = indi.getPropertyByPath("INDI:"+eventTag+":DATE");
        if (prop != null && prop instanceof PropertyDate) {
            PropertyDate pDate = (PropertyDate) prop;
            preciseDate = preciseDate(pDate);
@@ -1215,7 +1217,7 @@ public class ReportToolBox extends Report {
     String msg = "";
     boolean famChanged = false;
     if (evenProp != null) {
-       Property prop = (Property) fam.getPropertyByPath("FAM:"+eventTag+":DATE");
+       Property prop = fam.getPropertyByPath("FAM:"+eventTag+":DATE");
        if (prop != null && prop instanceof PropertyDate) {
            PropertyDate pDate = (PropertyDate) prop;
            preciseDate = preciseDate(pDate);
@@ -1369,7 +1371,7 @@ public class ReportToolBox extends Report {
      end = start;
      while ((end<=str.length()-1)&&Character.isDigit(str.charAt(end))) end++;
      if (end == start) return 0;
-     else return (int)Integer.parseInt(str.substring(start, end));
+     else return Integer.parseInt(str.substring(start, end));
      }
 
 
@@ -1441,7 +1443,7 @@ public class ReportToolBox extends Report {
        choices.remove(2);
        }
 
-    String todo = (String)getValueFromUser(msg, (Object[])choices.toArray(), (Object) choices.get(0));
+    String todo = (String)getValueFromUser(msg, choices.toArray(), choices.get(0));
 
     //                   ask&add new,  ask mapping, remap,   remove
     boolean [] flags = { false,        false,       false,   false };
@@ -1483,6 +1485,7 @@ public class ReportToolBox extends Report {
  /**
   * Open Gedcom file
   */
+@SuppressWarnings("deprecation")
   private Gedcom openGedcomFile(String filepath) {
         try {
             return Workbench.getInstance().openGedcom((new File(filepath)).toURL()).getGedcom();

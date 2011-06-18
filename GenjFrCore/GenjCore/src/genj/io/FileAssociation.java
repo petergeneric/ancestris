@@ -51,9 +51,9 @@ public class FileAssociation {
 
     private static Logger LOG = Logger.getLogger("genj.io");
     /** instances */
-    private static List associations = new LinkedList();
+    private static List<FileAssociation> associations = new LinkedList<FileAssociation>();
     /** suffix */
-    private Set suffixes = new HashSet();
+    private Set<String> suffixes = new HashSet<String>();
     /** action name e.g. OPEN */
     private String name = "";
     /** external app */
@@ -276,7 +276,7 @@ public class FileAssociation {
      */
     public static String[] parse(String cmd) {
 
-        List tokens = new ArrayList();
+        List<String> tokens = new ArrayList<String>();
         StringBuffer token = new StringBuffer(32);
         boolean quoted = false;
         for (int i = 0; i < cmd.length(); i++) {
@@ -318,22 +318,22 @@ public class FileAssociation {
         }
 
         // done
-        return (String[]) tokens.toArray(new String[tokens.size()]);
+        return tokens.toArray(new String[tokens.size()]);
 
     }
 
     /**
      * Gets all
      */
-    public static List getAll() {
-        return new ArrayList(associations);
+    public static List<FileAssociation> getAll() {
+        return new ArrayList<FileAssociation>(associations);
     }
 
     /**
      * Gets associations
      */
-    public static List getAll(String suffix) {
-        List result = new ArrayList();
+    public static List<FileAssociation> getAll(String suffix) {
+        List<FileAssociation> result = new ArrayList<FileAssociation>();
         Iterator it = associations.iterator();
         while (it.hasNext()) {
             FileAssociation fa = (FileAssociation) it.next();
