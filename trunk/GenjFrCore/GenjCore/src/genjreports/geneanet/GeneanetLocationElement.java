@@ -14,6 +14,7 @@ import java.util.List;
  * @version 0.1
  *
  */
+@SuppressWarnings("unchecked")
 public class GeneanetLocationElement {
 
     	private String code;
@@ -28,7 +29,7 @@ public class GeneanetLocationElement {
     	public GeneanetLocationElement(String names,String code){
     		nameList = new ArrayList();
     		// extract all the "," separated names and save them in a List
-    		List nameListTemp = new ArrayList((Collection)Arrays.asList(names.split(",")));
+    		List<String> nameListTemp = new ArrayList<String>((Collection<String>)Arrays.asList(names.split(",")));
     		String name = null;
     		Iterator it = nameListTemp.iterator();
     		while(it.hasNext()){

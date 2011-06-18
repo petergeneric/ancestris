@@ -99,7 +99,7 @@ public class HorizontalLines implements TreeFilter {
             if (level < levelMin)
                 levelMin = level;
 
-            Integer height = (Integer)levelHeight.get(level);
+            Integer height = levelHeight.get(level);
             if (height == null)
                 height = 0;
             int newHeight = indibox.height + spacing * 2;

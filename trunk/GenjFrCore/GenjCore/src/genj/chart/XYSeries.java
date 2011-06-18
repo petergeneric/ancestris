@@ -35,7 +35,7 @@ import org.jfree.data.xy.XYDataset;
 public class XYSeries {
 
   /** values */
-  private LinkedList points = new LinkedList();
+  private LinkedList<Point2D.Float> points = new LinkedList<Point2D.Float>();
   
   /** name */
   private String name;
@@ -58,7 +58,7 @@ public class XYSeries {
    * Accessor - get points by index
    */
   private Point2D.Float getPointByIndex(int i) {
-    return (Point2D.Float)points.get(i);
+    return points.get(i);
   }
     
   /**
@@ -70,7 +70,7 @@ public class XYSeries {
     // look at existing points
     for (int i=0;i<points.size();i++) {
       
-      Point2D.Float p = (Point2D.Float)points.get(i);
+      Point2D.Float p = points.get(i);
       
       // found it?
       if (p.getX()==x) 
@@ -121,8 +121,8 @@ public class XYSeries {
    * Convenient converter to get a list of series from
    * a dynamic collection containing xy series
    */
-  public static XYSeries[] toArray(Collection c) {
-    return (XYSeries[])c.toArray(new XYSeries[c.size()]);
+  public static XYSeries[] toArray(Collection<XYSeries> c) {
+    return c.toArray(new XYSeries[c.size()]);
   }
   /**
    * Wrap into something JFreeChart can use

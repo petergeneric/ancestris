@@ -52,7 +52,7 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 	   * Convert collection of templates into array
 	   */
 	  public GedartTemplate[] toArray() {
-	    return (GedartTemplate[])(values().toArray(new GedartTemplate[0]));
+	    return (values().toArray(new GedartTemplate[0]));
 	  }
 	  public GedartTemplate[] toArray(Object context) {
 		  ArrayList<GedartTemplate> result = new ArrayList<GedartTemplate>(5);
@@ -67,6 +67,6 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 			  } catch (CloneNotSupportedException e) {
 			  }
 		  }
-	    return (GedartTemplate[])(result.toArray(new GedartTemplate[0]));
+	    return (result.toArray(new GedartTemplate[0]));
 	  }
 }

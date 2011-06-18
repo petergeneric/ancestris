@@ -18,6 +18,7 @@ import java.util.Map;
 /**
  * Test whether properties adhere to their singleton status
  */
+@SuppressWarnings("unchecked")
 public class TestUniqueIDs extends Test {
   
   private final static String[] PATHS = { "INDI:RIN" };

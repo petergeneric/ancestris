@@ -63,7 +63,7 @@ public abstract class Format {
   private boolean isExternalizedFiles;
   
   /** caching for xsl templates */
-  private Map xslCache = new HashMap();
+  private Map<String,TemplatesCache> xslCache = new HashMap<String,TemplatesCache>();
 
   /** 
    * Constructor 
@@ -222,7 +222,7 @@ public abstract class Format {
       if (in == null){
           return null;
       }
-    TemplatesCache cache = (TemplatesCache)xslCache.get(filename);
+    TemplatesCache cache = xslCache.get(filename);
     if (cache!=null)
         return cache.templates;
 
@@ -253,7 +253,7 @@ public abstract class Format {
     File file = new File(filename);
     // check timestamp if we have it already
     long lastModified = file.lastModified();
-    TemplatesCache cache = (TemplatesCache)xslCache.get(file);
+    TemplatesCache cache = xslCache.get(filename);
     if (cache!=null&&cache.timestamp==lastModified)
         return cache.templates;
 
@@ -269,7 +269,7 @@ public abstract class Format {
     }
     
     // keep it
-    xslCache.put(file, cache);
+    xslCache.put(filename, cache);
 
     // done
     return cache.templates;
@@ -297,7 +297,7 @@ public abstract class Format {
       return formats;
     
     // look 'em up
-    List list = new ArrayList(10);
+    List<Format> list = new ArrayList<Format>(10);
     list.add(DEFAULT);
     
     Iterator it = ServiceRegistry.lookupProviders(Format.class);
@@ -312,7 +312,7 @@ public abstract class Format {
     }
 
     // keep 'em
-    formats = (Format[])list.toArray(new Format[list.size()]);
+    formats = list.toArray(new Format[list.size()]);
     
     // done
     return formats;

@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
  * Utterance is used to generate sentences and phrases in different languages.
  * Linguists use the term "utterance" as a general "speech act".
  */
+@SuppressWarnings("unchecked")
 public class Utterance {
   private final String template;
   private final Map props = new HashMap(); // key/value; "1" for 1st positional property

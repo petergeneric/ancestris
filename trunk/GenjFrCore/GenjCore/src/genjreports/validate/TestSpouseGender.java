@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * @author nmeier
  */
+@SuppressWarnings("unchecked")
 /*package*/ class TestSpouseGender extends Test {
 
   /**

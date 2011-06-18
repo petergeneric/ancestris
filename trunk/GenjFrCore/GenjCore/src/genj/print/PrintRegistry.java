@@ -226,7 +226,7 @@ public class PrintRegistry extends Registry {
    */
   private Attribute getIntegerSyntax(Class<Attribute> type, Attribute def) {
     // try to get a stored value
-    int i = super.get(type.getName(),(int)-1);
+    int i = super.get(type.getName(),-1);
     if (i<0)
       return def;
     // try to instantiate appropriate attr
@@ -251,7 +251,7 @@ public class PrintRegistry extends Registry {
    */
   private Attribute getEnumSyntax(Class<Attribute> type, Attribute def) {
     // try to get a stored value
-    int i = super.get(type.getName(),(int)-1);
+    int i = super.get(type.getName(),-1);
     if (i<0)
       return def;
     // try to find appropriate enumeration item

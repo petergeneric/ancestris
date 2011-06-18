@@ -13,6 +13,7 @@ import java.util.TreeSet;
  * GenJ -  ReportPhonetics - a report that generates phonetics
  * @version 0.2
  */
+@SuppressWarnings("unchecked")
 public class ReportPhonetics extends Report {
 
     public int outputFormat = 0;

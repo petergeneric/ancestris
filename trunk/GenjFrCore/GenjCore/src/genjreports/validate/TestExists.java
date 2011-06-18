@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * Test for existance of properties
  */
+@SuppressWarnings("unchecked")
 /*package*/ class TestExists extends Test {
 
   /** path1 pointing to property that triggers existance check */

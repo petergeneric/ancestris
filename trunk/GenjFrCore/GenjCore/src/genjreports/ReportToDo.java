@@ -76,8 +76,8 @@ public class ReportToDo extends Report {
    * The report's entry point
    */
   public Document start(Gedcom gedcom) {
-    List ents = gedcom.getEntities();
-    return start((Entity[])ents.toArray(new Entity[ents.size()]));
+    List<Entity> ents = gedcom.getEntities();
+    return start(ents.toArray(new Entity[ents.size()]));
   }
 
   /**
@@ -275,7 +275,7 @@ public class ReportToDo extends Report {
     propArray = fam.getProperties("NOTE");
     boolean seenNote = false;
     for (int i = 0; i < propArray.length; i++) {
-      prop = (Property) propArray[i];
+      prop = propArray[i];
       if (todos.contains(prop))
         continue;
       if (!seenNote) {
@@ -438,7 +438,7 @@ public class ReportToDo extends Report {
     propArray = indi.getProperties("NOTE");
     boolean seenNote = false;
     for (int i = 0; i < propArray.length; i++) {
-      prop = (Property) propArray[i];
+      prop =  propArray[i];
       if (todos.contains(prop))
         continue;
       if (!seenNote) {

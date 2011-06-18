@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * GridCache - caching information in a 2d grid */
+ * GridCache - caching information in a 2d grid
+ */
+@SuppressWarnings("unchecked")
 public class GridCache {
   
   /** an empty list */
@@ -139,7 +141,8 @@ public class GridCache {
   }
 
   /**
-   * Get the content of a grid cell   */
+   * Get the content of a grid cell
+   */
   public void get(Set set, int row, int col) {
     // what's in the grid?
     Object o = grid[row][col];
@@ -154,9 +157,11 @@ public class GridCache {
    */
   private class EntryList extends ArrayList {
     /**
-     * Constructor     */
+     * Constructor
+     */
     private EntryList() {
       super(8);
     }
-  } //EntryList       
+  } //EntryList
+       
 } //GridCache

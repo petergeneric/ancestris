@@ -43,6 +43,7 @@ import javax.swing.ImageIcon;
  * @author Bill Kelly
  * @version 0.9
  */
+@SuppressWarnings("unchecked")
 public class ReportNarrative extends Report {
 /* TODO priorities:
    _ in text

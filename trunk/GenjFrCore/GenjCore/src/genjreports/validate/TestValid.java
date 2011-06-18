@@ -17,6 +17,7 @@ import java.util.List;
  * Test for property validity
  * @author nmeier
  */
+@SuppressWarnings("unchecked")
 /*package*/ class TestValid extends Test {
 
   /** the report */

@@ -16,6 +16,7 @@ import java.util.List;
  * A test for validation
  * @author nmeier
  */
+@SuppressWarnings("unchecked")
 /*package*/ abstract class Test {
   
   private TagPath[] pathTriggers;

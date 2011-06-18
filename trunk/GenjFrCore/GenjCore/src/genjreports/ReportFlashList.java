@@ -103,6 +103,7 @@ import javax.swing.ImageIcon;
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 2.2
  */
+@SuppressWarnings("unchecked")
 public class ReportFlashList extends Report {
 
   private final static TagPath CITY = new TagPath(".:ADDR:CITY");
@@ -364,19 +365,19 @@ public class ReportFlashList extends Report {
       ArrayList choices = new ArrayList((Collection)Arrays.asList(gedcom.getPlaceFormat().split("\\,"))); // list used for selection only
       
       recordKeyText = recordKeyText.replaceAll(translate("loc1"),"XXX");
-      String selection1 = (String)getValueFromUser(translate("recordKey1")+" "+recordKeyText, (Object[])choices.toArray(), choices.get(0));
+      String selection1 = (String)getValueFromUser(translate("recordKey1")+" "+recordKeyText, choices.toArray(), choices.get(0));
       if (selection1 == null) { return false; } 
          else { choices.remove(choices.indexOf(selection1)); }
       
       recordKeyText = recordKeyText.replaceAll("XXX",selection1);
       recordKeyText = recordKeyText.replaceAll(translate("loc2"),"XXX");
-      String selection2 = (String)getValueFromUser(translate("recordKey2")+" "+recordKeyText, (Object[])choices.toArray(), choices.get(0));
+      String selection2 = (String)getValueFromUser(translate("recordKey2")+" "+recordKeyText, choices.toArray(), choices.get(0));
       if (selection2 == null) { return false; } 
          else { choices.remove(choices.indexOf(selection2)); }
       
       recordKeyText = recordKeyText.replaceAll("XXX",selection2);
       recordKeyText = recordKeyText.replaceAll(translate("loc3"),"XXX");
-      String selection3 = (String)getValueFromUser(translate("recordKey3")+" "+recordKeyText, (Object[])choices.toArray(), choices.get(0));
+      String selection3 = (String)getValueFromUser(translate("recordKey3")+" "+recordKeyText, choices.toArray(), choices.get(0));
       if (selection3 == null) { return false; } 
          else { choices.remove(choices.indexOf(selection3)); }
       recordKeyText = recordKeyText.replaceAll("XXX",selection3);
@@ -670,7 +671,7 @@ public class ReportFlashList extends Report {
   /**
    * Lookup an object in a map with a default class
    */
-  private Object lookup(Map index, String key, Class fallback) {
+  private Object lookup(Map<String,Object> index, String key, Class fallback) {
     // look up and create lazily if necessary
     Object result = index.get(key);
     if (result==null) {

@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Test whether files that are pointed to actually exist
  */
+@SuppressWarnings("unchecked")
 public class TestFile extends Test {
 
   /**

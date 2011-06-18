@@ -128,7 +128,7 @@ public class ReportFamily extends Report {
                 printBaptism(child, "CHRA");
                 families = child.getFamiliesWhereSpouse();
                 for(int j=0; j<families.length; j++) {
-                    family = (Fam)families[j];
+                    family = families[j];
                     println(getIndent(4)+OPTIONS.getMarriageSymbol()+family+" "+trim(family.getMarriageDate())+" "+trim(family.getProperty(new TagPath("FAM:MARR:PLAC"))));
                 }
                 if(child.getProperty("DEAT")!=null && ( (trim(child.getDeathAsString()).length()>0) || (trim(child.getProperty(new TagPath("INDI:DEAT:PLAC"))).length()>0) ) )

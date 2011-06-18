@@ -43,7 +43,7 @@ public class RulerRenderer extends ContentRenderer {
   /*package*/ Color cTick = null;
   
   /** almanac categories */
-  /*package*/ Set acats = null;
+  /*package*/ Set<String> acats = null;
   
   /** a tick */
   private Shape tickMark, eventMark;

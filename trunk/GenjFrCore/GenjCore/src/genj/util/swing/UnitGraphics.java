@@ -37,14 +37,15 @@ import java.util.Stack;
 
 /**
  * A graphics wrapper that prepares for unit-based drawing
- * on a scaled Graphics object (wrapped)  */
+ * on a scaled Graphics object (wrapped) 
+ */
 public class UnitGraphics {
   
   /** stack of transformations */
-  private Stack stackTransformations = new Stack();
+  private Stack<AffineTransform> stackTransformations = new Stack<AffineTransform>();
 
   /** a stack of push'd clips */
-  private Stack clipStack = new Stack();
+  private Stack<Shape> clipStack = new Stack<Shape>();
 
   /** scale */
   private double unitx = 1, unity = 1;
@@ -75,13 +76,15 @@ public class UnitGraphics {
   }
   
   /**
-   * Get the unit   */
+   * Get the unit
+   */
   public Point2D getUnit() {
     return new Point2D.Double(unitx,unity);
   }
   
   /**
-   * Antialiasing   */  
+   * Antialiasing
+   */  
   public void setAntialiasing(boolean set) {
     graphics.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
@@ -90,7 +93,8 @@ public class UnitGraphics {
   }
   
   /**
-   * Translation   */
+   * Translation
+   */
   public void translate(double dx, double dy) {
     // 20030423
     // when not casting this to int tiny offsets happen
@@ -106,13 +110,15 @@ public class UnitGraphics {
   }
   
   /**
-   * Access to the underlying Graphics   */
+   * Access to the underlying Graphics
+   */
   public Graphics2D getGraphics() {
     return graphics;
   }
   
   /**
-   * Clipping   */
+   * Clipping
+   */
   public Rectangle2D getClip() {
     Rectangle r = graphics.getClipBounds();
     return new Rectangle2D.Double(
@@ -127,7 +133,8 @@ public class UnitGraphics {
    * FontMetrics
    */
   public FontMetrics getFontMetrics() {
-    return graphics.getFontMetrics();  }
+    return graphics.getFontMetrics();
+  }
   
   /**
    * Color
@@ -178,7 +185,8 @@ public class UnitGraphics {
   }
   
   /**
-   * Draw shape   */
+   * Draw shape
+   */
   public void draw(Shape shape, double x, double y) {
     draw(shape,x,y,false);
   }
@@ -214,7 +222,7 @@ public class UnitGraphics {
    * Pops a saved AffineTransformation
    */
   public void popTransformation() {
-    graphics.setTransform((AffineTransform)stackTransformations.pop());
+    graphics.setTransform(stackTransformations.pop());
   }
 
   /**
@@ -255,7 +263,7 @@ public class UnitGraphics {
    * Pop's a previously push'd clip
    */
   public void popClip() {
-    graphics.setClip((Shape)clipStack.pop());    
+    graphics.setClip(clipStack.pop());    
   }
 
   /**

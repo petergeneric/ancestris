@@ -20,6 +20,7 @@ import java.util.ListIterator;
 /**
  * Test for dupes in information about being biological child
  */
+@SuppressWarnings("unchecked")
 public class TestBiologicalChild extends Test {
 
   /**

@@ -59,6 +59,7 @@ import org.w3c.dom.Node;
  * <li><a ref="http://www.renderx.com/demos/src_examples.html">Samples at renderx.com</a>
  * </ul>
  */
+@SuppressWarnings("unchecked")
 public class Document {
   /** Symbolic constant for font size for sections.
    * @see #setSectionSizes
@@ -93,7 +94,7 @@ public class Document {
   private String title;
   private boolean needsTOC = false;
   private Map file2elements = new HashMap();
-  private List toc = new ArrayList();
+  private List<TOCEntry> toc = new ArrayList<TOCEntry>();
   private String formatSection = "font-weight=bold,space-before=0.5cm,space-after=0.2cm,keep-with-next.within-page=always";
   private String formatSectionLarger = "font-size=larger," + formatSection;
   private static final String[] fontSizes = new String[] {
@@ -526,8 +527,8 @@ select="$header-width * 0.3333"/><xsl:text>pc</xsl:text>
    * Access to external image files
    */
   protected File[] getImages() {
-    Set files = file2elements.keySet();
-    return (File[])files.toArray(new File[files.size()]);
+    Set<File> files = file2elements.keySet();
+    return files.toArray(new File[files.size()]);
   }
   
   /**

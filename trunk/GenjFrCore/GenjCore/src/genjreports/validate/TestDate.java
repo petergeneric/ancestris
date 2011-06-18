@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * Test two dates
  */
+@SuppressWarnings("unchecked")
 /*package*/ class TestDate extends Test {
 
   /** comparisons */

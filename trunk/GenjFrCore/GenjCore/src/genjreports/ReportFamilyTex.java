@@ -320,7 +320,7 @@ public class ReportFamilyTex extends Report {
 	{
 		if (reportNumberFamilies==true)
 		{
-			return TexEncode((String)  f.getId())+" ";
+			return TexEncode(f.getId())+" ";
 		}
 		else
 		{
@@ -557,7 +557,7 @@ public class ReportFamilyTex extends Report {
                 printBaptism(child, "CHRA");
                 families = child.getFamiliesWhereSpouse();
                 for(int j=0; j<families.length; j++) {
-                    family = (Fam)families[j];
+                    family = families[j];
                     // println(getIndentTex(4)+OPTIONS.getMarriageSymbol()+family+" "+trim(family.getMarriageDate())+" "+trim(family.getProperty(new TagPath("FAM:MARR:PLAC")))+"\\par");
 
                     str = trim(family.getMarriageDate())+" ";

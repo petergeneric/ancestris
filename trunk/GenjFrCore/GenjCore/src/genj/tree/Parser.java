@@ -431,7 +431,7 @@ import java.util.List;
       TreeNode pivot = node;
       // loop through fams
 
-      List l = new ArrayList(fams.length);
+      List<Indi> l = new ArrayList<Indi>(fams.length);
 
       for (int f=0; f<fams.length; f++) {
         // loop through children

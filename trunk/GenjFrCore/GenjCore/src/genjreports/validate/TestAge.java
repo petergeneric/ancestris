@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Test age of individuals at specific dates
  */
+@SuppressWarnings("unchecked")
 public class TestAge extends Test {
 
   /** comparisons */

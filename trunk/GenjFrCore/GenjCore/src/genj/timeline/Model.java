@@ -225,8 +225,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
    */
   protected Set<Event> getEvents(Context context) {
     
-    Set propertyHits = new HashSet();
-    Set entityHits = new HashSet();
+    Set<Event> propertyHits = new HashSet<Event>();
+    Set<Event> entityHits = new HashSet<Event>();
     
     List<? extends Property> props = context.getProperties();
     List<? extends Entity> ents = context.getEntities();
@@ -281,7 +281,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
    */
   private void fireStructureChanged() {
     for (int l=listeners.size()-1; l>=0; l--) {
-      ((Listener)listeners.get(l)).structureChanged();
+      (listeners.get(l)).structureChanged();
     }
   }
 
@@ -290,7 +290,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
    */
   private void fireDataChanged() {
     for (int l=listeners.size()-1; l>=0; l--) {
-      ((Listener)listeners.get(l)).dataChanged();
+      (listeners.get(l)).dataChanged();
     }
   }
   
@@ -319,11 +319,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
     min = Double.MAX_VALUE;
     max = -Double.MAX_VALUE;
     // keep old and create some new space
-    List old = layers;
-    layers = new ArrayList(10);
+    List<List<Event>> old = layers;
+    layers = new ArrayList<List<Event>>(10);
     // loop through old
     for (int l=0; l<old.size(); l++) {
-      List layer = (List)old.get(l);
+      List<Event> layer = old.get(l);
       Iterator events = layer.iterator();
       while (events.hasNext()) {
         Event event = (Event)events.next();
@@ -407,13 +407,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
     // find a level that suits us
     for (int l=0;l<layers.size();l++) {
       // try to insert in level
-      List layer = (List)layers.get(l);
+      List<Event> layer = layers.get(l);
       if (insertEvent(e, layer)) return;
       // continue
     }
     
     // create a new layer
-    List layer = new LinkedList();
+    List<Event> layer = new LinkedList<Event>();
     layers.add(layer);
     layer.add(e);
     
@@ -424,11 +424,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
    * Insert the Event into a layer
    * @return whether that was successfull
    */
-  private final boolean insertEvent(Event candidate, List layer) {
+  private final boolean insertEvent(Event candidate, List<Event> layer) {
     // loop through layer
-    ListIterator events = layer.listIterator();
+    ListIterator<Event> events = layer.listIterator();
     do {
-      Event event = (Event)events.next();
+      Event event = events.next();
       // before?
       if (candidate.to+timeAfterEvent<event.from-timeBeforeEvent) {
         events.previous();

@@ -22,6 +22,7 @@ package genj.tree;
 import gj.layout.tree.Branch;
 import gj.layout.tree.NodeOptions;
 import gj.layout.tree.Orientation;
+import gj.model.Arc;
 import gj.model.Node;
 
 import java.awt.Point;
@@ -31,7 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A node in our genealogy tree */
+ * A node in our genealogy tree
+ */
 /*package*/ class TreeNode implements Node, NodeOptions {
   
   /** no padding */
@@ -41,7 +43,7 @@ import java.util.List;
   /*package*/ Object content;
   
   /** arcs of this entity */
-  /*package*/ List arcs = new ArrayList(5);
+  /*package*/ List<Arc> arcs = new ArrayList<Arc>(5);
   
   /** position of this entity */
   /*package*/ Point pos = new Point();

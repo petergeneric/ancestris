@@ -42,7 +42,7 @@ public class PropertyReader {
   protected boolean useIndents = false;
   protected int lines = 0;
   protected String line = null;
-  protected Collection collectXRefs;
+  protected Collection<PropertyXRef> collectXRefs;
   protected boolean isMerge = false;
   
   /** variables read line by line */
@@ -60,6 +60,7 @@ public class PropertyReader {
    * @param collectXRefs collection to collect xrefs in (otherwise xrefs are linked immediately)
    * @param useIndents whether to use spaces as indent declarations
    */
+  @SuppressWarnings("unchecked")
   public PropertyReader(Reader in, Collection collectXRefs, boolean useIndents) {
     this(new BufferedReader(in), collectXRefs, useIndents);
   }
@@ -68,7 +69,7 @@ public class PropertyReader {
    * Constructor 
    * @see PropertyReader#PropertyReader(Reader, Collection, boolean)
    */
-  public PropertyReader(BufferedReader in, Collection collectXRefs, boolean useIndents) {
+  public PropertyReader(BufferedReader in, Collection<PropertyXRef> collectXRefs, boolean useIndents) {
     this.in = in;
     this.useIndents = useIndents;
     this.collectXRefs = collectXRefs;

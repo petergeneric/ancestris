@@ -237,7 +237,7 @@ public class DnDTree extends JTree implements Autoscroll {
      * </ul>
      */    
     private class DragHandler extends DragSourceAdapter implements DragGestureListener,
-                                                                   Comparator {
+                                                                   Comparator<TreePath> {
         /**
          * The transferable to be dragged.
          */
@@ -247,6 +247,7 @@ public class DnDTree extends JTree implements Autoscroll {
          * Start a drag with all currently selected nodes if one of them
          * is hit by the mouse event that originates the drag.
          */
+        @Override
         public void dragGestureRecognized(DragGestureEvent dge) {
             
             if (hasDnDModel()) {
@@ -290,9 +291,10 @@ public class DnDTree extends JTree implements Autoscroll {
          * Compare two treePaths because the selectionModel doesn't keep them
          * necessarily ordered - lower rows come first.
          */
-        public int compare(Object object1, Object object2) {
-            TreePath path1 = (TreePath)object1;
-            TreePath path2 = (TreePath)object2;
+        @Override
+        public int compare(TreePath object1, TreePath object2) {
+            TreePath path1 = object1;
+            TreePath path2 = object2;
             
             int row1 = getRowForPath(path1); 
             int row2 = getRowForPath(path2);
@@ -305,6 +307,7 @@ public class DnDTree extends JTree implements Autoscroll {
             }
         }
 
+        @Override
         public void dragDropEnd(DragSourceDropEvent dsde) {
             
             if (dsde.getDropSuccess()) {
@@ -340,7 +343,7 @@ public class DnDTree extends JTree implements Autoscroll {
         private TreePath   parentPath;
         private int        childIndex = 0;
         private Rectangle  indicator;
-        private List       insertions = new ArrayList();
+        private List<TreePath>       insertions = new ArrayList<TreePath>();
 
         public DropHandler() {
             timer = new Timer(1500, this);
@@ -406,7 +409,7 @@ public class DnDTree extends JTree implements Autoscroll {
                 if (!insertions.isEmpty()&&parent!=null) {
                     getSelectionModel().clearSelection();
                     for (int i = 0; i < insertions.size(); i++) {
-                      TreePath path = (TreePath)insertions.get(i);
+                      TreePath path = insertions.get(i);
                       if (getModel().getIndexOfChild(parent, path.getLastPathComponent())>=0)
                         getSelectionModel().addSelectionPath(path);
                     }

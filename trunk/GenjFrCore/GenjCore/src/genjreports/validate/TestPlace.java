@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * Test for place formatting
  */
+@SuppressWarnings("unchecked")
 public class TestPlace extends Test {
   
   private String globalHierarchy;

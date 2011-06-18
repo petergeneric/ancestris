@@ -34,6 +34,7 @@ public class ReportAlmanac extends Report {
   /**
    * main for Gedcom
    */
+  @SuppressWarnings("unchecked")
   public void start(Gedcom gedcom) {
     report(gedcom, (Collection<Indi>)gedcom.getEntities(Gedcom.INDI));
   }

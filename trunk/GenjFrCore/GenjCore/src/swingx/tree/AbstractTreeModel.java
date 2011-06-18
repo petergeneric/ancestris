@@ -363,6 +363,7 @@ public abstract class AbstractTreeModel implements TreeModel {
      * 
      * @since 1.3
      */
+    @SuppressWarnings("unchecked")
     public EventListener[] getListeners(Class listenerType) { 
     return listenerList.getListeners(listenerType); 
     }

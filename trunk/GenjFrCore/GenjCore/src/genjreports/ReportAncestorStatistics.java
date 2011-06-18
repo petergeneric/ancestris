@@ -44,13 +44,13 @@ public class ReportAncestorStatistics extends Report {
     "--------------------------------------------------------------------------------";
 
     private double dImplexFactor;
-    Vector vecGenerationInfo = new Vector();
-    private HashSet setIndi = new HashSet();
-    private HashSet setCommonAncestor = new HashSet();
-    private TreeMap mapImplexCommonIndi = new TreeMap();
+    Vector<GenerationInfo> vecGenerationInfo = new Vector<GenerationInfo>();
+    private HashSet<String> setIndi = new HashSet<String>();
+    private HashSet<String> setCommonAncestor = new HashSet<String>();
+    private TreeMap<String,Indi> mapImplexCommonIndi = new TreeMap<String,Indi>();
 
     private double dConsanguinityFactor;
-    private TreeMap mapConsanguinityCommonIndi = new TreeMap();
+    private TreeMap<String,ConsanguinityInfo> mapConsanguinityCommonIndi = new TreeMap<String,ConsanguinityInfo>();
 
     private class GenerationInfo {
         int iLevel;
@@ -76,7 +76,7 @@ public class ReportAncestorStatistics extends Report {
         public Indi indi;
         public int count;
         public double consanguinityFactor;
-        public Stack stackIndi = new Stack();
+        public Stack<String> stackIndi = new Stack<String>();
     }
 
     /**
@@ -234,13 +234,13 @@ public class ReportAncestorStatistics extends Report {
      */
     private void computeImplexFactor(Indi indi) {
         // Initialize the first generation with the selected individual
-        List listIndi = new ArrayList();
+        List<Indi> listIndi = new ArrayList<Indi>();
         listIndi.add(indi);
 
         // Compute statistics one generation after the other
         int iLevel = 1;
         while (!listIndi.isEmpty()) {
-            List listParent = new ArrayList();
+            List<Indi> listParent = new ArrayList<Indi>();
             computeGeneration(iLevel, listIndi, listParent);
             listIndi = listParent;
             iLevel++;
@@ -305,7 +305,7 @@ public class ReportAncestorStatistics extends Report {
      * @param listIndi     Individuals of a generation.
      * @param listParent   [return] Individuals of the next generation.
      */
-    private void computeGeneration(int iLevel, List listIndi, List listParent) {
+    private void computeGeneration(int iLevel, List<Indi> listIndi, List<Indi> listParent) {
         // Prepare generation information
         GenerationInfo info = new GenerationInfo(iLevel);
         vecGenerationInfo.add(info);
@@ -365,8 +365,8 @@ public class ReportAncestorStatistics extends Report {
         if (famc == null)
             return;
 
-        Stack vecWife = new Stack();
-        Stack vecHusband = new Stack();
+        Stack<String> vecWife = new Stack<String>();
+        Stack<String> vecHusband = new Stack<String>();
         checkRightTree(famc.getWife(), 0, vecWife, famc.getHusband(), 0, vecHusband);
     }
 
@@ -379,8 +379,8 @@ public class ReportAncestorStatistics extends Report {
      * @param iLevelLeft   Current generation level of other the tree.
      * @param stackLeft    Current ancestor list of other the tree.
      */
-    private void checkRightTree(Indi indiRight, int iLevelRight, Stack stackRight,
-    Indi indiLeft, int iLevelLeft, Stack stackLeft) {
+    private void checkRightTree(Indi indiRight, int iLevelRight, Stack<String> stackRight,
+    Indi indiLeft, int iLevelLeft, Stack<String> stackLeft) {
         // Exit if an individual is missing
         if (indiRight == null || indiLeft == null)
             return;
@@ -417,8 +417,8 @@ public class ReportAncestorStatistics extends Report {
      * @param iLevelLeft   Current generation level.
      * @param stackLeft    Current ancestor list.
      */
-    private void searchInLeftTree(Indi indiRight, int iLevelRight, Stack stackRight,
-    Indi indiLeft, int iLevelLeft, Stack stackLeft) {
+    private void searchInLeftTree(Indi indiRight, int iLevelRight, Stack<String> stackRight,
+    Indi indiLeft, int iLevelLeft, Stack<String> stackLeft) {
         // Exit if an individual is missing
         if (indiRight == null || indiLeft == null)
             return;
@@ -434,7 +434,7 @@ public class ReportAncestorStatistics extends Report {
         String strIdRight = indiRight.getId();
         if (strIdRight == strIdLeft) {
             // Check if indivividual is already in list
-            ConsanguinityInfo info = (ConsanguinityInfo) mapConsanguinityCommonIndi.get(strIdRight);
+            ConsanguinityInfo info = mapConsanguinityCommonIndi.get(strIdRight);
             if (info == null) {
                 // Create info about individual
                 info = new ConsanguinityInfo();
@@ -443,7 +443,7 @@ public class ReportAncestorStatistics extends Report {
 
             // Save ancestor list in debug mode
             if (DEBUG) {
-                Iterator itrStack = stackRight.iterator();
+                Iterator<String> itrStack = stackRight.iterator();
                 while (itrStack.hasNext())
                     info.stackIndi.push(itrStack.next());
                 info.stackIndi.push(STACK_SEPARATOR);

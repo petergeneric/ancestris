@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Test for dupes in information about being biological child
  */
+@SuppressWarnings("unchecked")
 public class TestOrder extends Test {
 
   private String tagToSort;

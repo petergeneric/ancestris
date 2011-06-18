@@ -148,9 +148,9 @@ public class ReportSummaryOfRecords extends Report {
     // sort properties
     Property[] props = of.getProperties();
     if (sortProperties)
-      Arrays.sort(props, new Comparator() {
-        public int compare(Object p1, Object p2) {
-          return Gedcom.getName( ((Property)p1).getTag() ).compareTo( Gedcom.getName( ((Property)p2).getTag()) );
+      Arrays.sort(props, new Comparator<Property>() {
+        public int compare(Property p1, Property p2) {
+          return Gedcom.getName( (p1).getTag() ).compareTo( Gedcom.getName( (p2).getTag()) );
         }
       });
 
