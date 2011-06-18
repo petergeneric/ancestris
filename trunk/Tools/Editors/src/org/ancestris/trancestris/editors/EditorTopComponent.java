@@ -35,7 +35,7 @@ import org.openide.nodes.Node;
 public final class EditorTopComponent extends TopComponent {
 
     private ResourceFile resourceFile;
-    private Locale translatedLocale = Locale.getDefault();
+    private Locale translatedLocale = new java.util.Locale("es", "ES");
 
     private class Listener implements ListSelectionListener, ActionListener {
 

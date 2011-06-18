@@ -34,7 +34,7 @@ public class LanguageSelectionPanel extends javax.swing.JPanel {
                 localeList.put(locale.getDisplayLanguage(), locale);
             }
         }
-        Locale selectedLocale = Locale.getDefault();
+        Locale selectedLocale = new java.util.Locale("es", "ES");
 
         @Override
         public int getSize() {

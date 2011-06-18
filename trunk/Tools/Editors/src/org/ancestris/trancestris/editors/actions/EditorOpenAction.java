@@ -22,7 +22,7 @@ public final class EditorOpenAction implements ActionListener {
         fileChooser.setFileFilter(filter);
         fileChooser.setAcceptAllFileFilterUsed(false);
         if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
-            Locale defaultLocale = Locale.getDefault();
+            Locale defaultLocale = new java.util.Locale("es", "ES");
             File defaultBundleFile = fileChooser.getSelectedFile();
             String defaultBundleFileName = defaultBundleFile.getName();
             int extensionIndex = defaultBundleFileName.lastIndexOf(".");
