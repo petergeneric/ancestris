@@ -28,16 +28,18 @@ public final class EditorOpenAction implements ActionListener {
             int extensionIndex = defaultBundleFileName.lastIndexOf(".");
             String translatedBundleFileName = "";
             try {
+                ResourceFile resourceFile = new ResourceFile(defaultBundleFile);
+                /*
+                 * 
+                 */
                 translatedBundleFileName = fileChooser.getCurrentDirectory().getCanonicalPath() + System.getProperty("file.separator");
                 translatedBundleFileName += defaultBundleFileName.substring(0, extensionIndex);
                 translatedBundleFileName += "_" + defaultLocale.getLanguage();
                 translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
                 File translatedBundleFile = new File(translatedBundleFileName);
-                if (translatedBundleFile.exists() == false) {
-                    translatedBundleFile.createNewFile();
+                if (translatedBundleFile.exists() == true) {
+                    resourceFile.setTranslation(translatedBundleFile);
                 }
-                ResourceFile resourceFile = new ResourceFile(defaultBundleFile, false);
-                resourceFile.setTranslation(translatedBundleFile, false);
                 TopComponent tc = WindowManager.getDefault().findTopComponent("EditorTopComponent");
                 ((EditorTopComponent) tc).setBundles(resourceFile);
             } catch (IOException ex) {

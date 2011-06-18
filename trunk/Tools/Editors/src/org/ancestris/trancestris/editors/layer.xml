@@ -2,6 +2,14 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
+        <folder name="Edit">
+            <file name="org-ancestris-trancestris-editors-actions-LanguageSelectionAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.LanguageSelectionAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_LanguageSelectionAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/actions/translate.gif"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
         <folder name="File">
             <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.EditorOpenAction"/>
@@ -41,6 +49,10 @@
             <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-editors-actions-EditorOpenAction.instance"/>
                 <attr name="position" intvalue="300"/>
+            </file>
+            <file name="org-ancestris-trancestris-editors-actions-LanguageSelectionAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-ancestris-trancestris-editors-actions-LanguageSelectionAction.instance"/>
+                <attr name="position" intvalue="500"/>
             </file>
         </folder>
     </folder>

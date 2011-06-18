@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
@@ -26,13 +27,15 @@ import org.openide.cookies.SaveCookie;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//org.ancestris.trancestris.editors//Editor//EN", autostore = false)
 public final class EditorTopComponent extends TopComponent {
+
+    private ResourceFile resourceFile;
+    private Locale translatedLocale = Locale.getDefault();
 
     private class Listener implements ListSelectionListener, ActionListener {
 
@@ -107,13 +110,19 @@ public final class EditorTopComponent extends TopComponent {
 
                     @Override
                     public void save() throws IOException {
-                        change = false;
-                        fire();
+                        String defaultBundleFileName = resourceFile.getDefaultBundleFile().getName();
+                        int extensionIndex = defaultBundleFileName.lastIndexOf(".");
+                        String translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
+                        translatedBundleFileName += "_" + translatedLocale.getLanguage();
+                        translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
+                        fileChooser.setSelectedFile(new File (translatedBundleFileName));
                         if (fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
                             File file = fileChooser.getSelectedFile();
                             if (file != null) {
                                 try {
                                     resourceFileView.getResourceFile().writeTo(file, true);
+                                    change = false;
+                                    fire();
                                 } catch (Exception exception) {
                                     NotifyDescriptor errorMsg = new NotifyDescriptor.Message("Error saving to " + file.getName() + "\n<" + exception.getMessage() + ">", NotifyDescriptor.ERROR_MESSAGE);
                                     DialogDisplayer.getDefault().notify(errorMsg);
@@ -259,18 +268,6 @@ public final class EditorTopComponent extends TopComponent {
         return PREFERRED_ID;
     }
 
-    public void setResourceFile(File defaultLangage, File localLanguage) {
-        ResourceFile resourceFile = null;
-        try {
-            resourceFile = new ResourceFile(defaultLangage, true);
-            resourceFile.setTranslation(localLanguage, true);
-            resourceFileView.setResourceFile(resourceFile);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-    }
-
     public void fireTranslationHappened() {
         firePropertyChange("translation", "1", "2");
         change = true;
@@ -279,6 +276,11 @@ public final class EditorTopComponent extends TopComponent {
     }
 
     public void setBundles(ResourceFile resourceFile) {
+        this.resourceFile = resourceFile;
         resourceFileView.setResourceFile(resourceFile);
     }
+
+     public void setTranslatedLocale(Locale locale) {
+         this.translatedLocale = locale;
+     }
 }

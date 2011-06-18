@@ -68,7 +68,6 @@ public class ResourceFileView extends JList {
         }
         while (i + 1 < getModel().getSize()) {
             i++;
-            ResourceFileView _tmp = this;
             if (file.getLineState(i) == 0) {
                 setSelectedIndex(i);
                 ensureIndexIsVisible(i);
