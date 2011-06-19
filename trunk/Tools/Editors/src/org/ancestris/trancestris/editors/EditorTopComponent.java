@@ -35,7 +35,7 @@ import org.openide.nodes.Node;
 public final class EditorTopComponent extends TopComponent {
 
     private ResourceFile resourceFile;
-    private Locale translatedLocale = new java.util.Locale("es", "ES");
+    private Locale translatedLocale;
 
     private class Listener implements ListSelectionListener, ActionListener {
 
@@ -115,7 +115,7 @@ public final class EditorTopComponent extends TopComponent {
                         String translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
                         translatedBundleFileName += "_" + translatedLocale.getLanguage();
                         translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
-                        fileChooser.setSelectedFile(new File (translatedBundleFileName));
+                        fileChooser.setSelectedFile(new File(translatedBundleFileName));
                         if (fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
                             File file = fileChooser.getSelectedFile();
                             if (file != null) {
@@ -275,12 +275,12 @@ public final class EditorTopComponent extends TopComponent {
         dummyNode.fire();
     }
 
-    public void setBundles(ResourceFile resourceFile) {
+    public void setBundles(ResourceFile resourceFile, Locale locale) {
         this.resourceFile = resourceFile;
-        resourceFileView.setResourceFile(resourceFile);
+        this.translatedLocale = locale;
+        resourceFileView.setResourceFile(this.resourceFile);
     }
 
-     public void setTranslatedLocale(Locale locale) {
-         this.translatedLocale = locale;
-     }
+    public void setTranslatedLocale(Locale locale) {
+    }
 }
