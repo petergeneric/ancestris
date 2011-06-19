@@ -15,20 +15,19 @@ public class ResourceFile {
     private File DefaultLangageFile = null;
     private Properties defaultLangage = new Properties();
     private Properties translatedLangage = new Properties();
-    private ArrayList<String> content = null;
+    private ArrayList<ResourceLine> content = null;
     private int not_translated;
-//    private ResourceDir parent;
 
     public ResourceFile(File file) throws IOException {
         DefaultLangageFile = file;
         not_translated = 0;
         InputStreamReader inputStream = new InputStreamReader(new FileInputStream(file));
         defaultLangage.load(inputStream);
-        content = new ArrayList<String> (defaultLangage.size());
+        content = new ArrayList<ResourceLine>(defaultLangage.size());
         Iterator it = defaultLangage.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
-            content.add((String)pairs.getKey()+ "=" + (String)pairs.getValue());
+            content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
         }
         not_translated = defaultLangage.size();
     }
@@ -47,8 +46,8 @@ public class ResourceFile {
         Iterator it = defaultLangage.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
-            if (translatedLangage.getProperty((String)pairs.getKey()) != null) {
-                    not_translated = Math.max(0, not_translated - 1);
+            if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
+                not_translated = Math.max(0, not_translated - 1);
             }
         }
     }
@@ -62,39 +61,43 @@ public class ResourceFile {
     }
 
     public String getLine(int i) {
-        return (String) content.get(i);
+        return (String) content.get(i).propertyValue;
     }
 
     public String getLineTranslation(int i) {
-        String s = getLine(i);
-        String s1 = ResourceLine.getKey(s);
-        String s2 = (String) translatedLangage.get(s1);
+        String key = content.get(i).getKey();
+        String s2 = (String) translatedLangage.get(key);
         if (s2 != null) {
             return s2;
         } else {
-            return ResourceLine.getValue(s);
+            return content.get(i).getValue();
         }
     }
 
     public void setLineTranslation(int i, String s) {
-        String s1 = getLine(i);
-        String s2 = ResourceLine.getKey(s1);
-        if (translatedLangage.get(s2) == null) {
+        String key = content.get(i).getKey();
+        if (translatedLangage.get(key) == null) {
             not_translated--;
         }
-        translatedLangage.put(s2, s);
+        translatedLangage.put(key, s);
     }
 
     public int getLineState(int i) {
-        String s = getLine(i);
-        if (s.startsWith("#")) {
-            return -1;
+
+        if (translatedLangage.containsKey(content.get(i).getKey()) == true) {
+            String Origin = defaultLangage.getProperty(content.get(i).getKey());
+
+            if (Origin.equalsIgnoreCase(translatedLangage.getProperty(content.get(i).getKey()))) {
+                return -1;
+            } else {
+                return 1;
+            }
         } else {
-            return translatedLangage.containsKey(ResourceLine.getKey(s)) ? 1 : 0;
+            return 0;
         }
     }
 
-    public File getDefaultBundleFile () {
+    public File getDefaultBundleFile() {
         return DefaultLangageFile;
     }
 }
