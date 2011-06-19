@@ -43,11 +43,11 @@ public final class EditorOpenAction implements ActionListener {
         dialog.toFront();
         if (GeneanetExportActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
 
-            String defaultBundleFileName = defaultBundleFile.getName();
-            int extensionIndex = defaultBundleFileName.lastIndexOf(".");
             try {
                 ResourceFile resourceFile = new ResourceFile(defaultBundleFile);
 
+                String defaultBundleFileName = defaultBundleFile.getCanonicalPath();
+                int extensionIndex = defaultBundleFileName.lastIndexOf(".");
                 String translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
                 translatedBundleFileName += "_" + selectedLocale.getLanguage();
                 translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
