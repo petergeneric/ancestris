@@ -72,7 +72,7 @@ import genj.util.swing.DateWidget;
  *  @version    1.0             Oct 17, 2002 
  */
 public class Calculator extends JPanel implements KeyListener{
-	private final Class ENGINE; 
+	private final Class<?> ENGINE;
 	private final CalculatorEngine engine = new CalculatorEngine();
 	private final JTextField display = new JTextField();
 	private char lastChar = 0;
@@ -327,7 +327,7 @@ public class Calculator extends JPanel implements KeyListener{
 			try {
 				if ( e.getSource() instanceof DigitButton ) {
 					method =
-						ENGINE.getMethod("digit", new Class[] { int.class });
+						ENGINE.getMethod("digit", new Class<?>[] { (Class<?>)int.class });
 
 					if (methodName.equals(".")) {
 						method.invoke(engine, new Object[] { Integer.valueOf( '.' )});
@@ -336,8 +336,8 @@ public class Calculator extends JPanel implements KeyListener{
 								new Integer( methodName )});
 					}
 				} else {
-					method = ENGINE.getMethod(methodName, null);
-					method.invoke(engine, null);
+					method = ENGINE.getMethod(methodName, (Class<?>[])null);
+					method.invoke(engine, (Object[])null);
 				}
 			} catch (NoSuchMethodException ex) {
 				System.out.println("No such method: " + methodName);
