@@ -498,7 +498,7 @@ public class GeoFilter {
         for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
             TopComponent topComponent = it.next();
             if (topComponent instanceof EditTopComponent && gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
-                Entity ent = ((EditTopComponent) topComponent).getCurrentEntity();
+                Entity ent = ((EditTopComponent) topComponent).getContext().getEntity();
                 if (ent instanceof Indi) {
                     return (Indi) ent;
                 } else if (ent instanceof Fam) {
