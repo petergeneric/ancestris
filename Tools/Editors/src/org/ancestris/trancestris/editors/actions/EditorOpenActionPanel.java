@@ -12,7 +12,11 @@ package org.ancestris.trancestris.editors.actions;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,7 +28,7 @@ import org.openide.windows.WindowManager;
  */
 public class EditorOpenActionPanel extends javax.swing.JPanel {
 
-    final static Locale[] locales = Locale.getAvailableLocales();
+    static Locale[] locales = null;
     final static HashMap<String, Locale> localeList = new HashMap<String, Locale>();
     Locale selectedLocale = Locale.getDefault();
     File defaultBundleFile = null;
@@ -33,8 +37,20 @@ public class EditorOpenActionPanel extends javax.swing.JPanel {
 
         public LocaleComboBoxModel() {
             super();
-            for (Locale locale : locales) {
-                localeList.put(locale.getDisplayLanguage(), locale);
+            for (Locale locale : Locale.getAvailableLocales()) {
+                if (localeList.get(locale.getDisplayLanguage()) == null) {
+                    localeList.put(locale.getDisplayLanguage(), locale);
+                }
+            }
+
+            locales = new Locale[localeList.size()];
+            SortedSet<String> sortedset= new TreeSet<String>(localeList.keySet());
+
+           Iterator<String> iter = sortedset.iterator();
+
+            int index = 0;
+            while (iter.hasNext()) {
+                locales[index++] = localeList.get((String) iter.next());
             }
         }
 
@@ -62,6 +78,8 @@ public class EditorOpenActionPanel extends javax.swing.JPanel {
     /** Creates new form EditorOpenActionPanel */
     public EditorOpenActionPanel() {
         initComponents();
+
+
     }
 
     /** This method is called from within the constructor to
