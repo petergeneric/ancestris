@@ -654,7 +654,7 @@ public final class GeneanetExportAction implements ActionListener {
             String lastName = null;
             Indi indi = indisIterator.next();
 
-            Property[] pIndiNames = (Property[]) indi.getProperties("NAME");
+            Property[] pIndiNames = indi.getProperties("NAME");
             if (pIndiNames.length > 0) {
                 // extract First and last Name of the first property
                 // name found for key generation
