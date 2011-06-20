@@ -31,9 +31,6 @@
             <file name="EditorAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-EditorAction.instance"/>
             </file>
-            <file name="testAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-testAction.instance"/>
-            </file>
         </folder>
     </folder>
     <folder name="Toolbars">
@@ -47,14 +44,10 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="EditorTopComponent.settings" url="EditorTopComponentSettings.xml"/>
-            <file name="testTopComponent.settings" url="testTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="editor">
                 <file name="EditorTopComponent.wstcref" url="EditorTopComponentWstcref.xml"/>
-            </folder>
-            <folder name="explorer">
-                <file name="testTopComponent.wstcref" url="testTopComponentWstcref.xml"/>
             </folder>
         </folder>
     </folder>
