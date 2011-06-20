@@ -253,13 +253,13 @@ public final class FamilyGroupsTopComponent extends TopComponent {
     /**
      * A sub-tree of people related to each other
      */
-    private class Tree extends HashSet implements Comparable {
+    private class Tree extends HashSet<Indi> implements Comparable<Tree> {
 
         private Indi oldestIndividual;
 
         @Override
-        public int compareTo(Object that) {
-            return ((Tree) that).size() - ((Tree) this).size();
+        public int compareTo(Tree that) {
+            return (that).size() - (this).size();
         }
 
         @Override
@@ -271,15 +271,13 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         }
 
         @Override
-        public boolean add(Object o) {
-            // Individuals expected
-            Indi indi = (Indi) o;
+        public boolean add(Indi indi) {
             // check if oldest
             if (isOldest(indi)) {
                 oldestIndividual = indi;
             }
             // continue
-            return super.add(o);
+            return super.add(indi);
         }
 
         private boolean isOldest(Indi indi) {
@@ -307,14 +305,14 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         familyGroupsTextArea.addMouseListener(new myMouseListener());
     }
 
-    public void start(Entity[] indis, HashSet allIndis) {
-        HashSet unvisited = new HashSet(Arrays.asList(indis));
-        List trees = new ArrayList();
+    public void start(Indi[] indis, HashSet allIndis) {
+        HashSet<Indi> unvisited = new HashSet<Indi>(Arrays.asList(indis));
+        List<Tree> trees = new ArrayList<Tree>();
 
         familyGroupsTextArea.setText("");
 //        println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.fileheader"), myGedcom.getName()));
         while (!unvisited.isEmpty()) {
-            Indi indi = (Indi) unvisited.iterator().next();
+            Indi indi = unvisited.iterator().next();
 
             // start a new sub-tree
             Tree tree = new Tree();
@@ -343,7 +341,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
             int loners = 0;
             for (int i = 0; i < trees.size(); i++) {
 
-                Tree tree = (Tree) trees.get(i);
+                Tree tree = trees.get(i);
 
                 // sort group entities by birth date
                 grandtotal += tree.size();
@@ -388,7 +386,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
     private void iterate(Indi indi, Tree tree, Set unvisited) {
 
         // individuals we need to check
-        Stack todos = new Stack();
+        Stack<Indi> todos = new Stack<Indi>();
         if (unvisited.remove(indi)) {
             todos.add(indi);
         }
@@ -396,7 +394,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         // loop
         while (!todos.isEmpty()) {
 
-            Indi todo = (Indi) todos.pop();
+            Indi todo = todos.pop();
 
             // belongs to group
             tree.add(todo);
@@ -528,8 +526,8 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         context = App.center.getSelectedContext(true);
         if (context != null) {
             Gedcom myGedcom = context.getGedcom();
-            Entity[] indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-            HashSet unvisited = new HashSet(Arrays.asList(indis));
+            Indi[] indis = (Indi[] )myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
+            HashSet<Indi> unvisited = new HashSet<Indi>(Arrays.asList(indis));
             start(indis, unvisited);
         }
     }
