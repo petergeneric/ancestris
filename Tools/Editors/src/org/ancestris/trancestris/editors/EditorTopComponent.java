@@ -112,7 +112,13 @@ public final class EditorTopComponent extends TopComponent {
                     public void save() throws IOException {
                         String defaultBundleFileName = resourceFile.getDefaultBundleFile().getName();
                         int extensionIndex = defaultBundleFileName.lastIndexOf(".");
-                        String translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
+                        int LanguageExtIndex = defaultBundleFileName.lastIndexOf("_");
+                        String translatedBundleFileName = "";
+                        if (LanguageExtIndex > 0) {
+                            translatedBundleFileName = defaultBundleFileName.substring(0, LanguageExtIndex);
+                        } else {
+                            translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
+                        }
                         translatedBundleFileName += "_" + translatedLocale.getLanguage();
                         translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
                         fileChooser.setSelectedFile(new File(translatedBundleFileName));
