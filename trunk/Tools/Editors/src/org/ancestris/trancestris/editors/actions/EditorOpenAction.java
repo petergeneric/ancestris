@@ -47,8 +47,14 @@ public final class EditorOpenAction implements ActionListener {
                 ResourceFile resourceFile = new ResourceFile(defaultBundleFile);
 
                 String defaultBundleFileName = defaultBundleFile.getCanonicalPath();
+                int LanguageExtIndex = defaultBundleFileName.lastIndexOf("_");
                 int extensionIndex = defaultBundleFileName.lastIndexOf(".");
-                String translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
+                String translatedBundleFileName = "";
+                if (LanguageExtIndex > 0) {
+                    translatedBundleFileName = defaultBundleFileName.substring(0, LanguageExtIndex);
+                } else {
+                    translatedBundleFileName = defaultBundleFileName.substring(0, extensionIndex);
+                }
                 translatedBundleFileName += "_" + selectedLocale.getLanguage();
                 translatedBundleFileName += defaultBundleFileName.substring(extensionIndex, defaultBundleFileName.length());
                 File translatedBundleFile = new File(translatedBundleFileName);
