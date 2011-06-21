@@ -16,8 +16,6 @@ import ancestris.modules.editors.standard.actions.ACreateChild;
 import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
-import ancestris.modules.beans.AFamBean;
-import ancestris.modules.beans.AIndiBean;
 import ancestris.modules.beans.AListBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -252,7 +250,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     private Action getCreateChildAction(){
         return AActions.alwaysEnabled(
-                new ACreateChild((Fam) familySpouse.getContext(), this),
+                new ACreateChild((Fam) familySpouse.getContext()),
                 "",
                 org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getContext()),
                 "ancestris/modules/editors/standard/images/add-child.png",
@@ -260,7 +258,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     }
     private Action getCreateSpouseActions(){
         return AActions.alwaysEnabled(
-                new ACreateSpouse((Indi) husband.getContext(), this),
+                new ACreateSpouse((Indi) husband.getContext()),
                 "",
                 "Ajouter un conjoint",
                 "ancestris/modules/editors/standard/images/add-spouse.png",
@@ -663,65 +661,43 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         }
     }
 
-    public boolean editProperty(Property entity, boolean isNew) {
+    public static boolean editProperty(Property property, boolean isNew) {
         // FIXME: Horror!
-        if (entity instanceof Indi) {
-            return editEntity((Indi) entity, isNew);
+        if (property instanceof Indi) {
+            return EntityEditor.editEntity((Indi) property, isNew);
         }
-        if (entity instanceof Fam) {
-            return editEntity((Fam) entity, isNew);
+        if (property instanceof Fam) {
+            return EntityEditor.editEntity((Fam) property, isNew);
+        }
+        if (property instanceof PropertyEvent) {
+            return editEvent((PropertyEvent) property, isNew);
         }
         return false;
     }
 
-    public boolean editEntity(Fam fam, boolean isNew) {
+    public static boolean editEvent(PropertyEvent prop, boolean isNew) {
         String title;
+
         if (isNew) {
-            title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.new.title", fam);
+            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", prop);
         } else {
-            title = NbBundle.getMessage(FamilyPanel.class, "dialog.fam.edit.title", fam);
+            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.edit.title", prop);
         }
-        final AFamBean bean = new AFamBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        if (prop == null) {
+            return false;
+        }
+        final EventBean propEditor = new EventBean();
+        propEditor.setRoot(prop);
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(propEditor), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
         }
         try {
-            fam.getGedcom().doUnitOfWork(new UnitOfWork() {
+            prop.getGedcom().doUnitOfWork(new UnitOfWork() {
 
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    bean.commit();
-                }
-            });
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean editEntity(Indi indi, boolean isNew) {
-        String title;
-        if (isNew) {
-            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", indi);
-        } else {
-            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.edit.title", indi);
-        }
-        if (indi == null) {
-            return false;
-        }
-        final AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
-        DialogDisplayer.getDefault().notify(nd);
-        if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
-            return false;
-        }
-        try {
-            indi.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    bean.commit();
+                    propEditor.commit();
                 }
             });
         } catch (GedcomException ex) {
@@ -811,9 +787,9 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         @Override
         public ActionListener getCreateAction() {
             if (otherBean == null || otherBean.getContext() == null) {
-                return new ACreateSpouse(null, ancestris.modules.editors.standard.FamilyPanel.this);
+                return new ACreateSpouse(null);
             }
-            return new ACreateSpouse((Indi) otherBean.getContext(), ancestris.modules.editors.standard.FamilyPanel.this);
+            return new ACreateSpouse((Indi) otherBean.getContext());
         }
     }
 
@@ -851,12 +827,12 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         @Override
         public ActionListener getCreateAction() {
             if (parentBean != null && parentBean.getContext() != null) {
-                return new ACreateChild((Indi) parentBean.getContext(), ancestris.modules.editors.standard.FamilyPanel.this);
+                return new ACreateChild((Indi) parentBean.getContext());
             }
             if (famcBean != null && famcBean.getContext() != null) {
-                return new ACreateChild((Fam) famcBean.getContext(), ancestris.modules.editors.standard.FamilyPanel.this);
+                return new ACreateChild((Fam) famcBean.getContext());
             }
-            return new ACreateSpouse(null, ancestris.modules.editors.standard.FamilyPanel.this);
+            return new ACreateSpouse(null);
         }
     }
 

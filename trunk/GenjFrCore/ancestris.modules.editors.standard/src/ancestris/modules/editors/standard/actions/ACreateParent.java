@@ -1,6 +1,6 @@
 package ancestris.modules.editors.standard.actions;
 
-import ancestris.modules.editors.standard.FamilyPanel;
+import ancestris.modules.editors.standard.EntityEditor;
 import genj.edit.actions.CreateParent;
 import genj.gedcom.Indi;
 import java.awt.event.ActionEvent;
@@ -25,7 +25,7 @@ public class ACreateParent extends AbstractAction {
         cpAction.actionPerformed(e);
         Indi parent = (Indi) cpAction.getCreated();
         if (cpAction.isNew()) {
-            if (!FamilyPanel.editEntity(parent, true)) {
+            if (!EntityEditor.editEntity(parent, true)) {
                 child.getGedcom().undoUnitOfWork(false);
             }
         }

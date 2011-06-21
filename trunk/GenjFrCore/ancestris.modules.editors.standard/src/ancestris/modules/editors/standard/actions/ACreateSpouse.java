@@ -1,6 +1,6 @@
 package ancestris.modules.editors.standard.actions;
 
-import ancestris.modules.editors.standard.FamilyPanel;
+import ancestris.modules.editors.standard.EntityEditor;
 import genj.edit.actions.CreateSpouse;
 import genj.gedcom.Indi;
 import genj.view.SelectionSink;
@@ -10,11 +10,9 @@ import javax.swing.AbstractAction;
 public class ACreateSpouse extends AbstractAction {
 
     private Indi other;
-    FamilyPanel editor;
 
-    public ACreateSpouse(Indi indi, FamilyPanel editor) {
+    public ACreateSpouse(Indi indi) {
         super();
-        this.editor = editor;
         other = indi;
     }
 
@@ -28,7 +26,7 @@ public class ACreateSpouse extends AbstractAction {
             csAction.actionPerformed(e);
             Indi indi = (Indi) csAction.getCreated();
             if (csAction.isNew()) {
-                if (!editor.editEntity(indi, true)) {
+                if (!EntityEditor.editEntity(indi, true)) {
                     other.getGedcom().undoUnitOfWork(false);
                 }
             }

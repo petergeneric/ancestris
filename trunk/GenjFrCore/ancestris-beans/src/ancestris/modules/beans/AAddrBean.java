@@ -46,10 +46,10 @@ public final class AAddrBean extends JPanel implements ABean {
     @Override
     public AAddrBean setRoot(Property property) {
         address.setContext(property, "ADDR");
-        cpost.setContext(property, "ADDR:POST");
-        city.setContext(property, "ADDR:CITY");
-        state.setContext(property, "ADDR:STAE");
-        country.setContext(property, "ADDR:CTRY");
+        cpost.setContext(property, "ADDR","POST");
+        city.setContext(property, "ADDR","CITY");
+        state.setContext(property, "ADDR","STAE");
+        country.setContext(property, "ADDR","CTRY");
         return this;
     }
 
@@ -163,4 +163,4 @@ public final class AAddrBean extends JPanel implements ABean {
     private ancestris.modules.beans.AChoiceBean state;
     private ancestris.modules.beans.ATagBean stateLabel;
     // End of variables declaration//GEN-END:variables
-}
+    }
