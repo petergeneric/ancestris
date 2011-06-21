@@ -12,20 +12,15 @@
 package ancestris.modules.editors.standard;
 
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
-import genj.gedcom.UnitOfWork;
 import genj.util.swing.Action2;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genjfr.app.pluginservice.GenjFrPlugin;
 import java.awt.event.ActionEvent;
-import java.util.List;
 import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.modules.ModuleInstall;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
