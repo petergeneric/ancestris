@@ -22,6 +22,7 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
     private SubmitterWizardPanel changeListener;
 
     /** Creates new form SubmitterVisualPanel */
+    // FIXME: circular dependency: 
     public SubmitterVisualPanel(INewGedcomProvider newGedcom, SubmitterWizardPanel changeListner) {
         initComponents();
         //FIXME: ce n'est pas sa place

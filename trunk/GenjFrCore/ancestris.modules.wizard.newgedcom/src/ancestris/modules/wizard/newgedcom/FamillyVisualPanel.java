@@ -417,10 +417,6 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
         updatechildrenPanel();
     }
 
-    private boolean editEntity(Entity entity) {
-        return false;
-    }
-
     private boolean editEntity(Fam fam) {
         AFamBean bean = new AFamBean();
         NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
