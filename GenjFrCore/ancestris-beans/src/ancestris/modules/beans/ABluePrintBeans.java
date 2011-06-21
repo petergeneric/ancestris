@@ -156,7 +156,7 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
      * Get blueprint used for given type
      */
     private Blueprint getBlueprint(String tag) {
-        Blueprint result = (Blueprint) type2blueprint.get(tag);
+        Blueprint result = type2blueprint.get(tag);
         if (result == null) {
             result = BlueprintManager.getInstance().getBlueprint(tag, "");
             type2blueprint.put(tag, result);
