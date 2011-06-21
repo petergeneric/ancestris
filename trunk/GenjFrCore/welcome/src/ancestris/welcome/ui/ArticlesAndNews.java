@@ -116,7 +116,7 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
         return panel;
     }
 
-    private class ArticlesAndNewsRSSFeed extends CombinationRSSFeed {
+    private static class ArticlesAndNewsRSSFeed extends CombinationRSSFeed {
         public ArticlesAndNewsRSSFeed( String url1, String url2, boolean showProxyButton ) {
             super( url1, url2, showProxyButton, MAX_ARTICLES_COUNT );
         }

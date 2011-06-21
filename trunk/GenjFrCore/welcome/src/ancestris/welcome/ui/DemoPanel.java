@@ -110,7 +110,7 @@ class DemoPanel extends RSSFeedReaderPanel {
         return res;
     }
 
-    class DemoRSSFeed extends RSSFeed {
+    private static class DemoRSSFeed extends RSSFeed {
         public DemoRSSFeed( String url ) {
             super( url, false );
         }
