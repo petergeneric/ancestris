@@ -16,6 +16,7 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
@@ -26,7 +27,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
     private int index = 0;
     private WizardDescriptor wizard;
-    private WizardDescriptor.Panel<WizardDescriptor>[] panels;
+    private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     private final INewGedcomProvider newGedcom;
 
     NewGedcomWizardIterator(INewGedcomProvider newGedcom) {
@@ -38,22 +39,20 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private WizardDescriptor.Panel<WizardDescriptor>[] getPanels() {
+    private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
         if (panels == null) {
-            ArrayList<WizardDescriptor.Panel> _panels = new ArrayList<WizardDescriptor.Panel>(4);
-            panels = new WizardDescriptor.Panel[]{};
+            panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>(5);;
             if (!NewGedcomOptions.getInstance().getSkipIntro()) {
-                _panels.add(new IntroWizardPanel());
+                panels.add(new IntroWizardPanel());
             }
-            _panels.add(new SubmitterWizardPanel(newGedcom));
-            _panels.add(new GedcomWizardPanel(newGedcom));
-            _panels.add(new FirstIndiWizardPanel(newGedcom));
-            _panels.add(new FamillyWizardPanel(newGedcom));
-            panels = _panels.toArray(panels);
+            panels.add(new SubmitterWizardPanel(newGedcom));
+            panels.add(new GedcomWizardPanel(newGedcom));
+            panels.add(new FirstIndiWizardPanel(newGedcom));
+            panels.add(new FamillyWizardPanel(newGedcom));
 
             String[] steps = createSteps();
-            for (int i = 0; i < panels.length; i++) {
-                Component c = panels[i].getComponent();
+            for (int i = 0; i < panels.size(); i++) {
+                Component c = panels.get(i).getComponent();
 
                 if (steps[i] == null) {
                     // Default step name to component name of panel. Mainly
@@ -79,7 +78,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
                     jc.putClientProperty(WizardDescriptor.PROP_HELP_DISPLAYED, Boolean.TRUE);
 
-                    jc.putClientProperty(WizardDescriptor.PROP_HELP_URL, ((IHelpPanel)panels[i]).getHelpUrl());
+                    jc.putClientProperty(WizardDescriptor.PROP_HELP_URL, ((IHelpPanel)panels.get(i)).getHelpUrl());
                 }
             }
         }
@@ -103,17 +102,17 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
     @Override
     public WizardDescriptor.Panel<WizardDescriptor> current() {
-        return getPanels()[index];
+        return getPanels().get(index);
     }
 
     @Override
     public String name() {
-        return index + 1 + ". sur " + getPanels().length;
+        return index + 1 + ". sur " + getPanels().size();
     }
 
     @Override
     public boolean hasNext() {
-        return index < getPanels().length - 1;
+        return index < getPanels().size() - 1;
     }
 
     @Override
@@ -126,7 +125,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        ((NewGedcomSteps) panels[index].getComponent()).applyNext();
+        ((NewGedcomSteps) panels.get(index).getComponent()).applyNext();
         index++;
     }
 
@@ -188,12 +187,12 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
             beforeSteps = new String[1];
         }
 
-        String[] res = new String[(beforeSteps.length - 1) + panels.length];
+        String[] res = new String[(beforeSteps.length - 1) + panels.size()];
         for (int i = 0; i < res.length; i++) {
             if (i < (beforeSteps.length - 1)) {
                 res[i] = beforeSteps[i];
             } else {
-                res[i] = panels[i - beforeSteps.length + 1].getComponent().getName();
+                res[i] = panels.get(i - beforeSteps.length + 1).getComponent().getName();
             }
         }
         return res;

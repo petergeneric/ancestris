@@ -23,7 +23,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class SubmitterWizardPanel implements WizardDescriptor.Panel, IHelpPanel {
+public class SubmitterWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -93,11 +93,11 @@ public class SubmitterWizardPanel implements WizardDescriptor.Panel, IHelpPanel 
     // WizardDescriptor.getProperty & putProperty to store information entered
     // by the user.
     @Override
-    public void readSettings(Object settings) {
+    public void readSettings(WizardDescriptor settings) {
     }
 
     @Override
-    public void storeSettings(Object settings) {
+    public void storeSettings(WizardDescriptor settings) {
     }
 
     @Override
