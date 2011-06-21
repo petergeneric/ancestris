@@ -43,10 +43,10 @@ public class AListBean extends JPanel {
      * Get blueprint used for given type
      */
     private Blueprint getBlueprint(String tag) {
-        Blueprint result = (Blueprint) type2blueprint.get(tag);
+        Blueprint result = type2blueprint.get(tag);
         // try fallback
         if (result == null) {
-            result =  (Blueprint) type2blueprint.get("");
+            result =  type2blueprint.get("");
         }
         // fallback to global
         if (result == null) {
