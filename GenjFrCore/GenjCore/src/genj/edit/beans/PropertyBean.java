@@ -227,6 +227,34 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
       TagPath tpath = new TagPath(root.getPath()+":"+path);
     return setContext(root, tpath, root.getProperty(tpath), new ArrayList<PropertyBean>());
   }
+
+  /**
+   * set property to look at. This is a helper method to set the context of a bean to a potentially
+   * non existent property from a root property. This property is defined from the root property as
+   * root.getPropertyByPath(path).getProperty(tag) if path is non null
+   * root.getProperty(tag) otherwise
+   * the
+   * @param root root property
+   * @param path path to the main property. If null, then root is considered as the main property
+   * @param tag tag of the property
+   * @return the PropertyBean
+   * 
+   * for example setContext(indi, "BIRT", DATE") gets the bean for the birth date of the indi
+   * this is in roughly the same as setContext(indi.getProperty("BIRT"), DATE") but in this later 
+   * case the BIRTH Event must not be null
+   */
+  public PropertyBean setContext(Property root, String path, String tag) {
+        StringBuilder sb = new StringBuilder();
+        if (path != null && !path.isEmpty() )
+            sb.append(path);
+        if (tag != null && !tag.isEmpty()){
+            if (sb.length() != 0)
+                sb.append(':');
+            sb.append(tag);
+      }
+      TagPath tpath = new TagPath(/*root.getTag()+*/".:"+sb.toString());
+    return setContext(root, tpath, root.getProperty(tpath), new ArrayList<PropertyBean>());
+  }
   /**
    * set property to look at
    */

@@ -21,7 +21,7 @@ import java.io.Serializable;
  */
 public class APlaceBean extends PlaceBean implements Serializable {
 
-    private static final String PATH = "PLAC";
+    private static final String TAG = "PLAC";
 
     public APlaceBean() {
         super();
@@ -32,8 +32,9 @@ public class APlaceBean extends PlaceBean implements Serializable {
      * @param property
      */
     @Override
-    public APlaceBean setContext(Property root, String tag) {
-        super.setContext(root, tag + ":" + PATH);
+    public APlaceBean setContext(Property root, String path) {
+//        super.setContext(root, path,TAG);
+        super.setContext(root, path, TAG);
         return this;
     }
 }

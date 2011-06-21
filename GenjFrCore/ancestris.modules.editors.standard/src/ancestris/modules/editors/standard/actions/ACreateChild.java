@@ -1,6 +1,6 @@
 package ancestris.modules.editors.standard.actions;
 
-import ancestris.modules.editors.standard.FamilyPanel;
+import ancestris.modules.editors.standard.EntityEditor;
 import genj.edit.actions.CreateChild;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -14,18 +14,15 @@ public class ACreateChild extends AbstractAction {
     private Indi parent;
     private Fam famc;
     private int sex;
-    FamilyPanel editor;
 
-    public ACreateChild(Indi parent, FamilyPanel editor) {
+    public ACreateChild(Indi parent) {
         super();
-        this.editor = editor;
         this.parent = parent;
         this.famc = null;
    }
 
-    public ACreateChild(Fam famc, FamilyPanel editor) {
+    public ACreateChild(Fam famc) {
         super();
-        this.editor = editor;
         this.parent = null;
         this.famc = famc;
     }
@@ -53,7 +50,7 @@ public class ACreateChild extends AbstractAction {
             }
             Indi indi = (Indi) ccAction.getCreated();
             if (ccAction.isNew()) {
-                if (!editor.editEntity(indi, true)) {
+                if (!EntityEditor.editEntity(indi, true)) {
                     if (gedcom != null) {
                         gedcom.undoUnitOfWork(false);
                     }

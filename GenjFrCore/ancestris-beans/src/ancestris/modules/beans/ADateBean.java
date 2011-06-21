@@ -21,7 +21,7 @@ import java.io.Serializable;
  */
 public class ADateBean extends DateBean implements Serializable {
 
-    private static final String PATH = "DATE";
+    private static final String TAG = "DATE";
 
     public ADateBean() {
         super();
@@ -33,7 +33,7 @@ public class ADateBean extends DateBean implements Serializable {
      */
     @Override
     public ADateBean setContext(Property root, String path) {
-        super.setContext(root, path + ":" + PATH);
+        super.setContext(root, path,TAG);
         return this;
     }
 }
