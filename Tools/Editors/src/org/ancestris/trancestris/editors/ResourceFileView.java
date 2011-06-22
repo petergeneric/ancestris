@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import org.ancestris.trancestris.resources.ResourceFile;
 
-
 public class ResourceFileView extends JList {
 
     private class LRenderer extends JLabel implements ListCellRenderer {

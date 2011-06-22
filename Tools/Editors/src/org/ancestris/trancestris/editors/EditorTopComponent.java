@@ -44,7 +44,7 @@ public final class EditorTopComponent extends TopComponent {
             ResourceFile resourcefile = resourceFileView.getResourceFile();
             int i = resourceFileView.getSelectedIndex();
             if (i >= 0) {
-                resourcefile.setLineTranslation(i, jTextFieldTranslation.getText());
+                resourcefile.setLineTranslation(i, jTextAreaTranslation.getText());
             }
             resourceFileView.incSelection();
             fireTranslationHappened();
@@ -63,9 +63,9 @@ public final class EditorTopComponent extends TopComponent {
                 flag = resourcefile.getLineState(i) != -1;
                 s = resourcefile.getLineTranslation(i);
             }
-            jTextFieldTranslation.setText(s);
-            jTextFieldTranslation.setEditable(flag);
-            jTextFieldTranslation.setCaretPosition(0);
+            jTextAreaTranslation.setText(s);
+            jTextAreaTranslation.setEditable(flag);
+            jTextAreaTranslation.setCaretPosition(0);
             jButtonConfirm.setEnabled(flag);
         }
     }
@@ -163,7 +163,7 @@ public final class EditorTopComponent extends TopComponent {
         setToolTipText(NbBundle.getMessage(EditorTopComponent.class, "HINT_EditorTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         resourceFileView.addListSelectionListener(listener);
-        jTextFieldTranslation.addActionListener(listener);
+//        jTextAreaTranslation.addActionListener(listener);
         jButtonConfirm.addActionListener(listener);
         setActivatedNodes(new Node[]{
                     dummyNode = new DummyNode()
@@ -178,29 +178,47 @@ public final class EditorTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jTextFieldTranslation = new javax.swing.JTextField();
-        jButtonConfirm = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaTranslation = new javax.swing.JTextArea();
+        jButtonConfirm = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(0.75);
+        jSplitPane1.setLeftComponent(jScrollPaneResourceView);
 
-        jTextFieldTranslation.setText(org.openide.util.NbBundle.getMessage(EditorTopComponent.class, "EditorTopComponent.jTextFieldTranslation.text")); // NOI18N
-        jPanel1.add(jTextFieldTranslation);
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jTextAreaTranslation.setColumns(20);
+        jTextAreaTranslation.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaTranslation);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonConfirm, org.openide.util.NbBundle.getMessage(EditorTopComponent.class, "EditorTopComponent.jButtonConfirm.text")); // NOI18N
-        jPanel1.add(jButtonConfirm);
+        jPanel1.add(jButtonConfirm, java.awt.BorderLayout.SOUTH);
 
-        add(jPanel1, java.awt.BorderLayout.PAGE_END);
-        add(jScrollPaneResourceView, java.awt.BorderLayout.CENTER);
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_START);
+
+        jSplitPane1.setRightComponent(jPanel1);
+
+        add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConfirm;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneResourceView;
-    private javax.swing.JTextField jTextFieldTranslation;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextArea jTextAreaTranslation;
     // End of variables declaration//GEN-END:variables
 
     /**
