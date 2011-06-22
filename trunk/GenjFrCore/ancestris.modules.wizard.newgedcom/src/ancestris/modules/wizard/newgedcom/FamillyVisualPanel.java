@@ -91,7 +91,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
     @Override
     public String getName() {
-        return "Completer le noyau familial";
+        return org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "FamilyPanel.title");
     }
 
     /** This method is called from within the constructor to
@@ -419,7 +419,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
     private boolean editEntity(Fam fam) {
         AFamBean bean = new AFamBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "CreateFam.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -438,7 +438,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
             return false;
         }
         AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), "create indi", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "CreateIndi.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
