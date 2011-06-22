@@ -172,9 +172,14 @@
             <fileset dir="${harness.dir}/.." includes="platform/modules/locale/**"/>
             <fileset dir="${harness.dir}/.." includes="platform/modules/ext/locale/**"/>
         </copy>
-        <zip destfile="${dist.dir}/${app.name}-osx.zip" update="true">
-            <zipfileset dir="${dist.dir}/${app.name}.app" prefix="${app.name}.app"/>
-        </zip>
+        <!-- Note that file permissions will not be stored in the resulting zipfile.
+            so zip task is inappropriate to create a zip archive
+        -->
+        <exec executable="zip" dir="${dist.dir}">
+            <arg value="-yrq"/>
+            <arg value="${app.name}-osx.zip"/>
+            <arg value="${app.name}.app"/>
+        </exec>
     </target>
 
 </project>
