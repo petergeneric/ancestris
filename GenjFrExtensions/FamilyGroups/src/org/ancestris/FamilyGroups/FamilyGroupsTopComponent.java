@@ -526,9 +526,16 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         context = App.center.getSelectedContext(true);
         if (context != null) {
             Gedcom myGedcom = context.getGedcom();
-            Indi[] indis = (Indi[] )myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-            HashSet<Indi> unvisited = new HashSet<Indi>(Arrays.asList(indis));
-            start(indis, unvisited);
+            Entity[] _indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
+            // FIXME: must be redesigned!!
+            List<Indi> indiList = new ArrayList<Indi>(_indis.length);
+            for (Entity indi:_indis){
+                if (indi instanceof Indi)
+                    indiList.add((Indi)indi);
+            }
+//            Indi[] indis = new Indi[_indis.length];
+            HashSet<Indi> unvisited = new HashSet<Indi>(indiList);
+            start(indiList.toArray(new Indi[0]), unvisited);
         }
     }
 
