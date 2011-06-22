@@ -35,6 +35,7 @@
     </folder>
     <folder name="Toolbars">
         <folder name="File">
+            <file name="org-openide-actions-SaveAction.instance"/>
             <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-editors-actions-EditorOpenAction.instance"/>
                 <attr name="position" intvalue="300"/>
