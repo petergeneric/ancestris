@@ -165,16 +165,16 @@
     <target name="build-mac" depends="suite.build-mac">
         <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
         <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
         <copy todir="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}">
-            <fileset dir="res/" includes="GNU ..."/>
-            <fileset dir="res/language/" includes="etc/**"/>
-            <fileset dir="res/language/" includes="platform11/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/core/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/lib/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/ext/locale/**"/>
         </copy>
-        <exec executable="zip">
-            <arg value="-yrq"/>
-            <arg value="${dist.dir}/${app.name}-osx.zip"/>
-            <arg value="${dist.dir}/${app.name}.app"/>
-        </exec>
+        <zip destfile="${dist.dir}/${app.name}-osx.zip" update="true">
+            <zipfileset dir="${dist.dir}/${app.name}.app" prefix="${app.name}.app"/>
+        </zip>
     </target>
 
 </project>
