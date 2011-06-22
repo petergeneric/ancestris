@@ -92,10 +92,26 @@ public final class EditorTopComponent extends TopComponent {
                     }
                 } else {
                     if (filter.accept(f) == false) {
-                        setSelectedFile(new File(f.getName() + ".properties"));
+                        if (f.getName().indexOf('.') > 0) {
+                            Confirmation CrfMsg = new NotifyDescriptor.Confirmation(
+                                    "Not standard file name extension " + f.getName() + " ok to save ?",
+                                    NotifyDescriptor.OK_CANCEL_OPTION,
+                                    NotifyDescriptor.QUESTION_MESSAGE);
+                            DialogDisplayer.getDefault().notify(CrfMsg);
+                            Object result = CrfMsg.getValue();
+                            if (result == NotifyDescriptor.OK_OPTION) {
+                                super.approveSelection();
+                            } else {
+                                super.cancelSelection();
+                            }
+                        } else {
+                            setSelectedFile(new File(f.getName() + ".properties"));
+                            super.approveSelection();
+                        }
+                    } else {
+                        super.approveSelection();
                     }
                 }
-                super.approveSelection();
             }
         };
 
@@ -210,7 +226,6 @@ public final class EditorTopComponent extends TopComponent {
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConfirm;
     private javax.swing.JPanel jPanel1;
