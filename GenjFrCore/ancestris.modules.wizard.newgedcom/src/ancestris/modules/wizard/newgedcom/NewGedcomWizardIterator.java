@@ -107,7 +107,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
     @Override
     public String name() {
-        return index + 1 + ". sur " + getPanels().size();
+        return index + 1 + org.openide.util.NbBundle.getMessage(NewGedcomWizardIterator.class, "of") + getPanels().size();
     }
 
     @Override
