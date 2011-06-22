@@ -127,6 +127,7 @@ public final class APlaceFormatBean extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbJuri7, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.cbJuri7.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel1.text")); // NOI18N
+        jLabel1.setToolTipText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel1.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel2.text")); // NOI18N
 
@@ -147,8 +148,10 @@ public final class APlaceFormatBean extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jLabel10.text")); // NOI18N
 
         jtDisplayFormat.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtDisplayFormat.text")); // NOI18N
+        jtDisplayFormat.setToolTipText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtDisplayFormat.toolTipText")); // NOI18N
 
         jtSortOrder.setText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtSortOrder.text")); // NOI18N
+        jtSortOrder.setToolTipText(org.openide.util.NbBundle.getMessage(APlaceFormatBean.class, "APlaceFormatBean.jtSortOrder.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -195,8 +198,8 @@ public final class APlaceFormatBean extends JPanel {
                             .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtSortOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                            .addComponent(jtDisplayFormat, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))))
+                            .addComponent(jtSortOrder, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                            .addComponent(jtDisplayFormat, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
