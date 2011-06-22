@@ -132,7 +132,7 @@ public class EditorOpenActionPanel extends javax.swing.JPanel {
         final FileNameExtensionFilter filter = new FileNameExtensionFilter("Properties files", "properties");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
-        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setAcceptAllFileFilterUsed(true);
         if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             defaultBundleFile = fileChooser.getSelectedFile();
             jTextField1.setText(defaultBundleFile.getName());
