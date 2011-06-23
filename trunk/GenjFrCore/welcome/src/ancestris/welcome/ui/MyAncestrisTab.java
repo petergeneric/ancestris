@@ -74,11 +74,12 @@ class MyAncestrisTab extends AbstractTab {
         leftPanel.setBorder(BorderFactory.createEmptyBorder());
         main.add(new ContentSection( leftPanel,false,false));
 
-        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), //NOI18N
-                new RecentFilesPanel(), false, false, false ) );
 //        ContentSection.addTitleToPanel(leftPanel, BundleSupport.getLabel( "SectionRecentFiles" ));
 //        leftPanel.add(new RecentFilesPanel() );
         leftPanel.add( new ContentSection( new NewGedcomPanel(), false, false, false ) );
+        leftPanel.add( new ContentSection( new OpenGedcomPanel(), false, false, false ) );
+        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), //NOI18N
+                new RecentFilesPanel(), false, false, false ) );
 //        leftPanel.add( new NewGedcomPanel() );
 
         JPanel rightPanel = new JPanel( new GridLayout(0,1) );

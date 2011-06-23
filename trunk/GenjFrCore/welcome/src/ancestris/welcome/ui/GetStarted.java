@@ -142,6 +142,8 @@ class GetStarted extends JPanel implements Constants {
             add( panel, new GridBagConstraints( 0,row++,1,1,1.0,0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                 new Insets(0,0,7,0), 0, 0 ) );
+        } else {
+            row++;
         }
         return row;
     }
