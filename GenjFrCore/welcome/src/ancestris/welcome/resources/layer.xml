@@ -94,6 +94,7 @@ made subject to such option by the copyright holder.
             </file>
 
             <file name="sampleproject.instance">
+                <attr name="gap" boolvalue="true"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="instanceClass" stringvalue="ancestris.welcome.ui.SampleGedcomAction"/>
                 <attr name="instanceOf" stringvalue="javax.swing.Action"/>
