@@ -133,6 +133,8 @@ class GetStarted extends JPanel implements Constants {
             panel.setOpaque(false);
             ActionButton lb = new ActionButton( action, Utils.getUrlString( dob ),
                     Utils.getColor( COLOR_HEADER ), true, dob.getPrimaryFile().getPath() );
+            Object gap = dob.getPrimaryFile().getAttribute("gap");
+            boolean isGap = (gap != null && gap instanceof Boolean && ((Boolean)gap).booleanValue());
             panel.add( lb, new GridBagConstraints(1,0,1,3,1.0,0.0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,0),0,0) );
             lb.setFont( GET_STARTED_FONT );
             
@@ -141,10 +143,8 @@ class GetStarted extends JPanel implements Constants {
                     BundleSupport.getAccessibilityDescription( "GettingStarted", lb.getText() ) ); //NOI18N
             add( panel, new GridBagConstraints( 0,row++,1,1,1.0,0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                new Insets(0,0,7,0), 0, 0 ) );
-        } else {
-            row++;
-        }
+                new Insets(isGap?24:0,0,7,0), 0, 0 ) );
+        } 
         return row;
     }
 
