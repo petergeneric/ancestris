@@ -34,13 +34,16 @@
         </folder>
     </folder>
     <folder name="Toolbars">
+        <file name="Clipboard_hidden"/>
         <folder name="File">
             <file name="org-openide-actions-SaveAction.instance"/>
             <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-editors-actions-EditorOpenAction.instance"/>
                 <attr name="position" intvalue="300"/>
             </file>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
+            <file name="UndoRedo_hidden"/>
     </folder>
     <folder name="Windows2">
         <folder name="Components">
