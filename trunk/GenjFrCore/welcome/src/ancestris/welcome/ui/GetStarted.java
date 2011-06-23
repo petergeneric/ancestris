@@ -143,7 +143,7 @@ class GetStarted extends JPanel implements Constants {
                     BundleSupport.getAccessibilityDescription( "GettingStarted", lb.getText() ) ); //NOI18N
             add( panel, new GridBagConstraints( 0,row++,1,1,1.0,0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                new Insets(isGap?24:0,0,7,0), 0, 0 ) );
+                new Insets(isGap?64:0,0,7,0), 0, 0 ) );
         } 
         return row;
     }
