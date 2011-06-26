@@ -2,34 +2,19 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
-        <folder name="File">
-            <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.instance">
-                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.EditorOpenAction"/>
-                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_EditorOpenAction"/>
-                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/actions/Open.png"/>
-                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-            </file>
-        </folder>
         <folder name="Window">
-            <file name="org-ancestris-trancestris-editors-EditorAction.instance">
-                <attr name="component" methodvalue="org.ancestris.trancestris.editors.EditorTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.Bundle#CTL_EditorTopComponent"/>
+            <file name="org-ancestris-trancestris-editors-resourceeditor-ResourceEditorAction.instance">
+                <attr name="component" methodvalue="org.ancestris.trancestris.editors.resourceeditor.ResourceEditorTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.resourceeditor.Bundle#CTL_ResourceEditorAction"/>
                 <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/Advanced.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
         </folder>
     </folder>
     <folder name="Menu">
-        <folder name="File">
-            <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-editors-actions-EditorOpenAction.instance"/>
-                <attr name="position" intvalue="1300"/>
-            </file>
-        </folder>
         <folder name="Window">
-            <file name="EditorAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-EditorAction.instance"/>
+            <file name="ResourceEditorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-resourceeditor-ResourceEditorAction.instance"/>
             </file>
         </folder>
     </folder>
@@ -37,21 +22,17 @@
         <file name="Clipboard_hidden"/>
         <folder name="File">
             <file name="org-openide-actions-SaveAction.instance"/>
-            <file name="org-ancestris-trancestris-editors-actions-EditorOpenAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-editors-actions-EditorOpenAction.instance"/>
-                <attr name="position" intvalue="300"/>
-            </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
             <file name="UndoRedo_hidden"/>
     </folder>
     <folder name="Windows2">
         <folder name="Components">
-            <file name="EditorTopComponent.settings" url="EditorTopComponentSettings.xml"/>
+            <file name="ResourceEditorTopComponent.settings" url="ResourceEditorTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="editor">
-                <file name="EditorTopComponent.wstcref" url="EditorTopComponentWstcref.xml"/>
+                <file name="ResourceEditorTopComponent.wstcref" url="ResourceEditorTopComponentWstcref.xml"/>
             </folder>
         </folder>
     </folder>

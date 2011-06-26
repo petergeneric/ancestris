@@ -6,6 +6,6 @@ and open the template in the editor.
 <!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
 <tc-ref version="2.0" >
     <module name="org.ancestris.trancestris.editors" spec="1.0"/>
-    <tc-id id="EditorTopComponent"/>
+    <tc-id id="ResourceEditorTopComponent"/>
     <state opened="true"/>
 </tc-ref>
