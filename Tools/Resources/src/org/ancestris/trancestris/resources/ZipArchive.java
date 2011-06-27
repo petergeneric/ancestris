@@ -12,13 +12,24 @@ import java.util.zip.ZipFile;
 public class ZipArchive {
 
     private ZipDirectory root;
-    private static final String PREFIX = "Bundle_";
+    private static final String PREFIX = "Bundle";
     private static final String SUFFIX = ".properties";
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) throws IOException {
         root = new ZipDirectory(inputFile.getName());
-        String fromBundleName = PREFIX + fromLocale.getLanguage() + SUFFIX;
-        String toBundleName = PREFIX + toLocale.getLanguage() + SUFFIX;
+        String fromBundleName = "";
+        String toBundleName = "";
+        if (fromLocale.equals(Locale.UK)) {
+            fromBundleName = PREFIX + SUFFIX;
+        } else {
+            fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
+
+        }
+        if (toLocale.equals(Locale.UK)) {
+            toBundleName = PREFIX + SUFFIX;
+        } else {
+            toBundleName = PREFIX + "_" + toLocale.getLanguage() + SUFFIX;
+        }
 
         ZipFile zipInputFile = new ZipFile(inputFile);
         // Get Reference Bundle
