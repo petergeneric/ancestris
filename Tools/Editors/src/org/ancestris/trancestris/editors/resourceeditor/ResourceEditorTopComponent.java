@@ -63,7 +63,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }
     private static ResourceEditorTopComponent instance;
     /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "org/ancestris/trancestris/editors/Advanced.png";
+    static final String ICON_PATH = "org/ancestris/trancestris/editors/resourceeditor/Advanced.png";
     private static final String PREFERRED_ID = "ResourceEditorTopComponent";
     private ResourceFileView resourceFileView;
     private Lookup.Result result = null;
