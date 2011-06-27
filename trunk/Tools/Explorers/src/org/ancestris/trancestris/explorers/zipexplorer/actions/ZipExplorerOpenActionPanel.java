@@ -11,6 +11,7 @@
 package org.ancestris.trancestris.explorers.zipexplorer.actions;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -19,6 +20,8 @@ import java.util.TreeSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
 /**
@@ -27,33 +30,36 @@ import org.openide.windows.WindowManager;
  */
 public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
 
-    static Locale[] locales = null;
-    final static HashMap<String, Locale> localeList = new HashMap<String, Locale>();
     File zipFile = null;
-    Locale fromLocale = Locale.getDefault();
+    static HashMap<String, Locale> localeList = new HashMap<String, Locale>();
+    static Locale[] locales = null;
+    Locale fromLocale = Locale.UK;
     Locale toLocale = Locale.getDefault();
+
+    {
+        for (Locale locale : Locale.getAvailableLocales()) {
+            if (localeList.get(locale.getDisplayLanguage()) == null) {
+                localeList.put(locale.getDisplayLanguage(), locale);
+            }
+        }
+
+        locales = new Locale[localeList.size()];
+        SortedSet<String> sortedset = new TreeSet<String>(localeList.keySet());
+
+        Iterator<String> iter = sortedset.iterator();
+
+        int index = 0;
+        while (iter.hasNext()) {
+            locales[index++] = localeList.get((String) iter.next());
+        }
+    }
 
     private class LocaleComboBoxModel extends DefaultComboBoxModel {
 
-        Locale selectedLocale = Locale.getDefault();
+        String selectedLocale = Locale.getDefault().getDisplayLanguage();
 
         public LocaleComboBoxModel() {
             super();
-            for (Locale locale : Locale.getAvailableLocales()) {
-                if (localeList.get(locale.getDisplayLanguage()) == null) {
-                    localeList.put(locale.getDisplayLanguage(), locale);
-                }
-            }
-
-            locales = new Locale[localeList.size()];
-            SortedSet<String> sortedset = new TreeSet<String>(localeList.keySet());
-
-            Iterator<String> iter = sortedset.iterator();
-
-            int index = 0;
-            while (iter.hasNext()) {
-                locales[index++] = localeList.get((String) iter.next());
-            }
         }
 
         @Override
@@ -63,14 +69,12 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
 
         @Override
         public Object getElementAt(int i) {
-//            return locales[i].getDisplayLanguage();
-            return locales[i];
+            return locales[i].getDisplayLanguage();
         }
 
         @Override
         public void setSelectedItem(Object o) {
-//            selectedLocale = localeList.get((String) o);
-            selectedLocale = (Locale)o;
+            selectedLocale = (String) o;
         }
 
         @Override
@@ -81,7 +85,17 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
 
     /** Creates new form EditorOpenActionPanel */
     public ZipExplorerOpenActionPanel() {
+        fromLocale = localeList.get(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("fromLocale", Locale.UK.getDisplayLanguage()));
+        toLocale = localeList.get(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("toLocale", Locale.getDefault().getDisplayLanguage()));
         initComponents();
+        jComboBox1.setSelectedItem(fromLocale.getDisplayLanguage());
+        jComboBox2.setSelectedItem(toLocale.getDisplayLanguage());
+        jTextField1.setText(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Fichier", ""));
+        String dirName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Dossier", "");
+        String fileName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Fichier", "");
+        if ((dirName + System.getProperty("file.separator") + fileName).length() > 0) {
+            zipFile = new File(dirName + System.getProperty("file.separator") + fileName);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -169,22 +183,41 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         final FileNameExtensionFilter filter = new FileNameExtensionFilter("Zip files", "zip");
+        String dirName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Dossier", "");
+        String fileName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Fichier", "");
+
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
+        if (dirName.length() > 0) {
+            // Set the current directory
+            fileChooser.setCurrentDirectory(new File(dirName));
+        }
+
+        if (fileName.length() > 0) {
+            fileChooser.setSelectedFile(new File(fileName));
+        }
+
         if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             zipFile = fileChooser.getSelectedFile();
             jTextField1.setText(zipFile.getName());
+            try {
+                NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("Dossier", fileChooser.getCurrentDirectory().getCanonicalPath());
+            } catch (IOException ex) {
+                NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("Dossier", "");
+            }
+            NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("Fichier", zipFile.getName());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-            fromLocale = (Locale) jComboBox1.getSelectedItem();
+        fromLocale = localeList.get((String) jComboBox1.getSelectedItem());
+        NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("fromLocale", fromLocale.getDisplayLanguage());
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-             toLocale = (Locale) jComboBox2.getSelectedItem();
+        toLocale = localeList.get((String) jComboBox2.getSelectedItem());
+        NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("toLocale", toLocale.getDisplayLanguage());
     }//GEN-LAST:event_jComboBox2ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;

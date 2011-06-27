@@ -15,6 +15,7 @@
             <file name="org-ancestris-trancestris-explorers-zipexplorer-ZipExplorerAction.instance">
                 <attr name="component" methodvalue="org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.Bundle#CTL_ZipExplorerAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/zip-icon.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
         </folder>
