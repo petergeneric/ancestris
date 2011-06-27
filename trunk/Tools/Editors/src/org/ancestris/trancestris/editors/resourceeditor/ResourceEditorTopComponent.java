@@ -168,7 +168,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
     @Override
     public void componentOpened() {
-        Lookup.Template tpl = new Lookup.Template(ZipDirectory.class);
+        Lookup.Template<ZipDirectory> tpl = new Lookup.Template<ZipDirectory>(ZipDirectory.class);
         result = Utilities.actionsGlobalContext().lookup(tpl);
         result.addLookupListener(this);
     }
