@@ -4,7 +4,6 @@
  */
 package org.ancestris.trancestris.explorers.zipexplorer;
 
-import java.util.Locale;
 import java.util.logging.Logger;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.util.NbBundle;
@@ -15,6 +14,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
+import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -138,6 +138,8 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
 
     public void setBundles(ZipArchive zipFile) {
         ((BeanTreeView) beanTreeView).setRootVisible(true);
-        zipExplorerManager.setRootContext(new ZipRootNode(zipFile));
+        ZipRootNode newZipRootNode = new ZipRootNode(zipFile);
+        zipExplorerManager.setRootContext(newZipRootNode);
+        setActivatedNodes(new Node[]{newZipRootNode});
     }
 }
