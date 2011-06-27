@@ -171,7 +171,6 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
         final FileNameExtensionFilter filter = new FileNameExtensionFilter("Zip files", "zip");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
-        fileChooser.setAcceptAllFileFilterUsed(true);
         if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             zipFile = fileChooser.getSelectedFile();
             jTextField1.setText(zipFile.getName());
