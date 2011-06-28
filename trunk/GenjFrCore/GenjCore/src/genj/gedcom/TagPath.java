@@ -21,6 +21,8 @@ package genj.gedcom;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -52,6 +54,8 @@ public class TagPath implements Comparable{
   public final static char SEPARATOR = ':';
   public final static String SEPARATOR_STRING = String.valueOf(SEPARATOR);
   private final static char SELECTOR = '#';
+
+  private static Map<String,TagPath> tagCache = new HashMap<String,TagPath>(5);
 
   /**
    * Constructor for TagPath
@@ -98,6 +102,24 @@ public class TagPath implements Comparable{
     this(path.split(SEPARATOR_STRING), name);
   }
   
+  /**
+   * Returns a TagPath instance representing the specified String value. 
+   * If a new TagPath instance is not required, this method should generally be used 
+   * in preference to the constructor TagPath.TagPath(String),
+   * as this method is likely to yield significantly better space and time performance by caching frequently requested values.
+   * 
+   * @param path a path value
+   * @return a TagPath instance representing path
+   */
+  public static TagPath valueOf(String path){
+      TagPath result = tagCache.get(path);
+      if (result == null){
+          result = new TagPath(path);
+          tagCache.put(path, result);
+      }
+      return result;
+  }
+
   private void set(int pos, String tag) {
     
     // check qualifier
