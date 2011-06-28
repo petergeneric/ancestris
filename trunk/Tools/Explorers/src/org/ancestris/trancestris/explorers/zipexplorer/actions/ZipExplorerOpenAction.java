@@ -8,13 +8,11 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -22,7 +20,7 @@ import org.openide.windows.WindowManager;
 public final class ZipExplorerOpenAction implements ActionListener {
 
     File zipFile = null;
-    Locale fromLocale = Locale.FRANCE;
+    Locale fromLocale = null;
     Locale toLocale = null;
     ZipExplorerOpenActionPanel zipExplorerOpenActionPanel = new ZipExplorerOpenActionPanel();
 
@@ -34,7 +32,7 @@ public final class ZipExplorerOpenAction implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 zipFile = zipExplorerOpenActionPanel.zipFile;
-                toLocale = zipExplorerOpenActionPanel.fromLocale;
+                fromLocale = zipExplorerOpenActionPanel.fromLocale;
                 toLocale = zipExplorerOpenActionPanel.toLocale;
             }
         }
@@ -49,14 +47,10 @@ public final class ZipExplorerOpenAction implements ActionListener {
         dialog.toFront();
         if (zipExplorerOpenActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
 
-            try {
-                ZipArchive zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
+            ZipArchive zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
 
-                TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                ((ZipExplorerTopComponent) tc).setBundles(zipArchive);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+            ((ZipExplorerTopComponent) tc).setBundles(zipArchive);
         }
     }
 }
