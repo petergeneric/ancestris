@@ -19,10 +19,10 @@ public class ZipDirectory {
     }
 
     void writeTo(OutputStream outputStream) throws IOException {
+
         if (resourceFile != null) {
             resourceFile.writeTo(outputStream);
         }
-
         for (ZipDirectory zipDirectory : dirs.values()) {
             zipDirectory.writeTo(outputStream);
         }
