@@ -35,7 +35,7 @@ public final class GedcomVisualPanel extends JPanel implements NewGedcomSteps {
         placeFormat.setDisplayFormat(gedcom.getPlaceDisplayFormat());
         placeFormat.setSortOrder(gedcom.getPlaceSortOrder());
         aMLEBean1.setTag("NOTE");
-        aMLEBean1.setRoot(gedcom.getFirstEntity("HEAD"));
+        aMLEBean1.setContext(gedcom.getFirstEntity("HEAD"),null);
     }
 
     @Override

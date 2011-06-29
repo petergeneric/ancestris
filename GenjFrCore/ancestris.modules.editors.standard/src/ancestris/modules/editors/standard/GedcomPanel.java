@@ -54,7 +54,7 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
         placeFormat.setDisplayFormat(gedcom.getPlaceDisplayFormat());
         placeFormat.setSortOrder(gedcom.getPlaceSortOrder());
         gedcomDescription.setTag("NOTE");
-        gedcomDescription.setRoot(gedcom.getFirstEntity("HEAD"));
+        gedcomDescription.setContext(gedcom.getFirstEntity("HEAD"),null);
     }
 
     @Override
@@ -101,8 +101,7 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
                         .addComponent(jLabel1)
                         .addGap(12, 12, 12)
                         .addComponent(gedcomDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

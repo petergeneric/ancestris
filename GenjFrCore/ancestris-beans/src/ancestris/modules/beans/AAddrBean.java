@@ -11,12 +11,15 @@
  */
 package ancestris.modules.beans;
 
+import genj.edit.beans.PropertyBean;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import javax.swing.JPanel;
+import java.util.Arrays;
+import java.util.List;
 
-public final class AAddrBean extends JPanel implements ABean {
+public final class AAddrBean extends PropertyBean {
 
+    private List<PropertyBean> childBeans;
     private String tag = "";
 
     /**
@@ -44,31 +47,37 @@ public final class AAddrBean extends JPanel implements ABean {
      * @param property new value of root
      */
     @Override
-    public AAddrBean setRoot(Property property) {
-        address.setContext(property, "ADDR");
-        cpost.setContext(property, "ADDR","POST");
-        city.setContext(property, "ADDR","CITY");
-        state.setContext(property, "ADDR","STAE");
-        country.setContext(property, "ADDR","CTRY");
-        return this;
+    protected void setPropertyImpl(Property prop) {
+        address.setContext(root, path, prop, "ADDR");
+        cpost.setContext(root, path, prop, "ADDR:POST");
+        city.setContext(root, path, prop, "ADDR:CITY");
+        state.setContext(root, path, prop, "ADDR:STAE");
+        country.setContext(root, path, prop, "ADDR:CTRY");
     }
 
     /** Creates new form NewGedcomVisualPanel2 */
     public AAddrBean() {
         initComponents();
+        childBeans = Arrays.asList(address,cpost,city,state,country);
     }
 
     /**
      * commit beans - transaction has to be running already
      */
     @Override
-    public void commit() throws GedcomException {
-        address.commit();
-        cpost.commit();
-        city.commit();
-        state.commit();
-        country.commit();
+    protected void commitImpl(Property property) throws GedcomException {
+        for (PropertyBean bean:childBeans)
+            bean.commit();
     }
+
+    @Override
+    public boolean hasChanged() {
+        boolean changed = false;
+        for (PropertyBean bean:childBeans)
+            changed |= bean.hasChanged();
+        return changed;
+    }
+
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -150,7 +159,6 @@ public final class AAddrBean extends JPanel implements ABean {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.AMLEBean address;
     private ancestris.modules.beans.ATagBean addressLabel;
@@ -163,4 +171,4 @@ public final class AAddrBean extends JPanel implements ABean {
     private ancestris.modules.beans.AChoiceBean state;
     private ancestris.modules.beans.ATagBean stateLabel;
     // End of variables declaration//GEN-END:variables
-    }
+}

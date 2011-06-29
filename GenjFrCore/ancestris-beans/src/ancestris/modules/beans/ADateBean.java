@@ -12,7 +12,6 @@
 package ancestris.modules.beans;
 
 import genj.edit.beans.DateBean;
-import genj.gedcom.Property;
 import java.io.Serializable;
 
 /**
@@ -27,13 +26,8 @@ public class ADateBean extends DateBean implements Serializable {
         super();
     }
 
-    /**
-     * set root gedcom property for this bean
-     * @param property
-     */
     @Override
-    public ADateBean setContext(Property root, String path) {
-        super.setContext(root, path,TAG);
-        return this;
+    public String getTag() {
+        return TAG;
     }
 }

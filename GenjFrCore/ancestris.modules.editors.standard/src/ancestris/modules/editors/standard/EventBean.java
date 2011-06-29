@@ -11,20 +11,18 @@
  */
 package ancestris.modules.editors.standard;
 
-import ancestris.modules.beans.ABean;
 import ancestris.modules.beans.AEventBean;
+import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.GedcomException;
-import javax.swing.JPanel;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 
-public final class EventBean extends JPanel implements ABean{
+public final class EventBean extends PropertyBean {
 
     private Context context;
     private AEventBean eventDetailBean;
     private PropertyEvent event;
-
 
     /** Creates new form FamilyPanel */
     public EventBean() {
@@ -32,21 +30,6 @@ public final class EventBean extends JPanel implements ABean{
         eventDetailBean = new AEventBean();
         eventDetailBean.setDetailedView(true);
         evtDetailPanel.setViewportView(eventDetailBean);
-    }
-
-    public void setContext(Context context) {
-        if (context == null || context.getGedcom() == null) {
-            return;
-        }
-        if (this.context != null && !context.getGedcom().equals(this.context.getGedcom())) {
-            return;
-        }
-        Property prop = context.getProperty();
-        if (!(prop instanceof PropertyEvent))
-            return;
-        event = ((PropertyEvent)prop);
-        this.context = context;
-        setRoot(event);
     }
 
     /** This method is called from within the constructor to
@@ -118,12 +101,12 @@ public final class EventBean extends JPanel implements ABean{
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void commit() throws GedcomException {
+    protected void commitImpl(Property property) throws GedcomException {
         eventDetailBean.commit();
     }
 
-    public ABean setRoot(Property property) {
-        eventDetailBean.setRoot(property);
-        return this;
+    @Override
+    protected void setPropertyImpl(Property property) {
+        eventDetailBean.setContext(root, path, property);
     }
 }

@@ -22,7 +22,6 @@ public final class APlaceFormatBean extends JPanel {
     private final JTextField JURIS[];
     private final JCheckBox SHOW_JURIS[];
 
-
     /**
      * Get the value of tag
      *
@@ -45,8 +44,8 @@ public final class APlaceFormatBean extends JPanel {
     /** Creates new form NewGedcomVisualPanel2 */
     public APlaceFormatBean() {
         initComponents();
-        JURIS = new JTextField[] {jtJuri1,jtJuri2,jtJuri3,jtJuri4,jtJuri5,jtJuri6,jtJuri7,jtJuri8};
-        SHOW_JURIS = new JCheckBox[] {cbJuri1,cbJuri2,cbJuri3,cbJuri4,cbJuri5,cbJuri6,cbJuri7,cbJuri8};
+        JURIS = new JTextField[]{jtJuri1, jtJuri2, jtJuri3, jtJuri4, jtJuri5, jtJuri6, jtJuri7, jtJuri8};
+        SHOW_JURIS = new JCheckBox[]{cbJuri1, cbJuri2, cbJuri3, cbJuri4, cbJuri5, cbJuri6, cbJuri7, cbJuri8};
     }
 
     /** This method is called from within the constructor to
@@ -268,7 +267,6 @@ public final class APlaceFormatBean extends JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbJuri1;
     private javax.swing.JCheckBox cbJuri2;
@@ -306,8 +304,8 @@ public final class APlaceFormatBean extends JPanel {
         StringBuilder sb = new StringBuilder();
         final String SEP = cbSpaces.isSelected() ? ", " : ",";
 
-        for (JTextField juri:JURIS){
-           if (juri.getText().trim().isEmpty()) {
+        for (JTextField juri : JURIS) {
+            if (juri.getText().trim().isEmpty()) {
                 continue;
             }
             if (sb.length() != 0) {
@@ -318,18 +316,18 @@ public final class APlaceFormatBean extends JPanel {
         return sb.toString();
     }
 
-    public void setJurisdictions(String format){
+    public void setJurisdictions(String format) {
         String juris[] = format.split(",");
 
-        for (JTextField juri:JURIS){
+        for (JTextField juri : JURIS) {
             juri.setText("");
         }
-        for (int i=0;i<juris.length;i++){
+        for (int i = 0; i < juris.length; i++) {
             JURIS[i].setText(juris[i].trim());
         }
 
-        for (int i = 0; i< JURIS.length; i++) {
-            if (i<juris.length){
+        for (int i = 0; i < JURIS.length; i++) {
+            if (i < juris.length) {
                 JURIS[i].setText(juris[i].trim());
                 SHOW_JURIS[i].setSelected(juris[i].trim().length() == 0);
             } else {
@@ -339,13 +337,11 @@ public final class APlaceFormatBean extends JPanel {
         }
     }
 
-
-
     public Boolean[] getShowJuridictions() {
         ArrayList<Boolean> showJuri = new ArrayList<Boolean>();
 
-        for (int i = 0; i<JURIS.length;i++){
-           if (JURIS[i].getText().trim().isEmpty()) {
+        for (int i = 0; i < JURIS.length; i++) {
+            if (JURIS[i].getText().trim().isEmpty()) {
                 continue;
             }
             showJuri.add(SHOW_JURIS[i].isSelected());
@@ -357,19 +353,20 @@ public final class APlaceFormatBean extends JPanel {
      * Note: must be called after setJurisdictions
      * @param show
      */
-    public void setShowJuridcitions(Boolean show[]){
-        for (JCheckBox showJuri:SHOW_JURIS){
+    public void setShowJuridcitions(Boolean show[]) {
+        for (JCheckBox showJuri : SHOW_JURIS) {
             showJuri.setSelected(true);
         }
 
-        for (int i=0;i<SHOW_JURIS.length;i++){
-            if (show == null)
+        for (int i = 0; i < SHOW_JURIS.length; i++) {
+            if (show == null) {
                 SHOW_JURIS[i].setSelected(true);
-            else if (i<show.length)
+            } else if (i < show.length) {
                 SHOW_JURIS[i].setSelected(show[i]);
-            else
+            } else {
                 SHOW_JURIS[i].setSelected(false);
-            if (JURIS[i].getText().length() == 0){
+            }
+            if (JURIS[i].getText().length() == 0) {
                 SHOW_JURIS[i].setSelected(false);
             }
         }
@@ -377,8 +374,9 @@ public final class APlaceFormatBean extends JPanel {
 
     public String getDisplayFormat() {
         String displayFormat = jtDisplayFormat.getText();
-        if (displayFormat.length() == 0)
+        if (displayFormat.length() == 0) {
             return null;
+        }
         return displayFormat;
     }
 
@@ -393,7 +391,4 @@ public final class APlaceFormatBean extends JPanel {
     public void setSortOrder(String order) {
         this.jtSortOrder.setText(order);
     }
-
-
-
 }

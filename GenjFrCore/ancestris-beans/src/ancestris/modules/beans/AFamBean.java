@@ -11,15 +11,16 @@
  */
 package ancestris.modules.beans;
 
+import genj.edit.beans.PropertyBean;
 import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import javax.swing.JPanel;
 
-public final class AFamBean extends JPanel implements ABean {
+public final class AFamBean extends PropertyBean {
 
     /** Creates new form NewGedcomVisualPanel2 */
     public AFamBean() {
+        setOpaque(true);
         initComponents();
     }
     private Fam fam;
@@ -30,21 +31,25 @@ public final class AFamBean extends JPanel implements ABean {
      * @param entity new value of indi
      */
     @Override
-    public AFamBean setRoot(Property entity) {
+    protected void setPropertyImpl(Property entity) {
         if (!(entity instanceof Fam)) {
-            return this;
+            throw new UnsupportedOperationException("only setContext(Entity) supported yet.");
         }
         this.fam = (Fam) entity;
-        marrEvent.setRoot(fam);
-        return this;
+        marrEvent.setContext(fam, null);
     }
 
     /**
      * commit beans - transaction has to be running already
      */
     @Override
-    public void commit() throws GedcomException {
+    protected void commitImpl(Property property) throws GedcomException {
         marrEvent.commit();
+    }
+
+    @Override
+    public boolean hasChanged() {
+        return marrEvent.hasChanged();
     }
 
     /** This method is called from within the constructor to
@@ -81,4 +86,9 @@ public final class AFamBean extends JPanel implements ABean {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.AEventBean marrEvent;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public String getTag() {
+        return "FAM";
+    }
 }

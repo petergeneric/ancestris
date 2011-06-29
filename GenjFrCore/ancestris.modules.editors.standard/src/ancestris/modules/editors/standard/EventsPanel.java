@@ -129,7 +129,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
 
     private void refresh() {
         husband.setContext(focusIndi);
-        eventsPanel.update(husband.getContext(), null, null);
+        eventsPanel.update(husband.getProperty(), null, null);
 
     }
 
@@ -287,7 +287,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
             title = NbBundle.getMessage(EventsPanel.class, "dialog.fam.edit.title", fam);
         }
         final AFamBean bean = new AFamBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(bean.setContext(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -317,7 +317,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
             return false;
         }
         final AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setContext(indi)), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -377,11 +377,11 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
             if (src instanceof ABluePrintBeans) {
                 bean = (ABluePrintBeans) src;
             }
-            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getContext() == null) {
+            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
                 SelectionSink.Dispatcher.muteSelection(true);
                 try {
-                    if (bean != null && bean.getContext() != null) {
-                        editProperty(bean.getContext(), false);
+                    if (bean != null && bean.getProperty() != null) {
+                        editProperty(bean.getProperty(), false);
                     } else {
                         getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
                     }
@@ -391,7 +391,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
                 }
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
-                Property prop = bean.getContext();
+                Property prop = bean.getProperty();
                 if (prop instanceof Entity)
                     fireSelection((Entity)prop);
             }
@@ -417,10 +417,10 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            if (childBean == null || childBean.getContext() == null) {
+            if (childBean == null || childBean.getProperty() == null) {
                 return new ACreateParent(null, PropertySex.MALE);
             }
-            return new ACreateParent((Indi) childBean.getContext(), sex);
+            return new ACreateParent((Indi) childBean.getProperty(), sex);
         }
     }
 

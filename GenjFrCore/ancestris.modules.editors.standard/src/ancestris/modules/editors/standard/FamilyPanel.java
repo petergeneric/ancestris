@@ -63,7 +63,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private final EntitiesPanel oFamsPanel;
     private final EntitiesPanel siblingsPanel;
     private final EntitiesPanel eventsPanel;
-    private ActionListener NoOpAction = new ActionListener() {
+    private static final ActionListener NOOP_ACTION = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
         }
@@ -223,23 +223,23 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             wife.setContext(focusFam.getOtherSpouse(focusIndi));
         }
         childrenPanel.update(
-                familySpouse.getContext() == null ? null : (Fam) (familySpouse.getContext().getEntity()),
+                familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),
                 null,
                 null);
         btAddChild.setAction(getCreateChildAction());
 
-        Fam famChild = ((Indi) husband.getContext()).getFamilyWhereBiologicalChild();
+        Fam famChild = ((Indi) husband.getProperty()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
         //siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild, this)));
-        siblingsPanel.update(husband.getContext(), null, null);
+        siblingsPanel.update(husband.getProperty(), null, null);
 
-        oFamsPanel.update(husband.getContext(), familySpouse == null ? null : familySpouse.getContext(), null);
+        oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty(), null);
         btAddSpouse.setAction(getCreateSpouseActions());
         btUnlinkSpouse.setAction(getUnlinkSpouseAction());
         btUnlinkFamc.setAction(getUnlinkFamcAction());
         btAddSibling.setAction(getAddSiblingAction());
 
-        eventsPanel.update(husband.getContext(), null, null);
+        eventsPanel.update(husband.getProperty(), null, null);
 
     }
 
@@ -250,15 +250,15 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     private Action getCreateChildAction(){
         return AActions.alwaysEnabled(
-                new ACreateChild((Fam) familySpouse.getContext()),
+                new ACreateChild((Fam) familySpouse.getProperty()),
                 "",
-                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getContext()),
+                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getProperty()),
                 "ancestris/modules/editors/standard/images/add-child.png",
                 true);
     }
     private Action getCreateSpouseActions(){
         return AActions.alwaysEnabled(
-                new ACreateSpouse((Indi) husband.getContext()),
+                new ACreateSpouse((Indi) husband.getProperty()),
                 "",
                 "Ajouter un conjoint",
                 "ancestris/modules/editors/standard/images/add-spouse.png",
@@ -266,7 +266,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     }
     private Action getUnlinkSpouseAction(){
         return AActions.alwaysEnabled(
-                NoOpAction,
+                NOOP_ACTION,
                 "",
                 "Supprimer le liens vers un conjoint",
                 "ancestris/modules/editors/standard/images/unlink-spouse.png",
@@ -274,7 +274,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     }
     private Action getUnlinkFamcAction(){
         return AActions.alwaysEnabled(
-                NoOpAction,
+                NOOP_ACTION,
                 "",
                 "Supprimer le liens avec les parents",
                 "ancestris/modules/editors/standard/images/unlink-famc.png",
@@ -283,7 +283,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     private Action getAddSiblingAction(){
         return AActions.alwaysEnabled(
-                NoOpAction,
+                NOOP_ACTION,
                 "",
                 "Ajouter un frère ou un soeur",
                 "ancestris/modules/editors/standard/images/add-sibling.png",
@@ -687,7 +687,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             return false;
         }
         final EventBean propEditor = new EventBean();
-        propEditor.setRoot(prop);
+        propEditor.setContext(prop);
         NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(propEditor), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
@@ -748,11 +748,11 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             if (src instanceof ABluePrintBeans) {
                 bean = (ABluePrintBeans) src;
             }
-            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getContext() == null) {
+            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
                 SelectionSink.Dispatcher.muteSelection(true);
                 try {
-                    if (bean != null && bean.getContext() != null) {
-                        editProperty(bean.getContext(), false);
+                    if (bean != null && bean.getProperty() != null) {
+                        editProperty(bean.getProperty(), false);
                     } else {
                         getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
                     }
@@ -762,7 +762,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 }
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
-                Property prop = bean.getContext();
+                Property prop = bean.getProperty();
                 if (prop instanceof Entity)
                     fireSelection((Entity)prop);
             }
@@ -786,10 +786,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            if (otherBean == null || otherBean.getContext() == null) {
+            if (otherBean == null || otherBean.getProperty() == null) {
                 return new ACreateSpouse(null);
             }
-            return new ACreateSpouse((Indi) otherBean.getContext());
+            return new ACreateSpouse((Indi) otherBean.getProperty());
         }
     }
 
@@ -806,10 +806,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            if (childBean == null || childBean.getContext() == null) {
+            if (childBean == null || childBean.getProperty() == null) {
                 return new ACreateParent(null, PropertySex.MALE);
             }
-            return new ACreateParent((Indi) childBean.getContext(), sex);
+            return new ACreateParent((Indi) childBean.getProperty(), sex);
         }
     }
 
@@ -826,11 +826,11 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            if (parentBean != null && parentBean.getContext() != null) {
-                return new ACreateChild((Indi) parentBean.getContext());
+            if (parentBean != null && parentBean.getProperty() != null) {
+                return new ACreateChild((Indi) parentBean.getProperty());
             }
-            if (famcBean != null && famcBean.getContext() != null) {
-                return new ACreateChild((Fam) famcBean.getContext());
+            if (famcBean != null && famcBean.getProperty() != null) {
+                return new ACreateChild((Fam) famcBean.getProperty());
             }
             return new ACreateSpouse(null);
         }

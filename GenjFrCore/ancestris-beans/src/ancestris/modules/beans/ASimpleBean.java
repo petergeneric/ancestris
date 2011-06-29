@@ -23,5 +23,4 @@ public class ASimpleBean extends SimpleValueBean implements Serializable {
     public ASimpleBean() {
         super();
     }
-
 }

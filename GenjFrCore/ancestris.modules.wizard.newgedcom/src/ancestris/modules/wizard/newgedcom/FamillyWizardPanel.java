@@ -11,7 +11,9 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
+import ancestris.modules.editors.standard.FamilyPanel;
 import ancestris.util.Utilities;
+import genj.gedcom.Context;
 import java.awt.Component;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,7 +41,10 @@ public class FamillyWizardPanel implements WizardDescriptor.Panel<WizardDescript
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new FamillyVisualPanel(gedcomProvider);
+            FamilyPanel famPanel = new FamilyPanel();
+            famPanel.setContext(new Context(gedcomProvider.getFirst()));
+            component = famPanel;
+//            component = new FamillyVisualPanel(gedcomProvider);
         }
         return component;
     }

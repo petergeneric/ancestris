@@ -12,9 +12,11 @@
 package ancestris.modules.wizard.newgedcom;
 
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
 import javax.swing.JPanel;
+import org.openide.util.Exceptions;
 
 public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps {
 
@@ -30,7 +32,7 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
         this.changeListener = changeListner;
 
         Submitter subm = gedcom.getSubmitter();
-        submitterAddress.setRoot(subm);
+        submitterAddress.setContext(subm,null);
         submitterName.setContext(subm, new TagPath("NAME"), subm.getProperty("NAME"));
     }
 
@@ -123,6 +125,12 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
 
     @Override
     public void applyNext() {
+        try {
+            submitterAddress.commit();
+            submitterName.commit();
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     String getSubmitterName() {
