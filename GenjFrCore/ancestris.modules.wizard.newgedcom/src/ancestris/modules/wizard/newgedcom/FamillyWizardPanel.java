@@ -44,7 +44,6 @@ public class FamillyWizardPanel implements WizardDescriptor.Panel<WizardDescript
             FamilyPanel famPanel = new FamilyPanel();
             famPanel.setContext(new Context(gedcomProvider.getFirst()));
             component = famPanel;
-//            component = new FamillyVisualPanel(gedcomProvider);
         }
         return component;
     }
