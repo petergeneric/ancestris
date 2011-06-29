@@ -12,7 +12,6 @@
 package ancestris.modules.beans;
 
 import genj.edit.beans.ShortNameBean;
-import genj.gedcom.Property;
 import java.io.Serializable;
 
 /**
@@ -25,11 +24,8 @@ public class ANameBean extends ShortNameBean implements Serializable {
         super();
     }
 
-    /**
-     * set root gedcom property for this bean
-     * @param property
-     */
-    public void setRoot(Property property) {
-        setContext(property, "NAME");
+    @Override
+    public String getTag() {
+        return "NAME";
     }
 }

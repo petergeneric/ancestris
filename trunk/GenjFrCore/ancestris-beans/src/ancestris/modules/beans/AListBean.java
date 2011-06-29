@@ -11,7 +11,6 @@
  */
 package ancestris.modules.beans;
 
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.renderer.Blueprint;
@@ -46,7 +45,7 @@ public class AListBean extends JPanel {
         Blueprint result = type2blueprint.get(tag);
         // try fallback
         if (result == null) {
-            result =  type2blueprint.get("");
+            result = type2blueprint.get("");
         }
         // fallback to global
         if (result == null) {
@@ -75,8 +74,9 @@ public class AListBean extends JPanel {
         }
         setBlueprint(tag, new Blueprint(bp));
     }
+
     public void add(Property property, MouseListener listener) {
-        ABluePrintBeans bean = new ABluePrintBeans(){
+        ABluePrintBeans bean = new ABluePrintBeans() {
 
             @Override
             public Dimension getMinimumSize() {
@@ -91,12 +91,13 @@ public class AListBean extends JPanel {
         String tag = property.getTag();
         bean.setBlueprint(tag, getBlueprint(tag));
         bean.setContext(property);
-        if (listener != null)
+        if (listener != null) {
             bean.addMouseListener(listener);
+        }
         add(bean);
     }
 
-    public void add(Property[] properties, Property exclude,MouseListener listener) {
+    public void add(Property[] properties, Property exclude, MouseListener listener) {
         if (properties == null) {
             return;
         }

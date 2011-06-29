@@ -11,19 +11,23 @@
  */
 package ancestris.modules.beans;
 
+import genj.edit.beans.PropertyBean;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
-import javax.swing.JPanel;
+import java.util.Arrays;
+import java.util.List;
 
-public final class AIndiBean extends JPanel implements ABean {
+public final class AIndiBean extends PropertyBean {
 
+    private List<PropertyBean> childBeans;
     /** Creates new form NewGedcomVisualPanel2 */
     public AIndiBean() {
+        setOpaque(true);
         initComponents();
+        childBeans = Arrays.asList(deathBean,birthBean,aSexBean1,aNameBean2,aSimpleBean1,aPlaceBean2);
     }
-
     private Indi indi;
 
     /**
@@ -41,30 +45,34 @@ public final class AIndiBean extends JPanel implements ABean {
      * @param entity new value of indi
      */
     @Override
-    public AIndiBean setRoot(Property entity) {
-        if (!(entity instanceof Indi))
-            return this;
-        this.indi = (Indi)entity;
-        deathBean.setRoot(indi);
-        birthBean.setRoot(indi);
-        aSexBean1.setRoot(indi);
-        aNameBean2.setRoot(indi);
-        aSimpleBean1.setContext(indi,"OCCU");
-        aPlaceBean2.setContext(indi, "RESI");
-        return this;
+    protected void setPropertyImpl(Property entity) {
+        if (!(entity instanceof Indi)) {
+            throw new UnsupportedOperationException("only setContext(Entity) supported yet.");
+        }
+        this.indi = (Indi) entity;
+        deathBean.setContext(indi, null);
+        birthBean.setContext(indi, null);
+        aSexBean1.setContext(indi, null);
+        aNameBean2.setContext(indi, null);
+        aSimpleBean1.setContext(indi, TagPath.valueOf(".:OCCU"));
+        aPlaceBean2.setContext(indi, TagPath.valueOf(".:RESI:PLAC"));
     }
 
     /**
      * commit beans - transaction has to be running already
      */
     @Override
-    public void commit() throws GedcomException {
-        deathBean.commit();
-        birthBean.commit();
-        aSexBean1.commit();
-        aNameBean2.commit();
-        aSimpleBean1.commit();
-        aPlaceBean2.commit();
+    protected void commitImpl(Property property) throws GedcomException {
+        for (PropertyBean bean:childBeans)
+            bean.commit();
+    }
+
+    @Override
+    public boolean hasChanged() {
+        boolean changed = false;
+        for (PropertyBean bean:childBeans)
+            changed |= bean.hasChanged();
+        return changed;
     }
 
     /** This method is called from within the constructor to
@@ -161,7 +169,6 @@ public final class AIndiBean extends JPanel implements ABean {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ANameBean aNameBean2;
     private ancestris.modules.beans.APlaceBean aPlaceBean2;
@@ -174,4 +181,10 @@ public final class AIndiBean extends JPanel implements ABean {
     private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
 
+
+
+    @Override
+    public String getTag() {
+        return "INDI";
+    }
 }

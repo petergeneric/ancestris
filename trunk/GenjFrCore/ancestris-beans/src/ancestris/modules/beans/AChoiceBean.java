@@ -23,5 +23,4 @@ public class AChoiceBean extends ChoiceBean implements Serializable {
     public AChoiceBean() {
         super();
     }
-
 }

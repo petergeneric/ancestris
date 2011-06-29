@@ -28,7 +28,7 @@ public final class FirstIndiVisualPanel extends JPanel implements NewGedcomSteps
     @Override
     public void addNotify() {
         super.addNotify();
-        aIndiBean1.setRoot(gedcomProvider.getFirst());
+        aIndiBean1.setContext(gedcomProvider.getFirst());
     }
 
     @Override

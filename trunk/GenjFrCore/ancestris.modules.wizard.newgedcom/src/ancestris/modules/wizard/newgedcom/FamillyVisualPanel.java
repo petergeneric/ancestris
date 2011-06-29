@@ -293,27 +293,27 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }// </editor-fold>//GEN-END:initComponents
 
     private void husbFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbFatherMouseClicked
-        createOrEditParent(husbandBeans, (Indi) husbFather.getContext(), PropertySex.MALE);
+        createOrEditParent(husbandBeans, (Indi) husbFather.getProperty(), PropertySex.MALE);
     }//GEN-LAST:event_husbFatherMouseClicked
 
     private void wifeFatherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeFatherMouseClicked
-        createOrEditParent(wifeBeans, (Indi) wifeFather.getContext(), PropertySex.MALE);
+        createOrEditParent(wifeBeans, (Indi) wifeFather.getProperty(), PropertySex.MALE);
     }//GEN-LAST:event_wifeFatherMouseClicked
 
     private void husbMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbMotherMouseClicked
-        createOrEditParent(husbandBeans, (Indi) husbMother.getContext(), PropertySex.FEMALE);
+        createOrEditParent(husbandBeans, (Indi) husbMother.getProperty(), PropertySex.FEMALE);
     }//GEN-LAST:event_husbMotherMouseClicked
 
     private void wifeMotherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMotherMouseClicked
-        createOrEditParent(wifeBeans, (Indi) wifeMother.getContext(), PropertySex.FEMALE);
+        createOrEditParent(wifeBeans, (Indi) wifeMother.getProperty(), PropertySex.FEMALE);
     }//GEN-LAST:event_wifeMotherMouseClicked
 
     private void husbandMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_husbandMouseClicked
-        createOrEditSpouse(husbandBeans, (Indi)wife.getContext());
+        createOrEditSpouse(husbandBeans, (Indi)wife.getProperty());
     }//GEN-LAST:event_husbandMouseClicked
 
     private void wifeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wifeMouseClicked
-        createOrEditSpouse(wifeBeans, (Indi)husband.getContext());
+        createOrEditSpouse(wifeBeans, (Indi)husband.getProperty());
     }//GEN-LAST:event_wifeMouseClicked
 
     private void familySpouseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_familySpouseMouseClicked
@@ -371,15 +371,15 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }
 
     private void createOrEditChild(ABluePrintBeans destBean) {
-        Indi indi = (Indi) destBean.getContext();
+        Indi indi = (Indi) destBean.getProperty();
         if (indi != null) {
             editEntity(indi);
         } else {
             CreateChild ccAction;
             // tries to guess entity to attach new child to
             // Familly knows?
-            if (familySpouse.getContext() != null) {
-                ccAction = new CreateChild((Fam) (familySpouse.getContext().getEntity()), true);
+            if (familySpouse.getProperty() != null) {
+                ccAction = new CreateChild((Fam) (familySpouse.getProperty().getEntity()), true);
                 ccAction.actionPerformed(new ActionEvent(this, 0, ""));
             } else {
                 Indi parent = getWifeOrHusband();
@@ -407,7 +407,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     }
 
     private void createOrEditFam(ABluePrintBeans destBean) {
-        Fam fam = (Fam) destBean.getContext();
+        Fam fam = (Fam) destBean.getProperty();
         if (fam == null) {
             return;
         }
@@ -419,7 +419,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
 
     private boolean editEntity(Fam fam) {
         AFamBean bean = new AFamBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setRoot(fam), org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "CreateFam.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(bean.setContext(fam), org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "CreateFam.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -438,7 +438,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
             return false;
         }
         AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setRoot(indi)), org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "CreateIndi.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setContext(indi)), org.openide.util.NbBundle.getMessage(FamillyVisualPanel.class, "CreateIndi.title"), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -459,7 +459,7 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
     private void updatechildrenPanel() {
         childrenPanel.removeAll();
         childrenPanel.repaint();
-        Fam f = familySpouse.getContext() == null ? null : (Fam) (familySpouse.getContext().getEntity());
+        Fam f = familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity());
         if (f != null) {
             for (Indi child : f.getChildren()) {
                 childrenPanel.add(new ChildBean(child));
@@ -526,10 +526,10 @@ public final class FamillyVisualPanel extends JPanel implements NewGedcomSteps {
      */
     private Indi getWifeOrHusband() {
         // return wife
-        Indi parent = (Indi) wife.getContext();
+        Indi parent = (Indi) wife.getProperty();
         // or husband
         if (parent == null) {
-            parent = (Indi) husband.getContext();
+            parent = (Indi) husband.getProperty();
         }
         return parent;
     }

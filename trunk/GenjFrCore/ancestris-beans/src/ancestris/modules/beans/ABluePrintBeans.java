@@ -88,7 +88,7 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
     /**
      * Context getter (Entity)
      */
-    public Property getContext() {
+    public Property getProperty() {
         return property;
     }
 

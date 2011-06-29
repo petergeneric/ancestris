@@ -21,10 +21,15 @@ import javax.swing.JLabel;
  */
 public class ATagBean extends JLabel implements Serializable {
 
+    private String tag;
+
     public ATagBean() {
         super();
     }
-    private String tag;
+
+    public String getTag() {
+        return tag;
+    }
 
     /**
      * Set the value of tag
@@ -35,5 +40,4 @@ public class ATagBean extends JLabel implements Serializable {
         this.tag = tag;
         setText(Gedcom.getName(tag));
     }
-
 }

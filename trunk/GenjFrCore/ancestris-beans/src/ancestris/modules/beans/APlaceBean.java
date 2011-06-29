@@ -12,7 +12,6 @@
 package ancestris.modules.beans;
 
 import genj.edit.beans.PlaceBean;
-import genj.gedcom.Property;
 import java.io.Serializable;
 
 /**
@@ -27,14 +26,8 @@ public class APlaceBean extends PlaceBean implements Serializable {
         super();
     }
 
-    /**
-     * set root gedcom property for this bean
-     * @param property
-     */
     @Override
-    public APlaceBean setContext(Property root, String path) {
-//        super.setContext(root, path,TAG);
-        super.setContext(root, path, TAG);
-        return this;
+    public String getTag() {
+        return TAG;
     }
 }

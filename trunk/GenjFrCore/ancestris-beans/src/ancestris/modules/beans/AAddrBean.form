@@ -28,10 +28,10 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="city" alignment="1" pref="241" max="32767" attributes="2"/>
-                          <Component id="address" alignment="0" pref="241" max="32767" attributes="3"/>
-                          <Component id="cpost" alignment="0" pref="241" max="32767" attributes="2"/>
-                          <Component id="country" alignment="1" pref="241" max="32767" attributes="2"/>
+                          <Component id="city" alignment="1" pref="242" max="32767" attributes="2"/>
+                          <Component id="address" alignment="0" pref="242" max="32767" attributes="3"/>
+                          <Component id="cpost" alignment="0" pref="242" max="32767" attributes="2"/>
+                          <Component id="country" alignment="1" pref="242" max="32767" attributes="2"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">

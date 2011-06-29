@@ -11,15 +11,16 @@
  */
 package ancestris.modules.beans;
 
-import genj.gedcom.Entity;
+import genj.edit.beans.PropertyBean;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import javax.swing.JPanel;
+import java.util.Arrays;
+import java.util.List;
 
-public final class AEventBean extends JPanel implements ABean {
+public final class AEventBean extends PropertyBean {
 
-    private String tag = "";
+    private List<PropertyBean> childBeans;
     private boolean detailedView = false;
 
     /**
@@ -27,8 +28,8 @@ public final class AEventBean extends JPanel implements ABean {
      *
      * @return the value of tag
      */
-    public String getTag() {
-        return tag;
+    private String getTagName() {
+        return Gedcom.getName(getTag());
     }
 
     /**
@@ -36,12 +37,12 @@ public final class AEventBean extends JPanel implements ABean {
      *
      * @param tag new value of tag
      */
+    @Override
     public void setTag(String tag) {
-        this.tag = tag;
+        super.setTag(tag);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, getTagName());
         repaint();
     }
-    private Entity root;
 
     public boolean isDetailedView() {
         return detailedView;
@@ -51,60 +52,34 @@ public final class AEventBean extends JPanel implements ABean {
         this.detailedView = detailedView;
     }
 
-    /**
-     * Get the value of root
-     *
-     * @return the value of root
-     */
-    public Entity getRoot() {
-        return root;
-    }
-
-    /**
-     * Set the value of root
-     *
-     * @param root new value of root
-     */
     @Override
-    public AEventBean setRoot(Property root) {
-        // nothing to do with null root
-        if (root == null) {
-            return this;
-        }
-        if (!(root instanceof Entity)) {
-            // check if root is the event property itself
-            Property parent = root.getParent();
-            if (!(parent instanceof Entity)) {
-                return this;
-            } else {
-                setTag(root.getTag());
-                return setRoot(parent, root);
-            }
-        }
-        return setRoot(root, root.getProperty(tag));
-    }
+    protected void setPropertyImpl(Property event) {
+        cbIsKnown.setSelected(event != null);
+        aDateBean1.setContext(root, path, event, (String) null);
+        aPlaceBean1.setContext(root, path, event, (String) null);
 
-    public AEventBean setRoot(Property root, Property event) {
-        this.root = (Entity) root;
-        if (root != null) {
-            cbIsKnown.setSelected(event != null);
-            aDateBean1.setContext(root, tag);
-            aPlaceBean1.setContext(root, tag);
+        evtAddr.setContext(root, path, event, (String) null);
+        evtType.setContext(root, path, event, "TYPE");
+        evtAge.setContext(root, path, event, "AGE");
+        evtAgency.setContext(root, path, event, "AGNC");
+        evtCause.setContext(root, path, event, "CAUS");
 
-            evtAddr.setRoot(event);
-            evtType.setContext(event, null, "TYPE");
-            evtAge.setContext(event, null, "AGE");
-            evtAgency.setContext(event, null, "AGNC");
-            evtCause.setContext(event, null, "CAUS");
-
-            showOrHide();
-        }
-        return this;
+        showOrHide();
     }
 
     /** Creates new form NewGedcomVisualPanel2 */
     public AEventBean() {
+        setOpaque(true);
         initComponents();
+        childBeans = Arrays.asList(
+                aDateBean1,
+                aPlaceBean1,
+                evtAddr,
+                evtType,
+                evtAge,
+                evtAgency,
+                evtCause);
+
         cbIsKnown.setSelected(false);
         showOrHide();
     }
@@ -124,9 +99,19 @@ public final class AEventBean extends JPanel implements ABean {
      * commit beans - transaction has to be running already
      */
     @Override
-    public void commit() throws GedcomException {
-        aDateBean1.commit();
-        aPlaceBean1.commit();
+    protected void commitImpl(Property property) throws GedcomException {
+        for (PropertyBean bean : childBeans) {
+            bean.commit();
+        }
+    }
+
+    @Override
+    public boolean hasChanged() {
+        boolean changed = false;
+        for (PropertyBean bean : childBeans) {
+            changed |= bean.hasChanged();
+        }
+        return changed;
     }
 
     /** This method is called from within the constructor to
@@ -300,10 +285,6 @@ public final class AEventBean extends JPanel implements ABean {
         causLabel.setVisible(showDetails);
 
         revalidate();
-    }
-
-    private String getTagName() {
-        return Gedcom.getName(tag);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean1;
