@@ -35,20 +35,8 @@ public class ResourceFile {
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
     private TreeMap<String, Properties> resourceFiles = new TreeMap();
 
-    ResourceFile(Locale fromLocale, Locale toLocale) {
+    ResourceFile() {
         not_translated = 0;
-
-        if (fromLocale.getCountry().equals("")) {
-            fromBundleName = PREFIX + SUFFIX;
-        } else {
-            fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
-        }
-
-        if (toLocale.getCountry().equals("")) {
-            toBundleName = PREFIX + SUFFIX;
-        } else {
-            toBundleName = PREFIX + "_" + toLocale.getLanguage() + SUFFIX;
-        }
     }
 
     public void put(InputStream inputStream, String bundleName) throws IOException {
@@ -56,27 +44,6 @@ public class ResourceFile {
 
         properties.load(inputStream);
         resourceFiles.put(bundleName, properties);
-
-        if (bundleName.equals(fromBundleName)) {
-            defaultLangage = properties;
-            content = new ArrayList<ResourceLine>(defaultLangage.size());
-            Iterator it = defaultLangage.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
-            }
-            not_translated = defaultLangage.size();
-        } else if (bundleName.equals(toBundleName)) {
-            translatedLangage = properties;
-
-            Iterator it = defaultLangage.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
-                    not_translated = Math.max(0, not_translated - 1);
-                }
-            }
-        }
     }
 
     public Set<String> getFiles() {
@@ -86,11 +53,51 @@ public class ResourceFile {
     public void writeTo(OutputStream outputStream, String bundleName) throws IOException {
         Properties properties = null;
         if (bundleName.equals(toBundleName)) {
-             properties = translatedLangage;
+            properties = translatedLangage;
         } else {
             properties = resourceFiles.get(bundleName);
         }
         properties.store(outputStream, "Translated with Trancetris");
+    }
+
+    void setTranslation(Locale fromLocale, Locale toLocale) {
+        Iterator it = null;
+
+        if (fromLocale.getCountry().equals("")) {
+            fromBundleName = PREFIX + SUFFIX;
+        } else {
+            fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
+        }
+
+        defaultLangage = resourceFiles.get(fromBundleName);
+        if (defaultLangage != null) {
+            content = new ArrayList<ResourceLine>(defaultLangage.size());
+            it = defaultLangage.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
+            }
+
+            if (toLocale.getCountry().equals("")) {
+                toBundleName = PREFIX + SUFFIX;
+            } else {
+                toBundleName = PREFIX + "_" + toLocale.getLanguage() + SUFFIX;
+            }
+
+            translatedLangage = resourceFiles.get(toBundleName);
+            if (translatedLangage == null) {
+                translatedLangage = new Properties();
+                resourceFiles.put(toBundleName, translatedLangage);
+            }
+
+            it = defaultLangage.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
+                    not_translated = Math.max(0, not_translated - 1);
+                }
+            }
+        }
     }
 
     public boolean isTranslated() {

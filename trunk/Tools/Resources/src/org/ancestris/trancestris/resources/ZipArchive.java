@@ -21,7 +21,7 @@ public class ZipArchive {
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
         zipName = inputFile.getName();
-        root = new ZipDirectory("", fromLocale, toLocale);
+        root = new ZipDirectory("");
         try {
             ZipFile zipInputFile = new ZipFile(inputFile);
 
@@ -39,6 +39,8 @@ public class ZipArchive {
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
         }
+        
+        root.setTranslation(fromLocale, toLocale);
     }
 
     public void write(File outputFile, String s) {
