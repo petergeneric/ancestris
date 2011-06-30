@@ -27,7 +27,13 @@ public class ZipDirectory {
     void writeTo(ZipOutputStream zipoutputstream, String path) throws IOException {
         if (resourceFile != null) {
             for (String fileName : resourceFile.getFiles()) {
-                ZipEntry zipentry = new ZipEntry(path + "/" + directoryName + "/" + fileName);
+                ZipEntry zipentry = null;
+
+                if (path.isEmpty() == true) {
+                    zipentry = new ZipEntry(directoryName + "/" + fileName);
+                } else {
+                    zipentry = new ZipEntry(path + "/" + directoryName + "/" + fileName);
+                }
                 zipoutputstream.putNextEntry(zipentry);
 
                 resourceFile.writeTo(zipoutputstream, fileName);
@@ -35,7 +41,11 @@ public class ZipDirectory {
         }
 
         for (ZipDirectory zipDirectory : dirs.values()) {
-            zipDirectory.writeTo(zipoutputstream, path + "/" + directoryName);
+            if (path.isEmpty() == true) {
+                zipDirectory.writeTo(zipoutputstream, directoryName);
+            } else {
+                zipDirectory.writeTo(zipoutputstream, path + "/" + directoryName);
+            }
         }
     }
 
