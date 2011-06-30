@@ -3,6 +3,12 @@
 <filesystem>
     <folder name="Actions">
         <folder name="File">
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ExplorerSaveAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ExplorerSaveAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerOpenAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ZipExplorerOpenAction"/>
@@ -22,6 +28,10 @@
     </folder>
     <folder name="Menu">
         <folder name="File">
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
+                <attr name="position" intvalue="1250"/>
+            </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance"/>
                 <attr name="position" intvalue="1350"/>
