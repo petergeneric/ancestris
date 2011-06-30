@@ -2,47 +2,40 @@ package org.ancestris.trancestris.resources;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class ZipDirectory {
 
-    private String name;
+    private String directoryName;
     private ResourceFile resourceFile = null;
     private LinkedHashMap<String, ZipDirectory> dirs;
+    private Locale fromLocale;
+    private Locale toLocale;
 
-    public ZipDirectory(String name) {
+    public ZipDirectory(String name, Locale fromLocale, Locale toLocale) {
+        this.fromLocale = fromLocale;
+        this.toLocale = toLocale;
         dirs = new LinkedHashMap<String, ZipDirectory>();
-        this.name = name;
+        this.directoryName = name;
     }
 
-    void writeTo(OutputStream outputStream) throws IOException {
-
+    void writeTo(ZipOutputStream zipoutputstream, String path) throws IOException {
         if (resourceFile != null) {
-            resourceFile.writeTo(outputStream);
+            for (String fileName : resourceFile.getFiles()) {
+                ZipEntry zipentry = new ZipEntry(path + "/" + directoryName + "/" + fileName);
+                zipoutputstream.putNextEntry(zipentry);
+
+                resourceFile.writeTo(zipoutputstream, fileName);
+            }
         }
+
         for (ZipDirectory zipDirectory : dirs.values()) {
-            zipDirectory.writeTo(outputStream);
-        }
-    }
-
-    void setTranslation(String filePath, InputStream inputstream) throws IOException {
-        StringTokenizer stringtokenizer = new StringTokenizer(filePath, "/", false);
-        setTranslation(stringtokenizer, inputstream);
-    }
-
-    private void setTranslation(StringTokenizer tokenizefilePath, InputStream inputstream) throws IOException {
-        String token = tokenizefilePath.nextToken();
-        if (!tokenizefilePath.hasMoreTokens()) {
-            if (this.resourceFile != null) {
-                this.resourceFile.setTranslation(inputstream);
-            }
-        } else {
-            if (dirs.containsKey(token) == true) {
-                dirs.get(token).setTranslation(tokenizefilePath, inputstream);
-            }
+            zipDirectory.writeTo(zipoutputstream, path + "/" + directoryName);
         }
     }
 
@@ -54,12 +47,15 @@ public class ZipDirectory {
     void put(StringTokenizer tokenizefilePath, InputStream inputstream) throws IOException {
         String token = tokenizefilePath.nextToken();
         if (!tokenizefilePath.hasMoreTokens()) {
-            this.resourceFile = new ResourceFile(inputstream);
+            if (this.resourceFile == null) {
+                this.resourceFile = new ResourceFile(this.fromLocale, this.toLocale);
+            }
+            this.resourceFile.put(inputstream, token);
         } else {
             if (dirs.containsKey(token) == true) {
                 dirs.get(token).put(tokenizefilePath, inputstream);
             } else {
-                ZipDirectory zipDirectory = new ZipDirectory(token);
+                ZipDirectory zipDirectory = new ZipDirectory(token, this.fromLocale, this.toLocale);
                 dirs.put(token, zipDirectory);
                 zipDirectory.put(tokenizefilePath, inputstream);
             }
@@ -67,7 +63,7 @@ public class ZipDirectory {
     }
 
     public String getName() {
-        return name;
+        return directoryName;
     }
 
     public ArrayList<ZipDirectory> getDirs() {
@@ -80,7 +76,7 @@ public class ZipDirectory {
 
     @Override
     public String toString() {
-        return name;
+        return directoryName;
     }
 
     public boolean isTranslated() {

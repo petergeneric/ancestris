@@ -7,90 +7,90 @@ package org.ancestris.trancestris.resources;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class ResourceFile {
 
+    private static final String PREFIX = "Bundle";
+    private static final String SUFFIX = ".properties";
+    private String fromBundleName = "";
+    private String toBundleName = "";
     private File DefaultLangageFile = null;
     private Properties defaultLangage = new Properties();
     private Properties translatedLangage = new Properties();
     private ArrayList<ResourceLine> content = null;
     private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
+    private TreeMap<String, Properties> resourceFiles = new TreeMap();
 
-    public ResourceFile(File file) throws IOException {
-        DefaultLangageFile = file;
+    ResourceFile(Locale fromLocale, Locale toLocale) {
         not_translated = 0;
-        InputStreamReader inputStream = new InputStreamReader(new FileInputStream(file));
-        defaultLangage.load(inputStream);
-        content = new ArrayList<ResourceLine>(defaultLangage.size());
-        Iterator it = defaultLangage.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
+
+        if (fromLocale.getCountry().equals("")) {
+            fromBundleName = PREFIX + SUFFIX;
+        } else {
+            fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
         }
-        not_translated = defaultLangage.size();
-    }
 
-    ResourceFile(InputStream inputStream) throws IOException {
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        defaultLangage.load(inputStream);
-        content = new ArrayList<ResourceLine>(defaultLangage.size());
-        Iterator it = defaultLangage.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
+        if (toLocale.getCountry().equals("")) {
+            toBundleName = PREFIX + SUFFIX;
+        } else {
+            toBundleName = PREFIX + "_" + toLocale.getLanguage() + SUFFIX;
         }
-        not_translated = defaultLangage.size();
     }
 
-    public void writeTo(File file) throws IOException {
-        PrintStream outputStream = new PrintStream(file, "UTF8");
-        translatedLangage.store(outputStream, null);
-        outputStream.close();
-    }
+    public void put(InputStream inputStream, String bundleName) throws IOException {
+        Properties properties = new Properties();
 
-    public void writeTo(OutputStream outputStream) throws IOException {
-    }
+        properties.load(inputStream);
+        resourceFiles.put(bundleName, properties);
 
-    public void setTranslation(File file) throws IOException {
-        not_translated = 0;
-        InputStreamReader inputStream = new InputStreamReader(new FileInputStream(file));
-        translatedLangage.load(inputStream);
+        if (bundleName.equals(fromBundleName)) {
+            defaultLangage = properties;
+            content = new ArrayList<ResourceLine>(defaultLangage.size());
+            Iterator it = defaultLangage.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
+            }
+            not_translated = defaultLangage.size();
+        } else if (bundleName.equals(toBundleName)) {
+            translatedLangage = properties;
 
-        Iterator it = defaultLangage.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
-                not_translated = Math.max(0, not_translated - 1);
+            Iterator it = defaultLangage.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
+                    not_translated = Math.max(0, not_translated - 1);
+                }
             }
         }
     }
 
-    public void setTranslation(InputStream inputstream) throws IOException {
-        not_translated = 0;
-        InputStreamReader inputStream = new InputStreamReader(inputstream);
-        translatedLangage.load(inputStream);
+    public Set<String> getFiles() {
+        return resourceFiles.keySet();
+    }
 
-        Iterator it = defaultLangage.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
-                not_translated = Math.max(0, not_translated - 1);
-            }
+    public void writeTo(OutputStream outputStream, String bundleName) throws IOException {
+        Properties properties = null;
+        if (bundleName.equals(toBundleName)) {
+             properties = translatedLangage;
+        } else {
+            properties = resourceFiles.get(bundleName);
         }
+        properties.store(outputStream, "Translated with Trancetris");
     }
 
     public boolean isTranslated() {
