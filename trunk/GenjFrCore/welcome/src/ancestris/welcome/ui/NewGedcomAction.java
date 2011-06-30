@@ -44,6 +44,7 @@ package ancestris.welcome.ui;
 import ancestris.api.newgedcom.NewGedcom;
 import genj.app.WorkbenchHelper;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.view.SelectionSink;
 import genjfr.app.ActionNew;
@@ -65,8 +66,9 @@ public class NewGedcomAction extends AbstractAction {
         if (wiz != null){
             Context context = wiz.create();
             if ( context != null){
+                Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
                 GedcomDirectory.getInstance().registerGedcom(context);
-                WorkbenchHelper.openDefaultViews(context);
+                WorkbenchHelper.openDefaultViews(firstIndiContext);
                 SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
             }
         } else {
