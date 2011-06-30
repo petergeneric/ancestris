@@ -110,10 +110,10 @@ public class ActionAPropos extends JDialog implements ActionListener {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11));
         jLabel3.setText(App.getPluginVersion());
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
         jLabel2.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel2.text")); // NOI18N
 
         jLabel1.setBackground(new java.awt.Color(240, 176, 111));
@@ -179,9 +179,9 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         jLabel4.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel4.text")); // NOI18N
 
-        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13));
+        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13)); // NOI18N
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel12.text")); // NOI18N
+        jLabel12.setText(getContributors());
         jLabel12.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -239,11 +239,11 @@ public class ActionAPropos extends JDialog implements ActionListener {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE))
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE))
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -257,7 +257,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -409,6 +409,15 @@ public class ActionAPropos extends JDialog implements ActionListener {
         text += "</table><br></html>";
         NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
+    }
+
+    private String getContributors(){
+        String contributors = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors"); // NOI18N
+        String translators = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.translators"); // NOI18N
+
+        return NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors.text",
+                "<br>"+contributors.replaceAll(",", "<br>"),
+                "<br>"+translators.replaceAll(",", "<br>")); // NOI18N
     }
 }
 
