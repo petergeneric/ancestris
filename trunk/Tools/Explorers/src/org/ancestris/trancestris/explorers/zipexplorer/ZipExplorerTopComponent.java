@@ -29,6 +29,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     static final String ICON_PATH = "org/ancestris/trancestris/explorers/zipexplorer/actions/zip-icon.png";
     private static final String PREFERRED_ID = "ZipExplorerTopComponent";
     private ExplorerManager zipExplorerManager = null;
+    ZipArchive zipFile;
 
     public ZipExplorerTopComponent() {
         initComponents();
@@ -137,9 +138,14 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     public void setBundles(ZipArchive zipFile) {
-        ((BeanTreeView) beanTreeView).setRootVisible(true);
         ZipRootNode newZipRootNode = new ZipRootNode(zipFile);
         zipExplorerManager.setRootContext(newZipRootNode);
+        ((BeanTreeView) beanTreeView).setRootVisible(true);
         setActivatedNodes(new Node[]{newZipRootNode});
+        this.zipFile = zipFile;
+    }
+
+    public ZipArchive getBundles() {
+        return zipFile;
     }
 }
