@@ -14,12 +14,8 @@ public class ZipDirectory {
     private String directoryName;
     private ResourceFile resourceFile = null;
     private LinkedHashMap<String, ZipDirectory> dirs;
-    private Locale fromLocale;
-    private Locale toLocale;
 
-    public ZipDirectory(String name, Locale fromLocale, Locale toLocale) {
-        this.fromLocale = fromLocale;
-        this.toLocale = toLocale;
+    public ZipDirectory(String name) {
         dirs = new LinkedHashMap<String, ZipDirectory>();
         this.directoryName = name;
     }
@@ -58,14 +54,14 @@ public class ZipDirectory {
         String token = tokenizefilePath.nextToken();
         if (!tokenizefilePath.hasMoreTokens()) {
             if (this.resourceFile == null) {
-                this.resourceFile = new ResourceFile(this.fromLocale, this.toLocale);
+                this.resourceFile = new ResourceFile();
             }
             this.resourceFile.put(inputstream, token);
         } else {
             if (dirs.containsKey(token) == true) {
                 dirs.get(token).put(tokenizefilePath, inputstream);
             } else {
-                ZipDirectory zipDirectory = new ZipDirectory(token, this.fromLocale, this.toLocale);
+                ZipDirectory zipDirectory = new ZipDirectory(token);
                 dirs.put(token, zipDirectory);
                 zipDirectory.put(tokenizefilePath, inputstream);
             }
@@ -87,6 +83,15 @@ public class ZipDirectory {
     @Override
     public String toString() {
         return directoryName;
+    }
+
+    void setTranslation(Locale fromLocale, Locale toLocale) {
+        if (resourceFile != null) {
+            resourceFile.setTranslation(fromLocale, toLocale);
+        }
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            zipDirectory.setTranslation(fromLocale, toLocale);
+        }
     }
 
     public boolean isTranslated() {
