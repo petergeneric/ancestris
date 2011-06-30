@@ -249,16 +249,30 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     }
 
     private Action getCreateChildAction(){
+        ActionListener action = new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                (new ACreateChild((Fam) familySpouse.getProperty())).actionPerformed(e);
+                refresh();
+            }
+        };
         return AActions.alwaysEnabled(
-                new ACreateChild((Fam) familySpouse.getProperty()),
+                action,
                 "",
                 org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getProperty()),
                 "ancestris/modules/editors/standard/images/add-child.png",
                 true);
     }
     private Action getCreateSpouseActions(){
+        ActionListener action = new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                (new ACreateSpouse((Indi) husband.getProperty())).actionPerformed(e);
+                refresh();
+            }
+        };
         return AActions.alwaysEnabled(
-                new ACreateSpouse((Indi) husband.getProperty()),
+                action,
                 "",
                 "Ajouter un conjoint",
                 "ancestris/modules/editors/standard/images/add-spouse.png",
