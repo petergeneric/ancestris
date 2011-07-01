@@ -15,9 +15,14 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Lookup;
@@ -379,7 +384,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private void displayLicence() {
         String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceTitle");
         String text = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(getScrollableText(text), title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
     }
 
@@ -407,7 +412,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
             }
         }
         text += "</table><br></html>";
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation(text, title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(getScrollableText(text), title, NotifyDescriptor.DEFAULT_OPTION, NotifyDescriptor.INFORMATION_MESSAGE);
         DialogDisplayer.getDefault().notify(d);
     }
 
@@ -418,6 +423,12 @@ public class ActionAPropos extends JDialog implements ActionListener {
         return NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors.text",
                 "<br>"+contributors.replaceAll(",", "<br>"),
                 "<br>"+translators.replaceAll(",", "<br>")); // NOI18N
+    }
+
+    private JScrollPane getScrollableText(String text){
+        JLabel area = new JLabel(text);
+        area.setOpaque(true);
+        return new JScrollPane(area);
     }
 }
 
