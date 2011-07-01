@@ -63,7 +63,7 @@ public class ResourceFile {
     void setTranslation(Locale fromLocale, Locale toLocale) {
         Iterator it = null;
 
-        if (fromLocale.getCountry().equals("")) {
+        if (fromLocale.getLanguage().equals("en")) {
             fromBundleName = PREFIX + SUFFIX;
         } else {
             fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
@@ -78,7 +78,7 @@ public class ResourceFile {
                 content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
             }
 
-            if (toLocale.getCountry().equals("")) {
+            if (toLocale.getLanguage().equals("en")) {
                 toBundleName = PREFIX + SUFFIX;
             } else {
                 toBundleName = PREFIX + "_" + toLocale.getLanguage() + SUFFIX;
@@ -118,7 +118,7 @@ public class ResourceFile {
         if (s2 != null) {
             return s2;
         } else {
-            return content.get(i).getValue();
+            return "";
         }
     }
 
