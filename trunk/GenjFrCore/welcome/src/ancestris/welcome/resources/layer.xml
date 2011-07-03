@@ -77,18 +77,18 @@ made subject to such option by the copyright holder.
         <folder name="GettingStartedLinks">
 
             <file name="tour.url">
-                <attr name="url" stringvalue="http://www.arvernes.com/wiki/index.php/Ancestris_-_Aide_-_Video"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/GettingStartedLinks/tour.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="100"/>
             </file>
 
             <file name="whatsnew.url">
-                <attr name="url" stringvalue="http://trac.ancestris.org/ancestris/milestone/0.5"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/GettingStartedLinks/whatsnew.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="300"/>
             </file>
             <file name="community.url">
-                <attr name="url" stringvalue="http://www.arvernes.com/wiki/index.php/Ancestris_-_O%C3%B9_parler_de_Ancestris"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/GettingStartedLinks/community.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="400"/>
             </file>
@@ -111,27 +111,27 @@ made subject to such option by the copyright holder.
 
         <folder name="TutorialsLinks">
             <file name="tutorial1.url">
-                <attr name="url" stringvalue="http://www.arvernes.com/wiki/index.php/Ancestris_-_Menus"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial1.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="tutorial2.url">
-                <attr name="url" stringvalue="http://www.arvernes.com/wiki/index.php/Ancestris_-_L%27ordonnancement_des_juridictions"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial2.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="200"/>
             </file>
             <file name="tutorial3.url">
-                <attr name="url" stringvalue="http://www.arvernes.com/wiki/index.php/Ancestris_-_Migration"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial3.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="300"/>
             </file>
             <file name="tutorial4.url">
-                <attr name="url" stringvalue="http://trac.arvernes.dyndns.org/ancestris/wiki/GenjFrDevNetBeans"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial4.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="400"/>
             </file>
             <file name="tutorial5.url">
-                <attr name="url" stringvalue="http://trac.arvernes.dyndns.org/ancestris/wiki/GenjFrTraduc"/>
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/TutorialsLinks/tutorial5.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="500"/>
             </file>
