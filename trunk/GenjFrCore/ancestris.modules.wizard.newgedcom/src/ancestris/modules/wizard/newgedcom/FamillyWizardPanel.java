@@ -20,6 +20,7 @@ import java.net.URL;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 
 public class FamillyWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
 
@@ -43,6 +44,7 @@ public class FamillyWizardPanel implements WizardDescriptor.Panel<WizardDescript
         if (component == null) {
             FamilyPanel famPanel = new FamilyPanel();
             famPanel.setContext(new Context(gedcomProvider.getFirst()));
+            famPanel.setName(NbBundle.getMessage(FamillyWizardPanel.class, "FamilyPanel.title"));
             component = famPanel;
         }
         return component;
