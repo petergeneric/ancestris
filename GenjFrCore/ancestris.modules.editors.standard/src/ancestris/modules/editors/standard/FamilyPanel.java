@@ -243,10 +243,10 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
     }
 
-    @Override
-    public String getName() {
-        return "Completer le noyau familial";
-    }
+//    @Override
+//    public String getName() {
+//        return "Completer le noyau familial";
+//    }
 
     private Action getCreateChildAction(){
         ActionListener action = new ActionListener() {
