@@ -19,6 +19,7 @@ and open the template in the editor.
     <mapID target="ancestris.app.nomade" url="./advanced/ancestris_nomade.html"/>
     <mapID target="ancestris.app.options.menu1" url="./first_steps/menu_options_1.html"/>
     <mapID target="ancestris.app.plugins" url="./advanced/ancestris_plugins.html"/>
+    <mapID target="ancestris.app.plugins.development" url="./plugins/plugins_development.html"/>
     <mapID target="ancestris.app.plugins.liste" url="./plugins/plugins_liste.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>

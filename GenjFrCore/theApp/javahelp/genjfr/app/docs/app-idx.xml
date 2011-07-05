@@ -17,7 +17,8 @@ and open the template in the editor.
     <indexitem text="Divers" target="ancestris.app.misc"/>
     <indexitem text="Nomadisme et Ancestris" target="ancestris.app.nomade"/>
     <indexitem text="Les plugins" target="ancestris.app.plugins"/>
-    <indexitem text="Liste des plugins" target="ancestris.app.plugins.liste"/>
+    <indexitem text="L'écriture d'un plugin" target="ancestris.app.plugins.development"/>
+    <indexitem text="Liste des plugins" target="ancestris.app.plugins.liste"/>    
     <indexitem text="La visualisation chronologique" target="ancestris.app.view.chrono"/>
     <indexitem text="Les Editeurs" target="ancestris.app.view.editors"/>
     <indexitem text="La vue Entité" target="ancestris.app.view.entity"/>
