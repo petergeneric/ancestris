@@ -5,6 +5,7 @@
 <project name="GenjFrApp" basedir="." default="build">
     <description>Builds the module suite GenjFrApp.</description>
     <import file="nbproject/build-impl.xml"/>
+     <property name="app.icon.icns" value="${basedir}/ancestris.icns"/>
     <target name="build-launchers" depends="-init">
         <echo message=" "/>
         <echo message="BUILDING ANCESTRIS DISTRIBUTION..." />
