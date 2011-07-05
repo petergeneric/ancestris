@@ -226,7 +226,8 @@ public class PropertyChange extends Property implements MultiLineProperty {
    */
   private class DateTimeCollector implements MultiLineProperty.Collector {
 
-    private String dateCollected, timeCollected;
+    private String dateCollected = "01 JAN 1900";
+    private String timeCollected = "00:00:00";
 
     /**
      * @see genj.gedcom.MultiLineSupport.Continuation#append(int, java.lang.String, java.lang.String)
