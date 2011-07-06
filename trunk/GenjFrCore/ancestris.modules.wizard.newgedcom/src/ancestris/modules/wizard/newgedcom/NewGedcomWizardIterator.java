@@ -27,7 +27,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
     private int index = 0;
     private WizardDescriptor wizard;
-    private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
+    private List<NewGedcomWizardPanel> panels;
     private final INewGedcomProvider newGedcom;
 
     NewGedcomWizardIterator(INewGedcomProvider newGedcom) {
@@ -39,9 +39,9 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
+    private List<NewGedcomWizardPanel> getPanels() {
         if (panels == null) {
-            panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>(5);;
+            panels = new ArrayList<NewGedcomWizardPanel>(5);;
             if (!NewGedcomOptions.getInstance().getSkipIntro()) {
                 panels.add(new IntroWizardPanel());
             }
@@ -78,7 +78,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
 
                     jc.putClientProperty(WizardDescriptor.PROP_HELP_DISPLAYED, Boolean.TRUE);
 
-                    jc.putClientProperty(WizardDescriptor.PROP_HELP_URL, ((IHelpPanel)panels.get(i)).getHelpUrl());
+                    jc.putClientProperty(WizardDescriptor.PROP_HELP_URL, panels.get(i).getHelpUrl());
                 }
             }
         }
@@ -125,7 +125,7 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        ((NewGedcomSteps) panels.get(index).getComponent()).applyNext();
+        panels.get(index).applyNext();
         index++;
     }
 

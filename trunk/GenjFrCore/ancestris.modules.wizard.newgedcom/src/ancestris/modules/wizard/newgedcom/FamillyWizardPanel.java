@@ -22,13 +22,13 @@ import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-public class FamillyWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
+public class FamillyWizardPanel extends NewGedcomWizardPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private FamilyPanel component;
     private INewGedcomProvider gedcomProvider;
 
     public FamillyWizardPanel(INewGedcomProvider provider) {
@@ -67,6 +67,11 @@ public class FamillyWizardPanel implements WizardDescriptor.Panel<WizardDescript
         // and when this condition changes (last form field filled in...) then:
         // fireChangeEvent();
         // and uncomment the complicated stuff below.
+    }
+
+    @Override
+    void applyNext() {
+        // nothing (last step)
     }
 
     @Override

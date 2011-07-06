@@ -17,13 +17,13 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class IntroWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
+public class IntroWizardPanel extends NewGedcomWizardPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private IntroVisualPanel component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -49,6 +49,11 @@ public class IntroWizardPanel implements WizardDescriptor.Panel<WizardDescriptor
     public boolean isValid() {
         // If it is always OK to press Next or Finish, then:
         return true;
+    }
+
+    @Override
+    void applyNext() {
+        component.applyNext();
     }
 
     @Override

@@ -18,7 +18,7 @@ import genj.gedcom.TagPath;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
-public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps {
+public final class SubmitterVisualPanel extends JPanel {
 
     private Gedcom gedcom;
     private SubmitterWizardPanel changeListener;
@@ -123,7 +123,6 @@ public final class SubmitterVisualPanel extends JPanel implements NewGedcomSteps
     private ancestris.modules.beans.ASimpleBean submitterName;
     // End of variables declaration//GEN-END:variables
 
-    @Override
     public void applyNext() {
         try {
             submitterAddress.commit();

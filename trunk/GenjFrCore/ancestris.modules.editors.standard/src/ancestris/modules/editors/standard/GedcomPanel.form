@@ -20,7 +20,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  <Component id="gedcomDescription" pref="450" max="32767" attributes="0"/>
+                  <Component id="gedcomDescription" pref="302" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="placeFormat" min="-2" max="-2" attributes="0"/>
