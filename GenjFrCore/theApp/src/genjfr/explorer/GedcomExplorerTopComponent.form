@@ -18,11 +18,8 @@
   <SubComponents>
     <Component class="javax.swing.JComboBox" name="displayType">
       <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="Toutes les entit&#xe9;s"/>
-            <StringItem index="1" value="Parent&#xe9; proche"/>
-          </StringArray>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="displayTypeModel" type="code"/>
         </Property>
       </Properties>
       <Constraints>

@@ -8,6 +8,7 @@ import genj.view.ContextProvider;
 import genj.view.ViewContext;
 import genjfr.util.GedcomDirectory;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -32,7 +33,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     private static GedcomExplorerTopComponent instance;
     /** path to the icon used by the component and its open action */
 //    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
-    private static final String PREFERRED_ID = "GedcomExplorerTopComponent";
+    private static final String PREFERRED_ID = "GedcomExplorerTopComponent"; //NOI18N
 
     private transient ExplorerManager explorerManager = new ExplorerManager();
     private boolean forceClose=false;
@@ -66,7 +67,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
 
         setLayout(new java.awt.BorderLayout());
 
-        displayType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Toutes les entités", "Parenté proche" }));
+        displayType.setModel(displayTypeModel);
         add(displayType, java.awt.BorderLayout.PAGE_START);
         add(gedcomsPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -75,6 +76,10 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     private javax.swing.JComboBox displayType;
     private javax.swing.JScrollPane gedcomsPane;
     // End of variables declaration//GEN-END:variables
+    private DefaultComboBoxModel displayTypeModel = new DefaultComboBoxModel(new String[] {
+        org.openide.util.NbBundle.getMessage(GedcomExplorerTopComponent.class, "DisplayType.AllEntities"),
+        org.openide.util.NbBundle.getMessage(GedcomExplorerTopComponent.class, "DisplayType.Neighbourhood") });
+
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
@@ -94,15 +99,15 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
         if (win == null) {
             Logger.getLogger(GedcomExplorerTopComponent.class.getName()).warning(
-                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
+                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system."); //NOI8N
             return getDefault();
         }
         if (win instanceof GedcomExplorerTopComponent) {
             return (GedcomExplorerTopComponent) win;
         }
         Logger.getLogger(GedcomExplorerTopComponent.class.getName()).warning(
-                "There seem to be multiple components with the '" + PREFERRED_ID
-                + "' ID. That is a potential source of errors and unexpected behavior.");
+                "There seem to be multiple components with the '" + PREFERRED_ID //NOI18N
+                + "' ID. That is a potential source of errors and unexpected behavior.");  //NOI18N
         return getDefault();
     }
 
@@ -132,7 +137,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
+        p.setProperty("version", "1.0");  //NOI18N
         // TODO store your settings
     }
 
