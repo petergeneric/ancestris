@@ -24,7 +24,7 @@ import javax.swing.JPanel;
  *
  * @author daniel
  */
-public class IntroVisualPanel extends JPanel implements NewGedcomSteps{
+public class IntroVisualPanel extends JPanel{
 
     /** Creates new form IntroVisualPanel */
     public IntroVisualPanel() {
@@ -88,7 +88,6 @@ public class IntroVisualPanel extends JPanel implements NewGedcomSteps{
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
 
-    @Override
     public void applyNext() {
         NewGedcomOptions.getInstance().setSkipIntro(cbSkipIntro.isSelected());
     }

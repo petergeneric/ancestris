@@ -11,6 +11,7 @@
  */
 package ancestris.modules.wizard.newgedcom;
 
+import ancestris.modules.editors.standard.GedcomPanel;
 import ancestris.util.Utilities;
 import java.awt.Component;
 import java.net.MalformedURLException;
@@ -19,13 +20,13 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class GedcomWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
+public class GedcomWizardPanel extends NewGedcomWizardPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private GedcomPanel component;
     private INewGedcomProvider gedcomProvider;
 
     public GedcomWizardPanel(INewGedcomProvider provider) {
@@ -39,7 +40,8 @@ public class GedcomWizardPanel implements WizardDescriptor.Panel<WizardDescripto
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new GedcomVisualPanel(gedcomProvider);
+            component = new GedcomPanel();
+            component.setContext(gedcomProvider.getContext());
         }
         return component;
     }
@@ -61,6 +63,11 @@ public class GedcomWizardPanel implements WizardDescriptor.Panel<WizardDescripto
         // and when this condition changes (last form field filled in...) then:
         // fireChangeEvent();
         // and uncomment the complicated stuff below.
+    }
+
+    @Override
+    public void applyNext() {
+        component.commit();
     }
 
     @Override

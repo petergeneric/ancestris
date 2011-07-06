@@ -13,12 +13,13 @@
 package ancestris.modules.wizard.newgedcom;
 
 import java.net.URL;
+import org.openide.WizardDescriptor;
 
 /**
  *
  * @author daniel
  */
-interface IHelpPanel {
-    URL getHelpUrl();
+public abstract class NewGedcomWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>{
+    abstract URL getHelpUrl();
+    abstract void applyNext();
 }
-

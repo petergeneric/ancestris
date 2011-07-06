@@ -23,13 +23,13 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class SubmitterWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
+public class SubmitterWizardPanel extends NewGedcomWizardPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private Component component;
+    private SubmitterVisualPanel component;
     private INewGedcomProvider gedcomProvider;
 
     public SubmitterWizardPanel(INewGedcomProvider gedcomProvider) {
@@ -58,7 +58,12 @@ public class SubmitterWizardPanel implements WizardDescriptor.Panel<WizardDescri
 
     @Override
     public boolean isValid() {
-        return !((SubmitterVisualPanel)component).getSubmitterName().isEmpty();
+        return !component.getSubmitterName().isEmpty();
+    }
+
+    @Override
+    void applyNext() {
+        component.applyNext();
     }
 
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0

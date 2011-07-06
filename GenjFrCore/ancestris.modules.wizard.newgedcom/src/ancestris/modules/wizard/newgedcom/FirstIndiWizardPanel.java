@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class FirstIndiWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, IHelpPanel {
+public class FirstIndiWizardPanel extends NewGedcomWizardPanel {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -61,6 +61,11 @@ public class FirstIndiWizardPanel implements WizardDescriptor.Panel<WizardDescri
         // and when this condition changes (last form field filled in...) then:
         // fireChangeEvent();
         // and uncomment the complicated stuff below.
+    }
+
+    @Override
+    void applyNext() {
+        component.applyNext();
     }
 
     @Override

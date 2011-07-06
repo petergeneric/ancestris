@@ -16,7 +16,7 @@ import genj.gedcom.Indi;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
-public final class FirstIndiVisualPanel extends JPanel implements NewGedcomSteps {
+public final class FirstIndiVisualPanel extends JPanel{
 
     private INewGedcomProvider gedcomProvider ;
     /** Creates new form FirstIndiVisualPanel */
@@ -101,7 +101,6 @@ public final class FirstIndiVisualPanel extends JPanel implements NewGedcomSteps
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    @Override
     public void applyNext() {
         try {
             aIndiBean1.commit();
