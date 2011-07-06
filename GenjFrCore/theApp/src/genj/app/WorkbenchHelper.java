@@ -248,7 +248,11 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             // remember
             GedcomDirectory.getInstance().registerGedcom(context);
             openDefaultViews(context);
-            SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
+            Indi firstIndi = (Indi)context.getGedcom().getFirstEntity(Gedcom.INDI);
+            if (firstIndi == null){
+                firstIndi = (Indi) context.getGedcom().createEntity(Gedcom.INDI);
+            }
+            SelectionSink.Dispatcher.fireSelection((Component) null, new Context(firstIndi), true);
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
