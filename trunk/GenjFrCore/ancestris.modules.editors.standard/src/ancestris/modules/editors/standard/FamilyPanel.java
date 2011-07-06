@@ -54,7 +54,6 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
-    private final static String VOID_BP = "";
     private Context context;
     private Indi focusIndi;
     private Fam focusFam;
@@ -108,19 +107,19 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         familySpouse.addMouseListener(handler);
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
 
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
-        wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
 
         husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
-        husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
 
         husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
-        husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));
+        husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
 
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
-        familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));
+        familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));  // NOI18N
 
         // Childs
         childrenPanel = new EntitiesPanel(jScrollPane1) {
@@ -174,7 +173,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 return null;
             }
         };
-        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");
+        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
     }
 
     public void setContext(Context context) {
@@ -260,7 +259,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 action,
                 "",
                 org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getProperty()),
-                "ancestris/modules/editors/standard/images/add-child.png",
+                "ancestris/modules/editors/standard/images/add-child.png",  // NOI18N
                 true);
     }
     private Action getCreateSpouseActions(){
@@ -274,24 +273,24 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return AActions.alwaysEnabled(
                 action,
                 "",
-                "Ajouter un conjoint",
-                "ancestris/modules/editors/standard/images/add-spouse.png",
+                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addspouse.title"),
+                "ancestris/modules/editors/standard/images/add-spouse.png",  // NOI18N
                 true);
     }
     private Action getUnlinkSpouseAction(){
         return AActions.alwaysEnabled(
                 NOOP_ACTION,
                 "",
-                "Supprimer le liens vers un conjoint",
-                "ancestris/modules/editors/standard/images/unlink-spouse.png",
+                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkspouse.title"),
+                "ancestris/modules/editors/standard/images/unlink-spouse.png",  // NOI18N
                 true);
     }
     private Action getUnlinkFamcAction(){
         return AActions.alwaysEnabled(
                 NOOP_ACTION,
                 "",
-                "Supprimer le liens avec les parents",
-                "ancestris/modules/editors/standard/images/unlink-famc.png",
+                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkparents.title"),
+                "ancestris/modules/editors/standard/images/unlink-famc.png",  // NOI18N
                 true);
     }
 
@@ -299,8 +298,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
         return AActions.alwaysEnabled(
                 NOOP_ACTION,
                 "",
-                "Ajouter un frère ou un soeur",
-                "ancestris/modules/editors/standard/images/add-sibling.png",
+                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addsibling.title"),
+                "ancestris/modules/editors/standard/images/add-sibling.png",  // NOI18N
                 true);
     }
 
@@ -854,8 +853,8 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
 
         public EntitiesPanel(JScrollPane pane) {
             super();
-            setBlueprint(Gedcom.INDI, "<body bgcolor=#ffffe3>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI.cell"));
-            setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM.cell"));
+            setBlueprint(Gedcom.INDI, "<body bgcolor=#ffffe3>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI.cell"));  // NOI18N
+            setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM.cell"));  // NOI18N
             setBackground(java.awt.Color.white);
             setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
             pane.setViewportView(this);
@@ -870,7 +869,7 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
                 add(getEntities(rootProperty), exclude, new ABeanHandler());
             }
             if (listener != null) {
-                JButton createBtn = new JButton("Ajouter");
+                JButton createBtn = new JButton(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "button.add.title"));
                 createBtn.addMouseListener(listener);
                 add(createBtn);
             }

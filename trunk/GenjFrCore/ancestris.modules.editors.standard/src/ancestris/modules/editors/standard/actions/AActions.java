@@ -79,7 +79,7 @@ public class AActions{
 
         Method alwaysEnabledMethod = null;
         try {
-            alwaysEnabledMethod = Actions.class.getDeclaredMethod("alwaysEnabled", Map.class);
+            alwaysEnabledMethod = Actions.class.getDeclaredMethod("alwaysEnabled", Map.class);  // NOI18N
             alwaysEnabledMethod.setAccessible(true);
             return (Action) alwaysEnabledMethod.invoke(Action.class, map);
         } catch (Exception ex) {
