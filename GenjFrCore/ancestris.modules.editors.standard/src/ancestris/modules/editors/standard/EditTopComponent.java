@@ -34,7 +34,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = GenjViewInterface.class)
 public final class EditTopComponent extends AncestrisTopComponent implements ActionProvider, SelectionListener {
 
-    private static final String PREFERRED_ID = "EditTopComponent";
+    private static final String PREFERRED_ID = "EditTopComponent";  // NOI18N
     private static EditTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
     EventsPanel eventsPanel = new EventsPanel();
@@ -44,15 +44,15 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     @Override
     public boolean createPanel() {
         editorPanel = new JTabbedPane();
-        editorPanel.addTab("Entity", familyPanel);
-        editorPanel.addTab("Event", eventsPanel);
+        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.entity.title"), familyPanel);
+        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.event.title"), eventsPanel);
 //        editorPanel.addTab("Gedcom", gedcomPanel);
         setContext(getContext(), true);
         return true;
     }
 
     public String getDefaultFactoryMode() {
-        return "genjfr-editor";
+        return "genjfr-editor"; // NOI18N
     }
 
     /** This method is called from within the constructor to
@@ -130,7 +130,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
 
         public OpenInEditor(Context context) {
             this.context = context;
-            setText(ResourcesSupport.getTitle("OpenInEditor"));
+            setText(ResourcesSupport.getTitle("OpenInEditor")); // NOI18N
             setImage(ResourcesSupport.editorIcon);
         }
 

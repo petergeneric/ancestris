@@ -59,7 +59,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
         public OpenInEditor(EditTopComponent editor, Context context) {
             this.editor = editor;
             this.context = context;
-            setText(ResourcesSupport.getTitle("OpenInEditor"));
+            setText(ResourcesSupport.getTitle("OpenInEditor"));  // NOI18N
             setImage(ResourcesSupport.editorIcon);
         }
 

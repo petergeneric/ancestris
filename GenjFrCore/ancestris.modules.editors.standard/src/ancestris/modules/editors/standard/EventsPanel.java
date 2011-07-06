@@ -12,8 +12,6 @@
 package ancestris.modules.editors.standard;
 
 import ancestris.modules.editors.standard.actions.ACreateParent;
-import ancestris.modules.editors.standard.actions.ACreateChild;
-import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AFamBean;
@@ -38,7 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import ancestris.modules.editors.standard.actions.AActions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import java.util.ArrayList;
@@ -56,7 +53,6 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.fams.empty");
-    private final static String VOID_BP = "";
     private Context context;
     private Indi focusIndi;
     private final EntitiesPanel eventsPanel;
@@ -76,7 +72,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
         handler.setEditOnClick(true);
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(EventsPanel.class, "blueprint.INDI"));
+        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(EventsPanel.class, "blueprint.INDI")); // NOI18N
 
         // Events
         eventsPanel = new EntitiesPanel(jsEvents) {
@@ -94,7 +90,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
                 return null;
             }
         };
-        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");
+        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
     }
 
     public void setContext(Context context) {
@@ -135,7 +131,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
 
     @Override
     public String getName() {
-        return "Liste des evenements";
+        return org.openide.util.NbBundle.getMessage(EventsPanel.class, "events.panel.title");
     }
 
     /** This method is called from within the constructor to
@@ -429,8 +425,8 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
 
         public EntitiesPanel(JScrollPane pane) {
             super();
-            setBlueprint(Gedcom.INDI, "<body bgcolor=#ffffe3>" + NbBundle.getMessage(EventsPanel.class, "blueprint.INDI.cell"));
-            setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(EventsPanel.class, "blueprint.FAM.cell"));
+            setBlueprint(Gedcom.INDI, "<body bgcolor=#ffffe3>" + NbBundle.getMessage(EventsPanel.class, "blueprint.INDI.cell"));  // NOI18N
+            setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(EventsPanel.class, "blueprint.FAM.cell"));  // NOI18N
             setBackground(java.awt.Color.white);
             setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
             pane.setViewportView(this);
@@ -445,7 +441,7 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
                 add(getEntities(rootProperty), exclude, new ABeanHandler());
             }
             if (listener != null) {
-                JButton createBtn = new JButton("Ajouter");
+                JButton createBtn = new JButton(org.openide.util.NbBundle.getMessage(EventsPanel.class, "button.add.title"));
                 createBtn.addMouseListener(listener);
                 add(createBtn);
             }
