@@ -16,41 +16,31 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cpostLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="city" alignment="1" pref="242" max="32767" attributes="2"/>
-                          <Component id="address" alignment="0" pref="242" max="32767" attributes="3"/>
-                          <Component id="cpost" alignment="0" pref="242" max="32767" attributes="2"/>
-                          <Component id="country" alignment="1" pref="242" max="32767" attributes="2"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="stateLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
-                      <Component id="state" pref="241" max="32767" attributes="2"/>
-                  </Group>
+                  <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="stateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cpostLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="state" alignment="0" pref="157" max="32767" attributes="2"/>
+                  <Component id="city" alignment="1" pref="157" max="32767" attributes="2"/>
+                  <Component id="address" alignment="0" pref="157" max="32767" attributes="3"/>
+                  <Component id="cpost" alignment="0" pref="157" max="32767" attributes="2"/>
+                  <Component id="country" alignment="1" pref="157" max="32767" attributes="2"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="addressLabel" min="-2" max="-2" attributes="0"/>
-                  <Component id="address" pref="99" max="32767" attributes="0"/>
+                  <Component id="address" pref="106" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -64,15 +54,14 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="state" min="-2" max="-2" attributes="0"/>
                   <Component id="stateLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="state" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="country" min="-2" max="-2" attributes="0"/>
                   <Component id="countryLabel" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
