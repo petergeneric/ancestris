@@ -48,14 +48,13 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
   
   /** singleton constructor */
   private GedcomDirectory() {
-      GenjFrPlugin.register(this);
   }
 
   /** singleton accessor */
   public static GedcomDirectory getInstance() {
       if (instance == null) {
           instance  = new GedcomDirectory();
-//FIXME: a effacer        GenjFrPlugin.register(instance);
+          GenjFrPlugin.register(instance);
       }
     return instance;
   }
@@ -187,16 +186,6 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
           return null;
       }
   }
-
-  /**
-   * @deprecated use updateModified(gedcom) and let gedcomObject set its modified state using its own data
-   * @param g
-   * @param modified
-   */
-  @Deprecated
-  public void setModified(Gedcom g, boolean  modified){
-          gedcomsOpened.get(g).getDummyNode().fire(modified);
-    }
 
     public void updateModified(Gedcom gedcom){
       try {
