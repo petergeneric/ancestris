@@ -68,6 +68,7 @@ public class NewGedcomAction extends AbstractAction {
             if ( context != null){
                 Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
                 GedcomDirectory.getInstance().registerGedcom(context);
+                GedcomDirectory.getInstance().updateModified(context.getGedcom());
                 WorkbenchHelper.openDefaultViews(firstIndiContext);
                 SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
             }

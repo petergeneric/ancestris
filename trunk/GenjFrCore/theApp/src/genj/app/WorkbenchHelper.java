@@ -108,13 +108,14 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
         commitRequested(workbench, context);
     }
 
-    public void saveGedcom(Context context) {
+    public boolean saveGedcom(Context context) {
         if (context != null && context.getGedcom().getOrigin() == null)
-            saveAsGedcom(context);
-        workbench.saveGedcom(context);
+            return saveAsGedcom(context);
+        else
+            return workbench.saveGedcom(context);
     }
 
-    public void saveAsGedcom(Context context) {
+    public boolean saveAsGedcom(Context context) {
         Origin o = workbench.saveAsGedcom(context);
         if (o != null) {
             try {
@@ -122,12 +123,13 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            return true;
         } else {
-
             if (context != null) {
                 GedcomDirectory.getInstance().unregisterGedcom(context);
                 GedcomDirectory.getInstance().registerGedcom(context);
             }
+            return false;
         }
     }
 
@@ -251,6 +253,7 @@ public class WorkbenchHelper /*extends JPanel*/ implements SelectionSink, IWorkb
             if (firstIndi == null){
                 firstIndi = (Indi) context.getGedcom().createEntity(Gedcom.INDI);
             }
+            GedcomDirectory.getInstance().updateModified(gedcom);
             openDefaultViews(new Context(firstIndi));
             SelectionSink.Dispatcher.fireSelection((Component) null, new Context(firstIndi), true);
         } catch (Exception e) {

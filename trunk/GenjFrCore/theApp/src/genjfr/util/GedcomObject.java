@@ -71,7 +71,7 @@ public class GedcomObject {
             @Override
             public void save() throws IOException {
                 App.workbenchHelper.saveGedcom(getContext());
-                fire(false);
+                fire(getContext().getGedcom().hasChanged());
             }
         }
 
