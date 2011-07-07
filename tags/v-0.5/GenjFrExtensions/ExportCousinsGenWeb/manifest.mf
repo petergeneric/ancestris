@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.ancestris.ancestrisexports.cousinsgenweb
+OpenIDE-Module-Layer: org/ancestris/ancestrisexports/cousinsgenweb/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/ancestris/ancestrisexports/cousinsgenweb/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

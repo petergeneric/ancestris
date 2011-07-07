@@ -1,0 +1,69 @@
+<HTML>
+<BODY>
+
+<h2><a href="../views.html">Vues</a> - Visualisation des Rapports</h2>
+
+<P>
+Un Rapport (Script) est une classe Java qui met en oeuvre une 
+interface pour GenJ. Les Rapports doivent &ecirc;tre plac&eacute;s dans 
+le sous r&eacute;pertoire <b>./reports</b>, ils seront ainsi charg&eacute;s 
+de mani&egrave;re dynamique par GenJ. D&eacute;s que vous ouvrez la 
+fen&ecirc;tre des Rapports (Scripts), une liste de tous rapports disponibles 
+est affich&eacute;e. Il vous suffit de cliquer sur un des scripts 
+pr&eacute;sent&eacute;s dans cette liste, et une description sommaire 
+ainsi que le num&eacute;ro de version et le nom de l'auteur de ce script 
+vous seront affich&eacute;s sur la partie droite.
+</P>
+
+<P>
+Les boutons vous permettent de d&eacute;marrer le script, de 
+l'arr&ecirc;ter si il a &eacute;t&eacute; lanc&eacute;, de fermer la 
+fen&ecirc;tre, de sauvegarder les informations qu'il vous affiche, de 
+recharger tous les scripts disponibles au cas o&ugrave; ils auraient 
+&eacute;t&eacute; modifi&eacute;s sur votre disque. Conservez toujours 
+&agrave; l'esprit que le rapport (le script) utilise les donn&eacute;es 
+du fichier Gedcom &agrave; partir duquel on a lanc&eacute; l'ouverture 
+de cette fen&ecirc;tre de visualisation des rapports (ex. Si vous avez 
+lanc&eacute; l'affichage de l'arbre g&eacute;n&eacute;alogique du 
+fichier gedcom "nils.ged", qu'ensuite vous avez ouvert cette fen&ecirc;tre 
+des rapports, et que par la suite vous avez demand&eacute; l'affichage de 
+l'arbre g&eacute;n&eacute;alogique du fichier gedcom "fran&ccedil;ois.ged", 
+les rapports que vous pourrez lancer seront bas&eacute;s sur "nils.ged" et 
+non "fran&ccedil;ois.ged". Si vous voulez que les rapports soient ceux de 
+"fran&ccedil;ois.ged", il vous faut fermer la fen&ecirc;tre des rapports, 
+mettre en premier plan le fichier gedcom "fran&ccedil;ois.ged", et 
+r&eacute;ouvrir la fen&ecirc;tre des rapports).
+</P>
+
+<P>
+Selon le type de rapport, l'affichage va passer sur l'onglet r&eacute;sultat 
+d&eacute;s qu'il aura &eacute;t&eacute; lanc&eacute;. Un rapport peut 
+&ecirc;tre de type console ou fen&ecirc;tr&eacute;. Le premier se contente 
+d'&eacute;crire vers la sortie classique qui est ensuite captur&eacute;e 
+et pr&eacute;sent&eacute;e sur cet onglet particulier (le r&eacute;sultat 
+peut d'ailleurs &ecirc;tre sauvegard&eacute; ult&eacute;rieurement). Le 
+deuxi&egrave;me type (fen&ecirc;tr&eacute;) est cens&eacute; afficher un 
+r&eacute;sultat mis en forme, travaill&eacute;, ind&eacute;pendamment de 
+la sortie standard.
+</P>
+
+<P>
+Pour en apprendre un peu sur ce que les rapports peuvent faire et comment 
+&eacute;crire vos propres scripts, jetez un coup d'oeil 
+<A href="../special/report.html">ici</A>.
+</P>
+
+<h3><u>Barre d'Outils</u></h3>
+ Cette vue n'offre aucune barre d'outils.
+
+<h3><u>Param&egrave;trages</u></h3>
+ Cette vue n'offre aucun param&egrave;tre configurable.<Br>
+ <i><Font color="red"><b>Cependant</b></Font> un 
+ certain nombre de rapports ont des options qui peuvent &ecirc;tre 
+ param&eacute;tr&eacute;es (vous les trouverez si il y en a, dans 
+ l'onglet "Options")</i>.
+
+<Br>
+
+</BODY>
+</HTML>
