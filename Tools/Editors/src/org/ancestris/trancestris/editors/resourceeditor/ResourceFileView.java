@@ -38,7 +38,13 @@ public class ResourceFileView extends JList {
             }
             label.setBackground(flag ? jlist.getSelectionBackground() : jlist.getBackground());
             label.setForeground(flag ? jlist.getSelectionForeground() : color);
-            label.setText(obj.toString());
+            String LabelText = "<HTML>";
+            for (String line : obj.toString().split("\\n")) {
+                LabelText += line + "<BR>";
+            }
+            LabelText += "</HTML>";
+
+            label.setText(LabelText);
             return label;
         }
         private JLabel label;
