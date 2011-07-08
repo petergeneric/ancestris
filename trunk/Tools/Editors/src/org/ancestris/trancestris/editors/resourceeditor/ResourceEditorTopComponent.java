@@ -56,9 +56,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 s = resourcefile.getLineTranslation(i);
             }
             jTextAreaTranslation.setText(s);
-            jTextAreaTranslation.setEditable(flag);
+            jTextAreaTranslation.setEditable(true);
             jTextAreaTranslation.setCaretPosition(0);
-            jButtonConfirm.setEnabled(flag);
+            jButtonConfirm.setEnabled(true);
         }
     }
     private static ResourceEditorTopComponent instance;
