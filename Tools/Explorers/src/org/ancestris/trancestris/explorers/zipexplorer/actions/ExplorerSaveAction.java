@@ -21,7 +21,7 @@ public final class ExplorerSaveAction implements ActionListener {
             if (file.exists() == false) {
                 file.createNewFile();
             }
-            zipArchive.write(file, null);
+            zipArchive.write();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
