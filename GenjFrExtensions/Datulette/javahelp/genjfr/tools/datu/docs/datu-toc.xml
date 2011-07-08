@@ -6,6 +6,6 @@ and open the template in the editor.
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
     <tocitem text="Datulette">
-        <tocitem text="About Datulette" target="genjfr.tools.datu.about"/>
+        <tocitem text="Datulette - Présentation" target="genjfr.tools.datu.about"/>
     </tocitem>
 </toc>
