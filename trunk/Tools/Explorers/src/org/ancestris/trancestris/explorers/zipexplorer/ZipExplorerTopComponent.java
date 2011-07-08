@@ -16,6 +16,11 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Top component which displays something.
@@ -29,7 +34,9 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     static final String ICON_PATH = "org/ancestris/trancestris/explorers/zipexplorer/actions/zip-icon.png";
     private static final String PREFERRED_ID = "ZipExplorerTopComponent";
     private ExplorerManager zipExplorerManager = null;
-    ZipArchive zipFile;
+    private ZipArchive zipFile = null;
+    private InstanceContent content = new InstanceContent();
+    private final ProxyLookup proxyLookup;
 
     public ZipExplorerTopComponent() {
         initComponents();
@@ -41,7 +48,12 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
         zipExplorerManager = new ExplorerManager();
         ((BeanTreeView) beanTreeView).setRootVisible(false);
-        associateLookup(ExplorerUtils.createLookup(zipExplorerManager, getActionMap()));
+//        associateLookup(ExplorerUtils.createLookup(zipExplorerManager, getActionMap()));
+//        ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
+//        setActivatedNodes(new Node[]{newZipRootNode});
+        Lookup lookup = ExplorerUtils.createLookup(zipExplorerManager, getActionMap());
+        proxyLookup = new ProxyLookup(lookup, new AbstractLookup(content));
+        associateLookup(proxyLookup);
     }
 
     /** This method is called from within the constructor to
@@ -138,11 +150,12 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     public void setBundles(ZipArchive zipFile) {
-        ZipRootNode newZipRootNode = new ZipRootNode(zipFile);
+        ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
         zipExplorerManager.setRootContext(newZipRootNode);
         ((BeanTreeView) beanTreeView).setRootVisible(true);
-        setActivatedNodes(new Node[]{newZipRootNode});
+        content.add(newZipRootNode);
         this.zipFile = zipFile;
+
     }
 
     public ZipArchive getBundles() {
