@@ -173,9 +173,12 @@ public class Entity extends Property {
     
     if (!(other instanceof Entity))
       throw new IllegalArgumentException("Cannot compare entity to property");
-    
-//    return getID() - ((Entity)other).getID();
-    return id.compareToIgnoreCase(((Entity)other).id);
+
+    try{
+        return getID() - ((Entity)other).getID();
+    } catch (NumberFormatException e) {
+        return id.compareToIgnoreCase(((Entity)other).id);
+    }
   }
 
   /**
