@@ -17,11 +17,14 @@ public class ZipArchive {
 
     private static final Logger logger = Logger.getLogger(ZipArchive.class.getName());
     private ZipDirectory root;
-    private String zipName = "";
+    private String zipFileName = "";
+    private File zipFile = null;
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
-        zipName = inputFile.getName();
-        root = new ZipDirectory("");
+        this.zipFile = inputFile;
+        this.zipFileName = inputFile.getName();
+        this.root = new ZipDirectory("");
+        
         try {
             ZipFile zipInputFile = new ZipFile(inputFile);
 
@@ -43,9 +46,9 @@ public class ZipArchive {
         root.setTranslation(fromLocale, toLocale);
     }
 
-    public void write(File outputFile, String s) {
+    public void write() {
         try {
-            ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+            ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
             root.writeTo(outputStream, "");
             outputStream.close();
         } catch (IOException ioe) {
@@ -58,6 +61,6 @@ public class ZipArchive {
     }
 
     public String getName() {
-        return this.zipName;
+        return this.zipFileName;
     }
 }

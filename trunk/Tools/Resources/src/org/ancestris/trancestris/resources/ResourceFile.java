@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -28,22 +26,22 @@ public class ResourceFile {
     private String fromBundleName = "";
     private String toBundleName = "";
     private File DefaultLangageFile = null;
-    private Properties defaultLangage = new Properties();
-    private Properties translatedLangage = new Properties();
-    private ArrayList<ResourceLine> content = null;
+    private ResourceStructure defaultLangage = null;
+    private ResourceStructure translatedLangage = null;
+    private ArrayList<String> content = null;
     private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
-    private TreeMap<String, Properties> resourceFiles = new TreeMap();
+    private TreeMap<String, ResourceStructure> resourceFiles = new <String, ResourceStructure>TreeMap();
 
     ResourceFile() {
         not_translated = 0;
     }
 
     public void put(InputStream inputStream, String bundleName) throws IOException {
-        Properties properties = new Properties();
-
-        properties.load(inputStream);
-        resourceFiles.put(bundleName, properties);
+        ResourceParser resourceParser = new ResourceParser(inputStream);
+        resourceParser.initParser();
+        ResourceStructure resourceStructure = resourceParser.parseFile();
+        resourceFiles.put(bundleName, resourceStructure);
     }
 
     public Set<String> getFiles() {
@@ -51,17 +49,18 @@ public class ResourceFile {
     }
 
     public void writeTo(OutputStream outputStream, String bundleName) throws IOException {
-        Properties properties = null;
+
+        ResourceStructure resourceStructure;
         if (bundleName.equals(toBundleName)) {
-            properties = translatedLangage;
+            resourceStructure = translatedLangage;
         } else {
-            properties = resourceFiles.get(bundleName);
+            resourceStructure = resourceFiles.get(bundleName);
         }
-        properties.store(outputStream, "Translated with Trancetris");
+        
+        outputStream.write(resourceStructure.getBundleString().getBytes());
     }
 
     void setTranslation(Locale fromLocale, Locale toLocale) {
-        Iterator it = null;
 
         if (fromLocale.getLanguage().equals("en")) {
             fromBundleName = PREFIX + SUFFIX;
@@ -71,13 +70,8 @@ public class ResourceFile {
 
         defaultLangage = resourceFiles.get(fromBundleName);
         if (defaultLangage != null) {
-            content = new ArrayList<ResourceLine>(defaultLangage.size());
-            it = defaultLangage.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                content.add(new ResourceLine((String) pairs.getKey(), (String) pairs.getValue()));
-            }
 
+            content = new<String> ArrayList(defaultLangage.keySet());
             if (toLocale.getLanguage().equals("en")) {
                 toBundleName = PREFIX + SUFFIX;
             } else {
@@ -86,14 +80,14 @@ public class ResourceFile {
 
             translatedLangage = resourceFiles.get(toBundleName);
             if (translatedLangage == null) {
-                translatedLangage = new Properties();
+                translatedLangage = new ResourceStructure();
                 resourceFiles.put(toBundleName, translatedLangage);
             }
 
-            it = defaultLangage.entrySet().iterator();
+            Iterator<ResourceItem.ResourceLine> it = defaultLangage.iterator();
             while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                if (translatedLangage.getProperty((String) pairs.getKey()) != null) {
+                ResourceItem.ResourceLine line = it.next();
+                if (translatedLangage.getLine(line.getKey()) != null) {
                     not_translated = Math.max(0, not_translated - 1);
                 }
             }
@@ -109,36 +103,39 @@ public class ResourceFile {
     }
 
     public String getLine(int i) {
-        return content.get(i).propertyValue;
+        ResourceItem.ResourceLine line = defaultLangage.getLine(content.get(i));
+        String comment = line.getComment();
+        String value = line.getValue();
+        
+        return line.getComment() + "\n" + line.getValue();
     }
 
     public String getLineTranslation(int i) {
-        String key = content.get(i).getKey();
-        String s2 = (String) translatedLangage.get(key);
-        if (s2 != null) {
-            return s2;
-        } else {
-            return "";
-        }
+        ResourceItem.ResourceLine line = translatedLangage.getLine(content.get(i));
+
+        return line == null ? "" : line.getValue();
     }
 
     public void setLineTranslation(int i, String s) {
-        String key = content.get(i).getKey();
-        String old = content.get(i).getValue();
-        if (translatedLangage.get(key) == null) {
+        ResourceItem.ResourceLine old = translatedLangage.getLine(content.get(i));
+        ResourceItem.ResourceLine line = null;
+        if (old == null) {
             not_translated--;
+            translatedLangage.put(content.get(i), s, "");
+        } else {
+            translatedLangage.put(old.getKey(), s, old.getComment());
+            line = new ResourceItem.ResourceLine(old.getPropertyKey(), new ResourceItem.PropertyValue(s), old.getPropertyComment());
         }
-        translatedLangage.put(key, s);
 
-        fire(key, old, s);
+
+        fire(content.get(i), old, s);
     }
 
     public int getLineState(int i) {
-
-        if (translatedLangage.containsKey(content.get(i).getKey()) == true) {
-            String Origin = defaultLangage.getProperty(content.get(i).getKey());
-
-            if (Origin.equalsIgnoreCase(translatedLangage.getProperty(content.get(i).getKey()))) {
+        if (translatedLangage.getLine(content.get(i)) != null) {
+            String from = defaultLangage.getLine(content.get(i)).getValue();
+            String to = translatedLangage.getLine(content.get(i)) != null ? translatedLangage.getLine(content.get(i)).getValue() : "";
+            if (from.equalsIgnoreCase(to)) {
                 return -1;
             } else {
                 return 1;
