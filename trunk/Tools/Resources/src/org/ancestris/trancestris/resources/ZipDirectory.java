@@ -6,24 +6,32 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipDirectory {
 
+    private static final Logger logger = Logger.getLogger(ZipDirectory.class.getName());
     private String directoryName;
     private ResourceFile resourceFile = null;
     private LinkedHashMap<String, ZipDirectory> dirs;
 
     public ZipDirectory(String name) {
+        logger.log(Level.INFO, "New directory {0}", name);
+
         dirs = new LinkedHashMap<String, ZipDirectory>();
         this.directoryName = name;
     }
 
     void writeTo(ZipOutputStream zipoutputstream, String path) throws IOException {
         if (resourceFile != null) {
+
             for (String fileName : resourceFile.getFiles()) {
                 ZipEntry zipentry = null;
+
+                logger.log(Level.INFO, "Save File {0}", fileName);
 
                 if (path.isEmpty() == true) {
                     zipentry = new ZipEntry(directoryName + "/" + fileName);
@@ -53,6 +61,7 @@ public class ZipDirectory {
     void put(StringTokenizer tokenizefilePath, InputStream inputstream) throws IOException {
         String token = tokenizefilePath.nextToken();
         if (!tokenizefilePath.hasMoreTokens()) {
+            logger.log(Level.INFO, "Add File {0}", token);
             if (this.resourceFile == null) {
                 this.resourceFile = new ResourceFile();
             }
@@ -61,6 +70,8 @@ public class ZipDirectory {
             if (dirs.containsKey(token) == true) {
                 dirs.get(token).put(tokenizefilePath, inputstream);
             } else {
+                logger.log(Level.INFO, "Add dir {0}", token);
+
                 ZipDirectory zipDirectory = new ZipDirectory(token);
                 dirs.put(token, zipDirectory);
                 zipDirectory.put(tokenizefilePath, inputstream);
