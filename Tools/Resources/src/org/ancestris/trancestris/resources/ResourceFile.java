@@ -34,7 +34,7 @@ public class ResourceFile {
     private ArrayList<String> content = null;
     private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
-    private TreeMap<String, ResourceStructure> resourceFiles = new <String, ResourceStructure>TreeMap();
+    private TreeMap<String, ResourceStructure> resourceFiles = new TreeMap();
 
     ResourceFile() {
         not_translated = 0;
@@ -76,7 +76,7 @@ public class ResourceFile {
         defaultLangage = resourceFiles.get(fromBundleName);
         if (defaultLangage != null) {
 
-            content = new <String>ArrayList(defaultLangage.keySet());
+            content = new ArrayList(defaultLangage.keySet());
             if (toLocale.getLanguage().equals("en")) {
                 toBundleName = PREFIX + SUFFIX;
             } else {
