@@ -112,7 +112,7 @@ public class ResourceFile {
         String comment = line.getComment();
         String value = line.getValue();
 
-        return (comment == null ? "" : comment + "\n") + (value == null ? "" : value);
+        return (comment == null ? "" : comment) + (value == null ? "" : value);
     }
 
     public String getLineTranslation(int i) {
