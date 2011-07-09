@@ -35,6 +35,8 @@ public class ResourceFile {
     private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
     private TreeMap<String, ResourceStructure> resourceFiles = new TreeMap();
+    private boolean modified = false;
+    private boolean translationCreated = false;
 
     ResourceFile() {
         not_translated = 0;
@@ -52,17 +54,16 @@ public class ResourceFile {
     }
 
     public void writeTo(OutputStream outputStream, String bundleName) throws IOException {
-
-        ResourceStructure resourceStructure;
-        if (bundleName.equals(toBundleName)) {
-            resourceStructure = translatedLangage;
-        } else {
-            resourceStructure = resourceFiles.get(bundleName);
-        }
-
+        
         logger.log(Level.INFO, "Save file {0}", bundleName);
 
-        outputStream.write(resourceStructure.getBundleString().getBytes());
+        if (bundleName.equals(toBundleName)) {
+            if (translationCreated == false || (translationCreated == true && modified == true)) {
+                outputStream.write(translatedLangage.getBundleString().getBytes());
+            }
+        } else {
+            outputStream.write(resourceFiles.get(bundleName).getBundleString().getBytes());
+        }
     }
 
     void setTranslation(Locale fromLocale, Locale toLocale) {
@@ -87,6 +88,7 @@ public class ResourceFile {
             if (translatedLangage == null) {
                 translatedLangage = new ResourceStructure();
                 resourceFiles.put(toBundleName, translatedLangage);
+                translationCreated = true;
             }
 
             Iterator<ResourceItem.ResourceLine> it = defaultLangage.iterator();
@@ -132,7 +134,7 @@ public class ResourceFile {
         } else {
             translatedLangage.put(key, value, comment);
         }
-
+        modified = true;
         fire(content.get(i), old, s);
     }
 
