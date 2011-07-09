@@ -4,6 +4,7 @@
  */
 package org.ancestris.trancestris.explorers.zipexplorer;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.util.NbBundle;
@@ -14,12 +15,10 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
@@ -29,6 +28,7 @@ import org.openide.util.lookup.ProxyLookup;
 autostore = false)
 public final class ZipExplorerTopComponent extends TopComponent implements ExplorerManager.Provider {
 
+    private static final Logger logger = Logger.getLogger(ZipExplorerTopComponent.class.getName());
     private static ZipExplorerTopComponent instance;
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "org/ancestris/trancestris/explorers/zipexplorer/actions/zip-icon.png";
@@ -91,14 +91,14 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     public static synchronized ZipExplorerTopComponent findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
         if (win == null) {
-            Logger.getLogger(ZipExplorerTopComponent.class.getName()).warning(
+            logger.warning(
                     "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
             return getDefault();
         }
         if (win instanceof ZipExplorerTopComponent) {
             return (ZipExplorerTopComponent) win;
         }
-        Logger.getLogger(ZipExplorerTopComponent.class.getName()).warning(
+        logger.warning(
                 "There seem to be multiple components with the '" + PREFERRED_ID
                 + "' ID. That is a potential source of errors and unexpected behavior.");
         return getDefault();
@@ -153,9 +153,9 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
         zipExplorerManager.setRootContext(newZipRootNode);
         ((BeanTreeView) beanTreeView).setRootVisible(true);
+        logger.log(Level.INFO, "add lookup");
         content.add(newZipRootNode);
         this.zipFile = zipFile;
-
     }
 
     public ZipArchive getBundles() {

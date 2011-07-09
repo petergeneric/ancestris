@@ -7,6 +7,8 @@ package org.ancestris.trancestris.explorers.zipexplorer;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -22,6 +24,7 @@ import org.openide.util.lookup.InstanceContent;
  */
 public class ZipRootNode extends AbstractNode implements PropertyChangeListener, SaveCookie {
 
+    private static final Logger logger = Logger.getLogger(ZipRootNode.class.getName());
     private boolean change = false;
     InstanceContent content;
 
@@ -34,6 +37,7 @@ public class ZipRootNode extends AbstractNode implements PropertyChangeListener,
 
     @Override
     public Node.Cookie getCookie(Class type) {
+        logger.entering(ZipRootNode.class.getName(), "getCookie", type);
         if (type == SaveCookie.class && change == true) {
             return this;
         } else {
@@ -42,11 +46,14 @@ public class ZipRootNode extends AbstractNode implements PropertyChangeListener,
     }
 
     public void fire(boolean modified) {
+        logger.entering(ZipRootNode.class.getName(), "fire", modified);
         content.add(this);
     }
 
     @Override
     public void save() throws IOException {
+        logger.entering(ZipRootNode.class.getName(), "save");
+        logger.log(Level.INFO, "Save file {0}");
         Confirmation msg = new NotifyDescriptor.Confirmation("Do you want to save ?", NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE);
 
         Object result = DialogDisplayer.getDefault().notify(msg);
@@ -64,6 +71,6 @@ public class ZipRootNode extends AbstractNode implements PropertyChangeListener,
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         change = true;
-        fire (true);
+        fire(true);
     }
 }
