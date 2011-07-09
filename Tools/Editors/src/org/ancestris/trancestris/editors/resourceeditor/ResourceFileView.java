@@ -13,19 +13,19 @@ public class ResourceFileView extends JList {
 
     private class LRenderer extends JTextArea implements ListCellRenderer {
 
-        private JTextArea cell;
+        private JTextArea cellRenderer;
 
         @Override
-        public Component getListCellRendererComponent(JList jlist, Object obj, int i, boolean flag, boolean flag1) {
-            if (cell == null) {
-                cell = new JTextArea();
-                cell.setFont(jlist.getFont());
-                cell.setOpaque(true);
+        public Component getListCellRendererComponent(JList jlist, Object obj, int index, boolean isSelected, boolean cellHasFocus) {
+            if (cellRenderer == null) {
+                cellRenderer = new JTextArea();
+                cellRenderer.setFont(jlist.getFont());
+                cellRenderer.setOpaque(true);
             }
 
-            String s = file.getLineTranslation(i);
+            String s = file.getLineTranslation(index);
             Color color;
-            switch (file.getLineState(i)) {
+            switch (file.getLineState(index)) {
                 case -1:
                     color = Color.blue;
                     break;
@@ -39,11 +39,16 @@ public class ResourceFileView extends JList {
                     color = jlist.getForeground();
                     break;
             }
-            cell.setBackground(flag ? jlist.getSelectionBackground() : jlist.getBackground());
-            cell.setForeground(flag ? jlist.getSelectionForeground() : color);
+            if (isSelected) {
+                cellRenderer.setForeground(Color.white);
+                cellRenderer.setBackground(jlist.getSelectionBackground());
+            } else {
+                cellRenderer.setForeground(color);
+                cellRenderer.setBackground(jlist.getBackground());
+            }
 
-            cell.setText( obj.toString());
-            return cell;
+            cellRenderer.setText(obj.toString());
+            return cellRenderer;
         }
 
         private LRenderer() {
