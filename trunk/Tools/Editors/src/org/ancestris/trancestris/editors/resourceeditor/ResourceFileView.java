@@ -11,15 +11,18 @@ import org.ancestris.trancestris.resources.ResourceFile;
 
 public class ResourceFileView extends JList {
 
-    private class LRenderer extends JLabel implements ListCellRenderer {
+    private class LRenderer extends JTextArea implements ListCellRenderer {
+
+        private JTextArea cell;
 
         @Override
         public Component getListCellRendererComponent(JList jlist, Object obj, int i, boolean flag, boolean flag1) {
-            if (label == null) {
-                label = new JLabel();
-                label.setFont(jlist.getFont());
-                label.setOpaque(true);
+            if (cell == null) {
+                cell = new JTextArea();
+                cell.setFont(jlist.getFont());
+                cell.setOpaque(true);
             }
+
             String s = file.getLineTranslation(i);
             Color color;
             switch (file.getLineState(i)) {
@@ -36,18 +39,12 @@ public class ResourceFileView extends JList {
                     color = jlist.getForeground();
                     break;
             }
-            label.setBackground(flag ? jlist.getSelectionBackground() : jlist.getBackground());
-            label.setForeground(flag ? jlist.getSelectionForeground() : color);
-            String LabelText = "<HTML>";
-            for (String line : obj.toString().split("\\n")) {
-                LabelText += line + "<BR>";
-            }
-            LabelText += "</HTML>";
+            cell.setBackground(flag ? jlist.getSelectionBackground() : jlist.getBackground());
+            cell.setForeground(flag ? jlist.getSelectionForeground() : color);
 
-            label.setText(LabelText);
-            return label;
+            cell.setText( obj.toString());
+            return cell;
         }
-        private JLabel label;
 
         private LRenderer() {
         }
