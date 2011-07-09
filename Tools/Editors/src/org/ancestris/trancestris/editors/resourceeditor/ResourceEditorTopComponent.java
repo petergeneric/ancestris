@@ -210,9 +210,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         if (!c.isEmpty()) {
             for (Iterator i = c.iterator(); i.hasNext();) {
                 ZipDirectory zipDirectory = (ZipDirectory) i.next();
-                if (zipDirectory.getResourceFile() != null) {
-                    resourceFileView.setResourceFile(zipDirectory.getResourceFile());
-                }
+                resourceFileView.setResourceFile(zipDirectory.getResourceFile());
             }
         }
     }
