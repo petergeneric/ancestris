@@ -107,9 +107,10 @@ public abstract class ResourceItem {
         @Override
         public String getStringValue() {
             String comment = "";
-            for (String line : value.split( "\\r?\\n")) {
+            for (String line : value.split("\\r?\\n")) {
                 comment += "# " + line + "\n";
             }
+
             return comment;
         }
     }
@@ -139,9 +140,10 @@ public abstract class ResourceItem {
          * @return the string
          */
         public String getResourceLine() {
-            return (comment == null) ? "" : comment.getStringValue() + "\n" + // NOI18N
-                    ((key == null) ? "" : key.getStringValue()) + // NOI18N
-                    ((value == null) ? "" : value.getStringValue()) + "\n"; // NOI18N
+            String sComment = (comment == null) ? "" : comment.getStringValue(); // NOI18N
+            String sKey = (key == null) ? "" : key.getStringValue(); // NOI18N
+            String sValue = (value == null) ? "" : value.getStringValue(); // NOI18N
+            return sComment + sKey + sValue + "\n";
         }
 
         /** Returns the key element for this item. */
@@ -173,7 +175,7 @@ public abstract class ResourceItem {
 
         /** Get the comment for this item */
         public String getComment() {
-            return (comment == null) ? null : comment.getStringValue ();
+            return (comment == null) ? null : comment.getStringValue();
         }
     }
 }

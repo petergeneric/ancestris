@@ -49,7 +49,7 @@ public class ResourceParser {
      * @exception IOException if any i/o problem occured during reading
      */
     private ResourceReader createReader() throws IOException {
-        return new ResourceReader(new InputStreamReader (inputStream));
+        return new ResourceReader(new InputStreamReader(inputStream));
     }
 
     /** Parses .properties file specified by <code>pfe</code> and resets its properties
@@ -120,9 +120,9 @@ public class ResourceParser {
      * Reads next element from input stream.
      * @return next element or null if the end of the stream occurred */
     private ResourceItem.ResourceLine readNextElem(ResourceReader in) throws IOException {
-        ResourceItem.PropertyComment commE;
-        ResourceItem.PropertyKey keyE;
-        ResourceItem.PropertyValue valueE;
+        ResourceItem.PropertyComment commE = null;
+        ResourceItem.PropertyKey keyE = null;
+        ResourceItem.PropertyValue valueE = null;
 
         int begPos = in.position;
 
@@ -138,8 +138,7 @@ public class ResourceParser {
                 comment.append(trimComment(fl.line));
                 comment.append(fl.lineSep);
                 keyPos = in.position;
-            } else // not a part of a comment
-            {
+            } else { // not a part of a comment
                 break;
             }
             fl = in.readLineExpectComment();
@@ -156,16 +155,12 @@ public class ResourceParser {
             if (comment.charAt(comment.length() - 1) == '\n') {
                 comHelp = comment.substring(0, comment.length() - 1);
             }
+
+            commE = new ResourceItem.PropertyComment(UtilConvert.loadConvert(comHelp));
+            // fl now contains the line after the comment or  null if none exists
         }
 
-        commE = new ResourceItem.PropertyComment(UtilConvert.loadConvert(comHelp));
-        // fl now contains the line after the comment or  null if none exists
-
-
-        if (fl == null) {
-            keyE = null;
-            valueE = null;
-        } else {
+        if (fl != null) {
             // read the key and the value
             // list of
             ArrayList<FlaggedLine> lines = new ArrayList<FlaggedLine>(2);

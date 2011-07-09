@@ -21,10 +21,12 @@ public class ZipArchive {
     private File zipFile = null;
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
+        logger.log(Level.INFO, "Open Archive {0}", zipFileName);
+
         this.zipFile = inputFile;
         this.zipFileName = inputFile.getName();
         this.root = new ZipDirectory("");
-        
+
         try {
             ZipFile zipInputFile = new ZipFile(inputFile);
 
@@ -42,17 +44,18 @@ public class ZipArchive {
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
         }
-        
+
         root.setTranslation(fromLocale, toLocale);
     }
 
     public void write() {
         try {
+            logger.log(Level.INFO, "Save archive {0}", zipFileName);
             ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
             root.writeTo(outputStream, "");
             outputStream.close();
         } catch (IOException ioe) {
-            Logger.getLogger(ZipArchive.class.getName()).log(Level.SEVERE, null, ioe);
+            logger.log(Level.SEVERE, null, ioe);
         }
     }
 

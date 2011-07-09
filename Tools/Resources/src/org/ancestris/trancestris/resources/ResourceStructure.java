@@ -11,6 +11,8 @@ package org.ancestris.trancestris.resources;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Element structure for one .properties file tightly
@@ -21,6 +23,7 @@ import java.util.Set;
 public class ResourceStructure {
 
     private LinkedHashMap<String, ResourceItem.ResourceLine> resourceLines;
+    private static final Logger logger = Logger.getLogger(ResourceStructure.class.getName());
 
     /** Constructs a new PropertiesStructure for the given bounds and ResourceLines. */
     public ResourceStructure(LinkedHashMap<String, ResourceItem.ResourceLine> resourceLines) {
@@ -59,15 +62,11 @@ public class ResourceStructure {
         return resourceLines.keySet();
     }
 
-    public boolean put (String key, String value, String comment) {
-
+    public boolean put(ResourceItem.PropertyKey key, ResourceItem.PropertyValue value, ResourceItem.PropertyComment comment) {
         // construct the new element
-        ResourceItem.ResourceLine line = new ResourceItem.ResourceLine(
-                new ResourceItem.PropertyKey(key),
-                new ResourceItem.PropertyValue(value),
-                new ResourceItem.PropertyComment(comment));
+        ResourceItem.ResourceLine line = new ResourceItem.ResourceLine(key, value, comment);
 
-        resourceLines.put(key, line);
+        resourceLines.put(key.getValue(), line);
         return true;
 
     }

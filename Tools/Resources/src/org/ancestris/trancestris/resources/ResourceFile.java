@@ -18,9 +18,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ResourceFile {
 
+    private static final Logger logger = Logger.getLogger(ResourceFile.class.getName());
     private static final String PREFIX = "Bundle";
     private static final String SUFFIX = ".properties";
     private String fromBundleName = "";
@@ -56,7 +59,9 @@ public class ResourceFile {
         } else {
             resourceStructure = resourceFiles.get(bundleName);
         }
-        
+
+        logger.log(Level.INFO, "Save file {0}", bundleName);
+
         outputStream.write(resourceStructure.getBundleString().getBytes());
     }
 
@@ -71,7 +76,7 @@ public class ResourceFile {
         defaultLangage = resourceFiles.get(fromBundleName);
         if (defaultLangage != null) {
 
-            content = new<String> ArrayList(defaultLangage.keySet());
+            content = new <String>ArrayList(defaultLangage.keySet());
             if (toLocale.getLanguage().equals("en")) {
                 toBundleName = PREFIX + SUFFIX;
             } else {
@@ -106,8 +111,8 @@ public class ResourceFile {
         ResourceItem.ResourceLine line = defaultLangage.getLine(content.get(i));
         String comment = line.getComment();
         String value = line.getValue();
-        
-        return line.getComment() + "\n" + line.getValue();
+
+        return (comment == null ? "" : comment + "\n") + (value == null ? "" : value);
     }
 
     public String getLineTranslation(int i) {
@@ -118,15 +123,15 @@ public class ResourceFile {
 
     public void setLineTranslation(int i, String s) {
         ResourceItem.ResourceLine old = translatedLangage.getLine(content.get(i));
-        ResourceItem.ResourceLine line = null;
+        ResourceItem.PropertyComment comment = defaultLangage.getLine(content.get(i)).getPropertyComment();
+        ResourceItem.PropertyKey key = defaultLangage.getLine(content.get(i)).getPropertyKey();
+        ResourceItem.PropertyValue value = new ResourceItem.PropertyValue(s);
         if (old == null) {
             not_translated--;
-            translatedLangage.put(content.get(i), s, "");
+            translatedLangage.put(key, value, comment);
         } else {
-            translatedLangage.put(old.getKey(), s, old.getComment());
-            line = new ResourceItem.ResourceLine(old.getPropertyKey(), new ResourceItem.PropertyValue(s), old.getPropertyComment());
+            translatedLangage.put(key, value, comment);
         }
-
 
         fire(content.get(i), old, s);
     }
