@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class ResourceFile {
 
@@ -53,16 +55,28 @@ public class ResourceFile {
         return resourceFiles.keySet();
     }
 
-    public void writeTo(OutputStream outputStream, String bundleName) throws IOException {
-        
-        logger.log(Level.INFO, "Save file {0}", bundleName);
+    public boolean writeTo(ZipOutputStream zipOutputStream, ZipEntry zipEntry, String bundleName) throws IOException {
 
         if (bundleName.equals(toBundleName)) {
-            if (translationCreated == false || (translationCreated == true && modified == true)) {
-                outputStream.write(translatedLangage.getBundleString().getBytes());
+            if (translationCreated == false) {
+                logger.log(Level.INFO, "Save file {0}", bundleName);
+                zipOutputStream.putNextEntry(zipEntry);
+
+                zipOutputStream.write(translatedLangage.getBundleString().getBytes());
+                return true;
+            } else if (translationCreated == true && modified == true) {
+                logger.log(Level.INFO, "Create file {0}", bundleName);
+                zipOutputStream.putNextEntry(zipEntry);
+                zipOutputStream.write(translatedLangage.getBundleString().getBytes());
+                return true;
+            } else {
+                return false;
             }
         } else {
-            outputStream.write(resourceFiles.get(bundleName).getBundleString().getBytes());
+            logger.log(Level.INFO, "Save file {0}", bundleName);
+            zipOutputStream.putNextEntry(zipEntry);
+            zipOutputStream.write(resourceFiles.get(bundleName).getBundleString().getBytes());
+            return true;
         }
     }
 
@@ -86,6 +100,7 @@ public class ResourceFile {
 
             translatedLangage = resourceFiles.get(toBundleName);
             if (translatedLangage == null) {
+                logger.log(Level.INFO, "Create Langage file {0}", toBundleName);
                 translatedLangage = new ResourceStructure();
                 resourceFiles.put(toBundleName, translatedLangage);
                 translationCreated = true;
@@ -98,6 +113,8 @@ public class ResourceFile {
                     not_translated = Math.max(0, not_translated - 1);
                 }
             }
+        } else {
+            logger.log(Level.INFO, "No default langage file {0}", fromBundleName);
         }
     }
 

@@ -31,16 +31,13 @@ public class ZipDirectory {
             for (String fileName : resourceFile.getFiles()) {
                 ZipEntry zipentry = null;
 
-                logger.log(Level.INFO, "Save File {0}", fileName);
-
                 if (path.isEmpty() == true) {
                     zipentry = new ZipEntry(directoryName + "/" + fileName);
                 } else {
                     zipentry = new ZipEntry(path + "/" + directoryName + "/" + fileName);
                 }
-                zipoutputstream.putNextEntry(zipentry);
 
-                resourceFile.writeTo(zipoutputstream, fileName);
+                resourceFile.writeTo(zipoutputstream, zipentry, fileName);
             }
         }
 

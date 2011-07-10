@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class ResourceParser {
 
+    private static final Logger logger = Logger.getLogger(ResourceParser.class.getName());
     /** PropertiesFileEntry for which source is this parser created. */
     InputStream inputStream;
     /** Properties file reader. Input stream. */
@@ -59,10 +60,9 @@ public class ResourceParser {
     public ResourceStructure parseFile() {
         try {
             ResourceStructure resourceStructure = parseFileMain();
-
             return resourceStructure;
-        } catch (IOException e) {
-            // Parsing failed, return null.
+        } catch (IOException ioe) {
+            logger.log(Level.SEVERE, null, ioe);
             return null;
         }
     }
@@ -79,7 +79,7 @@ public class ResourceParser {
             try {
                 resourceReader.close();
             } catch (IOException ex) {
-                Logger.getLogger(ResourceParser.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
             resourceReader = null;
         }
@@ -332,8 +332,8 @@ public class ResourceParser {
          */
         public FlaggedLine readLineExpectComment() throws IOException {
             int charRead = read();
-            if (charRead == -1) // end of the reader reached
-            {
+            if (charRead == -1) { // end of the reader reached
+
                 return null;
             }
 
@@ -351,8 +351,7 @@ public class ResourceParser {
                 charRead = read();
             }
 
-            if (!decided) // all were whitespaces
-            {
+            if (!decided) { // all were whitespaces
                 fl.flag = true;
             }
 
@@ -396,8 +395,7 @@ public class ResourceParser {
                 } else {
                     fl.lineSep = "\r"; // NOI18N
                 }
-            } else if (charRead == (int) '\n') // NOI18N
-            {
+            } else if (charRead == (int) '\n') { // NOI18N
                 fl.lineSep = "\n"; // NOI18N
             } else {
                 fl.lineSep = System.getProperty(LINE_SEPARATOR);
