@@ -41,7 +41,7 @@ public class ResourceFileView extends JList {
             }
             if (isSelected) {
                 cellRenderer.setForeground(Color.white);
-                cellRenderer.setBackground(jlist.getSelectionBackground());
+                cellRenderer.setBackground(Color.black);
             } else {
                 cellRenderer.setForeground(color);
                 cellRenderer.setBackground(jlist.getBackground());
