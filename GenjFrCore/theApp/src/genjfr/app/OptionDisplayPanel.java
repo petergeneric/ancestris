@@ -27,7 +27,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("es"),
         new Locale("nl"),
         Locale.ITALIAN,
-        new Locale("pl")
+        new Locale("pl"),
+        new Locale("no")
     };
     String[] skins = new String[9];
 
