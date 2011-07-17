@@ -134,6 +134,7 @@ public class ResourceFile {
             }
 
             Iterator<ResourceItem.ResourceLine> it = defaultLanguage.iterator();
+            not_translated = getLineCount ();
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
                 if (toLanguage.getLine(line.getKey()) != null) {
