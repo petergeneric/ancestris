@@ -58,7 +58,17 @@ public class ResourceStructure {
         return resourceLines.get(key);
     }
 
+    public String getResourceLineString(String key) {
+        ResourceItem.ResourceLine line = resourceLines.get(key);
+        if (line != null) {
+            return line.getResourceLine();
+        } else {
+            return null;
+        }
+    }
+
     public Set<String> keySet() {
+
         return resourceLines.keySet();
     }
 

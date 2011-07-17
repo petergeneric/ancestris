@@ -9,7 +9,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -30,6 +29,7 @@ public class ResourceFile {
     private static final String SUFFIX = ".properties";
     private String fromBundleName = "";
     private String toBundleName = "";
+    private String directoryPath = "";
     private File DefaultLangageFile = null;
     private ResourceStructure defaultLangage = null;
     private ResourceStructure translatedLangage = null;
@@ -40,7 +40,8 @@ public class ResourceFile {
     private boolean modified = false;
     private boolean translationCreated = false;
 
-    ResourceFile() {
+    ResourceFile(String directoryPath) {
+        this.directoryPath = directoryPath;
         not_translated = 0;
     }
 
@@ -59,23 +60,40 @@ public class ResourceFile {
 
         if (bundleName.equals(toBundleName)) {
             if (translationCreated == false) {
-                logger.log(Level.INFO, "Save file {0}", bundleName);
+                logger.log(Level.INFO, "Save file {0} ...", zipEntry.getName());
                 zipOutputStream.putNextEntry(zipEntry);
-
-                zipOutputStream.write(translatedLangage.getBundleString().getBytes());
+                for (String key : content) {
+                    String lineString = translatedLangage.getResourceLineString(key);
+                    if (lineString != null) {
+                        zipOutputStream.write(lineString.getBytes());
+                    }
+                }
+                logger.log(Level.INFO, "Done");
                 return true;
             } else if (translationCreated == true && modified == true) {
-                logger.log(Level.INFO, "Create file {0}", bundleName);
+                logger.log(Level.INFO, "Create file {0} ...", zipEntry.getName());
                 zipOutputStream.putNextEntry(zipEntry);
-                zipOutputStream.write(translatedLangage.getBundleString().getBytes());
+                for (String key : content) {
+                    String lineString = translatedLangage.getResourceLineString(key);
+                    if (lineString != null) {
+                        zipOutputStream.write(lineString.getBytes());
+                    }
+                }
+                logger.log(Level.INFO, "Done");
                 return true;
             } else {
                 return false;
             }
         } else {
-            logger.log(Level.INFO, "Save file {0}", bundleName);
+            logger.log(Level.INFO, "Saving file {0} ...", zipEntry.getName());
             zipOutputStream.putNextEntry(zipEntry);
-            zipOutputStream.write(resourceFiles.get(bundleName).getBundleString().getBytes());
+            for (String key : content) {
+                String lineString = resourceFiles.get(bundleName).getResourceLineString(key);
+                if (lineString != null) {
+                    zipOutputStream.write(lineString.getBytes());
+                }
+            }
+            logger.log(Level.INFO, "Done");
             return true;
         }
     }
@@ -114,7 +132,7 @@ public class ResourceFile {
                 }
             }
         } else {
-            logger.log(Level.INFO, "No default langage file {0}", fromBundleName);
+            logger.log(Level.SEVERE, "No default langage dir {0}", this.directoryPath);
         }
     }
 
