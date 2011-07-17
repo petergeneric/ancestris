@@ -71,7 +71,7 @@ public class UtilConvert {
     public  static final String strictKeyValueSeparators = "=:";
 
     /** Differs from JDK's implementation in that it does not save ' ' as '\ '. */
-    private static final String specialSaveChars = "=:\t\r\n\f#!";
+    private static final String specialSaveChars = "\t\r\n\f#!";
 
     public  static final String whiteSpaceChars = " \t\r\n\f";
 

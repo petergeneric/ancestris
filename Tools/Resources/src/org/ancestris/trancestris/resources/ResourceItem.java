@@ -143,7 +143,7 @@ public abstract class ResourceItem {
             String sComment = (comment == null) ? "" : comment.getStringValue(); // NOI18N
             String sKey = (key == null) ? "" : key.getStringValue(); // NOI18N
             String sValue = (value == null) ? "" : value.getStringValue(); // NOI18N
-            return sComment + sKey + sValue + "\n";
+            return sComment + sKey + UtilConvert.saveConvert(sValue) + "\n";
         }
 
         /** Returns the key element for this item. */
