@@ -108,7 +108,11 @@ public abstract class ResourceItem {
         public String getStringValue() {
             String comment = "";
             for (String line : value.split("\\r?\\n")) {
-                comment += "# " + line + "\n";
+                if (line.length() > 0) {
+                    comment += "# " + line + "\n";
+                } else {
+                    comment += "\n";
+                }
             }
 
             return comment;
