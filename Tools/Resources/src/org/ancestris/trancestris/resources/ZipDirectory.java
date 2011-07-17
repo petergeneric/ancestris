@@ -25,7 +25,7 @@ public class ZipDirectory {
         this.directoryName = name;
     }
 
-    void writeTo(ZipOutputStream zipoutputstream, String path) throws IOException {
+    public void writeTo(ZipOutputStream zipoutputstream, String path) throws IOException {
         if (resourceFile != null) {
 
             for (String fileName : resourceFile.getFiles()) {
@@ -50,28 +50,28 @@ public class ZipDirectory {
         }
     }
 
-    void put(String filePath, InputStream inputstream) throws IOException {
+    public void put(String filePath, InputStream inputstream) throws IOException {
         StringTokenizer tokenizefilePath = new StringTokenizer(filePath, "/");
-        put(tokenizefilePath, inputstream);
+        put(tokenizefilePath, inputstream, filePath);
     }
 
-    void put(StringTokenizer tokenizefilePath, InputStream inputstream) throws IOException {
+    private void put(StringTokenizer tokenizefilePath, InputStream inputstream, String filePath) throws IOException {
         String token = tokenizefilePath.nextToken();
         if (!tokenizefilePath.hasMoreTokens()) {
-            logger.log(Level.INFO, "Add File {0}", token);
+            logger.log(Level.INFO, "Add File {0}", filePath);
             if (this.resourceFile == null) {
-                this.resourceFile = new ResourceFile();
+                this.resourceFile = new ResourceFile(filePath.substring(0, filePath.lastIndexOf("/")));
             }
             this.resourceFile.put(inputstream, token);
         } else {
             if (dirs.containsKey(token) == true) {
-                dirs.get(token).put(tokenizefilePath, inputstream);
+                dirs.get(token).put(tokenizefilePath, inputstream, filePath);
             } else {
                 logger.log(Level.INFO, "Add dir {0}", token);
 
                 ZipDirectory zipDirectory = new ZipDirectory(token);
                 dirs.put(token, zipDirectory);
-                zipDirectory.put(tokenizefilePath, inputstream);
+                zipDirectory.put(tokenizefilePath, inputstream, filePath);
             }
         }
     }
@@ -93,7 +93,7 @@ public class ZipDirectory {
         return directoryName;
     }
 
-    void setTranslation(Locale fromLocale, Locale toLocale) {
+    public void setTranslation(Locale fromLocale, Locale toLocale) {
         if (resourceFile != null) {
             resourceFile.setTranslation(fromLocale, toLocale);
         }
