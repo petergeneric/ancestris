@@ -150,7 +150,7 @@ public class ResourceFile {
     }
 
     public int getLineCount() {
-        return fromLanguage.size();
+        return defaultLanguage.size();
     }
 
     public String getLine(int i) {
@@ -178,8 +178,8 @@ public class ResourceFile {
 
     public void setLineTranslation(int i, String s) {
         ResourceItem.ResourceLine old = toLanguage.getLine(content.get(i));
-        ResourceItem.PropertyComment comment = fromLanguage.getLine(content.get(i)).getPropertyComment();
-        ResourceItem.PropertyKey key = fromLanguage.getLine(content.get(i)).getPropertyKey();
+        ResourceItem.PropertyComment comment = defaultLanguage.getLine(content.get(i)).getPropertyComment();
+        ResourceItem.PropertyKey key = defaultLanguage.getLine(content.get(i)).getPropertyKey();
         ResourceItem.PropertyValue value = new ResourceItem.PropertyValue(s);
         if (old == null) {
             not_translated--;
@@ -193,7 +193,14 @@ public class ResourceFile {
 
     public int getLineState(int i) {
         if (toLanguage.getLine(content.get(i)) != null) {
-            String from = fromLanguage.getLine(content.get(i)).getValue();
+            String from = null;
+
+            if (fromLanguage != null) {
+                from = fromLanguage.getLine(content.get(i)).getValue();
+            } else {
+                from = defaultLanguage.getLine(content.get(i)).getValue();
+            }
+
             String to = toLanguage.getLine(content.get(i)) != null ? toLanguage.getLine(content.get(i)).getValue() : "";
             if (from.equalsIgnoreCase(to)) {
                 return -1;
