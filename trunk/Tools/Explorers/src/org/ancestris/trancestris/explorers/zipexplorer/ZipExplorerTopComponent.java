@@ -6,6 +6,7 @@ package org.ancestris.trancestris.explorers.zipexplorer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
@@ -48,6 +49,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
         zipExplorerManager = new ExplorerManager();
         ((BeanTreeView) beanTreeView).setRootVisible(false);
+        ((BeanTreeView) beanTreeView).setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 //        associateLookup(ExplorerUtils.createLookup(zipExplorerManager, getActionMap()));
 //        ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
 //        setActivatedNodes(new Node[]{newZipRootNode});
