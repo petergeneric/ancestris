@@ -30,9 +30,9 @@ public class ResourceFile {
     private String fromBundleName = "";
     private String toBundleName = "";
     private String directoryPath = "";
-    private File DefaultLangageFile = null;
-    private ResourceStructure defaultLangage = null;
-    private ResourceStructure translatedLangage = null;
+    private File DefaultLanguageFile = null;
+    private ResourceStructure defaultLanguage = null;
+    private ResourceStructure translatedLanguage = null;
     private ArrayList<String> content = null;
     private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
@@ -63,7 +63,7 @@ public class ResourceFile {
                 logger.log(Level.INFO, "Save file {0} ...", zipEntry.getName());
                 zipOutputStream.putNextEntry(zipEntry);
                 for (String key : content) {
-                    String lineString = translatedLangage.getResourceLineString(key);
+                    String lineString = translatedLanguage.getResourceLineString(key);
                     if (lineString != null) {
                         zipOutputStream.write(lineString.getBytes());
                     }
@@ -74,7 +74,7 @@ public class ResourceFile {
                 logger.log(Level.INFO, "Create file {0} ...", zipEntry.getName());
                 zipOutputStream.putNextEntry(zipEntry);
                 for (String key : content) {
-                    String lineString = translatedLangage.getResourceLineString(key);
+                    String lineString = translatedLanguage.getResourceLineString(key);
                     if (lineString != null) {
                         zipOutputStream.write(lineString.getBytes());
                     }
@@ -106,33 +106,33 @@ public class ResourceFile {
             fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
         }
 
-        defaultLangage = resourceFiles.get(fromBundleName);
-        if (defaultLangage != null) {
+        defaultLanguage = resourceFiles.get(fromBundleName);
+        if (defaultLanguage != null) {
 
-            content = new ArrayList(defaultLangage.keySet());
+            content = new ArrayList(defaultLanguage.keySet());
             if (toLocale.getLanguage().equals("en")) {
                 toBundleName = PREFIX + SUFFIX;
             } else {
                 toBundleName = PREFIX + "_" + toLocale.getLanguage() + SUFFIX;
             }
 
-            translatedLangage = resourceFiles.get(toBundleName);
-            if (translatedLangage == null) {
-                logger.log(Level.INFO, "Create Langage file {0}", toBundleName);
-                translatedLangage = new ResourceStructure();
-                resourceFiles.put(toBundleName, translatedLangage);
+            translatedLanguage = resourceFiles.get(toBundleName);
+            if (translatedLanguage == null) {
+                logger.log(Level.INFO, "Create Language file {0}", toBundleName);
+                translatedLanguage = new ResourceStructure();
+                resourceFiles.put(toBundleName, translatedLanguage);
                 translationCreated = true;
             }
 
-            Iterator<ResourceItem.ResourceLine> it = defaultLangage.iterator();
+            Iterator<ResourceItem.ResourceLine> it = defaultLanguage.iterator();
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
-                if (translatedLangage.getLine(line.getKey()) != null) {
+                if (translatedLanguage.getLine(line.getKey()) != null) {
                     not_translated = Math.max(0, not_translated - 1);
                 }
             }
         } else {
-            logger.log(Level.SEVERE, "No default langage dir {0}", this.directoryPath);
+            logger.log(Level.SEVERE, "No default language for directory {0}", this.directoryPath);
         }
     }
 
@@ -141,11 +141,11 @@ public class ResourceFile {
     }
 
     public int getLineCount() {
-        return defaultLangage.size();
+        return defaultLanguage.size();
     }
 
     public String getLine(int i) {
-        ResourceItem.ResourceLine line = defaultLangage.getLine(content.get(i));
+        ResourceItem.ResourceLine line = defaultLanguage.getLine(content.get(i));
         String comment = line.getComment();
         String value = line.getValue();
 
@@ -153,30 +153,30 @@ public class ResourceFile {
     }
 
     public String getLineTranslation(int i) {
-        ResourceItem.ResourceLine line = translatedLangage.getLine(content.get(i));
+        ResourceItem.ResourceLine line = translatedLanguage.getLine(content.get(i));
 
         return line == null ? "" : line.getValue();
     }
 
     public void setLineTranslation(int i, String s) {
-        ResourceItem.ResourceLine old = translatedLangage.getLine(content.get(i));
-        ResourceItem.PropertyComment comment = defaultLangage.getLine(content.get(i)).getPropertyComment();
-        ResourceItem.PropertyKey key = defaultLangage.getLine(content.get(i)).getPropertyKey();
+        ResourceItem.ResourceLine old = translatedLanguage.getLine(content.get(i));
+        ResourceItem.PropertyComment comment = defaultLanguage.getLine(content.get(i)).getPropertyComment();
+        ResourceItem.PropertyKey key = defaultLanguage.getLine(content.get(i)).getPropertyKey();
         ResourceItem.PropertyValue value = new ResourceItem.PropertyValue(s);
         if (old == null) {
             not_translated--;
-            translatedLangage.put(key, value, comment);
+            translatedLanguage.put(key, value, comment);
         } else {
-            translatedLangage.put(key, value, comment);
+            translatedLanguage.put(key, value, comment);
         }
         modified = true;
         fire(content.get(i), old, s);
     }
 
     public int getLineState(int i) {
-        if (translatedLangage.getLine(content.get(i)) != null) {
-            String from = defaultLangage.getLine(content.get(i)).getValue();
-            String to = translatedLangage.getLine(content.get(i)) != null ? translatedLangage.getLine(content.get(i)).getValue() : "";
+        if (translatedLanguage.getLine(content.get(i)) != null) {
+            String from = defaultLanguage.getLine(content.get(i)).getValue();
+            String to = translatedLanguage.getLine(content.get(i)) != null ? translatedLanguage.getLine(content.get(i)).getValue() : "";
             if (from.equalsIgnoreCase(to)) {
                 return -1;
             } else {
@@ -188,7 +188,7 @@ public class ResourceFile {
     }
 
     public File getDefaultBundleFile() {
-        return DefaultLangageFile;
+        return DefaultLanguageFile;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
