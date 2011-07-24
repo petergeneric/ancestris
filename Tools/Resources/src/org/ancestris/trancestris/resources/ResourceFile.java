@@ -134,7 +134,7 @@ public class ResourceFile {
             }
 
             Iterator<ResourceItem.ResourceLine> it = defaultLanguage.iterator();
-            not_translated = getLineCount ();
+            not_translated = getLineCount();
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
                 if (toLanguage.getLine(line.getKey()) != null) {
@@ -174,7 +174,17 @@ public class ResourceFile {
     public String getLineTranslation(int i) {
         ResourceItem.ResourceLine line = toLanguage.getLine(content.get(i));
 
-        return line == null ? "" : line.getValue();
+        if (line == null) {
+
+            if (fromLanguage != null) {
+                line = fromLanguage.getLine(content.get(i));
+            }
+
+            if (line == null) {
+                line = defaultLanguage.getLine(content.get(i));
+            }
+        }
+        return line.getValue();
     }
 
     public void setLineTranslation(int i, String s) {
