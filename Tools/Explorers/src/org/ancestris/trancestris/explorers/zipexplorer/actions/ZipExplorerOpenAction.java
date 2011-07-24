@@ -5,6 +5,7 @@
 package org.ancestris.trancestris.explorers.zipexplorer.actions;
 
 import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -46,6 +47,8 @@ public final class ZipExplorerOpenAction implements ActionListener {
         dialog.setVisible(true);
         dialog.toFront();
         if (zipExplorerOpenActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
+            Frame mainWindow = WindowManager.getDefault().getMainWindow();
+            mainWindow.setTitle(NbBundle.getMessage(ZipExplorerOpenAction.class,"CTL_MainWindow_Title",fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage()));
 
             ZipArchive zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
 
