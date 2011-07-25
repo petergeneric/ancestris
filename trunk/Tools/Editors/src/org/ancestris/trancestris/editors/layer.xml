@@ -2,6 +2,22 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
+        <folder name="Tools">
+            <file name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.IncreaseFontAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_IncreaseFontAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/actions/font-size-increase.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-ancestris-trancestris-editors-actions-ReduceFontAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.editors.actions.ReduceFontAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.actions.Bundle#CTL_ReduceFontAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/actions/font-size-reduce.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
         <folder name="Window">
             <file name="org-ancestris-trancestris-editors-resourceeditor-ResourceEditorAction.instance">
                 <attr name="component" methodvalue="org.ancestris.trancestris.editors.resourceeditor.ResourceEditorTopComponent.findInstance"/>
@@ -21,6 +37,14 @@
     <folder name="Toolbars">
         <file name="Clipboard_hidden"/>
         <folder name="File">
+            <attr name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow/org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow" boolvalue="true"/>
+            <attr name="org-openide-actions-SaveAction.instance/org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow" boolvalue="true"/>
+            <file name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-editors-actions-IncreaseFontAction.instance"/>
+            </file>
+            <file name="org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-editors-actions-ReduceFontAction.instance"/>
+            </file>
             <file name="org-openide-actions-SaveAction.instance"/>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
