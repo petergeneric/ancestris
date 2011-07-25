@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
@@ -55,119 +56,117 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 }
             }
 
-            }
-            @Override
-            public void valueChanged
+        }
+
+        @Override
+        public void valueChanged(ListSelectionEvent lse) {
 
 
-                 (ListSelectionEvent lse) {
-
-
-                   if (lse.getValueIsAdjusting()) {
+            if (lse.getValueIsAdjusting()) {
                 return;
             }
             String s = null;
-                boolean flag = false;
-                if (resourceFileView.getSelectedIndex() >= 0) {
-                    int i = resourceFileView.getSelectedIndex();
-                    flag = resourceFile.getLineState(i) != -1;
-                    s = resourceFile.getLineTranslation(i);
-                }
-                jTextAreaTranslation.setText(s);
-                jTextAreaTranslation.setEditable(true);
-                jTextAreaTranslation.setCaretPosition(0);
-                jButtonConfirm.setEnabled(true);
+            boolean flag = false;
+            if (resourceFileView.getSelectedIndex() >= 0) {
+                int i = resourceFileView.getSelectedIndex();
+                flag = resourceFile.getLineState(i) != -1;
+                s = resourceFile.getLineTranslation(i);
             }
+            jTextAreaTranslation.setText(s);
+            jTextAreaTranslation.setEditable(true);
+            jTextAreaTranslation.setCaretPosition(0);
+            jButtonConfirm.setEnabled(true);
+        }
+    }
+
+    private class ResourceFileModel implements ListModel {
+
+        @Override
+        public void addListDataListener(ListDataListener listdatalistener1) {
         }
 
-        private class ResourceFileModel implements ListModel {
-
-            @Override
-            public void addListDataListener(ListDataListener listdatalistener1) {
-            }
-
-            @Override
-            public void removeListDataListener(ListDataListener listdatalistener1) {
-            }
-
-            @Override
-            public Object getElementAt(int i) {
-                return resourceFile == null ? "" : resourceFile.getLine(i);
-            }
-
-            @Override
-            public int getSize() {
-                return resourceFile == null ? 0 : resourceFile.getLineCount();
-            }
+        @Override
+        public void removeListDataListener(ListDataListener listdatalistener1) {
         }
 
-        private class ResourceFileCellRenderer extends JLabel implements ListCellRenderer {
-
-            // This is the only method defined by ListCellRenderer.
-            // We just reconfigure the JLabel each time we're called.
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list,
-                    Object value, // value to display
-                    int index, // cell index
-                    boolean isSelected, // is the cell selected
-                    boolean cellHasFocus) // the list and the cell have the focus
-            {
-                String s = value.toString();
-                setText(s);
-                Color color;
-                switch (resourceFile.getLineState(index)) {
-                    case -1:
-                        color = Color.blue;
-                        break;
-
-                    case 0: // '\0'
-                        color = Color.red;
-                        break;
-
-                    case 1: // '\001'
-                    default:
-                        color = list.getForeground();
-                        break;
-                }
-                if (isSelected) {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
-                } else {
-                    setBackground(list.getBackground());
-                    setForeground(color);
-                }
-                setEnabled(list.isEnabled());
-                setFont(list.getFont());
-                setOpaque(true);
-                return this;
-            }
+        @Override
+        public Object getElementAt(int i) {
+            return resourceFile == null ? "" : resourceFile.getLine(i);
         }
-        private static ResourceEditorTopComponent instance;
-        /** path to the icon used by the component and its open action */
-        static final String ICON_PATH = "org/ancestris/trancestris/editors/resourceeditor/Advanced.png";
-        private static final String PREFERRED_ID = "ResourceEditorTopComponent";
+
+        @Override
+        public int getSize() {
+            return resourceFile == null ? 0 : resourceFile.getLineCount();
+        }
+    }
+
+    private class ResourceFileCellRenderer extends JTextArea implements ListCellRenderer {
+
+        // This is the only method defined by ListCellRenderer.
+        // We just reconfigure the JLabel each time we're called.
+        @Override
+        public Component getListCellRendererComponent(
+                JList list,
+                Object value, // value to display
+                int index, // cell index
+                boolean isSelected, // is the cell selected
+                boolean cellHasFocus) // the list and the cell have the focus
+        {
+            String s = value.toString();
+            setText(s);
+            Color color;
+            switch (resourceFile.getLineState(index)) {
+                case -1:
+                    color = Color.blue;
+                    break;
+
+                case 0: // '\0'
+                    color = Color.red;
+                    break;
+
+                case 1: // '\001'
+                default:
+                    color = list.getForeground();
+                    break;
+            }
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(color);
+            }
+            setEnabled(list.isEnabled());
+            setFont(list.getFont());
+            setOpaque(true);
+            return this;
+        }
+    }
+    private static ResourceEditorTopComponent instance;
+    /** path to the icon used by the component and its open action */
+    static final String ICON_PATH = "org/ancestris/trancestris/editors/resourceeditor/Advanced.png";
+    private static final String PREFERRED_ID = "ResourceEditorTopComponent";
 //    private ResourceFileView resourceFileView;
-        private Lookup.Result result = null;
-        private ResourceFile resourceFile = null;
+    private Lookup.Result result = null;
+    private ResourceFile resourceFile = null;
 
-        public ResourceEditorTopComponent() {
+    public ResourceEditorTopComponent() {
 //        resourceFileView = new ResourceFileView();
-            Listener listener = new Listener();
-            initComponents();
-            setName(NbBundle.getMessage(ResourceEditorTopComponent.class, "CTL_ResourceEditorTopComponent"));
-            setToolTipText(NbBundle.getMessage(ResourceEditorTopComponent.class, "HINT_ResourceEditorTopComponent"));
-            setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
-            resourceFileView.addListSelectionListener(listener);
-            jButtonConfirm.addActionListener(listener);
-        }
+        Listener listener = new Listener();
+        initComponents();
+        setName(NbBundle.getMessage(ResourceEditorTopComponent.class, "CTL_ResourceEditorTopComponent"));
+        setToolTipText(NbBundle.getMessage(ResourceEditorTopComponent.class, "HINT_ResourceEditorTopComponent"));
+        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
+        putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+        resourceFileView.addListSelectionListener(listener);
+        jButtonConfirm.addActionListener(listener);
+    }
 
-        /** This method is called from within the constructor to
-         * initialize the form.
-         * WARNING: Do NOT modify this code. The content of this method is
-         * always regenerated by the Form Editor.
-         */
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -221,98 +220,98 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JList resourceFileView;
     // End of variables declaration//GEN-END:variables
 
-        /**
-         * Gets default instance. Do not use directly: reserved for *.settings files only,
-         * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
-         * To obtain the singleton instance, use {@link #findInstance}.
-         */
-        public static synchronized ResourceEditorTopComponent getDefault() {
-            if (instance == null) {
-                instance = new ResourceEditorTopComponent();
-            }
-            return instance;
+    /**
+     * Gets default instance. Do not use directly: reserved for *.settings files only,
+     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
+     * To obtain the singleton instance, use {@link #findInstance}.
+     */
+    public static synchronized ResourceEditorTopComponent getDefault() {
+        if (instance == null) {
+            instance = new ResourceEditorTopComponent();
         }
+        return instance;
+    }
 
-        /**
-         * Obtain the ResourceEditorTopComponent instance. Never call {@link #getDefault} directly!
-         */
-        public static synchronized ResourceEditorTopComponent findInstance() {
-            TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
-            if (win == null) {
-                Logger.getLogger(ResourceEditorTopComponent.class.getName()).warning(
-                        "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
-                return getDefault();
-            }
-            if (win instanceof ResourceEditorTopComponent) {
-                return (ResourceEditorTopComponent) win;
-            }
+    /**
+     * Obtain the ResourceEditorTopComponent instance. Never call {@link #getDefault} directly!
+     */
+    public static synchronized ResourceEditorTopComponent findInstance() {
+        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
+        if (win == null) {
             Logger.getLogger(ResourceEditorTopComponent.class.getName()).warning(
-                    "There seem to be multiple components with the '" + PREFERRED_ID
-                    + "' ID. That is a potential source of errors and unexpected behavior.");
+                    "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");
             return getDefault();
         }
-
-        @Override
-        public int getPersistenceType() {
-            return TopComponent.PERSISTENCE_ALWAYS;
+        if (win instanceof ResourceEditorTopComponent) {
+            return (ResourceEditorTopComponent) win;
         }
+        Logger.getLogger(ResourceEditorTopComponent.class.getName()).warning(
+                "There seem to be multiple components with the '" + PREFERRED_ID
+                + "' ID. That is a potential source of errors and unexpected behavior.");
+        return getDefault();
+    }
 
-        @Override
-        public void componentOpened() {
-            Lookup.Template<ZipDirectory> tpl = new Lookup.Template<ZipDirectory>(ZipDirectory.class);
-            result = Utilities.actionsGlobalContext().lookup(tpl);
-            result.addLookupListener(this);
+    @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ALWAYS;
+    }
+
+    @Override
+    public void componentOpened() {
+        Lookup.Template<ZipDirectory> tpl = new Lookup.Template<ZipDirectory>(ZipDirectory.class);
+        result = Utilities.actionsGlobalContext().lookup(tpl);
+        result.addLookupListener(this);
+    }
+
+    @Override
+    public void componentClosed() {
+        // TODO add custom code on component closing
+    }
+
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        // TODO store your settings
+    }
+
+    Object readProperties(java.util.Properties p) {
+        if (instance == null) {
+            instance = this;
         }
+        instance.readPropertiesImpl(p);
+        return instance;
+    }
 
-        @Override
-        public void componentClosed() {
-            // TODO add custom code on component closing
-        }
+    private void readPropertiesImpl(java.util.Properties p) {
+        String version = p.getProperty("version");
+        // TODO read your settings according to their version
+    }
 
-        void writeProperties(java.util.Properties p) {
-            // better to version settings since initial version as advocated at
-            // http://wiki.apidesign.org/wiki/PropertyFiles
-            p.setProperty("version", "1.0");
-            // TODO store your settings
-        }
+    @Override
+    protected String preferredID() {
+        return PREFERRED_ID;
+    }
 
-        Object readProperties(java.util.Properties p) {
-            if (instance == null) {
-                instance = this;
-            }
-            instance.readPropertiesImpl(p);
-            return instance;
-        }
-
-        private void readPropertiesImpl(java.util.Properties p) {
-            String version = p.getProperty("version");
-            // TODO read your settings according to their version
-        }
-
-        @Override
-        protected String preferredID() {
-            return PREFERRED_ID;
-        }
-
-        @Override
-        public void resultChanged(LookupEvent le) {
-            Lookup.Result r = (Lookup.Result) le.getSource();
-            Collection c = r.allInstances();
-            if (!c.isEmpty()) {
-                for (Iterator i = c.iterator(); i.hasNext();) {
-                    ZipDirectory zipDirectory = (ZipDirectory) i.next();
+    @Override
+    public void resultChanged(LookupEvent le) {
+        Lookup.Result r = (Lookup.Result) le.getSource();
+        Collection c = r.allInstances();
+        if (!c.isEmpty()) {
+            for (Iterator i = c.iterator(); i.hasNext();) {
+                ZipDirectory zipDirectory = (ZipDirectory) i.next();
 //              resourceFileView.setResourceFile(zipDirectory.getResourceFile());
-                    resourceFile = zipDirectory.getResourceFile();
-                    resourceFileView.updateUI();
+                resourceFile = zipDirectory.getResourceFile();
+                resourceFileView.updateUI();
 
-                }
             }
-        }
-
-        @Override
-        public void setFont(Font font) {
-            super.setFont(font);
-            resourceFileView.setFont(font);
-            jTextAreaTranslation.setFont(font);
         }
     }
+
+    @Override
+    public void setFont(Font font) {
+        super.setFont(font);
+        resourceFileView.setFont(font);
+        jTextAreaTranslation.setFont(font);
+    }
+}
