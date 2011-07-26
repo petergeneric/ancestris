@@ -200,7 +200,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jTextAreaTranslation.setColumns(20);
         jTextAreaTranslation.setRows(5);
-        jTextAreaTranslation.setEnabled(false);
         jScrollPane1.setViewportView(jTextAreaTranslation);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
