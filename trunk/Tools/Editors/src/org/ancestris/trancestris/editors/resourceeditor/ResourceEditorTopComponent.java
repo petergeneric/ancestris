@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
@@ -30,6 +29,7 @@ import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
+import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
 /**
@@ -60,8 +60,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         @Override
         public void valueChanged(ListSelectionEvent lse) {
-
-
             if (lse.getValueIsAdjusting()) {
                 return;
             }
@@ -117,11 +115,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             Color color;
             switch (resourceFile.getLineState(index)) {
                 case -1:
-                    color = Color.blue;
+                    color = Color.BLUE;
                     break;
 
                 case 0: // '\0'
-                    color = Color.red;
+                    color = Color.RED;
                     break;
 
                 case 1: // '\001'
@@ -130,8 +128,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     break;
             }
             if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
+                // Arvernes specific pb
+                if (list.getSelectionBackground().equals(list.getSelectionForeground())) {
+                    setBackground(Color.DARK_GRAY);
+                    setForeground(Color.YELLOW);
+                } else {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                }
             } else {
                 setBackground(list.getBackground());
                 setForeground(color);
@@ -152,8 +156,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
     public ResourceEditorTopComponent() {
 //        resourceFileView = new ResourceFileView();
-        Listener listener = new Listener();
         initComponents();
+        String fontName = NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Name", "Dialog");
+        int fontStyle = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Style", "0"));
+        int fontSize = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Size", "12"));
+        setFont(new Font(fontName, fontStyle, fontSize));
+        Listener listener = new Listener();
         setName(NbBundle.getMessage(ResourceEditorTopComponent.class, "CTL_ResourceEditorTopComponent"));
         setToolTipText(NbBundle.getMessage(ResourceEditorTopComponent.class, "HINT_ResourceEditorTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
@@ -184,6 +192,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.75);
 
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
@@ -300,7 +309,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         if (!c.isEmpty()) {
             for (Iterator i = c.iterator(); i.hasNext();) {
                 ZipDirectory zipDirectory = (ZipDirectory) i.next();
-//              resourceFileView.setResourceFile(zipDirectory.getResourceFile());
                 resourceFile = zipDirectory.getResourceFile();
                 resourceFileView.updateUI();
 
@@ -313,5 +321,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         super.setFont(font);
         resourceFileView.setFont(font);
         jTextAreaTranslation.setFont(font);
+        NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Name", font.getName());
+        NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Style", String.valueOf(font.getStyle()));
+        NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Size", String.valueOf(font.getSize()));
     }
 }
