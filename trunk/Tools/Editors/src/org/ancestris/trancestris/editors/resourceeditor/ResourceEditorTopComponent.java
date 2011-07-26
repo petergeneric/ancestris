@@ -128,14 +128,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     break;
             }
             if (isSelected) {
-                // Arvernes specific pb
-                if (list.getSelectionBackground().equals(list.getSelectionForeground())) {
+                // for Arvernes specific pb
                     setBackground(Color.DARK_GRAY);
                     setForeground(Color.YELLOW);
-                } else {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
-                }
+//                    setBackground(list.getSelectionBackground());
+//                    setForeground(list.getSelectionForeground());
             } else {
                 setBackground(list.getBackground());
                 setForeground(color);
