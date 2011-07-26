@@ -55,7 +55,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     break;
                 }
             }
-
         }
 
         @Override
@@ -63,7 +62,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             if (lse.getValueIsAdjusting()) {
                 return;
             }
-            String s = null;
+            String s = "";
             boolean flag = false;
             if (resourceFileView.getSelectedIndex() >= 0) {
                 int i = resourceFileView.getSelectedIndex();
@@ -129,8 +128,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             }
             if (isSelected) {
                 // for Arvernes specific pb
-                    setBackground(Color.DARK_GRAY);
-                    setForeground(Color.YELLOW);
+                setBackground(Color.DARK_GRAY);
+                setForeground(Color.YELLOW);
 //                    setBackground(list.getSelectionBackground());
 //                    setForeground(list.getSelectionForeground());
             } else {
@@ -189,7 +188,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.75);
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
@@ -201,11 +200,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jTextAreaTranslation.setColumns(20);
         jTextAreaTranslation.setRows(5);
+        jTextAreaTranslation.setEnabled(false);
         jScrollPane1.setViewportView(jTextAreaTranslation);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonConfirm, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jButtonConfirm.text")); // NOI18N
+        jButtonConfirm.setEnabled(false);
         jPanel1.add(jButtonConfirm, java.awt.BorderLayout.SOUTH);
 
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
@@ -308,7 +309,18 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 ZipDirectory zipDirectory = (ZipDirectory) i.next();
                 resourceFile = zipDirectory.getResourceFile();
                 resourceFileView.updateUI();
-
+                if (resourceFile != null) {
+                    resourceFileView.setSelectedIndex(0);
+                    jTextAreaTranslation.setText(resourceFile.getLineTranslation(0));
+                    jTextAreaTranslation.setEditable(true);
+                    jTextAreaTranslation.setCaretPosition(0);
+                    jButtonConfirm.setEnabled(true);
+                } else {
+                    jTextAreaTranslation.setText("");
+                    jTextAreaTranslation.setEditable(false);
+                    jTextAreaTranslation.setCaretPosition(0);
+                    jButtonConfirm.setEnabled(false);
+                }
             }
         }
     }
