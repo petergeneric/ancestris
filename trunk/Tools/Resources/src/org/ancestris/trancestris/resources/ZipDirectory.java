@@ -27,18 +27,7 @@ public class ZipDirectory {
 
     public void writeTo(ZipOutputStream zipoutputstream, String path) throws IOException {
         if (resourceFile != null) {
-
-            for (String fileName : resourceFile.getFiles()) {
-                ZipEntry zipentry = null;
-
-                if (path.isEmpty() == true) {
-                    zipentry = new ZipEntry(directoryName + "/" + fileName);
-                } else {
-                    zipentry = new ZipEntry(path + "/" + directoryName + "/" + fileName);
-                }
-
-                resourceFile.writeTo(zipoutputstream, zipentry, fileName);
-            }
+            resourceFile.writeTo(zipoutputstream);
         }
 
         for (ZipDirectory zipDirectory : dirs.values()) {
@@ -50,28 +39,43 @@ public class ZipDirectory {
         }
     }
 
-    public void put(String filePath, InputStream inputstream) throws IOException {
-        StringTokenizer tokenizefilePath = new StringTokenizer(filePath, "/");
-        put(tokenizefilePath, inputstream, filePath);
+    public void saveTranslation (ZipOutputStream zipoutputstream, String path) throws IOException {
+        if (resourceFile != null) {
+            resourceFile.saveTranslation(zipoutputstream);
+        }
+
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            if (path.isEmpty() == true) {
+                zipDirectory.saveTranslation(zipoutputstream, directoryName);
+            } else {
+                zipDirectory.saveTranslation(zipoutputstream, path + "/" + directoryName);
+            }
+        }
     }
 
-    private void put(StringTokenizer tokenizefilePath, InputStream inputstream, String filePath) throws IOException {
+    public void put(ZipEntry zipEntry, InputStream inputstream) throws IOException {
+        String filePath = zipEntry.getName();
+        StringTokenizer tokenizefilePath = new StringTokenizer(filePath, "/");
+        put(tokenizefilePath, zipEntry, inputstream, filePath);
+    }
+
+    private void put(StringTokenizer tokenizefilePath, ZipEntry zipEntry, InputStream inputstream, String filePath) throws IOException {
         String token = tokenizefilePath.nextToken();
         if (!tokenizefilePath.hasMoreTokens()) {
             logger.log(Level.INFO, "Add File {0}", filePath);
             if (this.resourceFile == null) {
                 this.resourceFile = new ResourceFile(filePath.substring(0, filePath.lastIndexOf("/")));
             }
-            this.resourceFile.put(inputstream, token);
+            this.resourceFile.put(zipEntry, inputstream, token);
         } else {
             if (dirs.containsKey(token) == true) {
-                dirs.get(token).put(tokenizefilePath, inputstream, filePath);
+                dirs.get(token).put(tokenizefilePath, zipEntry, inputstream, filePath);
             } else {
                 logger.log(Level.INFO, "Add dir {0}", token);
 
                 ZipDirectory zipDirectory = new ZipDirectory(token);
                 dirs.put(token, zipDirectory);
-                zipDirectory.put(tokenizefilePath, inputstream, filePath);
+                zipDirectory.put(tokenizefilePath, zipEntry, inputstream, filePath);
             }
         }
     }

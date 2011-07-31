@@ -11,8 +11,8 @@ package org.ancestris.trancestris.resources;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
 
 /**
  * Element structure for one .properties file tightly
@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 public class ResourceStructure {
 
     private LinkedHashMap<String, ResourceItem.ResourceLine> resourceLines;
+    // Zip entry associated with that file.
+    private ZipEntry zipEntry;
     private static final Logger logger = Logger.getLogger(ResourceStructure.class.getName());
 
     /** Constructs a new PropertiesStructure for the given bounds and ResourceLines. */
@@ -88,5 +90,13 @@ public class ResourceStructure {
 
     public int size() {
         return resourceLines.size();
+    }
+    
+    public ZipEntry getZipEntry () {
+        return this.zipEntry;
+    }
+    
+    public  void setZipEntry (ZipEntry zipEntry) {
+        this.zipEntry = zipEntry;
     }
 }

@@ -17,14 +17,14 @@ public class ZipArchive {
 
     private static final Logger logger = Logger.getLogger(ZipArchive.class.getName());
     private ZipDirectory root;
-    private String zipFileName = "";
     private File zipFile = null;
+    private Locale toLocale;
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
-        logger.log(Level.INFO, "Open Archive {0}", zipFileName);
+        logger.log(Level.INFO, "Open Archive {0}", inputFile.getName());
 
         this.zipFile = inputFile;
-        this.zipFileName = inputFile.getName();
+        this.toLocale = toLocale;
         this.root = new ZipDirectory("");
 
         try {
@@ -35,7 +35,7 @@ public class ZipArchive {
                 ZipEntry zipEntry = e.nextElement();
                 if (!zipEntry.isDirectory()) {
                     InputStream inputStream = zipInputFile.getInputStream(zipEntry);
-                    root.put(zipEntry.getName(), inputStream);
+                    root.put(zipEntry, inputStream);
                     inputStream.close();
                 }
             }
@@ -50,9 +50,20 @@ public class ZipArchive {
 
     public void write() {
         try {
-            logger.log(Level.INFO, "Save archive {0}", zipFileName);
+            logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
             ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
             root.writeTo(outputStream, "");
+            outputStream.close();
+        } catch (IOException ioe) {
+            logger.log(Level.SEVERE, null, ioe);
+        }
+    }
+
+    public void saveTranslation (File outputFile) {
+        try {
+            logger.log(Level.INFO, "Save archive {0}", outputFile.getName());
+            ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+            root.saveTranslation(outputStream, "");
             outputStream.close();
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
@@ -64,6 +75,14 @@ public class ZipArchive {
     }
 
     public String getName() {
-        return this.zipFileName;
+        return this.zipFile.getName();
+    }
+
+    public File getZipFile() {
+        return this.zipFile;
+    }
+
+        public Locale getTranslatedLocale() {
+        return this.toLocale;
     }
 }
