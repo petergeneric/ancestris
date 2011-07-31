@@ -5,7 +5,7 @@
 
 package genjfr.app.editorstd;
 
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.util.Arrays;
 import java.util.Collection;
 import org.openide.util.lookup.ServiceProvider;
@@ -14,8 +14,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author frederic
  */
-@ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
-public class EditorStdPlugin extends GenjFrPlugin{
+@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
+public class EditorStdPlugin extends AncestrisPlugin{
 //    @Override
 //    public Collection<Class> getDefaultOpenedViews() {
 //        return Arrays.asList(new Class[]{EditorStdTopComponent.class});

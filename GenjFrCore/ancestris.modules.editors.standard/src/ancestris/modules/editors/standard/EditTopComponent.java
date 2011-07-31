@@ -12,26 +12,23 @@
 
 package ancestris.modules.editors.standard;
 
-import genj.app.Images;
+import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
-import genj.gedcom.Indi;
 import genj.util.swing.Action2;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genj.view.SelectionListener;
-import genjfr.app.AncestrisTopComponent;
-import genjfr.app.GenjViewInterface;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.AncestrisViewInterface;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Top component which displays something.
  */
-//@ConvertAsProperties(dtd = "-//genjfr.app//Edit//EN",autostore = false)
-@ServiceProvider(service = GenjViewInterface.class)
+@ServiceProvider(service = AncestrisViewInterface.class)
 public final class EditTopComponent extends AncestrisTopComponent implements ActionProvider, SelectionListener {
 
     private static final String PREFERRED_ID = "EditTopComponent";  // NOI18N
@@ -52,7 +49,7 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     }
 
     public String getDefaultFactoryMode() {
-        return "genjfr-editor"; // NOI18N
+        return AncestrisDockModes.EDITOR; // NOI18N
     }
 
     /** This method is called from within the constructor to

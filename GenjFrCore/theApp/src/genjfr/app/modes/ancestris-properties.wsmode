@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mode version="2.3">
-    <name unique="genjfr-explorer" />
+    <name unique="ancestris-properties" />
   <kind type="editor" />
   <state type="joined" />
   <constraints>
@@ -12,10 +12,10 @@
     <path orientation="horizontal" number="20" weight="0.20360480640854473"/>
     <path orientation="vertical" number="21" weight="0.38871951219512196"/>
     <path orientation="horizontal" number="0" weight="0.19759679572763686"/>
-    <path orientation="vertical" number="1" weight="0.199023199023199"/>
+    <path orientation="vertical" number="3" weight="0.503052503052503"/>
   </constraints>
   <bounds x="0" y="0" width="0" height="0" />
   <frame state="0"/>
-    <active-tc  id="ControlCenterTopComponent" />
+    <active-tc  id="EntityTopComponent_1" />
     <empty-behavior permanent="true"/>
 </mode>

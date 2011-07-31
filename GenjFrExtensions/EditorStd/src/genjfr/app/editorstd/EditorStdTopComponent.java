@@ -4,19 +4,18 @@
  */
 package genjfr.app.editorstd;
 
-import genj.app.Workbench;
 import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.util.Trackable;
 import genj.view.View;
-import genjfr.app.AncestrisTopComponent;
+import ancestris.view.AncestrisTopComponent;
 import genjfr.app.App;
-import genjfr.app.GenjViewInterface;
-import genjfr.app.pluginservice.GenjFrPlugin;
-import genjfr.explorer.ExplorerNode;
-import genjfr.util.GedcomDirectory;
+import ancestris.view.AncestrisViewInterface;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.explorer.ExplorerNode;
+import ancestris.gedcom.GedcomDirectory;
 import java.awt.Image;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,7 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.editorstd//EditorStd//EN",
 autostore = false)
-@ServiceProvider(service = GenjViewInterface.class)
+@ServiceProvider(service = AncestrisViewInterface.class)
 public final class EditorStdTopComponent extends AncestrisTopComponent implements LookupListener, WorkbenchListener {
 
     // Path to the icon used by the component and its open action */
@@ -107,7 +106,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         if (c == null || c.getGedcom() == null) {
             return null;
         }
-        for (EditorStdTopComponent editor : GenjFrPlugin.lookupAll(EditorStdTopComponent.class)) {
+        for (EditorStdTopComponent editor : AncestrisPlugin.lookupAll(EditorStdTopComponent.class)) {
             if ((c.getGedcom().equals(editor.getContext().getGedcom()))) {
                 editor.requestActive();
                 return editor;
@@ -115,7 +114,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         }
 
         EditorStdTopComponent editor = new EditorStdTopComponent(c);
-        GenjFrPlugin.register(editor);
+        AncestrisPlugin.register(editor);
         editor.open();
         editor.requestActive();
         return editor;
@@ -200,7 +199,7 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
         }
         result.removeLookupListener(this);
         result = null;
-        GenjFrPlugin.unregister(this);
+        AncestrisPlugin.unregister(this);
     }
 
     @Override
@@ -307,40 +306,40 @@ public final class EditorStdTopComponent extends AncestrisTopComponent implement
     }
 
     @Override
-    public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
+    public void selectionChanged(Context context, boolean isActionPerformed) {
     }
 
     @Override
-    public void processStarted(Workbench workbench, Trackable process) {
+    public void processStarted(Trackable process) {
     }
 
     @Override
-    public void processStopped(Workbench workbench, Trackable process) {
+    public void processStopped(Trackable process) {
     }
 
     @Override
-    public void commitRequested(Workbench workbench, Context context) {
+    public void commitRequested(Context context) {
         commit();
     }
 
     @Override
-    public void workbenchClosing(Workbench workbench) {
+    public void workbenchClosing() {
     }
 
     @Override
-    public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
+    public void gedcomClosed(Gedcom gedcom) {
     }
 
     @Override
-    public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
+    public void gedcomOpened(Gedcom gedcom) {
     }
 
     @Override
-    public void viewOpened(Workbench workbench, View view) {
+    public void viewOpened(View view) {
     }
 
     @Override
-    public void viewClosed(Workbench workbench, View view) {
+    public void viewClosed(View view) {
     }
 
 }

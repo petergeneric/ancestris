@@ -10,16 +10,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package genjfr.app;
+package ancestris.core;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 
 /**
  *
  * @author daniel
  */
 public class Options {
-    private static AncestrisPreferences appOptions = AncestrisPreferences.get(Options.class);
+    private static AncestrisPreferences appOptions = Registry.get(Options.class);
 
     public static String getDefaultGedcom(){
         return  appOptions.get("gedcomFile","");

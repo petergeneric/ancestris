@@ -16,7 +16,7 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
 import genj.gedcom.GedcomException;
 
-import genjfr.app.pluginservice.PluginInterface;
+import ancestris.core.pluginservice.PluginInterface;
 import genjfr.app.tools.webbook.WebBook;
 import genjfr.app.tools.webbook.WebBookParams;
 

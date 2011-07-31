@@ -34,6 +34,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ import javax.swing.JFrame;
 /**
  * Registry - betterfied java.util.Properties
  */
-public class Registry implements PropertyChangeListener {
+public class Registry implements PropertyChangeListener, AncestrisPreferences {
   
 
   private String prefix;
@@ -120,14 +121,14 @@ public class Registry implements PropertyChangeListener {
    * Accessor 
    */
   public static Registry get(Class<?> source) {
-          return new Registry(new RegistryStorage.Preferences(source));
+          return new Registry(RegistryStorage.get(source));
   }
   
   /**
    * Accessor 
    */
   public static Registry get(String pckg) {
-      return new Registry(new RegistryStorage.Preferences(pckg));
+      return new Registry(RegistryStorage.get(pckg));
   }
 
   public void addPreferenceChangeListener(PreferenceChangeListener pcl){
@@ -614,7 +615,39 @@ public class Registry implements PropertyChangeListener {
     // Done
   }
 
-  /**
+    /**
+     * Returns a collection of strings by key
+     */
+    public Collection<String> get(String key, Collection<String> def) {
+
+        // Get size of array
+        int size = get(key, -1);
+        if (size == -1) {
+            return def;
+        }
+
+        // Create result
+        Collection<String> result;
+        if (def == null) {
+            def = new HashSet<String>();
+        }
+
+        try {
+            result = (Collection<String>) def.getClass().newInstance();
+        } catch (Throwable t) {
+            return def;
+        }
+
+        // Collection content
+        for (int i = 0; i < size; i++) {
+            result.add(get(key + "." + (i + 1), ""));
+        }
+
+        // Done
+        return result;
+    }
+
+ /**
    * Remembers a boolean value
    */
   public void put(String key, Boolean value) {

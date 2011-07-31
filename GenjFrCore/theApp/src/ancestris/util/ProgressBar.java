@@ -4,7 +4,6 @@
  */
 package ancestris.util;
 
-import genj.app.Workbench;
 import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -32,7 +31,7 @@ public class ProgressBar implements WorkbenchListener {
     public ProgressBar() {
     }
 
-    public void processStarted(Workbench workbench, Trackable process) {
+    public void processStarted(Trackable process) {
         track = process;
         handle = ProgressHandleFactory.createHandle(process.getTaskName(), new Cancellable() {
 
@@ -63,32 +62,32 @@ public class ProgressBar implements WorkbenchListener {
 
     }
 
-    public void processStopped(Workbench workbench, Trackable process) {
+    public void processStopped(Trackable process) {
         timer.stop();
         // at this point the task is finished and removed from status bar
         // it's not realy necessary to count all the way to the limit, finish can be called earlier.
         // however it has to be called at the end of the processing.
         handle.finish();
     }
-
-    public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
+// FIXME: extend from WorbenchAdapter
+    public void gedcomClosed(Gedcom gedcom) {
     }
 
-    public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
+    public void gedcomOpened(Gedcom gedcom) {
     }
 
-    public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
+    public void selectionChanged(Context context, boolean isActionPerformed) {
     }
 
-    public void viewClosed(Workbench workbench, View view) {
+    public void viewClosed(View view) {
     }
 
-    public void viewOpened(Workbench workbench, View view) {
+    public void viewOpened(View view) {
     }
 
-    public void workbenchClosing(Workbench workbench) {
+    public void workbenchClosing() {
     }
 
-    public void commitRequested(Workbench workbench, Context context) {
+    public void commitRequested(Context context) {
     }
 }

@@ -101,7 +101,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.EditTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_EditAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
                 <attr name="iconBase" stringvalue="genjfr/app/Help.png"/>
             </file>
 
@@ -109,48 +109,48 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.EntityTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_EntityAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
                 <attr name="iconBase" stringvalue="genjfr/app/New.png"/>
             </file>
             <file name="genjfr-app-NavigatorAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.NavigatorTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_NavigatorAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-ReportAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.ReportTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_ReportAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-SearchAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.SearchTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_SearchAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-TableAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.TableTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TableAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-TimelineAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.TimelineTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TimelineAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
             <file name="genjfr-app-TreeAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
                 <attr name="component" methodvalue="genjfr.app.TreeTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TreeAction"/>
-                <attr name="instanceCreate" methodvalue="genjfr.app.AncestrisTopComponent.openAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="genjfr-explorer-GedcomExplorerAction.instance">
-                <attr name="component" methodvalue="genjfr.explorer.GedcomExplorerTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="genjfr.explorer.Bundle#CTL_GedcomExplorerAction"/>
+            <file name="ancestris-explorer-GedcomExplorerAction.instance">
+                <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
             <file name="org-netbeans-core-windows-actions-ResetWindowsAction.instance_hidden"/>
@@ -354,7 +354,7 @@
 -->
         <folder name="Window">
             <file name="GedcomExplorerAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-explorer-GedcomExplorerAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-explorer-GedcomExplorerAction.instance"/>
             </file>
             <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
             <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
@@ -520,31 +520,31 @@
     <!-- XML Workspace Layout part -->
     <folder name="Windows2">
         <folder name="Components">
-            <file name="GedcomExplorerTopComponent.settings" url="GedcomExplorerTopComponentSettings.xml"/>
+            <file name="GedcomExplorerTopComponent.settings" url="../../ancestris/explorer/GedcomExplorerTopComponentSettings.xml"/>
 <!--            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>-->
         </folder>
         <folder name="Modes">
-            <folder name="genjfr-explorer">
-                <file name="GedcomExplorerTopComponent.wstcref" url="GedcomExplorerTopComponentWstcref.xml"/>
+            <folder name="ancestris-explorer">
+                <file name="GedcomExplorerTopComponent.wstcref" url="../../ancestris/explorer/GedcomExplorerTopComponentWstcref.xml"/>
 <!--                <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>-->
             </folder>
-            <folder name="genjfr-nav">
+            <folder name="ancestris-nav">
             </folder>
-            <folder name="genjfr-output">
+            <folder name="ancestris-output">
             </folder>
-            <folder name="genjfr-properties">
+            <folder name="ancestris-properties">
             </folder>
-            <folder name="genjfr-table">
+            <folder name="ancestris-table">
             </folder>
-            <folder name="genjfr-editor">
+            <folder name="ancestris-editor">
             </folder>
 
-            <file name="genjfr-editor.wsmode" url="modes/genjfr-editor.wsmode"/>
-            <file name="genjfr-explorer.wsmode" url="modes/genjfr-explorer.wsmode"/>
-            <file name="genjfr-nav.wsmode" url="modes/genjfr-nav.wsmode"/>
-            <file name="genjfr-output.wsmode" url="modes/genjfr-output.wsmode"/>
-            <file name="genjfr-properties.wsmode" url="modes/genjfr-properties.wsmode"/>
-            <file name="genjfr-table.wsmode" url="modes/genjfr-table.wsmode"/>
+            <file name="ancestris-editor.wsmode" url="modes/ancestris-editor.wsmode"/>
+            <file name="ancestris-explorer.wsmode" url="../../ancestris/explorer/ancestris-explorer.wsmode"/>
+            <file name="ancestris-nav.wsmode" url="modes/ancestris-nav.wsmode"/>
+            <file name="ancestris-output.wsmode" url="modes/ancestris-output.wsmode"/>
+            <file name="ancestris-properties.wsmode" url="modes/ancestris-properties.wsmode"/>
+            <file name="ancestris-table.wsmode" url="modes/ancestris-table.wsmode"/>
             <!--
             <file name="ccenter.wsmode" url="outputWsmode.xml"/>
             <file name="table.wsmode" url="tableWsmode.xml"/>

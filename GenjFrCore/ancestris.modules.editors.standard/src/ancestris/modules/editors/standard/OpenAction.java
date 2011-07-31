@@ -13,7 +13,7 @@
 package ancestris.modules.editors.standard;
 
 import genj.gedcom.Context;
-import genjfr.app.AncestrisTopComponent;
+import ancestris.view.AncestrisTopComponent;
 import genjfr.app.App;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -5,6 +5,8 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -18,8 +20,8 @@ import org.openide.windows.RetainLocation;
     dtd="-//genjfr.app//Table//EN",
     autostore=false
 )
-@RetainLocation("genjfr-table")
-@ServiceProvider(service=GenjViewInterface.class)
+@RetainLocation(AncestrisDockModes.TABLE)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class TableTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TableTopComponent";
@@ -29,7 +31,7 @@ public final class TableTopComponent extends GenjViewTopComponent {
 
     @Override
     public String getDefaultFactoryMode() {
-        return "genjfr-table";
+        return AncestrisDockModes.TABLE;
     }
 
     ViewFactory getViewFactory() {
@@ -70,14 +72,14 @@ public final class TableTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

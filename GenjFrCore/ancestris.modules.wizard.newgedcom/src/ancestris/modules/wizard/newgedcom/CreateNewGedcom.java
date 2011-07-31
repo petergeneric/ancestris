@@ -12,12 +12,11 @@
 package ancestris.modules.wizard.newgedcom;
 
 import ancestris.api.newgedcom.NewGedcom;
-import genj.app.WorkbenchHelper;
+import genj.app.Workbench;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.UnitOfWork;
 import java.awt.Dialog;
 import java.text.MessageFormat;
 import org.openide.DialogDisplayer;
@@ -61,7 +60,7 @@ public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
         if (context == null){
             Gedcom gedcom = new Gedcom();
             gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
-            WorkbenchHelper.getinstance().setDefault(gedcom);
+            Workbench.getInstance().setDefault(gedcom);
 
             // remember
             context = new Context(gedcom);

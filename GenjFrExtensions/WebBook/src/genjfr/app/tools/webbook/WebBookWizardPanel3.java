@@ -6,7 +6,7 @@ package genjfr.app.tools.webbook;
 
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
-import genjfr.app.pluginservice.PluginInterface;
+import ancestris.core.pluginservice.PluginInterface;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;

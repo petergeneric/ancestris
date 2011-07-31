@@ -20,15 +20,14 @@
 package genj.edit;
 
 import genj.app.PluginFactory;
-import genj.app.Workbench;
 
 /**
  * Factory for edit plugin
  */
 public class EditPluginFactory implements PluginFactory {
   
-  public Object createPlugin(Workbench workbench) {
-    return new EditPlugin(workbench);
+  public Object createPlugin() {
+    return new EditPlugin();
   }
 
 }

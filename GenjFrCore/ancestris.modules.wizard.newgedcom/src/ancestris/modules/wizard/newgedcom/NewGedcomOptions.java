@@ -12,7 +12,8 @@
 
 package ancestris.modules.wizard.newgedcom;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 
 /**
  *
@@ -35,7 +36,7 @@ public class NewGedcomOptions {
    * Ancestris way
    */
     private AncestrisPreferences getPreferences() {
-        return AncestrisPreferences.get(NewGedcomOptions.class);
+        return Registry.get(NewGedcomOptions.class);
     }
     private static final String SKIP_INTRO   = "newgedcom.skip_intro";         // NOI18N
 

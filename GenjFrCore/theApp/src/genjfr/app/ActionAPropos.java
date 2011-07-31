@@ -10,7 +10,7 @@
  */
 package genjfr.app;
 
-import genjfr.app.pluginservice.PluginInterface;
+import ancestris.core.pluginservice.PluginInterface;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

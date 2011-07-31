@@ -5,7 +5,7 @@
 
 package genjfr.app;
 
-import genj.app.Images;
+import genj.app.Workbench;
 import genj.gedcom.Gedcom;
 import genj.util.Resources;
 import genj.util.swing.Action2;
@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        App.workbenchHelper.saveAsGedcom(App.center.getSelectedContext(true));
+        Workbench.getInstance().saveAsGedcom(App.center.getSelectedContext(true));
     }
 
   } // ActionSave

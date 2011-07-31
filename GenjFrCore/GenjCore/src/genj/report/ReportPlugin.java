@@ -48,13 +48,10 @@ public class ReportPlugin extends WorkbenchAdapter implements ActionProvider {
 
   private boolean showReportPickerOnOpen = true;
   
-  private Workbench workbench;
   private Action2.Group workbenchActions = new Action2.Group(Resources.get(this).getString("report.reports"));
   
-  public ReportPlugin(Workbench workbench) {
-    this.workbench = workbench;
-    
-    workbench.addWorkbenchListener(this);
+  public ReportPlugin() {
+    Workbench.getInstance().addWorkbenchListener(this);
 
   }
   
@@ -245,10 +242,11 @@ public class ReportPlugin extends WorkbenchAdapter implements ActionProvider {
     }
     
     /** callback */
+        @Override
     public void actionPerformed(ActionEvent event) {
       showReportPickerOnOpen = false;
       try {
-        ReportView view = (ReportView)workbench.openView(ReportViewFactory.class);
+        ReportView view = (ReportView)Workbench.getInstance().openView(ReportViewFactory.class);
         view.startReport(report, context);
       } finally {
         showReportPickerOnOpen = true;
@@ -256,10 +254,12 @@ public class ReportPlugin extends WorkbenchAdapter implements ActionProvider {
     }
   } //ActionRun
 
-  public void viewClosed(Workbench workbench, View view) {
+    @Override
+  public void viewClosed(View view) {
   }
 
-  public void viewOpened(Workbench workbench, View view) {
+    @Override
+  public void viewOpened(View view) {
     if (view instanceof ReportView) {
       if (showReportPickerOnOpen)
         ((ReportView)view).startReport();

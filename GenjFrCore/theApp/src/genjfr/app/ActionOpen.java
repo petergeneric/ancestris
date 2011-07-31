@@ -4,7 +4,8 @@
  */
 package genjfr.app;
 
-import genj.app.Images;
+import ancestris.view.Images;
+import genj.app.Workbench;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
@@ -33,9 +34,9 @@ public class ActionOpen extends Action2 {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (url != null) {
-            App.workbenchHelper.openGedcom(url);
+            Workbench.getInstance().openGedcom(url);
         } else {
-            App.workbenchHelper.openGedcom();
+            Workbench.getInstance().openGedcom();
         }
     }
 

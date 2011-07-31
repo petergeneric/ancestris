@@ -1,13 +1,16 @@
 /* * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package genjfr.app;
+package ancestris.view;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genjfr.app.pluginservice.GenjFrPlugin;
-import genjfr.util.GedcomDirectory;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDirectory;
+import genjfr.app.App;
+import genjfr.app.ModePersisterTopComponent;
+import genjfr.app.OpenGenjViewAction;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Window;
@@ -64,8 +67,8 @@ import org.openide.windows.WindowManager;
  *   => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
-@ServiceProvider(service=GenjViewInterface.class)
-public class AncestrisTopComponent extends TopComponent implements GenjViewInterface{
+@ServiceProvider(service=AncestrisViewInterface.class)
+public class AncestrisTopComponent extends TopComponent implements AncestrisViewInterface{
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
@@ -100,14 +103,14 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         return GedcomDirectory.getInstance().getUndoRedo(context);
     }
 
-    public String getDefaultFactoryMode() {return "genjfr-editor";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.EDITOR;}
 
     String getDefaultMode(){
-        return AncestrisPreferences.get(this).get(preferredID()+".dockMode",getDefaultFactoryMode());
+        return genj.util.Registry.get(this).get(preferredID()+".dockMode",getDefaultFactoryMode());
     }
 
     public void setDefaultMode(String mode) {
-        AncestrisPreferences.get(this).put(preferredID()+".dockMode", mode);
+        genj.util.Registry.get(this).put(preferredID()+".dockMode", mode);
     }
 
     public void setDefaultMode(Mode mode) {
@@ -160,11 +163,11 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
 
 
     /**
-     * @deprecated : use GenjFrPlugin.register(this)
+     * @deprecated : use AncestrisPlugin.register(this)
      */
     @Deprecated
     public void addLookup() {
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
     }
 
     public void setPanel(JComponent jpanel) {
@@ -250,7 +253,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
 //        if (gedName==null) return;
         if (gedName==null)
             close();
-        isRestored = true;
+        setRestored(true);
         waitStartup(gedName);
     }
 
@@ -259,11 +262,19 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         return PREFERRED_ID;
     }
 
+    /**
+     * return
+     * @return
+     */
+    public String getPreferencesKey(String key){
+        return PREFERRED_ID+"."+key;
+    }
+
     public AncestrisTopComponent create(Context context) {
         Gedcom gedcom = context == null?null:context.getGedcom();
         AncestrisTopComponent topComponent = null;
         if (gedcom != null)
-            for (AncestrisTopComponent tc:GenjFrPlugin.lookupAll(this.getClass()))
+            for (AncestrisTopComponent tc:AncestrisPlugin.lookupAll(this.getClass()))
                 if (gedcom.equals(tc.getGedcom())){
                     topComponent = tc;
                     break;
@@ -316,7 +327,7 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
         }
         if (!createPanel())
             return;
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
 
         String gedcomName;
         if ((getGedcom() != null) && ((gedcomName = getGedcom().getName())!=null)){
@@ -383,5 +394,9 @@ public class AncestrisTopComponent extends TopComponent implements GenjViewInter
 
     public Mode getMode() {
         return WindowManager.getDefault().findMode(this);
+    }
+
+    public void setRestored(boolean b) {
+        isRestored = b;
     }
 }

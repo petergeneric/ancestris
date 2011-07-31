@@ -59,6 +59,22 @@ made subject to such option by the copyright holder.
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>ancestris.core</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>0.5.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>ancestris.core.pluginservice</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>0.5.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>ancestris.samples</code-name-base>
                     <run-dependency>
                         <specification-version>1.0</specification-version>
@@ -74,22 +90,6 @@ made subject to such option by the copyright holder.
                 </dependency>
                 <dependency>
                     <code-name-base>genjfr.app</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>0.5.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>genjfr.app.pluginservice</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>0.5.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>genjfr.genjcore</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

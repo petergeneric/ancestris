@@ -3,7 +3,7 @@
 *** GENERATED FROM project.xml - DO NOT EDIT  ***
 ***         EDIT ../build.xml INSTEAD         ***
 -->
-<project name="genjfr.app.pluginservice-impl" basedir="..">
+<project name="ancestris.core.pluginservice-impl" basedir="..">
     <fail message="Please build using Ant 1.7.1 or higher.">
         <condition>
             <not>

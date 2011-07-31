@@ -7,7 +7,7 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>genjfr.genjcore</code-name-base>
+                    <code-name-base>ancestris.core</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

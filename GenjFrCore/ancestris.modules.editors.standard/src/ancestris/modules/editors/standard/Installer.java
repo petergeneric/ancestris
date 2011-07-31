@@ -15,7 +15,7 @@ import genj.gedcom.Context;
 import genj.util.swing.Action2;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
@@ -31,7 +31,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
 
     @Override
     public void restored() {
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
         // By default, do nothing.
         // Put your startup code here.
     }
@@ -39,7 +39,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
     public void createActions(Context context, Purpose purpose, Group into) {
         if (purpose != Purpose.CONTEXT)
             return;
-        for (EditTopComponent edit : GenjFrPlugin.lookupAll(EditTopComponent.class) ) {
+        for (EditTopComponent edit : AncestrisPlugin.lookupAll(EditTopComponent.class) ) {
             Context viewContext = edit.getContext();
             if (viewContext == null)
                 continue;

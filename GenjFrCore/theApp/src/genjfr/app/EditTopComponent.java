@@ -4,6 +4,8 @@
  */
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.edit.EditView;
 import genj.edit.EditViewFactory;
 import genj.gedcom.Context;
@@ -19,8 +21,8 @@ import org.openide.windows.RetainLocation;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app//Edit//EN",
 autostore = false)
-@RetainLocation("genjfr-editor")
-@ServiceProvider(service=GenjViewInterface.class)
+@RetainLocation(AncestrisDockModes.EDITOR)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class EditTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "EditTopComponent";
@@ -32,7 +34,7 @@ public final class EditTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public String getDefaultFactoryMode() {return "genjfr-editor";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.EDITOR;}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -68,15 +70,16 @@ public final class EditTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    @Override
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

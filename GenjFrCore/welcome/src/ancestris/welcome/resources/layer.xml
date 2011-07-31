@@ -64,7 +64,7 @@ made subject to such option by the copyright holder.
     <!-- XML Workspace Layout part --> 
     <folder name="Windows2">
         <folder name="Modes">
-            <folder name="genjfr-output">
+            <folder name="ancestris-output">
                 <file name="Welcome.wstcref" url="Welcome.wstcref"/>
             </folder>
         </folder>

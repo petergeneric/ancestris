@@ -5,6 +5,8 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.timeline.TimelineViewFactory;
 import genj.view.ViewFactory;
 //import org.openide.util.ImageUtilities;
@@ -18,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
     dtd="-//genjfr.app//Timeline//EN",
     autostore=false
 )
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class TimelineTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "TimelineTopComponent";
@@ -30,7 +32,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public String getDefaultFactoryMode() {return "genjfr-table";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.TABLE;}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -66,15 +68,15 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

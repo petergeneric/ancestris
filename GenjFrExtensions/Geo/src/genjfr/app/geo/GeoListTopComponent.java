@@ -5,9 +5,9 @@
 package genjfr.app.geo;
 
 import genj.gedcom.Context;
-import genjfr.app.AncestrisTopComponent;
-import genjfr.app.GenjViewInterface;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.AncestrisViewInterface;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -28,7 +28,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoList//EN",
 autostore = false)
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class GeoListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
 
     /** path to the icon used by the component and its open action */
@@ -117,7 +117,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
             gpl.removeGeoPlacesListener(this);
         }
         mgr.removePropertyChangeListener(this);
-        GenjFrPlugin.unregister(this);
+        AncestrisPlugin.unregister(this);
     }
 
     void writeProperties(java.util.Properties p) {

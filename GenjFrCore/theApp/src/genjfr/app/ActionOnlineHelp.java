@@ -5,7 +5,7 @@
 
 package genjfr.app;
 
-import genj.app.Images;
+import ancestris.view.Images;
 import genj.io.FileAssociation;
 import genj.util.Resources;
 import genj.util.swing.Action2;

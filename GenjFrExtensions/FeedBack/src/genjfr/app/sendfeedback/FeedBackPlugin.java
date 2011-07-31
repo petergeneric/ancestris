@@ -5,14 +5,14 @@
 
 package genjfr.app.sendfeedback;
 
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author daniel
  */
-@ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
-public class FeedBackPlugin extends GenjFrPlugin{
+@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
+public class FeedBackPlugin extends AncestrisPlugin{
 
 }

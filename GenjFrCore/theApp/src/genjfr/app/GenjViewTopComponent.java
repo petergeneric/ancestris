@@ -3,8 +3,7 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
-import genj.app.Workbench;
+import ancestris.view.AncestrisTopComponent;
 import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -20,7 +19,7 @@ import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
 import genj.view.ViewFactory;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -188,6 +187,31 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         setToolTipText(getViewFactory().getTitle());
     }
 
+        // FIXME: public to allow use from derived class in another package
+    public void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        p.setProperty("gedcom",getGedcom().getOrigin().toString());
+        // TODO store your settings
+    }
+
+    public Object readProperties(java.util.Properties p) {
+        readPropertiesImpl(p);
+        return this;
+    }
+
+    void readPropertiesImpl(java.util.Properties p) {
+// version not used        String version = p.getProperty("version");
+        final String gedName = p.getProperty("gedcom");
+//        if (gedName==null) return;
+        if (gedName==null)
+            close();
+        setRestored(true);
+        waitStartup(gedName);
+    }
+
+
     // ToolBar support
     private void setToolBar(View view) {
 
@@ -206,7 +230,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
 
         //    add(bar, viewHandle.getRegistry().get("toolbar", BorderLayout.WEST));
         if ((bar != null) && (bar.getToolBar() != null)){
-            add(bar.getToolBar(), AncestrisPreferences.get(view).get("toolbar",BorderLayout.WEST));
+            add(bar.getToolBar(), genj.util.Registry.get(view).get("toolbar",BorderLayout.NORTH));
         }
     // done
     }
@@ -219,7 +243,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
     // restore toolbar orientation?
     if ((bar!=null) && (comp==bar.getToolBar())) {
       // remember
-      AncestrisPreferences.get(view).put("toolbar", constraints.toString());
+      genj.util.Registry.get(view).put("toolbar", constraints.toString());
       // find orientation
       int orientation = SwingConstants.HORIZONTAL;
       if (BorderLayout.WEST.equals(constraints)||BorderLayout.EAST.equals(constraints))
@@ -449,7 +473,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
       private Action2.Group getProvidedActions(Context context) {
       Action2.Group group = new Action2.Group("");
       // ask the action providers
-        for (ActionProvider provider : GenjFrPlugin.lookupAll(ActionProvider.class) )
+        for (ActionProvider provider : AncestrisPlugin.lookupAll(ActionProvider.class) )
         provider.createActions(context, Purpose.CONTEXT, group);
       // done
       return group;
@@ -460,7 +484,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
 
     // Workbench listener support
 
-    public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
+    public void selectionChanged(Context context, boolean isActionPerformed) {
     // appropriate?
     if (context.getGedcom()!= getContext().getGedcom()) {
       LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
@@ -483,13 +507,13 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
           view.setContext(context, isActionPerformed);
   }
 
-    public void processStarted(Workbench workbench, Trackable process) {
+    public void processStarted(Trackable process) {
     }
 
-    public void processStopped(Workbench workbench, Trackable process) {
+    public void processStopped(Trackable process) {
     }
 
-    public void commitRequested(Workbench workbench, Context context) {
+    public void commitRequested(Context context) {
         if (context.getGedcom()!= getContext().getGedcom()) {
           LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
           return;
@@ -498,24 +522,24 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
             view.commit();
     }
 
-    public void workbenchClosing(Workbench workbench) {
+    public void workbenchClosing() {
         if (view != null)
             view.closing();
     }
 
-    public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
+    public void gedcomClosed(Gedcom gedcom) {
     }
 
-    public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
+    public void gedcomOpened(Gedcom gedcom) {
     }
 
-    public void viewRestored(Workbench workbench, View view) {
+    public void viewRestored(View view) {
     }
 
-    public void viewOpened(Workbench workbench, View view) {
+    public void viewOpened(View view) {
     }
 
-    public void viewClosed(Workbench workbench, View view) {
+    public void viewClosed(View view) {
     }
 
 }

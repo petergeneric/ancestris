@@ -12,7 +12,7 @@
 package ancestris.samples;
 
 import ancestris.samples.api.SampleProvider;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import org.openide.modules.ModuleInstall;
 
 /**
@@ -24,7 +24,7 @@ public class Installer extends ModuleInstall {
     private SampleProvider sampleInstance = new SamplePlugin();
     @Override
     public void restored() {
-        GenjFrPlugin.register(sampleInstance);
+        AncestrisPlugin.register(sampleInstance);
         // By default, do nothing.
         // Put your startup code here.
     }
@@ -32,7 +32,7 @@ public class Installer extends ModuleInstall {
     @Override
     public void uninstalled() {
         super.uninstalled();
-        GenjFrPlugin.unregister(sampleInstance);
+        AncestrisPlugin.unregister(sampleInstance);
     }
 
 }

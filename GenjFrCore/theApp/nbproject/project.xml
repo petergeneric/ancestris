@@ -7,7 +7,7 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>ancestris.modules.beans</code-name-base>
+                    <code-name-base>ancestris.core</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -15,19 +15,19 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>genjfr.app.pluginservice</code-name-base>
+                    <code-name-base>ancestris.core.pluginservice</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.5</specification-version>
+                        <specification-version>0.5.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>genjfr.genjcore</code-name-base>
+                    <code-name-base>ancestris.modules.beans</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.5</specification-version>
+                        <specification-version>0.5.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -178,11 +178,11 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>ancestris.explorer</package>
                 <package>ancestris.util</package>
+                <package>ancestris.view</package>
                 <package>genj.app</package>
                 <package>genjfr.app</package>
-                <package>genjfr.explorer</package>
-                <package>genjfr.util</package>
             </public-packages>
         </data>
     </configuration>
