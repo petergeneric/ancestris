@@ -4,7 +4,6 @@
  */
 package org.ancestris.trancestris.explorers.zipexplorer;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -36,7 +35,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     private static final String PREFERRED_ID = "ZipExplorerTopComponent";
     private ExplorerManager zipExplorerManager = null;
     private ZipArchive zipFile = null;
-    private InstanceContent content = new InstanceContent();
+    private InstanceContent instanceContent = new InstanceContent();
     private final ProxyLookup proxyLookup;
 
     public ZipExplorerTopComponent() {
@@ -54,7 +53,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
 //        ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
 //        setActivatedNodes(new Node[]{newZipRootNode});
         Lookup lookup = ExplorerUtils.createLookup(zipExplorerManager, getActionMap());
-        proxyLookup = new ProxyLookup(lookup, new AbstractLookup(content));
+        proxyLookup = new ProxyLookup(lookup, new AbstractLookup(instanceContent));
         associateLookup(proxyLookup);
     }
 
@@ -152,11 +151,10 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     public void setBundles(ZipArchive zipFile) {
-        ZipRootNode newZipRootNode = new ZipRootNode(zipFile, content);
+        ZipRootNode newZipRootNode = new ZipRootNode(zipFile);
         zipExplorerManager.setRootContext(newZipRootNode);
         ((BeanTreeView) beanTreeView).setRootVisible(true);
-        logger.log(Level.INFO, "add lookup");
-        content.add(newZipRootNode);
+        instanceContent.add(newZipRootNode);
         this.zipFile = zipFile;
     }
 

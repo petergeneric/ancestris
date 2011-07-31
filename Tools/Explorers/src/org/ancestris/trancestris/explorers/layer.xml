@@ -9,6 +9,12 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.SaveTranslationAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_SaveTranslationAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerOpenAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ZipExplorerOpenAction"/>
@@ -31,6 +37,10 @@
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
                 <attr name="position" intvalue="1250"/>
+            </file>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.instance"/>
+                <attr name="position" intvalue="1150"/>
             </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance"/>
