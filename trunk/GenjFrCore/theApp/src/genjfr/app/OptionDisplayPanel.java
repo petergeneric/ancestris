@@ -5,10 +5,11 @@
 package genjfr.app;
 
 import ancestris.startup.settings.StartupOptions;
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
 import ancestris.util.Lifecycle;
 import genj.table.TableView;
 import genj.tree.TreeView;
+import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Locale;
 import javax.swing.SpinnerNumberModel;
@@ -26,6 +27,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         Locale.GERMAN,
         new Locale("es"),
         new Locale("nl"),
+        new Locale("no"),
         Locale.ITALIAN,
         new Locale("pl"),
         new Locale("no")
@@ -233,15 +235,14 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
-        AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
+        AncestrisPreferences editPrefs = Registry.get(genj.edit.Options.class);
 
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
 
-        setSkin(appPrefs.get("lookAndFeel", ""));
-        setRestoreWindows(appPrefs.get("isRestoreViews", ""));
+        jComboBox2.setSelectedIndex(ancestris.app.Options.getLookAndFeel());
+        jCheckBox1.setSelected(ancestris.app.Options.isRestoreViews());
         setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
         cbSplitJuridictions.setSelected(Boolean.valueOf(editPrefs.get("isSplitJurisdictions", "")));
@@ -253,9 +254,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     void store() {
         boolean needRestart = false;
 
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
-        AncestrisPreferences editPrefs = AncestrisPreferences.get(genj.edit.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
+        AncestrisPreferences editPrefs = Registry.get(genj.edit.Options.class);
 
         StartupOptions stopts = new StartupOptions();
 
@@ -269,8 +269,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         stopts.setJvmLocale(newLocale);
         stopts.applyChanges();
 
-        appPrefs.put("lookAndFeel", getSkin());
-        appPrefs.put("isRestoreViews", getRestoreWindows());
+        ancestris.app.Options.setLookAndFeel(jComboBox2.getSelectedIndex());
+        ancestris.app.Options.setRestoreViews(jCheckBox1.isSelected());
         editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
 
@@ -375,35 +375,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         if (i<0 || i>=locales.length)
             return null;
         return locales[i];
-    }
-
-    void setSkin(String str) {
-        if (str.equals("-1")) {
-            str = "1";
-        }
-        Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 1;
-        }
-        if (i > skins.length) {
-            i = skins.length;
-        }
-        jComboBox2.setSelectedIndex(i);
-    }
-
-    String getSkin() {
-        return jComboBox2.getSelectedIndex() + "";
-    }
-
-    void setRestoreWindows(String str) {
-        if (str.equals("")) {
-            str = "true";
-        }
-        jCheckBox1.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getRestoreWindows() {
-        return jCheckBox1.isSelected() ? "true" : "false";
     }
 
     void setAutoCommit(String str) {

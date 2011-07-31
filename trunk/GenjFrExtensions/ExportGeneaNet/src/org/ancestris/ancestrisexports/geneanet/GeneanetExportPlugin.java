@@ -1,13 +1,13 @@
 package org.ancestris.ancestrisexports.geneanet;
 
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author daniel
  */
-@ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
-public class GeneanetExportPlugin extends GenjFrPlugin{
+@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
+public class GeneanetExportPlugin extends AncestrisPlugin{
 
 }

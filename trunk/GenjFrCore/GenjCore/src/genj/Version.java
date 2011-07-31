@@ -19,7 +19,7 @@
  */
 package genj;
 
-import genjfr.app.pluginservice.PluginInterface;
+import ancestris.core.pluginservice.PluginInterface;
 
 /**
  * Type that encapsulates the GenJ Version
@@ -28,7 +28,7 @@ public class Version {
 
   /** Singleton reference */
   public static final Version singleton = new Version();
-  public static final PluginInterface plugref = new genjfr.genjcore.GenjCorePlugin();
+  public static final PluginInterface plugref = new ancestris.core.AncestrisCorePlugin();
 
   /**
    * Constructor

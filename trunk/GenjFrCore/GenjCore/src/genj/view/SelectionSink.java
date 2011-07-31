@@ -81,12 +81,9 @@ public interface SelectionSink {
         }
       });
       if (!isMuted())
-        theSink.fireSelection(listener,context, isActionPerformed);
+        Workbench.getInstance().fireSelection(listener,context, isActionPerformed);
     }
 
-    public static void fireSelection(Workbench w, Context context, boolean isActionPerformed) {
-        fireSelection((Component)null, context, isActionPerformed);
-    }
     public static void fireSelection(Context context, boolean isActionPerformed) {
         fireSelection((Component)null, context, isActionPerformed);
     }

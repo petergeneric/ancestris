@@ -4,7 +4,8 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 import javax.swing.SpinnerNumberModel;
 import org.openide.awt.StatusDisplayer;
 
@@ -364,8 +365,8 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences reportPrefs = AncestrisPreferences.get(genj.report.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
+        AncestrisPreferences reportPrefs = Registry.get(genj.report.Options.class);
 
         setSymbolBirt(reportPrefs.get("birthSymbol", ""));
         setSymbolBapm(reportPrefs.get("baptismSymbol", ""));
@@ -388,8 +389,8 @@ final class OptionFormatPanel extends javax.swing.JPanel {
     }
 
     void store() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences reportPrefs = AncestrisPreferences.get(genj.report.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
+        AncestrisPreferences reportPrefs = Registry.get(genj.report.Options.class);
 
         reportPrefs.put("birthSymbol", getSymbolBirt());
         reportPrefs.put("baptismSymbol", getSymbolBapm());

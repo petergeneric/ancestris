@@ -5,6 +5,8 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Property;
 import genj.search.SearchView;
 import genj.search.SearchViewFactory;
@@ -21,7 +23,7 @@ import org.openide.util.lookup.ServiceProvider;
     dtd="-//genjfr.app//Search//EN",
     autostore=false
 )
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class SearchTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "SearchTopComponent";
@@ -34,7 +36,7 @@ public final class SearchTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    public String getDefaultFactoryMode() {return "genjfr-properties";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.PROPERTIES;}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -70,14 +72,14 @@ public final class SearchTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mode version="2.3">
-    <name unique="genjfr-table" />
+    <name unique="ancestris-explorer" />
   <kind type="editor" />
   <state type="joined" />
   <constraints>
@@ -11,11 +11,11 @@
     <path orientation="vertical" number="2" weight="0.7948717948717948"/>
     <path orientation="horizontal" number="20" weight="0.20360480640854473"/>
     <path orientation="vertical" number="21" weight="0.38871951219512196"/>
-    <path orientation="horizontal" number="1" weight="0.7997329773030708"/>
-    <path orientation="vertical" number="1" weight="0.25"/>
+    <path orientation="horizontal" number="0" weight="0.19759679572763686"/>
+    <path orientation="vertical" number="1" weight="0.199023199023199"/>
   </constraints>
   <bounds x="0" y="0" width="0" height="0" />
   <frame state="0"/>
-    <active-tc  id="TimelineTopComponent_1" />
+    <active-tc  id="ControlCenterTopComponent" />
     <empty-behavior permanent="true"/>
 </mode>

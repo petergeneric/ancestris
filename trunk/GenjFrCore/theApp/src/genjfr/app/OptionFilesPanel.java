@@ -4,7 +4,8 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
@@ -374,11 +375,10 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_logLevelActionPerformed
 
     void load() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
 
-        setGedcomFile(genjfr.app.Options.getDefaultGedcom());
-        jcbAlwaysOpen.setSelected(genjfr.app.Options.getAlwaysOpenDefault());
+        setGedcomFile(ancestris.core.Options.getDefaultGedcom());
+        jcbAlwaysOpen.setSelected(ancestris.core.Options.getAlwaysOpenDefault());
         setReportDir(gedcomPrefs.get("reportDir", ""));
 
 //TODO: not used atm        registry.put("options.associations", "6");...
@@ -389,19 +389,17 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setAssoSound("");
         setAssoWeb("");
 
-        setLogSize(appPrefs.get("maxLogSizeKB", ""));
-        setLogLevel(AncestrisPreferences.get(App.class).get("logLevel", "INFO"));
+        jSpinner1.setValue(ancestris.app.Options.getMaxLogSizeKB());
+        setLogLevel(Registry.get(App.class).get("logLevel", "INFO"));
     }
 
     void store() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
 
-        genjfr.app.Options.setDefaultGedcom(getGedcomFile());
-        genjfr.app.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
+        ancestris.core.Options.setDefaultGedcom(getGedcomFile());
+        ancestris.core.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
-        appPrefs.put("maxLogSizeKB", getLogSize());
-        AncestrisPreferences.get(App.class).put("logLevel", getLogLevel());
+        ancestris.app.Options.setLookAndFeel(Integer.valueOf(jSpinner1.getValue().toString()));
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));
 
@@ -538,24 +536,6 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
     String getAssoWeb() {
         return "html,xml,htm*Internet*" + jTextField9.getText();
-    }
-
-    void setLogSize(String str) {
-        if (str.equals("-1")) {
-            str = "128";
-        }
-        Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 256;
-        }
-        if (i > 16384) {
-            i = 16384;
-        }
-        jSpinner1.setValue(i);
-    }
-
-    String getLogSize() {
-        return jSpinner1.getValue().toString();
     }
 
     String getLogLevel() {

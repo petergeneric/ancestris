@@ -19,21 +19,16 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
 import genj.Version;
-import genj.app.Options;
-import genj.app.WorkbenchHelper;
-import genj.gedcom.Gedcom;
+import ancestris.app.Options;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.swing.DialogHelper;
-import genj.view.SelectionSink;
-import genjfr.app.pluginservice.GenjFrPlugin;
-import genjfr.util.DialogManagerImp;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.util.DialogManagerImp;
 
 import java.awt.EventQueue;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -43,7 +38,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -70,7 +64,7 @@ public class App {
     /*package*/ static File LOGFILE;
     private static Startup startup;
     public static ControlCenter center;
-    public static WorkbenchHelper workbenchHelper;
+//    public static WorkbenchHelper workbenchHelper;
 
     private static boolean x11ErrorHandlerFixInstalled = false;
 
@@ -100,14 +94,13 @@ public class App {
 
         // wait for startup do be done
         synchronized (startup) {
-            if (workbenchHelper == null) {
+            if (center == null) {
                 try {
                     startup.wait();
                 } catch (InterruptedException e) {
                 }
             }
         }
-        center = startup.center;
 
         if (!x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
             x11ErrorHandlerFixInstalled = true;
@@ -162,7 +155,7 @@ public class App {
         // persist options
         OptionProvider.persistAll();
         // Store registry
-        AncestrisPreferences.persist();
+        Registry.persist();
         // Reload modes if restart required
         loadModesIfRestartRequired();
         // done
@@ -234,7 +227,6 @@ public class App {
      */
     private static class Startup implements Runnable {
 
-        ControlCenter center;
         /**
          * Constructor
          */
@@ -264,17 +256,12 @@ public class App {
                 System.setOut(new PrintStream(new LogOutputStream(Level.INFO, "System", "out")));
                 System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
 
-                // Pour le moment il ne faut pas que je lnf soit mis a autre chose que java.
-                // ni pas les options, ni par l'assistant.
-                // On maintient la possibilite de changer mais le lnf reel utilise pas l'appli est java
-                AncestrisPreferences.get(genj.app.Options.class).put("lookAndFeel", "1");
-
                 // initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions();
 
                 // Setup File Logging and check environment
                 LOGFILE = new File(home, "ancestris.log");
-                Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), Options.getInstance().getMaxLogSizeKB() * 1024, 1, true);
+                Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), Options.getMaxLogSizeKB() * 1024, 1, true);
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);
@@ -287,7 +274,7 @@ public class App {
                 if (System.getProperty("genj.debug.level") != null) {
                     setLogLevel(System.getProperty("genj.debug.level"));
                 } else {
-                    setLogLevel((AncestrisPreferences.get(App.class).get("logLevel","")));
+                    setLogLevel((Registry.get(App.class).get("logLevel","")));
                 }
 
                 // Startup Information
@@ -308,8 +295,6 @@ public class App {
 
                 // setup control center
                 center = new ControlCenter();
-        workbenchHelper = WorkbenchHelper.getinstance();
-        SelectionSink.Dispatcher.setSink(workbenchHelper);
 
 
                 // done
@@ -492,7 +477,7 @@ public class App {
         }
     }
 
-  private static class AppPlugin extends GenjFrPlugin{
+  private static class AppPlugin extends AncestrisPlugin{
   }
 
 } //App

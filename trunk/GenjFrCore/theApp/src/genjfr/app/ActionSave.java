@@ -4,9 +4,9 @@
  */
 package genjfr.app;
 
-import genj.app.Images;
+import ancestris.view.Images;
+import genj.app.Workbench;
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
@@ -35,11 +35,11 @@ public class ActionSave extends Action2 {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (contextBeingSaved != null){
-            App.workbenchHelper.saveGedcom(contextBeingSaved);
+            Workbench.getInstance().saveGedcom(contextBeingSaved);
         } else {
             Context context = App.center.getSelectedContext(true);
             if (context != null)  {
-                App.workbenchHelper.saveGedcom(context);
+                Workbench.getInstance().saveGedcom(context);
             }
         }
     }

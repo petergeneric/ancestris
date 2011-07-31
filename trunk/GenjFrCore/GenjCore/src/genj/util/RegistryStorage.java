@@ -41,6 +41,10 @@ public abstract class RegistryStorage implements IRegistryStorage {
         return new Preferences(cls);
     }
 
+    public static IRegistryStorage get(String pckg) {
+        return new Preferences(pckg);
+    }
+
     // FIXME: DAN 20101230: not used shall we remove it?
     protected static class Properties extends RegistryStorage {
 

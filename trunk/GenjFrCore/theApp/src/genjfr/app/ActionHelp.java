@@ -4,7 +4,7 @@
  */
 package genjfr.app;
 
-import genj.app.Images;
+import ancestris.view.Images;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import org.netbeans.api.javahelp.Help;

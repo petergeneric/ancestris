@@ -22,9 +22,7 @@ package genj.edit;
 import genj.app.Priority;
 import genj.app.Workbench;
 import genj.app.WorkbenchAdapter;
-import genj.common.SelectEntityWidget;
 import genj.crypto.Enigma;
-import genj.edit.actions.AbstractChange;
 import genj.edit.actions.CreateAlias;
 import genj.edit.actions.CreateAssociation;
 import genj.edit.actions.CreateChild;
@@ -35,7 +33,6 @@ import genj.edit.actions.CreateSpouse;
 import genj.edit.actions.CreateXReference;
 import genj.edit.actions.DelEntity;
 import genj.edit.actions.DelProperty;
-import genj.edit.actions.OpenForEdit;
 import genj.edit.actions.Redo;
 import genj.edit.actions.RunExternal;
 import genj.edit.actions.SetPlaceHierarchy;
@@ -48,7 +45,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
@@ -59,32 +55,19 @@ import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyRepository;
-import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertySubmitter;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
-import genj.gedcom.UnitOfWork;
-import genj.util.EnvironmentChecker;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.util.swing.DialogHelper;
-import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
-import genj.view.SelectionSink;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.Action;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
 /**
  * our editing plugin
@@ -96,14 +79,12 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
   private final static Logger LOG = Logger.getLogger("genj.edit");
   
   private String ACC_UNDO = "ctrl Z", ACC_REDO = "ctrl Y";
-  private Workbench workbench;
   
   /**
    * Constructor
    */
-  /*package*/ EditPlugin(Workbench workbench) {
-    this.workbench = workbench;
-    workbench.addWorkbenchListener(this);
+  /*package*/ EditPlugin() {
+    Workbench.getInstance().addWorkbenchListener(this);
     
     // prime bean cache
     PropertyBean.getAvailableBeans();
@@ -111,7 +92,7 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
   }
   
   @Override
-  public void gedcomOpened(Workbench workbench, final Gedcom gedcom) {
+  public void gedcomOpened(final Gedcom gedcom) {
 
       return;
 //    // check if there's any individuals
@@ -129,121 +110,6 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
 //
   }
   
-  private Indi adamOrEve;
-  
-  private void wizardFirst(Workbench workbench, Gedcom gedcom) throws GedcomException {
-    
-    // create indi
-    gedcom.doUnitOfWork(new UnitOfWork() {
-      public void perform(Gedcom gedcom) throws GedcomException {
-        adamOrEve = (Indi)gedcom.createEntity("INDI");
-        adamOrEve.setSex(PropertySex.MALE);
-      }
-    });
-    
-    // let user edit it
-    JToolBar tools = new JToolBar();
-    tools.setFloatable(false);
-    
-    final BeanPanel panel = new BeanPanel();
-    panel.setRoot(adamOrEve);
-    
-    for (Action action : panel.getActions())
-      tools.add(action);
-    
-    JPanel content = new JPanel(new BorderLayout());
-    content.add(BorderLayout.CENTER, panel);
-    content.add(BorderLayout.NORTH , tools);
-    
-    if (0!=DialogHelper.openDialog(RESOURCES.getString("wizard.first", gedcom.getName()), DialogHelper.QUESTION_MESSAGE, content, Action2.okCancel(), workbench)) {
-      while (gedcom.canUndo())
-        gedcom.undoUnitOfWork(false);
-      return;
-    }      
-    
-    gedcom.doMuteUnitOfWork(new UnitOfWork() {
-      public void perform(Gedcom gedcom) throws GedcomException {
-        // commit changes 
-        panel.commit();
-        
-        // commit submitter as well
-        Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
-        submitter.setName(EnvironmentChecker.getProperty("user.name", "?", "user name used as submitter in new gedcom"));
-      }
-    });
-    
-    SelectionSink.Dispatcher.fireSelection(workbench, new Context(gedcom.getFirstEntity(Gedcom.INDI)), true);
-
-    // done
-  }
-
-  /** 
-   * Frederic - a test action showing cross-gedcom work 
-   */
-  private static class CopyIndividual extends AbstractChange {
-    
-    private Gedcom source;
-    private Indi existing;
-  
-    public CopyIndividual(Gedcom dest, Gedcom source) {
-      super(dest, Gedcom.getEntityImage(Gedcom.INDI), "Copy individual from "+source);
-      this.source = source;
-    }
-    
-    /**
-     * Override content components to show to user 
-     */
-    @Override
-    protected JPanel getDialogContent() {
-      
-      JPanel result = new JPanel(new NestedBlockLayout("<col><row><select wx=\"1\"/></row><row><text wx=\"1\" wy=\"1\"/></row><row><check/><text/></row></col>"));
-  
-      // create selector
-      final SelectEntityWidget select = new SelectEntityWidget(source, Gedcom.INDI, null);
-  
-      // wrap it up
-      result.add(select);
-      result.add(getConfirmComponent());
-  
-      // add listening
-      select.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          // grab current selection (might be null)
-          existing = (Indi)select.getSelection();
-          refresh();
-        }
-      });
-      
-      existing = (Indi)select.getSelection();
-      refresh();
-      
-      // done
-      return result;
-    }
-    
-    private boolean dupe() {
-      return gedcom.getEntity(existing.getId())!=null;
-    }
-    
-    @Override
-    protected String getConfirmMessage() {
-      if (existing==null)
-        return "Please select an individual";
-      String result = "Copying individual "+existing+" from "+source.getName()+" to "+gedcom.getName();
-      if (dupe())
-        result += "\n\nNote: Duplicate ID - a new ID will be assigned";
-      return result;
-    }
-    
-    @Override
-    protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
-      Entity e = gedcom.createEntity(Gedcom.INDI, dupe() ? null : existing.getId());
-      e.copyProperties(existing.getProperties(), true);
-      return new Context(e);
-    }
-  
-  }
-
   /**
    * @see genj.view.ActionProvider#createActions(Entity[], ViewManager)
    */

@@ -34,53 +34,53 @@ public interface WorkbenchListener {
    * @param context the new selection
    * @param isActionPerformed whether to perform action (normally double-click)
    */
-  public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed);
+  public void selectionChanged(Context context, boolean isActionPerformed);
   
   /**
    * notificaton that a long running process has started
    * @param workbench
    * @param process
    */
-  public void processStarted(Workbench workbench, Trackable process);
+  public void processStarted(Trackable process);
 
   /**
    * notificaton that a long running process has finished
    * @param workbench
    * @param process
    */
-  public void processStopped(Workbench workbench, Trackable process);
+  public void processStopped(Trackable process);
 
   /**
    * notification that commit of edits is requested
    */
-    public void commitRequested(Workbench workbench, Context context);
+    public void commitRequested(Context context);
   
   /** 
    * notification that workbench is closing
    * @return whether to veto the close operation (false=continue)
    */
-  public void workbenchClosing(Workbench workbench);
+  public void workbenchClosing();
   
   /** 
    * notification that gedcom was closed
    * @return whether to continue with close operation or not
    */
-  public void gedcomClosed(Workbench workbench, Gedcom gedcom);
+  public void gedcomClosed(Gedcom gedcom);
   
   /** 
    * notification that gedcom was opened
    * @return whether to continue with close operation or not
    */
-  public void gedcomOpened(Workbench workbench, Gedcom gedcom);
+  public void gedcomOpened(Gedcom gedcom);
   
   /**
    * notification that a view has been opened
    */
-  public void viewOpened(Workbench workbench, View view);
+  public void viewOpened(View view);
 
   /**
    * notification that a view has been opened
    */
-  public void viewClosed(Workbench workbench, View view);
+  public void viewClosed(View view);
 
 }

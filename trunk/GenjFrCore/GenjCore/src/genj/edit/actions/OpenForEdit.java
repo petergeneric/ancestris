@@ -19,9 +19,9 @@
  */
 package genj.edit.actions;
 
+import genj.app.Workbench;
 import java.awt.event.ActionEvent;
 
-import genj.app.Workbench;
 import genj.edit.EditViewFactory;
 import genj.edit.Images;
 import genj.gedcom.Context;
@@ -32,14 +32,12 @@ import genj.util.swing.Action2;
  */
 public class OpenForEdit extends Action2 {
   private Context context;
-  private Workbench workbench;
   
   /**
    * Constructor
    */
-  public OpenForEdit(Workbench workbench, Context context) {
+  public OpenForEdit(Context context) {
     this.context = context;
-    this.workbench = workbench;
     setImage(Images.imgView);
     setText(EditViewFactory.NAME);
   }
@@ -48,7 +46,7 @@ public class OpenForEdit extends Action2 {
    * @see genj.util.swing.Action2#execute()
    */
   public void actionPerformed(ActionEvent event) {
-    workbench.openView(EditViewFactory.class, context);
+    Workbench.getInstance().openView(EditViewFactory.class, context);
   }
   
 } //OpenForEdit

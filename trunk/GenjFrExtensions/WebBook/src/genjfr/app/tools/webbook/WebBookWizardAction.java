@@ -6,7 +6,7 @@ package genjfr.app.tools.webbook;
 
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genjfr.util.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory;
 import genjfr.app.App;
 import java.awt.Component;
 import java.awt.Dialog;

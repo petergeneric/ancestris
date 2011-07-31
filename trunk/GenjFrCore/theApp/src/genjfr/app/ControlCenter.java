@@ -19,9 +19,8 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
 import genj.gedcom.Gedcom;
-import genjfr.util.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory;
 import genj.util.DirectAccessTokenizer;
 
 import java.io.File;
@@ -33,7 +32,8 @@ import javax.swing.JPanel;
 
 import org.openide.util.Exceptions;
 import genj.gedcom.Context;
-import genjfr.explorer.GedcomExplorerTopComponent;
+import ancestris.explorer.GedcomExplorerTopComponent;
+import genj.app.Workbench;
 import java.net.URL;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
@@ -92,7 +92,7 @@ public class ControlCenter extends JPanel{
         sem.acquire();
         // force a commit
         for (Context context:GedcomDirectory.getInstance().getContexts())
-            App.workbenchHelper.fireCommit(context);
+            Workbench.getInstance().fireCommit(context);
 
             for (Context context:GedcomDirectory.getInstance().getContexts()){
 //            // next gedcom
@@ -119,7 +119,7 @@ public class ControlCenter extends JPanel{
 //                }
 //                // no - skip it
 //            }
-            if (!App.workbenchHelper.closeGedcom(context, false))
+            if (!Workbench.getInstance().closeGedcom(context, false))
                     postExitCode = null;
             // next gedcom
         }
@@ -146,11 +146,11 @@ public class ControlCenter extends JPanel{
 
         private String getDefaultFile(Collection<String> files) {
             // ne pas ouvrir si onlyempty est positionne
-            if (files != null && !files.isEmpty() && !genjfr.app.Options.getAlwaysOpenDefault()) {
+            if (files != null && !files.isEmpty() && !ancestris.core.Options.getAlwaysOpenDefault()) {
                 return null;
             }
 
-            File defaultFile = new File(genjfr.app.Options.getDefaultGedcom());
+            File defaultFile = new File(ancestris.core.Options.getDefaultGedcom());
             if (defaultFile == null) {
                 return null;
             }
@@ -201,7 +201,7 @@ public class ControlCenter extends JPanel{
                         if (local.exists()) {
                             local.toURI().toURL().toString();
                         }
-                        App.workbenchHelper.openGedcom(new URL(restore));
+                        Workbench.getInstance().openGedcom(new URL(restore));
 
                     } catch (Throwable t) {
                         App.LOG.log(Level.WARNING, "cannot restore " + uriStr, t);
@@ -223,7 +223,7 @@ public class ControlCenter extends JPanel{
                             local.toURI().toURL().toString();
                         }
 
-                        App.workbenchHelper.openGedcom(new URL(restore));
+                        Workbench.getInstance().openGedcom(new URL(restore));
                     } catch (Throwable t) {
                         App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
                     }
@@ -315,7 +315,7 @@ public class ControlCenter extends JPanel{
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {
-        String defaultFile = genjfr.app.Options.getDefaultGedcom();
+        String defaultFile = ancestris.core.Options.getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }

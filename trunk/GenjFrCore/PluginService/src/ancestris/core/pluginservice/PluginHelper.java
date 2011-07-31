@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package genjfr.app.pluginservice;
+package ancestris.core.pluginservice;
 
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;

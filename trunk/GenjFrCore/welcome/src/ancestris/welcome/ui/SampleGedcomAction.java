@@ -44,7 +44,8 @@ package ancestris.welcome.ui;
 
 import ancestris.samples.api.SampleProvider;
 import genjfr.app.App;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.app.Workbench;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import javax.swing.AbstractAction;
@@ -58,11 +59,11 @@ public class SampleGedcomAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        SampleProvider sp = GenjFrPlugin.lookup(SampleProvider.class);
+        SampleProvider sp = AncestrisPlugin.lookup(SampleProvider.class);
         URL url;
         try {
             url = sp.getSampleGedcomURL();
-            App.workbenchHelper.openGedcom(url);
+            Workbench.getInstance().openGedcom(url);
         } catch (Exception ex){
             Exceptions.printStackTrace(ex);
         }

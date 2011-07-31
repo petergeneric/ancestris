@@ -4,13 +4,14 @@
  */
 package genjfr.app;
 
-import genj.app.Images;
+import ancestris.view.Images;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genjfr.app.pluginservice.GenjFrPlugin;
-import genjfr.util.GedcomDirectory;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDirectory;
+import genj.app.Workbench;
 import java.awt.event.ActionEvent;
 
 /**
@@ -40,11 +41,11 @@ public class ActionClose extends Action2 {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (contextBeingClosed != null){
-            App.workbenchHelper.closeGedcom(contextBeingClosed);
+            Workbench.getInstance().closeGedcom(contextBeingClosed);
         } else {
             Context context = App.center.getSelectedContext(true);
             if (context != null)
-                App.workbenchHelper.closeGedcom(context);
+                Workbench.getInstance().closeGedcom(context);
         }
     }
 } //ActionClose

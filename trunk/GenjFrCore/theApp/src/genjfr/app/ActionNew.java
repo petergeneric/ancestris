@@ -4,7 +4,8 @@
  */
 package genjfr.app;
 
-import genj.app.Images;
+import ancestris.view.Images;
+import genj.app.Workbench;
 import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,7 @@ public final class ActionNew extends Action2 {
 
     /** execute callback */
     public void actionPerformed(ActionEvent event) {
-        App.workbenchHelper.newGedcom();
+        Workbench.getInstance().newGedcom();
     }
 } //ActionNew
 

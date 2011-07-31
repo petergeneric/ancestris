@@ -13,7 +13,7 @@
 package ancestris.samples;
 
 import ancestris.samples.api.SampleProvider;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -27,8 +27,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author daniel
  */
-@ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
-public class SamplePlugin extends GenjFrPlugin implements SampleProvider {
+@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
+public class SamplePlugin extends AncestrisPlugin implements SampleProvider {
 
     @Override
     public File getSampleGedcomFile() {

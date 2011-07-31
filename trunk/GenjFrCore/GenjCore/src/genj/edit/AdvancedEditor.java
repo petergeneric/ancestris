@@ -19,7 +19,6 @@
  */
 package genj.edit;
 
-import genj.app.Workbench;
 import genj.common.SelectEntityWidget;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;

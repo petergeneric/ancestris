@@ -5,6 +5,8 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.nav.NavigatorViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -17,7 +19,7 @@ import org.openide.util.lookup.ServiceProvider;
     dtd="-//genjfr.app//Navigator//EN",
     autostore=false
 )
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class NavigatorTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "NavigatorTopComponent";
@@ -26,7 +28,7 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
 
 
     @Override
-    public String getDefaultFactoryMode() {return "genjfr-nav";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.NAV;}
 
     ViewFactory getViewFactory() {
         return viewfactory;
@@ -66,14 +68,14 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

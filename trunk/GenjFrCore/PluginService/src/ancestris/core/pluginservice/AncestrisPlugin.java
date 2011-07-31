@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package genjfr.app.pluginservice;
+package ancestris.core.pluginservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import org.openide.util.lookup.InstanceContent;
  *
  * @author daniel
  */
-public abstract class GenjFrPlugin implements PluginInterface {
+public abstract class AncestrisPlugin implements PluginInterface {
     private final static InstanceContent ic = new InstanceContent();
     private static AbstractLookup abstractLookup = new AbstractLookup(ic);
 
@@ -73,12 +73,12 @@ public abstract class GenjFrPlugin implements PluginInterface {
 
     /**
      * gets Plugin (module) specification version string. As of development version, this string must be
-     * in the form 1.0.0.t (see http://trac.arvernes.dyndns.org/genjf/wiki/GenjFrDevPlugins). We are still in
+     * in the form 1.0.0.t (see http://trac.ancestris.org/ancestris/wiki/AncestrisDevPlugins). We are still in
      * pre 1.0 release version. if this is true, this method returns 0.t (eg 0.3.1). Otherwise return full
      * specification version string.
      *
      * If Build-Version or Implementation-Version is available, appends it to the retruned version string
-     * @return GenjFrPlugin version string
+     * @return AncestrisPlugin version string
      */
     public String getPluginVersion() {
         String version = PluginHelper.getManifestMainAttributes(this.getClass()).getValue("OpenIDE-Module-Specification-Version");

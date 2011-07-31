@@ -4,6 +4,8 @@
  */
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
@@ -18,8 +20,8 @@ import org.openide.windows.RetainLocation;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app//Tree//EN",
 autostore = false)
-@RetainLocation("genjfr-output")
-@ServiceProvider(service = GenjViewInterface.class)
+@RetainLocation(AncestrisDockModes.OUTPUT)
+@ServiceProvider(service = AncestrisViewInterface.class)
 public final class TreeTopComponent extends GenjViewTopComponent {
 
     private static TreeTopComponent factory;
@@ -32,7 +34,7 @@ public final class TreeTopComponent extends GenjViewTopComponent {
 
     @Override
     public String getDefaultFactoryMode() {
-        return "genjfr-output";
+        return AncestrisDockModes.OUTPUT;
     }
 
     /** This method is called from within the constructor to
@@ -69,14 +71,14 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

@@ -5,6 +5,8 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisViewInterface;
 import genj.report.ReportViewFactory;
 import genj.view.ViewFactory;
 import org.openide.windows.TopComponent;
@@ -18,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
     dtd="-//genjfr.app//Report//EN",
     autostore=false
 )
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class ReportTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "ReportTopComponent";
@@ -30,7 +32,7 @@ public final class ReportTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public String getDefaultFactoryMode() {return "genjfr-output";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.OUTPUT;}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -76,14 +78,14 @@ public final class ReportTopComponent extends GenjViewTopComponent {
         // TODO add custom code on component closing
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

@@ -4,11 +4,13 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.AncestrisViewInterface;
+import genj.util.AncestrisPreferences;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public final class ActionSaveLayout implements ActionListener {
         if (selected == null){
             return;
         }
-        AncestrisPreferences prefs = AncestrisPreferences.get(AncestrisTopComponent.class);
+        AncestrisPreferences prefs = Registry.get(AncestrisTopComponent.class);
         Object date = prefs.get("openViews.date", (String)null) == null?
             NbBundle.getMessage(this.getClass(), "TXT_ASL_never"):
             new Date(new Long(prefs.get("openViews.date", "0")));
@@ -47,7 +49,7 @@ public final class ActionSaveLayout implements ActionListener {
     public void saveDefaultLayout(Gedcom gedcom, AncestrisPreferences prefs){
         List<String> openedViews = new ArrayList<String>();
 
-        for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
+        for (AncestrisViewInterface gjvTc : AncestrisPlugin.lookupAll(AncestrisViewInterface.class)) {
             if (((AncestrisTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
                 App.LOG.info(gjvTc.getClass().getName()+": "+gjvTc.getMode().getName());
                 Mode mode = gjvTc.getMode();
@@ -66,11 +68,11 @@ public final class ActionSaveLayout implements ActionListener {
 
         TopComponent tcHasFocus = TopComponent.getRegistry().getActivated();
         
-        for (GenjViewInterface gjvTc : GenjFrPlugin.lookupAll(GenjViewInterface.class)) {
+        for (AncestrisViewInterface gjvTc : AncestrisPlugin.lookupAll(AncestrisViewInterface.class)) {
             if (((AncestrisTopComponent)gjvTc).isOpened() &&  gedcom.equals(gjvTc.getGedcom())){
                 App.LOG.info(gjvTc.getClass().getName()+": "+gjvTc.getMode().getName());
                 Mode mode = gjvTc.getMode();
-                prefs.put(((AncestrisTopComponent)gjvTc).preferredID()+".dockMode", mode.getName());
+                prefs.put(((AncestrisTopComponent)gjvTc).getPreferencesKey("dockMode"), mode.getName());
                 if (gjvTc.equals(mode.getSelectedTopComponent()) && (!gjvTc.equals(tcHasFocus)))
                     focusViews.add(gjvTc.getClass().getName());
                 openedViews.add(gjvTc.getClass().getName());

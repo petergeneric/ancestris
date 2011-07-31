@@ -4,7 +4,7 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
+import genj.app.Workbench;
 import java.io.File;
 import javax.swing.JMenuItem;
 import org.netbeans.api.actions.Openable;
@@ -34,7 +34,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
     protected void performAction(Node[] nodes) {
         if (fileToOpen != null) {
             try {
-                App.workbenchHelper.openGedcom(fileToOpen.toURI().toURL());
+                Workbench.getInstance().openGedcom(fileToOpen.toURI().toURL());
             } catch (Exception e) {
                 System.out.println("Error opening default gedcom:" + e);
             }
@@ -85,7 +85,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        String defaultFile = genjfr.app.Options.getDefaultGedcom();
+        String defaultFile = ancestris.core.Options.getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }

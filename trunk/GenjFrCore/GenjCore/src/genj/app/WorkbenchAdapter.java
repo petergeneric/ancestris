@@ -26,31 +26,39 @@ import genj.view.View;
 
 public class WorkbenchAdapter implements WorkbenchListener {
 
-	public void commitRequested(Workbench workbench, Context context) {
-	}
+    @Override
+    public void commitRequested(Context context) {
+    }
 
-	public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
-	}
+    @Override
+    public void gedcomClosed(Gedcom gedcom) {
+    }
 
-	public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
-	}
+    @Override
+    public void gedcomOpened(Gedcom gedcom) {
+    }
 
-	public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
-	}
+    @Override
+    public void selectionChanged(Context context, boolean isActionPerformed) {
+    }
 
-	public void viewClosed(Workbench workbench, View view) {
-	}
-	
-	public void viewOpened(Workbench workbench, View view) {
-	}
+    @Override
+    public void viewClosed(View view) {
+    }
 
-	public void workbenchClosing(Workbench workbench) {
-	}
+    @Override
+    public void viewOpened(View view) {
+    }
 
-  public void processStarted(Workbench workbench, Trackable process) {
-  }
+    @Override
+    public void workbenchClosing() {
+    }
 
-  public void processStopped(Workbench workbench, Trackable process) {
-  }
+    @Override
+    public void processStarted(Trackable process) {
+    }
 
+    @Override
+    public void processStopped(Trackable process) {
+    }
 }

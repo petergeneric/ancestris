@@ -1,21 +1,13 @@
-/**
- * GenJ - GenealogyJ
+/*
+ * Ancestris - http://www.ancestris.org
  *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright 2011 Ancestris
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * Author: Daniel Andre (daniel@ancestris.org).
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 package ancestris.modules.beans;
 
@@ -29,7 +21,7 @@ import genj.renderer.BlueprintRenderer;
 import genj.renderer.Options;
 import genj.util.Registry;
 import genj.util.Resources;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -199,13 +191,13 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
     @Override
     public void addNotify() {
         super.addNotify();
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
     }
 
     @Override
     public void removeNotify() {
         super.removeNotify();
-        GenjFrPlugin.unregister(this);
+        AncestrisPlugin.unregister(this);
     }
 
     @Override

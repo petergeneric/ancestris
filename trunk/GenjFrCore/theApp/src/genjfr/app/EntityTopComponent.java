@@ -5,6 +5,7 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisDockModes;
 import genj.entity.EntityViewFactory;
 import genj.view.ViewFactory;
 import org.openide.windows.TopComponent;
@@ -29,7 +30,7 @@ public final class EntityTopComponent extends GenjViewTopComponent {
     }
 
     @Override
-    public String getDefaultFactoryMode() {return "genjfr-properties";}
+    public String getDefaultFactoryMode() {return AncestrisDockModes.PROPERTIES;}
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -65,14 +66,14 @@ public final class EntityTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
-    Object readProperties(java.util.Properties p) {
-        readPropertiesImpl(p);
+    public Object readProperties(java.util.Properties p) {
+        super.readProperties(p);
         return this;
     }
 

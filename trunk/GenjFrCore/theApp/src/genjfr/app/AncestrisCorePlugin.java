@@ -5,7 +5,7 @@
 
 package genjfr.app;
 
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.util.Arrays;
 import java.util.Collection;
 import org.openide.util.lookup.ServiceProvider;
@@ -14,8 +14,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author daniel
  */
-@ServiceProvider(service=genjfr.app.pluginservice.PluginInterface.class)
-public class AncestrisCorePlugin extends GenjFrPlugin{
+@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
+public class AncestrisCorePlugin extends AncestrisPlugin{
 
     @Override
     public Collection<Class> getDefaultOpenedViews() {

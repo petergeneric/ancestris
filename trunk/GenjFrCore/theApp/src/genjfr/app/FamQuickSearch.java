@@ -9,7 +9,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.view.SelectionSink;
-import genjfr.util.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory;
 import java.awt.Component;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;

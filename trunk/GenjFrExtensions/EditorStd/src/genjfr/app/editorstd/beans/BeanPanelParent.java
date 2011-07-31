@@ -8,7 +8,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
-import genjfr.util.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory;
 import javax.swing.text.JTextComponent;
 import org.openide.util.Exceptions;
 

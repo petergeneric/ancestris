@@ -5,6 +5,7 @@
 
 package genjfr.app;
 
+import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
@@ -15,11 +16,11 @@ import java.util.Map;
  *
  * @author daniel
  */
-final class OpenGenjViewAction extends Action2  {
+final public class OpenGenjViewAction extends Action2  {
     private final Map<?,?> map;
     private final AncestrisTopComponent component;
 
-    OpenGenjViewAction(AncestrisTopComponent component, Map<?,?> map) {
+    public OpenGenjViewAction(AncestrisTopComponent component, Map<?,?> map) {
         this.component = component;
         this.map = map;
         setImage(new ImageIcon(component.getImageIcon()));

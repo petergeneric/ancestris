@@ -19,7 +19,6 @@
  */
 package genj.tree;
 
-import genj.app.Workbench;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -60,7 +59,7 @@ import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -216,7 +215,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
 //    });
     
     // done
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
   }
   
   /**
@@ -253,7 +252,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     REGISTRY.put("hide.ancestors"  , model.getHideAncestorsIDs());
     REGISTRY.put("hide.descendants", model.getHideDescendantsIDs());
     
-    GenjFrPlugin.unregister(this);
+    AncestrisPlugin.unregister(this);
     // done
     super.removeNotify();
   }

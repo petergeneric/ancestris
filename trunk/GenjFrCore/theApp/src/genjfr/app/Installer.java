@@ -4,7 +4,7 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
 import java.util.Collection;
 import java.util.prefs.Preferences;
 import org.openide.modules.ModuleInstall;
@@ -35,7 +35,7 @@ public class Installer extends ModuleInstall {
 
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             public void run() {
-            Collection<String> pfiles = AncestrisPreferences.get(App.class).get("gedcoms", (Collection<String>) null);
+            Collection<String> pfiles = genj.util.Registry.get(App.class).get("gedcoms", (Collection<String>) null);
             App.center.load(pfiles);
             }
         });
@@ -43,7 +43,7 @@ public class Installer extends ModuleInstall {
 
     @Override
     public boolean closing() {
-        AncestrisPreferences.get(App.class).put("gedcoms", App.center.getOpenedGedcoms());
+        genj.util.Registry.get(App.class).put("gedcoms", App.center.getOpenedGedcoms());
         return App.closing();
     }
 

@@ -5,10 +5,10 @@
 package genjfr.app.geo;
 
 import genj.gedcom.Context;
-import genjfr.app.AncestrisTopComponent;
+import ancestris.view.AncestrisTopComponent;
 import genjfr.app.App;
-import genjfr.app.GenjViewInterface;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.view.AncestrisViewInterface;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -68,7 +68,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoMap//EN",
 autostore = false)
-@ServiceProvider(service=GenjViewInterface.class)
+@ServiceProvider(service=AncestrisViewInterface.class)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener {
 
     /** path to the icon used by the component and its open action */
@@ -885,7 +885,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             GeoPlacesList gpl = GeoPlacesList.getInstance(getGedcom());
             gpl.removeGeoPlacesListener(this);
         }
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
     }
 
     void writeProperties(java.util.Properties p) {

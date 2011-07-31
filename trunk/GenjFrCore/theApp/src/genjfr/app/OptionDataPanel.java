@@ -4,7 +4,8 @@
  */
 package genjfr.app;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import org.openide.awt.StatusDisplayer;
@@ -291,8 +292,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
 
         setSubmName(gedcomPrefs.get("submName", ""));
         setSubmCity(gedcomPrefs.get("submCity", ""));
@@ -312,12 +312,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
         //FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
-        setBOM(appPrefs.get("isWriteBOM", ""));
+        jCheckBox19.setSelected(ancestris.app.Options.isWriteBOM());
     }
 
     void store() {
-        AncestrisPreferences gedcomPrefs = AncestrisPreferences.get(genj.gedcom.Options.class);
-        AncestrisPreferences appPrefs = AncestrisPreferences.get(genj.app.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
         genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
 
         gedcomPrefs.put("submName", getSubmName());
@@ -339,8 +338,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 //FIXME:        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
         gedcomPrefs.put("defaultEncoding", getEncoding());
-        appPrefs.put("isWriteBOM", getBOM());
-
+        ancestris.app.Options.setWriteBOM(jCheckBox19.isSelected());
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
     }
 
@@ -482,17 +480,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     String getEncoding() {
         return jComboBox1.getSelectedIndex() + "";
-    }
-
-    void setBOM(String str) {
-        if (str.equals("")) {
-            str = "true";
-        }
-        jCheckBox19.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getBOM() {
-        return jCheckBox19.isSelected() ? "true" : "false";
     }
 
     private Integer getIntFromStr(String str) {

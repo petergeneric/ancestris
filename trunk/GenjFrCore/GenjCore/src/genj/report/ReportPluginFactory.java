@@ -20,7 +20,6 @@
 package genj.report;
 
 import genj.app.PluginFactory;
-import genj.app.Workbench;
 
 /**
  * A plugin for adding report tools
@@ -30,9 +29,9 @@ public class ReportPluginFactory implements PluginFactory {
   private static ReportPlugin instance;
   
   /** factory */
-  public Object createPlugin(Workbench workbench) {
+  public Object createPlugin() {
     if (instance==null)
-      instance = new ReportPlugin(workbench);
+      instance = new ReportPlugin();
     return instance;
   }
   

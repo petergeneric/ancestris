@@ -1,6 +1,5 @@
 package genjfr.app;
 
-import genj.app.Workbench;
 import genj.app.WorkbenchAdapter;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -11,7 +10,7 @@ import genj.util.swing.Action2;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
 import genj.view.SelectionSink;
-import genjfr.app.pluginservice.GenjFrPlugin;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -152,11 +151,11 @@ private static class HistoryCombo extends JPanel {
   private class EventHandler extends WorkbenchAdapter implements GedcomListener {
 
       EventHandler(){
-        GenjFrPlugin.register(this);
+        AncestrisPlugin.register(this);
       }
 
     @Override
-    public void gedcomClosed(Workbench workbench, Gedcom gedcom) {
+    public void gedcomClosed(Gedcom gedcom) {
       history.clear();
       index = -1;
       update();
@@ -164,12 +163,12 @@ private static class HistoryCombo extends JPanel {
     }
 
     @Override
-    public void gedcomOpened(Workbench workbench, Gedcom gedcom) {
+    public void gedcomOpened(Gedcom gedcom) {
       gedcom.addGedcomListener(this);
     }
 
     @Override
-    public void selectionChanged(Workbench workbench, Context context, boolean isActionPerformed) {
+    public void selectionChanged(Context context, boolean isActionPerformed) {
 
       Entity e = context.getEntity();
       if (e==null)

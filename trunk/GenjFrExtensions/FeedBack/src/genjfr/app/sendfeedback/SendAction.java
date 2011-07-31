@@ -4,9 +4,10 @@
  */
 package genjfr.app.sendfeedback;
 
-import ancestris.util.AncestrisPreferences;
+import genj.util.AncestrisPreferences;
 import genj.Version;
 import genj.util.EnvironmentChecker;
+import genj.util.Registry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -18,7 +19,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.MultiPartEmail;
 import org.openide.DialogDescriptor;
@@ -31,7 +31,7 @@ public final class SendAction implements ActionListener {
     private final static java.util.ResourceBundle RESOURCES = java.util.ResourceBundle.getBundle("genjfr/app/sendfeedback/Bundle");
     private final static String TEXTSEPARATOR = "\n=======================================\n";
     private final static String SEND = new String(NbBundle.getMessage(SendAction.class, "SEND_BUTTON"));
-    private AncestrisPreferences feedbackPrefs = AncestrisPreferences.get(FeedbackPanel.class);
+    private AncestrisPreferences feedbackPrefs = Registry.get(FeedbackPanel.class);
     private File userDir;
     private FeedbackPanel fbPanel;
 

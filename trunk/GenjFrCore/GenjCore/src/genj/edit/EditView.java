@@ -19,7 +19,6 @@
  */
 package genj.edit;
 
-import genj.app.Workbench;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -29,8 +28,6 @@ import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.Action2;
-import genj.util.swing.ButtonHelper;
-import genj.util.swing.DialogHelper;
 import genj.view.ContextProvider;
 import genj.view.ToolBar;
 import genj.view.View;
@@ -38,16 +35,12 @@ import genj.view.ViewContext;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
