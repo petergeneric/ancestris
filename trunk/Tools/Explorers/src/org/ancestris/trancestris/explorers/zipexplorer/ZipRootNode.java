@@ -16,7 +16,6 @@ import org.openide.NotifyDescriptor.Confirmation;
 import org.openide.cookies.SaveCookie;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
-import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -26,13 +25,11 @@ public class ZipRootNode extends AbstractNode implements PropertyChangeListener,
 
     private static final Logger logger = Logger.getLogger(ZipRootNode.class.getName());
     private boolean change = false;
-    InstanceContent content;
 
     /** Creates a new instance of RootNode */
-    public ZipRootNode(ZipArchive root, InstanceContent content) {
+    public ZipRootNode(ZipArchive root) {
         super(new ZipDirectoryChildren(root.getRoot()));
         setDisplayName(root.getName());
-        this.content = content;
     }
 
     @Override
@@ -47,7 +44,6 @@ public class ZipRootNode extends AbstractNode implements PropertyChangeListener,
 
     public void fire(boolean modified) {
         logger.entering(ZipRootNode.class.getName(), "fire", modified);
-        content.add(this);
     }
 
     @Override
