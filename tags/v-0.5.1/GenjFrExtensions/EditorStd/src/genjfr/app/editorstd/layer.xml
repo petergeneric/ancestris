@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Edit">
+            <file name="genjfr-app-editorstd-actions-CreateIndi.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateIndi"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateIndi"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createindi.png"/> // for large/disabled/pressed/rolled-over, the relevant icon is shown. The important factor is that the "iconBase" is really the "base", with the others ("24", "_disabled", "_pressed", and "_rollover") being added on to the name of the base icon.
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSource.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateSource"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateSource"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createsource.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSubmitter.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateSubmitter"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateSubmitter"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createsubmitter.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateMedia.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateMedia"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateMedia"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createmedia.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateNote.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateNote"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateNote"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createnote.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-UpdateHeader.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.UpdateHeader"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_UpdateHeader"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/updateheader.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-UpdateSubmitter.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.UpdateSubmitter"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_UpdateSubmitter"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/updatesubmitter.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+
+            <file name="genjfr-app-editorstd-actions-CreateFather.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateFather"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateFather"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createfather.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateMother.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateMother"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateMother"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createmother.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSibling.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateSibling"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateSibling"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createsibling.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSpouse.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateSpouse"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateSpouse"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createspouse.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateChild.instance">
+                <attr name="delegate" newvalue="genjfr.app.editorstd.actions.CreateChild"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.actions.Bundle#CTL_CreateChild"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/createchild.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="genjfr-app-editorstd-EditorStdAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.editorstd.Bundle"/>
+                <attr name="delegate" newvalue="genjfr.app.editorstd.Action"/>
+                <attr name="displayName" bundlevalue="genjfr.app.editorstd.Bundle#CTL_EditorStdAction"/>
+                <attr name="iconBase" stringvalue="genjfr/app/editorstd/images/editorStd.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Edit">
+            <file name="genjfr-app-editorstd-actions-CreateIndi-separatorBefore.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2150"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateIndi.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateIndi.instance"/>
+                <attr name="position" intvalue="2200"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSource.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSource.instance"/>
+                <attr name="position" intvalue="2300"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSubmitter.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSubmitter.instance"/>
+                <attr name="position" intvalue="2350"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateMedia.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateMedia.instance"/>
+                <attr name="position" intvalue="2400"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateNote.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateNote.instance"/>
+                <attr name="position" intvalue="2450"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-UpdateHeader.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-UpdateHeader.instance"/>
+                <attr name="position" intvalue="2500"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-UpdateSubmitter.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-UpdateSubmitter.instance"/>
+                <attr name="position" intvalue="2550"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateFather-separatorBefore.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="3000"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateFather.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateFather.instance"/>
+                <attr name="position" intvalue="3050"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateMother.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateMother.instance"/>
+                <attr name="position" intvalue="3100"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSibling.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSibling.instance"/>
+                <attr name="position" intvalue="3150"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSpouse.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSpouse.instance"/>
+                <attr name="position" intvalue="3200"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateChild.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateChild.instance"/>
+                <attr name="position" intvalue="3250"/>
+            </file>
+        </folder>
+        <folder name="View">
+            <file name="EditorStdAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-editorstd-EditorStdAction.instance"/>
+                <attr name="position" intvalue="-501"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <file name="D-I.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateIndi.instance"/>
+        </file>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="EditorStd">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.editorstd.actions.Bundle"/>
+            <file name="genjfr-app-editorstd-CreateIndi.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateIndi.instance"/>
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSource.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSource.instance"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSubmitter.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSubmitter.instance"/>
+                <attr name="position" intvalue="1200"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateMedia.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateMedia.instance"/>
+                <attr name="position" intvalue="1300"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateNote.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateNote.instance"/>
+                <attr name="position" intvalue="1400"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-UpdateHeader.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-UpdateHeader.instance"/>
+                <attr name="position" intvalue="1500"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-UpdateSubmitter.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-UpdateSubmitter.instance"/>
+                <attr name="position" intvalue="1600"/>
+            </file>
+        </folder>
+        <folder name="EditorIndi">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.editorstd.actions.Bundle"/>
+            <file name="genjfr-app-editorstd-CreateFather.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateFather.instance"/>
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateMother.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateMother.instance"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSibling.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSibling.instance"/>
+                <attr name="position" intvalue="1200"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateSpouse.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateSpouse.instance"/>
+                <attr name="position" intvalue="1300"/>
+            </file>
+            <file name="genjfr-app-editorstd-actions-CreateChild.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-editorstd-actions-CreateChild.instance"/>
+                <attr name="position" intvalue="1400"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="EditorStdTopComponent.settings" url="EditorStdTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="EditorStdTopComponent.wstcref" url="EditorStdTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
