@@ -52,6 +52,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -144,7 +145,7 @@ public class RecentFilesPanel extends JPanel implements Constants {
         private GedcomFileInformation file;
         public OpenGedcomFileAction( GedcomFileInformation file ) {
             super( file.getURL());
-            setText(file.getURL().getFile().toString());
+            setText((new File(file.getURL().getFile())).getName());
             this.file = file;
         }
     }
