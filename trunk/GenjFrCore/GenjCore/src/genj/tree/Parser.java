@@ -32,6 +32,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -235,7 +237,7 @@ import java.util.List;
     // done
     return node;
   }
-  
+
   /**
    * Parser - Ancestors without Families
    */
@@ -274,6 +276,12 @@ import java.util.List;
           // grab the family's husband/wife and their ancestors
           Indi wife = famc.getWife();
           Indi husb = famc.getHusband();
+          //swap husb and wife if horizontal
+          if (!model.isVertical()){
+              Indi i = wife;
+              wife=husb;
+              husb=i;
+          }
           if (wife!=null) model.add(new TreeArc(minus, parse(wife, generation+1), true));
           if (husb!=null) model.add(new TreeArc(minus, parse(husb, generation+1), true));
           // done
@@ -345,10 +353,16 @@ import java.util.List;
       // grab wife&husb
       Indi wife = fam.getWife();
       Indi husb = fam.getHusband();
+      //swap husb and wife if horizontal
+      if (!model.isVertical()){
+          Indi i = wife;
+          wife=husb;
+          husb=i;
+      }
 
       // node for wife & arc fam-wife 
       TreeNode nWife = model.add(new TreeNode(wife, shapeIndis, padHusband));
-      model.add(new TreeArc(node, parse(wife, nWife, hasParents(husb)?-offsetSpouse:0, generation+1), false)); 
+      model.add(new TreeArc(node, parse(wife, nWife, hasParents(husb)?-offsetSpouse:0, generation+1), false));
       
       // node for marr & arc fam-marr 
       TreeNode nMarr = model.add(new TreeNode(null, shapeMarrs, null));
@@ -436,6 +450,11 @@ import java.util.List;
       for (int f=0; f<fams.length; f++) {
         // loop through children
         Indi[] children = fams[f].getChildren();
+        if (!model.isVertical()){
+            List<Indi> childrenList = Arrays.asList(children);
+            Collections.reverse(childrenList);
+            children = childrenList.toArray(new Indi[]{});
+        }
         for (int c=0; c<children.length; c++) {
           if (!l.contains(children[c])) {
               l.add(children[c]);
@@ -559,6 +578,11 @@ import java.util.List;
       
       // grab the children
       Indi[] children = fam.getChildren();
+        if (!model.isVertical()){
+            List<Indi> childrenList = Arrays.asList(children);
+            Collections.reverse(childrenList);
+            children = childrenList.toArray(new Indi[]{});
+        }
       for (int c=0; c<children.length; c++) {
         // create an arc from node to node for indi
         parse(children[c], nFam, 0);       
@@ -593,37 +617,75 @@ import java.util.List;
       // choose one of the families
       Fam fam = model.getFamily(indi, fams, false);
       
-      // otherwise indi as husband first of family and arc pivot-indi
-      TreeNode nIndi = model.add(new TreeNode(indi,shapeIndis,padHusband) {
-        /**
-         * @see genj.tree.TreeNode#getLongitude(gj.model.Node, gj.layout.tree.Branch[], gj.layout.tree.Orientation)
-         */
-        public int getLongitude(Node node, Branch[] children, Orientation o) {
-          return super.getLongitude(node, children, o) + offsetHusband;
-        }
-      });
-      model.add(new TreeArc(pivot, nIndi, pivot.getShape()!=null));
-      
+      // FIXME: hack to show husband on top of wife. Must be redesigned when trre will be reworked
+        TreeNode nIndi=null;
+        TreeNode nSpouse = null;
+        if (model.isVertical()){
+          // otherwise indi as husband first of family and arc pivot-indi
+          nIndi = model.add(new TreeNode(indi,shapeIndis,padHusband) {
+            /**
+             * @see genj.tree.TreeNode#getLongitude(gj.model.Node, gj.layout.tree.Branch[], gj.layout.tree.Orientation)
+             */
+            public int getLongitude(Node node, Branch[] children, Orientation o) {
+              return super.getLongitude(node, children, o) + offsetHusband;
+            }
+          });
+          model.add(new TreeArc(pivot, nIndi, pivot.getShape()!=null));
+      } else {
+          // add spouse and arc pivot-spouse
+          nSpouse = model.add(new TreeNode(fam.getOtherSpouse(indi), shapeIndis, padHusband));
+          model.add(new TreeArc(pivot, nSpouse, false));
+
+          // add 'next' spouse and arc spouse-next
+          if (fams.length>1&&model.isFoldSymbols()) {
+            TreeNode nNext = model.add(new TreeNode(model.new NextFamily(indi,fams), shapeNext, padFams));
+            model.add(new TreeArc(nSpouse, nNext, false));
+          }
+      }
       // add marr and arc pivot-marr
       TreeNode nMarr = model.add(new TreeNode(null, shapeMarrs, null));
       model.add(new TreeArc(pivot, nMarr, false));
-      
-      // add spouse and arc pivot-spouse
-      TreeNode nSpouse = model.add(new TreeNode(fam.getOtherSpouse(indi), shapeIndis, padWife));
-      model.add(new TreeArc(pivot, nSpouse, false));
-      
-      // add 'next' spouse and arc spouse-next
-      if (fams.length>1&&model.isFoldSymbols()) {
-        TreeNode nNext = model.add(new TreeNode(model.new NextFamily(indi,fams), shapeNext, padNext));
-        model.add(new TreeArc(pivot, nNext, false));
+
+      if (model.isVertical()){
+          // add spouse and arc pivot-spouse
+          nSpouse = model.add(new TreeNode(fam.getOtherSpouse(indi), shapeIndis, padWife));
+          model.add(new TreeArc(pivot, nSpouse, false));
+
+          // add 'next' spouse and arc spouse-next
+          if (fams.length>1&&model.isFoldSymbols()) {
+            TreeNode nNext = model.add(new TreeNode(model.new NextFamily(indi,fams), shapeNext, padNext));
+            model.add(new TreeArc(pivot, nNext, false));
+          }
+      } else {
+          // otherwise indi as husband first of family and arc pivot-indi
+          nIndi = model.add(new TreeNode(indi,shapeIndis,padWife) {
+            /**
+             * @see genj.tree.TreeNode#getLongitude(gj.model.Node, gj.layout.tree.Branch[], gj.layout.tree.Orientation)
+             */
+            public int getLongitude(Node node, Branch[] children, Orientation o) {
+              return super.getLongitude(node, children, o) + offsetHusband;
+            }
+          });
+          model.add(new TreeArc(pivot, nIndi, pivot.getShape()!=null));
       }
-            
-      // add fam and arc indi-fam
-      TreeNode nFam = model.add(new TreeNode(fam, shapeFams, padFams));
-      model.add(new TreeArc(nIndi, nFam, false));
+      TreeNode nFam ;
+      if (model.isVertical()){
+          // add fam and arc indi-fam
+          nFam = model.add(new TreeNode(fam, shapeFams, padFams));
+          model.add(new TreeArc(nIndi, nFam, false));
+        } else {
+          // add fam and arc indi-fam
+          nFam = model.add(new TreeNode(fam, shapeFams, padFams));
+          model.add(new TreeArc(nMarr, nFam, false));
+        }
       
       // grab the children
       Indi[] children = fam.getChildren();
+        if (!model.isVertical()){
+            List<Indi> childrenList = Arrays.asList(children);
+            Collections.reverse(childrenList);
+            children = childrenList.toArray(new Indi[]{});
+        }
       for (int c=0; c<children.length; c++) {
         
         // on first : no descendants for indi?
