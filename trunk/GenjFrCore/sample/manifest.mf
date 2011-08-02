@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: ancestris.samples
-OpenIDE-Module-Install: ancestris/samples/Installer.class
-OpenIDE-Module-Localizing-Bundle: ancestris/samples/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-
