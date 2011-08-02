@@ -23,12 +23,13 @@ public class ZipDirectoryNode extends AbstractNode implements PropertyChangeList
     public ZipDirectoryNode(ZipDirectory directory) {
         super(!directory.getDirs().isEmpty() ? new ZipDirectoryChildren(directory) : Children.LEAF, Lookups.singleton(directory));
         this.directory = directory;
+        this.directory.addPropertyChangeListener(this);
         setDisplayName(directory.getName());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        this.firePropertyChange(getName(), null, null);
+        fireDisplayNameChange(directory.getName(), directory.getName());
     }
 
     @Override
