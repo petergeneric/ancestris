@@ -20,7 +20,6 @@
 package genjfr.app;
 
 import genj.Version;
-import ancestris.app.Options;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
