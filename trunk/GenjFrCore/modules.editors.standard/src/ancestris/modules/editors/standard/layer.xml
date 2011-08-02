@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-editor-EditorStdAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.modules.editors.standard.Bundle"/>
+                <attr name="delegate" newvalue="ancestris.modules.editors.standard.OpenAction"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.editors.standard.Bundle#CTL_EditorStdAction"/>
+                <attr name="iconBase" stringvalue="ancestris/modules/editors/standard/editeur_standard.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="View">
+            <file name="AncestrisEditorStdAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-editor-EditorStdAction.instance"/>
+                <attr name="position" intvalue="-501"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>
