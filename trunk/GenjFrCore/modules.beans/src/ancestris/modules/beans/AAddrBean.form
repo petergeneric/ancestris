@@ -1,0 +1,116 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="countryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="stateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cpostLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="state" alignment="0" pref="157" max="32767" attributes="2"/>
+                  <Component id="city" alignment="1" pref="157" max="32767" attributes="2"/>
+                  <Component id="address" alignment="0" pref="157" max="32767" attributes="3"/>
+                  <Component id="cpost" alignment="0" pref="157" max="32767" attributes="2"/>
+                  <Component id="country" alignment="1" pref="157" max="32767" attributes="2"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="addressLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="address" pref="106" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cpostLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="cpost" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cityLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="city" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="stateLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="state" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="country" min="-2" max="-2" attributes="0"/>
+                  <Component id="countryLabel" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="ancestris.modules.beans.ATagBean" name="addressLabel">
+      <Properties>
+        <Property name="tag" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/beans/Bundle.properties" key="AAddrBean.addressLabel.tag" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="ancestris.modules.beans.ATagBean" name="cityLabel">
+      <Properties>
+        <Property name="tag" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/beans/Bundle.properties" key="AAddrBean.cityLabel.tag" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="ancestris.modules.beans.ATagBean" name="countryLabel">
+      <Properties>
+        <Property name="tag" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/beans/Bundle.properties" key="AAddrBean.countryLabel.tag" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="ancestris.modules.beans.ATagBean" name="stateLabel">
+      <Properties>
+        <Property name="tag" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/beans/Bundle.properties" key="AAddrBean.stateLabel.tag" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="ancestris.modules.beans.AChoiceBean" name="city">
+    </Component>
+    <Component class="ancestris.modules.beans.AChoiceBean" name="state">
+    </Component>
+    <Component class="ancestris.modules.beans.AChoiceBean" name="country">
+    </Component>
+    <Component class="ancestris.modules.beans.AMLEBean" name="address">
+    </Component>
+    <Component class="ancestris.modules.beans.ATagBean" name="cpostLabel">
+      <Properties>
+        <Property name="tag" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/beans/Bundle.properties" key="AAddrBean.cpostLabel.tag" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="ancestris.modules.beans.AChoiceBean" name="cpost">
+    </Component>
+  </SubComponents>
+</Form>
