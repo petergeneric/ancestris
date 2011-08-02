@@ -29,7 +29,8 @@ public class ZipDirectoryNode extends AbstractNode implements PropertyChangeList
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        fireDisplayNameChange(directory.getName(), directory.getName());
+        // Empty new name to force update
+        fireDisplayNameChange(directory.getName(), "");
     }
 
     @Override
