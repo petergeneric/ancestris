@@ -27,10 +27,7 @@ public class ZipDirectoryChildren extends Children.Keys<ZipDirectory> {
     protected Node[] createNodes(ZipDirectory key) {
         ZipDirectoryNode newNode = new ZipDirectoryNode(key);
         newNode.addPropertyChangeListener((PropertyChangeListener) this.getNode());
-        ResourceFile resourceFile = key.getResourceFile();
-        if (resourceFile != null) {
-            resourceFile.addPropertyChangeListener(WeakListeners.propertyChange(newNode, key));
-        }
+
         return new Node[]{newNode};
     }
 
