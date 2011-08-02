@@ -1,0 +1,7 @@
+ <table wy="1" gy="1">
+  <row><label path=".:PAGE"/><bean path=".:PAGE" wx="1"/></row>
+  <row><label path=".:QUAY"/><bean path=".:QUAY" wx="1"/></row>
+  <label path=".:TEXT" cols="2"/>
+  <bean path=".:TEXT" wx="1" cols="2" wy="1"/>
+  <bean path="." type="genj.edit.beans.MediaBean" wx="1" wy="1" cols="2"/>
+ </table>
