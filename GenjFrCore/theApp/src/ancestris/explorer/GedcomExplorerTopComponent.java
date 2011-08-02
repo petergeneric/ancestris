@@ -25,9 +25,9 @@ import org.openide.windows.RetainLocation;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//genjfr.explorer//GedcomExplorer//EN",
+@ConvertAsProperties(dtd = "-//ancestris.explorer//GedcomExplorer//EN",
 autostore = false)
-@RetainLocation("genjfr-explorer")
+@RetainLocation("ancestris-explorer")
 public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider/*, ContextProvider*/{
 
     private static GedcomExplorerTopComponent instance;
