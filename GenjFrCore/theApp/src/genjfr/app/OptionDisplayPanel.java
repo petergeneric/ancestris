@@ -241,8 +241,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
 
-        jComboBox2.setSelectedIndex(ancestris.app.Options.getLookAndFeel());
-        jCheckBox1.setSelected(ancestris.app.Options.isRestoreViews());
+        jComboBox2.setSelectedIndex(genjfr.app.Options.getLookAndFeel());
+        jCheckBox1.setSelected(genjfr.app.Options.isRestoreViews());
         setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
         cbSplitJuridictions.setSelected(Boolean.valueOf(editPrefs.get("isSplitJurisdictions", "")));
@@ -269,8 +269,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         stopts.setJvmLocale(newLocale);
         stopts.applyChanges();
 
-        ancestris.app.Options.setLookAndFeel(jComboBox2.getSelectedIndex());
-        ancestris.app.Options.setRestoreViews(jCheckBox1.isSelected());
+        genjfr.app.Options.setLookAndFeel(jComboBox2.getSelectedIndex());
+        genjfr.app.Options.setRestoreViews(jCheckBox1.isSelected());
         editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
 

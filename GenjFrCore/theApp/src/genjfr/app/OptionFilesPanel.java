@@ -389,7 +389,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setAssoSound("");
         setAssoWeb("");
 
-        jSpinner1.setValue(ancestris.app.Options.getMaxLogSizeKB());
+        jSpinner1.setValue(genjfr.app.Options.getMaxLogSizeKB());
         setLogLevel(Registry.get(App.class).get("logLevel", "INFO"));
     }
 
@@ -399,7 +399,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         ancestris.core.Options.setDefaultGedcom(getGedcomFile());
         ancestris.core.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
-        ancestris.app.Options.setLookAndFeel(Integer.valueOf(jSpinner1.getValue().toString()));
+        genjfr.app.Options.setLookAndFeel(Integer.valueOf(jSpinner1.getValue().toString()));
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));
 
