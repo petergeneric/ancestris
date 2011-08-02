@@ -675,7 +675,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
 
         // Always open explorer (if not opened)
         // FIXME: GedcomTC is not known from this module
-        // FIXME: Must be donne with lookups
+        // XXX: Must be donne with lookups will be done later
         // GedcomExplorerTopComponent.getDefault().open();
 
         // try gedcom properties
