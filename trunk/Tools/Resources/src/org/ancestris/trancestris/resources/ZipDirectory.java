@@ -1,9 +1,14 @@
 package org.ancestris.trancestris.resources;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -11,12 +16,13 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class ZipDirectory {
+public class ZipDirectory implements PropertyChangeListener {
 
     private static final Logger logger = Logger.getLogger(ZipDirectory.class.getName());
     private String directoryName;
     private ResourceFile resourceFile = null;
     private LinkedHashMap<String, ZipDirectory> dirs;
+    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
 
     public ZipDirectory(String name) {
         logger.log(Level.INFO, "New directory {0}", name);
@@ -39,7 +45,7 @@ public class ZipDirectory {
         }
     }
 
-    public void saveTranslation (ZipOutputStream zipoutputstream, String path) throws IOException {
+    public void saveTranslation(ZipOutputStream zipoutputstream, String path) throws IOException {
         if (resourceFile != null) {
             resourceFile.saveTranslation(zipoutputstream);
         }
@@ -65,6 +71,7 @@ public class ZipDirectory {
             logger.log(Level.INFO, "Add File {0}", filePath);
             if (this.resourceFile == null) {
                 this.resourceFile = new ResourceFile(filePath.substring(0, filePath.lastIndexOf("/")));
+                this.resourceFile.addPropertyChangeListener(this);
             }
             this.resourceFile.put(zipEntry, inputstream, token);
         } else {
@@ -74,6 +81,8 @@ public class ZipDirectory {
                 logger.log(Level.INFO, "Add dir {0}", token);
 
                 ZipDirectory zipDirectory = new ZipDirectory(token);
+
+                zipDirectory.addPropertyChangeListener(this);
                 dirs.put(token, zipDirectory);
                 zipDirectory.put(tokenizefilePath, zipEntry, inputstream, filePath);
             }
@@ -116,6 +125,29 @@ public class ZipDirectory {
                 }
             }
             return true;
+        }
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        listeners.add(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        listeners.remove(pcl);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent pce) {
+        fire(this.getName(), null, null);
+    }
+
+    private void fire(String propertyName, Object old, Object nue) {
+        //Passing 0 below on purpose, so you only synchronize for one atomic call
+        @SuppressWarnings(value = "unchecked")
+        PropertyChangeListener[] pcls = (PropertyChangeListener[]) listeners.toArray(new PropertyChangeListener[0]);
+        for (int i = 0; i < pcls.length; i++) {
+            logger.entering(ZipDirectory.class.getName(), "fire {0}", propertyName);
+            pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
         }
     }
 }
