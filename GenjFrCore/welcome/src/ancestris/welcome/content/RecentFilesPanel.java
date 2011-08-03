@@ -46,7 +46,7 @@ package ancestris.welcome.content;
 
 import ancestris.util.RecentFiles;
 import ancestris.util.RecentFiles.GedcomFileInformation;
-import genjfr.app.ActionOpen;
+import ancestris.app.ActionOpen;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

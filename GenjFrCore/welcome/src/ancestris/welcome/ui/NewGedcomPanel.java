@@ -30,7 +30,7 @@ import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.Constants;
 import ancestris.welcome.content.LinkButton;
 import ancestris.welcome.content.Utils;
-import genjfr.app.ActionNew;
+import ancestris.app.ActionNew;
 import javax.swing.AbstractAction;
 import org.openide.util.Lookup;
 

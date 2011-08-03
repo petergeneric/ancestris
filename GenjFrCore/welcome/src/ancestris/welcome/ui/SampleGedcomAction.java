@@ -43,7 +43,7 @@
 package ancestris.welcome.ui;
 
 import ancestris.api.sample.SampleProvider;
-import genjfr.app.App;
+import ancestris.app.App;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.Workbench;
 import java.awt.event.ActionEvent;

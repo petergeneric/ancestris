@@ -45,7 +45,7 @@ import ancestris.api.newgedcom.NewGedcom;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.view.SelectionSink;
-import genjfr.app.ActionNew;
+import ancestris.app.ActionNew;
 import ancestris.gedcom.GedcomDirectory;
 import genj.app.Workbench;
 import java.awt.Component;
