@@ -74,7 +74,7 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>, Explore
             }
         }
 
-        // ancestris way
+        // genjfr way
         return new FireNodeSelection();
     }
 
@@ -120,7 +120,7 @@ class EntityNode extends AbstractNode implements Comparable<EntityNode>, Explore
     private class FireNodeSelection extends AbstractAction {
 
         public void actionPerformed(ActionEvent e) {
-            // ancestris way
+            // genjfr way
             SelectionSink.Dispatcher.fireSelection((Component) null, getContext(), true);
         }
     }
