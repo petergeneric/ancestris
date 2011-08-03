@@ -83,7 +83,7 @@ made subject to such option by the copyright holder.
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>genjfr.app</code-name-base>
+                    <code-name-base>ancestris.app</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
