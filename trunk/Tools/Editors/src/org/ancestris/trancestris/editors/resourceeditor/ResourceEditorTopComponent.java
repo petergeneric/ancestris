@@ -35,8 +35,7 @@ import org.openide.util.Utilities;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//org.ancestris.trancestris.editors.resourceeditor//ResourceEditor//EN",
-autostore = false)
+@ConvertAsProperties(dtd = "-//org.ancestris.trancestris.editors.resourceeditor//ResourceEditor//EN", autostore = false)
 public final class ResourceEditorTopComponent extends TopComponent implements LookupListener {
 
     private class Listener implements ListSelectionListener, ActionListener {
@@ -62,14 +61,18 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             if (lse.getValueIsAdjusting()) {
                 return;
             }
-            String s = "";
+            String translation = "";
+            String comment = "";
+
             boolean flag = false;
             if (resourceFileView.getSelectedIndex() >= 0) {
                 int i = resourceFileView.getSelectedIndex();
                 flag = resourceFile.getLineState(i) != -1;
-                s = resourceFile.getLineTranslation(i);
+                translation = resourceFile.getLineTranslation(i);
+                comment = resourceFile.getLineComment(i);
             }
-            jTextAreaTranslation.setText(s);
+            jTextArea1.setText(comment);
+            jTextAreaTranslation.setText(translation);
             jTextAreaTranslation.setEditable(true);
             jTextAreaTranslation.setCaretPosition(0);
             jButtonConfirm.setEnabled(true);
@@ -174,7 +177,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jScrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
         resourceFileView = new javax.swing.JList();
         jPanel1 = new javax.swing.JPanel();
@@ -185,20 +189,25 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         setLayout(new java.awt.BorderLayout());
 
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setResizeWeight(0.75);
+        jTextArea1.setColumns(20);
+        jTextArea1.setEditable(false);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
+        add(jScrollPane2, java.awt.BorderLayout.NORTH);
+
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
         jScrollPaneResourceView.setViewportView(resourceFileView);
 
-        jSplitPane1.setLeftComponent(jScrollPaneResourceView);
+        add(jScrollPaneResourceView, java.awt.BorderLayout.CENTER);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jTextAreaTranslation.setColumns(20);
+        jTextAreaTranslation.setEditable(false);
         jTextAreaTranslation.setRows(5);
         jScrollPane1.setViewportView(jTextAreaTranslation);
 
@@ -211,17 +220,16 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
         jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_START);
 
-        jSplitPane1.setRightComponent(jPanel1);
-
-        add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        add(jPanel1, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConfirm;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneResourceView;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextAreaTranslation;
     private javax.swing.JList resourceFileView;
     // End of variables declaration//GEN-END:variables
