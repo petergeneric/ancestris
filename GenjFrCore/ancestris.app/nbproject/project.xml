@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>ancestris.app</code-name-base>
+            <code-name-base>genjfr.app</code-name-base>
             <suite-component/>
             <module-dependencies>
                 <dependency>
@@ -182,7 +182,7 @@
                 <package>ancestris.util</package>
                 <package>ancestris.view</package>
                 <package>genj.app</package>
-                <package>ancestris.app</package>
+                <package>genjfr.app</package>
             </public-packages>
         </data>
     </configuration>
