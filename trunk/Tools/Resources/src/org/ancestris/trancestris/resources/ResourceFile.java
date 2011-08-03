@@ -245,10 +245,25 @@ public class ResourceFile {
             line = defaultLanguage.getLine(content.get(i));
         }
 
-        String comment = line.getComment();
         String value = line.getValue();
 
-        return (comment == null ? "" : comment) + (value == null ? "" : value);
+        return (value == null ? "" : value);
+    }
+
+    public String getLineComment(int i) {
+        ResourceItem.ResourceLine line = null;
+
+        if (fromLanguage != null) {
+            line = fromLanguage.getLine(content.get(i));
+        }
+
+        if (line == null) {
+            line = defaultLanguage.getLine(content.get(i));
+        }
+
+        String comment = line.getComment();
+
+        return (comment == null ? "" : comment);
     }
 
     public String getLineTranslation(int i) {
