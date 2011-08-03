@@ -14,7 +14,7 @@ package ancestris.modules.editors.standard;
 
 import genj.gedcom.Context;
 import ancestris.view.AncestrisTopComponent;
-import genjfr.app.App;
+import ancestris.app.App;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
