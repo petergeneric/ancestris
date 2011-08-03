@@ -40,7 +40,7 @@ import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.time.PointInTime;
-import genjfr.app.App;
+import ancestris.app.App;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
