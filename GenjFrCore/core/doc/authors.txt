@@ -8,13 +8,13 @@ Qui se cache derrière GenJ :
       C'est l'auteur, le développeur, la personne qui a tout imaginé.
       Sans Nils, rien de tout cela n'existerait, ni serait possible.
 
-Maintenant, GenjFr :
+Maintenant, Ancestris :
 
     L'initiateur :
       . Daniel André. Daniel a commencé à écrire du code pour GenJ, puis a
       développé des rapports qui sont devenus des programmes à part entiè-
       re. Des divergeances de vues et une volonté de donner une autre im-
-      pulsion à GenJ, ont conduit Daniel a envisager GenjFr.
+      pulsion à GenJ, ont conduit Daniel a envisager Ancestris.
 
 Les contributions diverses et variées :
 
