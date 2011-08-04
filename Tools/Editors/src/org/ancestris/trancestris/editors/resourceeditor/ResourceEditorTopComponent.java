@@ -44,7 +44,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         public void actionPerformed(ActionEvent actionevent) {
             int i = resourceFileView.getSelectedIndex();
             if (i >= 0) {
-                resourceFile.setLineTranslation(i, jTextAreaTranslation.getText());
+                resourceFile.setLineTranslation(i, textAreaTranslation.getText());
             }
 
             while (i + 1 < resourceFileView.getModel().getSize()) {
@@ -71,11 +71,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 translation = resourceFile.getLineTranslation(i);
                 comment = resourceFile.getLineComment(i);
             }
-            jTextArea1.setText(comment);
-            jTextAreaTranslation.setText(translation);
-            jTextAreaTranslation.setEditable(true);
-            jTextAreaTranslation.setCaretPosition(0);
-            jButtonConfirm.setEnabled(true);
+            textAreaComments.setText(comment);
+            textAreaTranslation.setText(translation);
+            textAreaTranslation.setEditable(true);
+            textAreaTranslation.setCaretPosition(0);
+            buttonConfirmTranslation.setEnabled(true);
         }
     }
 
@@ -166,7 +166,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         resourceFileView.addListSelectionListener(listener);
-        jButtonConfirm.addActionListener(listener);
+        buttonConfirmTranslation.addActionListener(listener);
     }
 
     /** This method is called from within the constructor to
@@ -177,61 +177,56 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jScrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
+        scrollPaneComments = new javax.swing.JScrollPane();
+        textAreaComments = new javax.swing.JTextArea();
+        scrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
         resourceFileView = new javax.swing.JList();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaTranslation = new javax.swing.JTextArea();
-        jButtonConfirm = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        panelTranslation = new javax.swing.JPanel();
+        scrollPaneTranslation = new javax.swing.JScrollPane();
+        textAreaTranslation = new javax.swing.JTextArea();
+        buttonConfirmTranslation = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        textAreaComments.setColumns(20);
+        textAreaComments.setEditable(false);
+        textAreaComments.setRows(5);
+        scrollPaneComments.setViewportView(textAreaComments);
 
-        add(jScrollPane2, java.awt.BorderLayout.NORTH);
+        add(scrollPaneComments, java.awt.BorderLayout.NORTH);
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
-        jScrollPaneResourceView.setViewportView(resourceFileView);
+        scrollPaneResourceView.setViewportView(resourceFileView);
 
-        add(jScrollPaneResourceView, java.awt.BorderLayout.CENTER);
+        add(scrollPaneResourceView, java.awt.BorderLayout.CENTER);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        panelTranslation.setLayout(new java.awt.BorderLayout());
 
-        jTextAreaTranslation.setColumns(20);
-        jTextAreaTranslation.setEditable(false);
-        jTextAreaTranslation.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaTranslation);
+        textAreaTranslation.setColumns(20);
+        textAreaTranslation.setEditable(false);
+        textAreaTranslation.setRows(5);
+        scrollPaneTranslation.setViewportView(textAreaTranslation);
 
-        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButtonConfirm, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jButtonConfirm.text")); // NOI18N
-        jButtonConfirm.setEnabled(false);
-        jPanel1.add(jButtonConfirm, java.awt.BorderLayout.SOUTH);
+        org.openide.awt.Mnemonics.setLocalizedText(buttonConfirmTranslation, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.buttonConfirmTranslation.text")); // NOI18N
+        buttonConfirmTranslation.setEnabled(false);
+        panelTranslation.add(buttonConfirmTranslation, java.awt.BorderLayout.SOUTH);
 
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
-        jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_START);
-
-        add(jPanel1, java.awt.BorderLayout.SOUTH);
+        add(panelTranslation, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonConfirm;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPaneResourceView;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextAreaTranslation;
+    private javax.swing.JButton buttonConfirmTranslation;
+    private javax.swing.JPanel panelTranslation;
     private javax.swing.JList resourceFileView;
+    private javax.swing.JScrollPane scrollPaneComments;
+    private javax.swing.JScrollPane scrollPaneResourceView;
+    private javax.swing.JScrollPane scrollPaneTranslation;
+    private javax.swing.JTextArea textAreaComments;
+    private javax.swing.JTextArea textAreaTranslation;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -318,15 +313,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 resourceFileView.updateUI();
                 if (resourceFile != null) {
                     resourceFileView.setSelectedIndex(0);
-                    jTextAreaTranslation.setText(resourceFile.getLineTranslation(0));
-                    jTextAreaTranslation.setEditable(true);
-                    jTextAreaTranslation.setCaretPosition(0);
-                    jButtonConfirm.setEnabled(true);
+                    textAreaTranslation.setText(resourceFile.getLineTranslation(0));
+                    textAreaTranslation.setEditable(true);
+                    textAreaTranslation.setCaretPosition(0);
+                    buttonConfirmTranslation.setEnabled(true);
                 } else {
-                    jTextAreaTranslation.setText("");
-                    jTextAreaTranslation.setEditable(false);
-                    jTextAreaTranslation.setCaretPosition(0);
-                    jButtonConfirm.setEnabled(false);
+                    textAreaTranslation.setText("");
+                    textAreaTranslation.setEditable(false);
+                    textAreaTranslation.setCaretPosition(0);
+                    buttonConfirmTranslation.setEnabled(false);
                 }
             }
         }
@@ -336,7 +331,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     public void setFont(Font font) {
         super.setFont(font);
         resourceFileView.setFont(font);
-        jTextAreaTranslation.setFont(font);
+        textAreaTranslation.setFont(font);
+        textAreaComments.setFont(font);
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Name", font.getName());
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Style", String.valueOf(font.getStyle()));
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Size", String.valueOf(font.getSize()));
