@@ -48,7 +48,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         setMaximumSize(new Dimension(664, 585));
         setTimer();
         //setScroller();
-        setIconImage(new ImageIcon(App.class.getResource("/genjfr/app/ActionAPropos.png")).getImage());
+        setIconImage(new ImageIcon(App.class.getResource("/ancestris/app/ActionAPropos.png")).getImage());
         setTitle(NbBundle.getMessage(ActionAPropos.class, "CTL_ActionAPropos"));
         setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         setResizable(false);

@@ -19,7 +19,7 @@ import org.openide.windows.RetainLocation;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//genjfr.app//Edit//EN",
+@ConvertAsProperties(dtd = "-//ancestris.app//Edit//EN",
 autostore = false)
 @RetainLocation(AncestrisDockModes.EDITOR)
 @ServiceProvider(service=AncestrisViewInterface.class)

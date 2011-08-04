@@ -17,7 +17,7 @@ import org.openide.windows.RetainLocation;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd="-//genjfr.app//Table//EN",
+    dtd="-//ancestris.app//Table//EN",
     autostore=false
 )
 @RetainLocation(AncestrisDockModes.TABLE)

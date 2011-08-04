@@ -231,7 +231,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         int i = jComboBox2.getSelectedIndex();
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/genjfr/app/skin-" + i + ".png")));
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/app/skin-" + i + ".png")));
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {

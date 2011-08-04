@@ -14,7 +14,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//genjfr.app//Dummy//EN",
+@ConvertAsProperties(dtd = "-//ancestris.app//Dummy//EN",
 autostore = false)
 public final class ModePersisterTopComponent extends TopComponent {
 

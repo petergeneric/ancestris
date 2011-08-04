@@ -26,126 +26,120 @@
     <attr name="Menu\File\org-openide-actions-SaveAsAction.instance\position" intvalue="2100"/>
     <folder name="Actions">
         <folder name="Edit">
-            <file name="genjfr-app-ActionHistory.instance">
+            <file name="ancestris-app-ActionHistory.instance">
             </file>
         </folder>
         <folder name="File">
-            <file name="genjfr-app-ActionNew.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="delegate" newvalue="genjfr.app.ActionNew"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionNew"/>
-                <attr name="iconBase" stringvalue="genjfr/app/New.png"/>
+            <file name="ancestris-app-ActionNew.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionNew"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionNew"/>
+                <attr name="iconBase" stringvalue="ancestris/app/New.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="genjfr-app-ActionOpenDefault.instance">
+            <file name="ancestris-app-ActionOpenDefault.instance">
                 <attr name="type" stringvalue="org.netbeans.api.actions.Openable"/>
                 <attr name="delegate" methodvalue="org.openide.awt.Action.inject"/>
                 <attr name="selectionType" stringvalue="ANY"/>
-                <attr name="injectable" stringvalue="genjfr.app.ActionOpenDefault"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionOpenDefault"/>
-                <attr name="iconBase" stringvalue="genjfr/app/OpenDefault.png"/>
+                <attr name="injectable" stringvalue="ancestris.app.ActionOpenDefault"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionOpenDefault"/>
+                <attr name="iconBase" stringvalue="ancestris/app/OpenDefault.png"/>
             </file>
-            <file name="genjfr-app-ActionOpen.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="delegate" newvalue="genjfr.app.ActionOpen"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionOpen"/>
-                <attr name="iconBase" stringvalue="genjfr/app/Open.png"/>
+            <file name="ancestris-app-ActionOpen.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionOpen"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionOpen"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Open.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="genjfr-app-ActionClose.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionClose"/>
+            <file name="ancestris-app-ActionClose.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionClose"/>
             </file>
-             <!--<file name="genjfr-app-ActionSave.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionSave"/>
+             <!--<file name="ancestris-app-ActionSave.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionSave"/>
             </file>-->
-            <file name="genjfr-app-ActionSaveAs.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionSaveAs"/>
+            <file name="ancestris-app-ActionSaveAs.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionSaveAs"/>
             </file>
         </folder>
         <folder name="Tools">
             <file name="MyOptions.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="org.netbeans.modules.options.OptionsWindowAction"/>  <!-- the name of the options menuitem (FL) -->
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsCategory_Title_AncestrisPreference"/>
-                <attr name="iconBase" stringvalue="genjfr/app/Options.png"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsCategory_Title_AncestrisPreference"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Options.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="genjfr-app-SaveLayoutAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+            <file name="ancestris-app-SaveLayoutAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
-                <attr name="delegate" newvalue="genjfr.app.ActionSaveLayout"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_SaveLayout"/>
-                <attr name="iconBase" stringvalue="genjfr/app/ActionSaveLayout.png"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionSaveLayout"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_SaveLayout"/>
+                <attr name="iconBase" stringvalue="ancestris/app/ActionSaveLayout.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
         <folder name="Window">
             <!--
-            <file name="genjfr-app-ControlCenterAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.ControlCenterTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ControlCenterAction"/>
-                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
-            </file>
-            <file name="genjfr-app-EditAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.EditTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_EditAction"/>
+            <file name="ancestris-app-EditAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.EditTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_EditAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
 -->
-            <file name="genjfr-app-EditAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.EditTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_EditAction"/>
+            <file name="ancestris-app-EditAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.EditTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_EditAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-                <attr name="iconBase" stringvalue="genjfr/app/Help.png"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Help.png"/>
             </file>
 
-            <file name="genjfr-app-EntityAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.EntityTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_EntityAction"/>
+            <file name="ancestris-app-EntityAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.EntityTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_EntityAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-                <attr name="iconBase" stringvalue="genjfr/app/New.png"/>
+                <attr name="iconBase" stringvalue="ancestris/app/New.png"/>
             </file>
-            <file name="genjfr-app-NavigatorAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.NavigatorTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_NavigatorAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
-            <file name="genjfr-app-ReportAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.ReportTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_ReportAction"/>
+            <file name="ancestris-app-NavigatorAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.NavigatorTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_NavigatorAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="genjfr-app-SearchAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.SearchTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_SearchAction"/>
+            <file name="ancestris-app-ReportAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.ReportTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_ReportAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="genjfr-app-TableAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.TableTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TableAction"/>
+            <file name="ancestris-app-SearchAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.SearchTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_SearchAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="genjfr-app-TimelineAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.TimelineTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TimelineAction"/>
+            <file name="ancestris-app-TableAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.TableTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TableAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="genjfr-app-TreeAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="component" methodvalue="genjfr.app.TreeTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_MENU_TreeAction"/>
+            <file name="ancestris-app-TimelineAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.TimelineTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TimelineAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
+            </file>
+            <file name="ancestris-app-TreeAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="component" methodvalue="ancestris.app.TreeTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TreeAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
             <file name="ancestris-explorer-GedcomExplorerAction.instance">
@@ -158,20 +152,20 @@
         <folder name="Help">
             <!-- Override the registered action with the new one. This will be
                  used by code that calls SystemAction.get(...), e.g. the AppleMenu module -->
-            <file name="genjfr-app-ActionHelp.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionHelp"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionHelp"/>
-                <attr name="iconBase" stringvalue="genjfr/app/ActionHelp.png"/>
+            <file name="ancestris-app-ActionHelp.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionHelp"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionHelp"/>
+                <attr name="iconBase" stringvalue="ancestris/app/ActionHelp.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="genjfr-app-ActionOnlineHelp.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionOnlineHelp"/>
+            <file name="ancestris-app-ActionOnlineHelp.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionOnlineHelp"/>
             </file>
-            <file name="genjfr-app-ActionAPropos.instance">
-                <attr name="delegate" newvalue="genjfr.app.ActionAPropos"/>
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#CTL_ActionAPropos"/>
-                <attr name="iconBase" stringvalue="genjfr/app/ActionAPropos.png"/>
+            <file name="ancestris-app-ActionAPropos.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionAPropos"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionAPropos"/>
+                <attr name="iconBase" stringvalue="ancestris/app/ActionAPropos.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -187,24 +181,24 @@
     <folder name="Menu">
         <file name="BuildProject_hidden"/>
         <folder name="File">
-            <file name="genjfr-app-ActionNew.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+            <file name="ancestris-app-ActionNew.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionNew.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
-            <file name="genjfr-app-ActionOpenDefault.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpenDefault.instance"/>
+            <file name="ancestris-app-ActionOpenDefault.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionOpenDefault.instance"/>
                 <attr name="position" intvalue="150"/>
             </file>
-            <file name="genjfr-app-ActionOpen.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
+            <file name="ancestris-app-ActionOpen.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionOpen.instance"/>
                 <attr name="position" intvalue="200"/>
             </file>
-            <file name="genjfr-app-ActionClose.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
+            <file name="ancestris-app-ActionClose.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
                 <attr name="position" intvalue="800"/>
             </file>
-             <!--<file name="genjfr-app-ActionSave.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
+             <!--<file name="ancestris-app-ActionSave.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSave.instance"/>
                 <attr name="position" intvalue="1801"/>
                 <attr name="noIconInMenu" boolvalue="true"/>
             </file>-->
@@ -213,11 +207,11 @@
                 <attr name="position" intvalue="1850"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="genjfr-app-ActionSaveAs.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSaveAs.instance"/>
+            <file name="ancestris-app-ActionSaveAs.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSaveAs.instance"/>
                 <attr name="position" intvalue="1900"/>
             </file>
-            <file name="genjfr-app-ActionSaveAs.shadow-separatorAfter.instance">
+            <file name="ancestris-app-ActionSaveAs.shadow-separatorAfter.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="2000"/>
             </file>
@@ -227,20 +221,20 @@
         <file name="GoTo_hidden"/>
         <folder name="Help">
             <file name="Separator1.instance_hidden"/>
-            <file name="genjfr-app-ActionHelp.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionHelp.instance"/>
+            <file name="ancestris-app-ActionHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
-            <file name="genjfr-app-ActionOnlineHelp.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionOnlineHelp.instance"/>
+            <file name="ancestris-app-ActionOnlineHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
                 <attr name="position" intvalue="-50"/>
             </file>
             <file name="SeparatorAPropos.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="49"/>
             </file>
-            <file name="genjfr-app-ActionAPropos.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAPropos.instance"/>
+            <file name="ancestris-app-ActionAPropos.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionAPropos.instance"/>
                 <attr name="position" intvalue="50"/>
             </file>
             <file name="org-netbeans-core-actions-AboutAction.instance_hidden"/>
@@ -277,26 +271,26 @@
                 <attr name="position" intvalue="101"/>
             </file>
             <file name="ActionSaveLayout.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/genjfr-app-SaveLayoutAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-app-SaveLayoutAction.instance"/>
                 <attr name="position" intvalue="150"/>
             </file>
         </folder>
         <file name="Versioning_hidden"/>
         <folder name="View">
             <file name="EntityAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-EntityAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-EntityAction.instance"/>
                 <attr name="position" intvalue="-1000"/>
             </file>
             <file name="TableAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TableAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TableAction.instance"/>
                 <attr name="position" intvalue="-900"/>
             </file>
             <file name="TreeAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TreeAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TreeAction.instance"/>
                 <attr name="position" intvalue="-800"/>
             </file>
             <file name="TimelineAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-TimelineAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TimelineAction.instance"/>
                 <attr name="position" intvalue="-700"/>
             </file>
             <file name="Separator1_1_2.instance">
@@ -304,7 +298,7 @@
                 <attr name="position" intvalue="-600"/>
             </file>
             <file name="EditAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-EditAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-EditAction.instance"/>
                 <attr name="position" intvalue="-500"/>
             </file>
             <file name="Separator1_1_1.instance">
@@ -312,11 +306,11 @@
                 <attr name="position" intvalue="-400"/>
             </file>
             <file name="NavigatorAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-NavigatorAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-NavigatorAction.instance"/>
                 <attr name="position" intvalue="-300"/>
             </file>
             <file name="SearchAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-SearchAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SearchAction.instance"/>
                 <attr name="position" intvalue="-250"/>
             </file>
             <file name="Separator1_1.instance">
@@ -324,7 +318,7 @@
                 <attr name="position" intvalue="-200"/>
             </file>
             <file name="ReportAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ReportAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-ReportAction.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
 
@@ -338,7 +332,7 @@
             <file name="DocumentsAction.shadow_hidden"/>
 
             <file name="ControlCenterAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/genjfr-app-ControlCenterAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-ControlCenterAction.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="MaximizeWindowAction.shadow_hidden"/>
@@ -370,39 +364,39 @@
         <folder name="Familles">
             <attr name="command" stringvalue=""/>
             <attr name="position" intvalue="10"/>
-            <file name="genjfr-app-FamQuickSearch.instance">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#QuickSearch/Familles/genjfr-app-FamQuickSearch.instance"/>
+            <file name="ancestris-app-FamQuickSearch.instance">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#QuickSearch/Familles/ancestris-app-FamQuickSearch.instance"/>
             </file>
         </folder>
         <file name="GoToOption_hidden"/>
         <folder name="Individus">
             <attr name="command" stringvalue=""/>
             <attr name="position" intvalue="0"/>
-            <file name="genjfr-app-IndiQuickSearch.instance">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#QuickSearch/Individus/genjfr-app-IndiQuickSearch.instance"/>
+            <file name="ancestris-app-IndiQuickSearch.instance">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#QuickSearch/Individus/ancestris-app-IndiQuickSearch.instance"/>
             </file>
         </folder>
     </folder>
     <folder name="Services">
         <folder name="AutoupdateType">
-            <file name="genjfr_extensions_update_center.instance">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_extensions_update_center.instance"/>
+            <file name="ancestris_extensions_update_center.instance">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#Services/AutoupdateType/ancestris_extensions_update_center.instance"/>
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
                 <attr name="url" stringvalue="http://arvernes.dyndns.org/files/ancestris/0.5/extensions/updates.xml"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
 -->
             </file>
-            <file name="genjfr_core_update_center.instance">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#Services/AutoupdateType/genjfr_core_update_center.instance"/>
+            <file name="ancestris_update_center.instance">
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#Services/AutoupdateType/ancestris_update_center.instance"/>
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
                 <attr name="url" stringvalue="http://arvernes.dyndns.org/files/ancestris/0.5/core/updates.xml"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="genjfr.app.Bundle"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
 -->
@@ -414,8 +408,8 @@
             </file>
         </folder>
         <folder name="Hidden">
-            <file name="genjfr-app-ActionOpenDefault.instance">
-                <attr name="instanceClass" stringvalue="genjfr.app.ActionOpenDefault"/>
+            <file name="ancestris-app-ActionOpenDefault.instance">
+                <attr name="instanceClass" stringvalue="ancestris.app.ActionOpenDefault"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.api.actions.Openable"/>
                 <attr name="position" intvalue="100"/>
             </file>
@@ -424,7 +418,7 @@
     </folder>
     <folder name="Shortcuts">
         <file name="D-N.shadow">
-            <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+            <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionNew.instance"/>
         </file>
         <file name="D-S.shadow">
             <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
@@ -461,11 +455,11 @@
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
         <file name="Standard.xml" url="Standard.xml"/>
         <folder name="Nav">
-            <file name="genjfr-app-ActionHistory.shadow">
-                <attr name="originalFile" stringvalue="Actions/Edit/genjfr-app-ActionHistory.instance"/>
+            <file name="ancestris-app-ActionHistory.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/ancestris-app-ActionHistory.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
-            <file name="genjfr-app-QuickSearch.shadow">
+            <file name="ancestris-app-QuickSearch.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-quicksearch-QuickSearchAction.instance"/>
                 <attr name="position" intvalue="200"/>
             </file>
@@ -475,12 +469,12 @@
                 <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
-            <file name="genjfr-app-ActionAPropos.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/genjfr-app-ActionAPropos.instance"/>
+            <file name="ancestris-app-ActionAPropos.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionAPropos.instance"/>
                 <attr name="position" intvalue="200"/>
             </file>
-            <file name="genjfr-tools-calc-SendAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/genjfr-tools-calc-SendAction.instance"/>
+            <file name="ancestris-tools-calc-SendAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-tools-calc-SendAction.instance"/>
                 <attr name="position" intvalue="300"/>
             </file>
             <file name="org-netbeans-modules-javahelp-HelpAction.shadow">
@@ -489,24 +483,24 @@
             </file>
         </folder>
         <folder name="File">
-            <file name="genjfr-app-ActionNew.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionNew.instance"/>
+            <file name="ancestris-app-ActionNew.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionNew.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
-            <file name="genjfr-app-ActionOpenDefault.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpenDefault.instance"/>
+            <file name="ancestris-app-ActionOpenDefault.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionOpenDefault.instance"/>
                 <attr name="position" intvalue="-5"/>
             </file>
-            <file name="genjfr-app-ActionOpen.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionOpen.instance"/>
+            <file name="ancestris-app-ActionOpen.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionOpen.instance"/>
                 <attr name="position" intvalue="0"/>
             </file>
-            <file name="genjfr-app-ActionClose.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionClose.instance"/>
+            <file name="ancestris-app-ActionClose.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
                 <attr name="position" intvalue="10"/>
             </file>
-             <!--<file name="genjfr-app-ActionSave.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/genjfr-app-ActionSave.instance"/>
+             <!--<file name="ancestris-app-ActionSave.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSave.instance"/>
                 <attr name="position" intvalue="20"/>
             </file>-->
             <file name="org-openide-actions-SaveAction.shadow">
@@ -521,12 +515,10 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="GedcomExplorerTopComponent.settings" url="../../ancestris/explorer/GedcomExplorerTopComponentSettings.xml"/>
-<!--            <file name="ControlCenterTopComponent.settings" url="ControlCenterTopComponentSettings.xml"/>-->
         </folder>
         <folder name="Modes">
             <folder name="ancestris-explorer">
                 <file name="GedcomExplorerTopComponent.wstcref" url="../../ancestris/explorer/GedcomExplorerTopComponentWstcref.xml"/>
-<!--                <file name="ControlCenterTopComponent.wstcref" url="ControlCenterTopComponentWstcref.xml"/>-->
             </folder>
             <folder name="ancestris-nav">
             </folder>
@@ -557,38 +549,38 @@
             <file name="Welcome_hidden"/>
         </folder>
         <folder name="preferences">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences"/>
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences"/>
             <attr name="position" intvalue="100"/>
             <file name="optionsAncestris">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/optionsAncestris"/>
-                <attr name="include" stringvalue="config/Preferences/genjfr/.*|config/Preferences/ancestris/.*"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/optionsAncestris"/>
+                <attr name="include" stringvalue="config/Preferences/ancestris/.*|config/Preferences/ancestris/.*"/>
             </file>
             <file name="ui">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/ui"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
                 <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
             </file>
             <file name="reports">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/reports"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/reports"/>
                 <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*"/>
                 <attr name="exclude" stringvalue="ancestris/ancestris.log.*"/>
             </file>
             <file name="gedcoms">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/preferences/gedcoms"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/gedcoms"/>
                 <attr name="include" stringvalue="config/Preferences/gedcoms/.*|config/Windows2Local/Components/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
             </file>
         </folder>
         <folder name="other">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/other"/>
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/other"/>
             <attr name="position" intvalue="200"/>
             <file name="internal">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/other/internal"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/other/internal"/>
                 <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
             </file>
         </folder>
         <folder name="blueprints">
-            <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/blueprints"/>
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/blueprints"/>
             <file name="blueprint">
-                <attr name="displayName" bundlevalue="genjfr.app.Bundle#OptionsExport/blueprints"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/blueprints"/>
                 <attr name="include" stringvalue="ancestris/blueprints/[^/]*/([^/]*)\.html"/>
             </file>
         </folder>

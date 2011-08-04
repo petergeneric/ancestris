@@ -18,7 +18,7 @@ import org.openide.windows.RetainLocation;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//genjfr.app//Tree//EN",
+@ConvertAsProperties(dtd = "-//ancestris.app//Tree//EN",
 autostore = false)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
