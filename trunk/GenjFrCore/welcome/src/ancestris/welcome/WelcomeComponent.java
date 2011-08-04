@@ -60,7 +60,7 @@ import org.openide.util.NbPreferences;
  * @author  Richard Gregor, S. Aubrecht
  */
 public class WelcomeComponent extends TopComponent {
-    static final long serialVersionUID=6021472310161712674L;
+    static final long serialVersionUID=6021472310161712676L;
     private static WeakReference<WelcomeComponent> component =
                 new WeakReference<WelcomeComponent>(null); 
     private JComponent content;
@@ -70,6 +70,7 @@ public class WelcomeComponent extends TopComponent {
     private WelcomeComponent(){
         setLayout(new BorderLayout());
         setName(NbBundle.getMessage(WelcomeComponent.class, "LBL_Tab_Title"));   //NOI18N
+        setToolTipText(NbBundle.getMessage(WelcomeComponent.class, "ACS_Welcome_DESC"));   //NOI18N
         content = null;
         initialized = false;
         putClientProperty( "activateAtStartup", Boolean.TRUE ); //NOI18N
@@ -86,6 +87,9 @@ public class WelcomeComponent extends TopComponent {
     
     private void doInitialize() {
         initAccessibility();
+        // FIXME: initAccessibility reset name and tt values...
+        setName(NbBundle.getMessage(WelcomeComponent.class, "LBL_Tab_Title"));   //NOI18N
+        setToolTipText(NbBundle.getMessage(WelcomeComponent.class, "ACS_Welcome_DESC"));   //NOI18N
         
         if( null == content ) {
             WelcomeOptions.getDefault().incrementStartCounter();
