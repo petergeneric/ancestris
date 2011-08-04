@@ -4,7 +4,7 @@
  */
 package genjfr.app.geo;
 
-import genjfr.app.EditTopComponent;
+import ancestris.app.EditTopComponent;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -5,7 +5,7 @@
 
 package genjfr.app.geo;
 
-import genjfr.app.App;
+import ancestris.app.App;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -6,7 +6,7 @@ package genjfr.app.geo;
 
 import genj.gedcom.Context;
 import ancestris.view.AncestrisTopComponent;
-import genjfr.app.App;
+import ancestris.app.App;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import java.awt.BasicStroke;

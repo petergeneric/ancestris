@@ -14,7 +14,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
-import genjfr.app.App;
+import ancestris.app.App;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.datatransfer.Clipboard;
