@@ -8,9 +8,9 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.app.App;
-import ancestris.app.ModePersisterTopComponent;
-import ancestris.app.OpenGenjViewAction;
+import genjfr.app.App;
+import genjfr.app.ModePersisterTopComponent;
+import genjfr.app.OpenGenjViewAction;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Window;
@@ -42,7 +42,7 @@ import org.openide.windows.WindowManager;
  */
 // TODO: regarder en detail cette faq: http://wiki.netbeans.org/DevFaqNonSingletonTopComponents
 //TODO: delete@ConvertAsProperties(
-//    dtd="-//ancestris.app//ControlCenter//EN",
+//    dtd="-//genjfr.app//ControlCenter//EN",
 //    autostore=false
 //)
 /*
