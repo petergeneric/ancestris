@@ -11,7 +11,7 @@
  */
 package ancestris.util;
 
-import genjfr.app.App;
+import ancestris.app.App;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import org.openide.DialogDisplayer;
