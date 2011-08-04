@@ -34,17 +34,17 @@
     </folder>
     <folder name="Menu">
         <folder name="File">
-            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
-                <attr name="position" intvalue="1250"/>
-            </file>
-            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.instance"/>
-                <attr name="position" intvalue="1150"/>
-            </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance"/>
                 <attr name="position" intvalue="1350"/>
+            </file>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
+                <attr name="position" intvalue="1550"/>
+            </file>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.instance"/>
+                <attr name="position" intvalue="1800"/>
             </file>
         </folder>
         <folder name="Window">
