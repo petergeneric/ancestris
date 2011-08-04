@@ -23,8 +23,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import com.sun.image.codec.jpeg.*;
-import genjfr.app.App;
-import genjfr.app.PrivacyPolicy;
+import ancestris.app.App;
+import ancestris.app.PrivacyPolicy;
 
 import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
