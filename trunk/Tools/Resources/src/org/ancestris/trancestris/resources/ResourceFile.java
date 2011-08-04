@@ -231,55 +231,62 @@ public class ResourceFile {
     }
 
     public int getLineCount() {
-        return defaultLanguage.size();
+        if (defaultLanguage != null) {
+            return defaultLanguage.size();
+        } else {
+            return 1;
+        }
     }
 
     public String getLine(int i) {
         ResourceItem.ResourceLine line = null;
+        String value = null;
 
-        if (fromLanguage != null) {
-            line = fromLanguage.getLine(content.get(i));
+        if (defaultLanguage != null) {
+            if (fromLanguage != null) {
+                line = fromLanguage.getLine(content.get(i));
+            } else {
+                line = defaultLanguage.getLine(content.get(i));
+            }
+
+            value = line.getValue();
         }
-
-        if (line == null) {
-            line = defaultLanguage.getLine(content.get(i));
-        }
-
-        String value = line.getValue();
-
-        return (value == null ? "" : value);
+        return (value == null ? "This file can not be translated there is no default bundle file" : value);
     }
 
     public String getLineComment(int i) {
         ResourceItem.ResourceLine line = null;
+        String comment = null;
 
-        if (fromLanguage != null) {
-            line = fromLanguage.getLine(content.get(i));
+        if (defaultLanguage != null) {
+            if (fromLanguage != null) {
+                line = fromLanguage.getLine(content.get(i));
+            } else {
+                line = defaultLanguage.getLine(content.get(i));
+            }
+
+            comment = line.getComment();
         }
-
-        if (line == null) {
-            line = defaultLanguage.getLine(content.get(i));
-        }
-
-        String comment = line.getComment();
-
         return (comment == null ? "" : comment);
     }
 
     public String getLineTranslation(int i) {
-        ResourceItem.ResourceLine line = toLanguage.getLine(content.get(i));
-
-        if (line == null) {
-
-            if (fromLanguage != null) {
-                line = fromLanguage.getLine(content.get(i));
-            }
+        ResourceItem.ResourceLine line = null;
+        if (defaultLanguage != null) {
+            line = toLanguage.getLine(content.get(i));
 
             if (line == null) {
+                if (fromLanguage != null) {
+                    line = fromLanguage.getLine(content.get(i));
+                } else {
+                    line = defaultLanguage.getLine(content.get(i));
+                }
+
                 line = defaultLanguage.getLine(content.get(i));
             }
         }
-        return line.getValue();
+
+        return line != null ? line.getValue() : "";
     }
 
     public void setLineTranslation(int i, String s) {
@@ -298,23 +305,26 @@ public class ResourceFile {
     }
 
     public int getLineState(int i) {
-        if (toLanguage.getLine(content.get(i)) != null) {
-            String from = null;
+        if (defaultLanguage != null) {
+            if (toLanguage.getLine(content.get(i)) != null) {
+                String from = null;
 
-            if (fromLanguage != null) {
-                from = fromLanguage.getLine(content.get(i)).getValue();
+                if (fromLanguage != null) {
+                    from = fromLanguage.getLine(content.get(i)).getValue();
+                } else {
+                    from = defaultLanguage.getLine(content.get(i)).getValue();
+                }
+                String to = toLanguage.getLine(content.get(i)) != null ? toLanguage.getLine(content.get(i)).getValue() : "";
+                if (from.equalsIgnoreCase(to)) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             } else {
-                from = defaultLanguage.getLine(content.get(i)).getValue();
-            }
-
-            String to = toLanguage.getLine(content.get(i)) != null ? toLanguage.getLine(content.get(i)).getValue() : "";
-            if (from.equalsIgnoreCase(to)) {
-                return -1;
-            } else {
-                return 1;
+                return 0;
             }
         } else {
-            return 0;
+            return -1;
         }
     }
 
