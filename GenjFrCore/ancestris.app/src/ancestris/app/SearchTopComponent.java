@@ -20,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd="-//genjfr.app//Search//EN",
+    dtd="-//ancestris.app//Search//EN",
     autostore=false
 )
 @ServiceProvider(service=AncestrisViewInterface.class)

@@ -16,7 +16,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd="-//genjfr.app//Navigator//EN",
+    dtd="-//ancestris.app//Navigator//EN",
     autostore=false
 )
 @ServiceProvider(service=AncestrisViewInterface.class)

@@ -67,7 +67,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
 
     @Override
     protected String iconResource() {
-        return "genjfr/app/OpenDefault.png";
+        return "ancestris/app/OpenDefault.png";
     }
 
     @Override

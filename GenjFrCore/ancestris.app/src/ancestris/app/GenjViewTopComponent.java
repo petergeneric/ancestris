@@ -55,7 +55,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 // TODO: regarder en detail cette faq: http://wiki.netbeans.org/DevFaqNonSingletonTopComponents
 //TODO: delete@ConvertAsProperties(
-//    dtd="-//genjfr.app//ControlCenter//EN",
+//    dtd="-//ancestris.app//ControlCenter//EN",
 //    autostore=false
 //)
 /*

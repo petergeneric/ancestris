@@ -16,7 +16,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd="-//genjfr.app//Entity//EN",
+    dtd="-//ancestris.app//Entity//EN",
     autostore=false
 )
 public final class EntityTopComponent extends GenjViewTopComponent {
