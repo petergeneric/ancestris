@@ -7,6 +7,7 @@ package org.ancestris.trancestris.explorers.zipexplorer;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.resources.ZipArchive;
+import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -15,6 +16,7 @@ import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
+import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -98,13 +100,20 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ((BeanTreeView) beanTreeView).expandAll();
+        if (beanTreeView != null) {
+            ((BeanTreeView) beanTreeView).expandAll();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ((BeanTreeView) beanTreeView).collapseNode(newZipRootNode);
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if (beanTreeView != null && newZipRootNode != null) {
+            Children children = newZipRootNode.getChildren();
 
+            for (Node node : children.getNodes()) {
+                ((BeanTreeView) beanTreeView).collapseNode(node);
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane beanTreeView;
     private javax.swing.JButton jButton1;
