@@ -37,6 +37,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     private ZipArchive zipFile = null;
     private InstanceContent instanceContent = new InstanceContent();
     private final ProxyLookup proxyLookup;
+    private ZipRootNode newZipRootNode = null;
 
     public ZipExplorerTopComponent() {
         initComponents();
@@ -65,13 +66,51 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jButton2 = new javax.swing.JButton();
         beanTreeView = new BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
+        jPanel1.add(jSeparator1);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.jButton2.text")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton2);
+
+        add(jPanel1, java.awt.BorderLayout.NORTH);
         add(beanTreeView, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ((BeanTreeView) beanTreeView).expandAll();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        ((BeanTreeView) beanTreeView).collapseNode(newZipRootNode);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane beanTreeView;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -151,7 +190,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     public void setBundles(ZipArchive zipFile) {
-        ZipRootNode newZipRootNode = new ZipRootNode(zipFile);
+        newZipRootNode = new ZipRootNode(zipFile);
         zipExplorerManager.setRootContext(newZipRootNode);
         ((BeanTreeView) beanTreeView).setRootVisible(true);
         instanceContent.add(newZipRootNode);
