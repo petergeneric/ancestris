@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <attr name="Toolbars\File\org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow\position" intvalue="200"/>
+    <attr name="Toolbars\File\org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow\position" intvalue="300"/>
+    <attr name="Toolbars\File\org-openide-actions-SaveAllAction.shadow_hidden\position" intvalue="500"/>
     <folder name="Actions">
+        <file name="Edit_hidden"/>
         <folder name="File">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ExplorerSaveAction"/>
@@ -46,6 +50,11 @@
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.instance"/>
                 <attr name="position" intvalue="1800"/>
             </file>
+            <file name="org-netbeans-modules-print-action-PageSetupAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-print-action-PrintAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
         </folder>
         <folder name="Window">
             <file name="ZipExplorerAction.shadow">
@@ -57,6 +66,9 @@
         <folder name="File">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-openide-actions-SaveAction.instance_hidden">
                 <attr name="position" intvalue="400"/>
             </file>
         </folder>
