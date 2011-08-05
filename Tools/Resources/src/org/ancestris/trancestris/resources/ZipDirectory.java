@@ -116,14 +116,15 @@ public class ZipDirectory implements PropertyChangeListener {
     }
 
     public boolean isTranslated() {
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            if (zipDirectory.isTranslated() == false) {
+                return false;
+            }
+        }
+        
         if (resourceFile != null) {
             return resourceFile.isTranslated();
         } else {
-            for (ZipDirectory zipDirectory : dirs.values()) {
-                if (zipDirectory.isTranslated() == false) {
-                    return false;
-                }
-            }
             return true;
         }
     }
