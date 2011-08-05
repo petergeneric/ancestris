@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.openide.util.NbBundle;
 
 public class ResourceFile {
 
@@ -251,7 +252,7 @@ public class ResourceFile {
 
             value = line.getValue();
         }
-        return (value == null ? "This file can not be translated there is no default bundle file" : value);
+        return (value == null ? NbBundle.getMessage(ResourceFile.class, "No-Default-Bundle-Error") : value);
     }
 
     public String getLineComment(int i) {
