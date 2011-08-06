@@ -192,12 +192,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         setLayout(new java.awt.BorderLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel1.border.title"))); // NOI18N
+        jPanel1.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Comment-Window")); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
         textAreaComments.setColumns(20);
         textAreaComments.setEditable(false);
         textAreaComments.setRows(5);
-        textAreaComments.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Comment-Window")); // NOI18N
+        textAreaComments.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.textAreaComments.toolTipText")); // NOI18N
         scrollPaneComments.setViewportView(textAreaComments);
 
         jPanel1.add(scrollPaneComments);
@@ -205,12 +206,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel2.border.title"))); // NOI18N
+        jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
         resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        resourceFileView.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
+        resourceFileView.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.resourceFileView.toolTipText")); // NOI18N
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
         scrollPaneResourceView.setViewportView(resourceFileView);
 
@@ -219,6 +221,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel3.border.title"))); // NOI18N
+        jPanel3.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Translation-Window")); // NOI18N
         jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
         panelTranslation.setLayout(new java.awt.BorderLayout());
@@ -226,7 +229,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaTranslation.setColumns(20);
         textAreaTranslation.setEditable(false);
         textAreaTranslation.setRows(5);
-        textAreaTranslation.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Translation-Window")); // NOI18N
+        textAreaTranslation.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.textAreaTranslation.toolTipText")); // NOI18N
         scrollPaneTranslation.setViewportView(textAreaTranslation);
 
         panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
