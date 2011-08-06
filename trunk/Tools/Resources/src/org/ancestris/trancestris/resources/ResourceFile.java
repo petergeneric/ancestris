@@ -36,8 +36,8 @@ public class ResourceFile {
     private ResourceStructure toLanguage = null;
     private ArrayList<String> content = null;
     private int not_translated;
-    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
-    private TreeMap<String, ResourceStructure> resourceFiles = new TreeMap();
+    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
+    private TreeMap<String, ResourceStructure> resourceFiles = new TreeMap<String, ResourceStructure>();
     private boolean modified = false;
     private boolean translationCreated = false;
 
@@ -59,28 +59,44 @@ public class ResourceFile {
     }
 
     public void writeTo(ZipOutputStream zipOutputStream) throws IOException {
-        for (String bundleName : getFiles()) {
-            if (bundleName.equals(toBundleName)) {
-                // the file already exits
-                if (translationCreated == false) {
-                    // and has not been modified
-                    if (modified == false) {
-                        logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+        if (defaultLanguage != null) {
+            for (String bundleName : getFiles()) {
+                if (bundleName.equals(toBundleName)) {
+                    // the file already exits
+                    if (translationCreated == false) {
+                        // and has not been modified
+                        if (modified == false) {
+                            logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
 
-                        ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
-                        zipEntry.setTime(toLanguage.getZipEntry().getTime());
+                            ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
+                            zipEntry.setTime(toLanguage.getZipEntry().getTime());
 
-                        zipOutputStream.putNextEntry(zipEntry);
-                        for (String key : content) {
-                            String lineString = toLanguage.getResourceLineString(key);
-                            if (lineString != null) {
-                                zipOutputStream.write(lineString.getBytes());
+                            zipOutputStream.putNextEntry(zipEntry);
+                            for (String key : content) {
+                                String lineString = toLanguage.getResourceLineString(key);
+                                if (lineString != null) {
+                                    zipOutputStream.write(lineString.getBytes());
+                                }
                             }
+                            logger.log(Level.INFO, "Done");
+                        } // and has been modified
+                        else {
+                            logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+                            ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
+                            Calendar c = Calendar.getInstance();
+                            zipEntry.setTime(c.getTimeInMillis());
+                            zipOutputStream.putNextEntry(zipEntry);
+                            for (String key : content) {
+                                String lineString = toLanguage.getResourceLineString(key);
+                                if (lineString != null) {
+                                    zipOutputStream.write(lineString.getBytes());
+                                }
+                            }
+                            logger.log(Level.INFO, "Done");
                         }
-                        logger.log(Level.INFO, "Done");
-                    } // and has been modified
-                    else {
-                        logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+                        // the file has been created
+                    } else if (modified == true) {
+                        logger.log(Level.INFO, "Create file {0} ...", this.directoryPath + "/" + bundleName);
                         ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
                         Calendar c = Calendar.getInstance();
                         zipEntry.setTime(c.getTimeInMillis());
@@ -93,60 +109,62 @@ public class ResourceFile {
                         }
                         logger.log(Level.INFO, "Done");
                     }
-                    // the file has been created
-                } else if (modified == true) {
-                    logger.log(Level.INFO, "Create file {0} ...", this.directoryPath + "/" + bundleName);
+                } else {
+                    logger.log(Level.INFO, "Saving file {0} ...", this.directoryPath + "/" + bundleName);
+
+                    ResourceStructure current = resourceFiles.get(bundleName);
                     ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
-                    Calendar c = Calendar.getInstance();
-                    zipEntry.setTime(c.getTimeInMillis());
+                    zipEntry.setTime(current.getZipEntry().getTime());
+
                     zipOutputStream.putNextEntry(zipEntry);
                     for (String key : content) {
-                        String lineString = toLanguage.getResourceLineString(key);
+                        String lineString = current.getResourceLineString(key);
                         if (lineString != null) {
                             zipOutputStream.write(lineString.getBytes());
                         }
                     }
                     logger.log(Level.INFO, "Done");
                 }
-            } else {
-                logger.log(Level.INFO, "Saving file {0} ...", this.directoryPath + "/" + bundleName);
-
-                ResourceStructure current = resourceFiles.get(bundleName);
-                ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
-                zipEntry.setTime(current.getZipEntry().getTime());
-
-                zipOutputStream.putNextEntry(zipEntry);
-                for (String key : content) {
-                    String lineString = current.getResourceLineString(key);
-                    if (lineString != null) {
-                        zipOutputStream.write(lineString.getBytes());
-                    }
-                }
-                logger.log(Level.INFO, "Done");
             }
         }
     }
 
     public void saveTranslation(ZipOutputStream zipOutputStream) throws IOException {
-        for (String bundleName : getFiles()) {
-            if (bundleName.equals(toBundleName)) {
-                if (translationCreated == false) {
-                    if (modified == false) {
-                        logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+        if (defaultLanguage != null) {
+            for (String bundleName : getFiles()) {
+                if (bundleName.equals(toBundleName)) {
+                    if (translationCreated == false) {
+                        if (modified == false) {
+                            logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
 
-                        ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
-                        zipEntry.setTime(toLanguage.getZipEntry().getTime());
+                            ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
+                            zipEntry.setTime(toLanguage.getZipEntry().getTime());
 
-                        zipOutputStream.putNextEntry(zipEntry);
-                        for (String key : content) {
-                            String lineString = toLanguage.getResourceLineString(key);
-                            if (lineString != null) {
-                                zipOutputStream.write(lineString.getBytes());
+                            zipOutputStream.putNextEntry(zipEntry);
+                            for (String key : content) {
+                                String lineString = toLanguage.getResourceLineString(key);
+                                if (lineString != null) {
+                                    zipOutputStream.write(lineString.getBytes());
+                                }
                             }
+                            logger.log(Level.INFO, "Done");
+                        } else {
+                            logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+                            ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
+                            Calendar c = Calendar.getInstance();
+                            zipEntry.setTime(c.getTimeInMillis());
+                            zipOutputStream.putNextEntry(zipEntry);
+                            for (String key : content) {
+                                String lineString = toLanguage.getResourceLineString(key);
+                                if (lineString != null) {
+                                    zipOutputStream.write(lineString.getBytes());
+                                }
+                            }
+                            logger.log(Level.INFO, "Done");
+
                         }
-                        logger.log(Level.INFO, "Done");
-                    } else {
-                        logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
+                    } else if (modified == true) {
+                        logger.log(Level.INFO, "Create file {0} ...", this.directoryPath + "/" + bundleName);
                         ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
                         Calendar c = Calendar.getInstance();
                         zipEntry.setTime(c.getTimeInMillis());
@@ -158,21 +176,7 @@ public class ResourceFile {
                             }
                         }
                         logger.log(Level.INFO, "Done");
-
                     }
-                } else if (modified == true) {
-                    logger.log(Level.INFO, "Create file {0} ...", this.directoryPath + "/" + bundleName);
-                    ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
-                    Calendar c = Calendar.getInstance();
-                    zipEntry.setTime(c.getTimeInMillis());
-                    zipOutputStream.putNextEntry(zipEntry);
-                    for (String key : content) {
-                        String lineString = toLanguage.getResourceLineString(key);
-                        if (lineString != null) {
-                            zipOutputStream.write(lineString.getBytes());
-                        }
-                    }
-                    logger.log(Level.INFO, "Done");
                 }
             }
         }
