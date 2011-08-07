@@ -46,9 +46,6 @@
                 <Property name="columns" type="int" value="20"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="rows" type="int" value="5"/>
-                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/ancestris/trancestris/editors/resourceeditor/Bundle.properties" key="ResourceEditorTopComponent.textAreaComments.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                </Property>
               </Properties>
             </Component>
           </SubComponents>
@@ -92,9 +89,6 @@
                   <Connection code="new ResourceFileModel ()" type="code"/>
                 </Property>
                 <Property name="selectionMode" type="int" value="0"/>
-                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="org/ancestris/trancestris/editors/resourceeditor/Bundle.properties" key="ResourceEditorTopComponent.resourceFileView.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                </Property>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="resourceFileView.setCellRenderer(new ResourceFileCellRenderer());"/>
@@ -146,9 +140,6 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="org/ancestris/trancestris/editors/resourceeditor/Bundle.properties" key="ResourceEditorTopComponent.textAreaTranslation.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-                    </Property>
                   </Properties>
                 </Component>
               </SubComponents>
