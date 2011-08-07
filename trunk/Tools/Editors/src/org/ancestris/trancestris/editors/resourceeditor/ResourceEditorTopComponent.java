@@ -198,7 +198,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaComments.setColumns(20);
         textAreaComments.setEditable(false);
         textAreaComments.setRows(5);
-        textAreaComments.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.textAreaComments.toolTipText")); // NOI18N
         scrollPaneComments.setViewportView(textAreaComments);
 
         jPanel1.add(scrollPaneComments);
@@ -212,7 +211,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        resourceFileView.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.resourceFileView.toolTipText")); // NOI18N
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
         scrollPaneResourceView.setViewportView(resourceFileView);
 
@@ -229,7 +227,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaTranslation.setColumns(20);
         textAreaTranslation.setEditable(false);
         textAreaTranslation.setRows(5);
-        textAreaTranslation.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.textAreaTranslation.toolTipText")); // NOI18N
         scrollPaneTranslation.setViewportView(textAreaTranslation);
 
         panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
