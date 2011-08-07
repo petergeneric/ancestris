@@ -18,7 +18,7 @@ public class ActionSave extends Action2 {
 
     /** gedcom */
     private Context contextBeingSaved = null;
-    private Resources RES = Resources.get("genj.app");
+    private Resources RES = Resources.get(ActionSave.class);
 
     public ActionSave() {
         setText(RES.getString("cc.menu.save"));

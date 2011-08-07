@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
  */
 public class ActionClose extends Action2 {
 
-    private Resources RES = Resources.get("genj.app");
+    private Resources RES = Resources.get(ActionClose.class);
     private Context contextBeingClosed = null;
 
     /** constructor */

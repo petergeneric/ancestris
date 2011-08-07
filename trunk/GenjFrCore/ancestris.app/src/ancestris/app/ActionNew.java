@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 
 public final class ActionNew extends Action2 {
 
-    private Resources RES = Resources.get("genj.app");
+    private Resources RES = Resources.get(ActionNew.class);
 
     /** constructor */
     public ActionNew() {

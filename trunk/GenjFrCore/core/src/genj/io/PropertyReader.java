@@ -37,7 +37,7 @@ import java.util.StringTokenizer;
  */
 public class PropertyReader {
 
-  protected final static Resources RESOURCES = Resources.get("genj.io");
+  protected final static Resources RESOURCES = Resources.get(PropertyReader.class);
 
   protected boolean useIndents = false;
   protected int lines = 0;
