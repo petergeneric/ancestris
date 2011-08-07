@@ -23,18 +23,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.NbBundle;
 
 /**
  * Class which provides localized text-resources for a package
@@ -63,6 +64,9 @@ public class Resources {
 
   /** cached message formats */
   private WeakHashMap<String, MessageFormat> msgFormats = new WeakHashMap<String, MessageFormat>();
+
+  /** bundle objet to delegate if not a report resource */
+  ResourceBundle bundle=null;
   
   /**
    * Constructor for empty resources
@@ -90,13 +94,21 @@ public class Resources {
    * Accessor (cached) 
    */
   public static Resources get(Object packgeMember) {
+    Class<?> clazz = packgeMember instanceof Class<?> ? (Class<?>)packgeMember : packgeMember.getClass();
+      try {
+        return new Resources(NbBundle.getBundle(clazz));
+      } catch (MissingResourceException e) {
     return get(calcPackage(packgeMember));
+      }
   }
 
   /**
    * Accessor  (cached)
    */
   public static Resources get(String packge) {
+      try {
+        return new Resources(NbBundle.getBundle(packge));
+      } catch (MissingResourceException e) {
     synchronized (instances) {
       Resources result = instances.get(packge);
       if (result==null) {
@@ -105,8 +117,9 @@ public class Resources {
       }
       return result;
     }
+      }
   }
-  
+
   /**
    * Calc package for instance
    */
@@ -117,20 +130,6 @@ public class Resources {
     return last<0 ? "" : name.substring(0, last);
   }
 
-  /**
-   * Reset cached Resourcces (for language change)
-   */
-  public static void clearResources(){
-    synchronized (instances) {
-      for (String s:instances.keySet()){
-          instances.get(s).unCache();
-      }
-    }
-  }
-
-  private void unCache(){
-      key2string = null;
-  }
   /**
    * Calc file for package (package/resources.properties)
    */
@@ -157,11 +156,15 @@ public class Resources {
     // remember
     this.pkg=pkg;
   }
+
+  private Resources(ResourceBundle bundle){
+      this.bundle = bundle;
+  }
   
   /**
    * Load more resources from stream
    */
-  public void load(InputStream in) throws IOException {
+  private void load(InputStream in) throws IOException {
     load(in, keys, key2string, false);
   }
   
@@ -347,7 +350,14 @@ public class Resources {
    * @param notNull will return key if resource is not defined
    */
   public String getString(String key, boolean notNull) {
-    String result = getKey2String().get(key.toLowerCase());
+      String result = null;
+      if (bundle!=null){
+          try {
+            result = bundle.getString(key);
+          } catch (Exception e){}
+      } else {
+        result = getKey2String().get(key.toLowerCase());
+      }
     if (result==null&&notNull) result = key;
     return result;
   }
@@ -366,6 +376,9 @@ public class Resources {
    * @param values array of values to replace placeholders in value
    */
   public String getString(String key, Object... substitutes) {
+      if (bundle != null){
+        return MessageFormat.format(getString(key,false), substitutes);
+      }
 
     // do we have a message format already?
     MessageFormat format = msgFormats.get(key);
@@ -384,7 +397,7 @@ public class Resources {
   /**
    * Generate a MessageFormat for given pattern
    */
-  public static MessageFormat getMessageFormat(String pattern) {
+  private static MessageFormat getMessageFormat(String pattern) {
     // have to patch single quotes to doubles because
     // MessageFormat doesn't like those 
     if (pattern.indexOf('\'')>=0) {
@@ -400,112 +413,4 @@ public class Resources {
     return new MessageFormat(pattern);
   }
 
-  /**
-   * Returns the available Keys
-   */
-  public List<String> getKeys() {
-    // initialize first
-    getKey2String();
-    return keys;
-  }
-
-
-          public static String unescape(String str) {
-        if (str == null) {
-            return null;
-        }
-        try {
-            StringWriter writer = new StringWriter(str.length());
-            unescape(writer, str);
-            return writer.toString();
-        } catch (IOException ioe) {
-            // this should never ever happen while writing to a StringWriter
-            throw new UnknownError();
-        }
-    }
-
-    private static void unescape(Writer out, String str) throws IOException {
-        if (out == null) {
-            throw new IllegalArgumentException("The Writer must not be null");
-        }
-        if (str == null) {
-            return;
-        }
-        int sz = str.length();
-        StringBuffer unicode = new StringBuffer(4);
-        boolean hadSlash = false;
-        boolean inUnicode = false;
-        for (int i = 0; i < sz; i++) {
-            char ch = str.charAt(i);
-            if (inUnicode) {
-                // if in unicode, then we're reading unicode
-                // values in somehow
-                unicode.append(ch);
-                if (unicode.length() == 4) {
-                    // unicode now contains the four hex digits
-                    // which represents our unicode character
-                    try {
-                        int value = Integer.parseInt(unicode.toString(), 16);
-                        out.write((char) value);
-                        unicode.setLength(0);
-                        inUnicode = false;
-                        hadSlash = false;
-                    } catch (NumberFormatException nfe) {
-                        throw new RuntimeException("Unable to parse unicode value: " + unicode, nfe);
-                    }
-                }
-                continue;
-            }
-            if (hadSlash) {
-                // handle an escaped value
-                hadSlash = false;
-                switch (ch) {
-//                        case '\\':
-//                            out.write('\\');
-//                            break;
-//                        case '\'':
-//                            out.write('\'');
-//                            break;
-//                        case '\"':
-//                            out.write('"');
-//                            break;
-//                        case 'r':
-//                            out.write('\r');
-//                            break;
-//                        case 'f':
-//                            out.write('\f');
-//                            break;
-//                        case 't':
-//                            out.write('\t');
-//                            break;
-                        case 'n':
-                            out.write('\n');
-                            break;
-//                        case 'b':
-//                            out.write('\b');
-//                            break;
-                    case 'u': {
-                        // uh-oh, we're in unicode country....
-                        inUnicode = true;
-                        break;
-                    }
-                    default:
-                        out.write(ch);
-                        break;
-                }
-                continue;
-            } else if (ch == '\\') {
-                hadSlash = true;
-                continue;
-            }
-            out.write(ch);
-        }
-        if (hadSlash) {
-            // then we're in the weird case of a \ at the end of the
-            // string, let's output it anyway.
-            out.write('\\');
-        }
-    }
-
-  
 } //Resources
