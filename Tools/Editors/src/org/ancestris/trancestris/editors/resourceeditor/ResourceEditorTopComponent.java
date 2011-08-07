@@ -337,11 +337,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 resourceFileView.updateUI();
                 if (resourceFile != null) {
                     resourceFileView.setSelectedIndex(0);
+                    textAreaComments.setText(resourceFile.getLineComment(0));
                     textAreaTranslation.setText(resourceFile.getLineTranslation(0));
                     textAreaTranslation.setEditable(true);
                     textAreaTranslation.setCaretPosition(0);
                     buttonConfirmTranslation.setEnabled(true);
                 } else {
+                    textAreaComments.setText("");
                     textAreaTranslation.setText("");
                     textAreaTranslation.setEditable(false);
                     textAreaTranslation.setCaretPosition(0);
