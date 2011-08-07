@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  */
 public class GedcomWriter implements IGedcomWriter {
 
-  private final static Resources RESOURCES = Resources.get("genj.io");
+  private final static Resources RESOURCES = Resources.get(GedcomWriter.class);
   private static Logger LOG = Logger.getLogger("genj.io");
   
   /** lots of state */

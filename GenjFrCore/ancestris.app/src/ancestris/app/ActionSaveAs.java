@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
   public class ActionSaveAs extends Action2 {
     /** gedcom */
     protected Gedcom gedcomBeingSaved;
-    private Resources RES = Resources.get("genj.app");
+    private Resources RES = Resources.get(ActionSaveAs.class);
 
     /**
      * Constructor for saving gedcom

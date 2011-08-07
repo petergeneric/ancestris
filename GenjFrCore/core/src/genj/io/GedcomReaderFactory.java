@@ -51,7 +51,7 @@ import java.util.logging.Logger;
  */
 public class GedcomReaderFactory {
   
-  private final static Resources RESOURCES = Resources.get("genj.io");
+  private final static Resources RESOURCES = Resources.get(GedcomReaderFactory.class);
   private static Logger LOG = Logger.getLogger("genj.io");
   
   /** estimated average byte size of one entity */

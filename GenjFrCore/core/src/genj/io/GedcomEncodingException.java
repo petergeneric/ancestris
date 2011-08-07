@@ -27,7 +27,7 @@ import genj.util.Resources;
  */
 public class GedcomEncodingException extends GedcomIOException {
   
-  private final static Resources RESOURCES = Resources.get("genj.io");
+  private final static Resources RESOURCES = Resources.get(GedcomEncodingException.class);
   
   /** constructor */
   public GedcomEncodingException(Entity entity, String encoding) {

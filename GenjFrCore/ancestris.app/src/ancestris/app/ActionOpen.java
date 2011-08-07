@@ -13,7 +13,7 @@ import java.net.URL;
 
 public class ActionOpen extends Action2 {
 
-    private Resources RES = Resources.get("genj.app");
+    private Resources RES = Resources.get(ActionOpen.class);
     private URL url = null;;
 
     /** constructor - good for button or menu item */

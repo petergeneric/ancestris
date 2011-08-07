@@ -109,14 +109,10 @@ public class Resources {
 
   /**
    * Accessor  (cached)
+   * @deprecated use get(Object...) instead
    */
+  @Deprecated
   public static Resources get(String packge) {
-      try {
-          Resources result = new Resources(NbBundle.getBundle(packge));
-          result.description = "string:"+packge;
-        return result;
-      } catch (MissingResourceException e) {
-          LOG.log(Level.INFO, "bundle notfound for string {0}",packge);
     synchronized (instances) {
       Resources result = instances.get(packge);
       if (result==null) {
@@ -125,7 +121,6 @@ public class Resources {
       }
       return result;
     }
-      }
   }
 
   /**
