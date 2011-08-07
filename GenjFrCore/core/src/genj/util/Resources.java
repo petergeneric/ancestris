@@ -51,6 +51,7 @@ import org.openide.util.NbBundle;
  * </il>
  */
 public class Resources {
+    private static final Logger LOG = Logger.getLogger("genj.util");
   
   /** keep track of loaded resources */
   private static Map<String, Resources> instances = new HashMap<String, Resources>();
@@ -66,7 +67,8 @@ public class Resources {
   private WeakHashMap<String, MessageFormat> msgFormats = new WeakHashMap<String, MessageFormat>();
 
   /** bundle objet to delegate if not a report resource */
-  ResourceBundle bundle=null;
+  private ResourceBundle bundle=null;
+  private String description = "";
   
   /**
    * Constructor for empty resources
@@ -96,8 +98,11 @@ public class Resources {
   public static Resources get(Object packgeMember) {
     Class<?> clazz = packgeMember instanceof Class<?> ? (Class<?>)packgeMember : packgeMember.getClass();
       try {
-        return new Resources(NbBundle.getBundle(clazz));
+          Resources result = new Resources(NbBundle.getBundle(clazz));
+          result.description = "string:"+clazz;
+        return result;
       } catch (MissingResourceException e) {
+          LOG.log(Level.INFO, "bundle notfound for class {0} ({1})",new Object[]{clazz,packgeMember});
     return get(calcPackage(packgeMember));
       }
   }
@@ -107,8 +112,11 @@ public class Resources {
    */
   public static Resources get(String packge) {
       try {
-        return new Resources(NbBundle.getBundle(packge));
+          Resources result = new Resources(NbBundle.getBundle(packge));
+          result.description = "string:"+packge;
+        return result;
       } catch (MissingResourceException e) {
+          LOG.log(Level.INFO, "bundle notfound for string {0}",packge);
     synchronized (instances) {
       Resources result = instances.get(packge);
       if (result==null) {
@@ -354,7 +362,9 @@ public class Resources {
       if (bundle!=null){
           try {
             result = bundle.getString(key);
-          } catch (Exception e){}
+          } catch (Exception e){
+              LOG.log(Level.INFO, "key {0} not found in {1} bundle",new Object[]{key,description});
+          }
       } else {
         result = getKey2String().get(key.toLowerCase());
       }
