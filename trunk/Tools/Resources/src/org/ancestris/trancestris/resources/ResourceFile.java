@@ -319,12 +319,15 @@ public class ResourceFile {
                 } else {
                     from = defaultLanguage.getLine(content.get(i)).getValue();
                 }
-                String to = toLanguage.getLine(content.get(i)) != null ? toLanguage.getLine(content.get(i)).getValue() : "";
-                if (from.equalsIgnoreCase(to)) {
-                    return -1;
-                } else {
-                    return 1;
+                if (from != null) {
+                    String to = toLanguage.getLine(content.get(i)) != null ? toLanguage.getLine(content.get(i)).getValue() : "";
+                    if (from.equalsIgnoreCase(to)) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
                 }
+                return -1;
             } else {
                 return 0;
             }
