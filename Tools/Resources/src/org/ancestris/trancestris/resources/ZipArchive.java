@@ -21,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipArchive implements PropertyChangeListener {
 
     private static final Logger logger = Logger.getLogger(ZipArchive.class.getName());
-    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
+    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
     private ZipDirectory root;
     private File zipFile = null;
     private Locale toLocale;
@@ -109,7 +109,7 @@ public class ZipArchive implements PropertyChangeListener {
     private void fire(String propertyName, Object old, Object nue) {
         //Passing 0 below on purpose, so you only synchronize for one atomic call
         @SuppressWarnings(value = "unchecked")
-        PropertyChangeListener[] pcls = (PropertyChangeListener[]) listeners.toArray(new PropertyChangeListener[0]);
+        PropertyChangeListener[] pcls = listeners.toArray(new PropertyChangeListener[0]);
         for (int i = 0; i < pcls.length; i++) {
             logger.entering(ZipArchive.class.getName(), "fire {0}", propertyName);
             pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));

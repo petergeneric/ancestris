@@ -49,7 +49,7 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
 
         int index = 0;
         while (iter.hasNext()) {
-            locales[index++] = localeList.get((String) iter.next());
+            locales[index++] = localeList.get(iter.next());
         }
     }
 

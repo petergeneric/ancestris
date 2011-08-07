@@ -201,7 +201,7 @@ public class ResourceFile {
 
         if (defaultLanguage != null) {
 
-            content = new ArrayList(defaultLanguage.keySet());
+            content = new ArrayList<String>(defaultLanguage.keySet());
 
             // Load translayed language
             if (toLocale.getLanguage().equals("en")) {
@@ -344,7 +344,7 @@ public class ResourceFile {
     private void fire(String propertyName, Object old, Object nue) {
         //Passing 0 below on purpose, so you only synchronize for one atomic call
         @SuppressWarnings(value = "unchecked")
-        PropertyChangeListener[] pcls = (PropertyChangeListener[]) listeners.toArray(new PropertyChangeListener[0]);
+        PropertyChangeListener[] pcls = listeners.toArray(new PropertyChangeListener[0]);
         for (int i = 0; i < pcls.length; i++) {
             pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
         }

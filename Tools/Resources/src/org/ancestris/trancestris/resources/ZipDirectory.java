@@ -22,7 +22,7 @@ public class ZipDirectory implements PropertyChangeListener {
     private String directoryName;
     private ResourceFile resourceFile = null;
     private LinkedHashMap<String, ZipDirectory> dirs;
-    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList());
+    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener> ());
 
     public ZipDirectory(String name) {
         logger.log(Level.INFO, "New directory {0}", name);
@@ -145,7 +145,7 @@ public class ZipDirectory implements PropertyChangeListener {
     private void fire(String propertyName, Object old, Object nue) {
         //Passing 0 below on purpose, so you only synchronize for one atomic call
         @SuppressWarnings(value = "unchecked")
-        PropertyChangeListener[] pcls = (PropertyChangeListener[]) listeners.toArray(new PropertyChangeListener[0]);
+        PropertyChangeListener[] pcls = listeners.toArray(new PropertyChangeListener[0]);
         for (int i = 0; i < pcls.length; i++) {
             logger.entering(ZipDirectory.class.getName(), "fire {0}", propertyName);
             pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
