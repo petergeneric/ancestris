@@ -99,7 +99,7 @@ public class Resources {
     Class<?> clazz = packgeMember instanceof Class<?> ? (Class<?>)packgeMember : packgeMember.getClass();
       try {
           Resources result = new Resources(NbBundle.getBundle(clazz));
-          result.description = "string:"+clazz;
+          result.description = ""+clazz;
         return result;
       } catch (MissingResourceException e) {
           LOG.log(Level.INFO, "bundle notfound for class {0} ({1})",new Object[]{clazz,packgeMember});
@@ -382,6 +382,9 @@ public class Resources {
    */
   public String getString(String key, Object... substitutes) {
       if (bundle != null){
+          String format = getString(key,false);
+          if (format == null)
+              return key;
         return MessageFormat.format(getString(key,false), substitutes);
       }
 
