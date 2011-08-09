@@ -4,7 +4,7 @@
  */
 package ancestris.app;
 
-import genj.util.AncestrisPreferences;
+import ancestris.explorer.GedcomExplorerTopComponent;
 import java.util.Collection;
 import java.util.prefs.Preferences;
 import org.openide.modules.ModuleInstall;
@@ -24,9 +24,8 @@ public class Installer extends ModuleInstall {
     @Override
     public void validate() throws IllegalStateException {
         Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate");
-        p.putInt("period", p.getInt("period",0));
+        p.putInt("period", p.getInt("period", 0));
     }
-
 
     @Override
     public void restored() {
@@ -34,9 +33,11 @@ public class Installer extends ModuleInstall {
         App.main(new String[]{});
 
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+
             public void run() {
-            Collection<String> pfiles = genj.util.Registry.get(App.class).get("gedcoms", (Collection<String>) null);
-            App.center.load(pfiles);
+                Collection<String> pfiles = genj.util.Registry.get(App.class).get("gedcoms", (Collection<String>) null);
+                App.center.load(pfiles);
+                GedcomExplorerTopComponent.getDefault().open();
             }
         });
     }
@@ -51,5 +52,4 @@ public class Installer extends ModuleInstall {
     public void close() {
         App.close();
     }
-
 }
