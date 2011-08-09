@@ -61,29 +61,105 @@ public class TableView extends View {
     private Map<String, Mode> modes = new HashMap<String, Mode>();
 
     {
-        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
-        modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{"FAM", "FAM:MARR:DATE", "FAM:MARR:PLAC", "FAM:HUSB", "FAM:WIFE", "FAM:CHIL"}));
-        modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{"OBJE", "OBJE:FILE:TITL"}));
-        modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{"NOTE", "NOTE:NOTE"}));
-        modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{"SOUR", "SOUR:TITL", "SOUR:TEXT"}));
-        modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{"SUBM", "SUBM:NAME"}));
-        modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{"REPO", "REPO:NAME", "REPO:NOTE"}));
-    }
+//        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
+        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{
+            "INDI",
+            "INDI:SEX",
+            "INDI:NAME",
+            "INDI:BIRT:DATE",
+            "INDI:BIRT:PLAC",
+            "INDI:DEAT:DATE",
+            "INDI:DEAT:PLAC",
+            "INDI:FAMS",
+            "INDI:FAMC",
+            "INDI:RESI:ADDR",
+            "INDI:RESI:ADDR:CTRY",
+            "INDI:DEAT:AGE",
+            "INDI:ASSO",
+            "INDI:ASSO:RELA",
+            "INDI:CHAN",
+            "INDI:NAME:GIVN",
+            "INDI:NAME:SURN"
+        }));
+//        modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{"FAM", "FAM:MARR:DATE", "FAM:MARR:PLAC", "FAM:HUSB", "FAM:WIFE", "FAM:CHIL"}));
+        modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{
+            "FAM",
+            "FAM:MARR:DATE",
+            "FAM:MARR:PLAC",
+            "FAM:HUSB",
+            "FAM:WIFE",
+            "FAM:MARR:HUSB:AGE",
+            "FAM:MARR:WIFE:AGE",
+            "FAM:DIV:DATE",
+            "FAM:NOTE",
+            "FAM:MARC:DATE",
+            "FAM:MARC:AGNC",
+            "FAM:MARC:PLAC",
+            "FAM:CHAN"
+        }));
 
-    ;
+//        modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{"OBJE", "OBJE:FILE:TITL"}));
+        modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{
+            "OBJE",
+            "OBJE:FILE:TITL"
+        }));
+
+//        modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{"NOTE", "NOTE:NOTE"}));
+        modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{
+            "NOTE",
+            "NOTE:NOTE",
+            "NOTE:CHAN"
+        }));
+
+//        modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{"SOUR", "SOUR:TITL", "SOUR:TEXT"}));
+        modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{
+            "SOUR",
+            "SOUR:TITL",
+            "SOUR:DATA:EVEN:DATE",
+            "SOUR:REPO",
+            "SOUR:REPO:CALN",
+            "SOUR:REPO:CALN:MEDI",
+            "SOUR:CHAN"
+        }));
+
+//        modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{"SUBM", "SUBM:NAME"}));
+        modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{
+            "SUBM",
+            "SUBM:NAME",
+            "SUBM:ADDR",
+            "SUBM:ADDR:CITY",
+            "SUBM:ADDR:POST",
+            "SUBM:ADDR:CTRY",
+            "SUBM:PHON",
+            "SUBM:CHAN"
+        }));
+
+//        modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{"REPO", "REPO:NAME", "REPO:NOTE"}));
+        modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{
+            "REPO",
+            "REPO:NAME",
+            "REPO:ADDR",
+            "REPO:ADDR:CITY",
+            "REPO:ADDR:POST",
+            "REPO:ADDR:CTRY",
+            "REPO:PHON",
+            "REPO:NOTE",
+            "REPO:CHAN"
+        }));
+    };
+
     private Map<String, String> defaultLayouts = new HashMap<String, String>();
 
     {
-        defaultLayouts.put(Gedcom.INDI, "8,60,180,40,100,200,160,250,250");
-        defaultLayouts.put(Gedcom.FAM, "6,60,100,200,180,180,180");
-        defaultLayouts.put(Gedcom.OBJE, "2,60,300");
-        defaultLayouts.put(Gedcom.NOTE, "2,60,800");
-        defaultLayouts.put(Gedcom.SOUR, "3,60,300,500");
-        defaultLayouts.put(Gedcom.SUBM, "2,60,300");
+        defaultLayouts.put(Gedcom.INDI, "17,52,24,310,96,163,94,156,356,397,224,113,99,388,218,167,254,172,2,1");
+        defaultLayouts.put(Gedcom.FAM, "13,52,99,375,296,323,93,92,116,283,100,250,429,154,2,1");
+        defaultLayouts.put(Gedcom.OBJE, "2,75,75,1,1");
+        defaultLayouts.put(Gedcom.NOTE, "9,55,283,222,173,62,90,123,360,169,0,1");
+        defaultLayouts.put(Gedcom.SOUR, "7,75,578,227,381,287,115,174,1,1");
+        defaultLayouts.put(Gedcom.SUBM, "8,75,213,244,202,84,152,149,174");
         defaultLayouts.put(Gedcom.REPO, "3,60,300,500");
-    }
+    };
 
-    ;
     /** current type we're showing */
     private Mode currentMode;
     private Sticky sticky = new Sticky();
