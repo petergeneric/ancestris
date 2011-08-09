@@ -119,16 +119,25 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         return TopComponent.PERSISTENCE_ALWAYS;
     }
 
-    // Closes explorer if no gedcom file opened
     @Override
-    protected void componentOpened() {
-        super.componentOpened();
-        if( GedcomDirectory.getInstance().getContexts().isEmpty() ) {
-            forceClose = true;
-                close();
-        }
+    public void open() {
+         Mode m = WindowManager.getDefault().findMode ("leftSlidingSide");
+         if (m != null) {
+            m.dockInto(this);
+         }
+         super.open();
     }
 
+    // Closes explorer if no gedcom file opened
+//    @Override
+//    protected void componentOpened() {
+//        super.componentOpened();
+//        if( GedcomDirectory.getInstance().getContexts().isEmpty() ) {
+//            forceClose = true;
+//                close();
+//        }
+//    }
+//
     @Override
     public void componentClosed() {
         // TODO add custom code on component closing
