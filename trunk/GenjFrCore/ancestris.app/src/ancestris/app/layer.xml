@@ -229,6 +229,16 @@
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
                 <attr name="position" intvalue="-50"/>
             </file>
+
+            <file name="SeparatorFeedBack.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="40"/>
+            </file>
+            <file name="org-netbeans-core-actions-LogAction.shadow">
+                <attr name="position" intvalue="45"/>
+                <attr name="originalFile" stringvalue="Actions/View/org-netbeans-core-actions-LogAction.instance"/>
+            </file>
+
             <file name="SeparatorAPropos.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="49"/>
@@ -281,6 +291,7 @@
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-EntityAction.instance"/>
                 <attr name="position" intvalue="-1000"/>
             </file>
+            <file name="Separator1.instance_hidden"/>
             <file name="TableAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TableAction.instance"/>
                 <attr name="position" intvalue="-900"/>
@@ -322,6 +333,8 @@
                 <attr name="position" intvalue="-100"/>
             </file>
 
+            <file name="org-netbeans-core-actions-HTMLViewAction.shadow_hidden"/>
+            <file name="org-netbeans-core-actions-LogAction.shadow_hidden"/>
         </folder>
         <!--
         <folder name="Window">
