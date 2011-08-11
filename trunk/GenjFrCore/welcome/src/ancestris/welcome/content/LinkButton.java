@@ -231,6 +231,5 @@ public abstract class LinkButton extends JButton
         rec.setResourceBundleName(BundleSupport.BUNDLE_NAME);
 
         Constants.USAGE_LOGGER.log(rec);
-        System.err.println("usage: " + id);
     }
 }
