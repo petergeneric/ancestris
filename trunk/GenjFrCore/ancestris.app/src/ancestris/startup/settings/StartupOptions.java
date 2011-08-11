@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
+import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Utilities;
 
 /**
@@ -37,12 +39,17 @@ public class StartupOptions {
         // Tries user conf file
         ancestrisConfProps = Util.loadProperties(ancestrisUserConfFile);
         // No user file? tries ancestris system
+        File conf;
         if (ancestrisConfProps == null) {
-            ancestrisConfProps = Util.loadProperties(new File(System.getProperty("netbeans.home") + "/../etc/ancestris.conf"));
+            conf  = InstalledFileLocator.getDefault().locate("../etc/ancestris.conf", "org.netbeans.core.startup", false);
+            if (conf != null)
+                ancestrisConfProps = Util.loadProperties(conf);
         }
         // No ancestris system? tries netbeans system (for run from netbeans ide)
         if (ancestrisConfProps == null) {
-            ancestrisConfProps = Util.loadProperties(new File(System.getProperty("netbeans.home") + "/../etc/netbeans.conf"));
+            conf = InstalledFileLocator.getDefault().locate("../etc/netbeans.conf", "org.netbeans.core.startup", false);
+            if (conf != null)
+                ancestrisConfProps = Util.loadProperties(conf);
             prefix = "netbeans_";
         }
         loadConf(ancestrisConfProps, prefix);
