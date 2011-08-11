@@ -24,8 +24,8 @@ import java.awt.event.ActionEvent;
      * Constructor for saving gedcom
      */
     public ActionSaveAs() {
-        setText(RES.getString("cc.menu.saveas"));
-     setTip(RES, "cc.tip.save_file");
+        setText(RES.getString("CTL_ActionSaveAs"));
+     setTip(RES, "HINT_ActionSave");
       // setup
       //setImage(Images.imgSave);
     }
