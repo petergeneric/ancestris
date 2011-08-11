@@ -28,7 +28,7 @@ public class ActionClose extends Action2 {
 
     /** constructor */
     public ActionClose() {
-        setText(RES, "cc.menu.close");
+        setText(RES, "CTL_ActionClose");
         setImage(Images.imgClose);
         setEnabled(enabled);
     }

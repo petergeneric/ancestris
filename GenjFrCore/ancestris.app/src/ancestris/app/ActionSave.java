@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 /**
  * Action - Save
  */
+// FIXME: must be remove in flavour of NB Save capabilities (SaveCoockie?)
 public class ActionSave extends Action2 {
 
     /** gedcom */
@@ -21,8 +22,8 @@ public class ActionSave extends Action2 {
     private Resources RES = Resources.get(ActionSave.class);
 
     public ActionSave() {
-        setText(RES.getString("cc.menu.save"));
-        setTip(RES, "cc.tip.save_file");
+        setText(RES.getString("CTL_ActionSave"));
+        setTip(RES, "HINT_ActionSave");
         // setup
         setImage(Images.imgSave);
     }

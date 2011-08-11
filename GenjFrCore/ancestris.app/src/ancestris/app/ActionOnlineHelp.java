@@ -7,7 +7,6 @@ package ancestris.app;
 
 import ancestris.view.Images;
 import genj.io.FileAssociation;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;

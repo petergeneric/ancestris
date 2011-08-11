@@ -18,16 +18,16 @@ public class ActionOpen extends Action2 {
 
     /** constructor - good for button or menu item */
     public ActionOpen() {
-        setTip(RES, "cc.tip.open");
-        setText(RES, "cc.menu.open");
+        setTip(RES, "HINT_ActionOpen");
+        setText(RES, "CTL_ActionOpen");
         setImage(Images.imgOpen);
     }
 
     /** constructor - good for button or menu item */
     public ActionOpen(URL url) {
         this.url = url;
-        setTip(RES.getString("cc.tip.open.file",url.getFile()));
-        setText(RES.getString("cc.menu.open.file",url.getFile()));
+        setTip(RES.getString("HINT_ActionOpen_file",url.getFile()));
+        setText(RES.getString("CTL_ActionOpen_file",url.getFile()));
         setImage(Images.imgOpen);
     }
 

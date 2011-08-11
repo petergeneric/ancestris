@@ -17,8 +17,8 @@ public final class ActionNew extends Action2 {
     /** constructor */
     public ActionNew() {
 //      setAccelerator(ACC_NEW);
-        setText(RES, "cc.menu.new");
-        setTip(RES, "cc.tip.create_file");
+        setText(RES, "CTL_ActionNew");
+        setTip(RES, "HINT_ActionNew");
         setImage(Images.imgNew);
     }
 
