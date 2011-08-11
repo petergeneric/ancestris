@@ -102,5 +102,5 @@ public interface Constants {
     
     static final int START_PAGE_MIN_WIDTH = 600;
 
-    static final Logger USAGE_LOGGER = Logger.getLogger("org.netbeans.ui.metrics.projects"); //NOI18N
+    static final Logger USAGE_LOGGER = Logger.getLogger("ancestris.app.sendfeedback"); //NOI18N
 }

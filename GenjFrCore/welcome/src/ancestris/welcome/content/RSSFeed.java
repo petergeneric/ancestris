@@ -294,7 +294,6 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         public void run() {
             try {
                 lastReload = System.currentTimeMillis();
-//                System.err.println("reloading: " + lastReload + "url=" + url);
 
                 List<FeedItem> itemList = buildItemList();
                 final JPanel contentPanel = new JPanel( new GridBagLayout() );
