@@ -709,7 +709,7 @@ public class Gedcom implements Comparable {
     Class<? extends Entity> clazz = (Class<? extends Entity>)E2TYPE.get(tag);
     if (clazz!=null) {
       if (id.length()==0)
-        throw new GedcomException(resources.getString("entity.error.noid", tag));
+        throw new GedcomException(resources.getString("error.entity.noid", tag));
     } else {
       clazz = Entity.class;
     }
