@@ -63,10 +63,6 @@ public class SexBean extends PropertyBean {
     add(female);
     add(unknown);
     
-//    String tip = RESOURCES.getString("sex.tip");
-//    male.setToolTipText(tip);
-//    female.setToolTipText(tip);
-    
     group = new ButtonGroup();
     group.add(male);
     group.add(female);
