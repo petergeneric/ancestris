@@ -2,8 +2,8 @@
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
-<project name="GenjFrApp" basedir="." default="build">
-    <description>Builds the module suite GenjFrApp.</description>
+<project name="AncestrisCore" basedir="." default="build">
+    <description>Builds the module suite AncestrisCore.</description>
     <import file="nbproject/build-impl.xml"/>
      <property name="app.icon.icns" value="${basedir}/ancestris.icns"/>
     <target name="build-launchers" depends="-init">
@@ -133,7 +133,7 @@
 
         <echo message="Setting variable names..." />
         <replace file="${nbdist-app.dir}/izpack-install-script.xml">
-            <replacefilter token="$APP-NAME" value="GenjFr" />
+            <replacefilter token="$APP-NAME" value="Ancestris" />
             <replacefilter token="$APP-VERSION" value="${inst.version}" />
             <replacefilter token="$APP-PATH" value="${app.title}-${inst.version}" />
         </replace>
@@ -151,8 +151,8 @@
         <echo message="Creating the release ${nbdist-app-installer} ..."/>
         <exec dir="${izpack2exe.dir}" executable="python" >
             <arg value="izpack2exe.py"/>
-            <arg value="--file=../../../GenjFrCore/${nbdist-app.dir}/${izpack-installer}"/>
-            <arg value="--output=../../../GenjFrCore/${nbdist.dir}/${nbdist-app-installer}"/>
+            <arg value="--file=../../../AncestrisCore/${nbdist-app.dir}/${izpack-installer}"/>
+            <arg value="--output=../../../AncestrisCore/${nbdist.dir}/${nbdist-app-installer}"/>
             <arg value="--no-upx"/>
         </exec>
 
@@ -160,7 +160,7 @@
         <delete dir="${nbdist-app.dir}"/>
 
         <echo message=" "/>
-        <echo message="Release IzPack of GenjFr for Windows is ready: ${nbdist-app-installer}" />
+        <echo message="Release IzPack of Ancestris for Windows is ready: ${nbdist-app-installer}" />
     </target>
 
     <target name="build-mac" depends="suite.build-mac">
