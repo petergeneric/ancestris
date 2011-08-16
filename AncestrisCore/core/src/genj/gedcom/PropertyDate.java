@@ -369,10 +369,14 @@ public class PropertyDate extends Property {
     }
     
     public String getPrefix1Name() {
+        if (start.length() == 0)
+            return null;
       return resources.getString("prop.date.mod."+start, false);
     }
     
     public String getPrefix2Name() {
+        if (end.length() == 0)
+            return null;
       return resources.getString("prop.date.mod."+end, false);
     }
     
