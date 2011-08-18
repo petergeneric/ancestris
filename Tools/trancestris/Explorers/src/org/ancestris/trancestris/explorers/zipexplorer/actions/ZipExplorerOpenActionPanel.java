@@ -79,13 +79,13 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
         @Override
         public Object getSelectedItem() {
             return selectedLocale;
+            }
         }
-    }
 
     /** Creates new form EditorOpenActionPanel */
     public ZipExplorerOpenActionPanel() {
-        fromLocale = localeList.get(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("fromLocale", Locale.UK.getDisplayLanguage()));
-        toLocale = localeList.get(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("toLocale", Locale.getDefault().getDisplayLanguage()));
+        fromLocale = getLocaleFromString(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("fromLocale", Locale.ENGLISH.toString()));
+        toLocale = getLocaleFromString(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("toLocale", Locale.getDefault().toString()));
         initComponents();
         jComboBox1.setSelectedItem(fromLocale.getDisplayLanguage());
         jComboBox2.setSelectedItem(toLocale.getDisplayLanguage());
@@ -225,4 +225,13 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    private Locale getLocaleFromString(String str){
+        if (str == null || str.length() == 0)
+            return null;
+        String locale[] = (str+"__").split("_",3);
+
+        return new Locale (locale[0],locale[1],locale[2]);
+    }
+
 }
