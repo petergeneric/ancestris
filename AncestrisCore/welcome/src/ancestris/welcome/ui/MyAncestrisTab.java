@@ -77,8 +77,8 @@ class MyAncestrisTab extends AbstractTab {
 //        leftPanel.add(new RecentFilesPanel() );
         leftPanel.add( new ContentSection( new NewGedcomPanel(), false, false, false ) );
         leftPanel.add( new ContentSection( new OpenGedcomPanel(), false, false, false ) );
-        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionSample" ), //NOI18N
-                new SamplePanel(), false, false, false ) );
+        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), //NOI18N
+                new RecentFilesPanel(), false, false, false ) );
 //        leftPanel.add( new NewGedcomPanel() );
 
         JPanel rightPanel = new JPanel( new GridLayout(0,1) );
