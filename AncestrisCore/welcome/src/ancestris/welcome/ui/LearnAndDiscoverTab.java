@@ -69,6 +69,8 @@ class LearnAndDiscoverTab extends AbstractTab {
 
         panel.add( new ContentSection( BundleSupport.getLabel("SectionDemosAndTutorials"), new Tutorials(), true, false )); //NOI18N
 
+        panel.add( new ContentSection( BundleSupport.getLabel( "SectionSample" ), //NOI18N
+                new SamplePanel(), true, false ) );
 //        panel.add( new ContentSection( BundleSupport.getLabel( "SectionDemo" ), //NOI18N
 //                new DemoPanel(), true, false ));
 

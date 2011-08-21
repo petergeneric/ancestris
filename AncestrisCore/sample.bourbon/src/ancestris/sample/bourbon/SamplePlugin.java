@@ -52,4 +52,14 @@ public class SamplePlugin extends AncestrisPlugin implements SampleProvider {
             return null;
         }
     }
+
+    @Override
+    public String getName() {
+        return getPluginDisplayName();
+    }
+
+    @Override
+    public String getDescription() {
+        return getPluginShortDescription();
+    }
 }
