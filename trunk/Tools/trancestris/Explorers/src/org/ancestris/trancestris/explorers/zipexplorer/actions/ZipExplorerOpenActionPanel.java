@@ -41,6 +41,8 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
                 localeList.put(locale.getDisplayLanguage(), locale);
             }
         }
+        Locale breton = new Locale("br");
+        localeList.put(breton.getDisplayLanguage(),breton);
 
         locales = new Locale[localeList.size()];
         SortedSet<String> sortedset = new TreeSet<String>(localeList.keySet());
