@@ -22,4 +22,17 @@ import java.net.URL;
 public interface SampleProvider {
     public File getSampleGedcomFile();
     public URL getSampleGedcomURL();
+    
+    /**
+     * Get sample gedcom Name
+     * @return
+     */
+    public String getName();
+
+    /**
+     * Get short gedcom description. Implementor mays localize this description thru,
+     * for instance, a Bundle Property
+     * @return
+     */
+    public String getDescription();
 }

@@ -93,13 +93,13 @@ made subject to such option by the copyright holder.
                 <attr name="position" intvalue="400"/>
             </file>
 
-            <file name="sampleproject.instance">
+<!--            <file name="sampleproject.instance">
                 <attr name="gap" boolvalue="true"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="instanceClass" stringvalue="ancestris.welcome.ui.SampleGedcomAction"/>
                 <attr name="instanceOf" stringvalue="javax.swing.Action"/>
                 <attr name="position" intvalue="500"/>
-            </file>
+            </file>-->
 
 <!--            <file name="newgedcom.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
