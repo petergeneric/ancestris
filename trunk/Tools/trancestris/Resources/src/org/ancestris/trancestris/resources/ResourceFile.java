@@ -255,6 +255,7 @@ public class ResourceFile {
             }
 
             value = line.getValue();
+            return (value == null ? "" : value);
         }
         return (value == null ? NbBundle.getMessage(ResourceFile.class, "No-Default-Bundle-Error") : value);
     }
