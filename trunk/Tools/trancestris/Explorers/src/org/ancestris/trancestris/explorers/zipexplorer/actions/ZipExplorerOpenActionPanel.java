@@ -210,12 +210,12 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         fromLocale = localeList.get((String) jComboBox1.getSelectedItem());
-        NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("fromLocale", fromLocale.getDisplayLanguage());
+        NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("fromLocale", fromLocale.toString());
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         toLocale = localeList.get((String) jComboBox2.getSelectedItem());
-        NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("toLocale", toLocale.getDisplayLanguage());
+        NbPreferences.forModule(ZipExplorerOpenActionPanel.class).put("toLocale", toLocale.toString());
     }//GEN-LAST:event_jComboBox2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
