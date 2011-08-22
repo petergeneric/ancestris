@@ -250,7 +250,9 @@ public class ResourceFile {
         if (defaultLanguage != null) {
             if (fromLanguage != null) {
                 line = fromLanguage.getLine(content.get(i));
-            } else {
+            }
+            // fall back to default language if not found (ie translate from fr to br)
+            if (line == null) {
                 line = defaultLanguage.getLine(content.get(i));
             }
 
@@ -267,7 +269,9 @@ public class ResourceFile {
         if (defaultLanguage != null) {
             if (fromLanguage != null) {
                 line = fromLanguage.getLine(content.get(i));
-            } else {
+            }
+            // fall back to default language if not found (ie translate from fr to br)
+            if (line == null) {
                 line = defaultLanguage.getLine(content.get(i));
             }
 
@@ -284,7 +288,9 @@ public class ResourceFile {
             if (line == null) {
                 if (fromLanguage != null) {
                     line = fromLanguage.getLine(content.get(i));
-                } else {
+                }
+                // fall back to default language if not found (ie translate from fr to br)
+                if (line == null) {
                     line = defaultLanguage.getLine(content.get(i));
                 }
 
