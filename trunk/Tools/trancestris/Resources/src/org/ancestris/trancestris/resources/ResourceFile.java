@@ -308,10 +308,9 @@ public class ResourceFile {
         ResourceItem.PropertyValue value = new ResourceItem.PropertyValue(s);
         if (old == null) {
             not_translated--;
-            toLanguage.put(key, value, comment);
-        } else {
-            toLanguage.put(key, value, comment);
         }
+        if (key != null)
+            toLanguage.put(key, value, comment);
         modified = true;
         fire(content.get(i), old, s);
     }
