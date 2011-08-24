@@ -38,16 +38,6 @@
         <copy todir="${build.classes.dir}">
             <fileset dir="${src.dir}/../" includes="contrib/**"/>
         </copy>
-        <copy todir="${build.classes.dir}" >
-            <fileset dir="${src.dir}/../language/de" />
-            <fileset dir="${src.dir}/../language/en" />
-            <fileset dir="${src.dir}/../language/es" />
-            <fileset dir="${src.dir}/../language/fr" />
-            <fileset dir="${src.dir}/../language/it" />
-            <fileset dir="${src.dir}/../language/nl" />
-            <fileset dir="${src.dir}/../language/no" />
-            <fileset dir="${src.dir}/../language/pl" />
-        </copy>
 
     </target>
 
