@@ -125,7 +125,7 @@ public class BlueprintManager {
    * Resolve blueprint directory
    */
   private File getBlueprintDirectory() {
-    return new File(EnvironmentChecker.getProperty("user.home.genj/blueprints", "?", "Looking for blueprints"));
+    return new File(EnvironmentChecker.getProperty("user.home.ancestris/blueprints", "?", "Looking for blueprints"));
   }
   
   /**

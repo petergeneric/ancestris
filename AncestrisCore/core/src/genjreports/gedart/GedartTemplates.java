@@ -15,9 +15,9 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 				"gedart/templates");
 		putAll(new GedartTemplates(gedartDir));
 
-		// second templates in {user.home.genj}/gedart/contrib-templates
+		// second templates in {user.home.ancestris}/gedart/contrib-templates
 		File dir = new File(EnvironmentChecker.getProperty(
-				"user.home.genj/gedart/contrib-templates", "?",
+				"user.home.ancestris/gedart/contrib-templates", "?",
 				"Looking for gedart/contrib-templates"));
 
 		if (!dir.exists()) {
@@ -25,9 +25,9 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 		}
 		putAll(new GedartTemplates(dir));
 
-		// then templates in {user.home.genj}/gedart/templates
+		// then templates in {user.home.ancestris}/gedart/templates
 		dir = new File(EnvironmentChecker.getProperty(
-				"user.home.genj/gedart/templates", "?",
+				"user.home.ancestris/gedart/templates", "?",
 				"Looking for gedart/templates"));
 
 		if (!dir.exists()) {

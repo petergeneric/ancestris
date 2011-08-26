@@ -11,7 +11,6 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  *
  * @author daniel
- * modification pour forcer la MAJ de genjcore 20101021
  */
 @ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
 public class AncestrisCorePlugin extends AncestrisPlugin{

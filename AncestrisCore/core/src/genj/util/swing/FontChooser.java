@@ -38,7 +38,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 
 /**
- * A component for choosing a font */
+ * A component for choosing a font
+ */
 public class FontChooser extends JPanel {
   
   /** list of all font families */
@@ -58,12 +59,13 @@ public class FontChooser extends JPanel {
    * we render each and every of those fonts in the font-selection-list
    */
   private final static boolean isRenderWithFont = 
-    null == EnvironmentChecker.getProperty("genj.debug.fontproblems", null, "supress font usage in font-selection-list");
+    null == EnvironmentChecker.getProperty("ancestris.debug.fontproblems", null, "supress font usage in font-selection-list");
     
 
   
   /**
-   * Constructor   */
+   * Constructor
+   */
   public FontChooser() {
     
     // sub-components
@@ -95,7 +97,8 @@ public class FontChooser extends JPanel {
   }
 
   /**
-   * Accessor - selected font   */
+   * Accessor - selected font
+   */
   public void setSelectedFont(Font font) {
     if (font==null) {
       fonts.setSelectedIndex(-1);
@@ -116,7 +119,8 @@ public class FontChooser extends JPanel {
   }
   
   /**
-   * Accessor - selected font   */
+   * Accessor - selected font
+   */
   public Font getSelectedFont() {
     Font font = (Font)fonts.getSelectedItem();
     if (font==null)

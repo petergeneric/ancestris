@@ -47,7 +47,7 @@ public class CachingStreamHandler extends URLStreamHandler {
    */
   public CachingStreamHandler(String name) {
     // prepare cache if we can
-    cache = new File(EnvironmentChecker.getProperty("user.home.genj", null, "local cache home"), name);
+    cache = new File(EnvironmentChecker.getProperty("user.home.ancestris", null, "local cache home"), name);
     if (!cache.isDirectory()&&!cache.mkdir()) {
       LOG.warning("caching disable - can't write to "+cache);
       cache = null;
