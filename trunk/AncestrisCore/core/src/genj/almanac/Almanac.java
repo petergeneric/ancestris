@@ -287,7 +287,7 @@ public class Almanac {
         /** look into ./contrib/almanac */
         protected File getDirectory() {
             return new File(EnvironmentChecker.getProperty(
-                    new String[]{"genj.almanac.dir", "user.home.genj/almanac"},
+                    new String[]{"ancestris.almanac.dir", "user.home.ancestris/almanac"},
                     "contrib/almanac",
                     "find almanac files"));
         }
@@ -408,7 +408,7 @@ public class Almanac {
 
             // we know were those are
             File result = new File(EnvironmentChecker.getProperty(
-                    new String[]{"genj.wikipedia.dir", "user.home.genj/contrib/wikipedia"}, "contrib/wikipedia",
+                    new String[]{"ancestris.wikipedia.dir", "user.home.ancestris/contrib/wikipedia"}, "contrib/wikipedia",
                     "find wikipedia files"));
 
             // look for applicable one (language)

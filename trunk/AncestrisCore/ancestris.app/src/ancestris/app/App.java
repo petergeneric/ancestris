@@ -241,7 +241,7 @@ public class App {
                 DialogHelper.setDialogManager(DialogManagerImp.getInstance());
 
                 // create our home directory
-                File home = new File(EnvironmentChecker.getProperty("user.home.genj", null, "determining home directory"));
+                File home = new File(EnvironmentChecker.getProperty("user.home.ancestris", null, "determining home directory"));
                 home.mkdirs();
                 if (!home.exists() || !home.isDirectory()) {
                     throw new IOException("Can't initialize home directoy " + home);
@@ -270,8 +270,8 @@ public class App {
                 LOG.info("Startup");
 
                 // Priorite sur le parametre passe en ligne de commande
-                if (System.getProperty("genj.debug.level") != null) {
-                    setLogLevel(System.getProperty("genj.debug.level"));
+                if (System.getProperty("ancestris.debug.level") != null) {
+                    setLogLevel(System.getProperty("ancestris.debug.level"));
                 } else {
                     setLogLevel((Registry.get(App.class).get("logLevel","")));
                 }

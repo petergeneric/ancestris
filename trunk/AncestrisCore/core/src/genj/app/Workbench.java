@@ -466,7 +466,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
                 file = gedcom.getOrigin().getFile().getCanonicalFile();
 
                 // .. create a temporary output
-                temp = File.createTempFile("genj", ".ged", file.getParentFile());
+                temp = File.createTempFile("ancestris", ".ged", file.getParentFile());
 
                 // .. create writer
                 writer = (IGedcomWriter) Spin.off(new GedcomWriter(gedcom, new FileOutputStream(temp)));
@@ -784,7 +784,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     public File chooseFile(String title, String action, JComponent accessory) {
         FileChooser chooser = new FileChooser(
                 null, title, action, "ged",
-                EnvironmentChecker.getProperty(new String[]{"genj.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
+                EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
 
         String gedcomDir = getDefaultFile(true);
         if (gedcomDir == null || gedcomDir.trim().isEmpty()) {

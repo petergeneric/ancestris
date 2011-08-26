@@ -41,7 +41,7 @@ package genjreports.gedart;
  * TODO: 	recuperer l'evt lors d'une asso
  * TODO:	recuperer CHAN:DATE
  * TODO:	mettre une arbo des templates
- * TODO:	faire une extension de genj pour gerer des rapports type gedart
+ * TODO:	faire un plugin ancestris pour gerer des rapports type gedart
  * TODO:	Aspect multilangue  
  * TODO:	voir getOptionsFromUser
  * TODO:	ajouter une methode pour trier: comme  public Entity[] getEntities(String tag, Comparator comparator) dans Gedcom

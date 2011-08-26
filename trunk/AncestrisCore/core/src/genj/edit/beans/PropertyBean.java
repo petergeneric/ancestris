@@ -88,7 +88,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
         PropertyXRef.class, XRefBean.class,
         Property.class, SimpleValueBean.class // last!
     };
-    private final static boolean isCache = "true".equals(EnvironmentChecker.getProperty("genj.edit.beans.cache", "true", "checking if bean cache is enabled or not"));
+    private final static boolean isCache = "true".equals(EnvironmentChecker.getProperty("ancestris.edit.beans.cache", "true", "checking if bean cache is enabled or not"));
     private final static Map<Class<? extends PropertyBean>, List<PropertyBean>> BEANCACHE = createBeanCache();
     /** the context to edit */
     protected Property root;

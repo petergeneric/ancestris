@@ -51,7 +51,7 @@ public class EnvironmentChecker {
         "java.version", "java.class.version",
         "os.name", "os.arch", "os.version",
         "browser", "browser.vendor", "browser.version",
-        "user.name", "user.dir", "user.home", "all.home", "user.home.genj", "all.home.genj"
+        "user.name", "user.dir", "user.home", "all.home", "user.home.ancestris", "all.home.ancestris"
   };
   
   private final static Set<String> NOOVERRIDE = new HashSet<String>();
@@ -163,11 +163,11 @@ public class EnvironmentChecker {
    */
   public static File getLog() {
     
-    File home = new File(getProperty("user.home.genj", null, "log file"));
+    File home = new File(getProperty("user.home.ancestris", null, "log file"));
     if ( !(home.exists()||home.mkdirs()) && !home.isDirectory()) 
       throw new Error("Can't initialize home directoy "+home);
     
-    return new File(home, "genj.log");
+    return new File(home, "ancestris.log");
   }
 
   /**
@@ -278,52 +278,16 @@ public class EnvironmentChecker {
   }
   
   /**
-   * "user.home.genj" the genj application data directory 
-   *  C:/Documents and Settings/%USERNAME%/Application Data/genj on windows
-   *  ~/Library/Application Support/GenJ on Mac
-   *  ~/.genj otherwise
+   * "user.home.ancestris" the ancestris application data directory
+   *  C:/Documents and Settings/%USERNAME%/Application Data/ancestris on windows
+   *  ~/Library/Application Support/ancestris on Mac
+   *  ~/.ancestris otherwise
    */
   static {
       // TODO: faire autrement (c'est une rapide modif pour pouvoir sauver les options sans toucher au "classique")
       // Peut-etre utiliser InstalledFileLocator
       File nbuserdir = new File(System.getProperty("netbeans.user"));
 
-//      setProperty("user.home.genj", (new File(nbuserdir,"genj")).getAbsolutePath());
-      setProperty("user.home.genj", (new File(nbuserdir,"ancestris")).getAbsolutePath());
-
-//    try {
-//      File user_home_genj;
-//      File home = new File(System.getProperty("user.home"));
-//      File dotgenj = new File(home, ".genj");
-//      File appdata = new File(home, "Application Data");
-//      if (!isWindows() || dotgenj.isDirectory() || !appdata.isDirectory())
-//        user_home_genj = dotgenj;
-//      else
-//        user_home_genj = new File(appdata, "GenJ");
-//
-//      setProperty("user.home.genj", user_home_genj.getAbsolutePath());
-//
-//    } catch (Throwable t) {
-//      // ignore if we can't access system properties
-//    }
-    
-  }
-  
-  /**
-   * "all.home.genj" the genj application data directory ("C:/Documents and Settings/All Users/Application Data/genj" windows only)
-   */
-  static {
-
-    try {
-      if (isWindows()) {
-        File app_data = new File(System.getProperty("all.home"), "Application Data");
-        if (app_data.isDirectory())
-          setProperty("all.home.genj", new File(app_data, "GenJ3").getAbsolutePath());
-      }
-    } catch (Throwable t) {
-      // ignore if we can't access system properties
-    }
-    
-  }
-  
+      setProperty("user.home.ancestris", (new File(nbuserdir,"ancestris")).getAbsolutePath());
+  }  
 }

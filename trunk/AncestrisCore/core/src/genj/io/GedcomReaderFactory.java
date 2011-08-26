@@ -105,7 +105,7 @@ public class GedcomReaderFactory {
       if (!sniffer.isDeterministic())
         context.handleWarning(0, RESOURCES.getString("read.warn.nochar"), new Context(ged));
   
-      String charsetName = EnvironmentChecker.getProperty("genj.gedcom.charset", null, "checking for forced charset for read of "+ged.getName());
+      String charsetName = EnvironmentChecker.getProperty("ancestris.gedcom.charset", null, "checking for forced charset for read of "+ged.getName());
       if (charsetName!=null) {
         try {
           charset = Charset.forName(charsetName);
