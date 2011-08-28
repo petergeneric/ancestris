@@ -5,6 +5,7 @@
 package ancestris.app;
 
 import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.edit.EditView;
 import genj.edit.EditViewFactory;
@@ -15,6 +16,7 @@ import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
+import org.openide.windows.TopComponent;
 
 /**
  * Top component which displays something.
@@ -23,7 +25,7 @@ import org.openide.windows.RetainLocation;
 autostore = false)
 @RetainLocation(AncestrisDockModes.EDITOR)
 @ServiceProvider(service=AncestrisViewInterface.class)
-public final class EditTopComponent extends GenjViewTopComponent {
+public final class EditTopComponent extends GenjViewTopComponent implements TopComponent.Cloneable{
 
     private static final String PREFERRED_ID = "EditTopComponent";
     private static EditTopComponent factory;
@@ -68,6 +70,15 @@ public final class EditTopComponent extends GenjViewTopComponent {
             factory = new EditTopComponent();
         }
         return factory;
+    }
+
+    public TopComponent cloneComponent() {
+        if (getContext() == null)
+            return null;
+
+        AncestrisTopComponent topComponent = new EditTopComponent();
+        topComponent.init(getContext());
+            return topComponent;
     }
 
     @Override
