@@ -1,6 +1,7 @@
 package org.ancestris.FamilyGroups;
 
 import genj.gedcom.Context;
+import genj.gedcom.Property;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.logging.Logger;
@@ -19,6 +20,8 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.view.SelectionSink;
 import ancestris.app.App;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.io.Filter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
     private int minGroupSize = 0;  // Don't print groups with size less than this
     private int maxGroupSize = 0;
     private String CurrentId = null;
+    private List<FamilyGroupFilter> filters = null;
 
     private class myMouseListener implements MouseListener {
 
@@ -296,6 +300,41 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         }
     } //Tree
 
+    private static class FamilyGroupFilter implements Filter{
+        private Tree tree;
+
+        public FamilyGroupFilter(Tree tree) {
+            this.tree = tree;
+        }
+
+        public void setTree(Tree tree){
+            this.tree = tree;
+        }
+
+        @Override
+        public String getFilterName() {
+            return "("+tree.size()+") "+tree;
+        }
+
+        @Override
+        public boolean veto(Property property) {
+            return false;
+        }
+
+        @Override
+        public boolean veto(Entity entity) {
+            return entity instanceof Indi?!tree.contains((Indi)entity):false;
+        }
+
+        @Override
+        public boolean canApplyTo(Gedcom gedcom) {
+            if (tree == null)
+                return false;
+            return tree.oldestIndividual.getGedcom().equals(gedcom);
+        }
+
+    }
+
     public FamilyGroupsTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"));
@@ -332,6 +371,15 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
             // Sort in descending order by count
             Collections.sort(trees);
+            
+            // Clears filters
+            if (filters!=null){
+                for (FamilyGroupFilter filter:filters){
+                    filter.setTree(null);
+                    AncestrisPlugin.unregister(filter);
+                }
+            }
+            filters = new ArrayList<FamilyGroupFilter>(10);
 
             // Print sorted list of groups
             println(align(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.count"), 7, ALIGN_RIGHT) + "  " + NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.indi_name"));
@@ -347,7 +395,8 @@ public final class FamilyGroupsTopComponent extends TopComponent {
                 grandtotal += tree.size();
                 if (tree.size() < getMinGroupSize()) {
                     loners += tree.size();
-                } else if (tree.size() < getMaxGroupSize()) {
+                } else {
+                    if (tree.size() < getMaxGroupSize()) {
                     if (i != 0) {
                         println("");
                     }
@@ -363,6 +412,10 @@ public final class FamilyGroupsTopComponent extends TopComponent {
                     }
                 } else {
                     println(align("" + tree.size(), 7, ALIGN_RIGHT) + "  " + tree);
+                }
+                    FamilyGroupFilter filter = new FamilyGroupFilter(tree);
+                    AncestrisPlugin.register(filter);
+                    filters.add(filter);
                 }
             }
 
