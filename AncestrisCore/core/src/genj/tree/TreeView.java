@@ -215,7 +215,12 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
 //    });
     
     // done
-        AncestrisPlugin.register(this);
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+    AncestrisPlugin.register (this);
   }
   
   /**
