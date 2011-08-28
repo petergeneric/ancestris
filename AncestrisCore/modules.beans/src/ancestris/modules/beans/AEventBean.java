@@ -29,7 +29,8 @@ public final class AEventBean extends PropertyBean {
      * @return the value of tag
      */
     private String getTagName() {
-        return Gedcom.getName(getTag());
+        String tag = getTag();
+        return tag == null?"":Gedcom.getName(tag);
     }
 
     /**
