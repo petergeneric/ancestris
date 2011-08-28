@@ -46,6 +46,7 @@ import genj.view.ViewFactory;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.ProgressBar;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.GedcomMetaListener;
@@ -75,7 +76,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import junit.awtui.ProgressBar;
 
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
