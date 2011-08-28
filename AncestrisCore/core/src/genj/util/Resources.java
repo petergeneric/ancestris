@@ -358,7 +358,7 @@ public class Resources {
           try {
             result = bundle.getString(key);
           } catch (Exception e){
-              LOG.log(Level.INFO, "key {0} not found in {1} bundle",new Object[]{key,description});
+              LOG.log(Level.FINER, "key {0} not found in {1} bundle",new Object[]{key,description});
           }
       } else {
         result = getKey2String().get(key.toLowerCase());
