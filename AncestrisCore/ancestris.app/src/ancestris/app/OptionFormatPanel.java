@@ -32,7 +32,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
         jTextField3 = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
-        jSpinner3 = new javax.swing.JSpinner(new SpinnerNumberModel(248, 20, 248, 1));
+        jSpinner3 = new javax.swing.JSpinner(new SpinnerNumberModel(246, 20, 246, 1));
         jLabel23 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner(new SpinnerNumberModel(128, 128, 16384, 128));
         jLabel22 = new javax.swing.JLabel();
