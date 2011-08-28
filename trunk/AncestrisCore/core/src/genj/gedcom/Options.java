@@ -124,7 +124,7 @@ public class Options extends OptionProvider {
    * accessor - valueLineBreak
    */
   public int getValueLineBreak() {
-    return (valueLineBreak>248)?248:valueLineBreak;
+    return (valueLineBreak>246)?246:valueLineBreak;
   }
 
   /**
