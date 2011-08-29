@@ -21,6 +21,7 @@ import genj.gedcom.Indi;
 import genj.view.SelectionSink;
 import ancestris.app.App;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -260,6 +261,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
     private class Tree extends HashSet<Indi> implements Comparable<Tree> {
 
         private Indi oldestIndividual;
+        private HashSet<Entity> entities = new HashSet<Entity>();
 
         @Override
         public int compareTo(Tree that) {
@@ -281,7 +283,15 @@ public final class FamilyGroupsTopComponent extends TopComponent {
                 oldestIndividual = indi;
             }
             // continue
+            addEntity(indi);
             return super.add(indi);
+        }
+        public void addEntity(Entity entity){
+            entities.add(entity);
+        }
+
+        public boolean hasEntity(Entity e){
+            return entities.contains(e);
         }
 
         private boolean isOldest(Indi indi) {
@@ -323,7 +333,13 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
         @Override
         public boolean veto(Entity entity) {
-            return entity instanceof Indi?!tree.contains((Indi)entity):false;
+            if (entity instanceof Indi || entity instanceof Fam)
+                return !tree.hasEntity(entity);
+            for (PropertyXRef xref : entity.getProperties(PropertyXRef.class)) {
+                if (xref.isValid() && tree.hasEntity(xref.getTargetEntity()))
+                    return false;
+            }
+            return true;
         }
 
         @Override
@@ -455,6 +471,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
             // check the ancestors
             Fam famc = todo.getFamilyWhereBiologicalChild();
             if (famc != null) {
+                tree.addEntity(famc);
                 Indi mother = famc.getWife();
                 if (mother != null && unvisited.remove(mother)) {
                     todos.push(mother);
@@ -472,6 +489,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
                 // Get the family & process the spouse
                 Fam fam = fams[f];
+                tree.addEntity(fam);
                 Indi spouse = fam.getOtherSpouse(todo);
                 if (spouse != null && unvisited.remove(spouse)) {
                     todos.push(spouse);
