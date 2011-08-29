@@ -270,8 +270,11 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
         @Override
         public String toString() {
-            return oldestIndividual.getId()
-                    + " " + oldestIndividual.getName()
+            return oldestIndividual.getId() + " " + getTitle();
+        }
+
+        public String getTitle(){
+            return oldestIndividual.getName()
                     + " (" + oldestIndividual.getBirthAsString() + "-"
                     + oldestIndividual.getDeathAsString() + ")";
         }
@@ -323,7 +326,8 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
         @Override
         public String getFilterName() {
-            return "("+tree.size()+") "+tree;
+            return NbBundle.getMessage(FamilyGroupFilter.class, "TTL_Filter",
+                    tree.size(), tree.getTitle());
         }
 
         @Override
@@ -351,6 +355,16 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
     }
 
+    private void resetFilters(){
+            // Clears filters
+            if (filters!=null){
+                for (FamilyGroupFilter filter:filters){
+                    filter.setTree(null);
+                    AncestrisPlugin.unregister(filter);
+                }
+            }
+            filters = null;
+    }
     public FamilyGroupsTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"));
@@ -388,13 +402,6 @@ public final class FamilyGroupsTopComponent extends TopComponent {
             // Sort in descending order by count
             Collections.sort(trees);
             
-            // Clears filters
-            if (filters!=null){
-                for (FamilyGroupFilter filter:filters){
-                    filter.setTree(null);
-                    AncestrisPlugin.unregister(filter);
-                }
-            }
             filters = new ArrayList<FamilyGroupFilter>(10);
 
             // Print sorted list of groups
@@ -612,6 +619,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
     @Override
     public void componentClosed() {
+        resetFilters();
         // TODO add custom code on component closing
     }
 
