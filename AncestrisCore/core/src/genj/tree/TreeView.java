@@ -90,6 +90,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.util.NbBundle;
 
 /**
  * TreeView
@@ -1290,7 +1291,8 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
    */
     @Override
   public String getFilterName() {
-    return model.getEntities().size()+" nodes in "+TITLE;
+    return NbBundle.getMessage(TreeView.class, "TTL_Filter",
+            model.getEntities().size(),TITLE);
   }
 
     @Override
