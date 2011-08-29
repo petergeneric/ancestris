@@ -382,7 +382,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         setPrivFlag(reportPrefs.get("privateTag", ""));
         setPrivAlive(reportPrefs.get("deceasedIsPublic", ""));
         setPrivYears(reportPrefs.get("yearsEventsArePrivate", ""));
-        setLineBreak(gedcomPrefs.get("valueLineBreak", ""));
+        jSpinner3.setValue(genj.gedcom.Options.getInstance().getValueLineBreak());
         setImageSize(gedcomPrefs.get("maxImageFileSizeKB", ""));
         setDisplayNames(gedcomPrefs.get("nameFormat", ""));
         setDisplayDates(gedcomPrefs.get("dateFormat", ""));
@@ -406,7 +406,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         reportPrefs.put("privateTag", getPrivFlag());
         reportPrefs.put("deceasedIsPublic", getPrivAlive());
         reportPrefs.put("yearsEventsArePrivate", getPrivYears());
-        gedcomPrefs.put("valueLineBreak", getLineBreak());
+        genj.gedcom.Options.getInstance().setValueLineBreak(Integer.valueOf(jSpinner3.getValue().toString()));
         gedcomPrefs.put("maxImageFileSizeKB", getImageSize());
         gedcomPrefs.put("nameFormat", getDisplayNames());
         gedcomPrefs.put("dateFormat", getDisplayDates());
@@ -619,24 +619,6 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
     String getPrivYears() {
         return jSpinner2.getValue().toString();
-    }
-
-    void setLineBreak(String str) {
-        if (str.equals("-1")) {
-            str = "20";
-        }
-        Integer i = getIntFromStr(str);
-        if (i == -1) {
-            i = 248;
-        }
-        if (i > 248) {
-            i = 248;
-        }
-        jSpinner3.setValue(i);
-    }
-
-    String getLineBreak() {
-        return jSpinner3.getValue().toString();
     }
 
     void setImageSize(String str) {
