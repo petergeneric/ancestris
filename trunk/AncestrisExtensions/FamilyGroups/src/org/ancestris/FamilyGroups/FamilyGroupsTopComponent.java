@@ -272,7 +272,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         public String toString() {
             return oldestIndividual.getId()
                     + " " + oldestIndividual.getName()
-                    + "(" + oldestIndividual.getBirthAsString() + "-"
+                    + " (" + oldestIndividual.getBirthAsString() + "-"
                     + oldestIndividual.getDeathAsString() + ")";
         }
 
