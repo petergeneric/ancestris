@@ -44,6 +44,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -130,7 +131,7 @@ import javax.swing.JTextField;
     add(resources.getString("save.options"                  ), options);
     add(resources.getString("save.options.filter.entities"  ), types);
     add(resources.getString("save.options.filter.properties"), props);
-    add(resources.getString("save.options.filter.views"     ), others);
+    add(resources.getString("save.options.filter.views"     ), new JScrollPane(others));
     
     // done
   }
