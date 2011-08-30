@@ -56,6 +56,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Submitter;
 import genj.util.AncestrisPreferences;
 import genj.util.EnvironmentChecker;
+import genj.util.ServiceLookup;
 import genj.util.Trackable;
 import genj.util.swing.FileChooser;
 import genj.view.SelectionListener;
@@ -108,6 +109,10 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     public static Workbench getInstance() {
         if (instance == null) {
             instance = new Workbench();
+            for (PluginFactory pf : ServiceLookup.lookup(PluginFactory.class)) {
+              LOG.info("Activate plugin "+pf.getClass());
+              Object plugin = pf.createPlugin();
+            }
         }
         return instance;
     }
