@@ -567,11 +567,17 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   /**
    * create actions for a context
    */
+    @Override
   public void createActions(Context context, Purpose purpose, Group result) {
     
     // not for own
     if (context instanceof TreeContext)
       return;
+
+    if (this.context == null)
+        return;
+    if (!context.getGedcom().equals(this.context.getGedcom()))
+        return;
 
     // for context menu of one record
     if (purpose==Purpose.CONTEXT&&context.getEntities().size()==1) {

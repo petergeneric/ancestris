@@ -9,6 +9,7 @@ import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
+import genj.util.swing.Action2.Group;
 import genj.view.ViewFactory;
 import java.awt.Graphics;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -36,6 +37,21 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     public String getDefaultFactoryMode() {
         return AncestrisDockModes.OUTPUT;
     }
+
+    /*
+     * FIXME: GenjViewTopComponent (this class' base class) is an ActionProvider.
+     * The enclosed TreeView is an ActionProvider too.
+     * This result in these action being provided twice so we don't create them here
+     * overiding createActions.
+     * XXX/ This will be properly fixed when the TreeView
+     * will be in it own AncestrisPlugin
+     */
+    @Override
+    public void createActions(Context context, Purpose purpose, Group into) {
+        return;
+    }
+
+
 
     /** This method is called from within the constructor to
      * initialize the form.
