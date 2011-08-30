@@ -210,7 +210,7 @@ public class ReportView extends View {
     actionStart.setEnabled(false);
     actionStop.setEnabled(true);
     
-    ReportPluginFactory.getInstance().setEnabled(false);
+//XXX: to be deleted    ReportPluginFactory.getInstance().setEnabled(false);
 
     // kick it off
     new Thread(new Runner(gedcom, context, report, (Runner.Callback) Spin.over(new RunnerCallback()))).start();
@@ -246,7 +246,7 @@ public class ReportView extends View {
       // let report happend again
       actionStart.setEnabled(gedcom != null);
       actionStop.setEnabled(false);
-      ReportPluginFactory.getInstance().setEnabled(true);
+//XXX: to be deleted      ReportPluginFactory.getInstance().setEnabled(true);
 
       // handle result
       showResult(result);
