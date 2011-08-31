@@ -347,7 +347,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
             }
         }
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        File file = chooseFile(RES.getString("cc.save.title",context.getGedcom().toString()), RES.getString("cc.save.action"), options);
+        File file = chooseFile(RES.getString("cc.save.title",context.getGedcom().toString()), RES.getString("cc.save.action"), options,context.getGedcom().toString());
         if (file == null) {
             return null;
         }
@@ -787,6 +787,10 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
      * Let the user choose a file
      */
     public File chooseFile(String title, String action, JComponent accessory) {
+        return chooseFile(title, action, accessory, null);
+    }
+
+    public File chooseFile(String title, String action, JComponent accessory,String defaultFilename) {
         FileChooser chooser = new FileChooser(
                 null, title, action, "ged",
                 EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
@@ -795,7 +799,11 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (gedcomDir == null || gedcomDir.trim().isEmpty()) {
             gedcomDir = "user.home";
         }
-        chooser.setCurrentDirectory(new File(Registry.get(Workbench.class).get("last.dir", gedcomDir)));
+        File directory = new File(Registry.get(Workbench.class).get("last.dir", gedcomDir));
+        chooser.setCurrentDirectory(directory);
+        if (defaultFilename!=null){
+            chooser.setSelectedFile(new File(directory, defaultFilename));
+        }
         if (accessory != null) {
             chooser.setAccessory(accessory);
         }
