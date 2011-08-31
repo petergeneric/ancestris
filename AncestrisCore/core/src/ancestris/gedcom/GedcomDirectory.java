@@ -94,6 +94,19 @@ public class GedcomDirectory implements SelectionListener,GedcomMetaListener{
       return result;
   }
 
+  /**
+   * get context at position i
+   * @param i
+   * @return
+   */
+  public Context getContext(int i) {
+      try{
+          return getContexts().get(i);
+      } catch (IndexOutOfBoundsException e){
+          return null;
+      }
+    }
+
     public Context getLastContext() {
         return lastContext;
     }
