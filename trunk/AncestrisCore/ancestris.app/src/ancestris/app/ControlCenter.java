@@ -246,8 +246,7 @@ public class ControlCenter extends JPanel{
             return c;
         if (c!=null)
             return c;
-        c = Utilities.actionsGlobalContext().lookup(Context.class);
-        return c;
+        return GedcomDirectory.getInstance().getContext(0);
     }
 
     /**

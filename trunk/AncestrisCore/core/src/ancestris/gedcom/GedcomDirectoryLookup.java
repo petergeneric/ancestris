@@ -18,6 +18,11 @@ import org.openide.util.Lookup;
  *
  * @author daniel
  */
+/**
+ * Note: this class is not used ATM
+ * XXX: Will certainely be used to provide alternative to GedcomDirectory class
+ * @author daniel
+ */
 public abstract class GedcomDirectoryLookup {
 
     /** Instance of dummy window manager. */
