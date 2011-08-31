@@ -347,7 +347,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
             }
         }
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        File file = chooseFile(RES.getString("cc.save.title"), RES.getString("cc.save.action"), options);
+        File file = chooseFile(RES.getString("cc.save.title",context.getGedcom().toString()), RES.getString("cc.save.action"), options);
         if (file == null) {
             return null;
         }
@@ -359,7 +359,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
 
         // Need confirmation if File exists?
         if (file.exists()) {
-            int rc = DialogHelper.openDialog(RES.getString("cc.save.title"), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
+            int rc = DialogHelper.openDialog(RES.getString("cc.save.title",context.getGedcom().toString()), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
             if (rc != 0) {
                 return null;
             }
