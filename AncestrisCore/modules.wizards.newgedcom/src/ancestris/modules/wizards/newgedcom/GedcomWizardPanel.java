@@ -41,8 +41,8 @@ public class GedcomWizardPanel extends NewGedcomWizardPanel {
     @Override
     public Component getComponent() {
         if (component == null) {
-            component = new GedcomPanel();
-//            component = new GedcomVisualPanel();
+//            component = new GedcomPanel();
+            component = new GedcomVisualPanel();
             component.setContext(gedcomProvider.getContext());
         }
         return (Component)component;

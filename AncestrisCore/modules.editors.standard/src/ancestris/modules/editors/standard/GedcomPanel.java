@@ -18,7 +18,7 @@ import genj.gedcom.UnitOfWork;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
-public final class GedcomPanel extends JPanel implements IEditorPanel {
+public class GedcomPanel extends JPanel implements IEditorPanel {
 
     private Context context;
 
@@ -126,6 +126,6 @@ public final class GedcomPanel extends JPanel implements IEditorPanel {
             });
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
-        }
+        } catch (NullPointerException ex){}
     }
 }
