@@ -38,9 +38,7 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="gedcomDescription" min="-2" pref="163" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="placeFormat" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="placeFormat" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
