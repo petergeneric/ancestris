@@ -164,7 +164,7 @@ public class StartupOptions {
             return oldValue != null;
         } else {
             hParam.put(parameter, value);
-            return !oldValue.equals(value);
+            return !value.equals(oldValue);
         }
     }
 
