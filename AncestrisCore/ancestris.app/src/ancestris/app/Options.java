@@ -74,17 +74,6 @@ public class Options {
         coreOptions.put("isRestoreViews",isRestoreViews);
     }
 
-    public static int getLookAndFeel() {
-        return 1;
-//        return instance.get("lookAndFeel",1);
-    }
-
-    public static void setLookAndFeel(int lookAndFeel) {
-        coreOptions.put("lookAndFeel",lookAndFeel);
-    }
-
-
-
   /**
    * Getter - http proxy
    */

@@ -4,6 +4,7 @@
  */
 package ancestris.app;
 
+import ancestris.api.lnf.LookAndFeelProvider;
 import ancestris.startup.settings.StartupOptions;
 import genj.util.AncestrisPreferences;
 import ancestris.util.Lifecycle;
@@ -11,6 +12,7 @@ import genj.table.TableView;
 import genj.tree.TreeView;
 import genj.util.Registry;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.ToolTipManager;
@@ -32,12 +34,13 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("pl"),
         new Locale("br")
     };
-    String[] skins = new String[9];
+
+    private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
 
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
         this.controller = controller;
-        initSkins();
         initComponents();
+        jComboBox2ActionPerformed(null);
         ToolTipManager.sharedInstance().setDismissDelay(10000); // sets it for the other panels...
         // TODO listen to changes in form fields and call controller.changed()
     }
@@ -230,8 +233,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        int i = jComboBox2.getSelectedIndex();
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/app/skin-" + i + ".png")));
+        LookAndFeelProvider provider = ((LookAndFeelProvider)jComboBox2.getSelectedItem());
+
+        jLabel5.setIcon(provider==null?null:provider.getSampleImage());
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {
@@ -241,7 +245,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
 
-        jComboBox2.setSelectedIndex(ancestris.app.Options.getLookAndFeel());
+        jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.Options.isRestoreViews());
         setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
@@ -259,17 +263,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         StartupOptions stopts = new StartupOptions();
 
-        Locale oldLocale = stopts.getJvmLocale();
+        needRestart = stopts.setJvmLocale(getLanguage());
+        needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getName());
 
-        Locale newLocale = getLanguage();
-        if (oldLocale == null)
-            needRestart = (newLocale != null);
-        else
-            needRestart = ! oldLocale.equals(newLocale);
-        stopts.setJvmLocale(newLocale);
         stopts.applyChanges();
 
-        ancestris.app.Options.setLookAndFeel(jComboBox2.getSelectedIndex());
         ancestris.app.Options.setRestoreViews(jCheckBox1.isSelected());
         editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
@@ -346,16 +344,12 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         return -1;
     }
 
-    private void initSkins() {
-        skins[0] = NbBundle.getMessage(App.class, "option.skin.ST");
-        skins[1] = NbBundle.getMessage(App.class, "option.skin.JA");
-        skins[2] = NbBundle.getMessage(App.class, "option.skin.ME");
-        skins[3] = NbBundle.getMessage(App.class, "option.skin.KS");
-        skins[4] = NbBundle.getMessage(App.class, "option.skin.AQ");
-        skins[5] = NbBundle.getMessage(App.class, "option.skin.XP");
-        skins[6] = NbBundle.getMessage(App.class, "option.skin.MO");
-        skins[7] = NbBundle.getMessage(App.class, "option.skin.WH");
-        skins[8] = NbBundle.getMessage(App.class, "option.skin.AR");
+    private static String[] initSkins1(){
+        List<String> result = new ArrayList<String>();
+        for (LookAndFeelProvider l:skins){
+            result.add(l.getDisplayName());
+        }
+        return result.toArray(new String[]{});
     }
 
     /**
