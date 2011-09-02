@@ -38,7 +38,7 @@ public class LnFNimbus extends LookAndFeelProvider{
 
     @Override
     public ImageIcon getSampleImage() {
-        return null;
+        return new ImageIcon(getClass().getResource(KEY + ".png"));
     }
 
 }
