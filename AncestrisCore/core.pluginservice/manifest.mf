@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: ancestris.core.pluginservice
 OpenIDE-Module-Localizing-Bundle: ancestris/core/pluginservice/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.5.0
+OpenIDE-Module-Specification-Version: 0.6.0
 

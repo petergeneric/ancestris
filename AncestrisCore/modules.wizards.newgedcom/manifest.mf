@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.wizards.newgedcom
 OpenIDE-Module-Layer: ancestris/modules/wizards/newgedcom/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/wizards/newgedcom/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.5.0
+OpenIDE-Module-Specification-Version: 0.6.0
 
