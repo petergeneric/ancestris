@@ -64,6 +64,12 @@ public class Note extends Entity implements MultiLineProperty {
    * contains this note's content
    */
   public PropertyMultilineValue getDelegate() {
+    // create a delegate we're using for storing the
+    // note's multiline value
+    if (delegate==null) {
+      delegate = (PropertyMultilineValue)addProperty("NOTE", "");
+      delegate.isTransient = true;
+    }
     return delegate;
   }
   
@@ -72,7 +78,7 @@ public class Note extends Entity implements MultiLineProperty {
    */
   @Override
   protected String getToStringPrefix(boolean showIds) {
-    return delegate.getDisplayValue();
+    return getDelegate().getDisplayValue();
   }
 
   /**
@@ -80,7 +86,7 @@ public class Note extends Entity implements MultiLineProperty {
    */
   public void setValue(String newValue) {
     // keep it in delegate
-    delegate.setValue(newValue);
+    getDelegate().setValue(newValue);
   }
   
   /**
@@ -88,7 +94,7 @@ public class Note extends Entity implements MultiLineProperty {
    */
   public void delProperty(Property which) {
     // ignore request unless not delegate
-    if (which!=delegate) 
+    if (which!=getDelegate())
       super.delProperty(which);
   }
 
@@ -97,7 +103,7 @@ public class Note extends Entity implements MultiLineProperty {
    * @see genj.gedcom.Property#getValue()
    */
   public String getValue() {
-    return delegate.getValue();
+    return getDelegate().getValue();
   }
   
   public List<Property> findProperties(Pattern tag, Pattern value) {
@@ -113,28 +119,28 @@ public class Note extends Entity implements MultiLineProperty {
    * @see genj.gedcom.MultiLineProperty#getLineIterator()
    */
   public Iterator getLineIterator() {
-    return delegate.getLineIterator();
+    return getDelegate().getLineIterator();
   }
 
   /**
    * @see genj.gedcom.MultiLineProperty#getLineCollector()
    */
   public Collector getLineCollector() {
-    return delegate.getLineCollector();
+    return getDelegate().getLineCollector();
   }
   
   /**
    * @see genj.gedcom.Property#isPrivate()
    */
   public boolean isPrivate() {
-    return delegate.isPrivate();
+    return getDelegate().isPrivate();
   }
 
   /**
    * @see genj.gedcom.Property#setPrivate(boolean, boolean)
    */
   public void setPrivate(boolean set, boolean recursively) {
-    delegate.setPrivate(set, recursively);
+    getDelegate().setPrivate(set, recursively);
   }
 
 } //Note
