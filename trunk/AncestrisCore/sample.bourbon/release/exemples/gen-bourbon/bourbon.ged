@@ -1,12 +1,12 @@
 0 HEAD
 1 SOUR ANCESTRIS
-2 VERS 0.5.0.1125
+2 VERS 0.5.0.1895
 2 NAME Ancestris
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org, http://www.ancestris.com
 1 DEST ANY
-1 DATE 24 JAN 2011
-2 TIME 20:38:35
+1 DATE 3 SEP 2011
+2 TIME 08:38:53
 1 SUBM @B1@
 1 FILE bourbon.ged
 1 GEDC
@@ -592,9 +592,9 @@
 4 FORM pdf
 3 NOTE Adresse de l'acte : http://doc.geneanet.org/actes/zoom.php?idacte=40472
 2 DATA
-3 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la public
-4 CONC ation de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêque d
-4 CONC e paris, plus bas de la Touche secrétaire...
+3 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la publ
+4 CONC ication de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêqu
+4 CONC e de paris, plus bas de la Touche secrétaire...
 1 CHAN
 2 DATE 24 JAN 2011
 3 TIME 19:31:25
@@ -608,4 +608,13 @@
 1 CHAN
 2 DATE 20 DEC 2010
 3 TIME 11:40:37
+0 @N1@ NOTE Cette généalogie est un exemple fourni avec Ancestris. Elle peut cependant être corrigée et/ou complétée.
+1 CONT
+1 CONT N'hésitez pas à la modifier, toujours dans le respect de la norme gedcom, et à nous la faire parvenir (uniquement le fichier gedcom sauf si vous rajoutez des images et autres documents liés à vos modifications), à l'adresse:
+1 CONT support@ancestris.org
+1 CONT
+1 CONT Merci. L'équipe de développement.
+1 CHAN
+2 DATE 3 SEP 2011
+3 TIME 06:38:48
 0 TRLR
