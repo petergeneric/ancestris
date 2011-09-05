@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 public final class OpenFamilyGroups implements ActionListener {
 
@@ -19,12 +20,16 @@ public final class OpenFamilyGroups implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             minGroupSize = familyGroupsOptionsPanel.getMinGroupSizeValue();
+            NbPreferences.forModule(OpenFamilyGroups.class).put("minGroupSize", String.valueOf(minGroupSize));
             maxGroupSize = familyGroupsOptionsPanel.getMaxGroupSizeValue();
+            NbPreferences.forModule(OpenFamilyGroups.class).put("maxGroupSize", String.valueOf(maxGroupSize));
         }
     };
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        minGroupSize = Integer.valueOf(NbPreferences.forModule(OpenFamilyGroups.class).get("minGroupSize", "2"));
+        maxGroupSize = Integer.valueOf(NbPreferences.forModule(OpenFamilyGroups.class).get("maxGroupSize", "20"));
         familyGroupsOptionsPanel = new FamilyGroupsOptionsPanel(minGroupSize, maxGroupSize);
         familyGroupsOptionsPanelDescriptor = new DialogDescriptor(
                 familyGroupsOptionsPanel,
@@ -42,6 +47,7 @@ public final class OpenFamilyGroups implements ActionListener {
             window.setMinGroupSize(minGroupSize);
             window.openAtTabPosition(0);
             window.requestActive();
+            window.start();
         }
     }
 
