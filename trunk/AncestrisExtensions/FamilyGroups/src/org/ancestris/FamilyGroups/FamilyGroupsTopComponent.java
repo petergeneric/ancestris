@@ -273,7 +273,7 @@ public final class FamilyGroupsTopComponent extends TopComponent {
             return oldestIndividual.getId() + " " + getTitle();
         }
 
-        public String getTitle(){
+        public String getTitle() {
             return oldestIndividual.getName()
                     + " (" + oldestIndividual.getBirthAsString() + "-"
                     + oldestIndividual.getDeathAsString() + ")";
@@ -289,11 +289,12 @@ public final class FamilyGroupsTopComponent extends TopComponent {
             addEntity(indi);
             return super.add(indi);
         }
-        public void addEntity(Entity entity){
+
+        public void addEntity(Entity entity) {
             entities.add(entity);
         }
 
-        public boolean hasEntity(Entity e){
+        public boolean hasEntity(Entity e) {
             return entities.contains(e);
         }
 
@@ -313,14 +314,15 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         }
     } //Tree
 
-    private static class FamilyGroupFilter implements Filter{
+    private static class FamilyGroupFilter implements Filter {
+
         private Tree tree;
 
         public FamilyGroupFilter(Tree tree) {
             this.tree = tree;
         }
 
-        public void setTree(Tree tree){
+        public void setTree(Tree tree) {
             this.tree = tree;
         }
 
@@ -337,34 +339,37 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
         @Override
         public boolean veto(Entity entity) {
-            if (entity instanceof Indi || entity instanceof Fam)
+            if (entity instanceof Indi || entity instanceof Fam) {
                 return !tree.hasEntity(entity);
+            }
             for (PropertyXRef xref : entity.getProperties(PropertyXRef.class)) {
-                if (xref.isValid() && tree.hasEntity(xref.getTargetEntity()))
+                if (xref.isValid() && tree.hasEntity(xref.getTargetEntity())) {
                     return false;
+                }
             }
             return true;
         }
 
         @Override
         public boolean canApplyTo(Gedcom gedcom) {
-            if (tree == null)
+            if (tree == null) {
                 return false;
+            }
             return tree.oldestIndividual.getGedcom().equals(gedcom);
         }
-
     }
 
-    private void resetFilters(){
-            // Clears filters
-            if (filters!=null){
-                for (FamilyGroupFilter filter:filters){
-                    filter.setTree(null);
-                    AncestrisPlugin.unregister(filter);
-                }
+    private void resetFilters() {
+        // Clears filters
+        if (filters != null) {
+            for (FamilyGroupFilter filter : filters) {
+                filter.setTree(null);
+                AncestrisPlugin.unregister(filter);
             }
-            filters = null;
+        }
+        filters = null;
     }
+
     public FamilyGroupsTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"));
@@ -374,86 +379,96 @@ public final class FamilyGroupsTopComponent extends TopComponent {
         familyGroupsTextArea.addMouseListener(new myMouseListener());
     }
 
-    public void start(Indi[] indis, HashSet allIndis) {
-        HashSet<Indi> unvisited = new HashSet<Indi>(Arrays.asList(indis));
+    public void start() {
         List<Tree> trees = new ArrayList<Tree>();
 
-        familyGroupsTextArea.setText("");
-//        println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.fileheader"), myGedcom.getName()));
-        while (!unvisited.isEmpty()) {
-            Indi indi = unvisited.iterator().next();
-
-            // start a new sub-tree
-            Tree tree = new Tree();
-
-            // indi has been visited now
-            unvisited.remove(indi);
-
-            // collect all relatives
-            iterate(indi, tree, allIndis);
-
-            // remember
-            trees.add(tree);
-        }
-
-        // Report about groups
-        if (!trees.isEmpty()) {
-
-            // Sort in descending order by count
-            Collections.sort(trees);
-            
-            filters = new ArrayList<FamilyGroupFilter>(10);
-
-            // Print sorted list of groups
-            println(align(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.count"), 7, ALIGN_RIGHT) + "  " + NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.indi_name"));
-            println("-------  ----------------------------------------------");
-
-            int grandtotal = 0;
-            int loners = 0;
-            for (int i = 0; i < trees.size(); i++) {
-
-                Tree tree = trees.get(i);
-
-                // sort group entities by birth date
-                grandtotal += tree.size();
-                if (tree.size() < getMinGroupSize()) {
-                    loners += tree.size();
-                } else {
-                    if (tree.size() < getMaxGroupSize()) {
-                    if (i != 0) {
-                        println("");
-                    }
-                    String prefix = "" + tree.size();
-                    Iterator it = tree.iterator();
-                    while (it.hasNext()) {
-                        Indi indi = (Indi) it.next();
-                        println(align(prefix, 7, ALIGN_RIGHT) + "  " + indi.getId()
-                                + " " + indi.getName()
-                                + " " + "(" + indi.getBirthAsString() + " - "
-                                + indi.getDeathAsString() + ")");
-                        prefix = "";
-                    }
-                } else {
-                    println(align("" + tree.size(), 7, ALIGN_RIGHT) + "  " + tree);
-                }
-                    FamilyGroupFilter filter = new FamilyGroupFilter(tree);
-                    AncestrisPlugin.register(filter);
-                    filters.add(filter);
+        context = App.center.getSelectedContext(true);
+        if (context != null) {
+            Gedcom myGedcom = context.getGedcom();
+            Entity[] _indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
+            // FIXME: must be redesigned!!
+            List<Indi> indiList = new ArrayList<Indi>(_indis.length);
+            for (Entity indi : _indis) {
+                if (indi instanceof Indi) {
+                    indiList.add((Indi) indi);
                 }
             }
 
-            println("");
-            println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.grandtotal"), grandtotal));
+            HashSet<Indi> unvisited = new HashSet<Indi>(indiList);
+            HashSet<Indi> allIndis = new HashSet<Indi>(indiList);
 
-            if (loners > 0) {
-                println("\n" + String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"), loners, getMinGroupSize()));
+            familyGroupsTextArea.setText("");
+//          println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.fileheader"), myGedcom.getName()));
+            while (!unvisited.isEmpty()) {
+                Indi indi = unvisited.iterator().next();
+
+                // start a new sub-tree
+                Tree tree = new Tree();
+
+                // indi has been visited now
+                unvisited.remove(indi);
+
+                // collect all relatives
+                iterate(indi, tree, allIndis);
+
+                // remember
+                trees.add(tree);
             }
 
+            // Report about groups
+            if (!trees.isEmpty()) {
+
+                // Sort in descending order by count
+                Collections.sort(trees);
+
+                filters = new ArrayList<FamilyGroupFilter>(10);
+
+                // Print sorted list of groups
+                println(align(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.count"), 7, ALIGN_RIGHT) + "  " + NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.indi_name"));
+                println("-------  ----------------------------------------------");
+
+                int grandtotal = 0;
+                int loners = 0;
+                for (int i = 0; i < trees.size(); i++) {
+
+                    Tree tree = trees.get(i);
+
+                    // sort group entities by birth date
+                    grandtotal += tree.size();
+                    if (tree.size() < getMinGroupSize()) {
+                        loners += tree.size();
+                    } else {
+                        if (tree.size() < getMaxGroupSize()) {
+                            if (i != 0) {
+                                println("");
+                            }
+                            String prefix = "" + tree.size();
+                            Iterator it = tree.iterator();
+                            while (it.hasNext()) {
+                                Indi indi = (Indi) it.next();
+                                println(align(prefix, 7, ALIGN_RIGHT) + "  " + indi.getId()
+                                        + " " + indi.getName()
+                                        + " " + "(" + indi.getBirthAsString() + " - "
+                                        + indi.getDeathAsString() + ")");
+                                prefix = "";
+                            }
+                        } else {
+                            println(align("" + tree.size(), 7, ALIGN_RIGHT) + "  " + tree);
+                        }
+                        FamilyGroupFilter filter = new FamilyGroupFilter(tree);
+                        AncestrisPlugin.register(filter);
+                        filters.add(filter);
+                    }
+                }
+
+                println("");
+                println(String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.grandtotal"), grandtotal));
+
+                if (loners > 0) {
+                    println("\n" + String.format(NbBundle.getMessage(FamilyGroupsTopComponent.class, "CTL_FamilyGroupsAction"), loners, getMinGroupSize()));
+                }
+            }
         }
-
-
-        // Done
-        return;
     }
 
     /**
@@ -601,20 +616,6 @@ public final class FamilyGroupsTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
-        context = App.center.getSelectedContext(true);
-        if (context != null) {
-            Gedcom myGedcom = context.getGedcom();
-            Entity[] _indis = myGedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-            // FIXME: must be redesigned!!
-            List<Indi> indiList = new ArrayList<Indi>(_indis.length);
-            for (Entity indi:_indis){
-                if (indi instanceof Indi)
-                    indiList.add((Indi)indi);
-            }
-//            Indi[] indis = new Indi[_indis.length];
-            HashSet<Indi> unvisited = new HashSet<Indi>(indiList);
-            start(indiList.toArray(new Indi[0]), unvisited);
-        }
     }
 
     @Override
