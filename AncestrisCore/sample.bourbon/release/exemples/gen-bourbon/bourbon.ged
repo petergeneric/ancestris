@@ -1,12 +1,14 @@
 0 HEAD
 1 SOUR ANCESTRIS
-2 VERS 0.5.0.1895
+2 VERS 0.5.0.1607
 2 NAME Ancestris
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org, http://www.ancestris.com
 1 DEST ANY
-1 DATE 3 SEP 2011
-2 TIME 08:38:53
+1 DEST ANY
+1 DEST ANY
+1 DATE 6 SEP 2011
+2 TIME 19:04:35
 1 SUBM @B1@
 1 FILE bourbon.ged
 1 GEDC
@@ -24,8 +26,8 @@
 1 _EMAIL
 1 _WWW
 1 CHAN
-2 DATE 19 DEC 2010
-3 TIME 15:05:01
+2 DATE 5 SEP 2011
+3 TIME 18:09:13
 0 @I1@ INDI
 1 NAME Louis XIII /CAPET/
 1 SEX M
@@ -85,13 +87,6 @@
 2 DATE 5 SEP 1638
 2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
 2 SOUR @S1@
-3 OBJE
-4 TITL Acte de Baptême de Louis XIV
-4 FILE actes/Bapteme_Louis_XIV.jpg
-5 FORM jpg
-4 FILE actes/Transcription_bapteme_Louis_XIV.pdf
-5 FORM pdf
-4 NOTE Lien de l'acte : http://doc.geneanet.org/actes/zoom.php?idacte=121616
 3 DATA
 4 TEXT Le cinquiesme jour de septembre mil six
 5 CONT cents trente huict nasquit dans le chasteau
@@ -111,6 +106,16 @@
 5 CONT Cagnye pbre et cure de ladicte
 5 CONT Paroisse
 5 CONT Bailly
+3 OBJE
+4 TITL Acte de Baptême de Louis XIV
+4 FILE actes/Bapteme_Louis_XIV.jpg
+5 FORM jpg
+4 NOTE Collection Communale
+5 CONT Cote 1168917
+5 CONT Registre des Baptêmes (1629-1640)
+5 CONT Page 108
+4 FILE actes/Transcription_bapteme_Louis_XIV.pdf
+5 FORM pdf
 1 DEAT
 2 DATE 1 SEP 1715
 2 PLAC ,Versailles,78646,Yvelines,,FRANCE
@@ -122,12 +127,7 @@
 1 BURI
 2 DATE 9 SEP 1715
 2 PLAC Basilique,Saint-Denis,93066,Seine-Saint-Denis,,FRANCE
-2 SOUR @S1@
-3 OBJE
-4 TITL Inhumation de Louis XIV
-4 FILE actes/Sepulture_Louis_XIV.jpg
-5 FORM jpg
-4 NOTE
+2 SOUR @S2@
 3 DATA
 4 TEXT Le premier jour de septembre de l'an mil sept
 5 CONT cents quinze est decedé tres haut tres puissant et tres
@@ -138,6 +138,11 @@
 5 CONT Dubois chanoine de St quentin chappelain ord(inai)re de la
 5 CONT musique du Roy et M(essir)e Pierre mamoury p(re)b(t)re de la
 5 CONT con(gregatio)n de la mission qui ont signé avec nous
+3 OBJE
+4 TITL Inhumation de Louis XIV
+4 FILE actes/Sepulture_Louis_XIV.jpg
+5 FORM jpg
+4 NOTE
 1 EVEN
 2 TYPE Sacre
 2 DATE 7 JUN 1654
@@ -151,8 +156,8 @@
 3 FORM jpg
 2 NOTE
 1 CHAN
-2 DATE 24 JAN 2011
-3 TIME 19:32:01
+2 DATE 6 SEP 2011
+3 TIME 16:39:01
 0 @I4@ INDI
 1 NAME Philippe I /CAPET/
 2 NICK D'Orléans
@@ -440,25 +445,6 @@
 1 CHAN
 2 DATE 24 JAN 2011
 3 TIME 19:31:25
-0 @S1@ SOUR
-1 AUTH Généanet
-1 TITL Généanet
-1 TEXT http://www.geneanet.org/
-1 REPO @R1@
-1 REPO @R2@
-1 CHAN
-2 DATE 20 DEC 2010
-3 TIME 14:34:15
-0 @R1@ REPO
-1 NAME Archives Départementales de Seine-Saint-Denis
-1 ADDR 18 avenue du Président Salvador Allende
-2 CITY Bobigny
-2 POST 93000
-2 STAE
-2 CTRY
-1 CHAN
-2 DATE 20 DEC 2010
-3 TIME 11:00:07
 0 @I15@ INDI
 1 NAME Marie /LESZCZYNSKA/
 1 SEX F
@@ -512,10 +498,10 @@
 1 SEX F
 1 BIRT
 2 DATE 4 NOV 1731
-2 PLAC
+2 PLAC ,Dresde,,,,ALLEMAGNE
 1 DEAT
 2 DATE 13 MAR 1767
-2 PLAC
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 1 FAMS @F9@
 1 OBJE
 2 TITL Marie-Josèphe DE SAXE
@@ -523,8 +509,8 @@
 3 FORM jpg
 2 NOTE
 1 CHAN
-2 DATE 20 DEC 2010
-3 TIME 11:23:11
+2 DATE 6 SEP 2011
+3 TIME 17:02:31
 0 @F9@ FAM
 1 HUSB @I16@
 1 WIFE @I17@
@@ -583,7 +569,11 @@
 1 MARR
 2 DATE 16 MAY 1770
 2 PLAC ,Versailles,78646,Yvelines,,FRANCE
-1 SOUR @S1@
+2 SOUR @S3@
+3 DATA
+4 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la public
+5 CONC ation de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêque d
+5 CONC e paris, plus bas de la Touche secrétaire...
 2 OBJE
 3 TITL Acte de Mariage de Louis XVI et Marie Antoinette
 3 FILE actes/Acte_mariage_Louis16.jpg
@@ -591,23 +581,9 @@
 3 FILE actes/Transcription_mariage_louis16.pdf
 4 FORM pdf
 3 NOTE Adresse de l'acte : http://doc.geneanet.org/actes/zoom.php?idacte=40472
-2 DATA
-3 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la publ
-4 CONC ication de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêqu
-4 CONC e de paris, plus bas de la Touche secrétaire...
 1 CHAN
-2 DATE 24 JAN 2011
-3 TIME 19:31:25
-0 @R2@ REPO
-1 NAME Archives Départementales des Yvelines
-1 ADDR 2, Avenue de Lunca
-2 CITY Montigny-le-Bretonneux
-2 POST 78180
-2 STAE
-2 CTRY
-1 CHAN
-2 DATE 20 DEC 2010
-3 TIME 11:40:37
+2 DATE 6 SEP 2011
+3 TIME 16:55:57
 0 @N1@ NOTE Cette généalogie est un exemple fourni avec Ancestris. Elle peut cependant être corrigée et/ou complétée.
 1 CONT
 1 CONT N'hésitez pas à la modifier, toujours dans le respect de la norme gedcom, et à nous la faire parvenir (uniquement le fichier gedcom sauf si vous rajoutez des images et autres documents liés à vos modifications), à l'adresse:
@@ -617,4 +593,44 @@
 1 CHAN
 2 DATE 3 SEP 2011
 3 TIME 06:38:48
+0 @S1@ SOUR
+1 AUTH Registre Communal de SAINT-GERMAIN-EN-LAYE
+1 TITL Site Internet Archives Départementales des Yvelines
+1 TEXT
+1 REPO @R1@
+1 REPO @R2@
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:50:22
+0 @R1@ REPO
+1 NAME Généanet
+1 ADDR www.geneanet.org
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:56:12
+0 @R2@ REPO
+1 NAME Archives Départementales des Yvelines
+1 ADDR 2 Avenue de Lunca
+2 CITY MONTIGNY-LE-BRETONNEUX
+2 POST 78180
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:15:25
+0 @S2@ SOUR
+1 AUTH Archives Départementales de Seine-Saint-Denis
+1 TITL Site Internet Archives Départementales de Seine-Saint-Denis
+1 TEXT 18 Avenue du Président Salvador Allende
+2 CONT 93000 BOBIGNY
+1 REPO @R1@
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:50:48
+0 @S3@ SOUR
+1 AUTH Site Internet Archives Départementales Yvelines
+1 TITL Registre Paroissaux de Versailles
+1 TEXT
+1 REPO @R1@
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:56:12
 0 TRLR
