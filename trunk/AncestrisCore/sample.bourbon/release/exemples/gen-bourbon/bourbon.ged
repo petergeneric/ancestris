@@ -1,14 +1,12 @@
 0 HEAD
 1 SOUR ANCESTRIS
-2 VERS 0.5.0.1607
+2 VERS 0.6.0.1910
 2 NAME Ancestris
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org, http://www.ancestris.com
 1 DEST ANY
-1 DEST ANY
-1 DEST ANY
 1 DATE 6 SEP 2011
-2 TIME 19:04:35
+2 TIME 20:13:03
 1 SUBM @B1@
 1 FILE bourbon.ged
 1 GEDC
@@ -18,16 +16,17 @@
 1 PLAC
 2 FORM Lieudit,Commune,Code_INSEE,Département,Région,Pays
 0 @B1@ SUBM
-1 NAME
-1 ADDR
-2 CITY
-2 CTRY
-1 PHON
-1 _EMAIL
-1 _WWW
+1 NAME POUYET Patrick
+1 ADDR 100, rue Inconnu Bidon
+2 CITY Janse-Rien
+2 POST 11999
+2 CTRY France
+1 PHON +33 909 909 909
+1 _EMAIL support@ancestris.org
+1 _WWW http://www.ancestris.org
 1 CHAN
-2 DATE 5 SEP 2011
-3 TIME 18:09:13
+2 DATE 6 SEP 2011
+3 TIME 18:09:09
 0 @I1@ INDI
 1 NAME Louis XIII /CAPET/
 1 SEX M
@@ -571,9 +570,9 @@
 2 PLAC ,Versailles,78646,Yvelines,,FRANCE
 2 SOUR @S3@
 3 DATA
-4 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la public
-5 CONC ation de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêque d
-5 CONC e paris, plus bas de la Touche secrétaire...
+4 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la publ
+5 CONC ication de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêqu
+5 CONC e de paris, plus bas de la Touche secrétaire...
 2 OBJE
 3 TITL Acte de Mariage de Louis XVI et Marie Antoinette
 3 FILE actes/Acte_mariage_Louis16.jpg
@@ -594,7 +593,7 @@
 2 DATE 3 SEP 2011
 3 TIME 06:38:48
 0 @S1@ SOUR
-1 AUTH Registre Communal de SAINT-GERMAIN-EN-LAYE
+1 AUTH Registre Communal de Saint-Germain-en-Laye
 1 TITL Site Internet Archives Départementales des Yvelines
 1 TEXT
 1 REPO @R1@
@@ -604,23 +603,25 @@
 3 TIME 16:50:22
 0 @R1@ REPO
 1 NAME Généanet
-1 ADDR www.geneanet.org
+1 ADDR http://www.geneanet.org
 1 CHAN
 2 DATE 6 SEP 2011
-3 TIME 16:56:12
+3 TIME 18:10:00
 0 @R2@ REPO
 1 NAME Archives Départementales des Yvelines
 1 ADDR 2 Avenue de Lunca
-2 CITY MONTIGNY-LE-BRETONNEUX
+2 CITY Montigny-le-Bretonneux
 2 POST 78180
+2 CTRY France
+1 PHON +33 161 373 630
 1 CHAN
 2 DATE 6 SEP 2011
-3 TIME 16:15:25
+3 TIME 18:12:07
 0 @S2@ SOUR
 1 AUTH Archives Départementales de Seine-Saint-Denis
 1 TITL Site Internet Archives Départementales de Seine-Saint-Denis
 1 TEXT 18 Avenue du Président Salvador Allende
-2 CONT 93000 BOBIGNY
+2 CONT 93000 Bobigny
 1 REPO @R1@
 1 CHAN
 2 DATE 6 SEP 2011
