@@ -30,7 +30,7 @@ public final class SearchTopComponent extends GenjViewTopComponent {
     private static SearchTopComponent factory;
     private static ViewFactory viewfactory = new SearchViewFactory();
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 

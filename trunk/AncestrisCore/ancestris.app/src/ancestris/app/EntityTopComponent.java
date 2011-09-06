@@ -25,7 +25,7 @@ public final class EntityTopComponent extends GenjViewTopComponent {
     private static EntityTopComponent factory;
     private static ViewFactory viewfactory = new EntityViewFactory();
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 

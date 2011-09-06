@@ -151,7 +151,7 @@ public class GenjViewTopComponent extends AncestrisTopComponent implements Workb
         return PREFERRED_ID;
     }
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return null;
     }
 

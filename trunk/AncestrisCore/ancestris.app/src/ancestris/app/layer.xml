@@ -106,12 +106,6 @@
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
                 <attr name="iconBase" stringvalue="ancestris/app/New.png"/>
             </file>
-            <file name="ancestris-app-NavigatorAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.NavigatorTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_NavigatorAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
             <file name="ancestris-app-ReportAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="component" methodvalue="ancestris.app.ReportTopComponent.getFactory"/>
@@ -315,10 +309,6 @@
             <file name="Separator1_1_1.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-400"/>
-            </file>
-            <file name="NavigatorAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-NavigatorAction.instance"/>
-                <attr name="position" intvalue="-300"/>
             </file>
             <file name="SearchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SearchAction.instance"/>

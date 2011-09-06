@@ -34,7 +34,7 @@ public final class TableTopComponent extends GenjViewTopComponent {
         return AncestrisDockModes.TABLE;
     }
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 

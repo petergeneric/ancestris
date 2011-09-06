@@ -31,7 +31,7 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
     private static EditTopComponent factory;
     private ViewFactory viewfactory = new EditViewFactory();  // should not be static
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 

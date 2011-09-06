@@ -27,7 +27,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     private static TimelineTopComponent factory;
     private static ViewFactory viewfactory = new TimelineViewFactory();
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 
