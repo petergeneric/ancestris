@@ -27,7 +27,7 @@ public final class ReportTopComponent extends GenjViewTopComponent {
     private static ReportTopComponent factory;
     private static ViewFactory viewfactory = new ReportViewFactory();
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 

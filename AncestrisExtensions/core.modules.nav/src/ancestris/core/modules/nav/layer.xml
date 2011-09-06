@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-app-NavigatorAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.modules.nav.Bundle"/>
+                <attr name="component" methodvalue="ancestris.core.modules.nav.NavigatorTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.core.modules.nav.Bundle#CTL_MENU_NavigatorAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="View">
+            <file name="NavigatorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-NavigatorAction.instance"/>
+                <attr name="position" intvalue="-300"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

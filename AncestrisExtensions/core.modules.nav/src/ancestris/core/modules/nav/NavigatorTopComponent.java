@@ -3,11 +3,12 @@
  * and open the template in the editor.
  */
 
-package ancestris.app;
+package ancestris.core.modules.nav;
 
+import ancestris.app.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
-import genj.nav.NavigatorViewFactory;
+import ancestris.core.modules.nav.NavigatorViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
@@ -30,7 +31,7 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
     @Override
     public String getDefaultFactoryMode() {return AncestrisDockModes.NAV;}
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 

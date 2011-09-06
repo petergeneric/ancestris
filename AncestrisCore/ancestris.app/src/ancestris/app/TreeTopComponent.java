@@ -29,7 +29,7 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     private static ViewFactory viewfactory = new TreeViewFactory();
     private static final String PREFERRED_ID = "TreeTopComponent";
 
-    ViewFactory getViewFactory() {
+    public ViewFactory getViewFactory() {
         return viewfactory;
     }
 
