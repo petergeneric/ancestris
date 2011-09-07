@@ -24,7 +24,7 @@ public final class OpenAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context contextToOpen = App.center.getSelectedContext(true);
         if (contextToOpen != null) {
-            AncestrisTopComponent win = new EditTopComponent().create(contextToOpen);
+            AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
 //            win.init(contextToOpen);
             win.open();
             win.requestActive();

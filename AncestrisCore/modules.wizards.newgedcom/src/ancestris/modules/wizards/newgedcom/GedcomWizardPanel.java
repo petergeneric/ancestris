@@ -11,8 +11,7 @@
  */
 package ancestris.modules.wizards.newgedcom;
 
-import ancestris.modules.editors.standard.GedcomPanel;
-import ancestris.modules.editors.standard.IEditorPanel;
+import ancestris.modules.editors.standard.EditorPanel;
 import ancestris.util.Utilities;
 import java.awt.Component;
 import java.net.MalformedURLException;
@@ -27,7 +26,7 @@ public class GedcomWizardPanel extends NewGedcomWizardPanel {
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private IEditorPanel component;
+    private EditorPanel component;
     private INewGedcomProvider gedcomProvider;
 
     public GedcomWizardPanel(INewGedcomProvider provider) {

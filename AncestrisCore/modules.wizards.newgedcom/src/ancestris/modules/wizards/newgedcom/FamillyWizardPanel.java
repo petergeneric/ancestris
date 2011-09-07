@@ -11,7 +11,7 @@
  */
 package ancestris.modules.wizards.newgedcom;
 
-import ancestris.modules.editors.standard.FamilyPanel;
+import ancestris.modules.nav.FamilyPanel;
 import ancestris.util.Utilities;
 import genj.gedcom.Context;
 import java.awt.Component;

@@ -18,7 +18,7 @@ import genj.gedcom.UnitOfWork;
 import javax.swing.JPanel;
 import org.openide.util.Exceptions;
 
-public class GedcomPanel extends JPanel implements IEditorPanel {
+public class GedcomPanel extends EditorPanel {
 
     private Context context;
 
@@ -76,7 +76,7 @@ public class GedcomPanel extends JPanel implements IEditorPanel {
 
         placeFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.placeFormat.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -101,8 +101,7 @@ public class GedcomPanel extends JPanel implements IEditorPanel {
                         .addComponent(jLabel1)
                         .addGap(12, 12, 12)
                         .addComponent(gedcomDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(placeFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

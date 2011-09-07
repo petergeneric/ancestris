@@ -18,16 +18,15 @@
 
 package ancestris.modules.wizards.newgedcom;
 
-import ancestris.modules.beans.AIndiBean;
+import ancestris.modules.editors.standard.EditorPanel;
 import ancestris.modules.editors.standard.GedcomPanel;
-import ancestris.modules.editors.standard.IEditorPanel;
 import genj.gedcom.Context;
 
 /**
  *
  * @author daniel
  */
-public class GedcomVisualPanel extends javax.swing.JPanel implements IEditorPanel {
+public class GedcomVisualPanel extends EditorPanel {
     private Context context;
     private GedcomPanel gedcomPanel;
 

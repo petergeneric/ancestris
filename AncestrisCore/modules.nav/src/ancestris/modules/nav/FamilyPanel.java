@@ -9,7 +9,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.modules.editors.standard;
+package ancestris.modules.nav;
 
 import ancestris.modules.editors.standard.actions.ACreateParent;
 import ancestris.modules.editors.standard.actions.ACreateChild;
@@ -17,6 +17,8 @@ import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
+import ancestris.modules.editors.standard.EntityEditor;
+import ancestris.modules.editors.standard.EventBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -45,7 +47,7 @@ import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
-public final class FamilyPanel extends JPanel implements IEditorPanel {
+public final class FamilyPanel extends JPanel {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.empty");
     private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
@@ -718,10 +720,6 @@ public final class FamilyPanel extends JPanel implements IEditorPanel {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public void commit() {
     }
 
     private class ABeanHandler extends FilteredMouseAdapter {

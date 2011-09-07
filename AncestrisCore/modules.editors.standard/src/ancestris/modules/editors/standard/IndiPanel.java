@@ -9,21 +9,24 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.modules.beans;
+package ancestris.modules.editors.standard;
 
 import genj.edit.beans.PropertyBean;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.util.Arrays;
 import java.util.List;
+import org.openide.util.Exceptions;
 
-public final class AIndiBean extends PropertyBean {
+public final class IndiPanel extends EditorPanel {
 
     private List<PropertyBean> childBeans;
     /** Creates new form NewGedcomVisualPanel2 */
-    public AIndiBean() {
+    public IndiPanel() {
         setOpaque(true);
         initComponents();
         childBeans = Arrays.asList(deathBean,birthBean,aSexBean1,aNameBean2,aSimpleBean1,aPlaceBean2);
@@ -45,10 +48,15 @@ public final class AIndiBean extends PropertyBean {
      * @param entity new value of indi
      */
     @Override
-    protected void setPropertyImpl(Property entity) {
-        if (!(entity instanceof Indi)) {
-            throw new UnsupportedOperationException("only setContext(Entity) supported yet.");
-        }
+    public void setContext(Context context) {
+        super.setContext(context);
+        if (context == null)
+            return;
+
+        Entity entity =context.getEntity();
+        if (entity == null || !(entity instanceof Indi))
+            return;
+
         this.indi = (Indi) entity;
         deathBean.setContext(indi, null);
         birthBean.setContext(indi, null);
@@ -62,18 +70,22 @@ public final class AIndiBean extends PropertyBean {
      * commit beans - transaction has to be running already
      */
     @Override
-    protected void commitImpl(Property property) throws GedcomException {
+    public void commit() {
+        try {
         for (PropertyBean bean:childBeans)
             bean.commit();
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
-    @Override
-    public boolean hasChanged() {
-        boolean changed = false;
-        for (PropertyBean bean:childBeans)
-            changed |= bean.hasChanged();
-        return changed;
-    }
+//XXX: to be replaced    @Override
+//    public boolean hasChanged() {
+//        boolean changed = false;
+//        for (PropertyBean bean:childBeans)
+//            changed |= bean.hasChanged();
+//        return changed;
+//    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -94,16 +106,16 @@ public final class AIndiBean extends PropertyBean {
         aSimpleBean1 = new ancestris.modules.beans.AChoiceBean();
 
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(AIndiBean.class, "AIndiBean.jLabel4.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.jLabel4.text")); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AIndiBean.class, "AIndiBean.jLabel1.text")); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.jLabel1.text")); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(76, 15));
         jLabel1.setMinimumSize(new java.awt.Dimension(76, 15));
         jLabel1.setPreferredSize(new java.awt.Dimension(76, 15));
 
         jLabel5.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(AIndiBean.class, "AIndiBean.jLabel5.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.jLabel5.text")); // NOI18N
 
         deathBean.setRequestFocusEnabled(false);
         deathBean.setShowKnown(true);
@@ -181,10 +193,4 @@ public final class AIndiBean extends PropertyBean {
     private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
 
-
-
-    @Override
-    public String getTag() {
-        return "INDI";
-    }
 }

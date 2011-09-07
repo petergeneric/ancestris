@@ -14,8 +14,6 @@ package ancestris.modules.editors.standard;
 import ancestris.modules.editors.standard.actions.ACreateParent;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
-import ancestris.modules.beans.AFamBean;
-import ancestris.modules.beans.AIndiBean;
 import ancestris.modules.beans.AListBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -38,13 +36,14 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
+import java.awt.ComponentOrientation;
 import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
 import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
-public final class EventsPanel extends JPanel implements IEditorPanel {
+public final class EventsPanel extends EditorPanel {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.empty");
     private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.wife.empty");
@@ -282,8 +281,9 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
         } else {
             title = NbBundle.getMessage(EventsPanel.class, "dialog.fam.edit.title", fam);
         }
-        final AFamBean bean = new AFamBean();
-        NotifyDescriptor nd = new NotifyDescriptor(bean.setContext(fam), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        final FamPanel bean = new FamPanel();
+        bean.setContext(new Context(fam));
+        NotifyDescriptor nd = new NotifyDescriptor(bean, title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
@@ -312,8 +312,9 @@ public final class EventsPanel extends JPanel implements IEditorPanel {
         if (indi == null) {
             return false;
         }
-        final AIndiBean bean = new AIndiBean();
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean.setContext(indi)), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+        final IndiPanel bean = new IndiPanel();
+        bean.setContext(new Context(indi));
+        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(bean), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
         DialogDisplayer.getDefault().notify(nd);
         if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
             return false;
