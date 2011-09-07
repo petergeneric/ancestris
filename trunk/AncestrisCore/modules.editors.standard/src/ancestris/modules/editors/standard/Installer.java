@@ -39,7 +39,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
     public void createActions(Context context, Purpose purpose, Group into) {
         if (purpose != Purpose.CONTEXT)
             return;
-        for (EditTopComponent edit : AncestrisPlugin.lookupAll(EditTopComponent.class) ) {
+        for (EditorTopComponent edit : AncestrisPlugin.lookupAll(EditorTopComponent.class) ) {
             Context viewContext = edit.getContext();
             if (viewContext == null)
                 continue;
@@ -53,10 +53,10 @@ public class Installer extends ModuleInstall implements ActionProvider{
 
     private static class OpenInEditor extends Action2 {
 
-        EditTopComponent editor;
+        EditorTopComponent editor;
         Context context;
 
-        public OpenInEditor(EditTopComponent editor, Context context) {
+        public OpenInEditor(EditorTopComponent editor, Context context) {
             this.editor = editor;
             this.context = context;
             setText(ResourcesSupport.getTitle("OpenInEditor"));  // NOI18N

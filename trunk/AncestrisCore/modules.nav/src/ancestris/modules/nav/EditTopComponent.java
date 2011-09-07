@@ -10,8 +10,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package ancestris.modules.editors.standard;
+package ancestris.modules.nav;
 
+import ancestris.modules.editors.standard.ResourcesSupport;
 import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
@@ -22,7 +23,6 @@ import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import javax.swing.JTabbedPane;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -34,15 +34,15 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
     private static final String PREFERRED_ID = "EditTopComponent";  // NOI18N
     private static EditTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
-    EventsPanel eventsPanel = new EventsPanel();
+//    EventsPanel eventsPanel = new EventsPanel();
 //    GedcomPanel gedcomPanel = new GedcomPanel();
-    JTabbedPane editorPanel;
+//    JTabbedPane editorPanel;
 
     @Override
     public boolean createPanel() {
-        editorPanel = new JTabbedPane();
-        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.entity.title"), familyPanel);
-        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.event.title"), eventsPanel);
+//        editorPanel = new JTabbedPane();
+//        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.entity.title"), familyPanel);
+//        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.event.title"), eventsPanel);
 //        editorPanel.addTab("Gedcom", gedcomPanel);
         setContext(getContext(), true);
         return true;
@@ -91,49 +91,25 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         return PREFERRED_ID;
     }
 
+    @Override
     public void createActions(Context context, Purpose purpose, Group into) {
 //        if (purpose == Purpose.CONTEXT && getContext().getGedcom().equals(context.getGedcom())) {
 //            into.add(new OpenInEditor(context));
 //        }
     }
 
-    @Override
-    public Image getImageIcon() {
-        return ResourcesSupport.editorIcon.getImage();
-    }
+//    @Override
+//    public Image getImageIcon() {
+//        // XXX: return proper image
+//        return ResourcesSupport.editorIcon.getImage();
+//    }
 
     public void setContext(Context context, boolean isActionPerformed) {
         if (context == null) {
             return;
         }
         familyPanel.setContext(context);
-//        gedcomPanel.setContext(context);
-        eventsPanel.setContext(context);
-        setPanel(editorPanel);
-//        if (context.getEntity() != null && !context.getEntities().isEmpty()) {
-//            setPanel(familyPanel);
-//            familyPanel.setContext(context);
-//            return;
-//        }
-//        // Default to gedcom
-//        gedcomPanel.setContext(context);
-//        setPanel(gedcomPanel);
+        setPanel(familyPanel);
         repaint();
-    }
-
-    private class OpenInEditor extends Action2 {
-
-        Context context;
-
-        public OpenInEditor(Context context) {
-            this.context = context;
-            setText(ResourcesSupport.getTitle("OpenInEditor")); // NOI18N
-            setImage(ResourcesSupport.editorIcon);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            setContext(context,true);
-        }
     }
 }

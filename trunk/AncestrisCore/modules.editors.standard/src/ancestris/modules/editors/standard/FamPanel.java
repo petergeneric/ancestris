@@ -9,48 +9,24 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.modules.beans;
+package ancestris.modules.editors.standard;
 
 import genj.edit.beans.PropertyBean;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import org.openide.util.Exceptions;
 
-public final class AFamBean extends PropertyBean {
+public final class FamPanel extends EditorPanel {
 
     /** Creates new form NewGedcomVisualPanel2 */
-    public AFamBean() {
+    public FamPanel() {
         setOpaque(true);
         initComponents();
     }
     private Fam fam;
-
-    /**
-     * Set the value of indi
-     *
-     * @param entity new value of indi
-     */
-    @Override
-    protected void setPropertyImpl(Property entity) {
-        if (!(entity instanceof Fam)) {
-            throw new UnsupportedOperationException("only setContext(Entity) supported yet.");
-        }
-        this.fam = (Fam) entity;
-        marrEvent.setContext(fam, null);
-    }
-
-    /**
-     * commit beans - transaction has to be running already
-     */
-    @Override
-    protected void commitImpl(Property property) throws GedcomException {
-        marrEvent.commit();
-    }
-
-    @Override
-    public boolean hasChanged() {
-        return marrEvent.hasChanged();
-    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -87,8 +63,34 @@ public final class AFamBean extends PropertyBean {
     private ancestris.modules.beans.AEventBean marrEvent;
     // End of variables declaration//GEN-END:variables
 
+
+    /**
+     * Set the value of fam
+     *
+     * @param entity new value of indi
+     */
     @Override
-    public String getTag() {
-        return "FAM";
+    public void setContext(Context context) {
+        super.setContext(context);
+        if (context == null)
+            return;
+
+        Entity entity =context.getEntity();
+        if (entity == null) return;
+        if (!(entity instanceof Fam)) {
+            return;
+        }
+        this.fam = (Fam) entity;
+        marrEvent.setContext(fam, null);
     }
+
+    @Override
+    public void commit() {
+        try {
+            marrEvent.commit();
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
 }

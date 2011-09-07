@@ -11,6 +11,7 @@
  */
 package ancestris.modules.wizards.newgedcom;
 
+import genj.gedcom.Context;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import javax.swing.JPanel;
@@ -28,7 +29,7 @@ public final class FirstIndiVisualPanel extends JPanel{
     @Override
     public void addNotify() {
         super.addNotify();
-        aIndiBean1.setContext(gedcomProvider.getFirst());
+        aIndiBean1.setContext(new Context(gedcomProvider.getFirst()));
     }
 
     @Override
@@ -46,7 +47,7 @@ public final class FirstIndiVisualPanel extends JPanel{
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        aIndiBean1 = new ancestris.modules.beans.AIndiBean();
+        aIndiBean1 = new ancestris.modules.editors.standard.IndiPanel();
 
         setAutoscrolls(true);
         setPreferredSize(new java.awt.Dimension(622, 380));
@@ -96,16 +97,12 @@ public final class FirstIndiVisualPanel extends JPanel{
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.beans.AIndiBean aIndiBean1;
+    private ancestris.modules.editors.standard.IndiPanel aIndiBean1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
     public void applyNext() {
-        try {
-            aIndiBean1.commit();
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        aIndiBean1.commit();
     }
     }
