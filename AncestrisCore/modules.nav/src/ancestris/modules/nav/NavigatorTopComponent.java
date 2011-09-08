@@ -12,17 +12,15 @@
 
 package ancestris.modules.nav;
 
-import ancestris.modules.editors.standard.ResourcesSupport;
 import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
-import genj.util.swing.Action2;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genj.view.SelectionListener;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
+import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -99,12 +97,12 @@ public final class NavigatorTopComponent extends AncestrisTopComponent implement
 //        }
     }
 
-//    @Override
-//    public Image getImageIcon() {
-//        // XXX: return proper image
-//        return ResourcesSupport.editorIcon.getImage();
-//    }
+    @Override
+    public Image getImageIcon() {
+        return ImageUtilities.loadImage("ancestris/modules/nav/NavIcon.png", true);
+    }
 
+    @Override
     public void setContext(Context context, boolean isActionPerformed) {
         if (context == null) {
             return;
