@@ -9,13 +9,10 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package ancestris.modules.nav;
 
 import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
-import genj.util.swing.Action2.Group;
-import genj.view.ActionProvider;
 import genj.view.SelectionListener;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -27,21 +24,14 @@ import org.openide.util.lookup.ServiceProvider;
  * Top component which displays something.
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class NavigatorTopComponent extends AncestrisTopComponent implements ActionProvider, SelectionListener {
+public final class NavigatorTopComponent extends AncestrisTopComponent implements SelectionListener {
 
-    private static final String PREFERRED_ID = "EditTopComponent";  // NOI18N
+    private static final String PREFERRED_ID = "AncestrisNavTopComponent";  // NOI18N
     private static NavigatorTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
-//    EventsPanel eventsPanel = new EventsPanel();
-//    GedcomPanel gedcomPanel = new GedcomPanel();
-//    JTabbedPane editorPanel;
 
     @Override
     public boolean createPanel() {
-//        editorPanel = new JTabbedPane();
-//        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.entity.title"), familyPanel);
-//        editorPanel.addTab(org.openide.util.NbBundle.getMessage(EditTopComponent.class, "tab.event.title"), eventsPanel);
-//        editorPanel.addTab("Gedcom", gedcomPanel);
         setContext(getContext(), true);
         return true;
     }
@@ -88,13 +78,6 @@ public final class NavigatorTopComponent extends AncestrisTopComponent implement
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
-    }
-
-    @Override
-    public void createActions(Context context, Purpose purpose, Group into) {
-//        if (purpose == Purpose.CONTEXT && getContext().getGedcom().equals(context.getGedcom())) {
-//            into.add(new OpenInEditor(context));
-//        }
     }
 
     @Override
