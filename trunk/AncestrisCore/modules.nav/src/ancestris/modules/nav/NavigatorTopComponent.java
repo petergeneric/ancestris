@@ -29,10 +29,10 @@ import org.openide.util.lookup.ServiceProvider;
  * Top component which displays something.
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class EditTopComponent extends AncestrisTopComponent implements ActionProvider, SelectionListener {
+public final class NavigatorTopComponent extends AncestrisTopComponent implements ActionProvider, SelectionListener {
 
     private static final String PREFERRED_ID = "EditTopComponent";  // NOI18N
-    private static EditTopComponent factory;
+    private static NavigatorTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
 //    EventsPanel eventsPanel = new EventsPanel();
 //    GedcomPanel gedcomPanel = new GedcomPanel();
@@ -48,8 +48,9 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
         return true;
     }
 
+    @Override
     public String getDefaultFactoryMode() {
-        return AncestrisDockModes.EDITOR; // NOI18N
+        return AncestrisDockModes.OUTPUT; // NOI18N
     }
 
     /** This method is called from within the constructor to
@@ -79,9 +80,9 @@ public final class EditTopComponent extends AncestrisTopComponent implements Act
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
      */
-    public static synchronized EditTopComponent getFactory() {
+    public static synchronized NavigatorTopComponent getFactory() {
         if (factory == null) {
-            factory = new EditTopComponent();
+            factory = new NavigatorTopComponent();
         }
         return factory;
     }
