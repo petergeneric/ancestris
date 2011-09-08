@@ -11,14 +11,11 @@
  */
 package ancestris.modules.nav;
 
-import ancestris.modules.editors.standard.actions.ACreateParent;
-import ancestris.modules.editors.standard.actions.ACreateChild;
-import ancestris.modules.editors.standard.actions.ACreateSpouse;
+import ancestris.api.editor.AncestrisEditor;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
-import ancestris.modules.editors.standard.EntityEditor;
-import ancestris.modules.editors.standard.EventBean;
+import genj.edit.beans.EventBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -33,16 +30,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.Action;
-//import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import ancestris.modules.editors.standard.actions.AActions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 import java.util.ArrayList;
-import javax.swing.border.EmptyBorder;
 import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -59,34 +53,24 @@ public final class FamilyPanel extends JPanel {
     private Context context;
     private Indi focusIndi;
     private Fam focusFam;
-    private int muteContext = 0;
     private final EntitiesPanel childrenPanel;
     private final EntitiesPanel oFamsPanel;
     private final EntitiesPanel siblingsPanel;
     private final EntitiesPanel eventsPanel;
-    private static final ActionListener NOOP_ACTION = new ActionListener() {
 
-        public void actionPerformed(ActionEvent e) {
-        }
-    };
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
         initComponents();
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
-        // Add listners
-        ABeanHandler handler;
-        handler = new ABeanHandler();
-        handler.setEditOnClick(true);
-        husband.addMouseListener(handler);
-
+        husband.addMouseListener(new ABeanHandler(true));
         wife.addMouseListener(new SpouseHandler(husband));
+
         husbFather.addMouseListener(new ParentHandler(husband, PropertySex.MALE));
         husbMother.addMouseListener(new ParentHandler(husband, PropertySex.FEMALE));
-        handler = new ABeanHandler();
-        handler.setEditOnClick(true);
-        familySpouse.addMouseListener(handler);
+
+        familySpouse.addMouseListener(new ABeanHandler(true));
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
         husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
@@ -219,67 +203,6 @@ public final class FamilyPanel extends JPanel {
 
     }
 
-//    @Override
-//    public String getName() {
-//        return "Completer le noyau familial";
-//    }
-
-//XXX: to put elsewhere    private Action getCreateChildAction(){
-//        ActionListener action = new ActionListener() {
-//
-//            public void actionPerformed(ActionEvent e) {
-//                (new ACreateChild((Fam) familySpouse.getProperty())).actionPerformed(e);
-//                refresh();
-//            }
-//        };
-//        return AActions.alwaysEnabled(
-//                action,
-//                "",
-//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getProperty()),
-//                "ancestris/modules/editors/standard/images/add-child.png",  // NOI18N
-//                true);
-//    }
-//    private Action getCreateSpouseActions(){
-//        ActionListener action = new ActionListener() {
-//
-//            public void actionPerformed(ActionEvent e) {
-//                (new ACreateSpouse((Indi) husband.getProperty())).actionPerformed(e);
-//                refresh();
-//            }
-//        };
-//        return AActions.alwaysEnabled(
-//                action,
-//                "",
-//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addspouse.title"),
-//                "ancestris/modules/editors/standard/images/add-spouse.png",  // NOI18N
-//                true);
-//    }
-//    private Action getUnlinkSpouseAction(){
-//        return AActions.alwaysEnabled(
-//                NOOP_ACTION,
-//                "",
-//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkspouse.title"),
-//                "ancestris/modules/editors/standard/images/unlink-spouse.png",  // NOI18N
-//                true);
-//    }
-//    private Action getUnlinkFamcAction(){
-//        return AActions.alwaysEnabled(
-//                NOOP_ACTION,
-//                "",
-//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkparents.title"),
-//                "ancestris/modules/editors/standard/images/unlink-famc.png",  // NOI18N
-//                true);
-//    }
-//
-//    private Action getAddSiblingAction(){
-//        return AActions.alwaysEnabled(
-//                NOOP_ACTION,
-//                "",
-//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addsibling.title"),
-//                "ancestris/modules/editors/standard/images/add-sibling.png",  // NOI18N
-//                true);
-//    }
-//
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -627,26 +550,6 @@ public final class FamilyPanel extends JPanel {
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
 
-    private void fireSelection(Entity entity) {
-        if (entity != null) {
-            SelectionSink.Dispatcher.fireSelection(new Context(entity), false);
-        }
-    }
-
-    public static boolean editProperty(Property property, boolean isNew) {
-        // FIXME: Horror!
-        if (property instanceof Indi) {
-            return EntityEditor.editEntity((Indi) property, isNew);
-        }
-        if (property instanceof Fam) {
-            return EntityEditor.editEntity((Fam) property, isNew);
-        }
-        if (property instanceof PropertyEvent) {
-            return editEvent((PropertyEvent) property, isNew);
-        }
-        return false;
-    }
-
     public static boolean editEvent(PropertyEvent prop, boolean isNew) {
         String title;
 
@@ -684,6 +587,7 @@ public final class FamilyPanel extends JPanel {
         private boolean editOnClick = false;
         private ActionListener action = new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
             }
         };
@@ -693,14 +597,15 @@ public final class FamilyPanel extends JPanel {
         }
 
         private ABeanHandler() {
+            this(false);
         }
 
         /**
          *
          * @param edit true if single click mouse must launch editor
          */
-        void setEditOnClick(boolean edit) {
-            editOnClick = edit;
+        private ABeanHandler(boolean editOnClic) {
+            this.editOnClick = editOnClic;
         }
 
         @Override
@@ -720,7 +625,9 @@ public final class FamilyPanel extends JPanel {
                 SelectionSink.Dispatcher.muteSelection(true);
                 try {
                     if (bean != null && bean.getProperty() != null) {
-                        editProperty(bean.getProperty(), false);
+                        AncestrisEditor editor = AncestrisEditor.findEditor(bean.getProperty());
+                        if (editor != null)
+                            editor.edit(bean.getProperty());
                     } else {
                         getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
                     }
@@ -732,7 +639,7 @@ public final class FamilyPanel extends JPanel {
                 // FIXME: test click count necessaire?
                 Property prop = bean.getProperty();
                 if (prop instanceof Entity)
-                    fireSelection((Entity)prop);
+                    SelectionSink.Dispatcher.fireSelection(new Context(prop), false);
             }
         }
 
@@ -754,10 +661,10 @@ public final class FamilyPanel extends JPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            if (otherBean == null || otherBean.getProperty() == null) {
-                return new ACreateSpouse(null);
-            }
-            return new ACreateSpouse((Indi) otherBean.getProperty());
+            Property property = null;
+            if (otherBean != null)
+                property = otherBean.getProperty();
+            return AncestrisEditor.findEditor(property).getCreateSpouseAction(property);
         }
     }
 
@@ -774,35 +681,42 @@ public final class FamilyPanel extends JPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            if (childBean == null || childBean.getProperty() == null) {
-                return new ACreateParent(null, PropertySex.MALE);
-            }
-            return new ACreateParent((Indi) childBean.getProperty(), sex);
+            Property property = null;
+            if (childBean != null)
+                property = childBean.getProperty();
+            return AncestrisEditor.findEditor(property).getCreateParentAction(property,sex);
         }
     }
 
-    private class ChildHandler extends ABeanHandler {
-
-        ABluePrintBeans famcBean;
-        private final ABluePrintBeans parentBean;
-
-        public ChildHandler(ABluePrintBeans parentBean, ABluePrintBeans famcBean) {
-            super();
-            this.parentBean = parentBean;
-            this.famcBean = famcBean;
-        }
-
-        @Override
-        public ActionListener getCreateAction() {
-            if (parentBean != null && parentBean.getProperty() != null) {
-                return new ACreateChild((Indi) parentBean.getProperty());
-            }
-            if (famcBean != null && famcBean.getProperty() != null) {
-                return new ACreateChild((Fam) famcBean.getProperty());
-            }
-            return new ACreateSpouse(null);
-        }
-    }
+//XXX:    private class ChildHandler extends ABeanHandler {
+//
+//        ABluePrintBeans famcBean;
+//        private final ABluePrintBeans parentBean;
+//
+//        public ChildHandler(ABluePrintBeans parentBean, ABluePrintBeans famcBean) {
+//            super();
+//            this.parentBean = parentBean;
+//            this.famcBean = famcBean;
+//        }
+//
+//        @Override
+//        public ActionListener getCreateAction() {
+//            Property property = null;
+//            if (childBean != null)
+//                property = childBean.getProperty();
+//            return AncestrisEditor.findEditor(property).getCreateParentAction(property,sex);
+//
+//
+//
+//            if (parentBean != null && parentBean.getProperty() != null) {
+//                return new ACreateChild((Indi) parentBean.getProperty());
+//            }
+//            if (famcBean != null && famcBean.getProperty() != null) {
+//                return new ACreateChild((Fam) famcBean.getProperty());
+//            }
+//            return new ACreateSpouse(null);
+//        }
+//    }
 
     private abstract class EntitiesPanel extends AListBean {
 

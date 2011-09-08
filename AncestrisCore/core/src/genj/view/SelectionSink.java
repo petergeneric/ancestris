@@ -84,6 +84,11 @@ public interface SelectionSink {
         Workbench.getInstance().fireSelection(listener,context, isActionPerformed);
     }
 
+    /**
+     * Fire a selection event.
+     * @param context The seleted context. May be a property, an entity, an gedcom...
+     * @param isActionPerformed true if it is an actionn event ie if a double clic occured
+     */
     public static void fireSelection(Context context, boolean isActionPerformed) {
         fireSelection((Component)null, context, isActionPerformed);
     }
