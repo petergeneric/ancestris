@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.Action;
-import javax.swing.JButton;
+//import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.openide.DialogDisplayer;
@@ -69,29 +69,9 @@ public final class FamilyPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
         }
     };
-    private javax.swing.JButton btAddSpouse;
-    private javax.swing.JButton btUnlinkSpouse;
-    private javax.swing.JButton btAddChild;
-    private javax.swing.JButton btUnlinkFamc;
-    private javax.swing.JButton btAddSibling;
-
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
         initComponents();
-
-        // Adds spouse toolbar buttons
-        btAddSpouse = new EditorButton();
-        toolSpouse.add(btAddSpouse);
-        btUnlinkSpouse = new EditorButton();
-        toolSpouse.add(btUnlinkSpouse);
-
-        // Adds indi toolbar buttons
-        btAddChild = new EditorButton();
-        toolIndi.add(btAddChild);
-        btAddSibling = new EditorButton();
-        toolIndi.add(btAddSibling);
-        btUnlinkFamc = new EditorButton();
-        toolIndi.add(btUnlinkFamc);
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
@@ -227,7 +207,6 @@ public final class FamilyPanel extends JPanel {
                 familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),
                 null,
                 null);
-        btAddChild.setAction(getCreateChildAction());
 
         Fam famChild = ((Indi) husband.getProperty()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
@@ -235,10 +214,6 @@ public final class FamilyPanel extends JPanel {
         siblingsPanel.update(husband.getProperty(), null, null);
 
         oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty(), null);
-        btAddSpouse.setAction(getCreateSpouseActions());
-        btUnlinkSpouse.setAction(getUnlinkSpouseAction());
-        btUnlinkFamc.setAction(getUnlinkFamcAction());
-        btAddSibling.setAction(getAddSiblingAction());
 
         eventsPanel.update(husband.getProperty(), null, null);
 
@@ -249,62 +224,62 @@ public final class FamilyPanel extends JPanel {
 //        return "Completer le noyau familial";
 //    }
 
-    private Action getCreateChildAction(){
-        ActionListener action = new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                (new ACreateChild((Fam) familySpouse.getProperty())).actionPerformed(e);
-                refresh();
-            }
-        };
-        return AActions.alwaysEnabled(
-                action,
-                "",
-                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getProperty()),
-                "ancestris/modules/editors/standard/images/add-child.png",  // NOI18N
-                true);
-    }
-    private Action getCreateSpouseActions(){
-        ActionListener action = new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                (new ACreateSpouse((Indi) husband.getProperty())).actionPerformed(e);
-                refresh();
-            }
-        };
-        return AActions.alwaysEnabled(
-                action,
-                "",
-                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addspouse.title"),
-                "ancestris/modules/editors/standard/images/add-spouse.png",  // NOI18N
-                true);
-    }
-    private Action getUnlinkSpouseAction(){
-        return AActions.alwaysEnabled(
-                NOOP_ACTION,
-                "",
-                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkspouse.title"),
-                "ancestris/modules/editors/standard/images/unlink-spouse.png",  // NOI18N
-                true);
-    }
-    private Action getUnlinkFamcAction(){
-        return AActions.alwaysEnabled(
-                NOOP_ACTION,
-                "",
-                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkparents.title"),
-                "ancestris/modules/editors/standard/images/unlink-famc.png",  // NOI18N
-                true);
-    }
-
-    private Action getAddSiblingAction(){
-        return AActions.alwaysEnabled(
-                NOOP_ACTION,
-                "",
-                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addsibling.title"),
-                "ancestris/modules/editors/standard/images/add-sibling.png",  // NOI18N
-                true);
-    }
-
+//XXX: to put elsewhere    private Action getCreateChildAction(){
+//        ActionListener action = new ActionListener() {
+//
+//            public void actionPerformed(ActionEvent e) {
+//                (new ACreateChild((Fam) familySpouse.getProperty())).actionPerformed(e);
+//                refresh();
+//            }
+//        };
+//        return AActions.alwaysEnabled(
+//                action,
+//                "",
+//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "create.child.action.tt",husband.getProperty()),
+//                "ancestris/modules/editors/standard/images/add-child.png",  // NOI18N
+//                true);
+//    }
+//    private Action getCreateSpouseActions(){
+//        ActionListener action = new ActionListener() {
+//
+//            public void actionPerformed(ActionEvent e) {
+//                (new ACreateSpouse((Indi) husband.getProperty())).actionPerformed(e);
+//                refresh();
+//            }
+//        };
+//        return AActions.alwaysEnabled(
+//                action,
+//                "",
+//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addspouse.title"),
+//                "ancestris/modules/editors/standard/images/add-spouse.png",  // NOI18N
+//                true);
+//    }
+//    private Action getUnlinkSpouseAction(){
+//        return AActions.alwaysEnabled(
+//                NOOP_ACTION,
+//                "",
+//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkspouse.title"),
+//                "ancestris/modules/editors/standard/images/unlink-spouse.png",  // NOI18N
+//                true);
+//    }
+//    private Action getUnlinkFamcAction(){
+//        return AActions.alwaysEnabled(
+//                NOOP_ACTION,
+//                "",
+//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.unlinkparents.title"),
+//                "ancestris/modules/editors/standard/images/unlink-famc.png",  // NOI18N
+//                true);
+//    }
+//
+//    private Action getAddSiblingAction(){
+//        return AActions.alwaysEnabled(
+//                NOOP_ACTION,
+//                "",
+//                org.openide.util.NbBundle.getMessage(FamilyPanel.class, "action.addsibling.title"),
+//                "ancestris/modules/editors/standard/images/add-sibling.png",  // NOI18N
+//                true);
+//    }
+//
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -330,11 +305,9 @@ public final class FamilyPanel extends JPanel {
         jPanel5 = new javax.swing.JPanel();
         husband = new ancestris.modules.beans.ABluePrintBeans();
         jLabel3 = new javax.swing.JLabel();
-        toolIndi = new javax.swing.JToolBar();
         jPanel6 = new javax.swing.JPanel();
         wife = new ancestris.modules.beans.ABluePrintBeans();
         jLabel2 = new javax.swing.JLabel();
-        toolSpouse = new javax.swing.JToolBar();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jLabel1 = new javax.swing.JLabel();
@@ -456,7 +429,7 @@ public final class FamilyPanel extends JPanel {
         husbFather.setLayout(husbFatherLayout);
         husbFatherLayout.setHorizontalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 291, Short.MAX_VALUE)
         );
         husbFatherLayout.setVerticalGroup(
             husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -467,7 +440,7 @@ public final class FamilyPanel extends JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -483,7 +456,7 @@ public final class FamilyPanel extends JPanel {
         husbMother.setLayout(husbMotherLayout);
         husbMotherLayout.setHorizontalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 277, Short.MAX_VALUE)
         );
         husbMotherLayout.setVerticalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -494,7 +467,7 @@ public final class FamilyPanel extends JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -507,7 +480,7 @@ public final class FamilyPanel extends JPanel {
         husband.setLayout(husbandLayout);
         husbandLayout.setHorizontalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 296, Short.MAX_VALUE)
+            .addGap(0, 303, Short.MAX_VALUE)
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -517,26 +490,19 @@ public final class FamilyPanel extends JPanel {
         jLabel3.setFont(new java.awt.Font("DejaVu Sans", 3, 16));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
 
-        toolIndi.setFloatable(false);
-        toolIndi.setRollover(true);
-        toolIndi.setPreferredSize(new java.awt.Dimension(100, 18));
-
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
-                .addComponent(toolIndi, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(221, Short.MAX_VALUE))
             .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(toolIndi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -547,7 +513,7 @@ public final class FamilyPanel extends JPanel {
         wife.setLayout(wifeLayout);
         wifeLayout.setHorizontalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 296, Short.MAX_VALUE)
+            .addGap(0, 289, Short.MAX_VALUE)
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -557,27 +523,20 @@ public final class FamilyPanel extends JPanel {
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 3, 14));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
 
-        toolSpouse.setFloatable(false);
-        toolSpouse.setRollover(true);
-        toolSpouse.setPreferredSize(new java.awt.Dimension(100, 18));
-
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
-                .addComponent(toolSpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(230, Short.MAX_VALUE))
             .addComponent(wife, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(toolSpouse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(7, 7, 7)
                 .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -590,8 +549,8 @@ public final class FamilyPanel extends JPanel {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(173, Short.MAX_VALUE))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                .addContainerGap(166, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -665,8 +624,6 @@ public final class FamilyPanel extends JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JScrollPane jsEvents;
-    private javax.swing.JToolBar toolIndi;
-    private javax.swing.JToolBar toolSpouse;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
 
@@ -866,22 +823,13 @@ public final class FamilyPanel extends JPanel {
             if (rootProperty != null) {
                 add(getEntities(rootProperty), exclude, new ABeanHandler());
             }
-            if (listener != null) {
-                JButton createBtn = new JButton(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "button.add.title"));
-                createBtn.addMouseListener(listener);
-                add(createBtn);
-            }
+//XXX:             if (listener != null) {
+//                JButton createBtn = new JButton(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "button.add.title"));
+//                createBtn.addMouseListener(listener);
+//                add(createBtn);
+//            }
             revalidate();
         }
     }
 
-    private static class EditorButton extends JButton {
-
-        public EditorButton() {
-            super();
-            setBorderPainted(false);
-            setFocusPainted(false);
-            setBorder(new EmptyBorder(0, 0, 0, 0));
-        }
-    }
 }
