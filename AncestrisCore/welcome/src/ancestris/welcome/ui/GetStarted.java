@@ -162,7 +162,7 @@ class GetStarted extends JPanel implements Constants {
                 }
                 return res;
             } catch( Exception e ) {
-                Logger.getLogger(SampleGedcomAction.class.getName()).log( Level.INFO, null, e );
+                Logger.getLogger(GetStarted.class.getName()).log( Level.INFO, null, e );
             }
         }
         return null;

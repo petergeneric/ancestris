@@ -152,7 +152,7 @@ class Tutorials extends JPanel implements Constants {
                 }
                 return res;
             } catch( Exception e ) {
-                Logger.getLogger(SampleGedcomAction.class.getName()).log( Level.INFO, null, e );
+                Logger.getLogger(Tutorials.class.getName()).log( Level.INFO, null, e );
             }
         }
         return null;
