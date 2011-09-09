@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.openide.util.Exceptions;
 
 /**
  * An origin describes where a resource came from. This is normally
@@ -309,16 +311,22 @@ public abstract class Origin {
     /**
      * @see genj.util.Origin#getFile()
      */
+        @Override
     public File getFile() {
       // only for locals
       if (!"file".equals(url.getProtocol()) && !"jar".equals(url.getProtocol()))
         return null;
-      return new File(url.getFile());
+            try {
+                return new File(url.toURI());
+            } catch (URISyntaxException ex) {
+                return null;
+            }
     }
 
     /**
      * @see genj.util.Origin#getFile(java.lang.String)
      */
+        @Override
     public File getFile(String file) {
       
       // good argument?
@@ -327,7 +335,7 @@ public abstract class Origin {
       // Absolute file specification?
       if (ABSOLUTE.matcher(file).matches()) 
         return new File(file);
-      
+
       // should be in parent directory
           return new File(getFile().getParent(), file);
       }
