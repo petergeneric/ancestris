@@ -43,6 +43,7 @@ public abstract class AncestrisEditor {
     // Actions
     public abstract AbstractAction getCreateSpouseAction(Property indi);
     public abstract AbstractAction getCreateParentAction(Property child, int sex);
+    public abstract AbstractAction getCreateChildAction(Property indi);
 
     /**
      * This editor does nothing. It is created to avoid many check against null by findEditor
@@ -76,6 +77,11 @@ public abstract class AncestrisEditor {
 
         @Override
         public AbstractAction getCreateParentAction(Property child, int sex) {
+            return NOOP;
+        }
+
+        @Override
+        public AbstractAction getCreateChildAction(Property indi) {
             return NOOP;
         }
 

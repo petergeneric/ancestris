@@ -28,7 +28,6 @@ import genj.view.SelectionSink;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -130,11 +129,12 @@ public final class FamilyPanel extends JPanel {
             public Property[] getEntities(Property rootProperty) {
                 if (rootProperty != null && rootProperty instanceof Indi) {
                     ArrayList<Property> result = new ArrayList<Property>(5);
-                    for (Property p:rootProperty.getProperties()){
-                        if (p instanceof PropertyEvent)
+                    for (Property p : rootProperty.getProperties()) {
+                        if (p instanceof PropertyEvent) {
                             result.add(p);
+                        }
                     }
-                    return result.toArray(new Property[] {});
+                    return result.toArray(new Property[]{});
                 }
                 return null;
             }
@@ -189,17 +189,16 @@ public final class FamilyPanel extends JPanel {
         }
         childrenPanel.update(
                 familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),
-                null,
                 null);
 
         Fam famChild = ((Indi) husband.getProperty()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
         //siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild, this)));
-        siblingsPanel.update(husband.getProperty(), null, null);
+        siblingsPanel.update(husband.getProperty(), null);
 
-        oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty(), null);
+        oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty());
 
-        eventsPanel.update(husband.getProperty(), null, null);
+        eventsPanel.update(husband.getProperty(), null);
 
     }
 
@@ -626,8 +625,9 @@ public final class FamilyPanel extends JPanel {
                 try {
                     if (bean != null && bean.getProperty() != null) {
                         AncestrisEditor editor = AncestrisEditor.findEditor(bean.getProperty());
-                        if (editor != null)
+                        if (editor != null) {
                             editor.edit(bean.getProperty());
+                        }
                     } else {
                         getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
                     }
@@ -638,8 +638,9 @@ public final class FamilyPanel extends JPanel {
             } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
                 Property prop = bean.getProperty();
-                if (prop instanceof Entity)
+                if (prop instanceof Entity) {
                     SelectionSink.Dispatcher.fireSelection(new Context(prop), false);
+                }
             }
         }
 
@@ -662,8 +663,9 @@ public final class FamilyPanel extends JPanel {
         @Override
         public ActionListener getCreateAction() {
             Property property = null;
-            if (otherBean != null)
+            if (otherBean != null) {
                 property = otherBean.getProperty();
+            }
             return AncestrisEditor.findEditor(property).getCreateSpouseAction(property);
         }
     }
@@ -682,41 +684,35 @@ public final class FamilyPanel extends JPanel {
         @Override
         public ActionListener getCreateAction() {
             Property property = null;
-            if (childBean != null)
+            if (childBean != null) {
                 property = childBean.getProperty();
-            return AncestrisEditor.findEditor(property).getCreateParentAction(property,sex);
+            }
+            return AncestrisEditor.findEditor(property).getCreateParentAction(property, sex);
         }
     }
 
-//XXX:    private class ChildHandler extends ABeanHandler {
-//
-//        ABluePrintBeans famcBean;
-//        private final ABluePrintBeans parentBean;
-//
-//        public ChildHandler(ABluePrintBeans parentBean, ABluePrintBeans famcBean) {
-//            super();
-//            this.parentBean = parentBean;
-//            this.famcBean = famcBean;
-//        }
-//
-//        @Override
-//        public ActionListener getCreateAction() {
-//            Property property = null;
-//            if (childBean != null)
-//                property = childBean.getProperty();
-//            return AncestrisEditor.findEditor(property).getCreateParentAction(property,sex);
-//
-//
-//
-//            if (parentBean != null && parentBean.getProperty() != null) {
-//                return new ACreateChild((Indi) parentBean.getProperty());
-//            }
-//            if (famcBean != null && famcBean.getProperty() != null) {
-//                return new ACreateChild((Fam) famcBean.getProperty());
-//            }
-//            return new ACreateSpouse(null);
-//        }
-//    }
+    private class ChildHandler extends ABeanHandler {
+
+        private final ABluePrintBeans parentBean;
+
+        /**
+         *
+         * @param parentBean May be an amC Bean or one of the parents IndiBean
+         */
+        public ChildHandler(ABluePrintBeans parentBean) {
+            super();
+            this.parentBean = parentBean;
+        }
+
+        @Override
+        public ActionListener getCreateAction() {
+            Property property = null;
+            if (parentBean != null) {
+                property = parentBean.getProperty();
+            }
+            return AncestrisEditor.findEditor(property).getCreateChildAction(property);
+        }
+    }
 
     private abstract class EntitiesPanel extends AListBean {
 
@@ -731,19 +727,13 @@ public final class FamilyPanel extends JPanel {
 
         public abstract Property[] getEntities(Property rootProperty);
 
-        public void update(Property rootProperty, Property exclude, MouseListener listener) {
+        public void update(Property rootProperty, Property exclude) {
             removeAll();
             repaint();
             if (rootProperty != null) {
                 add(getEntities(rootProperty), exclude, new ABeanHandler());
             }
-//XXX:             if (listener != null) {
-//                JButton createBtn = new JButton(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "button.add.title"));
-//                createBtn.addMouseListener(listener);
-//                add(createBtn);
-//            }
             revalidate();
         }
     }
-
 }
