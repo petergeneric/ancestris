@@ -23,8 +23,13 @@ import genj.option.Option;
 import genj.option.OptionProvider;
 import genj.option.PropertyOption;
 import genj.util.Resources;
+import genj.util.swing.Action2;
+import genj.util.swing.DialogHelper;
 
 import java.util.List;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 /**
  * Global options for editor
@@ -64,5 +69,34 @@ public class Options extends OptionProvider {
   public List<? extends Option> getOptions() {
     return PropertyOption.introspect(instance);
   }
+  /**
+   * Ask the user whether he wants to commit changes
+   */
+  /*package*/ boolean isCommitChanges() {
+    // check for auto commit
+    if (Options.getInstance().isAutoCommit)
+      return true;
+
+      JCheckBox auto = new JCheckBox(RES.getString("confirm.autocomit"));
+      auto.setFocusable(false);
+
+      int rc = DialogHelper.openDialog(RES.getString("confirm.keep.changes"),
+          DialogHelper.QUESTION_MESSAGE, new JComponent[] {
+            new JLabel(RES.getString("confirm.keep.changes")),
+            auto
+          },
+          Action2.yesNo(),
+          this
+      );
+
+      if (rc!=0) {
+            return false;
+      }
+
+      Options.getInstance().isAutoCommit = auto.isSelected();
+            return true;
+
+    }
+
 
 } //Options
