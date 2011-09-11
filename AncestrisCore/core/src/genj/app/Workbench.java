@@ -180,7 +180,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
 
         // form origin
         try {
-            return openGedcom(new URL("file:" + file.getAbsolutePath()));
+            return openGedcom(file.toURI().toURL());
         } catch (Throwable t) {
             // shouldn't
             LOG.info(t.toString());
@@ -425,6 +425,8 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (context != null && context.getGedcom().getOrigin() == null) {
             return saveAsGedcom(context);
         }
+        if (context==null)
+            return false;
         if (context.getGedcom() == null) {
             return false;
         }
@@ -441,6 +443,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (gedcom.hasChanged()) {
             gedcom.doMuteUnitOfWork(new UnitOfWork() {
 
+                @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     gedcom.setUnchanged();
                 }
@@ -499,13 +502,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
 
             // .. make backup
             BackupFile.createBackup(file);
-//      if (file.exists()) {
-//        File bak = new File(file.getAbsolutePath() + "~");
-//        if (bak.exists()&&!bak.delete())
-//          throw new GedcomIOException("Couldn't delete backup file " + bak.getName(), -1);
-//        if (!file.renameTo(bak))
-//          throw new GedcomIOException("Couldn't create backup for " + file.getName(), -1);
-//      }
 
             // .. and now !finally! move from temp to result
             if (!temp.renameTo(file)) {
