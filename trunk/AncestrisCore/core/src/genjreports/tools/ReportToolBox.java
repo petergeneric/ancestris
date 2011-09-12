@@ -1488,7 +1488,7 @@ public class ReportToolBox extends Report {
 @SuppressWarnings("deprecation")
   private Gedcom openGedcomFile(String filepath) {
         try {
-            return Workbench.getInstance().openGedcom((new File(filepath)).toURL()).getGedcom();
+            return Workbench.getInstance().openGedcom((new File(filepath)).toURI().toURL()).getGedcom();
         } catch (MalformedURLException ex) {
             Logger.getLogger(ReportToolBox.class.getName()).log(Level.SEVERE, null, ex);
             return null;
