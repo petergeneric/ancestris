@@ -158,7 +158,7 @@ public class EditView extends View implements ContextProvider, ConfirmChangeWidg
         }
 
         // check for auto commit
-        if (ask && !Options.getInstance().isCommitChanges()) {
+        if (ask && !confirmPanel.isCommitChanges()) {
             // Don't commit
             confirmPanel.setChanged(false);
             return;

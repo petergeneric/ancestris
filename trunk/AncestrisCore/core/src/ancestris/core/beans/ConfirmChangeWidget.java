@@ -11,13 +11,21 @@
  */
 package ancestris.core.beans;
 
+import ancestris.core.AncestrisCorePlugin;
+import genj.util.Registry;
 import genj.util.swing.Action2;
 import genj.util.swing.ButtonHelper;
+import genj.util.swing.DialogHelper;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -25,6 +33,7 @@ import javax.swing.event.ChangeListener;
  */
 public class ConfirmChangeWidget extends JPanel implements ChangeListener {
 
+    private final static ResourceBundle BUNDLE = NbBundle.getBundle(AncestrisCorePlugin.class);
     private boolean changed = false;
     private ConfirmChangeCallBack callback;
     private OK ok = new OK();
@@ -37,6 +46,50 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         bh.create(ok).setFocusable(false);
         bh.create(cancel).setFocusable(false);
         this.callback = callback;
+    }
+
+    /*
+     * Preferences settings
+     */
+    /** option - whether changes are auto commit */
+    private static final String AUTO_COMMIT = "auto.commit";         // NOI18N
+
+    public static void setAutoCommit(boolean autoCommit) {
+        Registry.get(AncestrisCorePlugin.class).put(AUTO_COMMIT, autoCommit);
+    }
+
+    public static boolean getAutoCommit() {
+        // Default Autocommit to false
+        return Registry.get(AncestrisCorePlugin.class).get(AUTO_COMMIT, false);
+    }
+
+    /**
+     * Ask the user whether he wants to commit changes
+     */
+    public boolean isCommitChanges() {
+        // check for auto commit
+        if (getAutoCommit()) {
+            return true;
+        }
+
+        JCheckBox auto = new JCheckBox(BUNDLE.getString("confirm.autocomit"));
+        auto.setFocusable(false);
+
+        int rc = DialogHelper.openDialog(BUNDLE.getString("confirm.keep.changes"),
+                DialogHelper.QUESTION_MESSAGE, new JComponent[]{
+                    new JLabel(BUNDLE.getString("confirm.keep.changes")),
+                    auto
+                },
+                Action2.yesNo(),
+                this);
+
+        if (rc != 0) {
+            return false;
+        }
+
+        setAutoCommit(auto.isSelected());
+        return true;
+
     }
 
     /**
@@ -56,12 +109,20 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
      */
     public void setChanged(boolean changeStatus) {
         changed = changeStatus;
+        // don't show widget if autocommit is true
+        if (getAutoCommit()) {
+            ok.setEnabled(false);
+            cancel.setEnabled(false);
+            setVisible(false);
+            return;
+        }
         ok.setEnabled(changeStatus);
         cancel.setEnabled(changeStatus);
-        if (changeStatus)
+        if (changeStatus) {
             setVisible(true);
-        else if(hideIfUnchanged)
+        } else if (hideIfUnchanged) {
             setVisible(false);
+        }
     }
 
     /**
@@ -86,8 +147,9 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         /** cancel current proxy */
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (callback != null)
+            if (callback != null) {
                 callback.okCallBack(event);
+            }
         }
     } //OK
 
@@ -108,8 +170,9 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
             // disable ok&cancel
             setChanged(false);
 
-            if (callback != null)
+            if (callback != null) {
                 callback.cancelCallBack(event);
+            }
         }
     } //Cancel
 
