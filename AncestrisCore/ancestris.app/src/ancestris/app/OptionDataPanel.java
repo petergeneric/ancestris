@@ -4,6 +4,7 @@
  */
 package ancestris.app;
 
+import ancestris.core.beans.ConfirmChangeWidget;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import javax.swing.JTextArea;
@@ -60,6 +61,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jCheckBox19 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         placeFormat = new ancestris.modules.beans.APlaceFormatBean();
+        cbAutoCommit = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.toolTipText")); // NOI18N
@@ -185,6 +187,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbAutoCommit, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -225,7 +229,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
                                     .addComponent(jtSubmitterName, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)))
                             .addComponent(jCheckBox1)
                             .addComponent(jCheckBox2)
-                            .addComponent(cbCreateSpouse)))
+                            .addComponent(cbCreateSpouse)
+                            .addComponent(cbAutoCommit)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -270,7 +275,9 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbCreateSpouse)
                     .addComponent(jLabel22))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbAutoCommit)
+                .addGap(21, 21, 21)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -313,6 +320,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
         jCheckBox19.setSelected(ancestris.app.Options.isWriteBOM());
+        cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
     }
 
     void store() {
@@ -339,6 +347,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
         gedcomPrefs.put("defaultEncoding", getEncoding());
         ancestris.app.Options.setWriteBOM(jCheckBox19.isSelected());
+        ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
     }
 
@@ -346,6 +355,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         return !jtSubmitterName.getText().isEmpty();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox18;
