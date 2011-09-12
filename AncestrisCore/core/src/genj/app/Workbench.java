@@ -297,7 +297,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         Origin o = saveAsGedcomImpl(context);
         if (o != null) {
             try {
-                openGedcom(o.getFile().toURL());
+                openGedcom(o.getFile().toURI().toURL());
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -589,11 +589,11 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         String restore = REGISTRY.get("restore.url", (String) null);
         try {
             // no known key means load default
-            if (restore == null) // we're intentionally not going through toURI.toURL here since
+            if (restore == null) // XXX: we're intentionally not going through toURI.toURL here since
             // that would add space-to-%20 conversion which kills our relative
             // file check operations down the line
             {
-                restore = new File("gedcom/example.ged").toURL().toString();
+                restore = new File("gedcom/example.ged").toURI().toURL().toString();
             }
             // known key needs value
             if (restore.length() > 0) {
