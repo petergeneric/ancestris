@@ -98,6 +98,7 @@
             </module-dependencies>
             <public-packages>
                 <package>ancestris.core</package>
+                <package>ancestris.core.beans</package>
                 <package>ancestris.gedcom</package>
                 <package>ancestris.view</package>
                 <package>genj</package>
@@ -115,7 +116,6 @@
                 <package>genj.gedcom.time</package>
                 <package>genj.io</package>
                 <package>genj.lnf</package>
-                <package>genj.nav</package>
                 <package>genj.option</package>
                 <package>genj.print</package>
                 <package>genj.renderer</package>
