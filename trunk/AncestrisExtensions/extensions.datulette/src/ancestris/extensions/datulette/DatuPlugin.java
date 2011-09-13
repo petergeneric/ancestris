@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.ancestris.extensions.datulette;
+package ancestris.extensions.datulette;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import org.openide.util.lookup.ServiceProvider;

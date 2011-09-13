@@ -4,8 +4,8 @@
     <folder name="Actions">
         <folder name="Window">
             <file name="ancestris-extensions-datulette-DatuAction.instance">
-                <attr name="component" methodvalue="org.ancestris.extensions.datulette.DatuTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="org.ancestris.extensions.datulette.Bundle#CTL_DatuAction"/>
+                <attr name="component" methodvalue="ancestris.extensions.datulette.DatuTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="ancestris.extensions.datulette.Bundle#CTL_DatuAction"/>
                 <attr name="iconBase" stringvalue="ancestris/extensions/datulette/datulette.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
             </file>
@@ -31,7 +31,7 @@
             <file name="DatuTopComponent.settings" url="DatuTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="genjfr-nav">
+            <folder name="ancestris-nav">
                 <file name="DatuTopComponent.wstcref" url="DatuTopComponentWstcref.xml"/>
             </folder>
         </folder>
