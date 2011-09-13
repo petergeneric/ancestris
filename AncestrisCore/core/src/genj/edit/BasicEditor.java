@@ -19,6 +19,7 @@
  */
 package genj.edit;
 
+import ancestris.api.editor.Editor;
 import genj.edit.actions.EditNote;
 import genj.edit.actions.EditSource;
 import genj.edit.beans.PropertyBean;

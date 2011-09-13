@@ -11,15 +11,18 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.api.editor.Editor;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.view.ViewContext;
 import org.openide.util.Exceptions;
 
-public final class FamPanel extends EditorPanel {
+public final class FamPanel extends Editor {
+    private Context context;
 
     /** Creates new form NewGedcomVisualPanel2 */
     public FamPanel() {
@@ -71,7 +74,7 @@ public final class FamPanel extends EditorPanel {
      */
     @Override
     public void setContext(Context context) {
-        super.setContext(context);
+        this.context = context;
         if (context == null)
             return;
 
@@ -82,6 +85,11 @@ public final class FamPanel extends EditorPanel {
         }
         this.fam = (Fam) entity;
         marrEvent.setContext(fam, null);
+    }
+
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
     }
 
     @Override
