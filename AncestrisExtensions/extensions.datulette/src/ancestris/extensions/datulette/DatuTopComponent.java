@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.ancestris.extensions.datulette;
+package ancestris.extensions.datulette;
 
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.Calendar;
@@ -30,13 +30,13 @@ import org.netbeans.api.settings.ConvertAsProperties;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//org.ancestris.extensions.datulette//Datu//EN",
+@ConvertAsProperties(dtd = "-//ancestris.extensions.datulette//Datu//EN",
 autostore = false)
 public final class DatuTopComponent extends TopComponent {
 
     private static DatuTopComponent instance;
     /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "/org/ancestris/extensions/datulette/Calc.png";
+    static final String ICON_PATH = "ancestris/extensions/datulette/Calc.png";
     private static final String PREFERRED_ID = "DatuTopComponent";
     private DateWidget dw1 = new DateWidget();
     private boolean updateInProgress = false;
@@ -323,7 +323,7 @@ public final class DatuTopComponent extends TopComponent {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/extensions/datulette/information.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/extensions/datulette/information.png"))); // NOI18N
         jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jButton1.toolTipText")); // NOI18N
         jButton1.setBorder(null);
         jButton1.setOpaque(false);
@@ -539,7 +539,7 @@ public final class DatuTopComponent extends TopComponent {
     private javax.swing.JTextField jTextFieldGap1;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
-    private javax.swing.ImageIcon arvernes_logo_small = new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/extensions/datulette/arvernes_logo_small.gif")); // NOI18N
+    private javax.swing.ImageIcon arvernes_logo_small = new javax.swing.ImageIcon(getClass().getResource("/ancestris/extensions/datulette/arvernes_logo_small.gif")); // NOI18N
 
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
