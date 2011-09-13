@@ -11,6 +11,7 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.api.editor.Editor;
 import ancestris.modules.editors.standard.actions.ACreateParent;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
@@ -24,6 +25,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.gedcom.UnitOfWork;
 import genj.view.SelectionSink;
+import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -43,7 +45,7 @@ import org.openide.awt.MouseUtils;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
-public final class EventsPanel extends EditorPanel {
+public final class EventsPanel extends Editor {
 
     private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.empty");
     private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(EventsPanel.class, "blueprint.wife.empty");
@@ -126,6 +128,11 @@ public final class EventsPanel extends EditorPanel {
         husband.setContext(focusIndi);
         eventsPanel.update(husband.getProperty(), null, null);
 
+    }
+
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
     }
 
     @Override

@@ -23,6 +23,7 @@ import org.openide.util.Lookup;
  * @author daniel
  */
 // XXX: write javadoc
+// XXX: merge with Editor in core?
 public abstract class AncestrisEditor {
 
     public static AncestrisEditor findEditor(Property property){

@@ -12,6 +12,7 @@
 
 package ancestris.modules.editors.standard;
 
+import ancestris.api.editor.Editor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -33,7 +34,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
 public class EditorTopComponent extends AncestrisTopComponent implements SelectionListener {
-    private final Map<Class, EditorPanel> panels = new HashMap<Class,EditorPanel>();
+    private final Map<Class, Editor> panels = new HashMap<Class,Editor>();
 
 
     private static final String PREFERRED_ID = "EntityEditTopComponent";  // NOI18N
@@ -71,7 +72,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements Selecti
         if (context.getEntity() == null){
             return;
         }
-        EditorPanel panel = panels.get(context.getEntity().getClass());
+        Editor panel = panels.get(context.getEntity().getClass());
         JPanel thePanel = new JPanel();
         if (panel != null){
             panel.setContext(context);

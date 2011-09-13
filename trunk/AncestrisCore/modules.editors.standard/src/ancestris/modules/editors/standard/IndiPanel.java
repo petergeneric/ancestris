@@ -11,6 +11,7 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.api.editor.Editor;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -18,13 +19,16 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
+import genj.view.ViewContext;
 import java.util.Arrays;
 import java.util.List;
 import org.openide.util.Exceptions;
 
-public final class IndiPanel extends EditorPanel {
+public final class IndiPanel extends Editor {
 
     private List<PropertyBean> childBeans;
+    private Context context;
+
     /** Creates new form NewGedcomVisualPanel2 */
     public IndiPanel() {
         setOpaque(true);
@@ -49,7 +53,7 @@ public final class IndiPanel extends EditorPanel {
      */
     @Override
     public void setContext(Context context) {
-        super.setContext(context);
+        this.context = context;
         if (context == null)
             return;
 
@@ -64,6 +68,11 @@ public final class IndiPanel extends EditorPanel {
         aNameBean2.setContext(indi, null);
         aSimpleBean1.setContext(indi, TagPath.valueOf(".:OCCU"));
         aPlaceBean2.setContext(indi, TagPath.valueOf(".:RESI:PLAC"));
+    }
+
+    @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
     }
 
     /**

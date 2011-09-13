@@ -19,6 +19,7 @@
  */
 package genj.edit;
 
+import ancestris.api.editor.Editor;
 import genj.common.SelectEntityWidget;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;

@@ -18,15 +18,16 @@
 
 package ancestris.modules.wizards.newgedcom;
 
-import ancestris.modules.editors.standard.EditorPanel;
+import ancestris.api.editor.Editor;
 import ancestris.modules.editors.standard.GedcomPanel;
 import genj.gedcom.Context;
+import genj.view.ViewContext;
 
 /**
  *
  * @author daniel
  */
-public class GedcomVisualPanel extends EditorPanel {
+public class GedcomVisualPanel extends Editor {
     private Context context;
     private GedcomPanel gedcomPanel;
 
@@ -95,6 +96,10 @@ public class GedcomVisualPanel extends EditorPanel {
         }
         gedcomPanel.setContext(context);
         jTextField1.setText(context.getGedcom().getName());
+    }
+
+    public ViewContext getContext() {
+        return new ViewContext(context);
     }
 
     @Override

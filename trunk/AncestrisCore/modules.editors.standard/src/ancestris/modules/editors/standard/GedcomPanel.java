@@ -11,14 +11,15 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.api.editor.Editor;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
-import javax.swing.JPanel;
+import genj.view.ViewContext;
 import org.openide.util.Exceptions;
 
-public class GedcomPanel extends EditorPanel {
+public class GedcomPanel extends Editor {
 
     private Context context;
 
@@ -58,6 +59,12 @@ public class GedcomPanel extends EditorPanel {
     }
 
     @Override
+    public ViewContext getContext() {
+        return new ViewContext(context);
+    }
+
+
+    @Override
     public String getName() {
         return org.openide.util.NbBundle.getMessage(GedcomPanel.class, "gedcom.properties.title");
     }
@@ -76,7 +83,7 @@ public class GedcomPanel extends EditorPanel {
 
         placeFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.placeFormat.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
