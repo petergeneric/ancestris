@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -319,6 +320,7 @@ public abstract class Origin {
             try {
                 return new File(url.toURI());
             } catch (URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
                 return null;
             }
     }
