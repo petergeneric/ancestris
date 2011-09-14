@@ -112,8 +112,13 @@ public class Context {
    */
   public Context(Property prop) {
     this(prop.getGedcom());
-    properties.add(prop);
-    Entity entity = prop.getEntity();
+    Entity entity;
+    if (!(prop instanceof Entity)){
+        properties.add(prop);
+        entity = prop.getEntity();
+      } else {
+        entity = (Entity) prop;
+      }
     if (!entities.contains(entity))
       entities.add(entity);
   }
@@ -145,6 +150,8 @@ public class Context {
    * A context minus the given property
    */
   public Context remove(Property property) {
+      if (property instanceof Entity)
+          return remove ((Entity) property);
     List<Entity> ents = new ArrayList<Entity>(entities);
     List<Property> props = new ArrayList<Property>(properties);
     props.remove(property);
