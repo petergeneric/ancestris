@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.ancestris.extensions.optionspanel
 OpenIDE-Module-Layer: org/ancestris/extensions/optionspanel/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/ancestris/extensions/optionspanel/Bundle.properties
