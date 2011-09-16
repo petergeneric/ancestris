@@ -140,7 +140,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         // form the origin
         Gedcom gedcom;
         try {
-            gedcom = new Gedcom(Origin.create(new URL("file:" + file.getAbsolutePath())));
+            gedcom = new Gedcom(Origin.create(file.toURI().toURL()));
         } catch (MalformedURLException e) {
             LOG.log(Level.WARNING, "unexpected exception creating new gedcom", e);
             return null;
@@ -378,7 +378,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         Origin newOrigin = null;
         // .. create new origin
         try {
-            newOrigin = Origin.create(new URL("file", "", file.getAbsolutePath()));
+            newOrigin = Origin.create(file.toURI().toURL());
             gedcom.setOrigin(newOrigin);
         } catch (Throwable t) {
             LOG.log(Level.FINER, "Failed to create origin for file " + file, t);
