@@ -42,6 +42,7 @@ import org.openide.util.Utilities;
 /**
  * The central component of the GenJ application
  */
+// XXX: this entire class must be at least redesigned or removed
 public class ControlCenter extends JPanel{
 
     /** members */
@@ -144,6 +145,7 @@ public class ControlCenter extends JPanel{
             files = theFiles;
         }
 
+        //XXX: to be changed, as of 20110916: quick fix for File to URL conversion
         private String getDefaultFile(Collection<String> files) {
             // ne pas ouvrir si onlyempty est positionne
             if (files != null && !files.isEmpty() && !ancestris.core.Options.getAlwaysOpenDefault()) {
@@ -177,7 +179,8 @@ public class ControlCenter extends JPanel{
                 }
             }
             try {
-                return (new URL("file", "", defaultFile.getAbsolutePath())).toString();
+//                return (new URL("file", "", defaultFile.getAbsolutePath())).toString();
+                return (defaultFile.toURI().toURL().toString());
             } catch (Exception ex) {
                 return null;
             }
