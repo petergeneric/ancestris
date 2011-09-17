@@ -147,9 +147,9 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
       txt = es.get(0).toString();
     else if (!es.isEmpty())
       txt = Entity.getPropertyNames(es, 5);
-    else txt = getGedcom().getName();
+    else txt = getGedcom()==null?null:getGedcom().getName();
 
-    return txt;
+    return txt==null?"":txt;
   }
 
   /**
