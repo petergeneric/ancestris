@@ -58,7 +58,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         initComponents();
         enableAddressFields();
         jTextField1.setText(geoObj.getCity());
-        fillPlaceFromGeoNode(geoObj);
+        fillPlaceFromGeoNode();
         jLabel14.setText("");
         jLabel15.setText("");
         jLabel16.setText("");
@@ -69,6 +69,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         jLabel34.setText("");
         jCheckBox1.setSelected(false);
         getClipboard().addFlavorListener(this);
+        NbPreferences.forModule(App.class).addPreferenceChangeListener(this);
         jButton4.setEnabled(getClipboard().isDataFlavorAvailable(GeoToken.geoPosFlavor));
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
@@ -556,7 +557,6 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         jButton1ActionPerformed(evt);
     }//GEN-LAST:event_jTextField1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -608,28 +608,37 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 
-    private void fillPlaceFromGeoNode(GeoNodeObject geoObj) {
-        String str = "";
-        str = NbPreferences.forModule(App.class).get("fmt_address1", "");
-        jTextField6.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+    private void enableAddressFields() {
+        Boolean[] show = geoObj.getPlace().getGedcom().getShowJuridictions();
+        if (show == null) show = genj.gedcom.Options.getInstance().getShowJuridictions();
+        jLabel25.setEnabled(show[0] && !jCheckBox1.isSelected());
+        jLabel26.setEnabled(show[1] && !jCheckBox1.isSelected());
+        jLabel27.setEnabled(show[2] && !jCheckBox1.isSelected());
+        jLabel28.setEnabled(show[3] && !jCheckBox1.isSelected());
+        jLabel29.setEnabled(show[4] && !jCheckBox1.isSelected());
+        jLabel30.setEnabled(show[5] && !jCheckBox1.isSelected());
+        jLabel31.setEnabled(show[6] && !jCheckBox1.isSelected());
 
-        str = NbPreferences.forModule(App.class).get("fmt_address2", "");
-        jTextField7.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+        jTextField6.setEnabled(show[0] && !jCheckBox1.isSelected());
+        jTextField7.setEnabled(show[1] && !jCheckBox1.isSelected());
+        jTextField8.setEnabled(show[2] && !jCheckBox1.isSelected());
+        jTextField9.setEnabled(show[3] && !jCheckBox1.isSelected());
+        jTextField2.setEnabled(show[4] && !jCheckBox1.isSelected());
+        jTextField3.setEnabled(show[5] && !jCheckBox1.isSelected());
+        jTextField4.setEnabled(show[6] && !jCheckBox1.isSelected());
+    }
 
-        str = NbPreferences.forModule(App.class).get("fmt_address3", "");
-        jTextField8.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
-
-        str = NbPreferences.forModule(App.class).get("fmt_address4", "");
-        jTextField9.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
-
-        str = NbPreferences.forModule(App.class).get("fmt_address5", "");
-        jTextField2.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
-
-        str = NbPreferences.forModule(App.class).get("fmt_address6", "");
-        jTextField3.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
-
-        str = NbPreferences.forModule(App.class).get("fmt_address7", "");
-        jTextField4.setText((!str.equals("0") && isNumeric(str)) ? geoObj.getPlace().getJurisdiction(Integer.valueOf(str) - 1) : "");
+    private void fillPlaceFromGeoNode() {
+        PropertyPlace tmpPlace = geoObj.getPlace();
+        Boolean[] show = tmpPlace.getGedcom().getShowJuridictions();
+        if (show == null) show = genj.gedcom.Options.getInstance().getShowJuridictions();
+        jTextField6.setText(show[0] ? tmpPlace.getJurisdiction(0) : "");
+        jTextField7.setText(show[1] ? tmpPlace.getJurisdiction(1) : "");
+        jTextField8.setText(show[2] ? tmpPlace.getJurisdiction(2) : "");
+        jTextField9.setText(show[3] ? tmpPlace.getJurisdiction(3) : "");
+        jTextField2.setText(show[4] ? tmpPlace.getJurisdiction(4) : "");
+        jTextField3.setText(show[5] ? tmpPlace.getJurisdiction(5) : "");
+        jTextField4.setText(show[6] ? tmpPlace.getJurisdiction(6) : "");
 
         jTextField5.setText(Double.toString(geoObj.getLatitude()));
         jTextField10.setText(Double.toString(geoObj.getLongitude()));
@@ -639,28 +648,8 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         return inputData.matches("\\d+(.\\d+)?");
     }
 
-    private void enableAddressFields() {
-        jLabel25.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address1", "").equals("0") && !jCheckBox1.isSelected());
-        jLabel26.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address2", "").equals("0") && !jCheckBox1.isSelected());
-        jLabel27.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address3", "").equals("0") && !jCheckBox1.isSelected());
-        jLabel28.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address4", "").equals("0") && !jCheckBox1.isSelected());
-        jLabel29.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address5", "").equals("0") && !jCheckBox1.isSelected());
-        jLabel30.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address6", "").equals("0") && !jCheckBox1.isSelected());
-        jLabel31.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address7", "").equals("0") && !jCheckBox1.isSelected());
-
-        jTextField6.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address1", "").equals("0") && !jCheckBox1.isSelected());
-        jTextField7.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address2", "").equals("0") && !jCheckBox1.isSelected());
-        jTextField8.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address3", "").equals("0") && !jCheckBox1.isSelected());
-        jTextField9.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address4", "").equals("0") && !jCheckBox1.isSelected());
-        jTextField2.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address5", "").equals("0") && !jCheckBox1.isSelected());
-        jTextField3.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address6", "").equals("0") && !jCheckBox1.isSelected());
-        jTextField4.setEnabled(!NbPreferences.forModule(App.class).get("fmt_address7", "").equals("0") && !jCheckBox1.isSelected());
-
-        NbPreferences.forModule(App.class).addPreferenceChangeListener(this);
-    }
-
     public void preferenceChange(PreferenceChangeEvent pce) {
-        fillPlaceFromGeoNode(geoObj);
+        fillPlaceFromGeoNode();
         enableAddressFields();
     }
 
@@ -669,7 +658,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         // if place to be updated, update gedcom
         Gedcom gedcom = geoObj.getPlace().getGedcom();
         if (!jCheckBox1.isSelected()) {
-            final String place = buildPlaceStringFromFields();
+            final String place = buildPlaceStringFromFields(gedcom);
             try {
                 GeoPlacesList.getInstance(gedcom).stopListening();
                 gedcom.doUnitOfWork(new UnitOfWork() {
@@ -760,40 +749,40 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     }
 
     /**
+     * This method builds a gedcom place string separated by commas (and spaces if necessary)
+     * from the fields of the place editor.
+     * The order of the fields is taken from the user preferences
      *
      * @return
      */
-    private String buildPlaceStringFromFields() {
+    private String buildPlaceStringFromFields(Gedcom gedcom) {
         String[] placeArray = new String[7];
         String ret = "";
 
-        for (int i = 0; i < placeArray.length; i++) {
-            placeArray[i] = "@f[*";  // any weird string the user will not write by chance in one of the fields
-        }
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address1", ""), jTextField6);
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address2", ""), jTextField7);
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address3", ""), jTextField8);
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address4", ""), jTextField9);
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address5", ""), jTextField2);
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address6", ""), jTextField3);
-        fillPlaceArray(placeArray, NbPreferences.forModule(App.class).get("fmt_address7", ""), jTextField4);
+        // initialises the array with the fields
+        placeArray[0] = jTextField6.getText();
+        placeArray[1] = jTextField7.getText();
+        placeArray[2] = jTextField8.getText();
+        placeArray[3] = jTextField9.getText();
+        placeArray[4] = jTextField2.getText();
+        placeArray[5] = jTextField3.getText();
+        placeArray[6] = jTextField4.getText();
 
-        for (int i = 0; i < placeArray.length; i++) {
-            if (placeArray[i].equals("@f[*")) {
-                break;
+        // build the ret string as the gedcom PLAC string in the getPlaceSortOrder sequence
+        String placeOrder = gedcom.getPlaceSortOrder();
+        if (placeOrder == null) placeOrder = genj.gedcom.Options.getInstance().getPlaceSortOrder();
+        String order[] = placeOrder.split(",");
+        for (int i = 0; i < order.length; i++) {
+            String bit = order[i];
+            if (isNumeric(bit)) {
+                if (i > 0) {
+                    //FIXME: should create a get method within Options
+                    ret += "," + (NbPreferences.forModule(App.class).get("address_splitspaces", "").equals("true") ? " " : "");
+                }
+                ret += placeArray[Integer.valueOf(bit)];
             }
-            if (i > 0) {
-                ret += "," + (NbPreferences.forModule(App.class).get("address_splitspaces", "").equals("true") ? " " : "");
-            }
-            ret += placeArray[i];
         }
         return ret;
-    }
-
-    private void fillPlaceArray(String[] placeArray, String str, JTextField jtf) {
-        if (!str.equals("0") && isNumeric(str)) {
-            placeArray[Integer.valueOf(str) - 1] = jtf.getText();
-        }
     }
 
     public void getHelp() {
