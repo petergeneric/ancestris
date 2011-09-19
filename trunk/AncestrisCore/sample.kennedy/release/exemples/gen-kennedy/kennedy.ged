@@ -351,7 +351,7 @@
 3 NOTE
 1 BURI
 2 DATE 25 NOV 1963
-2 PLAC , Arlington, , , Arlington Co, VA, USA
+2 PLAC , Arlington, , 22209, Arlington Co, VA, USA
 2 SOUR @S8@
 3 QUAY 2
 1 OCCU US President #35
@@ -532,7 +532,7 @@
 3 QUAY 3
 1 BURI
 2 DATE AFT 6 JUN 1968
-2 PLAC , Arlington, , , Arlington Co, VA, USA
+2 PLAC , Arlington, , 22209, Arlington Co, VA, USA
 2 SOUR @S8@
 3 QUAY 3
 1 OCCU US Senator
@@ -1320,7 +1320,7 @@
 3 TIME 14:15:32
 1 BIRT
 2 DATE 20 FEB 1957
-2 PLAC , Bakersfield, , , Kern Co, CA, USA
+2 PLAC , Bakersfield, , 93380, Kern Co, CA, USA
 1 REFN GIFFVD57
 1 FAMS @F14@
 0 @R65@ INDI
@@ -2442,7 +2442,7 @@
 2 DATE 2 APR 1926
 2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 RESI
-2 PLAC , Ann Arbor, , , Washtenaw Co, MI, USA
+2 PLAC , Ann Arbor, , 48109, Washtenaw Co, MI, USA
 1 REFN BURKML26
 1 FAMC @F38@
 1 FAMS @F39@
@@ -2485,9 +2485,9 @@
 3 TIME 13:54:05
 1 BIRT
 2 DATE 5 FEB 1920
-2 PLAC , Ann Arbor, , , Washtenaw Co, MI, USA
+2 PLAC , Ann Arbor, , 48109, Washtenaw Co, MI, USA
 1 RESI
-2 PLAC , Ann Arbor, , , Washtenaw Co, MI, USA
+2 PLAC , Ann Arbor, , 48109, Washtenaw Co, MI, USA
 1 REFN DEVIJB20
 1 FAMS @F39@
 0 @R133@ INDI
@@ -2673,7 +2673,7 @@
 2 DATE 1793
 1 DEAT
 2 DATE 28 NOV 1877
-2 PLAC , Acton, , , Middlesex Co, MA, USA
+2 PLAC , Town of Acton, , , Middlesex Co, MA, USA
 1 REFN NOONEL93
 1 FAMS @F46@
 0 @R146@ INDI
@@ -2687,7 +2687,7 @@
 2 DATE 30 SEP 1832
 1 DEAT
 2 DATE 1 FEB 1900
-2 PLAC , Acton, , , Middlesex Co, MA, USA
+2 PLAC , Town of Acton, , , Middlesex Co, MA, USA
 2 SOUR @S18@
 3 QUAY 1
 1 REFN HANNMI32
@@ -2715,7 +2715,7 @@
 3 TIME 13:59:55
 1 BIRT
 2 DATE 31 OCT 1865
-2 PLAC , Acton, , , Middlesex Co, MA, USA
+2 PLAC , Town of Acton, , , Middlesex Co, MA, USA
 2 SOUR @S61@
 3 QUAY 1
 1 DEAT
