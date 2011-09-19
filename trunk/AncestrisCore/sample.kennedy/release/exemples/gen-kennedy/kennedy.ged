@@ -5,7 +5,6 @@
 2 CORP Ancestris Team
 3 ADDR http://www.ancestris.org, http://www.ancestris.com
 1 DEST ANY
-1 DEST ANY
 1 DATE 18 SEP 2011
 2 TIME 17:15:50
 1 SUBM @B1@
@@ -14,6 +13,9 @@
 2 VERS 5.5.1
 2 FORM Lineage-Linked
 1 CHAR UTF-8
+1 LANG English
+1 PLAC
+2 FORM Hamlet, City, , Zip_Code, County, State, Country
 0 @S2@ SOUR
 1 TITL @R5@
 0 @S3@ SOUR
@@ -222,22 +224,22 @@
 3 TIME 14:58:13
 1 BIRT
 2 DATE 6 SEP 1888
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S72@
 3 QUAY 2
 1 DEAT
 2 DATE 18 NOV 1969
-2 PLAC Hyannis Port, Barnstable Co, MA
+2 PLAC , Hyannis Port, , , Barnstable Co, MA, USA
 2 SOUR @S16@
 3 QUAY 2
 1 CHR
 2 DATE 9 SEP 1888
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S15@
 3 QUAY 2
 1 BURI
 2 DATE AFT 18 NOV 1969
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 2 SOUR @S14@
 3 QUAY 2
 1 OCCU Ambassador
@@ -280,14 +282,14 @@
 3 TIME 15:01:54
 1 BIRT
 2 DATE 22 JUL 1890
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S18@
 3 QUAY 2
 1 DEAT
 2 DATE 22 JAN 1995
-2 PLAC Hyannis, MA
+2 PLAC , Hyannis, , , , MA, USA
 1 RESI
-2 PLAC Hyannis Port, Barnstable Co, MA
+2 PLAC , Hyannis Port, , , Barnstable Co, MA, USA
 1 REFN FITZRE90
 1 FAMS @F0@
 1 FAMC @F48@
@@ -300,12 +302,12 @@
 3 TIME 13:50:19
 1 BIRT
 2 DATE 25 JUL 1915
-2 PLAC Hull, Plymouth Co, MA
+2 PLAC , Hull, , , Plymouth Co, MA, USA
 2 SOUR @S7@
 3 QUAY 2
 1 DEAT
 2 DATE 12 AUG 1944
-2 PLAC the air, Suffolk, England
+2 PLAC , the air, , , Suffolk, , England
 1 OCCU Lieutenant
 1 REFN KENNJP15
 1 FAMC @F0@
@@ -334,22 +336,22 @@
 3 TIME 15:15:50
 1 BIRT
 2 DATE 29 MAY 1917
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 2 SOUR @S10@
 3 QUAY 2
 1 DEAT
 2 DATE 22 NOV 1963
-2 PLAC Dallas, Dallas Co, TX
+2 PLAC , Dallas, , , Dallas Co, TX, USA
 2 SOUR @S9@
 3 QUAY 2
 2 OBJE
-3 TITL Conséquences de l'Assassinat de John KENEEDY
+3 TITL Consequences of the assassination of John KENNEDY
 3 FILE documents/Herald-Tribune.jpg
 4 FORM jpg
 3 NOTE
 1 BURI
 2 DATE 25 NOV 1963
-2 PLAC Arlington, Arlington Co, VA
+2 PLAC , Arlington, , , Arlington Co, VA, USA
 2 SOUR @S8@
 3 QUAY 2
 1 OCCU US President #35
@@ -396,9 +398,9 @@
 3 TIME 13:46:17
 1 BIRT
 2 DATE 20 FEB 1920
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 RESI
-2 PLAC Jefferson, Jefferson Co, WI
+2 PLAC , Jefferson, , , Jefferson Co, WI, USA
 2 SOUR @S19@
 3 QUAY 2
 1 REFN KENNRM20
@@ -412,17 +414,17 @@
 3 TIME 13:47:20
 1 BIRT
 2 DATE 20 FEB 1920
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 2 SOUR @S21@
 3 QUAY 2
 1 DEAT
 2 DATE 13 MAY 1948
-2 PLAC Ste-Bauzille, Ardeche, France
+2 PLAC , Ste-Bauzille, , , , Ardeche, France
 2 SOUR @S20@
 3 QUAY 1
 1 BURI
 2 DATE AFT 13 MAY 1948
-2 PLAC Chatsworth, England
+2 PLAC , Chatsworth, , , , , England
 2 SOUR @S20@
 3 QUAY 1
 1 REFN KENNKA20
@@ -451,11 +453,11 @@
 3 TIME 13:45:41
 1 BIRT
 2 DATE 10 JUL 1921
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 2 SOUR @S23@
 3 QUAY 2
 1 RESI
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 2 SOUR @S22@
 3 QUAY 1
 1 REFN KENNEM21
@@ -470,9 +472,9 @@
 3 TIME 13:46:00
 1 BIRT
 2 DATE 9 NOV 1915
-2 PLAC Westminster, Carroll Co, MD
+2 PLAC , Westminster, , , Carroll Co, MD, USA
 1 RESI
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 OCCU Politics
 1 REFN SHRIRS15
 1 FAMS @F1@
@@ -485,11 +487,11 @@
 3 TIME 13:41:20
 1 BIRT
 2 DATE 6 MAY 1924
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 2 SOUR @S24@
 3 QUAY 2
 1 RESI
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 2 SOUR @S22@
 3 QUAY 1
 1 REFN KENNPA24
@@ -504,10 +506,10 @@
 3 TIME 13:39:33
 1 BIRT
 2 DATE 7 SEP 1923
-2 PLAC London, England
+2 PLAC , London, , , , , England
 1 DEAT
 2 DATE 24 DEC 1984
-2 PLAC Los Angeles, Los Angeles Co, CA
+2 PLAC , Los Angeles, , , Los Angeles Co, CA, USA
 1 OCCU actor
 1 REFN LAWFPE23
 1 FAMS @F2@
@@ -520,17 +522,17 @@
 3 TIME 14:49:07
 1 BIRT
 2 DATE 20 NOV 1925
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 2 SOUR @S25@
 3 QUAY 2
 1 DEAT
 2 DATE 6 JUN 1968
-2 PLAC Los Angeles, Los Angeles Co, CA
+2 PLAC , Los Angeles, , , Los Angeles Co, CA, USA
 2 SOUR @S9@
 3 QUAY 3
 1 BURI
 2 DATE AFT 6 JUN 1968
-2 PLAC Arlington, Arlington Co, VA
+2 PLAC , Arlington, , , Arlington Co, VA, USA
 2 SOUR @S8@
 3 QUAY 3
 1 OCCU US Senator
@@ -566,7 +568,7 @@
 3 TIME 13:38:56
 1 BIRT
 2 DATE 20 FEB 1928
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S26@
 3 QUAY 2
 1 REFN KENNJA28
@@ -581,12 +583,12 @@
 3 TIME 13:39:25
 1 BIRT
 2 DATE 22 FEB 1932
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S22@
 3 QUAY 1
 1 RESI
 2 DATE 1988
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 OCCU US Senator
 1 REFN KENNEM32
 1 FAMC @F0@
@@ -612,7 +614,7 @@
 3 TIME 13:37:25
 1 BIRT
 2 DATE 9 SEP 1936
-2 PLAC Riverdale, Unk Co, NY
+2 PLAC , Riverdale, , , Unk Co, NY, USA
 1 REFN BENNVJ36
 1 FAMS @F7@
 1 FAMC @F67@
@@ -625,7 +627,7 @@
 3 TIME 13:38:14
 1 BIRT
 2 DATE 29 MAR 1955
-2 PLAC Santa Monica, Los Angeles Co, CA
+2 PLAC , Santa Monica, , , Los Angeles Co, CA, USA
 1 OCCU actor
 1 REFN LAWFCK55
 1 FAMC @F2@
@@ -640,9 +642,9 @@
 3 TIME 13:37:03
 1 BIRT
 2 DATE 25 AUG 1956
-2 PLAC Santa Monica, Los Angeles Co, CA
+2 PLAC , Santa Monica, , , Los Angeles Co, CA, USA
 1 RESI
-2 PLAC Baltimore, Baltimore Co, MD
+2 PLAC , Baltimore, , , Baltimore Co, MD, USA
 1 REFN LAWFSM56
 1 FAMC @F2@
 1 FAMS @F4@
@@ -655,7 +657,7 @@
 3 TIME 13:37:16
 1 BIRT
 2 DATE 4 NOV 1958
-2 PLAC Santa Monica, Los Angeles Co, CA
+2 PLAC , Santa Monica, , , Los Angeles Co, CA, USA
 1 OCCU public-service
 1 REFN LAWFVF58
 1 FAMC @F2@
@@ -668,7 +670,7 @@
 3 TIME 13:36:51
 1 BIRT
 2 DATE 2 JUL 1961
-2 PLAC Santa Monica, Los Angeles Co, CA
+2 PLAC , Santa Monica, , , Los Angeles Co, CA, USA
 1 REFN LAWFRE61
 1 FAMC @F2@
 0 @R20@ INDI
@@ -680,7 +682,7 @@
 3 TIME 14:31:52
 1 BIRT
 2 DATE 24 JAN 1955
-2 PLAC Seoul, Korea
+2 PLAC , Seoul, , , , , Korea
 1 REFN OLSSJE55
 1 FAMS @F3@
 0 @R21@ INDI
@@ -692,7 +694,7 @@
 3 TIME 14:31:48
 1 BIRT
 2 DATE 4 APR 1955
-2 PLAC Pittsburgh, Allegheny Co, PA
+2 PLAC , Pittsburgh, , , Allegheny Co, PA, USA
 1 REFN MCKEJP55
 1 FAMS @F4@
 0 @R22@ INDI
@@ -704,7 +706,7 @@
 3 TIME 14:31:44
 1 BIRT
 2 DATE 28 APR 1954
-2 PLAC Chicago, Cook Co, IL
+2 PLAC , Chicago, , , Cook Co, IL, USA
 1 REFN SHRIRS54
 1 FAMC @F1@
 0 @R23@ INDI
@@ -716,9 +718,9 @@
 3 TIME 14:31:37
 1 BIRT
 2 DATE 6 NOV 1955
-2 PLAC Chicago, Cook Co, IL
+2 PLAC , Chicago, , , Cook Co, IL, USA
 1 RESI
-2 PLAC Santa Monica, Los Angeles Co, CA
+2 PLAC , Santa Monica, , , Los Angeles Co, CA, USA
 1 OCCU Broadcasting
 1 REFN SHRIMO55
 1 FAMC @F1@
@@ -732,7 +734,7 @@
 3 TIME 14:31:29
 1 BIRT
 2 DATE 29 AUG 1959
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN SHRITP59
 1 FAMC @F1@
 1 NOTE Disappeared from the family in 1899 and never heard from again.
@@ -745,7 +747,7 @@
 3 TIME 14:31:25
 1 BIRT
 2 DATE 17 FEB 1964
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 REFN SHRIMK64
 1 FAMC @F1@
 0 @R26@ INDI
@@ -757,7 +759,7 @@
 3 TIME 14:31:21
 1 BIRT
 2 DATE 20 JUL 1965
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN SHRIAP65
 1 FAMC @F1@
 0 @R27@ TITL "A Hyannis Hitching," People Weekly
@@ -788,7 +790,7 @@
 3 TIME 14:31:56
 1 BIRT
 2 DATE 24 SEP 1927
-2 PLAC Brooklyn, Kings Co, NY
+2 PLAC , Brooklyn, , , Kings Co, NY, USA
 1 REFN SMITSE27
 1 FAMS @F6@
 0 @R30@ INDI
@@ -811,7 +813,7 @@
 3 TIME 14:35:20
 1 BIRT
 2 DATE 4 SEP 1960
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN SMITWK60
 1 FAMC @F6@
 0 @R32@ INDI
@@ -834,7 +836,7 @@
 3 TIME 14:35:30
 1 BIRT
 2 DATE 29 NOV 1972
-2 PLAC Vietnam
+2 PLAC , , , , , , Vietnam
 1 REFN SMITKM72
 1 FAMC @F6@
 0 @R34@ INDI
@@ -846,7 +848,7 @@
 3 TIME 14:35:25
 1 BIRT
 2 DATE 27 FEB 1960
-2 PLAC Bronxville, Westchester Co, NY
+2 PLAC , Bronxville, , , Westchester Co, NY, USA
 1 REFN KENNKA60
 1 FAMC @F7@
 0 @R35@ INDI
@@ -858,9 +860,9 @@
 3 TIME 14:32:23
 1 BIRT
 2 DATE 26 SEP 1961
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 RESI
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN KENNEM61
 1 FAMC @F7@
 0 @R36@ INDI
@@ -872,7 +874,7 @@
 3 TIME 14:32:14
 1 BIRT
 2 DATE 14 JUL 1967
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 OCCU student
 1 REFN KENNPJ67
 1 FAMC @F7@
@@ -890,7 +892,7 @@
 3 TIME 13:54:21
 1 BIRT
 2 DATE 28 JUL 1929
-2 PLAC Southampton, Long Island, NY
+2 PLAC , Southampton, , , Long Island, NY, USA
 2 SOUR @S28@
 3 QUAY 1
 1 OCCU Editor
@@ -910,7 +912,7 @@
 2 DATE 23 AUG 1956
 1 BURI
 2 DATE AFT 23 AUG 1956
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 REFN DAUGHT56
 1 FAMC @F8@
 0 @R39@ INDI
@@ -927,7 +929,7 @@
 3 TIME 14:48:18
 1 BIRT
 2 DATE 27 NOV 1957
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 2 SOUR @S29@
 3 QUAY 2
 1 REFN KENNCB57
@@ -957,14 +959,14 @@
 3 TIME 14:55:01
 1 BIRT
 2 DATE 25 NOV 1960
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 2 SOUR @S28@
 3 QUAY 2
 1 DEAT
 2 DATE 16 JUL 1999
-2 PLAC Martha's Vineyard, MA
+2 PLAC , Martha's Vineyard, , , , MA, USA
 1 RESI
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 REFN KENNJF60
 1 DESI MEDIUM
 1 FAMC @F8@
@@ -987,12 +989,12 @@
 3 TIME 14:26:44
 1 BIRT
 2 DATE 7 AUG 1963
-2 PLAC Falmouth, Barnstable Co, MA
+2 PLAC , Falmouth, , , Barnstable Co, MA, USA
 1 DEAT
 2 DATE 9 AUG 1963
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 REFN KENNPB63
 1 FAMC @F8@
 0 @R42@ INDI
@@ -1004,9 +1006,9 @@
 3 TIME 14:27:34
 1 BIRT
 2 DATE 11 APR 1928
-2 PLAC Chicago, Cook Co, IL
+2 PLAC , Chicago, , , Cook Co, IL, USA
 1 RESI
-2 PLAC McLean, Fairfax Co, VA
+2 PLAC , McLean, , , Fairfax Co, VA, USA
 1 REFN SKAKET28
 1 FAMS @F9@
 1 FAMC @F66@
@@ -1019,7 +1021,7 @@
 3 TIME 14:27:24
 1 BIRT
 2 DATE 4 JUL 1951
-2 PLAC Greenwich, Fairfield Co, CT
+2 PLAC , Greenwich, , , Fairfield Co, CT, USA
 1 REFN KENNKH51
 1 FAMC @F9@
 1 FAMS @F10@
@@ -1045,7 +1047,7 @@
 3 TIME 14:27:13
 1 BIRT
 2 DATE 24 SEP 1952
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 OCCU politics
 1 REFN KENNJP52
 1 FAMC @F9@
@@ -1059,7 +1061,7 @@
 3 TIME 14:27:03
 1 BIRT
 2 DATE 17 JAN 1954
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 OCCU Lawyer
 1 REFN KENNRF54
 1 FAMC @F9@
@@ -1073,13 +1075,13 @@
 3 TIME 14:28:57
 1 BIRT
 2 DATE 15 JUN 1955
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 DEAT
 2 DATE 25 APR 1984
-2 PLAC Palm Beach, Palm Beach Co, FL
+2 PLAC , Palm Beach, , , Palm Beach Co, FL, USA
 1 BURI
 2 DATE AFT 25 APR 1984
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 REFN KENNDA55
 1 FAMC @F9@
 1 NOTE David Anthony Kennedy was 13 years old when he witnessed his father's
@@ -1100,9 +1102,9 @@
 3 TIME 14:28:33
 1 BIRT
 2 DATE 9 SEP 1956
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 RESI
-2 PLAC NY
+2 PLAC , , , , , NY, USA
 1 REFN KENNMC56
 1 FAMC @F9@
 1 FAMS @F13@
@@ -1118,7 +1120,7 @@
 3 TIME 14:28:18
 1 BIRT
 2 DATE 27 FEB 1958
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 OCCU VP-CEC
 1 REFN KENNML58
 1 FAMC @F9@
@@ -1137,7 +1139,7 @@
 3 TIME 14:28:09
 1 BIRT
 2 DATE 8 SEP 1959
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 REFN KENNMK59
 1 FAMC @F9@
 0 @R50@ INDI
@@ -1149,7 +1151,7 @@
 3 TIME 14:29:14
 1 BIRT
 2 DATE 4 JUL 1963
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN KENNCG63
 1 FAMC @F9@
 0 @R51@ INDI
@@ -1161,7 +1163,7 @@
 3 TIME 14:29:22
 1 BIRT
 2 DATE 9 JAN 1965
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 REFN KENNMM65
 1 FAMC @F9@
 0 @R52@ INDI
@@ -1173,7 +1175,7 @@
 3 TIME 14:29:32
 1 BIRT
 2 DATE 24 MAR 1967
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 OCCU student
 1 REFN KENNDH67
 1 FAMC @F9@
@@ -1186,7 +1188,7 @@
 3 TIME 14:30:05
 1 BIRT
 2 DATE 12 DEC 1968
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 REFN KENNRE68
 1 FAMC @F9@
 0 @R54@ INDI
@@ -1198,7 +1200,7 @@
 3 TIME 14:29:50
 1 BIRT
 2 DATE 17 NOV 1947
-2 PLAC Baltimore, Baltimore Co, MD
+2 PLAC , Baltimore, , , Baltimore Co, MD, USA
 1 REFN TOWNDL47
 1 FAMS @F10@
 0 @R55@ INDI
@@ -1210,7 +1212,7 @@
 3 TIME 14:30:55
 1 BIRT
 2 DATE 7 NOV 1977
-2 PLAC Santa Fe, Santa Fe Co, NM
+2 PLAC , Santa Fe, , , Santa Fe Co, NM, USA
 1 REFN TOWNMA77
 1 FAMC @F10@
 0 @R56@ INDI
@@ -1222,7 +1224,7 @@
 3 TIME 14:30:48
 1 BIRT
 2 DATE 1 NOV 1979
-2 PLAC New Haven, New Haven Co, CT
+2 PLAC , New Haven, , , New Haven Co, CT, USA
 1 REFN TOWNMF79
 1 FAMC @F10@
 0 @R57@ INDI
@@ -1234,7 +1236,7 @@
 3 TIME 14:31:09
 1 BIRT
 2 DATE 17 DEC 1983
-2 PLAC Weston, Middlesex Co, MA
+2 PLAC , Weston, , , Middlesex Co, MA, USA
 1 REFN TOWNRK83
 1 FAMC @F10@
 0 @R58@ INDI
@@ -1246,7 +1248,7 @@
 3 TIME 14:31:01
 1 BIRT
 2 DATE 22 MAR 1949
-2 PLAC Bryn Mawr, Montgomery Co, PA
+2 PLAC , Bryn Mawr, , , Montgomery Co, PA, USA
 1 REFN RAUCSB49
 1 FAMS @F11@
 0 @R59@ INDI
@@ -1258,7 +1260,7 @@
 3 TIME 14:31:15
 1 BIRT
 2 DATE 4 OCT 1980
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN KENNMR80
 1 FAMC @F11@
 0 @R60@ INDI
@@ -1270,7 +1272,7 @@
 3 TIME 14:12:53
 1 BIRT
 2 DATE 4 FEB 1980
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN KENNJP80
 1 FAMC @F11@
 0 @R61@ INDI
@@ -1282,7 +1284,7 @@
 3 TIME 14:12:42
 1 BIRT
 2 DATE 15 OCT 1957
-2 PLAC Bedford, Lawrence Co, IN
+2 PLAC , Bedford, , , Lawrence Co, IN, USA
 1 REFN BLACER57
 1 FAMS @F12@
 0 @R62@ INDI
@@ -1294,7 +1296,7 @@
 3 TIME 14:12:30
 1 BIRT
 2 DATE 2 SEP 1984
-2 PLAC Mt. Kisco, Westchester Co, NY
+2 PLAC , Mt. Kisco, , , Westchester Co, NY, USA
 1 REFN KENNRF84
 1 FAMC @F12@
 0 @R63@ INDI
@@ -1306,7 +1308,7 @@
 3 TIME 14:12:14
 1 BIRT
 2 DATE 21 FEB 1952
-2 PLAC La Porte, La Porte Co, IN
+2 PLAC , La Porte, , , La Porte Co, IN, USA
 1 REFN RUHEJR52
 1 FAMS @F13@
 0 @R64@ INDI
@@ -1318,7 +1320,7 @@
 3 TIME 14:15:32
 1 BIRT
 2 DATE 20 FEB 1957
-2 PLAC Bakersfield, Kern Co, CA
+2 PLAC , Bakersfield, , , Kern Co, CA, USA
 1 REFN GIFFVD57
 1 FAMS @F14@
 0 @R65@ INDI
@@ -1330,7 +1332,7 @@
 3 TIME 14:15:44
 1 BIRT
 2 DATE 9 JAN 1983
-2 PLAC Charlottesvlle, Albemarle Co, VA
+2 PLAC , Charlottesvlle, , , Albemarle Co, VA, USA
 1 REFN KENNML83
 1 FAMC @F14@
 0 @R66@ INDI
@@ -1342,7 +1344,7 @@
 3 TIME 14:15:16
 1 BIRT
 2 DATE 6 JUL 1984
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 REFN KENNKF84
 1 FAMC @F14@
 0 @R67@ INDI
@@ -1353,9 +1355,9 @@
 2 DATE 9 SEP 2011
 3 TIME 14:15:23
 1 BIRT
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 DEAT
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 OCCU farmer
 1 REFN KENNPA
 1 ANCI HIGH
@@ -1368,9 +1370,9 @@
 2 DATE 9 SEP 2011
 3 TIME 14:13:45
 1 BIRT
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 DEAT
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 REFN KENNMJ
 1 FAMS @F15@
 0 @R69@ INDI
@@ -1382,27 +1384,27 @@
 3 TIME 14:15:08
 1 BIRT
 2 DATE ABT 1823
-2 PLAC Dunganstown, Wexford Co, Ireland
+2 PLAC , Dunganstown, , , Wexford Co, , Ireland
 2 SOUR @S34@
 3 QUAY 1
 1 DEAT
 2 DATE 22 NOV 1858
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S33@
 3 QUAY 2
 1 BURI
 2 DATE 23 NOV 1858
-2 PLAC Cambridge, Middlesex Co, MA
+2 PLAC , Cambridge, , , Middlesex Co, MA, USA
 2 SOUR @S32@
 3 QUAY 2
 1 PROB
 2 DATE 13 DEC 1858
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S31@
 3 QUAY 2
 1 IMMI
 2 DATE ABT 1847
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S30@
 3 QUAY 3
 1 OCCU cooper
@@ -1447,21 +1449,21 @@
 3 TIME 14:16:49
 1 BIRT
 2 DATE 1821
-2 PLAC Dunganstown, Wexford Co, Ireland
+2 PLAC , Dunganstown, , , Wexford Co, , Ireland
 2 SOUR @S34@
 3 QUAY 1
 1 DEAT
 2 DATE 20 DEC 1888
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S36@
 3 QUAY 2
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 2 SOUR @S35@
 3 QUAY 2
 1 IMMI
 2 DATE ABT 1847
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN MURPBR21
 1 ANCI HIGH
 1 FAMC @F16@
@@ -1475,22 +1477,22 @@
 3 TIME 14:21:39
 1 BIRT
 2 DATE 9 AUG 1851
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S39@
 3 QUAY 2
 1 DEAT
 2 DATE 7 MAR 1926
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S38@
 3 QUAY 2
 1 CHR
 2 DATE 10 AUG 1851
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S37@
 3 QUAY 2
 1 BURI
 2 DATE AFT 7 MAR 1926
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 2 SOUR @S35@
 3 QUAY 2
 1 OCCU skirtmaker
@@ -1506,22 +1508,22 @@
 3 TIME 14:18:55
 1 BIRT
 2 DATE 27 NOV 1852
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S43@
 3 QUAY 2
 1 DEAT
 2 DATE 23 FEB 1926
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 2 SOUR @S42@
 3 QUAY 2
 1 CHR
 2 DATE 4 DEC 1852
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S41@
 3 QUAY 2
 1 BURI
 2 DATE AFT 23 FEB 1926
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 2 SOUR @S40@
 3 QUAY 2
 1 REFN KENNJL52
@@ -1536,21 +1538,21 @@
 3 TIME 14:23:23
 1 BIRT
 2 DATE 4 JAN 1854
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S47@
 3 QUAY 1
 1 DEAT
 2 DATE 24 SEP 1855
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S46@
 3 QUAY 2
 1 CHR
 2 DATE 5 JAN 1854
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S45@
 3 QUAY 2
 1 BURI
-2 PLAC Cambridge, Middlesex Co, MA
+2 PLAC , Cambridge, , , Middlesex Co, MA, USA
 2 SOUR @S44@
 3 QUAY 2
 1 REFN KENNJO54
@@ -1564,21 +1566,21 @@
 3 TIME 14:24:34
 1 BIRT
 2 DATE JUL 1855
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S51@
 3 QUAY 2
 1 DEAT
 2 DATE 2 APR 1929
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 2 SOUR @S50@
 3 QUAY 2
 1 CHR
 2 DATE 22 JUL 1855
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S49@
 3 QUAY 2
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 2 SOUR @S48@
 3 QUAY 2
 1 REFN KENNMM55
@@ -1593,21 +1595,21 @@
 3 TIME 14:25:57
 1 BIRT
 2 DATE 14 JAN 1858
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S55@
 3 QUAY 2
 1 DEAT
 2 DATE 18 MAY 1929
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S54@
 3 QUAY 2
 1 CHR
 2 DATE 16 JAN 1858
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 2 SOUR @S53@
 3 QUAY 2
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 2 SOUR @S52@
 3 QUAY 2
 1 OCCU politician
@@ -1628,7 +1630,7 @@
 3 TIME 14:26:07
 1 BIRT
 2 DATE BEF 1858
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 REFN KANEPH58
 1 FAMS @F18@
 0 @R79@ INDI
@@ -1640,7 +1642,7 @@
 3 TIME 14:22:31
 1 BIRT
 2 DATE BEF 1858
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 REFN MURPMA58
 1 FAMS @F18@
 0 @R80@ INDI
@@ -1652,15 +1654,15 @@
 3 TIME 14:04:24
 1 BIRT
 2 DATE 29 NOV 1858
-2 PLAC Wexford Co, Ireland
+2 PLAC , , , , Wexford Co, , Ireland
 1 DEAT
 2 DATE 19 JUL 1905
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 IMMI
 2 DATE 15 MAY 1876
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 OCCU laborer
 1 REFN KANELM58
 1 FAMC @F18@
@@ -1674,13 +1676,13 @@
 3 TIME 14:04:02
 1 BIRT
 2 DATE 29 NOV 1883
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 19 MAR 1967
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 CHR
 2 DATE 2 DEC 1883
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 OCCU politician
 1 REFN KANEJL83
 1 FAMC @F19@
@@ -1693,13 +1695,13 @@
 3 TIME 14:06:27
 1 BIRT
 2 DATE 25 AUG 1885
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 14 SEP 1885
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 30 AUG 1885
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN KANEMM85
 1 FAMC @F19@
 0 @R83@ INDI
@@ -1711,13 +1713,13 @@
 3 TIME 14:05:19
 1 BIRT
 2 DATE 8 SEP 1888
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 6 JUL 1954
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 16 SEP 1888
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 OCCU sign painter
 1 REFN KANEGP88
 1 FAMC @F19@
@@ -1730,13 +1732,13 @@
 3 TIME 14:04:58
 1 BIRT
 2 DATE 26 MAY 1890
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 14 JAN 1969
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 1 JUN 1890
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN KANEGM90
 1 FAMC @F19@
 1 FAMS @F20@
@@ -1749,10 +1751,10 @@
 3 TIME 14:04:43
 1 BIRT
 2 DATE 1 NOV 1891
-2 PLAC Chelsea, Suffolk Co, MA
+2 PLAC , Chelsea, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 2 JUL 1955
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 OCCU shipwright
 1 REFN METCCE91
 1 FAMS @F20@
@@ -1765,12 +1767,12 @@
 3 TIME 14:07:54
 1 BIRT
 2 DATE 1892
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 15 OCT 1897
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 REFN KANEFR92
 1 FAMC @F19@
 0 @R87@ INDI
@@ -1782,13 +1784,13 @@
 3 TIME 14:08:32
 1 BIRT
 2 DATE 12 DEC 1847
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 25 AUG 1928
-2 PLAC Saratoga Springs, Saratoga Co, NY
+2 PLAC , Saratoga Springs, , , Saratoga Co, NY, USA
 1 BURI
 2 DATE AFT 25 AUG 1928
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 OCCU custodian
 1 REFN MAHOHC47
 1 FAMS @F21@
@@ -1801,15 +1803,15 @@
 3 TIME 14:06:50
 1 BIRT
 2 DATE 14 OCT 1873
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 20 NOV 1875
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 19 OCT 1873
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Cambridge, Middlesex Co, MA
+2 PLAC , Cambridge, , , Middlesex Co, MA, USA
 1 REFN MAHODA73
 1 FAMC @F21@
 0 @R89@ INDI
@@ -1821,15 +1823,15 @@
 3 TIME 14:07:31
 1 BIRT
 2 DATE 18 OCT 1875
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 7 DEC 1875
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 20 OCT 1875
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Cambridge, Middlesex Co, MA
+2 PLAC , Cambridge, , , Middlesex Co, MA, USA
 1 REFN MAHOME75
 1 FAMC @F21@
 0 @R90@ INDI
@@ -1841,13 +1843,13 @@
 3 TIME 14:08:48
 1 BIRT
 2 DATE 17 MAY 1878
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 10 MAY 1879
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 19 MAY 1878
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN MAHOWH78
 1 FAMC @F21@
 0 @R91@ INDI
@@ -1859,13 +1861,13 @@
 3 TIME 14:09:31
 1 BIRT
 2 DATE 2 MAR 1880
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 13 APR 1963
-2 PLAC Lynn, Essex Co, MA
+2 PLAC , Lynn, , , Essex Co, MA, USA
 1 CHR
 2 DATE 7 MAR 1880
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN MAHOFJ80
 1 FAMC @F21@
 1 FAMS @F22@
@@ -1878,10 +1880,10 @@
 3 TIME 14:09:14
 1 BIRT
 2 DATE 12 DEC 1879
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 14 JAN 1965
-2 PLAC Lynn, Essex Co, MA
+2 PLAC , Lynn, , , Essex Co, MA, USA
 1 OCCU custodian
 1 REFN TWOMLL79
 1 FAMS @F22@
@@ -1894,16 +1896,16 @@
 3 TIME 14:10:32
 1 BIRT
 2 DATE 13 FEB 1883
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 7 MAY 1889
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 18 FEB 1883
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
 2 DATE AFT 17 MAY 1889
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 REFN MAHOAN83
 1 FAMC @F21@
 0 @R94@ INDI
@@ -1915,13 +1917,13 @@
 3 TIME 14:09:52
 1 BIRT
 2 DATE 15 OCT 1884
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 3 FEB 1961
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 CHR
 2 DATE 19 OCT 1884
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 OCCU custodian
 1 REFN MAHOHJ84
 1 FAMC @F21@
@@ -1935,13 +1937,13 @@
 3 TIME 14:11:06
 1 BIRT
 2 DATE 7 OCT 1886
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 27 JUL 1887
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 10 OCT 1886
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN MAHOGE86
 1 FAMC @F21@
 0 @R96@ INDI
@@ -1953,13 +1955,13 @@
 3 TIME 14:10:48
 1 BIRT
 2 DATE 21 AUG 1890
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 26 OCT 1965
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 28 AUG 1890
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 OCCU school-submaster
 1 REFN MAHOFL90
 1 FAMC @F21@
@@ -1972,10 +1974,10 @@
 3 TIME 14:11:20
 1 BIRT
 2 DATE 15 OCT 1884
-2 PLAC McKeesport, Allegheny Co, PA
+2 PLAC , McKeesport, , , Allegheny Co, PA, USA
 1 DEAT
 2 DATE 23 APR 1949
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN FARLME84
 1 FAMS @F23@
 0 @R98@ INDI
@@ -1987,12 +1989,12 @@
 3 TIME 14:11:46
 1 BIRT
 2 DATE JAN 1861
-2 PLAC Weymouth, Norfolk Co, MA
+2 PLAC , Weymouth, , , Norfolk Co, MA, USA
 1 DEAT
 2 DATE 12 JUL 1937
-2 PLAC Lynn, Essex Co, MA
+2 PLAC , Lynn, , , Essex Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 OCCU purchasing
 1 REFN CAULJT61
 1 FAMS @F24@
@@ -2006,13 +2008,13 @@
 3 TIME 14:12:02
 1 BIRT
 2 DATE 8 FEB 1884
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 14 JUN 1938
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 10 FEB 1884
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN CAULMF84
 1 FAMC @F25@
 1 FAMS @F26@
@@ -2025,7 +2027,7 @@
 3 TIME 13:41:31
 1 BIRT
 2 DATE 20 JUN 1886
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 DEAT
 1 REFN CAULFR86
 1 FAMC @F25@
@@ -2038,10 +2040,10 @@
 3 TIME 13:43:00
 1 BIRT
 2 DATE 8 APR 1888
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 DEAT
 2 DATE 6 APR 1943
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN CAULEM88
 1 FAMC @F25@
 1 FAMS @F27@
@@ -2054,10 +2056,10 @@
 3 TIME 13:43:08
 1 BIRT
 2 DATE MAY 1889
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 DEAT
 2 DATE 27 APR 1925
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN CAULHR89
 1 FAMC @F25@
 0 @R103@ INDI
@@ -2069,12 +2071,12 @@
 3 TIME 13:42:43
 1 BIRT
 2 DATE 19 NOV 1891
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 DEAT
 2 DATE 10 AUG 1892
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 REFN CAULFJ91
 1 FAMC @F25@
 0 @R104@ INDI
@@ -2086,10 +2088,10 @@
 3 TIME 13:42:52
 1 BIRT
 2 DATE OCT 1894
-2 PLAC Bayonne, Hudson Co, NJ
+2 PLAC , Bayonne, , , Hudson Co, NJ, USA
 1 DEAT
 2 DATE 8 FEB 1914
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 1 REFN CAULEG94
 1 FAMC @F25@
 0 @R105@ INDI
@@ -2101,10 +2103,10 @@
 3 TIME 13:42:16
 1 BIRT
 2 DATE FEB 1896
-2 PLAC Bayonne, Hudson Co, NJ
+2 PLAC , Bayonne, , , Hudson Co, NJ, USA
 1 DEAT
 2 DATE 1 JUN 1953
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN CAULJD96
 1 FAMC @F25@
 1 FAMS @F28@
@@ -2117,10 +2119,10 @@
 3 TIME 13:42:24
 1 BIRT
 2 DATE 3 JUN 1899
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 18 AUG 1966
-2 PLAC Saugus, Essex Co, MA
+2 PLAC , Saugus, , , Essex Co, MA, USA
 1 REFN CAULJT99
 1 FAMC @F25@
 1 FAMS @F29@
@@ -2133,7 +2135,7 @@
 3 TIME 13:41:58
 1 BIRT
 2 DATE ABT 1882
-2 PLAC Liverpool, England
+2 PLAC , Liverpool, , , , , England
 1 IMMI
 2 DATE ABT 1887
 1 OCCU riveter
@@ -2148,10 +2150,10 @@
 3 TIME 13:42:07
 1 BIRT
 2 DATE FEB 1891
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 2 DEC 1928
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 OCCU electric supply
 1 REFN BAKEJU91
 1 FAMS @F27@
@@ -2164,10 +2166,10 @@
 3 TIME 13:41:47
 1 BIRT
 2 DATE 16 NOV 1894
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 3 FEB 1960
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 1 REFN FINKFW94
 1 FAMS @F28@
 0 @R110@ INDI
@@ -2179,10 +2181,10 @@
 3 TIME 13:43:21
 1 BIRT
 2 DATE 29 NOV 1902
-2 PLAC Lynn, Essex Co, MA
+2 PLAC , Lynn, , , Essex Co, MA, USA
 1 DEAT
 2 DATE 15 JUL 1968
-2 PLAC Lynn, Essex Co, MA
+2 PLAC , Lynn, , , Essex Co, MA, USA
 1 REFN BAKEHE02
 1 FAMS @F29@
 0 @R111@ INDI
@@ -2214,7 +2216,7 @@
 2 DATE ABT 1836
 1 DEAT
 2 DATE 5 JUN 1911
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN FIELMM36
 1 FAMC @F30@
 1 FAMS @F32@
@@ -2247,10 +2249,10 @@
 3 TIME 13:44:06
 1 BIRT
 2 DATE 1836
-2 PLAC Cork, Cork Co, Munster Province, Ireland
+2 PLAC , Cork, , , Cork Co, Munster Province, Ireland
 1 DEAT
 2 DATE 22 NOV 1900
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN HICKJA36
 1 FAMC @F31@
 1 FAMS @F32@
@@ -2263,12 +2265,12 @@
 3 TIME 13:43:56
 1 BIRT
 2 DATE 6 DEC 1857
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 20 MAY 1923
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 REFN HICKMA57
 1 FAMC @F32@
 1 FAMS @F33@
@@ -2281,15 +2283,15 @@
 3 TIME 13:44:58
 1 BIRT
 2 DATE 11 MAR 1891
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 14 JUN 1892
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 CHR
 2 DATE 22 MAR 1891
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 REFN KENNFB91
 1 FAMC @F33@
 0 @R119@ INDI
@@ -2301,13 +2303,13 @@
 3 TIME 13:44:17
 1 BIRT
 2 DATE 6 AUG 1892
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 18 NOV 1972
-2 PLAC Winfield, Du Page Co, IL
+2 PLAC , Winfield, , , Du Page Co, IL, USA
 1 CHR
 2 DATE 18 AUG 1892
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 REFN KENNML92
 1 FAMC @F33@
 1 FAMS @F35@
@@ -2320,15 +2322,15 @@
 3 TIME 13:51:00
 1 BIRT
 2 DATE 22 OCT 1898
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 14 NOV 1974
-2 PLAC Brookline, Norfolk Co, MA
+2 PLAC , Brookline, , , Norfolk Co, MA, USA
 1 CHR
 2 DATE 30 OCT 1898
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 REFN KENNML98
 1 FAMC @F33@
 1 FAMS @F38@
@@ -2359,10 +2361,10 @@
 3 TIME 13:51:48
 1 BIRT
 2 DATE 10 JUN 1898
-2 PLAC East Boston, Suffolk Co, MA
+2 PLAC , East Boston, , , Suffolk Co, MA, USA
 1 DEAT
 2 DATE 29 AUG 1971
-2 PLAC St. Augustine, St. Johns Co, FL
+2 PLAC , St. Augustine, , , St. Johns Co, FL, USA
 1 REFN CONNGW98
 1 FAMC @F34@
 1 FAMS @F35@
@@ -2375,7 +2377,7 @@
 3 TIME 13:51:31
 1 BIRT
 2 DATE 21 OCT 1928
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 REFN CONNML28
 1 FAMC @F35@
 1 FAMS @F36@
@@ -2388,9 +2390,9 @@
 3 TIME 13:51:21
 1 BIRT
 2 DATE 8 FEB 1926
-2 PLAC Chicago, Cook Co, IL
+2 PLAC , Chicago, , , Cook Co, IL, USA
 1 RESI
-2 PLAC St. Augustine, St. Johns Co, FL
+2 PLAC , St. Augustine, , , St. Johns Co, FL, USA
 1 REFN MCCAMJ26
 1 FAMS @F36@
 0 @R126@ INDI
@@ -2420,12 +2422,12 @@
 3 TIME 13:52:23
 1 BIRT
 2 DATE 23 AUG 1899
-2 PLAC Medford, Middlesex Co, MA
+2 PLAC , Medford, , , Middlesex Co, MA, USA
 1 DEAT
 2 DATE 5 APR 1967
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 BURI
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 REFN BURKCJ99
 1 FAMC @F37@
 1 FAMS @F38@
@@ -2438,9 +2440,9 @@
 3 TIME 13:52:09
 1 BIRT
 2 DATE 2 APR 1926
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 RESI
-2 PLAC Ann Arbor, Washtenaw Co, MI
+2 PLAC , Ann Arbor, , , Washtenaw Co, MI, USA
 1 REFN BURKML26
 1 FAMC @F38@
 1 FAMS @F39@
@@ -2453,9 +2455,9 @@
 3 TIME 13:54:25
 1 BIRT
 2 DATE 5 MAY 1928
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 RESI
-2 PLAC Wellesley Hills, Norfolk Co, MA
+2 PLAC , Wellesley Hills, , , Norfolk Co, MA, USA
 1 REFN BURKCJ28
 1 FAMC @F38@
 1 FAMS @F40@
@@ -2468,9 +2470,9 @@
 3 TIME 13:54:36
 1 BIRT
 2 DATE 25 MAY 1933
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 RESI
-2 PLAC Newton, Middlesex Co, MA
+2 PLAC , Newton, , , Middlesex Co, MA, USA
 1 REFN BURKTF33
 1 FAMC @F38@
 1 FAMS @F41@
@@ -2483,9 +2485,9 @@
 3 TIME 13:54:05
 1 BIRT
 2 DATE 5 FEB 1920
-2 PLAC Ann Arbor, Washtenaw Co, MI
+2 PLAC , Ann Arbor, , , Washtenaw Co, MI, USA
 1 RESI
-2 PLAC Ann Arbor, Washtenaw Co, MI
+2 PLAC , Ann Arbor, , , Washtenaw Co, MI, USA
 1 REFN DEVIJB20
 1 FAMS @F39@
 0 @R133@ INDI
@@ -2497,9 +2499,9 @@
 3 TIME 13:54:15
 1 BIRT
 2 DATE 11 NOV 1935
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 1 RESI
-2 PLAC Wellesley Hills, Norfolk Co, MA
+2 PLAC , Wellesley Hills, , , Norfolk Co, MA, USA
 1 REFN COLTCL35
 1 FAMS @F40@
 0 @R134@ INDI
@@ -2511,9 +2513,9 @@
 3 TIME 13:55:13
 1 BIRT
 2 DATE 10 OCT 1936
-2 PLAC Waltham, Middlesex Co, MA
+2 PLAC , Waltham, , , Middlesex Co, MA, USA
 1 RESI
-2 PLAC Newton, Middlesex Co, MA
+2 PLAC , Newton, , , Middlesex Co, MA, USA
 1 REFN MILLGA36
 1 FAMS @F41@
 0 @R135@ INDI
@@ -2559,7 +2561,7 @@
 2 DATE 1797
 1 DEAT
 2 DATE 16 NOV 1875
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN WILMEL97
 1 ANCI HIGH
 1 FAMC @F42@
@@ -2573,7 +2575,7 @@
 3 TIME 13:54:44
 1 DEAT
 2 DATE 19 MAY 1885
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 REFN FITZTH
 1 FAMC @F43@
 1 FAMS @F45@
@@ -2609,11 +2611,11 @@
 3 QUAY 1
 1 DEAT
 2 DATE 12 MAR 1879
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S67@
 3 QUAY 1
 1 BURI
-2 PLAC Malden, Middlesex Co, MA
+2 PLAC , Malden, , , Middlesex Co, MA, USA
 2 SOUR @S66@
 3 QUAY 2
 1 REFN COXRO
@@ -2629,22 +2631,22 @@
 3 TIME 13:57:16
 1 BIRT
 2 DATE 11 FEB 1863
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S60@
 3 QUAY 1
 1 DEAT
 2 DATE 3 OCT 1950
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S59@
 3 QUAY 1
 1 BAPM
 2 DATE 12 FEB 1863
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 2 SOUR @S58@
 3 QUAY 1
 1 BURI
 2 DATE 5 OCT 1950
-2 PLAC West Roxbury, Suffolk Co, MA
+2 PLAC , West Roxbury, , , Suffolk Co, MA, USA
 2 SOUR @S57@
 3 QUAY 2
 1 OCCU Boston Mayor
@@ -2671,7 +2673,7 @@
 2 DATE 1793
 1 DEAT
 2 DATE 28 NOV 1877
-2 PLAC Acton, Middlesex Co, MA
+2 PLAC , Acton, , , Middlesex Co, MA, USA
 1 REFN NOONEL93
 1 FAMS @F46@
 0 @R146@ INDI
@@ -2685,7 +2687,7 @@
 2 DATE 30 SEP 1832
 1 DEAT
 2 DATE 1 FEB 1900
-2 PLAC Acton, Middlesex Co, MA
+2 PLAC , Acton, , , Middlesex Co, MA, USA
 2 SOUR @S18@
 3 QUAY 1
 1 REFN HANNMI32
@@ -2713,12 +2715,12 @@
 3 TIME 13:59:55
 1 BIRT
 2 DATE 31 OCT 1865
-2 PLAC Acton, Middlesex Co, MA
+2 PLAC , Acton, , , Middlesex Co, MA, USA
 2 SOUR @S61@
 3 QUAY 1
 1 DEAT
 2 DATE 8 AUG 1964
-2 PLAC Dorchester, Suffolk Co, MA
+2 PLAC , Dorchester, , , Suffolk Co, MA, USA
 2 SOUR @S18@
 3 QUAY 1
 1 REFN HANNMJ65
@@ -2750,7 +2752,7 @@
 3 TIME 14:03:32
 1 BIRT
 2 DATE BET 30 JAN 1727 AND 30 JAN 1728
-2 PLAC France
+2 PLAC , , , , , , France
 1 DEAT
 1 REFN BOUVFR28
 1 FAMS @F49@
@@ -2774,7 +2776,7 @@
 3 TIME 14:02:09
 1 BIRT
 2 DATE 29 MAY 1758
-2 PLAC Grenoble, France
+2 PLAC , Grenoble, , , , , France
 1 DEAT
 2 DATE 1835
 1 REFN BOUVEU58
@@ -2857,7 +2859,7 @@
 3 TIME 14:07:41
 1 BIRT
 2 DATE 2 FEB 1792
-2 PLAC Pont-St-Esprit, France
+2 PLAC , Pont-St-Esprit, , , , , France
 1 DEAT
 2 DATE 1874
 1 IMMI
@@ -3002,12 +3004,12 @@
 3 TIME 15:05:00
 1 BIRT
 2 DATE 19 MAY 1891
-2 PLAC Easthampton, Hampshire Co, MA
+2 PLAC , Easthampton, , , Hampshire Co, MA, USA
 1 DEAT
 2 DATE 2 AUG 1957
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 BURI
-2 PLAC Easthampton, Hampshire Co, MA
+2 PLAC , Easthampton, , , Hampshire Co, MA, USA
 1 REFN BOUVJV91
 1 FAMC @F58@
 1 FAMS @F62@
@@ -3020,10 +3022,10 @@
 3 TIME 14:09:42
 1 BIRT
 2 DATE 1893
-2 PLAC Easthampton, Hampshire Co, MA
+2 PLAC , Easthampton, , , Hampshire Co, MA, USA
 1 DEAT
 2 DATE 8 OCT 1929
-2 PLAC Los Olivos, Santa Barbara Co, CA
+2 PLAC , Los Olivos, , , Santa Barbara Co, CA, USA
 1 BURI
 2 DATE 15 OCT 1929
 1 REFN BOUVWS93
@@ -3117,10 +3119,10 @@
 3 TIME 14:13:33
 1 BIRT
 2 DATE 1933
-2 PLAC Southampton, Long Island, NY
+2 PLAC , Southampton, , , Long Island, NY, USA
 1 CHR
 2 DATE 29 JUL 1933
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 REFN BOUVCL33
 1 FAMC @F62@
 1 FAMS @F63@
@@ -3245,10 +3247,10 @@
 3 TIME 14:22:13
 1 BIRT
 2 DATE 1892
-2 PLAC Chicago, Cook Co, IL
+2 PLAC , Chicago, , , Cook Co, IL, USA
 1 DEAT
 2 DATE 1955
-2 PLAC OK
+2 PLAC , , , , , OK, USA
 1 OCCU manufacturing
 1 REFN SKAKGE92
 1 FAMS @F66@
@@ -3263,7 +3265,7 @@
 2 DATE ABT 1892
 1 DEAT
 2 DATE 1955
-2 PLAC OK
+2 PLAC , , , , , OK, USA
 1 REFN BRANAN92
 1 FAMS @F66@
 0 @R196@ INDI
@@ -3376,7 +3378,7 @@
 3 TIME 14:01:26
 1 BIRT
 2 DATE 1939
-2 PLAC Riverdale, Unk Co, NY
+2 PLAC , Riverdale, , , Unk Co, NY, USA
 1 REFN BENNCA39
 1 FAMC @F67@
 0 @R207@ INDI
@@ -3401,7 +3403,7 @@
 2 DATE 10 DEC 1917
 1 DEAT
 2 DATE 10 SEP 1944
-2 PLAC Heppen, Belgium
+2 PLAC , Heppen, , , , , Belgium
 1 OCCU Marquess
 1 REFN CAVEWJ17
 1 FAMS @F69@
@@ -3451,7 +3453,7 @@
 2 DATE 9 SEP 2011
 3 TIME 13:49:58
 1 RESI
-2 PLAC Near Boston, Suffolk Co, MA
+2 PLAC , Near Boston, , , Suffolk Co, MA, USA
 1 OCCU Writer
 0 @R215@ TITL "The_American Ancestry_of_John Fitzgerald Kennedy," TAG
 1 CHAN
@@ -3498,7 +3500,7 @@
 3 TIME 13:50:46
 1 BIRT
 2 DATE 1798
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 2 SOUR @S69@
 3 QUAY 1
 1 DEAT
@@ -3523,10 +3525,10 @@
 3 TIME 14:39:32
 1 MARR
 2 DATE 7 OCT 1914
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 ENGA
 2 DATE 1914
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R1@
 1 WIFE @R2@
 1 CHIL @R3@
@@ -3545,7 +3547,7 @@
 3 TIME 14:39:24
 1 MARR
 2 DATE 23 MAY 1953
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 HUSB @R9@
 1 WIFE @R8@
 1 CHIL @R22@
@@ -3560,7 +3562,7 @@
 3 TIME 14:40:08
 1 MARR
 2 DATE 24 APR 1954
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 DIV
 2 DATE 1966
 1 HUSB @R11@
@@ -3576,7 +3578,7 @@
 3 TIME 14:39:56
 1 MARR
 2 DATE DEC 1984
-2 PLAC Bequia, West Indies
+2 PLAC , Bequia, , , , , West Indies
 1 HUSB @R16@
 1 WIFE @R20@
 0 @F4@ FAM
@@ -3586,7 +3588,7 @@
 3 TIME 14:39:52
 1 MARR
 2 DATE 17 SEP 1983
-2 PLAC Centerville, Barnstable Co, MA
+2 PLAC , Centerville, , , Barnstable Co, MA, USA
 1 HUSB @R21@
 1 WIFE @R17@
 0 @F5@ FAM
@@ -3596,7 +3598,7 @@
 3 TIME 14:39:43
 1 MARR
 2 DATE 25 APR 1986
-2 PLAC Hyannis Port, Barnstable Co, MA
+2 PLAC , Hyannis Port, , , Barnstable Co, MA, USA
 1 HUSB @R28@
 1 WIFE @R23@
 0 @F6@ FAM
@@ -3606,7 +3608,7 @@
 3 TIME 14:37:53
 1 MARR
 2 DATE 19 MAY 1956
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 HUSB @R29@
 1 WIFE @R13@
 1 CHIL @R30@
@@ -3620,7 +3622,7 @@
 3 TIME 14:38:58
 1 MARR
 2 DATE 30 NOV 1958
-2 PLAC Bronxville, Westchester Co, NY
+2 PLAC , Bronxville, , , Westchester Co, NY, USA
 1 DIV
 2 DATE 1984
 1 HUSB @R14@
@@ -3630,7 +3632,7 @@
 1 CHIL @R36@
 0 @F8@ FAM
 1 OBJE
-2 TITL John et Jacqueline KENNEDY
+2 TITL John and Jacqueline KENNEDY
 2 FILE photos/JFK_Jacqueline-BOUVIER.jpg
 3 FORM jpg
 2 NOTE
@@ -3640,7 +3642,7 @@
 3 TIME 13:48:04
 1 MARR
 2 DATE 12 SEP 1953
-2 PLAC Newport, Newport Co, RI
+2 PLAC , Newport, , , Newport Co, RI, USA
 2 SOUR @S64@
 3 QUAY 2
 1 HUSB @R4@
@@ -3656,7 +3658,7 @@
 3 TIME 14:37:09
 1 MARR
 2 DATE 17 JUN 1950
-2 PLAC Greenwich, Fairfield Co, CT
+2 PLAC , Greenwich, , , Fairfield Co, CT, USA
 1 HUSB @R12@
 1 WIFE @R42@
 1 CHIL @R43@
@@ -3677,7 +3679,7 @@
 3 TIME 14:36:50
 1 MARR
 2 DATE 17 NOV 1973
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 HUSB @R54@
 1 WIFE @R43@
 1 CHIL @R55@
@@ -3690,7 +3692,7 @@
 3 TIME 14:36:43
 1 MARR
 2 DATE 3 FEB 1979
-2 PLAC Gladwyne, Unk Co, PA
+2 PLAC , Gladwyne, , , Unk Co, PA, USA
 1 HUSB @R44@
 1 WIFE @R58@
 1 CHIL @R60@
@@ -3702,7 +3704,7 @@
 3 TIME 14:36:47
 1 MARR
 2 DATE 3 APR 1982
-2 PLAC Bloomington, Monroe Co, IN
+2 PLAC , Bloomington, , , Monroe Co, IN, USA
 1 HUSB @R45@
 1 WIFE @R61@
 1 CHIL @R62@
@@ -3713,7 +3715,7 @@
 3 TIME 14:39:15
 1 MARR
 2 DATE 14 JUN 1980
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 HUSB @R63@
 1 WIFE @R47@
 0 @F14@ FAM
@@ -3723,7 +3725,7 @@
 3 TIME 14:39:20
 1 MARR
 2 DATE 14 MAR 1981
-2 PLAC New York City, NY
+2 PLAC , New York City, , , , NY, USA
 1 HUSB @R48@
 1 WIFE @R64@
 1 CHIL @R65@
@@ -3734,7 +3736,7 @@
 2 DATE 9 SEP 2011
 3 TIME 14:39:04
 1 MARR
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 HUSB @R67@
 1 WIFE @R68@
 1 CHIL @R69@
@@ -3754,7 +3756,7 @@
 3 TIME 14:37:43
 1 MARR
 2 DATE 26 SEP 1849
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R69@
 1 WIFE @R72@
 1 CHIL @R73@
@@ -3768,7 +3770,7 @@
 2 DATE 9 SEP 2011
 3 TIME 14:38:02
 1 MARR
-2 PLAC Ireland
+2 PLAC , , , , , , Ireland
 1 HUSB @R78@
 1 WIFE @R79@
 1 CHIL @R80@
@@ -3779,7 +3781,7 @@
 3 TIME 14:36:54
 1 MARR
 2 DATE 1 JAN 1883
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R80@
 1 WIFE @R73@
 1 CHIL @R81@
@@ -3794,7 +3796,7 @@
 3 TIME 14:46:03
 1 MARR
 2 DATE 29 DEC 1918
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R85@
 1 WIFE @R84@
 0 @F21@ FAM
@@ -3804,7 +3806,7 @@
 3 TIME 14:45:59
 1 MARR
 2 DATE 22 SEP 1872
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R87@
 1 WIFE @R74@
 1 CHIL @R88@
@@ -3822,7 +3824,7 @@
 3 TIME 14:45:55
 1 MARR
 2 DATE 20 JUN 1916
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R92@
 1 WIFE @R91@
 0 @F23@ FAM
@@ -3832,7 +3834,7 @@
 3 TIME 14:45:51
 1 MARR
 2 DATE 30 JUN 1912
-2 PLAC Chelsea, Suffolk Co, MA
+2 PLAC , Chelsea, , , Suffolk Co, MA, USA
 1 HUSB @R94@
 1 WIFE @R97@
 0 @F24@ FAM
@@ -3849,7 +3851,7 @@
 3 TIME 14:41:57
 1 MARR
 2 DATE 21 FEB 1882
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R98@
 1 WIFE @R76@
 1 CHIL @R99@
@@ -3867,7 +3869,7 @@
 3 TIME 14:41:50
 1 MARR
 2 DATE 16 APR 1906
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R107@
 1 WIFE @R99@
 0 @F27@ FAM
@@ -3877,7 +3879,7 @@
 3 TIME 14:40:47
 1 MARR
 2 DATE 17 FEB 1920
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R108@
 1 WIFE @R101@
 0 @F28@ FAM
@@ -3887,7 +3889,7 @@
 3 TIME 14:45:12
 1 MARR
 2 DATE 4 JAN 1928
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 1 HUSB @R109@
 1 WIFE @R105@
 0 @F29@ FAM
@@ -3897,7 +3899,7 @@
 3 TIME 14:42:37
 1 MARR
 2 DATE 29 AUG 1931
-2 PLAC Revere, Suffolk Co, MA
+2 PLAC , Revere, , , Suffolk Co, MA, USA
 1 HUSB @R106@
 1 WIFE @R110@
 0 @F30@ FAM
@@ -3934,7 +3936,7 @@
 3 TIME 14:46:43
 1 MARR
 2 DATE 23 NOV 1887
-2 PLAC Boston, Suffolk Co, MA
+2 PLAC , Boston, , , Suffolk Co, MA, USA
 1 HUSB @R77@
 1 WIFE @R117@
 1 CHIL @R1@
@@ -3957,7 +3959,7 @@
 3 TIME 14:46:14
 1 MARR
 2 DATE 12 OCT 1927
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 HUSB @R123@
 1 WIFE @R119@
 1 CHIL @R124@
@@ -3968,7 +3970,7 @@
 3 TIME 14:46:10
 1 MARR
 2 DATE 29 DEC 1951
-2 PLAC St. Augustine, St. Johns Co, FL
+2 PLAC , St. Augustine, , , St. Johns Co, FL, USA
 1 HUSB @R125@
 1 WIFE @R124@
 0 @F37@ FAM
@@ -3987,7 +3989,7 @@
 3 TIME 14:46:19
 1 MARR
 2 DATE 14 JUN 1924
-2 PLAC Winthrop, Suffolk Co, MA
+2 PLAC , Winthrop, , , Suffolk Co, MA, USA
 1 DIV
 1 HUSB @R128@
 1 WIFE @R120@
@@ -4009,7 +4011,7 @@
 3 TIME 14:36:39
 1 MARR
 2 DATE 4 FEB 1976
-2 PLAC Newton, Middlesex Co, MA
+2 PLAC , Newton, , , Middlesex Co, MA, USA
 1 HUSB @R130@
 1 WIFE @R133@
 0 @F41@ FAM
@@ -4019,7 +4021,7 @@
 3 TIME 14:36:35
 1 MARR
 2 DATE 18 JUN 1960
-2 PLAC Watertown, Middlesex Co, MA
+2 PLAC , Watertown, , , Middlesex Co, MA, USA
 1 HUSB @R131@
 1 WIFE @R134@
 0 @F42@ FAM
@@ -4085,7 +4087,7 @@
 3 TIME 14:36:04
 1 MARR
 2 DATE 18 SEP 1889
-2 PLAC Concord, Middlesex Co, MA
+2 PLAC , Concord, , , Middlesex Co, MA, USA
 2 SOUR @S65@
 3 QUAY 2
 1 HUSB @R143@
@@ -4098,7 +4100,7 @@
 3 TIME 14:35:53
 1 MARR
 2 DATE 26 APR 1753
-2 PLAC France
+2 PLAC , , , , , , France
 1 HUSB @R150@
 1 WIFE @R151@
 1 CHIL @R152@
@@ -4223,7 +4225,7 @@
 3 TIME 14:40:43
 1 MARR
 2 DATE 7 JUL 1928
-2 PLAC Easthampton, Long Island, NY
+2 PLAC , Easthampton, , , Long Island, NY, USA
 1 DIV
 2 DATE 1938
 1 HUSB @R171@
@@ -4237,7 +4239,7 @@
 3 TIME 14:40:54
 1 MARR
 2 DATE APR 1953
-2 PLAC Washington, DC
+2 PLAC , Washington, , , , DC, USA
 1 ANUL
 1 HUSB @R186@
 1 WIFE @R180@
@@ -4297,7 +4299,7 @@
 3 TIME 14:45:16
 1 MARR
 2 DATE 19 JUL 1986
-2 PLAC Centerville, Barnstable Co, MA
+2 PLAC , Centerville, , , Barnstable Co, MA, USA
 1 HUSB @R207@
 1 WIFE @R39@
 0 @F69@ FAM
@@ -4307,7 +4309,7 @@
 3 TIME 14:45:21
 1 MARR
 2 DATE 6 MAY 1944
-2 PLAC London, England
+2 PLAC , London, , , , , England
 1 HUSB @R208@
 1 WIFE @R7@
 0 @F70@ FAM
@@ -4317,7 +4319,7 @@
 3 TIME 14:40:37
 1 MARR
 2 DATE 22 OCT 1968
-2 PLAC Skorpios, Greece
+2 PLAC , Skorpios, , , , , Greece
 1 HUSB @R209@
 1 WIFE @R37@
 0 @F71@ FAM
