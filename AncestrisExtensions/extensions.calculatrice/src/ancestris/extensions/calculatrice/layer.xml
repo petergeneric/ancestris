@@ -31,7 +31,7 @@
             <file name="CalcTopComponent.settings" url="CalcTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="genjfr-nav">
+            <folder name="ancestris-nav">
                 <file name="CalcTopComponent.wstcref" url="CalcTopComponentWstcref.xml"/>
             </folder>
         </folder>
