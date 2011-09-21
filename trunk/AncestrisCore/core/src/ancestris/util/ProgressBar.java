@@ -1,14 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Ancestris - http://www.ancestris.org
+ *
+ * Copyright 2011 Ancestris
+ *
+ * Author: Daniel Andre (daniel@ancestris.org).
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 package ancestris.util;
 
-import genj.app.WorkbenchListener;
-import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
+import genj.app.ProgressListener;
 import genj.util.Trackable;
-import genj.view.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -20,8 +24,7 @@ import org.openide.util.Cancellable;
  *
  * @author daniel
  */
-
-public class ProgressBar implements WorkbenchListener {
+public class ProgressBar implements ProgressListener {
 
     ProgressHandle handle;
     Trackable track;
@@ -50,9 +53,9 @@ public class ProgressBar implements WorkbenchListener {
 
             public void actionPerformed(ActionEvent e) {
                 // update progress bar
-                try{
+                try {
                     handle.progress(track.getState(), track.getProgress());
-                } catch (IllegalArgumentException ex){
+                } catch (IllegalArgumentException ex) {
                     // NoOp : le trackable envoie des process decroissants
                     handle.progress(track.getState());
                 }
@@ -68,26 +71,5 @@ public class ProgressBar implements WorkbenchListener {
         // it's not realy necessary to count all the way to the limit, finish can be called earlier.
         // however it has to be called at the end of the processing.
         handle.finish();
-    }
-// FIXME: extend from WorbenchAdapter
-    public void gedcomClosed(Gedcom gedcom) {
-    }
-
-    public void gedcomOpened(Gedcom gedcom) {
-    }
-
-    public void selectionChanged(Context context, boolean isActionPerformed) {
-    }
-
-    public void viewClosed(View view) {
-    }
-
-    public void viewOpened(View view) {
-    }
-
-    public void workbenchClosing() {
-    }
-
-    public void commitRequested(Context context) {
     }
 }

@@ -59,14 +59,26 @@ import genj.util.EnvironmentChecker;
 import genj.util.ServiceLookup;
 import genj.util.Trackable;
 import genj.util.swing.FileChooser;
+import genj.util.swing.MenuHelper;
+import genj.view.ActionProvider;
+import genj.view.ActionProvider.Purpose;
+import genj.view.ContextProvider;
 import genj.view.SelectionListener;
+import java.awt.AWTEvent;
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -75,8 +87,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.FocusManager;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JPopupMenu;
+import javax.swing.MenuSelectionManager;
+import javax.swing.SwingUtilities;
 
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -93,6 +109,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     /*package*/ final static Logger LOG = Logger.getLogger("genj.app");
     /*package*/ final static Resources RES = Resources.get(Workbench.class);
     /*package*/ final static Registry REGISTRY = Registry.get(Workbench.class);
+    private final static ContextHook HOOK = new ContextHook();
 // Callback
 //      IWorkbenchHelper helper;
     // Instance
@@ -110,8 +127,8 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (instance == null) {
             instance = new Workbench();
             for (PluginFactory pf : ServiceLookup.lookup(PluginFactory.class)) {
-              LOG.info("Activate plugin "+pf.getClass());
-              Object plugin = pf.createPlugin();
+                LOG.info("Activate plugin " + pf.getClass());
+                Object plugin = pf.createPlugin();
             }
         }
         return instance;
@@ -347,7 +364,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
             }
         }
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        File file = chooseFile(RES.getString("cc.save.title",context.getGedcom().toString()), RES.getString("cc.save.action"), options,context.getGedcom().toString());
+        File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString());
         if (file == null) {
             return null;
         }
@@ -359,7 +376,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
 
         // Need confirmation if File exists?
         if (file.exists()) {
-            int rc = DialogHelper.openDialog(RES.getString("cc.save.title",context.getGedcom().toString()), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
+            int rc = DialogHelper.openDialog(RES.getString("cc.save.title", context.getGedcom().toString()), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
             if (rc != 0) {
                 return null;
             }
@@ -425,8 +442,9 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (context != null && context.getGedcom().getOrigin() == null) {
             return saveAsGedcom(context);
         }
-        if (context==null)
+        if (context == null) {
             return false;
+        }
         if (context.getGedcom() == null) {
             return false;
         }
@@ -639,14 +657,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         selectionChanged(from, context, isActionPerformed);
     }
 
-    public void addWorkbenchListener(WorkbenchListener listener) {
-        AncestrisPlugin.register(listener);
-    }
-
-    public void removeWorkbenchListener(WorkbenchListener listener) {
-        AncestrisPlugin.unregister(listener);
-    }
-
     /**
      * (re)open a view
      */
@@ -786,7 +796,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         return chooseFile(title, action, accessory, null);
     }
 
-    public File chooseFile(String title, String action, JComponent accessory,String defaultFilename) {
+    public File chooseFile(String title, String action, JComponent accessory, String defaultFilename) {
         FileChooser chooser = new FileChooser(
                 null, title, action, "ged",
                 EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
@@ -797,7 +807,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         }
         File directory = new File(Registry.get(Workbench.class).get("last.dir", gedcomDir));
         chooser.setCurrentDirectory(directory);
-        if (defaultFilename!=null){
+        if (defaultFilename != null) {
             chooser.setSelectedFile(new File(directory, defaultFilename));
         }
         if (accessory != null) {
@@ -837,53 +847,35 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     }
 
     public void processStarted(Trackable process) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
+        for (ProgressListener listener : AncestrisPlugin.lookupAll(ProgressListener.class)) {
             listener.processStarted(process);
         }
     }
 
     public void processStopped(Trackable process) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
+        for (ProgressListener listener : AncestrisPlugin.lookupAll(ProgressListener.class)) {
             listener.processStopped(process);
         }
     }
 
     public void commitRequested(Context context) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
+        for (GedcomFileListener listener : AncestrisPlugin.lookupAll(GedcomFileListener.class)) {
             listener.commitRequested(context);
         }
     }
 
-    public void workbenchClosing() {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
-            listener.workbenchClosing();
-        }
-    }
-
     public void gedcomClosed(Gedcom gedcom) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
+        for (GedcomFileListener listener : AncestrisPlugin.lookupAll(GedcomFileListener.class)) {
             listener.gedcomClosed(gedcom);
         }
         gedcom.removeGedcomListener(this);
     }
 
     public void gedcomOpened(Gedcom gedcom) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
+        for (GedcomFileListener listener : AncestrisPlugin.lookupAll(GedcomFileListener.class)) {
             listener.gedcomOpened(gedcom);
         }
         gedcom.addGedcomListener(this);
-    }
-
-    public void viewOpened(View view) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
-            listener.viewOpened(view);
-        }
-    }
-
-    public void viewClosed(View view) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
-            listener.viewClosed(view);
-        }
     }
 
     // Gedcom Listener
@@ -955,5 +947,180 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         return null;
 //        return App.center.getSelectedContext(true);
     }
+
+    /**
+     * Our hook into keyboard and mouse operated context changes / menu
+     */
+    private static class ContextHook extends Action2 implements AWTEventListener {
+
+        /** constructor */
+        private ContextHook() {
+            try {
+                AccessController.doPrivileged(new PrivilegedAction<Void>() {
+
+                    public Void run() {
+                        Toolkit.getDefaultToolkit().addAWTEventListener(ContextHook.this, AWTEvent.MOUSE_EVENT_MASK);
+                        return null;
+                    }
+                });
+            } catch (Throwable t) {
+                LOG.log(Level.WARNING, "Cannot install ContextHook", t);
+            }
+        }
+
+        /**
+         * Find workbench for given component
+         * @return workbench or null
+         */
+        /**
+         * A Key press initiation of the context menu
+         */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            // only for jcomponents with focus
+            Component focus = FocusManager.getCurrentManager().getFocusOwner();
+            if (!(focus instanceof JComponent)) {
+                return;
+            }
+            // look for ContextProvider and show menu if appropriate
+            ViewContext context = new ContextProvider.Lookup(focus).getContext();
+            if (context != null) {
+                JPopupMenu popup = getContextMenu(context);
+                if (popup != null) {
+                    popup.show(focus, 0, 0);
+                }
+            }
+            // done
+        }
+
+        /**
+         * A mouse click initiation of the context menu
+         */
+        public void eventDispatched(AWTEvent event) {
+
+            // a mouse popup/click event?
+            if (!(event instanceof MouseEvent)) {
+                return;
+            }
+            final MouseEvent me = (MouseEvent) event;
+            if (!(me.isPopupTrigger() || me.getID() == MouseEvent.MOUSE_CLICKED)) {
+                return;
+            }
+
+            // NM 20080130 do the component/context calculation in another event to
+            // allow everyone to catch up
+            // Peter reported that the context menu is the wrong one as
+            // PropertyTreeWidget
+            // changes the selection on mouse clicks (following right-clicks).
+            // It might be that eventDispatched() is called before the mouse click is
+            // propagated to the
+            // component thus calculates the menu before the selection changes.
+            // So I'm trying now to show the popup this in a later event to make sure
+            // everyone caught up to the event
+
+            // find workbench now (popup menu might go away after this method call)
+//      final Workbench workbench = getWorkbench((Component)me.getSource());
+//      if (workbench==null)
+//        return;
+
+            // find context at point
+            final Component source = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY());
+            final ContextProvider.Lookup lookup = new ContextProvider.Lookup(source);
+            if (lookup.getContext() == null) {
+                return;
+            }
+
+            final Point point = SwingUtilities.convertPoint(me.getComponent(), me.getX(), me.getY(), me.getComponent());
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+
+                    // a double-click on provider?
+                    if (lookup.getProvider() == source
+                            && me.getButton() == MouseEvent.BUTTON1
+                            && me.getID() == MouseEvent.MOUSE_CLICKED
+                            && me.getClickCount() == 2) {
+                        SelectionSink.Dispatcher.fireSelection(me.getComponent(), lookup.getContext(), true);
+                        return;
+                    }
+
+                    // a popup?
+                    if (me.isPopupTrigger()) {
+
+                        // cancel any menu
+                        MenuSelectionManager.defaultManager().clearSelectedPath();
+
+                        // show context menu
+                        JPopupMenu popup = getContextMenu(lookup.getContext());
+                        if (popup != null) {
+                            popup.show(me.getComponent(), point.x, point.y);
+                        }
+
+                    }
+                }
+            });
+
+            // done
+        }
+
+        /**
+         * Create a popup menu for given context
+         */
+        private JPopupMenu getContextMenu(ViewContext context) {
+
+            // make sure context is valid
+            if (context == null) {
+                return null;
+            }
+
+            // make sure any existing popup is cleared
+            MenuSelectionManager.defaultManager().clearSelectedPath();
+
+            // create a popup
+            MenuHelper mh = new MenuHelper();
+            JPopupMenu popup = mh.createPopup();
+
+            // popup local actions?
+            mh.createItems(context.getActions());
+
+            // get and merge all actions
+            List<Action2> groups = new ArrayList<Action2>(8);
+            List<Action2> singles = new ArrayList<Action2>(8);
+            Map<Action2.Group, Action2.Group> lookup = new HashMap<Action2.Group, Action2.Group>();
+
+            for (Action2 action : getProvidedActions(context)) {
+                if (action instanceof Action2.Group) {
+                    Action2.Group group = lookup.get(action);
+                    if (group != null) {
+                        group.add(new ActionProvider.SeparatorAction());
+                        group.addAll((Action2.Group) action);
+                    } else {
+                        lookup.put((Action2.Group) action, (Action2.Group) action);
+                        groups.add((Action2.Group) action);
+                    }
+                } else {
+                    singles.add(action);
+                }
+            }
+
+            // add to menu
+            mh.createItems(groups);
+            mh.createItems(singles);
+
+            // done
+            return popup;
+        }
+
+        private Action2.Group getProvidedActions(Context context) {
+            Action2.Group group = new Action2.Group("");
+            // ask the action providers
+            for (ActionProvider provider : AncestrisPlugin.lookupAll(ActionProvider.class)) {
+                provider.createActions(context, Purpose.CONTEXT, group);
+            }
+            // done
+            return group;
+        }
+    } //ContextHook
 } // WorkBench
 

@@ -19,9 +19,9 @@
  */
 package genj.edit;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.app.GedcomFileListener;
 import genj.app.Priority;
-import genj.app.Workbench;
-import genj.app.WorkbenchAdapter;
 import genj.crypto.Enigma;
 import genj.edit.actions.CreateAlias;
 import genj.edit.actions.CreateAssociation;
@@ -73,7 +73,7 @@ import java.util.logging.Logger;
  * our editing plugin
  */
 @Priority(priority=Priority.HIGH)
-public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
+public class EditPlugin implements GedcomFileListener,ActionProvider {
   
   private final static Resources RESOURCES = Resources.get(EditPlugin.class);
   private final static Logger LOG = Logger.getLogger("genj.edit");
@@ -84,7 +84,7 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
    * Constructor
    */
   /*package*/ EditPlugin() {
-    Workbench.getInstance().addWorkbenchListener(this);
+    AncestrisPlugin.register(this);
     
     // prime bean cache
     PropertyBean.getAvailableBeans();
@@ -109,6 +109,14 @@ public class EditPlugin extends WorkbenchAdapter implements ActionProvider {
 //    }
 //
   }
+
+    @Override
+    public void commitRequested(Context context) {
+    }
+
+    @Override
+    public void gedcomClosed(Gedcom gedcom) {
+    }
   
   /**
    * @see genj.view.ActionProvider#createActions(Entity[], ViewManager)

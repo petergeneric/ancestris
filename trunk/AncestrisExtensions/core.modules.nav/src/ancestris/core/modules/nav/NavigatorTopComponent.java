@@ -1,11 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Ancestris - http://www.ancestris.org
+ *
+ * Copyright 2011 Ancestris
+ *
+ * Author: Daniel Andre (daniel@ancestris.org).
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package ancestris.core.modules.nav;
 
-import ancestris.app.GenjViewTopComponent;
+import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.core.modules.nav.NavigatorViewFactory;
@@ -16,20 +22,19 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(
-    dtd="-//ancestris.app//Navigator//EN",
-    autostore=false
-)
-@ServiceProvider(service=AncestrisViewInterface.class)
+@ConvertAsProperties(dtd = "-//ancestris.app//Navigator//EN",
+autostore = false)
+@ServiceProvider(service = AncestrisViewInterface.class)
 public final class NavigatorTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "NavigatorTopComponent";
     private static NavigatorTopComponent factory;
     private static ViewFactory viewfactory = new NavigatorViewFactory();
 
-
     @Override
-    public String getDefaultFactoryMode() {return AncestrisDockModes.NAV;}
+    public String getDefaultFactoryMode() {
+        return AncestrisDockModes.NAV;
+    }
 
     public ViewFactory getViewFactory() {
         return viewfactory;

@@ -9,10 +9,8 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package ancestris.api.editor;
 
-import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -26,30 +24,43 @@ import org.openide.util.Lookup;
 // XXX: merge with Editor in core?
 public abstract class AncestrisEditor {
 
-    public static AncestrisEditor findEditor(Property property){
-        if (property == null)
-            return NoOpEditor.instance;
-        for (AncestrisEditor editor: Lookup.getDefault().lookupAll(AncestrisEditor.class)){
-            if (editor.canEdit(property))
-                return editor;
+    public static AncestrisEditor findEditor(Property property) {
+        AncestrisEditor editor = NoOpEditor.instance;
+        if (property == null) {
+            return editor;
         }
-        return NoOpEditor.instance;
+        for (AncestrisEditor edt : Lookup.getDefault().lookupAll(AncestrisEditor.class)) {
+            if (edt.canEdit(property)) {
+                if (edt.isActive()) {
+                    return edt;
+                }
+                editor = edt;
+            }
+        }
+        return editor;
     }
+
     public abstract boolean canEdit(Property property);
+
+    public abstract boolean isActive();
+
     public abstract boolean edit(Property property, boolean isNew);
-    public boolean edit(Property property){
+
+    public boolean edit(Property property) {
         return edit(property, false);
     }
 
     // Actions
     public abstract AbstractAction getCreateSpouseAction(Property indi);
+
     public abstract AbstractAction getCreateParentAction(Property child, int sex);
+
     public abstract AbstractAction getCreateChildAction(Property indi);
 
     /**
      * This editor does nothing. It is created to avoid many check against null by findEditor
      */
-    private static class NoOpEditor extends AncestrisEditor{
+    private static class NoOpEditor extends AncestrisEditor {
 
         private static AbstractAction NOOP = new AbstractAction() {
 
@@ -58,7 +69,6 @@ public abstract class AncestrisEditor {
                 // NoOp
             }
         };
-
         public static final AncestrisEditor instance = new NoOpEditor();
 
         @Override
@@ -86,5 +96,13 @@ public abstract class AncestrisEditor {
             return NOOP;
         }
 
+        /**
+         * default editor is never active
+         * @return always false
+         */
+        @Override
+        public boolean isActive() {
+            return false;
+        }
     }
 }

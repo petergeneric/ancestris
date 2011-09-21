@@ -94,4 +94,15 @@ public final class NavigatorTopComponent extends AncestrisTopComponent implement
         setPanel(familyPanel);
         repaint();
     }
+
+    // XXX: put something more meaningfull ;-)
+    @Override
+    public void setName() {
+        setName("");
+    }
+
+    @Override
+    public void setToolTipText() {
+        setToolTipText("");
+    }
 }

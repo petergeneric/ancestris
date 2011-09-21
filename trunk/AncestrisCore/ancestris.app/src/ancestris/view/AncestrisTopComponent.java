@@ -3,7 +3,6 @@
  */
 package ancestris.view;
 
-import genj.util.AncestrisPreferences;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import ancestris.core.pluginservice.AncestrisPlugin;
@@ -12,6 +11,8 @@ import ancestris.app.App;
 import ancestris.app.ModePersisterTopComponent;
 import ancestris.app.OpenGenjViewAction;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
@@ -22,7 +23,8 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import org.openide.awt.UndoRedo;
 import org.openide.nodes.AbstractNode;
@@ -32,7 +34,6 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
-import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -67,8 +68,7 @@ import org.openide.windows.WindowManager;
  *   => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
-@ServiceProvider(service=AncestrisViewInterface.class)
-public class AncestrisTopComponent extends TopComponent implements AncestrisViewInterface{
+public class AncestrisTopComponent extends TopComponent implements AncestrisViewInterface {
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
@@ -94,8 +94,10 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
      */
     @Override
     public Lookup getLookup() {
-        if (dummyNode == null) { return tcLookup; }
-        return new ProxyLookup(new Lookup[] {tcLookup, dummyNode.getLookup()});
+        if (dummyNode == null) {
+            return tcLookup;
+        }
+        return new ProxyLookup(new Lookup[]{tcLookup, dummyNode.getLookup()});
     }
 
     @Override
@@ -103,14 +105,16 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return GedcomDirectory.getInstance().getUndoRedo(context);
     }
 
-    public String getDefaultFactoryMode() {return AncestrisDockModes.EDITOR;}
+    public String getDefaultFactoryMode() {
+        return AncestrisDockModes.EDITOR;
+    }
 
-    String getDefaultMode(){
-        return genj.util.Registry.get(this).get(preferredID()+".dockMode",getDefaultFactoryMode());
+    String getDefaultMode() {
+        return genj.util.Registry.get(this).get(preferredID() + ".dockMode", getDefaultFactoryMode());
     }
 
     public void setDefaultMode(String mode) {
-        genj.util.Registry.get(this).put(preferredID()+".dockMode", mode);
+        genj.util.Registry.get(this).put(preferredID() + ".dockMode", mode);
     }
 
     public void setDefaultMode(Mode mode) {
@@ -119,26 +123,28 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     @Override
     public void open() {
-        if (context == null)
+        if (context == null) {
             return;
+        }
         if (!isRestored) {
-            String modeName = getGedcom().getRegistry().get(preferredID()+".dockMode", getDefaultMode()) ;
-            
-             Mode m = WindowManager.getDefault().findMode (modeName);
-             if (m != null) {
+            String modeName = getGedcom().getRegistry().get(preferredID() + ".dockMode", getDefaultMode());
+
+            Mode m = WindowManager.getDefault().findMode(modeName);
+            if (m != null) {
                 m.dockInto(this);
-             }
+            }
         }
         super.open();
     }
 
     public Gedcom getGedcom() {
-        return context==null?null:context.getGedcom();
+        return context == null ? null : context.getGedcom();
     }
-    public void setContext(Context context){
-        this.context=context;
+
+    public void setContext(Context context) {
+        this.context = context;
         AbstractNode n = GedcomDirectory.getInstance().getDummyNode(context);
-        if (n != null && n != dummyNode){
+        if (n != null && n != dummyNode) {
             // Create a dummy node for the save button
             setActivatedNodes(new Node[]{n});
             dummyNode = n;
@@ -148,26 +154,6 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     public Context getContext() {
         return context;
-    }
-    
-/**
- *
- * @param gedcom
- * @deprecated
- */
-    @Deprecated
-    public void setGedcom(Gedcom gedcom) {
-        LOG.warning("setGedcom obsolete, try workaround...");
-        setContext(new Context(gedcom));
-    }
-
-
-    /**
-     * @deprecated : use AncestrisPlugin.register(this)
-     */
-    @Deprecated
-    public void addLookup() {
-        AncestrisPlugin.register(this);
     }
 
     public void setPanel(JComponent jpanel) {
@@ -183,28 +169,70 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         add(panel, BorderLayout.CENTER);
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * return icon image for this TopComponent
+     * @return
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    public Image getImageIcon() {
+        return null;
+    }
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-    }// </editor-fold>//GEN-END:initComponents
+    /**
+     * sets the display name (title) of this TopComponent. Usually displayed in
+     * a tab
+     */
+    public void setName() {
+        setName("");
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
+    /**
+     * Sets tooltip text
+     */
+    public void setToolTipText() {
+        setToolTipText("");
+    }
+    /*
+     * lors de l'initialisation de la vue la taille du panel n'est pas correcte (0,0)
+     * donc le node n'est pas centre dans la vue. Ce flag permet de lancer un recentrage lorsque
+     * la taille a ete positionnee correctement et donc de refaire un centrage correct
+     * apres.
+     *
+     * This is specially true for GenjViewTopComponent
+     */
+    private boolean sizeCorrect = true;
+
+    public boolean isSizeCorrect() {
+        return sizeCorrect;
+    }
+
+    public void setSizeCorrect(boolean value) {
+        sizeCorrect = value;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (!isSizeCorrect()) {
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    runWhenSizeIsCorrect();
+                }
+            });
+            setSizeCorrect(true);
+        }
+    }
+
+    public void runWhenSizeIsCorrect() {
+    }
+
+    public boolean createPanel() {
+        return false;
+    }
+
+    public void refreshPanel(Context context) {
+        return;
+    }
 
     @Override
     public int getPersistenceType() {
@@ -219,30 +247,33 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     // code pour forcer la persistence des mode (place ici aussi car ne fonctionne pas tjs dans close
     @Override
-    public boolean canClose(){
+    public boolean canClose() {
         persistMode();
         return true;
     }
-    private void persistMode(){
+
+    private void persistMode() {
         Mode mode = getMode();
-        if (mode == null)
+        if (mode == null) {
             return;
-        for (TopComponent tc: mode.getTopComponents()) {
-            if (tc instanceof ModePersisterTopComponent)
+        }
+        for (TopComponent tc : mode.getTopComponents()) {
+            if (tc instanceof ModePersisterTopComponent) {
                 return;
+            }
         }
         mode.dockInto(new ModePersisterTopComponent());
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        p.setProperty("gedcom",getGedcom().getOrigin().toString());
+        p.setProperty("gedcom", getGedcom().getOrigin().toString());
         // TODO store your settings
     }
 
-    Object readProperties(java.util.Properties p) {
+    public Object readProperties(java.util.Properties p) {
         readPropertiesImpl(p);
         return this;
     }
@@ -250,9 +281,9 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
     void readPropertiesImpl(java.util.Properties p) {
 // version not used        String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
-//        if (gedName==null) return;
-        if (gedName==null)
+        if (gedName == null) {
             close();
+        }
         setRestored(true);
         waitStartup(gedName);
     }
@@ -266,21 +297,24 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
      * return
      * @return
      */
-    public String getPreferencesKey(String key){
-        return PREFERRED_ID+"."+key;
+    public String getPreferencesKey(String key) {
+        return PREFERRED_ID + "." + key;
     }
 
     public AncestrisTopComponent create(Context context) {
-        Gedcom gedcom = context == null?null:context.getGedcom();
+        Gedcom gedcom = context == null ? null : context.getGedcom();
         AncestrisTopComponent topComponent = null;
-        if (gedcom != null)
-            for (AncestrisTopComponent tc:AncestrisPlugin.lookupAll(this.getClass()))
-                if (gedcom.equals(tc.getGedcom())){
+        if (gedcom != null) {
+            for (AncestrisTopComponent tc : AncestrisPlugin.lookupAll(this.getClass())) {
+                if (gedcom.equals(tc.getGedcom())) {
                     topComponent = tc;
                     break;
                 }
-        if (topComponent != null)
+            }
+        }
+        if (topComponent != null) {
             return topComponent;
+        }
         try {
             topComponent = this.getClass().newInstance();
             //return Constructor.newInstance(this);
@@ -289,8 +323,8 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         } catch (IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         }
-            topComponent.init(context);
-            return topComponent;
+        topComponent.init(context);
+        return topComponent;
     }
 
     /**
@@ -315,22 +349,23 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return new OpenGenjViewAction((AncestrisTopComponent) map.get("component"), map);
     }
 
-    
     public void init(Context context) {
         setName();
         setToolTipText();
         setContext(context);
-        if (getImageIcon() != null)
+        if (getImageIcon() != null) {
             setIcon(getImageIcon());
+        }
         if (context == null || context.getGedcom() == null) {
             return;
         }
-        if (!createPanel())
+        if (!createPanel()) {
             return;
+        }
         AncestrisPlugin.register(this);
 
         String gedcomName;
-        if ((getGedcom() != null) && ((gedcomName = getGedcom().getName())!=null)){
+        if ((getGedcom() != null) && ((gedcomName = getGedcom().getName()) != null)) {
             setName(gedcomName);
             setToolTipText(getToolTipText() + ": " + gedcomName);
         }
@@ -341,53 +376,34 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
             @Override
             public void componentShown(ComponentEvent evt) {
                 Window w = SwingUtilities.getWindowAncestor(AncestrisTopComponent.this);
-                if(w!=null && w instanceof JFrame && ! (w.equals(WindowManager.getDefault().getMainWindow()))){
-//                if(w!=null && w instanceof JFrame){
-                    ((JFrame)w).setTitle(getName());
-                    ((JFrame)w).setIconImage(getIcon());
+                if (w != null && w instanceof JFrame && !(w.equals(WindowManager.getDefault().getMainWindow()))) {
+                    ((JFrame) w).setTitle(getName());
+                    ((JFrame) w).setIconImage(getIcon());
                 }
             }
-
         });
 
     }
 
-    public boolean createPanel(){
-        return false;
-    }
-
-    public void refreshPanel(Context context) {
-        return;
-    }
-
-     public Image getImageIcon(){
-        return null;
-    }
-    public void setName() {
-        setName("");
-    }
-    public void setToolTipText(){
-        setToolTipText("");
-    }
-
     //FIXME: revoir la synchro avec le CC
-    public void waitStartup(String name){
+    public void waitStartup(String name) {
         final String gedName = name;
-                new Thread(new Runnable() {
+        new Thread(new Runnable() {
+
             @SuppressWarnings("empty-statement")
             public void run() {
-                while (!App.center.isReady(0))
-                        ;
+                while (!App.center.isReady(0));
                 SwingUtilities.invokeLater(new Runnable() {
+
                     public void run() {
-                    if (App.center.getOpenedContext(gedName) == null)
-                        close();
-                    else {
-                        init(App.center.getOpenedContext(gedName));
-                        open();
+                        if (App.center.getOpenedContext(gedName) == null) {
+                            close();
+                        } else {
+                            init(App.center.getOpenedContext(gedName));
+                            open();
+                        }
                     }
-                }
-            });
+                });
             }
         }).start();
     }
@@ -398,5 +414,38 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     public void setRestored(boolean b) {
         isRestored = b;
+    }
+    // ToolBar support
+    private JToolBar bar = null;
+
+    public void setToolBar(JToolBar bar) {
+        this.bar = bar;
+
+        if (bar != null) {
+            add(bar, genj.util.Registry.get(this).get("toolbar", BorderLayout.NORTH));
+        }
+    }
+
+    /**
+     * When adding components we fix a Toolbar's sub-component's orientation
+     */
+    @Override
+    protected void addImpl(Component comp, Object constraints, int index) {
+        // restore toolbar orientation?
+        if ((bar != null) && (comp == bar)) {
+            // remember
+            genj.util.Registry.get(this).put("toolbar", constraints.toString());
+            // find orientation
+            int orientation = SwingConstants.HORIZONTAL;
+            if (BorderLayout.WEST.equals(constraints) || BorderLayout.EAST.equals(constraints)) {
+                orientation = SwingConstants.VERTICAL;
+            }
+            // fix orientation for toolbar
+            bar.setOrientation(orientation);
+            // toolbar o.k.
+        }
+        // go ahead with super
+        super.addImpl(comp, constraints, index);
+        // done
     }
 }
