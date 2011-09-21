@@ -120,7 +120,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         AncestrisPlugin.unregister(this);
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
@@ -129,7 +129,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         }
     }
 
-    void readProperties(java.util.Properties p) {
+    public void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
         if (gedName == null) {
