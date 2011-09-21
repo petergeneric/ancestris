@@ -273,9 +273,8 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         // TODO store your settings
     }
 
-    public Object readProperties(java.util.Properties p) {
+    public void readProperties(java.util.Properties p) {
         readPropertiesImpl(p);
-        return this;
     }
 
     void readPropertiesImpl(java.util.Properties p) {

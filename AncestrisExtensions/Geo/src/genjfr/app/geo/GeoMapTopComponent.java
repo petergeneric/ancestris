@@ -888,7 +888,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         AncestrisPlugin.register(this);
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
@@ -924,7 +924,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         p.setProperty("geoFilter.otherEvents", Boolean.toString(geoFilter.otherEvents));
     }
 
-    void readProperties(java.util.Properties p) {
+    public void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
         mapCenterLat = Double.valueOf(p.getProperty("mapCenterLat", "47"));

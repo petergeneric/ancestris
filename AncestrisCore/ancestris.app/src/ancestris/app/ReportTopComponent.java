@@ -62,9 +62,8 @@ public final class ReportTopComponent extends GenjViewTopComponent {
         super.writeProperties(p);
     }
 
-    public Object readProperties(java.util.Properties p) {
+    public void readProperties(java.util.Properties p) {
         super.readProperties(p);
-        return this;
     }
 
     @Override
