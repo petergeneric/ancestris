@@ -19,6 +19,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -31,6 +32,7 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
@@ -179,17 +181,29 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     /**
      * sets the display name (title) of this TopComponent. Usually displayed in
-     * a tab
+     * a tab.
      */
     public void setName() {
-        setName("");
+        String name;
+        try{
+            name = NbBundle.getMessage(this.getClass(), "CTL_"+preferredID());
+        } catch (MissingResourceException ex){
+            name = preferredID();
+        }
+        setName(name);
     }
 
     /**
      * Sets tooltip text
      */
     public void setToolTipText() {
-        setToolTipText("");
+        String name;
+        try{
+            name = NbBundle.getMessage(this.getClass(), "HINT_"+preferredID());
+        } catch (MissingResourceException ex){
+            name = preferredID();
+        }
+        setToolTipText(name);
     }
     /*
      * lors de l'initialisation de la vue la taille du panel n'est pas correcte (0,0)
@@ -295,6 +309,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
     /**
      * return
      * @return
+     * XXX:
      */
     public String getPreferencesKey(String key) {
         return PREFERRED_ID + "." + key;
