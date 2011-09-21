@@ -8,5 +8,5 @@ and open the template in the editor.
     <module name="ancestris.extensions.calculatrice" spec="1.0"/>
     <instanceof class="org.openide.windows.TopComponent"/>
     <instanceof class="ancestris.extensions.calculatrice.CalcTopComponent"/>
-    <instance class="gancestris.extensions.calculatrice.CalcTopComponent" method="getDefault"/>
+    <instance class="ancestris.extensions.calculatrice.CalcTopComponent" method="getDefault"/>
 </settings>
