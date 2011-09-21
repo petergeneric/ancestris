@@ -20,67 +20,17 @@
 package genj.app;
 
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import genj.util.Trackable;
-import genj.view.View;
 
 /**
  * Workbench callbacks
+ * XXX: there is only one call back left. Could we merge it with SelectionListener interface?
  */
 public interface WorkbenchListener {
 
-  /**
-   * notification that selection has changed
-   * @param context the new selection
-   * @param isActionPerformed whether to perform action (normally double-click)
-   */
-  public void selectionChanged(Context context, boolean isActionPerformed);
-  
-  /**
-   * notificaton that a long running process has started
-   * @param workbench
-   * @param process
-   */
-  public void processStarted(Trackable process);
-
-  /**
-   * notificaton that a long running process has finished
-   * @param workbench
-   * @param process
-   */
-  public void processStopped(Trackable process);
-
-  /**
-   * notification that commit of edits is requested
-   */
-    public void commitRequested(Context context);
-  
-  /** 
-   * notification that workbench is closing
-   * @return whether to veto the close operation (false=continue)
-   */
-  public void workbenchClosing();
-  
-  /** 
-   * notification that gedcom was closed
-   * @return whether to continue with close operation or not
-   */
-  public void gedcomClosed(Gedcom gedcom);
-  
-  /** 
-   * notification that gedcom was opened
-   * @return whether to continue with close operation or not
-   */
-  public void gedcomOpened(Gedcom gedcom);
-  
-  /**
-   * notification that a view has been opened
-   */
-  public void viewOpened(View view);
-
-  /**
-   * notification that a view has been opened
-   */
-  public void viewClosed(View view);
-
+    /**
+     * notification that selection has changed
+     * @param context the new selection
+     * @param isActionPerformed whether to perform action (normally double-click)
+     */
+    public void selectionChanged(Context context, boolean isActionPerformed);
 }
