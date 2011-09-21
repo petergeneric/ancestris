@@ -34,8 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -46,7 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class EditorTopComponent extends AncestrisTopComponent
         implements SelectionListener, ConfirmChangeWidget.ConfirmChangeCallBack {
 
-    private static final String PREFERRED_ID = "EntityEditTopComponent";  // NOI18N
+    private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
     private static EditorTopComponent factory;
 
     /*package*/ final static Logger LOG = Logger.getLogger("ancestris.edit");
@@ -259,18 +257,18 @@ public class EditorTopComponent extends AncestrisTopComponent
 
     @Override
     public void setName() {
-        if (editor == null) {
-            return;
-        }
-        setName(editor.getName());
+        if (editor != null && editor.getName() != null) {
+            setName(editor.getName());
+        } else
+        super.setName();
     }
 
     @Override
     public void setToolTipText() {
-        if (editor == null) {
-            return;
-        }
-        setToolTipText(editor.getToolTipText());
+        if (editor != null && editor.getToolTipText() != null) {
+            setToolTipText(editor.getToolTipText());
+        } else 
+        super.setToolTipText();
     }
 
     private class Callback extends GedcomListenerAdapter {
