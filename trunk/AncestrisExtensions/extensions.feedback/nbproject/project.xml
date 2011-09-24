@@ -31,11 +31,11 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>genjfr.apache.commons</code-name-base>
+                    <code-name-base>com.sun.mail</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.5</specification-version>
+                        <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

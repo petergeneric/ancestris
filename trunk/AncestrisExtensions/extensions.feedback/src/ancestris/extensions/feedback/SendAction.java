@@ -4,10 +4,9 @@
  */
 package ancestris.extensions.feedback;
 
-import genj.util.AncestrisPreferences;
+import com.sun.mail.smtp.SMTPTransport;
 import genj.Version;
 import genj.util.EnvironmentChecker;
-import genj.util.Registry;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -18,39 +17,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.mail.EmailAttachment;
-import org.apache.commons.mail.MultiPartEmail;
+import java.util.prefs.Preferences;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 public final class SendAction implements ActionListener {
 
     private final static java.util.ResourceBundle RESOURCES = java.util.ResourceBundle.getBundle("ancestris/extensions/feedback/Bundle");
     private final static String TEXTSEPARATOR = "\n=======================================\n";
     private final static String SEND = new String(NbBundle.getMessage(SendAction.class, "SEND_BUTTON"));
-    private AncestrisPreferences feedbackPrefs = Registry.get(FeedbackPanel.class);
+    private Preferences modulePreferences = NbPreferences.forModule(FeedBackPlugin.class);
     private File userDir;
     private FeedbackPanel fbPanel;
 
     private void setDefaultValues(FeedbackPanel panel) {
         panel.jtaText.setText(getSystemInfo());
         panel.jtEmailTo.setText(RESOURCES.getString("fb.mailto.default"));
-        panel.jtMailHost.setText(feedbackPrefs.get("mail.host", System.getProperty("mail.host")));
-        panel.jtName.setText(feedbackPrefs.get("mail.name", ""));
-        panel.jtEmail.setText(feedbackPrefs.get("mail.address", ""));
+        panel.jtName.setText(modulePreferences.get("mail.name", ""));
+        panel.jtEmail.setText(modulePreferences.get("mail.address", ""));
     }
 
     private void saveDefaultValues(FeedbackPanel panel) {
-        String s = panel.jtMailHost.getText();
-        if (!s.equalsIgnoreCase(System.getProperty("mail.host"))) {
-            feedbackPrefs.put("mail.host", s);
-        }
-
-        feedbackPrefs.put("mail.name", panel.jtName.getText().trim());
-        feedbackPrefs.put("mail.address", panel.jtEmail.getText().trim());
+        modulePreferences.put("mail.name", panel.jtName.getText().trim());
+        modulePreferences.put("mail.address", panel.jtEmail.getText().trim());
 
     }
 
@@ -75,7 +77,6 @@ public final class SendAction implements ActionListener {
         if (dd.getValue().equals(SEND)) {
             // on sauvegarde qq valeurs par defaut
             saveDefaultValues(fbPanel);
-//            System.setProperty("mail.host", fbPanel.jtMailHost.getText());
             Thread t = new Thread(new SendWorker(), "SendFeedback");
             t.start();
         }
@@ -83,7 +84,7 @@ public final class SendAction implements ActionListener {
 
     public static String getSystemInfo() {
         Properties p = System.getProperties();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Ancestris ");
         sb.append(Version.getInstance().getBuildString());
         sb.append(" (");
@@ -99,7 +100,7 @@ public final class SendAction implements ActionListener {
         sb.append(" ");
         sb.append(p.get("java.version"));
         sb.append("\n");
-        sb.append(TEXTSEPARATOR + RESOURCES.getString("fb.text.comment"));
+        sb.append(TEXTSEPARATOR).append(RESOURCES.getString("fb.text.comment"));
         sb.append("\n");
         return sb.toString();
     }
@@ -107,50 +108,75 @@ public final class SendAction implements ActionListener {
     private class SendWorker implements Runnable {
 
         public void run() {
-//			acSend.setEnabled(false);
-//			acCancel.setEnabled(false);
-
             String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
             String subject = "[" + RESOURCES.getString("fb.tag.subject") + " " + TS + "] ";
             subject += fbPanel.jtSubject.getText().trim();
             String name = fbPanel.jtName.getText().trim();
             String from = fbPanel.jtEmail.getText().trim();
-            String msg = fbPanel.jtaText.getText().trim();
-
-
+            String text = fbPanel.jtaText.getText().trim();
+            String to = fbPanel.jtEmailTo.getText().trim();
+            String mailhost = modulePreferences.get("mail.host", "");
             boolean failed = false;
             String response = "";
 
-            String to = fbPanel.jtEmailTo.getText().trim();
+            Properties props = System.getProperties();
+            props.put("mail.smtp.host", mailhost);
+            props.put("mail.smtp.auth", "true");
+            if (modulePreferences.getBoolean("mail.host.TLSSupport", false) == true) {
+                props.put("mail.smtp.starttls.enable", "true");
+            }
+            props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
+
+            // Get a Session object
+            Session session = Session.getInstance(props, null);
+
+            /*
+             * Construct the message and send it.
+             */
+            Message msg = new MimeMessage(session);
+            SMTPTransport t = null;
 
             try {
+                msg.setFrom(new InternetAddress(from));
+                msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+                msg.setSubject(subject);
 
-                EmailAttachment attachment = null;
+                // Attach the specified file.
                 if (fbPanel.jcbIncGenjLog.isSelected()) {
-                    attachment = new EmailAttachment();
-                    attachment.setURL(sendUserDir().toURI().toURL());
-                    attachment.setDisposition(EmailAttachment.ATTACHMENT);
-                    attachment.setDescription("Ancestris User Dir");
-                    attachment.setName("userdir.zip");
+                    // We need a multipart message to hold the attachment.
+                    MimeBodyPart mbp1 = new MimeBodyPart();
+                    mbp1.setText(text);
+                    MimeBodyPart mbp2 = new MimeBodyPart();
+                    mbp2.attachFile(sendUserDir());
+                    MimeMultipart mp = new MimeMultipart();
+                    mp.addBodyPart(mbp1);
+                    mp.addBodyPart(mbp2);
+                    msg.setContent(mp);
+                } else {
+                    msg.setText(text);
                 }
 
-                // Create the email message
-                MultiPartEmail email = new MultiPartEmail();
+                msg.setHeader("X-Mailer", "smtpsend");
+                msg.setSentDate(new Date());
 
+                t = (SMTPTransport) session.getTransport("smtp");
 
-                email.addTo(to);
-                email.setFrom(from, name);
-                email.setSubject(subject);
-                email.setMsg(msg);
-//                email.setHostName(fbPanel.jtMailHost.getText());
-                if (attachment != null) {
-                    email.attach(attachment);
+                if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+                    t.connect(modulePreferences.get("mail.host.login", ""), modulePreferences.get("mail.host.password", ""));
+                } else {
+                    t.connect();
                 }
-                email.send();
+                t.sendMessage(msg, msg.getAllRecipients());
             } catch (Exception e) {
                 response = e.getMessage();
-                Logger.getLogger(SendAction.class.getPackage().getName()).info("" + e);
+                Logger.getLogger(SendAction.class.getPackage().getName()).log(Level.INFO, "{0}", e);
                 failed = true;
+            } finally {
+                try {
+                    t.close();
+                } catch (MessagingException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
 
             if (failed) {
