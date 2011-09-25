@@ -77,6 +77,10 @@ public abstract class Editor extends JPanel {
         if (title != null) {
             return title;
         }
+        return getTitleImpl();
+    }
+
+    protected String getTitleImpl() {
         return (getContext() == null ? "" : getContext().getText());
     }
 

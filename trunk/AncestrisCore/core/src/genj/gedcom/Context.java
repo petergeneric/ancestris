@@ -41,6 +41,19 @@ public class Context {
     return this.gedcom==that.gedcom && this.entities.equals(that.entities) 
       && this.properties.equals(that.properties);
   }
+
+  /**
+   * Returns true if gedcom is not null and is equal to that.gedcom
+   * @param that
+   * @return
+   */
+  public boolean sameGedcom(Context that){
+      if (that == null)
+          return false;
+      if (gedcom == null)
+          return false;
+      return gedcom.equals(that.gedcom);
+  }
   
   /**
    * Constructor

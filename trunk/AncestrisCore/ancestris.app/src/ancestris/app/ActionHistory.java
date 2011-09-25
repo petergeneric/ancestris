@@ -11,7 +11,7 @@ import genj.util.swing.PopupWidget;
 import genj.view.SelectionSink;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.GedcomFileListener;
-import genj.app.WorkbenchListener;
+import genj.view.SelectionListener;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -163,7 +163,7 @@ public final class ActionHistory implements Presenter.Toolbar {
             }
         }
 
-        private class EventHandler implements WorkbenchListener, GedcomFileListener, GedcomListener {
+        private class EventHandler implements SelectionListener, GedcomFileListener, GedcomListener {
 
             EventHandler() {
                 AncestrisPlugin.register(this);
@@ -186,7 +186,7 @@ public final class ActionHistory implements Presenter.Toolbar {
             }
 
             @Override
-            public void selectionChanged(Context context, boolean isActionPerformed) {
+            public void setContext(Context context, boolean isActionPerformed) {
 
                 Entity e = context.getEntity();
                 if (e == null) {
