@@ -78,6 +78,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jTextArea1.setRows(5);
         jTextArea1.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jTextArea1.text")); // NOI18N
         jTextArea1.setWrapStyleWord(true);
+        jTextArea1.setOpaque(false);
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jLabel1.text")); // NOI18N
