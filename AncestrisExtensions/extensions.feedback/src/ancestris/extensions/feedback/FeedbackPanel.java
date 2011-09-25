@@ -72,6 +72,8 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jTextArea1.setBackground(getBackground());
         jTextArea1.setColumns(20);
         jTextArea1.setEditable(false);
+        jTextArea1.setFont(jTextArea1.getFont().deriveFont(jTextArea1.getFont().getSize()+2f));
+        jTextArea1.setForeground(new java.awt.Color(0, 51, 255));
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jTextArea1.setText(org.openide.util.NbBundle.getMessage(FeedbackPanel.class, "FeedbackPanel.jTextArea1.text")); // NOI18N
