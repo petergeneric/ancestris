@@ -53,7 +53,6 @@ public final class SendAction implements ActionListener {
     private void saveDefaultValues(FeedbackPanel panel) {
         modulePreferences.put("mail.name", panel.jtName.getText().trim());
         modulePreferences.put("mail.address", panel.jtEmail.getText().trim());
-
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -65,20 +64,24 @@ public final class SendAction implements ActionListener {
                     + "\n(" + ex.getMessage() + ").", NotifyDescriptor.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
         }
+        if (modulePreferences.get("mail.host", "").equals("")) {
+            NotifyDescriptor nd = new NotifyDescriptor.Message(RESOURCES.getString("fb.msg.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
+            DialogDisplayer.getDefault().notify(nd);
+        } else {
+            fbPanel = new FeedbackPanel(userDir.length());
 
-        fbPanel = new FeedbackPanel(userDir.length());
+            setDefaultValues(fbPanel);
 
-        setDefaultValues(fbPanel);
-
-        DialogDescriptor dd = new DialogDescriptor(fbPanel, NbBundle.getMessage(this.getClass(), "FeedbackPanel.title"));
-        dd.setOptions(new Object[]{new String(SEND), DialogDescriptor.CANCEL_OPTION});
-        DialogDisplayer.getDefault().createDialog(dd);
-        DialogDisplayer.getDefault().notify(dd);
-        if (dd.getValue().equals(SEND)) {
-            // on sauvegarde qq valeurs par defaut
-            saveDefaultValues(fbPanel);
-            Thread t = new Thread(new SendWorker(), "SendFeedback");
-            t.start();
+            DialogDescriptor dd = new DialogDescriptor(fbPanel, NbBundle.getMessage(this.getClass(), "FeedbackPanel.title"));
+            dd.setOptions(new Object[]{new String(SEND), DialogDescriptor.CANCEL_OPTION});
+            DialogDisplayer.getDefault().createDialog(dd);
+            DialogDisplayer.getDefault().notify(dd);
+            if (dd.getValue().equals(SEND)) {
+                // on sauvegarde qq valeurs par defaut
+                saveDefaultValues(fbPanel);
+                Thread t = new Thread(new SendWorker(), "SendFeedback");
+                t.start();
+            }
         }
     }
 
@@ -147,7 +150,7 @@ public final class SendAction implements ActionListener {
                     MimeBodyPart mbp1 = new MimeBodyPart();
                     mbp1.setText(text);
                     MimeBodyPart mbp2 = new MimeBodyPart();
-                    mbp2.attachFile(sendUserDir());
+                    mbp2.attachFile(userDir);
                     MimeMultipart mp = new MimeMultipart();
                     mp.addBodyPart(mbp1);
                     mp.addBodyPart(mbp2);
