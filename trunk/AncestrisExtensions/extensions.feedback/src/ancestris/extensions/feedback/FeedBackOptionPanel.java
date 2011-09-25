@@ -1,6 +1,7 @@
 package ancestris.extensions.feedback;
 
 import java.util.prefs.Preferences;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 final class FeedBackOptionPanel extends javax.swing.JPanel {
@@ -157,11 +158,11 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
 
     void load() {
         Preferences modulePreferences = NbPreferences.forModule(FeedBackPlugin.class);
-        textFieldName.setText(modulePreferences.get("mail.name", "Set SMTP server"));
-        textFieldEmailAddress.setText(modulePreferences.get("mail.address", "Set SMTP server"));
+        textFieldName.setText(modulePreferences.get("mail.name", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldName.text")));
+        textFieldEmailAddress.setText(modulePreferences.get("mail.address", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldEmailAddress.text")));
 
-        textFieldSMTPHost.setText(modulePreferences.get("mail.host", "Set SMTP server"));
-        textFieldSMTPPort.setText(modulePreferences.get("mail.host.port", "25"));
+        textFieldSMTPHost.setText(modulePreferences.get("mail.host", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.labelSMTPHost.text")));
+        textFieldSMTPPort.setText(modulePreferences.get("mail.host.port", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldSMTPPort.text")));
 
         checkBoxTLSSupport.setSelected(modulePreferences.getBoolean("mail.host.TLSSupport", false));
 
@@ -169,11 +170,11 @@ final class FeedBackOptionPanel extends javax.swing.JPanel {
         if (checkBoxAuthenticationRequired.isSelected() == true) {
             labelLoginName.setEnabled(true);
             textFieldLoginName.setEnabled(true);
-            textFieldLoginName.setText(modulePreferences.get("mail.host.login", "login"));
+            textFieldLoginName.setText(modulePreferences.get("mail.host.login", NbBundle.getMessage(FeedBackOptionPanel.class, "FeedBackOptionPanel.textFieldLoginName.text")));
 
             labelPassord.setEnabled(true);
             passwordField.setEnabled(true);
-            passwordField.setText(modulePreferences.get("mail.host.password", "password"));
+            passwordField.setText(modulePreferences.get("mail.host.password", ""));
         } else {
             labelLoginName.setEnabled(false);
             textFieldLoginName.setEnabled(false);
