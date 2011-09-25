@@ -78,18 +78,4 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
     protected String preferredID() {
         return PREFERRED_ID;
     }
-
-    /**
-     * @deprecated use getContext().getEntity()
-     * @return
-     */
-    @Deprecated
-    public Entity getCurrentEntity() {
-        return getContext().getEntity();
-    }
-
-    public void setCurrentEntity(Property property) {
-        Context vc = new Context(property);
-        ((EditView) getView()).setContext(vc, true);
-    }
 }

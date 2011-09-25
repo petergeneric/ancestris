@@ -5,6 +5,7 @@
 package genjfr.app.geo;
 
 import ancestris.app.EditTopComponent;
+import genj.gedcom.Context;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -179,7 +180,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 EditTopComponent etc = getEditTopComponent(obj);
                 if (etc != null) {
                     etc.requestActive();
-                    etc.setCurrentEntity(obj.getProperty());
+                    etc.setContext(new Context(obj.getProperty()),true);
                 }
             } else if (actionName.equals("ACTION_HelpPlace")) {
                 String id = "ancestris.app.view.geo.menuplace";
