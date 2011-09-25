@@ -56,6 +56,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private ConfirmChangeWidget confirmPanel;
     private Gedcom gedcom;
     private JPanel editorContainer = new JPanel(new BorderLayout());
+    private JLabel titleLabel = new JLabel("");
 
     @Override
     public boolean createPanel() {
@@ -64,6 +65,10 @@ public class EditorTopComponent extends AncestrisTopComponent
         confirmPanel = new ConfirmChangeWidget(this);
 
         setContext(getContext(), true);
+
+        titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        editorContainer.add(titleLabel, BorderLayout.NORTH);
+
         return true;
     }
 
@@ -88,19 +93,19 @@ public class EditorTopComponent extends AncestrisTopComponent
      * Set editor to use
      */
     private void setEditor(Editor set) {
-
-        // commit old editor unless set==null
+//        // commit old editor unless set==null
         Context old = null;
         if (set != null) {
-
-            // preserve old context
-            old = editor != null ? editor.getContext() : null;
-
-            // force commit
-            commit();
-
+//
+//            // preserve old context
+//            old = editor != null ? editor.getContext() : null;
+            old = set.getContext();
+//
+//            // force commit
+//            commit();
+//
         }
-
+//
         // clear old editor
         if (editor != null) {
             editor.removeChangeListener(confirmPanel);
@@ -112,14 +117,11 @@ public class EditorTopComponent extends AncestrisTopComponent
         // set new and restore context
         editor = set;
         if (editor != null) {
-            JLabel titleLabel = new JLabel(set.getTitle());
-            titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-
-            editorContainer.add(titleLabel, BorderLayout.NORTH);
-            editorContainer.add(editor, BorderLayout.CENTER);
             if (old != null) {
                 editor.setContext(old);
             }
+            editorContainer.add(editor, BorderLayout.CENTER);
+            titleLabel.setText(editor.getTitle());
             editor.addChangeListener(confirmPanel);
         }
 
@@ -128,22 +130,13 @@ public class EditorTopComponent extends AncestrisTopComponent
         repaint();
     }
 
-    /**
-     * ContextProvider callback
-     */
-    @Override
-    public ViewContext getContext() {
-        return editor != null ? editor.getContext() : null;
-    }
-
     public void commit() {
         commit(true);
     }
 
     private void commit(boolean ask) {
-
         // changes?
-        if (!confirmPanel.hasChanged()) {
+        if (confirmPanel == null || !confirmPanel.hasChanged()) {
             return;
         }
 
@@ -188,19 +181,16 @@ public class EditorTopComponent extends AncestrisTopComponent
         }
     }
 
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContextImpl(Context context, boolean isActionPerformed) {
         // see also EditView
         if (context == null) {
             return;
         }
-
-
         // disconnect from last gedcom?
         if (context.getGedcom() != gedcom && gedcom != null) {
             gedcom.removeGedcomListener(callback);
             gedcom = null;
         }
-
         // clear?
         if (context.getGedcom() == null) {
 //            sticky.setSelected(false);
@@ -216,12 +206,8 @@ public class EditorTopComponent extends AncestrisTopComponent
             gedcom.addGedcomListener(callback);
         }
 
-        // commit?
+        // commit if necessary
         commit();
-
-
-
-
         if (context.getEntity() == null) {
             return;
         }
@@ -259,16 +245,18 @@ public class EditorTopComponent extends AncestrisTopComponent
     public void setName() {
         if (editor != null && editor.getName() != null) {
             setName(editor.getName());
-        } else
-        super.setName();
+        } else {
+            super.setName();
+        }
     }
 
     @Override
     public void setToolTipText() {
         if (editor != null && editor.getToolTipText() != null) {
             setToolTipText(editor.getToolTipText());
-        } else 
-        super.setToolTipText();
+        } else {
+            super.setToolTipText();
+        }
     }
 
     private class Callback extends GedcomListenerAdapter {

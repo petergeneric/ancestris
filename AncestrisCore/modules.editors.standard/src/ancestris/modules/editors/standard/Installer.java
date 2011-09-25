@@ -43,7 +43,7 @@ public class Installer extends ModuleInstall implements ActionProvider{
             Context viewContext = edit.getContext();
             if (viewContext == null)
                 continue;
-            if (viewContext.getGedcom().equals(context.getGedcom())){
+            if (viewContext.sameGedcom(context)){
                 into.add(new OpenInEditor(edit,context));
                 return;
             }

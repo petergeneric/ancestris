@@ -13,12 +13,12 @@ package ancestris.view;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.GedcomFileListener;
-import genj.app.WorkbenchListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
+import genj.view.SelectionListener;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewFactory;
@@ -106,7 +106,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
             return false;
         }
         setPanel(panel);
-        getViewProxy().setContext(getContext(), true);
+        setContext(getContext(), true);
         setToolBar(getViewProxy().createToolBar());
         return true;
     }
@@ -119,7 +119,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
         return super.canClose();
     }
 
-    public void setContext(Context context,boolean isActionPerformed){
+    protected void setContextImpl(Context context,boolean isActionPerformed){
         getViewProxy().setContext(context, isActionPerformed);
     }
 
@@ -131,26 +131,18 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
      * A class that proxies Genj Veiw class to be used by an AncestrisTopComponent.
      * @author daniel
      */
-    public class GenjViewProxy implements ActionProvider, WorkbenchListener, GedcomFileListener {
+    public class GenjViewProxy implements ActionProvider, GedcomFileListener {
         //XXX:: must be private (temporarily set to public to be accessed from GenjViewTC
 
-        public View view;
+        private View view;
         private ViewFactory factory;
-        private Context context;
+//        private Context context;
 
         public GenjViewProxy() {
         }
 
         public GenjViewProxy(ViewFactory factory) {
             this.factory = factory;
-        }
-
-        public void setContext(Context context, boolean isActionPerformed) {
-            if (view == null) {
-                return;
-            }
-            this.context = context; //remember context
-            view.setContext(context, isActionPerformed);
         }
 
         public JPanel createPanel() {
@@ -171,7 +163,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
                 return;
             }
 
-            if (this.context.getGedcom().equals(context.getGedcom())) {
+            if (context.sameGedcom(getContext())) {
                 ((ActionProvider) view).createActions(context, purpose, into);
             }
         }
@@ -205,34 +197,16 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
             return bar.getToolBar();
         }
 
-        public void selectionChanged(Context context, boolean isActionPerformed) {
-            // appropriate?
-            if (context.getGedcom() != this.context.getGedcom()) {
-                LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
+        protected void setContext(Context context, boolean isActionPerformed) {
+            if (view == null) {
                 return;
             }
-
-            // already known?
-            if (!isActionPerformed && this.context.equals(context)) {
-                return;
-            }
-
-            LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context, isActionPerformed});
-
-            // remember
-//XXX: a remettre!    setContext(context);
-
-            if (context.getGedcom() != null) {
-                context.getGedcom().getRegistry().put("context", context.toString());
-            }
-
-            if (view != null) {
-                view.setContext(context, isActionPerformed);
-            }
+            view.setContext(context, isActionPerformed);
         }
 
+
         public void commitRequested(Context context) {
-            if (context.getGedcom() != this.context.getGedcom()) {
+            if (context.sameGedcom(getContext())){
                 LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
                 return;
             }

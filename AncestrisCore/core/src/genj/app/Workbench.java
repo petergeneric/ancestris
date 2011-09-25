@@ -626,6 +626,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         commitRequested(context);
     }
 
+    @Override
     public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
 //TODO: mieux controler. Devra atre refait lors du basculement total dans l'environnement NB
 //    // appropriate?
@@ -829,9 +830,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     // IWorkbenchHelper Implementation
 
     public void selectionChanged(MySelectionListener from, Context context, boolean isActionPerformed) {
-        for (WorkbenchListener listener : AncestrisPlugin.lookupAll(WorkbenchListener.class)) {
-            listener.selectionChanged(context, isActionPerformed);
-        }
         for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
             if (!listener.equals(from)) {
                 listener.setContext(context, isActionPerformed);

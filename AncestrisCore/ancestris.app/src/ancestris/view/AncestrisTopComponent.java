@@ -10,6 +10,7 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.app.App;
 import ancestris.app.ModePersisterTopComponent;
 import ancestris.app.OpenGenjViewAction;
+import genj.view.SelectionListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -20,6 +21,7 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -70,7 +72,7 @@ import org.openide.windows.WindowManager;
  *   => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
-public class AncestrisTopComponent extends TopComponent implements AncestrisViewInterface {
+public class AncestrisTopComponent extends TopComponent implements AncestrisViewInterface, SelectionListener {
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
@@ -143,8 +145,26 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return context == null ? null : context.getGedcom();
     }
 
-    public void setContext(Context context) {
+        public void setContext(Context context, boolean isActionPerformed) {
+            // appropriate?
+            if (this.context != null && !this.context.sameGedcom(context)) {
+                LOG.log(Level.FINER, "context selection on unknown gedcom");
+                return;
+            }
+
+            // already known?
+            if (!isActionPerformed && this.context != null && this.context.equals(context)) {
+                return;
+            }
+
+            LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context, isActionPerformed});
+
+            // remember
         this.context = context;
+            if (context.getGedcom() != null) {
+                context.getGedcom().getRegistry().put("context", context.toString());
+            }
+
         AbstractNode n = GedcomDirectory.getInstance().getDummyNode(context);
         if (n != null && n != dummyNode) {
             // Create a dummy node for the save button
@@ -152,6 +172,12 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
             dummyNode = n;
         }
         ic.add(context);
+
+
+            setContextImpl(context, isActionPerformed);
+        }
+
+    protected void setContextImpl(Context context,boolean isActionPerformed){
     }
 
     public Context getContext() {
@@ -366,7 +392,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
     public void init(Context context) {
         setName();
         setToolTipText();
-        setContext(context);
+        setContext(context,false);
         if (getImageIcon() != null) {
             setIcon(getImageIcon());
         }

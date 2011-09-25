@@ -17,7 +17,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
 import java.util.Arrays;
@@ -29,11 +28,10 @@ public final class IndiPanel extends Editor {
     private List<PropertyBean> childBeans;
     private Context context;
 
-    /** Creates new form NewGedcomVisualPanel2 */
     public IndiPanel() {
         setOpaque(true);
         initComponents();
-        childBeans = Arrays.asList(deathBean,birthBean,aSexBean1,aNameBean2,aSimpleBean1,aPlaceBean2);
+        childBeans = Arrays.asList(deathBean, birthBean, aSexBean1, aNameBean2, aSimpleBean1, aPlaceBean2);
     }
     private Indi indi;
 
@@ -54,12 +52,14 @@ public final class IndiPanel extends Editor {
     @Override
     public void setContext(Context context) {
         this.context = context;
-        if (context == null)
+        if (context == null) {
             return;
+        }
 
-        Entity entity =context.getEntity();
-        if (entity == null || !(entity instanceof Indi))
+        Entity entity = context.getEntity();
+        if (entity == null || !(entity instanceof Indi)) {
             return;
+        }
 
         this.indi = (Indi) entity;
         deathBean.setContext(indi, null);
@@ -81,11 +81,20 @@ public final class IndiPanel extends Editor {
     @Override
     public void commit() {
         try {
-        for (PropertyBean bean:childBeans)
-            bean.commit();
+            for (PropertyBean bean : childBeans) {
+                bean.commit();
+            }
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
+    }
+
+    @Override
+    protected String getTitleImpl() {
+        if (context == null || context.getEntity() == null) {
+            return "";
+        }
+        return (new ViewContext(context.getEntity())).getText();
     }
 
 //XXX: to be replaced    @Override
@@ -95,7 +104,6 @@ public final class IndiPanel extends Editor {
 //            changed |= bean.hasChanged();
 //        return changed;
 //    }
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -201,5 +209,4 @@ public final class IndiPanel extends Editor {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
-
 }
