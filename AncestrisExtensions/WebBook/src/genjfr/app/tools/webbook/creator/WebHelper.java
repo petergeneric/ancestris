@@ -1,5 +1,6 @@
 package genjfr.app.tools.webbook.creator;
 
+import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Indi;
 import genj.gedcom.Fam;
 import genj.gedcom.Source;
@@ -23,8 +24,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import com.sun.image.codec.jpeg.*;
-import ancestris.app.App;
-import ancestris.app.PrivacyPolicy;
 
 import genjfr.app.tools.webbook.Log;
 import genjfr.app.tools.webbook.WebBookParams;
@@ -1336,25 +1335,13 @@ public class WebHelper {
         }
         return;
     }
-    /**
-     * Privacy policy (using genj private policy core function
-     * TODO: will need to enrich and move to own PrivatePolicy module within ancestris core
-     */
     // Privacy policy
-    public PrivacyPolicy privacyPolicy = null;
+    private PrivacyPolicy privacyPolicy = null;
     //
 
     public PrivacyPolicy getPrivacyPolicy() {
         if (privacyPolicy == null) {
-            privacyPolicy = new PrivacyPolicy(
-                    genj.report.Options.getInstance().yearsEventsArePrivate,
-                    genj.report.Options.getInstance().privateTag,
-                    genj.report.Options.getInstance().deceasedIsPublic,
-// FIXME: controler que c'est ca                   new Integer(NbPreferences.forModule(App.class).get("privYears", "")), //int
-//                    NbPreferences.forModule(App.class).get("privFlag", ""), // string
-//                    NbPreferences.forModule(App.class).get("privAlive", "").equals("true"), // boolean
-                    null, //  TODO events, not used yet
-                    false); // TODO infoOfDeceasedisPublic, not used yet
+            privacyPolicy = PrivacyPolicy.getDefault();
         }
         return privacyPolicy;
     }
@@ -1385,7 +1372,7 @@ public class WebHelper {
     }
 
     public String getPrivDisplay() {
-        return genj.gedcom.Options.getInstance().maskPrivate; //FIXME: controler NbPreferences.forModule(App.class).get("privDisplay", "");
+        return getPrivacyPolicy().getPrivateMask();
     }
 } // End_of_Report
 

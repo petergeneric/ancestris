@@ -1,8 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2011 Ancestris
+ * 
+ * Author: Daniel Andre (daniel@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.app;
+package ancestris.gedcom.privacy.standard;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -11,15 +18,13 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(displayName = "#OptionsTab_Name_OptionFormat",
-//iconBase = "ancestris/app/OptionFormat.png",
-keywords = "#OptionsCategory_Keywords_OptionFormat",
-keywordsCategory = "r",
-location = "OptionsFormat",
-position = 1)
-public final class OptionFormatOptionsPanelController extends OptionsPanelController {
+@OptionsPanelController.SubRegistration(location = "OptionsFormat",
+displayName = "#AdvancedOption_DisplayName_Privacy",
+keywords = "#AdvancedOption_Keywords_Privacy",
+keywordsCategory = "OptionsFormat/Privacy")
+public final class PrivacyOptionsPanelController extends OptionsPanelController {
 
-    private OptionFormatPanel panel;
+    private PrivacyPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -61,9 +66,9 @@ public final class OptionFormatOptionsPanelController extends OptionsPanelContro
         pcs.removePropertyChangeListener(l);
     }
 
-    private OptionFormatPanel getPanel() {
+    private PrivacyPanel getPanel() {
         if (panel == null) {
-            panel = new OptionFormatPanel(this);
+            panel = new PrivacyPanel(this);
         }
         return panel;
     }

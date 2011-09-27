@@ -12,14 +12,13 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.gedcom.PrivacyPolicy;
+import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyMultilineValue;
 import genj.report.Report;
 
 import java.util.HashMap;
 
-import javax.swing.ImageIcon;
 
 /*
  * GenJ - ReportMultDesc
@@ -99,7 +98,7 @@ public class ReportMultDesc extends Report {
         HashMap<Fam, String> done = new HashMap<Fam, String>();
 
         // Init some stuff
-        PrivacyPolicy policy = OPTIONS.getPrivacyPolicy();
+        PrivacyPolicy policy = PrivacyPolicy.getDefault();
 
         nbColumns = 2;
         if (reportPlaceOfBirth || reportDateOfBirth) {
@@ -150,7 +149,7 @@ public class ReportMultDesc extends Report {
         }
 
         // still in a public generation?
-        PrivacyPolicy localPolicy = level < publicGen + 1 ? PrivacyPolicy.PUBLIC : policy;
+        PrivacyPolicy localPolicy = level < publicGen + 1 ? PrivacyPolicy.getDefault().getAllPublic() : policy;
 
         output.startIndi(doc);
         format(indi, (Fam) null, num, localPolicy, doc);
