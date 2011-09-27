@@ -14,17 +14,21 @@ package ancestris.gedcom.privacy.standard;
 import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.time.Delta;
+import genj.io.Filter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.lookup.ServiceProviders;
 
 /**
  * A filtering scheme applying privacy to Gedcom properties
@@ -81,8 +85,11 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author put in plugin by daniel
  */
-@ServiceProvider(service = PrivacyPolicy.class)
-public class PrivacyPolicyImpl extends PrivacyPolicy {
+@ServiceProviders({
+    @ServiceProvider(service = PrivacyPolicy.class)
+//    @ServiceProvider(service = Filter.class)
+})
+public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
 
     // For performance reasons, keep track of private years entities and alive entities
     private Set<Entity> privateYearsEntities = new HashSet<Entity>();
@@ -385,5 +392,26 @@ public class PrivacyPolicyImpl extends PrivacyPolicy {
             }
         }
         return null;
+    }
+
+    /** Filter interface implementation */
+    @Override
+    public String getFilterName() {
+        return NbBundle.getMessage(PrivacyPolicyImpl.class, "PrivacyFilterName");
+    }
+
+    @Override
+    public boolean veto(Property property) {
+        return isPrivate(property);
+    }
+
+    @Override
+    public boolean veto(Entity entity) {
+        return isPrivate(entity);
+    }
+
+    @Override
+    public boolean canApplyTo(Gedcom gedcom) {
+        return true;
     }
 }
