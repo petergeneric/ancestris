@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.util.Resources;
 import genj.util.WordBuffer;
 import genj.util.swing.ImageIcon;
@@ -1145,7 +1146,7 @@ public abstract class Property implements Comparable<Property> {
    * @see Property#format(String, PrivacyPolicy)
    */
   public String format(String format) {
-    return format(format, PrivacyPolicy.PUBLIC);
+    return format(format, PrivacyPolicy.getDefault().getAllPublic());
   }
   
   /**

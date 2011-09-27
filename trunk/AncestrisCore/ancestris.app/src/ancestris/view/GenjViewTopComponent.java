@@ -18,7 +18,6 @@ import genj.gedcom.Gedcom;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
-import genj.view.SelectionListener;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewFactory;
@@ -92,6 +91,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
         super.setToolTipText();
     }
 
+    //XXX: do it in editorTC? in encestrisTC?
     @Override
     public void runWhenSizeIsCorrect() {
         if (getViewProxy() != null) {
@@ -99,6 +99,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
         }
     }
 
+    //XXX: do it in editorTC? in encestrisTC?
     @Override
     public boolean createPanel() {
         JPanel panel = getViewProxy().createPanel();
@@ -111,6 +112,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
         return true;
     }
 
+    //XXX: do it in editorTC
     @Override
     public boolean canClose() {
         if (getViewProxy().view != null) {
@@ -119,6 +121,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
         return super.canClose();
     }
 
+    @Override
     protected void setContextImpl(Context context,boolean isActionPerformed){
         getViewProxy().setContext(context, isActionPerformed);
     }
@@ -128,7 +131,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
     }
 
     /**
-     * A class that proxies Genj Veiw class to be used by an AncestrisTopComponent.
+     * A class that proxies Genj View class to be used by an AncestrisTopComponent.
      * @author daniel
      */
     public class GenjViewProxy implements ActionProvider, GedcomFileListener {
