@@ -42,9 +42,6 @@ final class PrivacyPanel extends javax.swing.JPanel {
         jtPrivTag = new javax.swing.JTextField();
         jtReplace = new javax.swing.JTextField();
 
-        setBorder(null);
-        setOpaque(false);
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel1.text")); // NOI18N
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
