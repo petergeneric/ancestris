@@ -300,6 +300,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     void load() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
+        genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
 
         setSubmName(gedcomPrefs.get("submName", ""));
         setSubmCity(gedcomPrefs.get("submCity", ""));
@@ -308,7 +309,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setSubmEmail(gedcomPrefs.get("submEmail", ""));
         setSubmCountry(gedcomPrefs.get("submCountry", ""));
         setSubmWeb(gedcomPrefs.get("submWeb", ""));
-        setNamesUppercase(gedcomPrefs.get("isUpperCaseNames", ""));
+        jCheckBox1.setSelected(gedcomOptions.isUpperCaseNames());
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
         cbCreateSpouse.setSelected(genj.gedcom.Options.getInstance().getCreateSpouse());
         placeFormat.setJurisdictions(genj.gedcom.Options.getInstance().getPlaceFormat());
@@ -334,7 +335,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("submEmail", getSubmEmail());
         gedcomPrefs.put("submCountry", getSubmCountry());
         gedcomPrefs.put("submWeb", getSubmWeb());
-        gedcomPrefs.put("isUpperCaseNames", getNamesUppercase());
+        gedcomOptions.setUpperCaseNames(jCheckBox1.isSelected());
         gedcomPrefs.put("setWifeLastname", getNamesSpouse());
 
         gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
@@ -442,17 +443,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     String getSubmWeb() {
         return jTextField7.getText();
-    }
-
-    void setNamesUppercase(String str) {
-        if (str.equals("")) {
-            str = "true";
-        }
-        jCheckBox1.setSelected(str.equals("true") ? true : false);
-    }
-
-    String getNamesUppercase() {
-        return jCheckBox1.isSelected() ? "true" : "false";
     }
 
     void setNamesSpouse(String str) {

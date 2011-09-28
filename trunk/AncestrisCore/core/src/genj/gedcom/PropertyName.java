@@ -25,6 +25,8 @@ import genj.util.WordBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Gedcom Property : NAME
@@ -275,8 +277,10 @@ public class PropertyName extends Property {
     String old = hasParent ? getValue() : null;
 
     // check for uppercase lastname
-    if (Options.getInstance().isUpperCaseNames)
-      last = last.toUpperCase();
+    if (Options.getInstance().isUpperCaseNames()){
+        NameParser parser = new NameParser(last);
+        last = parser.getPrefix()+parser.getLast().toUpperCase();
+    }
     
     // TUNING We expect that a lot of first and last names are the same
     // so we pay the upfront cost of reusing an intern cached String to
@@ -473,5 +477,32 @@ public class PropertyName extends Property {
     if (firstName.length()>0) refSet.remove(firstName, this);
     if (newFirst.length()>0) refSet.add(newFirst, this);
     // done
+  }
+
+  /**
+   * Helper class to parse last name and name
+   */
+  private static class NameParser{
+      // de prefix may collide with italian or netherland conventions
+      private Pattern prefixPattern = Pattern.compile("(d\'|von der|von|zu|del|de las|de les|de los|de|las|la|os|das|da|dos|af|av)( +)(.*)");
+      private String prefix = "";
+      private String last = "";
+        public NameParser(String last) {
+            Matcher m = prefixPattern.matcher(last);
+            if (m.matches()){
+                this.prefix = m.group(1)+" ";
+                this.last = m.group(3);
+            } else {
+                this.prefix = "";
+                this.last = last;
+            }
+        }
+        String getPrefix(){
+            return prefix;
+        }
+        String getLast(){
+            return last;
+        }
+
   }
 } //PropertyName
