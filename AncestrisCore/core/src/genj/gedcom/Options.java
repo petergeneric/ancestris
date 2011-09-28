@@ -47,7 +47,15 @@ public class Options extends OptionProvider {
   public boolean isFillGapsInIDs = false;
   
   /** option - whether to convert last names to uppercase */
-  public boolean isUpperCaseNames = false;
+  //public boolean isUpperCaseNames = false;
+    private static final String UPPERCASE_NAME   = "gedcom.isUpperCaseNames";         // NOI18N
+    public void setUpperCaseNames(boolean value) {
+        getPreferences().put(UPPERCASE_NAME, value);
+    }
+    public boolean isUpperCaseNames() {
+        return getPreferences().get(UPPERCASE_NAME, true);
+    }
+
   
   /** option - whether to set wife's last name when person is created */
   public boolean setWifeLastname = true;
