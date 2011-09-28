@@ -46,8 +46,8 @@ public class NameBean extends PropertyBean {
 
   private final static NestedBlockLayout LAYOUT = new NestedBlockLayout(
       "<table>"+
-       "<row><l/><v wx=\"1\"/></row>"+
        "<row><l/><row><v wx=\"1\"/><check pad=\"0\"/></row></row>"+
+       "<row><l/><v wx=\"1\"/></row>"+
        "<row><l/><v/></row>"+
        "<row><l/><v/></row>"+
       "</table>"
@@ -100,12 +100,12 @@ public class NameBean extends PropertyBean {
     cAll.setVisible(false);
     cAll.setRequestFocusEnabled(false);
     
-    add(new JLabel(PropertyName.getLabelForFirstName()));
-    add(cFirst);
-
     add(new JLabel(PropertyName.getLabelForLastName()));
     add(cLast);
     add(cAll);
+
+    add(new JLabel(PropertyName.getLabelForFirstName()));
+    add(cFirst);
 
     add(new JLabel(PropertyName.getLabelForSuffix()));
     add(tSuff);
