@@ -44,6 +44,11 @@ public abstract class PrivacyPolicy {
     /** returns privacy mask text */
     public abstract String getPrivateMask();
 
+    /** Open preference panel for this privacy policy */
+    public void openPreferences(){
+        // Do nothing
+    }
+
     /** Singleton instance accessor method for privacy manager
      *
      * @return instance of privacy manager installed in the system
