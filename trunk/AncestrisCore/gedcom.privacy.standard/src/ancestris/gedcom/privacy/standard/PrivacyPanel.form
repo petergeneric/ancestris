@@ -25,7 +25,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel1" alignment="1" pref="455" max="32767" attributes="0"/>
+                  <Component id="jLabel1" alignment="1" pref="467" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -37,7 +37,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jtPrivTag" min="-2" pref="28" max="-2" attributes="0"/>
+                              <Component id="jtPrivTag" min="-2" pref="46" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jcbDead" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbLivings" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -50,6 +50,7 @@
                           </Group>
                           <Component id="jtReplace" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
