@@ -50,7 +50,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel2.text_1")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel3.text")); // NOI18N
 
@@ -58,10 +58,10 @@ final class PrivacyPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel5.text")); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.text")); // NOI18N
 
-        titleReplace.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        titleReplace.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
         org.openide.awt.Mnemonics.setLocalizedText(titleReplace, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.titleReplace.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jcbLivings, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jcbLivings.text")); // NOI18N
