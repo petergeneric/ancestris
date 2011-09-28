@@ -4,6 +4,7 @@
  */
 package genjfr.app.tools.webbook;
 
+import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -11,7 +12,6 @@ import genj.gedcom.Property;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JPanel;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel2 extends JPanel {
@@ -156,7 +156,7 @@ public final class WebBookVisualPanel2 extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        OptionsDisplayer.getDefault().open("OptionsFormat");
+        PrivacyPolicy.getDefault().openPreferences();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
@@ -134,6 +135,11 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
     @Override
     public String getPrivateMask() {
         return Options.getInstance().getPrivateMask();
+    }
+
+    @Override
+    public void openPreferences(){
+        OptionsDisplayer.getDefault().open("OptionsFormat/Privacy");
     }
 
     /**

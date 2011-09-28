@@ -21,7 +21,11 @@ import org.openide.util.Lookup;
 @OptionsPanelController.SubRegistration(location = "OptionsFormat",
 displayName = "#AdvancedOption_DisplayName_Privacy",
 keywords = "#AdvancedOption_Keywords_Privacy",
-keywordsCategory = "OptionsFormat/Privacy")
+keywordsCategory = "OptionsFormat/Privacy",
+id = "Privacy",
+position=200
+)
+
 public final class PrivacyOptionsPanelController extends OptionsPanelController {
 
     private PrivacyPanel panel;

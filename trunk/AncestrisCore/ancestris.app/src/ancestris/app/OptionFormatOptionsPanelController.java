@@ -16,6 +16,7 @@ import org.openide.util.Lookup;
 keywords = "#OptionsCategory_Keywords_OptionFormat",
 keywordsCategory = "r",
 location = "OptionsFormat",
+id="General",
 position = 1)
 public final class OptionFormatOptionsPanelController extends OptionsPanelController {
 
