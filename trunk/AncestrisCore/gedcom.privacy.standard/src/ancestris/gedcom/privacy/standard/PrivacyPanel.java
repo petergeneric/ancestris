@@ -49,7 +49,7 @@ final class PrivacyPanel extends javax.swing.JPanel {
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel3.text")); // NOI18N
@@ -58,8 +58,9 @@ final class PrivacyPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel5.text")); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
+        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.text")); // NOI18N
+        jLabel6.setToolTipText(org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.jLabel6.toolTipText")); // NOI18N
 
         titleReplace.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
         org.openide.awt.Mnemonics.setLocalizedText(titleReplace, org.openide.util.NbBundle.getMessage(PrivacyPanel.class, "PrivacyPanel.titleReplace.text")); // NOI18N
@@ -89,11 +90,10 @@ final class PrivacyPanel extends javax.swing.JPanel {
                             .addComponent(titleReplace))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jtPrivTag, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jcbDead)
                             .addComponent(jcbLivings)
                             .addGroup(layout.createSequentialGroup()
@@ -101,7 +101,8 @@ final class PrivacyPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jsYears, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)))))
+                                .addComponent(jLabel4))
+                            .addComponent(jtReplace, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

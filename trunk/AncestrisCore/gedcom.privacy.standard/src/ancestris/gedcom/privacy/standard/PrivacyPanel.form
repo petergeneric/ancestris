@@ -34,11 +34,10 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jtReplace" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jtPrivTag" min="-2" max="-2" attributes="0"/>
+                              <Component id="jtPrivTag" min="-2" pref="28" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jcbDead" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbLivings" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -49,6 +48,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jtReplace" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -142,6 +142,9 @@
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/gedcom/privacy/standard/Bundle.properties" key="PrivacyPanel.jLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/gedcom/privacy/standard/Bundle.properties" key="PrivacyPanel.jLabel6.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>
