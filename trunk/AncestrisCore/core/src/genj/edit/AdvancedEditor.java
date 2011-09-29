@@ -49,6 +49,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -342,6 +343,23 @@ import javax.swing.tree.TreePath;
       bean.commit();
   }
   
+/* Editor API */
+    @Override
+    public Image getImageIcon() {
+        return new EditViewFactory().getImage().getImage();
+    }
+
+    @Override
+    public String getName() {
+        return new EditViewFactory().getTitle();
+    }
+
+
+    @Override
+    public String getToolTipText() {
+        return getName();
+    }
+
   /**
    * Action - propagate properties
    */

@@ -84,7 +84,7 @@ public abstract class Editor extends JPanel {
         return (getContext() == null ? "" : getContext().getText());
     }
 
-    public Image getImageIcone() {
+    public Image getImageIcon() {
         return null;
     }
 
