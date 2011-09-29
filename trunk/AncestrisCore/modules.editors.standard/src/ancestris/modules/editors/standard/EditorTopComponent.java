@@ -23,8 +23,6 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.UnitOfWork;
-import genj.view.SelectionListener;
-import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -34,7 +32,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -42,7 +42,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
 public class EditorTopComponent extends AncestrisTopComponent
-        implements SelectionListener, ConfirmChangeWidget.ConfirmChangeCallBack {
+        implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
     private static EditorTopComponent factory;
@@ -57,6 +57,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private Gedcom gedcom;
     private JPanel editorContainer = new JPanel(new BorderLayout());
     private JLabel titleLabel = new JLabel("");
+    private JScrollPane editorScroll = new JScrollPane();
 
     @Override
     public boolean createPanel() {
@@ -68,6 +69,7 @@ public class EditorTopComponent extends AncestrisTopComponent
 
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         editorContainer.add(titleLabel, BorderLayout.NORTH);
+        editorContainer.add(editorScroll, BorderLayout.CENTER);
 
         return true;
     }
@@ -110,7 +112,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (editor != null) {
             editor.removeChangeListener(confirmPanel);
             editor.setContext(new Context());
-            editorContainer.remove(editor);
+            editorScroll.removeAll();
             editor = null;
         }
 
@@ -120,7 +122,7 @@ public class EditorTopComponent extends AncestrisTopComponent
             if (old != null) {
                 editor.setContext(old);
             }
-            editorContainer.add(editor, BorderLayout.CENTER);
+            editorScroll.setViewportView(editor);
             titleLabel.setText(editor.getTitle());
             editor.addChangeListener(confirmPanel);
         }
@@ -238,7 +240,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (editor == null) {
             return null;
         }
-        return editor.getImageIcone();
+        return editor.getImageIcon();
     }
 
     @Override
@@ -257,6 +259,16 @@ public class EditorTopComponent extends AncestrisTopComponent
         } else {
             super.setToolTipText();
         }
+    }
+
+    public TopComponent cloneComponent() {
+        if (getContext() == null) {
+            return null;
+        }
+
+        AncestrisTopComponent topComponent = new EditorTopComponent();
+        topComponent.init(getContext());
+        return topComponent;
     }
 
     private class Callback extends GedcomListenerAdapter {
