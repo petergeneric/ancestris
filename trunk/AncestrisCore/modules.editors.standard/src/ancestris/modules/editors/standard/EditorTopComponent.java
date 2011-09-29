@@ -112,7 +112,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (editor != null) {
             editor.removeChangeListener(confirmPanel);
             editor.setContext(new Context());
-            editorScroll.removeAll();
+            editorScroll.remove(editor);
             editor = null;
         }
 
