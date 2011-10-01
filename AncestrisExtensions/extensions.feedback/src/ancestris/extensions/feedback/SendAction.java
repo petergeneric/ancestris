@@ -27,6 +27,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -67,6 +68,8 @@ public final class SendAction implements ActionListener {
         if (modulePreferences.get("mail.host", "").equals("")) {
             NotifyDescriptor nd = new NotifyDescriptor.Message(RESOURCES.getString("fb.msg.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
+            
+            OptionsDisplayer.getDefault().open("Extensions/FeedBack");
         } else {
             fbPanel = new FeedbackPanel(userDir.length());
 
