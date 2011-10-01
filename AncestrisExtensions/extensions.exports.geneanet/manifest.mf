@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-OpenIDE-Module: org.ancestris.extensions.exports.geneanet
-OpenIDE-Module-Layer: org/ancestris/extensions/exports/geneanet/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/ancestris/extensions/exports/geneanet/Bundle.properties
+OpenIDE-Module: ancestris.extensions.exports.geneanet
+OpenIDE-Module-Layer: ancestris/extensions/exports/geneanet/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/extensions/exports/geneanet/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 
