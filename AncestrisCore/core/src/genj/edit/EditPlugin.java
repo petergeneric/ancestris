@@ -219,12 +219,12 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
         // sub-menu for properties
         if (context.getProperties().size()>1) {
           Action2.Group group = new ActionProvider.PropertiesActionGroup(context.getProperties());
-          if (context.getEntities().size()>1) {
-              //
-            createActions(context.getEntities(), group);
-          } else {
+//          if (context.getEntities().size()>1) {
+//              //
+//            createActions(context.getEntities(), group);
+//          } else {
               createActions(context.getProperties(), group);
-            }
+//            }
           if (group.size()>0)
             result.add(group);
         } else if (context.getProperties().size()==1) {
