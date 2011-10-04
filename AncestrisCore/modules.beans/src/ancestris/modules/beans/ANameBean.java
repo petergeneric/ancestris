@@ -11,14 +11,14 @@
  */
 package ancestris.modules.beans;
 
-import genj.edit.beans.ShortNameBean;
+import genj.edit.beans.FullNameBean;
 import java.io.Serializable;
 
 /**
  *
  * @author daniel
  */
-public class ANameBean extends ShortNameBean implements Serializable {
+public class ANameBean extends FullNameBean implements Serializable {
 
     public ANameBean() {
         super();
