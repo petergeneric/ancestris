@@ -49,15 +49,6 @@ import net.miginfocom.swing.MigLayout;
  */
 public class FullNameBean extends PropertyBean {
 
-//  private final static NestedBlockLayout LAYOUT = new NestedBlockLayout(
-//      "<table>"+
-//       "<row><l/><row><v wx=\"1\"/><check pad=\"0\"/></row></row>"+
-//       "<row><l/><v wx=\"1\"/></row>"+
-//       "<row><l/><v/></row>"+
-//       "<row><l/><v/></row>"+
-//      "</table>"
-//  );
-//
   /** our components */
   private Property[] sameLastNames = new Property[0];
   private ChoiceWidget cLast, cFirst;
@@ -116,18 +107,18 @@ MigLayout layout = new MigLayout(
     tNick.addChangeListener(changeSupport);
 
     tNPfx  = new TextFieldWidget("", 10);
-    JLabel lNPfx = new JLabel(Gedcom.getName("NPFX"));
-    lNPfx.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+//    JLabel lNPfx = new JLabel(Gedcom.getName("NPFX"));
+//    lNPfx.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
     tNPfx.addChangeListener(changeSupport);
 
     tNSfx  = new TextFieldWidget("", 10);
-    JLabel lNSfx = new JLabel(Gedcom.getName("NSFX"));
-    lNSfx.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+//    JLabel lNSfx = new JLabel(Gedcom.getName("NSFX"));
+//    lNSfx.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
     tNSfx.addChangeListener(changeSupport);
 
     tSPfx  = new TextFieldWidget("", 10);
-    JLabel lSPfx = new JLabel(Gedcom.getName("SPFX"));
-    lSPfx.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+//    JLabel lSPfx = new JLabel(Gedcom.getName("SPFX"));
+//    lSPfx.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
     tSPfx.addChangeListener(changeSupport);
 
     cAll = new JCheckBox();
@@ -167,7 +158,7 @@ MigLayout layout = new MigLayout(
     add(new JLabel(PropertyName.getLabelForSuffix()));
     add(tSuff,new CC().wrap());
 
-    add(new JLabel(Gedcom.getName("NICK")));
+    add(BeanHelper.createTagLabel(this, "NICK", "", 0));
     add(tNick,new CC().wrap());
 
     extPanel = new JPanel(new MigLayout(
@@ -175,16 +166,16 @@ MigLayout layout = new MigLayout(
             new AC().align("right").gap("rel").grow().fill()
             ));
     extPanel.setVisible(jCheckBox1.isSelected());
-    extPanel.add(lNPfx);
+    extPanel.add(BeanHelper.createTagLabel(this, "NPFX", "", 10));
     extPanel.add(tNPfx,new CC().wrap());
 
-    extPanel.add(lSPfx);
+    extPanel.add(BeanHelper.createTagLabel(this, "SPFX", "", 10));
     extPanel.add(tSPfx,new CC().wrap());
 
-    extPanel.add(lNSfx);
+    extPanel.add(BeanHelper.createTagLabel(this, "NSFX", "", 10));
     extPanel.add(tNSfx,new CC().wrap());
 
-    add(jCheckBox1,new CC().wrap());
+    add(jCheckBox1,new CC().spanX().alignX("left").wrap());
     add(extPanel,new CC().grow().spanX().gapBefore("20").wrap());
 
     

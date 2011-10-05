@@ -1226,6 +1226,14 @@ public class Gedcom implements Comparable {
   }
 
   /**
+   * XXX: Can we use MetaProperty.getInfo()?
+   * Accessor - some explanationary information about a tag
+   */
+  public static String getInfo(String tag) {
+    return resources.getString(tag+".info", false);
+  }
+
+  /**
    * Returns the prefix of the given entity
    */
   public static String getEntityPrefix(String tag) {
