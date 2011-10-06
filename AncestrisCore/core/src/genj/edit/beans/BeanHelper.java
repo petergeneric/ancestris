@@ -12,10 +12,9 @@
 package genj.edit.beans;
 
 import genj.gedcom.Gedcom;
-import genj.gedcom.JMultiLineToolTip;
 import java.awt.Font;
 import javax.swing.JLabel;
-import javax.swing.JToolTip;
+import org.apache.commons.lang.WordUtils;
 
 /**
  * Helper class for Beans
@@ -28,31 +27,36 @@ public class BeanHelper {
     }
 
     public static JLabel createTagLabel(PropertyBean bean, String tag, String tip, int fontSize) {
-        if (tip != null && tip.length() == 0) {
-            tip = bean.RESOURCES.getString("HINT_" + tag, false); // NOI18N
-        }
-        if (tip == null) {
-            tip = Gedcom.getInfo(tag);
-        }
-        return createLabel(bean, Gedcom.getName(tag), tip, fontSize);
+        return createLabel(bean, Gedcom.getName(tag), formatToolTip(bean, tag, tip), fontSize);
     }
 
     public static JLabel createLabel(PropertyBean bean, String label, String tip, int fontSize) {
-        JLabel jLabel = new JLabel(label) {
-
-            public JToolTip createToolTip() {
-                JMultiLineToolTip tt = new JMultiLineToolTip();
-                tt.setColumns(50);
-                return tt;
-            }
-        };
+        JLabel jLabel = new JLabel(label);
 
         if (tip != null && tip.length() != 0) {
-            jLabel.setToolTipText(tip);
+            jLabel.setToolTipText(formatToolTip(bean, null, tip));
         }
         if (fontSize != 0) {
             jLabel.setFont(new Font("DejaVu Sans", 0, fontSize)); // NOI18N
         }
         return jLabel;
     }
+
+    public static String formatToolTip(PropertyBean bean, String tag, String tip){
+        if (tag != null) {
+            if (tip != null && tip.length() == 0) {
+                tip = bean.RESOURCES.getString("HINT_" + tag, false); // NOI18N
+            }
+            if (tip == null) {
+                tip = Gedcom.getInfo(tag);
+            }
+        }
+        if (tip != null){
+            if (!tip.startsWith("<html>")){
+                tip = "<html>"+WordUtils.wrap(tip,40, "<br/>", false)+"</html>";
+            }
+        }
+        return tip;
+    }
+
 }
