@@ -13,8 +13,9 @@ package genj.edit.beans;
 
 import genj.gedcom.Gedcom;
 import java.awt.Font;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import org.apache.commons.lang.WordUtils;
 
 /**
  * Helper class for Beans
@@ -42,7 +43,7 @@ public class BeanHelper {
         return jLabel;
     }
 
-    public static String formatToolTip(PropertyBean bean, String tag, String tip){
+    public static String formatToolTip(PropertyBean bean, String tag, String tip) {
         if (tag != null) {
             if (tip != null && tip.length() == 0) {
                 tip = bean.RESOURCES.getString("HINT_" + tag, false); // NOI18N
@@ -51,12 +52,38 @@ public class BeanHelper {
                 tip = Gedcom.getInfo(tag);
             }
         }
-        if (tip != null){
-            if (!tip.startsWith("<html>")){
-                tip = "<html>"+WordUtils.wrap(tip,40, "<br/>", false)+"</html>";
+        if (tip != null) {
+            if (!tip.startsWith("<html>")) {
+                // return text wrapped to 200 pixels
+                tip = "<html><table width=200><tr><td>" + tip + "</td></tr></table></html";
             }
         }
         return tip;
     }
 
+    /**
+     * display get a checkbox to show/hide a JComponent
+     * @param title
+     * @param component
+     * @return
+     */
+    public static JCheckBox createShowHide(
+            String title,
+            String tip,
+            final JComponent component) {
+        final JCheckBox jcb = new JCheckBox();
+
+        jcb.setFont(new Font("DejaVu Sans", 0, 10)); // NOI18N
+        jcb.setText(title);
+        jcb.setToolTipText(formatToolTip(null, null, tip));
+        jcb.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        jcb.addActionListener(new java.awt.event.ActionListener() {
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                component.setVisible(jcb.isSelected());
+            }
+        });
+        return jcb;
+    }
 }
