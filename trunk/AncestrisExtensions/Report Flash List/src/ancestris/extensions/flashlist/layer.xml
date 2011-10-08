@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Tools">
+            <file name="ancestris-extensions-flashlist-FlashListAction.instance">
+                <attr name="delegate" newvalue="ancestris.extensions.flashlist.FlashListAction"/>
+                <attr name="displayName" bundlevalue="ancestris.extensions.flashlist.Bundle#CTL_FlashListAction"/>
+                <attr name="iconBase" stringvalue="ancestris/extensions/flashlist/ReportFO.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="ancestris-extensions-flashlist-FlashListAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-extensions-flashlist-FlashListAction.instance"/>
+                <attr name="position" intvalue="91"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>
