@@ -306,13 +306,13 @@ public class ReportFlashList extends Report {
         // Updates values of recordKey, posLoc1, posLoc2, posLoc3, existPLACTag
         if (gedcom.getPlaceFormat().equals("")) {
             // no tag PLAC found
-            String[] choices = {translate("SurnLoc"), translate("LocSurn")};
-            recordKeyText = (String) getValueFromUser(translate("recordKey"), choices, choices[0]);
+            String[] choices = {NbBundle.getMessage(this.getClass(), "ReportFlashList.SurnLoc"), NbBundle.getMessage(this.getClass(), "ReportFlashList.LocSurn")};
+            recordKeyText = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey"), choices, choices[0]);
             existPLACTag = false;
             if (recordKeyText == null) {
                 return false;
             }
-            if (recordKeyText.compareTo(translate("LocSurn")) == 0) {
+            if (recordKeyText.compareTo(NbBundle.getMessage(this.getClass(), "ReportFlashList.LocSurn")) == 0) {
                 recordKey = LOC1_SURN_LOC23;
             } else {
                 recordKey = SURN_LOC1_LOC23;
@@ -320,14 +320,14 @@ public class ReportFlashList extends Report {
         } // tag PLAC found
         else {
             String recordKeys[] = {
-                translate("loc1") + "/" + translate("loc2") + " > " + translate("surname") + " > " + translate("loc3"),
-                translate("loc1") + "/" + translate("loc2") + " > " + translate("loc3") + " > " + translate("surname"),
-                translate("surname") + " > " + translate("loc1") + "/" + translate("loc2") + " > " + translate("loc3"),
-                translate("surname") + " > " + translate("loc1") + " > " + translate("loc2") + "/" + translate("loc3"),
-                translate("loc1") + " -> " + translate("loc2") + "/" + translate("loc3") + " > " + translate("surname"),
-                translate("loc1") + " -> " + translate("surname") + " > " + translate("loc2") + "/" + translate("loc3")
+                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"),
+                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname"),
+                NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"),
+                NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"),
+                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + " -> " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname"),
+                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + " -> " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3")
             };
-            recordKeyText = (String) getValueFromUser(translate("recordKey"), recordKeys, recordKeys[0]);
+            recordKeyText = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey"), recordKeys, recordKeys[0]);
             if (recordKeyText == null) {
                 return false;
             } else {
@@ -338,8 +338,8 @@ public class ReportFlashList extends Report {
             List tag = Arrays.asList(gedcom.getPlaceFormat().split("\\,")); // original tag
             ArrayList choices = new ArrayList((Collection) Arrays.asList(gedcom.getPlaceFormat().split("\\,"))); // list used for selection only
 
-            recordKeyText = recordKeyText.replaceAll(translate("loc1"), "XXX");
-            String selection1 = (String) getValueFromUser(translate("recordKey1") + " " + recordKeyText, choices.toArray(), choices.get(0));
+            recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1"), "XXX");
+            String selection1 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey1") + " " + recordKeyText, choices.toArray(), choices.get(0));
             if (selection1 == null) {
                 return false;
             } else {
@@ -347,8 +347,8 @@ public class ReportFlashList extends Report {
             }
 
             recordKeyText = recordKeyText.replaceAll("XXX", selection1);
-            recordKeyText = recordKeyText.replaceAll(translate("loc2"), "XXX");
-            String selection2 = (String) getValueFromUser(translate("recordKey2") + " " + recordKeyText, choices.toArray(), choices.get(0));
+            recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2"), "XXX");
+            String selection2 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey2") + " " + recordKeyText, choices.toArray(), choices.get(0));
             if (selection2 == null) {
                 return false;
             } else {
@@ -356,8 +356,8 @@ public class ReportFlashList extends Report {
             }
 
             recordKeyText = recordKeyText.replaceAll("XXX", selection2);
-            recordKeyText = recordKeyText.replaceAll(translate("loc3"), "XXX");
-            String selection3 = (String) getValueFromUser(translate("recordKey3") + " " + recordKeyText, choices.toArray(), choices.get(0));
+            recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"), "XXX");
+            String selection3 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey3") + " " + recordKeyText, choices.toArray(), choices.get(0));
             if (selection3 == null) {
                 return false;
             } else {
