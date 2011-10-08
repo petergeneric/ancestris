@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: ancestris.extensions.reportsview
+OpenIDE-Module-Layer: ancestris/extensions/reportsview/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/extensions/reportsview/Bundle.properties
+OpenIDE-Module-Provides: ancestris.extensions.reportsview
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 1.0
+
