@@ -1,14 +1,11 @@
 package ancestris.extensions.reportsview;
 
 import genj.fo.Format;
-import genj.fo.FormatOptionsWidget;
-import genj.util.swing.Action2;
-import genj.util.swing.DialogHelper;
+import genj.fo.HTMLFormat;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -27,7 +24,8 @@ public final class ReportViewTopComponent extends TopComponent {
     static final String ICON_PATH = "ancestris/extensions/reportsview/View.png";
     private static final String PREFERRED_ID = "ReportViewTopComponent";
     genj.util.Registry foRegistry = genj.util.Registry.get(getClass());
-    private Logger LOG = Logger.getLogger(this.getClass().getSimpleName());
+    private static final Logger LOG = Logger.getLogger("ReportViewTopComponent");
+    private File tempfile = null;
 
     public ReportViewTopComponent() {
         initComponents();
@@ -103,6 +101,9 @@ public final class ReportViewTopComponent extends TopComponent {
 
     @Override
     public void componentClosed() {
+        if (tempfile != null) {
+            tempfile.delete();
+        }
         // TODO add custom code on component closing
     }
 
@@ -145,29 +146,20 @@ public final class ReportViewTopComponent extends TopComponent {
         return reportViewScrollPane;
     }
 
-    public void test(genj.fo.Document doc) {
-        Action[] actions = Action2.okCancel();
-        FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-        options.connect(actions[0]);
-
-        int rc = DialogHelper.openDialog("Document " + doc.getTitle(), DialogHelper.QUESTION_MESSAGE, options, actions, this);
-        Format formatter = options.getFormat();
-        File file = options.getFile();
-        if (rc != 0 || formatter.getFileExtension() == null || file == null) {
-            return;
-        }
+    public void displayDocument(genj.fo.Document doc) {
+        Format htmlFormatter = new HTMLFormat();
+        // Create temporary file.
 
         // format and write
         try {
-            file.getParentFile().mkdirs();
-            formatter.format(doc, file);
-        } catch (Throwable t) {
-            LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
-            return;
-        }
+            // create temporary file
+            tempfile = File.createTempFile("name", ".html");
 
-        try {
-            reportViewEditorPane.setPage(file.toURI().toURL());
+            htmlFormatter.format(doc, tempfile);
+
+            // display File
+            reportViewEditorPane.setPage(tempfile.toURI().toURL());
+
         } catch (IOException e) {
             LOG.log(Level.WARNING, "formatting " + doc + " failed", e);
         }
