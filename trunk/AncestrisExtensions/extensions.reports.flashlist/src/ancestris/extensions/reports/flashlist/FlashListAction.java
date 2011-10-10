@@ -1,8 +1,8 @@
 package ancestris.extensions.reports.flashlist;
 
 import ancestris.app.App;
-import ancestris.extensions.reportsview.ReportViewTopComponent;
-import ancestris.extensions.reportsview.SaveReport;
+import ancestris.extensions.reports.view.ReportViewTopComponent;
+import ancestris.extensions.reports.view.SaveReport;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
