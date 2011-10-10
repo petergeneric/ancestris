@@ -69,12 +69,9 @@ public final class FamPanel extends Editor {
      *
      * @param entity new value of indi
      */
-    @Override
-    public void setContext(Context context) {
+  @Override
+  protected void setContextImpl(Context context) {
         this.context = context;
-        if (context == null) {
-            return;
-        }
 
         Entity entity = context.getEntity();
         if (entity == null) {

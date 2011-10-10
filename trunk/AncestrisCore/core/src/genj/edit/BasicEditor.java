@@ -109,7 +109,7 @@ import javax.swing.SwingUtilities;
    * Callback - set current context
    */
   @Override
-  public void setContext(Context context) {
+  protected void setContextImpl(Context context) {
     
     if (isIgnoreSetContext)
       return;

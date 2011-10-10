@@ -112,26 +112,31 @@ public class ChangeSupport implements DocumentListener, ChangeListener, ActionLi
   /**
    * callback - change event = fire change event
    */
+    @Override
   public void stateChanged(ChangeEvent e) {
     fireChangeEvent(e);
   }
 
   /**
    * callback - document events = fire change event
-   */  
+   */
+    @Override
   public void changedUpdate(DocumentEvent e) {
     fireChangeEvent();
   }
+    @Override
   public void insertUpdate(DocumentEvent e) {
     fireChangeEvent();
   }
+    @Override
   public void removeUpdate(DocumentEvent e) {
     fireChangeEvent();
   }
-  
+
   /**
    * callback - action events = fire change event
    */
+    @Override
   public void actionPerformed(ActionEvent e) {
     fireChangeEvent(e.getSource());
   }

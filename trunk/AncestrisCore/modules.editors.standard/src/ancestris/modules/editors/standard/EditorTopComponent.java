@@ -33,6 +33,9 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
 
@@ -55,7 +58,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private Editor editor;
     private ConfirmChangeWidget confirmPanel;
     private Gedcom gedcom;
-    private JPanel editorContainer = new JPanel(new BorderLayout());
+    private JPanel editorContainer = new JPanel(new MigLayout(new LC().fillX().hideMode(2)));
     private JLabel titleLabel = new JLabel("");
     private JScrollPane editorScroll = new JScrollPane();
 
@@ -63,13 +66,15 @@ public class EditorTopComponent extends AncestrisTopComponent
     public boolean createPanel() {
         panels.put(Fam.class, new FamPanel());
         panels.put(Indi.class, new IndiPanel());
+
         confirmPanel = new ConfirmChangeWidget(this);
 
         setContext(getContext(), true);
 
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        editorContainer.add(titleLabel, BorderLayout.NORTH);
-        editorContainer.add(editorScroll, BorderLayout.CENTER);
+        editorContainer.add(editorScroll,new CC().growX());
+        editorContainer.add(titleLabel, new CC().dockNorth());
+        editorContainer.add(confirmPanel, new CC().dockSouth());
 
         return true;
     }
@@ -183,6 +188,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         }
     }
 
+    @Override
     public void setContextImpl(Context context, boolean isActionPerformed) {
         // see also EditView
         if (context == null) {

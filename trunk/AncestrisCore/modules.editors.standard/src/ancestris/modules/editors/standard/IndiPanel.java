@@ -32,6 +32,11 @@ public final class IndiPanel extends Editor {
         setOpaque(true);
         initComponents();
         childBeans = Arrays.asList(deathBean, birthBean, aSexBean1, aNameBean2, aSimpleBean1, aPlaceBean2);
+        // Add changes to each bean change listeners
+        for (PropertyBean bean : childBeans) {
+            bean.addChangeListener(changes);
+        }
+
     }
     private Indi indi;
 
@@ -49,12 +54,9 @@ public final class IndiPanel extends Editor {
      *
      * @param entity new value of indi
      */
-    @Override
-    public void setContext(Context context) {
+  @Override
+  protected void setContextImpl(Context context) {
         this.context = context;
-        if (context == null) {
-            return;
-        }
 
         Entity entity = context.getEntity();
         if (entity == null || !(entity instanceof Indi)) {

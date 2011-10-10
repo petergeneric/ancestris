@@ -44,10 +44,17 @@ public abstract class Editor extends JPanel {
      */
     public abstract ViewContext getContext();
 
-    /**
-     * Accessor - current
-     */
-    public abstract void setContext(Context context);
+    public void setContext(Context context){
+        if (context == null) {
+            return;
+        }
+        if (changes != null)
+            changes.mute();
+        setContextImpl(context);
+        if (changes != null)
+            changes.unmute();
+    }
+    protected abstract void setContextImpl(Context context);
 
     /**
      * commit changes

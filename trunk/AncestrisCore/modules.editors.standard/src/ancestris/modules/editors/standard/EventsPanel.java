@@ -94,7 +94,8 @@ public final class EventsPanel extends Editor {
         eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
     }
 
-    public void setContext(Context context) {
+  @Override
+  protected void setContextImpl(Context context) {
         if (context == null || context.getGedcom() == null) {
             return;
         }
