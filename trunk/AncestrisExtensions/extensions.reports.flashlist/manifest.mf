@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.extensions.reports.flashlist
+OpenIDE-Module-Layer: ancestris/extensions/reports/flashlist/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/extensions/reports/flashlist/Bundle.properties
+OpenIDE-Module-Requires: ancestris.extensions.optionspanel
+OpenIDE-Module-Specification-Version: 1.0
+
