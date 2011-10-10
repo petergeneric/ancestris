@@ -89,15 +89,14 @@ public class GedcomVisualPanel extends Editor {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    public void setContext(Context context) {
+  @Override
+  protected void setContextImpl(Context context) {
         this.context = context;
-        if (context == null) {
-            return;
-        }
         gedcomPanel.setContext(context);
         jTextField1.setText(context.getGedcom().getName());
     }
 
+    @Override
     public ViewContext getContext() {
         return new ViewContext(context);
     }

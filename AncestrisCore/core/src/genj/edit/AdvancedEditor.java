@@ -215,6 +215,7 @@ import javax.swing.tree.TreePath;
   /**
    * Provider current context 
    */
+    @Override
   public ViewContext getContext() {
     return tree.getContext();
   }
@@ -224,7 +225,7 @@ import javax.swing.tree.TreePath;
    * @param context context to switch to
    */
   @Override
-  public void setContext(Context context) {
+  protected void setContextImpl(Context context) {
     setContextImpl(context, false);
   }
   

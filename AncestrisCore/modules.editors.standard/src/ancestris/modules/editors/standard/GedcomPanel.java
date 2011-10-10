@@ -44,11 +44,9 @@ public class GedcomPanel extends Editor {
     }
 
 
-    public void setContext(Context context) {
+  @Override
+  protected void setContextImpl(Context context) {
         this.context = context;
-        if (context == null) {
-            return;
-        }
         Gedcom gedcom = context.getGedcom();
         placeFormat.setJurisdictions(gedcom.getPlaceFormat());
         placeFormat.setShowJuridcitions(gedcom.getShowJuridictions());
