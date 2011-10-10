@@ -69,7 +69,6 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
 
 
     protected Registry(IRegistryStorage preference) {
-    LOG.fine("set storage to preference storage");
         this.storage = preference;
         this.prefix = "";
     }
