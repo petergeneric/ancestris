@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 /**
  * Gedcom Property : NAME
  */
+// XXX: This class probably need to be design
 public class PropertyName extends Property {
   
   // TODO change to enum when migrating to java 5 
@@ -77,6 +78,7 @@ public class PropertyName extends Property {
   /**
    * @see java.lang.Comparable#compareTo(Object)
    */
+    @Override
   public int compareTo(Property other) {
   
     // check last name initially
@@ -98,6 +100,7 @@ public class PropertyName extends Property {
   /**
    * Returns <b>true</b> if this property is valid
    */
+    @Override
   public boolean isValid() {
     /// no indi -> true
     if (!(getEntity() instanceof Indi||getEntity() instanceof Submitter)) return true;
@@ -138,25 +141,11 @@ public class PropertyName extends Property {
    * @return 'de Vries' in case of PREFIX_AS_IS.
    *         'Vries' in case of IGNORE_PREFIX.
    *         'Vries, de' in case of PREFIX_LAST.
+   * @deprecated use gedLastName()
    */
+  @Deprecated
   public String getLastName(int prefixPresentation) {
-    
-    if (prefixPresentation == PropertyName.PREFIX_AS_IS) 
       return lastName;
-    
-    String last = lastName.replaceFirst("^[a-z ]*", "");
-    last = last.replaceFirst("-", "");
-    
-    if (prefixPresentation == PropertyName.IGNORE_PREFIX) {
-      last = last.replaceFirst("Hengevel[dt]", "Hengeveld/t");
-      return last;
-    }
-    
-    int diff = lastName.length() - last.length();
-    if ( diff > 0 ) {
-      last = last + ", "+ lastName.subSequence(0, diff);
-    }
-    return last;
   }
 
   /**
@@ -173,6 +162,14 @@ public class PropertyName extends Property {
     return getPropertyValue("NICK");
   }
   
+  public String getSurnamePrefix() {
+    return getPropertyValue("SPFX");
+  }
+
+  public String getNamePrefix() {
+    return getPropertyValue("NPFX");
+  }
+
   public void setNick(String nick) {
     Property n = getProperty("NICK");
     if (n==null) {
@@ -256,7 +253,7 @@ public class PropertyName extends Property {
   /**
    * Sets name to a new value
    */
-  public PropertyName setName(String setFirst, String setLast) {
+  public final PropertyName setName(String setFirst, String setLast) {
     return setName(setFirst,setLast,suffix);
   }
 
@@ -271,6 +268,17 @@ public class PropertyName extends Property {
    * Sets name to a new value
    */
   public PropertyName setName(String first, String last, String suff, boolean replaceAllLastNames) {
+      return setName(getPropertyValue("NPFX"),first, getPropertyValue("SPFX"),last, suff, replaceAllLastNames);
+  }
+  public PropertyName setName(
+          String nPfx,
+          String first,
+          String sPfx,
+          String last,
+          String suff,
+          boolean replaceAllLastNames) {
+
+      boolean hasPfx = !nPfx.isEmpty() || !sPfx.isEmpty();
 
     // 20070128 don't bother with calculating old if this is happening in init()
     boolean hasParent = getParent()!=null;
@@ -307,20 +315,11 @@ public class PropertyName extends Property {
     // update GIVN|SURN - IF we have a parent
     if (hasParent) {
       boolean add = Options.getInstance().isAddGivenSurname;
-      Property givn = getProperty("GIVN");
-      if (add || givn!=null) {
-        if (givn==null)
-          givn = addProperty("GIVN", first);
-        else
-          givn.setValue(first);
-      }
-      Property surn = getProperty("SURN");
-      if (add || surn!=null) {
-        if (surn==null)
-          surn = addProperty("SURN", last);
-        else
-          surn.setValue(last);
-      }
+      addNameSubProperty(add||hasPfx, "GIVN", first);
+      addNameSubProperty(add||hasPfx, "SURN", last);
+      addNameSubProperty(add||hasPfx, "NSFX", suff);
+      addNameSubProperty(add||hasPfx, "NPFX", nPfx);
+      addNameSubProperty(add||hasPfx, "SPFX", sPfx);
     }
     
     // Make sure no Information is kept in base class
@@ -335,7 +334,22 @@ public class PropertyName extends Property {
     // Done
     return this;
   }
-  
+
+  private void addNameSubProperty(boolean add, String tag,  String value){
+      Property sub = getProperty(tag);
+      if (add ) {
+        if (sub==null)
+          sub = addProperty(tag, value);
+        else
+          sub.setValue(value);
+          sub.isTransient = false;
+      } else {
+          delProperties(tag);
+          sub = addProperty(tag, value);
+          sub.isTransient = true;
+      }
+  }
+
   /**
    * Hook:
    * + Remember last names in reference set
@@ -394,11 +408,22 @@ public class PropertyName extends Property {
     }
 
     // ... format ok
-    suffix = l.substring( l.indexOf('/') + 1 );
+    String s = l.substring( l.indexOf('/') + 1 );
     l = l.substring( 0 , l.indexOf('/') );
 
+    // If has prefix, then name is not easily parsable, so get sub tag values
+    boolean hasPfx = ((getProperty("NPFX") != null) || (getProperty("SPFX") != null));
+    if (hasPfx){
+        if(getProperty("SURN")!=null)
+            l = getPropertyValue("SURN");
+        if(getProperty("GIVN")!=null)
+            f = getPropertyValue("GIVN");
+        if(getProperty("NSFX")!=null)
+            s = getPropertyValue("NSFX");
+    }
+
     // keep
-    setName(f,l,suffix);
+    setName(getPropertyValue("NPFX"),f,getPropertyValue("SPFX"),l,s,false);
     
     // done
   }

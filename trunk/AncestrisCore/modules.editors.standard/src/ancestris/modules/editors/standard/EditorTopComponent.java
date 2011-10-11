@@ -68,6 +68,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         panels.put(Indi.class, new IndiPanel());
 
         confirmPanel = new ConfirmChangeWidget(this);
+        confirmPanel.setChanged(false);
 
         setContext(getContext(), true);
 
