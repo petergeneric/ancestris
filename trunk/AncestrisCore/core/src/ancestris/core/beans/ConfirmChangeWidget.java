@@ -19,10 +19,13 @@ import genj.util.swing.DialogHelper;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
@@ -46,6 +49,7 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         bh.create(ok).setFocusable(false);
         bh.create(cancel).setFocusable(false);
         this.callback = callback;
+        setBorder(BorderFactory.createEtchedBorder());
     }
 
     /*
