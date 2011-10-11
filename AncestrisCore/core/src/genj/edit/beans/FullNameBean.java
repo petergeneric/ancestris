@@ -48,7 +48,7 @@ public class FullNameBean extends PropertyBean {
 
     // Extended Panel
     private javax.swing.JPanel extPanel;
-    private TextFieldWidget tNPfx, tNSfx, tSPfx;
+    private TextFieldWidget tNPfx, tSPfx;
 
     /**
      * Calculate message for replace all last names
@@ -98,9 +98,6 @@ public class FullNameBean extends PropertyBean {
         tNPfx = new TextFieldWidget("", 10);
         tNPfx.addChangeListener(changeSupport);
 
-        tNSfx = new TextFieldWidget("", 10);
-        tNSfx.addChangeListener(changeSupport);
-
         tSPfx = new TextFieldWidget("", 10);
         tSPfx.addChangeListener(changeSupport);
 
@@ -144,7 +141,7 @@ public class FullNameBean extends PropertyBean {
         extPanel.add(tSPfx, new CC().wrap());
 
         extPanel.add(BeanHelper.createTagLabel(this, "NSFX", "", 10));
-        extPanel.add(tNSfx, new CC().wrap());
+        extPanel.add(tSuff, new CC().wrap());
 
         final JCheckBox showCb = BeanHelper.createShowHide(
                 NbBundle.getMessage(FullNameBean.class, "FullNameBean.showCb.text") // NOI18N
@@ -194,7 +191,11 @@ public class FullNameBean extends PropertyBean {
         }
 
         // ... store changed value
-        p.setName(first, last, suff, cAll.isSelected());
+        p.setName(
+                tNPfx.getText().trim(),
+                first,
+                tSPfx.getText().trim(),
+                last, suff, cAll.isSelected());
         p.setNick(nick);
 
         // start fresh
@@ -217,6 +218,8 @@ public class FullNameBean extends PropertyBean {
             cFirst.setText("");
             tSuff.setText("");
             tNick.setText("");
+            tNPfx.setText("");
+            tSPfx.setText("");
         } else {
             // keep track of who has the same last name
             sameLastNames = name.getSameLastNames();
@@ -226,7 +229,11 @@ public class FullNameBean extends PropertyBean {
             cFirst.setValues(name.getFirstNames(true));
             cFirst.setText(name.getFirstName());
             tSuff.setText(name.getSuffix());
+
             tNick.setText(name.getNick());
+            tNPfx.setText(name.getNamePrefix());
+            tSPfx.setText(name.getSurnamePrefix());
+
         }
 
         cAll.setVisible(false);
