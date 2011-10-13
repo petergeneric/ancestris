@@ -206,7 +206,15 @@ public class Options extends OptionProvider {
         return Registry.get(genj.gedcom.Options.class);
     }
 
-    private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
+    private static final String ADD_NAME_SUBTAGS   = "gedcom.addNameSubtags";         // NOI18N
+    public void setAddNameSubtags(boolean value) {
+        getPreferences().put(ADD_NAME_SUBTAGS, value);
+    }
+    public boolean getAddNameSubtags() {
+        return getPreferences().get(ADD_NAME_SUBTAGS, false);
+    }
+
+private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
     }

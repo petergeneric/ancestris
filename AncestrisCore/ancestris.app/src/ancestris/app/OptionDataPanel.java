@@ -62,6 +62,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         placeFormat = new ancestris.modules.beans.APlaceFormatBean();
         cbAutoCommit = new javax.swing.JCheckBox();
+        cbAddNameSubtags = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.toolTipText")); // NOI18N
@@ -189,6 +190,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbAutoCommit, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -230,7 +233,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
                             .addComponent(jCheckBox1)
                             .addComponent(jCheckBox2)
                             .addComponent(cbCreateSpouse)
-                            .addComponent(cbAutoCommit)))
+                            .addComponent(cbAutoCommit)
+                            .addComponent(cbAddNameSubtags)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -277,7 +281,9 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAutoCommit)
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbAddNameSubtags)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -322,6 +328,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
         jCheckBox19.setSelected(ancestris.app.Options.isWriteBOM());
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
+        cbAddNameSubtags.setSelected(genj.gedcom.Options.getInstance().getAddNameSubtags());
     }
 
     void store() {
@@ -349,6 +356,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("defaultEncoding", getEncoding());
         ancestris.app.Options.setWriteBOM(jCheckBox19.isSelected());
         ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
+        genj.gedcom.Options.getInstance().setAddNameSubtags(cbAddNameSubtags.isSelected());
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
     }
 
@@ -356,6 +364,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         return !jtSubmitterName.getText().isEmpty();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbAddNameSubtags;
     private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox jCheckBox1;
