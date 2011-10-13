@@ -48,8 +48,11 @@ public class SimpleValueBean extends PropertyBean {
    */
   @Override
   protected void commitImpl(Property property) {
-    if (!property.isReadOnly())
+    if (!property.isReadOnly()){
       property.setValue(tfield.getText());
+      // if commit, clear guessed flag
+      property.setGuessed(false);
+      }
   }
   
   /**
