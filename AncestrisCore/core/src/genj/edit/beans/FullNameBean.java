@@ -45,7 +45,6 @@ public class FullNameBean extends PropertyBean {
     private ChoiceWidget cLast, cFirst;
     private JCheckBox cAll;
     private TextFieldWidget tSuff, tNick;
-
     // Extended Panel
     private javax.swing.JPanel extPanel;
     private TextFieldWidget tNPfx, tSPfx;
@@ -66,8 +65,7 @@ public class FullNameBean extends PropertyBean {
     public FullNameBean() {
         MigLayout layout = new MigLayout(
                 new LC().fillX().hideMode(2),
-                new AC().align("right").gap("rel").grow().fill()
-                );
+                new AC().align("right").gap("rel").grow().fill());
 
         setLayout(layout);
 
@@ -128,12 +126,13 @@ public class FullNameBean extends PropertyBean {
 //        add(new JLabel(PropertyName.getLabelForSuffix()));
 //        add(tSuff, new CC().wrap());
 //
-        add(BeanHelper.createTagLabel(this, "NICK", "", 0));
-        add(tNick, new CC().wrap());
-
         extPanel = new JPanel(new MigLayout(
                 new LC().fillX(),
                 new AC().align("right").gap("rel").grow().fill()));
+
+        extPanel.add(BeanHelper.createTagLabel(this, "NICK", "", 0));
+        extPanel.add(tNick, new CC().wrap());
+
         extPanel.add(BeanHelper.createTagLabel(this, "NPFX", "", 10));
         extPanel.add(tNPfx, new CC().wrap());
 
