@@ -331,7 +331,7 @@ public class PropertyName extends Property {
 
         // update GIVN|SURN - IF we have a parent
         if (hasParent) {
-            boolean add = Options.getInstance().isAddGivenSurname;
+            boolean add = Options.getInstance().getAddNameSubtags();
             addNameSubProperty(add || hasPfx, "GIVN", first);
             addNameSubProperty(add || hasPfx, "SURN", last);
             addNameSubProperty(add || hasPfx, "NSFX", suff);
@@ -455,7 +455,11 @@ public class PropertyName extends Property {
 
         // done
     }
-
+      /*package*/@Override
+     void propagatePropertyDeleted(Property container, int pos, Property deleted) {
+          setValue(getValue());
+          super.propagatePropertyDeleted(container, pos, deleted);
+      }
     /**
      * Return all last names
      */
