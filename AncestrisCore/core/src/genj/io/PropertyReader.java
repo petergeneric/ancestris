@@ -22,6 +22,7 @@ package genj.io;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MultiLineProperty;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyXRef;
 import genj.util.Resources;
 
@@ -162,9 +163,16 @@ public class PropertyReader {
 
       // add sub property
       Property child = addProperty(prop, tag, value, pos);
-      
+
+      String prevValue = value;
+
       // first recurse into child(ren)
       readProperties(child, level, 0);
+
+      // set NameProperty again after children have been read
+      //(try to  fix value%subtag inconstitencies)
+      if (child instanceof PropertyName)
+          child.setValue(prevValue);
         
       // 20060406 now link after children are setup - this makes a difference for
       // e.g. link() in case of ASSO that looks at RELA

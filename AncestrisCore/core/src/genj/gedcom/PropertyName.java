@@ -202,10 +202,19 @@ public class PropertyName extends Property {
         }
 
         WordBuffer wb = new WordBuffer();
-        wb.append(firstName);
+
+        if (!getNamePrefix().isEmpty())
+            wb.append(getNamePrefix());
+        if (!firstName.isEmpty())
+                wb.append(firstName);
+
+        String name = getSurnamePrefix();
+        if (!name.isEmpty() && !lastName.isEmpty())
+            name += " ";
+        name += lastName;
         // 20050328 need last name //'s if there's a suffix
-        if (lastName.length() > 0 || suffix.length() > 0) {
-            wb.append("/" + lastName + "/");
+        if (name.length() > 0 || suffix.length() > 0) {
+            wb.append("/" +name + "/");
         }
         if (suffix.length() > 0) {
             wb.append(suffix);

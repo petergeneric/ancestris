@@ -130,7 +130,7 @@ public class FullNameBean extends PropertyBean {
                 new LC().fillX(),
                 new AC().align("right").gap("rel").grow().fill()));
 
-        extPanel.add(BeanHelper.createTagLabel(this, "NICK", "", 0));
+        extPanel.add(BeanHelper.createTagLabel(this, "NICK", "", 10));
         extPanel.add(tNick, new CC().wrap());
 
         extPanel.add(BeanHelper.createTagLabel(this, "NPFX", "", 10));
