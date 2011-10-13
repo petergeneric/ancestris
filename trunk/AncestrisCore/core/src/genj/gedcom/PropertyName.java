@@ -372,10 +372,10 @@ public class PropertyName extends Property {
         }
         if (sub == null) {
             sub = addProperty(tag, value);
+            sub.setGuessed(!force);
         } else {
             sub.setValue(value);
         }
-        sub.setGuessed(!force);
     }
 
     /**
@@ -441,19 +441,15 @@ public class PropertyName extends Property {
         l = l.substring(0, l.indexOf('/'));
 
         // If has prefix, then name is not easily parsable, so get sub tag values
-        boolean hasPfx = ((getProperty("NPFX") != null) || (getProperty("SPFX") != null));
-        if (hasPfx) {
-            if (getProperty("SURN") != null) {
-                l = getPropertyValue("SURN");
-            }
-            if (getProperty("GIVN") != null) {
-                f = getPropertyValue("GIVN");
-            }
-            if (getProperty("NSFX") != null) {
-                s = getPropertyValue("NSFX");
-            }
+        if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
+            l = getPropertyValue("SURN");
         }
-
+        if (getProperty("GIVN") != null && !getProperty("GIVN").isGuessed()) {
+            f = getPropertyValue("GIVN");
+        }
+        if (getProperty("NSFX") != null && !getProperty("NSFX").isGuessed()) {
+            s = getPropertyValue("NSFX");
+        }
         // keep
         setName(getPropertyValue("NPFX"), f, getPropertyValue("SPFX"), l, s, false);
 
