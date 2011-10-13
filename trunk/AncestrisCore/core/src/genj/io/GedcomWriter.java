@@ -360,7 +360,7 @@ public class GedcomWriter implements IGedcomWriter {
     protected void writeProperty(int level, Property prop) throws IOException {
 
       // check against filters
-      if (!prop.getTag().equalsIgnoreCase("HEAD") && !prop.isTransient() ) {
+      if (!prop.getTag().equalsIgnoreCase("HEAD") && !prop.isTransient() && !prop.isGuessed()) {
         if (filter.veto(prop)){
             hasVetoed=true;
           return;

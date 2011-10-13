@@ -996,6 +996,19 @@ public abstract class Property implements Comparable<Property> {
   }
 
   /**
+   * A guessed property should act as any other property except that
+   * its value is computed at run time and shouldn't be saved to file.
+   * This is specially used in NAME properties.
+   */
+  private boolean isGuessed = false;
+  public boolean isGuessed(){
+      return isGuessed;
+  }
+  public void setGuessed(boolean value){
+      isGuessed=value;
+  }
+
+  /**
    * A read-only attribute that can be honoured by the UI
    */
   public boolean isReadOnly() {

@@ -77,6 +77,10 @@ public class PropertyWriter {
     if (prop.isTransient())
       return;
     
+    // skip guessed
+    if (prop.isGuessed())
+      return;
+
     // multiline or one-line?
     if (prop instanceof MultiLineProperty)
       writeMultiLine(level, prop);
