@@ -20,6 +20,7 @@
 package genj.edit.beans;
 
 import genj.gedcom.Property;
+import genj.gedcom.PropertyName;
 import genj.util.swing.TextFieldWidget;
 
 import java.awt.BorderLayout;
@@ -52,6 +53,8 @@ public class SimpleValueBean extends PropertyBean {
       property.setValue(tfield.getText());
       // if commit, clear guessed flag
       property.setGuessed(false);
+      if (property.getParent()!=null && property.getParent() instanceof PropertyName)
+          property.getParent().setValue(property.getParent().getValue());
       }
   }
   
