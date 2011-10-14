@@ -191,6 +191,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbAutoCommit, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
+        cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
