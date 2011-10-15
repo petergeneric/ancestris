@@ -24,6 +24,7 @@ import genj.util.swing.TextFieldWidget;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyListener;
+import javax.swing.JLabel;
 
 /**
  * A Proxy knows how to generate interaction components that the user
@@ -33,10 +34,12 @@ public class SimpleValueBean extends PropertyBean {
 
     /** members */
     private TextFieldWidget tfield;
+    private JLabel tfieldRO;
 
     public SimpleValueBean() {
 
         tfield = new TextFieldWidget("", 8);
+        tfieldRO = new JLabel(""); // for RO properties
         tfield.addChangeListener(changeSupport);
 
         setLayout(new BorderLayout());
@@ -67,16 +70,25 @@ public class SimpleValueBean extends PropertyBean {
      */
     public void setPropertyImpl(Property property) {
 
+        removeAll();
         if (property == null) {
             tfield.setText("");
             tfield.setEditable(true);
             tfield.setVisible(true);
+            add(BorderLayout.NORTH, tfield);
         } else {
             String txt = property.getDisplayValue();
-            tfield.setText(txt);
-            tfield.setEditable(!property.isReadOnly());
-            tfield.setVisible(!property.isReadOnly() || txt.length() > 0);
-            defaultFocus = tfield.isEditable() ? tfield : null;
+            if (property.isReadOnly()) {
+                tfieldRO.setText(txt);
+                tfieldRO.setVisible(txt.length() > 0);
+                defaultFocus = null;
+                add(BorderLayout.NORTH, tfieldRO);
+            } else {
+                tfield.setText(txt);
+                tfield.setEditable(true);
+                tfield.setVisible(true);
+                add(BorderLayout.NORTH, tfield);
+            }
         }
         // not changed
         changeSupport.setChanged(false);
