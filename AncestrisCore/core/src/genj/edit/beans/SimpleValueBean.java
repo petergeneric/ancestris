@@ -20,7 +20,6 @@
 package genj.edit.beans;
 
 import genj.gedcom.Property;
-import genj.gedcom.PropertyName;
 import genj.util.swing.TextFieldWidget;
 
 import java.awt.BorderLayout;
@@ -32,66 +31,63 @@ import java.awt.event.KeyListener;
  */
 public class SimpleValueBean extends PropertyBean {
 
-  /** members */
-  private TextFieldWidget tfield;
+    /** members */
+    private TextFieldWidget tfield;
 
-  public SimpleValueBean() {
-    
-    tfield = new TextFieldWidget("", 8);
-    tfield.addChangeListener(changeSupport);
-    
-    setLayout(new BorderLayout());
-    add(BorderLayout.NORTH, tfield);
-  }
+    public SimpleValueBean() {
 
-  /**
-   * Finish editing a property through proxy
-   */
-  @Override
-  protected void commitImpl(Property property) {
-    if (!property.isReadOnly()){
-      property.setValue(tfield.getText());
-      // if commit, clear guessed flag
-      property.setGuessed(false);
-      if (property.getParent()!=null && property.getParent() instanceof PropertyName)
-          property.getParent().setValue(property.getParent().getValue());
-      }
-  }
-  
-  /**
-   * Editable depends on property
-   */  
-  public boolean isEditable() {
-    return tfield.isEditable();
-  }
-  
-  /**
-   * Set context to edit
-   */
-  public void setPropertyImpl(Property property) {
+        tfield = new TextFieldWidget("", 8);
+        tfield.addChangeListener(changeSupport);
 
-    if (property==null) {
-      tfield.setText("");
-      tfield.setEditable(true);
-      tfield.setVisible(true);
-    } else {
-      String txt = property.getDisplayValue();
-      tfield.setText(txt);
-      tfield.setEditable(!property.isReadOnly());
-      tfield.setVisible(!property.isReadOnly()||txt.length()>0);
-      defaultFocus = tfield.isEditable() ? tfield : null;
-    }    
-    // not changed
-    changeSupport.setChanged(false);
-  }
-
-      @Override
-    public synchronized void addKeyListener(KeyListener l) {
-          tfield.addKeyListener(l);
+        setLayout(new BorderLayout());
+        add(BorderLayout.NORTH, tfield);
     }
 
-      public String getValue(){
-          return tfield.getText();
-      }
+    /**
+     * Finish editing a property through proxy
+     */
+    @Override
+    protected void commitImpl(Property property) {
+        if (!property.isReadOnly()) {
+            property.setValue(tfield.getText());
+            // if commit, clear guessed flag
+            property.setGuessed(false);
+        }
+    }
 
+    /**
+     * Editable depends on property
+     */
+    public boolean isEditable() {
+        return tfield.isEditable();
+    }
+
+    /**
+     * Set context to edit
+     */
+    public void setPropertyImpl(Property property) {
+
+        if (property == null) {
+            tfield.setText("");
+            tfield.setEditable(true);
+            tfield.setVisible(true);
+        } else {
+            String txt = property.getDisplayValue();
+            tfield.setText(txt);
+            tfield.setEditable(!property.isReadOnly());
+            tfield.setVisible(!property.isReadOnly() || txt.length() > 0);
+            defaultFocus = tfield.isEditable() ? tfield : null;
+        }
+        // not changed
+        changeSupport.setChanged(false);
+    }
+
+    @Override
+    public synchronized void addKeyListener(KeyListener l) {
+        tfield.addKeyListener(l);
+    }
+
+    public String getValue() {
+        return tfield.getText();
+    }
 }

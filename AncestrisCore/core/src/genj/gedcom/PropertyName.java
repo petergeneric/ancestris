@@ -47,6 +47,7 @@ public class PropertyName extends Property {
             suffix = "";
     /** the name if unparsable */
     private String nameAsString;
+    private boolean mutePC = false;
 
     /**
      * need tag-argument constructor for all properties
@@ -173,7 +174,7 @@ public class PropertyName extends Property {
             if (nick.length() == 0) {
                 return;
             }
-            n = addProperty("NICK", nick);
+            addProperty("NICK", nick);
         } else {
             n.setValue(nick);
         }
@@ -195,6 +196,7 @@ public class PropertyName extends Property {
     /**
      * the gedcom value
      */
+    @Override
     public String getValue() {
 
         if (nameAsString != null) {
@@ -203,18 +205,21 @@ public class PropertyName extends Property {
 
         WordBuffer wb = new WordBuffer();
 
-        if (!getNamePrefix().isEmpty())
+        if (!getNamePrefix().isEmpty()) {
             wb.append(getNamePrefix());
-        if (!firstName.isEmpty())
-                wb.append(firstName);
+        }
+        if (!firstName.isEmpty()) {
+            wb.append(firstName);
+        }
 
         String name = getSurnamePrefix();
-        if (!name.isEmpty() && !lastName.isEmpty())
+        if (!name.isEmpty() && !lastName.isEmpty()) {
             name += " ";
+        }
         name += lastName;
         // 20050328 need last name //'s if there's a suffix
         if (name.length() > 0 || suffix.length() > 0) {
-            wb.append("/" +name + "/");
+            wb.append("/" + name + "/");
         }
         if (suffix.length() > 0) {
             wb.append(suffix);
@@ -225,6 +230,7 @@ public class PropertyName extends Property {
     /**
      * a value for display
      */
+    @Override
     public String getDisplayValue() {
 
         if (isSecret()) {
@@ -351,6 +357,7 @@ public class PropertyName extends Property {
         }
 
         // Done
+        mutePC = false;
         return this;
     }
 
@@ -399,7 +406,8 @@ public class PropertyName extends Property {
      * + Forget last names in reference set
      * @see genj.gedcom.Property#delNotify()
      */
-    /*package*/ void beforeDelNotify() {
+    /*package*/@Override
+ void beforeDelNotify() {
         // forget value
         remember("", "");
         // continue
@@ -410,6 +418,7 @@ public class PropertyName extends Property {
     /**
      * sets the name to a new gedcom value
      */
+    @Override
     public void setValue(String newValue) {
 
         // don't parse anything secret
@@ -455,11 +464,22 @@ public class PropertyName extends Property {
 
         // done
     }
-      /*package*/@Override
-     void propagatePropertyDeleted(Property container, int pos, Property deleted) {
-          setValue(getValue());
-          super.propagatePropertyDeleted(container, pos, deleted);
-      }
+
+    @Override
+    void propagatePropertyDeleted(Property container, int pos, Property deleted) {
+        setValue(getValue());
+        super.propagatePropertyDeleted(container, pos, deleted);
+    }
+
+    @Override
+    void propagatePropertyChanged(Property property, String oldValue) {
+        if (!mutePC) {
+            mutePC = true;
+            setValue(getValue());
+        }
+        super.propagatePropertyChanged(property, oldValue);
+    }
+
     /**
      * Return all last names
      */
