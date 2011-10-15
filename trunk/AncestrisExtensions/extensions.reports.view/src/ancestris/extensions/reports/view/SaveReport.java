@@ -97,16 +97,13 @@ public class SaveReport {
                 try {
                     saveFile = fileChooser.getSelectedFile();
                     formatter.format(document, saveFile);
+                    return saveFile.getCanonicalPath();
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
+                    return "";
                 }
             }
         }
-        try {
-            return saveFile == null ? "" : saveFile.getCanonicalPath();
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-            return "";
-        }
+        return "";
     }
 }

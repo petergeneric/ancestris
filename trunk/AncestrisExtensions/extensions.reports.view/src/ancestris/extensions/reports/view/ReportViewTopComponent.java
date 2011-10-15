@@ -1,16 +1,28 @@
 package ancestris.extensions.reports.view;
 
+import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.HTMLFormat;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JEditorPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.cookies.SaveCookie;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
 /**
  * Top component which displays something.
@@ -19,20 +31,98 @@ import org.netbeans.api.settings.ConvertAsProperties;
 autostore = false)
 public final class ReportViewTopComponent extends TopComponent {
 
+    private class myMouseListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            System.out.println(e.getButton());
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+    }
+
+    public class DummyNode extends AbstractNode {
+
+        private class SaveCookieImpl implements SaveCookie {
+
+            @Override
+            public void save() throws IOException {
+                if (!new SaveReport(document, document.getTitle()).saveFile().equals("")) {
+                    fire(false);
+                }
+            }
+        }
+        private SaveCookieImpl saveImpl;
+
+        public DummyNode() {
+            super(Children.LEAF);
+            saveImpl = new SaveCookieImpl();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "test";
+        }
+
+        public void fire(boolean modified) {
+            if (modified) {
+                getCookieSet().assign(SaveCookie.class, saveImpl);
+            } else {
+                getCookieSet().assign(SaveCookie.class);
+            }
+        }
+    }
+
+    private class Hyperactive implements HyperlinkListener {
+
+        @Override
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                JEditorPane pane = (JEditorPane) e.getSource();
+                if (e instanceof HTMLFrameHyperlinkEvent) {
+                    HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
+                    HTMLDocument doc = (HTMLDocument) pane.getDocument();
+                    doc.processHTMLFrameHyperlinkEvent(evt);
+                } else {
+                    try {
+                        pane.setPage(e.getURL());
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
     private static ReportViewTopComponent instance;
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "ancestris/extensions/reports/view/View.png";
     private static final String PREFERRED_ID = "ReportViewTopComponent";
-    genj.util.Registry foRegistry = genj.util.Registry.get(getClass());
     private static final Logger LOG = Logger.getLogger("ReportViewTopComponent");
     private File tempfile = null;
+    private DummyNode dummyNode;
+    Document document = null;
 
     public ReportViewTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(ReportViewTopComponent.class, "CTL_ReportViewTopComponent"));
         setToolTipText(NbBundle.getMessage(ReportViewTopComponent.class, "HINT_ReportViewTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-
+        reportViewEditorPane.addMouseListener(new myMouseListener());
+        setActivatedNodes(new Node[]{dummyNode = new DummyNode()});
     }
 
     /** This method is called from within the constructor to
@@ -132,30 +222,16 @@ public final class ReportViewTopComponent extends TopComponent {
         return PREFERRED_ID;
     }
 
-    /**
-     * @return the reportViewEditorPane
-     */
-    public javax.swing.JEditorPane getReportViewEditorPane() {
-        return reportViewEditorPane;
-    }
-
-    /**
-     * @return the reportViewScrollPane
-     */
-    public javax.swing.JScrollPane getReportViewScrollPane() {
-        return reportViewScrollPane;
-    }
-
     public void displayDocument(genj.fo.Document doc) {
         Format htmlFormatter = new HTMLFormat();
-        // Create temporary file.
+        document = doc;
 
         // format and write
         try {
             // create temporary file
             tempfile = File.createTempFile("name", ".html");
 
-            htmlFormatter.format(doc, tempfile);
+            htmlFormatter.format(document, tempfile);
 
             // display File
             reportViewEditorPane.setPage(tempfile.toURI().toURL());
@@ -163,5 +239,9 @@ public final class ReportViewTopComponent extends TopComponent {
         } catch (IOException e) {
             LOG.log(Level.WARNING, "formatting " + doc + " failed", e);
         }
+
+        reportViewEditorPane.addHyperlinkListener(new Hyperactive());
+
+        dummyNode.fire(true);
     }
 }

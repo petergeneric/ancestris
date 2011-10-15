@@ -26,8 +26,8 @@ public final class FlashListAction implements ActionListener {
             window.displayDocument(doc);
             window.open();
             window.requestActive();
-            String fileName = new SaveReport(doc, modulePreferences.get("reportFilename", "")).saveFile();
-            modulePreferences.put("reportFilename", fileName);
+//            String fileName = new SaveReport(doc, modulePreferences.get("reportFilename", "")).saveFile();
+//            modulePreferences.put("reportFilename", fileName);
         }
     }
 }
