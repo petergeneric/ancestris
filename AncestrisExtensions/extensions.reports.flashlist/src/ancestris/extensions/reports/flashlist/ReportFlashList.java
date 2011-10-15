@@ -25,11 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
 
 //
 // Flash lists are structured lists with locations and individual lastnames
@@ -155,6 +155,7 @@ public class ReportFlashList extends Report {
     private final static int LOC1_SURN_LOC23 = 5;
     private int recordKey = LOC12_SURN_LOC3;  // Will indicate sorting structure
     private String recordKeyText = "";        // Text for the legend
+    private static final Logger LOG = Logger.getLogger("ReportFlashList");
 
     /**
      * the report's entry point Our main logic
@@ -162,16 +163,12 @@ public class ReportFlashList extends Report {
     public Document start(Gedcom gedcom) {
         Collection indis = gedcom.getEntities(Gedcom.INDI);
         Indi indiDeCujus = null;
-        InputOutput io = null;
 
         //Get location and lastname options based on PLAC tag in gedcom and user input
         // Updates values of recordKey, posLoc1, posLoc2, posLoc3, existPLACTag
         if (!getFlashOptions(gedcom)) {
             return null;
         }
-
-        io = IOProvider.getDefault().getIO(NbBundle.getMessage(this.getClass(), "ReportFlashList.TabTitle") + " " + gedcom.getName(), true);
-        io.select();
 
         // get de-cujus (sosa 1) if entry point is generic
         if (indiDeCujus == null) {
@@ -186,18 +183,18 @@ public class ReportFlashList extends Report {
         Map primary = new TreeMap();
         int countIndiv = 0;
         counterIncrement = (int) Math.pow(10, counterIncrement);
-        io.getOut().println(NbBundle.getMessage(this.getClass(), "ReportFlashList.StartingAnalysis"));
+        LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.StartingAnalysis"));
         for (Iterator it = indis.iterator(); it.hasNext();) {
             analyze((Indi) it.next(), primary, indiDeCujus);
             if (counterIncrement > 1) {
                 countIndiv++;
                 if ((int) Math.floor(countIndiv / counterIncrement) * counterIncrement == countIndiv) {
-                    io.getOut().println(String.valueOf(countIndiv));
+                    // io.getOut().println(String.valueOf(countIndiv));
                 }
             }
         }
         if (counterIncrement > 1) {
-            io.getOut().println(NbBundle.getMessage(this.getClass(), "ReportFlashList.NowWriting"));
+            LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.NowWriting"));
         }
 
         // write main file out
@@ -292,7 +289,7 @@ public class ReportFlashList extends Report {
         }
 
         // done with main output
-        io.getOut().println(NbBundle.getMessage(this.getClass(), "ReportFlashList.Completed"));
+        LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.Completed"));
 
         return doc;
 
