@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Top component which displays something.
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class NavigatorTopComponent extends AncestrisTopComponent implements SelectionListener {
+public final class NavigatorTopComponent extends AncestrisTopComponent {
 
     private static final String PREFERRED_ID = "AncestrisNavigator";  // NOI18N
     private static NavigatorTopComponent factory;
@@ -64,7 +64,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent implement
     }
 
     @Override
-    public void setContext(Context context, boolean isActionPerformed) {
+    public void setContextImpl(Context context, boolean isActionPerformed) {
         if (context == null) {
             return;
         }

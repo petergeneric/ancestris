@@ -145,7 +145,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return context == null ? null : context.getGedcom();
     }
 
-        public void setContext(Context context, boolean isActionPerformed) {
+        final public void setContext(Context context, boolean isActionPerformed) {
             // appropriate?
             if (this.context != null && !this.context.sameGedcom(context)) {
                 LOG.log(Level.FINER, "context selection on unknown gedcom");
