@@ -702,8 +702,8 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
           setBackground(defaultRenderer.getBackgroundSelectionColor());
         } else {
           setForeground(defaultRenderer.getTextNonSelectionColor());
-          if (prop.isReadOnly()){
-              setBackground(new Color(255, 255, 128));
+          if (prop.isGuessed()){
+            setBackground(new Color(0xf0, 0xf0, 0xf0));
             } else{
           setBackground(defaultRenderer.getBackgroundNonSelectionColor());
             }
