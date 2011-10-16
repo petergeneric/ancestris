@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -61,7 +62,9 @@ public final class ReportViewTopComponent extends TopComponent {
 
             @Override
             public void save() throws IOException {
-                if (!new SaveReport(document, document.getTitle()).saveFile().equals("")) {
+                String fileName = new SaveReport(document, document.getTitle()).saveFile();
+                if (!fileName.equals("")) {
+                    reportPreferences.put("reportFilename", fileName);
                     fire(false);
                 }
             }
@@ -115,6 +118,7 @@ public final class ReportViewTopComponent extends TopComponent {
     private File tempfile = null;
     private DummyNode dummyNode;
     Document document = null;
+    Preferences reportPreferences = null;
 
     public ReportViewTopComponent() {
         initComponents();
@@ -222,9 +226,10 @@ public final class ReportViewTopComponent extends TopComponent {
         return PREFERRED_ID;
     }
 
-    public void displayDocument(genj.fo.Document doc) {
+    public void displayDocument(genj.fo.Document doc, Preferences reportPreferences) {
         Format htmlFormatter = new HTMLFormat();
         document = doc;
+        this.reportPreferences = reportPreferences;
 
         // format and write
         try {
