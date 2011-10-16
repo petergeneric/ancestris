@@ -160,7 +160,7 @@ public class ReportFlashList extends Report {
     /**
      * the report's entry point Our main logic
      */
-    public Document start(Gedcom gedcom) {
+    public Document start(Gedcom gedcom, String documentName) {
         Collection indis = gedcom.getEntities(Gedcom.INDI);
         Indi indiDeCujus = null;
 
@@ -198,7 +198,7 @@ public class ReportFlashList extends Report {
         }
 
         // write main file out
-        Document doc = new Document(gedcom.getName());
+        Document doc = new Document(documentName);
 
         // Display toc
         if (weAddaTOC) {

@@ -2,7 +2,6 @@ package ancestris.extensions.reports.flashlist;
 
 import ancestris.app.App;
 import ancestris.extensions.reports.view.ReportViewTopComponent;
-import ancestris.extensions.reports.view.SaveReport;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
@@ -22,12 +21,10 @@ public final class FlashListAction implements ActionListener {
 
         context = App.center.getSelectedContext(true);
         if (context != null) {
-            Document doc = new ReportFlashList().start(context.getGedcom());
-            window.displayDocument(doc);
+            Document doc = new ReportFlashList().start(context.getGedcom(), modulePreferences.get("reportFilename", "flash-list"));
+            window.displayDocument(doc, modulePreferences);
             window.open();
             window.requestActive();
-//            String fileName = new SaveReport(doc, modulePreferences.get("reportFilename", "")).saveFile();
-//            modulePreferences.put("reportFilename", fileName);
         }
     }
 }
