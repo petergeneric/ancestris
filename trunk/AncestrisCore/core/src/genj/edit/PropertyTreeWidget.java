@@ -35,9 +35,11 @@ import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.view.ContextProvider;
 import genj.view.ViewContext;
+import java.awt.Color;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -700,7 +702,11 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
           setBackground(defaultRenderer.getBackgroundSelectionColor());
         } else {
           setForeground(defaultRenderer.getTextNonSelectionColor());
+          if (prop.isReadOnly()){
+              setBackground(new Color(255, 255, 128));
+            } else{
           setBackground(defaultRenderer.getBackgroundNonSelectionColor());
+            }
         }
       }
 
@@ -712,7 +718,6 @@ public class PropertyTreeWidget extends DnDTree implements ContextProvider {
 
       // calc text
       setText(prop instanceof Entity ? calcText((Entity)prop) : calcText(prop));
-
       // done
       return this;
     }
