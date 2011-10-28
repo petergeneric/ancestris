@@ -23,8 +23,8 @@ import javax.swing.JLabel;
  */
 public class BeanHelper {
 
-    public static JLabel createTagLabel(PropertyBean bean, String tag) {
-        return createTagLabel(bean, tag, null, 0);
+    public static JLabel createTagLabel(String tag) {
+        return createTagLabel(null, tag, null, 0);
     }
 
     public static JLabel createTagLabel(PropertyBean bean, String tag, String tip, int fontSize) {

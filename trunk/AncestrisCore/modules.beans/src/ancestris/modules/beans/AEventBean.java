@@ -11,26 +11,43 @@
  */
 package ancestris.modules.beans;
 
+import genj.edit.beans.BeanHelper;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import java.util.Arrays;
-import java.util.List;
+import javax.swing.JLabel;
+import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 
 public final class AEventBean extends PropertyBean {
 
-    private List<PropertyBean> childBeans;
     private boolean detailedView = false;
+    private ancestris.modules.beans.ADateBean aDateBean1;
+    private ancestris.modules.beans.APlaceBean aPlaceBean1;
+    private JLabel ageLabel;
+    private JLabel agncLabel;
+    private JLabel causLabel;
+    private javax.swing.JCheckBox cbIsKnown;
+    private ancestris.modules.beans.AAddrBean evtAddr;
+    private ancestris.modules.beans.ASimpleBean evtAge;
+    private ancestris.modules.beans.ASimpleBean evtAgency;
+    private ancestris.modules.beans.ASimpleBean evtCause;
+    private ancestris.modules.beans.AChoiceBean evtType;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel placeLabel;
+    private javax.swing.JLabel typeLabel;
 
     /**
-     * Get the value of tag
+     * Get the name of tag
      *
-     * @return the value of tag
+     * @return the name of tag
      */
     private String getTagName() {
         String tag = getTag();
-        return tag == null?"":Gedcom.getName(tag);
+        return tag == null ? "" : Gedcom.getName(tag);
     }
 
     /**
@@ -70,16 +87,67 @@ public final class AEventBean extends PropertyBean {
 
     /** Creates new form NewGedcomVisualPanel2 */
     public AEventBean() {
-        setOpaque(true);
-        initComponents();
-        childBeans = Arrays.asList(
-                aDateBean1,
-                aPlaceBean1,
-                evtAddr,
-                evtType,
-                evtAge,
-                evtAgency,
-                evtCause);
+        // layout the bean
+        MigLayout layout = new MigLayout(
+                new LC().fillX().hideMode(2),
+                new AC().align("right").gap("rel").grow().fill());
+        setLayout(layout);
+
+        cbIsKnown = new javax.swing.JCheckBox();
+        add(cbIsKnown, new CC().alignX("left").wrap());
+        cbIsKnown.setFont(new java.awt.Font("DejaVu Sans", 2, 10));
+        org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
+        cbIsKnown.addActionListener(new java.awt.event.ActionListener() {
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showOrHide();
+            }
+        });
+
+        // Event TYPE
+        typeLabel = BeanHelper.createTagLabel("TYPE");
+        evtType = new ancestris.modules.beans.AChoiceBean();
+        evtType.addChangeListener(changeSupport);
+        add(typeLabel);
+        add(evtType, new CC().growX().wrap());
+
+        // Date
+        aDateBean1 = new ancestris.modules.beans.ADateBean();
+        aDateBean1.addChangeListener(changeSupport);
+        add(aDateBean1, new CC().skip().split(3).growX(0));
+        // AGE
+        ageLabel = BeanHelper.createTagLabel("AGE");
+        evtAge = new ancestris.modules.beans.ASimpleBean();
+        evtAge.addChangeListener(changeSupport);
+        add(ageLabel, new CC().growX(0));
+        add(evtAge, new CC().wrap());
+
+        // PLACE
+        placeLabel = BeanHelper.createTagLabel("PLAC");
+        aPlaceBean1 = new ancestris.modules.beans.APlaceBean();
+        aPlaceBean1.addChangeListener(changeSupport);
+        add(placeLabel);
+        add(aPlaceBean1, new CC().wrap());
+
+        // Address
+        evtAddr = new ancestris.modules.beans.AAddrBean();
+        evtAddr.addChangeListener(changeSupport);
+
+        agncLabel = BeanHelper.createTagLabel("AGNC");
+        evtAgency = new ancestris.modules.beans.ASimpleBean();
+        evtAgency.addChangeListener(changeSupport);
+        add(agncLabel);
+        add(evtAgency, new CC().wrap());
+
+        causLabel = BeanHelper.createTagLabel("CAUS");
+        evtCause = new ancestris.modules.beans.ASimpleBean();
+        evtCause.addChangeListener(changeSupport);
+        add(causLabel);
+        add(evtCause, new CC().wrap());
+
+        jLabel2 = new javax.swing.JLabel();
+
 
         cbIsKnown.setSelected(false);
         showOrHide();
@@ -101,147 +169,14 @@ public final class AEventBean extends PropertyBean {
      */
     @Override
     protected void commitImpl(Property property) throws GedcomException {
-        for (PropertyBean bean : childBeans) {
-            bean.commit();
-        }
+        aDateBean1.commit();
+        aPlaceBean1.commit();
+        evtAddr.commit();
+        evtAge.commit();
+        evtAgency.commit();
+        evtCause.commit();
+        evtType.commit();
     }
-
-    @Override
-    public boolean hasChanged() {
-        boolean changed = false;
-        for (PropertyBean bean : childBeans) {
-            changed |= bean.hasChanged();
-        }
-        return changed;
-    }
-
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        aDateBean1 = new ancestris.modules.beans.ADateBean();
-        jLabel2 = new javax.swing.JLabel();
-        aPlaceBean1 = new ancestris.modules.beans.APlaceBean();
-        cbIsKnown = new javax.swing.JCheckBox();
-        placeLabel = new javax.swing.JLabel();
-        evtType = new ancestris.modules.beans.AChoiceBean();
-        evtAddr = new ancestris.modules.beans.AAddrBean();
-        evtAgency = new ancestris.modules.beans.ASimpleBean();
-        agncLabel = new ancestris.modules.beans.ATagBean();
-        causLabel = new ancestris.modules.beans.ATagBean();
-        evtCause = new ancestris.modules.beans.ASimpleBean();
-        ageLabel = new ancestris.modules.beans.ATagBean();
-        evtAge = new ancestris.modules.beans.ASimpleBean();
-        typeLabel = new javax.swing.JLabel();
-
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, getTagName());
-        jLabel2.setMaximumSize(new java.awt.Dimension(76, 15));
-        jLabel2.setMinimumSize(new java.awt.Dimension(76, 15));
-        jLabel2.setPreferredSize(new java.awt.Dimension(76, 15));
-
-        cbIsKnown.setFont(new java.awt.Font("DejaVu Sans", 2, 10));
-        org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
-        cbIsKnown.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbIsKnownActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.placeLabel.text")); // NOI18N
-
-        evtAddr.setMinimumSize(new java.awt.Dimension(237, 0));
-        evtAddr.setPreferredSize(new java.awt.Dimension(353, 0));
-        evtAddr.setRequestFocusEnabled(false);
-
-        agncLabel.setTag(org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.agncLabel.tag")); // NOI18N
-
-        causLabel.setTag(org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.causLabel.tag")); // NOI18N
-
-        ageLabel.setTag(org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.ageLabel.tag")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(typeLabel, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.typeLabel.text")); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(evtAddr, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(typeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbIsKnown)
-                            .addComponent(evtType, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(placeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(aPlaceBean1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(aDateBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(evtAge, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(causLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(agncLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(evtAgency, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-                            .addComponent(evtCause, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbIsKnown))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(evtType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(typeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(aDateBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(evtAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(placeLabel)
-                    .addComponent(aPlaceBean1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(evtAddr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(agncLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(evtAgency, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(causLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(evtCause, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void cbIsKnownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbIsKnownActionPerformed
-        showOrHide();
-    }//GEN-LAST:event_cbIsKnownActionPerformed
 
     private void showOrHide() {
         if (showKnown) {
@@ -287,20 +222,4 @@ public final class AEventBean extends PropertyBean {
 
         revalidate();
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.beans.ADateBean aDateBean1;
-    private ancestris.modules.beans.APlaceBean aPlaceBean1;
-    private ancestris.modules.beans.ATagBean ageLabel;
-    private ancestris.modules.beans.ATagBean agncLabel;
-    private ancestris.modules.beans.ATagBean causLabel;
-    private javax.swing.JCheckBox cbIsKnown;
-    private ancestris.modules.beans.AAddrBean evtAddr;
-    private ancestris.modules.beans.ASimpleBean evtAge;
-    private ancestris.modules.beans.ASimpleBean evtAgency;
-    private ancestris.modules.beans.ASimpleBean evtCause;
-    private ancestris.modules.beans.AChoiceBean evtType;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel placeLabel;
-    private javax.swing.JLabel typeLabel;
-    // End of variables declaration//GEN-END:variables
 }
