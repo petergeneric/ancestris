@@ -25,4 +25,11 @@
             </folder>
         </folder>
     </folder>
+    <folder name="OptionsDialog">
+        <folder name="Extensions">
+            <file name="ancestris-extensions-exports-geneanet-GeneanetExportOptionsPanelController.instance" url="ancestris-extensions-exports-geneanet-GeneanetExportOptionsPanelController.instance">
+                <attr name="keywordsCategory" stringvalue="Extensions/GeneanetExportOptions"/>
+            </file>
+            </folder>
+    </folder>
 </filesystem>
