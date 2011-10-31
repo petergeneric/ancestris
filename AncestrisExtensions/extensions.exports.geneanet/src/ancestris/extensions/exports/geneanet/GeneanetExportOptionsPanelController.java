@@ -25,6 +25,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
 @OptionsPanelController.SubRegistration(location = "Extensions",
+id = "GeneanetExport",
 displayName = "#AdvancedOption_DisplayName_GeneanetExport",
 keywords = "#AdvancedOption_Keywords_GeneanetExport",
 keywordsCategory = "Extensions/GeneanetExport")
