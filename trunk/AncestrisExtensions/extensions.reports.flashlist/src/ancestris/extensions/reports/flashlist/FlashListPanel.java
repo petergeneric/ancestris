@@ -53,6 +53,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         nbEventsFormattedTextField = new javax.swing.JFormattedTextField();
         minSosaFormattedTextField = new javax.swing.JFormattedTextField();
         counterIncrementComboBox = new javax.swing.JComboBox(initCounterIncrementComboBox());
+        jLabel1 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(displayLegendLabel, org.openide.util.NbBundle.getMessage(FlashListPanel.class, "FlashListPanel.displayLegendLabel.text")); // NOI18N
 
@@ -78,27 +79,30 @@ final class FlashListPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(displayZerosCheckBox, org.openide.util.NbBundle.getMessage(FlashListPanel.class, "FlashListPanel.displayZerosCheckBox.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FlashListPanel.class, "FlashListPanel.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(repeatHeaderCheckBox)
-                    .addComponent(addTOCCheckBox)
-                    .addComponent(repeatKeysCheckBox)
-                    .addComponent(displayZerosCheckBox)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .addComponent(repeatHeaderCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addTOCCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(repeatKeysCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(displayZerosCheckBox, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(displayLegendLabel)
                             .addComponent(filterKey1Label)
-                            .addComponent(filterKey2Label)
                             .addComponent(filterKey3Label)
                             .addComponent(counterIncrementLabel)
                             .addComponent(yearSpanLabel)
                             .addComponent(nbEventsLabel)
-                            .addComponent(minSosaLabel))
+                            .addComponent(minSosaLabel)
+                            .addComponent(filterKey2Label))
                         .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(minSosaFormattedTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
@@ -115,6 +119,8 @@ final class FlashListPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(displayLegendLabel)
                     .addComponent(displayLegendComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -223,6 +229,7 @@ final class FlashListPanel extends javax.swing.JPanel {
     private javax.swing.JTextField filterKey2TextField;
     private javax.swing.JLabel filterKey3Label;
     private javax.swing.JTextField filterKey3TextField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JFormattedTextField minSosaFormattedTextField;
     private javax.swing.JLabel minSosaLabel;
     private javax.swing.JFormattedTextField nbEventsFormattedTextField;
