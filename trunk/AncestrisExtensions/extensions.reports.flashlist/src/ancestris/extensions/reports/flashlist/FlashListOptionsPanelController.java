@@ -7,12 +7,10 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(
-    location="Extensions",
-    displayName="#AdvancedOption_DisplayName_FlashList",
-    keywords="#AdvancedOption_Keywords_FlashList",
-    keywordsCategory="Extensions/FlashList"
-)
+@OptionsPanelController.SubRegistration(location = "Extensions",
+id = "FlashList", displayName = "#AdvancedOption_DisplayName_FlashList",
+keywords = "#AdvancedOption_Keywords_FlashList",
+keywordsCategory = "Extensions/FlashList")
 public final class FlashListOptionsPanelController extends OptionsPanelController {
 
     private FlashListPanel panel;

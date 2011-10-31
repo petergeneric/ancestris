@@ -7,12 +7,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(
-    location="Extensions",
-    displayName="#AdvancedOption_DisplayName_FamilyGroups",
-    keywords="#AdvancedOption_Keywords_FamilyGroups",
-    keywordsCategory="Extensions/FamilyGroups"
-)
+@OptionsPanelController.SubRegistration(location = "Extensions",
+id = "FamilyGroups",
+displayName = "#AdvancedOption_DisplayName_FamilyGroups",
+keywords = "#AdvancedOption_Keywords_FamilyGroups",
+keywordsCategory = "Extensions/FamilyGroups")
 public final class FamilyGroupsOptionsPanelController extends OptionsPanelController {
 
     private FamilyGroupsPanel panel;

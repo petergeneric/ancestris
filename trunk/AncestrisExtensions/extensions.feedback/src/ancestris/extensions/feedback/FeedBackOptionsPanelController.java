@@ -7,12 +7,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(
-    location="Extensions",
-    displayName="#AdvancedOption_DisplayName_FeedBack",
-    keywords="#AdvancedOption_Keywords_FeedBack",
-    keywordsCategory="Extensions/FeedBack"
-)
+@OptionsPanelController.SubRegistration(location = "Extensions",
+id = "FeedBack",
+displayName = "#AdvancedOption_DisplayName_FeedBack",
+keywords = "#AdvancedOption_Keywords_FeedBack",
+keywordsCategory = "Extensions/FeedBack")
 public final class FeedBackOptionsPanelController extends OptionsPanelController {
 
     private FeedBackOptionPanel panel;

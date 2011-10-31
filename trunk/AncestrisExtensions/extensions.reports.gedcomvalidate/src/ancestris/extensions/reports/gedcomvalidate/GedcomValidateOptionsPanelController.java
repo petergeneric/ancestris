@@ -7,12 +7,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(
-    location="Extensions",
-    displayName="#AdvancedOption_DisplayName_GedcomValidateOptions",
-    keywords="#AdvancedOption_Keywords_GedcomValidateOptions",
-    keywordsCategory="Extensions/GedcomValidateOptions"
-)
+@OptionsPanelController.SubRegistration(location = "Extensions",
+id = "GedcomValidateOptions",
+displayName = "#AdvancedOption_DisplayName_GedcomValidateOptions",
+keywords = "#AdvancedOption_Keywords_GedcomValidateOptions",
+keywordsCategory = "Extensions/GedcomValidateOptions")
 public final class GedcomValidateOptionsPanelController extends OptionsPanelController {
 
     private GedcomValidateOptionsPanel panel;
