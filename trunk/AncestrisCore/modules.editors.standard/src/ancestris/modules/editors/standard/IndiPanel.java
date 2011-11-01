@@ -11,6 +11,7 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.modules.beans.PropertyTabbedPane;
 import ancestris.api.editor.Editor;
 import ancestris.modules.beans.AEventBean;
 import ancestris.modules.beans.ANameBean;
@@ -32,29 +33,40 @@ import org.openide.util.Exceptions;
 public final class IndiPanel extends Editor {
 
     private ancestris.modules.beans.ANameBean aNameBean2;
-    private ancestris.modules.beans.ASexBean aSexBean1;
+    private PropertyTabbedPane namePane;
+
     private ancestris.modules.beans.AEventBean birthBean;
+    private PropertyTabbedPane birthPane;
     private ancestris.modules.beans.AEventBean deathBean;
+    private PropertyTabbedPane deathPane;
     private ancestris.modules.beans.AChoiceBean occuBean;
+    private PropertyTabbedPane occuPane;
     private ancestris.modules.beans.APlaceBean resiBean;
+    private PropertyTabbedPane resiPane;
+
     private List<PropertyBean> childBeans;
     private Context context;
 
     public IndiPanel() {
-        occuBean = new ancestris.modules.beans.AChoiceBean();
-        aSexBean1 = new ancestris.modules.beans.ASexBean();
 
         aNameBean2 = new ANameBean();
+        namePane = new PropertyTabbedPane(aNameBean2, Gedcom.getName("NAME"), null, null);
 
         birthBean = new AEventBean();
         birthBean.setDetailedView(true);
         birthBean.setTag("BIRT"); // NOI18N
+        birthPane = new PropertyTabbedPane(birthBean, Gedcom.getName("BIRT"), null, null);
 
         deathBean = new AEventBean();
         deathBean.setShowKnown(true);
         deathBean.setTag("DEAT"); // NOI18N
+        deathPane = new PropertyTabbedPane(deathBean, Gedcom.getName("DEAT"), null, null);
 
         resiBean = new ancestris.modules.beans.APlaceBean();
+        resiPane = new PropertyTabbedPane(resiBean, Gedcom.getName("RESI"), null, null);
+
+        occuBean = new ancestris.modules.beans.AChoiceBean();
+        occuPane = new PropertyTabbedPane(occuBean, Gedcom.getName("OCCU"), null, null);
 
         setOpaque(true);
         // layout the bean
@@ -62,13 +74,13 @@ public final class IndiPanel extends Editor {
                 new LC().fillX().hideMode(2).flowY(), new AC().align("left").grow().fill());
         setLayout(layout);
 
-        add(new PropertyTabbedPane(aNameBean2, Gedcom.getName("NAME"), null, null));
-        add(new PropertyTabbedPane(birthBean, Gedcom.getName("BIRT"), null, null));
-        add(new PropertyTabbedPane(deathBean, Gedcom.getName("DEAT"), null, null));
-        add(new PropertyTabbedPane(resiBean, Gedcom.getName("RESI"), null, null));
-        add(new PropertyTabbedPane(occuBean, Gedcom.getName("OCCU"), null, null));
+        add(namePane);
+        add(birthPane);
+        add(deathPane);
+        add(resiPane);
+        add(occuPane);
 
-        childBeans = Arrays.asList(deathBean, birthBean, aSexBean1, aNameBean2, occuBean, resiBean);
+        childBeans = Arrays.asList(deathBean, birthBean, aNameBean2, occuBean, resiBean);
         // Add changes to each bean change listeners
         for (PropertyBean bean : childBeans) {
             bean.addChangeListener(changes);
@@ -103,7 +115,6 @@ public final class IndiPanel extends Editor {
         this.indi = (Indi) entity;
         deathBean.setContext(indi, null);
         birthBean.setContext(indi, null);
-        aSexBean1.setContext(indi, null);
         aNameBean2.setContext(indi, null);
         occuBean.setContext(indi, TagPath.valueOf(".:OCCU"));
         resiBean.setContext(indi, TagPath.valueOf(".:RESI:PLAC"));

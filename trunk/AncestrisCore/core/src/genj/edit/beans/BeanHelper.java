@@ -12,6 +12,8 @@
 package genj.edit.beans;
 
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyName;
 import java.awt.Font;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;

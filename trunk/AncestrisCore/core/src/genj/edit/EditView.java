@@ -276,7 +276,7 @@ public class EditView extends View implements ContextProvider, ConfirmChangeWidg
         // add sticky/focus/mode
         toolbar.add(new JToggleButton(sticky));
         toolbar.add(new JToggleButton(focus));
-//     toolbar.add(new JToggleButton(mode)); // XXX: uncomment this line to get back old standard editor
+     toolbar.add(new JToggleButton(mode)); // XXX: uncomment this line to get back old standard editor
 
         // done
         toolbar.endUpdate();
