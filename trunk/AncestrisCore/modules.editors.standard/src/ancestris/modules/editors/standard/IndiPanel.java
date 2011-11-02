@@ -77,8 +77,8 @@ public final class IndiPanel extends Editor {
         add(namePane);
         add(birthPane);
         add(deathPane);
-        add(resiPane);
         add(occuPane);
+        add(resiPane);
 
         childBeans = Arrays.asList(deathBean, birthBean, aNameBean2, occuBean, resiBean);
         // Add changes to each bean change listeners
