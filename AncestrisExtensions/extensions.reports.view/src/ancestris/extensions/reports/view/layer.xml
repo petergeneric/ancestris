@@ -23,7 +23,7 @@
             <file name="ReportViewTopComponent.settings" url="ReportViewTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="editor">
+            <folder name="ancestris-output">
                 <file name="ReportViewTopComponent.wstcref" url="ReportViewTopComponentWstcref.xml"/>
             </folder>
         </folder>
