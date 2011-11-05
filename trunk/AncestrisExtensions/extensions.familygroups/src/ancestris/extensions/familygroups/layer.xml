@@ -25,7 +25,7 @@
             <file name="FamilyGroupsTopComponent.settings" url="FamilyGroupsTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="editor">
+            <folder name="ancestris-output">
                 <file name="FamilyGroupsTopComponent.wstcref" url="FamilyGroupsTopComponentWstcref.xml"/>
             </folder>
         </folder>
