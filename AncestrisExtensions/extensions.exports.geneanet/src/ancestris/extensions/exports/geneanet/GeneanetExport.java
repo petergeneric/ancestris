@@ -161,6 +161,7 @@ public class GeneanetExport {
     private boolean relationsExported = false;
     private boolean weddingDetailExported = false;
     private boolean eventsExported = false;
+    private boolean displayIDELog = false;
     private int ExportRestriction = 100;
     private Gedcom myGedcom = null;
     private File exportFile = null;
@@ -173,6 +174,7 @@ public class GeneanetExport {
         this.exportedRestricted = modulePreferences.getBoolean("ExportRestricited", true);
         this.ExportRestriction = modulePreferences.getInt("RestricitionDuration", 100);
         this.notesExported = modulePreferences.getBoolean("ExportNotes", true);
+        this.displayIDELog = modulePreferences.getBoolean("DisplayConsole", false);
         this.logEnabled = modulePreferences.getBoolean("LogEnable", false);
 
         this.sourcesExported = modulePreferences.getBoolean("ExportSources", true);
@@ -185,7 +187,10 @@ public class GeneanetExport {
 
     public void start() {
         io = IOProvider.getDefault().getIO(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle") + " " + myGedcom.getName(), true);
-        io.select();
+        if (displayIDELog == true) {
+            io.select();
+        }
+
         io.getOut().println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), myGedcom.getName()));
 
         // Analyze all Individuals
