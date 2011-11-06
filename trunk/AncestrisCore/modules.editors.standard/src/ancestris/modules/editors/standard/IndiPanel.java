@@ -14,6 +14,7 @@ package ancestris.modules.editors.standard;
 import ancestris.modules.beans.PropertyTabbedPane;
 import ancestris.api.editor.Editor;
 import ancestris.modules.beans.AEventBean;
+import ancestris.modules.beans.AListBean;
 import ancestris.modules.beans.ANameBean;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
@@ -21,20 +22,28 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.TagPath;
 import genj.view.ViewContext;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 public final class IndiPanel extends Editor {
 
     private ancestris.modules.beans.ANameBean aNameBean2;
     private PropertyTabbedPane namePane;
-
     private ancestris.modules.beans.AEventBean birthBean;
     private PropertyTabbedPane birthPane;
     private ancestris.modules.beans.AEventBean deathBean;
@@ -43,7 +52,7 @@ public final class IndiPanel extends Editor {
     private PropertyTabbedPane occuPane;
     private ancestris.modules.beans.APlaceBean resiBean;
     private PropertyTabbedPane resiPane;
-
+    AListBean eventsPanel;
     private List<PropertyBean> childBeans;
     private Context context;
 
@@ -68,17 +77,30 @@ public final class IndiPanel extends Editor {
         occuBean = new ancestris.modules.beans.AChoiceBean();
         occuPane = new PropertyTabbedPane(occuBean, Gedcom.getName("OCCU"), null, null);
 
-        setOpaque(true);
-        // layout the bean
-        MigLayout layout = new MigLayout(
-                new LC().fillX().hideMode(2).flowY(), new AC().align("left").grow().fill());
-        setLayout(layout);
+        // Summary panel
+        JPanel summary = new JPanel(new MigLayout(
+                new LC().fillX().hideMode(2).flowY().debug(100),
+                new AC().align("left").grow().fill()));
 
-        add(namePane);
-        add(birthPane);
-        add(deathPane);
-        add(occuPane);
-        add(resiPane);
+        summary.setOpaque(true);
+        summary.add(namePane);
+        summary.add(birthPane);
+        summary.add(deathPane);
+        summary.add(occuPane);
+        summary.add(resiPane);
+
+        eventsPanel = new AListBean();
+        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
+        eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.PAGE_AXIS));
+
+        JTabbedPane tabs = new JTabbedPane();
+        tabs.addTab(NbBundle.getMessage(IndiPanel.class, "IndiPanel.tab.summary"), new JScrollPane(summary));
+        tabs.addTab(NbBundle.getMessage(IndiPanel.class, "IndiPanel.tab.events"), new JScrollPane(eventsPanel));
+
+        setLayout(new MigLayout(
+                new LC().fillX().hideMode(2).flowY()));
+        add(tabs, new CC().grow());
+
 
         childBeans = Arrays.asList(deathBean, birthBean, aNameBean2, occuBean, resiBean);
         // Add changes to each bean change listeners
@@ -118,6 +140,18 @@ public final class IndiPanel extends Editor {
         aNameBean2.setContext(indi, null);
         occuBean.setContext(indi, TagPath.valueOf(".:OCCU"));
         resiBean.setContext(indi, TagPath.valueOf(".:RESI:PLAC"));
+
+
+        ArrayList<Property> events = new ArrayList<Property>(5);
+        for (Property p : indi.getProperties()) {
+            if (p instanceof PropertyEvent) {
+                events.add(p);
+            }
+        }
+            eventsPanel.removeAll();
+            eventsPanel.repaint();
+        eventsPanel.add(events.toArray(new Property[]{}), null, null);
+            eventsPanel.revalidate();
     }
 
     @Override
