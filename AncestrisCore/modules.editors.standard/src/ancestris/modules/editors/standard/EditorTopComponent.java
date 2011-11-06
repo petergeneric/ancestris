@@ -23,7 +23,6 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.UnitOfWork;
-import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
@@ -58,14 +57,18 @@ public class EditorTopComponent extends AncestrisTopComponent
     private Editor editor;
     private ConfirmChangeWidget confirmPanel;
     private Gedcom gedcom;
-    private JPanel editorContainer = new JPanel(new MigLayout(new LC().fillX().hideMode(2)));
-    private JLabel titleLabel = new JLabel("");
-    private JScrollPane editorScroll = new JScrollPane();
+    private JPanel editorContainer;
+    private JLabel titleLabel;
 
     @Override
     public boolean createPanel() {
         panels.put(Fam.class, new FamPanel());
         panels.put(Indi.class, new IndiPanel());
+
+        editorContainer = new JPanel(
+                new MigLayout(new LC().fillX().hideMode(2).debug(100),
+                new AC().grow().fill()));
+        titleLabel = new JLabel("");
 
         confirmPanel = new ConfirmChangeWidget(this);
         confirmPanel.setChanged(false);
@@ -73,7 +76,6 @@ public class EditorTopComponent extends AncestrisTopComponent
         setContext(getContext(), true);
 
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        editorContainer.add(editorScroll,new CC().growX());
         editorContainer.add(titleLabel, new CC().dockNorth());
         editorContainer.add(confirmPanel, new CC().dockSouth());
 
@@ -118,9 +120,9 @@ public class EditorTopComponent extends AncestrisTopComponent
         if (editor != null) {
             editor.removeChangeListener(confirmPanel);
             editor.setContext(new Context());
-            editorScroll.remove(editor);
             editor = null;
         }
+        editorContainer.removeAll();
 
         // set new and restore context
         editor = set;
@@ -128,10 +130,12 @@ public class EditorTopComponent extends AncestrisTopComponent
             if (old != null) {
                 editor.setContext(old);
             }
-            editorScroll.setViewportView(editor);
+            editorContainer.add(editor, new CC().growX());
             titleLabel.setText(editor.getTitle());
             editor.addChangeListener(confirmPanel);
         }
+        editorContainer.add(titleLabel, new CC().dockNorth());
+        editorContainer.add(confirmPanel, new CC().dockSouth());
 
         // show
         revalidate();
