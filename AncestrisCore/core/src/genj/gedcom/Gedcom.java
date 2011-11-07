@@ -146,7 +146,8 @@ public class Gedcom implements Comparable {
   private Submitter submitter;
   
   /** grammar version */
-  private Grammar grammar = Grammar.V551;
+//  private Grammar grammar = Grammar.V551;
+  private Grammar grammar = Grammar.V55;
 
   /** origin of this Gedcom */
   private Origin origin;
