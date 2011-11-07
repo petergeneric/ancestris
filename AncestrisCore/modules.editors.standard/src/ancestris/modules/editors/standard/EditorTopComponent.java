@@ -66,7 +66,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         panels.put(Indi.class, new IndiPanel());
 
         editorContainer = new JPanel(
-                new MigLayout(new LC().fillX().hideMode(2).debug(100),
+                new MigLayout(new LC().fillX().hideMode(2),
                 new AC().grow().fill()));
         titleLabel = new JLabel("");
 

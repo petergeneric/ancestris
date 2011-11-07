@@ -79,7 +79,7 @@ public final class IndiPanel extends Editor {
 
         // Summary panel
         JPanel summary = new JPanel(new MigLayout(
-                new LC().fillX().hideMode(2).flowY().debug(100),
+                new LC().fillX().hideMode(2).flowY(),
                 new AC().align("left").grow().fill()));
 
         summary.setOpaque(true);
