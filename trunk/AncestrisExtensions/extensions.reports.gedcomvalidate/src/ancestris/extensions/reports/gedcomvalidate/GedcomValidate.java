@@ -44,17 +44,17 @@ public class GedcomValidate {
     /** whether we consider underscore tags to be valid custom tags */
     public boolean isUnderscoreValid = modulePreferences.getBoolean("isUnderscoreValid", true);
     /** whether we consider extramarital children (before MARR after DIV) to be valid */
-    public boolean isExtramaritalValid = modulePreferences.getBoolean("isExtramaritalValid", false);
+    public boolean isExtramaritalValid = modulePreferences.getBoolean("isExtramaritalValid", true);
     /** whether a place format is binding and has to be adhered to */
     public boolean isRelaxedPlaceFormat = modulePreferences.getBoolean("isRelaxedPlaceFormat", false);
     /** options of reports are picked up via field-introspection */
-    public int maxLife = modulePreferences.getInt("maxLife", 100);
-    public int minAgeMARR = modulePreferences.getInt("minAgeMARR", 15);
-    public int maxAgeBAPM = modulePreferences.getInt("maxAgeBAPM", 6);
-    public int minAgeRETI = modulePreferences.getInt("minAgeRETI", 45);
+    public int maxLife = modulePreferences.getInt("maxLife", 120);
+    public int minAgeMARR = modulePreferences.getInt("minAgeMARR", 12);
+    public int maxAgeBAPM = modulePreferences.getInt("maxAgeBAPM", 120);
+    public int minAgeRETI = modulePreferences.getInt("minAgeRETI", 30);
     public int minAgeFather = modulePreferences.getInt("minAgeFather", 14);
-    public int minAgeMother = modulePreferences.getInt("minAgeMother", 16);
-    public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 44);
+    public int minAgeMother = modulePreferences.getInt("minAgeMother", 10);
+    public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
     /** Jerome's checks that haven't made it yet
 
     [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
