@@ -225,11 +225,13 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="maxLifeFormattedTextField">
       <Properties>
+        <Property name="columns" type="int" value="3"/>
         <Property name="text" type="java.lang.String" value="000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="maxAgeBAPMFormattedTextField">
       <Properties>
+        <Property name="columns" type="int" value="3"/>
         <Property name="text" type="java.lang.String" value="000"/>
       </Properties>
     </Component>
@@ -240,21 +242,25 @@
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="minAgeFatherFormattedTextField">
       <Properties>
+        <Property name="columns" type="int" value="3"/>
         <Property name="text" type="java.lang.String" value="000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="minAgeMotherFormattedTextField">
       <Properties>
+        <Property name="columns" type="int" value="3"/>
         <Property name="text" type="java.lang.String" value="000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="maxAgeMotherFormattedTextField">
       <Properties>
+        <Property name="columns" type="int" value="3"/>
         <Property name="text" type="java.lang.String" value="000"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="minAgeRETIFormattedTextField">
       <Properties>
+        <Property name="columns" type="int" value="3"/>
         <Property name="text" type="java.lang.String" value="000"/>
       </Properties>
     </Component>

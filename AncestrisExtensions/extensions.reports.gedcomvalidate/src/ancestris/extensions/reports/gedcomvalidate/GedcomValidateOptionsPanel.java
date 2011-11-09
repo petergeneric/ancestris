@@ -71,18 +71,24 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(minAgeRETILabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "minAgeRETI")); // NOI18N
 
+        maxLifeFormattedTextField.setColumns(3);
         maxLifeFormattedTextField.setText("000");
 
+        maxAgeBAPMFormattedTextField.setColumns(3);
         maxAgeBAPMFormattedTextField.setText("000");
 
         minAgeMARRFormattedTextField.setText("000");
 
+        minAgeFatherFormattedTextField.setColumns(3);
         minAgeFatherFormattedTextField.setText("000");
 
+        minAgeMotherFormattedTextField.setColumns(3);
         minAgeMotherFormattedTextField.setText("000");
 
+        maxAgeMotherFormattedTextField.setColumns(3);
         maxAgeMotherFormattedTextField.setText("000");
 
+        minAgeRETIFormattedTextField.setColumns(3);
         minAgeRETIFormattedTextField.setText("000");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -181,19 +187,19 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
     void load() {
         Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
         isEmptyValueValidCheckBox.setSelected(modulePreferences.getBoolean("isEmptyValueValid", true));
-        isExtramaritalValidCheckBox.setSelected(modulePreferences.getBoolean("isExtramaritalValid", false));
+        isExtramaritalValidCheckBox.setSelected(modulePreferences.getBoolean("isExtramaritalValid", true));
         isFileNotFoundValidCheckBox.setSelected(modulePreferences.getBoolean("isFileNotFoundValid", true));
         isOrderDiscretionaryCheckBox.setSelected(modulePreferences.getBoolean("isOrderDiscretionary", true));
         isPrivateValueValidCheckBox.setSelected(modulePreferences.getBoolean("isPrivateValueValid", true));
         isRelaxedPlaceFormatCheckBox.setSelected(modulePreferences.getBoolean("isRelaxedPlaceFormat", false));
         isUnderscoreValidCheckBox.setSelected(modulePreferences.getBoolean("isUnderscoreValid", true));
-        maxAgeBAPMFormattedTextField.setValue(modulePreferences.getInt("maxAgeBAPM", 6));
-        maxAgeMotherFormattedTextField.setValue(modulePreferences.getInt("maxAgeMother", 44));
-        maxLifeFormattedTextField.setValue(modulePreferences.getInt("maxLife", 100));
+        maxAgeBAPMFormattedTextField.setValue(modulePreferences.getInt("maxAgeBAPM", 120));
+        maxAgeMotherFormattedTextField.setValue(modulePreferences.getInt("maxAgeMother", 48));
+        maxLifeFormattedTextField.setValue(modulePreferences.getInt("maxLife", 120));
         minAgeFatherFormattedTextField.setValue(modulePreferences.getInt("minAgeFather", 14));
-        minAgeMARRFormattedTextField.setValue(modulePreferences.getInt("minAgeMARR", 15));
-        minAgeMotherFormattedTextField.setValue(modulePreferences.getInt("minAgeMother", 16));
-        minAgeRETIFormattedTextField.setValue(modulePreferences.getInt("minAgeRETI", 45));
+        minAgeMARRFormattedTextField.setValue(modulePreferences.getInt("minAgeMARR", 12));
+        minAgeMotherFormattedTextField.setValue(modulePreferences.getInt("minAgeMother", 10));
+        minAgeRETIFormattedTextField.setValue(modulePreferences.getInt("minAgeRETI", 30));
     }
 
     void store() {
