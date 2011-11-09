@@ -39,12 +39,14 @@ public final class GedcomValidateAction implements ActionListener {
                 String title = "Report";
                 genj.fo.Document doc = new genj.fo.Document(title);
                 doc.startSection(title);
-                Iterator iterator = result.listIterator();
-                while (iterator.hasNext()) {
-                    Context c = (Context) iterator.next();
+                if (result != null) {
+                    Iterator iterator = result.listIterator();
+                    while (iterator.hasNext()) {
+                        Context c = (Context) iterator.next();
 
-                    doc.addText(c.getEntity() + ":" + ((ViewContext) c).getText());
-                    doc.nextParagraph();
+                        doc.addText(c.getEntity() + ":" + ((ViewContext) c).getText());
+                        doc.nextParagraph();
+                    }
                 }
                 if (doc != null) {
                     window.displayDocument(doc, modulePreferences);
