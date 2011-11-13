@@ -221,7 +221,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     @Override
     public void addNotify() {
         super.addNotify();
-    AncestrisPlugin.register (this);
+//XXX: removed in favour of GenjViewProxy    AncestrisPlugin.register (this);
   }
   
   /**
@@ -258,7 +258,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     REGISTRY.put("hide.ancestors"  , model.getHideAncestorsIDs());
     REGISTRY.put("hide.descendants", model.getHideDescendantsIDs());
     
-    AncestrisPlugin.unregister(this);
+//XXX: removed in favour of GenjViewProxy    AncestrisPlugin.unregister(this);
     // done
     super.removeNotify();
   }
