@@ -12,12 +12,14 @@ import genj.view.ViewFactory;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.app//Timeline//EN",
 autostore = false)
+@RetainLocation(AncestrisDockModes.TABLE)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class TimelineTopComponent extends GenjViewTopComponent {
 
