@@ -11,6 +11,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.app.GedcomFileListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -21,9 +22,8 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
-public final class ActionSaveLayout implements ActionListener {
+public final class ActionSaveLayout implements ActionListener,GedcomFileListener {
 
     public void actionPerformed(ActionEvent e) {
         Context selected = App.center.getSelectedContext(true);
@@ -84,5 +84,15 @@ public final class ActionSaveLayout implements ActionListener {
         prefs.put("openViews", openedViews);
         prefs.put("focusViews", focusViews);
         prefs.put("openViews.date",System.currentTimeMillis()+"");
+    }
+
+    public void commitRequested(Context context) {
+    }
+
+    public void gedcomClosed(Gedcom gedcom) {
+        saveLayout(gedcom);
+    }
+
+    public void gedcomOpened(Gedcom gedcom) {
     }
 }

@@ -579,9 +579,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         // remember context
         context.getGedcom().getRegistry().put("context", context.toString());
 
-        // FIXME: place in a gedcomlistener
-//        ActionSaveLayout.saveLayout(context.getGedcom());
-
         // closes all views
         for (AncestrisViewInterface gjvTc : AncestrisPlugin.lookupAll(AncestrisViewInterface.class)) {
             if (context.getGedcom().equals(gjvTc.getGedcom())) {
