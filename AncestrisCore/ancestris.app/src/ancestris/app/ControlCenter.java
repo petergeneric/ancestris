@@ -241,10 +241,16 @@ public class ControlCenter extends JPanel{
         }
     } //LastOpenLoader
 
+    //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
     public Context getSelectedContext(boolean firstIfNoneSelected){
-        if (Utilities.actionsGlobalContext().lookupAll(Context.class).size()<2)
-            firstIfNoneSelected = true;
-        Context c = GedcomExplorerTopComponent.getDefault().getContext();
+        Collection<? extends Context> selected = Utilities.actionsGlobalContext().lookupAll(Context.class);
+
+        Context c;
+        if (selected.isEmpty())
+            c = GedcomExplorerTopComponent.getDefault().getContext();
+        else {
+            c = Utilities.actionsGlobalContext().lookup(Context.class);
+        }
         if (!firstIfNoneSelected)
             return c;
         if (c!=null)
