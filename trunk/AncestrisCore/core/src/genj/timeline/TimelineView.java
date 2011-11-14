@@ -199,7 +199,8 @@ public class TimelineView extends View {
     ruler = new Ruler();
     
     // all that fits in a scrollpane
-    scrollContent = new ScrollPaneWidget(new ViewPortAdapter(content));
+    scrollContent = new ScrollPaneWidget(content);
+//    scrollContent = new ScrollPaneWidget(new ViewPortAdapter(content));
     scrollContent.setColumnHeaderView(new ViewPortAdapter(ruler));
     scrollContent.getViewport().addChangeListener(new ChangeListener() {
       @Override
@@ -209,7 +210,7 @@ public class TimelineView extends View {
         centeredYear = pixel2year(x);
       }
     });
-   
+
     // layout
     setLayout(new BorderLayout());
     add(scrollContent, BorderLayout.CENTER);
