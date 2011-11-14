@@ -51,6 +51,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -64,6 +66,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.BorderFactory;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -200,6 +203,8 @@ public class TimelineView extends View {
     
     // all that fits in a scrollpane
     scrollContent = new ScrollPaneWidget(content);
+    scrollContent.setViewportBorder(BorderFactory.createEmptyBorder(5,0,0,0));
+    scrollContent.setBackground(Color.WHITE);
 //    scrollContent = new ScrollPaneWidget(new ViewPortAdapter(content));
     scrollContent.setColumnHeaderView(new ViewPortAdapter(ruler));
     scrollContent.getViewport().addChangeListener(new ChangeListener() {
