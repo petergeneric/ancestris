@@ -27,6 +27,7 @@ import genj.util.swing.UnitGraphics;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -114,12 +115,11 @@ public class ContentRenderer {
     g.setColor(cGrid);
     // loop
     Rectangle2D r = g.getClip();
-    int layers = model.layers.size();
     double 
       from = Math.floor(r.getMinX()),
       to = Math.ceil(r.getMaxX());
-    for (double year=from;year<=to;year++) {
-//      g.draw(year, 0, year, layers);
+    double step = getYearStep(g, model);
+    for (double year = Math.ceil(from/step)*step;year<to;year += step){
         g.draw(year, 0, year, 10000);
     }
     // done
@@ -226,6 +226,20 @@ public class ContentRenderer {
     g.popClip();
 
     // done
+  }
+  double getYearStep(UnitGraphics graphics, Model model){
+    // prepare some stuff
+    FontMetrics fm = graphics.getFontMetrics();
+    double
+      width = fm.stringWidth(" 0000 ") * dotSize.x;
+    double step = Math.ceil(width);
+    if (step == 1)
+        return step;
+    if (step <= 5)
+        return 5;
+    if (step<=50)
+        return (10*(Math.ceil(step/10)));
+    return  (100*(Math.ceil(step/100)));
   }
   
   /**
