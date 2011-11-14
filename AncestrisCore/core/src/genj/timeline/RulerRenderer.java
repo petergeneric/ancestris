@@ -62,6 +62,7 @@ public class RulerRenderer extends ContentRenderer {
       from  = Math.ceil(model.min),
       to    = Math.floor(model.max),
       width = fm.stringWidth(" 0000 ") * dotSize.x;
+    double step = getYearStep(graphics, model);
 
     // render background
     renderBackground(graphics, model);
@@ -72,15 +73,18 @@ public class RulerRenderer extends ContentRenderer {
     
     from += width;
     to += -width;
-    
-    // recurse binary
-    renderSpan(graphics, model, fm, from, to, width);
-    
+
+    for (double year = Math.floor(from/step)*step;year<to;year += step){
+        renderYear(graphics, model, fm, year, 0.5D);
+    }
+       
     // render cday events
     renderAlmanac(graphics);
     
     // done
   }
+
+
   
   /**
    * Renders CDay event markers
