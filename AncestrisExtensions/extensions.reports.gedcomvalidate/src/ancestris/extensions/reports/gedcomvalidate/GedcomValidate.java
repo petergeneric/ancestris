@@ -128,7 +128,7 @@ public class GedcomValidate {
     private List<ViewContext> results(Gedcom gedcom, List<ViewContext> issues) {
 
         // any fixes proposed at all?
-        if (issues.size() == 0) {
+        if (issues.isEmpty()) {
 //            getOptionFromUser(translate("noissues"), Report.OPTION_OK);
             return null;
         }

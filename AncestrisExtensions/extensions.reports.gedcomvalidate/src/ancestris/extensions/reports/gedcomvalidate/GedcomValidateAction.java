@@ -36,23 +36,33 @@ public final class GedcomValidateAction implements ActionListener {
             } else {
                 result = new GedcomValidate().start(context.getGedcom());
 
-                String title = "Report";
+                String title = NbBundle.getMessage(GedcomValidate.class, "name");
                 genj.fo.Document doc = new genj.fo.Document(title);
                 doc.startSection(title);
+
                 if (result != null) {
+                    doc.startTable("width=100%");
+                    doc.addTableColumn("column-width=10%");
+                    doc.addTableColumn("column-width=25%");
+                    doc.addTableColumn("column-width=65%");
                     Iterator iterator = result.listIterator();
                     while (iterator.hasNext()) {
                         Context c = (Context) iterator.next();
-
-                        doc.addText(c.getEntity() + ":" + ((ViewContext) c).getText());
-                        doc.nextParagraph();
+                        doc.nextTableRow();
+                        doc.addText(c.getEntity().getId());
+                        doc.nextTableCell();
+                        doc.addText(c.getEntity().toString(false));
+                        doc.nextTableCell();
+                        doc.addText(((ViewContext) c).getText());
                     }
+                    doc.endTable();
+                } else {
+                    doc.addText(NbBundle.getMessage(GedcomValidate.class, "noissues"));
                 }
-                if (doc != null) {
-                    window.displayDocument(doc, modulePreferences);
-                    window.open();
-                    window.requestActive();
-                }
+
+                window.displayDocument(doc, modulePreferences);
+                window.open();
+                window.requestActive();
             }
         }
     }
