@@ -119,7 +119,8 @@ public class ContentRenderer {
       from = Math.floor(r.getMinX()),
       to = Math.ceil(r.getMaxX());
     for (double year=from;year<=to;year++) {
-      g.draw(year, 0, year, layers);
+//      g.draw(year, 0, year, layers);
+        g.draw(year, 0, year, 10000);
     }
     // done
   }
@@ -228,7 +229,8 @@ public class ContentRenderer {
   }
   
   /**
-   * inits painting   */
+   * inits painting
+   */
   protected void init(UnitGraphics graphics) {
     
     // calculate dot-size
