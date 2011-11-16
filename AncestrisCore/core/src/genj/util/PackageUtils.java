@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package genj.util;
 
 import java.io.File;
@@ -24,23 +23,32 @@ import java.util.regex.Pattern;
  * @author daniel
  */
 public class PackageUtils {
-public static List<Class> getClassesForPackage(String pckgname) throws ClassNotFoundException {
-    return getClassesForPackage(pckgname, null);
-}
-public static List<Class> getClassesForPackage(String pckgname,String startWith)
-                                                throws ClassNotFoundException {
+
+    public static List<Class> getClassesForPackage(String pckgname) throws ClassNotFoundException {
+        return getClassesForPackage(pckgname, null);
+    }
+
+    public static List<Class> getClassesForPackage(String pckgname, String startWith)
+            throws ClassNotFoundException {
         // This will hold a list of directories matching the pckgname.
         //There may be more than one if a package is split over multiple jars/paths
         List<Class> classes = new ArrayList<Class>();
-        List<String> resPaths = findInPackage(pckgname,  Pattern.compile((".*/"+(startWith==null?"":startWith)+"[^/]*").concat("\\.class")));
-        for (String resPath:resPaths) {
+        List<String> resPaths = findInPackage(pckgname, Pattern.compile((".*/" + (startWith == null ? "" : startWith) + "[^/]*").concat("\\.class")));
+        for (String resPath : resPaths) {
             classes.add(Class.forName(resPath.substring(0, resPath.length() - 6)));
         }
         return classes;
     }
 
-public static List<String> findInPackage(String pckgname,Pattern pattern)
-                                                throws ClassNotFoundException {
+    /**
+     * Find in package pckgname all resources whose name matches pattern
+     * @param pckgname
+     * @param pattern
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public static List<String> findInPackage(String pckgname, Pattern pattern)
+            throws ClassNotFoundException {
         // This will hold a list of directories matching the pckgname.
         //There may be more than one if a package is split over multiple jars/paths
         List<String> resPath = new ArrayList<String>();
@@ -52,34 +60,35 @@ public static List<String> findInPackage(String pckgname,Pattern pattern)
                 throw new ClassNotFoundException("Can't get class loader.");
             }
             // Ask for all resources for the path
-            Enumeration<URL> resources = cld.getResources(pckgname.replace('.', '/'));
+            Enumeration<URL> resources = cld.getResources(pckgname.replace('.', '/') + "/");
             while (resources.hasMoreElements()) {
                 URL res = resources.nextElement();
-                if (res.getProtocol().equalsIgnoreCase("jar")){
+                if (res.getProtocol().equalsIgnoreCase("jar")) {
                     JarURLConnection conn = (JarURLConnection) res.openConnection();
                     JarFile jar = conn.getJarFile();
-                    for (JarEntry e:Collections.list(jar.entries())){
+                    for (JarEntry e : Collections.list(jar.entries())) {
 
                         if (e.getName().startsWith(packagePath)
-                            && !e.getName().contains("$")
-                            && pattern.matcher(e.getName().substring(packagePath.length())).matches()){
+                                && !e.getName().contains("$")
+                                && pattern.matcher(e.getName().substring(packagePath.length())).matches()) {
                             String className =
-                                    e.getName().replace("/",".");
+                                    e.getName().replace("/", ".");
                             resPath.add(className);
                         }
                     }
-                }else
+                } else {
                     directories.add(new File(URLDecoder.decode(res.getPath(), "UTF-8")));
+                }
             }
         } catch (NullPointerException x) {
-            throw new ClassNotFoundException(pckgname + " does not appear to be " +
-                    "a valid package (Null pointer exception)");
+            throw new ClassNotFoundException(pckgname + " does not appear to be "
+                    + "a valid package (Null pointer exception)");
         } catch (UnsupportedEncodingException encex) {
-            throw new ClassNotFoundException(pckgname + " does not appear to be " +
-                    "a valid package (Unsupported encoding)");
+            throw new ClassNotFoundException(pckgname + " does not appear to be "
+                    + "a valid package (Unsupported encoding)");
         } catch (IOException ioex) {
-            throw new ClassNotFoundException("IOException was thrown when trying " +
-                    "to get all resources for " + pckgname);
+            throw new ClassNotFoundException("IOException was thrown when trying "
+                    + "to get all resources for " + pckgname);
         }
 
         // For every directory identified capture all the .class files
@@ -91,15 +100,14 @@ public static List<String> findInPackage(String pckgname,Pattern pattern)
                     // we are only interested in .class files
                     if (pattern.matcher(file).matches()) {
                         // removes the .class extension
-                        resPath.add(pckgname + '.'+file);
+                        resPath.add(pckgname + '.' + file);
                     }
                 }
             } else {
-                throw new ClassNotFoundException(pckgname + " (" + directory.getPath() +
-                                    ") does not appear to be a valid package");
+                throw new ClassNotFoundException(pckgname + " (" + directory.getPath()
+                        + ") does not appear to be a valid package");
             }
         }
         return resPath;
     }
-
 }
