@@ -1,8 +1,13 @@
 package ancestris.extensions.reports.view;
 
+import ancestris.app.App;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.HTMLFormat;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.view.SelectionSink;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -101,10 +106,17 @@ public final class ReportViewTopComponent extends TopComponent {
                     HTMLDocument doc = (HTMLDocument) pane.getDocument();
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 } else {
-                    try {
-                        pane.setPage(e.getURL());
-                    } catch (Throwable t) {
-                        t.printStackTrace();
+                    Gedcom myGedcom = null;
+                    Context context = App.center.getSelectedContext(true);
+                    if (context != null) {
+                        myGedcom = context.getGedcom();
+                        String CurrentId = ((HyperlinkEvent)e).getDescription();
+                        if (CurrentId != null && myGedcom != null) {
+                            Entity entity = myGedcom.getEntity(CurrentId);
+                            if (entity != null) {
+                                SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
+                            }
+                        }
                     }
                 }
             }
