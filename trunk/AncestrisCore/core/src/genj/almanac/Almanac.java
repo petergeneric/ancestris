@@ -22,6 +22,7 @@ package genj.almanac;
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.PointInTime;
 import genj.util.EnvironmentChecker;
+import genj.util.PackageUtils;
 import genj.util.Resources;
 
 import java.io.BufferedReader;
@@ -49,6 +50,7 @@ import java.util.zip.ZipInputStream;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.util.Exceptions;
 
 /**
  * A global Almanac for all kinds of historic events
@@ -204,32 +206,30 @@ public class Almanac {
 
             if (files.length == 0) {
                 LOG.info("Found no file(s) in " + dir.getAbsoluteFile());
-                return;
-            }
-
-            // load each one
-            for (int f = 0; f < files.length; f++) {
-                File file = files[f];
-                if (accept(dir, file.getName())) {
-                    LOG.info("Loading " + file.getAbsoluteFile());
-                    try {
-                        load(file);
-                    } catch (IOException e) {
-                        LOG.log(Level.WARNING, "IO Problem reading " + file.getAbsoluteFile(), e);
+            } else {
+                // load each one
+                for (int f = 0; f < files.length; f++) {
+                    File file = files[f];
+                    if (accept(dir, file.getName())) {
+                        LOG.info("Loading " + file.getAbsoluteFile());
+                        try {
+                            load(open(file));
+                        } catch (IOException e) {
+                            LOG.log(Level.WARNING, "IO Problem reading " + file.getAbsoluteFile(), e);
+                        }
                     }
                 }
             }
-
-            // done
+            // tries resources
+            loadFromResources();
         }
 
         /**
          * load one file
          */
-        protected void load(File file) throws IOException {
+        protected void load(BufferedReader in) throws IOException {
 
             // read its lines
-            BufferedReader in = open(file);
             for (String line = in.readLine(); line != null; line = in.readLine()) {
 
                 try {
@@ -256,6 +256,8 @@ public class Almanac {
 
             // done
         }
+
+        protected abstract void loadFromResources();
 
         /**
          * get buffered reader from file
@@ -378,6 +380,24 @@ public class Almanac {
 
             return result;
         }
+
+        @Override
+        protected void loadFromResources() {
+            final String PCKNAME = "contrib.almanac";
+            try {
+                for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\.almanac"))) {
+                    try {
+                        String resName = "/" + PCKNAME.replace('.', '/') + "/" + res.substring(PCKNAME.length() + 1);
+                        load(new BufferedReader(new InputStreamReader(Almanac.class.getResourceAsStream(resName))));
+                    } catch (Exception ex) {
+                        LOG.log(Level.WARNING, "IO Problem reading " + res, ex);
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            } catch (ClassNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     } //AlmanacLoader
 
     /**
@@ -476,6 +496,10 @@ public class Almanac {
 
             // create event
             return new Event(cats, pit, text);
+        }
+
+        @Override
+        protected void loadFromResources() {
         }
     } //CDAY
 
