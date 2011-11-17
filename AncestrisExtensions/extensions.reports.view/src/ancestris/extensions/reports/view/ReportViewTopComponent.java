@@ -8,8 +8,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.view.SelectionSink;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -36,30 +34,6 @@ import org.openide.nodes.Node;
 @ConvertAsProperties(dtd = "-//ancestris.extensions.reports.view//ReportView//EN",
 autostore = false)
 public final class ReportViewTopComponent extends TopComponent {
-
-    private class myMouseListener implements MouseListener {
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            System.out.println(e.getButton());
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-        }
-    }
 
     public class DummyNode extends AbstractNode {
 
@@ -106,16 +80,25 @@ public final class ReportViewTopComponent extends TopComponent {
                     HTMLDocument doc = (HTMLDocument) pane.getDocument();
                     doc.processHTMLFrameHyperlinkEvent(evt);
                 } else {
-                    Gedcom myGedcom = null;
-                    Context context = App.center.getSelectedContext(true);
-                    if (context != null) {
-                        myGedcom = context.getGedcom();
-                        String CurrentId = ((HyperlinkEvent)e).getDescription();
-                        if (CurrentId != null && myGedcom != null) {
-                            Entity entity = myGedcom.getEntity(CurrentId);
-                            if (entity != null) {
-                                SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
+                    String description = e.getDescription();
+                    if (description.contains("#INDI_") || description.contains("#FAM_")) {
+                        Gedcom myGedcom = null;
+                        Context context = App.center.getSelectedContext(true);
+                        if (context != null) {
+                            myGedcom = context.getGedcom();
+                            String CurrentId = description.substring(description.indexOf("_") + 1);
+                            if (CurrentId != null && myGedcom != null) {
+                                Entity entity = myGedcom.getEntity(CurrentId);
+                                if (entity != null) {
+                                    SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
+                                }
                             }
+                        }
+                    } else {
+                        try {
+                            pane.setPage(e.getURL());
+                        } catch (Throwable t) {
+                            t.printStackTrace();
                         }
                     }
                 }
@@ -137,7 +120,6 @@ public final class ReportViewTopComponent extends TopComponent {
         setName(NbBundle.getMessage(ReportViewTopComponent.class, "CTL_ReportViewTopComponent"));
         setToolTipText(NbBundle.getMessage(ReportViewTopComponent.class, "HINT_ReportViewTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
-        reportViewEditorPane.addMouseListener(new myMouseListener());
         setActivatedNodes(new Node[]{dummyNode = new DummyNode()});
     }
 
