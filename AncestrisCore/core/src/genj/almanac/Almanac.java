@@ -221,7 +221,7 @@ public class Almanac {
                 }
             }
             // tries resources
-            loadFromResources();
+            loadFromResources(files);
         }
 
         /**
@@ -257,7 +257,7 @@ public class Almanac {
             // done
         }
 
-        protected abstract void loadFromResources();
+        protected abstract void loadFromResources(File[] loaded);
 
         /**
          * get buffered reader from file
@@ -382,13 +382,21 @@ public class Almanac {
         }
 
         @Override
-        protected void loadFromResources() {
+        protected void loadFromResources(File[] loaded) {
+            Set<String> seen = new HashSet<String>();
+            for (File file:loaded){
+                seen.add(file.getName());
+            }
             final String PCKNAME = "contrib.almanac";
             try {
                 for (String res : PackageUtils.findInPackage(PCKNAME, Pattern.compile(".*/[^/]*\\.almanac"))) {
+                    String name = res.substring(PCKNAME.length() + 1);
+                    if (seen.contains(name))
+                        continue;
                     try {
-                        String resName = "/" + PCKNAME.replace('.', '/') + "/" + res.substring(PCKNAME.length() + 1);
-                        load(new BufferedReader(new InputStreamReader(Almanac.class.getResourceAsStream(resName))));
+                        load(new BufferedReader(
+                                new InputStreamReader(
+                                Almanac.class.getResourceAsStream("/" + PCKNAME.replace('.', '/') + "/" +name))));
                     } catch (Exception ex) {
                         LOG.log(Level.WARNING, "IO Problem reading " + res, ex);
                         Exceptions.printStackTrace(ex);
@@ -499,7 +507,7 @@ public class Almanac {
         }
 
         @Override
-        protected void loadFromResources() {
+        protected void loadFromResources(File[] loaded) {
         }
     } //CDAY
 
