@@ -3,8 +3,8 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Tools">
-            <file name="ancestris-extensions-familygroups-OpenFamilyGroups.instance">
-                <attr name="delegate" newvalue="ancestris.extensions.familygroups.OpenFamilyGroups"/>
+            <file name="ancestris-extensions-familygroups-OpenFamilyGroupsAction.instance">
+                <attr name="delegate" newvalue="ancestris.extensions.familygroups.OpenFamilyGroupsAction"/>
                 <attr name="displayName" bundlevalue="ancestris.extensions.familygroups.Bundle#CTL_OpenFamilyGroups"/>
                 <attr name="iconBase" stringvalue="ancestris/extensions/familygroups/FamilyGroups.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
@@ -15,19 +15,9 @@
     <folder name="Menu">
         <folder name="Tools">
             <file name="ancestris-extensions-familygroups-OpenFamilyGroups.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-extensions-familygroups-OpenFamilyGroups.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-extensions-familygroups-OpenFamilyGroupsAction.instance"/>
                 <attr name="position" intvalue="82"/>
             </file>
-        </folder>
-    </folder>
-    <folder name="Windows2">
-        <folder name="Components">
-            <file name="FamilyGroupsTopComponent.settings" url="FamilyGroupsTopComponentSettings.xml"/>
-        </folder>
-        <folder name="Modes">
-            <folder name="ancestris-output">
-                <file name="FamilyGroupsTopComponent.wstcref" url="FamilyGroupsTopComponentWstcref.xml"/>
-            </folder>
         </folder>
     </folder>
 </filesystem>

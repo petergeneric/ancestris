@@ -2,11 +2,11 @@ package ancestris.extensions.familygroups;
 
 import org.openide.util.NbPreferences;
 
-final class FamilyGroupsPanel extends javax.swing.JPanel {
+final class FamilyGroupsOptionPanel extends javax.swing.JPanel {
 
     private final FamilyGroupsOptionsPanelController controller;
 
-    FamilyGroupsPanel(FamilyGroupsOptionsPanelController controller) {
+    FamilyGroupsOptionPanel(FamilyGroupsOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
         // TODO listen to changes in form fields and call controller.changed()
@@ -26,14 +26,14 @@ final class FamilyGroupsPanel extends javax.swing.JPanel {
         maxGroupSizeFormattedTextField = new javax.swing.JFormattedTextField();
 
         minGroupSizeFormattedTextField.setColumns(3);
-        minGroupSizeFormattedTextField.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsPanel.class, "FamilyGroupsPanel.minGroupSizeFormattedTextField.toolTipText")); // NOI18N
+        minGroupSizeFormattedTextField.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.minGroupSizeFormattedTextField.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(minGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsPanel.class, "FamilyGroupsPanel.minGroupSizeLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(minGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.minGroupSizeLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(maxGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsPanel.class, "FamilyGroupsPanel.maxGroupSizeLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(maxGroupSizeLabel, org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.maxGroupSizeLabel.text")); // NOI18N
 
         maxGroupSizeFormattedTextField.setColumns(3);
-        maxGroupSizeFormattedTextField.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsPanel.class, "FamilyGroupsPanel.maxGroupSizeFormattedTextField.toolTipText")); // NOI18N
+        maxGroupSizeFormattedTextField.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyGroupsOptionPanel.class, "FamilyGroupsOptionPanel.maxGroupSizeFormattedTextField.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -66,13 +66,13 @@ final class FamilyGroupsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        minGroupSizeFormattedTextField.setValue(NbPreferences.forModule(OpenFamilyGroups.class).get("minGroupSize", "2"));
-        maxGroupSizeFormattedTextField.setValue(NbPreferences.forModule(OpenFamilyGroups.class).get("maxGroupSize", "20"));
+        minGroupSizeFormattedTextField.setValue(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("minGroupSize", "2"));
+        maxGroupSizeFormattedTextField.setValue(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("maxGroupSize", "20"));
     }
 
     void store() {
-        NbPreferences.forModule(FamilyGroupsPanel.class).put("minGroupSize", String.valueOf(minGroupSizeFormattedTextField.getValue()));
-        NbPreferences.forModule(FamilyGroupsPanel.class).put("maxGroupSize", String.valueOf(maxGroupSizeFormattedTextField.getValue()));
+        NbPreferences.forModule(FamilyGroupsOptionPanel.class).put("minGroupSize", String.valueOf(minGroupSizeFormattedTextField.getValue()));
+        NbPreferences.forModule(FamilyGroupsOptionPanel.class).put("maxGroupSize", String.valueOf(maxGroupSizeFormattedTextField.getValue()));
     }
 
     boolean valid() {
