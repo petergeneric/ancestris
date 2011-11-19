@@ -14,7 +14,7 @@ keywords = "#AdvancedOption_Keywords_FamilyGroups",
 keywordsCategory = "Extensions/FamilyGroups")
 public final class FamilyGroupsOptionsPanelController extends OptionsPanelController {
 
-    private FamilyGroupsPanel panel;
+    private FamilyGroupsOptionPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -65,9 +65,9 @@ public final class FamilyGroupsOptionsPanelController extends OptionsPanelContro
         pcs.removePropertyChangeListener(l);
     }
 
-    private FamilyGroupsPanel getPanel() {
+    private FamilyGroupsOptionPanel getPanel() {
         if (panel == null) {
-            panel = new FamilyGroupsPanel(this);
+            panel = new FamilyGroupsOptionPanel(this);
         }
         return panel;
     }
