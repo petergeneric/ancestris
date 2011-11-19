@@ -6,6 +6,7 @@ import genj.gedcom.Context;
 import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -41,20 +42,21 @@ public final class GedcomValidateAction implements ActionListener {
                 doc.startSection(title);
 
                 if (result != null) {
+                    Collections.sort(result);
                     doc.startTable("width=100%");
                     doc.addTableColumn("column-width=10%");
                     doc.addTableColumn("column-width=25%");
                     doc.addTableColumn("column-width=65%");
                     Iterator iterator = result.listIterator();
                     while (iterator.hasNext()) {
-                        Context c = (Context) iterator.next();
+                        ViewContext c = (ViewContext) iterator.next();
                         doc.nextTableRow();
                         // doc.addText(c.getEntity().getId());
                         doc.addLink(c.getEntity().getId(), c.getEntity());
                         doc.nextTableCell();
                         doc.addText(c.getEntity().toString(false));
                         doc.nextTableCell();
-                        doc.addText(((ViewContext) c).getText());
+                        doc.addText(c.getText());
                     }
                     doc.endTable();
                 } else {
