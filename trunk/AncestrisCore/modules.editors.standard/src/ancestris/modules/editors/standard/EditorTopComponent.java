@@ -36,6 +36,7 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 
 /**
@@ -43,6 +44,7 @@ import org.openide.windows.TopComponent;
  * @author daniel
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.EDITOR)
 public class EditorTopComponent extends AncestrisTopComponent
         implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 

@@ -19,10 +19,12 @@ import ancestris.view.AncestrisViewInterface;
 import java.awt.Image;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
+@RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class NavigatorTopComponent extends AncestrisTopComponent {
 
