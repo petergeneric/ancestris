@@ -43,7 +43,7 @@ public class SaveReport {
             } else {
                 FileNameExtensionFilter fileFilter = (FileNameExtensionFilter) getFileFilter();
                 if (fileFilter.accept(f) == false) {
-                    setSelectedFile(new File(f.getName() + "." + fileFilter.getExtensions()[0]));
+                    setSelectedFile(new File(f.getPath() + "." + fileFilter.getExtensions()[0]));
                 }
                 super.approveSelection();
             }
@@ -56,6 +56,7 @@ public class SaveReport {
         fileChooser.addChoosableFileFilter(htmlFilter);
         fileChooser.addChoosableFileFilter(csvFilter);
         fileChooser.setAcceptAllFileFilterUsed(false);
+
         if (fileName.isEmpty() == false) {
             saveFile = new File(fileName);
             try {
