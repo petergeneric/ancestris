@@ -8,6 +8,7 @@ import genj.gedcom.Context;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.view.AncestrisDockModes;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,6 +22,7 @@ import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.WindowManager;
 
 /**
@@ -29,6 +31,7 @@ import org.openide.windows.WindowManager;
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoList//EN",
 autostore = false)
 @ServiceProvider(service=AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
 
     /** path to the icon used by the component and its open action */

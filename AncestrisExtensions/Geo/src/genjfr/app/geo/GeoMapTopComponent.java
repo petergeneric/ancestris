@@ -9,6 +9,7 @@ import ancestris.view.AncestrisTopComponent;
 import ancestris.app.App;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.view.AncestrisDockModes;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -61,6 +62,7 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.WindowManager;
 
 /**
@@ -69,6 +71,7 @@ import org.openide.windows.WindowManager;
 @ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoMap//EN",
 autostore = false)
 @ServiceProvider(service=AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener {
 
     /** path to the icon used by the component and its open action */
