@@ -17,6 +17,7 @@
  */
 package ancestris.extensions.exports.geneanet;
 
+import ancestris.extensions.console.Console;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -51,8 +52,6 @@ import java.util.prefs.Preferences;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
 
 /**
  *
@@ -151,7 +150,7 @@ public class GeneanetExport {
     private Map<String, Integer> indiNameOccurence = new HashMap<String, Integer>();
     private Map<String, GwIndi> indiMap = new HashMap<String, GwIndi>();
     private final static Logger LOG = Logger.getLogger("genj.app", null);
-    private InputOutput io = null;
+    private Console console = null;
     private boolean notesExported = true;
     private boolean sourcesExported = true;
     private boolean exportedRestricted = true;
@@ -161,7 +160,6 @@ public class GeneanetExport {
     private boolean relationsExported = false;
     private boolean weddingDetailExported = false;
     private boolean eventsExported = false;
-    private boolean displayIDELog = false;
     private int ExportRestriction = 100;
     private Gedcom myGedcom = null;
     private File exportFile = null;
@@ -174,7 +172,6 @@ public class GeneanetExport {
         this.exportedRestricted = modulePreferences.getBoolean("ExportRestricited", true);
         this.ExportRestriction = modulePreferences.getInt("RestricitionDuration", 100);
         this.notesExported = modulePreferences.getBoolean("ExportNotes", true);
-        this.displayIDELog = modulePreferences.getBoolean("DisplayConsole", false);
         this.logEnabled = modulePreferences.getBoolean("LogEnable", false);
 
         this.sourcesExported = modulePreferences.getBoolean("ExportSources", true);
@@ -186,12 +183,9 @@ public class GeneanetExport {
     }
 
     public void start() {
-        io = IOProvider.getDefault().getIO(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle") + " " + myGedcom.getName(), true);
-        if (displayIDELog == true) {
-            io.select();
-        }
+        console = new Console (NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle") + " " + myGedcom.getName());
 
-        io.getOut().println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), myGedcom.getName()));
+        console.println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), myGedcom.getName()));
 
         // Analyze all Individuals
         analyzeIndis(myGedcom.getIndis());
@@ -208,14 +202,13 @@ public class GeneanetExport {
             GwIndi indi = indiMap.get(key);
 
             if (indi.canBeExported() == true && indi.isDescribed() == false) {
-                io.getOut().println(key + " " + indi.getName());
+                console.println(key + " " + indi.getName());
             }
         }
 
         // export terminated
-        io.getOut().println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.End"));
-        io.getOut().close();
-        io.getErr().close();
+        console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.End"));
+        console.close();
     }
 
     private boolean canbeExported(Indi indi) {
@@ -611,8 +604,8 @@ public class GeneanetExport {
             }
         }
 
-        io.getOut().println("Nombre de familles exportées " + nbExportedFamilys);
-        io.getOut().println("Nombre d'individus exportés " + nbExportedindis);
+        console.println("Nombre de familles exportées " + nbExportedFamilys);
+        console.println("Nombre d'individus exportés " + nbExportedindis);
         if (logEnabled == true) {
             LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbFamillesExportText"), nbExportedFamilys);
             LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NbIndividusExportText"), nbExportedindis);
@@ -656,6 +649,7 @@ public class GeneanetExport {
             // create the Key
             String fullName = (lastName.replaceAll("-", "_") + "_" + firstName.replaceAll("-", "_")).toLowerCase();
             String indiKey = Normalizer.normalize(fullName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            console.println(indiKey);
 
             Integer NameOccurence = indiNameOccurence.get(indiKey);
             indiNameOccurence.put(indiKey, (NameOccurence == null) ? 1 : NameOccurence + 1);

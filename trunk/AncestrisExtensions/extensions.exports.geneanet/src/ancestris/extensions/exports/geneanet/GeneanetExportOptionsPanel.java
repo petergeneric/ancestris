@@ -45,7 +45,6 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
         jCheckBoxExportNotes = new javax.swing.JCheckBox();
         jCheckBoxExportSources = new javax.swing.JCheckBox();
         jCheckBoxLogEnable = new javax.swing.JCheckBox();
-        displayConsoleCheckBox = new javax.swing.JCheckBox();
         jPanelIndis = new javax.swing.JPanel();
         jCheckBoxExportAlive = new javax.swing.JCheckBox();
         jCheckBoxExportEvents = new javax.swing.JCheckBox();
@@ -76,31 +75,31 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxLogEnable, org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jCheckBoxLogEnable.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(displayConsoleCheckBox, org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.displayConsoleCheckBox.text")); // NOI18N
-
         javax.swing.GroupLayout jPanelGeneralLayout = new javax.swing.GroupLayout(jPanelGeneral);
         jPanelGeneral.setLayout(jPanelGeneralLayout);
         jPanelGeneralLayout.setHorizontalGroup(
             jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                .addGap(11, 11, 11)
                 .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBoxLogEnable)
-                    .addComponent(displayConsoleCheckBox)
                     .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                        .addComponent(jCheckBoxExportRestricited)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jFormattedTextFieldDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel1))
-                    .addComponent(jCheckBoxExportNotes)
-                    .addComponent(jCheckBoxExportSources))
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                                .addComponent(jCheckBoxExportRestricited)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jFormattedTextFieldDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel1))
+                            .addComponent(jCheckBoxExportNotes)
+                            .addComponent(jCheckBoxExportSources)))
+                    .addGroup(jPanelGeneralLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jCheckBoxLogEnable)))
                 .addContainerGap(174, Short.MAX_VALUE))
         );
         jPanelGeneralLayout.setVerticalGroup(
             jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelGeneralLayout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
                 .addGroup(jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxExportRestricited)
                     .addComponent(jFormattedTextFieldDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -110,9 +109,8 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBoxExportSources)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(displayConsoleCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBoxLogEnable))
+                .addComponent(jCheckBoxLogEnable)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanelIndis.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jPanelIndis.border.title"))); // NOI18N
@@ -180,10 +178,10 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanelFam, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelIndis, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelGeneral, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelGeneral, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelFam, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelIndis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -217,7 +215,6 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
         }
         jCheckBoxExportNotes.setSelected(modulePreferences.getBoolean("ExportNotes", true));
         jCheckBoxExportSources.setSelected(modulePreferences.getBoolean("ExportSources", true));
-        displayConsoleCheckBox.setSelected(modulePreferences.getBoolean("DisplayConsole", false));
         jCheckBoxLogEnable.setSelected(modulePreferences.getBoolean("LogEnable", false));
 
         jCheckBoxExportAlive.setSelected(modulePreferences.getBoolean("ExportAlive", true));
@@ -234,7 +231,6 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
         modulePreferences.putInt("RestricitionDuration", (Integer) jFormattedTextFieldDuration.getValue());
         modulePreferences.putBoolean("ExportNotes", jCheckBoxExportNotes.isSelected());
         modulePreferences.putBoolean("ExportSources", jCheckBoxExportSources.isSelected());
-        modulePreferences.putBoolean("DisplayConsole", displayConsoleCheckBox.isSelected());
         modulePreferences.putBoolean("LogEnable", jCheckBoxLogEnable.isSelected());
 
         modulePreferences.putBoolean("ExportAlive", jCheckBoxExportAlive.isSelected());
@@ -250,7 +246,6 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox displayConsoleCheckBox;
     private javax.swing.JCheckBox jCheckBoxExportAlive;
     private javax.swing.JCheckBox jCheckBoxExportDivorce;
     private javax.swing.JCheckBox jCheckBoxExportEvents;
