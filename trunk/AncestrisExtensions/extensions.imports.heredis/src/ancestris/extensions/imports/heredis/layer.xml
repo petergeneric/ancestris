@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="ancestris-extensions-imports-heredis-HeredisImportAction.instance">
+                <attr name="delegate" newvalue="ancestris.extensions.imports.heredis.HeredisImportAction"/>
+                <attr name="displayName" bundlevalue="ancestris.extensions.imports.heredis.Bundle#CTL_HeredisImportAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <folder name="Import">
+                <file name="ancestris-extensions-imports-heredis-HeredisImportAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/File/ancestris-extensions-imports-heredis-HeredisImportAction.instance"/>
+                    <attr name="position" intvalue="2550"/>
+                </file>
+            </folder>
+            <file name="ancestris-extensions-imports-heredis-HeredisImportAction-separatorAfter.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2555"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>
