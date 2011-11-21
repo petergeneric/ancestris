@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.extensions.imports.heredis
+OpenIDE-Module-Layer: ancestris/extensions/imports/heredis/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/extensions/imports/heredis/Bundle.properties
+OpenIDE-Module-Requires: 
+  ancestris.extensions.console,
+  ancestris.extensions.imports.api
+OpenIDE-Module-Specification-Version: 1.0
+
