@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import org.openide.util.NbBundle;
 
 /**
@@ -115,14 +116,14 @@ public class Import {
                 input.close();
             }
         } catch (FileNotFoundException e1) {
-            console.println(NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
             return false;
         } catch (IOException ex) {
-            console.println(NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
             e.printStackTrace();
-            console.println(NbBundle.getMessage(Import.class, "error.unknown"));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
 
@@ -130,11 +131,11 @@ public class Import {
         try {
             output = getWriter();
         } catch (IOException e1) {
-            console.println(NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
             return false;
         } catch (Exception e) {
             e.printStackTrace();
-            console.println(NbBundle.getMessage(Import.class, "error.unknown"));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
         try {
@@ -163,18 +164,18 @@ public class Import {
             }
 
         } catch (FileNotFoundException e1) {
-            console.println(NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
             return false;
         } catch (IOException ex) {
-            console.println(NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
             e.printStackTrace();
-            console.println(NbBundle.getMessage(Import.class, "error.unknown"));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
             return false;
         }
 
-        console.println(NbBundle.getMessage(Import.class, "end", fileOut));
+        JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "end", fileOut));
         return true;
     }
 
@@ -360,8 +361,7 @@ public class Import {
         private int shiftedLevel = -1;
 
         public GedcomFileWriter(File filein, String eol) throws UnsupportedEncodingException, FileNotFoundException {
-            super(new OutputStreamWriter(new FileOutputStream(fileOut),
-                    "LATIN1"));
+            super(new OutputStreamWriter(new FileOutputStream(fileOut), "LATIN1"));
             EOL = eol;
         }
 
