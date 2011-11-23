@@ -39,11 +39,6 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         return viewfactory;
     }
 
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.OUTPUT;
-    }
-
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.

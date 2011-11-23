@@ -12,6 +12,7 @@ import genj.view.ViewFactory;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
@@ -19,6 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ConvertAsProperties(dtd = "-//ancestris.app//Report//EN",
 autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.OUTPUT)
 public final class ReportTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "ReportTopComponent";
@@ -27,11 +29,6 @@ public final class ReportTopComponent extends GenjViewTopComponent {
 
     public ViewFactory getViewFactory() {
         return viewfactory;
-    }
-
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.OUTPUT;
     }
 
     /**

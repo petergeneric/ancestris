@@ -84,11 +84,6 @@ public class EditorTopComponent extends AncestrisTopComponent
         return true;
     }
 
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.EDITOR; // NOI18N
-    }
-
     public static synchronized EditorTopComponent getFactory() {
         if (factory == null) {
             factory = new EditorTopComponent();

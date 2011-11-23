@@ -26,11 +26,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
     private static TableTopComponent factory;
     private static ViewFactory viewfactory = new TableViewFactory();
 
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.TABLE;
-    }
-
     public ViewFactory getViewFactory() {
         return viewfactory;
     }
