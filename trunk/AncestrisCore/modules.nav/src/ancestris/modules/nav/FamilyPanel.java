@@ -69,7 +69,7 @@ public final class FamilyPanel extends JPanel {
         husbFather.addMouseListener(new ParentHandler(husband, PropertySex.MALE));
         husbMother.addMouseListener(new ParentHandler(husband, PropertySex.FEMALE));
 
-        familySpouse.addMouseListener(new ABeanHandler(true));
+        familySpouse.addMouseListener(new ABeanHandler(false));
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
         husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
@@ -156,9 +156,14 @@ public final class FamilyPanel extends JPanel {
 
         this.context = context;
         if (entity instanceof Fam) {
-            if (((Fam) entity).getNoOfSpouses() == 0) {
+            Fam family = (Fam) entity;
+            if (family.getNoOfSpouses() == 0) {
                 return;
             }
+            // don't reset vue if focus fam is already this context's family:
+            // spouses are not swapped if wife is focus indi
+            if (family.equals(focusFam))
+                return;
             focusFam = ((Fam) entity);
             focusIndi = focusFam.getHusband();
             if (focusIndi == null) {
