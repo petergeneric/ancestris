@@ -8,15 +8,15 @@ import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import genj.entity.EntityViewFactory;
 import genj.view.ViewFactory;
-import org.openide.windows.TopComponent;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.app//Entity//EN",
 autostore = false)
+@RetainLocation(AncestrisDockModes.PROPERTIES)
 public final class EntityTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "EntityTopComponent";
@@ -25,11 +25,6 @@ public final class EntityTopComponent extends GenjViewTopComponent {
 
     public ViewFactory getViewFactory() {
         return viewfactory;
-    }
-
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.PROPERTIES;
     }
 
     /**

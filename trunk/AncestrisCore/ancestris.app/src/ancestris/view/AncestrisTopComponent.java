@@ -39,6 +39,7 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.Mode;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -109,12 +110,14 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return GedcomDirectory.getInstance().getUndoRedo(context);
     }
 
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.EDITOR;
-    }
-
     String getDefaultMode() {
-        return genj.util.Registry.get(this).get(preferredID() + ".dockMode", getDefaultFactoryMode());
+        String modeName = genj.util.Registry.get(this).get(preferredID() + ".dockMode", (String)null);
+        if (modeName == null) {
+            modeName = getClass().getAnnotation(RetainLocation.class).value();
+        }
+        if (modeName == null)
+            modeName = AncestrisDockModes.EDITOR;
+        return modeName;
     }
 
     public void setDefaultMode(String mode) {

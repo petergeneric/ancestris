@@ -14,10 +14,10 @@ package ancestris.core.modules.nav;
 import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
-import ancestris.core.modules.nav.NavigatorViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
@@ -25,6 +25,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ConvertAsProperties(dtd = "-//ancestris.app//Navigator//EN",
 autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.NAV)
 public final class NavigatorTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "NavigatorTopComponent";
@@ -32,10 +33,6 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
     private static ViewFactory viewfactory = new NavigatorViewFactory();
 
     @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.NAV;
-    }
-
     public ViewFactory getViewFactory() {
         return viewfactory;
     }
@@ -52,12 +49,14 @@ public final class NavigatorTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
+    @Override
     public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
+    @Override
     public void readProperties(java.util.Properties p) {
         super.readProperties(p);
     }

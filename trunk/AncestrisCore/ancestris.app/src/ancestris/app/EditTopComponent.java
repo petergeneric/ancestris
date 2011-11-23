@@ -36,11 +36,6 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
         return viewfactory;
     }
 
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.EDITOR;
-    }
-
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.

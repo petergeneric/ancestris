@@ -15,6 +15,7 @@ import java.util.List;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
@@ -22,6 +23,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ConvertAsProperties(dtd = "-//ancestris.app//Search//EN",
 autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.PROPERTIES)
 public final class SearchTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "SearchTopComponent";
@@ -30,11 +32,6 @@ public final class SearchTopComponent extends GenjViewTopComponent {
 
     public ViewFactory getViewFactory() {
         return viewfactory;
-    }
-
-    @Override
-    public String getDefaultFactoryMode() {
-        return AncestrisDockModes.PROPERTIES;
     }
 
     /**
