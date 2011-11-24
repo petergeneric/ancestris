@@ -43,7 +43,7 @@ public final class GedcomValidateAction implements ActionListener {
 
                 if (result != null) {
                     Collections.sort(result);
-                    doc.startTable("width=100%");
+                    doc.startTable("genj:csv=true,width=100%");
                     doc.addTableColumn("column-width=10%");
                     doc.addTableColumn("column-width=25%");
                     doc.addTableColumn("column-width=65%");
