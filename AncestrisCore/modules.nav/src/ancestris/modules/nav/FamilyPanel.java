@@ -63,7 +63,7 @@ public final class FamilyPanel extends JPanel {
 
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
-        husband.addMouseListener(new ABeanHandler(true));
+        husband.addMouseListener(new ABeanHandler(false));
         wife.addMouseListener(new SpouseHandler(husband));
 
         husbFather.addMouseListener(new ParentHandler(husband, PropertySex.MALE));
@@ -162,14 +162,18 @@ public final class FamilyPanel extends JPanel {
             }
             // don't reset vue if focus fam is already this context's family:
             // spouses are not swapped if wife is focus indi
-            if (family.equals(focusFam))
+            if (family.equals(focusFam)) {
                 return;
+            }
             focusFam = ((Fam) entity);
             focusIndi = focusFam.getHusband();
             if (focusIndi == null) {
                 focusIndi = focusFam.getWife();
             }
         } else if (entity instanceof Indi) {
+            if (((Indi) entity).equals(focusIndi)) {
+                return;
+            }
             focusIndi = (Indi) entity;
             focusFam = null;
         } else {
