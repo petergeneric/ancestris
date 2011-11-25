@@ -173,6 +173,7 @@ import javax.swing.tree.TreePath;
     // SplitPane with tree/edit
     splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treePane, editScroll);
     splitPane.setDividerLocation(REGISTRY.get("divider",300));
+    splitPane.setContinuousLayout(true);
     splitPane.addPropertyChangeListener(new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent evt) {
         if (JSplitPane.DIVIDER_LOCATION_PROPERTY.equals(evt.getPropertyName()))
