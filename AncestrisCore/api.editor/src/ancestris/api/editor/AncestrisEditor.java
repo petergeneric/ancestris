@@ -11,9 +11,11 @@
  */
 package ancestris.api.editor;
 
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.openide.util.Lookup;
 
 /**
@@ -23,6 +25,14 @@ import org.openide.util.Lookup;
 // XXX: write javadoc
 // XXX: merge with Editor in core?
 public abstract class AncestrisEditor {
+
+    static AbstractAction NOOP = new AbstractAction() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // NoOp
+        }
+    };
 
     public static AncestrisEditor findEditor(Property property) {
         AncestrisEditor editor = NoOpEditor.instance;
@@ -51,24 +61,17 @@ public abstract class AncestrisEditor {
     }
 
     // Actions
-    public abstract AbstractAction getCreateSpouseAction(Property indi);
+    public abstract Action getCreateSpouseAction(Indi indi);
 
-    public abstract AbstractAction getCreateParentAction(Property child, int sex);
+    public abstract Action getCreateParentAction(Indi child, int sex);
 
-    public abstract AbstractAction getCreateChildAction(Property indi);
+    public abstract Action getCreateChildAction(Indi indi);
 
     /**
      * This editor does nothing. It is created to avoid many check against null by findEditor
      */
     private static class NoOpEditor extends AncestrisEditor {
 
-        private static AbstractAction NOOP = new AbstractAction() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // NoOp
-            }
-        };
         public static final AncestrisEditor instance = new NoOpEditor();
 
         @Override
@@ -82,17 +85,17 @@ public abstract class AncestrisEditor {
         }
 
         @Override
-        public AbstractAction getCreateSpouseAction(Property indi) {
+        public Action getCreateSpouseAction(Indi indi) {
             return NOOP;
         }
 
         @Override
-        public AbstractAction getCreateParentAction(Property child, int sex) {
+        public Action getCreateParentAction(Indi child, int sex) {
             return NOOP;
         }
 
         @Override
-        public AbstractAction getCreateChildAction(Property indi) {
+        public Action getCreateChildAction(Indi indi) {
             return NOOP;
         }
 
