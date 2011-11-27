@@ -86,24 +86,24 @@
 #
 # IMPORTANT :
 # Ce fichier doit être édité avec un éditeur capable d'utiliser 
-# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou  
-# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre  
+# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou 
+# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre 
 # les caractères spéciaux utilisés dans certaines langues, les lettres  
-# accentuées notamment (comme l'allemand, le français, l'espagnol, 
-# etc...)
+# accentuées notamment (comme l'allemand, le français, l'espagnol, etc..)
 #
 # Le format de ce fichier est le suivant :
 #
 # Toutes les lignes vides et celles commençant par "#" sont considérées 
 # comme des commentaires et donc sont ignorées.
 #
-# On doit trouver un événement historique par ligne avec au minimum 
-# 6 paramètres séparés par un point-virgule ";"
+# On doit trouver un événement historique par ligne avec au minimum 6 
+# paramètres séparés par un point-virgule ";"
 #
 # Paramètre #1 : Date de départ de l'événement. Le format a utiliser est : 
 #                YYYYMMDD (année, mois et jour)
 #                Les formats YYYYMM et YYYY sont autorisés.
-#                (Si la date n'est pas indiquée la totalité de la ligne est ignorée)
+#                (Si la date n'est pas indiquée la totalité de la ligne 
+#                est ignorée)
 # Paramètre #2 : Date de fin de l'événement. Le format a utiliser est :
 #                YYYYMMDD (année, mois et jour)
 #                Les formats YYYYMM et YYYY sont autorisés.
@@ -125,10 +125,11 @@
 #                gb : Royaume uni
 #                se : Suede
 #                ch : Suisse
-# Paramètre #4 : L'importance de cet événement (un chiffre positif à choisir entre 
+# Paramètre #4 : L'importance de cet événement (un chiffre positif à 
+#                choisir entre 
 #                0 et 9), avec :
-#                0 = événement d'une importance majeure. Cet événénement sera 
-#                    toujours affiché.
+#                0 = événement d'une importance majeure. Cet événénement 
+#                    sera toujours affiché.
 #                1 = événement moins important.
 #                2 = événement encore moins important.
 #                etc...
@@ -142,12 +143,14 @@
 #                Y = Découverte
 #                F = Fondation
 #                E = Evénements divers
-#                R = Règnes
-#                Une liste de différents types est autorisée, ainsi WP sera 
-#                utilisé pour décrire un événement ayant une connotation de 
-#                guerre avec des conséquences politiques importantes.
-# Paramètre #6 : Une description de l'événement dans un langage donné - il faut 
-#                utiliser un préfix avec un code ISO-639 obligatoirement, ainsi :
+#                R = Règnes et présidences
+#                Une liste de différents types est autorisée, ainsi WP 
+#                sera utilisé pour décrire un événement ayant une 
+#                connotation de guerre avec des conséquences politiques 
+#                importantes.
+# Paramètre #6 : Une description de l'événement dans un langage donné - 
+#                il faut utiliser un préfix avec un code ISO-639 
+#                obligatoirement, ainsi :
 #                de = Allemand
 #                en = Anglais
 #                fr = Français
@@ -155,9 +158,9 @@
 # Paramètre #7+: De plus amples descriptions de l'événément en différentes 
 #                langues (à nouveau en les séparant par un point-virgule ';')
 #
-# Voici un exemple pour le siège de la ville de Québec le 26 juin 1759.
+# Voici un exemple pour l'entrée du Duc de Guise entrant dans Paris le 9 mai 1588
 #
-# 17590626;;ca;3;P;fr=Siège de la ville de Québec
+# 15880509;;fr;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
 #
 #
 # Note de l'auteur : J'ai volontairement fait débuter les événements vers 1600 et 
@@ -179,10 +182,16 @@
 #                    Contributeurs :
 #                    Voici une liste des personnes ayant contribué à des ajouts 
 #                    modifications de ce fichier (par ordre alphabétique) :
-#                         . Lionel (lio-sand) : Tous les règnes des Rois de France
-#                         . Dominique (dacore) : Ajout pour les années 1600 à 1700
+#                         . Lionel (lio-sand) : Tous les règnes des Rois 
+#                           de France
+#                         . Dominique (dacore) : Ajout pour les années 
+#                           1600 à 1700
+#                         . Christian Bouy : A fourni beaucoup de données 
+#                           pour les années postérieures à 1945.
+#                         . Joëlle Lussiau : A mis en forme les données de 
+#                           Christian dans l'almanac et les a classées.
 #
-#                    Dernière mise à jour : 10/01/2011
+#                    Dernière mise à jour : 27/11/2011
 #
 #
 #==============================================================================

@@ -85,24 +85,25 @@
 # --------------------------- F R E N C H    S E C T I O N  ----------------------------
 #
 # IMPORTANT :
-# Ce fichier doit être édité avec un éditeur capable d'utiliser l'encodage UTF-8
-# comme Notepad pour Windows, ou Jedit pour Linux ou Windows. Le fait d'utiliser 
-# cet encodage permettra de ne pas perdre les caractères spéciaux utilisés dans 
-# certaines langues, les lettres accentuées notamment (comme l'allemand, le 
-# français, l'espagnol, etc...)
+# Ce fichier doit être édité avec un éditeur capable d'utiliser 
+# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou 
+# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre 
+# les caractères spéciaux utilisés dans certaines langues, les lettres  
+# accentuées notamment (comme l'allemand, le français, l'espagnol, etc..)
 #
 # Le format de ce fichier est le suivant :
 #
-# Toutes les lignes vides et celles commençant par "#" sont considérées comme 
-# des commentaires et donc sont ignorées.
+# Toutes les lignes vides et celles commençant par "#" sont considérées 
+# comme des commentaires et donc sont ignorées.
 #
-# On doit trouver un événement historique par ligne avec au minimum 6 paramètres 
-# séparés par un point-virgule ";"
+# On doit trouver un événement historique par ligne avec au minimum 6 
+# paramètres séparés par un point-virgule ";"
 #
 # Paramètre #1 : Date de départ de l'événement. Le format a utiliser est : 
 #                YYYYMMDD (année, mois et jour)
 #                Les formats YYYYMM et YYYY sont autorisés.
-#                (Si la date n'est pas indiquée la totalité de la ligne est ignorée)
+#                (Si la date n'est pas indiquée la totalité de la ligne 
+#                est ignorée)
 # Paramètre #2 : Date de fin de l'événement. Le format a utiliser est :
 #                YYYYMMDD (année, mois et jour)
 #                Les formats YYYYMM et YYYY sont autorisés.
@@ -124,10 +125,11 @@
 #                gb : Royaume uni
 #                se : Suede
 #                ch : Suisse
-# Paramètre #4 : L'importance de cet événement (un chiffre positif à choisir entre 
+# Paramètre #4 : L'importance de cet événement (un chiffre positif à 
+#                choisir entre 
 #                0 et 9), avec :
-#                0 = événement d'une importance majeure. Cet événénement sera 
-#                    toujours affiché.
+#                0 = événement d'une importance majeure. Cet événénement 
+#                    sera toujours affiché.
 #                1 = événement moins important.
 #                2 = événement encore moins important.
 #                etc...
@@ -141,12 +143,14 @@
 #                Y = Découverte
 #                F = Fondation
 #                E = Evénements divers
-#                R = Règnes
-#                Une liste de différents types est autorisée, ainsi WP sera 
-#                utilisé pour décrire un événement ayant une connotation de 
-#                guerre avec des conséquences politiques importantes.
-# Paramètre #6 : Une description de l'événement dans un langage donné - il faut 
-#                utiliser un préfix avec un code ISO-639 obligatoirement, ainsi :
+#                R = Règnes et présidences
+#                Une liste de différents types est autorisée, ainsi WP 
+#                sera utilisé pour décrire un événement ayant une 
+#                connotation de guerre avec des conséquences politiques 
+#                importantes.
+# Paramètre #6 : Une description de l'événement dans un langage donné - 
+#                il faut utiliser un préfix avec un code ISO-639 
+#                obligatoirement, ainsi :
 #                de = Allemand
 #                en = Anglais
 #                fr = Français
@@ -178,10 +182,16 @@
 #                    Contributeurs :
 #                    Voici une liste des personnes ayant contribué à des ajouts 
 #                    modifications de ce fichier (par ordre alphabétique) :
-#                         . Lionel (lio-sand) : Tous les règnes des Rois de France
-#                         . Dominique (dacore) : Ajout pour les années 1600 à 1700
+#                         . Lionel (lio-sand) : Tous les règnes des Rois 
+#                           de France
+#                         . Dominique (dacore) : Ajout pour les années 
+#                           1600 à 1700
+#                         . Christian Bouy : A fourni beaucoup de données 
+#                           pour les années postérieures à 1945.
+#                         . Joëlle Lussiau : A mis en forme les données de 
+#                           Christian dans l'almanac et les a classées.
 #
-#                    Dernière mise à jour : 10/01/2011
+#                    Dernière mise à jour : 27/11/2011
 #
 #
 #==============================================================================
@@ -495,6 +505,14 @@
 19240613;;fr;1;P;fr=Gaston Doumergue est élu Président de la République.
 19310613;;fr;1;P;fr=Paul Doumer est élu Président de la République.
 19320510;;fr;1;P;fr=Albert Lebrun est élu Président de la République.
+19461013;;fr;1;P;fr=Adoption de la constitution de la IV° République.
+19531223;;fr;1;P;fr=René Coty est élu président de la république.
+19551106;;fr;6;P;fr=Fin du protectorat au Maroc.
+19560320;;fr;6;P;fr=Indépendance de la Tunisie.
+19581221;;fr;1;P;fr=Charles de Gaulle, 1er président de la V° République.
+19620701;;fr;3;P;fr=Indépendance de l'Algérie.
+19651219;;fr;2;P;fr=Réélection de de Gaulle.
+19660601;;fr;4;P;fr=La France quitte l'OTAN.
 #
 #
 # II - War Events (abbr. W)
@@ -560,6 +578,16 @@
 18710522;18710528;fr;6;WP;fr=C'est la "Semaine Sanglante". Paris est conquis rue par rue. La dernière barricade tombe le 28 mai Rue Ramponeau.
 19140803;;fr;1;W;fr=L'Allemagne déclare la guerre à la France.
 19181111;;fr;1;W;fr=La Guerre 14-18 prend fin. L'Armistice de Rethondes est signé entre 5h20 et 5h30 du matin. Cessez-le-feu à 11h. (Cette guerre fut dévastatrice : la France fut le pays le plus touché, sur 100 hommes actifs, 10,5 furent tués ou disparus).
+19460208;;fr;5;W;fr=Intervention au Tonkin.
+19461219;;fr;1;W;fr=Début de la guerre d'Indochine.
+19491230;;fr;6;WP;fr=Accords franco-vietnamiens.
+19500823;;fr;5;W;fr=Intervention en Corée.
+19540720;;fr;3;WP;fr=Accords de genève, fin de la guerre d'Indochine.
+19541101;;fr;5;W;fr=Début de l’insurrection en Algérie.
+19550824;;fr;5;W;fr=Rappel des réservistes.
+19580513;;fr;5;W;fr=Putsch d'Alger.
+19620318;;fr;3;W;fr=Accords d'Evian. Cessez-le-feu en Algérie le lendemain.
+19620326;;fr;4;WE;fr=Début du rapatriement des "pieds-noirs".
 #
 #
 # III - Founding Events (abbr. F)
@@ -578,33 +606,49 @@
 18010519;;fr;8;F;fr=Création de la Légion d'Honneur.
 18030327;;fr;8;F;fr=Création du Franc Germinal à l'effigie de Bonaparte.
 18040226;;fr;8;F;fr=Napoléon décide de construire l'Arc de Triomphe.
+18330628;;fr;5;F;fr=Loi Guizot qui impose aux communes de plus de 500 habitants de financer une école de garçons.
 18420611;;fr;6;F;fr=Création du réseau des Chemins de Fer.
 18480226;;fr;8;F;fr=Création des Ateliers Nationaux.
 18480623;;fr;8;F;fr=Suppression des Ateliers Nationaux jugés trop couteux.
 18550515;;fr;8;F;fr=Ouverture de l'Exposition Universelle.
 18621118;;fr;8;F;fr=Début du percement de l'isthme de Suez.
 186704;186710;fr;8;F;fr=Exposition Universelle.
+18670410;;fr;5;F;fr=Obligation pour les communes de plus de 500 habitants d'avoir une école de filles.
 18691117;;fr;8;F;fr=Inauguration du Canal de Suez.
+18720728;;fr;7;F;fr=Le Service national obligatoire pour tous les hommes est de 5 ans.
 18780501;;fr;8;F;fr=Troisième Exposition Universelle à Paris.
 18790131;;fr;2;F;fr=Le 14 juillet devient fête nationale, et la Marseillaise, hymne national.
-18810616;;fr;8;F;fr=Vote des Lois scolaires (gratuité et caractère obligatoire de l'enseignement primaire, création des écoles normales d'instituteurs).
+18810616;;fr;8;F;fr=Vote des Lois Jules Ferry(gratuité et caractère obligatoire de l'enseignement primaire, création des écoles normales d'instituteurs).
 18810729;;fr;8;F;fr=Liberté de réunion et de la Presse.
-18820328;;fr;8;F;fr=Laïcité de l'enseignement.
+18820328;;fr;8;F;fr=Laïcité de l'enseignement.L'enseignement religieux disparaît de l'école primaire au bénéfice de l'instruction morale et civique. 
 18840322;;fr;8;F;fr=Liberté syndicale.
 18840727;;fr;8;F;fr=Rétablissement du divorce.
 18890506;;fr;3;F;fr=Inauguration de la Tour Eiffel (Exposition Universelle).
+19050321;;fr;4:F;fr=La durée du Service militaire est fixée à 2 ans(service personnel, égal et obligatoire). Suppression du tirage au sort. Introduction de la notion de sursis.
 19110821;;fr;8;F;fr=La Joconde est volée.
 19130331;;fr;8;F;fr=La Joconde qui avait été volée, revient à Paris.
 19130810;;fr;8;F;fr=Le service militaire est fixé à 3 ans.
+19280331;;fr;7:F;fr=La durée du service militaire est ramenée à 1 an (loi Painlevé).
 19320212;;fr;8;F;fr=Arrivée à Pékin de la Croisière Jaune.
-19331107;;fr;8;F;fr=1er tirage de la Loterie Nationale.
+19331107;;fr;8;F;fr=Premier tirage de la Loterie Nationale.
+19360806;;fr;6;F;fr=Scolarité obligatoire jusqu'à 14 ans (loi Jean Zay).
+1936;;fr;7;F;fr=Durée du Service militaire portée à 2 ans.
+19440421;;fr;4;F;fr=Droit de vote pour les femmes. Mis en application pour la 1ère fois le 29 avril 1945 pour des élections municipales.
+19451019;;fr;5;F;fr=Création de la Sécurité Sociale.
+194610;;fr;7;F;fr=La durée du service militaire est fixée à 1 an.
+19501130;;fr;7;F;fr=La durée du service militaire est fixée à 18 mois mais maintien sous les drapeaux prolongé pendant la guerre d’Algérie jusqu’à 30 mois. Retour à 18 mois après la fin des opérations en Algérie.
+19570325;;fr;2;F;fr=Signature du Traité de Rome, création de la CEE (l'Europe des six).
+19580101;;fr;1;F;fr=Naissance du Marché commun européen.
+19590106;;fr;6;F;fr=Ordonnance prolongeant l'obligation scolaire jusqu'à 16 ans (loi Berthoin). 
+19600101;;fr:7;F;fr=Arrivée des "NF" (Nouveaux Francs) dits aussi "francs lourds" 100 francs en 1959 deviennent 1 franc en 1960.
+19631221;;fr;7;F;fr=La durée du service est ramenée à 16 mois. Introduction de la notion d'objection de conscience. 
 #
 #
 # IV - Discovery Events (abbr. Y)
 #
 16130111;;fr;9;y;fr=Découverte non loin de Romans dans le bas dauphiné de theutobocus, géant cimbre (peuple germanique).
 17640712;;fr;8;Y;fr=Charles Messier découvre la première nébuleuse de l'histoire, et l'inscrit au n° 27 de son catalogue (M27 ou Dumbbell).
-17690101;;fr;2;Y;fr=Je n'ai pas la date précise, aussi j'ai mis le premier janvier, mais c'est au cours de l'année 1769 que l'Académie de Besançon ouvre un concours pour un nouvel aliment végétal. Le lauréat sera Antoine Augustin Parmentier (1737-1813) avec la pomme de terre.
+17690101;;fr;2;Y;fr=Au cours de l'année 1769, l'Académie de Besançon ouvre un concours pour un nouvel aliment végétal. Le lauréat sera Antoine Augustin Parmentier (1737-1813) avec la pomme de terre.
 #
 #
 # V - Invention Events (abbr. I)
@@ -641,7 +685,7 @@
 18080420;;fr;6;B;fr=Naissance du futur Napoléon III. Son père Louis, roi de Hollande, déclara qu'il n'était pas de lui et rompit avec sa femme Hortense de Beauharnais. Hortense n'a jamais admis la naissance adultérine de son fils Louis, alors qu'elle a avoué celle du futur duc de Morny, fils du Comte de Flahaut.
 18080613;;fr;6;B;fr=Naissance du Maréchal de Mac-Mahon à Sully, Saône et Loire (futur Président de la République sous la IIIème République).
 18370811;;fr;6;B;fr=Naissance de Sadi Carnot (futur Président de la République sous la IIIème République) à Limoges.
-18560316;;fr;6;B;fr=Naissance du Prince Impérial (fils de Napoléon III) (nom envisagé : roi d'Alger à cause des projets d'un roy arabe en Algérie) (aprés la naissance de son fils, Eugénie, femme de Napoléon III fit chambre à part et laissa à son mari toute liberté dans ses liaisons féminines).
+18560316;;fr;6;B;fr=Naissance du Prince Impérial (fils de Napoléon III) (nom envisagé : roi d'Alger à cause des projets d'un roi arabe en Algérie) (aprés la naissance de son fils, Eugénie, femme de Napoléon III fit chambre à part et laissa à son mari toute liberté dans ses liaisons féminines).
 #
 #
 # VII - Weddings (abbr. X)
@@ -655,7 +699,6 @@
 16600609;;fr;5;X;fr=Mariage de Louis XIV et de Marie Thérèse d'Autriche à Saint-Jean de Luz.
 16711121;;fr;7;X;fr=Monsieur, frère du roi, épouse la princesse Palatine, chroniqueuse du règne.
 16971207;;fr;7;X;fr=Noces de Marie-Adélaïde de Savoie et du duc de Bourgogne, petit-fils aîné de Louis XIV. Ils eurent trois enfants : Louis de France (25 juin 1704 † 13 avril 1705), duc de Bretagne, Louis de France (8 janvier 1707 † 8 mars 1712), duc de Bretagne puis dauphin de France, Louis de France (15 février 1710 † 10 mai 1774), duc d'Anjou, futur Louis XV.
-
 17250905;;fr;6;X;fr=Mariage de Louis XV et de Marie Leszczyñska (qui a 7 ans de plus) (fille de l'ex Roi de Pologne). L'infante d'Espagne est trop jeune : Louix XV ne pourrait l'épouser avant d'avoir 23 ans (et s'il mourait sans enfants, le trône irait au duc d'Orléans, fils du Régent, ennemi des Condé).
 17700513;;fr;6;X;fr=Le Dauphin Louis (futur Louis XVI, 3ème fils du Dauphin du Viennois (fils de Louis XV)) épouse l'archiduchesse Marie-Antoinette d'Autriche (C'est l'aboutissement de la politique de Bernis, soutenue à Paris par le Comte Mercy d'Argenteau, ambassadeur d'Autriche depuis 1766).
 17960309;;fr;6;X;fr=Mariage religieux entre Bonaparte et Joséphine Tascher de la Pagerie (de Beauharnais) - le mariage civil a eu lieu le 2 décembre 1804.
@@ -740,6 +783,7 @@
 18990216;;fr;6;D;fr=Félix Faure meurt à l'Elysée au cours d'une aventure galante avec Marguerite Steinheil, née Japy, future héroïne du drame de l'impasse Ronsin en 1908.
 19140731;;fr;6;D;fr=Jean Jaurès est assassiné par Raoul Villain.
 19320506;;fr;2;D;fr=Paul Doumer, Président de la République, est assassiné par un émigré russe, sans doute fou, Paul Gorguloff.
+19510716;;fr;7;D;fr=Mort de Pétain.
 #
 #
 # IX - Misc. Events
@@ -752,7 +796,7 @@
 16580301;;fr;8;E;fr=Une grave crue de la Seine, la plus forte connue, se produit notamment à Paris où le pont Marie est emporté.
 16600621;;fr;6;E;fr=Dans la nuit un tremblement de terre est ressenti dans la région comprise entre Bordeaux et Bayonne. les secousses seront ensuite ressenti dans la région de Pau et surtout en Bigorre où les dommages sont conséquents et nombreux.
 1687;1703;fr;2;E;fr=Pessimum du Petit âge glaciaire : Hivers très rigoureux, printemps et étés froids, vendanges tardives. Le petit âge glaciaire correspond concrètement à un léger refroidissement climatique de l'ordre de moins de 1°C. Cette diminution peut paraître faible, mais elle était suffisante pour provoquer des hivers rigoureux et ralentir les activités humaines notamment la production agricole, en particulier au XVIIe siècle. Des archives historiques ou commerciales, des peintures de l'époque témoignent d'hivers rudes et enneigés. En Savoie, on organise même des processions dans l'espoir de conjurer l'avancée des glaces. 
-1692;;fr;2;E;fr=Disette en Auvergne.
+1692;;fr;5;E;fr=Disette en Auvergne.
 169211;;fr;2;E;fr=Désordres et famine dans la capitale.
 1692;1695;fr;2;E;fr=Mauvaises récoltes dans le Bordelais. Les négociants girondins font appel aux vins de Languedoc pour remplir leurs engagements commerciaux.
 1692;1700;fr;2;E;fr=Série de vendanges tardives dans le nord de la France.
@@ -767,6 +811,16 @@
 18160606;;fr;8;E;fr=Naufrage de la Méduse.
 183203;183204;fr;5;E;fr=Epidémie de choléra à Paris. Plus de 18.500 morts.
 191810;;fr;5;E;fr=Epidémie de grippe espagnole. Plus de 400.000 morts en France.
+19450815;;fr;5;E;fr=Condamnation à mort de Pétain.
+19470702;;fr;5;E;fr=Fin du bagne de Cayenne.
+19490629;;fr;7;E;fr=Premier journal télévisé.
+19540201;;fr;6:E;fr=Appel de l'abbé Pierre en faveur des sans-logis.
+1956;;fr;7;E;fr=Création de la Vignette automobile, destinée à alimenter le Fonds National de solidarité en faveur des personnes âgées.
+19591202;;fr;7;E;fr=Rupture du barrage de Malpasset(Var). Il y aura 423 morts et disparus.
+1965;;fr;7;E;fr=Une épouse peut désormais exercer une activité professionnelle sans l'autorisation de son mari. 
+1966;;fr;8;E;fr=La France compte 50 millions d'habitants.
+19660104;;fr;7:E:fr=Incendie à la raffinerie de Feyzin (Rhône). Il y aura 18 morts.
+19670318;;fr;7;E;fr=Naufrage dans la Manche du pétrolier le Torrey Canyon. 1ère marée noire.
 #
 #
 # X - Reigns of the French Kings
