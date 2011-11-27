@@ -1,6 +1,6 @@
 package ancestris.modules.editors.standard.actions;
 
-import ancestris.modules.editors.standard.EntityEditor;
+import ancestris.api.editor.AncestrisEditor;
 import genj.edit.actions.CreateChild;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -14,17 +14,20 @@ public class ACreateChild extends AbstractAction {
     private Indi parent;
     private Fam famc;
     private int sex;
+    private AncestrisEditor editor;
 
-    public ACreateChild(Indi parent) {
+    public ACreateChild(Indi parent, AncestrisEditor editor) {
         super();
         this.parent = parent;
         this.famc = null;
-   }
+        this.editor = editor;
+    }
 
-    public ACreateChild(Fam famc) {
+    public ACreateChild(Fam famc, AncestrisEditor editor) {
         super();
         this.parent = null;
         this.famc = famc;
+        this.editor = editor;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -50,7 +53,7 @@ public class ACreateChild extends AbstractAction {
             }
             Indi indi = (Indi) ccAction.getCreated();
             if (ccAction.isNew()) {
-                if (!EntityEditor.editEntity(indi, true)) {
+                if (!editor.edit(indi, true)) {
                     if (gedcom != null) {
                         gedcom.undoUnitOfWork(false);
                     }

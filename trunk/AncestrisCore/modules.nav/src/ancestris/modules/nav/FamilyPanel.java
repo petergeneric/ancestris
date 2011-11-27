@@ -671,11 +671,11 @@ public final class FamilyPanel extends JPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            Property property = null;
+            Indi indi = null;
             if (otherBean != null) {
-                property = otherBean.getProperty();
+                indi = (Indi) otherBean.getProperty();
             }
-            return AncestrisEditor.findEditor(property).getCreateSpouseAction(property);
+            return AncestrisEditor.findEditor(indi).getCreateSpouseAction(indi);
         }
     }
 
@@ -692,37 +692,36 @@ public final class FamilyPanel extends JPanel {
 
         @Override
         public ActionListener getCreateAction() {
-            Property property = null;
+            Indi child = null;
             if (childBean != null) {
-                property = childBean.getProperty();
+                child = (Indi) childBean.getProperty();
             }
-            return AncestrisEditor.findEditor(property).getCreateParentAction(property, sex);
+            return AncestrisEditor.findEditor(child).getCreateParentAction(child, sex);
         }
     }
 
-    private class ChildHandler extends ABeanHandler {
-
-        private final ABluePrintBeans parentBean;
-
-        /**
-         *
-         * @param parentBean May be an amC Bean or one of the parents IndiBean
-         */
-        public ChildHandler(ABluePrintBeans parentBean) {
-            super();
-            this.parentBean = parentBean;
-        }
-
-        @Override
-        public ActionListener getCreateAction() {
-            Property property = null;
-            if (parentBean != null) {
-                property = parentBean.getProperty();
-            }
-            return AncestrisEditor.findEditor(property).getCreateChildAction(property);
-        }
-    }
-
+//    private class ChildHandler extends ABeanHandler {
+//
+//        private final ABluePrintBeans parentBean;
+//
+//        /**
+//         *
+//         * @param parentBean May be an amC Bean or one of the parents IndiBean
+//         */
+//        public ChildHandler(ABluePrintBeans parentBean) {
+//            super();
+//            this.parentBean = parentBean;
+//        }
+//
+//        @Override
+//        public ActionListener getCreateAction() {
+//            Indi property = null;
+//            if (parentBean != null) {
+//                property = (Indi) parentBean.getProperty();
+//            }
+//            return AncestrisEditor.findEditor(property).getCreateChildAction(property);
+//        }
+//    }
     private abstract class EntitiesPanel extends AListBean {
 
         public EntitiesPanel(JScrollPane pane) {
