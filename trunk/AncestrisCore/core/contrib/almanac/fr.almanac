@@ -67,6 +67,7 @@
 #                F = Founding
 #                E = Misc. Events
 #                R = Reigns
+#                G = Genealogy specific Events
 #                A list of types is allowed, e.g. WP describes an event
 #                in the context of a war with political proportions.
 # Parameter #6 : The event description in a specific language - a prefix
@@ -144,6 +145,7 @@
 #                F = Fondation
 #                E = Evénements divers
 #                R = Règnes et présidences
+#                G = Evénéments d'intérêt généalogique	
 #                Une liste de différents types est autorisée, ainsi WP 
 #                sera utilisé pour décrire un événement ayant une 
 #                connotation de guerre avec des conséquences politiques 
@@ -508,13 +510,18 @@
 19310613;;fr;1;P;fr=Paul Doumer est élu Président de la République.
 19320510;;fr;1;P;fr=Albert Lebrun est élu Président de la République.
 19461013;;fr;1;P;fr=Adoption de la constitution de la IV° République.
-19531223;;fr;1;P;fr=René Coty est élu président de la république.
+19531223;;fr;1;P;fr=René Coty est élu Président de la république.
 19551106;;fr;6;P;fr=Fin du protectorat au Maroc.
 19560320;;fr;6;P;fr=Indépendance de la Tunisie.
-19581221;;fr;1;P;fr=Charles de Gaulle, 1er président de la V° République.
+19581221;;fr;1;P;fr=Charles de Gaulle, 1er Président de la V° République.
 19620701;;fr;3;P;fr=Indépendance de l'Algérie.
 19651219;;fr;2;P;fr=Réélection de de Gaulle.
 19660601;;fr;4;P;fr=La France quitte l'OTAN.
+19690427;;fr;2;P;fr=Référendum sur les régions et démission de de Gaulle.
+19690615;;fr;1;P;fr=Georges Pompidou, Président de la république.
+19740402;;fr;1;P;fr=Mort du président en exercice, Georges Pompidou.
+19740519;;fr;1;P;fr=Giscard d'Estaing, président de la république (Chirac, premier ministre).
+19730101;;fr;4;P;fr=L'Europe passe à neuf.
 #
 #
 # II - War Events (abbr. W)
@@ -786,6 +793,7 @@
 19140731;;fr;6;D;fr=Jean Jaurès est assassiné par Raoul Villain.
 19320506;;fr;2;D;fr=Paul Doumer, Président de la République, est assassiné par un émigré russe, sans doute fou, Paul Gorguloff.
 19510716;;fr;7;D;fr=Mort de Pétain.
+19701109;;fr;6;D:fr=Décès de Charles de Gaulle.
 #
 #
 # IX - Misc. Events (abbr. E)
@@ -823,6 +831,11 @@
 1966;;fr;8;E;fr=La France compte 50 millions d'habitants.
 19660104;;fr;7:E:fr=Incendie à la raffinerie de Feyzin (Rhône). Il y aura 18 morts.
 19670318;;fr;7;E;fr=Naufrage dans la Manche du pétrolier le Torrey Canyon. 1ère marée noire.
+19751027;;fr;5;E;fr=Attentat terroriste à Paris(paris, quartier latin).
+19760728;;fr;6;E;fr=Dernière exécution d'un condamné à mort(Ranucci).
+19770320;;fr;6;E;fr=Jacques Chirac élu Maire de Paris (après le rétablissement de la mairie de Paris, supprimée en 1871).
+19780318;;fr;7;E;fr=Naufrage au marge du Finistère du pétrolier l'Amoco Cadiz.
+19790607;;fr;6;E;fr=Première élection européenne au suffrage universel.
 #
 #
 # X - Reigns of the French Kings (abbr. R)
