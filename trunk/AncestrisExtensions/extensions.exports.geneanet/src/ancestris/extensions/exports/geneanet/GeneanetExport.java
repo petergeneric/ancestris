@@ -633,7 +633,7 @@ public class GeneanetExport {
                     lastName = " ?";
                 }
                 if (((PropertyName) pIndiNames[0]).getFirstName().length() > 0) {
-                    firstName = ((PropertyName) pIndiNames[0]).getFirstName();
+                    firstName = ((PropertyName) pIndiNames[0]).getFirstName().replaceAll("\\p{Punct}", "");
                     int index = firstName.indexOf(" ");
                     if (index > 0) {
                         firstName = firstName.substring(0, index);
