@@ -190,8 +190,10 @@
 #                           pour les années postérieures à 1945.
 #                         . Joëlle Lussiau : A mis en forme les données de 
 #                           Christian dans l'almanac et les a classées.
+#                         . Philippe Deville : A fourni les événements 
+#                           spécifiques à la généalogie.
 #
-#                    Dernière mise à jour : 27/11/2011
+#                    Dernière mise à jour : 28/11/2011
 #
 #
 #==============================================================================
@@ -646,7 +648,7 @@
 #
 # IV - Discovery Events (abbr. Y)
 #
-16130111;;fr;9;y;fr=Découverte non loin de Romans dans le bas dauphiné de theutobocus, géant cimbre (peuple germanique).
+16130111;;fr;9;Y;fr=Découverte non loin de Romans dans le bas dauphiné de theutobocus, géant cimbre (peuple germanique).
 17640712;;fr;8;Y;fr=Charles Messier découvre la première nébuleuse de l'histoire, et l'inscrit au n° 27 de son catalogue (M27 ou Dumbbell).
 17690101;;fr;2;Y;fr=Au cours de l'année 1769, l'Académie de Besançon ouvre un concours pour un nouvel aliment végétal. Le lauréat sera Antoine Augustin Parmentier (1737-1813) avec la pomme de terre.
 #
@@ -786,7 +788,7 @@
 19510716;;fr;7;D;fr=Mort de Pétain.
 #
 #
-# IX - Misc. Events
+# IX - Misc. Events (abbr. E)
 #
 1603;;fr;2;E;fr=Gelées d’oliviers en Provence. Le Rhône est gelé.
 16071027;;fr;2;E;fr=Passage de la Comète de Halley. En 1705 Edmond Halley prédit, en utilisant les lois nouvellement formulées de la mécanique céleste de Newton, que la comète vue en 1531, 1607, et en 1682 retournerait en 1758 (ce qui fut, malheureusement, après sa mort). La comète est en effet retournée comme prévu et plus tard elle fut nommé en son honneur. La comète de Halley reviendra à l'intérieur du système solaire en l'an 2061
@@ -823,7 +825,7 @@
 19670318;;fr;7;E;fr=Naufrage dans la Manche du pétrolier le Torrey Canyon. 1ère marée noire.
 #
 #
-# X - Reigns of the French Kings
+# X - Reigns of the French Kings (abbr. R)
 #
 ## Les Mérovingiens (447-751)
 0447;0457;fr;1;R;fr=Mérovée
@@ -931,6 +933,20 @@
 19400710;19440603;fr;1;R;fr=Gouvernement de Vichy
 19440603;19581005;fr;1;R;fr=IVe République
 19581005;;fr;1;R;fr=Ve République
+#
+#
+# XI - Genealogy specific Events (abbr. G)
+#
+15390825;;fr;0;G;fr="Ordonnance de Villers-Cotterêts", rendue par François 1er et instituant l'obligation de tenir des registres de baptêmes (article 51) et de décès (dans certains cas) et d'employer la langue française (article 111). Autrefois appelée "Guillemine" ou "Guihelmine" du nom de son rédacteur Guillaume Poyet.
+157905;;fr;1;G;fr="Ordonnance de Blois" promulguée par Henri III et imposant pour les mariages: célébration à l'église (catholique), obligation d'enregistrer les mariages, avec publication de bans, et citation de 4 témoins. Afin surtout d'éviter les mariages clandestins.
+166704;;fr;1;G;fr="Code Louis" ou Ordonnance de Saint Germain-en-Laye réglant la tenue des registres d'Etat Civil.
+16830809;;fr;2;G;fr=Arrêt du Conseil d'Etat signé par Colbert, ordonnant de remettre aux greffes des baillages et sénéchaussées les registres d'Etat Civil tenus et détenus par les "Protestants", qui de ce fait devaient se convertir s'ils voulaient avoir un "état civil".
+17871129;;fr;2;G;fr=Edit de Versailles dit de "tolérance" rétablissant pour les Protestants le droit d'avoir leur état civil sans devoir se convertir au catholicisme.
+17920920;;fr;0;G;fr=Décret "qui détermine le mode de constater l'état-civil des citoyens": la tenue des registres est retirée aux autorités religieuses et c'est un officier public qui enregistrera les naissances, mariages et décès. Les cérémonies religieuses passent après les formalités civiles. Les tables décennales sont prévues. 
+17920922;;fr;1;G;fr=La Convention Nationale décrète "Tous les actes publics sont désormais datés à partir de l'an I de la République".
+17931005;;fr;0;G;fr=La Convention Nationale abolit "l'ère vulgaire" et institue le nouveau calendrier républicain. 
+18050909;;fr;0;G;fr=(22 fructidor an XIII) Napoléon signe le senatus-consulte rétablissant l'usage du calendrier grégorien à compter du 1er janvier 1806.
+18770318;;fr;0;G;fr=Circulaire créant le Livret de Famille, suite à une période d'expérimentation, elle-même consécutive aux problèmes causés par l'incendie en 1871 détruisant les 2 exemplaires des registres de Paris. Ce livret permit de fixer l'orthographe des patronymes.
 #
 #
 #
