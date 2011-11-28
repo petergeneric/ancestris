@@ -183,11 +183,11 @@
 #
 #                    Contributeurs :
 #                    Voici une liste des personnes ayant contribué à des ajouts 
-#                    modifications de ce fichier (par ordre alphabétique) :
+#                    modifications de ce fichier :
 #                         . Lionel (lio-sand) : Tous les règnes des Rois 
-#                           de France
+#                           de France.
 #                         . Dominique (dacore) : Ajout pour les années 
-#                           1600 à 1700
+#                           1600 à 1700.
 #                         . Christian Bouy : A fourni beaucoup de données 
 #                           pour les années postérieures à 1945.
 #                         . Joëlle Lussiau : A mis en forme les données de 
@@ -826,13 +826,13 @@
 19490629;;fr;7;E;fr=Premier journal télévisé.
 19540201;;fr;6:E;fr=Appel de l'abbé Pierre en faveur des sans-logis.
 1956;;fr;7;E;fr=Création de la Vignette automobile, destinée à alimenter le Fonds National de solidarité en faveur des personnes âgées.
-19591202;;fr;7;E;fr=Rupture du barrage de Malpasset(Var). Il y aura 423 morts et disparus.
+19591202;;fr;7;E;fr=Rupture du barrage de Malpasset (Var). Il y aura 423 morts et disparus.
 1965;;fr;7;E;fr=Une épouse peut désormais exercer une activité professionnelle sans l'autorisation de son mari. 
 1966;;fr;8;E;fr=La France compte 50 millions d'habitants.
 19660104;;fr;7:E:fr=Incendie à la raffinerie de Feyzin (Rhône). Il y aura 18 morts.
-19670318;;fr;7;E;fr=Naufrage dans la Manche du pétrolier le Torrey Canyon. 1ère marée noire.
+19670318;;fr;7;E;fr=Naufrage dans la Manche du pétrolier le Torrey Canyon. Première marée noire.
 19751027;;fr;5;E;fr=Attentat terroriste à Paris(paris, quartier latin).
-19760728;;fr;6;E;fr=Dernière exécution d'un condamné à mort(Ranucci).
+19760728;;fr;6;E;fr=Dernière exécution d'un condamné à mort (Ranucci).
 19770320;;fr;6;E;fr=Jacques Chirac élu Maire de Paris (après le rétablissement de la mairie de Paris, supprimée en 1871).
 19780318;;fr;7;E;fr=Naufrage au marge du Finistère du pétrolier l'Amoco Cadiz.
 19790607;;fr;6;E;fr=Première élection européenne au suffrage universel.
@@ -965,4 +965,3 @@
 #
 #
 #=================================== END OF FILE ==============================
-
