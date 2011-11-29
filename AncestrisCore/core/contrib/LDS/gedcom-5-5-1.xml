@@ -108,7 +108,7 @@
   <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI" cardinality="0:M"/>
   <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
   <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI" />
-  <NCHI hide="1" type="PropertySimpleValue" img="NumChildren" super="INDI:RELI" />
+  <NCHI type="PropertySimpleValue" img="NumChildren" super="INDI:RELI" />
   <PROP hide="1" type="PropertyChoiceValue" img="Property" super="INDI:RELI" />
   <SSN  type="PropertySimpleValue" img="SSN" super="INDI:RELI" />
   <TITL type="PropertyChoiceValue" img="Title" super="INDI:RELI"/>
