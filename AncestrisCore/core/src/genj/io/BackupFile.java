@@ -37,8 +37,8 @@ public class BackupFile {
             Arrays.sort(backups);
 
             // TODO: mettre une options
-            if (backups.length >= 10) {
-                for (int i = 0; i <= backups.length - 10; i++) {
+            if (backups.length >= Options.getNbBackups()) {
+                for (int i = 0; i <= backups.length - Options.getNbBackups(); i++) {
                     if (!backups[i].delete()) {
                         throw new GedcomIOException("Couldn't delete backup file " + backups[0].getName(), -1);
                     }
@@ -62,9 +62,6 @@ public class BackupFile {
         }
     }
 
-    private static String getNextSuffix1(String suffix) {
-        return String.format("%04d", Integer.parseInt(suffix) + 1);
-    }
     private static File getBackupFile(File file){
         String fileName = file.getAbsolutePath();
         return new File(getBasename(fileName)+"_"+
