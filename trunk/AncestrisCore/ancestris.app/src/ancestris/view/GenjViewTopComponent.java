@@ -62,7 +62,6 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
         }
         if (viewProxy == null) {
             viewProxy = new GenjViewProxy(getViewFactory());
-            AncestrisPlugin.register(viewProxy);
         }
         return viewProxy;
     }
@@ -154,6 +153,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
             }
             // create the view
             view = factory.createView();
+            AncestrisPlugin.register(view);
             return view;
         }
 
