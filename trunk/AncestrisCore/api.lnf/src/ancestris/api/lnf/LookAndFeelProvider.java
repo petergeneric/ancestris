@@ -22,6 +22,14 @@ public abstract class LookAndFeelProvider {
 
     public abstract String getName();
 
+    /**
+     * Returns the jar class path for this lnf implementor or null if core lnf
+     * @return
+     */
+    public String getClassPath(){
+        return null;
+    }
+
     public abstract String getDisplayName();
 
     public abstract ImageIcon getSampleImage();
