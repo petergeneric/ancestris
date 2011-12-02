@@ -265,6 +265,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         needRestart = stopts.setJvmLocale(getLanguage());
         needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getName());
+        stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getClassPath());
 
         stopts.applyChanges();
 
