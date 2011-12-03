@@ -213,6 +213,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
    * Returns an event by year/layer
    */
   protected Event getEvent(double year, int layer) {
+      if (layer >= layers.size())
+          return null;
     // look for events in appropriate layer
     Iterator events = ((List)layers.get(layer)).iterator();
     while (events.hasNext()) {
