@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: ancestris.extensions.imports
 OpenIDE-Module-Layer: ancestris/extensions/imports/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/extensions/imports/Bundle.properties
