@@ -11,30 +11,27 @@
 package ancestris.extensions.imports.heredis;
 
 import ancestris.extensions.imports.api.Import;
-import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * The import function for Heredis originated Gedcom files
  */
+@ServiceProvider(service = Import.class)
 public class HeredisImport extends Import {
 
-    private static int clerepo;
-    private static Hashtable<String, Integer> hashrepo;
-    private static StringBuilder sb;
+    private static int clerepo = 0;
+    private static Hashtable<String, Integer> hashrepo = new Hashtable<String, Integer>();
+    private static StringBuilder sb = new StringBuilder();
 
     /**
      * Constructor
      */
-    public HeredisImport(File fileIn, File fileOut) {
-        super(fileIn, fileOut, NbBundle.getMessage(HeredisImport.class, "OpenIDE-Module-Name"));
-        clerepo = 0;
-        hashrepo = new Hashtable<String, Integer>();
-        sb = new StringBuilder();
+    public void HeredisImport() {
     }
 
     @Override
@@ -192,5 +189,10 @@ public class HeredisImport extends Import {
             return result;
         }
         return from;
+    }
+
+    @Override
+    public String toString() {
+        return "Hérédis";
     }
 }
