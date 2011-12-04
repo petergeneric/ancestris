@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.extensions.imports
+OpenIDE-Module-Layer: ancestris/extensions/imports/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/extensions/imports/Bundle.properties
+OpenIDE-Module-Provides: ancestris.extensions.imports.api
+OpenIDE-Module-Requires: ancestris.extensions.console
