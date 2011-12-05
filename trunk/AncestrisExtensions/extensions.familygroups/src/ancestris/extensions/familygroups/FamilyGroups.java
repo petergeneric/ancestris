@@ -1,6 +1,5 @@
 package ancestris.extensions.familygroups;
 
-import ancestris.app.App;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.fo.Document;
 import genj.gedcom.Context;
@@ -190,9 +189,7 @@ public class FamilyGroups {
             filters = new ArrayList<FamilyGroupFilter>(10);
 
             // Print sorted list of groups
-//                println(align(NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.count"), 7, ALIGN_RIGHT) + "  " + NbBundle.getMessage(FamilyGroupsTopComponent.class, "FamilyGroupsTopComponent.indi_name"));
-//                println("-------  ----------------------------------------------");
-            doc.startTable("width=100%");
+            doc.startTable("width=100%, border=1");
             doc.addTableColumn("column-width=10%");
             doc.addTableColumn("column-width=10%");
             doc.addTableColumn("column-width=80%");
