@@ -5,5 +5,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/extensions/exports/geneanet/Bundle.p
 OpenIDE-Module-Requires: 
   ancestris.extensions.console,
   ancestris.extensions.optionspanel
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 0.6
 
