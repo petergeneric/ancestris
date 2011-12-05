@@ -21,13 +21,7 @@ public final class OpenFamilyGroupsAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        /*        FamilyGroupsTopComponent window = FamilyGroupsTopComponent.findInstance();
-        window.setMinGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("minGroupSize", "2")));
-        window.setMaxGroupSize(Integer.valueOf(NbPreferences.forModule(OpenFamilyGroupsAction.class).get("maxGroupSize", "20")));
-        window.openAtTabPosition(0);
-        window.requestActive();
-        window.start();
-         */
+        
         window = ReportViewTopComponent.findInstance();
         context = App.center.getSelectedContext(true);
         if (context != null) {

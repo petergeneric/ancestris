@@ -6,5 +6,5 @@ OpenIDE-Module-Requires:
   ancestris.extensions.optionspanel,
   ancestris.extensions.reports.view,
   org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 0.6
 
