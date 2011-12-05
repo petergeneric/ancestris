@@ -5,5 +5,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/extensions/reports/gedcomvalidate/Bu
 OpenIDE-Module-Requires: 
   ancestris.extensions.optionspanel,
   ancestris.extensions.reports.view
-OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Specification-Version: 0.6
 
