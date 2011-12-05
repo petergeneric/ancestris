@@ -1,8 +1,11 @@
 package ancestris.extensions.imports.wizard;
 
 import ancestris.extensions.imports.api.Import;
+import ancestris.gedcom.GedcomDirectory;
+import ancestris.gedcom.GedcomObject.DummyNode;
 import genj.app.Workbench;
 import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.io.File;
@@ -40,8 +43,10 @@ public final class ImportWizardAction extends CallableSystemAction {
                 outFile = File.createTempFile("gedcom", ".ged");
                 if (importMethod.run(((ImportVisualImport) (panels[1].getComponent())).getInputFile(), outFile, NAME) == true) {
                     Context context = Workbench.getInstance().openGedcom(outFile.toURI().toURL());
-                    String name = context.getGedcom().getName();
-                    System.out.println(name);
+                    Gedcom importedGedcom = context.getGedcom();
+                    importedGedcom.setOrigin(null);
+                    GedcomDirectory.getInstance().getDummyNode(context).fire(true);
+                    outFile.delete();
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
