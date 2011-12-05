@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package ancestris.extensions.imports.api;
+package ancestris.extensions.imports;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import org.openide.util.lookup.ServiceProvider;
