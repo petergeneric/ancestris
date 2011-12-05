@@ -3,5 +3,5 @@ OpenIDE-Module: ancestris.extensions.feedback
 OpenIDE-Module-Layer: ancestris/extensions/feedback/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/extensions/feedback/Bundle.properties
 OpenIDE-Module-Requires: ancestris.extensions.optionspanel
-OpenIDE-Module-Specification-Version: 0.5.0
+OpenIDE-Module-Specification-Version: 0.6
 
