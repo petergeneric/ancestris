@@ -2,7 +2,6 @@ package ancestris.extensions.imports.wizard;
 
 import ancestris.extensions.imports.api.Import;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.gedcom.GedcomObject.DummyNode;
 import genj.app.Workbench;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -28,7 +27,6 @@ public final class ImportWizardAction extends CallableSystemAction {
     @Override
     public void performAction() {
         Import importMethod;
-        File outFile;
         WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels());
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
@@ -40,10 +38,12 @@ public final class ImportWizardAction extends CallableSystemAction {
         if (!cancelled) {
             importMethod = ((ImportVisualImport) (panels[1].getComponent())).getImportClass();
             try {
-                outFile = File.createTempFile("gedcom", ".ged");
-                if (importMethod.run(((ImportVisualImport) (panels[1].getComponent())).getInputFile(), outFile, NAME) == true) {
+                File inputFile = ((ImportVisualImport) (panels[1].getComponent())).getInputFile();
+                File outFile = new File (System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
+                if (importMethod.run(inputFile, outFile, NAME) == true) {
                     Context context = Workbench.getInstance().openGedcom(outFile.toURI().toURL());
                     Gedcom importedGedcom = context.getGedcom();
+                    importedGedcom.setName(inputFile.getName());
                     importedGedcom.setOrigin(null);
                     GedcomDirectory.getInstance().getDummyNode(context).fire(true);
                     outFile.delete();
