@@ -17,6 +17,7 @@ import genj.view.SelectionListener;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import java.awt.Image;
+import javax.swing.JScrollPane;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -66,7 +67,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
             return;
         }
         familyPanel.setContext(context);
-        setPanel(familyPanel);
+        setPanel(new JScrollPane(familyPanel));
         repaint();
     }
 }
