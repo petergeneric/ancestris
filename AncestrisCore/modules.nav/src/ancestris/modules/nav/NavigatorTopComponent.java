@@ -13,7 +13,6 @@ package ancestris.modules.nav;
 
 import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
-import genj.view.SelectionListener;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import java.awt.Image;
@@ -32,6 +31,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
     private static final String PREFERRED_ID = "AncestrisNavigator";  // NOI18N
     private static NavigatorTopComponent factory;
     FamilyPanel familyPanel = new FamilyPanel();
+    JScrollPane familyScrolPane = new JScrollPane(familyPanel);
 
     @Override
     public boolean createPanel() {
@@ -67,7 +67,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
             return;
         }
         familyPanel.setContext(context);
-        setPanel(new JScrollPane(familyPanel));
+        setPanel(familyScrolPane);
         repaint();
     }
 }
