@@ -45,6 +45,8 @@ public class PropertyName extends Property {
     private String lastName = "",
             firstName = "",
             suffix = "";
+    // XXX:nameValue should probably be replaced by nameAsString
+    private String nameValue;
     /** the name if unparsable */
     private String nameAsString;
     private boolean mutePC = false;
@@ -103,7 +105,11 @@ public class PropertyName extends Property {
         if (!(getEntity() instanceof Indi || getEntity() instanceof Submitter)) {
             return true;
         }
-        return nameAsString == null;
+        if (nameAsString != null)
+            return false;
+        if (nameValue == null)
+            return true;
+        return nameValue.equals(computeValue());
     }
 
     /**
@@ -202,7 +208,18 @@ public class PropertyName extends Property {
         if (nameAsString != null) {
             return nameAsString;
         }
+        if (nameValue != null)
+            return nameValue;
+        return computeValue();
+    }
 
+    /**
+     * the Name Value computed by appending each name parts (given, surname, prifix, suffix).
+     * This value is used when there is no conflict between those parts and the gedcom NAME value.
+     * (Is ths casenameValue is null).
+     * @return
+     */
+    private String computeValue(){
         WordBuffer wb = new WordBuffer();
 
         if (!getNamePrefix().isEmpty()) {
@@ -240,6 +257,10 @@ public class PropertyName extends Property {
         // n/a
         if (nameAsString != null) {
             return nameAsString;
+        }
+
+        if (nameValue != null){
+            return nameValue;
         }
 
         WordBuffer b = new WordBuffer();
@@ -350,6 +371,8 @@ public class PropertyName extends Property {
         lastName = last;
         firstName = first;
         suffix = suff;
+        // clear NAME tag value
+        this.nameValue = null;
 
         // tell about it
         if (old != null) {
@@ -421,6 +444,9 @@ public class PropertyName extends Property {
     @Override
     public void setValue(String newValue) {
 
+        // remember tag value
+        nameValue = newValue;
+
         // don't parse anything secret
         if (Enigma.isEncrypted(newValue)) {
             setName("", "", "");
@@ -461,6 +487,7 @@ public class PropertyName extends Property {
         }
         // keep
         setName(getPropertyValue("NPFX"), f, getPropertyValue("SPFX"), l, s, false);
+        nameValue = newValue;
 
         // done
     }
