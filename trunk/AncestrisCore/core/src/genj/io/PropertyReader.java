@@ -170,7 +170,7 @@ public class PropertyReader {
       readProperties(child, level, 0);
 
       // set NameProperty again after children have been read
-      //(try to  fix value%subtag inconstitencies)
+      //XXX:(try to  fix value%subtag inconstitencies) There is probably a better method
       if (child instanceof PropertyName)
           child.setValue(prevValue);
         
