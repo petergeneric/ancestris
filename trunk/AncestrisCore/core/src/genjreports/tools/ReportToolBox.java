@@ -12,19 +12,10 @@ import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import genj.util.swing.Action2;
-import genj.io.GedcomReader;
-import genj.io.GedcomWriter;
-import genj.io.GedcomIOException;
-import genj.util.Origin;
-import genjreports.tools.imports.ImportGenealogieDotCom;
-import genjreports.tools.imports.ImportGeneric;
-import genjreports.tools.imports.ImportHeredis;
-import genjreports.tools.imports.Importer;
 
 import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
-import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,8 +42,7 @@ public class ReportToolBox extends Report {
     TOOL_MNG_PLACES    = 4,
     TOOL_MNG_ASSO      = 5,
     TOOL_GENE_NAME     = 6,
-    TOOL_GENE_AGES     = 7,
-    TOOL_IMPORT_GEDCOM = 8;
+    TOOL_GENE_AGES     = 7;
 
   public int toolToRun = TOOL_GENE_ID;
   
@@ -65,7 +55,6 @@ public class ReportToolBox extends Report {
       translate("geneManageAsso"),
       translate("geneGivnSurn"),
       translate("geneAges"),
-      translate("importGedcom")
    };
 
   /** entity types */
@@ -150,11 +139,6 @@ public class ReportToolBox extends Report {
         settings = new SettingGeneAge();
         if (!getOptionsFromUser(title, settings)) return;
         ret = geneAges(gedcom, ((SettingGeneAge)settings));
-        break;
-      case TOOL_IMPORT_GEDCOM:
-        settings = new SettingImportGedcom();
-        //if (!getOptionsFromUser(title, settings)) return;
-        ret = importGedcom(gedcom, ((SettingImportGedcom)settings));
         break;
       default:
         throw new IllegalArgumentException("no such report type");
@@ -1082,93 +1066,6 @@ public class ReportToolBox extends Report {
   }
 
 
-  /**
-  * ### 9 ### Import Gedcom
-  *
-  * Supported origins: Heredis
-  *
-  */
-  private boolean importGedcom(Gedcom gedcom, Object object) {
-
-    // Strings
-    final String TYPE_HEREDIS  = "HEREDIS";
-    final String TYPE_GENEATIC = "GENEATIC";
-    final String TYPE_GENJ     = "GENJ";
-    final String TYPE_GENEALOGIEDOTCOM     = "GENEALOGIE.COM";
-
-    // Get the options
-    final SettingImportGedcom settings = (SettingImportGedcom)object;
-    log.write(translate("importGedcom"));
-
-    // Get gedcom file from user
-    File file = null;
-    file = getFileFromUser(translate("importFile"), Action2.TXT_OK);
-    if (file == null) return false;
-
-    // Read header to identify import type
-    String typeStr = getImportType(file);
-    log.write(translate("importFileType", typeStr));
-
-    Importer ig = null;
-    // Initiate importing class and execute it depending on header
-    if (typeStr.indexOf(TYPE_HEREDIS) > -1) {
-    	ig = new ImportHeredis(this, file);
-       }
-    else if (typeStr.indexOf(TYPE_GENJ) > -1) {
-        getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importNotNecessary"), OPTION_OK);
-        return true;
-    } else if (typeStr.indexOf(TYPE_GENEALOGIEDOTCOM) > -1) {
-    	ig = new ImportGenealogieDotCom(this, file);
-       }else {
-        ig = new ImportGeneric(this, file);
-       }
-    if (ig==null) {
-        getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importNotAvailableYet"), OPTION_OK);
-       	return false; 
-    } else {
-        // Ask confirmation to user that we got the right detection, abort otherwise
-        if (!getOptionFromUser(translate("importFileType", typeStr)+". "+translate("importConfirm",ig.getClass().getSimpleName()), OPTION_OKCANCEL)) return false; 
-        ig.run();
-        log.write(translate("importingDone", ig.getOutputName()));
-    }
-    log.write(" ");
-    log.write(" ");
-
-    return true;
-    // done
-  }
-
-
- /**
-  * Read gedcom header to identify SOUR approved id of created file 
-  */
-  private String getImportType(File file) {
-    String typeStr = translate("importTypeUnknown");
-    if (file == null) return typeStr;
-
-    FileInputStream from = null;
-    try {
-      from = new FileInputStream(file);
-      byte[] buffer = new byte[256];         // A buffer big enough to hold the header
-      int bytes_read;
-      bytes_read = from.read(buffer);        // buffer holds header lines
-      String header = new String(buffer);
-      int posStart = header.indexOf("1 SOUR") + 7;
-      int posEnd = header.indexOf("2", posStart) - 1;
-      typeStr = header.substring(posStart, posEnd);
-      // Always close the streams, even if exceptions were thrown
-      } catch (Exception e) {
-        e.printStackTrace();
-        log.write(translate("importUnknownError"));
-      }
-      finally {
-        if (from != null) try { from.close(); } catch (IOException e) { ; }
-      }
-    return typeStr;
-    }
-
-
-
  /**
   * Set Property position 
   */
@@ -1748,12 +1645,6 @@ public class ReportToolBox extends Report {
   public class SettingGeneAge {
      public boolean geneForce = false;
      public boolean geneRefresh = true;
-     }
-
-
-  // Import Gedcom 
-  public class SettingImportGedcom {
-     private int nothingyet = 0;
      }
 
 } // End_of_Report
