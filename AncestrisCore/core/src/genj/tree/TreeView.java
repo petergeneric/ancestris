@@ -747,6 +747,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
      * Constructor
      */
     private Content() {
+        putClientProperty("print.printable", Boolean.TRUE); // NOI18N
       // listen to mouse events
       addMouseListener(this);
       addMouseWheelListener(this);
