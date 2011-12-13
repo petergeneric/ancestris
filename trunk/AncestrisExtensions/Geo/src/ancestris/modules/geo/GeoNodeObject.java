@@ -79,9 +79,9 @@ class GeoNodeObject {
             return property.getImage(true).getImage();
         }
         if (isUnknown) {
-            return Utilities.loadImage("genjfr/app/geo/geo_red.png");
+            return Utilities.loadImage("ancestris/modules/geo/geo_red.png");
         }
-        return Utilities.loadImage("genjfr/app/geo/geo.png");
+        return Utilities.loadImage("ancestris/modules/geo/geo.png");
     }
 
     @Override

@@ -65,7 +65,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
     @SuppressWarnings("deprecation")
     public Image getIcon(int type) {
         GeoNodeObject obj = getLookup().lookup(GeoNodeObject.class);
-        return (obj != null) ? obj.getIcon() : Utilities.loadImage("genjfr/app/geo/geo.png");
+        return (obj != null) ? obj.getIcon() : Utilities.loadImage("ancestris/modules/geo/geo.png");
     }
 
     @Override
@@ -157,7 +157,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 // display place details
                 String info = obj.displayToponym(obj.getToponymFromPlace(obj.getPlace(), false));
                 JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
-                        new ImageIcon(Utilities.loadImage("genjfr/app/geo/geoicon.png")));
+                        new ImageIcon(Utilities.loadImage("ancestris/modules/geo/geoicon.png")));
 
             } else if (actionName.equals("ACTION_EditPlace")) {
                 // popup editor

@@ -28,14 +28,14 @@ import org.openide.windows.WindowManager;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoList//EN",
+@ConvertAsProperties(dtd = "-//ancestris.modules.geo//GeoList//EN",
 autostore = false)
 @ServiceProvider(service=AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GeoPlacesListener, PropertyChangeListener {
 
     /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "genjfr/app/geo/list.png";
+    static final String ICON_PATH = "ancestris/modules/geo/list.png";
     private static final String PREFERRED_ID = "GeoListTopComponent";
     private GeoNodeObject[] nodes = null;
     private ExplorerManager mgr = new ExplorerManager();
