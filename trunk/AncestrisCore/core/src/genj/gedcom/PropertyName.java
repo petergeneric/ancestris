@@ -259,7 +259,8 @@ public class PropertyName extends Property {
             return nameAsString;
         }
 
-        if (nameValue != null){
+        // if not valid, return name tag
+        if (!isValid() && nameValue != null){
             return nameValue;
         }
 
