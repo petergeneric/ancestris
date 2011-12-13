@@ -68,14 +68,14 @@ import org.openide.windows.WindowManager;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//genjfr.app.geo//GeoMap//EN",
+@ConvertAsProperties(dtd = "-//ancestris.modules.geo//GeoMap//EN",
 autostore = false)
 @ServiceProvider(service=AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener {
 
     /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "genjfr/app/geo/geo.png";
+    static final String ICON_PATH = "ancestris/modules/geo/geo.png";
     private static final String PREFERRED_ID = "GeoMapTopComponent";
     //
     private String[] maps = new String[]{
