@@ -109,7 +109,7 @@ public class PropertyName extends Property {
             return false;
         if (nameValue == null)
             return true;
-        return nameValue.equals(computeValue());
+        return nameValue.replaceAll(" */ *", "/").equals(computeValue().replaceAll(" */ *", "/"));
     }
 
     /**
