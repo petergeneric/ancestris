@@ -312,6 +312,7 @@ public class DateWidget extends JPanel {
   private void updateStatus() {
     // check whether valid
     PointInTime value = getValue();
+      Calendar helpCalendar = null;
     if (value == null) {
       // show 'X' on disabled button
       widgetCalendar.setEnabled(false);
@@ -320,14 +321,16 @@ public class DateWidget extends JPanel {
       // show current calendar on enabled button
       widgetCalendar.setEnabled(true);
       widgetCalendar.setIcon(calendar.getImage());
-      Calendar helpCalendar;
       if (value.getCalendar() == preferedCalendar) {
           helpCalendar = alternateCalendar;
       } else{
           helpCalendar = preferedCalendar;
       }
+    }
+
       if (helpCalendar == null){
           altDisplay.setVisible(false);;
+            altDisplay.setText("");
       } else {
         altDisplay.setVisible(true);
         try {
@@ -339,10 +342,13 @@ public class DateWidget extends JPanel {
         } catch (GedcomException ex) {
         }
         }
-    }
-    for (SwitchCalendar switcher : switches) 
+
+      for (SwitchCalendar switcher : switches)
       switcher.preview();
   }
+    private void setAltDisplay(){
+
+    }
 
   /**
    * Return the maximum size this component should be sized to
