@@ -11,7 +11,6 @@
  */
 package ancestris.view;
 
-import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -153,7 +152,6 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
             }
             // create the view
             view = factory.createView();
-            AncestrisPlugin.register(view);
             return view;
         }
 
@@ -209,7 +207,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
 
 
         public void commitRequested(Context context) {
-            if (context.sameGedcom(getContext())){
+            if (!context.sameGedcom(getContext())){
                 LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
                 return;
             }
