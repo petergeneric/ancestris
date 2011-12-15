@@ -109,7 +109,11 @@ public class PropertyName extends Property {
             return false;
         if (nameValue == null)
             return true;
-        return nameValue.replaceAll(" */ *", "/").equals(computeValue().replaceAll(" */ *", "/"));
+        // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
+        // We do not consider an space character around / (for geneatique compatibility
+        // We do consider the case of char (ie SURN may be UPPER where NAME is not)
+        // XXX: We should consider the cas where there is no sub tags in NAME structure
+        return nameValue.replaceAll(" */ *", "/").equalsIgnoreCase(computeValue().replaceAll(" */ *", "/"));
     }
 
     /**
