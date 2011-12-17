@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: ancestris.extensions.console
-OpenIDE-Module-Layer: ancestris/extensions/console/layer.xml
-OpenIDE-Module-Localizing-Bundle: ancestris/extensions/console/Bundle.properties
-OpenIDE-Module-Provides: ancestris.extensions.console
-OpenIDE-Module-Requires: ancestris.extensions.optionspanel
-OpenIDE-Module-Specification-Version: 1.0
-
