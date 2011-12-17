@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.modules.datulette
+OpenIDE-Module-Layer: ancestris/modules/datulette/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/datulette/Bundle.properties
+OpenIDE-Module-Requires: org.netbeans.api.javahelp.Help
+OpenIDE-Module-Specification-Version: 0.5.0
+
