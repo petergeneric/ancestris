@@ -3,9 +3,17 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>extensions.imports.generic</code-name-base>
+            <code-name-base>modules.imports.generic</code-name-base>
             <suite-component/>
             <module-dependencies>
+                <dependency>
+                    <code-name-base>ancestris.api.imports</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>0.6</specification-version>
+                    </run-dependency>
+                </dependency>
                 <dependency>
                     <code-name-base>ancestris.core.pluginservice</code-name-base>
                     <build-prerequisite/>
@@ -13,12 +21,6 @@
                     <run-dependency>
                         <specification-version>0.6.0</specification-version>
                     </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>ancestris.extensions.imports</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency/>
                 </dependency>
                 <dependency>
                     <code-name-base>org.openide.util.lookup</code-name-base>
