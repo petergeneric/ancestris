@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: ancestris.api.imports
-OpenIDE-Module-Localizing-Bundle: ancestris/api/imports/Bundle.properties
-OpenIDE-Module-Provides: ancestris.api.imports.api
-OpenIDE-Module-Requires: ancestris.modules.console
-OpenIDE-Module-Specification-Version: 0.6.0
