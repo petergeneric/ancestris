@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: ancestris.extensions.optionspanel
-OpenIDE-Module-Layer: ancestris/extensions/optionspanel/layer.xml
-OpenIDE-Module-Localizing-Bundle: ancestris/extensions/optionspanel/Bundle.properties
-OpenIDE-Module-Provides: ancestris.extensions.optionspanel
-OpenIDE-Module-Specification-Version: 1.0
-
