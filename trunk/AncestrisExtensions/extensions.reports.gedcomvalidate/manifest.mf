@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: ancestris.extensions.reports.gedcomvalidate
-OpenIDE-Module-Layer: ancestris/extensions/reports/gedcomvalidate/layer.xml
-OpenIDE-Module-Localizing-Bundle: ancestris/extensions/reports/gedcomvalidate/Bundle.properties
-OpenIDE-Module-Requires: 
-  ancestris.extensions.optionspanel,
-  ancestris.extensions.reports.view
-OpenIDE-Module-Specification-Version: 0.6
-
