@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>ancestris.extensions.imports</code-name-base>
+            <code-name-base>ancestris.api.imports</code-name-base>
             <suite-component/>
             <module-dependencies>
                 <dependency>
@@ -31,7 +31,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>ancestris.extensions.console</code-name-base>
+                    <code-name-base>ancestris.modules.console</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -80,7 +80,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
-                <package>ancestris.extensions.imports.api</package>
+                <package>ancestris.api.imports</package>
             </public-packages>
         </data>
     </configuration>
