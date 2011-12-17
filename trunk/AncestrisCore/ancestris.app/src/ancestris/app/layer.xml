@@ -556,7 +556,7 @@
             <attr name="position" intvalue="100"/>
             <file name="optionsAncestris">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/optionsAncestris"/>
-                <attr name="include" stringvalue="config/Preferences/ancestris/.*|config/Preferences/ancestris/.*"/>
+                <attr name="include" stringvalue="config/Preferences/ancestris/.*|config/Preferences/ancestris/.*|etc/.*"/>
             </file>
             <file name="ui">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
@@ -564,7 +564,7 @@
             </file>
             <file name="reports">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/reports"/>
-                <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*"/>
+                <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*|ancestris/almanac/.*"/>
                 <attr name="exclude" stringvalue="ancestris/ancestris.log.*"/>
             </file>
             <file name="gedcoms">
@@ -577,7 +577,7 @@
             <attr name="position" intvalue="200"/>
             <file name="internal">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/other/internal"/>
-                <attr name="include" stringvalue="config/Preferences/org/.*|var/.*"/>
+                <attr name="include" stringvalue="config/Preferences/org/.*"/>
             </file>
         </folder>
         <folder name="blueprints">
