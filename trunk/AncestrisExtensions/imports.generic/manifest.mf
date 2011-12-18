@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: modules.imports.generic
+OpenIDE-Module: ancestris.modules.imports.generic
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/imports/generic/Bundle.properties
 OpenIDE-Module-Requires: ancestris.modules.imports.wizard
 OpenIDE-Module-Specification-Version: 0.6.0
