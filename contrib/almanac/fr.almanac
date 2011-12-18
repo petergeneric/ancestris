@@ -1,21 +1,21 @@
 #####################################################################################################################				
 ##				
 ##			ALMANACH – FRANCE	
-##		Généré le :	16 décembre 2011	 à 18h 5mn
+##		Généré le :	18 décembre 2011	 à 19h 51mn
 ##				
 #####################################################################################################################				
 #		Climat et nature		
 #			A = Agriculture	
 				1649;1652;fr;;;2;A;fr=Mauvaise récolte de grains. Disettes et épidémies (1649-1652). La population rurale diminue.;;;;
-				1692;1695;fr;;bk;2;A;fr=Mauvaises récoltes dans le Bordelais. Les négociants girondins font appel aux vins de Languedoc pour remplir leurs engagements commerciaux.;;;;
+				1692;1695;fr;;b,k;2;A;fr=Mauvaises récoltes dans le Bordelais. Les négociants girondins font appel aux vins de Languedoc pour remplir leurs engagements commerciaux.;;;;
 				1692;1700;fr;;;2;A;fr=Série de vendanges tardives dans le nord de la France.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #			C = Climat	
-				1603;;fr;;u;2;AC;fr=Gelées d’oliviers en Provence. Le Rhône est gelé.;;;;
+				1603;;fr;;u;2;A,C;fr=Gelées d’oliviers en Provence. Le Rhône est gelé.;;;;
 				1687;1703;fr;;;2;C;fr=Pessimum du Petit âge glaciaire : Hivers très rigoureux, printemps et étés froids, vendanges tardives. Le petit âge glaciaire correspond concrètement à un léger refroidissement climatique de l'ordre de moins de 1°C. Cette diminution peut paraître faible, mais elle était suffisante pour provoquer des hivers rigoureux et ralentir les activités humaines notamment la production agricole, en particulier au XVIIe siècle. Des archives historiques ou commerciales, des peintures de l'époque témoignent d'hivers rudes et enneigés. En Savoie, on organise même des processions dans l'espoir de conjurer l'avancée des glaces. ;;;;
-				17160122;;fr;;ai;4;C;fr=-20° le 22 janvier. En Savoie la neige avait 20 pieds d'épaisseur : il en était de même en Alsace. Février - Glacial dans l'est de la France. Neiges abondantes dans l'est et le nord de la France, inondations dans l'Ouest.;;;;
-				17501205;;fr;;u;7;CK;fr=Le Var est sorti de son lit, suite aux pluies diluviennes s’étant abattues aux alentours de Nice. Les campagnes voisines sont inondées, plusieurs bâtiments entraînées et beaucoup d’arbres déracinés.;;;;
-				178311;178403;fr;;;5;CA;fr=Hiver exceptionnel qui détruit les semis de blé.;;;;
+				17160122;;fr;;a,i;4;C;fr=-20° le 22 janvier. En Savoie la neige avait 20 pieds d'épaisseur : il en était de même en Alsace. Février - Glacial dans l'est de la France. Neiges abondantes dans l'est et le nord de la France, inondations dans l'Ouest.;;;;
+				17501205;;fr;;u;7;C,K;fr=Le Var est sorti de son lit, suite aux pluies diluviennes s’étant abattues aux alentours de Nice. Les campagnes voisines sont inondées, plusieurs bâtiments entraînées et beaucoup d’arbres déracinés.;;;;
+				178311;178403;fr;;;5;C,A;fr=Hiver exceptionnel qui détruit les semis de blé.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #		Événements démographiques		
 #			M = Épidémies	
@@ -27,12 +27,12 @@
 #			H = Famines	
 				1692;;fr;;c;2;H;fr=Disette en Auvergne.;;;;
 				169211;;fr;;j;2;H;fr=Désordres et famine dans la capitale.;;;;
-				1693;1694;fr;;;2;HA;fr=Mauvaises récoltes, famine. La grande famine de 1693-1694 est due à un hiver très rigoureux en 1692, suivi en 1693 d'une récolte très médiocre, causée par un printemps et un été trop pluvieux, causant une flambée des prix des céréales et une sous-alimentation qui favorise les épidémies comme le typhus, jusqu'en 1694. La France, qui avait alors 20 millions d’habitants, eut 1 300 000 morts en plus de la mortalité normale.Autant que durant la Première Guerre mondiale, mais pour une population deux fois moindre. C'est la grande purge des miséreux que la cherté du pain jette sur les chemins pour y mendier et qui meurent au hasard de leur errance.;;;;
-				1725;;fr;;pq;5;H;fr=Famine en Normandie, on vit d'herbe des champs.;;;;
+				1693;1694;fr;;;2;H,A;fr=Mauvaises récoltes, famine. La grande famine de 1693-1694 est due à un hiver très rigoureux en 1692, suivi en 1693 d'une récolte très médiocre, causée par un printemps et un été trop pluvieux, causant une flambée des prix des céréales et une sous-alimentation qui favorise les épidémies comme le typhus, jusqu'en 1694. La France, qui avait alors 20 millions d’habitants, eut 1 300 000 morts en plus de la mortalité normale.Autant que durant la Première Guerre mondiale, mais pour une population deux fois moindre. C'est la grande purge des miséreux que la cherté du pain jette sur les chemins pour y mendier et qui meurent au hasard de leur errance.;;;;
+				1725;;fr;;p,q;5;H;fr=Famine en Normandie, on vit d'herbe des champs.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #			K = Catastrophes	
 				16580301;;fr;;j;8;K;fr=Une grave crue de la Seine, la plus forte connue, se produit notamment à Paris où le pont Marie est emporté.;;;;
-				16600621;;fr;;bk;6;K;fr=Dans la nuit un tremblement de terre est ressenti dans la région comprise entre Bordeaux et Bayonne. les secousses seront ensuite ressenti dans la région de Pau et surtout en Bigorre où les dommages sont conséquents et nombreux.;;;;
+				16600621;;fr;;b,k;6;K;fr=Dans la nuit un tremblement de terre est ressenti dans la région comprise entre Bordeaux et Bayonne. les secousses seront ensuite ressenti dans la région de Pau et surtout en Bigorre où les dommages sont conséquents et nombreux.;;;;
 				17500524;;fr;;k;7;K;fr=Un tremblement de terre se fait sentir en Guyenne, aux alentours des villes de Toulouse, Narbonne et Montpellier.;;;;
 				19991226;19991228;fr;;;7;K;fr=Les tempêtes Lothar et Martin traversent la france provoquant de nombreux dégats. Des vents de plus de 216 Km/h ont été enregistrés au sommet de la tour Eiffel.;;;;
 				20090124;;fr;;;7;K;fr=La tempête Klaus est une tempête exceptionnelle qui a principalement touché le sud-ouest de la France. Elle est considérée comme étant la plus destructrice en France depuis les tempêtes de 1999.;;;;
@@ -58,10 +58,10 @@
 				17920922;;fr;;;7;S;fr=La Convention Nationale décrète "Tous les actes publics sont désormais datés à partir de l'an I de la République".;;;;
 				18050909;;fr;;;7;S;fr=(22 fructidor an XIII) Napoléon signe le senatus-consulte rétablissant lusage du calendrier grégorien à compter du 1er janvier 1806;;;;
 				196805;;fr;;;7;S;fr=Evénements de mai 68;;;;
-				19700107;;fr;;;7;SP;fr=Loi instituant le SMIC à la place du SMIG.;;;;
+				19700107;;fr;;;7;S,P;fr=Loi instituant le SMIC à la place du SMIG.;;;;
 				19730825;;fr;;;7;S;fr=Manifestations d'écologistes, d'antimilitaristes et de régionalistes pour s'opposer à l'extension du terrain militaire du Larzac.;;;;
 				19750117;;fr;;;7;S;fr=Vote de la loi autorisant sous certaines conditions l'avortement appelée aussi loi Veil.;;;;
-				19760429;;fr;;;7;SG;fr=Décret donnant droit au regroupement familial des immigrés.;;;;
+				19760429;;fr;;;7;S,G;fr=Décret donnant droit au regroupement familial des immigrés.;;;;
 				198012;;fr;;;7;S;fr=Le pays compte à la fin de l'année plus de 1,5 million de chômeurs. La dette publique de la France est de 20,8 % du PIB.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #			E = Événements divers	
@@ -75,7 +75,7 @@
 				19700702;;fr;;;8;E;fr=Déclaration de Georges Pompidou à propos de l'ORTF selon lequel l’« information doit être libre...indépendante...et impartiale ». Il rappelle aux journalistes de l’ORTF que leur parole « engage la France ».;;;;
 				19710623;;fr;;;8;E;fr=Les six pays membres de la Communauté économique européenne (Allemagne, Belgique, Pays-Bas, Italie, France, Luxembourg) acceptent l'adhésion du Royaume-Uni.;;;;
 				198103;;fr;;;8;E;fr=Sortie du ZX81, premier ordinateur personnel.;;;;
-				1991;;fr;;;8;EI;fr=Début des téléphones portables (GSM).;;;;
+				1991;;fr;;;8;E,I;fr=Début des téléphones portables (GSM).;;;;
 				19721128;;fr;;;8;E;fr=Exécution de Roger Bontems, conséquence du refus de la grâce présidentielle.;;;;
 				19721031;;fr;;;8;E;fr=Création de la troisième chaîne de télévision.;;;;
 				19731017;;fr;;;8;E;fr=Premier choc pétrolier causé par la décision des pays de l'OPEP d'augmenter considérablement le prix du pétrole brut et de frapper d'embargo les alliés d'Israël suite au déclenchement de la guerre du Kippour. La France, non concernée par l'embargo, se rend compte de sa dépendance énergétique.;;;;
@@ -84,52 +84,52 @@
 				19731222;;fr;;;8;E;fr=Les pays arabes diminuent de 25 % les exportations de pétrole et augmentent le prix du baril de 17 %. Le prix du baril brut de pétrole passe de 5,092 $ à 11,651 $. La facture française passera de 17 à 123 milliards de francs.;;;;
 				19740308;;fr;;;8;E;fr=Inauguration de l'aéroport Roissy-Charles de Gaulle.;;;;
 				19760415;;fr;;;8;E;fr=La construction du supergénérateur nucléaire nommé Superphénix est décidée.;;;;
-				19771006;;fr;;;8;EP;fr=Adoption de la loi informatique et libertés contre l'utilisation abusive des fichiers nominatifs informatiques.;;;;
-				19780616;;fr;;;8;EP;fr=Sommet économique du G7 à Bonn (Giulio Andreotti, Takeo Fukuda, Jimmy Carter, Helmut Schmidt et Valéry Giscard d'Estaing).;;;;
-				19791010;;fr;;;8;EP;fr=Début de l'affaire des diamants. Le Canard enchaîné accuse le président de la République d'avoir reçu de Bokassa 1er, Empereur déchu de Centre Afrique des diamants en cadeaux lors de visites officielles. Le Canard enchaîné estime la valeur de ces diamants à un million de francs. La défense maladroite de Giscard va accréditer les informations du journal satirique et va avoir une influence négative sur sa campagne de réélection.;;;;
-				19791030;;fr;;;8;EP;fr=Le ministre du travail Robert Boulin, accusé par des lettres anonymes, publiées par Le Canard enchaîné, d'avoir acquis de manière illégale, une garrigue, est retrouvé mort dans un étang de la forêt de Rambouillet. L'enquête n'a toujours pas permis d'aboutir à des conclusions définitives.;;;;
+				19771006;;fr;;;8;E,P;fr=Adoption de la loi informatique et libertés contre l'utilisation abusive des fichiers nominatifs informatiques.;;;;
+				19780616;;fr;;;8;E,P;fr=Sommet économique du G7 à Bonn (Giulio Andreotti, Takeo Fukuda, Jimmy Carter, Helmut Schmidt et Valéry Giscard d'Estaing).;;;;
+				19791010;;fr;;;8;E,P;fr=Début de l'affaire des diamants. Le Canard enchaîné accuse le président de la République d'avoir reçu de Bokassa 1er, Empereur déchu de Centre Afrique des diamants en cadeaux lors de visites officielles. Le Canard enchaîné estime la valeur de ces diamants à un million de francs. La défense maladroite de Giscard va accréditer les informations du journal satirique et va avoir une influence négative sur sa campagne de réélection.;;;;
+				19791030;;fr;;;8;E,P;fr=Le ministre du travail Robert Boulin, accusé par des lettres anonymes, publiées par Le Canard enchaîné, d'avoir acquis de manière illégale, une garrigue, est retrouvé mort dans un étang de la forêt de Rambouillet. L'enquête n'a toujours pas permis d'aboutir à des conclusions définitives.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #		Guerres		
-#			W = Guerres et traités (événements majeurs)	
-				16010117;;fr;;;9;WP;fr=Annexion par la France de La Bresse (Vosges) et du Bugey (sud-est de la France, entre Lyon et Genève).;;;;
-				16200807;;fr;;r;9;WP;fr=Bataille des Ponts-de-Cé, commune du Maine-et-Loire situé dans la banlieue sud d'Angers. Les partisans de la reine mère Marie de Médicis sont défaits par les troupes royales (partisans de Louis XIII) aux Ponts-de-Cé. Cette bataille est aussi connue sous le nom des "Drôleries des Ponts-de-Cé" car les troupes de Marie de Médicis se présentent sans commandement sur le champ de bataille. L'armée royale n'eut plus qu'à disperser ses fantassins dans une "drôlerie" générale.;;;;
-				16201108;;fr;;;9;WP;fr=Bataille de la Montagne Blanche. C'est l'une des premières et des plus importantes de la guerre de Trente Ans;;;;
-				16210425;;fr;;;8;WP;fr=Traité de Madrid dans lequel l'Espagne s'engage à restituer la Valteline (Alpes) aux Grisons.;;;;
-				16220511;;fr;;t;7;WP;fr=Prise de Royan par les troupes du Roi.;;;;
-				16270721;;fr;;t;7;WP;fr=Les anglais débarquent à l’Île de Ré. Ils se veulent les protecteurs des huguenots mais ils tenteront en vain de s'emparer de Fort Saint Martin.;;;;
-				16280312;;fr;;;7;WP;fr=Richelieu tente, mais sans succès, un coup de force contre la porte Maubec de La Rochelle.;;;;
-				16290306;;fr;;;7;WP;fr=Victoire du Pas de Suse (Savoie) contre les Piémontais et les Espagnols.;;;;
-				16290527;;fr;;;9;WP;fr=Prise de Privas par Louis XIII (cité huguenote du Vivarais).;;;;
-				16300323;;fr;;;6;WP;fr=Richelieu prend d'assaut Pignerol (savoyard) (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
+#			W = Événements de guerres majeurs, traités.	
+				16010117;;fr;;;9;W,P;fr=Annexion par la France de La Bresse (Vosges) et du Bugey (sud-est de la France, entre Lyon et Genève).;;;;
+				16200807;;fr;;r;9;W,P;fr=Bataille des Ponts-de-Cé, commune du Maine-et-Loire situé dans la banlieue sud d'Angers. Les partisans de la reine mère Marie de Médicis sont défaits par les troupes royales (partisans de Louis XIII) aux Ponts-de-Cé. Cette bataille est aussi connue sous le nom des "Drôleries des Ponts-de-Cé" car les troupes de Marie de Médicis se présentent sans commandement sur le champ de bataille. L'armée royale n'eut plus qu'à disperser ses fantassins dans une "drôlerie" générale.;;;;
+				16201108;;fr;;;9;W,P;fr=Bataille de la Montagne Blanche. C'est l'une des premières et des plus importantes de la guerre de Trente Ans;;;;
+				16210425;;fr;;;8;W,P;fr=Traité de Madrid dans lequel l'Espagne s'engage à restituer la Valteline (Alpes) aux Grisons.;;;;
+				16220511;;fr;;t;7;W,P;fr=Prise de Royan par les troupes du Roi.;;;;
+				16270721;;fr;;t;7;W,P;fr=Les anglais débarquent à l’Île de Ré. Ils se veulent les protecteurs des huguenots mais ils tenteront en vain de s'emparer de Fort Saint Martin.;;;;
+				16280312;;fr;;;7;W,P;fr=Richelieu tente, mais sans succès, un coup de force contre la porte Maubec de La Rochelle.;;;;
+				16290306;;fr;;;7;W,P;fr=Victoire du Pas de Suse (Savoie) contre les Piémontais et les Espagnols.;;;;
+				16290527;;fr;;;9;W,P;fr=Prise de Privas par Louis XIII (cité huguenote du Vivarais).;;;;
+				16300323;;fr;;;6;W,P;fr=Richelieu prend d'assaut Pignerol (savoyard) (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
 				16300517;;fr;;;6;W;fr=Louis XIII prend Chambéry puis conquiert la Savoie (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
-				16300706;;fr;;;8;WP;fr=Traité secret de Turin (négociation : Mazarin). La Savoie donna Pignerol à la France contre Albe (mantouane) que Louis XIII paya 494.000 écus à Nevers  (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
+				16300706;;fr;;;8;W,P;fr=Traité secret de Turin (négociation : Mazarin). La Savoie donna Pignerol à la France contre Albe (mantouane) que Louis XIII paya 494.000 écus à Nevers  (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
 				16350519;;fr;;;4;W;fr=Louis XIII déclare la guerre à l'Espagne (et donc à Philippe IV frère de sa femme) (c'est la guerre de 30 ans - La guerre de Trente Ans est une suite de conflits armés qui ont déchiré l'Europe de 1618 à 1648. Elle se déroula principalement dans les territoires d'Europe centrale dépendant du Saint Empire romain germanique, mais impliqua la plupart des puissances continentales. Ses origines sont multiples, même si la principale est l'opposition religieuse et politique entre catholiques et protestants. Les traités qui suivirent la guerre de Trente Ans redessinèrent la carte de l'Europe en instaurant un nouvel équilibre des forces.).;;;;
 				16360815;;fr;;;8;W;fr=Les espagnols prennent Corbie dans la Somme.;;;;
 				16400809;;fr;;;7;W;fr=Prise d'Arras tenue par les espagnols, dont le siège avec débuté en juin.;;;;
 				16420929;;fr;;;7;W;fr=Capitulation espagnole à Perpignan.;;;;
-				16430519;;fr;;;9;WP;fr=Bataille de Rocroi (Ardennes). Suite au décès de Richelieu et le décès imminent de Louis XIII,le gouverneur espagnol en Hollande décide d'envahir la France.Il sera arrête dans sa progression à Rocroi par le duc d'Enghien (le futur grand Condé) ;;;;
-				16481024;;fr;;;4;WP;fr=Traité de Westphalie. La France reçoit les Trois-Evéchés (Metz, Toul et Verdun), l'Alsace (sauf quelques villes comme Strasbourg) et Pignerol (Italie).;;;;
-				16501005;;fr;;;8;WP;fr=Capitulation de Bordeaux assiégée par les troupes royales.;;;;
-				16501215;;fr;;;8;WP;fr=Défaite de Turenne à Rethel contre l'armée royale. Celui-ci marchait vers Paris pour libérer les princes.;;;;
-				16560716;;fr;;;8;WP;fr=Turenne est vaincu par Condé à Valenciennes.;;;;
-				16590508;;fr;;;5;WP;fr=Armistice avec l'Espagne. Fin d'un conflit datant de 1618 (guerre de trente ans) qui enflamma toute l'Europe et qui en 1635 opposa l'Espagne et la France sur la frontière Roussillonnaise;;;;
-				16591107;;fr;;;5;WP;fr=Traité des Pyrénées. La France reçoit le Roussillon, la Cerdagne, l'Artois, le Duché de Bar ainsi que quelques places.;;;;
-				16670626;;fr;;;7;WP;fr=Louis XIV prend Tournai. La ville est alors rattachée à la France jusqu'en 1709 par le traité d'Aix la Chapelle;;;;
-				16680502;;fr;;;5;WP;fr=Traité d'Aix la Chapelle. L’Espagne récupère la Franche-Comté et la France obtient des villes des Pays-Bas, dont Tournai, Lille, Douai etc..;;;;
+				16430519;;fr;;;9;W,P;fr=Bataille de Rocroi (Ardennes). Suite au décès de Richelieu et le décès imminent de Louis XIII,le gouverneur espagnol en Hollande décide d'envahir la France.Il sera arrête dans sa progression à Rocroi par le duc d'Enghien (le futur grand Condé) ;;;;
+				16481024;;fr;;;4;W,P;fr=Traité de Westphalie. La France reçoit les Trois-Evéchés (Metz, Toul et Verdun), l'Alsace (sauf quelques villes comme Strasbourg) et Pignerol (Italie).;;;;
+				16501005;;fr;;;8;W,P;fr=Capitulation de Bordeaux assiégée par les troupes royales.;;;;
+				16501215;;fr;;;8;W,P;fr=Défaite de Turenne à Rethel contre l'armée royale. Celui-ci marchait vers Paris pour libérer les princes.;;;;
+				16560716;;fr;;;8;W,P;fr=Turenne est vaincu par Condé à Valenciennes.;;;;
+				16590508;;fr;;;5;W,P;fr=Armistice avec l'Espagne. Fin d'un conflit datant de 1618 (guerre de trente ans) qui enflamma toute l'Europe et qui en 1635 opposa l'Espagne et la France sur la frontière Roussillonnaise;;;;
+				16591107;;fr;;;5;W,P;fr=Traité des Pyrénées. La France reçoit le Roussillon, la Cerdagne, l'Artois, le Duché de Bar ainsi que quelques places.;;;;
+				16670626;;fr;;;7;W,P;fr=Louis XIV prend Tournai. La ville est alors rattachée à la France jusqu'en 1709 par le traité d'Aix la Chapelle;;;;
+				16680502;;fr;;;5;W,P;fr=Traité d'Aix la Chapelle. L’Espagne récupère la Franche-Comté et la France obtient des villes des Pays-Bas, dont Tournai, Lille, Douai etc..;;;;
 				16720406;;fr;;;5;W;fr=Début de la Guerre de Hollande.;;;;
 				16750418;16750902;fr;;;5;W;fr=Soulèvement général en Bretagne, dit "des Bonnets rouges" et "du Papier timbré".;;;;
 				16770317;;fr;;;8;W;fr=Louis XIV, qui veut assurer à jamais le repos de ses frontières, décide de prendre d'assaut avec ses troupes, Valenciennes.;;;;
 				16770419;;fr;;;8;W;fr=Louis XIV, qui veut assurer à jamais le repos de ses frontières, décide de prendre d'assaut avec ses troupes, Cambrai et Saint-Omer.;;;;
 				16780810;16780917;fr;;;6;W;fr=Traité de Nimègue entre la France, l’Espagne et les Provinces-Unies mettant fin à la guerre de Hollande. L’Espagne doit céder la Franche-Comté et échanger les enclaves du nord contre 12 villes dont Saint-Omer, Cambrai, Valenciennes et Maubeuge qui ferment les voies d’invasions de la France par le nord. ;;;;
-				16790629;;fr;;;7;WP;fr=Traité de Saint-Germain. La paix est signée entre la France, la Suède et le Brandebourg. La Suède récupère la Poméranie.;;;;
+				16790629;;fr;;;7;W,P;fr=Traité de Saint-Germain. La paix est signée entre la France, la Suède et le Brandebourg. La Suède récupère la Poméranie.;;;;
 				16890116;;fr;;;5;W;fr=La France déclare la guerre à l’Espagne.;;;;
 				16890517;;fr;;;5;W;fr=Guillaume III d'Orange déclare la guerre à la France suite à un incident naval. En décembre, la « Grande Alliance » contre la France rassemble l’Empire, les Provinces-Unies, l’Espagne, la Savoie et l’Angleterre.;;;;
-				16930527;;fr;;;7;WP;fr=Bataille de Lagos. La flotte Française commandé par Tourville intercepte au large de Lagos situé sur la côte portugaise, un convoi de navires marchands composé de plusieurs nations du fait de l'état de guerre (guerre de la Ligue d’Augsbourg) et escorté par la marine anglaise. L'attaque du convoi aura un grand retentissement, surtout qu'elle entraîne un désastre financier et une série de faillites à Londres. ;;;;
-				17070425;;fr;;;5;WP;fr=Bataille d'Almanza dans le royaume de Valence (Espagne) ou l'armée des alliés (Anglais,Portugais et Hollandais) fût défaite par celle des deux couronnes (Espagne et France). Cette bataille rendit à Philippe V d'Espagne son trône.;;;;
+				16930527;;fr;;;7;W,P;fr=Bataille de Lagos. La flotte Française commandé par Tourville intercepte au large de Lagos situé sur la côte portugaise, un convoi de navires marchands composé de plusieurs nations du fait de l'état de guerre (guerre de la Ligue d’Augsbourg) et escorté par la marine anglaise. L'attaque du convoi aura un grand retentissement, surtout qu'elle entraîne un désastre financier et une série de faillites à Londres. ;;;;
+				17070425;;fr;;;5;W,P;fr=Bataille d'Almanza dans le royaume de Valence (Espagne) ou l'armée des alliés (Anglais,Portugais et Hollandais) fût défaite par celle des deux couronnes (Espagne et France). Cette bataille rendit à Philippe V d'Espagne son trône.;;;;
 				17580707;;fr;;;5;W;fr=Le 7 juillet, devant le Fort Ticonderoga, l'armée Franco-Canadienne, placée sous le commandement du marquis de Montcalm et du Chevalier de Levis, remporte une victoire sur l'armée Anglo-américaine aux ordres du général Anglais Abercombry.;;;;
-				17630210;;fr;;;6;WP;fr=Signature du traité de Paris mettant fin à la guerre de Sept Ans. L’Angleterre est devenu la puissance coloniale majeure. La France perd toutes ses positions en Inde hormis les comptoirs.;;;;
-				17650215;;fr;;;6;WP;fr=Signature du traité d'Hubertsbourg entre la France, la Prusse, l'Autriche et les Princes Allemands.;;;;
-				17920420;;fr;;;6;WP;fr=Déclaration de guerre au roi de Bohême et de Hongrie (c'est à dire François II, neveu de Marie-Antoinette et fils de l'Empereur Léopold, mort le 1er mars).;;;;
+				17630210;;fr;;;6;W,P;fr=Signature du traité de Paris mettant fin à la guerre de Sept Ans. L’Angleterre est devenu la puissance coloniale majeure. La France perd toutes ses positions en Inde hormis les comptoirs.;;;;
+				17650215;;fr;;;6;W,P;fr=Signature du traité d'Hubertsbourg entre la France, la Prusse, l'Autriche et les Princes Allemands.;;;;
+				17920420;;fr;;;6;W,P;fr=Déclaration de guerre au roi de Bohême et de Hongrie (c'est à dire François II, neveu de Marie-Antoinette et fils de l'Empereur Léopold, mort le 1er mars).;;;;
 				17930310;;fr;;;3;W;fr=Début des guerres de Vendée (plusieurs révoltes lors du recensement pour la levée en masse des 300.000 hommes, notamment dans le Choletais et à Challans). Les guerres de Vendée et de la Chouannerie feront plus de 600.000 morts.;;;;
 				17930311;;fr;;;8;W;fr=Guerre de Vendée - Prise de Machecoul.;;;;
 				17930313;;fr;;;8;W;fr=Guerre de Vendée - Prise de Chemillé par Cathelineau (rejoint le lendemain par Stofflet).;;;;
@@ -140,23 +140,23 @@
 				17960126;;fr;;;4;W;fr=Reprise de la Guerre de Vendée (Stofflet reprend les armes, il sera pris à Chemillé, puis exécute. Charette sera exécuté le 29 mars, et les dernières guérillas auront lieu en avril). Cette épisode est ce qu'on a appelé la deuxième guerre de Vendée : Charette n'avait jamais vraiment déposé les armes. Après la paix de La Jaunaie (17 février 1795), il va à son quartier général de Belleville, et dirige de nouvelles guérillas. Stofflet, brouillé avec lui, observe la paix qu'il a signée avec Hoche à Saint Florent le 17 mai 1795. Mais les agents du Capitaine d'Artois le contacteront à l'occasion du débarquement de Quiberon, et il se réconcilie avec Charette en septembre 1795.;;;;
 				18041021;;fr;;;6;W;fr=Défaite de Trafalgar.;;;;
 				18041202;;fr;;;6;W;fr=Victoire d'Austerlitz.;;;;
-				18071027;;fr;;;6;WP;fr=Traité de Fontainebleau. Le Portugal est partagé entre la France et l'Espagne.;;;;
+				18071027;;fr;;;6;W,P;fr=Traité de Fontainebleau. Le Portugal est partagé entre la France et l'Espagne.;;;;
 				18150618;;fr;;;6;W;fr=Napoléon qui avait attaqué en Belgique le 16 juin subit la défaite de Waterloo.;;;;
 				18480221;18490224;fr;;;6;W;fr=Guerre civile de février 1848. Cela commence par un défilé de protestation décidé par Louis Blanc et Ledru-Rollin, des émeutes s'en suivent dans Paris, le 24 février Louis-Philippe abdique, les émeutiers envahissent la Chambre, molestent la régente, et nomment un gouvernement provisoire. Un 2ème gouvernement se forme à l’Hôtel de ville, et à 20 heures le même jour, les deux gouvernements fusionnent et Lamartine proclame la République.;;;;
-				18600324;;fr;;;6;WP;fr=Traité de Turin. La France reçoit la Savoie et le Comté de Nice.;;;;
-				18700920;;fr;;;6;WP;fr=Échec de la tentative de paix à Ferrières entre Jules Favre et Bismarck.;;;;
-				18701104;;fr;;;6;WP;fr=Échec de la tentative de paix à Versailles entre Thiers et Bismarck.;;;;
-				18710226;;fr;;;6;WP;fr=Adolphe Thiers nouvellement élu chef du Pouvoir exécutif, signe avec Bismarck les préliminaires de la Paix.;;;;
-				18710403;;fr;;;6;WP;fr=Les Fédérés attaquent vers Versailles, mais sont arrêtes par le canon du Mont Valérien.;;;;
-				18710404;;fr;;;6;WP;fr=Les Versaillais attaquent Neuilly, prennent Courbevoie et Châtillon.;;;;
-				18710521;;fr;;;6;WP;fr=Les Versaillais entrent dans Paris par le bastion du Point du Jour.;;;;
-				18710522;18710528;fr;;;6;WP;fr=C'est la "Semaine Sanglante". Paris est conquis rue par rue. La dernière barricade tombe le 28 mai Rue Ramponeau.;;;;
+				18600324;;fr;;;6;W,P;fr=Traité de Turin. La France reçoit la Savoie et le Comté de Nice.;;;;
+				18700920;;fr;;;6;W,P;fr=Échec de la tentative de paix à Ferrières entre Jules Favre et Bismarck.;;;;
+				18701104;;fr;;;6;W,P;fr=Échec de la tentative de paix à Versailles entre Thiers et Bismarck.;;;;
+				18710226;;fr;;;6;W,P;fr=Adolphe Thiers nouvellement élu chef du Pouvoir exécutif, signe avec Bismarck les préliminaires de la Paix.;;;;
+				18710403;;fr;;;6;W,P;fr=Les Fédérés attaquent vers Versailles, mais sont arrêtes par le canon du Mont Valérien.;;;;
+				18710404;;fr;;;6;W,P;fr=Les Versaillais attaquent Neuilly, prennent Courbevoie et Châtillon.;;;;
+				18710521;;fr;;;6;W,P;fr=Les Versaillais entrent dans Paris par le bastion du Point du Jour.;;;;
+				18710522;18710528;fr;;;6;W,P;fr=C'est la "Semaine Sanglante". Paris est conquis rue par rue. La dernière barricade tombe le 28 mai Rue Ramponeau.;;;;
 				19140803;;fr;;;1;W;fr=L’Allemagne déclare la guerre à la France.;;;;
 				19181111;;fr;;;1;W;fr=La Guerre 14-18 prend fin. L’armistice de Rethondes est signé entre 5h20 et 5h30 du matin. Cessez-le-feu à 11h. (Cette guerre fut dévastatrice : la France fut le pays le plus touché, sur 100 hommes actifs, 10,5 furent tués ou disparus).;;;;
 				1966;;fr;;;6;W;fr=Retrait de la France du commandement militaire intégré de l'OTAN et expulsion des bases américaines du territoire.;;;;
 				200904;;fr;;;6;W;fr=La France fait son retour dans le commandement intégré de l'OTAN.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
-#			V = Batailles, faits d'armes	
+#			V = Batailles et faits d'armes mineurs.	
 				19780519;;fr;;;7;V;fr=Le président envoie des troupes parachutistes à Kolwezi au Zaïre, afin de libérer les occidentaux pris en otage par des rebelles au gouvernement zaïrois.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #	--------------------------------------------------------------------------------------------------------------------			
@@ -197,16 +197,16 @@
 				19320212;;fr;;;8;F;fr=Arrivée à Pékin de la Croisière Jaune.;;;;
 				19331107;;fr;;;8;F;fr=1er tirage de la Loterie Nationale.;;;;
 				19600101;;fr;;;8;F;fr=Passage au Nouveau Franc.;;;;
-				19621005;;fr;;;8;FP;fr=Election du président de la République au suffrage universel direct.;;;;
+				19621005;;fr;;;8;F,P;fr=Election du président de la République au suffrage universel direct.;;;;
 				19700702;;fr;;;8;F;fr=Fusion des trois constructeurs aéronautiques publics français (Sud-Aviation, Nord-Aviation et SEREB) pour former la Société nationale industrielle aérospatiale (SNIAS ou tout simplement « Aérospatiale »). Celle-ci s'associe la même année avec l'allemand Deutsche Airbus pour créer le consortium (sous forme de GIE) Airbus.;;;;
 				19720423;;fr;;;8;F;fr=Référendum organisé par Georges Pompidou approuvant l'élargissement de la CEE au Danemark, à la Norvège, à l'Irlande et au Royaume-Uni (68,3 % de oui mais avec 40 % d'abstentions).;;;;
 				19720424;;fr;;;8;F;fr=Création du Serpent monétaire européen.;;;;
 				197301;;fr;;;8;F;fr=La CEE devient l’Europe des 9 (Allemagne, Belgique, Danemark, Pays-Bas, Irlande, Italie, France, Luxembourg, Royaume-Uni). La Norvège reste en dehors de la CEE suite au rejet par référendum de l'adhésion par le peuple norvégien.;;;;
 				19730315;;fr;;;8;F;fr=Création du Service central de la sûreté des installations nucléaires (SCSIN). Mise en service à Marcoule de Phénix, première centrale française à neutrons rapides.;;;;
-				19740628;;fr;;;1;FG;fr=Vote de la loi fixant la majorité civile à 18 ans.;;;;
+				19740628;;fr;;;1;F,G;fr=Vote de la loi fixant la majorité civile à 18 ans.;;;;
 				19760429;;fr;;;8;F;fr=Fondation de la COGEMA (Compagnie Générale des Matières Nucléaires) et de l'Institut de protection et de sûreté nucléaire (IPSN).;;;;
-				19770627;;fr;;;2;FG;fr=Le territoire français des Afars et des Issars accède à l'indépendance.;;;;
-				19781205;;fr;;;8;FP;fr=Accord sur le Système monétaire européen (SME) qui établit un système de taux de change stable et ajustable entre les pays membres de la Communauté économique européenne.;;;;
+				19770627;;fr;;;2;F,G;fr=Le territoire français des Afars et des Issars accède à l'indépendance.;;;;
+				19781205;;fr;;;8;F,P;fr=Accord sur le Système monétaire européen (SME) qui établit un système de taux de change stable et ajustable entre les pays membres de la Communauté économique européenne.;;;;
 				19790313;;fr;;;8;F;fr=Création de l'ECU, l'unité de compte européenne.;;;;
 				20020101;;fr;;;8;F;fr=Passage à la monnaie unique (Euro).;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
@@ -364,8 +364,8 @@
 				17890716;;fr;;;3;P;fr=Création de la première Commune de Paris.;;;;
 				17890720;17890806;fr;;;2;P;fr=Grande Peur dans les campagnes, plusieurs centaines de châteaux pillés, notamment en Maine et Picardie.;;;;
 				17890804;;fr;;;0;P;fr=Nuit du 4 Août, abolition des privilèges.;;;;
-				17890826;;fr;;;0;PF;fr=Déclaration des Droits de l'Homme et du Citoyen.;;;;
-				17900115;;fr;;;4;PF;fr=Division de la France en 83 départements.;;;;
+				17890826;;fr;;;0;P,F;fr=Déclaration des Droits de l'Homme et du Citoyen.;;;;
+				17900115;;fr;;;4;P,F;fr=Division de la France en 83 départements.;;;;
 				17900213;;fr;;;6;P;fr=Suppression des ordres religieux.;;;;
 				17900315;;fr;;;6;P;fr=Suppression des droits seigneuriaux personnels.;;;;
 				17900521;;fr;;;4;P;fr=Création de la deuxième Commune de Paris (48 Sections remplaçant les 60 districts).;;;;
@@ -425,8 +425,8 @@
 				17931107;;fr;;;6;P;fr=La Vendée est renommée Vengé.;;;;
 				17931110;;fr;;;8;P;fr=Établissement du Culte de la Raison (ce culte n'est pas officiel, Robespierre n'y participe pas).;;;;
 				17931119;;fr;;;6;P;fr=Les biens des accusés sont déclarés nationaux, même avant le procès pour empêcher les donations en vifs faites par les accusés sûrs d'être mis à mort.;;;;
-				17940204;;fr;;;6;PS;fr=L'esclavage est aboli dans les Colonies.;;;;
-				17940215;;fr;;;6;PF;fr=Adoption du pavillon de marine : bleu-blanc-rouge comme drapeau national.;;;;
+				17940204;;fr;;;6;P,S;fr=L'esclavage est aboli dans les Colonies.;;;;
+				17940215;;fr;;;6;P,F;fr=Adoption du pavillon de marine : bleu-blanc-rouge comme drapeau national.;;;;
 				17940314;;fr;;;8;P;fr=Arrestation de 21 ultra-révolutionnaires ou hébertistes, du club des (nouveaux) Cordeliers (partisans de la Commune contre la Convention) : 19 exécutions le 24 mars dont Hébert et Cloots.;;;;
 				17940402;;fr;;;8;P;fr=Arrestation des "dantonistes" ou "vieux Cordeliers" : Danton, Camille-Desmoulins, Hérault de Séchelles, etc... (exécutés le 4 avril). Cette période a été appelée la Dictature de Robespierre : 02/04/1794-27/07/1794.;;;;
 				17940416;;fr;;;8;P;fr=Un décret stipule qu'aucun noble ne peut habiter Paris.;;;;
@@ -480,7 +480,7 @@
 				18511221;18511222;fr;;;6;P;fr=Louis-Napoléon élu pour 10 ans (7.439.216 oui et 646.737 non après un plébiscite au suffrage universel) (C'est le Second Empire - 2/12/1852-04/09/1870).;;;;
 				18520114;;fr;;;6;P;fr=Nouvelle Constitution.;;;;
 				18530701;;fr;;;8;P;fr=Le Baron Haussmann devient Préfet de la Seine.;;;;
-				18700904;19400710;fr;;;1;PF;fr=IIIe République;;;;
+				18700904;19400710;fr;;;1;P,F;fr=IIIe République;;;;
 				18700727;;fr;;;5;P;fr=Eugénie épouse de Napoléon III est nommée Régente pendant que son mari est à la guerre.;;;;
 				18700830;;fr;;;4;P;fr=Napoléon III est fait prisonnier à Sedan par les Allemands. Il sera libéré le 19 mars 1871 et s'établira à Camden Place (Chislehurst, à 20 km de Londres).;;;;
 				18700904;;fr;;;2;P;fr=C'est la fin du Second Empire, et le début de la IIIème République. Jules Favre, Gambetta, Jules Ferry (avec le Général Trochu, gouverneur de Paris), renversent la Régente et proclament la République. ;;;;
@@ -520,9 +520,9 @@
 				19581005;;fr;;;1;P;fr=Ve République;;;;
 				19690626;;fr;;;5;P;fr=Chaban-Delmas présente son programme « la nouvelle société » basé sur l'élargissement des libertés publiques, la participation dans les entreprises, l'accroissement des pouvoirs régionaux et le développement de la solidarité.;;;;
 				19690808;;fr;;;5;P;fr=Dévaluation du franc de 12,5 %.;;;;
-				19690916;;fr;;;5;PF;fr=Discours de politique générale de Jacques Chaban-Delmas qui exprime le souhait d'organiser une compétition véritable entre les deux chaînes de télévision de l'ORTF, et se traduit par la création de deux unités autonomes d’information puis par deux directions distinctes.;;;;
+				19690916;;fr;;;5;P,F;fr=Discours de politique générale de Jacques Chaban-Delmas qui exprime le souhait d'organiser une compétition véritable entre les deux chaînes de télévision de l'ORTF, et se traduit par la création de deux unités autonomes d’information puis par deux directions distinctes.;;;;
 				196912;;fr;;;5;P;fr=Loi sur l'actionnariat ouvrier chez Renault.;;;;
-				19730403;;fr;;;5;PF;fr=Georges Pompidou propose une réforme constitutionnelle ayant pour but de ramener le mandat présidentiel à cinq ans.;;;;
+				19730403;;fr;;;5;P,F;fr=Georges Pompidou propose une réforme constitutionnelle ayant pour but de ramener le mandat présidentiel à cinq ans.;;;;
 				19730531;;fr;;;5;P;fr=Le président Pompidou rencontre le président des États-Unis Richard Nixon à Reykjavik (Islande).;;;;
 				19740119;;fr;;;5;P;fr=La France sort du système Serpent monétaire européen.;;;;
 				19740703;;fr;;;5;P;fr=Fin de la politique d'incitation à l'immigration en France.;;;;
@@ -537,11 +537,11 @@
 				15390825;;fr;;;1;G;fr="Ordonnance de Villers-Cotterêts",rendue par François 1er et instituant l'obligation de tenir des registres de baptêmes (article 51) et de décès (dans certains cas) et d'employer la langue française (article 111). Autrefois appelée "Guillemine" ou "Guihelmine" du nom de son rédacteur Guillaume Poyet.;;;;
 				157905;;fr;;;1;G;fr="Ordonnance de Blois" promulguée par Henri III et imposant pour les mariages: célébration à l'église (catholique), obligation d'enregistrer les mariages, avec publication de bans, et citation de 4 témoins. Afin surtout d'éviter les mariages clandestins. ;;;;
 				166704;;fr;;;1;G;fr="Code Louis" ou Ordonnance de St Germain-en-Laye réglant la tenue des registres d'Etat Civil ;;;;
-				168308;;fr;;;1;GE;fr=Arrêt du Conseil d'Etat signé par Colbert, ordonnant de remettre aux greffes des baillages et sénéchaussées les registres d'Etat Civil tenus et détenus par les "Protestants", qui de ce fait devaient se convertir s'ils voulaient avoir un "état civil".;;;;
-				17811129;;fr;;;1;GE;fr=Edit de Versailles dit de "tolérance" rétablissant pour les Protestants le droit d'avoir leur état civil sans devoir se convertir au catholicisme.;;;;
+				168308;;fr;;;1;G,E;fr=Arrêt du Conseil d'Etat signé par Colbert, ordonnant de remettre aux greffes des baillages et sénéchaussées les registres d'Etat Civil tenus et détenus par les "Protestants", qui de ce fait devaient se convertir s'ils voulaient avoir un "état civil".;;;;
+				17811129;;fr;;;1;G,E;fr=Edit de Versailles dit de "tolérance" rétablissant pour les Protestants le droit d'avoir leur état civil sans devoir se convertir au catholicisme.;;;;
 				17920920;;fr;;;1;G;fr=Décret "qui détermine le mode de constater l'état-civil des citoyens": la tenue des registres est retirée aux autorités religieuses et c'est un officier public qui enregistrera les naissances, mariages et décès.Les cérémonies religieuses passent après les formalités civiles. Les tables décennales sont prévues.;;;;
 				18700318;;fr;;;1;G;fr=Circulaire créant le livret de Famille, suite à une période d'expérimentation, elle-même consécutive aux problèmes causés par l'incendie en 1871 détruisant les 2 exemplaires des registres de Paris.Ce livret permit de fixer l'orthographe des patronymes.;;;;
-				19750711;;fr;;;1;GS;fr=Institution du divorce par consentement mutuel.;;;;
+				19750711;;fr;;;1;G,S;fr=Institution du divorce par consentement mutuel.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #		Personnages significatifs		
 #			R = Rois, présidents	
@@ -658,12 +658,12 @@
 				19740402;;fr;;;5;U;fr=Le président du Sénat, Alain Poher, assure une nouvelle fois l'intérim de la présidence de la République.;;;;
 				19740716;;fr;;;5;U;fr=La journaliste Françoise Giroud devient la première secrétaire d'État à la condition féminine.;;;;
 				19760827;19810512;fr;;;5;U;fr=Gouvernement Barre.;;;;
-				19790610;;fr;;;5;UP;fr=Premières élections au suffrage universel au Parlement Européen. Simone Veil en devient la première présidente.;;;;
+				19790610;;fr;;;5;U,P;fr=Premières élections au suffrage universel au Parlement Européen. Simone Veil en devient la première présidente.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #		Art et culture		
-#			B = Peinture, photographie	
-				19691215;;fr;;;9;B;fr=Passionné par la culture et l'art, Georges Pompidou annonce la création d'un centre d'art contemporain à Paris (qui porte aujourd'hui le nom de centre Georges-Pompidou).;;;;
-				19770131;;fr;;;9;B;fr=Inauguration du centre Georges-Pompidou à Paris.;;;;
+#			J = Peinture, photographie	
+				19691215;;fr;;;9;J;fr=Passionné par la culture et l'art, Georges Pompidou annonce la création d'un centre d'art contemporain à Paris (qui porte aujourd'hui le nom de centre Georges-Pompidou).;;;;
+				19770131;;fr;;;9;J;fr=Inauguration du centre Georges-Pompidou à Paris.;;;;
 #	--------------------------------------------------------------------------------------------------------------------			
 #			N = Musique et danse	
 #	--------------------------------------------------------------------------------------------------------------------			
