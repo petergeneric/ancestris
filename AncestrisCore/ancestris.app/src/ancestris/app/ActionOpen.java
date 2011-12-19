@@ -25,6 +25,7 @@ public class ActionOpen extends Action2 {
     }
 
     /** constructor - good for button or menu item */
+    @SuppressWarnings("deprecation")
     public ActionOpen(URL url) {
         this.url = url;
         setTip(RES.getString("HINT_ActionOpen_file",URLDecoder.decode(url.getFile())));

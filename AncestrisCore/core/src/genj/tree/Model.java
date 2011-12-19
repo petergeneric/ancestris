@@ -259,6 +259,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
   /**
    * Nodes by range
    */
+    @SuppressWarnings("unchecked")
   public Collection<? extends TreeNode> getNodesIn(Rectangle range) {
     if (cache==null) 
       return new HashSet<TreeNode>();
@@ -540,6 +541,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
   /**
    * Fire event
    */
+    @SuppressWarnings("unchecked")
   private void fireNodesChanged(Collection nodes) {
     for (int l=listeners.size()-1; l>=0; l--) {
       (listeners.get(l)).nodesChanged(this, nodes);
@@ -675,6 +677,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
         fireNodesChanged(Collections.singletonList(node));
     }
   
+    @SuppressWarnings("unchecked")
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
       // a reference update?
       if (deleted instanceof PropertyXRef)

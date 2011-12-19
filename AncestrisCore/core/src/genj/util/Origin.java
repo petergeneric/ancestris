@@ -228,6 +228,7 @@ public abstract class Origin {
    *  http://host/dir/[archive.zip#example.ged]
    * </pre>
    */
+  @SuppressWarnings("deprecation")
   public String getName() {
     String path;
         try {

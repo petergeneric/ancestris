@@ -66,7 +66,7 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
         return null;
     }
 
-    public Cookie getCookie(Class clazz) {
+    public <T extends Cookie> T getCookie(Class<T>  clazz) {
         return GedcomDirectory.getInstance().getDummyNode(context).getCookie(clazz);
     }
 
