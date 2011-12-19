@@ -10,6 +10,7 @@ import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import java.net.URL;
+import java.net.URLDecoder;
 
 public class ActionOpen extends Action2 {
 
@@ -26,8 +27,8 @@ public class ActionOpen extends Action2 {
     /** constructor - good for button or menu item */
     public ActionOpen(URL url) {
         this.url = url;
-        setTip(RES.getString("HINT_ActionOpen_file",url.getFile()));
-        setText(RES.getString("CTL_ActionOpen_file",url.getFile()));
+        setTip(RES.getString("HINT_ActionOpen_file",URLDecoder.decode(url.getFile())));
+        setText(RES.getString("CTL_ActionOpen_file",URLDecoder.decode(url.getFile())));
         setImage(Images.imgOpen);
     }
 

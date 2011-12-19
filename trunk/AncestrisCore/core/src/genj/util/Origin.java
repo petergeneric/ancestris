@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,7 +229,12 @@ public abstract class Origin {
    * </pre>
    */
   public String getName() {
-    String path = back2forwardslash(url.toString());
+    String path;
+        try {
+            path = back2forwardslash(URLDecoder.decode(url.toString()));
+        } catch (Exception ex) {
+            path = url.toString();
+        }
     if (path.endsWith(""+FSLASH))
       path = path.substring(0, path.length()-1);
     return path.substring(path.lastIndexOf(FSLASH)+1);
