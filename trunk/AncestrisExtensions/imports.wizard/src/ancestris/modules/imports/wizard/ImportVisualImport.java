@@ -11,7 +11,7 @@ import org.openide.util.NbBundle;
 
 public final class ImportVisualImport extends JPanel {
 
-    Vector<Import> importList = new Vector();
+    Vector<Import> importList = new Vector<Import>();
     private File inputFile = null;
     private Import importClass = null;
 

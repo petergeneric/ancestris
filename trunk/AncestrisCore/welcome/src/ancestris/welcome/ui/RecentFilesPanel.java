@@ -145,6 +145,7 @@ public class RecentFilesPanel extends JPanel implements Constants {
             GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(2,2,2,2), 0, 0 ) );
     }
 
+    @SuppressWarnings("deprecation")
     private static class OpenGedcomFileAction extends ActionOpen {
         private GedcomFileInformation file;
         public OpenGedcomFileAction( GedcomFileInformation file ) {

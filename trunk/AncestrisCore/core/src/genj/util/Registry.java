@@ -617,6 +617,7 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
     /**
      * Returns a collection of strings by key
      */
+    @SuppressWarnings("unchecked")
     public Collection<String> get(String key, Collection<String> def) {
 
         // Get size of array
