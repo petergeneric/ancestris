@@ -3,10 +3,10 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Tools">
-            <file name="ancestris-modules-gedcomvalidate-GedcomValidateAction.instance">
-                <attr name="delegate" newvalue="ancestris.modules.gedcomvalidate.GedcomValidateAction"/>
-                <attr name="displayName" bundlevalue="ancestris.modules.gedcomvalidate.Bundle#CTL_GedcomValidateAction"/>
-                <attr name="iconBase" stringvalue="ancestris/modules/gedcomvalidate/ReportFO.png"/>
+            <file name="ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.instance">
+                <attr name="delegate" newvalue="ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.gedcom.gedcomvalidate.Bundle#CTL_GedcomValidateAction"/>
+                <attr name="iconBase" stringvalue="ancestris/modules/gedcom/gedcomvalidate/ReportFO.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -14,8 +14,8 @@
     </folder>
     <folder name="Menu">
         <folder name="Tools">
-            <file name="ancestris-modules-gedcomvalidate-GedcomValidateAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-gedcomvalidate-GedcomValidateAction.instance"/>
+            <file name="ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.instance"/>
                 <attr name="position" intvalue="95"/>
             </file>
         </folder>
