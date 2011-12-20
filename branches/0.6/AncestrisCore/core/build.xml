@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="ancestris.core" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project ancestris.core.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+   <property name="original.project.dir" value="genj-dev/app"/>
+<property name="original.project.jar"
+          value="${original.project.dir}/dist/GenJ.jar"/>
+
+<target name="release.disabled">
+    <echo message="Building ${original.project.dir}"/>
+    <ant dir="${original.project.dir}"
+        antfile="nb-build.xml"
+         target="jar" inheritall="false" inheritrefs="false"/>
+    <echo message="Done building ${original.project.dir}"/>
+
+    <copy todir="${cluster}/modules/ext"
+          file="${original.project.jar}"/>
+    <copy todir="${cluster}/modules/ext">
+    <fileset dir="${original.project.dir}/dist/lib" excludes="jhbasic*"/>
+    </copy>
+
+<!--    <copy todir="${cluster}/report" >
+    <fileset dir="${original.project.dir}/nbbuild/classes"
+        excludes="META-INF/**,contrib/**,doc/**,genj/**,launcher/**,spin/**,swingx/**"
+        />
+    </copy>
+--></target>
+
+   <target name="compile" depends="projectized-common.compile,-post-compile"></target>
+     <target name="-post-compile">
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}/../images"/>
+        </copy>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}/../" includes="contrib/**"/>
+        </copy>
+
+    </target>
+
+<target name="clean.disabled" depends="projectized-common.clean">
+    <echo message="Cleaning ${original.project.dir}"/>
+    <ant dir="${original.project.dir}"
+         target="clean" inheritall="false" inheritrefs="false"/>
+    <echo message="Done cleaning ${original.project.dir}"/>
+</target>
+
+    <import file="${suite.dir}/nbproject/ancestris-tasks.xml"/>
+    <target name="jar" depends="ancestris-tasks.jar" />
+</project>

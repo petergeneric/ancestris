@@ -1,0 +1,251 @@
+# ---------------- A L M A N A C H     B R E T O N  ------------------
+#
+# IMPORTANT :
+# Ce fichier doit être édité avec un éditeur capable d'utiliser 
+# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou 
+# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre 
+# les caractères spéciaux utilisés dans certaines langues, les lettres 
+# accentuées notamment (comme l'allemand, le français, l'espagnol, 
+# etc...)
+#
+# Le format de ce fichier est le suivant :
+#
+# Toutes les lignes vides et celles commençant par "#" sont considérées 
+# comme des commentaires et donc sont ignorées.
+#
+# On doit trouver un événement historique par ligne avec au minimum 6 
+# paramètres séparés par un point-virgule ";"
+#
+# Paramètre #1 : Date de départ de l'événement. Le format a utiliser est : 
+#                YYYYMMDD (année, mois et jour)
+#                Les formats YYYYMM et YYYY sont autorisés.
+#                (Si la date n'est pas indiquée la totalité de la ligne
+#                est ignorée)
+# Paramètre #2 : Date de fin de l'événement. Le format a utiliser est :
+#                YYYYMMDD (année, mois et jour)
+#                Les formats YYYYMM et YYYY sont autorisés.
+# Paramètre #3 : Le pays(code iso) concerné par cet événement
+#                Vous pouvez consulter cette url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algérie
+#                de : Allemagne
+#                ad : Andorre
+#                be : Belgique
+#                ca : Canada
+#                es : Espagne
+#                us : Etats-Unis d'Amérique
+#                fr : France
+#                it : Italie
+#                lu : Luxembourg
+#                no : Norvege
+#                pl : Pologne
+#                gb : Royaume uni
+#                se : Suede
+#                ch : Suisse
+# Paramètre #4 : L'importance de cet événement (un chiffre positif à 
+#                choisir entre 0 et 9), avec :
+#                0 = événement d'une importance majeure. Cet événénement 
+#                    sera toujours affiché.
+#                1 = événement moins important.
+#                2 = événement encore moins important.
+#                etc...
+# Paramètre #5 : Le type d'événement, avec :
+#                W = Guerre
+#                P = Evénement politique
+#                B = Anniversaire
+#                D = Décès
+#                X = Mariage
+#                I = Invention
+#                Y = Découverte
+#                F = Fondation
+#                E = Evénements divers
+#                R = Règnes
+#                Une liste de différents types est autorisée, ainsi WP 
+#                sera utilisé pour décrire un événement ayant une 
+#                connotation de guerre avec des conséquences politiques 
+#                importantes.
+# Paramètre #6 : Une description de l'événement dans un langage donné - 
+#                il faut utiliser un préfix avec un code ISO-639 
+#                obligatoirement, ainsi :
+#                de = Allemand
+#                en = Anglais
+#                fr = Français
+#                it = Italien
+# Paramètre #7+: De plus amples descriptions de l'événément en 
+#                différentes langues (à nouveau en les séparant par un 
+#                point-virgule ';')
+#
+# Voici un exemple pour la suppression de la capitation en 1698.
+#
+# 1698;;fr;1;P;fr=Bretagne - Suppression de la « capitation ».
+#
+#
+# Note de l'auteur : Vous êtes encouragé à rajouter des événements, 
+#                    mais il vous est demandé de ne pas en supprimer.
+#                    Attention de ne pas utiliser le point virgule (;) 
+#                    dans vos textes, car le point virgule est un 
+#                    "séparateur", comme je l'ai indiqué plus haut. 
+#                    Merci. F. Massonneau../.
+#
+#                    Contributeurs :
+#                    Voici une liste des personnes ayant contribué à 
+#                    créer, faire des ajouts, des modifications de ce 
+#                    fichier (par ordre alphabétique) :
+#                         . Serge Prigent : a créé cet almanach breton.
+#
+#                    Dernière mise à jour : 27/11/2011
+#
+#
+#==============================================================================
+#
+#
+# I - Political Informations (abbr. P)
+#
+13650115;;fr;1;P;fr=Bretagne - Le second traité de Guérande est signé le 15 janvier 1381 et ratifié le 4 avril. Le duc Jean IV de Bretagne recouvre ses biens, contre l’hommage prêté au roi de France, le versement d’une indemnité et le renvoi des conseillers anglais. Neutralité de la Bretagne.
+14810510;;fr;0,P;fr=Bretagne - François II et Edouard IV d'Angleterre signent un traité d'alliance contre Louis XI. Anne de Bretagne est promise en mariage au prince de Galles, ou à défaut à son frère cadet, le duc d'York.
+148701;;fr;3;P;fr=Bretagne - Louis d'Orléans s'échappe de la cour de France et se réfugie en Bretagne.
+14880728;;fr;3;P;fr=Bretagne - Défaite de l'armée bretonne à Saint-Aubin-du-Cormier. Le duc d'Orléans est fait prisonnier par les Français.
+14890210;;fr;1;P;fr=Bretagne - Anne de Bretagne est couronné duchesse de Bretagne à la cathédrale de Rennes.
+14901027;;fr;1;P;fr=Bretagne - La duchesse Anne de Bretagne adhère à la ligue formée contre Charles VIII, roi de France, par Maximilien d'Autriche et Henri VII d'Angleterre.
+149203;149206;fr;2;P;fr=Bretagne - Complot breton ayant pour but de livrer la Bretagne aux Anglais.
+14931229;;fr;1;P;fr=Bretagne - Charles VIII supprime la Chancellerie de Bretagne.
+14980409;;fr;1;P;fr=Bretagne - Anne de Bretagne rétablit la Chancellerie. Le 27 mai 1498 : Louis d'Orléans est sacré roi de France et devient Louis XII.
+14980928;;fr;2;P;fr=Bretagne - Anne de Bretagne préside les États de Bretagne à Rennes.
+1518;;fr;1;P;fr=Bretagne - Voyage de François I en Bretagne avec une visite à Morlaix consacrant ainsi la réunion définitive du duché a la France.
+15320814;;fr;0;P;fr=Bretagne - Les États de Bretagne, convoqués par François Ier à Vannes après le couronnement du dauphin comme duc de Bretagne à Rennes, adressent au monarque une supplique pour « unir et joindre par union perpétuelle iceluy pays et duché de Bretagne au royaume, le suppliant de garder et entretenir les droits, libertés et privilèges dudit pays et duché ». Cette requête, présentée au roi dans la grande salle du palais épiscopal de la Motte, est acceptée par une lettre donnée à Vennes (sic) le 4 août 1532.
+15480813;;fr;2;P;fr=Bretagne - Finistère, Roscoff, Le 7 août 1548 débarquement de Marie STUART. Marie de Lorraine, le coeur gros, remet sa fille, âgée de six ans, à Philippe de Maillé Brézé, qui est chargé de la conduire en France. les galères du roi atteignent sans encombre le port breton de Roscoff, prenant de surprise les Anglais qui les attendaient au large de Calais.
+15980813;;fr;0;P;fr=Bretagne - Nantes, Henri IV met un terme aux luttes de religions en signant l'édit de NANTES.
+16150418;;fr;1;P;fr=Bretagne - Rennes, la sédition éclate à Rennes et se signale par le pillage des bureaux du Timbre et du Tabac.
+1667;;fr;0;P;fr=France - Louis XIV promulgue en 1667 l’Ordonnance de Saint Germain en Laye, qui participe du Code Louis et exige la tenue des registres paroissiaux en double, à la suite et sans blanc pour éviter les fraudes et pouvoir pallier la destruction d'un dossier. Une copie doit être déposée à la sénéchaussée ou bailliage. L'objectif de Louis XIV aurait été de permettre un recensement de la population. Beaucoup de collections communales commencent en 1667, bien que la tenue de « registres des baptêmes et des sépultures » date de l'ordonnance de Villers-Cotterêts donnée en de 1539 par François Ier de France. Les registres de mariages avaient été créés par l'l'Ordonnance de Blois de 1579.
+1669;;fr;2;P;fr=Bretagne - Le duc de Chaulmes est gouverneur de la Bretagne jusqu’en 1694, il dirigea la répression des révoltes de 1675 (Papier timbré, Bonnets rouges).
+1673;;fr;2;P;fr=France - Aux Etats de 1673, l’assemblée ne fait pas opposition à l’édit qui institue l’obligation du papier timbré pour divers actes.
+1681;;fr;1;P;fr=Bretagne - Finistère, Réglementation sur le ramassage et la cueillette du goëmon par Colbert. le goémon est la source de nombreux textes législatifs et procéduriers, dont l’Ordonnance de la Marine de Colbert, qui définit trois catégories : le goémon-épave, constitué par les algues arrachées par la mer et rejetées sur le rivage, libres de droit et de collecte, le goémon de coupe, qui ne peut être récolté que par les habitants des paroisses sur le territoire desquelles se trouvent lesdits rochers, enfin, le "goémon de fond", principalement les laminaires, peu exploité à cause des moyens techniques nécessaires.
+1695;;fr;1;P;fr=Bretagne - C’est Louis Alexandre de Bourbon, Comte de Toulouse, fils légitimé de Louis XIV qui est gouverneur de Bretagne.
+1698;;fr;1;P;fr=Bretagne - Suppression de la « capitation ».
+1701;;fr;2;P;fr=France - Institution du tirage au sort pour le recrutement dans l’armée. Réapparition de la « capitation » qui frappe surtout le Tiers-Etat.
+1717;;fr;1;P;fr=Bretagne - la conspiration de Pontcallec est une tentative de soulèvement d'origine anti-fiscale survenue en Bretagne en 1718–1720, au début de la Régence. Menée par une partie de la petite noblesse bretonne, elle a entretenu des liens encore mal définis avec la conspiration de Cellamare, visant à renverser le Régent au profit de Philippe V d'Espagne. Mal préparée, elle échoue et quatre de ses meneurs sont décapités à Nantes.
+1756;;fr;1;P;fr=Bretagne - Le duc d’Aiguillon est gouverneur de la Bretagne.
+1764;;fr;1;P;fr=Bretagne - La Chalotais, procureur général du Parlement de Rennes s’oppose au gouverneur d’Aiguillon. L’autorité royale se voit entamée, la révolution est en marche.
+1769;;fr;1;P;fr=Bretagne - Morbihan, Lorient, Dissolution de la Compagnie des Indes Orientales.
+17900304;;fr;1;P;fr=France - Dès le 11 novembre 1789, l’Assemblée nationale constituante adopte le découpage en départements dont les noms sont choisis en fonction de la géographie et de l’hydrographie. La France fut découpée en départements à la suite du décret du 22 décembre 1789. Leur nombre exact (83) et leurs limites furent publiés le 26 février 1790, et leur existence prit effet le 4 mars 1790.
+179208;;fr;1;P;fr=France - Création de la commune. En septembre, proclamation de la République.
+17930121;;fr;0;P;fr=France - Mort du roi Louis XVI sur l’échafaud. Le 16 octobre, la reine est guillotinée.
+#
+#
+# II - War Events (abbr. W)
+#
+13781218;;fr;1;W;fr=Bretagne - Du Guesclin refuse l’annexion de la Bretagne à la France. Le 18 décembre 1378, Charles V, roi de France décide de proclamer la réunion de la Bretagne au Domaine royal. L’affaire de Bretagne commence. De nombreux nobles bretons refusent l’annexion et forment une ligue les 25 et 26 avril 1379 Source : Le Télégramme de Brest, dimanche 4 mars 2001. Par Frédéric Morvan.
+148705;;fr;3;W;fr=Bretagne - Une armée française de 15 000 hommes envahit la Bretagne.
+149105;149110;fr;2;W;fr=Bretagne - Les Français se rendent maîtres de la Bretagne à l'exception de la ville de Rennes.
+14911115;;fr;2;W;fr=Bretagne - Signature du traité de Rennes qui conclut la paix entre Anne de Bretagne et Charles VIII.
+15220307;;1;W;fr=Bretagne - Finistère, Morlaix, mise à sac de la ville par les anglais.
+1576;1594;fr;1;W;fr=Bretagne - Guerre de la ligue. La Ligue ou Sainte Ligue ou Sainte Union est un mouvement religieux et politique qui regroupe les catholiques français de 1576 à 1594, lors des guerres de Religion. La population entière de Bretagne va combattre pour sa foi et pour le Duc de Mercoeur contre le Roi. Des brigands tels le sieur de La Fontenelle, vont ravager le pays. En province les derniers chefs de la Ligue se soumettent en 1598.
+1597;;fr;1;W;fr=Bretagne - Fin des guerres de la Ligue.
+1694;;fr;1;W;fr=Bretagne - Finistère, la flotte anglos-hollandaise est repoussée devant Camaret (défense organisée par Vauban).
+17780728;;fr;1;W;fr=Bretagne - Finistère, la première bataille d'Ouessant a lieu le 27 juillet 1778, à 100 milles marins à l'ouest de l'île d'Ouessant, au cours de la Guerre d'indépendance des États-Unis. La France est alliée aux jeunes États-Unis et veut affaiblir la puissance maritime et coloniale du Royaume de Grande-Bretagne. C'est le premier grand affrontement entre les deux marines lors de ce conflit. Cette bataille est très attendue par l'opinion française qui vit dans l'attente de la revanche depuis les défaites de la Guerre de Sept Ans. L'armée navale du roi de France est commandée par le lieutenant général Louis Guillouet d'Orvilliers. La flotte britannique est sous les ordres du vice-amiral Augustus Keppel. Combat de la frégate « La Belle Poule » contre une frégate anglaise devant Plouescat.
+1793;;fr;1;WP;fr=Bretagne - Née dans le Léon en 1793 suite à l’exécution de Louis XVI, la Chouannerie, doit son nom au hululement du chat-huant, cri de ralliement de ses partisans. Ses chefs (le marquis de la Rouërie, Cadoudal…) aux fondements royalistes, refusent la conscription et la persécution des prêtres qui ne reconnaissent pas la Constitution Civile du Clergé. Insurrection dans le Léon, provoquée par une levée d’hommes appelés à défendre les frontières de la nation. La nomination de Landerneau comme chef-lieu de département donne à la ville une certaine importance, mais ce rôle est éphémère et ne dure que quelques mois.
+17940522;;fr;1;WP=Bretagne - Finistère, Brest, Le 3 prairial an II en représailles de la fronde Girondine, vingt-six administrateurs du département du Finistère sont guillotinés à Brest, place du Château à l'époque rebaptisée: " Place du triomphe du Peuple ". Les quatre autres, absents du département au moment du procès, eurent la vie sauve.
+17950623;17950721;fr;1;WP;fr=Bretagne - Morbihan, Quiberon, le débarquement des émigrés à Quiberon débuta le 23 juin et fut définitivement repoussé le 21 juillet 1795. Organisé afin de prêter main-forte à la Chouannerie et à l'armée catholique et royale en Vendée, il espérait soulever tout l'Ouest de la France afin de mettre fin à la Révolution française et de permettre le retour de la monarchie. Cette opération militaire de contre-révolution eut un grand retentissement, et porta un coup funeste au parti royaliste. La Convention avisée du complot dépêche Hoche à Quiberon qui fait prisonnier les insurgés et les immigrés. La Convention refuse leur grâce et les fait tous fusiller.
+18040625;;fr;1;WP;fr=France, Bretagne - Morbihan, Georges Cadoudal général Chouan, né à Brech (56) le 1er janvier 1771 est guillotiné le 25 juin 1804 à Paris. 
+#
+#
+# III - Founding Events (abbr. F)
+#
+16640827;;fr;1;F;fr=Bretagne - Colbert fonde la Compagnie des Indes Orientales. Comme l’Angleterre et la Hollande, la France fonde une compagnie destinée à assurer son monopole commercial sur certains produits des Indes orientales. Sa création avait pour but de donner à la France un outil de commerce international avec l'Asie et de concurrencer les puissantes Compagnies européennes fondées au XVIIe siècle, comme la Compagnie anglaise des Indes orientales et surtout la Compagnie hollandaise des Indes orientales. La compagnie française des Indes Orientales voit donc le jour, avec un capital initial de 8,8 millions de Livres.
+1666;;fr;1;F;fr=Bretagne - Lorient est créé pour servir de chantier de constructions navales, et de port à la Compagnie des Indes ou de l’Orient que Colbert vient de  fonder.
+1752;;fr;1;F;fr=France - Création de l’Académie de Marine.
+#
+#
+# IV - Discovery Events (abbr. Y)
+#
+15340510;15340905;fr;1;Y;fr=Bretagne - Ille-et-Vilaine, Saint Malo, Jacques CARTIER parti de Saint-Malo le 20 Avril 1534 aborde les côtes de Terre-Neuve le 10 mai. Il explore l'estuaire d'un fleuve qu'il nomme le Saint Laurent puis aborde le Labrador. Il prend possession de cette terre au nom du roi de France et la nomme "Canada" du mot iroquois Kanata qui signifie village. Le 5 septembre 1534 il est de retour au port de Saint-Malo.
+#
+#
+# V - Invention Events (abbr. I)
+#
+#
+#
+# VI - Birthdays (abbr. B)
+#
+14770125;;fr;1;B;fr=Bretagne - Naissance d'Anne de Bretagne à Nantes.
+#
+#
+# VII - Weddings (abbr. X)
+#
+14710626;;fr;1;X;fr=Bretagne - Mariage de François II, duc de Bretagne, et de Marguerite de Foix, fille de Gaston IV, comte de Foix, et d'Eléonore d'Aragon, héritière de Navarre.
+14901219;;fr;2;X;fr=Bretagne - Mariage par procuration de la duchesse Anne de Bretagne et de Maximilien d'Autriche (Maximilien Ier de Habsbourg).
+14911226;;fr;2;X;fr=Bretagne - Mariage d'Anne de Bretagne et de Charles VIII.
+14990118;;fr;1;X;fr=France - Mariage d'Anne de Bretagne et de Louis XII.
+16001217;;fr;1;X;fr=France - Mariage de Henri IV avec Marie de Médicis.
+#
+#
+# VIII - Deaths (abbr. D)
+#
+16100514;;fr;1;D;fr=France - Henri IV meurt assassiné par François Ravaillac, un catholique fanatique, dans la rue de la Ferronnerie à Paris.
+#
+#
+# IX - Misc. Events (abbr. E)
+#
+1348;;fr;2;E;fr=Bretagne - La première grande offensive de la peste.
+14980407;;fr;2;E;fr=Décès du roi de France Charles VIII.
+15140109;;fr;1;E;fr=France - Décès d'Anne de Bretagne.
+1521;;fr;1;E;fr=Bretagne - Finistère, Daoulas, épidémie de peste.
+1555;1558;fr;2;E;fr=Bretagne - Finistère, Sizun, construction de l'arc de triomphe, le plus beau du genre en Bretagne, très représentatif de l'art de la Renaissance bretonne.
+1596;;fr;1;E;fr=Bretagne - Les pluies abondantes provoquant de mauvaises récoltes.
+1597;1627;fr;2;E;fr=Bretagne - Une épidémie de peste touche la Bretagne et fait des milliers de victime. En 1590 et 1627 la peste cause de graves ravages dans le Léon (Finistère) et principalement à PLOUESCAT et CLEDER GUIMAËC, PLOUGOUVEN, PLOUJEAN, jusqu’en 1640. Beaucoup de morts ne sont plus enregistrés, les prêtres eux aussi sont touchés. Il y a des trous importants dans les registres paroissiaux de 1590 à 1627, des familles complètes son décimées. Seul est nom est donné avec le nombre de victimes sans précision. En deux ans 510 décès sont comptabilisés à PLOUESCAT.
+1625;;fr;2;E;fr=Bretagne - Finistère, épidémies de peste autour de Morlaix, Plouescat, Cléder.
+1631;;fr;1;E;fr=Bretagne - Finistère, Brest, Richelieu décide de faire de Brest un port militaire.
+1655;;fr;2;E;fr=Bretagne - Rennes, Fin de construction du Parlement de Bretagne, commencé en 1618 d’après les plans de l’architecte parisien Salomon de Brosse.
+1661;;fr;3;E;fr=Bretagne - Finistère, apparition des artichauts en culture dans le Léon.
+1663;;fr;2;E;fr=Bretagne - La Bretagne accueille les « déportés » acadiens.
+1675;;fr;1;E;fr=Bretagne - Finistère, Le prestige que Louis XIV offre à la France se trouve être fort onéreux. Dans le but de renflouer les caisses de l’état, Colbert décrète que tout acte devra être désormais rédigé sur papier timbré. Il réinstaure également sur le tabac et la vaisselle d’étain des droits que la Bretagne avait racheté deux millions de livres. Nouvelle d’une révolte à Bordeaux contre les nouvelles taxes. A Rennes et à Nantes la foule saccage les bureaux du timbre et du tabac. En juin, une véritable jacquerie éclate dans les campagnes de Cornouaille. Les paysans de nombreuses paroisses, qu’on appellera les Bonnets rouges, se révoltent non seulement contre les nouveaux impôts mais aussi contre les seigneurs et les gens des villes, dont les abus les exaspèrent. Un des meneurs se nomme Sébastien Le Balp dans le pays de Carhaix. Le parlement se verra exilé à Vannes.
+1686;;fr;2;E;fr=Bretagne - Finistère, Brest, Le roi de Siam à Brest.
+1693;1694;fr;2;E;fr=Bretagne - Finistère, les mauvaises conditions climatiques entrainenet de  mauvaises récoltes deux années de suite.
+17070330;;fr;1;E;fr=France - Mort de Vauban (Sébastien Le Prestre de Vauban est né le 4 mai 1633 dans le Morvan, à Saint-Léger-de-Foucherets), Maréchal de France, constructeur de plusieurs places fortes en Bretagne.
+1709;;fr;1;E;fr=France, Bretagne - Finistère, l'hiver est terrible dans toute la France. Les rivières gèlent, les moulins ne tournent plus. Des centaines de personnes meurent de froid dans tout le royaume.
+1710;;fr;1;E;fr=Bretagne - Finistère, Brest compte 1300 maisons et 14000 habitants.
+17150901;;fr;0;E;fr=France - Après une semaine de lente agonie, Louis XIV s’éteint à Versailles le 1er septembre 1715 à 8h15 du matin, peu avant son 77e anniversaire. Un règne de 72 ans s’achève, le plus long de l’Histoire de France. Un autre règne presqu’aussi long commence : celui de Louis XV (1715-1774). Début de la régence du duc d’Orléans.
+1736;;fr;1;E;fr=Bretagne - Finistère, Morlaix, Début de la construction de la manufacture des tabacs à Morlaix par la Compagnie des Indes.
+1741;1743;fr;1;E;fr=Bretagne - Finistère, Irvillac, épidémies de typhus et de dysenterie. L’arrivée d’un bateau à Brest entraîne une grave épidémie de typhus. A Irvillac on compte 78 victimes en octobre, puis 20 en novembre. Au total 302 victimes sont dénombrées sur la paroisse dont 147 hommes et 155 femmes. 119 enfants de moins de 10 en font partie.
+1750;;fr;2;E;fr=Bretagne - Finistère, Mauvaises conditions climatiques, mauvaises récoltes.
+1751;;fr;1;E;fr=Bretagne - Finistère, Brest nouvelle épidémie de typhus apporté à Brest par des équipages contaminés.
+1757;;fr;0;E;fr=Bretagne - Finistère, Brest, la maladie du typhus apportée à Brest par une escadre en provenance du Canada fait rage et se répand dans toute la Bretagne. Elle se fixe durablement et continue de sévir périodiquement jusqu’au XIX siècle.
+1776;;fr;1;E;fr=Bretagne - Finistère, nouvelle épidémie de typhus et de dysenterie dans le diocèse du Léon.
+1780;;fr;1;E;fr=Bretagne - Grave épidémie de dysenterie qui depuis 1779, provoque la mort de 132000 personnes.
+1788;;fr;1;E;fr=France - Hiver terrible sur la France, le gel dure 86 jours à Paris, la température descend à moins 31,8°C.
+1789;;fr;1;E;fr=France - Bretagne, Convocation des Etats Généraux, La révolution française se voit chaleureusement accueillie en Bretagne, elle débute à Rennes dans le sang.
+#
+#
+#
+# X - Reigns of the French Kings (abbr. R)
+#
+## Les Mérovingiens (447-751)
+#
+# Les Carolingiens (751-987)
+#
+# Les Capétiens (987-1328)
+1297;;fr;3;R;fr=Bretagne - La Bretagne de Jean II devient un duché de France.
+#
+# Les Valois (1328-1589)
+14920228;;fr;0;R;fr=Bretagne - Anne de Bretagne est couronnée reine de France à Saint-Denis.
+15041118;;fr;0;R;fr=France - Anne de Bretagne est reine de France pour la deuxième fois.
+#
+# Les Bourbons (1589-1792), l'Ancien Régime
+#
+# La Révolution française (1792-1804)
+#
+# Le 1er Empire (1804-1814)
+#
+# Retour des Bourbons (1814-1848), La Restauration
+#
+# IIe République et 2nd Empire (1848-1870)
+#
+# L'époque moderne (1870-à nos jours)
+#
+#
+#
+#
+#
+#
+#=================================== END OF FILE ==============================
+
