@@ -184,7 +184,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         jLabel4.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel4.text")); // NOI18N
 
-        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13));
+        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13)); // NOI18N
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText(getContributors());
         jLabel12.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -205,8 +205,8 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabel4.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel4.AccessibleContext.accessibleName")); // NOI18N
@@ -422,7 +422,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         return NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors.text",
                 "<br>"+contributors.replaceAll(",", "<br>"),
-                "<br>"+translators.replaceAll(",", "<br>")); // NOI18N
+                "<br>"+translators.replaceAll(",", "<br>")+"<br><br><br>"+"-:-:-:-:-:-:-:-:-:-:-:-:-"+"<br><br><br>"); // NOI18N
     }
 
     private JScrollPane getScrollableText(String text){
