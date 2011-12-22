@@ -422,7 +422,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         return NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors.text",
                 "<br>"+contributors.replaceAll(",", "<br>"),
-                "<br><br>"+"<br>"+translators.replaceAll(",", "<br>")+"<br><br>"); // NOI18N
+                "<br>"+translators.replaceAll(",", "<br>")+"<br><br><br>"+"-:-:-:-:-:-:-:-:-:-:-:-:-"+"<br><br><br>"); // NOI18N
     }
 
     private JScrollPane getScrollableText(String text){
