@@ -26,7 +26,7 @@ public final class OpenFamilyGroupsAction implements ActionListener {
         context = App.center.getSelectedContext(true);
         if (context != null) {
             if (modulePreferences.getInt("minGroupSize", -1) == -1) {
-                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(FamilyGroups.class, "FlashListPanel.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
+                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(FamilyGroups.class, "OpenFamilyGroupsAction.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
 
                 OptionsDisplayer.getDefault().open("Extensions/FamilyGroups");
