@@ -63,6 +63,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         placeFormat = new ancestris.modules.beans.APlaceFormatBean();
         cbAutoCommit = new javax.swing.JCheckBox();
         cbAddNameSubtags = new javax.swing.JCheckBox();
+        jLabel10 = new javax.swing.JLabel();
+        jtGivenTag = new javax.swing.JTextField();
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.text")); // NOI18N
         jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.toolTipText")); // NOI18N
@@ -193,6 +195,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
         cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel10, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel10.text")); // NOI18N
+
+        jtGivenTag.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtGivenTag.text")); // NOI18N
+        jtGivenTag.setMinimumSize(new java.awt.Dimension(64, 23));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -235,7 +242,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
                             .addComponent(jCheckBox2)
                             .addComponent(cbCreateSpouse)
                             .addComponent(cbAutoCommit)
-                            .addComponent(cbAddNameSubtags)))
+                            .addComponent(cbAddNameSubtags)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -284,7 +295,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addComponent(cbAutoCommit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAddNameSubtags)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -297,11 +312,13 @@ final class OptionDataPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 773, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -330,6 +347,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jCheckBox19.setSelected(ancestris.app.Options.isWriteBOM());
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
         cbAddNameSubtags.setSelected(genj.gedcom.Options.getInstance().getAddNameSubtags());
+        jtGivenTag.setText(genj.gedcom.Options.getInstance().getGivenTag());
     }
 
     void store() {
@@ -359,6 +377,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
         genj.gedcom.Options.getInstance().setAddNameSubtags(cbAddNameSubtags.isSelected());
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
+        gedcomOptions.setGivenTag(jtGivenTag.getText().trim());
     }
 
     public boolean valid() {
@@ -374,6 +393,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
@@ -395,6 +415,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField jtGivenTag;
     private javax.swing.JTextField jtSubmitterName;
     private ancestris.modules.beans.APlaceFormatBean placeFormat;
     // End of variables declaration//GEN-END:variables
