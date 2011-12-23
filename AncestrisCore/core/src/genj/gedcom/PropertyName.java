@@ -97,6 +97,31 @@ public class PropertyName extends Property {
     }
 
     /**
+     * Returns the name given to an Individual.
+     * @return
+     */
+    public String getGivenName(){
+        String tagGiven = Options.getInstance().getGivenTag();
+        String firstNames[] = firstName.split(" ");
+        String given = null;
+        if (tagGiven.isEmpty()){
+            for (String first:firstNames){
+
+                if (first.matches("\"[^\"]*\"")||
+                        first.matches("<[^>]*>")||
+                        first.matches("\\[[^\\]]*\\]")
+                        ){
+                    given = first.substring(1,first.length()-1);
+                    break;
+                }
+            }
+        } else if (getProperty(tagGiven) != null){
+            given = getProperty(tagGiven).getValue();
+        }
+        return (given==null?firstNames[0]:given);
+    }
+
+    /**
      * Returns <b>true</b> if this property is valid
      */
     @Override
@@ -479,6 +504,11 @@ public class PropertyName extends Property {
         // ... format ok
         String s = l.substring(l.indexOf('/') + 1);
         l = l.substring(0, l.indexOf('/'));
+
+        String npfx = getPropertyValue("NPFX");
+        if (npfx != null && !npfx.isEmpty() && f.startsWith(npfx+" ")){
+            f = f.substring(npfx.length()+1);
+        }
 
         // If has prefix, then name is not easily parsable, so get sub tag values
         if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {

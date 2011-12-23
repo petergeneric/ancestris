@@ -214,7 +214,15 @@ public class Options extends OptionProvider {
         return getPreferences().get(ADD_NAME_SUBTAGS, false);
     }
 
-private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
+    private static final String GIVEN_TAG   = "gedcom.givenNameTag";         // NOI18N
+    public void setGivenTag(String value) {
+        getPreferences().put(GIVEN_TAG, value);
+    }
+    public String getGivenTag() {
+        return getPreferences().get(GIVEN_TAG, "NICK");
+    }
+
+    private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
     }
