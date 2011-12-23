@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: ancestris.modules.console
 OpenIDE-Module-Layer: ancestris/modules/console/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/console/Bundle.properties
