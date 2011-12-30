@@ -46,7 +46,7 @@ public class PropertyName extends Property {
             firstName = "",
             suffix = "";
     // XXX:nameValue should probably be replaced by nameAsString
-    private String nameValue;
+    private String nameTagValue;
     /** the name if unparsable */
     private String nameAsString;
     private boolean mutePC = false;
@@ -93,8 +93,19 @@ public class PropertyName extends Property {
      * the first name
      */
     public String getFirstName() {
-        return firstName;
+        return getFirstName(false);
     }
+
+    /**
+     * the first name
+     */
+    public String getFirstName(boolean displayValue) {
+        if (displayValue)
+            return firstName.replaceAll(" *, *", " ");
+        else
+            return firstName;
+    }
+
 
     /**
      * Returns the name given to an Individual.
@@ -102,19 +113,19 @@ public class PropertyName extends Property {
      */
     public String getGivenName(){
         String tagGiven = Options.getInstance().getGivenTag();
-        String firstNames[] = firstName.split(" ");
+        String firstNames[] = firstName.split(",");
         String given = null;
         if (tagGiven.isEmpty()){
-            for (String first:firstNames){
-
-                if (first.matches("\"[^\"]*\"")||
-                        first.matches("<[^>]*>")||
-                        first.matches("\\[[^\\]]*\\]")
-                        ){
-                    given = first.substring(1,first.length()-1);
-                    break;
+                for (String first:firstNames){
+                    first = first.trim();
+                    if (first.matches("\"[^\"]*\"")||
+                            first.matches("<[^>]*>")||
+                            first.matches("\\[[^\\]]*\\]")
+                            ){
+                        given = first.substring(1,first.length()-1);
+                        break;
+                    }
                 }
-            }
         } else if (getProperty(tagGiven) != null){
             given = getProperty(tagGiven).getValue();
         }
@@ -132,13 +143,13 @@ public class PropertyName extends Property {
         }
         if (nameAsString != null)
             return false;
-        if (nameValue == null)
+        if (nameTagValue == null)
             return true;
         // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
         // We do not consider an space character around / (for geneatique compatibility
         // We do consider the case of char (ie SURN may be UPPER where NAME is not)
         // XXX: We should consider the cas where there is no sub tags in NAME structure
-        return nameValue.replaceAll(" */ *", "/").equalsIgnoreCase(computeValue().replaceAll(" */ *", "/"));
+        return nameTagValue.replaceAll(" */ *", "/").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
     }
 
     /**
@@ -166,7 +177,20 @@ public class PropertyName extends Property {
      * the last name
      */
     public String getLastName() {
-        return lastName;
+        return getLastName(false);
+    }
+
+    /**
+     * the last name
+     */
+    public String getLastName(boolean displayValue) {
+        if (displayValue){
+            if (lastName.indexOf(',')<0)
+                return lastName;
+            else
+                return lastName.substring(0,lastName.indexOf(','));
+        } else
+            return lastName;
     }
 
     /**
@@ -178,7 +202,7 @@ public class PropertyName extends Property {
      */
     @Deprecated
     public String getLastName(int prefixPresentation) {
-        return lastName;
+        return getLastName();
     }
 
     /**
@@ -217,15 +241,11 @@ public class PropertyName extends Property {
 
     /**
      * the name (e.g. "Meier, Nils")
+     * @deprecated use getDisplayValue instead
      */
+    @Deprecated
     public String getName() {
-        if (nameAsString != null) {
-            return nameAsString;
-        }
-        if (firstName.length() == 0) {
-            return lastName;
-        }
-        return lastName + ", " + firstName;
+        return getDisplayValue();
     }
 
     /**
@@ -237,32 +257,32 @@ public class PropertyName extends Property {
         if (nameAsString != null) {
             return nameAsString;
         }
-        if (nameValue != null)
-            return nameValue;
-        return computeValue();
+        if (nameTagValue != null)
+            return nameTagValue;
+        return computeNameValue();
     }
 
     /**
-     * the Name Value computed by appending each name parts (given, surname, prifix, suffix).
+     * the Name Value computed by appending each name parts (given, surname, prefix, suffix).
      * This value is used when there is no conflict between those parts and the gedcom NAME value.
-     * (Is ths casenameValue is null).
+     * (In this case nameValue is null).
      * @return
      */
-    private String computeValue(){
+    private String computeNameValue(){
         WordBuffer wb = new WordBuffer();
 
         if (!getNamePrefix().isEmpty()) {
             wb.append(getNamePrefix());
         }
         if (!firstName.isEmpty()) {
-            wb.append(firstName);
+            wb.append(getFirstName(true));
         }
 
         String name = getSurnamePrefix();
         if (!name.isEmpty() && !lastName.isEmpty()) {
             name += " ";
         }
-        name += lastName;
+        name += getLastName(true);
         // 20050328 need last name //'s if there's a suffix
         if (name.length() > 0 || suffix.length() > 0) {
             wb.append("/" + name + "/");
@@ -288,33 +308,42 @@ public class PropertyName extends Property {
             return nameAsString;
         }
 
-        // if not valid, return name tag
-        if (!isValid() && nameValue != null){
-            return nameValue;
+        // if not valid, return name tag value
+        if (!isValid() && nameTagValue != null){
+            return nameTagValue;
         }
 
         WordBuffer b = new WordBuffer();
 
         if (Options.getInstance().nameFormat == 1) {
 
-            String last = getLastName();
+            String last = getLastName(true);
             if (last.length() == 0) {
                 last = "?";
             }
             b.append(last);
             b.append(getSuffix());
             b.setFiller(", ");
-            b.append(getFirstName());
+            b.append(getFirstName(true));
 
         } else {
 
-            b.append(getFirstName());
-            b.append(getLastName());
+            b.append(getFirstName(true));
+            b.append(getLastName(true));
 
         }
 
         return b.toString();
     }
+
+    @Override
+    Property.PropertyFormatter formatImpl(char marker){
+        if (marker == 'g'){
+            return new PropertyFormatter(this, getGivenName());
+        }
+        return super.formatImpl(marker);
+    }
+
 
     /**
      * Sets name to a new value
@@ -352,8 +381,6 @@ public class PropertyName extends Property {
             String suff,
             boolean replaceAllLastNames) {
 
-        boolean hasPfx = !nPfx.isEmpty() || !sPfx.isEmpty();
-
         // 20070128 don't bother with calculating old if this is happening in init()
         boolean hasParent = getParent() != null;
         String old = hasParent ? getValue() : null;
@@ -367,9 +394,11 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memorey
-        first = first.trim().intern();
-        last = last.trim().intern();
+        first = first.trim().replaceAll(" *, *", ", ").intern();
+        last = last.trim().replaceAll(" *, *", ", ").intern();
         suff = suff.trim();
+        nPfx = nPfx.trim();
+        sPfx = sPfx.trim();
 
         // replace all last names?
         if (replaceAllLastNames) {
@@ -389,11 +418,12 @@ public class PropertyName extends Property {
         // update GIVN|SURN - IF we have a parent
         if (hasParent) {
             boolean add = Options.getInstance().getAddNameSubtags();
-            addNameSubProperty(add || hasPfx, "GIVN", first);
-            addNameSubProperty(add || hasPfx, "SURN", last);
-            addNameSubProperty(add || hasPfx, "NSFX", suff);
-            addNameSubProperty(add || hasPfx, "NPFX", nPfx);
-            addNameSubProperty(add || hasPfx, "SPFX", sPfx);
+
+            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);
+            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);
+            addNameSubProperty(add, "NSFX", suff);
+            addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);
+            addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);
         }
 
         // Make sure no Information is kept in base class
@@ -402,7 +432,7 @@ public class PropertyName extends Property {
         firstName = first;
         suffix = suff;
         // clear NAME tag value
-        this.nameValue = null;
+        this.nameTagValue = null;
 
         // tell about it
         if (old != null) {
@@ -416,10 +446,10 @@ public class PropertyName extends Property {
 
     /**
      * Add or update a subproperty to a name tag
-     * @param force if true, add a property is no sub property is present.
+     * @param force if true, add a property if no sub property is present.
      * Otherwise no property is added
      * @param tag the TAG
-     * @param value value of si property. If null no property is added and the previous is deleted
+     * @param value property's value. If null no property is added and the previous is deleted
      */
     private void addNameSubProperty(boolean force, String tag, String value) {
         Property sub = getProperty(tag);
@@ -432,10 +462,11 @@ public class PropertyName extends Property {
         }
         if (sub == null) {
             sub = addProperty(tag, value);
-            sub.setGuessed(!force);
         } else {
             sub.setValue(value);
         }
+        sub.setGuessed(!force);
+        sub.setReadOnly(true);
     }
 
     /**
@@ -475,7 +506,7 @@ public class PropertyName extends Property {
     public void setValue(String newValue) {
 
         // remember tag value
-        nameValue = newValue;
+        nameTagValue = newValue;
 
         // don't parse anything secret
         if (Enigma.isEncrypted(newValue)) {
@@ -506,11 +537,14 @@ public class PropertyName extends Property {
         l = l.substring(0, l.indexOf('/'));
 
         String npfx = getPropertyValue("NPFX");
-        if (npfx != null && !npfx.isEmpty() && f.startsWith(npfx+" ")){
+        if (!npfx.isEmpty() && f.startsWith(npfx+" ")){
             f = f.substring(npfx.length()+1);
         }
 
-        // If has prefix, then name is not easily parsable, so get sub tag values
+        // Format GIVN Tag (' ' char replaced by ', ')
+        f = f.replaceAll(" +", ", ");// Normalize
+
+        // Replace first, last and suffix by tag values if present
         if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
             l = getPropertyValue("SURN");
         }
@@ -522,14 +556,26 @@ public class PropertyName extends Property {
         }
         // keep
         setName(getPropertyValue("NPFX"), f, getPropertyValue("SPFX"), l, s, false);
-        nameValue = newValue;
+        nameTagValue = newValue;
 
         // done
     }
 
+    /**
+     * refresh name structure from name value and all subtags
+     */
+    private void refresh(){
+        setName(getPropertyValue("NPFX"),
+                getPropertyValue("GIVN"),
+                getPropertyValue("SPFX"),
+                getPropertyValue("SURN"),
+                getPropertyValue("NSFX"),
+                false);
+    }
     @Override
     void propagatePropertyDeleted(Property container, int pos, Property deleted) {
-        setValue(getValue());
+//XXX:        setValue(getValue());
+        refresh();
         super.propagatePropertyDeleted(container, pos, deleted);
     }
 
@@ -537,7 +583,8 @@ public class PropertyName extends Property {
     void propagatePropertyChanged(Property property, String oldValue) {
         if (!mutePC) {
             mutePC = true;
-            setValue(getValue());
+//XXX:            setValue(getValue());
+            refresh();
         }
         super.propagatePropertyChanged(property, oldValue);
     }
