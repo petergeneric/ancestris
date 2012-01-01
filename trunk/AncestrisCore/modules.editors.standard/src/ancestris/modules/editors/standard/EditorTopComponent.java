@@ -289,16 +289,17 @@ public class EditorTopComponent extends AncestrisTopComponent
 
         }
 
-        @Override
-        public void gedcomWriteLockReleased(Gedcom gedcom) {
-
-            // foreign change while we're looking?
-            if (editor != null && !isChangeSource) {
-                Context ctx = editor.getContext();
-                editor.setContext(new Context());
-                editor.setContext(ctx);
-//                populate(toolbar);
-            }
-        }
+//        @Override
+//        //XXX: this is commented out to help finding a race condition in toolbox
+//        public void gedcomWriteLockReleased(Gedcom gedcom) {
+//
+//            // foreign change while we're looking?
+//            if (editor != null && !isChangeSource) {
+//                Context ctx = editor.getContext();
+//                editor.setContext(new Context());
+//                editor.setContext(ctx);
+////                populate(toolbar);
+//            }
+//        }
     }
 }
