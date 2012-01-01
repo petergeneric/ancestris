@@ -240,6 +240,19 @@ public class Options extends OptionProvider {
 //        getPreferences().put(NAME_SPECIAL, value);
 //    }
 //
+
+    private static final String SPACE_IS_SEPARATOR   = "gedcom.spaceIsSeparator";         // NOI18N
+    /**
+     * True if space is considered as separator (same as comma) in name pieces
+     * defaults to true
+     */
+    public boolean spaceIsSeparator() {
+        return getPreferences().get(SPACE_IS_SEPARATOR, true);
+    }
+    public void setSpaceIsSeparator(boolean  value) {
+        getPreferences().put(SPACE_IS_SEPARATOR, value);
+    }
+
     private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
