@@ -354,7 +354,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
     public AncestrisTopComponent create(Context context) {
         Gedcom gedcom = context == null ? null : context.getGedcom();
         AncestrisTopComponent topComponent = null;
-        if (gedcom != null && !isSingleView()) {
+        if (gedcom != null && isSingleView()) {
             for (AncestrisTopComponent tc : AncestrisPlugin.lookupAll(this.getClass())) {
                 if (gedcom.equals(tc.getGedcom())) {
                     topComponent = tc;
