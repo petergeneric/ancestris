@@ -11,9 +11,15 @@
  */
 package ancestris.app;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.core.pluginservice.PluginInterface;
 import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
+import genj.io.Filter;
 import genj.tree.TreeView;
 import genj.tree.TreeViewFactory;
 import genj.view.ViewFactory;
@@ -28,7 +34,7 @@ import org.openide.windows.RetainLocation;
 autostore = false)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class TreeTopComponent extends GenjViewTopComponent {
+public final class TreeTopComponent extends GenjViewTopComponent implements Filter{
 
     private static TreeTopComponent factory;
     private static ViewFactory viewfactory = new TreeViewFactory();
@@ -66,6 +72,9 @@ public final class TreeTopComponent extends GenjViewTopComponent {
         if (!super.createPanel()) {
             return false;
         }
+        //XXX: must be redesign to merge treeTC and TreeView. that way proxying GenjView
+        //will not be necessary and lookup interface will be better
+        AncestrisPlugin.register(this);
         String root = getContext().getGedcom().getRegistry().get("tree.root", (String) null);
         TreeView v = (TreeView) getView();
         if (root != null) {
@@ -87,5 +96,21 @@ public final class TreeTopComponent extends GenjViewTopComponent {
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
+    }
+
+    public String getFilterName() {
+        return ((TreeView)getView()).getFilterName();
+    }
+
+    public boolean veto(Property property) {
+        return ((TreeView)getView()).veto(property);
+    }
+
+    public boolean veto(Entity entity) {
+        return ((TreeView)getView()).veto(entity);
+    }
+
+    public boolean canApplyTo(Gedcom gedcom) {
+        return ((TreeView)getView()).canApplyTo(gedcom);
     }
 }
