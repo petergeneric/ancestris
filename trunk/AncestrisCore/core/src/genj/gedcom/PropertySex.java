@@ -178,6 +178,11 @@ public class PropertySex extends Property {
 		        sex = MALE;
 		        sexAsString=null;
 		        break;
+		      case 'u' :
+		      case 'U' :
+		        sex = UNKNOWN;
+		        sexAsString=null;
+		        break;
 		      default:
 		        sexAsString = newValue;
 		        break;
