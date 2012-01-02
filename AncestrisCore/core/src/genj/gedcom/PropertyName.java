@@ -394,8 +394,8 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memorey
-        first = normalizeName(first);
-        last = normalizeName(last);
+        first = normalizeName(first,Options.getInstance().spaceIsSeparator());
+        last = normalizeName(last,false);
         suff = suff.trim();
         nPfx = nPfx.trim();
         sPfx = sPfx.trim();
@@ -469,9 +469,9 @@ public class PropertyName extends Property {
         sub.setReadOnly(true);
     }
 
-    private static String normalizeName(String namePiece){
+    private static String normalizeName(String namePiece, boolean spaceIsSeparator){
         String result = namePiece.trim().replaceAll(" *, *", ",");
-        if (Options.getInstance().spaceIsSeparator()){
+        if (spaceIsSeparator){
             result = result.replaceAll(" +",",");
         }
         return result.replaceAll(",", ", ");
