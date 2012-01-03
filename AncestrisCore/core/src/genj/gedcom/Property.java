@@ -1351,8 +1351,10 @@ public abstract class Property implements Comparable<Property> {
                         value = "";
                         prop = property;
                         String splitValues[] = prop.getValue().split(", *");
-                        int i = Character.digit(marker,10);
-                        if (i<splitValues.length)
+                        int i = Character.digit(marker,10)-1;
+                        if (i<0){
+                            value = prop.getValue();
+                        } else if (i<splitValues.length)
                             value = splitValues[i];
                         break;
                     }
