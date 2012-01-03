@@ -247,7 +247,7 @@ public class Options extends OptionProvider {
      * defaults to true
      */
     public boolean spaceIsSeparator() {
-        return getPreferences().get(SPACE_IS_SEPARATOR, true);
+        return getPreferences().get(SPACE_IS_SEPARATOR, false);
     }
     public void setSpaceIsSeparator(boolean  value) {
         getPreferences().put(SPACE_IS_SEPARATOR, value);
