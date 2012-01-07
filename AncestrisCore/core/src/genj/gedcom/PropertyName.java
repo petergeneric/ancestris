@@ -148,8 +148,8 @@ public class PropertyName extends Property {
         // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
         // We do not consider an space character around / (for geneatique compatibility
         // We do consider the case of char (ie SURN may be UPPER where NAME is not)
-        // XXX: We should consider the cas where there is no sub tags in NAME structure
-        return nameTagValue.replaceAll(" */ *", "/").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
+        // XXX: We should consider the case where there is no sub tags in NAME structure
+        return nameTagValue.replaceAll(" */ *", "/").replaceAll(" +", " ").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
     }
 
     /**
@@ -321,6 +321,7 @@ public class PropertyName extends Property {
             if (last.length() == 0) {
                 last = "?";
             }
+            b.append(getSurnamePrefix());
             b.append(last);
             b.append(getSuffix());
             b.setFiller(", ");
@@ -329,6 +330,7 @@ public class PropertyName extends Property {
         } else {
 
             b.append(getFirstName(true));
+            b.append(getSurnamePrefix());
             b.append(getLastName(true));
 
         }
