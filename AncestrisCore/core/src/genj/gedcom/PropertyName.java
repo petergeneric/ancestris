@@ -269,26 +269,35 @@ public class PropertyName extends Property {
      * @return
      */
     private String computeNameValue(){
+        return computeNameValue(
+                getNamePrefix(),
+                getFirstName(true),
+                getSurnamePrefix(),
+                getLastName(true),
+                suffix);
+
+    }
+    private String computeNameValue(String npfx, String first, String spfx, String last, String nsfx){
         WordBuffer wb = new WordBuffer();
 
-        if (!getNamePrefix().isEmpty()) {
-            wb.append(getNamePrefix());
+        if (!npfx.isEmpty()) {
+            wb.append(npfx);
         }
-        if (!firstName.isEmpty()) {
-            wb.append(getFirstName(true));
+        if (!first.isEmpty()) {
+            wb.append(first);
         }
 
-        String name = getSurnamePrefix();
-        if (!name.isEmpty() && !lastName.isEmpty()) {
+        String name = spfx;
+        if (!name.isEmpty() && !last.isEmpty()) {
             name += " ";
         }
-        name += getLastName(true);
+        name += last;
         // 20050328 need last name //'s if there's a suffix
-        if (name.length() > 0 || suffix.length() > 0) {
+        if (name.length() > 0 || nsfx.length() > 0) {
             wb.append("/" + name + "/");
         }
-        if (suffix.length() > 0) {
-            wb.append(suffix);
+        if (nsfx.length() > 0) {
+            wb.append(nsfx);
         }
         return wb.toString();
     }
@@ -545,6 +554,11 @@ public class PropertyName extends Property {
         // ... format ok
         String s = l.substring(l.indexOf('/') + 1);
         l = l.substring(0, l.indexOf('/'));
+
+        f = f.replaceAll(",", " ");// remove commas
+        f = f.replaceAll(" +", " ");// normalize
+        // rewrite name TAG value (normalize)
+        newValue = computeNameValue("", f, "", l, s);
 
         String npfx = getPropertyValue("NPFX");
         if (!npfx.isEmpty() && f.startsWith(npfx+" ")){
