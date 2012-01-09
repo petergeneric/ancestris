@@ -35,6 +35,7 @@ import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
+import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -243,10 +244,15 @@ public class EditorTopComponent extends AncestrisTopComponent
 
     @Override
     public Image getImageIcon() {
-        if (editor == null) {
-            return null;
+        Image icon = null;
+        if (editor != null) {
+            icon = editor.getImageIcon();
         }
-        return editor.getImageIcon();
+        if (icon == null)
+            icon = getImageIcon("ancestris/modules/editors/standard/editeur_standard.png");
+        if (icon == null)
+            icon = super.getImageIcon();
+        return icon;
     }
 
     @Override

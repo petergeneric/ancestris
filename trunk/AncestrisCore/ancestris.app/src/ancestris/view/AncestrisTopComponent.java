@@ -33,6 +33,7 @@ import org.openide.awt.UndoRedo;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
@@ -213,6 +214,10 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
      */
     public Image getImageIcon() {
         return null;
+    }
+
+    public Image getImageIcon(String resource){
+        return ImageUtilities.loadImage(resource, true);
     }
 
     /**
