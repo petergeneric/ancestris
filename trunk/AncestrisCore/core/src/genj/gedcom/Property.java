@@ -1279,7 +1279,7 @@ public abstract class Property implements Comparable<Property> {
                 value = (masked++ == 0 || prefix.trim().length() > 0) ? Options.getInstance().maskPrivate : "";
             }
             // append if value is good
-            if (value.length() > 0) {
+            if (value != null) {
                 result.append(prefix);
                 result.append(value);
                 result.append(suffix);
@@ -1297,6 +1297,22 @@ public abstract class Property implements Comparable<Property> {
         // got anything at all?
         return matches > 0 ? result.toString() : "";
     }
+
+    /**
+     * Default formatter based on given template.
+     * <pre>
+     *   {$t} property tag (doesn't count as matched)
+     *   {$T} property name(doesn't count as matched)
+     *   {$D} date as fully localized string
+     *   {$y} year
+     *   {$p} place (city)
+     *   {$P} place (all jurisdictions)
+     *   {$v} value
+     *   {$V} display value
+     * </pre>
+     * @param marker as described 
+     * @return formatted string if at least one marker matched, "" otherwise
+     */
     PropertyFormatter formatImpl(char marker){
         Property property = this;
         Property prop = null;
@@ -1305,25 +1321,22 @@ public abstract class Property implements Comparable<Property> {
             switch (marker) {
                 case 'D': {
                     prop = property.getProperty("DATE");
-                    value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : "";
+                    value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : null;
                     break;
                 }
                 case 'y': {
                     prop = property.getProperty("DATE");
-                    value = (prop instanceof PropertyDate) && prop.isValid() ? Integer.toString(((PropertyDate) prop).getStart().getYear()) : "";
+                    value = (prop instanceof PropertyDate) && prop.isValid() ? Integer.toString(((PropertyDate) prop).getStart().getYear()) : null;
                     break;
                 }
                 case 'p': {
                     prop = property.getProperty("PLAC");
-                    value = (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity() : "";
-                    if (value == null) {
-                        value = "";
-                    }
+                    value = (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity() : null;
                     break;
                 }
                 case 'P': {
                     prop = property.getProperty("PLAC");
-                    value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : "";
+                    value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : null;
                     break;
                 }
                 case 'v': {
@@ -1344,6 +1357,11 @@ public abstract class Property implements Comparable<Property> {
                 case 'T': {
                     prop = null;
                     value = Gedcom.getName(property.getTag());
+                    break;
+                }
+                case 'e': {
+                    prop = property;
+                    value = "";
                     break;
                 }
                 default:
