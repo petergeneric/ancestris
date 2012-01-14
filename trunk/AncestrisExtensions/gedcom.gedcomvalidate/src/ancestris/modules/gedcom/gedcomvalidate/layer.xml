@@ -14,10 +14,12 @@
     </folder>
     <folder name="Menu">
         <folder name="Tools">
-            <file name="ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.instance"/>
-                <attr name="position" intvalue="95"/>
-            </file>
+            <folder name="Gedcom">
+                <file name="ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-gedcom-gedcomvalidate-GedcomValidateAction.instance"/>
+                    <attr name="position" intvalue="95"/>
+                </file>
+            </folder>
         </folder>
     </folder>
 </filesystem>
