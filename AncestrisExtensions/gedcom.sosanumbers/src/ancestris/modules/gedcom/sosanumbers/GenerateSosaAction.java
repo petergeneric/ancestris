@@ -36,7 +36,7 @@ public final class GenerateSosaAction implements ActionListener {
             SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "AskDeCujus"), myGedcom, Gedcom.INDI);
             Indi indiDeCujus = (Indi) selectEntityDialog.getEntity();
             if (indiDeCujus != null) {
-                new SosaNumbers(myGedcom).generateSosaNbs(indiDeCujus);
+                new SosaNumbers().generateSosaNbs(myGedcom, indiDeCujus);
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Hello...", NotifyDescriptor.INFORMATION_MESSAGE));
             }
         }
