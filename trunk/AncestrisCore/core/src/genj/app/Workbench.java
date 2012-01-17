@@ -240,7 +240,11 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         Context context = null;
         try {
             processStarted(reader);
-            context = setGedcom(reader.read());
+            Gedcom gedcom = reader.read();
+            if (gedcom != null)
+                context = setGedcom(gedcom);
+            else 
+                return null;
             // FIXME: Afficher la liste des erreurs
 //      if (!warnings.isEmpty()) {
 //        dockingPane.putDockable("warnings", new GedcomDockable(this,
