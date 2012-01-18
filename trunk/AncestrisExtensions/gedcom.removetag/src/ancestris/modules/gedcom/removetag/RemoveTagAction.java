@@ -12,7 +12,7 @@
 package ancestris.modules.gedcom.removetag;
 
 import ancestris.app.App;
-import ancestris.modules.gedcom.utlilities.GedcomUtilities;
+import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
