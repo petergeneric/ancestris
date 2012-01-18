@@ -18,13 +18,16 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 public final class GenerateSosaAction implements ActionListener {
 
     Gedcom myGedcom = null;
+    private final Preferences modulePreferences = NbPreferences.forModule(SosaNumbers.class);
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -37,6 +40,7 @@ public final class GenerateSosaAction implements ActionListener {
             Indi indiDeCujus = (Indi) selectEntityDialog.getEntity();
             if (indiDeCujus != null) {
                 new SosaNumbers().generateSosaNbs(myGedcom, indiDeCujus);
+                modulePreferences.put("SelectEntityDialog." + myGedcom.getName(), indiDeCujus.getId());
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Hello...", NotifyDescriptor.INFORMATION_MESSAGE));
             }
         }
