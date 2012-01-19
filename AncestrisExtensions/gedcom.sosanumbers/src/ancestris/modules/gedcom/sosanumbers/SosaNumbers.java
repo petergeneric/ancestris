@@ -71,8 +71,10 @@ public class SosaNumbers {
                 SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "AskDeCujus"), gedcom, Gedcom.INDI);
                 if ((indiDeCujus = (Indi) selectEntityDialog.getEntity()) != null) {
                     modulePreferences.put("SelectEntityDialog." + gedcom.getName(), indiDeCujus.getId());
+                } else {
+                    modulePreferences.put("SelectEntityDialog." + gedcom.getName(), "No SOSA");
                 }
-            } else {
+            } else if (!selectedEntityID.equals("No SOSA")) {
                 indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
             }
             if (indiDeCujus != null) {
