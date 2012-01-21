@@ -18,6 +18,7 @@
 package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.modules.gedcom.utilities.SelectEntityDialog;
 import genj.app.GedcomFileListener;
 import genj.gedcom.Context;
@@ -37,6 +38,7 @@ import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -87,76 +89,70 @@ public class SosaNumbers {
         public void gedcomEntityAdded(final Gedcom gedcom, final Entity entity) {
             // Perform unit of work
             try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
+                DecimalFormat formatNbrs = new DecimalFormat("0");
+                // generate nested sosa Tags
+                if (entity instanceof Indi) {
+                    Indi indi = (Indi) entity;
+                    // Get father and mother
+                    Fam famc = indi.getFamilyWhereBiologicalChild();
+                    if (famc != null) {
+                        Indi husband = famc.getHusband();
+                        if (husband != null) {
+                            Property sosaPropertyValue = husband.getProperty(SOSA_TAG);
+                            if (sosaAboNumbering) {
+                                int sosaNumber = Integer.getInteger(sosaPropertyValue.getValue());
 
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        DecimalFormat formatNbrs = new DecimalFormat("0");
-                        // generate nested sosa Tags
-                        if (entity instanceof Indi) {
-                            Indi indi = (Indi) entity;
-                            // Get father and mother
-                            Fam famc = indi.getFamilyWhereBiologicalChild();
-                            if (famc != null) {
-                                Indi husband = famc.getHusband();
-                                if (husband != null) {
-                                    Property sosaPropertyValue = husband.getProperty(SOSA_TAG);
-                                    if (sosaAboNumbering) {
-                                        int sosaNumber = Integer.getInteger(sosaPropertyValue.getValue());
-
-                                        // re generate all sosaAboNumbering tags
-                                        Fam[] families = indi.getFamiliesWhereSpouse();
-                                        for (Fam family : families) {
-                                            // Order Children
-                                            int ChildOrder = 1;
-
-                                            for (Indi child : family.getChildren(true)) {
-                                                Property sosaAboNumberingPropertyValue = child.getProperty(SOSA_ABOVILLE_TAG);
-                                                if (sosaAboNumberingPropertyValue != null) {
-                                                    sosaAboNumberingPropertyValue.setValue(formatNbrs.format(sosaNumber) + "." + formatNbrs.format(ChildOrder));
-                                                } else {
-                                                    Property addedProperty = child.addProperty(SOSA_ABOVILLE_TAG, formatNbrs.format(sosaNumber) + "." + formatNbrs.format(ChildOrder), setPropertyPosition(child));
-                                                    addedProperty.setGuessed(true);
-                                                }
-                                                ChildOrder += 1;
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
+                                // re generate all sosaAboNumbering tags
                                 Fam[] families = indi.getFamiliesWhereSpouse();
-
                                 for (Fam family : families) {
+                                    // Order Children
+                                    int ChildOrder = 1;
+
                                     for (Indi child : family.getChildren(true)) {
-                                        Property sosaPropertyValue = child.getProperty(SOSA_TAG);
-                                        if (sosaPropertyValue != null) {
-                                            int sosaNumber = Integer.getInteger(sosaPropertyValue.getValue());
-                                            if (indi.getSex() == PropertySex.MALE) {
-                                                Property addedProperty = indi.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaNumber), setPropertyPosition(indi));
-                                                addedProperty.setGuessed(true);
-                                            } else if (indi.getSex() == PropertySex.FEMALE) {
-                                                Property addedProperty = indi.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaNumber + 1), setPropertyPosition(indi));
-                                                addedProperty.setGuessed(true);
-                                            }
-                                            if (sosaAboNumbering && indi.getSex() == PropertySex.MALE) {
-                                                for (Fam family2 : families) {
-                                                    // Order Children
-                                                    int ChildOrder = 1;
-                                                    for (Indi child2 : family2.getChildren(true)) {
-                                                        Property addedProperty = child.addProperty(SOSA_ABOVILLE_TAG, formatNbrs.format(2 * sosaNumber) + "." + formatNbrs.format(ChildOrder), setPropertyPosition(child2));
-                                                        addedProperty.setGuessed(true);
-                                                        ChildOrder += 1;
-                                                    }
-                                                }
-                                            }
-                                            break; // Only one sosa possible
+                                        Property sosaAboNumberingPropertyValue = child.getProperty(DABOVILLE_TAG);
+                                        if (sosaAboNumberingPropertyValue != null) {
+                                            sosaAboNumberingPropertyValue.setValue(formatNbrs.format(sosaNumber) + "." + formatNbrs.format(ChildOrder));
+                                        } else {
+                                            Property addedProperty = child.addProperty(DABOVILLE_TAG, formatNbrs.format(sosaNumber) + "." + formatNbrs.format(ChildOrder), setPropertyPosition(child));
+                                            addedProperty.setGuessed(true);
                                         }
+                                        ChildOrder += 1;
                                     }
                                 }
                             }
                         }
+                    } else {
+                        Fam[] families = indi.getFamiliesWhereSpouse();
+
+                        for (Fam family : families) {
+                            for (Indi child : family.getChildren(true)) {
+                                Property sosaPropertyValue = child.getProperty(SOSA_TAG);
+                                if (sosaPropertyValue != null) {
+                                    int sosaNumber = Integer.getInteger(sosaPropertyValue.getValue());
+                                    if (indi.getSex() == PropertySex.MALE) {
+                                        Property addedProperty = indi.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaNumber), setPropertyPosition(indi));
+                                        addedProperty.setGuessed(true);
+                                    } else if (indi.getSex() == PropertySex.FEMALE) {
+                                        Property addedProperty = indi.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaNumber + 1), setPropertyPosition(indi));
+                                        addedProperty.setGuessed(true);
+                                    }
+                                    if (sosaAboNumbering && indi.getSex() == PropertySex.MALE) {
+                                        for (Fam family2 : families) {
+                                            // Order Children
+                                            int ChildOrder = 1;
+                                            for (Indi child2 : family2.getChildren(true)) {
+                                                Property addedProperty = child.addProperty(DABOVILLE_TAG, formatNbrs.format(2 * sosaNumber) + "." + formatNbrs.format(ChildOrder), setPropertyPosition(child2));
+                                                addedProperty.setGuessed(true);
+                                                ChildOrder += 1;
+                                            }
+                                        }
+                                    }
+                                    break; // Only one sosa possible
+                                }
+                            }
+                        }
                     }
-                }); // end of doUnitOfWork
+                }
             } catch (GedcomException e) {
                 LOG.severe(e.getMessage());
             }
@@ -184,13 +180,17 @@ public class SosaNumbers {
     private final static Logger LOG = Logger.getLogger(SosaNumbers.class.getName(), null);
     private final GedcomEventHandler gedcomEventHandler = new GedcomEventHandler();
     final private String SOSA_TAG = "_SOSA";
-    final private String SOSA_ABOVILLE_TAG = "_SOSA_ABOVILLE";
+    final private String DABOVILLE_TAG = "_DABOVILLE";
     final private boolean sosaAboNumbering = true;
 
     public void generateSosaNbs(final Gedcom gedcom, final Indi indiDeCujus) {
         final List<Indi> sosaList = new ArrayList<Indi>();   // list only used to store ids of sosas
         // Perform unit of work
         final DecimalFormat formatNbrs = new DecimalFormat("0");
+
+        // Clean gedcom file for all SOSA and SOSA_ABBO tags
+        new GedcomUtilities(gedcom).deleteTags(SOSA_TAG, GedcomUtilities.ENT_INDI);
+        new GedcomUtilities(gedcom).deleteTags(DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
 
         try {
             Indi indi;
@@ -210,31 +210,8 @@ public class SosaNumbers {
                 indi = listIter.next();
                 sosaCounter = Integer.parseInt(indi.getPropertyValue(SOSA_TAG));
                 // Sosa d'Aboville generation
-                if (sosaAboNumbering) {
-//                    List<Indi> dabovilleList = new ArrayList<Indi>();
-//                    dabovilleList.add(indi);
-//                    ListIterator<Indi> listIter1 = dabovilleList.listIterator();
-                    String daboCounter = indi.getPropertyValue(SOSA_TAG);
-                    // Iterate on the list to go down the tree.
-//                    while (listIter1.hasNext()) {
-//                        Indi indi1 = listIter1.next();
-                        if (indi.getSex() == PropertySex.MALE) {
-                            Character suffix = 'a';
-                            Fam[] families = indi.getFamiliesWhereSpouse();
-                            for (Fam family : families) {
-                                int ChildOrder = 1;
-                                for (Indi child : family.getChildren(true)) {
-                                    String counter = daboCounter + (families.length > 1 ? suffix.toString() + "." : ".") + ChildOrder;
-                                    child.addProperty(SOSA_ABOVILLE_TAG, counter, setPropertyPosition(child));
-                                    addedProperty.setGuessed(true);
-//                                    listIter1.add(child);
-//                                    listIter1.previous();
-                                    ChildOrder++;
-                                }
-                                suffix++;
-                            }
-                        }
-//                    }
+                if (sosaAboNumbering && indi.getSex() == PropertySex.MALE) {
+                    dabovilleNumbering(indi);
                 }
                 // Get father and mother
                 famc = indi.getFamilyWhereBiologicalChild();
@@ -274,5 +251,45 @@ public class SosaNumbers {
             return 1;
         }
         return prop.getPropertyPosition(pName) + 1;
+    }
+
+    private void dabovilleNumbering(Indi indiDeCujus) {
+        Indi indi;
+        List<Indi> dabovilleList = new ArrayList<Indi>();
+        Property addedProperty;
+        String daboCounter;
+        // Iterate on the list to go down the tree.
+        dabovilleList.add(indiDeCujus);
+        ListIterator<Indi> listIter = dabovilleList.listIterator();
+        while (listIter.hasNext()) {
+            indi = listIter.next();
+            Character suffix = 'a';
+            if (indi.getProperty(SOSA_TAG) == null) {
+                daboCounter = indi.getPropertyValue(DABOVILLE_TAG);
+            } else {
+                daboCounter = indi.getPropertyValue(SOSA_TAG);
+            }
+
+            Fam[] families = indi.getFamiliesWhereSpouse();
+            for (Fam family : families) {
+                int ChildOrder = 1;
+                for (Indi child : family.getChildren(true)) {
+                    try {
+                        String counter = daboCounter + (families.length > 1 ? suffix.toString() + "." : ".") + ChildOrder;
+                        addedProperty = child.addProperty(DABOVILLE_TAG, counter, setPropertyPosition(child));
+                        addedProperty.setGuessed(true);
+                        // if in sosa tree children are already numbers
+                        if (child.getProperty(SOSA_TAG) == null) {
+                            listIter.add(child);
+                            listIter.previous();
+                        }
+                        ChildOrder++;
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                suffix++;
+            }
+        }
     }
 }
