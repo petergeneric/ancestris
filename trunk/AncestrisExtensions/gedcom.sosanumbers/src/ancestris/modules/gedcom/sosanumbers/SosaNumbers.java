@@ -121,7 +121,7 @@ public class SosaNumbers {
     private final static Logger LOG = Logger.getLogger(SosaNumbers.class.getName(), null);
     private final GedcomEventHandler gedcomEventHandler = new GedcomEventHandler();
     final private String SOSA_TAG = "_SOSA";
-    final private String DABOVILLE_TAG = "_DABOVILLE";
+    final private String DABOVILLE_TAG = "_SOSA_DABOVILLE";
     final private boolean sosaAboNumbering = true;
 
     public void generateSosaNbs(final Gedcom gedcom, final Indi indiDeCujus) {
