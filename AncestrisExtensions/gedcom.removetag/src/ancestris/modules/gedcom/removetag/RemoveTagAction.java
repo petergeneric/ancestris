@@ -15,10 +15,13 @@ import ancestris.app.App;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.UnitOfWork;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 
 public final class RemoveTagAction implements ActionListener {
 
@@ -39,7 +42,19 @@ public final class RemoveTagAction implements ActionListener {
                     NotifyDescriptor.NO_OPTION // default option is "Yes"
                     );
             if (DialogDisplayer.getDefault().notify(notifyDescriptor) == NotifyDescriptor.OK_OPTION) {
-                new GedcomUtilities(gedcom).deleteTags(removeTagPanel.getTag(), removeTagPanel.getSelectedEntity());
+                final String tag = removeTagPanel.getTag();
+                final int selectedentity = removeTagPanel.getSelectedEntity();
+                try {
+                    gedcom.doUnitOfWork(new UnitOfWork() {
+
+                        @Override
+                        public void perform(Gedcom gedcom) throws GedcomException {
+                            new GedcomUtilities(gedcom).deleteTags(tag, selectedentity);
+                        }
+                    }); // end of doUnitOfWork
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Hello...", NotifyDescriptor.INFORMATION_MESSAGE));
             }
         }
