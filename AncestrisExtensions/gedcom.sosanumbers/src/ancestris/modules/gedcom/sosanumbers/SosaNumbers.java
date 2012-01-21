@@ -223,18 +223,18 @@ public class SosaNumbers {
                 for (Indi child : family.getChildren(true)) {
                     try {
                         String counter = daboCounter + (families.length > 1 ? suffix.toString() + "." : ".") + ChildOrder;
+                        // Skip if indi has already a sosa_aboville tag
                         if ((dabovilleProperty = child.getProperty(DABOVILLE_TAG)) == null) {
                             dabovilleProperty = child.addProperty(DABOVILLE_TAG, counter, setPropertyPosition(child));
                             dabovilleProperty.setGuessed(true);
-                        } else {
-                            dabovilleProperty.setValue(dabovilleProperty.getValue() + ";" + counter);
+
+                            // if in sosa tree children are already numbers
+                            if (child.getProperty(SOSA_TAG) == null) {
+                                listIter.add(new Pair(child, counter));
+                                listIter.previous();
+                            }
+                            ChildOrder++;
                         }
-                        // if in sosa tree children are already numbers
-                        if (child.getProperty(SOSA_TAG) == null) {
-                            listIter.add(new Pair(child, counter));
-                            listIter.previous();
-                        }
-                        ChildOrder++;
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
