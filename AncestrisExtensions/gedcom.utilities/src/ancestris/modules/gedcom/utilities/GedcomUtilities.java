@@ -19,9 +19,7 @@ package ancestris.modules.gedcom.utilities;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import genj.gedcom.UnitOfWork;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -54,48 +52,37 @@ public class GedcomUtilities {
         this.gedcom = gedcom;
     }
 
-    public void deleteTags(final String tagToRemove, final int entityType) {
+    public void deleteTags(String tagToRemove, int entityType) {
         LOG.log(Level.INFO, "deleting_tag {0}", tagToRemove);
 
-        // Perform unit of work
-        try {
-            gedcom.doUnitOfWork(new UnitOfWork() {
+        Collection entities;
+        Entity entity;
+        int iCounter = 0;
 
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    Collection entities;
-                    Entity entity;
-                    int iCounter = 0;
-
-                    if (entityType == ENT_ALL) {
-                        entities = gedcom.getEntities();
-                    } else {
-                        entities = gedcom.getEntities(entityTypes[entityType]);
-                    }
-
-                    List propsToDelete = new ArrayList();
-                    for (Iterator it = entities.iterator(); it.hasNext();) {
-                        entity = (Entity) it.next();
-                        getPropertiesRecursively(entity, propsToDelete, tagToRemove);
-                        for (Iterator props = propsToDelete.iterator(); props.hasNext();) {
-                            Property prop = (Property) props.next();
-                            if (prop != null) {
-                                Property parent = prop.getParent();
-                                if (parent != null) {
-                                    String propText = parent.getTag() + " " + tagToRemove + " '" + prop.toString() + "'";
-                                    parent.delProperty(prop);
-                                    iCounter++;
-                                    LOG.log(Level.INFO, "deleting_tag {0} {1} {2}", new Object[]{entity.getTag(), entity.toString(), propText});
-                                }
-                            }
-                        }
-                    }
-                    LOG.log(Level.INFO, "DeletedNb {0}", iCounter);
-                }
-            }); // end of doUnitOfWork
-        } catch (GedcomException e) {
-            LOG.severe(e.getMessage());
+        if (entityType == ENT_ALL) {
+            entities = gedcom.getEntities();
+        } else {
+            entities = gedcom.getEntities(entityTypes[entityType]);
         }
+
+        List propsToDelete = new ArrayList();
+        for (Iterator it = entities.iterator(); it.hasNext();) {
+            entity = (Entity) it.next();
+            getPropertiesRecursively(entity, propsToDelete, tagToRemove);
+            for (Iterator props = propsToDelete.iterator(); props.hasNext();) {
+                Property prop = (Property) props.next();
+                if (prop != null) {
+                    Property parent = prop.getParent();
+                    if (parent != null) {
+                        String propText = parent.getTag() + " " + tagToRemove + " '" + prop.toString() + "'";
+                        parent.delProperty(prop);
+                        iCounter++;
+                        LOG.log(Level.INFO, "deleting_tag {0} {1} {2}", new Object[]{entity.getTag(), entity.toString(), propText});
+                    }
+                }
+            }
+        }
+        LOG.log(Level.INFO, "DeletedNb {0}", iCounter);
     }
 
     private void getPropertiesRecursively(Property parent, List props, String tag) {
