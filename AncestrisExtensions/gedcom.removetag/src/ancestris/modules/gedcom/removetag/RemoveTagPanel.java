@@ -102,8 +102,11 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         return tagTextField.getText();
     }
 
-    public int getSelectedEntity() {
+    public int getSelectedEntityIndex() {
         modulePreferences.putInt("RemoveTagPanel.selectedEntity", selectedEntityComboBox.getSelectedIndex());
         return selectedEntityComboBox.getSelectedIndex();
     }
-}
+    public Object getSelectedEntityItem() {
+        modulePreferences.putInt("RemoveTagPanel.selectedEntity", selectedEntityComboBox.getSelectedIndex());
+        return selectedEntityComboBox.getSelectedItem();
+    }}

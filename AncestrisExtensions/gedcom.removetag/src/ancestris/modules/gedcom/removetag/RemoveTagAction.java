@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 public final class RemoveTagAction implements ActionListener {
 
@@ -35,15 +36,15 @@ public final class RemoveTagAction implements ActionListener {
             // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
             NotifyDescriptor notifyDescriptor = new NotifyDescriptor(
                     removeTagPanel, // instance of your panel
-                    "test", // title of the dialog
-                    NotifyDescriptor.OK_CANCEL_OPTION, // it is Yes/No dialog ...
+                    NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagAction"), // title of the dialog
+                    NotifyDescriptor.OK_CANCEL_OPTION, 
                     NotifyDescriptor.QUESTION_MESSAGE, // ... of a question type => a question mark icon
                     null,
-                    NotifyDescriptor.NO_OPTION // default option is "Yes"
+                    NotifyDescriptor.OK_OPTION // default option is "Ok"
                     );
             if (DialogDisplayer.getDefault().notify(notifyDescriptor) == NotifyDescriptor.OK_OPTION) {
                 final String tag = removeTagPanel.getTag();
-                final int selectedentity = removeTagPanel.getSelectedEntity();
+                final int selectedentity = removeTagPanel.getSelectedEntityIndex();
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -55,7 +56,7 @@ public final class RemoveTagAction implements ActionListener {
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Hello...", NotifyDescriptor.INFORMATION_MESSAGE));
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(RemoveTagAction.class, "RemoveTagAction.done", tag, removeTagPanel.getSelectedEntityItem()), NotifyDescriptor.INFORMATION_MESSAGE));
             }
         }
     }
