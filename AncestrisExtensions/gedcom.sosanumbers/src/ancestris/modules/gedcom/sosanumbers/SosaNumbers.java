@@ -80,7 +80,7 @@ public class SosaNumbers {
             String selectedEntityID = modulePreferences.get("SelectEntityDialog." + gedcom.getName(), "");
             Indi indiDeCujus = null;
             if (selectedEntityID.isEmpty()) {
-                SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "AskDeCujus"), gedcom, Gedcom.INDI);
+                SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), gedcom, Gedcom.INDI);
                 if ((indiDeCujus = (Indi) selectEntityDialog.getEntity()) != null) {
                     modulePreferences.put("SelectEntityDialog." + gedcom.getName(), indiDeCujus.getId());
                 } else {
