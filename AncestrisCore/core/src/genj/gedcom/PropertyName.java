@@ -723,12 +723,12 @@ public class PropertyName extends Property {
     private static class NameParser {
         // de prefix may collide with italian or netherland conventions
 
-        private Pattern prefixPattern = Pattern.compile("(d\'|von der|von|zu|del|de las|de les|de los|de|las|la|os|das|da|dos|af|av)( +)(.*)");
+        private static final Pattern PREFIX_PATTERN = Pattern.compile("(d\'|von der|von|zu|del|de las|de les|de los|de|las|la|os|das|da|dos|af|av)( +)(.*)");
         private String prefix = "";
         private String last = "";
 
         public NameParser(String last) {
-            Matcher m = prefixPattern.matcher(last);
+            Matcher m = PREFIX_PATTERN.matcher(last);
             if (m.matches()) {
                 this.prefix = m.group(1) + " ";
                 this.last = m.group(3);
