@@ -29,6 +29,7 @@ public final class WebBookVisualPanel3 extends JPanel {
         jTextField1.setEnabled(jCheckBox5.isSelected());
 
     }
+
     @Override
     public String getName() {
         return NbBundle.getMessage(WebBookWizardAction.class, "CTL_Step_3");
@@ -258,8 +259,19 @@ public final class WebBookVisualPanel3 extends JPanel {
         jCheckBox5.setSelected(str.equals("1"));
     }
 
+    public void disablePref06() {
+        jCheckBox5.setEnabled(false);
+        jCheckBox5.setSelected(false);
+        jCheckBox6.setEnabled(jCheckBox5.isSelected());
+        jTextField1.setEnabled(jCheckBox5.isSelected());
+    }
+
     public String getPref07() {
-        return jCheckBox6.isSelected() ? "1" : "0";
+        if (jCheckBox6.isEnabled()) {
+            return jCheckBox6.isSelected() ? "1" : "0";
+        } else {
+            return "0";
+        }
     }
 
     public void setPref07(String str) {
@@ -270,15 +282,19 @@ public final class WebBookVisualPanel3 extends JPanel {
     }
 
     public String getPref08() {
-        return jTextField1.getText();
-    }
+        if (jTextField1.isEnabled()) {
+            return jTextField1.getText();
+        } else {
+            return "";
+        }
+        }
 
-    public void setPref08(String str) {
+    public
+
+     void setPref08(String str) {
         if (str.isEmpty()) {
             str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGoogleKey");
         }
         jTextField1.setText(str);
     }
-
 }
-
