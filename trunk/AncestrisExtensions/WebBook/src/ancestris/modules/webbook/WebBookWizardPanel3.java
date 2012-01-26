@@ -19,12 +19,12 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
 
     // Gedcom is used to load and store settings for the webbook as "one set of settings per gedcom"
     private Gedcom gedcom;
-
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
     private WebBookVisualPanel3 component;
+    private boolean isGeoFound = false;
 
     /**
      * Constructor
@@ -32,6 +32,14 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
      */
     WebBookWizardPanel3(Gedcom gedcom) {
         this.gedcom = gedcom;
+        PluginInterface pi = null;
+        for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+            if ("ancestris.modules.geo".equals(sInterface.getPluginName())) {
+                // found module geo
+                isGeoFound = true;
+                break;
+            }
+        }
     }
 
     // Get the visual component for the panel. In this template, the component
@@ -101,14 +109,18 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         }
         Registry gedcomSettings = gedcom.getRegistry();
 
-        ((WebBookVisualPanel3) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GeneSources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_DisplaySources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_CopySources", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GeneMedia", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_CopyMedia", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GeneMap", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_DispUnknownLoc", ""));
-        ((WebBookVisualPanel3) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX+".media_GoogleKey", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneSources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DisplaySources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref03(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_CopySources", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref04(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMedia", ""));
+        ((WebBookVisualPanel3) getComponent()).setPref05(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_CopyMedia", ""));
+        if (isGeoFound) {
+            ((WebBookVisualPanel3) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMap", ""));
+            ((WebBookVisualPanel3) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DispUnknownLoc", ""));
+            ((WebBookVisualPanel3) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GoogleKey", ""));
+        } else {
+            ((WebBookVisualPanel3) getComponent()).disablePref06();
+        }
         component.setComponents();
     }
 
@@ -118,14 +130,14 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         }
         Registry gedcomSettings = gedcom.getRegistry();
 
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GeneSources", ((WebBookVisualPanel3) getComponent()).getPref01());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_DisplaySources", ((WebBookVisualPanel3) getComponent()).getPref02());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_CopySources", ((WebBookVisualPanel3) getComponent()).getPref03());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GeneMedia", ((WebBookVisualPanel3) getComponent()).getPref04());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_CopyMedia", ((WebBookVisualPanel3) getComponent()).getPref05());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GeneMap", ((WebBookVisualPanel3) getComponent()).getPref06());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_DispUnknownLoc", ((WebBookVisualPanel3) getComponent()).getPref07());
-        gedcomSettings.put(WebBookParams.WB_PREFIX+".media_GoogleKey", ((WebBookVisualPanel3) getComponent()).getPref08());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_GeneSources", ((WebBookVisualPanel3) getComponent()).getPref01());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_DisplaySources", ((WebBookVisualPanel3) getComponent()).getPref02());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_CopySources", ((WebBookVisualPanel3) getComponent()).getPref03());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_GeneMedia", ((WebBookVisualPanel3) getComponent()).getPref04());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_CopyMedia", ((WebBookVisualPanel3) getComponent()).getPref05());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_GeneMap", ((WebBookVisualPanel3) getComponent()).getPref06());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_DispUnknownLoc", ((WebBookVisualPanel3) getComponent()).getPref07());
+        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_GoogleKey", ((WebBookVisualPanel3) getComponent()).getPref08());
     }
 
     /*
@@ -141,19 +153,9 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         if (name.trim().isEmpty() && geoSelected.equals("1")) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_GoogleKey"), null);
         }
-        boolean isGeoFound=false;
-        PluginInterface pi = null;
-        for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
-            if ("ancestris.modules.geo".equals(sInterface.getPluginName())) {
-                // found module geo
-                isGeoFound = true;
-                break;
-            }
-        }
         if (geoSelected.equals("1") && !isGeoFound) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_GeoModuleNotFound"), null);
         }
 
     }
 }
-
