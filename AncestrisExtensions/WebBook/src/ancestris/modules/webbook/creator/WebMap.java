@@ -57,7 +57,7 @@ public class WebMap extends WebSection {
         init(trs("TXT_Map"), "map", "map", "", 1, 0);
         if (!isModuleGeo()) {
             toBeGenerated = false;
-            wh.log.write(trs("Geo_module_Not_Found"));
+            wh.log.write(trs("LOG_Geo_module_Not_Found"));
         }
     }
 
