@@ -227,6 +227,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         ancestris.core.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
         ancestris.app.Options.setMaxLogSizeKB(Integer.valueOf(jSpinner1.getValue().toString()));
+        Registry.get(App.class).put("logLevel",getLogLevel());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));
 
