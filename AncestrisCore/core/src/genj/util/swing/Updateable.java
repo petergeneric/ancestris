@@ -17,5 +17,5 @@ package genj.util.swing;
  */
 public interface Updateable {
 
-    public void updateValues();
+    public Object[] getValues();
 }

@@ -71,12 +71,14 @@ public class FullNameBean extends PropertyBean {
         setLayout(layout);
 
         // Combo values are set only when used to improve response time
-        cLast = new ChoiceWidget( new Updateable() {
+        cLast = new ChoiceWidget();
+        cLast.setUpdater( new Updateable() {
 
             @Override
-            public void updateValues() {
+            public Object[] getValues() {
                 if (getRoot() != null)
-                    cLast.setValues(PropertyName.getLastNames(getRoot().getGedcom(), true));
+                    return PropertyName.getLastNames(getRoot().getGedcom(), true).toArray();
+                return null;
                 }
         });
         cLast.addChangeListener(changeSupport);
@@ -92,11 +94,13 @@ public class FullNameBean extends PropertyBean {
         });
         cLast.setIgnoreCase(true);
 
-        cFirst = new ChoiceWidget( new Updateable() {
+        cFirst = new ChoiceWidget();
+        cFirst.setUpdater(new Updateable() {
             @Override
-            public void updateValues() {
+            public Object[] getValues() {
                 if (getRoot() != null)
-                    cFirst.setValues(PropertyName.getFirstNames(getRoot().getGedcom(), true));
+                    return (PropertyName.getFirstNames(getRoot().getGedcom(), true).toArray());
+                return null;
         }});
         cFirst.addChangeListener(changeSupport);
         cFirst.setIgnoreCase(true);
