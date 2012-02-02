@@ -80,27 +80,6 @@ public class ChoiceWidget extends JComboBox {
         this(new Object[0], null);
     }
 
-    public ChoiceWidget(final Updateable updater) {
-        this(new Object[0], null);
-        //XXX: WARNING! LnF dependent code, read javadoc
-        addPopupMenuListener(new PopupMenuListener() {
-
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                updater.updateValues();
-                removePopupMenuListener(this);
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            }
-
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent e) {
-            }
-        });
-    }
-
     /**
      * Constructor
      */
@@ -134,6 +113,26 @@ public class ChoiceWidget extends JComboBox {
         // done
     }
 
+    public void setUpdater(final Updateable updater) {
+        //XXX: WARNING! LnF dependent code, read javadoc
+        addPopupMenuListener(new PopupMenuListener() {
+
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                setValues(updater.getValues());
+                removePopupMenuListener(this);
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+        });
+    }
+
     /**
      * Add change listener
      */
@@ -159,6 +158,8 @@ public class ChoiceWidget extends JComboBox {
      * set values
      */
     public void setValues(Object[] set) {
+        if (set == null)
+            return;
         try {
             autoComplete.disable();
             model.setValues(set);
