@@ -72,7 +72,7 @@ public class SosaNumbers {
 
         @Override
         public void gedcomClosed(Gedcom gedcom) {
-            gedcom.removeGedcomListener(this);
+ //           gedcom.removeGedcomListener(this);
         }
 
         @Override
@@ -90,7 +90,7 @@ public class SosaNumbers {
                 indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
             }
             if (indiDeCujus != null) {
-                gedcom.addGedcomListener(this);
+ //               gedcom.addGedcomListener(this);
                 generateSosaNbs(gedcom, indiDeCujus);
             }
         }
