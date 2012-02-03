@@ -19,7 +19,6 @@ import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.TextFieldWidget;
-import genj.util.swing.Updateable;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -70,17 +69,7 @@ public class FullNameBean extends PropertyBean {
 
         setLayout(layout);
 
-        // Combo values are set only when used to improve response time
         cLast = new ChoiceWidget();
-        cLast.setUpdater( new Updateable() {
-
-            @Override
-            public Object[] getValues() {
-                if (getRoot() != null)
-                    return PropertyName.getLastNames(getRoot().getGedcom(), true).toArray();
-                return null;
-                }
-        });
         cLast.addChangeListener(changeSupport);
         cLast.addChangeListener(new ChangeListener() {
 
@@ -95,13 +84,6 @@ public class FullNameBean extends PropertyBean {
         cLast.setIgnoreCase(true);
 
         cFirst = new ChoiceWidget();
-        cFirst.setUpdater(new Updateable() {
-            @Override
-            public Object[] getValues() {
-                if (getRoot() != null)
-                    return (PropertyName.getFirstNames(getRoot().getGedcom(), true).toArray());
-                return null;
-        }});
         cFirst.addChangeListener(changeSupport);
         cFirst.setIgnoreCase(true);
 
@@ -224,15 +206,14 @@ public class FullNameBean extends PropertyBean {
     /**
      * Set context to edit
      */
-    @Override
     public void setPropertyImpl(Property prop) {
 
         PropertyName name = (PropertyName) prop;
         if (name == null) {
             sameLastNames = new Property[0];
-//            cLast.setValues(PropertyName.getLastNames(getRoot().getGedcom(), true));
+            cLast.setValues(PropertyName.getLastNames(getRoot().getGedcom(), true));
             cLast.setText("");
-//            cFirst.setValues(PropertyName.getFirstNames(getRoot().getGedcom(), true));
+            cFirst.setValues(PropertyName.getFirstNames(getRoot().getGedcom(), true));
             cFirst.setText("");
             tSuff.setText("");
             tNick.setText("");
@@ -242,9 +223,9 @@ public class FullNameBean extends PropertyBean {
             // keep track of who has the same last name
             sameLastNames = name.getSameLastNames();
             // first, last, suff
-//            cLast.setValues(name.getLastNames(true));
+            cLast.setValues(name.getLastNames(true));
             cLast.setText(name.getLastName());
-//            cFirst.setValues(name.getFirstNames(true));
+            cFirst.setValues(name.getFirstNames(true));
             cFirst.setText(name.getFirstName());
             tSuff.setText(name.getSuffix());
 

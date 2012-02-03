@@ -62,13 +62,12 @@ public final class IndiPanel extends Editor {
         namePane = new PropertyTabbedPane(aNameBean2, Gedcom.getName("NAME"), null, null);
 
         birthBean = new AEventBean();
-        birthBean.setDetailedView(false);
+        birthBean.setDetailedView(true);
         birthBean.setTag("BIRT"); // NOI18N
         birthPane = new PropertyTabbedPane(birthBean, Gedcom.getName("BIRT"), null, null);
 
         deathBean = new AEventBean();
         deathBean.setShowKnown(true);
-        deathBean.setDetailedView(false);
         deathBean.setTag("DEAT"); // NOI18N
         deathPane = new PropertyTabbedPane(deathBean, Gedcom.getName("DEAT"), null, null);
 

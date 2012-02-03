@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
 import org.openide.awt.MouseUtils;
@@ -36,7 +35,7 @@ public class FilteredMouseAdapter extends MouseAdapter implements ActionListener
 
     public FilteredMouseAdapter() {
         super();
-        Logger.getLogger("ancestris.util").log(Level.FINER, "doubleclic interval: {0}", CLICK_INTERVAL);
+        Logger.getLogger("genj").fine("doubleclic interval: "+CLICK_INTERVAL);
         timer = new Timer(CLICK_INTERVAL, this);
         timer.setRepeats(false);
     }

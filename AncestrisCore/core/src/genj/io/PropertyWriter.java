@@ -77,7 +77,7 @@ public class PropertyWriter {
     if (prop.isTransient())
       return;
     
-    // skip if it shouldn't be written to file (ie guessed)
+    // skip guessed
     if (prop.isGuessed())
       return;
 

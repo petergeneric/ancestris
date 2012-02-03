@@ -46,7 +46,7 @@ public class PropertyName extends Property {
             firstName = "",
             suffix = "";
     // XXX:nameValue should probably be replaced by nameAsString
-    private String nameTagValue;
+    private String nameValue;
     /** the name if unparsable */
     private String nameAsString;
     private boolean mutePC = false;
@@ -93,43 +93,7 @@ public class PropertyName extends Property {
      * the first name
      */
     public String getFirstName() {
-        return getFirstName(false);
-    }
-
-    /**
-     * the first name
-     */
-    public String getFirstName(boolean displayValue) {
-        if (displayValue)
-            return firstName.replaceAll(" *, *", " ");
-        else
-            return firstName;
-    }
-
-
-    /**
-     * Returns the name given to an Individual.
-     * @return
-     */
-    public String getGivenName(){
-        String tagGiven = Options.getInstance().getGivenTag();
-        String firstNames[] = firstName.split(",");
-        String given = null;
-        if (tagGiven.isEmpty()){
-                for (String first:firstNames){
-                    first = first.trim();
-                    if (first.matches("\"[^\"]*\"")||
-                            first.matches("<[^>]*>")||
-                            first.matches("\\[[^\\]]*\\]")
-                            ){
-                        given = first.substring(1,first.length()-1);
-                        break;
-                    }
-                }
-        } else if (getProperty(tagGiven) != null){
-            given = getProperty(tagGiven).getValue();
-        }
-        return (given==null?firstNames[0]:given);
+        return firstName;
     }
 
     /**
@@ -143,13 +107,13 @@ public class PropertyName extends Property {
         }
         if (nameAsString != null)
             return false;
-        if (nameTagValue == null)
+        if (nameValue == null)
             return true;
         // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
         // We do not consider an space character around / (for geneatique compatibility
         // We do consider the case of char (ie SURN may be UPPER where NAME is not)
-        // XXX: We should consider the case where there is no sub tags in NAME structure
-        return nameTagValue.replaceAll(" */ *", "/").replaceAll(" +", " ").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
+        // XXX: We should consider the cas where there is no sub tags in NAME structure
+        return nameValue.replaceAll(" */ *", "/").equalsIgnoreCase(computeValue().replaceAll(" */ *", "/"));
     }
 
     /**
@@ -177,20 +141,7 @@ public class PropertyName extends Property {
      * the last name
      */
     public String getLastName() {
-        return getLastName(false);
-    }
-
-    /**
-     * the last name
-     */
-    public String getLastName(boolean displayValue) {
-        if (displayValue){
-            if (lastName.indexOf(',')<0)
-                return lastName;
-            else
-                return lastName.substring(0,lastName.indexOf(','));
-        } else
-            return lastName;
+        return lastName;
     }
 
     /**
@@ -202,7 +153,7 @@ public class PropertyName extends Property {
      */
     @Deprecated
     public String getLastName(int prefixPresentation) {
-        return getLastName();
+        return lastName;
     }
 
     /**
@@ -241,11 +192,15 @@ public class PropertyName extends Property {
 
     /**
      * the name (e.g. "Meier, Nils")
-     * @deprecated use getDisplayValue instead
      */
-    @Deprecated
     public String getName() {
-        return getDisplayValue();
+        if (nameAsString != null) {
+            return nameAsString;
+        }
+        if (firstName.length() == 0) {
+            return lastName;
+        }
+        return lastName + ", " + firstName;
     }
 
     /**
@@ -257,47 +212,38 @@ public class PropertyName extends Property {
         if (nameAsString != null) {
             return nameAsString;
         }
-        if (nameTagValue != null)
-            return nameTagValue;
-        return computeNameValue();
+        if (nameValue != null)
+            return nameValue;
+        return computeValue();
     }
 
     /**
-     * the Name Value computed by appending each name parts (given, surname, prefix, suffix).
+     * the Name Value computed by appending each name parts (given, surname, prifix, suffix).
      * This value is used when there is no conflict between those parts and the gedcom NAME value.
-     * (In this case nameValue is null).
+     * (Is ths casenameValue is null).
      * @return
      */
-    private String computeNameValue(){
-        return computeNameValue(
-                getNamePrefix(),
-                getFirstName(true),
-                getSurnamePrefix(),
-                getLastName(true),
-                suffix);
-
-    }
-    private String computeNameValue(String npfx, String first, String spfx, String last, String nsfx){
+    private String computeValue(){
         WordBuffer wb = new WordBuffer();
 
-        if (!npfx.isEmpty()) {
-            wb.append(npfx);
+        if (!getNamePrefix().isEmpty()) {
+            wb.append(getNamePrefix());
         }
-        if (!first.isEmpty()) {
-            wb.append(first);
+        if (!firstName.isEmpty()) {
+            wb.append(firstName);
         }
 
-        String name = spfx;
-        if (!name.isEmpty() && !last.isEmpty()) {
+        String name = getSurnamePrefix();
+        if (!name.isEmpty() && !lastName.isEmpty()) {
             name += " ";
         }
-        name += last;
+        name += lastName;
         // 20050328 need last name //'s if there's a suffix
-        if (name.length() > 0 || nsfx.length() > 0) {
+        if (name.length() > 0 || suffix.length() > 0) {
             wb.append("/" + name + "/");
         }
-        if (nsfx.length() > 0) {
-            wb.append(nsfx);
+        if (suffix.length() > 0) {
+            wb.append(suffix);
         }
         return wb.toString();
     }
@@ -317,44 +263,33 @@ public class PropertyName extends Property {
             return nameAsString;
         }
 
-        // if not valid, return name tag value
-        if (!isValid() && nameTagValue != null){
-            return nameTagValue;
+        // if not valid, return name tag
+        if (!isValid() && nameValue != null){
+            return nameValue;
         }
 
         WordBuffer b = new WordBuffer();
 
         if (Options.getInstance().nameFormat == 1) {
 
-            String last = getLastName(true);
+            String last = getLastName();
             if (last.length() == 0) {
                 last = "?";
             }
-            b.append(getSurnamePrefix());
             b.append(last);
             b.append(getSuffix());
             b.setFiller(", ");
-            b.append(getFirstName(true));
+            b.append(getFirstName());
 
         } else {
 
-            b.append(getFirstName(true));
-            b.append(getSurnamePrefix());
-            b.append(getLastName(true));
+            b.append(getFirstName());
+            b.append(getLastName());
 
         }
 
         return b.toString();
     }
-
-    @Override
-    Property.PropertyFormatter formatImpl(char marker){
-        if (marker == 'g'){
-            return new PropertyFormatter(this, getGivenName());
-        }
-        return super.formatImpl(marker);
-    }
-
 
     /**
      * Sets name to a new value
@@ -392,6 +327,8 @@ public class PropertyName extends Property {
             String suff,
             boolean replaceAllLastNames) {
 
+        boolean hasPfx = !nPfx.isEmpty() || !sPfx.isEmpty();
+
         // 20070128 don't bother with calculating old if this is happening in init()
         boolean hasParent = getParent() != null;
         String old = hasParent ? getValue() : null;
@@ -405,11 +342,9 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memorey
-        first = normalizeName(first,Options.getInstance().spaceIsSeparator());
-        last = normalizeName(last,false);
+        first = first.trim().intern();
+        last = last.trim().intern();
         suff = suff.trim();
-        nPfx = nPfx.trim();
-        sPfx = sPfx.trim();
 
         // replace all last names?
         if (replaceAllLastNames) {
@@ -429,12 +364,11 @@ public class PropertyName extends Property {
         // update GIVN|SURN - IF we have a parent
         if (hasParent) {
             boolean add = Options.getInstance().getAddNameSubtags();
-
-            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);
-            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);
-            addNameSubProperty(add, "NSFX", suff);
-            addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);
-            addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);
+            addNameSubProperty(add || hasPfx, "GIVN", first);
+            addNameSubProperty(add || hasPfx, "SURN", last);
+            addNameSubProperty(add || hasPfx, "NSFX", suff);
+            addNameSubProperty(add || hasPfx, "NPFX", nPfx);
+            addNameSubProperty(add || hasPfx, "SPFX", sPfx);
         }
 
         // Make sure no Information is kept in base class
@@ -443,7 +377,7 @@ public class PropertyName extends Property {
         firstName = first;
         suffix = suff;
         // clear NAME tag value
-        this.nameTagValue = null;
+        this.nameValue = null;
 
         // tell about it
         if (old != null) {
@@ -457,10 +391,10 @@ public class PropertyName extends Property {
 
     /**
      * Add or update a subproperty to a name tag
-     * @param force if true, add a property if no sub property is present.
+     * @param force if true, add a property is no sub property is present.
      * Otherwise no property is added
      * @param tag the TAG
-     * @param value property's value. If null no property is added and the previous is deleted
+     * @param value value of si property. If null no property is added and the previous is deleted
      */
     private void addNameSubProperty(boolean force, String tag, String value) {
         Property sub = getProperty(tag);
@@ -473,19 +407,10 @@ public class PropertyName extends Property {
         }
         if (sub == null) {
             sub = addProperty(tag, value);
+            sub.setGuessed(!force);
         } else {
             sub.setValue(value);
         }
-        sub.setGuessed(!force);
-        sub.setReadOnly(true);
-    }
-
-    private static String normalizeName(String namePiece, boolean spaceIsSeparator){
-        String result = namePiece.trim().replaceAll(" *, *", ",");
-        if (spaceIsSeparator){
-            result = result.replaceAll(" +",",");
-        }
-        return result.replaceAll(",", ", ");
     }
 
     /**
@@ -525,7 +450,7 @@ public class PropertyName extends Property {
     public void setValue(String newValue) {
 
         // remember tag value
-        nameTagValue = newValue;
+        nameValue = newValue;
 
         // don't parse anything secret
         if (Enigma.isEncrypted(newValue)) {
@@ -555,21 +480,7 @@ public class PropertyName extends Property {
         String s = l.substring(l.indexOf('/') + 1);
         l = l.substring(0, l.indexOf('/'));
 
-        f = f.replaceAll(",", " ");// remove commas
-        f = f.replaceAll(" +", " ");// normalize
-        // rewrite name TAG value (normalize)
-        newValue = computeNameValue("", f, "", l, s);
-
-        String npfx = getPropertyValue("NPFX");
-        f = stripPrefix(f, npfx+" ");
-
-        String spfx = getPropertyValue("SPFX");
-        l = stripPrefix(l, spfx+" ");
-
-        // Format GIVN Tag (' ' char replaced by ', ')
-        f = f.replaceAll(" +", ", ");// Normalize
-
-        // Replace first, last and suffix by tag values if present
+        // If has prefix, then name is not easily parsable, so get sub tag values
         if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
             l = getPropertyValue("SURN");
         }
@@ -581,40 +492,14 @@ public class PropertyName extends Property {
         }
         // keep
         setName(getPropertyValue("NPFX"), f, getPropertyValue("SPFX"), l, s, false);
-        nameTagValue = newValue;
+        nameValue = newValue;
 
         // done
     }
 
-    /**
-     * if value starts with prefix, returns value with prefix removed.
-     * returns value otherwise. Comparison is case insensitive
-     * @param value
-     * @param prefix
-     * @return
-     */
-    private static String stripPrefix(String value, String prefix){
-        if (value.toLowerCase().startsWith(prefix.toLowerCase())){
-            return value.substring(prefix.length());
-        }
-        return value;
-    }
-
-    /**
-     * refresh name structure from name value and all subtags
-     */
-    private void refresh(){
-        setName(getPropertyValue("NPFX"),
-                getPropertyValue("GIVN"),
-                getPropertyValue("SPFX"),
-                getPropertyValue("SURN"),
-                getPropertyValue("NSFX"),
-                false);
-    }
     @Override
     void propagatePropertyDeleted(Property container, int pos, Property deleted) {
-//XXX:        setValue(getValue());
-        refresh();
+        setValue(getValue());
         super.propagatePropertyDeleted(container, pos, deleted);
     }
 
@@ -622,8 +507,7 @@ public class PropertyName extends Property {
     void propagatePropertyChanged(Property property, String oldValue) {
         if (!mutePC) {
             mutePC = true;
-//XXX:            setValue(getValue());
-            refresh();
+            setValue(getValue());
         }
         super.propagatePropertyChanged(property, oldValue);
     }
@@ -723,12 +607,12 @@ public class PropertyName extends Property {
     private static class NameParser {
         // de prefix may collide with italian or netherland conventions
 
-        private static final Pattern PREFIX_PATTERN = Pattern.compile("(d\'|von der|von|zu|del|de las|de les|de los|de|las|la|os|das|da|dos|af|av)( +)(.*)");
+        private Pattern prefixPattern = Pattern.compile("(d\'|von der|von|zu|del|de las|de les|de los|de|las|la|os|das|da|dos|af|av)( +)(.*)");
         private String prefix = "";
         private String last = "";
 
         public NameParser(String last) {
-            Matcher m = PREFIX_PATTERN.matcher(last);
+            Matcher m = prefixPattern.matcher(last);
             if (m.matches()) {
                 this.prefix = m.group(1) + " ";
                 this.last = m.group(3);

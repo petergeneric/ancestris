@@ -214,46 +214,7 @@ public class Options extends OptionProvider {
         return getPreferences().get(ADD_NAME_SUBTAGS, false);
     }
 
-    /**
-     * Given Name Choice (Prefer given name et special tag?)
-     */
-    private static final String GIVEN_TAG   = "gedcom.givenNameTag";         // NOI18N
-    public void setGivenTag(String value) {
-        getPreferences().put(GIVEN_TAG, value);
-    }
-    public String getGivenTag() {
-        return getPreferences().get(GIVEN_TAG, "NICK");
-    }
-
-//XXX:    private static final String NAME_SPECIAL   = "gedcom.specialCharInName";         // NOI18N
-//    /**
-//     * Can NAME tag have special chars. For instance comma separators or bracket markers.
-//     * <ul><li/>If so, NAME tag can be fully parsed to get every NAME structure parts in most cases.
-//     * <li/>If not, to help parsing and to provide additionnal informations, subtags must be provided
-//     * </ul>in any cases subtag may be provided and will have higher priority over informations
-//     * found in NAME tag.
-//     */
-//    public boolean hasSpecialCharInName1() {
-//        return getPreferences().get(NAME_SPECIAL, false);
-//    }
-//    public void setSpecialCharInName(boolean  value) {
-//        getPreferences().put(NAME_SPECIAL, value);
-//    }
-//
-
-    private static final String SPACE_IS_SEPARATOR   = "gedcom.spaceIsSeparator";         // NOI18N
-    /**
-     * True if space is considered as separator (same as comma) in name pieces
-     * defaults to true
-     */
-    public boolean spaceIsSeparator() {
-        return getPreferences().get(SPACE_IS_SEPARATOR, false);
-    }
-    public void setSpaceIsSeparator(boolean  value) {
-        getPreferences().put(SPACE_IS_SEPARATOR, value);
-    }
-
-    private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
+private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
     }

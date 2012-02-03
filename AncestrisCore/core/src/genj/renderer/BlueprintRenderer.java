@@ -27,7 +27,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyBlob;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
@@ -878,7 +877,7 @@ public class BlueprintRenderer {
     }
     
     private void render(Property prop, Graphics2D g, Rectangle r) {
-
+      
       // entities (specifically NOTE) can be a multi-line - let fall through
       if (!(prop instanceof Entity) && prop instanceof MultiLineProperty) {
         render((MultiLineProperty)prop, g, r);
@@ -892,10 +891,10 @@ public class BlueprintRenderer {
       if (HINT_VALUE_TRUE.equals(attributes.get(HINT_KEY_IMG))) 
         render(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false), g, r);
       // text?
-      if (!HINT_VALUE_FALSE.equals(attributes.get(HINT_KEY_TXT)))
-            render(getText(prop), g, r);
-              }
-
+      if (!HINT_VALUE_FALSE.equals(attributes.get(HINT_KEY_TXT))) 
+        render(getText(prop), g, r);
+    }
+    
     private void render(MultiLineProperty mle, Graphics2D g, Rectangle r) {
       // get lines
       MultiLineProperty.Iterator line = mle.getLineIterator();
@@ -962,9 +961,7 @@ public class BlueprintRenderer {
         return getText((PropertyPlace)prop);
       if (prop instanceof PropertySex)
         return getText((PropertySex)prop);
-
-      if (attributes.get("format") != null)
-          return prop.format(attributes.get("format"));
+      
       return prop.getDisplayValue();
     }
     

@@ -26,7 +26,6 @@ public final class FamPanel extends Editor {
     public FamPanel() {
         setOpaque(true);
         initComponents();
-        marrEvent.addChangeListener(changes);
     }
     private Fam fam;
 

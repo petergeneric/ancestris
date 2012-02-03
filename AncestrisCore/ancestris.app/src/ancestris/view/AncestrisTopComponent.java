@@ -33,7 +33,6 @@ import org.openide.awt.UndoRedo;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
@@ -129,13 +128,6 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         setDefaultMode(mode.getName());
     }
 
-    /**
-     * Returns true if only one View can be opened on one gedcom file. Default to false
-     * @return
-     */
-    boolean isSingleView(){
-        return false;
-    }
     @Override
     public void open() {
         if (context == null) {
@@ -214,10 +206,6 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
      */
     public Image getImageIcon() {
         return null;
-    }
-
-    public Image getImageIcon(String resource){
-        return ImageUtilities.loadImage(resource, true);
     }
 
     /**
@@ -359,7 +347,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
     public AncestrisTopComponent create(Context context) {
         Gedcom gedcom = context == null ? null : context.getGedcom();
         AncestrisTopComponent topComponent = null;
-        if (gedcom != null && isSingleView()) {
+        if (gedcom != null) {
             for (AncestrisTopComponent tc : AncestrisPlugin.lookupAll(this.getClass())) {
                 if (gedcom.equals(tc.getGedcom())) {
                     topComponent = tc;

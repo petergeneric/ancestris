@@ -129,9 +129,6 @@ public class PropertySex extends Property {
       return "M";
     if (sex == FEMALE)
       return "F";
-
-    if (getGedcom() != null && getGedcom().getGrammar().equals(Grammar.V551))
-        return "U";
     return "";
   }
   
@@ -179,11 +176,6 @@ public class PropertySex extends Property {
 		      case 'm' :
 		      case 'M' : 
 		        sex = MALE;
-		        sexAsString=null;
-		        break;
-		      case 'u' :
-		      case 'U' :
-		        sex = UNKNOWN;
 		        sexAsString=null;
 		        break;
 		      default:

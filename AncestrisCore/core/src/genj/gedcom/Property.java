@@ -1047,34 +1047,26 @@ public abstract class Property implements Comparable<Property> {
     public boolean isTransient() {
         return isTransient;
     }
-
-    private boolean isGuessed = false;
     /**
      * A guessed property should act as any other property except that
      * its value is computed at run time and shouldn't be saved to file.
-     * This is specially used in NAME properties when ancestris manage the whole
-     * NAME Structure.
+     * This is specially used in NAME properties.
      */
+    private boolean isGuessed = false;
+
     public boolean isGuessed() {
         return isGuessed;
     }
 
     public void setGuessed(boolean value) {
         isGuessed = value;
-        // a Guessed property is read only
-        if (value)
-            setReadOnly(true);
     }
 
-    private boolean isReadOnly = false;
     /**
      * A read-only attribute that can be honoured by the UI
      */
     public boolean isReadOnly() {
-        return isReadOnly;
-    }
-    public void setReadOnly(boolean value){
-        this.isReadOnly = value;
+        return isGuessed();
     }
 
     /**
@@ -1250,9 +1242,6 @@ public abstract class Property implements Comparable<Property> {
      */
     public String format(String format, PrivacyPolicy policy) {
 
-        if (format == null)
-            return "";
-
         // match format given
         Matcher matcher = FORMAT_PATTERN.matcher(format);
         // prepare running parameters
@@ -1269,17 +1258,62 @@ public abstract class Property implements Comparable<Property> {
             char marker = format.charAt(matcher.start(2));
             String suffix = matcher.group(3);
             // translate marker into a value
-            PropertyFormatter formatter = formatImpl(marker);
-            Property prop = formatter.getProp();
-            String value = formatter.getValue();
-
+            Property prop;
+            String value;
+            switch (marker) {
+                case 'D': {
+                    prop = getProperty("DATE");
+                    value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : "";
+                    break;
+                }
+                case 'y': {
+                    prop = getProperty("DATE");
+                    value = (prop instanceof PropertyDate) && prop.isValid() ? Integer.toString(((PropertyDate) prop).getStart().getYear()) : "";
+                    break;
+                }
+                case 'p': {
+                    prop = getProperty("PLAC");
+                    value = (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity() : "";
+                    if (value == null) {
+                        value = "";
+                    }
+                    break;
+                }
+                case 'P': {
+                    prop = getProperty("PLAC");
+                    value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : "";
+                    break;
+                }
+                case 'v': {
+                    prop = this;
+                    value = getDisplayValue();
+                    break;
+                }
+                case 'V': {
+                    prop = this;
+                    value = getValue();
+                    break;
+                }
+                case 't': {
+                    prop = null;
+                    value = getTag();
+                    break;
+                }
+                case 'T': {
+                    prop = null;
+                    value = Gedcom.getName(getTag());
+                    break;
+                }
+                default:
+                    throw new IllegalArgumentException("unknown formatting marker " + marker);
+            }
             // check property against policy if applicable
             if (prop != null && policy.isPrivate(prop)) {
                 // we didn't have a mask yet or the prefix is not empty? use mask
                 value = (masked++ == 0 || prefix.trim().length() > 0) ? Options.getInstance().maskPrivate : "";
             }
             // append if value is good
-            if (value != null) {
+            if (value.length() > 0) {
                 result.append(prefix);
                 result.append(value);
                 result.append(suffix);
@@ -1297,90 +1331,6 @@ public abstract class Property implements Comparable<Property> {
         // got anything at all?
         return matches > 0 ? result.toString() : "";
     }
-
-    /**
-     * Default formatter based on given template.
-     * <pre>
-     *   {$t} property tag (doesn't count as matched)
-     *   {$T} property name(doesn't count as matched)
-     *   {$D} date as fully localized string
-     *   {$y} year
-     *   {$p} place (city)
-     *   {$P} place (all jurisdictions)
-     *   {$v} value
-     *   {$V} display value
-     * </pre>
-     * @param marker as described 
-     * @return formatted string if at least one marker matched, "" otherwise
-     */
-    PropertyFormatter formatImpl(char marker){
-        Property property = this;
-        Property prop = null;
-        String value = "";
-
-            switch (marker) {
-                case 'D': {
-                    prop = property.getProperty("DATE");
-                    value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : null;
-                    break;
-                }
-                case 'y': {
-                    prop = property.getProperty("DATE");
-                    value = (prop instanceof PropertyDate) && prop.isValid() ? Integer.toString(((PropertyDate) prop).getStart().getYear()) : null;
-                    break;
-                }
-                case 'p': {
-                    prop = property.getProperty("PLAC");
-                    value = (prop instanceof PropertyPlace) ? ((PropertyPlace) prop).getCity() : null;
-                    break;
-                }
-                case 'P': {
-                    prop = property.getProperty("PLAC");
-                    value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : null;
-                    break;
-                }
-                case 'v': {
-                    prop = property;
-                    value = property.getDisplayValue();
-                    break;
-                }
-                case 'V': {
-                    prop = property;
-                    value = property.getValue();
-                    break;
-                }
-                case 't': {
-                    prop = null;
-                    value = property.getTag();
-                    break;
-                }
-                case 'T': {
-                    prop = null;
-                    value = Gedcom.getName(property.getTag());
-                    break;
-                }
-                case 'e': {
-                    prop = property;
-                    value = "";
-                    break;
-                }
-                default:
-                    if (Character.isDigit(marker)){
-                        value = "";
-                        prop = property;
-                        String splitValues[] = prop.getValue().split(", *");
-                        int i = Character.digit(marker,10)-1;
-                        if (i<0){
-                            value = prop.getValue();
-                        } else if (i<splitValues.length)
-                            value = splitValues[i];
-                        break;
-                    }
-//                    throw new IllegalArgumentException("unknown formatting marker " + marker);
-            }
-            return new PropertyFormatter(prop, value);
-
-        }
 
     /**
      * Calculates an appropriate date that puts this property into a time context
@@ -1437,23 +1387,6 @@ public abstract class Property implements Comparable<Property> {
     protected void assertTag(String tag) {
         if (!this.tag.equals(tag)) {
             throw new Error("Tag should be " + tag + " but is " + this.tag);
-        }
-    }
-
-    static class PropertyFormatter{
-        private Property prop;
-        private String value;
-
-        public Property getProp() {
-            return prop;
-        }
-
-        public String getValue() {
-            return value;
-        }
-        PropertyFormatter(Property property, String value){
-            this.prop = property;
-            this.value = value;
         }
     }
 } //Property

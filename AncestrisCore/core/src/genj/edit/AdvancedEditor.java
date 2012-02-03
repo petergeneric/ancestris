@@ -675,7 +675,7 @@ import javax.swing.tree.TreePath;
     /** constructor */
     protected Add(Property parent) {
       this.parent = parent;
-      setText(resources.getString("action.list.add")+" ...");
+      setText(resources.getString("action.add")+" ...");
       setImage(Images.imgAdd);
     }
     /** run */

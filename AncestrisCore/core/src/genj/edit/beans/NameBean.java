@@ -46,8 +46,6 @@ public class NameBean extends PropertyBean {
 
   private final static NestedBlockLayout LAYOUT = new NestedBlockLayout(
       "<table>"+
-       "<row><l/><v/></row>"+
-       "<row><l/><v/></row>"+
        "<row><l/><row><v wx=\"1\"/><check pad=\"0\"/></row></row>"+
        "<row><l/><v wx=\"1\"/></row>"+
        "<row><l/><v/></row>"+
@@ -59,7 +57,7 @@ public class NameBean extends PropertyBean {
   private Property[] sameLastNames = new Property[0];
   private ChoiceWidget cLast, cFirst;
   private JCheckBox cAll;
-  private TextFieldWidget tSuff, tNick, tNpfx, tSpfx;
+  private TextFieldWidget tSuff, tNick;
 
   /**
    * Calculate message for replace all last names
@@ -94,18 +92,8 @@ public class NameBean extends PropertyBean {
     cFirst.setIgnoreCase(true);
     tSuff  = new TextFieldWidget("", 10); 
     tSuff.addChangeListener(changeSupport);
-    tNpfx  = new TextFieldWidget("", 10);
-    tNpfx.addChangeListener(changeSupport);
-    tSpfx  = new TextFieldWidget("", 10);
-    tSpfx.addChangeListener(changeSupport);
     tNick = new TextFieldWidget("", 10); 
     tNick.addChangeListener(changeSupport);
-
-    add(new JLabel(Gedcom.getName("NPFX")));
-    add(tNpfx);
-
-    add(new JLabel(Gedcom.getName("SPFX")));
-    add(tSpfx);
 
     cAll = new JCheckBox();
     cAll.setBorder(new EmptyBorder(1,1,1,1));
@@ -156,8 +144,6 @@ public class NameBean extends PropertyBean {
     String last  = cLast .getText().trim();
     String suff  = tSuff .getText().trim();
     String nick  = tNick .getText().trim();
-    String nPfx = tNpfx.getText().trim();
-    String sPfx = tSpfx.getText().trim();
     
     Gedcom ged = p.getGedcom();
     if (ged!=null) {
@@ -176,7 +162,7 @@ public class NameBean extends PropertyBean {
     }
 
     // ... store changed value
-    p.setName( nPfx, first, sPfx, last, suff, cAll.isSelected());
+    p.setName( first, last, suff, cAll.isSelected());
     p.setNick( nick );
     
     // start fresh
@@ -199,8 +185,6 @@ public class NameBean extends PropertyBean {
       cFirst.setText("");
       tSuff.setText("");
       tNick.setText("");
-      tNpfx.setText("");
-      tSpfx.setText("");
     } else {
       // keep track of who has the same last name
       sameLastNames = name.getSameLastNames();
@@ -211,8 +195,6 @@ public class NameBean extends PropertyBean {
       cFirst.setText(name.getFirstName()); 
       tSuff.setText(name.getSuffix()); 
       tNick.setText(name.getNick());
-      tNpfx.setText(name.getNamePrefix());
-      tSpfx.setText(name.getSurnamePrefix());
     }
     
     cAll.setVisible(false);

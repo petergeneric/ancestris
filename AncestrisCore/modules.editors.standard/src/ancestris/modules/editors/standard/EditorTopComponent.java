@@ -35,7 +35,6 @@ import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
-import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -244,15 +243,10 @@ public class EditorTopComponent extends AncestrisTopComponent
 
     @Override
     public Image getImageIcon() {
-        Image icon = null;
-        if (editor != null) {
-            icon = editor.getImageIcon();
+        if (editor == null) {
+            return null;
         }
-        if (icon == null)
-            icon = getImageIcon("ancestris/modules/editors/standard/editeur_standard.png");
-        if (icon == null)
-            icon = super.getImageIcon();
-        return icon;
+        return editor.getImageIcon();
     }
 
     @Override
@@ -295,17 +289,16 @@ public class EditorTopComponent extends AncestrisTopComponent
 
         }
 
-//        @Override
-//        //XXX: this is commented out to help finding a race condition in toolbox
-//        public void gedcomWriteLockReleased(Gedcom gedcom) {
-//
-//            // foreign change while we're looking?
-//            if (editor != null && !isChangeSource) {
-//                Context ctx = editor.getContext();
-//                editor.setContext(new Context());
-//                editor.setContext(ctx);
-////                populate(toolbar);
-//            }
-//        }
+        @Override
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
+
+            // foreign change while we're looking?
+            if (editor != null && !isChangeSource) {
+                Context ctx = editor.getContext();
+                editor.setContext(new Context());
+                editor.setContext(ctx);
+//                populate(toolbar);
+            }
+        }
     }
 }

@@ -699,7 +699,7 @@ public class GeneanetExport {
 
 
         Property[] indiNames = indi.getProperties("NAME");
-        if (indiNames.length > 0) {
+        if (indiNames != null) {
             indiDescription += analyseName(indiNames);
         }
 
@@ -722,7 +722,7 @@ public class GeneanetExport {
          * [#occu Occupation]
          */
         Property[] indiOccu = indi.getProperties("OCCU");
-        if (indiOccu.length > 0) {
+        if (indiOccu != null) {
 
             String occuString = new String();
 

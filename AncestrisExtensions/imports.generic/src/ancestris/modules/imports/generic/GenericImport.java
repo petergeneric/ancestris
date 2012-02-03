@@ -24,7 +24,7 @@ public class GenericImport extends Import {
     /**
      * Constructor
      */
-    public void GenericImport() {
+    public void HeredisImport() {
     }
 
     @Override

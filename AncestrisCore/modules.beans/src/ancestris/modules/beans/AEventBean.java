@@ -94,7 +94,7 @@ public final class AEventBean extends PropertyBean {
         setLayout(layout);
 
         cbIsKnown = new javax.swing.JCheckBox();
-        add(cbIsKnown, new CC().alignX("left").spanX().wrap());
+        add(cbIsKnown, new CC().alignX("left").wrap());
         cbIsKnown.setFont(new java.awt.Font("DejaVu Sans", 2, 10));
         org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
         cbIsKnown.addActionListener(new java.awt.event.ActionListener() {
@@ -102,7 +102,6 @@ public final class AEventBean extends PropertyBean {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showOrHide();
-                changeSupport.fireChangeEvent();
             }
         });
 
@@ -198,11 +197,11 @@ public final class AEventBean extends PropertyBean {
             evtCause.setVisible(checked);
             causLabel.setVisible(checked);
 
-//            if (checked) {
-//                cbIsKnown.setText(null);
-//            } else {
-//                org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
-//            }
+            if (checked) {
+                cbIsKnown.setText(null);
+            } else {
+                org.openide.awt.Mnemonics.setLocalizedText(cbIsKnown, org.openide.util.NbBundle.getMessage(AEventBean.class, "AEventBean.cbIsKnown.text")); // NOI18N
+            }
         } else {
             cbIsKnown.setVisible(false);
 //            cbIsKnown.setSelected(true);
