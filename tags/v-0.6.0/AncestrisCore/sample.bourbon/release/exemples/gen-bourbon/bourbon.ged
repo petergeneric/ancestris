@@ -1,0 +1,875 @@
+0 HEAD
+1 SOUR ANCESTRIS
+2 VERS 0.6.0.1970
+2 NAME Ancestris
+2 CORP Ancestris Team
+3 ADDR http://www.ancestris.org, http://www.ancestris.com
+1 DEST ANY
+1 DATE 20 SEP 2011
+2 TIME 18:57:59
+1 SUBM @B1@
+1 FILE bourbon.ged
+1 GEDC
+2 VERS 5.5.1
+2 FORM Lineage-Linked
+1 CHAR UTF-8
+1 PLAC
+2 FORM Lieudit,Commune,Code_INSEE,Département,Région,Pays
+0 @B1@ SUBM
+1 NAME POUYET Patrick
+1 ADDR 100, rue Inconnu Bidon
+2 CITY Janse-Rien
+2 POST 11999
+2 CTRY France
+1 PHON +33 909 909 909
+1 _EMAIL support@ancestris.org
+1 _WWW http://www.ancestris.org
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 18:09:09
+0 @I1@ INDI
+1 NAME Louis XIII /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 27 SEP 1601
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 DEAT
+2 DATE 14 MAY 1643
+2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
+1 EVEN
+2 TYPE Sacre
+2 DATE 17 OCT 1610
+2 PLAC ,Reims,51454,Marne,,FRANCE
+1 FAMC @F11@
+1 FAMS @F1@
+1 OBJE
+2 TITL Louis XIII par Rubens
+2 FILE photos/Louis_XIII.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 15:47:12
+0 @I2@ INDI
+1 NAME Anne /HABSBOURG/
+2 NICK D'Autriche
+1 SEX F
+1 BIRT
+2 DATE 22 SEP 1601
+2 PLAC ,Valladolid,,,,ESPAGNE
+1 DEAT
+2 DATE 20 JAN 1666
+2 PLAC ,Paris,75056,Paris,,FRANCE
+1 FAMS @F1@
+1 OBJE
+2 TITL Anne d'Autriche
+2 FILE photos/Anne_d_Autriche.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:30:35
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 MARR
+2 DATE 21 NOV 1615
+2 PLAC ,Bordeaux,33063,Gironde,,FRANCE
+1 CHIL @I3@
+1 CHIL @I4@
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:30:55
+0 @I3@ INDI
+1 NAME Louis XIV /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 5 SEP 1638
+2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
+2 SOUR @S1@
+3 DATA
+4 TEXT Le cinquiesme jour de septembre mil six
+5 CONT cents trente huict nasquit dans le chasteau
+5 CONT neuf de St Germain en Laye a onze heures
+5 CONT un quart du matin Monseigneur le dauphin
+5 CONT fils premier nay de tres chrestien et tres puissant
+5 CONT Monarqz Louys treiziesme de ce nom Roy
+5 CONT de france et de Navarre et de tres religieuse
+5 CONT et Illustre Princesse Anne d'Austriche
+5 CONT sa tres chaste et chere Espouse Et funt Incontinent
+5 CONT apres et le mesme Jour Ondoye par le
+5 CONT Reverand Pere en Dieu Messire dominiqz
+5 CONT Seguier Evesqz de Meaux et premier Aumosnier
+5 CONT de sa Maj[es]te avec les eaues baptismales des
+5 CONT fonts de la paroisse dud[it] lieu de st Germain en 
+5 CONT Laye bailles et livrees par Me Pierre
+5 CONT Cagnye pbre et cure de ladicte
+5 CONT Paroisse
+5 CONT Bailly
+3 OBJE
+4 TITL Acte de Baptême de Louis XIV
+4 FILE actes/Bapteme_Louis_XIV.jpg
+5 FORM jpg
+4 NOTE Collection Communale
+5 CONT Cote 1168917
+5 CONT Registre des Baptêmes (1629-1640)
+5 CONT Page 108
+4 FILE actes/Transcription_bapteme_Louis_XIV.pdf
+5 FORM pdf
+1 DEAT
+2 DATE 1 SEP 1715
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 RESI
+2 DATE 6 MAY 1682
+2 ADDR Le Château
+3 CITY Versailles,Yvelines
+3 POST 78000
+1 BURI
+2 DATE 9 SEP 1715
+2 PLAC Basilique,Saint-Denis,93066,Seine-Saint-Denis,,FRANCE
+2 SOUR @S2@
+3 DATA
+4 TEXT Le premier jour de septembre de l'an mil sept
+5 CONT cents quinze est decedé tres haut tres puissant et tres
+5 CONT excellent Roy de france Louis quatorze deglorieuse
+5 CONT memoire agé de Soixante et dix sept ans
+5 CONT Dans son ch(ate)au et transporté a St Denys
+5 CONT Le neufieme dudit mois en presence de M(essir)e Jean
+5 CONT Dubois chanoine de St quentin chappelain ord(inai)re de la
+5 CONT musique du Roy et M(essir)e Pierre mamoury p(re)b(t)re de la
+5 CONT con(gregatio)n de la mission qui ont signé avec nous
+3 OBJE
+4 TITL Inhumation de Louis XIV
+4 FILE actes/Sepulture_Louis_XIV.jpg
+5 FORM jpg
+4 NOTE
+1 EVEN
+2 TYPE Sacre
+2 DATE 7 JUN 1654
+2 PLAC ,Reims,51454,Marne,,FRANCE
+1 FAMC @F1@
+1 FAMS @F2@
+1 FAMS @F3@
+1 OBJE
+2 TITL Louis XIV en habit de sacre
+2 FILE photos/Louis_XIV.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:39:01
+0 @I4@ INDI
+1 NAME Philippe I /CAPET/
+2 NICK D'Orléans
+1 SEX M
+1 BIRT
+2 DATE 21 SEP 1640
+2 PLAC ,Saint-Germain-en-Laye,78551,Yvelines,,FRANCE
+1 DEAT
+2 DATE 9 JUN 1701
+2 PLAC ,Saint-Cloud,92064,Hauts-de-Seine,,FRANCE
+1 FAMC @F1@
+1 FAMS @F6@
+1 OBJE
+2 TITL Phillipe II d'Orléans
+2 FILE photos/Philippe_II.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:37:16
+0 @I5@ INDI
+1 NAME Marie-Thérèse /HABSBOURG/
+2 NICK D'Autriche
+1 SEX F
+1 BIRT
+2 DATE 20 SEP 1638
+2 PLAC ,Madrid,,,,ESPAGNE
+1 DEAT
+2 DATE 30 JUL 1683
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMS @F2@
+1 OBJE
+2 TITL Marie-Thérèse avec son fils, Louis
+2 FILE photos/Marie_Terese.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:32:20
+0 @F2@ FAM
+1 HUSB @I3@
+1 WIFE @I5@
+1 MARR
+2 DATE 9 JUN 1660
+2 PLAC ,Saint-Jean-de-Luz,64483,Pyrénées-Atlantiques,,FRANCE
+1 CHIL @I6@
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:33:52
+0 @I6@ INDI
+1 NAME Louis /CAPET/
+2 NICK Le Grand Dauphin
+1 SEX M
+1 BIRT
+2 DATE 1 NOV 1661
+2 PLAC Château,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 DEAT
+2 DATE 14 FEB 1711
+2 PLAC ,Meudon,92048,Hauts-de-Seine,,FRANCE
+1 FAMC @F2@
+1 FAMS @F4@
+1 OBJE
+2 TITL Louis, Le Grand Dauphin
+2 FILE photos/Louis_de_France.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:35:08
+0 @I7@ INDI
+1 NAME Françoise /D'AUBIGNÉ/
+2 NICK De Maintenon
+1 SEX F
+1 BIRT
+2 DATE 27 NOV 1635
+2 PLAC ,Niort,79191,Deux-Sèvres,,FRANCE
+1 DEAT
+2 DATE 15 APR 1719
+2 PLAC ,Saint-Cyr-l'École,78545,Yvelines,,FRANCE
+1 RESI
+2 DATE 1 JAN 1716
+2 ADDR Maison Royale de Saint-Louis
+3 CITY Saint-Cyr-l'École,Yvelines
+3 POST 78210
+1 FAMS @F3@
+1 OBJE
+2 TITL Madame de Maintenon
+2 FILE photos/Madame_de_Maintenon.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:33:23
+0 @F3@ FAM
+1 HUSB @I3@
+1 WIFE @I7@
+1 MARR
+2 DATE 10 OCT 1683
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 CHIL @I14@
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:28:59
+0 @I8@ INDI
+1 NAME Marie Anne Victoire /DE BAVIÈRE/
+1 SEX F
+1 BIRT
+2 DATE 28 NOV 1660
+2 PLAC ,Munich,,,,ALLEMAGNE
+1 DEAT
+2 DATE 20 APR 1690
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMS @F4@
+1 OBJE
+2 TITL Marie Anne DE BAVIÈRE
+2 FILE photos/Dauphine_Bayern.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @F4@ FAM
+1 HUSB @I6@
+1 WIFE @I8@
+1 MARR
+2 DATE 7 MAR 1680
+2 PLAC ,Châlons,51108,Marne,,FRANCE
+1 CHIL @I9@
+1 CHAN
+2 DATE 20 DEC 2010
+3 TIME 09:43:33
+0 @I9@ INDI
+1 NAME Louis /CAPET/
+2 NICK Duc de Bourgogne
+1 SEX M
+1 BIRT
+2 DATE 6 AUG 1682
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 DEAT
+2 DATE 18 FEB 1712
+2 PLAC ,Marly,78372,Yvelines,,FRANCE
+1 FAMC @F4@
+1 FAMS @F5@
+1 OBJE
+2 TITL Louis, Duc de BOURGOGNE
+2 FILE photos/Duc_de_Bourgogne.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:35:27
+0 @I10@ INDI
+1 NAME Marie-Adélaïde /DE SAVOIE/
+1 SEX F
+1 BIRT
+2 DATE 6 DEC 1685
+2 PLAC ,Turin,,,,ITALIE
+1 DEAT
+2 DATE 12 FEB 1712
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMS @F5@
+1 OBJE
+2 TITL Marie-Adélaïde DE SAVOIE
+2 FILE photos/Maria_Adelaide_von_Savoyen_02.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:35:41
+0 @F5@ FAM
+1 HUSB @I9@
+1 WIFE @I10@
+1 MARR
+2 DATE 7 DEC 1697
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 CHIL @I11@
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @I11@ INDI
+1 NAME Louis XV /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 15 FEB 1710
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 DEAT
+2 DATE 10 MAY 1774
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 EVEN
+2 TYPE Sacre
+2 DATE 25 OCT 1722
+2 PLAC ,Reims,51454,Marne,,FRANCE
+2 OBJE
+3 TITL Louis XV en costume de sacre
+3 FILE photos/Louis_XV_sacre.jpg
+4 FORM jpg
+3 NOTE
+1 FAMC @F5@
+1 FAMS @F8@
+1 OBJE
+2 TITL Louis XV
+2 FILE photos/Louis_XV.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @I12@ INDI
+1 NAME Charlotte-Élisabeth /VON DER PFALZ-SIMMERN/
+2 NICK De Bavière
+1 SEX F
+1 BIRT
+2 DATE 27 MAY 1652
+2 PLAC ,Heidelberg,,,Baden-Württemberg,ALLEMAGNE
+1 DEAT
+2 DATE 8 DEC 1722
+2 PLAC ,Saint-Cloud,92064,Hauts-de-Seine,,FRANCE
+1 FAMS @F6@
+1 OBJE
+2 TITL Charlotte-Élisabeth De Bavière
+2 FILE photos/Elisabeth_de_Baviere.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:38:09
+0 @F6@ FAM
+1 HUSB @I4@
+1 WIFE @I12@
+1 MARR
+2 DATE 16 NOV 1671
+2 PLAC ,Metz,57463,Mozelle,,FRANCE
+1 CHIL @I13@
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:38:20
+0 @I13@ INDI
+1 NAME Philippe II /CAPET/
+2 NICK D'Orléans
+1 SEX M
+1 BIRT
+2 DATE 2 AUG 1674
+2 PLAC ,Saint-Cloud,92064,Hauts-de-Seine,,FRANCE
+1 DEAT
+2 DATE 2 DEC 1723
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 OCCU Régent
+2 DATE BET 2 SEP 1715 AND 16 FEB 1723
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMC @F6@
+1 FAMS @F7@
+1 OBJE
+2 TITL Philippe d'Orléans
+2 FILE photos/Philippe_Orleans.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:37:53
+0 @I14@ INDI
+1 NAME Françoise Marie /DE BOURBON/
+1 SEX F
+1 BIRT
+2 DATE 4 MAY 1677
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 DEAT
+2 DATE 1 FEB 1749
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMC @F3@
+1 FAMS @F7@
+1 OBJE
+2 TITL Françoise Marie DE BOURBON, avec sa soeur
+2 FILE photos/Francoise_Marie_de_Blois.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @F7@ FAM
+1 HUSB @I13@
+1 WIFE @I14@
+1 MARR
+2 DATE 9 JAN 1692
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @I15@ INDI
+1 NAME Marie /LESZCZYNSKA/
+1 SEX F
+1 BIRT
+2 DATE 23 JUN 1703
+2 PLAC ,Trzebnica,,,,POLOGNE
+1 DEAT
+2 DATE 24 JUN 1768
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMS @F8@
+1 OBJE
+2 TITL Marie LESZCZYNSKA
+2 FILE photos/Marie_Leszczynska.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:36:09
+0 @F8@ FAM
+1 HUSB @I11@
+1 WIFE @I15@
+1 MARR
+2 DATE 5 SEP 1725
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 CHIL @I16@
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:28:59
+0 @I16@ INDI
+1 NAME Louis /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 4 SEP 1729
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 DEAT
+2 DATE 20 DEC 1765
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 FAMC @F8@
+1 FAMS @F9@
+1 OBJE
+2 TITL Louis de France
+2 FILE photos/Louis_de_France_02.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @I17@ INDI
+1 NAME Marie-Josèphe /VON SACHSEN/
+2 NICK De Saxe
+1 SEX F
+1 BIRT
+2 DATE 4 NOV 1731
+2 PLAC ,Dresde,,,,ALLEMAGNE
+1 DEAT
+2 DATE 13 MAR 1767
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 FAMS @F9@
+1 OBJE
+2 TITL Marie-Josèphe DE SAXE
+2 FILE photos/Marie-Josephe_de_Saxe.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 17:02:31
+0 @F9@ FAM
+1 HUSB @I16@
+1 WIFE @I17@
+1 MARR
+2 DATE 9 FEB 1747
+2 PLAC
+1 CHIL @I18@
+1 CHAN
+2 DATE 20 DEC 2010
+3 TIME 11:26:37
+0 @I18@ INDI
+1 NAME Louis XVI /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 23 AUG 1754
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+1 DEAT
+2 DATE @#DFRENCH R@ 2 PLUV 1
+2 PLAC ,Paris,75056,Paris,,FRANCE
+1 EVEN
+2 TYPE Sacre
+2 DATE 11 JUN 1775
+2 PLAC ,Reims,51454,Marne,,FRANCE
+1 FAMC @F9@
+1 FAMS @F10@
+1 OBJE
+2 TITL Louis XVI
+2 FILE photos/Louis_XVI.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:31:25
+0 @I19@ INDI
+1 NAME Marie Antoinette /DE HASBOURG-LORRAINE/
+2 NICK D'Autriche
+1 SEX F
+1 BIRT
+2 DATE 2 NOV 1755
+2 PLAC ,Vienne,,,,AUTRICHE
+1 DEAT
+2 DATE @#DFRENCH R@ 25 VEND 2
+2 PLAC ,Paris,75056,Paris,,FRANCE
+1 FAMS @F10@
+1 OBJE
+2 TITL Marie Antoinette d'Autriche
+2 FILE photos/Marie_Antoinette.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 24 JAN 2011
+3 TIME 19:36:48
+0 @F10@ FAM
+1 HUSB @I18@
+1 WIFE @I19@
+1 MARR
+2 DATE 16 MAY 1770
+2 PLAC ,Versailles,78646,Yvelines,,FRANCE
+2 SOUR @S3@
+3 DATA
+4 TEXT L'an mil sept cent soixante-dix, le seize may vu=û la dispense de parenté accordée par nôtre saint pere le pape clement quatorze en datte du trente aoust mil sept cent soixante-neuf et la dispense accordée par Mgr l'Archevêque de paris de la publ
+5 CONC ication de trois bans ensemble la permission d'être fiancés et mariés le même jour dans telle église, ou chapelle par tel évêque ou prêtre qu'il plaira à Sa majesté, même in pontificalibus en datte du quatre de ce mois, signé christophe Archevêqu
+5 CONC e de paris, plus bas de la Touche secrétaire...
+2 OBJE
+3 TITL Acte de Mariage de Louis XVI et Marie Antoinette
+3 FILE actes/Acte_mariage_Louis16.jpg
+4 FORM jpg
+3 FILE actes/Transcription_mariage_louis16.pdf
+4 FORM pdf
+3 NOTE Adresse de l'acte : http://doc.geneanet.org/actes/zoom.php?idacte=40472
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:55:57
+0 @N1@ NOTE Cette généalogie est un exemple fourni avec Ancestris. Elle peut cependant être corrigée et/ou complétée.
+1 CONT
+1 CONT N'hésitez pas à la modifier, toujours dans le respect de la norme gedcom, et à nous la faire parvenir (uniquement le fichier gedcom sauf si vous rajoutez des images et autres documents liés à vos modifications), à l'adresse:
+1 CONT support@ancestris.org
+1 CONT
+1 CONT Merci. L'équipe de développement.
+1 CHAN
+2 DATE 3 SEP 2011
+3 TIME 06:38:48
+0 @S1@ SOUR
+1 AUTH Registre Communal de Saint-Germain-en-Laye
+1 TITL Site Internet Archives Départementales des Yvelines
+1 TEXT
+1 REPO @R1@
+1 REPO @R2@
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:50:22
+0 @R1@ REPO
+1 NAME Généanet
+1 ADDR http://www.geneanet.org
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 18:10:00
+0 @R2@ REPO
+1 NAME Archives Départementales des Yvelines
+1 ADDR 2 Avenue de Lunca
+2 CITY Montigny-le-Bretonneux
+2 POST 78180
+2 CTRY France
+1 PHON +33 161 373 630
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 18:12:07
+0 @S2@ SOUR
+1 AUTH Archives Départementales de Seine-Saint-Denis
+1 TITL Site Internet Archives Départementales de Seine-Saint-Denis
+1 TEXT 18 Avenue du Président Salvador Allende
+2 CONT 93000 Bobigny
+1 REPO @R1@
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:50:48
+0 @S3@ SOUR
+1 AUTH Site Internet Archives Départementales Yvelines
+1 TITL Registre Paroissaux de Versailles
+1 TEXT
+1 REPO @R1@
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 16:56:12
+0 @I20@ INDI
+1 NAME Henri IV /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 13 DEC 1553
+2 PLAC Château,Pau,64445,Pyrénées-Atlantiques,,FRANCE
+1 DEAT
+2 DATE 14 MAY 1610
+2 PLAC Rue de la Ferronnerie[,Paris,75056,Paris,,FRANCE
+2 OBJE
+3 TITL L'assassinat d'Henri IV par Gaspas BOUTTATS
+3 FILE photos/Assassinat_de_Henri_IV.jpg
+4 FORM jpg
+1 BURI
+2 DATE 1 JUL 1610
+2 PLAC Basilique,Saint-Denis,93066,Seine-Saint-Denis,,FRANCE
+1 NOTE @N2@
+1 FAMS @F11@
+1 OBJE
+2 TITL Portrait d'Henri IV 
+2 FILE photos/Henri_IV.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:56:52
+0 @F11@ FAM
+1 HUSB @I20@
+1 WIFE @I21@
+1 MARR
+2 DATE 17 DEC 1600
+2 PLAC ,Lyon,69123,Rhône,,FRANCE
+1 CHIL @I1@
+1 CHIL @I22@
+1 CHIL @I24@
+1 CHIL @I25@
+1 CHIL @I26@
+1 CHIL @I28@
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:45:25
+0 @I21@ INDI
+1 NAME Maria /DE' MEDICI/
+1 SEX F
+1 BIRT
+2 DATE 26 APR 1575
+2 PLAC ,Florence,,,,ITALIE
+1 DEAT
+2 DATE 3 JUL 1642
+2 PLAC ,Cologne,,,Rhénanie-du-Nord-Westphalie,ALLEMAGNE
+1 FAMS @F11@
+1 OBJE
+2 TITL Marie de Medicis
+2 FILE photos/Marie_de_Medicis.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:10:34
+0 @I22@ INDI
+1 NAME Élisabeth /CAPET/
+1 SEX F
+1 BIRT
+2 DATE 22 NOV 1602
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 DEAT
+2 DATE 6 OCT 1644
+2 PLAC ,Madrid,,,,ESPAGNE
+1 FAMC @F11@
+1 FAMS @F12@
+1 OBJE
+2 TITL Élisabeth de France
+2 FILE photos/Elisabeth_de_France.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:17:21
+0 @I23@ INDI
+1 NAME Philippe IV /HASBOURG/
+2 NICK d'Espagne
+1 SEX M
+1 BIRT
+2 DATE 8 APR 1605
+2 PLAC ,Valladolid,,,,ESPAGNE
+1 DEAT
+2 DATE 17 SEP 1665
+2 PLAC ,Madrid,,,,ESPAGNE
+1 FAMS @F12@
+1 OBJE
+2 TITL Philippe IV d'Espagne
+2 FILE photos/Philippe_IV_espagne.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:23:35
+0 @F12@ FAM
+1 HUSB @I23@
+1 WIFE @I22@
+1 MARR
+2 DATE 25 NOV 1615
+2 PLAC ,Bordeaux,33063,Gironde,,FRANCE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:16:29
+0 @I24@ INDI
+1 NAME N*** /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 16 APR 1607
+2 PLAC
+1 DEAT
+2 DATE 17 NOV 1611
+2 PLAC
+1 NOTE Mort sans avoir reçu le baptême complet, d'où l'absence de prénom
+2 SOUR @S4@
+1 FAMC @F11@
+1 OBJE
+2 TITL N*** de BOURBON-CAPET
+2 FILE photos/Nicolas_de_bourbon.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:30:30
+0 @S4@ SOUR
+1 AUTH Wikipedia
+1 TITL Nicolas de France
+1 TEXT http://fr.wikipedia.org/wiki/Nicolas_de_France
+1 REPO @R3@
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:28:07
+0 @R3@ REPO
+1 NAME WIKIPEDIA
+1 ADDR http://fr.wikipedia.org
+2 CITY
+2 POST
+2 STAE
+2 CTRY
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:57:56
+0 @I25@ INDI
+1 NAME Gaston Jean Baptiste /CAPET/
+1 SEX M
+1 BIRT
+2 DATE 24 APR 1608
+2 PLAC ,Fontainebleau,77186,Seine-et-Marne,,FRANCE
+1 DEAT
+2 DATE 2 FEB 1660
+2 PLAC ,Blois,41018,Loir-et-Cher,,FRANCE
+1 FAMC @F11@
+1 OBJE
+2 TITL Gaston de France
+2 FILE photos/Gaston_de_France.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:37:26
+0 @I26@ INDI
+1 NAME Henriette Marie /CAPET/
+2 NICK de France
+1 SEX F
+1 BIRT
+2 DATE 26 NOV 1609
+2 PLAC Palais du Louvre,Paris,75056,Paris,,FRANCE
+1 DEAT
+2 DATE 10 SEP 1669
+2 PLAC Château de Colombes,Paris,75056,Paris,,FRANCE
+1 FAMC @F11@
+1 FAMS @F13@
+1 OBJE
+2 TITL Henriette de France
+2 FILE photos/Henriette_de_France.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:52:35
+0 @I27@ INDI
+1 NAME Charles I /STUART/
+1 SEX M
+1 BIRT
+2 DATE 19 NOV 1600
+2 PLAC ,Dunfermline,,,,ÉCOSSE
+1 DEAT
+2 DATE 30 JAN 1649
+2 PLAC ,Londres,,,,ANGLETERRE
+1 FAMS @F13@
+1 OBJE
+2 TITL Charles I STUART
+2 FILE photos/Charles_I_Stuart.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:49:28
+0 @F13@ FAM
+1 HUSB @I27@
+1 WIFE @I26@
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:42:46
+0 @I28@ INDI
+1 NAME Christine /CAPET/
+1 SEX F
+1 BIRT
+2 DATE 10 FEB 1606
+2 PLAC ,Paris,75056,Paris,,FRANCE
+1 DEAT
+2 DATE 27 DEC 1663
+2 PLAC ,Turin,,,,ITALIE
+1 FAMC @F11@
+1 OBJE
+2 TITL Christine CAPET
+2 FILE photos/Christine_de_France.jpg
+3 FORM jpg
+2 NOTE
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:47:21
+0 @N2@ NOTE Assassiné par François RAVAILLAC
+1 SOUR @S5@
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:56:52
+0 @S5@ SOUR
+1 AUTH Wikipedia
+1 TITL Henri IV de France
+1 TEXT http://fr.wikipedia.org/wiki/Henri_IV_de_France
+1 REPO @R3@
+1 CHAN
+2 DATE 20 SEP 2011
+3 TIME 16:57:56
+0 TRLR

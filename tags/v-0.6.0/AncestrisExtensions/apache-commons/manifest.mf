@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.libs.apache.commons
+OpenIDE-Module-Localizing-Bundle: ancestris/libs/apache/commons/Bundle.properties
+OpenIDE-Module-Specification-Version: 0.5.0
+

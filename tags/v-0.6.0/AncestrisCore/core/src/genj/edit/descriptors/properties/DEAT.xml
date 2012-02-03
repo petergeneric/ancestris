@@ -1,0 +1,6 @@
+<table>
+ <row><label path="." cols="2"/></row>
+ <row><label path=".:CAUS"/><bean path=".:CAUS"/></row>
+ <row><label path=".:DATE"/><bean path=".:DATE" dir="h"/></row>
+ <row><label path=".:PLAC"/><bean path=".:PLAC" wx="1"/></row>
+</table>
