@@ -324,6 +324,7 @@ public class App {
         } catch (Throwable t) {
         }
         LOG.setLevel(level);
+        Logger.getLogger("ancestris").setLevel(level);
         if (level.intValue() < Level.CONFIG.intValue()) {
             root.setLevel(Level.CONFIG);
         } else {
