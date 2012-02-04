@@ -29,22 +29,24 @@ public final class WebBookWizardAction extends CallableSystemAction {
     @SuppressWarnings("unchecked")
     public void performAction() {
         Gedcom gedcom = getGedcom();
-        WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels(gedcom));
-        // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
-        wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-        wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getName());
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
-        dialog.setVisible(true);
-        dialog.toFront();
-        boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
-        if (!cancelled) {
-            // user pressed ok
-            WebBookStarter wbs = new WebBookStarter(gedcom);
-            wbs.start();
-        } else {
-            // user pressed annuler
+        if (gedcom != null) {
+            WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels(gedcom));
+            // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
+            wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
+            wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getName());
+            Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
+            dialog.setVisible(true);
+            dialog.toFront();
+            boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
+            if (!cancelled) {
+                // user pressed ok
+                WebBookStarter wbs = new WebBookStarter(gedcom);
+                wbs.start();
+            } else {
+                // user pressed annuler
+            }
+            panels = null;
         }
-        panels = null;
     }
 
     /**
@@ -111,10 +113,10 @@ public final class WebBookWizardAction extends CallableSystemAction {
     }
 
     public Gedcom getGedcom() {
-        Context context;
+        Context context = App.center.getSelectedContext(true);
         Gedcom gedcom = null;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if (context != null) {
             gedcom = context.getGedcom(); // get selected gedcom
             if (gedcom == null) { // if none selected, take first one
                 Iterator it = GedcomDirectory.getInstance().getContexts().iterator();
