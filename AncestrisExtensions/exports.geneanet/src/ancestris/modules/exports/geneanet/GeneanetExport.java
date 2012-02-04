@@ -183,7 +183,7 @@ public class GeneanetExport {
     }
 
     public void start() {
-        console = new Console (NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle") + " " + myGedcom.getName());
+        console = new Console(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle") + " " + myGedcom.getName());
 
         console.println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), myGedcom.getName()));
 
@@ -767,6 +767,8 @@ public class GeneanetExport {
         Property birth = indi.getProperty("BIRT");
         if (birth != null) {
             indiDescription += analyzeBirth(birth) + " ";
+        } else {
+            indiDescription += "0 ";
         }
 
         /*
@@ -895,8 +897,7 @@ public class GeneanetExport {
      * DateOfBirth [#bs BirthSource] [#bp PlaceOfBirth] [!BaptizeDate]
      * [#pp BaptizePlace] [#ps BaptizeSource]
      */
-    private String analyzeBirth(
-            Property birth) {
+    private String analyzeBirth(Property birth) {
 
         // DateOfBirth
         String birthString = new String();
