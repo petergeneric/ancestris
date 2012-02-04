@@ -26,18 +26,23 @@ package ancestris.modules.exports.geneanet;
 import genj.gedcom.Context;
 import ancestris.app.App;
 import genj.gedcom.Gedcom;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.WindowManager;
 
 public final class GeneanetExportAction implements ActionListener {
 
@@ -82,7 +87,6 @@ public final class GeneanetExportAction implements ActionListener {
             if (modulePreferences.getInt("RestricitionDuration", -1) == -1) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
-
                 OptionsDisplayer.getDefault().open("Extensions/GeneanetExport");
             } else {
 
@@ -106,8 +110,11 @@ public final class GeneanetExportAction implements ActionListener {
                     modulePreferences.put("Fichier-Export-" + gedcomName, exportFile.getName());
 
                     GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, exportFile);
+                    showWaitCursor();
                     exportGeneanet.start();
-
+                    hideWaitCursor();
+                    NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.End"), NotifyDescriptor.INFORMATION_MESSAGE);
+                    DialogDisplayer.getDefault().notify(nd);
                 }
             }
         }
@@ -130,5 +137,31 @@ public final class GeneanetExportAction implements ActionListener {
         }
 
         return filename.substring(0, extensionIndex);
+    }
+
+    private static void showWaitCursor() {
+        Mutex.EVENT.readAccess(new Runnable() {
+
+            @Override
+            public void run() {
+                JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
+                mainWindow.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                mainWindow.getGlassPane().setVisible(true);
+                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"));
+            }
+        });
+    }
+
+    private static void hideWaitCursor() {
+        Mutex.EVENT.readAccess(new Runnable() {
+
+            @Override
+            public void run() {
+                StatusDisplayer.getDefault().setStatusText("");  //NOI18N
+                JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
+                mainWindow.getGlassPane().setVisible(false);
+                mainWindow.getGlassPane().setCursor(null);
+            }
+        });
     }
 }
