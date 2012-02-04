@@ -73,6 +73,9 @@ public class ChoiceWidget extends JComboBox {
     /** auto complete support */
     private AutoCompleteSupport autoComplete;
 
+    private Updateable updater = null;
+    private boolean valuesAreLoaded = false;
+
     /**
      * Constructor
      */
@@ -113,14 +116,19 @@ public class ChoiceWidget extends JComboBox {
         // done
     }
 
+    private void updateValues(){
+        if (!valuesAreLoaded && updater!= null)
+            setValues(updater.getValues());
+        valuesAreLoaded = true;
+    }
     public void setUpdater(final Updateable updater) {
+        this.updater = updater;
         //XXX: WARNING! LnF dependent code, read javadoc
         addPopupMenuListener(new PopupMenuListener() {
 
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                setValues(updater.getValues());
-                removePopupMenuListener(this);
+                updateValues();
             }
 
             @Override
@@ -596,6 +604,9 @@ public class ChoiceWidget extends JComboBox {
          * @return the matching item
          */
         private String setSelectedPrefix(String prefix) {
+
+            if (values.length == 0)
+                updateValues();
 
             // try to find a match
             for (int i = 0; i < values.length; i++) {
