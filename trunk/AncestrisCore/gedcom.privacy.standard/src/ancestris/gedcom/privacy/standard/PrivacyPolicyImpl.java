@@ -88,7 +88,7 @@ import org.openide.util.lookup.ServiceProviders;
  */
 @ServiceProviders({
     @ServiceProvider(service = PrivacyPolicy.class)
-//    @ServiceProvider(service = Filter.class)
+    ,@ServiceProvider(service = Filter.class)
 })
 public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
 
