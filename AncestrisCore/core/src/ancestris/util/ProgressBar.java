@@ -34,10 +34,12 @@ public class ProgressBar implements ProgressListener {
     public ProgressBar() {
     }
 
+    @Override
     public void processStarted(Trackable process) {
         track = process;
         handle = ProgressHandleFactory.createHandle(process.getTaskName(), new Cancellable() {
 
+            @Override
             public boolean cancel() {
                 track.cancelTrackable();
                 return true;
@@ -51,6 +53,7 @@ public class ProgressBar implements ProgressListener {
         // prepare timer
         timer = new Timer(100, new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 // update progress bar
                 try {
@@ -65,6 +68,7 @@ public class ProgressBar implements ProgressListener {
 
     }
 
+    @Override
     public void processStopped(Trackable process) {
         timer.stop();
         // at this point the task is finished and removed from status bar
