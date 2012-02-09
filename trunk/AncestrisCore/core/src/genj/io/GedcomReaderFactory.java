@@ -19,6 +19,7 @@
  */
 package genj.io;
 
+import ancestris.util.TimingUtility;
 import genj.crypto.Enigma;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -140,7 +141,7 @@ public class GedcomReaderFactory {
 
             // reading right now?
             if (state == READENTITIES && length > 0) {
-                progress = (int) Math.min(100, meter.getCount() * 100 / length);
+                progress = (int) Math.min(80, meter.getCount() * 80 / length);
             }
 
             // done
@@ -247,7 +248,8 @@ public class GedcomReaderFactory {
             long linking = System.currentTimeMillis();
 
             long total = System.currentTimeMillis();
-            LOG.log(Level.INFO, gedcom.getName() + " loaded in " + (total - start) / 1000 + "s (header " + (header - start) / 1000 + "s, records " + (records - header) / 1000 + "s, linking " + (linking - records) / 1000 + "s)");
+            LOG.log(Level.INFO, "{0}: {1} loaded in {2}s (header {3}s, records {4}s, linking {5}s)",
+                    new Object[]{TimingUtility.geInstance().getTime(), gedcom.getName(), (total - start) / 1000, (header - start) / 1000, (records - header) / 1000, (linking - records) / 1000});
 
             // Done
         }
@@ -264,7 +266,7 @@ public class GedcomReaderFactory {
                     if (lazyLink.xref.getParent() != null && lazyLink.xref.getTarget() == null) {
                         lazyLink.xref.link();
                     }
-                    progress = Math.min(100, (i * (100 * 2) / n));  // 100*2 because Links are probably backref'd
+                    progress = 80 + Math.min(20, (i * (20 * 2) / n));  // 100*2 because Links are probably backref'd
                 } catch (GedcomException ex) {
                     context.handleWarning(lazyLink.line, ex.getMessage(), new Context(lazyLink.xref));
                 } catch (Throwable t) {
