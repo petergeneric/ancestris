@@ -27,10 +27,18 @@ public abstract class PrivacyPolicy {
     private static PrivacyPolicy defaultInstance = null;
 
     /** filter a value */
-    public abstract String getDisplayValue(Property prop);
+    public String getDisplayValue(Property prop) {
+        return isPrivate(prop) ? getPrivateMask() : prop.getDisplayValue();
+    }
 
     /** filter a value */
-    public abstract String getDisplayValue(Property prop, String tag);
+    public String getDisplayValue(Property prop, String tag) {
+        if (prop == null) {
+            return "";
+        }
+        prop = prop.getProperty(tag);
+        return prop == null ? "" : getDisplayValue(prop);
+    }
 
     /** check for privacy */
     public abstract boolean isPrivate(Property prop);
@@ -45,7 +53,7 @@ public abstract class PrivacyPolicy {
     public abstract String getPrivateMask();
 
     /** Open preference panel for this privacy policy */
-    public void openPreferences(){
+    public void openPreferences() {
         // Do nothing
     }
 
@@ -102,19 +110,6 @@ public abstract class PrivacyPolicy {
          * private constructor
          */
         private DefaultPrivacyPolicy() {
-        }
-
-        /** filter a value */
-        @Override
-        public String getDisplayValue(Property prop) {
-            return isPrivate(prop) ? getPrivateMask() : prop.getDisplayValue();
-        }
-
-        /** filter a value */
-        @Override
-        public String getDisplayValue(Property prop, String tag) {
-            prop = prop.getProperty(tag);
-            return prop == null ? "" : getDisplayValue(prop);
         }
 
         @Override
