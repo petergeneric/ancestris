@@ -87,8 +87,8 @@ import org.openide.util.lookup.ServiceProviders;
  * @author put in plugin by daniel
  */
 @ServiceProviders({
-    @ServiceProvider(service = PrivacyPolicy.class)
-    ,@ServiceProvider(service = Filter.class)
+    @ServiceProvider(service = PrivacyPolicy.class),
+    @ServiceProvider(service = Filter.class)
 })
 public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
 
@@ -123,22 +123,12 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
     }
 
     @Override
-    public String getDisplayValue(Property prop) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getDisplayValue(Property prop, String tag) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public String getPrivateMask() {
         return Options.getInstance().getPrivateMask();
     }
 
     @Override
-    public void openPreferences(){
+    public void openPreferences() {
         OptionsDisplayer.getDefault().open("OptionsFormat/Privacy");
     }
 
