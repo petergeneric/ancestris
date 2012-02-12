@@ -15,19 +15,18 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.Timer;
-import javax.swing.UIManager;
+import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.windows.WindowManager;
 
 /**
  *
@@ -47,20 +46,33 @@ public class ActionAPropos extends JDialog implements ActionListener {
         initComponents();
         setMaximumSize(new Dimension(664, 585));
         setTimer();
-        //setScroller();
-        setIconImage(new ImageIcon(App.class.getResource("/ancestris/app/ActionAPropos.png")).getImage());
-        setTitle(NbBundle.getMessage(ActionAPropos.class, "CTL_ActionAPropos"));
-        setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        setResizable(false);
     }
 
     public void actionPerformed(ActionEvent e) {
-        setLocationRelativeTo(WindowManager.getDefault().getMainWindow());
-        jButton1.requestFocusInWindow();
         yTop = -jPanel3.getHeight();
         jPanel2.setBounds(0, yTop, jPanel2.getWidth(), jPanel2.getHeight());
-        setVisible(true);
         timer.stop();
+        DialogDescriptor descriptor = new DialogDescriptor(
+                this.getContentPane(),
+                NbBundle.getMessage(ActionAPropos.class, "CTL_ActionAPropos"),
+                true,
+                new Object[]{jButton2, jButton3, jButton4, Box.createGlue(), DialogDescriptor.CLOSED_OPTION},
+                DialogDescriptor.CLOSED_OPTION,
+                DialogDescriptor.DEFAULT_ALIGN,
+                HelpCtx.DEFAULT_HELP,
+                null);
+        descriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION});
+        Dialog dlg = null;
+        try {
+            dlg = DialogDisplayer.getDefault().createDialog(descriptor);
+            dlg.setResizable(false);
+            dlg.setVisible(true);
+        } finally {
+            if (dlg != null) {
+                dlg.dispose();
+            }
+        }
+
     }
 
     /** This method is called from within the constructor to
@@ -73,7 +85,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private void initComponents() {
 
         jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -105,17 +116,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
             }
         });
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton1.text")); // NOI18N
-        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "AProposPanel.jButton1.text.TTT")); // NOI18N
-        jButton1.setPreferredSize(new java.awt.Dimension(120, 29));
-        jButton1.setSelected(true);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11));
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11)); // NOI18N
         jLabel3.setText(App.getPluginVersion());
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
@@ -127,6 +128,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         jLabel1.setIcon(new ImageIcon(App.class.getResource("/ancestris/app/splash.gif")));
 
         jButton2.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton2.text")); // NOI18N
+        jButton2.setFocusable(false);
         jButton2.setPreferredSize(new java.awt.Dimension(120, 29));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,6 +137,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         });
 
         jButton3.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton3.text")); // NOI18N
+        jButton3.setFocusable(false);
         jButton3.setPreferredSize(new java.awt.Dimension(120, 29));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,7 +187,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         jLabel4.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jLabel4.text")); // NOI18N
 
-        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("DejaVu Sans", 2, 13));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText(getContributors());
         jLabel12.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -227,6 +230,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         );
 
         jButton4.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton4.text")); // NOI18N
+        jButton4.setFocusable(false);
         jButton4.setPreferredSize(new java.awt.Dimension(120, 29));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,9 +258,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -297,7 +299,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
                     .addComponent(jLabel11))
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -307,13 +308,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        timer.stop();
-        dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        jButton1.requestFocusInWindow();
     }//GEN-LAST:event_formWindowGainedFocus
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -332,7 +327,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
         displayVersions();
     }//GEN-LAST:event_jButton4ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -390,9 +384,9 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
     private void displayVersions() {
         String title = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jButton4.text");
-        String text = "<html><br><b>" + 
-                App.getPluginShortDescription() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>" +
-                App.getPluginVersion();
+        String text = "<html><br><b>"
+                + App.getPluginShortDescription() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>"
+                + App.getPluginVersion();
         text += "<br><br><br><b>" + NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle") + "&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</b><br>";
         text += "<table border='0'>";
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
@@ -408,7 +402,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
                     text += "</tr>";
                 }
             } catch (Throwable e) {
-                        App.LOG.info(e.getMessage());
+                App.LOG.info(e.getMessage());
             }
         }
         text += "</table><br></html>";
@@ -416,19 +410,18 @@ public class ActionAPropos extends JDialog implements ActionListener {
         DialogDisplayer.getDefault().notify(d);
     }
 
-    private String getContributors(){
+    private String getContributors() {
         String contributors = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors"); // NOI18N
         String translators = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.translators"); // NOI18N
 
         return NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors.text",
-                "<br>"+contributors.replaceAll(",", "<br>"),
-                "<br>"+translators.replaceAll(",", "<br>")+"<br><br><br>"+"-:-:-:-:-:-:-:-:-:-:-:-:-"+"<br><br><br>"); // NOI18N
+                "<br>" + contributors.replaceAll(",", "<br>"),
+                "<br>" + translators.replaceAll(",", "<br>") + "<br><br><br>" + "-:-:-:-:-:-:-:-:-:-:-:-:-" + "<br><br><br>"); // NOI18N
     }
 
-    private JScrollPane getScrollableText(String text){
+    private JScrollPane getScrollableText(String text) {
         JLabel area = new JLabel(text);
         area.setOpaque(true);
         return new JScrollPane(area);
     }
 }
-
