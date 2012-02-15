@@ -1241,8 +1241,8 @@ public abstract class Property implements Comparable<Property> {
      *   {$y} year
      *   {$p} place (city)
      *   {$P} place (all jurisdictions)
-     *   {$v} value
-     *   {$V} display value
+     *   {$v} display value
+     *   {$V} value
      * </pre>
      * @param format as described
      * @param policy applied privacy policy
@@ -1307,8 +1307,8 @@ public abstract class Property implements Comparable<Property> {
      *   {$y} year
      *   {$p} place (city)
      *   {$P} place (all jurisdictions)
-     *   {$v} value
-     *   {$V} display value
+     *   {$v} display value
+     *   {$V} value
      * </pre>
      * @param marker as described 
      * @return formatted string if at least one marker matched, "" otherwise
@@ -1347,6 +1347,9 @@ public abstract class Property implements Comparable<Property> {
                 case 'V': {
                     prop = property;
                     value = property.getValue();
+                    // remove @ chars (ie in PropertyXRef)
+                    if (value.startsWith("@") && value.endsWith("@"))
+                        value = value.substring(1,value.length()-1);
                     break;
                 }
                 case 't': {
