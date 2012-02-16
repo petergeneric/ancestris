@@ -14,7 +14,6 @@ import ancestris.core.pluginservice.PluginInterface;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -41,7 +40,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
     public ActionAPropos() {
         jbContrib.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jbContrib.text")); // NOI18N
         jbContrib.setFocusable(false);
-        jbContrib.setPreferredSize(new java.awt.Dimension(120, 29));
         jbContrib.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -51,7 +49,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         jbLicence.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jbLicence.text")); // NOI18N
         jbLicence.setFocusable(false);
-        jbLicence.setPreferredSize(new java.awt.Dimension(120, 29));
         jbLicence.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -61,7 +58,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
         jbVersions.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jbVersions.text")); // NOI18N
         jbVersions.setFocusable(false);
-        jbVersions.setPreferredSize(new java.awt.Dimension(120, 29));
         jbVersions.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,11 +72,12 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 panel,
                 NbBundle.getMessage(ActionAPropos.class, "CTL_ActionAPropos"),
                 true,
-                new Object[]{jbContrib, jbLicence, jbVersions, Box.createGlue(), DialogDescriptor.CLOSED_OPTION},
+                new Object[]{DialogDescriptor.CLOSED_OPTION},
                 DialogDescriptor.CLOSED_OPTION,
                 DialogDescriptor.DEFAULT_ALIGN,
                 HelpCtx.DEFAULT_HELP,
                 null);
+        descriptor.setAdditionalOptions(new Object[]{jbContrib, jbLicence, jbVersions});
         descriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION});
         Dialog dlg = null;
         try {
@@ -93,7 +90,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 dlg.dispose();
             }
         }
-
     }
 
     // Take last 72 charachters of userdir if too long
