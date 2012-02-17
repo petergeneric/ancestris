@@ -13,6 +13,7 @@ package ancestris.modules.beans;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import genj.renderer.Blueprint;
 import genj.renderer.BlueprintManager;
 import java.awt.Dimension;
@@ -36,6 +37,9 @@ public class AListBean extends JPanel {
         super();
         setBlueprint(Gedcom.INDI, "<prop path=INDI:NAME>");
         setBlueprint(Gedcom.FAM, "<prop path=FAM:HUSB> - <prop path=FAM:WIFE>");
+        setBlueprint(Gedcom.NOTE, "<name tag=NOTE>&nbsp;id=<prop path=NOTE> - <prop path=NOTE:NOTE>");
+        setBlueprint(Gedcom.SOUR, "<name tag=SOUR>&nbsp;id=<prop path=SOUR> - <prop path=SOUR:TITL>");
+        //XXX: add all other entities
     }
 
     /**
@@ -104,6 +108,11 @@ public class AListBean extends JPanel {
         for (Property property : properties) {
             if (property.equals(exclude)) {
                 continue;
+            }
+            //XXX: must be changed as display and editing xrefs must be handled differently
+            // from embedded entities
+            if (property instanceof PropertyXRef) {
+                property = ((PropertyXRef) property).getTargetEntity();
             }
             add(property, listener);
         }
