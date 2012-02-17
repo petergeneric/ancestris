@@ -16,6 +16,7 @@ import ancestris.api.editor.Editor;
 import ancestris.modules.beans.AEventBean;
 import ancestris.modules.beans.AListBean;
 import ancestris.modules.beans.ANameBean;
+import ancestris.util.TimingUtility;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -29,6 +30,8 @@ import genj.view.ViewContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,8 +58,11 @@ public final class IndiPanel extends Editor {
     AListBean eventsPanel;
     private List<PropertyBean> childBeans;
     private Context context;
+    private Logger LOG = Logger.getLogger("ancestris.editor");
 
     public IndiPanel() {
+
+        LOG.log(Level.FINE, "{0}: IndiPanel().start", TimingUtility.geInstance().getTime());
 
         aNameBean2 = new ANameBean();
         namePane = new PropertyTabbedPane(aNameBean2, Gedcom.getName("NAME"), null, null);
@@ -108,6 +114,7 @@ public final class IndiPanel extends Editor {
         for (PropertyBean bean : childBeans) {
             bean.addChangeListener(changes);
         }
+        LOG.log(Level.FINE, "{0}: IndiPanel: end", TimingUtility.geInstance().getTime());
 
     }
     private Indi indi;
@@ -128,6 +135,7 @@ public final class IndiPanel extends Editor {
      */
     @Override
     protected void setContextImpl(Context context) {
+        LOG.log(Level.FINE, "{0}: setContextImpl().start", TimingUtility.geInstance().getTime());
         this.context = context;
 
         Entity entity = context.getEntity();
@@ -149,10 +157,11 @@ public final class IndiPanel extends Editor {
                 events.add(p);
             }
         }
-            eventsPanel.removeAll();
-            eventsPanel.repaint();
+        eventsPanel.removeAll();
+        eventsPanel.repaint();
         eventsPanel.add(events.toArray(new Property[]{}), null, null);
-            eventsPanel.revalidate();
+        eventsPanel.revalidate();
+        LOG.log(Level.FINE, "{0}: setcontextimpl().end", TimingUtility.geInstance().getTime());
     }
 
     @Override
