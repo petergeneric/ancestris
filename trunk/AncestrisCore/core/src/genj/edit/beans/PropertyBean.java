@@ -19,6 +19,7 @@
  */
 package genj.edit.beans;
 
+import ancestris.util.TimingUtility;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -320,6 +321,7 @@ public abstract class PropertyBean extends JPanel implements ContextProvider {
         this.property = property;
         this.session = session;
 
+        LOG.log(Level.FINER, "{0}: setPropertyImpl {1}", new Object[]{TimingUtility.geInstance().getTime(),this.getClass().getCanonicalName()});
         setPropertyImpl(property);
 
         changeSupport.setChanged(false);
