@@ -46,8 +46,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class ReportArbre4Gen extends Report {
 
     /** option - our report types defined, the value and choices */
-    int reportType = 0;
-    int reportFormat = 1;
     int reportMinGenerations = 1;
     int reportMaxGenerations = 3;
     int index = 1;
@@ -68,7 +66,6 @@ public class ReportArbre4Gen extends Report {
     /** option - Information à afficher pour chaque évènement */
     boolean showAllPlaceJurisdictions = false;
     // Events (BIRT and BAPM will be lumped together in terms of options to display)
-    String[] events = {"BIRT", "MARR", "DEAT",};
     boolean[] dispEv = {true, true, true};
     String[] symbols = new String[3];
 
@@ -85,16 +82,16 @@ public class ReportArbre4Gen extends Report {
             startSosa = 1;
         }
 
-        ArrayList All_String = new ArrayList();
-        ArrayList Final_String = new ArrayList();
-        ArrayList Noms = new ArrayList(); // noms
-        ArrayList Pnom = new ArrayList(); // prénoms
-        ArrayList Dnai = new ArrayList(); // dates de naissance
-        ArrayList Lnai = new ArrayList(); // lieux de naissance
-        ArrayList Dmar = new ArrayList(); // dates de mariage
-        ArrayList Lmar = new ArrayList(); // lieux de mariage
-        ArrayList Ddec = new ArrayList(); // dates de deces
-        ArrayList Ldec = new ArrayList(); // Lieux de deces
+        ArrayList<String> All_String = new ArrayList<String>();
+        ArrayList<String> Final_String = new ArrayList<String>();
+        ArrayList<String> Noms = new ArrayList<String>(); // noms
+        ArrayList<String> Pnom = new ArrayList<String>(); // prénoms
+        ArrayList<String> Dnai = new ArrayList<String>(); // dates de naissance
+        ArrayList<String> Lnai = new ArrayList<String>(); // lieux de naissance
+        ArrayList<String> Dmar = new ArrayList<String>(); // dates de mariage
+        ArrayList<String> Lmar = new ArrayList<String>(); // lieux de mariage
+        ArrayList<String> Ddec = new ArrayList<String>(); // dates de deces
+        ArrayList<String> Ldec = new ArrayList<String>(); // Lieux de deces
         int offset = 0;
 
         // titre du document
@@ -171,6 +168,7 @@ public class ReportArbre4Gen extends Report {
         private JScrollPane defil;
 
         /** ************************************************************* */
+        @Override
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
             if (source == Sortir) {
@@ -218,7 +216,6 @@ public class ReportArbre4Gen extends Report {
             chooser.setMultiSelectionEnabled(false);
             int resultat = chooser.showSaveDialog(parent);
             if (resultat == JFileChooser.APPROVE_OPTION) {
-                directories = chooser.getCurrentDirectory();
                 return chooser.getSelectedFile();
             } else {
                 return null;
@@ -250,6 +247,7 @@ public class ReportArbre4Gen extends Report {
         }
 
         /** ************************************************************* */
+        @Override
         public void paintComponent(Graphics gx) {
             super.paintComponent(gx);
             ImageIcon img = new ImageIcon(graf());
@@ -352,7 +350,7 @@ public class ReportArbre4Gen extends Report {
 
     /** ********************************************************************************/
     /** debut */
-    void debut(Indi indi, PrivacyPolicy policy, ArrayList All_String, int index) {
+    void debut(Indi indi, PrivacyPolicy policy, ArrayList<String> All_String, int index) {
         Fam[] fams = indi.getFamiliesWhereSpouse();
         Fam fam = null;
         if ((fams != null) && (fams.length > 0)) {
@@ -364,7 +362,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void recursion(Indi indi, Fam fam, int gen, int index, int sosa, PrivacyPolicy policy, ArrayList All_String) {
+    void recursion(Indi indi, Fam fam, int gen, int index, int sosa, PrivacyPolicy policy, ArrayList<String> All_String) {
 
         // stop here?
         if (gen > reportMaxGenerations) {
@@ -400,7 +398,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void formatIndi(Indi indi, Fam fam, int gen, int index, int sosa, PrivacyPolicy policy, ArrayList All_String) {
+    void formatIndi(Indi indi, Fam fam, int gen, int index, int sosa, PrivacyPolicy policy, ArrayList<String> All_String) {
 
         // go one generation up to father and mother
         // Go back if generation too low
@@ -409,7 +407,7 @@ public class ReportArbre4Gen extends Report {
         }
 
         // Pour chaque individu, nous allons stocker la liste des événements et leurs descriptions
-        ArrayList eventDesc = new ArrayList();     //  Cartes évènement de leur description
+        ArrayList<String> eventDesc = new ArrayList<String>();     //  Cartes évènement de leur description
 
         // a cell with sosa# and name
         String indi_name = (getName(indi, index, sosa, policy)); // [sosa] name (id)
@@ -435,7 +433,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void getProperties(Indi indi, Fam fam, PrivacyPolicy privacy, boolean usePrefixes, boolean returnEmpties, ArrayList eDesc) {
+    void getProperties(Indi indi, Fam fam, PrivacyPolicy privacy, boolean usePrefixes, boolean returnEmpties, ArrayList<String> eDesc) {
         // Variables
         String event = "";
         String description = "";
@@ -501,7 +499,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void Classement(ArrayList All_String, ArrayList Final_String) {
+    void Classement(ArrayList<String> All_String, ArrayList<String> Final_String) {
 
         // table de correspondance des individus
         int Iedit[] = {8, 9, 10, 11, 12, 13, 14, 15, 4, 5, 6, 7, 2, 3, 1};
@@ -525,7 +523,7 @@ public class ReportArbre4Gen extends Report {
             trouve = false;
 
             for (int Istr = 0; Istr < Iallstr; Istr++) {
-                Object StringTmp = All_String.get(Istr);
+                String StringTmp = All_String.get(Istr);
                 String Str_Tmp = StringTmp.toString();
                 StringTokenizer tok = new StringTokenizer(Str_Tmp, "!");
                 Itmp = Integer.parseInt(tok.nextToken());
@@ -547,7 +545,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void Addevent(ArrayList All_String, ArrayList Final_String, int Istr) {
+    void Addevent(ArrayList<String> All_String, ArrayList<String> Final_String, int Istr) {
         String[] event = {"BIRT", "MARR", "DEAT"};
         String[] symbol = {"N ", "M ", "D "};
         int x1 = 0;
@@ -574,7 +572,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void extract_noms(ArrayList Final_String, ArrayList noms, ArrayList pnom, int i1, int i2) {
+    void extract_noms(ArrayList<String> Final_String, ArrayList<String> noms, ArrayList<String> pnom, int i1, int i2) {
         String tmp1 = "", tmp2 = "";
         int p1 = 0, p2 = 0;
 
@@ -607,7 +605,7 @@ public class ReportArbre4Gen extends Report {
     }
 
     /** ********************************************************************************/
-    void extract_other(ArrayList Final_String, ArrayList ldate, ArrayList lplac, int i1, int i2, int i3, boolean date, boolean place, String sym) {
+    void extract_other(ArrayList<String> Final_String, ArrayList<String> ldate, ArrayList<String> lplac, int i1, int i2, int i3, boolean date, boolean place, String sym) {
         String tmp1 = "", tmp2 = "";
         int p1 = 0, p2 = 0, k = 0;
         if (!date & !place) {
