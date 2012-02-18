@@ -118,6 +118,7 @@
                 <package>ancestris.core.beans</package>
                 <package>ancestris.gedcom</package>
                 <package>ancestris.gedcom.privacy</package>
+                <package>ancestris.util</package>
                 <package>ancestris.view</package>
                 <package>genj</package>
                 <package>genj.almanac</package>
