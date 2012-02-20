@@ -375,16 +375,16 @@ public class GedcomReaderFactory {
             // get rid of it for now
 
             // Remove all tags read an set to gedcom object
-            header.delProperties("SOUR");
-            header.delProperties("DEST");
-            header.delProperties("DATE");
-            header.delProperties("SUBM");
-            header.delProperties("SUBN");
-            header.delProperties("GEDC");
-            header.delProperties("CHAR");
-            header.delProperties("LANG");
-            header.delProperties("PLAC");
-            header.delProperties("FILE");
+//            header.delProperties("SOUR");
+//            header.delProperties("DEST");
+//            header.delProperties("DATE");
+//            header.delProperties("SUBM");
+//            header.delProperties("SUBN");
+//            header.delProperties("GEDC");
+//            header.delProperties("CHAR");
+//            header.delProperties("LANG");
+//            header.delProperties("PLAC");
+//            header.delProperties("FILE");
 
 // don't delete header as it may contain usefull information (eg Gedcom Description
 // as entered using new gedcom wizard
