@@ -26,6 +26,7 @@ import genj.edit.EditViewFactory;
 import genj.edit.Images;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
+import genj.view.SelectionSink;
 
 /**
  * ActionEdit - edit an entity
@@ -46,7 +47,8 @@ public class OpenForEdit extends Action2 {
    * @see genj.util.swing.Action2#execute()
    */
   public void actionPerformed(ActionEvent event) {
-    Workbench.getInstance().openView(EditViewFactory.class, context);
+      SelectionSink.Dispatcher.fireSelection(context, false);
+//    Workbench.getInstance().openView(EditViewFactory.class, context);
   }
   
 } //OpenForEdit

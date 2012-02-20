@@ -262,6 +262,8 @@ public class BlueprintManager {
         return bp;   	
     }
     // fallback try first
+    if (bps.isEmpty())
+        return new Blueprint("<html></html>");
     return bps.get(0);
   }
   

@@ -33,6 +33,7 @@ import genj.edit.actions.CreateSpouse;
 import genj.edit.actions.CreateXReference;
 import genj.edit.actions.DelEntity;
 import genj.edit.actions.DelProperty;
+import genj.edit.actions.OpenForEdit;
 import genj.edit.actions.Redo;
 import genj.edit.actions.RunExternal;
 import genj.edit.actions.SetPlaceHierarchy;
@@ -328,6 +329,7 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
     group.add(new CreateEntity(gedcom, Gedcom.REPO));
     group.add(new CreateEntity(gedcom, Gedcom.SOUR));
     group.add(new CreateEntity(gedcom, Gedcom.SUBM));
+    group.add(new OpenForEdit(new Context(gedcom)));
   
     // done
   }
