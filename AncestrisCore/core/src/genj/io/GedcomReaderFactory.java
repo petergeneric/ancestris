@@ -385,12 +385,25 @@ public class GedcomReaderFactory {
 //            header.delProperties("LANG");
 //            header.delProperties("PLAC");
 //            header.delProperties("FILE");
+            // FIXME: Mark all header properties as readonly: they will 
+            // not be editable in gedcom editor
+            // TODO: add missing properties in gedcom grammar
+            for (Property p: header.getProperties()){
+                recurseMarkRO(p);
+            }
 
 // don't delete header as it may contain usefull information (eg Gedcom Description
 // as entered using new gedcom wizard
 //      gedcom.deleteEntity(header);
             // Done
             return true;
+        }
+
+        private static void recurseMarkRO(Property prop){
+            prop.setReadOnly(true);
+            for (Property p: prop.getProperties()){
+                recurseMarkRO(p);
+            }
         }
 
         public String getTaskName() {
