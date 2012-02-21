@@ -136,7 +136,9 @@ public class StartupOptions {
                 hParam.put(parameter.substring(0, 6), parameter.substring(6));
             } else if (parameter.startsWith("-J-D")) {
                 String kv[] = parameter.split("=");
-                hParam.put(kv[0], kv[1]);
+                if (kv.length > 1) {
+                    hParam.put(kv[0], kv[1]);
+                }
             } else {
                 hParam.put(parameter, "");
             }
