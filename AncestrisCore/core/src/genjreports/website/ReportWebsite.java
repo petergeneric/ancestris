@@ -1248,7 +1248,7 @@ public class ReportWebsite extends Report {
 			Element divFooter = html.div("footer");
 			appendTo.appendChild(divFooter);
 			Element p = html.p(translateLocal("footerText") + " ");
-			p.appendChild(html.link("http://genj.sourceforge.net/", "GenealogyJ"));
+			p.appendChild(html.link("http://www.ancestris.org/", "Ancestris"));
 			divFooter.appendChild(p);
 		}
 	}
