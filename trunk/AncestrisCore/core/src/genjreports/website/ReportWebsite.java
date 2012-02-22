@@ -84,7 +84,7 @@ public class ReportWebsite extends Report {
     @Multiline public String reportWelcomeText = "On these pages my ancestors are presented";
     public boolean displaySosaStradonitz = false;
 	protected HashMap<String, String> sosaStradonitzNumber = null; 
-    public boolean displayGenJFooter = true;
+    public boolean displayWebSiteFooter = true;
 	public String placeDisplayFormat = "all";
 	public String secondaryLanguage = "en";
     public boolean removeAllFiles = false;
@@ -1244,7 +1244,7 @@ public class ReportWebsite extends Report {
 
 	protected void makeFooter(Element appendTo, Html html) {
 		// Footer
-		if (displayGenJFooter) {
+		if (displayWebSiteFooter) {
 			Element divFooter = html.div("footer");
 			appendTo.appendChild(divFooter);
 			Element p = html.p(translateLocal("footerText") + " ");
