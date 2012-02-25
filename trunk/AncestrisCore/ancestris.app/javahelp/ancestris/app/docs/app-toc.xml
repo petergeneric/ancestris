@@ -3,42 +3,51 @@
 To change this template, choose Tools | Templates
 and open the template in the editor.
 -->
+<!--arborescence de l'aide ?-->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
   <tocitem image="toplevelfolder"
            text="La Généalogie avec Ancestris">
     <tocitem target="ancestris.app.intro">Introduction à Ancestris </tocitem>
     <tocitem expand="true" text="Ancestris - Sommaire" target="ancestris.app.about">
-        <tocitem expand="true" text="Découverte d'Ancestris" target="ancestris.app.discovering">
-            <tocitem target="ancestris.app.download">Téléchargement d'Ancestris </tocitem>
-            <tocitem text="Première configuration" target="ancestris.app.wizard" />
-            <tocitem text="Gestionnaire des Gedcoms" target="ancestris.app.gedcoms.manager" />
-            <tocitem text="Gestion des fenêtres" target="ancestris.app.windows" />
-        </tocitem>
+        <tocitem expand="true" text="Utilisation de base" target="ancestris.app.discovering">
+		<tocitem expand="true" text="Les paramètres essentiels" target="ancestris.app.basic"> <!-- à rédiger -->
+		    <tocitem text="L'encodage du fichier" target="ancestris.app.gedcom.bases" /> <!-- à rédiger -->
+		    <tocitem text="La gestion des lieux" target="ancestris.app.place.management" /> <!-- à rédiger -->
+		    <tocitem text="Gestion des fenêtres" target="ancestris.app.windows" />
+		    <tocitem text="L'explorateur Gedcoms" target="ancestris.app.gedcoms.manager" />
+		    <tocitem expand="false" text="Les plugins" target="ancestris.app.plugins">
+		</tocitem>
+		<tocitem expand="true" text="Importer une généalogie" target="ancestris.app.genealogy.import"> <!-- à rédiger -->
+		    <tocitem text="Mettre en conformité sa généalogie" target="ancestris.app.conform.genealogy" /> <!-- à rédiger -->
+		    <tocitem text="FAQ : import suivant l'origine du fichier Gedcom" target="ancestris.app.import.issue" /> <!-- à rédiger -->
+		</tocitem>
+		<tocitem expand="true" text="Créer une génénalogie" target="ancestris.app.new.genealogy"> <!-- à rédiger -->
+		    <tocitem text="Saisir des individus" target="ancestris.app.new.entity" /> <!-- à rédiger -->
+	            <tocitem text="Sauvegarder son travail" target="ancestris.app.save.genealogy" /> <!-- à rédiger -->
+		</tocitem>
         <tocitem expand="true" text="Les différentes vues" target="ancestris.app.views">
             <tocitem text="L'Arbre généalogique" target="ancestris.app.view.tree" />
             <tocitem text="La vue Table" target="ancestris.app.view.table" />
+            <tocitem text="L'Editeurs Ancestris" target="ancestris.app.view.editors" /><!-- à rédiger -->
+            <tocitem text="L'Editeurs GedCom" target="ancestris.app.view.editors.gedcom" />
             <tocitem text="Les Editeurs" target="ancestris.app.view.editors" />
             <tocitem text="La visualisation Chronologique" target="ancestris.app.view.chrono" />
             <tocitem text="Le Navigateur" target="ancestris.app.view.navigator" />
             <tocitem text="La vue Entité" target="ancestris.app.view.entity" />
             <tocitem text="La vue Recherche" target="ancestris.app.view.search" />
             <tocitem text="La Fenêtre des Rapports" target="ancestris.app.view.reports" />
-        </tocitem>
-        <tocitem expand="true" text="Utilisation de base" target="ancestris.app.basic">
+            <tocitem text="Différents plugins disponibles" target="ancestris.app.plugins.liste" />
         </tocitem>
         <tocitem expand="true" text="Utilisation avancée" target="ancestris.app.advanced">
             <tocitem text="Les Calques" target="ancestris.app.blueprints" />
-            <tocitem expand="false" text="Ancestris et les plugins" target="ancestris.app.plugins">
-                <tocitem text="Différents plugins disponibles" target="ancestris.app.plugins.liste" />
-                <tocitem text="Ecrire son premier plugin" target="ancestris.app.plugins.development" />
-            </tocitem>
             <tocitem text="Ancestris en mode nomade" target="ancestris.app.nomade" />
-        </tocitem>
-    </tocitem>
-    <tocitem expand="false" text="Divers" target="ancestris.app.misc">
-        <tocitem target="ancestris.app.external.links">Liens externes</tocitem>
-        <tocitem target="ancestris.app.gedcom.standard">La norme Gedcom</tocitem>
+    	    <tocitem target="ancestris.app.gedcom.standard">La norme Gedcom</tocitem>
+            <tocitem target="ancestris.app.external.links">la communauté Ancestris</tocitem>
+            <tocitem text="Ecrire son premier plugin" target="ancestris.app.plugins.development" />
+            <tocitem text="Première configuration" target="ancestris.app.wizard" /> <!-- configuration; option paramètre-->
+	</tocitem>
     </tocitem>
   </tocitem>
+</tocitem>
 </toc>
