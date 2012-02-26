@@ -21,10 +21,10 @@ and open the template in the editor.
     <mapID target="ancestris.app.new.entity" url="./first_steps/first_steps_new_entity.html"/>
     <mapID target="ancestris.app.new.genealogy" url="./first_steps/first_steps_new_genealogy.html"/>
     <mapID target="ancestris.app.nomade" url="./advanced/advanced_ancestris_nomade.html"/>
-    <mapID target="ancestris.app.options.menu1" url="./first_steps/first_steps_menu_options_1.html"/>
+    <mapID target="ancestris.app.options.menu1" url="./advanced/advanced_menu_options_1.html"/>
     <mapID target="ancestris.app.place.management" url="./first_steps/first_steps_place_management.html"/>
-    <mapID target="ancestris.app.plugins.development" url="./advanced/advanced_development.html"/>
-    <mapID target="ancestris.app.plugins.liste" url="./basic_use/basic_use_liste.html"/>
+    <mapID target="ancestris.app.plugins.development" url="./advanced/advanced_plugins_development.html"/>
+    <mapID target="ancestris.app.plugins.liste" url="./basic_use/basic_use_plugins_liste.html"/>
     <mapID target="ancestris.app.plugins" url="./first_steps/first_steps_ancestris_plugins.html"/>
     <mapID target="ancestris.app.save.genealogy" url="./first_steps/first_steps_save_genealogy.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
@@ -32,7 +32,7 @@ and open the template in the editor.
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel4" url="app-about.html"/>
     <mapID target="ancestris.app.view.chrono" url="./basic_use/basic_use_view_chrono_ancestris.html"/>
-    <mapID target="ancestris.app.view.editors.gedcom" url="./basic_use/first_steps_view_editors_gedcom.html"/>
+    <mapID target="ancestris.app.view.editors.gedcom" url="./basic_use/basic_use_view_editors_gedcom.html"/>
     <mapID target="ancestris.app.view.editors" url="./basic_use/basic_use_view_editors_ancestris.html"/>
     <mapID target="ancestris.app.view.entity" url="./basic_use/basic_use_view_entity_ancestris.html"/>
     <mapID target="ancestris.app.view.navigator" url="./basic_use/basic_use_view_navigator_ancestris.html"/>
@@ -42,5 +42,4 @@ and open the template in the editor.
     <mapID target="ancestris.app.view.tree" url="./basic_use/basic_use_view_tree_ancestris.html"/>
     <mapID target="ancestris.app.views" url="./basic_use/basic_use_views_ancestris.html"/>
     <mapID target="ancestris.app.windows" url="./first_steps/first_steps_fenetrage.html"/>
-    <mapID target="ancestris.app.wizard" url="./advanced/advanced_wizard_ancestris.html"/>
 </map>
