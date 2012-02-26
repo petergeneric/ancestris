@@ -518,6 +518,9 @@ public class ReportToolBox extends Report {
     List placesProps = new ArrayList();
     for (Iterator it = entities.iterator(); it.hasNext();) {
        Entity ent = (Entity) it.next();
+       if (ent.getTag().equalsIgnoreCase("HEAD")){
+           continue;
+       }
        getPropertiesRecursively((Property)ent, placesProps, "PLAC");
        }
 
