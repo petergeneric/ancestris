@@ -26,6 +26,7 @@ and open the template in the editor.
 		    <tocitem text="Saisir des individus" target="ancestris.app.new.entity" /> <!-- à rédiger -->
 	            <tocitem text="Sauvegarder son travail" target="ancestris.app.save.genealogy" /> <!-- à rédiger -->
 		</tocitem>
+        </tocitem>
         <tocitem expand="true" text="Les différentes vues" target="ancestris.app.views">
             <tocitem text="L'Arbre généalogique" target="ancestris.app.view.tree" />
             <tocitem text="La vue Table" target="ancestris.app.view.table" />
@@ -45,7 +46,7 @@ and open the template in the editor.
     	    <tocitem target="ancestris.app.gedcom.standard">La norme Gedcom</tocitem>
             <tocitem target="ancestris.app.external.links">la communauté Ancestris</tocitem>
             <tocitem text="Ecrire son premier plugin" target="ancestris.app.plugins.development" />
-            <tocitem text="Première configuration" target="ancestris.app.wizard" /> <!-- configuration; option paramètre-->
+            <tocitem text="Paramètre et Première configuration" target="ancestris.app.options.menu1" /> <!-- configuration; option paramètre-->
 	</tocitem>
     </tocitem>
   </tocitem>

@@ -33,7 +33,6 @@ and open the template in the editor.
     <indexitem text="Liste des plugins" target="ancestris.app.plugins.liste"/>    
     <indexitem text="Mettre en conformité sa généalogie" target="ancestris.app.conform.genealogy"/>
     <indexitem text="Nomadisme et Ancestris" target="ancestris.app.nomade"/>
-    <indexitem text="Première configuration" target="ancestris.app.wizard"/>
     <indexitem text="Saisir des individus" target="ancestris.app.new.entity"/>
     <indexitem text="Sauvegarder son travail" target="ancestris.app.save.genealogy"/>
     <indexitem text="Sommaire Général" target="ancestris.app.about"/>
