@@ -242,7 +242,7 @@ import javax.swing.tree.TreePath;
     changes.setChanged(false);
     
     // clear?
-    if (context.getGedcom()==null||context.getEntities().isEmpty()) {
+    if (context.getGedcom()==null/*||context.getEntities().isEmpty()*/) {
       try {
         ignoreTreeSelection = true;
         tree.setRoot(null);
@@ -250,6 +250,10 @@ import javax.swing.tree.TreePath;
         ignoreTreeSelection = false;
       }
       return;
+    }
+    if (context.getEntities().isEmpty()){
+        context = new Context(context.getGedcom().getFirstEntity("HEAD"));
+
     }
     
     ignoreTreeSelection = true;
