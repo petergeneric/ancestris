@@ -47,7 +47,9 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.util.ProgressBar;
+import ancestris.util.TimingUtility;
 import ancestris.view.AncestrisViewInterface;
+import genj.common.ContextListWidget;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Indi;
@@ -91,8 +93,12 @@ import javax.swing.FocusManager;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -110,8 +116,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     /*package*/ final static Resources RES = Resources.get(Workbench.class);
     /*package*/ final static Registry REGISTRY = Registry.get(Workbench.class);
     private final static ContextHook HOOK = new ContextHook();
-// Callback
-//      IWorkbenchHelper helper;
     // Instance
     private ProgressBar progress;
     private static Workbench instance = null;
@@ -127,7 +131,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (instance == null) {
             instance = new Workbench();
             for (PluginFactory pf : ServiceLookup.lookup(PluginFactory.class)) {
-                LOG.info("Activate plugin " + pf.getClass());
+                LOG.log(Level.INFO, "Activate plugin {0}", pf.getClass());
                 Object plugin = pf.createPlugin();
             }
         }
@@ -227,7 +231,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
                 }
 
                 public void handleWarning(int line, String warning, Context context) {
-                    warnings.add(new ViewContext(RES.getString("cc.open.warning", new Object[]{new Integer(line), warning}), context));
+                    warnings.add(new ViewContext(RES.getString("cc.open.warning", new Object[]{Integer.valueOf(line), warning}), context));
                 }
             })));
 
@@ -237,22 +241,29 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
             return null;
         }
 
-        Context context = null;
+        final Context context;
         try {
             processStarted(reader);
             Gedcom gedcom = reader.read();
-            if (gedcom != null)
+            if (gedcom != null) {
                 context = setGedcom(gedcom);
-            else 
+            } else {
                 return null;
+            }
             // FIXME: Afficher la liste des erreurs
-//      if (!warnings.isEmpty()) {
-//        dockingPane.putDockable("warnings", new GedcomDockable(this,
-//            RES.getString("cc.open.warnings", context.getGedcom().getName()),
-//            IMG_OPEN,
-//            new JScrollPane(new ContextListWidget(warnings)))
-//        );
-//      }
+      if (!warnings.isEmpty()) {
+          NotifyDescriptor nd = new 
+                  DialogDescriptor(
+                  new JScrollPane(new ContextListWidget(warnings))
+                  ,RES.getString("cc.open.warnings", context.getGedcom().getName()),
+                  false,
+                  new Object[]{NotifyDescriptor.CLOSED_OPTION},
+                  null,
+                  DialogDescriptor.DEFAULT_ALIGN,
+                  null, null
+                  );
+          DialogDisplayer.getDefault().notify(nd);
+      }
         } catch (GedcomIOException ex) {
             // tell the user about it
             DialogHelper.openDialog(origin.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.open.read_error", "" + ex.getLine()) + ":\n" + ex.getMessage(), Action2.okOnly(), null);
@@ -289,11 +300,11 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
     }
 
     public Context setGedcom(Gedcom gedcom) {
+        LOG.log(Level.FINE, "{0}: setGedcom", TimingUtility.geInstance().getTime());
         Context context = new Context();
 
         // restore context
         try {
-//      context = Context.fromString(gedcom, REGISTRY.get(gedcom.getName()+".context", gedcom.getName()));
             Registry r = gedcom.getRegistry();
             context = Context.fromString(gedcom, r/*gedcom.getRegistry()*/.get("context", gedcom.getName()));
         } catch (GedcomException ge) {
@@ -306,8 +317,10 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         }
 
         // tell everone
+        LOG.log(Level.FINE, "{0}: gedcomOpened", TimingUtility.geInstance().getTime());
         gedcomOpened(gedcom);
 
+        LOG.log(Level.FINE, "{0}: fireSelection", TimingUtility.geInstance().getTime());
         fireSelection(null, context, true);
         return context;
 
@@ -482,9 +495,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
      */
     public boolean saveGedcomImpl(Gedcom gedcom, Collection<Filter> filters) {
 
-//  // .. open progress dialog
-//  progress = WindowManager.openNonModalDialog(null, RES.getString("cc.save.saving", file.getName()), WindowManager.INFORMATION_MESSAGE, new ProgressWidget(gedWriter, getThread()), Action2.cancelOnly(), getTarget());
-
         try {
 
             // prep files and writer
@@ -534,9 +544,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
             DialogHelper.openDialog(gedcom.getName(), DialogHelper.ERROR_MESSAGE, RES.getString("cc.save.write_error", "" + gioex.getLine()) + ":\n" + gioex.getMessage(), Action2.okOnly(), null);
             return false;
         }
-
-//  // close progress
-//  WindowManager.close(progress);
 
         // .. done
         return true;
@@ -713,6 +720,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         TopComponent tc = null;
         Map<String, TopComponent> name2tc = new HashMap<String, TopComponent>();
         for (Class clazz : openedViews) {
+            LOG.log(Level.FINE, "{0}: {1} opened", new Object[]{TimingUtility.geInstance().getTime(), clazz.getCanonicalName()});
             try {
                 tc = (TopComponent) clazz.newInstance();
 
