@@ -24,6 +24,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -135,19 +136,26 @@ public final class SendTranslationAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-        zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
-        if (zipArchive != null) {
-            sendTranslationPanel = new SendTranslationPanel();
-            setDefaultValues(sendTranslationPanel);
-            DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
-            dd.setOptions(new Object[]{new String(SEND), DialogDescriptor.CANCEL_OPTION});
-            DialogDisplayer.getDefault().createDialog(dd);
-            DialogDisplayer.getDefault().notify(dd);
-            if (dd.getValue().equals(SEND)) {
-                saveValues(sendTranslationPanel);
-                Thread t = new Thread(new SendMessageWorker());
-                t.start();
+        if (modulePreferences.get("mail.host", "").equals("")) {
+            NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationPanel.class, "SendTranslationPanel.msg.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
+            DialogDisplayer.getDefault().notify(nd);
+            OptionsDisplayer.getDefault().open("SendTranslation");
+
+        } else {
+            TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+            zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
+            if (zipArchive != null) {
+                sendTranslationPanel = new SendTranslationPanel();
+                setDefaultValues(sendTranslationPanel);
+                DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
+                dd.setOptions(new Object[]{new String(SEND), DialogDescriptor.CANCEL_OPTION});
+                DialogDisplayer.getDefault().createDialog(dd);
+                DialogDisplayer.getDefault().notify(dd);
+                if (dd.getValue().equals(SEND)) {
+                    saveValues(sendTranslationPanel);
+                    Thread t = new Thread(new SendMessageWorker());
+                    t.start();
+                }
             }
         }
     }
