@@ -11,7 +11,6 @@
 package org.ancestris.trancestris.explorers.zipexplorer.actions;
 
 import java.util.prefs.Preferences;
-import javax.swing.JFormattedTextField;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -28,18 +27,6 @@ public class SendTranslationPanel extends javax.swing.JPanel {
     /** Creates new form SendTranslationPanel */
     public SendTranslationPanel() {
         Preferences modulePreferences = NbPreferences.forModule(SendTranslationPanel.class);
-        if (modulePreferences.get("mail.host", "").equals("")) {
-            NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationPanel.class, "SendTranslationPanel.msg.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
-            DialogDisplayer.getDefault().notify(nd);
-            boolean open = OptionsDisplayer.getDefault().open("SendTranslation");
-            if (open) {
-                System.out.println("Open succed");
-            } else {
-                System.out.println("Open failed");
-
-            }
-        }
-
         initComponents();
     }
 
