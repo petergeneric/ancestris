@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <attr name="Toolbars\File\org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow\position" intvalue="200"/>
-    <attr name="Toolbars\File\org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow\position" intvalue="300"/>
     <attr name="Toolbars\File\org-openide-actions-SaveAllAction.shadow_hidden\position" intvalue="500"/>
     <folder name="Actions">
         <file name="Edit_hidden"/>
@@ -74,12 +72,12 @@
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
                 <attr name="position" intvalue="110"/>
             </file>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+        </folder>
+        <folder name="Mail">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SendTranslationAction.instance"/>
                 <attr name="position" intvalue="120"/>
-            </file>
-            <file name="org-openide-actions-SaveAction.instance_hidden">
-                <attr name="position" intvalue="400"/>
             </file>
         </folder>
     </folder>
