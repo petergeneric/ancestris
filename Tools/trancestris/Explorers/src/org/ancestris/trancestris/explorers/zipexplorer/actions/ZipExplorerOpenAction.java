@@ -47,13 +47,8 @@ public final class ZipExplorerOpenAction implements ActionListener {
         dialog.setVisible(true);
         dialog.toFront();
         if (zipExplorerOpenActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
-            Frame mainWindow = WindowManager.getDefault().getMainWindow();
-            mainWindow.setTitle(NbBundle.getMessage(ZipExplorerOpenAction.class,"CTL_MainWindow_Title",fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage()));
-
-            ZipArchive zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
-
             TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-            ((ZipExplorerTopComponent) tc).setBundles(zipArchive);
+            ((ZipExplorerTopComponent) tc).setBundles(zipFile, fromLocale, toLocale);
         }
     }
 }

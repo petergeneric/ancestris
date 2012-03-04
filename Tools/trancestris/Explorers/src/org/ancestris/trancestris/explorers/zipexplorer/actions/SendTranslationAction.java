@@ -45,9 +45,7 @@ public final class SendTranslationAction implements ActionListener {
 
         @Override
         public void run() {
-            String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
-            String subject = "[" + NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.tag.subject") + " " + TS + "] ";
-            subject += sendTranslationPanel.getSubjectFormattedTextField();
+            String subject = sendTranslationPanel.getSubjectFormattedTextField();
             String name = sendTranslationPanel.getNameFormattedTextField();
             String from = sendTranslationPanel.getEmailFormattedTextField();
             String text = sendTranslationPanel.getMessageTextArea();
@@ -121,7 +119,6 @@ public final class SendTranslationAction implements ActionListener {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.senderror")
                         + "\n(" + response + ").", NotifyDescriptor.ERROR_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
-
             } finally {
                 try {
                     t.close();
@@ -140,7 +137,6 @@ public final class SendTranslationAction implements ActionListener {
             NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationPanel.class, "SendTranslationPanel.msg.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
             OptionsDisplayer.getDefault().open("SendTranslation");
-
         } else {
             TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
             zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
@@ -148,7 +144,7 @@ public final class SendTranslationAction implements ActionListener {
                 sendTranslationPanel = new SendTranslationPanel();
                 setDefaultValues(sendTranslationPanel);
                 DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
-                dd.setOptions(new Object[]{new String(SEND), DialogDescriptor.CANCEL_OPTION});
+                dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
                 DialogDisplayer.getDefault().createDialog(dd);
                 DialogDisplayer.getDefault().notify(dd);
                 if (dd.getValue().equals(SEND)) {
@@ -164,11 +160,14 @@ public final class SendTranslationAction implements ActionListener {
         sendTranslationPanel.setMailToFormattedTextField(modulePreferences.get("mailto.address", "arvernes@ancestris.org"));
         sendTranslationPanel.setNameFormattedTextField(modulePreferences.get("mail.name", ""));
         sendTranslationPanel.setEmailFormattedTextField(modulePreferences.get("mail.address", ""));
+        String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
+        String subject = "[" + NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.tag.subject") + " " + TS + "] ";
+        sendTranslationPanel.setSubjectFormattedTextField(subject);
     }
 
     private void saveValues(SendTranslationPanel sendTranslationPanel) {
         modulePreferences.put("mail.name", sendTranslationPanel.getNameFormattedTextField());
         modulePreferences.put("mail.address", sendTranslationPanel.getEmailFormattedTextField());
-        modulePreferences.put("mail.address", sendTranslationPanel.getMailToFormattedTextField());
+        modulePreferences.put("mailto.address", sendTranslationPanel.getMailToFormattedTextField());
     }
 }
