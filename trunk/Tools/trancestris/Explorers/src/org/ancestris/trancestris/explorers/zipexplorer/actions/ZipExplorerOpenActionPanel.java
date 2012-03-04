@@ -94,7 +94,7 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
         jTextField1.setText(NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Fichier", ""));
         String dirName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Dossier", "");
         String fileName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Fichier", "");
-        if ((dirName + System.getProperty("file.separator") + fileName).length() > 0) {
+        if (dirName.length() > 0) {
             zipFile = new File(dirName + System.getProperty("file.separator") + fileName);
         }
     }

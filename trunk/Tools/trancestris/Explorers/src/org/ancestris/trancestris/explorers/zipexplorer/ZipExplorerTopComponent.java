@@ -4,10 +4,16 @@
  */
 package org.ancestris.trancestris.explorers.zipexplorer;
 
+import java.awt.Frame;
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.nodes.Children;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -19,6 +25,7 @@ import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
@@ -40,6 +47,7 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     private InstanceContent instanceContent = new InstanceContent();
     private final ProxyLookup proxyLookup;
     private ZipRootNode newZipRootNode = null;
+    private Preferences modulePreferences = NbPreferences.forModule(ZipExplorerTopComponent.class);
 
     public ZipExplorerTopComponent() {
         initComponents();
@@ -160,7 +168,23 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+
+            @Override
+            public void run() {
+                String dirName = "";
+                if ((dirName = modulePreferences.get("Dossier", "")).equals("") != true) {
+                    String fileName = modulePreferences.get("Fichier", "");
+                    File tempfile = new File(dirName + System.getProperty("file.separator") + fileName);
+
+                    if (tempfile.exists()) {
+                        Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
+                        Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                        setBundles(tempfile, fromLocale, toLocale);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -198,15 +222,29 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         return zipExplorerManager;
     }
 
-    public void setBundles(ZipArchive zipFile) {
-        newZipRootNode = new ZipRootNode(zipFile);
+    public void setBundles(File zipFile, Locale fromLocale, Locale toLocale) {
+        Frame mainWindow = WindowManager.getDefault().getMainWindow();
+        mainWindow.setTitle(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_MainWindow_Title", fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage()));
+
+        ZipArchive zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
+
+        newZipRootNode = new ZipRootNode(zipArchive);
         zipExplorerManager.setRootContext(newZipRootNode);
         ((BeanTreeView) beanTreeView).setRootVisible(true);
         instanceContent.add(newZipRootNode);
-        this.zipFile = zipFile;
+        this.zipFile = zipArchive;
     }
 
     public ZipArchive getBundles() {
         return zipFile;
+    }
+
+    private Locale getLocaleFromString(String str) {
+        if (str == null || str.length() == 0) {
+            return null;
+        }
+        String locale[] = (str + "__").split("_", 3);
+
+        return new Locale(locale[0], locale[1], locale[2]);
     }
 }
