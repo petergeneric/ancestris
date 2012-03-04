@@ -18,7 +18,7 @@
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.SendTranslationAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_SaveTranslationAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
-                <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/document-send.png"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/mail-icon.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance">
