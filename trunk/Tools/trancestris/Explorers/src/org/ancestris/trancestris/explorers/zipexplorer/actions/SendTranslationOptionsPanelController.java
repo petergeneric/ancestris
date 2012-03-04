@@ -13,7 +13,7 @@ import org.openide.util.Lookup;
 
 @OptionsPanelController.TopLevelRegistration(categoryName = "#OptionsCategory_Name_SendTranslation",
 id = "SendTranslation",
-iconBase = "org/ancestris/trancestris/explorers/zipexplorer/actions/document-send24.png",
+iconBase = "org/ancestris/trancestris/explorers/zipexplorer/actions/mail-icon32.png",
 keywords = "#OptionsCategory_Keywords_SendTranslation",
 keywordsCategory = "SendTranslation")
 public final class SendTranslationOptionsPanelController extends OptionsPanelController {
