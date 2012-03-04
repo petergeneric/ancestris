@@ -157,7 +157,7 @@ public final class SendTranslationAction implements ActionListener {
     }
 
     private void setDefaultValues(SendTranslationPanel sendTranslationPanel) {
-        sendTranslationPanel.setMailToFormattedTextField(modulePreferences.get("mailto.address", "arvernes@ancestris.org"));
+        sendTranslationPanel.setMailToFormattedTextField(modulePreferences.get("mailto.address", "francois@ancestris.org"));
         sendTranslationPanel.setNameFormattedTextField(modulePreferences.get("mail.name", ""));
         sendTranslationPanel.setEmailFormattedTextField(modulePreferences.get("mail.address", ""));
         String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
