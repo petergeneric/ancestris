@@ -14,7 +14,9 @@ public final class ExplorerSaveAction implements ActionListener {
 
         TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
         ZipArchive zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
-        zipArchive.write();
+        if (zipArchive != null) {
+            zipArchive.write();
+        }
 
     }
 }
