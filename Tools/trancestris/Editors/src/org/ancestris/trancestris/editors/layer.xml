@@ -36,7 +36,7 @@
     </folder>
     <folder name="Toolbars">
         <file name="Clipboard_hidden"/>
-        <folder name="File">
+        <folder name="Font">
             <attr name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow/org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow" boolvalue="true"/>
             <attr name="org-openide-actions-SaveAction.instance/org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow" boolvalue="true"/>
             <file name="org-ancestris-trancestris-editors-actions-IncreaseFontAction.shadow">
@@ -45,8 +45,6 @@
             <file name="org-ancestris-trancestris-editors-actions-ReduceFontAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-editors-actions-ReduceFontAction.instance"/>
             </file>
-            <file name="org-openide-actions-SaveAction.instance"/>
-            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
             <file name="UndoRedo_hidden"/>
     </folder>
