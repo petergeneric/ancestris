@@ -5,6 +5,11 @@ and open the template in the editor.
 -->
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
+    <indexitem text="Ajouter des Ascendants" target="ancestris.app.new.parent"/>
+    <indexitem text="Ajouter un conjoint" target="ancestris.app.new.spouse"/>
+    <indexitem text="Ajouter un Enfant" target="ancestris.app.new.child"/>
+    <indexitem text="Créer un Individu" target="ancestris.app.new.entity"/>
+    <indexitem text="Créer une Famille" target="ancestris.app.new.family"/>
     <indexitem text="Créer une génénalogie" target="ancestris.app.new.genealogy"/>
     <indexitem text="Découverte d'Ancestris" target="ancestris.app.discovering"/>
     <indexitem text="FAQ : import suivant l'origine du fichier Gedcom" target="ancestris.app.import.issue"/>
@@ -33,10 +38,10 @@ and open the template in the editor.
     <indexitem text="Liste des plugins" target="ancestris.app.plugins.liste"/>    
     <indexitem text="Mettre en conformité sa généalogie" target="ancestris.app.conform.genealogy"/>
     <indexitem text="Nomadisme et Ancestris" target="ancestris.app.nomade"/>
-    <indexitem text="Saisir des individus" target="ancestris.app.new.entity"/>
     <indexitem text="Sauvegarder son travail" target="ancestris.app.save.genealogy"/>
     <indexitem text="Sommaire Général" target="ancestris.app.about"/>
     <indexitem text="Téléchargement d'Ancestris" target="ancestris.app.download"/>
     <indexitem text="Utilisation avancée d'Ancestris" target="ancestris.app.advanced"/>
     <indexitem text="Utilisation de base d'Ancestris" target="ancestris.app.basic"/>
 </index>
+<!-- modifié le 2012-03-04 -->
