@@ -8,31 +8,31 @@ and open the template in the editor.
 <toc version="2.0">
   <tocitem image="toplevelfolder"
            text="La Généalogie avec Ancestris">
-    <tocitem target="ancestris.app.intro">Introduction à Ancestris </tocitem><!-- à valider -->
-    <tocitem expand="true" text="Ancestris - Sommaire" target="ancestris.app.about"><!-- à valider -->
-        <tocitem expand="true" text="Utilisation de base" target="ancestris.app.discovering"><!-- à corriger -->
-              <tocitem expand="true" text="Les paramètres essentiels" target="ancestris.app.basic"> <!-- à rédiger -->
-                  <tocitem text="L'encodage du fichier" target="ancestris.app.gedcom.bases" /> <!-- à rédiger -->
-                  <tocitem text="La gestion des lieux" target="ancestris.app.place.management" /> <!-- à rédiger -->
-                  <tocitem text="Gestion des fenêtres" target="ancestris.app.windows" />
-                  <tocitem text="L'explorateur Gedcoms" target="ancestris.app.gedcoms.manager" />
-                  <tocitem expand="false" text="Les plugins" target="ancestris.app.plugins">
+    <tocitem target="ancestris.app.intro">Introduction à Ancestris </tocitem><!-- à relire -->
+    <tocitem expand="true" text="Ancestris - Sommaire" target="ancestris.app.about"><!-- terminer 2012-03-09 -->
+        <tocitem expand="true" text="Utilisation de base" target="ancestris.app.discovering"><!-- à valider -->
+              <tocitem expand="true" text="Les paramètres essentiels" target="ancestris.app.basic"> <!-- à valider -->
+                  <tocitem text="L'encodage du fichier" target="ancestris.app.gedcom.bases" /> <!-- à simplifier cf note dans la page-->
+                  <tocitem text="La gestion des lieux" target="ancestris.app.place.management" /> <!-- à rédiger en s'impiratn du wiki -->
+                  <tocitem text="Gestion des fenêtres" target="ancestris.app.windows" /><!-- le wiki est plus actuel que cette version, reprendre-->
+                  <tocitem text="L'explorateur Gedcoms" target="ancestris.app.gedcoms.manager" /> <!-- à simplifier cf note dans la page et  s'impirant du wiki -->
+                  <tocitem expand="false" text="Les plugins" target="ancestris.app.plugins"/> <!-- cf wiki version plus résente -->
               </tocitem>
               <tocitem expand="true" text="Importer une généalogie" target="ancestris.app.genealogy.import"> <!-- à rédiger -->
                   <tocitem text="Mettre en conformité sa généalogie" target="ancestris.app.conform.genealogy" /> <!-- à rédiger -->
                   <tocitem text="FAQ : import suivant l'origine du fichier Gedcom" target="ancestris.app.import.issue" /> <!-- à rédiger -->
               </tocitem>
               <tocitem expand="true" text="Créer une génénalogie" target="ancestris.app.new.genealogy"> <!-- à rédiger -->
-                   <tocitem text="Créer et sauver une Généalogie" target="ancestris.app.save.genealogy" /> <!-- à rédiger -->
+                  <tocitem text="Créer et sauver une Généalogie" target="ancestris.app.save.genealogy" /> <!-- à rédiger -->
                   <tocitem text="Créer un Individu" target="ancestris.app.new.entity" /> <!-- à rédiger -->
                   <tocitem text="Ajouter un conjoint" target="ancestris.app.new.spouse" /> <!-- à rédiger -->
                   <tocitem text="Créer une Famille" target="ancestris.app.new.family" /> <!-- à rédiger -->
                   <tocitem text="Ajouter un Enfant" target="ancestris.app.new.child" /> <!-- à rédiger -->
                   <tocitem text="Ajouter des Ascendants" target="ancestris.app.new.parent" /> <!-- à rédiger -->
-                  <!-- d'autre didcatielle pourrait ajouté par la suite -->
+                  <!-- d'autres didcatielles pourraient être ajouté par la suite -->
               </tocitem>
         </tocitem>
-        <tocitem expand="true" text="Les différentes vues" target="ancestris.app.views"><!-- à corrgier -->
+        <tocitem expand="true" text="Les différentes vues" target="ancestris.app.views"><!-- image à faire ; pour ce chapitre reprendre les page depuis le wiki elle sont plsu résente illustration-->
             <tocitem text="L'Arbre généalogique" target="ancestris.app.view.tree" />
             <tocitem text="La vue Table" target="ancestris.app.view.table" />
             <tocitem text="L'Editeurs Ancestris" target="ancestris.app.view.editors" /><!-- à rédiger -->
@@ -48,13 +48,13 @@ and open the template in the editor.
         <tocitem expand="true" text="Utilisation avancée" target="ancestris.app.advanced">
             <tocitem text="Les Calques" target="ancestris.app.blueprints" />
             <tocitem text="Ancestris en mode nomade" target="ancestris.app.nomade" />
-               <tocitem target="ancestris.app.gedcom.standard">La norme Gedcom</tocitem>
+            <tocitem target="ancestris.app.gedcom.standard">La norme Gedcom</tocitem>
             <tocitem target="ancestris.app.external.links">la communauté Ancestris</tocitem>
             <tocitem text="Ecrire son premier plugin" target="ancestris.app.plugins.development" />
-            <tocitem text="Paramètre et Première configuration" target="ancestris.app.options.menu1" /> <!-- configuration; option paramètre-->
+            <tocitem text="Paramètre et Première configuration" target="ancestris.app.options.menu1" /> <!-- configuration; option paramètre, reprendre le wiki et la légende des infobul pour écrire la page-->
        </tocitem>
     </tocitem>
   </tocitem>
 </tocitem>
 </toc>
-<!-- vérifier l'ortho et la cohérence de l'arborescence dans l'aide 2012-03-04 -->
+<!-- vérifier l'ortho et la cohérence de l'arborescence dans l'aide 2012-03-09 -->
