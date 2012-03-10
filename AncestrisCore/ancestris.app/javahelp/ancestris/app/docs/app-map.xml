@@ -36,8 +36,9 @@ and open the template in the editor.
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel4" url="app-about.html"/>
     <mapID target="ancestris.app.view.chrono" url="./basic_use/basic_use_view_chrono_ancestris.html"/>
+    <mapID target="ancestris.app.view.editors" url="./basic_use/basic_use_view_editors.html"/>
     <mapID target="ancestris.app.view.editors.gedcom" url="./basic_use/basic_use_view_editors_gedcom.html"/>
-    <mapID target="ancestris.app.view.editors" url="./basic_use/basic_use_view_editors_ancestris.html"/>
+    <mapID target="ancestris.app.view.editors.ancestris" url="./basic_use/basic_use_view_editors_ancestris.html"/>
     <mapID target="ancestris.app.view.entity" url="./basic_use/basic_use_view_entity_ancestris.html"/>
     <mapID target="ancestris.app.view.navigator" url="./basic_use/basic_use_view_navigator_ancestris.html"/>
     <mapID target="ancestris.app.view.reports" url="./basic_use/basic_use_view_reports_ancestris.html"/>
@@ -47,4 +48,3 @@ and open the template in the editor.
     <mapID target="ancestris.app.views" url="./basic_use/basic_use_views_ancestris.html"/>
     <mapID target="ancestris.app.windows" url="./first_steps/first_steps_fenetrage.html"/>
 </map>
-<!-- 2012-03-09-->
