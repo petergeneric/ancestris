@@ -18,8 +18,12 @@ and open the template in the editor.
     <mapID target="ancestris.app.genealogy.import" url="./first_steps/first_steps_genealogy_import.html"/>
     <mapID target="ancestris.app.import.issue" url="./first_steps/first_steps_conform_import_issue.html"/>
     <mapID target="ancestris.app.intro" url="ancestris.html"/>
+    <mapID target="ancestris.app.new.child" url="./first_steps/first_steps_new_child.html"/>
     <mapID target="ancestris.app.new.entity" url="./first_steps/first_steps_new_entity.html"/>
+    <mapID target="ancestris.app.new.family" url="./first_steps/first_steps_new_family.html"/>
     <mapID target="ancestris.app.new.genealogy" url="./first_steps/first_steps_new_genealogy.html"/>
+    <mapID target="ancestris.app.new.parent" url="./first_steps/first_steps_new_parent.html"/>
+    <mapID target="ancestris.app.new.spouse" url="./first_steps/first_steps_new_spouse.html"/>
     <mapID target="ancestris.app.nomade" url="./advanced/advanced_ancestris_nomade.html"/>
     <mapID target="ancestris.app.options.menu1" url="./advanced/advanced_menu_options_1.html"/>
     <mapID target="ancestris.app.place.management" url="./first_steps/first_steps_place_management.html"/>
@@ -43,3 +47,4 @@ and open the template in the editor.
     <mapID target="ancestris.app.views" url="./basic_use/basic_use_views_ancestris.html"/>
     <mapID target="ancestris.app.windows" url="./first_steps/first_steps_fenetrage.html"/>
 </map>
+<!-- 2012-03-09-->
