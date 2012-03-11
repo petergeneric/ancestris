@@ -160,8 +160,8 @@ public final class SendTranslationAction implements ActionListener {
         sendTranslationPanel.setMailToFormattedTextField(modulePreferences.get("mailto.address", "francois@ancestris.org"));
         sendTranslationPanel.setNameFormattedTextField(modulePreferences.get("mail.name", ""));
         sendTranslationPanel.setEmailFormattedTextField(modulePreferences.get("mail.address", ""));
-        String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
-        String subject = "[" + NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.tag.subject") + " " + TS + "] ";
+        String TS = new SimpleDateFormat(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.subject.date")).format(new Date());
+        String subject = "[" + NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.subject.tag") + " " + TS + "] ";
         sendTranslationPanel.setSubjectFormattedTextField(subject);
     }
 
