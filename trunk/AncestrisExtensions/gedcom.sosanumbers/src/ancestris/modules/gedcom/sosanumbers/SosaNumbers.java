@@ -152,7 +152,7 @@ public class SosaNumbers {
                 Pair pair = listIter.next();
                 sosaCounter = Integer.parseInt(pair.value);
                 // Sosa d'Aboville generation
-                if (sosaAboNumbering && pair.indi.getSex() == PropertySex.MALE) {
+                if (pair.indi.equals(indiDeCujus) || (sosaAboNumbering && pair.indi.getSex() == PropertySex.MALE)) {
                     dabovilleNumbering(pair.indi, pair.value);
                 }
                 // Get father and mother
