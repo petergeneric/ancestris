@@ -16,6 +16,7 @@ import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.ToolTipManager;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -152,10 +153,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 //    private ResourceFileView resourceFileView;
     private Lookup.Result result = null;
     private ResourceFile resourceFile = null;
-
     public ResourceEditorTopComponent() {
 //        resourceFileView = new ResourceFileView();
         initComponents();
+        ToolTipManager.sharedInstance().setDismissDelay(60*1000);
         String fontName = NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Name", "Dialog");
         int fontStyle = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Style", "0"));
         int fontSize = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Size", "12"));
