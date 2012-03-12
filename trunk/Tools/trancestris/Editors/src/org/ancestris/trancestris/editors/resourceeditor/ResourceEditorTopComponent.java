@@ -153,10 +153,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 //    private ResourceFileView resourceFileView;
     private Lookup.Result result = null;
     private ResourceFile resourceFile = null;
+
     public ResourceEditorTopComponent() {
 //        resourceFileView = new ResourceFileView();
         initComponents();
-        ToolTipManager.sharedInstance().setDismissDelay(60*1000);
+        ToolTipManager.sharedInstance().setDismissDelay(60 * 1000);
         String fontName = NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Name", "Dialog");
         int fontStyle = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Style", "0"));
         int fontSize = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Size", "12"));
@@ -196,6 +197,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel1.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Comment-Window")); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
+        textAreaComments.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.shadow"));
         textAreaComments.setColumns(20);
         textAreaComments.setEditable(false);
         textAreaComments.setRows(5);
@@ -339,6 +341,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 if (resourceFile != null) {
                     resourceFileView.setSelectedIndex(0);
                     textAreaComments.setText(resourceFile.getLineComment(0));
+                    textAreaComments.setCaretPosition(0);
                     textAreaTranslation.setText(resourceFile.getLineTranslation(0));
                     textAreaTranslation.setEditable(true);
                     textAreaTranslation.setCaretPosition(0);
