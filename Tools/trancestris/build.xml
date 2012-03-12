@@ -4,6 +4,10 @@
 <!-- If you delete this file and reopen the project it will be recreated. -->
 <project name="Trancestris" basedir=".">
     <description>Builds the module suite Trancestris.</description>
+
+<!-- override build to add update branding -->
+    <target name="build" depends="build-brand,suite.build"/>
+
     <import file="nbproject/build-impl.xml"/>
     <target name="build-zip" depends="suite.build-zip">
         <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
@@ -18,14 +22,30 @@
 <!--        <zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/>-->
         </zip>
     </target>
-<!-- override build to add update branding -->
-    <target name="build" depends="build-brand,suite.build"/>
 
-    <target name="build-brand" depends="-init">
+    <target name="-svn-check">
+        <exec executable="svn" failonerror="false"
+              outputproperty="buildversion" errorproperty="erroroutput">
+            <arg value="info"/>
+            <arg value="--xml"/>
+        </exec>
+        <condition property="svn-no-error">
+            <length string="${erroroutput}" length="0"/>
+        </condition>
+    </target>
+
+    <target name="get-buildnumber-from-svn" if="svn-no-error">
+        <xmlproperty>
+            <propertyresource name="buildversion"/>
+        </xmlproperty>
+        <property name="buildnumber" value="${info.entry.commit(revision)}" />
+    </target>
+
+    <target name="build-brand" depends="-init,-svn-check,get-buildnumber-from-svn">
         <propertyfile
         file="${basedir}/branding/core/core.jar/org/netbeans/core/startup/Bundle.properties"
         comment="Updated by build script">
-            <entry key="currentVersion" value="${app.title} ${app.version} " />
+            <entry key="currentVersion" value="${app.title} ${app.version}.${buildnumber}" />
         </propertyfile>
 
         <propertyfile
@@ -35,6 +55,7 @@
             <entry key="CTL_MainWindow_Title_No_Project" value="${app.title} ${app.version}" />
         </propertyfile>
     </target>
+
     <target name="build-mac" depends="suite.build-mac">
         <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
         <echo message="${app.name}: update zip-distribution with own stuff"/>
@@ -54,5 +75,4 @@
             <arg value="${app.name}.app"/>
         </exec>
     </target>
-
 </project>
