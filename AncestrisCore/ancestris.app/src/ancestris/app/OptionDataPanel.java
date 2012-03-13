@@ -7,9 +7,6 @@ package ancestris.app;
 import ancestris.core.beans.ConfirmChangeWidget;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import org.openide.awt.StatusDisplayer;
 
 final class OptionDataPanel extends javax.swing.JPanel {
@@ -57,6 +54,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jLabel21 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox(encodings);
         jCheckBox19 = new javax.swing.JCheckBox();
+        jLabel9 = new javax.swing.JLabel();
+        idLength = new javax.swing.JSpinner();
         jPanel2 = new javax.swing.JPanel();
         placeFormat = new ancestris.modules.beans.APlaceFormatBean();
         cbAutoCommit = new javax.swing.JCheckBox();
@@ -115,19 +114,24 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jPanel1.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
-        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel20, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel20.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox18, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.text")); // NOI18N
         jCheckBox18.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.toolTipText")); // NOI18N
 
-        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel21.text")); // NOI18N
 
         jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jComboBox1.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox19, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.text")); // NOI18N
         jCheckBox19.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel9.text")); // NOI18N
+
+        idLength.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
+        idLength.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.idLength.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -136,16 +140,21 @@ final class OptionDataPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jCheckBox18))
                     .addComponent(jLabel20)
                     .addComponent(jLabel21)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBox19)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(idLength, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jCheckBox18))))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -155,7 +164,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addComponent(jLabel20)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox18)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(idLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
                 .addComponent(jLabel21)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -382,6 +395,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         jCheckBox3.setSelected(!gedcomOptions.getGivenTag().isEmpty());
         jCheckBox3ActionPerformed(new java.awt.event.ActionEvent(this,0,null));
         cbSpaceIsSep.setSelected(gedcomOptions.spaceIsSeparator());
+        idLength.setValue(gedcomOptions.getEntityIdLength());
     }
 
     void store() {
@@ -413,6 +427,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
         gedcomOptions.setGivenTag(jCheckBox3.isSelected()?jtGivenTag.getText().trim():"");
         gedcomOptions.setSpaceIsSeparator(cbSpaceIsSep.isSelected());
+        gedcomOptions.setEntityIdLength(Integer.valueOf(idLength.getValue().toString()));
     }
 
     public boolean valid() {
@@ -423,6 +438,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox cbSpaceIsSep;
+    private javax.swing.JSpinner idLength;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox18;
     private javax.swing.JCheckBox jCheckBox19;
@@ -440,6 +456,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
