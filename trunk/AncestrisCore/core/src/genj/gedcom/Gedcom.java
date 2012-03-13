@@ -914,7 +914,7 @@ public class Gedcom implements Comparable {
     // once if necessary
     int id = Options.getInstance().isFillGapsInIDs ? 1 : (id2entity.isEmpty() ? 1 : id2entity.size());
     
-    StringBuffer buf = new StringBuffer(maxIDLength);
+    StringBuilder buf = new StringBuilder(maxIDLength);
     
     search: while (true) {
       
@@ -938,7 +938,12 @@ public class Gedcom implements Comparable {
     
     // 20050509 not patching IDs with zeros anymore - since we now have alignment
     // in tableview there's not really a need to add leading zeros for readability.
-    return getEntityPrefix(entity) + id;
+    buf.setLength(0);
+    buf.append(id);
+    while(buf.length()<Options.getInstance().getEntityIdLength())
+        buf.insert(0, '0');
+
+    return getEntityPrefix(entity) + buf;
   }
   
   /**

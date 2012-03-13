@@ -253,6 +253,21 @@ public class Options extends OptionProvider {
         getPreferences().put(SPACE_IS_SEPARATOR, value);
     }
 
+    private static final String ENTITY_ID_LENGTH   = "gedcom.entityIdLength";         // NOI18N
+    /**
+     * Length for entity Ids (excluding prefix). Default is 5 ie I99999
+     */
+    public int getEntityIdLength() {
+        return getPreferences().get(ENTITY_ID_LENGTH, 5);
+    }
+    public void setEntityIdLength(int value) {
+        if (value<0)
+            value = 0;
+        if (value>20)
+            value = 20;
+        getPreferences().put(ENTITY_ID_LENGTH, value);
+    }
+
     private static final String CREATE_SPOUSE   = "gedcom.createSpouse";         // NOI18N
     public void setCreateSpouse(boolean createSpouse) {
         getPreferences().put(CREATE_SPOUSE, createSpouse);
