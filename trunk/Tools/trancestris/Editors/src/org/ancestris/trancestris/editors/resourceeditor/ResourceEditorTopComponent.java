@@ -197,7 +197,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel1.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Comment-Window")); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        textAreaComments.setBackground(java.awt.Color.lightGray);
+        textAreaComments.setBackground(new java.awt.Color(184, 207, 229));
         textAreaComments.setColumns(20);
         textAreaComments.setEditable(false);
         textAreaComments.setRows(5);
@@ -211,7 +211,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
