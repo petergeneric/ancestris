@@ -44,7 +44,7 @@
             <Component class="javax.swing.JTextArea" name="textAreaComments">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="c0" green="c0" id="lightGray" palette="1" red="c0" type="palette"/>
+                  <Color blue="e5" green="cf" red="b8" type="rgb"/>
                 </Property>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="editable" type="boolean" value="false"/>
