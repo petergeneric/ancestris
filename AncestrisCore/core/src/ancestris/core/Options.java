@@ -35,4 +35,16 @@ public class Options {
     public static void setAlwaysOpenDefault(boolean alwaysOpen){
         appOptions.put("alwaysOpenDefault",alwaysOpen);
     }
+
+    /**
+     * Show/Hide hidden files in open file dialog box.
+     * Defaults to "Don't show hidden files"
+     * @param def
+     */
+    public static void setShowHidden(boolean  def){
+        appOptions.put("showHidden",def);
+    }
+    public static boolean getShowHidden(){
+        return appOptions.get("showHidden",false);
+    }
 }

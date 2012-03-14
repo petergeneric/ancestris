@@ -19,6 +19,7 @@
  */
 package genj.app;
 
+import ancestris.core.Options;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -823,6 +824,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (accessory != null) {
             chooser.setAccessory(accessory);
         }
+        chooser.setFileHidingEnabled(!Options.getShowHidden());
         if (JFileChooser.APPROVE_OPTION != chooser.showDialog()) {
             return null;
         }
