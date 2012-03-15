@@ -87,11 +87,11 @@ public final class TreeTopComponent extends GenjViewTopComponent implements Filt
     }
 
     @Override
-    public void runWhenSizeIsCorrect() {
+    public void runWhenSizeIsCorrectImpl() {
         TreeView v = (TreeView) getView();
         v.setRoot(v.getRoot());
         v.show(v.getContext().getEntity(), true);
-    }
+        }
 
     @Override
     protected String preferredID() {

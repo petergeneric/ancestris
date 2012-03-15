@@ -278,7 +278,13 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         }
     }
 
-    public void runWhenSizeIsCorrect() {
+    //XXX: replace with componentActivated?
+    // componentActivated is called too early => we should redesign all genjview/TC interface
+    private void runWhenSizeIsCorrect() {
+        runWhenSizeIsCorrectImpl();
+        setSizeCorrect(true);
+    }
+    public void runWhenSizeIsCorrectImpl() {
     }
 
     public boolean createPanel() {
