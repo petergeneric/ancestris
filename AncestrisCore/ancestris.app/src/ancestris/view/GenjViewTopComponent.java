@@ -92,7 +92,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent {
 
     //XXX: do it in editorTC? in encestrisTC?
     @Override
-    public void runWhenSizeIsCorrect() {
+    public void runWhenSizeIsCorrectImpl() {
         if (getViewProxy() != null) {
             getViewProxy().setContext(getContext(), true);
         }
