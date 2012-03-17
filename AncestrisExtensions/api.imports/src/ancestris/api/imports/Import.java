@@ -92,6 +92,8 @@ public abstract class Import {
         return output;
     }
 
+    protected abstract String getImportComment ();
+
     public boolean run(File fileIn, File fileOut, String tabName) {
         this.fileIn = fileIn;
         this.fileOut = fileOut;
@@ -145,7 +147,7 @@ public abstract class Import {
                 while (input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
                         output.writeLine(input);
-                        output.writeLine(1, "NOTE", NbBundle.getMessage(Import.class, "note1", Import.class.getSimpleName()));
+                        output.writeLine(1, "NOTE", getImportComment());
                         continue;
                     }
                     if (process()) {
@@ -361,7 +363,7 @@ public abstract class Import {
         private int shiftedLevel = -1;
 
         public GedcomFileWriter(File filein, String eol) throws UnsupportedEncodingException, FileNotFoundException {
-            super(new OutputStreamWriter(new FileOutputStream(fileOut), "LATIN1"));
+            super(new OutputStreamWriter(new FileOutputStream(fileOut), "UTF-8"));
             EOL = eol;
         }
 
