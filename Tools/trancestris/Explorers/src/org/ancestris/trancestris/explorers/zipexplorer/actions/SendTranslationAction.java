@@ -70,6 +70,23 @@ public final class SendTranslationAction implements ActionListener {
             Message msg = new MimeMessage(session);
             SMTPTransport t = null;
 
+            zipArchive.write();
+            String archiveName = zipArchive.getName();
+            String filePath = zipArchive.getZipFile().getParent();
+            String prefix = archiveName.substring(0, archiveName.indexOf('.'));
+            String suffix = archiveName.substring(archiveName.indexOf('.') + 1);
+            String locale = zipArchive.getTranslatedLocale().getLanguage();
+
+            File zipOutputFile = new File(filePath + File.separator + prefix + "_" + locale + "." + suffix);
+            if (!zipOutputFile.exists()) {
+                try {
+                    zipOutputFile.createNewFile();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            zipArchive.saveTranslation(zipOutputFile);
+
             try {
                 msg.setFrom(new InternetAddress(from));
                 msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
@@ -80,21 +97,6 @@ public final class SendTranslationAction implements ActionListener {
                 mbp1.setText(text);
 
                 MimeBodyPart mbp2 = new MimeBodyPart();
-                String archiveName = zipArchive.getName();
-                String filePath = zipArchive.getZipFile().getParent();
-                String prefix = archiveName.substring(0, archiveName.indexOf('.'));
-                String suffix = archiveName.substring(archiveName.indexOf('.') + 1);
-                String locale = zipArchive.getTranslatedLocale().getLanguage();
-
-                File zipOutputFile = new File(filePath + File.separator + prefix + "_" + locale + "." + suffix);
-                if (!zipOutputFile.exists()) {
-                    try {
-                        zipOutputFile.createNewFile();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-                zipArchive.saveTranslation(zipOutputFile);
                 mbp2.attachFile(zipOutputFile);
 
                 MimeMultipart mp = new MimeMultipart();
