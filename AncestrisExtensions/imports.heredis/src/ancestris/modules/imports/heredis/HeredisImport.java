@@ -195,4 +195,9 @@ public class HeredisImport extends Import {
     public String toString() {
         return "Hérédis";
     }
+
+    @Override
+    protected String getImportComment() {
+        return NbBundle.getMessage(HeredisImport.class, "note1", HeredisImport.class);
+    }
 }
