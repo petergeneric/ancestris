@@ -12,6 +12,7 @@
 package ancestris.modules.imports.generic;
 
 import ancestris.api.imports.Import;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -30,5 +31,10 @@ public class GenericImport extends Import {
     @Override
     public String toString () {
         return "Generic";
+    }
+
+    @Override
+    protected String getImportComment() {
+        return NbBundle.getMessage(GenericImport.class, "note1", GenericImport.class);
     }
 }
