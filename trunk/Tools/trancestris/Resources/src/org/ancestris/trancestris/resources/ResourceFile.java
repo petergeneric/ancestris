@@ -143,7 +143,7 @@ public class ResourceFile {
             for (String bundleName : getFiles()) {
                 if (bundleName.equals(toBundleName)) {
                     for (String modifiedBundle : getFiles()) {
-                         if (modifiedBundle.equals(toModifiedName)) {
+                        if (modifiedBundle.equals(toModifiedName)) {
                             logger.log(Level.INFO, "Save file {0} ...", this.directoryPath + "/" + bundleName);
 
                             ZipEntry zipEntry = new ZipEntry(this.directoryPath + "/" + bundleName);
@@ -157,7 +157,7 @@ public class ResourceFile {
                                 }
                             }
                             logger.log(Level.INFO, "Done");
-                         }
+                        }
                     }
                 }
             }
@@ -206,7 +206,11 @@ public class ResourceFile {
             not_translated = getLineCount();
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
-                if (toLanguage.getLine(line.getKey()) != null) {
+                if (!line.getValue().isEmpty()) {
+                    if (toLanguage.getLine(line.getKey()) != null) {
+                        not_translated = Math.max(0, not_translated - 1);
+                    }
+                } else {
                     not_translated = Math.max(0, not_translated - 1);
                 }
             }
