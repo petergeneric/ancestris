@@ -25,16 +25,17 @@
  * 
  */
 
-body  {font-size: small;
+
+/* Page */
+
+body  {font-size: 12px;
 	font-family: SansSerif, Arial, Helvetica, sans-serif;
 	margin-left: 5;
 	margin-right: 5;
 	color: Black;
 	background-color: White}
 
-p  {font-size: small;
-     margin-top: 5;
-     margin-bottom: 5}
+/* Titles */
 
 h1 { font-size: large;
      font-weight: bold;
@@ -65,6 +66,14 @@ h6 { font-size: smaller;
      font-weight: bold;
      margin-top: 0;
      margin-bottom: 10}
+
+/* Paragraphs */
+
+p  {font-size: 12px;
+     margin-top: 5;
+     margin-bottom: 5}
+
+/* Lists */
 
 li {margin-top: 0;
     margin-bottom: 5}
@@ -143,14 +152,14 @@ dl {margin-left: 0;
     margin-top: 10;
     margin-bottom: 5}
 
-dt {font-size: small;
+dt {font-size: 12px;
     font-style: normal;
     font-weight: bold;
     margin-top: 0;
     margin-bottom: 0;
     text-indent: 0}
 
-dd {font-size: small;
+dd {font-size: 12px;
     font-style: normal;
     font-weight: normal;
     margin-top: 2;
@@ -177,7 +186,15 @@ th {border-style: solid;
 
 small {font-size: x-small}
 
-/* Specific style for the Help section - Start */
+/* Specific style for the Help section of Ancestris - Start */
+
+h1.ancestris_help_title   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 14pt;
+    font-weight: 900;
+    text-decoration: underline;
+    }
 
 h1.section1   {
     color: #000000;
@@ -191,6 +208,14 @@ h2.section1   {
     color: #000000;
     background: #ffffff;
     font-size: 15pt;
+    font-weight: 700;
+    text-decoration: underline;
+    }
+
+h2.ancestris_back_section   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 12pt;
     font-weight: 700;
     text-decoration: underline;
     }
@@ -211,6 +236,17 @@ div.section1    {
               margin-right: 5px;
               text-align: justify;
               }
+
+.ancestris_stop_tip {
+    background-color:#abeee2;
+    font-size: 11px;
+}
+
+.ancestris_info_image {
+    color: #24006b;
+    font-style: italic;
+    font-size: 10px;
+}
 
 .featured {
     margin: 30px 0;
@@ -249,4 +285,4 @@ p.warning   {
     font-size: 7pt;
     }
 
-/* Specific style for the Help section - End */
+/* Specific style for the Help section of Ancestris - End */
