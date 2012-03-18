@@ -206,7 +206,7 @@ public class ResourceFile {
             not_translated = getLineCount();
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
-                if (!line.getValue().isEmpty()) {
+                if (line.getValue() != null && !line.getValue().isEmpty()) {
                     if (toLanguage.getLine(line.getKey()) != null) {
                         not_translated = Math.max(0, not_translated - 1);
                     }
