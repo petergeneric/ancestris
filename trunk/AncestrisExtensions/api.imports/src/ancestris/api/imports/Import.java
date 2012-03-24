@@ -12,7 +12,9 @@ package ancestris.api.imports;
 
 import ancestris.modules.console.Console;
 import genj.gedcom.TagPath;
+import genj.io.GedcomEncodingSniffer;
 import genj.io.PropertyReader;
+import java.io.BufferedInputStream;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,10 +26,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -65,6 +69,7 @@ public abstract class Import {
     private File fileOut = null;
     protected GedcomFileReader input;
     protected GedcomFileWriter output;
+    protected Charset charset = null;
     protected Console console;
 
     // protected boolean handleYesTag = true;
@@ -84,15 +89,15 @@ public abstract class Import {
     }
 
     private GedcomFileReader getReader() throws Exception {
-        return new GedcomFileReader(fileIn);
+        return new GedcomFileReader(fileIn, charset);
     }
 
     private GedcomFileWriter getWriter() throws Exception {
-        GedcomFileWriter output = new GedcomFileWriter(fileOut, getEOL(fileIn));
+        GedcomFileWriter output = new GedcomFileWriter(fileOut, charset, getEOL(fileIn));
         return output;
     }
 
-    protected abstract String getImportComment ();
+    protected abstract String getImportComment();
 
     public boolean run(File fileIn, File fileOut, String tabName) {
         this.fileIn = fileIn;
@@ -100,6 +105,13 @@ public abstract class Import {
         this.console = new Console(tabName);
         hashIndis = new Hashtable<String, ImportIndi>();
         hashFams = new Hashtable<String, ImportFam>();
+        try {
+            GedcomEncodingSniffer encodingSniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));
+            charset = encodingSniffer.getCharset();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            charset = Charset.forName("UTF-8");
+        }
 
         // on fait une premiere passe sur le fichier pour creer les repos
         try {
@@ -134,6 +146,7 @@ public abstract class Import {
         try {
             output = getWriter();
         } catch (IOException e1) {
+            e1.printStackTrace();
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
             return false;
         } catch (Exception e) {
@@ -313,8 +326,8 @@ public abstract class Import {
             return path;
         }
 
-        public GedcomFileReader(File filein) throws UnsupportedEncodingException, FileNotFoundException {
-            super(new InputStreamReader(new FileInputStream(fileIn), "LATIN1"), null, false);
+        public GedcomFileReader(File filein, Charset charset) throws UnsupportedEncodingException, FileNotFoundException {
+            super(new InputStreamReader(new FileInputStream(fileIn), charset), null, false);
         }
 
         public String getValue() {
@@ -362,8 +375,8 @@ public abstract class Import {
         private int levelShift = 0;
         private int shiftedLevel = -1;
 
-        public GedcomFileWriter(File filein, String eol) throws UnsupportedEncodingException, FileNotFoundException {
-            super(new OutputStreamWriter(new FileOutputStream(fileOut), "UTF-8"));
+        public GedcomFileWriter(File filein, Charset charset, String eol) throws UnsupportedEncodingException, FileNotFoundException {
+            super(new OutputStreamWriter(new FileOutputStream(fileOut), charset));
             EOL = eol;
         }
 
