@@ -68,7 +68,7 @@ public class ZipArchive implements PropertyChangeListener {
 
     public void saveTranslation(File outputFile) {
         try {
-            logger.log(Level.INFO, "Save archive {0}", outputFile.getName());
+            logger.log(Level.INFO, "Create archive {0}", outputFile.getName());
             ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
             root.saveTranslation(outputStream, "");
             outputStream.close();
