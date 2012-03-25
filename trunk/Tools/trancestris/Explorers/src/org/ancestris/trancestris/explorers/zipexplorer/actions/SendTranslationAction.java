@@ -40,6 +40,12 @@ public final class SendTranslationAction implements ActionListener {
     private Preferences modulePreferences = NbPreferences.forModule(SendTranslationAction.class);
     File zipOutputFile = null;
     SendTranslationPanel sendTranslationPanel = new SendTranslationPanel();
+    String archiveName = "";
+    String filePath = "";
+    String prefix = "";
+    String suffix = "";
+    String toLocale = "";
+    String fromLocale = "";
 
     private class SendMessageWorker implements Runnable {
 
@@ -130,13 +136,14 @@ public final class SendTranslationAction implements ActionListener {
             if (zipArchive != null) {
                 zipArchive.write();
 
-                String archiveName = zipArchive.getName();
-                String filePath = zipArchive.getZipFile().getParent();
-                String prefix = archiveName.substring(0, archiveName.indexOf('.'));
-                String suffix = archiveName.substring(archiveName.indexOf('.') + 1);
-                String locale = zipArchive.getTranslatedLocale().getLanguage();
+                archiveName = zipArchive.getName();
+                filePath = zipArchive.getZipFile().getParent();
+                prefix = archiveName.substring(0, archiveName.indexOf('.'));
+                suffix = archiveName.substring(archiveName.indexOf('.') + 1);
+                toLocale = zipArchive.getToLocale().getLanguage();
+                fromLocale = zipArchive.getFromLocale().getLanguage();
 
-                zipOutputFile = new File(filePath + File.separator + prefix + "_" + locale + "." + suffix);
+                zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
                 if (!zipOutputFile.exists()) {
                     try {
                         zipOutputFile.createNewFile();
@@ -165,7 +172,7 @@ public final class SendTranslationAction implements ActionListener {
         sendTranslationPanel.setNameFormattedTextField(modulePreferences.get("mail.name", ""));
         sendTranslationPanel.setEmailFormattedTextField(modulePreferences.get("mail.address", ""));
         String TS = new SimpleDateFormat(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.subject.date")).format(new Date());
-        String subject = "[" + NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.subject.tag") + " " + TS + "] ";
+        String subject = "[" + NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.subject.tag", fromLocale, toLocale) + " " + TS + "] ";
         sendTranslationPanel.setSubjectFormattedTextField(subject);
     }
 
