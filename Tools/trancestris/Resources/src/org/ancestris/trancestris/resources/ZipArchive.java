@@ -25,12 +25,14 @@ public class ZipArchive implements PropertyChangeListener {
     private ZipDirectory root;
     private File zipFile = null;
     private Locale toLocale;
+    private Locale fromLocale;
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
         logger.log(Level.INFO, "Open Archive {0}", inputFile.getName());
 
         this.zipFile = inputFile;
         this.toLocale = toLocale;
+        this.fromLocale = fromLocale;
         this.root = new ZipDirectory("");
         this.root.addPropertyChangeListener(this);
 
@@ -89,8 +91,12 @@ public class ZipArchive implements PropertyChangeListener {
         return this.zipFile;
     }
 
-    public Locale getTranslatedLocale() {
+    public Locale getToLocale() {
         return this.toLocale;
+    }
+
+    public Locale getFromLocale() {
+        return this.fromLocale;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
