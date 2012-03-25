@@ -103,6 +103,11 @@ public class SelectEntityWidget extends JPanel {
   
   /**
    * Constructor
+   *
+   * @param gedcom
+   * @param type Tag type eg Gedcom.INDI
+   * @param none if non nul, string to display at first position.
+   * for instance to set a "add new" entry
    */
   public SelectEntityWidget(Gedcom gedcom, String type, String none) {
 

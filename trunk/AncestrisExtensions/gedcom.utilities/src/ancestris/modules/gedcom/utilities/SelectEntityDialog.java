@@ -23,6 +23,7 @@ import org.openide.util.NbPreferences;
  *
  * @author dominique
  */
+//FIXME: move this class to core, for instance in ancestris.util.swing (or a more convenient  name) package
 public class SelectEntityDialog {
 
     Preferences modulePreferences = NbPreferences.forModule(SelectEntityDialog.class);
