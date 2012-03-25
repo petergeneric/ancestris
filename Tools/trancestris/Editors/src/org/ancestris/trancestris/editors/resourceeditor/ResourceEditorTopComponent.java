@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JList;
 import javax.swing.JTextArea;
@@ -44,12 +45,18 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         @Override
         public void actionPerformed(ActionEvent actionevent) {
             int i = resourceFileView.getSelectedIndex();
+
+            logger.log(Level.INFO, "Selected index is {0}", i);
+
             if (i >= 0) {
+                logger.log(Level.INFO, "Save translation for index {0}", i);
                 resourceFile.setLineTranslation(i, textAreaTranslation.getText());
             }
 
+            // Search for the first non translated line
             while (i + 1 < resourceFileView.getModel().getSize()) {
                 if (resourceFile.getLineState(++i) == 0) {
+                    logger.log(Level.INFO, "New selected index is {0}", i);
                     resourceFileView.setSelectedIndex(i);
                     resourceFileView.ensureIndexIsVisible(i);
                     break;
@@ -65,10 +72,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             String translation = "";
             String comment = "";
 
-            boolean flag = false;
-            if (resourceFileView.getSelectedIndex() >= 0) {
-                int i = resourceFileView.getSelectedIndex();
-                flag = resourceFile.getLineState(i) != -1;
+            int i = resourceFileView.getSelectedIndex();
+            logger.log(Level.INFO, "Selected index is {0}", i);
+
+            if (i >= 0) {
                 translation = resourceFile.getLineTranslation(i);
                 comment = resourceFile.getLineComment(i);
             }
@@ -153,6 +160,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 //    private ResourceFileView resourceFileView;
     private Lookup.Result result = null;
     private ResourceFile resourceFile = null;
+    private static final Logger logger = Logger.getLogger(ResourceFile.class.getName());
 
     public ResourceEditorTopComponent() {
 //        resourceFileView = new ResourceFileView();
@@ -339,6 +347,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 resourceFile = zipDirectory.getResourceFile();
                 resourceFileView.updateUI();
                 if (resourceFile != null) {
+                    logger.log(Level.INFO, "Editing file in directory {0}", zipDirectory.getName());
+
                     resourceFileView.setSelectedIndex(0);
                     textAreaComments.setText(resourceFile.getLineComment(0));
                     textAreaComments.setCaretPosition(0);
@@ -347,6 +357,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     textAreaTranslation.setCaretPosition(0);
                     buttonConfirmTranslation.setEnabled(true);
                 } else {
+                    logger.log(Level.INFO, "No file under edition");
+
                     textAreaComments.setText("");
                     textAreaTranslation.setText("");
                     textAreaTranslation.setEditable(false);
