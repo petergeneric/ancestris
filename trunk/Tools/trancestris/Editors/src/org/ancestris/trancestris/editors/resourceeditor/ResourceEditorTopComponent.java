@@ -160,7 +160,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 //    private ResourceFileView resourceFileView;
     private Lookup.Result result = null;
     private ResourceFile resourceFile = null;
-    private static final Logger logger = Logger.getLogger(ResourceFile.class.getName());
+    private static final Logger logger = Logger.getLogger(ResourceEditorTopComponent.class.getName());
 
     public ResourceEditorTopComponent() {
 //        resourceFileView = new ResourceFileView();
