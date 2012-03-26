@@ -19,7 +19,7 @@ package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
-import ancestris.modules.gedcom.utilities.SelectEntityDialog;
+import ancestris.util.swing.SelectEntityDialog;
 import genj.app.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;

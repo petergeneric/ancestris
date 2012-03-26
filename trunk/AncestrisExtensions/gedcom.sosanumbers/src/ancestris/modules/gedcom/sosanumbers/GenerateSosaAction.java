@@ -11,7 +11,7 @@
  */
 package ancestris.modules.gedcom.sosanumbers;
 
-import ancestris.modules.gedcom.utilities.SelectEntityDialog;
+import ancestris.util.swing.SelectEntityDialog;
 import ancestris.app.App;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
