@@ -13,7 +13,7 @@ package ancestris.modules.reports.relatives;
 
 import ancestris.app.App;
 import ancestris.modules.document.view.DocumentViewTopComponent;
-import ancestris.modules.gedcom.utilities.SelectEntityDialog;
+import ancestris.util.swing.SelectEntityDialog;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
