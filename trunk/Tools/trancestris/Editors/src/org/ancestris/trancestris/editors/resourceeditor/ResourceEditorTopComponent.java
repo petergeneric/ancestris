@@ -81,10 +81,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             }
             textAreaComments.setText(comment);
             textAreaComments.setCaretPosition(0);
+            if (comment.contains("#NOI18N") == true) {
+                textAreaTranslation.setEditable(false);
+                buttonConfirmTranslation.setEnabled(false);
+            } else {
+                textAreaTranslation.setEditable(true);
+                buttonConfirmTranslation.setEnabled(true);
+            }
             textAreaTranslation.setText(translation);
-            textAreaTranslation.setEditable(true);
             textAreaTranslation.setCaretPosition(0);
-            buttonConfirmTranslation.setEnabled(true);
         }
     }
 
@@ -355,10 +360,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     resourceFileView.setSelectedIndex(0);
                     textAreaComments.setText(resourceFile.getLineComment(0));
                     textAreaComments.setCaretPosition(0);
+                    if (resourceFile.getLineComment(0).contains("#NOI18N") == true) {
+                        textAreaTranslation.setEditable(false);
+                        buttonConfirmTranslation.setEnabled(false);
+                    } else {
+                        textAreaTranslation.setEditable(true);
+                        buttonConfirmTranslation.setEnabled(true);
+                    }
                     textAreaTranslation.setText(resourceFile.getLineTranslation(0));
-                    textAreaTranslation.setEditable(true);
                     textAreaTranslation.setCaretPosition(0);
-                    buttonConfirmTranslation.setEnabled(true);
                 } else {
                     logger.log(Level.INFO, "No file under edition");
 
