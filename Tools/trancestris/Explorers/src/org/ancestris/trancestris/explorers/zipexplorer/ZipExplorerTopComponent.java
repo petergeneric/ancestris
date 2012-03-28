@@ -6,14 +6,12 @@ package org.ancestris.trancestris.explorers.zipexplorer;
 
 import java.awt.Frame;
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.nodes.Children;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -55,7 +53,6 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         setToolTipText(NbBundle.getMessage(ZipExplorerTopComponent.class, "HINT_ZipExplorerTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
-        putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
         zipExplorerManager = new ExplorerManager();
         ((BeanTreeView) beanTreeView).setRootVisible(false);
