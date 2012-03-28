@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.ancestris.trancestris.resources.ResourceItem.ResourceLine;
 import org.openide.util.NbBundle;
 
 public class ResourceFile {
@@ -205,7 +206,10 @@ public class ResourceFile {
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
                 if (line.getValue() != null && !line.getValue().isEmpty()) {
-                    if (toLanguage.getLine(line.getKey()) != null) {
+                    String comment = line.getComment();
+                    if (comment != null && comment.contains("NOI18N")) {
+                        not_translated = Math.max(0, not_translated - 1);
+                    } else if (toLanguage.getLine(line.getKey()) != null) {
                         not_translated = Math.max(0, not_translated - 1);
                     }
                 } else {
@@ -304,25 +308,38 @@ public class ResourceFile {
 
     public int getLineState(int i) {
         if (defaultLanguage != null) {
-            if (toLanguage.getLine(content.get(i)) != null) {
-                String from = null;
-
-                if (fromLanguage != null && fromLanguage.getLine(content.get(i)) != null) {
-                        from = fromLanguage.getLine(content.get(i)).getValue();
-                } else {
-                    from = defaultLanguage.getLine(content.get(i)).getValue();
-                }
-                if (from != null) {
-                    String to = toLanguage.getLine(content.get(i)) != null ? toLanguage.getLine(content.get(i)).getValue() : "";
-                    if (from.equalsIgnoreCase(to)) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }
-                return -1;
+            String comment = defaultLanguage.getLine(content.get(i)).getComment();
+            if (comment != null && comment.contains("NOI18N")) {
+                // the line shall not be translated
+                return 1;
             } else {
-                return 0;
+                ResourceLine toLine = toLanguage.getLine(content.get(i));
+                if (toLine != null) {
+                    String fromValue = null;
+
+                    if (fromLanguage != null && fromLanguage.getLine(content.get(i)) != null) {
+                        fromValue = fromLanguage.getLine(content.get(i)).getValue();
+                    } else {
+                        fromValue = defaultLanguage.getLine(content.get(i)).getValue();
+                    }
+
+                    if (fromValue != null) {
+                        String to = toLine.getValue() != null ? toLine.getValue() : "";
+                        if (fromValue.equalsIgnoreCase(to)) {
+                            // From and to line are the same sholud be translated
+                            return -1;
+                        } else {
+                            // The line seems translated
+                            return 1;
+                        }
+                    } else {
+                        // why not should not appen
+                        return -1;
+                    }
+                } else {
+                    // The line shall be translated
+                    return 0;
+                }
             }
         } else {
             return -1;
