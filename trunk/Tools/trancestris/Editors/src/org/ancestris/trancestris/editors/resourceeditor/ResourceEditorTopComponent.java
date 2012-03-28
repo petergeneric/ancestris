@@ -81,7 +81,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             }
             textAreaComments.setText(comment);
             textAreaComments.setCaretPosition(0);
-            if (comment.contains("#NOI18N") == true) {
+            if (comment.contains("NOI18N") == true) {
                 textAreaTranslation.setEditable(false);
                 buttonConfirmTranslation.setEnabled(false);
             } else {
@@ -360,7 +360,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     resourceFileView.setSelectedIndex(0);
                     textAreaComments.setText(resourceFile.getLineComment(0));
                     textAreaComments.setCaretPosition(0);
-                    if (resourceFile.getLineComment(0).contains("#NOI18N") == true) {
+                    if (resourceFile.getLineComment(0).contains("NOI18N") == true) {
                         textAreaTranslation.setEditable(false);
                         buttonConfirmTranslation.setEnabled(false);
                     } else {
