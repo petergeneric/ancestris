@@ -307,8 +307,8 @@ public class ResourceFile {
             if (toLanguage.getLine(content.get(i)) != null) {
                 String from = null;
 
-                if (fromLanguage != null) {
-                    from = fromLanguage.getLine(content.get(i)).getValue();
+                if (fromLanguage != null && fromLanguage.getLine(content.get(i)) != null) {
+                        from = fromLanguage.getLine(content.get(i)).getValue();
                 } else {
                     from = defaultLanguage.getLine(content.get(i)).getValue();
                 }
