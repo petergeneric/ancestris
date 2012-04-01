@@ -31,8 +31,8 @@
 body  {
     font-size: 12px;
     font-family: SansSerif, Arial, Helvetica, sans-serif;
-    margin-left: 5;
-    margin-right: 5;
+    margin-left: 10;
+    margin-right: 10;
     color: Black;
     background-color: White;
 }
@@ -307,11 +307,5 @@ p.warning   {
     background: white;
     }
 
-.buttons a   {
-    color: olive;
-    background: white;
-    text-decoration: none;
-    font-size: 7pt;
-    }
 
 /* Specific style for the Help section of Ancestris - End */
