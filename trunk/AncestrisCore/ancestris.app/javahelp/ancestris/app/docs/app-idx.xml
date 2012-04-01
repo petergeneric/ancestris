@@ -17,7 +17,7 @@ and open the template in the editor.
     <indexitem text="Fonctionnement des calques" target="ancestris.app.blueprints"/>
     <indexitem text="Gestion des fenêtres" target="ancestris.app.windows"/>
     <indexitem text="Importer une généalogie" target="ancestris.app.genealogy.import"/>
-    <indexitem text="Introduction à Ancestris" target="ancestris.app.intro"/>
+    <indexitem text="Conseils préalables" target="ancestris.app.intro"/>
     <indexitem text="L'arbre Généalogique" target="ancestris.app.view.tree"/>
     <indexitem text="L'écriture d'un plugin" target="ancestris.app.plugins.development"/>
     <indexitem text="L'Editeurs Ancestris" target="ancestris.app.view.editors.ancestris"/>
