@@ -14,10 +14,12 @@
     </folder>
     <folder name="Menu">
         <folder name="Tools">
-            <file name="WebBookWizardAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-webbook-WebBookWizardAction.instance"/>
-                <attr name="position" intvalue="10"/>
-            </file>
+            <folder name="Multimedia">
+                <file name="WebBookWizardAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-webbook-WebBookWizardAction.instance"/>
+                    <attr name="position" intvalue="10"/>
+                </file>
+            </folder>
         </folder>
     </folder>
     <folder name="Services">
