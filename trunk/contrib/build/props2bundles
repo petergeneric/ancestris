@@ -1,0 +1,60 @@
+#!/usr/bin/perl
+
+# usage: props2bundles report.properties [fr de ... evry_language_in_properties_file]
+
+my $infilename = shift @ARGV;
+system ("native2ascii -encoding utf8 $infilename tempBundle.properties");
+
+open(INFILE, "<", "tempBundle.properties")
+    or die "cannot open > Bundle_$lang.properties: $!";		
+
+my @lines = <INFILE>;
+close INFILE;
+
+my $isPrinted = 1;
+my $outfile;
+
+
+foreach my $lang ('',@ARGV){
+	if ($lang) {
+    		open($outfile, ">", "Bundle_$lang.properties")
+		    or die "cannot open > Bundle_$lang.properties: $!";		
+	} else {
+    		open($outfile, ">", "Bundle.properties")
+		    or die "cannot open > Bundle.properties: $!";		
+	}
+	$isPrinted = 1;
+	my $prev=undef;
+	foreach my $line (@lines){
+		chomp($line);
+		unless (defined $prev){
+			$prev = $line;
+			next;
+		}
+		if ($line =~ /^ .*/){
+			myPrint ("$prev\\\n");
+			$prev = $line;
+			next;
+		}
+		# not a continuation line
+		myPrint ("$prev\n");
+		$isPrinted = 0;
+		$isPrinted |= 1 if ($line =~ /^#.*/);
+		$isPrinted |= 1 if ($line =~ /^$/);
+
+		if ($lang){
+			if ($line =~ "^([^ .]*)(.$lang) *=(.*)"){
+				$isPrinted |= 1;
+				$line = "$1 = $3";
+			}
+		} else {
+			$isPrinted |= ($line =~ "^([^ \.]*) *=(.*)");
+		}
+		$prev = $line;
+	}
+	close $outfile;
+}
+
+sub myPrint{
+	print $outfile @_ if $isPrinted;
+}
