@@ -7,8 +7,6 @@ package org.ancestris.trancestris.editors.resourceeditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -19,8 +17,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.ancestris.trancestris.resources.ResourceFile;
 import org.ancestris.trancestris.resources.ZipDirectory;
 import org.openide.util.LookupEvent;
@@ -39,59 +35,6 @@ import org.openide.util.Utilities;
  */
 @ConvertAsProperties(dtd = "-//org.ancestris.trancestris.editors.resourceeditor//ResourceEditor//EN", autostore = false)
 public final class ResourceEditorTopComponent extends TopComponent implements LookupListener {
-
-    private class Listener implements ListSelectionListener, ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent actionevent) {
-            int i = resourceFileView.getSelectedIndex();
-
-            logger.log(Level.INFO, "Selected index is {0}", i);
-
-            if (i >= 0) {
-                logger.log(Level.INFO, "Save translation for index {0}", i);
-                resourceFile.setLineTranslation(i, textAreaTranslation.getText());
-            }
-
-            // Search for the first non translated line
-            while (i + 1 < resourceFileView.getModel().getSize()) {
-                if (resourceFile.getLineState(++i) == 0) {
-                    logger.log(Level.INFO, "New selected index is {0}", i);
-                    resourceFileView.setSelectedIndex(i);
-                    resourceFileView.ensureIndexIsVisible(i);
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public void valueChanged(ListSelectionEvent lse) {
-            if (lse.getValueIsAdjusting()) {
-                return;
-            }
-            String translation = "";
-            String comment = "";
-
-            int i = resourceFileView.getSelectedIndex();
-            logger.log(Level.INFO, "Selected index is {0}", i);
-
-            if (i >= 0) {
-                translation = resourceFile.getLineTranslation(i);
-                comment = resourceFile.getLineComment(i);
-            }
-            textAreaComments.setText(comment);
-            textAreaComments.setCaretPosition(0);
-            if (comment.contains("NOI18N") == true) {
-                textAreaTranslation.setEditable(false);
-                buttonConfirmTranslation.setEnabled(false);
-            } else {
-                textAreaTranslation.setEditable(true);
-                buttonConfirmTranslation.setEnabled(true);
-            }
-            textAreaTranslation.setText(translation);
-            textAreaTranslation.setCaretPosition(0);
-        }
-    }
 
     private class ResourceFileModel implements ListModel {
 
@@ -130,15 +73,18 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             setText(s);
             Color color;
             switch (resourceFile.getLineState(index)) {
+                // The line is the same
                 case -1:
                     color = Color.BLUE;
                     break;
 
-                case 0: // '\0'
+                // the line is not translated
+                case 0:
                     color = Color.RED;
                     break;
 
-                case 1: // '\001'
+                // the line is translated or non modifiable
+                case 1:
                 default:
                     color = list.getForeground();
                     break;
@@ -165,7 +111,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
      */
     static final String ICON_PATH = "org/ancestris/trancestris/editors/resourceeditor/Advanced.png";
     private static final String PREFERRED_ID = "ResourceEditorTopComponent";
-//    private ResourceFileView resourceFileView;
     private Lookup.Result result = null;
     private ResourceFile resourceFile = null;
     private static final Logger logger = Logger.getLogger(ResourceEditorTopComponent.class.getName());
@@ -177,13 +122,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         int fontStyle = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Style", "0"));
         int fontSize = Integer.valueOf(NbPreferences.forModule(ResourceEditorTopComponent.class).get("Font.Size", "12"));
         setFont(new Font(fontName, fontStyle, fontSize));
-        Listener listener = new Listener();
         setName(NbBundle.getMessage(ResourceEditorTopComponent.class, "CTL_ResourceEditorTopComponent"));
         setToolTipText(NbBundle.getMessage(ResourceEditorTopComponent.class, "HINT_ResourceEditorTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
-        resourceFileView.addListSelectionListener(listener);
-        buttonConfirmTranslation.addActionListener(listener);
     }
 
     /**
@@ -204,7 +146,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         panelTranslation = new javax.swing.JPanel();
         scrollPaneTranslation = new javax.swing.JScrollPane();
         textAreaTranslation = new javax.swing.JTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        previousButton = new javax.swing.JButton();
         buttonConfirmTranslation = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -226,10 +171,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
+        resourceFileView.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                resourceFileViewValueChanged(evt);
+            }
+        });
         scrollPaneResourceView.setViewportView(resourceFileView);
 
         jPanel2.add(scrollPaneResourceView);
@@ -245,24 +195,137 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaTranslation.setColumns(20);
         textAreaTranslation.setEditable(false);
         textAreaTranslation.setRows(5);
+        textAreaTranslation.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                textAreaTranslationKeyTyped(evt);
+            }
+        });
         scrollPaneTranslation.setViewportView(textAreaTranslation);
 
         panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
 
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(previousButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.previousButton.text")); // NOI18N
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(previousButton, java.awt.BorderLayout.WEST);
+
         org.openide.awt.Mnemonics.setLocalizedText(buttonConfirmTranslation, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.buttonConfirmTranslation.text")); // NOI18N
         buttonConfirmTranslation.setEnabled(false);
-        panelTranslation.add(buttonConfirmTranslation, java.awt.BorderLayout.SOUTH);
+        buttonConfirmTranslation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonConfirmTranslationActionPerformed(evt);
+            }
+        });
+        jPanel4.add(buttonConfirmTranslation, java.awt.BorderLayout.CENTER);
+
+        org.openide.awt.Mnemonics.setLocalizedText(nextButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.nextButton.text")); // NOI18N
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(nextButton, java.awt.BorderLayout.EAST);
+
+        panelTranslation.add(jPanel4, java.awt.BorderLayout.SOUTH);
 
         jPanel3.add(panelTranslation);
 
         add(jPanel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonConfirmTranslationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmTranslationActionPerformed
+        int i = resourceFileView.getSelectedIndex();
+
+        logger.log(Level.INFO, "Selected index is {0}", i);
+
+        if (i >= 0) {
+            logger.log(Level.INFO, "Save translation for index {0}", i);
+            resourceFile.setLineTranslation(i, textAreaTranslation.getText());
+        }
+
+        // Search for the first next non translated line
+        while (i + 1 < resourceFileView.getModel().getSize()) {
+            if (resourceFile.getLineState(++i) == 0) {
+                logger.log(Level.INFO, "New selected index is {0}", i);
+                resourceFileView.setSelectedIndex(i);
+                resourceFileView.ensureIndexIsVisible(i);
+                break;
+            }
+        }
+    }//GEN-LAST:event_buttonConfirmTranslationActionPerformed
+
+    private void resourceFileViewValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resourceFileViewValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
+        String translation = "";
+        String comment = "";
+
+        int i = resourceFileView.getSelectedIndex();
+        logger.log(Level.INFO, "Selected index is {0}", i);
+
+        if (i >= 0) {
+            translation = resourceFile.getLineTranslation(i);
+            comment = resourceFile.getLineComment(i);
+        }
+        textAreaComments.setText(comment);
+        textAreaComments.setCaretPosition(0);
+        if (comment.contains("NOI18N") == true) {
+            textAreaTranslation.setEditable(false);
+            buttonConfirmTranslation.setEnabled(false);
+        } else {
+            textAreaTranslation.setEditable(true);
+            buttonConfirmTranslation.setEnabled(false);
+        }
+        textAreaTranslation.setText(translation);
+        textAreaTranslation.setCaretPosition(0);
+    }//GEN-LAST:event_resourceFileViewValueChanged
+
+    private void textAreaTranslationKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textAreaTranslationKeyTyped
+        buttonConfirmTranslation.setEnabled(true);
+    }//GEN-LAST:event_textAreaTranslationKeyTyped
+
+    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        int i = resourceFileView.getSelectedIndex();
+        logger.log(Level.INFO, "Selected index is {0}", i);
+        // Search for the first next non translated line
+        while (i - 1 > 0) {
+            if (resourceFile.getLineState(--i) == 0) {
+                logger.log(Level.INFO, "New selected index is {0}", i);
+                resourceFileView.setSelectedIndex(i);
+                resourceFileView.ensureIndexIsVisible(i);
+                break;
+            }
+        }
+    }//GEN-LAST:event_previousButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        int i = resourceFileView.getSelectedIndex();
+        logger.log(Level.INFO, "Selected index is {0}", i);
+        // Search for the first next non translated line
+        while (i + 1 < resourceFileView.getModel().getSize()) {
+            if (resourceFile.getLineState(++i) == 0) {
+                logger.log(Level.INFO, "New selected index is {0}", i);
+                resourceFileView.setSelectedIndex(i);
+                resourceFileView.ensureIndexIsVisible(i);
+                break;
+            }
+        }
+    }//GEN-LAST:event_nextButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConfirmTranslation;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JButton nextButton;
     private javax.swing.JPanel panelTranslation;
+    private javax.swing.JButton previousButton;
     private javax.swing.JList resourceFileView;
     private javax.swing.JScrollPane scrollPaneComments;
     private javax.swing.JScrollPane scrollPaneResourceView;
@@ -358,6 +421,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     logger.log(Level.INFO, "Editing file in directory {0}", zipDirectory.getName());
 
                     resourceFileView.setSelectedIndex(0);
+                    resourceFileView.ensureIndexIsVisible(0);
+
                     textAreaComments.setText(resourceFile.getLineComment(0));
                     textAreaComments.setCaretPosition(0);
                     if (resourceFile.getLineComment(0).contains("NOI18N") == true) {
@@ -365,7 +430,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                         buttonConfirmTranslation.setEnabled(false);
                     } else {
                         textAreaTranslation.setEditable(true);
-                        buttonConfirmTranslation.setEnabled(true);
+                        buttonConfirmTranslation.setEnabled(false);
                     }
                     textAreaTranslation.setText(resourceFile.getLineTranslation(0));
                     textAreaTranslation.setCaretPosition(0);
