@@ -7,7 +7,7 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "Extensions",
+@OptionsPanelController.SubRegistration(location = "Advanced",
 displayName = "#AdvancedOption_DisplayName_ConsoleOptions",
 keywords = "#AdvancedOption_Keywords_ConsoleOptions",
 keywordsCategory = "Extensions/ConsoleOptions")
