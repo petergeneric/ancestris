@@ -16,7 +16,11 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ToolTipManager;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
 import org.ancestris.trancestris.resources.ResourceFile;
 import org.ancestris.trancestris.resources.ZipDirectory;
 import org.openide.util.LookupEvent;
@@ -25,6 +29,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.NbPreferences;
@@ -105,6 +110,90 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             return this;
         }
     }
+
+    class MyUndoRedo implements UndoRedo {
+
+        @Override
+        public boolean canUndo() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean canRedo() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void undo() throws CannotUndoException {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void redo() throws CannotRedoException {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener cl) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener cl) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getUndoPresentationName() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getRedoPresentationName() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    class MyAbstractUndoableEdit extends AbstractUndoableEdit {
+
+        private final int index;
+        private final String oldValue;
+        private final String newValue;
+
+        private MyAbstractUndoableEdit(int index, String oldValue, String newValue) {
+            this.index = index;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+
+        @Override
+        public boolean canRedo() {
+            return true;
+        }
+
+        @Override
+        public boolean canUndo() {
+            return true;
+        }
+
+        @Override
+        public void undo() throws CannotUndoException {
+            undoRedoEvent = true;
+            resourceFile.setLineTranslation(index, oldValue);
+            resourceFileView.setSelectedIndex(index);
+            resourceFileView.ensureIndexIsVisible(index);
+            undoRedoEvent = false;
+        }
+
+        @Override
+        public void redo() throws CannotUndoException {
+            undoRedoEvent = true;
+            resourceFile.setLineTranslation(index, newValue);
+            resourceFileView.setSelectedIndex(index);
+            resourceFileView.ensureIndexIsVisible(index);
+            undoRedoEvent = false;
+        }
+    }
     private static ResourceEditorTopComponent instance;
     /**
      * path to the icon used by the component and its open action
@@ -114,6 +203,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private Lookup.Result result = null;
     private ResourceFile resourceFile = null;
     private static final Logger logger = Logger.getLogger(ResourceEditorTopComponent.class.getName());
+    private UndoRedo.Manager manager = new UndoRedo.Manager();
+    private boolean undoRedoEvent;
 
     public ResourceEditorTopComponent() {
         initComponents();
@@ -204,7 +295,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
 
-        jPanel4.setLayout(new java.awt.BorderLayout());
+        jPanel4.setLayout(new java.awt.GridLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(previousButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.previousButton.text")); // NOI18N
         previousButton.addActionListener(new java.awt.event.ActionListener() {
@@ -212,7 +303,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 previousButtonActionPerformed(evt);
             }
         });
-        jPanel4.add(previousButton, java.awt.BorderLayout.WEST);
+        jPanel4.add(previousButton);
 
         org.openide.awt.Mnemonics.setLocalizedText(buttonConfirmTranslation, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.buttonConfirmTranslation.text")); // NOI18N
         buttonConfirmTranslation.setEnabled(false);
@@ -221,7 +312,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 buttonConfirmTranslationActionPerformed(evt);
             }
         });
-        jPanel4.add(buttonConfirmTranslation, java.awt.BorderLayout.CENTER);
+        jPanel4.add(buttonConfirmTranslation);
 
         org.openide.awt.Mnemonics.setLocalizedText(nextButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.nextButton.text")); // NOI18N
         nextButton.addActionListener(new java.awt.event.ActionListener() {
@@ -229,7 +320,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 nextButtonActionPerformed(evt);
             }
         });
-        jPanel4.add(nextButton, java.awt.BorderLayout.EAST);
+        jPanel4.add(nextButton);
 
         panelTranslation.add(jPanel4, java.awt.BorderLayout.SOUTH);
 
@@ -244,8 +335,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         logger.log(Level.INFO, "Selected index is {0}", i);
 
         if (i >= 0) {
+            String oldValue = resourceFile.getLineTranslation(i);
+            String newValue = textAreaTranslation.getText();
             logger.log(Level.INFO, "Save translation for index {0}", i);
-            resourceFile.setLineTranslation(i, textAreaTranslation.getText());
+            resourceFile.setLineTranslation(i, newValue);
+            manager.addEdit(new MyAbstractUndoableEdit(i, oldValue, newValue));
         }
 
         // Search for the first next non translated line
@@ -417,6 +511,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 ZipDirectory zipDirectory = (ZipDirectory) i.next();
                 resourceFile = zipDirectory.getResourceFile();
                 resourceFileView.updateUI();
+                manager.discardAllEdits();
                 if (resourceFile != null) {
                     logger.log(Level.INFO, "Editing file in directory {0}", zipDirectory.getName());
 
@@ -457,5 +552,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Name", font.getName());
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Style", String.valueOf(font.getStyle()));
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Size", String.valueOf(font.getSize()));
+    }
+
+    @Override
+    public UndoRedo getUndoRedo() {
+        return manager;
     }
 }
