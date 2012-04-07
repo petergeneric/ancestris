@@ -134,34 +134,37 @@ public final class SendTranslationAction implements ActionListener {
 
             ZipArchive zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
             if (zipArchive != null) {
-                zipArchive.write();
+                if (zipArchive.write() == true) {
+                    archiveName = zipArchive.getName();
+                    filePath = zipArchive.getZipFile().getParent();
+                    prefix = archiveName.substring(0, archiveName.indexOf('.'));
+                    suffix = archiveName.substring(archiveName.indexOf('.') + 1);
+                    toLocale = zipArchive.getToLocale().getLanguage();
+                    fromLocale = zipArchive.getFromLocale().getLanguage();
 
-                archiveName = zipArchive.getName();
-                filePath = zipArchive.getZipFile().getParent();
-                prefix = archiveName.substring(0, archiveName.indexOf('.'));
-                suffix = archiveName.substring(archiveName.indexOf('.') + 1);
-                toLocale = zipArchive.getToLocale().getLanguage();
-                fromLocale = zipArchive.getFromLocale().getLanguage();
-
-                zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
-                if (!zipOutputFile.exists()) {
-                    try {
-                        zipOutputFile.createNewFile();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                    zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
+                    if (!zipOutputFile.exists()) {
+                        try {
+                            zipOutputFile.createNewFile();
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     }
-                }
-                zipArchive.saveTranslation(zipOutputFile);
+                    zipArchive.saveTranslation(zipOutputFile);
 
-                setDefaultValues(sendTranslationPanel);
-                DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
-                dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
-                DialogDisplayer.getDefault().createDialog(dd);
-                DialogDisplayer.getDefault().notify(dd);
-                if (dd.getValue().equals(SEND)) {
-                    saveValues(sendTranslationPanel);
-                    Thread t = new Thread(new SendMessageWorker());
-                    t.start();
+                    setDefaultValues(sendTranslationPanel);
+                    DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
+                    dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
+                    DialogDisplayer.getDefault().createDialog(dd);
+                    DialogDisplayer.getDefault().notify(dd);
+                    if (dd.getValue().equals(SEND)) {
+                        saveValues(sendTranslationPanel);
+                        Thread t = new Thread(new SendMessageWorker());
+                        t.start();
+                    }
+                } else {
+                    NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.nothingToSend"), NotifyDescriptor.INFORMATION_MESSAGE);
+                    DialogDisplayer.getDefault().notify(nd);
                 }
             }
         }
