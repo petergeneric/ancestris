@@ -4,8 +4,6 @@
  */
 package org.ancestris.trancestris.explorers.zipexplorer;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import org.ancestris.trancestris.resources.ZipDirectory;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -15,7 +13,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author dominique
  */
-public class ZipDirectoryNode extends AbstractNode implements PropertyChangeListener {
+public class ZipDirectoryNode extends AbstractNode {
 
     boolean change = false;
     ZipDirectory directory;
@@ -23,14 +21,7 @@ public class ZipDirectoryNode extends AbstractNode implements PropertyChangeList
     public ZipDirectoryNode(ZipDirectory directory) {
         super(!directory.getDirs().isEmpty() ? new ZipDirectoryChildren(directory) : Children.LEAF, Lookups.singleton(directory));
         this.directory = directory;
-        this.directory.addPropertyChangeListener(this);
         setDisplayName(directory.getName());
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent pce) {
-        // Empty new name to force update
-        fireDisplayNameChange(directory.getName(), "");
     }
 
     @Override
