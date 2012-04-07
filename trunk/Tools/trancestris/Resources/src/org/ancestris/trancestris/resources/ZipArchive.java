@@ -21,11 +21,11 @@ import java.util.zip.ZipOutputStream;
 public class ZipArchive implements PropertyChangeListener {
 
     private static final Logger logger = Logger.getLogger(ZipArchive.class.getName());
-    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
     private ZipDirectory root;
     private File zipFile = null;
     private Locale toLocale;
     private Locale fromLocale;
+    private boolean change = false;
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
         logger.log(Level.INFO, "Open Archive {0}", inputFile.getName());
@@ -57,26 +57,33 @@ public class ZipArchive implements PropertyChangeListener {
         root.setTranslation(fromLocale, toLocale);
     }
 
-    public void write() {
-        try {
-            logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
-            ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
-            root.writeTo(outputStream, "");
-            outputStream.close();
-        } catch (IOException ioe) {
-            logger.log(Level.SEVERE, null, ioe);
+    public boolean write() {
+        if (change == true) {
+            try {
+                logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
+                ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
+                root.writeTo(outputStream, "");
+                outputStream.close();
+
+            } catch (IOException ioe) {
+                logger.log(Level.SEVERE, null, ioe);
+            }
         }
+        return change;
     }
 
-    public void saveTranslation(File outputFile) {
-        try {
-            logger.log(Level.INFO, "Create archive {0}", outputFile.getName());
-            ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
-            root.saveTranslation(outputStream, "");
-            outputStream.close();
-        } catch (IOException ioe) {
-            logger.log(Level.SEVERE, null, ioe);
+    public boolean saveTranslation(File outputFile) {
+        if (change == true) {
+            try {
+                logger.log(Level.INFO, "Create archive {0}", outputFile.getName());
+                ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+                root.saveTranslation(outputStream, "");
+                outputStream.close();
+            } catch (IOException ioe) {
+                logger.log(Level.SEVERE, null, ioe);
+            }
         }
+        return change;
     }
 
     public ZipDirectory getRoot() {
@@ -99,26 +106,8 @@ public class ZipArchive implements PropertyChangeListener {
         return this.fromLocale;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.add(pcl);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener pcl) {
-        listeners.remove(pcl);
-    }
-
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        fire(this.getName(), null, null);
-    }
-
-    private void fire(String propertyName, Object old, Object nue) {
-        //Passing 0 below on purpose, so you only synchronize for one atomic call
-        @SuppressWarnings(value = "unchecked")
-        PropertyChangeListener[] pcls = listeners.toArray(new PropertyChangeListener[0]);
-        for (int i = 0; i < pcls.length; i++) {
-            logger.entering(ZipArchive.class.getName(), "fire {0}", propertyName);
-            pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
-        }
+        change = true;
     }
 }
