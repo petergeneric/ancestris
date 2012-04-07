@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="CommonAncestorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-commonAncestor-CommonAncestorOpenAction.instance"/>
+                <attr name="position" intvalue="90"/>
+            </file>
+        </folder>
+     </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-modules-commonAncestor-CommonAncestorOpenAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="delegate" newvalue="ancestris.modules.commonAncestor.CommonAncestorOpenAction"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.commonAncestor.Bundle#CTL_CommonAncestorAction"/>
+                <attr name="iconBase" stringvalue="ancestris/modules/commonAncestor/CommonAncestor.png"/>
+            </file>
+        </folder>
+    </folder>    
+</filesystem>
