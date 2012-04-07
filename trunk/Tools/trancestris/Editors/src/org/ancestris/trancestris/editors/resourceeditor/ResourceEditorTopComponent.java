@@ -370,6 +370,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaComments.setText(comment);
         textAreaComments.setCaretPosition(0);
         if (comment.contains("NOI18N") == true) {
+            logger.log(Level.INFO, "index {0} shall not be translated", i);
             textAreaTranslation.setEditable(false);
             buttonConfirmTranslation.setEnabled(false);
         } else {
@@ -388,12 +389,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         int i = resourceFileView.getSelectedIndex();
         logger.log(Level.INFO, "Selected index is {0}", i);
         // Search for the first next non translated line
-        while (i - 1 > 0) {
+        while (i - 1 >= 0) {
             if (resourceFile.getLineState(--i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 resourceFileView.setSelectedIndex(i);
                 resourceFileView.ensureIndexIsVisible(i);
                 break;
+            } else {
+                logger.log(Level.INFO, "index {0} is translated", i);
             }
         }
     }//GEN-LAST:event_previousButtonActionPerformed
@@ -408,7 +411,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 resourceFileView.setSelectedIndex(i);
                 resourceFileView.ensureIndexIsVisible(i);
                 break;
+            } else {
+                logger.log(Level.INFO, "index {0} is translated", i);
             }
+
         }
     }//GEN-LAST:event_nextButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -521,6 +527,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     textAreaComments.setText(resourceFile.getLineComment(0));
                     textAreaComments.setCaretPosition(0);
                     if (resourceFile.getLineComment(0).contains("NOI18N") == true) {
+                        logger.log(Level.INFO, "index {0} shall not be translated", i);
                         textAreaTranslation.setEditable(false);
                         buttonConfirmTranslation.setEnabled(false);
                     } else {
