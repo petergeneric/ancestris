@@ -12,6 +12,7 @@ and open the template in the editor.
     <indexitem text="Créer une Famille" target="ancestris.app.new.family"/>
     <indexitem text="Créer une génénalogie" target="ancestris.app.new.genealogy"/>
     <indexitem text="Découverte d'Ancestris" target="ancestris.app.discovering"/>
+    <indexitem text="Différentes Aides pour Ancestris" target="ancestris.app.aids"/>
     <indexitem text="FAQ : import suivant l'origine du fichier Gedcom" target="ancestris.app.import.issue"/>
     <indexitem text="Fonctionnalités additionnelles" target="ancestris.app.additional.features"/>
     <indexitem text="Fonctionnement des calques" target="ancestris.app.blueprints"/>
@@ -22,7 +23,6 @@ and open the template in the editor.
     <indexitem text="L'écriture d'un plugin" target="ancestris.app.plugins.development"/>
     <indexitem text="L'Editeurs Ancestris" target="ancestris.app.view.editors.ancestris"/>
     <indexitem text="L'Editeurs GedCom" target="ancestris.app.view.editors.gedcom"/>
-    <indexitem text="L'encodage du fichier" target="ancestris.app.gedcom.bases"/>
     <indexitem text="La fenêtre de Recherche" target="ancestris.app.view.search"/>
     <indexitem text="La gestion des lieux" target="ancestris.app.place.management"/>
     <indexitem text="La norme Gedcom" target="ancestris.app.gedcom.standard"/>
@@ -30,18 +30,18 @@ and open the template in the editor.
     <indexitem text="La visualisation géographique" target="ancestris.app.view.geo"/>
     <indexitem text="La Vue des Rapports" target="ancestris.app.view.reports"/>
     <indexitem text="La vue Entité" target="ancestris.app.view.entity"/>
+    <indexitem text="La vue Géographique" target="ancestris.app.view.geo"/>
     <indexitem text="La vue Table" target="ancestris.app.view.table"/>
     <indexitem text="Le gestionnaire de fichiers Gedcom" target="ancestris.app.gedcoms.manager"/>
     <indexitem text="Le Navigateur" target="ancestris.app.view.navigator"/>
     <indexitem text="Les différentes vues" target="ancestris.app.views"/>
-    <indexitem text="Les Editeurs" target="ancestris.app.view.editors"/>
     <indexitem text="Les plugins" target="ancestris.app.plugins"/>
     <indexitem text="Lieux où parler d'Ancestris" target="ancestris.app.external.links"/>
-    <indexitem text="Liste des plugins" target="ancestris.app.plugins.liste"/>    
+    <indexitem text="Liste des Lieux" target="ancestris.app.juridictions.list"/>
+    <indexitem text="Liste des Plugins" target="ancestris.app.plugins.liste"/>
     <indexitem text="Mettre en conformité sa généalogie" target="ancestris.app.conform.genealogy"/>
     <indexitem text="Nomadisme et Ancestris" target="ancestris.app.nomade"/>
-    <indexitem text="Paramètre et première configuration" target="ancestris.app.options.menu1"/>
-    <indexitem text="Sauvegarder son travail" target="ancestris.app.save.genealogy"/>
+    <indexitem text="Paramètres et première configuration" target="ancestris.app.options.menu1"/>
     <indexitem text="Sommaire Général" target="ancestris.app.about"/>
     <indexitem text="Téléchargement d'Ancestris" target="ancestris.app.download"/>
     <indexitem text="Utilisation avancée d'Ancestris" target="ancestris.app.advanced"/>
