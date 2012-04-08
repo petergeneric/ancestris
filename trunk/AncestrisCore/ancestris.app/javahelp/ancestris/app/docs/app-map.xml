@@ -7,17 +7,18 @@ and open the template in the editor.
 <map version="2.0">
     <mapID target="ancestris.app.about" url="app-about.html"/>
     <mapID target="ancestris.app.advanced" url="./advanced/advanced_ancestris.html"/>
+    <mapID target="ancestris.app.aids" url="./basic_use/basic_use_ancestris_different_aids_available.html"/>
     <mapID target="ancestris.app.basic" url="./first_steps/first_steps_basic_ancestris.html"/>
     <mapID target="ancestris.app.blueprints" url="./advanced/advanced_blueprints.html"/>
     <mapID target="ancestris.app.conform.genealogy" url="./first_steps/first_steps_conform_import_genealogy.html"/>
     <mapID target="ancestris.app.discovering" url="./first_steps/first_steps_decouverte_ancestris.html"/>
     <mapID target="ancestris.app.external.links" url="./advanced/advanced_external_links_ancestris.html"/>
-    <mapID target="ancestris.app.gedcom.bases" url="./first_steps/first_steps_gedcom_bases.html"/>
     <mapID target="ancestris.app.gedcom.standard" url="./advanced/advanced_gedcom_standard.html"/>
     <mapID target="ancestris.app.gedcoms.manager" url="./first_steps/first_steps_gedcoms_manager.html"/>
     <mapID target="ancestris.app.genealogy.import" url="./first_steps/first_steps_genealogy_import.html"/>
     <mapID target="ancestris.app.import.issue" url="./first_steps/first_steps_conform_import_issue.html"/>
     <mapID target="ancestris.app.intro" url="ancestris.html"/>
+    <mapID target="ancestris.app.juridictions.list" url="./basic_use/basic_use_juridictions_list_ancestris.html"/>
     <mapID target="ancestris.app.new.child" url="./first_steps/first_steps_new_child.html"/>
     <mapID target="ancestris.app.new.entity" url="./first_steps/first_steps_new_entity.html"/>
     <mapID target="ancestris.app.new.family" url="./first_steps/first_steps_new_family.html"/>
@@ -30,16 +31,15 @@ and open the template in the editor.
     <mapID target="ancestris.app.plugins.development" url="./advanced/advanced_plugins_development.html"/>
     <mapID target="ancestris.app.plugins.liste" url="./basic_use/basic_use_plugins_liste.html"/>
     <mapID target="ancestris.app.plugins" url="./first_steps/first_steps_ancestris_plugins.html"/>
-    <mapID target="ancestris.app.save.genealogy" url="./first_steps/first_steps_save_genealogy.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel4" url="app-about.html"/>
     <mapID target="ancestris.app.view.chrono" url="./basic_use/basic_use_view_chrono_ancestris.html"/>
-    <mapID target="ancestris.app.view.editors" url="./basic_use/basic_use_view_editors.html"/>
     <mapID target="ancestris.app.view.editors.gedcom" url="./basic_use/basic_use_view_editors_gedcom.html"/>
     <mapID target="ancestris.app.view.editors.ancestris" url="./basic_use/basic_use_view_editors_ancestris.html"/>
     <mapID target="ancestris.app.view.entity" url="./basic_use/basic_use_view_entity_ancestris.html"/>
+    <mapID target="ancestris.app.view.geo" url="./basic_use/basic_use_view_geo_ancestris.html"/>
     <mapID target="ancestris.app.view.navigator" url="./basic_use/basic_use_view_navigator_ancestris.html"/>
     <mapID target="ancestris.app.view.reports" url="./basic_use/basic_use_view_reports_ancestris.html"/>
     <mapID target="ancestris.app.view.search" url="./basic_use/basic_use_view_search_ancestris.html"/>
