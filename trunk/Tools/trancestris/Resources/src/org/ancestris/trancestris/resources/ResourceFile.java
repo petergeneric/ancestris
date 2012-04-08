@@ -225,6 +225,10 @@ public class ResourceFile {
         return not_translated == 0;
     }
 
+    public int getTranslatedPercent() {
+        return (int) ((float)(getLineCount() - not_translated) / (float)getLineCount() * 100);
+    }
+
     public int getLineCount() {
         if (defaultLanguage != null) {
             return defaultLanguage.size();
@@ -333,7 +337,7 @@ public class ResourceFile {
                             return 1;
                         }
                     } else {
-                        // why not should not appen
+                        // should not append
                         return -1;
                     }
                 } else {
