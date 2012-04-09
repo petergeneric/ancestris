@@ -19,4 +19,11 @@
             </file>
         </folder>
     </folder>    
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="commonAncestor-helpset.xml" url="commonAncestor-helpset.xml">
+                <attr name="position" intvalue="3658"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>
