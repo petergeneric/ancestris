@@ -4,12 +4,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.Calendar;
 
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
-import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.PointInTime;
@@ -22,7 +20,6 @@ import org.openide.util.NbBundle;
  */
 public class Renderer implements IGraphicsRenderer {
 
-    private static final String OUTPUT_CATEGORY = "output";
     private static final int FAMILY_WIDTH = 300;
     private static final int FAMILY_HEIGH = 100;
     private static final int SPACE_BETWEEN_RECTANGLES = 20;
@@ -63,6 +60,11 @@ public class Renderer implements IGraphicsRenderer {
         "ufont_name.1", "ufont_name.2",
         "ufont_name.3", "ufont_name.4",
         "ufont_name.5"};
+
+    //private String font_name = "Helvetica";
+    //private String font_name = translate("ufont_name."+ufont_name);
+    private String font_name = "Times-Roman";
+
     /** options */
     protected final static int OPTION_YESNO = 0,
             OPTION_OKCANCEL = 1,
@@ -72,7 +74,6 @@ public class Renderer implements IGraphicsRenderer {
     private Indi secondIndi;
     private List<Step> firstIndiDirectLinks;
     private List<Step> secondIndiDirectLinks;
-    private AffineTransform defaultTransform;
     private int width;
     private int height;
     private double cx;
@@ -94,17 +95,12 @@ public class Renderer implements IGraphicsRenderer {
         this.displayRecentYears = displayRecentYears;
         this.husband_or_wife_first = husband_or_wife_first;
 
-        String font_name = "Helvetica";
-        font_name = "Times-Roman";
-        //font_name = translate("ufont_name."+ufont_name);
         titleFontStyle = new Font(font_name, Font.BOLD, 20);
         boldFontStyle  = new Font(font_name, Font.BOLD, 16);
         plainFontStyle = new Font(font_name, Font.PLAIN, 16);
         dateFontStyle  = new Font(font_name, Font.PLAIN, 12);
         smallFontStyle = new Font(font_name, Font.BOLD,  12);
 
-
-//	            int generations = getGenerationCount(indi, max_generations);
         width = 3 * FAMILY_WIDTH + FAMILY_WIDTH / 2;
         height = (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size())) * FAMILY_HEIGH
                 + (Math.max(firstIndiDirectLinks.size(), secondIndiDirectLinks.size()) + 3) * SPACE_BETWEEN_RECTANGLES
@@ -134,10 +130,6 @@ public class Renderer implements IGraphicsRenderer {
                 SPACE_BETWEEN_BORDER_AND_RECTANGLE,
                 width - SPACE_BETWEEN_BORDER_AND_RECTANGLE * 2,
                 height - SPACE_BETWEEN_BORDER_AND_RECTANGLE * 2, 50, 50);
-//	            graphics.drawRoundRect(SPACE_BETWEEN_BORDER_AND_RECTANGLE+3,
-//						SPACE_BETWEEN_BORDER_AND_RECTANGLE+3,
-//						width-SPACE_BETWEEN_BORDER_AND_RECTANGLE*2-6,
-//						height -SPACE_BETWEEN_BORDER_AND_RECTANGLE*2-6, 50, 50);
         graphics.setFont(plainFontStyle);
         graphics.setStroke(new BasicStroke(2));
         cy += SPACE_BETWEEN_BORDER_AND_RECTANGLE;
@@ -152,12 +144,13 @@ public class Renderer implements IGraphicsRenderer {
         for (int fontSize = titleFontStyle.getSize(); fontSize >= 8; fontSize--) {
             Rectangle2D rect = graphics.getFont().getStringBounds(titleString, graphics.getFontRenderContext());
             if ((int) rect.getWidth() > width - SPACE_BETWEEN_BORDER_AND_RECTANGLE * 4) {
-                graphics.setFont(new Font(titleFontStyle.getFontName(), titleFontStyle.getStyle(), fontSize));
+                titleFontStyle= new Font(titleFontStyle.getFontName(), titleFontStyle.getStyle(), fontSize);
             } else {
                 break;
             }
         }
 
+        // j'affiche le titre
         centerString(graphics, NbBundle.getMessage(Renderer.class, "Renderer.title1"), (int) cx, (int) cy);
         cy += SPACE_BETWEEN_TITLE_AND_COMMON_ANCESTOR;
         centerString(graphics, getTitleLine(firstIndi, secondIndi, nbMaxGen), (int) cx, (int) cy);
@@ -167,15 +160,87 @@ public class Renderer implements IGraphicsRenderer {
             return;
         }
 
+        int familyWidth = FAMILY_WIDTH;
+        String largestName = "";
+        
+        // je cherche le nom le plus long et taille de son rectangle
+        for (int i = 1; i < nbMaxGen; i++) {
+            Step step;
+            Rectangle2D rect;
+            String name = "";
+            if (firstIndiDirectLinks.size() > i) {
+                step = firstIndiDirectLinks.get(i);
+//                // Alongement articiel des noms pour tester les cas extremes
+//                if (!step.getHusband().getFirstName().endsWith("XXX")) {
+//                    String first = step.getHusband().getFirstName() + " XXXXXXXXXXXXXXXXXXXXXXX";
+//                    String last = step.getHusband().getLastName()   + " XXXXXXXXXXXXXXXXXXXXXXX";
+//                    step.getHusband().setName(first, last);
+//                }
+                name = getNameLine(step.getHusband());
+                rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
+                if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
+                    familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
+                    largestName =name;
+                }
+                name = getNameLine(step.getWife());
+                rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
+                if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
+                    familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
+                    largestName =name;
+                }
+            }
+            if (secondIndiDirectLinks.size() > i) {
+                step = secondIndiDirectLinks.get(i);
+                name = getNameLine(step.getHusband());
+                rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
+                if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
+                    familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
+                    largestName =name;
+                }
+                name = getNameLine(step.getWife());
+                rect = graphics.getFont().getStringBounds(name, graphics.getFontRenderContext());
+                if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > familyWidth) {
+                    familyWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
+                    largestName =name;
+                }
+            }
+        }
+
+        // je verifie que le rectangle contient dans dans la colonne
+        if (familyWidth > (width/2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE)) {
+            // Si le rectangle est trop grand, je limite la largeur du rectangle
+            familyWidth = (width/2 - 5 * SPACE_BETWEEN_BORDER_AND_RECTANGLE);
+            // et je diminue la taille de la police pour que le nom le plus long contienne
+            // dans le rectangle
+            graphics.setFont(boldFontStyle);
+            for (int fontSize = boldFontStyle.getSize(); fontSize >= 8; fontSize--) {
+                Rectangle2D rect = graphics.getFont().getStringBounds(largestName, graphics.getFontRenderContext());
+                if ((int) rect.getWidth() > familyWidth - SPACE_BETWEEN_BORDER_AND_RECTANGLE) {
+                    boldFontStyle  = new Font(boldFontStyle.getFontName(), boldFontStyle.getStyle(), fontSize);
+                    plainFontStyle = new Font(plainFontStyle.getFontName(), plainFontStyle.getStyle(), fontSize);
+                    graphics.setFont(boldFontStyle);
+                } else {
+                    break;
+                }
+            }
+        }
+
+        // je calcule le centre des colonnes des descendants
+        int cxLeft = (int) (cx - SPACE_BETWEEN_BORDER_AND_RECTANGLE)/2;
+        int cxRight = (int) (width - SPACE_BETWEEN_BORDER_AND_RECTANGLE + cx )/2;
+        
         //the common ancestor
         graphics.setFont(plainFontStyle);
-        render(graphics, firstIndiDirectLinks.get(0), Position.CENTER);
+        // j'affiche l'ancetre sur la colonne centrale.
+        render(graphics, firstIndiDirectLinks.get(0), familyWidth, (int)cx);
+        // je trace la ligne verticale sous l'ancetre
         graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
+        // je trace la ligne horizontale sous l'ancetre 
         if (firstIndiDirectLinks.size() > 1) {
-            graphics.drawLine((int) cx - FAMILY_WIDTH, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
+            graphics.drawLine( cxLeft, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, (int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
         }
         if (secondIndiDirectLinks.size() > 1) {
-            graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, (int) cx + FAMILY_WIDTH, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
+            graphics.drawLine((int) cx, (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES, cxRight , (int) cy + FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES);
         }
 
         cy += SPACE_BETWEEN_RECTANGLES;
@@ -184,12 +249,12 @@ public class Renderer implements IGraphicsRenderer {
         for (int i = 1; i < nbMaxGen; i++) {
             cy += FAMILY_HEIGH + SPACE_BETWEEN_RECTANGLES;
             if (firstIndiDirectLinks.size() > i) {
-                graphics.drawLine((int) cx - FAMILY_WIDTH, (int) cy - SPACE_BETWEEN_RECTANGLES, (int) cx - FAMILY_WIDTH, (int) cy);
-                render(graphics, firstIndiDirectLinks.get(i), Position.LEFT);
+                graphics.drawLine(cxLeft, (int) cy - SPACE_BETWEEN_RECTANGLES, cxLeft, (int) cy);
+                render(graphics, firstIndiDirectLinks.get(i), familyWidth, cxLeft);
             }
             if (secondIndiDirectLinks.size() > i) {
-                graphics.drawLine((int) cx + FAMILY_WIDTH, (int) cy - SPACE_BETWEEN_RECTANGLES, (int) cx + FAMILY_WIDTH, (int) cy);
-                render(graphics, secondIndiDirectLinks.get(i), Position.RIGHT);
+                graphics.drawLine(cxRight, (int) cy - SPACE_BETWEEN_RECTANGLES, cxRight, (int) cy);
+                render(graphics, secondIndiDirectLinks.get(i), familyWidth, cxRight);
             }
         }
 
@@ -234,51 +299,33 @@ public class Renderer implements IGraphicsRenderer {
      * write the couple names (and dates) in this rectangle<br/>
      * put the ascendant name in bold<br/>
      * @param step a link between the common ancestor and a descendant, with its spouse
-     * @param rightLeft where to position the step
+     * @param familyWidth rectangle width
+     * @param cxStep abcisse of center of column
      */
-    private void render(Graphics2D graphics, Step step, Position rightLeft) {
+    private void render(Graphics2D graphics, Step step, int familyWidth, int cxStep) {
 
         graphics.setPaint(Color.BLACK);
-        int cxStep = 0;
-        if (rightLeft == Position.LEFT) {
-            cxStep = (int) cx - FAMILY_WIDTH;
-        } else if (rightLeft == Position.RIGHT) {
-            cxStep = (int) cx + FAMILY_WIDTH;
-        } else {
-            cxStep = (int) cx;
-        }
-
 
         // get string size
-        int recWidth = FAMILY_WIDTH;
+        int recWidth = familyWidth;
 
         graphics.setFont(boldFontStyle);
-        if (step.getHusband() != null) {
-              // test long string            
-//            if (!step.getHusband().getFirstName().endsWith("XXX")) {
-//                String first = step.getHusband().getFirstName() + " XXXXXX";
-//                String last = step.getHusband().getLastName() + " XXXXXX";
-//                step.getHusband().setName(first, last);
+//        if (step.getHusband() != null) {
+//            // test long string
+//            Rectangle2D rect = graphics.getFont().getStringBounds(getNameLine(step.getHusband()), graphics.getFontRenderContext());
+//            if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > recWidth) {
+//                recWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
 //            }
-            Rectangle2D rect = graphics.getFont().getStringBounds(getNameLine(step.getHusband()), graphics.getFontRenderContext());
-            if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > recWidth) {
-                recWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-            }
-        }
-
-        if (step.getWife() != null) {
-            Rectangle2D rect = graphics.getFont().getStringBounds(getNameLine(step.getWife()), graphics.getFontRenderContext());
-            if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > recWidth) {
-                recWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
-            }
-        }
+//        }
+//
+//        if (step.getWife() != null) {
+//            Rectangle2D rect = graphics.getFont().getStringBounds(getNameLine(step.getWife()), graphics.getFontRenderContext());
+//            if ((int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE > recWidth) {
+//                recWidth = (int) rect.getWidth() + SPACE_BETWEEN_BORDER_AND_RECTANGLE;
+//            }
+//        }
 
         // the rectangle containing one step
-//    graphics.setPaint(Color.LIGHT_GRAY);
-//    graphics.fillRect(cxStep - FAMILY_WIDTH / 2 + SHADOW_SIZE, (int) cy + SHADOW_SIZE, FAMILY_WIDTH + SHADOW_SIZE, FAMILY_HEIGH + SHADOW_SIZE);
-//    graphics.setPaint(Color.BLACK);
-//    graphics.clearRect(cxStep - FAMILY_WIDTH / 2, (int) cy, FAMILY_WIDTH, FAMILY_HEIGH);
-//    graphics.drawRect(cxStep - FAMILY_WIDTH / 2, (int) cy, FAMILY_WIDTH, FAMILY_HEIGH);
         graphics.setPaint(Color.LIGHT_GRAY);
         graphics.fillRect(cxStep - recWidth / 2 + SHADOW_SIZE, (int) cy + SHADOW_SIZE, recWidth + SHADOW_SIZE, FAMILY_HEIGH + SHADOW_SIZE);
         graphics.setPaint(Color.BLACK);
@@ -293,7 +340,6 @@ public class Renderer implements IGraphicsRenderer {
             renderHusband(graphics, step, cxStep, (int) cy);
             renderWife(graphics, step, cxStep, (int) cy + SPACE_BETWEEN_LINES * 2);
         }
-
 
         // Marriage if it does exist
         if (step.famWhereSpouse != null
@@ -365,11 +411,16 @@ public class Renderer implements IGraphicsRenderer {
      * @return the name line formatted as follow : "name [indi id]"
      */
     private String getNameLine(Indi indi) {
-        StringBuffer sb = new StringBuffer(indi.getFirstName()).append(" ").append(indi.getLastName());
-
-        if (displayedId) {
-            sb.append(" [").append(indi.getId()).append("]");
+        StringBuilder sb = new StringBuilder();
+        if (indi != null ) {
+            sb.append(indi.getFirstName()).append(" ").append(indi.getLastName());
+            if (displayedId) {
+                sb.append(" [").append(indi.getId()).append("]");
+            }
+        } else {
+            sb.append("");
         }
+
         return sb.toString();
     }
 
@@ -412,7 +463,6 @@ public class Renderer implements IGraphicsRenderer {
                 sb.append(" [").append(step.famWhereSpouse.getId()).append("]");
             }
         }
-
         return sb.toString();
     }
 
@@ -440,29 +490,5 @@ public class Renderer implements IGraphicsRenderer {
                 graphics.getFontRenderContext());
         int iwidth = (int) rect.getWidth();
         graphics.drawString(text, x - iwidth / 2, y);
-    }
-
-    /* ----------------- */
-    /**
-     * Returns the number of generations that will be displayed.
-     */
-    private int getGenerationCount(Indi indi, int max) {
-        if (indi == null) {
-            return -1;
-        }
-        if (max == 0) {
-            return 0;
-        }
-        Fam family = indi.getFamilyWhereBiologicalChild();
-        if (family != null) {
-            int g1 = getGenerationCount(family.getHusband(), max - 1) + 1;
-            int g2 = getGenerationCount(family.getWife(), max - 1) + 1;
-            if (g2 > g1) {
-                return g2;
-            } else {
-                return g1;
-            }
-        }
-        return 0;
     }
 }
