@@ -663,7 +663,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 10);
         add(jPanelPreview, gridBagConstraints);
@@ -675,8 +674,10 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
         jPanelOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanelOptions.border.title"))); // NOI18N
         jPanelOptions.setEnabled(false);
+        jPanelOptions.setMaximumSize(new java.awt.Dimension(120, 120));
         jPanelOptions.setMinimumSize(new java.awt.Dimension(110, 107));
-        jPanelOptions.setPreferredSize(new java.awt.Dimension(110, 107));
+        jPanelOptions.setPreferredSize(new java.awt.Dimension(110, 110));
+        jPanelOptions.setLayout(new java.awt.GridLayout(3, 1, 2, 2));
 
         jCheckBoxDisplayedId.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxDisplayedId.text")); // NOI18N
         jCheckBoxDisplayedId.setPreferredSize(new java.awt.Dimension(70, 23));
@@ -685,6 +686,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 jCheckBoxDisplayedIdActionPerformed(evt);
             }
         });
+        jPanelOptions.add(jCheckBoxDisplayedId);
+        jCheckBoxDisplayedId.getAccessibleContext().setAccessibleName("");
 
         jCheckBoxRecentEvent.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxRecentEvent.text")); // NOI18N
         jCheckBoxRecentEvent.setPreferredSize(new java.awt.Dimension(70, 23));
@@ -693,6 +696,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 jCheckBoxRecentEventActionPerformed(evt);
             }
         });
+        jPanelOptions.add(jCheckBoxRecentEvent);
+        jCheckBoxRecentEvent.getAccessibleContext().setAccessibleName("");
 
         jComboBoxHusbandOrWife.setMaximumRowCount(2);
         jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "husband first", "wife first" }));
@@ -702,31 +707,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 jComboBoxHusbandOrWifeItemStateChanged(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanelOptionsLayout = new javax.swing.GroupLayout(jPanelOptions);
-        jPanelOptions.setLayout(jPanelOptionsLayout);
-        jPanelOptionsLayout.setHorizontalGroup(
-            jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jCheckBoxDisplayedId, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-            .addComponent(jCheckBoxRecentEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelOptionsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jComboBoxHusbandOrWife, 0, 98, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanelOptionsLayout.setVerticalGroup(
-            jPanelOptionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelOptionsLayout.createSequentialGroup()
-                .addComponent(jCheckBoxDisplayedId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxRecentEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBoxHusbandOrWife, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64))
-        );
-
-        jCheckBoxDisplayedId.getAccessibleContext().setAccessibleName("");
-        jCheckBoxRecentEvent.getAccessibleContext().setAccessibleName("");
+        jPanelOptions.add(jComboBoxHusbandOrWife);
 
         jPanelFile.add(jPanelOptions);
         jPanelOptions.getAccessibleContext().setAccessibleName(null);
@@ -735,43 +716,26 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelExportFile.setMaximumSize(new java.awt.Dimension(110, 107));
         jPanelExportFile.setMinimumSize(new java.awt.Dimension(110, 107));
         jPanelExportFile.setPreferredSize(new java.awt.Dimension(110, 107));
+        jPanelExportFile.setLayout(new java.awt.BorderLayout(0, 10));
 
         jComboBoxFileType.setMaximumRowCount(3);
         jComboBoxFileType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PDF", "PNG", "SVG" }));
         jComboBoxFileType.setMinimumSize(new java.awt.Dimension(50, 18));
         jComboBoxFileType.setName("jComboBoxFileType"); // NOI18N
-        jComboBoxFileType.setPreferredSize(new java.awt.Dimension(50, 20));
+        jComboBoxFileType.setPreferredSize(new java.awt.Dimension(30, 20));
+        jPanelExportFile.add(jComboBoxFileType, java.awt.BorderLayout.NORTH);
 
         jButtonSaveFile.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonSaveFile.text")); // NOI18N
+        jButtonSaveFile.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonSaveFile.setMaximumSize(null);
-        jButtonSaveFile.setMinimumSize(new java.awt.Dimension(50, 24));
-        jButtonSaveFile.setPreferredSize(new java.awt.Dimension(50, 32));
+        jButtonSaveFile.setMinimumSize(new java.awt.Dimension(70, 32));
+        jButtonSaveFile.setPreferredSize(new java.awt.Dimension(60, 32));
         jButtonSaveFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveFileActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanelExportFileLayout = new javax.swing.GroupLayout(jPanelExportFile);
-        jPanelExportFile.setLayout(jPanelExportFileLayout);
-        jPanelExportFileLayout.setHorizontalGroup(
-            jPanelExportFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelExportFileLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelExportFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonSaveFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                    .addComponent(jComboBoxFileType, javax.swing.GroupLayout.Alignment.LEADING, 0, 98, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanelExportFileLayout.setVerticalGroup(
-            jPanelExportFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelExportFileLayout.createSequentialGroup()
-                .addComponent(jComboBoxFileType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonSaveFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-
+        jPanelExportFile.add(jButtonSaveFile, java.awt.BorderLayout.CENTER);
         jButtonSaveFile.getAccessibleContext().setAccessibleName("");
 
         jPanelFile.add(jPanelExportFile);
@@ -780,7 +744,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
