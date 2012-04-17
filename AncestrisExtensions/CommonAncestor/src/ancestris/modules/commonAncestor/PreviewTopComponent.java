@@ -38,6 +38,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     private static final String PREFERRED_ID        = "PreviewTopComponent";
     private static final String DOCK_MODE           = "dockMode";
     private static final String SEPARATED_WINDOW    = "separatedWindow";
+    private static final String PREVIEW_ZOOM        = "previewZoom";
     //private static final String TITLE_ICON_PATH     = "ancestris/modules/commonAncestor/CommonAncestor.png";
     private PreviewView view;
     AToolBar bar = null;
@@ -74,6 +75,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
         setName(context.getGedcom().getName());
         setToolTipText(NbBundle.getMessage(CommonAncestorTopComponent.class, "HINT_PreviewTopComponent") + ": " + context.getGedcom().getName());
+        registry = new genj.util.Registry(genj.util.Registry.get(PreviewTopComponent.class), getClass().getName());
 
         // create  layout
         setLayout(new BorderLayout());
@@ -82,6 +84,9 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         view = new PreviewView();
         add(view, BorderLayout.CENTER);
 
+        // get previous zoom ( default value = 1.0s)
+        view.setZoom(Double.valueOf(registry.get(PREVIEW_ZOOM, "1.0")));
+        
         // add tool bar at WEST
         bar = new AToolBar();
         bar.beginUpdate();
@@ -94,7 +99,6 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         repaint();
 
         // set previous docking mode
-        registry = new genj.util.Registry(genj.util.Registry.get(PreviewTopComponent.class), getClass().getName());
         // get previous separatedWindowFlag ( default value = true)
         separatedWindowFlag = registry.get(SEPARATED_WINDOW, true);
         // get previous dock mose ( default value = "ancestris-output")
@@ -158,6 +162,8 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
             // record dockmode and separatedWindowFlag flag        
             registry.put(DOCK_MODE, dockMode);
             registry.put(SEPARATED_WINDOW, separatedWindowFlag);
+            // record preview zoom
+            registry.put(PREVIEW_ZOOM, Double.toString(view.getZoom()));
              // reset reference in parent
             samePanel.onClosePreview();
         }
