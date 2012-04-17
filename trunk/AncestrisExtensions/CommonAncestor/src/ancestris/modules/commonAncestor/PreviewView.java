@@ -267,19 +267,29 @@ public class PreviewView extends JPanel {
      * process zoom changes
      * @param d
      */
-    private void setZoom(double d) {
+    public void setZoom(double d) {
         zoom = Math.max(0.1D, Math.min(1.0, d));
-        renderer.setZoom(zoom);
+        if ( renderer != null) {
+            renderer.setZoom(zoom);
 
-        if (scrolledComponent!=null) {
-            // je mets à jour la taille du composant scrollé qui est a l'interieur du JScrollPane
-            // cela refrachit automatiquement la taille des scrollbar du JScrollPane
-            scrolledComponent.setPreferredSize(new Dimension(renderer.getImageWidth(), renderer.getImageHeight()));
-            scrolledComponent.setSize(new Dimension(renderer.getImageWidth(), renderer.getImageHeight()));
-            //revalidate();
-            repaint();
+            if (scrolledComponent!=null) {
+                // je mets à jour la taille du composant scrollé qui est a l'interieur du JScrollPane
+                // cela refrachit automatiquement la taille des scrollbar du JScrollPane
+                scrolledComponent.setPreferredSize(new Dimension(renderer.getImageWidth(), renderer.getImageHeight()));
+                scrolledComponent.setSize(new Dimension(renderer.getImageWidth(), renderer.getImageHeight()));
+                //revalidate();
+                repaint();
+            }
         }
     }
+
+    /**
+     * retourne le zoom
+     */
+    public double getZoom() {
+        return  zoom;
+    }
+
 
     void setRenderer(IGraphicsRenderer renderer) {
         this.renderer = renderer;
