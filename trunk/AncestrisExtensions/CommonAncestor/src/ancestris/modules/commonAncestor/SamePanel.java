@@ -17,6 +17,7 @@ import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchCo
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.io.File;
 import java.util.Set;
 import javax.swing.DefaultListModel;
@@ -76,6 +77,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         registry = new Registry(Registry.get(SamePanel.class), getClass().getName());
         initComponents();
         jCheckBoxAutoPreview.setSelected(false);
+        // j'affecte un modele à liste
+        jListAncestors.setModel(ancestorListModel);
 
         // Provider individu 1
         QuickSearchProvider searchProvider1 = new QuickSearchProvider();
@@ -306,7 +309,16 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         for (Indi ancestor : ancestorList) {
             ancestorListModel.addElement(ancestor);
         }
-        jListAncestors.setModel(ancestorListModel);
+        // je met a jour la taille de la JList por forcer la mise à jour des scrollbar
+        if (ancestorListModel.size()>0) {
+            // je recupere la hauteur de l'ensemble des lignes de la liste
+            int cellHeight = jListAncestors.getCellBounds(0, ancestorListModel.getSize()-1).height;
+            // je change la hauteur preferree de la JList
+            jListAncestors.setPreferredSize(new Dimension(jListAncestors.getPreferredSize().width, cellHeight));
+        } else {
+            // je met la hauteur preferree de la liste à zero
+            jListAncestors.setPreferredSize(new Dimension(jListAncestors.getPreferredSize().width, 0));
+        }
 
         // select default ancestor (first element) 
         if (ancestorListModel.size() > 0) {
@@ -432,7 +444,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jButtonPreview = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabelIndividu1 = new javax.swing.JLabel();
         jTextFieldIndividu1 = new javax.swing.JTextField();
@@ -456,15 +467,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelExportFile = new javax.swing.JPanel();
         jComboBoxFileType = new javax.swing.JComboBox();
         jButtonSaveFile = new javax.swing.JButton();
-
-        jButtonPreview.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonPreview.text")); // NOI18N
-        jButtonPreview.setPreferredSize(new java.awt.Dimension(71, 32));
-        jButtonPreview.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPreviewActionPerformed(evt);
-            }
-        });
-        jButtonPreview.getAccessibleContext().setAccessibleName(null);
 
         setMinimumSize(new java.awt.Dimension(260, 390));
         setPreferredSize(new java.awt.Dimension(260, 390));
@@ -757,10 +759,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
       saveFile();
   }//GEN-LAST:event_jButtonSaveFileActionPerformed
 
-  private void jButtonPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviewActionPerformed
-      openPreview();
-}//GEN-LAST:event_jButtonPreviewActionPerformed
-
   private void jCheckBoxAutoPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoPreviewActionPerformed
       if (jCheckBoxAutoPreview.isSelected()) {
             openPreview();
@@ -808,7 +806,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
   }//GEN-LAST:event_jCheckBoxSeparatedWindowActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonPreview;
     private javax.swing.JButton jButtonSaveFile;
     private javax.swing.JCheckBox jCheckBoxAutoPreview;
     private javax.swing.JCheckBox jCheckBoxDisplayedId;
