@@ -285,6 +285,7 @@ div.section1    {
 .ancestris_stop_tip {
     background-color:#abeee2;
     font-size: 11px;
+    text-align: justify;
 }
 
 .ancestris_info_image {
