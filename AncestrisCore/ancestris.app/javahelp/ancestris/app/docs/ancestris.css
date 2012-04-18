@@ -286,6 +286,7 @@ div.section1    {
     background-color:#abeee2;
     font-size: 11px;
     text-align: justify;
+    text-justify: newspaper;
 }
 
 .ancestris_info_image {
