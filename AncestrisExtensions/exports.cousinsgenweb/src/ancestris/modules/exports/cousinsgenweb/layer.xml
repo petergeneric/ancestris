@@ -4,7 +4,7 @@
     <folder name="Actions">
         <folder name="File">
             <file name="ancestris-modules-exports-cousinsgenweb-CousinsGenWebAction.instance">
-                <attr name="delegate" newvalue="ancestris.modules-exports.cousinsgenweb.CousinsGenWebAction"/>
+                <attr name="delegate" newvalue="ancestris.modules.exports.cousinsgenweb.CousinsGenWebAction"/>
                 <attr name="displayName" bundlevalue="ancestris.modules.exports.cousinsgenweb.Bundle#CTL_CousinsGenWebAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
