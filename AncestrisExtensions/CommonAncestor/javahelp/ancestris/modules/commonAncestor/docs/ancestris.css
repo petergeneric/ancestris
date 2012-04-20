@@ -185,6 +185,12 @@ p.marge40  {
     text-justify: newspaper;
 }
 
+p.warning   {
+    font-weight: bolder;
+    color: red;
+    background: white;
+    }
+
 /* Titles */
 
 h1.ancestris_help_title   {
@@ -251,9 +257,13 @@ div.section1    {
     text-align: justify;
     }
 
+/* Specific Texts */
+
 .ancestris_stop_tip {
     background-color:#abeee2;
     font-size: 11px;
+    text-align: justify;
+    text-justify: newspaper;
 }
 
 .ancestris_info_image {
@@ -285,12 +295,5 @@ div.section1    {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 }
-
-p.warning   {
-    font-weight: bolder;
-    color: red;
-    background: white;
-    }
-
 
 /* Specific style for the Help section of Ancestris - End */
