@@ -26,73 +26,6 @@
  */
 
 
-/* Page */
-
-body  {
-    font-size: 12px;
-    font-family: SansSerif, Arial, Helvetica, sans-serif;
-    margin-left: 10;
-    margin-right: 10;
-    color: Black;
-    background-color: White;
-}
-
-/* Titles */
-
-h1 {
-    font-size: large;
-    font-weight: bold;
-    margin-top: 10;
-    margin-bottom: 5;
-}
-
-h2 {
-    font-size: large;
-    font-weight: bold;
-    margin-top: 10;
-    margin-bottom: 5;
-}
-
-h3 {
-    font-size: medium;
-    font-weight: bold;
-    margin-top: 10;
-    margin-bottom: 5;
-}
-
-h4 {
-    font-size: medium;
-    font-weight: bold;
-    margin-top: 10;
-    margin-bottom: 5;
-}
-/* 
- * Use the h6 tag for the term in a glossary popup
- * topic. The term being defined is the heading for 
- * the topic.
- */
-h6 {
-    font-size: smaller;
-    font-weight: bold;
-    margin-top: 0;
-    margin-bottom: 10;
-}
-
-/* Paragraphs */
-
-p  {
-    font-size: 12px;
-    margin-top: 5;
-    margin-bottom: 5;
-}
-
-p.justify  {
-    font-size: 12px;
-    margin-top: 5;
-    margin-bottom: 5;
-    text-align: justify;
-    text-justify: newspaper;
-}
 
 /* Lists */
 
@@ -216,19 +149,55 @@ small {font-size: x-small}
 
 /* Specific style for the Help section of Ancestris - Start */
 
+/* Page */
+
+body  {
+    font-size: 12px;
+    font-family: SansSerif, Arial, Helvetica, sans-serif;
+    margin-left: 10;
+    margin-right: 10;
+    color: Black;
+    background-color: White;
+}
+
+/* Paragraphs */
+
+p  {
+    font-size: 12px;
+    margin-top: 5;
+    margin-bottom: 5;
+}
+
+p.justify  {
+    font-size: 12px;
+    margin-top: 5;
+    margin-bottom: 5;
+    text-align: justify;
+    text-justify: newspaper;
+}
+
+p.marge40  {
+    font-size: 12px;
+    margin-top: 5;
+    margin-bottom: 5;
+    margin-left: 40;
+    text-align: justify;
+    text-justify: newspaper;
+}
+
+p.warning   {
+    font-weight: bolder;
+    color: red;
+    background: white;
+    }
+
+/* Titles */
+
 h1.ancestris_help_title   {
     color: #000000;
     background: #ffffff;
     font-size: 14pt;
     font-weight: 900;
-    text-decoration: underline;
-    }
-
-h1.section1   {
-    color: #000000;
-    background: #ffffff;
-    font-size: 18pt;
-    font-weight: 700;
     text-decoration: underline;
     }
 
@@ -249,14 +218,6 @@ h2.ancestris_back_section   {
     text-decoration: underline;
     }
 
-h2.section1   {
-    color: #000000;
-    background: #ffffff;
-    font-size: 15pt;
-    font-weight: 700;
-    text-decoration: underline;
-    }
-
 h3.ancestris_help_title   {
     color: #000000;
     background: #ffffff;
@@ -265,13 +226,27 @@ h3.ancestris_help_title   {
     text-decoration: underline;
     }
 
-h3.section1   {
+h4.ancestris_help_title   {
     color: #000000;
     background: #ffffff;
-    font-size: 12pt;
+    font-size: 10pt;
     font-weight: 700;
+    font-style: italic;
     text-decoration: underline;
     }
+
+/*
+ * Use the h6 tag for the term in a glossary popup
+ * topic. The term being defined is the heading for
+ * the topic.
+ */
+
+h6 {
+    font-size: smaller;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10;
+}
 
 div.section1    {
     color: #000000;
@@ -281,6 +256,8 @@ div.section1    {
     margin-right: 5px;
     text-align: justify;
     }
+
+/* Specific Texts */
 
 .ancestris_stop_tip {
     background-color:#abeee2;
@@ -318,12 +295,5 @@ div.section1    {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 }
-
-p.warning   {
-    font-weight: bolder;
-    color: red;
-    background: white;
-    }
-
 
 /* Specific style for the Help section of Ancestris - End */
