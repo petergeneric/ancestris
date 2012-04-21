@@ -28,6 +28,8 @@ import org.openide.windows.WindowManager;
 import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
 import ancestris.modules.commonAncestor.graphics.ScreenOutput;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
 /**
  * Top component which displays ancestor tree preview
@@ -39,7 +41,6 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     private static final String DOCK_MODE           = "dockMode";
     private static final String SEPARATED_WINDOW    = "separatedWindow";
     private static final String PREVIEW_ZOOM        = "previewZoom";
-    //private static final String TITLE_ICON_PATH     = "ancestris/modules/commonAncestor/CommonAncestor.png";
     private PreviewView view;
     AToolBar bar = null;
     private Context context;
@@ -180,11 +181,12 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         return TopComponent.PERSISTENCE_NEVER;
     }
 
-//    @Override
-//    public Image getIcon() {
-//       return ImageUtilities.loadImage(TITLE_ICON_PATH, true);
-//    }
-//
+    @Override
+    public Image getIcon() {
+       ImageIcon icon = new ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CommonAncestor.png"));
+       return icon.getImage();
+    }
+
     public Context getContext() {
         return context;
     }
