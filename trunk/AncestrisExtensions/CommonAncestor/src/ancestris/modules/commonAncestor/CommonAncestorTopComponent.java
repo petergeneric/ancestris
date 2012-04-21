@@ -100,7 +100,7 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
             samePanel = new SamePanel();
             samePanel.init(context);
             setLayout(new BorderLayout());
-            add(samePanel, BorderLayout.CENTER);
+            add(samePanel, BorderLayout.NORTH);
 
             // register for selectionListener
             AncestrisPlugin.register(this);

@@ -26,6 +26,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.filechooser.FileFilter;
+import org.netbeans.api.javahelp.Help;
+import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
@@ -467,14 +470,17 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelExportFile = new javax.swing.JPanel();
         jComboBoxFileType = new javax.swing.JComboBox();
         jButtonSaveFile = new javax.swing.JButton();
+        jPanelHelp = new javax.swing.JPanel();
+        jButtonHelp = new javax.swing.JButton();
 
+        setMaximumSize(new java.awt.Dimension(260, 410));
         setMinimumSize(new java.awt.Dimension(260, 390));
-        setPreferredSize(new java.awt.Dimension(260, 390));
+        setPreferredSize(new java.awt.Dimension(260, 410));
         setLayout(new java.awt.GridBagLayout());
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanel3.border.title"))); // NOI18N
         jPanel3.setMinimumSize(new java.awt.Dimension(60, 230));
-        jPanel3.setPreferredSize(new java.awt.Dimension(124, 230));
+        jPanel3.setPreferredSize(new java.awt.Dimension(124, 250));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jLabelIndividu1.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelIndividu1.text")); // NOI18N
@@ -677,8 +683,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanelOptions.border.title"))); // NOI18N
         jPanelOptions.setEnabled(false);
         jPanelOptions.setMaximumSize(new java.awt.Dimension(120, 120));
-        jPanelOptions.setMinimumSize(new java.awt.Dimension(110, 107));
-        jPanelOptions.setPreferredSize(new java.awt.Dimension(110, 110));
+        jPanelOptions.setMinimumSize(new java.awt.Dimension(110, 114));
+        jPanelOptions.setPreferredSize(new java.awt.Dimension(110, 114));
         jPanelOptions.setLayout(new java.awt.GridLayout(3, 1, 2, 2));
 
         jCheckBoxDisplayedId.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxDisplayedId.text")); // NOI18N
@@ -703,7 +709,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
         jComboBoxHusbandOrWife.setMaximumRowCount(2);
         jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "husband first", "wife first" }));
-        jComboBoxHusbandOrWife.setPreferredSize(new java.awt.Dimension(70, 20));
+        jComboBoxHusbandOrWife.setPreferredSize(new java.awt.Dimension(70, 24));
         jComboBoxHusbandOrWife.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBoxHusbandOrWifeItemStateChanged(evt);
@@ -747,11 +753,42 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 1;
+        gridBagConstraints.ipady = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jPanelFile, gridBagConstraints);
+
+        jPanelHelp.setMaximumSize(new java.awt.Dimension(59, 25));
+        jPanelHelp.setPreferredSize(new java.awt.Dimension(100, 26));
+        jPanelHelp.setLayout(new java.awt.BorderLayout());
+
+        jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/information.png"))); // NOI18N
+        jButtonHelp.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonHelp.text")); // NOI18N
+        jButtonHelp.setToolTipText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonHelp.toolTipText")); // NOI18N
+        jButtonHelp.setBorderPainted(false);
+        jButtonHelp.setPreferredSize(new java.awt.Dimension(20, 20));
+        jButtonHelp.setRequestFocusEnabled(false);
+        jButtonHelp.setRolloverEnabled(false);
+        jButtonHelp.setVerifyInputWhenFocusTarget(false);
+        jButtonHelp.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jButtonHelp.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonHelpActionPerformed(evt);
+            }
+        });
+        jPanelHelp.add(jButtonHelp, java.awt.BorderLayout.EAST);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
+        add(jPanelHelp, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -805,7 +842,16 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
       }
   }//GEN-LAST:event_jCheckBoxSeparatedWindowActionPerformed
 
+  private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
+      String id = "ancestris.modules.commonAncestor.about";
+      Help help = Lookup.getDefault().lookup(Help.class);
+      if (help != null && help.isValidID(id, true).booleanValue()) {
+          help.showHelp(new HelpCtx(id));
+      }
+  }//GEN-LAST:event_jButtonHelpActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonHelp;
     private javax.swing.JButton jButtonSaveFile;
     private javax.swing.JCheckBox jCheckBoxAutoPreview;
     private javax.swing.JCheckBox jCheckBoxDisplayedId;
@@ -820,6 +866,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelExportFile;
     private javax.swing.JPanel jPanelFile;
+    private javax.swing.JPanel jPanelHelp;
     private javax.swing.JPanel jPanelOptions;
     private javax.swing.JPanel jPanelPreview;
     private javax.swing.JPanel jPanelSearch1;
