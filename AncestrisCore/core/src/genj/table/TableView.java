@@ -153,11 +153,11 @@ public class TableView extends View {
     {
         defaultLayouts.put(Gedcom.INDI, "17,52,24,310,96,163,94,156,356,397,224,113,99,388,218,167,254,172,2,1");
         defaultLayouts.put(Gedcom.FAM, "13,52,99,375,296,323,93,92,116,283,100,250,429,154,2,1");
-        defaultLayouts.put(Gedcom.OBJE, "2,75,75,1,1");
-        defaultLayouts.put(Gedcom.NOTE, "9,55,283,222,173,62,90,123,360,169,0,1");
-        defaultLayouts.put(Gedcom.SOUR, "7,75,578,227,381,287,115,174,1,1");
-        defaultLayouts.put(Gedcom.SUBM, "8,75,213,244,202,84,152,149,174");
-        defaultLayouts.put(Gedcom.REPO, "3,60,300,500");
+        defaultLayouts.put(Gedcom.OBJE, "2,149,1529,0,1");
+        defaultLayouts.put(Gedcom.NOTE, "3,55,1425,173,1,1");
+        defaultLayouts.put(Gedcom.SOUR, "7,75,578,227,381,287,115,174,0,1");
+        defaultLayouts.put(Gedcom.SUBM, "8,75,385,458,202,84,152,149,174,0,1");
+        defaultLayouts.put(Gedcom.REPO, "9,60,283,530,174,75,75,120,202,144,1,1");
     };
 
     /** current type we're showing */
