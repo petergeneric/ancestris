@@ -10,6 +10,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.view.SelectionSink;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.Utilities;
 import java.awt.Component;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
@@ -29,13 +30,12 @@ public class FamQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getInstance().getContexts()) {
                 for (Fam fam : context.getGedcom().getFamilies()) {
-                    if (fam.toString(false).toLowerCase().contains(request.getText().toLowerCase())) {
+                    if (Utilities.wordsMatch(fam.toString(false).toLowerCase(),request.getText().toLowerCase())) {
                         if (!response.addResult(createAction(fam), fam.toString(false))) {
                             return;
                         }
                     }
                 }
-                ;
             }
         }
     }
