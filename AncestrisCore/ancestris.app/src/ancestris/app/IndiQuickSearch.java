@@ -10,6 +10,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.view.SelectionSink;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.Utilities;
 import java.awt.Component;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
@@ -28,7 +29,7 @@ public class IndiQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getInstance().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
-                    if (indi.getName().toLowerCase().contains(request.getText().toLowerCase())) {
+                    if (Utilities.wordsMatch(indi.getName().toLowerCase(),request.getText().toLowerCase())) {
                         if (!response.addResult(createAction(indi), indi.getName())) {
                             return;
                         }
