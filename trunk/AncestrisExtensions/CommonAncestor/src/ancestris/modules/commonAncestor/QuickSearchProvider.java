@@ -4,6 +4,7 @@ import genj.gedcom.Indi;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchProvider;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchRequest;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchResponse;
+import ancestris.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -35,11 +36,9 @@ public class QuickSearchProvider implements SearchProvider {
             if (samePanel.getContext() != null) {
                 if (samePanel.getContext().getGedcom() != null) {
                     for (Indi indi : samePanel.getContext().getGedcom().getIndis()) {
-                        //if (indi.getName().toLowerCase().contains(request.getText().toLowerCase())) {
-                        String indiName = indi.getLastName()+" "+indi.getFirstName();
-                        if (indiName.toLowerCase().startsWith(request.getText().toLowerCase())) {
+                        if (Utilities.wordsMatch(indi.getName().toLowerCase(),request.getText().toLowerCase())) {
                             String categoryName = response.getCatResult().getCategory().getName();
-                            if (!response.addResult(new createAction(indi, categoryName), indiName )) {                                
+                            if (!response.addResult(new createAction(indi, categoryName), indi.getName() )) {
                                 return;
                             }
                         }
