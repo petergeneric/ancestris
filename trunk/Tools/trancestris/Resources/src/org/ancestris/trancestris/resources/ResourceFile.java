@@ -367,8 +367,13 @@ public class ResourceFile {
         }
     }
 
-    public String search(String expression) {
-        Iterator<ResourceLine> iterator = fromLanguage.iterator();
+    public String search(String expression, boolean fromLocale) {
+        Iterator<ResourceLine> iterator = null;
+        if (fromLocale == true) {
+            iterator = fromLanguage.iterator();
+        } else {
+            iterator = toLanguage.iterator();
+        }
 
         while (iterator.hasNext()) {
             ResourceLine resourceLine = iterator.next();

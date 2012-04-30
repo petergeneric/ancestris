@@ -7,9 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -86,8 +84,8 @@ public class ZipArchive implements PropertyChangeListener {
         return change;
     }
 
-    public  List<String> search (String expression) {
-        return root.search (expression);
+    public  List<String> search (String expression, boolean fromLocale) {
+        return root.search (expression, fromLocale);
     }
     
     public ZipDirectory getRoot() {
