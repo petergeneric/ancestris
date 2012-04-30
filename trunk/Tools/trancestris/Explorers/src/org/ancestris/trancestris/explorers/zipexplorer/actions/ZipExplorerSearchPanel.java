@@ -25,6 +25,8 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
     public ZipExplorerSearchPanel(ZipArchive zipArchive) {
         this.zipArchive = zipArchive;
         initComponents();
+        fromLocaleCheckBox.setText(zipArchive.getFromLocale().getDisplayLanguage());
+        toLocaleCheckBox.setText(zipArchive.getToLocale().getDisplayLanguage());
     }
 
     /** This method is called from within the constructor to
@@ -36,10 +38,13 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        localeButtonGroup = new javax.swing.ButtonGroup();
         expressionTextField = new javax.swing.JTextField();
         resultScrollPane = new javax.swing.JScrollPane();
         resultTextArea = new javax.swing.JTextArea();
         searchButton = new javax.swing.JButton();
+        fromLocaleCheckBox = new javax.swing.JCheckBox();
+        toLocaleCheckBox = new javax.swing.JCheckBox();
 
         resultTextArea.setColumns(20);
         resultTextArea.setRows(5);
@@ -52,16 +57,27 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
             }
         });
 
+        localeButtonGroup.add(fromLocaleCheckBox);
+        fromLocaleCheckBox.setSelected(true);
+        fromLocaleCheckBox.setText("From Locale");
+
+        localeButtonGroup.add(toLocaleCheckBox);
+        toLocaleCheckBox.setText("To Locale");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(toLocaleCheckBox)
+                            .addComponent(fromLocaleCheckBox))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchButton)))
                 .addContainerGap())
@@ -69,27 +85,44 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(searchButton)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(fromLocaleCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(toLocaleCheckBox)))
+                .addGap(12, 12, 12)
+                .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                .addGap(14, 14, 14))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
 
-        List<String> search = zipArchive.search(expressionTextField.getText());
+        List<String> search = null;
+        if (fromLocaleCheckBox.isSelected()) {
+            search = zipArchive.search(expressionTextField.getText(), true);
+        } else {
+            search = zipArchive.search(expressionTextField.getText(), false);
+        }
+        // Clear the Text Area
+        resultTextArea.setText("");
         for (String dirName : search) {
             resultTextArea.append(dirName + "\n");
         }
     }//GEN-LAST:event_searchButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField expressionTextField;
+    private javax.swing.JCheckBox fromLocaleCheckBox;
+    private javax.swing.ButtonGroup localeButtonGroup;
     private javax.swing.JScrollPane resultScrollPane;
     private javax.swing.JTextArea resultTextArea;
     private javax.swing.JButton searchButton;
+    private javax.swing.JCheckBox toLocaleCheckBox;
     // End of variables declaration//GEN-END:variables
 }
