@@ -112,4 +112,8 @@ public class ZipArchive implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent pce) {
         change = true;
     }
+
+    public int getTranslatePercent () {
+        return root.getTranslatedPercent();
+    }
 }
