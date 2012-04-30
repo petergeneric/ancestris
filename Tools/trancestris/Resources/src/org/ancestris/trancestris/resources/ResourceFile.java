@@ -226,7 +226,7 @@ public class ResourceFile {
     }
 
     public int getTranslatedPercent() {
-        return (int) ((float)(getLineCount() - not_translated) / (float)getLineCount() * 100);
+        return (int) ((float) (getLineCount() - not_translated) / (float) getLineCount() * 100);
     }
 
     public int getLineCount() {
@@ -365,5 +365,19 @@ public class ResourceFile {
         for (int i = 0; i < pcls.length; i++) {
             pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
         }
+    }
+
+    public String search(String expression) {
+        Iterator<ResourceLine> iterator = fromLanguage.iterator();
+
+        while (iterator.hasNext()) {
+            ResourceLine resourceLine = iterator.next();
+            String value = resourceLine.getValue();
+            if (value != null && value.matches(expression) == true) {
+                return directoryPath;
+            }
+        }
+
+        return null;
     }
 }
