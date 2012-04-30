@@ -5,14 +5,12 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -131,17 +129,17 @@ public class ZipDirectory implements PropertyChangeListener {
         }
     }
 
-    public List<String> search(String expression) {
+    public List<String> search(String expression, boolean fromLocale) {
         ArrayList<String> directoryNamesArray = new ArrayList();
         for (ZipDirectory zipDirectory : dirs.values()) {
-            List<String> found = zipDirectory.search(expression);
+            List<String> found = zipDirectory.search(expression, fromLocale);
             if (found.isEmpty() != true) {
                 directoryNamesArray.addAll(found);
             }
         }
 
         if (resourceFile != null) {
-            String search = resourceFile.search(expression);
+            String search = resourceFile.search(expression, fromLocale);
             if (search != null) {
                 directoryNamesArray.add(search);
             }
