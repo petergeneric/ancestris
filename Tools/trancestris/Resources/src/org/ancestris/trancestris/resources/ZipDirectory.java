@@ -148,6 +148,30 @@ public class ZipDirectory implements PropertyChangeListener {
         return directoryNamesArray;
     }
 
+    public int getTranslatedPercent() {
+        int translatedPercent = 0;
+        if (resourceFile != null) {
+            translatedPercent = resourceFile.getTranslatedPercent();
+        } else {
+            translatedPercent = -1;
+        }
+
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            int Percentage = zipDirectory.getTranslatedPercent();
+            if (translatedPercent == -1) {
+                if (Percentage >= 0) {
+                    translatedPercent = Percentage;
+                }
+            } else {
+                if (Percentage >= 0) {
+                    translatedPercent = (int) ((float) (translatedPercent + Percentage) / (float) 2);
+                }
+            }
+        }
+
+        return translatedPercent;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         listeners.add(pcl);
     }
