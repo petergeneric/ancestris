@@ -5,12 +5,14 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -22,7 +24,7 @@ public class ZipDirectory implements PropertyChangeListener {
     private String directoryName;
     private ResourceFile resourceFile = null;
     private LinkedHashMap<String, ZipDirectory> dirs;
-    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener> ());
+    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
 
     public ZipDirectory(String name) {
         logger.log(Level.INFO, "New directory {0}", name);
@@ -121,12 +123,31 @@ public class ZipDirectory implements PropertyChangeListener {
                 return false;
             }
         }
-        
+
         if (resourceFile != null) {
             return resourceFile.isTranslated();
         } else {
             return true;
         }
+    }
+
+    public List<String> search(String expression) {
+        ArrayList<String> directoryNamesArray = new ArrayList();
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            List<String> found = zipDirectory.search(expression);
+            if (found.isEmpty() != true) {
+                directoryNamesArray.addAll(found);
+            }
+        }
+
+        if (resourceFile != null) {
+            String search = resourceFile.search(expression);
+            if (search != null) {
+                directoryNamesArray.add(search);
+            }
+        }
+
+        return directoryNamesArray;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
