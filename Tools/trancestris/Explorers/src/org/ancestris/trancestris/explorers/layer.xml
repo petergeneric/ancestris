@@ -5,15 +5,15 @@
     <folder name="Actions">
         <file name="Edit_hidden"/>
         <folder name="File">
-            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance">
-                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ExplorerSaveAction"/>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSaveAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerSaveAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ExplorerSaveAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/save-icon.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SendTranslationAction.instance">
-                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.SendTranslationAction"/>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSendTranslationAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerSendTranslationAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_SaveTranslationAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/mail-icon.png"/>
@@ -23,6 +23,14 @@
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerOpenAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ZipExplorerOpenAction"/>
                 <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/zip-icon.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+        <folder name="Tools">
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerSearchAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ZipExplorerSearchAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -37,17 +45,23 @@
         </folder>
     </folder>
     <folder name="Menu">
+        <folder name="Edit">
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.instance"/>
+                <attr name="position" intvalue="2050"/>
+            </file>
+        </folder>
         <folder name="File">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance"/>
                 <attr name="position" intvalue="1350"/>
             </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSaveAction.instance"/>
                 <attr name="position" intvalue="1550"/>
             </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SendTranslationAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSendTranslationAction.instance"/>
                 <attr name="position" intvalue="1800"/>
             </file>
             <file name="org-netbeans-modules-print-action-PageSetupAction.shadow_hidden"/>
@@ -69,14 +83,14 @@
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSaveAction.instance"/>
                 <attr name="position" intvalue="110"/>
             </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
         <folder name="Mail">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-SendTranslationAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSendTranslationAction.instance"/>
                 <attr name="position" intvalue="120"/>
             </file>
         </folder>
