@@ -220,10 +220,10 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     public void setBundles(File zipFile, Locale fromLocale, Locale toLocale) {
-        Frame mainWindow = WindowManager.getDefault().getMainWindow();
-        mainWindow.setTitle(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_MainWindow_Title", fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage()));
 
         ZipArchive zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
+        Frame mainWindow = WindowManager.getDefault().getMainWindow();
+        mainWindow.setTitle(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_MainWindow_Title", fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage(), zipArchive.getTranslatePercent()));
 
         newZipRootNode = new ZipRootNode(zipArchive);
         zipExplorerManager.setRootContext(newZipRootNode);
