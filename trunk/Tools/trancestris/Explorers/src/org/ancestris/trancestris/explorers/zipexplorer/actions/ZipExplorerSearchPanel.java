@@ -46,6 +46,12 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
         fromLocaleCheckBox = new javax.swing.JCheckBox();
         toLocaleCheckBox = new javax.swing.JCheckBox();
 
+        expressionTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                expressionTextFieldKeyPressed(evt);
+            }
+        });
+
         resultTextArea.setColumns(20);
         resultTextArea.setRows(5);
         resultScrollPane.setViewportView(resultTextArea);
@@ -103,7 +109,25 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        search();
+    }//GEN-LAST:event_searchButtonActionPerformed
 
+    private void expressionTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionTextFieldKeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            search();
+        }
+    }//GEN-LAST:event_expressionTextFieldKeyPressed
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField expressionTextField;
+    private javax.swing.JCheckBox fromLocaleCheckBox;
+    private javax.swing.ButtonGroup localeButtonGroup;
+    private javax.swing.JScrollPane resultScrollPane;
+    private javax.swing.JTextArea resultTextArea;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JCheckBox toLocaleCheckBox;
+    // End of variables declaration//GEN-END:variables
+
+    private void search() {
         List<String> search = null;
         if (fromLocaleCheckBox.isSelected()) {
             search = zipArchive.search(expressionTextField.getText(), true);
@@ -115,14 +139,5 @@ public class ZipExplorerSearchPanel extends javax.swing.JPanel {
         for (String dirName : search) {
             resultTextArea.append(dirName + "\n");
         }
-    }//GEN-LAST:event_searchButtonActionPerformed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField expressionTextField;
-    private javax.swing.JCheckBox fromLocaleCheckBox;
-    private javax.swing.ButtonGroup localeButtonGroup;
-    private javax.swing.JScrollPane resultScrollPane;
-    private javax.swing.JTextArea resultTextArea;
-    private javax.swing.JButton searchButton;
-    private javax.swing.JCheckBox toLocaleCheckBox;
-    // End of variables declaration//GEN-END:variables
+    }
 }
