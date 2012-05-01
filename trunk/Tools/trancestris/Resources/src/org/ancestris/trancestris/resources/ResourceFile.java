@@ -204,11 +204,12 @@ public class ResourceFile {
 
             Iterator<ResourceItem.ResourceLine> it = defaultLanguage.iterator();
             not_translated = getLineCount();
+            Pattern p = Pattern.compile("NOI18N$");
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
                 if (line.getValue() != null && !line.getValue().isEmpty()) {
                     String comment = line.getComment();
-                    if (comment != null && comment.contains("NOI18N")) {
+                    if (comment != null &&  p.matcher(comment).find()) {
                         not_translated = Math.max(0, not_translated - 1);
                     } else if (toLanguage.getLine(line.getKey()) != null) {
                         not_translated = Math.max(0, not_translated - 1);
@@ -227,7 +228,8 @@ public class ResourceFile {
     }
 
     public int getTranslatedPercent() {
-        return (int) ((float) (getLineCount() - not_translated) / (float) getLineCount() * 100);
+        logger.log(Level.INFO, "{0}: Lines count {1} not translated {2}", new Object[]{directoryPath, getLineCount(), not_translated});
+        return (int) (((float) (getLineCount() - not_translated) / (float) getLineCount()) * 100);
     }
 
     public int getLineCount() {
@@ -314,7 +316,9 @@ public class ResourceFile {
     public int getLineState(int i) {
         if (defaultLanguage != null) {
             String comment = defaultLanguage.getLine(content.get(i)).getComment();
-            if (comment != null && comment.contains("NOI18N")) {
+            Pattern p = Pattern.compile("NOI18N$");
+
+            if (comment != null && p.matcher(comment).find()) {
                 // the line shall not be translated
                 return 1;
             } else {
