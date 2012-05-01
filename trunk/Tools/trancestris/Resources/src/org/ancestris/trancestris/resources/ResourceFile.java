@@ -20,6 +20,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.ancestris.trancestris.resources.ResourceItem.ResourceLine;
@@ -368,6 +369,8 @@ public class ResourceFile {
     }
 
     public String search(String expression, boolean fromLocale) {
+        Pattern p = Pattern.compile(expression);
+
         Iterator<ResourceLine> iterator = null;
         if (fromLocale == true) {
             iterator = fromLanguage.iterator();
@@ -378,7 +381,7 @@ public class ResourceFile {
         while (iterator.hasNext()) {
             ResourceLine resourceLine = iterator.next();
             String value = resourceLine.getValue();
-            if (value != null && value.matches(expression) == true) {
+            if (value != null && p.matcher(value).find() == true) {
                 return directoryPath;
             }
         }
