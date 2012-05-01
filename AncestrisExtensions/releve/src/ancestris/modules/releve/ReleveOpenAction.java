@@ -35,10 +35,10 @@ public final class ReleveOpenAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         // je cree le composant
         ReleveTopComponent component = new ReleveTopComponent();
-        Mode mode = WindowManager.getDefault().findMode("ancestris-output");
-        if (mode != null) {
-            mode.dockInto(component);
-        }
+//        Mode mode = WindowManager.getDefault().findMode("ancestris-output");
+//        if (mode != null) {
+//            mode.dockInto(component);
+//        }
         component.open();
         component.requestActive();
 
