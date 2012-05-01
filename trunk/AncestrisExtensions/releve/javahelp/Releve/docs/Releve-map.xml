@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
+<map version="2.0">
+    <mapID target="Releve.about" url="Releve-about.html"/>
+    <mapID target="Releve.editor" url="Releve-editor.html"/>
+    <mapID target="Releve.table" url="Releve-table.html"/>
+    <mapID target="Releve.config" url="Releve-config.html"/>
+    <mapID target="Releve.file" url="Releve-file.html"/>
+    <mapID target="Releve.fileAncestris" url="Releve-fileAncestris.html"/>
+    <mapID target="Releve.fileEgmt" url="Releve-fileEgmt.html"/>
+    <mapID target="Releve.fileNimegue" url="Releve-fileNimegue.html"/>
+</map>

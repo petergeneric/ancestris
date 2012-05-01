@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+    <tocitem text="Releve">
+        <tocitem text="About Releve" target="Releve.about"/>
+        <tocitem text="Les tables" target="Releve.table"/>
+        <tocitem text="L'editeur" target="Releve.editor"/>
+        <tocitem text="Configuration" target="Releve.config"/>
+           <tocitem text="Gestion des fichiers" target="Releve.file"/>
+           <tocitem text="Fichier ANCESTRIS" target="Releve.fileAncestris"/>
+           <tocitem text="Fichier EGMT" target="Releve.fileEgmt"/>
+           <tocitem text="Fichier NIMEGUE" target="Releve.fileNimegue"/>
+       
+    </tocitem>
+</toc>
