@@ -58,12 +58,6 @@ public class ZipExplorerSendTranslationPanel extends javax.swing.JPanel {
 
         mailToLabel.setText(org.openide.util.NbBundle.getMessage(ZipExplorerSendTranslationPanel.class, "ZipExplorerSendTranslationPanel.mailToLabel.text")); // NOI18N
 
-        emailFormattedTextField.setText(org.openide.util.NbBundle.getMessage(ZipExplorerSendTranslationPanel.class, "ZipExplorerSendTranslationPanel.emailFormattedTextField.text")); // NOI18N
-
-        nameFormattedTextField.setText(org.openide.util.NbBundle.getMessage(ZipExplorerSendTranslationPanel.class, "ZipExplorerSendTranslationPanel.nameFormattedTextField.text")); // NOI18N
-
-        subjectFormattedTextField.setText(org.openide.util.NbBundle.getMessage(ZipExplorerSendTranslationPanel.class, "ZipExplorerSendTranslationPanel.subjectFormattedTextField.text")); // NOI18N
-
         messageTextArea.setColumns(20);
         messageTextArea.setLineWrap(true);
         messageTextArea.setRows(5);

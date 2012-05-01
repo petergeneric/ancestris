@@ -97,9 +97,9 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldSMTPHost, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                            .addComponent(textFieldEmailAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                            .addComponent(textFieldName, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                            .addComponent(textFieldSMTPHost, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addComponent(textFieldEmailAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addComponent(textFieldName, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                             .addComponent(textFieldSMTPPort, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +149,7 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 451, Short.MAX_VALUE)
+            .addGap(0, 647, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -158,7 +158,7 @@ final class SendTranslationOptionPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 212, Short.MAX_VALUE)
+            .addGap(0, 272, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)

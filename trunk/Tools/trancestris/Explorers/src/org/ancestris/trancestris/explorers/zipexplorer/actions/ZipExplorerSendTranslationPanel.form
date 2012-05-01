@@ -126,31 +126,16 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="emailFormattedTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="ZipExplorerSendTranslationPanel.emailFormattedTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="nameFormattedTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="ZipExplorerSendTranslationPanel.nameFormattedTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="subjectFormattedTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="ZipExplorerSendTranslationPanel.subjectFormattedTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
