@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.modules.releve
+OpenIDE-Module-Layer: ancestris/modules/releve/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/releve/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager, org.netbeans.api.javahelp.Help
+OpenIDE-Module-Specification-Version: 1.0
+

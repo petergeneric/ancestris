@@ -1,0 +1,427 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr-fr"><head><title>Format des Fichiers EGMT</title>
+
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<link href="./ancestris.css" rel="stylesheet"></head>
+<body>
+<h2>Format des Fichiers EGMT</h2>
+Les quatre types de releves ont &nbsp;tous le même format. Les lignes sont contitutées de 44 champs séparés par
+des point-vigule.<br>A la lecture , certains champs&nbsp;sont ignorés à la lecture du fichier par Ancestris. <br><br>Astuce : &nbsp;Il est possible de créer un fichier au format EGMT avec
+un tableur&nbsp;pour, par exemple, réutiliser des données déjà saisie avec
+un tableur<br><ol><li>créer un tableau de 44 colonnes avec le tableur,</li><li>renseigner
+&nbsp;les&nbsp;colonnes en respectant la défintion ci-dessous. Il est
+possible de laisser des cellules vides excepté la première colonne.</li><li>enregistrer les données au format CSV ou TXT ( avec point virgule comme séparateur de cellule)</li></ol><br>
+<br>
+<table style="text-align: left;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<th><span style="font-weight: bold;">Colonne</span></th>
+<th style="text-align: center;">Naissance</th>
+<th style="text-align: center;">Mariage</th>
+<th style="text-align: center;">Décès</th>
+<th style="text-align: center; width: 153px;">Divers</th>
+<td style="text-align: center; width: 268px;"><span style="font-weight: bold;">Remarque</span></td>
+</tr>
+<tr>
+<td>EventType</td>
+<td style="text-align: center;">"naissance"</td>
+<td style="text-align: center;">"mariage"</td>
+<td style="text-align: center;">"décés"</td>
+<td style="width: 153px; text-align: center;">"contrat
+de mariage"<br>
+"testament"</td>
+<td style="width: 268px; text-align: left;">Type d'evenement (<span style="font-weight: bold;">obligatoire</span>)</td>
+</tr>
+<tr align="center">
+<td style="text-align: left;">CountyCode</td>
+<td style="width: 153px;" colspan="4" rowspan="1">x<br>
+</td>
+<td style="width: 268px; text-align: left;">numéro
+de département</td>
+</tr>
+<tr align="center">
+<td style="text-align: left;">CityName</td>
+<td style="width: 153px;" colspan="4" rowspan="1">x<br>
+</td>
+<td style="width: 268px; text-align: left;">nom de
+la commune</td>
+</tr>
+<tr align="center">
+<td style="text-align: left;">ParishName</td>
+<td style="width: 153px;" colspan="4" rowspan="1">x<br>
+</td>
+<td style="width: 268px; text-align: left;">nom de
+la paroisse s'il en a plusieurs dans la commune</td>
+</tr>
+<tr align="center">
+<td style="text-align: left;">NotaryName</td>
+<td colspan="1" rowspan="1">ignoré<br>
+</td>
+<td colspan="1">ignoré</td>
+<td colspan="1">ignoré</td>
+<td style="width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Cote</td>
+<td colspan="4" rowspan="1" style="text-align: center;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>PhotoNo</td>
+<td colspan="4" rowspan="1" style="text-align: center;">x</td>
+<td style="text-align: left;">numéro de photo</td>
+</tr>
+<tr>
+<td>Day</td>
+<td colspan="4" rowspan="1" style="text-align: center;">x</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left;">Month</td>
+<td colspan="4" rowspan="1">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left;">Year</td>
+<td colspan="4" rowspan="1">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left;"></td>
+<td colspan="4" rowspan="1"><br>
+</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">IndiLastName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">IndiFirstName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">IndiSex</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">IndiAge</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">IndiPlace</td>
+<td style="text-align: center;">ignoré
+</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">IndiComment</td>
+<td style="text-align: center;">x<br>
+</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Ecriture
+: ancestris ajoute la date de niassance, la profession et les
+informations sur l'ex conjoint ( pour un releve de mariage, deces ou
+divers)&nbsp;</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center; width: 153px;"></td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>IndiFatherFirstName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Lecture
+: Ancestris utilise le même nom que &nbsp;le fils (IndiLastName)</td>
+</tr>
+<tr>
+<td>IndiFatherDead</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>IndiFatherComment</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Ecriture
+: ancestris ajoute la profession&nbsp;</td>
+</tr>
+<tr>
+<td>IndiMotherLastName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>IndiMotherFirstName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>IndiMotherDead</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>IndiMotherComment</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Ecriture
+: ancestris ajoute la profession</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center; width: 153px;"></td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeLastName</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeFirstName</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeDead</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeAge</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifePlace</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeComment</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Ecriture
+: ancestris ajoutela date de naissance,&nbsp; la profession et les
+informations sur l'ex conjoint ( pour un releve de mariage, deces ou
+divers)&nbsp;</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center; width: 153px;"></td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeFatherFirstName</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Lecture
+: Ancestris utilise le même nom que &nbsp;la fille (WifeLastName) </td>
+</tr>
+<tr>
+<td>WifeFatherDead</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeFatherComment</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeMotherLastName</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeMotherFirstName</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeMotherDead</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>WifeMotherComment</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center; width: 153px;"></td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>Heirs</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center;">ignoré</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">héritiers <br>Lecture
+: Ancestris ajoute ce champ dans le commentaire général (GeneralComment)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="width: 153px;"></td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>Witness1LastName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">témoin
+n°1 ou parrain</td>
+</tr>
+<tr>
+<td>Witness1FirstName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>Witness1Comment</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>Witness2LastName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">témoin
+N°2 ou marraine</td>
+</tr>
+<tr>
+<td>Witness2FirstName</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>Witness2Comment</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;"></td>
+</tr>
+<tr>
+<td>GeneralComment</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center; width: 153px;">x</td>
+<td style="width: 268px; text-align: left;">Ecriture
+: ancestris ajoute les 3ieme et 4ieme témoins&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+</body></html>

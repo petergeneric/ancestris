@@ -1,0 +1,587 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr-fr"><head><title>Format des Fichiers&nbsp;NIMEGUEV3</title>
+
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<link href="./ancestris.css" rel="stylesheet"></head>
+<body>
+<h2>Format des Fichiers&nbsp;NIMEGUEV3</h2>
+
+Les quatre types de releves ont des formats différents. <br><br><ul><li>Les lignes des naissances contiennent 30 colonnes</li><li>Les lignes des mariages contiennent 60&nbsp;colonnes</li><li>Les lignes des décès contiennent 38&nbsp;colonnes.</li><li>Les lignes des actes divers&nbsp; contiennent 64&nbsp;colonnes</li></ul><br>Les champs sont séparés par un point-vigule. Le dernier champ de la ligne est toujours suivi d'un point-virgule.<br>Les lignes sont séparées par &nbsp;2 caractères x0A x0D<br><br>
+<br>
+<br>
+<table style="text-align: left; height: 1808px; width: 971px;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<th style="width: 173px;"><span style="font-weight: bold;">Colonne</span></th>
+<th style="text-align: center; width: 86px;">Naissance</th>
+<th style="text-align: center; width: 82px;">Mariage</th>
+<th style="text-align: center; width: 76px;">Décès</th>
+<th style="text-align: center; width: 83px;">Divers</th>
+<td style="text-align: center; width: 233px;"><span style="font-weight: bold;">Description</span></td><td style="width: 194px;"><span style="font-weight: bold;">Import dans Ancestris</span></td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">"NIMEGUEV3"</td>
+<td style="width: 83px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
+<td style="width: 233px;"><span style="font-weight: bold;">obligatoire</span></td><td style="width: 194px;">ne doit pas être vide</td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">CityCode</td>
+<td style="width: 83px;" colspan="1" rowspan="1">x <br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
+<td style="width: 233px;"></td><td style="width: 194px;">ignoré</td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">CityName</td>
+<td style="width: 83px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
+<td style="width: 233px;"></td><td style="width: 194px;">ne doit pas être vide</td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">CountyCode</td>
+<td style="width: 83px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
+<td style="width: 233px;"></td><td style="width: 194px;">utilisé si CountyName est vide</td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">CountyName</td>
+<td style="width: 83px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">EventType</td>
+<td style="text-align: center; width: 86px;">"N"</td>
+<td style="text-align: center; width: 82px;">"M"</td>
+<td style="text-align: center; width: 76px;">"D"</td>
+<td style="text-align: center; width: 83px;">"V"</td>
+<td style="width: 233px; text-align: center; font-weight: bold;">obligatoire</td><td style="width: 194px;">ne doit pas être vide</td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">Date</td>
+<td style="width: 86px;" colspan="1" rowspan="1">x<br>
+</td>
+<td style="width: 82px;" colspan="1">x</td>
+<td style="width: 76px;" colspan="1">x</td>
+<td style="width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">IncompletDate</td>
+<td style="width: 86px;" colspan="1" rowspan="1">x<br>
+</td>
+<td style="width: 82px;" colspan="1">x</td>
+<td style="width: 76px;" colspan="1">x</td>
+<td style="width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">Cote</td>
+<td style="width: 86px;" colspan="1" rowspan="1">x<br>
+</td>
+<td style="width: 82px;" colspan="1">x</td>
+<td style="width: 76px;" colspan="1">x</td>
+<td style="width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;">Freecomment</td>
+<td style="width: 86px;" colspan="1" rowspan="1">x<br>
+</td>
+<td style="width: 82px;" colspan="1">x</td>
+<td style="width: 76px;" colspan="1">x</td>
+<td style="width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">EventTypeName</td>
+<td style="width: 86px;"></td>
+<td style="width: 82px;"></td>
+<td style="width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">EventTypeTag</td>
+<td style="width: 86px;"></td>
+<td style="width: 82px;"></td>
+<td style="width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr align="center">
+<td style="text-align: left; width: 173px;"></td>
+<td style="width: 86px;" colspan="1" rowspan="1"><br>
+</td>
+<td style="width: 82px;" colspan="1"></td>
+<td style="width: 76px;" colspan="1"></td>
+<td style="width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiLastName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiFirstName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiSex</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiPlace</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiBirthDate</td>
+<td style="text-align: center; width: 86px;"><br>
+</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiAge</td>
+<td style="text-align: center; width: 86px;"><br>
+</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiComment</td>
+<td style="text-align: center; width: 86px;">x<br>
+</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;">IndiOccupation</td>
+<td style="text-align: center; width: 86px;"> </td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="text-align: left; width: 173px;"></td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiMarriedLastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x<br>
+</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;">ex conjoint</td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiMarriedFirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x<br>
+</td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiMarriedComment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x<br>
+</td>
+<td style="text-align: center; width: 76px;">&nbsp;</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;"></td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiFatherLastName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiFatherFirstName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiFatherComment</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiFatherOccupation</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
+<td style="width: 173px;">IndiMotherLastName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiMotherFirstName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiMotherComment</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">IndiMotherOccupation</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;"></td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeLastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeFirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeSex</td>
+<td style="width: 86px;"></td>
+<td style="width: 82px;"></td>
+<td style="width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifePlace</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeBirthDate</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeAge</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeComment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeOccupation</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;"></td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeMarriedLastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;">ex conjoint</td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeMarriedFirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeMarriedComment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;"></td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeFatherLastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeFatherFirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeFatherComment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeFatherOccupation</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr>
+<td style="width: 173px;">WifeMotherLastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeMotherFirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeMotherComment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">WifeMotherOccupation</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;"></td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;"></td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;"></td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness1LastName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;">témoin n°1 ou parrain</td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness1FirstName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness1Comment</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness2LastName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;">témoin n°2 ou marraine</td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness2FirstName</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness2Comment</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness3LastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness3FirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness3Comment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness4LastName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness4FirstName</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">Witness4Comment</td>
+<td style="text-align: center; width: 86px;"></td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;"></td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr>
+<tr>
+<td style="width: 173px;">GeneralComment</td>
+<td style="text-align: center; width: 86px;">x</td>
+<td style="text-align: center; width: 82px;">x</td>
+<td style="text-align: center; width: 76px;">x</td>
+<td style="text-align: center; width: 83px;">x</td>
+<td style="width: 233px;"></td><td style="width: 194px;"></td>
+</tr><tr><td style="width: 173px;">RecordNo</td><td style="text-align: center; width: 86px;">x</td><td style="text-align: center; width: 82px;">x</td><td style="text-align: center; width: 76px;">x</td><td style="text-align: center; width: 83px;">x</td><td style="width: 233px;">numéro de relevé</td><td style="width: 194px;"></td></tr>
+</tbody>
+</table>
+<p>
+</p>
+</body></html>
