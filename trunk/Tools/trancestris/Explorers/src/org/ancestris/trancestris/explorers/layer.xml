@@ -3,7 +3,6 @@
 <filesystem>
     <attr name="Toolbars\File\org-openide-actions-SaveAllAction.shadow_hidden\position" intvalue="500"/>
     <folder name="Actions">
-        <file name="Edit_hidden"/>
         <folder name="File">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSaveAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerSaveAction"/>
@@ -31,6 +30,7 @@
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerSearchAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ZipExplorerSearchAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/search-icon.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -50,6 +50,14 @@
                 <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.instance"/>
                 <attr name="position" intvalue="2050"/>
             </file>
+            <file name="org-openide-actions-CopyAction.shadow_hidden"/>
+            <file name="org-openide-actions-CutAction.shadow_hidden"/>
+            <file name="org-openide-actions-DeleteAction.shadow_hidden"/>
+            <file name="org-openide-actions-FindAction.shadow_hidden"/>
+            <file name="org-openide-actions-PasteAction.shadow_hidden"/>
+            <file name="org-openide-actions-RedoAction.shadow_hidden"/>
+            <file name="org-openide-actions-ReplaceAction.shadow_hidden"/>
+            <file name="org-openide-actions-UndoAction.shadow_hidden"/>
         </folder>
         <folder name="File">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
@@ -87,6 +95,13 @@
                 <attr name="position" intvalue="110"/>
             </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+        </folder>
+        <folder name="Edit">
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSearchAction.instance"/>
+                <attr name="position" intvalue="110"/>
+            </file>
         </folder>
         <folder name="Mail">
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-SaveTranslationAction.shadow">
