@@ -84,8 +84,8 @@ public class ZipArchive implements PropertyChangeListener {
         return change;
     }
 
-    public  List<String> search (String expression, boolean fromLocale) {
-        return root.search (expression, fromLocale);
+    public  List<String> search (String expression, boolean fromLocale, boolean caseSensitive) {
+        return root.search (expression, fromLocale, caseSensitive);
     }
     
     public ZipDirectory getRoot() {
