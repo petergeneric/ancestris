@@ -209,7 +209,7 @@ public class ResourceFile {
                 ResourceItem.ResourceLine line = it.next();
                 if (line.getValue() != null && !line.getValue().isEmpty()) {
                     String comment = line.getComment();
-                    if (comment != null &&  p.matcher(comment).find()) {
+                    if (comment != null && p.matcher(comment).find()) {
                         not_translated = Math.max(0, not_translated - 1);
                     } else if (toLanguage.getLine(line.getKey()) != null) {
                         not_translated = Math.max(0, not_translated - 1);
@@ -372,9 +372,14 @@ public class ResourceFile {
         }
     }
 
-    public String search(String expression, boolean fromLocale) {
-        Pattern p = Pattern.compile(expression);
+    public String search(String expression, boolean fromLocale, boolean caseSensitive) {
+        Pattern p = null;
+        if (caseSensitive == false) {
+            p = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        } else {
+            p = Pattern.compile(expression);
 
+        }
         Iterator<ResourceLine> iterator = null;
         if (fromLocale == true) {
             iterator = fromLanguage.iterator();
