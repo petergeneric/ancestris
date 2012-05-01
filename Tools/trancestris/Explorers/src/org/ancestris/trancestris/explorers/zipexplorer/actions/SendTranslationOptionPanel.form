@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="451" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="647" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -28,7 +28,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="212" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="272" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -59,9 +59,9 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="textFieldSMTPHost" alignment="0" pref="267" max="32767" attributes="0"/>
-                              <Component id="textFieldEmailAddress" alignment="0" pref="267" max="32767" attributes="1"/>
-                              <Component id="textFieldName" alignment="0" pref="267" max="32767" attributes="1"/>
+                              <Component id="textFieldSMTPHost" alignment="0" pref="318" max="32767" attributes="0"/>
+                              <Component id="textFieldEmailAddress" alignment="0" pref="318" max="32767" attributes="1"/>
+                              <Component id="textFieldName" alignment="0" pref="318" max="32767" attributes="1"/>
                               <Component id="textFieldSMTPPort" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -134,7 +134,7 @@
         <Component class="javax.swing.JFormattedTextField" name="textFieldSMTPHost">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/ancestris/trancestris/sendtranslation/Bundle.properties" key="SendTranslationOptionPanel.textFieldSMTPHost.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="SendTranslationOptionPanel.textFieldSMTPHost.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -151,7 +151,7 @@
         <Component class="javax.swing.JFormattedTextField" name="textFieldName">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/ancestris/trancestris/sendtranslation/Bundle.properties" key="SendTranslationOptionPanel.textFieldName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="SendTranslationOptionPanel.textFieldName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -161,7 +161,7 @@
         <Component class="javax.swing.JFormattedTextField" name="textFieldEmailAddress">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/ancestris/trancestris/sendtranslation/Bundle.properties" key="SendTranslationOptionPanel.textFieldEmailAddress.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="SendTranslationOptionPanel.textFieldEmailAddress.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -185,7 +185,7 @@
         <Component class="javax.swing.JTextField" name="textFieldSMTPPort">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/ancestris/trancestris/sendtranslation/Bundle.properties" key="SendTranslationOptionPanel.textFieldSMTPPort.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="SendTranslationOptionPanel.textFieldSMTPPort.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
         </Component>
@@ -211,7 +211,7 @@
         <Component class="javax.swing.JTextField" name="textFieldLoginName">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/ancestris/trancestris/sendtranslation/Bundle.properties" key="SendTranslationOptionPanel.textFieldLoginName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="SendTranslationOptionPanel.textFieldLoginName.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -227,7 +227,7 @@
         <Component class="javax.swing.JPasswordField" name="passwordField">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="org/ancestris/trancestris/sendtranslation/Bundle.properties" key="SendTranslationOptionPanel.passwordField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="org/ancestris/trancestris/explorers/zipexplorer/actions/Bundle.properties" key="SendTranslationOptionPanel.passwordField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
