@@ -19,7 +19,7 @@ import java.io.FileWriter;
  */
 public class ReleveFileNimegue {
 
-    final static private String fieldSeparator = ";";
+    final static private char fieldSeparator = ';';
     final static private String fileSignature = "NIMEGUEV3";
 
     public static boolean isValidFile(String strLine ) {
@@ -37,7 +37,7 @@ public class ReleveFileNimegue {
      * @return fields[] ou null si la ligne n'est pas valide
      */
     private static String[] splitLine(String strLine, int lineNo)throws Exception  {
-        String[] fields = strLine.split(fieldSeparator, 100);
+        String[] fields = strLine.split(String.valueOf(fieldSeparator), 100);
         // nombre de champs +1 car NIMEGUE ajout un point virgule apres le dernier champ
 
         if (fields.length >= BirthField.typeActe.ordinal()) {
@@ -543,7 +543,7 @@ public class ReleveFileNimegue {
                         fileBuffer.append(fields[BirthField.typeActe.ordinal()]).append("\n");
                     }
                 } catch (Exception e) {
-                    fileBuffer.append("Line ").append(lineNumber).append(": ").append(e.toString()).append("\n");;
+                    fileBuffer.append("Line ").append(lineNumber).append(": ").append(e.toString()).append("\n");
                     fileBuffer.append(strLine).append("\n");
                     e.printStackTrace();
                 }
@@ -586,280 +586,280 @@ public class ReleveFileNimegue {
                 Record record = recordModel.getRecord(index);
                 try {
                     if ( record instanceof RecordBirth ) {
-                        line.appendSep("NIMEGUEV3");
-                        line.appendSep(dataManager.getCityCode());
-                        line.appendSep(dataManager.getCityName());
-                        line.appendSep(dataManager.getCountryName());
-                        line.appendSep(dataManager.getCountyName());
-                        line.appendSep("N");
-                        line.appendSep(record.getEventDateString());
-                        line.appendSep("");
-                        line.appendSep(record.getCote());
-                        line.appendSep(record.getFreeComment());
-                        line.appendSep(record.getIndiLastName().toString());
-                        line.appendSep(record.getIndiFirstName().toString());
-                        line.appendSep(record.getIndiSex());
-                        line.appendSep(record.getIndiComment());
+                        line.appendNimegueFn("NIMEGUEV3");
+                        line.appendNimegueFn(dataManager.getCityCode());
+                        line.appendNimegueFn(dataManager.getCityName());
+                        line.appendNimegueFn(dataManager.getCountryName());
+                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn("N");
+                        line.appendNimegueFn(record.getEventDateString());
+                        line.appendNimegueFn("");
+                        line.appendNimegueFn(record.getCote());
+                        line.appendNimegueFn(record.getFreeComment());
+                        line.appendNimegueFn(record.getIndiLastName().toString());
+                        line.appendNimegueFn(record.getIndiFirstName().toString());
+                        line.appendNimegueFn(record.getIndiSex());
+                        line.appendNimegueFn(record.getIndiComment());
 
-                        line.appendSep(record.getIndiFatherLastName().toString());
-                        line.appendSep(record.getIndiFatherFirstName().toString());
-                        line.appendSep(record.getIndiFatherComment());
-                        line.appendSep(record.getIndiFatherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiFatherLastName().toString());
+                        line.appendNimegueFn(record.getIndiFatherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiFatherComment());
+                        line.appendNimegueFn(record.getIndiFatherOccupation().toString());
 
-                        line.appendSep(record.getIndiMotherLastName().toString());
-                        line.appendSep(record.getIndiMotherFirstName().toString());
-                        line.appendSep(record.getIndiMotherComment());
-                        line.appendSep(record.getIndiMotherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiMotherLastName().toString());
+                        line.appendNimegueFn(record.getIndiMotherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMotherComment());
+                        line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
-                        line.appendSep(record.getWitness1LastName().toString());
-                        line.appendSep(record.getWitness1FirstName().toString());
-                        line.appendSep(record.getWitness1Comment(),
+                        line.appendNimegueFn(record.getWitness1LastName().toString());
+                        line.appendNimegueFn(record.getWitness1FirstName().toString());
+                        line.appendNimegueFn(record.getWitness1Comment(),
                             record.getWitness1Occupation().toString() );
 
-                        line.appendSep(record.getWitness2LastName().toString());
-                        line.appendSep(record.getWitness2FirstName().toString());
-                        line.appendSep(record.getWitness2Comment(),
+                        line.appendNimegueFn(record.getWitness2LastName().toString());
+                        line.appendNimegueFn(record.getWitness2FirstName().toString());
+                        line.appendNimegueFn(record.getWitness2Comment(),
                             record.getWitness2Occupation().toString() );
 
-                        line.appendSep(record.getGeneralComment());
-                        line.appendSep(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(record.getGeneralComment());
+                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
 
                     } if ( record instanceof RecordMarriage ) {
 
-                        line.appendSep("NIMEGUEV3");
-                        line.appendSep(dataManager.getCityCode());
-                        line.appendSep(dataManager.getCityName());
-                        line.appendSep(dataManager.getCountryName());
-                        line.appendSep(dataManager.getCountyName());
-                        line.appendSep("M");
-                        line.appendSep(record.getEventDateString());
-                        line.appendSep("");
-                        line.appendSep(record.getCote());
-                        line.appendSep(record.getFreeComment());
+                        line.appendNimegueFn("NIMEGUEV3");
+                        line.appendNimegueFn(dataManager.getCityCode());
+                        line.appendNimegueFn(dataManager.getCityName());
+                        line.appendNimegueFn(dataManager.getCountryName());
+                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn("M");
+                        line.appendNimegueFn(record.getEventDateString());
+                        line.appendNimegueFn("");
+                        line.appendNimegueFn(record.getCote());
+                        line.appendNimegueFn(record.getFreeComment());
 
-                        line.appendSep(record.getIndiLastName().getValue());
-                        line.appendSep(record.getIndiFirstName().getValue());
-                        line.appendSep(record.getIndiPlace().toString());
+                        line.appendNimegueFn(record.getIndiLastName().getValue());
+                        line.appendNimegueFn(record.getIndiFirstName().getValue());
+                        line.appendNimegueFn(record.getIndiPlace().toString());
                         if (record.getIndiBirthDate().trim().equals("")) {
-                            line.appendSep("          ");
+                            line.appendNimegueFn("          ");
                         } else {
-                            line.appendSep(record.getIndiBirthDate());
+                            line.appendNimegueFn(record.getIndiBirthDate());
                         }
-                        line.appendSep(record.getIndiAge());
-                        line.appendSep(record.getIndiComment());
-                        line.appendSep(record.getIndiOccupation().toString());
+                        line.appendNimegueFn(record.getIndiAge());
+                        line.appendNimegueFn(record.getIndiComment());
+                        line.appendNimegueFn(record.getIndiOccupation().toString());
 
-                        line.appendSep(record.getIndiMarriedLastName().toString());
-                        line.appendSep(record.getIndiMarriedFirstName().toString());
-                        line.appendSep(record.getIndiMarriedComment());
+                        line.appendNimegueFn(record.getIndiMarriedLastName().toString());
+                        line.appendNimegueFn(record.getIndiMarriedFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMarriedComment());
 
-                        line.appendSep(record.getIndiFatherLastName().toString());
-                        line.appendSep(record.getIndiFatherFirstName().toString());
-                        line.appendSep(record.getIndiFatherComment());
-                        line.appendSep(record.getIndiFatherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiFatherLastName().toString());
+                        line.appendNimegueFn(record.getIndiFatherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiFatherComment());
+                        line.appendNimegueFn(record.getIndiFatherOccupation().toString());
 
-                        line.appendSep(record.getIndiMotherLastName().toString());
-                        line.appendSep(record.getIndiMotherFirstName().toString());
-                        line.appendSep(record.getIndiMotherComment());
-                        line.appendSep(record.getIndiMotherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiMotherLastName().toString());
+                        line.appendNimegueFn(record.getIndiMotherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMotherComment());
+                        line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
-                        line.appendSep(record.getWifeLastName().toString());
-                        line.appendSep(record.getWifeFirstName().toString());
-                        line.appendSep(record.getWifePlace().toString());
+                        line.appendNimegueFn(record.getWifeLastName().toString());
+                        line.appendNimegueFn(record.getWifeFirstName().toString());
+                        line.appendNimegueFn(record.getWifePlace().toString());
                         if (record.getWifeBirthDate().trim().equals("")){
-                            line.appendSep("          ");
+                            line.appendNimegueFn("          ");
                         } else {
-                            line.appendSep(record.getWifeBirthDate());
+                            line.appendNimegueFn(record.getWifeBirthDate());
                         }
-                        line.appendSep(record.getWifeAge());
-                        line.appendSep(record.getWifeComment());
-                        line.appendSep(record.getWifeOccupation().toString());
+                        line.appendNimegueFn(record.getWifeAge());
+                        line.appendNimegueFn(record.getWifeComment());
+                        line.appendNimegueFn(record.getWifeOccupation().toString());
 
-                        line.appendSep(record.getWifeMarriedLastName().toString());
-                        line.appendSep(record.getWifeMarriedFirstName().toString());
-                        line.appendSep(record.getWifeMarriedComment());
+                        line.appendNimegueFn(record.getWifeMarriedLastName().toString());
+                        line.appendNimegueFn(record.getWifeMarriedFirstName().toString());
+                        line.appendNimegueFn(record.getWifeMarriedComment());
 
-                        line.appendSep(record.getWifeFatherLastName().toString());
-                        line.appendSep(record.getWifeFatherFirstName().toString());
-                        line.appendSep(record.getWifeFatherComment());
-                        line.appendSep(record.getWifeFatherOccupation().toString());
+                        line.appendNimegueFn(record.getWifeFatherLastName().toString());
+                        line.appendNimegueFn(record.getWifeFatherFirstName().toString());
+                        line.appendNimegueFn(record.getWifeFatherComment());
+                        line.appendNimegueFn(record.getWifeFatherOccupation().toString());
 
-                        line.appendSep(record.getWifeMotherLastName().toString());
-                        line.appendSep(record.getWifeMotherFirstName().toString());
-                        line.appendSep(record.getWifeMotherComment());
-                        line.appendSep(record.getWifeMotherOccupation().toString());
+                        line.appendNimegueFn(record.getWifeMotherLastName().toString());
+                        line.appendNimegueFn(record.getWifeMotherFirstName().toString());
+                        line.appendNimegueFn(record.getWifeMotherComment());
+                        line.appendNimegueFn(record.getWifeMotherOccupation().toString());
 
-                        line.appendSep(record.getWitness1LastName().toString());
-                        line.appendSep(record.getWitness1FirstName().toString());
-                        line.appendSep(record.getWitness1Comment(),
+                        line.appendNimegueFn(record.getWitness1LastName().toString());
+                        line.appendNimegueFn(record.getWitness1FirstName().toString());
+                        line.appendNimegueFn(record.getWitness1Comment(),
                             record.getWitness1Occupation().toString() );
 
-                        line.appendSep(record.getWitness2LastName().toString());
-                        line.appendSep(record.getWitness2FirstName().toString());
-                        line.appendSep(record.getWitness2Comment(),
+                        line.appendNimegueFn(record.getWitness2LastName().toString());
+                        line.appendNimegueFn(record.getWitness2FirstName().toString());
+                        line.appendNimegueFn(record.getWitness2Comment(),
                             record.getWitness2Occupation().toString() );
 
-                        line.appendSep(record.getWitness3LastName().toString());
-                        line.appendSep(record.getWitness3FirstName().toString());
-                        line.appendSep(record.getWitness3Comment(),
+                        line.appendNimegueFn(record.getWitness3LastName().toString());
+                        line.appendNimegueFn(record.getWitness3FirstName().toString());
+                        line.appendNimegueFn(record.getWitness3Comment(),
                             record.getWitness3Occupation().toString() );
 
-                        line.appendSep(record.getWitness4LastName().toString());
-                        line.appendSep(record.getWitness4FirstName().toString());
-                        line.appendSep(record.getWitness4Comment(),
+                        line.appendNimegueFn(record.getWitness4LastName().toString());
+                        line.appendNimegueFn(record.getWitness4FirstName().toString());
+                        line.appendNimegueFn(record.getWitness4Comment(),
                             record.getWitness4Occupation().toString() );
 
-                        line.appendSep(record.getGeneralComment());
-                        line.appendSep(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(record.getGeneralComment());
+                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordDeath ) {
 
-                        line.appendSep("NIMEGUEV3");
-                        line.appendSep(dataManager.getCityCode());
-                        line.appendSep(dataManager.getCityName());
-                        line.appendSep(dataManager.getCountryName());
-                        line.appendSep(dataManager.getCountyName());
-                        line.appendSep("D");
-                        line.appendSep(record.getEventDateString());
-                        line.appendSep("");
-                        line.appendSep(record.getCote());
-                        line.appendSep(record.getFreeComment());
+                        line.appendNimegueFn("NIMEGUEV3");
+                        line.appendNimegueFn(dataManager.getCityCode());
+                        line.appendNimegueFn(dataManager.getCityName());
+                        line.appendNimegueFn(dataManager.getCountryName());
+                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn("D");
+                        line.appendNimegueFn(record.getEventDateString());
+                        line.appendNimegueFn("");
+                        line.appendNimegueFn(record.getCote());
+                        line.appendNimegueFn(record.getFreeComment());
 
-                        line.appendSep(record.getIndiLastName().getValue());
-                        line.appendSep(record.getIndiFirstName().getValue());
-                        line.appendSep(record.getIndiPlace().toString());
+                        line.appendNimegueFn(record.getIndiLastName().getValue());
+                        line.appendNimegueFn(record.getIndiFirstName().getValue());
+                        line.appendNimegueFn(record.getIndiPlace().toString());
                         if (record.getIndiBirthDate().trim().equals("")){
-                            line.appendSep("          ");
+                            line.appendNimegueFn("          ");
                         } else {
-                            line.appendSep(record.getIndiBirthDate());
+                            line.appendNimegueFn(record.getIndiBirthDate());
                         }
-                        line.appendSep(record.getIndiSex());
-                        line.appendSep(record.getIndiAge());
-                        line.appendSep(record.getIndiComment());
-                        line.appendSep(record.getIndiOccupation().toString());
+                        line.appendNimegueFn(record.getIndiSex());
+                        line.appendNimegueFn(record.getIndiAge());
+                        line.appendNimegueFn(record.getIndiComment());
+                        line.appendNimegueFn(record.getIndiOccupation().toString());
 
-                        line.appendSep(record.getIndiMarriedLastName().toString());
-                        line.appendSep(record.getIndiMarriedFirstName().toString());
-                        line.appendSep(record.getIndiMarriedComment());
-                        line.appendSep(record.getIndiMarriedOccupation().toString());
+                        line.appendNimegueFn(record.getIndiMarriedLastName().toString());
+                        line.appendNimegueFn(record.getIndiMarriedFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMarriedComment());
+                        line.appendNimegueFn(record.getIndiMarriedOccupation().toString());
 
-                        line.appendSep(record.getIndiFatherLastName().toString());
-                        line.appendSep(record.getIndiFatherFirstName().toString());
-                        line.appendSep(record.getIndiFatherComment());
-                        line.appendSep(record.getIndiFatherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiFatherLastName().toString());
+                        line.appendNimegueFn(record.getIndiFatherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiFatherComment());
+                        line.appendNimegueFn(record.getIndiFatherOccupation().toString());
 
-                        line.appendSep(record.getIndiMotherLastName().toString());
-                        line.appendSep(record.getIndiMotherFirstName().toString());
-                        line.appendSep(record.getIndiMotherComment());
-                        line.appendSep(record.getIndiMotherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiMotherLastName().toString());
+                        line.appendNimegueFn(record.getIndiMotherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMotherComment());
+                        line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
-                        line.appendSep(record.getWitness1LastName().toString());
-                        line.appendSep(record.getWitness1FirstName().toString());
-                        line.appendSep(record.getWitness1Comment(),
+                        line.appendNimegueFn(record.getWitness1LastName().toString());
+                        line.appendNimegueFn(record.getWitness1FirstName().toString());
+                        line.appendNimegueFn(record.getWitness1Comment(),
                             record.getWitness1Occupation().toString() );
 
-                        line.appendSep(record.getWitness2LastName().toString());
-                        line.appendSep(record.getWitness2FirstName().toString());
-                        line.appendSep(record.getWitness2Comment(),
+                        line.appendNimegueFn(record.getWitness2LastName().toString());
+                        line.appendNimegueFn(record.getWitness2FirstName().toString());
+                        line.appendNimegueFn(record.getWitness2Comment(),
                             record.getWitness2Occupation().toString() );
 
-                        line.appendSep(record.getGeneralComment());
-                        line.appendSep(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(record.getGeneralComment());
+                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
 
                     } else if ( record instanceof RecordMisc ) {
 
-                        line.appendSep("NIMEGUEV3");
-                        line.appendSep(dataManager.getCityCode());
-                        line.appendSep(dataManager.getCityName());
-                        line.appendSep(dataManager.getCountryName());
-                        line.appendSep(dataManager.getCountyName());
-                        line.appendSep("V");
-                        line.appendSep(record.getEventDateString());
-                        line.appendSep("");
-                        line.appendSep(record.getCote());
-                        line.appendSep(record.getFreeComment());
+                        line.appendNimegueFn("NIMEGUEV3");
+                        line.appendNimegueFn(dataManager.getCityCode());
+                        line.appendNimegueFn(dataManager.getCityName());
+                        line.appendNimegueFn(dataManager.getCountryName());
+                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn("V");
+                        line.appendNimegueFn(record.getEventDateString());
+                        line.appendNimegueFn("");
+                        line.appendNimegueFn(record.getCote());
+                        line.appendNimegueFn(record.getFreeComment());
 
-                        line.appendSep(record.getEventType().getName());
-                        line.appendSep(record.getEventType().getTag());
+                        line.appendNimegueFn(record.getEventType().getName());
+                        line.appendNimegueFn(record.getEventType().getTag());
 
-                        line.appendSep(record.getIndiLastName().getValue());
-                        line.appendSep(record.getIndiFirstName().getValue());
-                        line.appendSep(record.getIndiSex());
-                        line.appendSep(record.getIndiPlace().toString());
+                        line.appendNimegueFn(record.getIndiLastName().getValue());
+                        line.appendNimegueFn(record.getIndiFirstName().getValue());
+                        line.appendNimegueFn(record.getIndiSex());
+                        line.appendNimegueFn(record.getIndiPlace().toString());
                         if (record.getIndiBirthDate().trim().equals("")) {
-                            line.appendSep("          ");
+                            line.appendNimegueFn("          ");
                         } else {
-                            line.appendSep(record.getIndiBirthDate());
+                            line.appendNimegueFn(record.getIndiBirthDate());
                         }
-                        line.appendSep(record.getIndiAge());
-                        line.appendSep(record.getIndiComment());
-                        line.appendSep(record.getIndiOccupation().toString());
+                        line.appendNimegueFn(record.getIndiAge());
+                        line.appendNimegueFn(record.getIndiComment());
+                        line.appendNimegueFn(record.getIndiOccupation().toString());
 
-                        line.appendSep(record.getIndiMarriedLastName().toString());
-                        line.appendSep(record.getIndiMarriedFirstName().toString());
-                        line.appendSep(record.getIndiMarriedComment());
+                        line.appendNimegueFn(record.getIndiMarriedLastName().toString());
+                        line.appendNimegueFn(record.getIndiMarriedFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMarriedComment());
 
-                        line.appendSep(record.getIndiFatherLastName().toString());
-                        line.appendSep(record.getIndiFatherFirstName().toString());
-                        line.appendSep(record.getIndiFatherComment());
-                        line.appendSep(record.getIndiFatherOccupation().toString());
-                        line.appendSep(record.getIndiMotherLastName().toString());
-                        line.appendSep(record.getIndiMotherFirstName().toString());
-                        line.appendSep(record.getIndiMotherComment());
-                        line.appendSep(record.getIndiMotherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiFatherLastName().toString());
+                        line.appendNimegueFn(record.getIndiFatherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiFatherComment());
+                        line.appendNimegueFn(record.getIndiFatherOccupation().toString());
+                        line.appendNimegueFn(record.getIndiMotherLastName().toString());
+                        line.appendNimegueFn(record.getIndiMotherFirstName().toString());
+                        line.appendNimegueFn(record.getIndiMotherComment());
+                        line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
-                        line.appendSep(record.getWifeLastName().toString());
-                        line.appendSep(record.getWifeFirstName().toString());
-                        line.appendSep(record.getWifeSex());
-                        line.appendSep(record.getWifePlace().toString());
+                        line.appendNimegueFn(record.getWifeLastName().toString());
+                        line.appendNimegueFn(record.getWifeFirstName().toString());
+                        line.appendNimegueFn(record.getWifeSex());
+                        line.appendNimegueFn(record.getWifePlace().toString());
                         if (record.getWifeBirthDate().trim().equals("")){
-                            line.appendSep("          ");
+                            line.appendNimegueFn("          ");
                         } else {
-                            line.appendSep(record.getWifeBirthDate());
+                            line.appendNimegueFn(record.getWifeBirthDate());
                         }
-                        line.appendSep(record.getWifeAge());
-                        line.appendSep(record.getWifeComment());
-                        line.appendSep(record.getWifeOccupation().toString());
+                        line.appendNimegueFn(record.getWifeAge());
+                        line.appendNimegueFn(record.getWifeComment());
+                        line.appendNimegueFn(record.getWifeOccupation().toString());
 
-                        line.appendSep(record.getWifeMarriedLastName().toString());
-                        line.appendSep(record.getWifeMarriedFirstName().toString());
-                        line.appendSep(record.getWifeMarriedComment());
+                        line.appendNimegueFn(record.getWifeMarriedLastName().toString());
+                        line.appendNimegueFn(record.getWifeMarriedFirstName().toString());
+                        line.appendNimegueFn(record.getWifeMarriedComment());
 
-                        line.appendSep(record.getWifeFatherLastName().toString());
-                        line.appendSep(record.getWifeFatherFirstName().toString());
-                        line.appendSep(record.getWifeFatherComment());
-                        line.appendSep(record.getWifeFatherOccupation().toString());
-                        line.appendSep(record.getWifeMotherLastName().toString());
-                        line.appendSep(record.getWifeMotherFirstName().toString());
-                        line.appendSep(record.getWifeMotherComment());
-                        line.appendSep(record.getWifeMotherOccupation().toString());
+                        line.appendNimegueFn(record.getWifeFatherLastName().toString());
+                        line.appendNimegueFn(record.getWifeFatherFirstName().toString());
+                        line.appendNimegueFn(record.getWifeFatherComment());
+                        line.appendNimegueFn(record.getWifeFatherOccupation().toString());
+                        line.appendNimegueFn(record.getWifeMotherLastName().toString());
+                        line.appendNimegueFn(record.getWifeMotherFirstName().toString());
+                        line.appendNimegueFn(record.getWifeMotherComment());
+                        line.appendNimegueFn(record.getWifeMotherOccupation().toString());
 
-                        line.appendSep(record.getWitness1LastName().toString());
-                        line.appendSep(record.getWitness1FirstName().toString());
-                        line.appendSep(record.getWitness1Comment(),
+                        line.appendNimegueFn(record.getWitness1LastName().toString());
+                        line.appendNimegueFn(record.getWitness1FirstName().toString());
+                        line.appendNimegueFn(record.getWitness1Comment(),
                             record.getWitness1Occupation().toString() );
 
-                        line.appendSep(record.getWitness2LastName().toString());
-                        line.appendSep(record.getWitness2FirstName().toString());
-                        line.appendSep(record.getWitness2Comment(),
+                        line.appendNimegueFn(record.getWitness2LastName().toString());
+                        line.appendNimegueFn(record.getWitness2FirstName().toString());
+                        line.appendNimegueFn(record.getWitness2Comment(),
                             record.getWitness2Occupation().toString() );
 
-                        line.appendSep(record.getWitness3LastName().toString());
-                        line.appendSep(record.getWitness3FirstName().toString());
-                        line.appendSep(record.getWitness3Comment(),
+                        line.appendNimegueFn(record.getWitness3LastName().toString());
+                        line.appendNimegueFn(record.getWitness3FirstName().toString());
+                        line.appendNimegueFn(record.getWitness3Comment(),
                             record.getWitness3Occupation().toString() );
 
-                        line.appendSep(record.getWitness4LastName().toString());
-                        line.appendSep(record.getWitness4FirstName().toString());
-                        line.appendSep(record.getWitness4Comment(),
+                        line.appendNimegueFn(record.getWitness4LastName().toString());
+                        line.appendNimegueFn(record.getWitness4FirstName().toString());
+                        line.appendNimegueFn(record.getWitness4Comment(),
                             record.getWitness4Occupation().toString() );
 
 
-                        line.appendSep(record.getGeneralComment());
-                        line.appendSep(String.valueOf(record.recordNo)); // numero d'enregistrement
+                        line.appendNimegueFn(record.getGeneralComment());
+                        line.appendNimegueFn(String.valueOf(record.recordNo)); // numero d'enregistrement
                     }
                     // Nimegue exige les retours chariot au format Windows CR+LF
-                    line.appendln("\r\n");
+                    line.appendNimegue("\r\n");
                     writer.write(line.toString());
 
                 } catch (Exception e) {

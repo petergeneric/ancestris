@@ -1,8 +1,6 @@
-package ancestris.modules.releve;
+package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.file.FileBuffer;
-import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.file.ReleveFileNimegue;
+import ancestris.modules.releve.TestUtility;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;

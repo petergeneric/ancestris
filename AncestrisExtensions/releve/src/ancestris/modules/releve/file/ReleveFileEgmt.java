@@ -19,16 +19,23 @@ import java.io.FileWriter;
  */
 public class ReleveFileEgmt {
 
-    final static String fieldSeparator = ";";
+    final static char fieldSeparator = ';';
 
     /**
      * verifie le format de la premiere ligne du fichier
      * @param strLine
      * @return
      */
-    public static boolean isValidFile( String strLine) {
-        String[] fields = splitLine(strLine);
-        return fields != null;
+    public static boolean isValidFile( BufferedReader br) {
+        try {
+            String[] fields = splitLine(br);
+            if (fields == null ) {
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -36,12 +43,17 @@ public class ReleveFileEgmt {
      * @param strLine
      * @return fields[] ou null si la ligne n'est pas valide
      */
-    private static String[] splitLine( String strLine) {
-        String[] fields = strLine.split(fieldSeparator,100);
-        if (fields.length == 44 ) {
-           return fields;
+    private static String[] splitLine( BufferedReader br) throws Exception  {
+        String[] fields = Line.splitCSV(br, fieldSeparator);
+        if (fields != null) {
+            if (fields.length == 44) {
+                return fields;
+             } else {
+                throw new Exception(String.format("Line contains %s fields. Must be %d fields", fields.length, 44));
+            }
+        } else {
+            return null;
         }
-        return null;
     }
 
    // Format d'un releve
@@ -76,10 +88,10 @@ public class ReleveFileEgmt {
             String strLine = "";
             int lineNumber = 0;
 
+            String[] fields ;
             //read comma separated file line by line
-            while ((strLine = br.readLine()) != null) {
+            while ((fields = splitLine(br)) != null) {
                 lineNumber++;
-                String[] fields = splitLine(strLine);
                 try {
                     if (fields != null) {
                         if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("naissance")) {
@@ -457,37 +469,41 @@ public class ReleveFileEgmt {
                 final Record record = recordModel.getRecord(index);
                 try {
                     if ( record instanceof RecordBirth ) {
-                       line.appendSep("naissance");
+                       line.appendCsvFn("naissance");
                     } else if (record instanceof RecordMarriage) {
-                        line.appendSep("mariage");
+                        line.appendCsvFn("mariage");
                     } else if (record instanceof RecordDeath) {
-                        line.appendSep("décès");
+                        line.appendCsvFn("décès");
                     } else {
-                        line.appendSep(record.getEventType().getName());
+                        line.appendCsvFn(record.getEventType().getName());
                     }
-                    line.appendSep(dataManager.getCountryName());
-                    line.appendSep(dataManager.getCityName());
-                    line.appendSep(record.getParish());
-                    line.appendSep(record.getNotary());
-                    line.appendSep(record.getCote());
-                    line.appendSep(record.getFreeComment());
-                    line.appendSep(String.format("%02d", record.getEventDateField().getStart().getDay()));
-                    line.appendSep(String.format("%02d", record.getEventDateField().getStart().getMonth()));
-                    line.appendSep(String.format("%4d", record.getEventDateField().getStart().getYear()));
-
-                    line.appendSep(record.getIndiLastName().getValue());
-                    line.appendSep(record.getIndiFirstName().getValue());
-                    line.appendSep(record.getIndiSex());
-                    if (!(record instanceof RecordBirth)) {
-                        line.appendSep(record.getIndiAge());
-                        line.appendSep(record.getIndiPlace().toString());
+                    line.appendCsvFn(dataManager.getCountryName());
+                    line.appendCsvFn(dataManager.getCityName());
+                    line.appendCsvFn(record.getParish());
+                    if ( record instanceof RecordMisc ) {
+                        line.appendCsvFn(record.getNotary());
                     } else {
-                        line.appendSep("");
-                        line.appendSep("");
+                        line.appendCsvFn("");
+                    }
+                    line.appendCsvFn(record.getCote());
+                    line.appendCsvFn(record.getFreeComment());
+                    line.appendCsvFn(String.format("%02d", record.getEventDateField().getStart().getDay()));
+                    line.appendCsvFn(String.format("%02d", record.getEventDateField().getStart().getMonth()));
+                    line.appendCsvFn(String.format("%4d", record.getEventDateField().getStart().getYear()));
+
+                    line.appendCsvFn(record.getIndiLastName().getValue());
+                    line.appendCsvFn(record.getIndiFirstName().getValue());
+                    line.appendCsvFn(record.getIndiSex());
+                    if (!(record instanceof RecordBirth)) {
+                        line.appendCsvFn(record.getIndiAge());
+                        line.appendCsvFn(record.getIndiPlace().toString());
+                    } else {
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
                     }
 
                     if ( record instanceof RecordBirth) {
-                        line.appendSep(record.getIndiComment());
+                        line.appendCsvFn(record.getIndiComment());
                     } else {
                         String birthDate = "";
                         if (!record.getIndiBirthDate().isEmpty() ) {
@@ -499,7 +515,7 @@ public class ReleveFileEgmt {
                                     + record.getIndiMarriedFirstName() +" "
                                     + record.getIndiMarriedComment();
                         }
-                        line.appendSep(record.getIndiComment(), 
+                        line.appendCsvFn(record.getIndiComment(),
                             record.getIndiOccupation().toString(),
                             birthDate, 
                             marriedName,
@@ -508,22 +524,22 @@ public class ReleveFileEgmt {
                             );
                     }
                     
-                    line.appendSep(record.getIndiFatherFirstName().toString());
-                    line.appendSep(record.getIndiFatherDead().toString());
-                    line.appendSep(record.getIndiFatherComment(),
+                    line.appendCsvFn(record.getIndiFatherFirstName().toString());
+                    line.appendCsvFn(record.getIndiFatherDead().toString());
+                    line.appendCsvFn(record.getIndiFatherComment(),
                             record.getIndiFatherOccupation().toString());
-                    line.appendSep(record.getIndiMotherLastName().toString());
-                    line.appendSep(record.getIndiMotherFirstName().toString());
-                    line.appendSep(record.getIndiMotherDead().toString());
-                    line.appendSep(record.getIndiMotherComment(),
+                    line.appendCsvFn(record.getIndiMotherLastName().toString());
+                    line.appendCsvFn(record.getIndiMotherFirstName().toString());
+                    line.appendCsvFn(record.getIndiMotherDead().toString());
+                    line.appendCsvFn(record.getIndiMotherComment(),
                             record.getIndiMotherOccupation().toString());
                     
                     if (!(record instanceof RecordBirth)) {
-                        line.appendSep(record.getWifeLastName().toString());
-                        line.appendSep(record.getWifeFirstName().toString());
-                        line.appendSep(record.getWifeAge());
-                        line.appendSep(record.getWifePlace().toString());
-                        line.appendSep(record.getWifeComment(), record.getWifeOccupation().toString());
+                        line.appendCsvFn(record.getWifeLastName().toString());
+                        line.appendCsvFn(record.getWifeFirstName().toString());
+                        line.appendCsvFn(record.getWifeAge());
+                        line.appendCsvFn(record.getWifePlace().toString());
+                        line.appendCsvFn(record.getWifeComment(), record.getWifeOccupation().toString());
 
                         String birthDate = "";
                         if (!record.getIndiBirthDate().isEmpty() ) {
@@ -535,7 +551,7 @@ public class ReleveFileEgmt {
                                     + record.getWifeMarriedFirstName() +" "
                                     + record.getWifeMarriedComment();
                         }
-                        line.appendSep(record.getWifeComment(),
+                        line.appendCsvFn(record.getWifeComment(),
                             record.getWifeOccupation().toString(),
                             birthDate,
                             marriedName,
@@ -543,45 +559,45 @@ public class ReleveFileEgmt {
                             record.getWifeMarriedComment()
                             );
 
-                        line.appendSep(record.getWifeFatherFirstName().toString());
-                        line.appendSep(record.getWifeFatherDead().getValue());
-                        line.appendSep(record.getWifeFatherComment(), record.getWifeFatherOccupation().toString());
-                        line.appendSep(record.getWifeMotherLastName().toString());
-                        line.appendSep(record.getWifeMotherFirstName().toString());
-                        line.appendSep(record.getWifeMotherDead().toString());
-                        line.appendSep(record.getWifeMotherComment(), record.getWifeMotherOccupation().toString());
-//                        line.appendSep(record.getWifeMotherOccupation());
+                        line.appendCsvFn(record.getWifeFatherFirstName().toString());
+                        line.appendCsvFn(record.getWifeFatherDead().getValue());
+                        line.appendCsvFn(record.getWifeFatherComment(), record.getWifeFatherOccupation().toString());
+                        line.appendCsvFn(record.getWifeMotherLastName().toString());
+                        line.appendCsvFn(record.getWifeMotherFirstName().toString());
+                        line.appendCsvFn(record.getWifeMotherDead().toString());
+                        line.appendCsvFn(record.getWifeMotherComment(), record.getWifeMotherOccupation().toString());
+//                        line.appendCsvFn(record.getWifeMotherOccupation());
                      } else {
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
 
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
-                        line.appendSep("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
+                        line.appendCsvFn("");
                      }
 
-                    line.appendSep(""); // heirComment
+                    line.appendCsvFn(""); // heirComment
 
-                    line.appendSep(record.getWitness1LastName().toString());
-                    line.appendSep(record.getWitness1FirstName().toString());
-                    line.appendSep(record.getWitness1Comment(),
+                    line.appendCsvFn(record.getWitness1LastName().toString());
+                    line.appendCsvFn(record.getWitness1FirstName().toString());
+                    line.appendCsvFn(record.getWitness1Comment(),
                         record.getWitness1Occupation().toString() );
-                    line.appendSep(record.getWitness2LastName().toString());
-                    line.appendSep(record.getWitness2FirstName().toString());
-                    line.appendSep(record.getWitness2Comment(),
+                    line.appendCsvFn(record.getWitness2LastName().toString());
+                    line.appendCsvFn(record.getWitness2FirstName().toString());
+                    line.appendCsvFn(record.getWitness2Comment(),
                          record.getWitness2Occupation().toString() );
                     if( record.getWitness3LastName().isEmpty() && record.getWitness4LastName().isEmpty()) {
-                       line.appendSep(record.getGeneralComment());
+                       line.appendCsvFn(record.getGeneralComment());
                     } else {
-                        line.appendSep(record.getGeneralComment(),
+                        line.appendCsvFn(record.getGeneralComment(),
                            "témoin: " + record.getWitness3FirstName().toString() + " "+ record.getWitness3LastName().toString(),
                            record.getWitness3Occupation().toString(),
                            record.getWitness3Comment(),
@@ -591,7 +607,7 @@ public class ReleveFileEgmt {
                            );
                     }
 
-                    line.appendln("\r\n");
+                    line.appendCsv("\r\n");
                     writer.write(line.toString());
 
                 } catch (Exception e) {
