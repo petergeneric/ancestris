@@ -46,7 +46,7 @@
     pratiche, non lasciare spazi tra le giurisdizioni.</i><br>
   </p>
     Sette livelli di giurisdizione sono possibili&nbsp;:<br>
-    <center><i>Frazione,Comune,Codice_postale,Provincia,Regione,Paese</i></center>
+    <center><i>Localit&agrave;,Comune,Codice_ISTAT,Codice_postale,Provincia,Regione,Paese</i></center>
   <p class="justify">
     Non siete obbligati a definirli tutti, ma bisogner&agrave; 
     <b>rispettare la gerarchia del loro ordinamento</b>.
@@ -61,12 +61,12 @@
             </td>
             <td>
               <p class="justify">
-                Bien qu'Ancestris  permette de saisir aussi le <b>code
-                postal</b>, il est pr&eacute;f&eacute;rable d'utiliser le
-                <b>code INSEE</b>. En effet, un code postal peut
-                regrouper plusieurs communes alors que le code INSEE
-                (syst&egrave;me de code G&eacute;ographique
-                cr&eacute;&eacute; en 1943), est unique pour chaque commune.
+                Bench&egrave; Ancestris permetta di censire anche il 
+                <b>codice postale</b>, &egrave; preferibile usare il 
+                codice dei comuni <b>ISTAT</b>. Infatti il CAP pu&ograve; 
+                raggruppare pi&ugrave; comuni, mentre il codice ISTAT 
+                &egrave; univoco per ogni comune anche se il comune 
+                non esiste pi&ugrave;.
               </p>
             </td>
           </tr>
@@ -78,45 +78,44 @@
   <a name="first_steps_place_management_2"></a>
   <h3 class="ancestris_help_title">Il censimento delle giurisdizioni</h3>
   <p class="justify">
-    Si vous avez opt&eacute; pour la pr&eacute;sentation "distinguer 
-    les juridictions" 
-    (cf <a href="../first_steps/first_steps_basic_ancestris.html">Les premiers param&egrave;tres</a>) 
-    vous n'avez pas &agrave; vous 
-    soucier des explications qui suivent, vous saisirez les 
-    juridictions niveau par niveau.<br>
-    Pour ceux qui n'ont pas choisi cette option, le plus simple, 
-    c'est un exemple:<br>
-    Pour un &eacute;v&eacute;nement localis&eacute; au lieu-dit 
-    "M&eacute;zin", &agrave; Allanche (code INSEE 15160), 
-    d&eacute;partement du Cantal, en Auvergne, France. Il convient 
-    de saisir:
+    Se avete optato per la presentazione "distinguere le giurisdizioni" 
+    (cfr. <a href="../first_steps/first_steps_basic_ancestris.html">I 
+    primi parametri</a>) non dovete preoccuparvi delle spiegazioni 
+    che seguono, voi censirete le giurisdizioni livello per livello.<br>
+    Per coloro che non hanno scelto questa opzione, la cosa pi&ugrave; 
+    semplice &egrave; un esempio&nbsp;:<br>
+    Per un evento localizzato nella localit&agrave; "Cascina Musetta", 
+    a Rossiglione (codice ISTAT 010051), provincia di Genova, in 
+    Liguria, Italia. Conviene censire&nbsp;:<br>
+    [Cascina Musetta,Rossiglione,010051,16010,Genova,Liguria,Italia]
   </p>
   <center>
-  <img src="../images/screenshots/screenshots_first_steps_place_management_saisie_lieux.png" alt="Ecran de saisie des juridictions." width="480" height="50">
+  <img src="../images/screenshots/screenshots_first_steps_place_management_saisie_lieux.png" alt="Schermata di censimento delle giurisdizioni." width="480" height="50">
   </center>
   <ul>
-    <li><i>On ne met rien apr&egrave;s le mot France.</i></li>
-    <li><i>Si le lieu-dit est inconnu on met une virgule en d&eacute;but de ligne.</i></li>
-    <li><i>Pour un &eacute;v&eacute;nement dont on ne conna&icirc;t que la 
-    commune, on &eacute;crit: ,Allanche,,,,  (1 virgule en t&ecirc;te et 
-    4 virgules en fin de ligne).</i></li>
+    <li><i>Non si aggiunge niente dopo la parola Italia.</i></li>
+    <li><i>Se la localit&agrave; &egrave; sconosciuta si mette una 
+    virgola all'inizio della riga.</i></li>
+    <li><i>Per un evento di cui non si conosce che il comune, si 
+    scrive&nbsp;: ,Rossiglione,,,, (1 virgola in testa et 4 virgole 
+    alla fine della riga).</i></li>
   </ul>
   <br>
   <center>
-  C'est simple, retenir: "Du plus petit au plus grand et chaque terme 
-  s&eacute;par&eacute; par une virgule".
+  E' facile da memorizzare&nbsp;: "Dal pi&ugrave; piccolo al pi&ugrave; 
+  grande, ed ogni livello separato da una virgola".
   </center>
   <br>
-  <b>Auto-compl&egrave;tement de champ</b><br>
+  <b>Auto-completamento di campo</b><br>
   <p class="justify">
-    Pendant la saisie, un menu d&eacute;roulant s'ouvrira vous proposant
-    les <u>lieux d&eacute;j&agrave; connus</u> commen&ccedil;ant par la
-    m&ecirc;me cha&icirc;ne de caract&egrave;res. → Un clic gauche sur
-    la ligne propos&eacute;e et OK pour   valider.<br>
-    Si vous avez choisi pour la saisie
-    "<a href="../advanced/advanced_menu_options_1.html">Pr&eacute;f&eacute;rences</a> -
-    juridictions s&eacute;par&eacute;es", cette fonction existe
-    &eacute;galement mais ligne par ligne.<br>
+    Durante il censimento, si aprir&agrave; un menu a tendina 
+    proponendo i <u>luoghi gi&agrave; noti che</u> iniziano con la 
+    stessa stringa di caratteri. Un clic sinistro sulla riga 
+    proposta e OK per confermare.<br>
+    Se avete scelto per il censimento 
+    "<a href="../advanced/advanced_menu_options_1.html">Preferenze</a> - 
+    giurisdizioni separate", questa funzione esiste comunque, 
+    ma riga per riga.<br>
   </p>
   <br>
   <table border="1" width="100%">
@@ -124,19 +123,18 @@
       <td>
         <font size="-1">
         <center>
-        <img src="../images/warn.gif" width="18" height="17"> <b>Ne 
-        pas confondre l’enregistrement dans le fichier Gedcom 
-        et l'affichage des lieux dans les vues</b>
+        <img src="../images/warn.gif" width="18" height="17"> <b>Non 
+        confondere la registrazione dati nel file Gedcom con la 
+        visualizzazione dei luoghi nelle schermate.</b>
         </center>
         <br>
-        <u>L’enregistrement dans le fichier Gedcom</u>, c'est l&agrave; 
-        que la norme d'organisation des juridictions devra &ecirc;tre 
-        respect&eacute;e.<br>
-        <u>L'affichage des lieux dans les vues</u>, c'est la fa&ccedil;on 
-        dont vous voulez voir s'afficher les juridictions dans 
-        les vues (par exemple, choisir de n'afficher dans l'arbre 
-        que la ville et le pays - cf 
-        <a href="../advanced/advanced_menu_options_1.html">Pr&eacute;f&eacute;rences</a>).
+        <u>La registrazione nel file Gedcom</u>, impone che la 
+        norma di organizzazione delle giurisdizioni sia rispettata.<br>
+        <u>La visualizzazione dei luoghi nelle schermate</u>, &egrave; 
+        il modo con cui volete veder comparire le giurisdizioni nelle 
+        schermate (per esempio, scegliere di veder comparire 
+        nell'albero solo la citt&agrave; ed il paese - cfr. 
+        <a href="../advanced/advanced_menu_options_1.html">Preferenze</a>).
         </font>
       </td>
     </tr>
@@ -145,93 +143,90 @@
   <a name="first_steps_place_management_3"></a>
   <h3 class="ancestris_help_title">La registrazione dell'ordine delle giurisdizioni nel file Gedcom</h3>
   <p class="justify">
-    Il est important que cette hi&eacute;rarchie des lieux (ou ordre 
-    des juridictions) soit d&eacute;crite dans le header (l'ent&ecirc;te) 
-    de votre Gedcom. C'est la r&egrave;gle interne fix&eacute;e pour le 
-    fichier Gedcom qui permet &agrave; Ancestris et aux autres 
-    utilisateurs de lire les juridictions. Cet enregistrement 
-    d&eacute;termine le format de toutes vos &eacute;tiquettes "PLAC".<br>
-    <u>Cet enregistrement devra &ecirc;tre fait d&egrave;s la cr&eacute;ation 
-    d'une g&eacute;n&eacute;alogie ou suite &agrave; l'importation d'une 
-    g&eacute;n&eacute;alogie cr&eacute;&eacute;e avec un autre logiciel</u> 
-    (beaucoup ne respectent pas la norme).
+    E' importante che questa gerarchia dei luoghi (o ordinamento 
+    delle giurisdizioni) sia descritta nel header (intestazione) del 
+    vostro Gedcom. E' la regola interna fissata per il file Gedcom 
+    che permette ad Ancestris e agli alrti utenti di leggere le 
+    giurisdizioni. Questo ordinamento determina il formato di tutte 
+    le vostre etichette "PLAC".<br>
+    <u>Questa registrazione dovra essere fatta al momento della 
+    creazione di una genealogia o all'importazione di una genealogia 
+    creata da un altro programma</u> (molti non rispettano la norma).
   </p>
   <ul>
-    <li>1&egrave;re solution:
+    <li>1&deg; soluzione&nbsp;:
       <ul>
-        <li>Ouvrir l'&eacute;diteur Gedcom. Pointer une ligne PLAC (au 
-        choix)<br>
-        - clic gauche (pour la mettre en surbrillance) puis clic droit 
-        pour ouvrir le menu contextuel .<br>
-        - descendre sur la ligne  Propri&eacute;t&eacute; Lieu-... 
-        (correspondant &agrave; votre choix)... un nouveau sous-menu 
-        appara&icirc;t. Clic sur la premi&egrave;re ligne ''&Eacute;tablir 
-        la hi&eacute;rarchie des Entit&eacute;s   juridictionnelles''<br>
-        <img src="../images/screenshots/screenshots_first_steps_place_management_ordonnancement_des_juridictions.png" alt="Ecran de l'ordonnacement juridictionnel dans le fichier Gedcom." width="480" height="240"><br>
-        La ligne du bas sert &agrave; contr&ocirc;ler, modifier ou 
-        saisir les diff&eacute;rentes juridictions que vous avez 
-        retenues pour toute votre g&eacute;n&eacute;alogie.<br> 
-        Pour valider votre choix: cliquer sur le bouton "Ex&eacute;cuter 
-        et &Eacute;tablir la hi&eacute;rarchie des entit&eacute;s 
-        juridictionnelles".<br> 
-        C'est fini! Pensez &agrave; sauvegarder votre travail.<br>
+        <li>Aprire l'editore Gedcom. Scegliere una riga PLAC (a 
+        scelta)<br>
+        - clic sinistro (per renderla "fosforescente") poi clic 
+        destro per aprire il menu contestuale.<br>
+        - scendere sulla riga Propriet&agrave; luoghi... (corrispondente 
+        alla vostra celta)... appare un nuovo sotto-menu. Clic 
+        sulla prima riga "Definire la gerarchia delle entit&agrave; 
+        giurisdizionali"<br>
+        <img src="../images/screenshots/screenshots_first_steps_place_management_ordonnancement_des_juridictions.png" alt="Schermata dell'ordinamento giurisdizionale nel file Gedcom." width="480" height="240"><br>
+        La riga in basso serve a controllare, modificare o censire 
+        le differenti giurisdizioni che avete stabilito per tutta 
+        la vostra genealogia.<br> 
+        Per convalidare la scelta clic sul bottone "Esegui e 
+        Definisci la gerarchia delle entit&agrave; giurisdizionali".<br> 
+        Finito! Ricordatevi di salvare il vostro lavoro.<br>
         </li>
       </ul>
     </li>
     <br>
-    <li>2&egrave;me solution:
+    <li>2&deg; soluzione&nbsp;:
       <ul>
-        <li>Ouvrir votre fichier Gedcom avec un &eacute;diteur de texte. 
-        Pour Linux, utilisez Gedit, ou Nedit, ou Jedit. Sous Windows, 
-        utilisez Notepad (surtout pas Word).  Sous MacOs, utilisez 
-        TextEdit.<br>
+        <li>Aprire il vostro file Gedcom con un editore di testo. 
+        Per Linux, usare Gedit, o Nedit, o Jedit. Sotto Windows, 
+        usare Notepad (assolutamente non usare Word). Sotto MacOs, 
+        usare TextEdit.<br>
         </li>
         <pre>
         0 HEAD
         1 SOUR ANCESTRIS
-        2 VERS 0.5.0.1291
+        2 VERS 0.6.0.1591
         2 NAME Ancestris
         2 CORP Ancestris Team
         3 ADDR http://www.ancestris.org, http://www.ancestris.com
         1 DEST ANY
-        1 DATE 21 MAR 2011      &lt;---- La date sera diff&eacute;rente
-        2 TIME 18:44:12         &lt;---- L'heure sera diff&eacute;rente
-        1 SUBM @B1@             &lt;---- Peut &ecirc;tre que vous n'aurez pas cette ligne
-        1 FILE francois.ged     &lt;---- Vous aurez l&agrave; le nom de votre fichier
+        1 DATE 21 MAR 2012      &lt;---- La data sar&agrave; differente
+        2 TIME 18:44:12         &lt;---- L'ora sar&agrave; differente
+        1 SUBM @B1@             &lt;---- Pu&ograve; essere che non abbiate questra riga
+        1 FILE francois.ged     &lt;---- Qui si trova il nome del vostro file Gedcom
         1 GEDC
         2 VERS 5.5
         2 FORM Lineage-Linked
         1 CHAR UTF-8
-        1 LANG French
+        1 LANG Italian
         </pre>
         <p class="justify">
-          Il vous suffit de rajouter, juste apr&egrave;s la ligne
-          ''1 LANG French'', les deux lignes suivantes:
+          E' sufficente aggiungere, subito dopo la riga "1 LANG 
+          Italian", le due righe seguenti&nbsp;:
         </p>
         <pre>
         1 PLAC
-        2 FORM Lieudit,Commune,Code,D&eacute;partement,R&eacute;gion,Pays
+        2 FORM Localit&agrave;,Comune,Codice,Provincia,Regione,Paese
         </pre>
-        <b>Sauvegardez</b> votre travail, et voil&agrave;, c'est fini!
+        <b>Salvate</b> i dati, et voil&agrave;, finito!
         <p class="justify">
-          <img src="../images/warn.gif" width="18" height="17"> Si vous
-          avez d&eacute;j&agrave; saisi des centaines de lieux dans votre
-          fichier, le simple fait de rajouter dans l'ent&ecirc;te du
-          fichier Gedcom les deux lignes d&eacute;crites dans le paragraphe
-          pr&eacute;c&eacute;dent ne changera rien &agrave; tous les lieux
-          d&eacute;j&agrave; enregistr&eacute;s. La seule solution sera de
-          reprendre un par un tous les lieux de votre
-          g&eacute;n&eacute;alogie.
+          <img src="../images/warn.gif" width="18" height="17"> 
+          Se avete gi&agrave; censito centinaia di luoghi nel vostro 
+          archivio, il solo fatto di aver aggiunto nell'intestazione 
+          del file Gedcom le due righe descritte nel paragrafo 
+          precedente non cambier&agrave; nulla in tutti i luoghi 
+          gi&agrave; registrati. La sola soluzione sar&agrave; quella 
+          di correggere ad uno ad uno tutti i luoghi della 
+          vostra genealogia.
         </p>
       </ul>
     </li>
     <br>
     <li>
-    <b>une autre solution</b> pour g&eacute;rer l'ordonnancement 
-    des juridictions (si l'on h&eacute;site &agrave; modifier avec un 
-    &eacute;diteur de texte) est d'aller dans "Affichage /Listes 
-    et rapports/ Bo&icirc;te &agrave; outils/ 5 - Gestion des 
-    &eacute;tiquettes d'adresses PLAC".
+    <b>un'altra soluzion</b> per gestire l'ordinamento delle 
+    giurisdizioni (se esitate a modificare con un editore di testo) 
+    &egrave; quella di andarein "Visualizzazione /Liste dei 
+    rapporti/ Strumenti/ 5 - Gestione delle etichette d'indirizzo PLAC".
     </li>
     <table border="1" width="100%" class="ancestris_stop_tip">
       <tr>
@@ -243,10 +238,10 @@
               </td>
               <td>
                 <p class="justify">
-                  Le format des lieux de votre fichier Gedcom ainsi que
-                  vos pr&eacute;f&eacute;rences d'affichage peuvent
-                  &eacute;galement &ecirc;tre modifi&eacute;s &agrave;
-                  partir du plug-in "Liste des lieux".
+                  Il formato dei luoghi del vostro file Gedcom 
+                  così come le preferenze di visualizzazione si 
+                  possono modificare a partire dal plug-in "Lista 
+                  dei luoghi".
                 </p>
               </td>
             </tr>
@@ -259,27 +254,27 @@
   <a name="first_steps_place_management_4"></a>
   <h3 class="ancestris_help_title">Modifica globale del nome delle giurisdizioni</h3>
   <p class="justify">
-    Vous vous apercevez que depuis le d&eacute;but, vous faites une 
-    erreur de frappe sur une localit&eacute;. Autre hypoth&egrave;se, 
-    une m&ecirc;me localit&eacute; a &eacute;t&eacute; enregistr&eacute;e 
-    de fa&ccedil;ons diff&eacute;rentes.<br>
-    Il suffit de quelques clics pour modifier en une fois tous les lieux 
-    concern&eacute;s:
+    Vi siete accorti che dall'inizio avete fatto un errore di 
+    battitura su una localit&agrave;. Altra ipotesi, una stessa 
+    localit&agrave; &egrave; stata registrata in modo differente.<br>
+    Basteranno pochi clic per modificare in una sola volta tutti i 
+    luoghi interessati&nbsp;:
     <ul>
       <ul>
-        <li> surligner une des lignes PLAC que vous souhaitez modifier (1)</li>
-        <li>faites la modification dans la zone de saisie (2)<i>- 
-        dans cet exemple on supprime le "s" -</i> ce qui fera 
-        appara&icirc;tre un petit carr&eacute; au bout de la ligne (3)</li> 
-        <li>cochez ce carr&eacute; puis "oui" dans la fen&ecirc;tre de 
-        demande de confirmation (4)</li>
-        <li>il ne vous reste plus qu'&agrave; cliquer sur ok dans la zone 
-        basse de l'&eacute;diteur pour valider ce changement.</li>
+        <li> sottolineare una delle righe PLAC che desiderate 
+        modificare (1)</li>
+        <li>fate la modifica nella zona di censimento (2)<i>- in 
+        questo esempio si cancella la "s" -</i> cosa che 
+        far&agrave; comparire un quadratino alla fine della riga (3)</li> 
+        <li>spuntate il quadratino poi "si" newlla finestra di 
+        richiesta conferma (4)</li>
+        <li>non vi resta piu che cliccare su ok nella parte bassa 
+        dell'editore per convalidare questa modifica.</li>
         <br>
-        <img src="../images/screenshots/screenshots_first_steps_place_management_global_change.png" alt="Ecran de changement global du libell&eacute; des juridictions." width="480" height="200">
+        <img src="../images/screenshots/screenshots_first_steps_place_management_global_change.png" alt="Schermata di cambiamento globale della stesura delle giurisdizioni." width="480" height="200">
         <br>
-        Cette modification est identique &agrave; partir de l'un ou 
-        l'autre des deux &eacute;diteurs.<br>
+        Questa modifica &egrave; identica sia con uno o l'altro dei 2 
+        editori.<br>
       </ul>
     </ul>
   </p>
@@ -317,7 +312,7 @@
   </table>
   <!-- Fin des boutons Precedent - Suivant -->
 
-<!-- Italian Help - updated on 04/30/2012 -->
+<!-- Italian Help - updated on 05/01/2012 -->
 </body>
 </html>
 
