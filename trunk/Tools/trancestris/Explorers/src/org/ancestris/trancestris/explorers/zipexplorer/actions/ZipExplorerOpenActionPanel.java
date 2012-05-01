@@ -134,8 +134,6 @@ public class ZipExplorerOpenActionPanel extends javax.swing.JPanel {
             }
         });
 
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(ZipExplorerOpenActionPanel.class, "ZipExplorerOpenActionPanel.jTextField1.text")); // NOI18N
-
         jLabel2.setText(org.openide.util.NbBundle.getMessage(ZipExplorerOpenActionPanel.class, "ZipExplorerOpenActionPanel.jLabel2.text")); // NOI18N
 
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
