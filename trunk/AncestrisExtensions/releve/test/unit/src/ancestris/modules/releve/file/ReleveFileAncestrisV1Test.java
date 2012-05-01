@@ -1,8 +1,7 @@
-package ancestris.modules.releve;
+package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.file.FileBuffer;
-import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.file.ReleveFileAncestrisV1;
+import ancestris.modules.releve.TestUtility;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
@@ -23,19 +22,26 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     public void testIsValidFile() {
             String data;
             data= "";
-            boolean isValid = ReleveFileAncestrisV1.isValidFile(data);
-            assertEquals("ligne vide" , isValid, false);
+            BufferedReader br;
+            
+            data= "";
+            br = new BufferedReader(new java.io.StringReader(data));
+            boolean isValid = ReleveFileAncestrisV1.isValidFile(br);
+            assertEquals("fichier vide" , isValid, false);
 
             data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;";
-            isValid = ReleveFileAncestrisV1.isValidFile(data);
+            br = new BufferedReader(new java.io.StringReader(data));
+            isValid = ReleveFileAncestrisV1.isValidFile(br);
             assertEquals("ligne incomplete", isValid, false);
 
             data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
-            isValid = ReleveFileAncestrisV1.isValidFile(data);
+            br = new BufferedReader(new java.io.StringReader(data));
+            isValid = ReleveFileAncestrisV1.isValidFile(br);
             assertEquals("points virgules collés", isValid, true);
 
             data = "ANCESTRISV1; ; ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
-            isValid = ReleveFileAncestrisV1.isValidFile(data);
+            br = new BufferedReader(new java.io.StringReader(data));
+            isValid = ReleveFileAncestrisV1.isValidFile(br);
             assertEquals(isValid, true);
             
         
@@ -54,7 +60,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             data = "";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV1.loadFile(file);
-            assertEquals("fichier vide" , sb.getError().length(), 0);
+            assertEquals("File empty" , sb.getError().isEmpty(), true);
             file.delete();
 
             data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
@@ -98,10 +104,6 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         }
     }
 
-    /**
-     * Test of saveFile method, of class ReleveFileAncestrisV1.
-     */
-    public void testSaveFile() {
-    }
-
+    
+   
 }

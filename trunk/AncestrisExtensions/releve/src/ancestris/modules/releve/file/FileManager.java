@@ -6,6 +6,9 @@ import ancestris.modules.releve.model.ModelAbstract;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.openide.util.NbPreferences;
 
 /**
@@ -15,10 +18,6 @@ import org.openide.util.NbPreferences;
 public class FileManager {
 
     private static final String FILE_DIRECTORY = "FileDirectory";
-//    public static final int FILE_TYPE_UNKNOW = 0;
-//    public static final int FILE_TYPE_ANCESTRISV1 = 1;
-//    public static final int FILE_TYPE_EGMT = 2;
-//    public static final int FILE_TYPE_NIMEGUE = 3;
     public static enum FileFormat { FILE_TYPE_UNKNOW,  FILE_TYPE_ANCESTRISV1, FILE_TYPE_EGMT, FILE_TYPE_NIMEGUE } ;
 
     /**
@@ -37,9 +36,9 @@ public class FileManager {
             throw new Exception(String.format("%s \n Fichier vide.", inputFile.getName()));
         }
         FileBuffer buffer = null;
-        if (ReleveFileAncestrisV1.isValidFile(strLine)) {
+        if (ReleveFileAncestrisV1.isValidFile(br)) {
             buffer = ReleveFileAncestrisV1.loadFile(inputFile);
-        } else if (ReleveFileEgmt.isValidFile(strLine)) {
+        } else if (ReleveFileEgmt.isValidFile(br)) {
             buffer = ReleveFileEgmt.loadFile(inputFile);
         } else if (ReleveFileNimegue.isValidFile(strLine)) {
             buffer = ReleveFileNimegue.loadFile(inputFile);
@@ -105,32 +104,148 @@ public class FileManager {
      */
     public static class Line  {
         StringBuilder line = new StringBuilder();
-        String fieldSeparator;
+        char fieldSeparator;
+        static char quote = '\"';
+
 
 
         /**
          *
          */
-        public Line(String fieldSeparator) {
+        public Line(char fieldSeparator) {
             this.fieldSeparator = fieldSeparator;
         }
 
         /**
+         * ajoute un champ dans la ligne avec le sepreateur de ligne
+         * et en remplaçant toutes les occurrences du separateur par un point '.'
+         * @param value
+         * @return
+         */
+
+        public StringBuilder appendCsvFn(String value, String... otherValues) {
+            // j'ajoute le separateur de champ
+            return appendCsv(value,otherValues).append(fieldSeparator);
+        }
+
+        /**
+         * ajout de valeurs muti
+         */
+        public StringBuilder appendCsv(String value, String... otherValues) {
+            int fieldSize = value.length();
+            StringBuilder sb = new StringBuilder();
+            boolean separatorFound = false;
+            sb.append(value);
+            separatorFound |= value.indexOf(fieldSeparator)!=-1 ? true:false;
+            for (String otherValue : otherValues) {
+                // j'ajoute les valeurs supplémentaires séparées par des virgules
+                if (!otherValue.isEmpty()) {
+                    separatorFound |= value.indexOf(fieldSeparator)!=-1 ? true:false;
+                    // je concantene les valeurs en inserant une virgule dans
+                    // si la valeur précedente n'est pas vide
+                    if (fieldSize > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(otherValue);
+                    fieldSize += otherValue.length();
+                }
+            }
+
+            // j'ajoute des quotes au debut et a la fin du champ si le separateur
+            // est present dans les données
+            if (separatorFound) {
+                line.append(quote).append(sb).append(quote);
+            } else {
+                line.append(sb);
+            }            
+            return line;
+        }
+
+        /**
+         * lit les données en entrée jusqu'au separateur de fin de ligne \n
+         * applique les cas particulier prévus dans la norme du format CSV (RFC 4180).
+         * Cas ou les données d'un champ sont entre guillement :
+         *     ;"aaa; bbb"; => ;aaa bbb;
+         * traite le cas du double guillemet protegeant un guillemet
+         *     ;aaa""bbb; => ;aaa"bbb;
+         * @param reader  données en entrée
+         * @param fieldSeparator  caractere seprateur de champ
+         * @return String[] champs lu ou null si la fin de fichier est rencontrée
+         * @throws IOException
+         */
+        public static String[] splitCSV(BufferedReader reader, char fieldSeparator) throws IOException {
+            final List<String> fields = new ArrayList<String>();
+            final StringBuilder sb = new StringBuilder(100);
+            boolean fieldFound = false;
+            
+            for (boolean quoted = false;; sb.append('\n')) {
+                final String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                fieldFound = true;
+                for (int i = 0, len = line.length(); i < len; i++) {
+                    final char c = line.charAt(i);
+                    if (c == quote) {
+                        if (quoted && i < len - 1 && line.charAt(i + 1) == quote) {
+                            //deux guillemets se suivent
+                            sb.append(c);
+                            // je saute le guillemet suivant
+                            i++;
+                        } else {
+                            if (quoted) {
+                                if (i == len - 1 || line.charAt(i + 1) == fieldSeparator) {
+                                    //guillemet en fin de champ
+                                    quoted = false;
+                                    continue;
+                                }
+                            } else {
+                                // guillement en début de champ
+                                if (sb.length() == 0) {
+                                    quoted = true;
+                                    continue;
+                                }
+                            }                            
+                            sb.append(c);
+                        }
+                    } else if (c == fieldSeparator && !quoted) {
+                        fields.add(sb.toString());
+                        sb.setLength(0);
+                    } else {
+                        sb.append(c);
+                    }
+                }
+                if (!quoted) {
+                    break;
+                }
+            }
+            if( fieldFound) {
+                // j'ajoute le dernier champ
+                fields.add(sb.toString());
+                return fields.toArray(new String[fields.size()]);
+            } else {
+                return null;
+            }
+        }
+
+
+        /**
+         * ajout de valeurs mutiples et le separateur de fin de champ
+         */
+        public StringBuilder appendNimegueFn(String value, String... otherValues) {            
+            return appendNimegue(value, otherValues).append(fieldSeparator);
+        }
+
+
+         /**
          * ajoute un champ dans la ligne avec le seprateur de ligne
          * et en remplaçant toutes les occurrences du separateur par un point '.'
          * @param value
          * @return
          */
-//        public StringBuilder appendSep( String  value ) {
-//            return line.append(value.replace(fieldSeparator,".")).append(fieldSeparator);
-//        }
-
-        /**
-         * ajout de valeurs muti
-         */
-        public StringBuilder appendSep(String value, String... otherValues) {
+        public StringBuilder appendNimegue(String value, String... otherValues) {
             int fieldSize = value.length();
-            appendln(value);
+            line.append(value.replace(fieldSeparator,'.'));
             for (String otherValue : otherValues) {
                 // j'ajoute les valeurs supplémentaires séparées par des virgules
                 if (!otherValue.isEmpty()) {
@@ -138,16 +253,11 @@ public class FileManager {
                     if (fieldSize > 0) {
                         line.append(", ");
                     }
-                    appendln(otherValue);
+                    line.append(otherValue.replace(fieldSeparator,'.'));
                     fieldSize += otherValue.length();
                 }
             }
-            return line.append(fieldSeparator);
-        }
-
-
-        public void appendln(String value) {
-            line.append(value.replace(fieldSeparator,"."));
+            return line;
         }
 
         @Override
