@@ -7,6 +7,7 @@ import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileDialog;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.editor.StandaloneEditor;
+import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV1;
@@ -47,15 +48,17 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-// je declare la classe ServiceProvider pour que ses instances soient visibles 
 // de AncestrisPlugin.lookupAll(ReleveTopComponent.class)
-@ServiceProvider(service=ReleveTopComponent.class)
+@RetainLocation(AncestrisDockModes.PROPERTIES)
+// je declare la classe ServiceProvider pour que ses instances soient visibles
+//@ServiceProvider(service=ReleveTopComponent.class)
 public final class ReleveTopComponent extends TopComponent  {    
     private static final String PREFERRED_ID = "ReleveTopComponent";
     private static final String FILE_DIRECTORY = "FileDirectory";
