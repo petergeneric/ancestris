@@ -43,12 +43,12 @@ public class CompletionProvider {
         // indi FirstName
         if ( record.getIndiFirstName()!= null && record.getIndiFirstName().isEmpty()==false) {
             firstNames.add(record.getIndiFirstName().getValue(), record.getIndiFirstName());
-            updateFirstNameSex(null, "", record.getIndiFirstName().getValue(), record.getIndiSexField().getValue());
+            updateFirstNameSex(null, "", record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
         }        
         if ( record.getIndiMarriedFirstName()!= null && record.getIndiMarriedFirstName().isEmpty()==false) {
             firstNames.add(record.getIndiMarriedFirstName().getValue(), record.getIndiMarriedFirstName());
             //addFirstNameSex(record.getIndiMarriedFirstName(), record.getIndiMarriedSex().getFirstNameSex());
-            updateFirstNameSex(null, "", record.getIndiMarriedFirstName().getValue(), record.getIndiSexField().getOppositeString());
+            updateFirstNameSex(null, "", record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString());
         }
         if ( record.getIndiFatherFirstName()!= null && record.getIndiFatherFirstName().isEmpty()==false) {
             firstNames.add(record.getIndiFatherFirstName().getValue(), record.getIndiFatherFirstName());
@@ -61,12 +61,12 @@ public class CompletionProvider {
         // wife FirstName
         if ( record.getWifeFirstName()!= null && record.getWifeFirstName().isEmpty()==false) {
             firstNames.add(record.getWifeFirstName().getValue(), record.getWifeFirstName());
-            updateFirstNameSex(null, "", record.getWifeFirstName().getValue(), record.getWifeSexField().getValue());
+            updateFirstNameSex(null, "", record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
         }
         if ( record.getWifeMarriedFirstName()!= null && record.getWifeMarriedFirstName().isEmpty()==false) {
             firstNames.add(record.getWifeMarriedFirstName().getValue(), record.getWifeMarriedFirstName());
             //addFirstNameSex(record.getWifeMarriedFirstName(), record.getWifeMarriedSex().getFirstNameSex());
-            updateFirstNameSex(null, "", record.getWifeMarriedFirstName().getValue(), record.getWifeSexField().getOppositeString());
+            updateFirstNameSex(null, "", record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString());
         }
         if ( record.getWifeFatherFirstName()!= null && record.getWifeFatherFirstName().isEmpty()==false) {
             firstNames.add(record.getWifeFatherFirstName().getValue(), record.getWifeFatherFirstName());
@@ -191,12 +191,12 @@ public class CompletionProvider {
         // indi FirstName
         if ( record.getIndiFirstName()!= null && record.getIndiFirstName().isEmpty()==false) {
             firstNames.remove(record.getIndiFirstName().getValue(), record.getIndiFirstName());
-            updateFirstNameSex(record.getIndiFirstName().getValue(), record.getIndiSexField().getValue(), null,"");
+            updateFirstNameSex(record.getIndiFirstName().getValue(), record.getIndiSex().getValue(), null,"");
         }
         if ( record.getIndiMarriedFirstName()!= null && record.getIndiMarriedFirstName().isEmpty()==false) {
             firstNames.remove(record.getIndiMarriedFirstName().getValue(), record.getIndiMarriedFirstName());
             //removeFirstNameSex(record.getIndiMarriedFirstName(), record.getIndiMarriedSex().getFirstNameSex());
-            updateFirstNameSex(record.getIndiMarriedFirstName().getValue(), record.getIndiSexField().getOppositeString(), null,"");
+            updateFirstNameSex(record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString(), null,"");
         }
         if ( record.getIndiFatherFirstName()!= null && record.getIndiFatherFirstName().isEmpty()==false) {
             firstNames.remove(record.getIndiFatherFirstName().getValue(), record.getIndiFatherFirstName());
@@ -209,12 +209,12 @@ public class CompletionProvider {
         // wife FirstName
         if ( record.getWifeFirstName()!= null && record.getWifeFirstName().isEmpty()==false) {
             firstNames.remove(record.getWifeFirstName().getValue(), record.getWifeFirstName());
-            updateFirstNameSex(record.getWifeFirstName().getValue(), record.getWifeSexField().getValue(), null,"");
+            updateFirstNameSex(record.getWifeFirstName().getValue(), record.getWifeSex().getValue(), null,"");
         }
         if ( record.getWifeMarriedFirstName()!= null && record.getWifeMarriedFirstName().isEmpty()==false) {
             firstNames.remove(record.getWifeMarriedFirstName().getValue(), record.getWifeMarriedFirstName());
             //removeFirstNameSex(record.getWifeMarriedFirstName(), record.getWifeMarriedSex().getFirstNameSex());
-            updateFirstNameSex(record.getWifeMarriedFirstName().getValue(), record.getWifeSexField().getOppositeString(), null,"");
+            updateFirstNameSex(record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString(), null,"");
         }
         if ( record.getWifeFatherFirstName()!= null && record.getWifeFatherFirstName().isEmpty()==false) {
             firstNames.remove(record.getWifeFatherFirstName().getValue(), record.getWifeFatherFirstName());
@@ -375,10 +375,12 @@ public class CompletionProvider {
      */
     public int getFirstNameSex(String firstName) {
         int count = 0;
-        Integer releveCount = gedcomFirstNameSex.get(firstName);
+        // je cherche parmi les releves
+        Integer releveCount = firstNameSex.get(firstName);
         if (releveCount != null) {
             count += releveCount;
         }
+        // je cherche aussi parmi les individus du gedcom
         Integer gedcomCount = gedcomFirstNameSex.get(firstName);
         if (gedcomCount != null) {
             count += gedcomCount;

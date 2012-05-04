@@ -13,7 +13,7 @@ import org.openide.util.NbPreferences;
 public class ModelMisc extends ModelAbstract {
 
     final String columnName[] = {"Id", "Date", "Type", "Intervenant 1", "Intervenant 2", "Photo" };
-    final Class columnType[] = {Integer.class, String.class, FieldDate.class, String.class, String.class, String.class};
+    final Class columnType[] = {Integer.class, String.class, FieldDate.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor

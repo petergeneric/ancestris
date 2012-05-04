@@ -73,6 +73,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
      * et reinitialise Dirty
      */
     protected void removeAll() {
+        try {
         // je vide le modele
         int previousRowCount = getRowCount();
         releveList.clear();
@@ -81,6 +82,10 @@ public abstract class ModelAbstract extends AbstractTableModel  {
         }
         lock.clear();
         resetDirty();
+        } catch (NullPointerException e ){
+            e.printStackTrace();
+
+        }
     }
 
     public Record getRecord(int index) {

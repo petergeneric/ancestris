@@ -30,20 +30,25 @@ public class FieldPlace extends Field {
         } else {
             cityName = "";
         }
+        if (juridictions.length > 1 ) {
+            cityCode = juridictions[1];
+        } else {
+            cityCode = "";
+        }
         if (juridictions.length > 2 ) {
             countyName = juridictions[2];
         } else {
             countyName = "";
         }
-        if (juridictions.length > 1 ) {
-            stateName = juridictions[1];
+        if (juridictions.length > 3 ) {
+            stateName = juridictions[3];
         } else {
             stateName = "";
         }
-        if (juridictions.length > 3 ) {
-            countryName = juridictions[3];
+        if (juridictions.length > 4 ) {
+            countryName = juridictions[4];
         } else {
-            countyName = "";
+            countryName = "";
         }
     }
 
@@ -54,7 +59,7 @@ public class FieldPlace extends Field {
    
     @Override
     public boolean isEmpty() {
-        return cityName.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty();
+        return cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty();
     }
 
     public String getCityName() {

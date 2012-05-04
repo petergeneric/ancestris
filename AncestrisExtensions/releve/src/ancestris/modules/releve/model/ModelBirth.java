@@ -13,7 +13,7 @@ import org.openide.util.NbPreferences;
 public class ModelBirth extends ModelAbstract {
 
     final String columnName[] = {"Id", "Nom", "Sexe", "Date", "Père", "Mère", "Photo"};
-    final Class columnType[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, String.class};
+    final Class columnType[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor
@@ -75,7 +75,7 @@ public class ModelBirth extends ModelAbstract {
                 value = getRecord(row).getIndiLastName().toString() + " " + getRecord(row).getIndiFirstName().toString();
                 break;
             case 2:
-                value = getRecord(row).getIndiSexField();
+                value = getRecord(row).getIndiSex();
                 break;
             case 3:
                 value = getRecord(row).getEventDateField();

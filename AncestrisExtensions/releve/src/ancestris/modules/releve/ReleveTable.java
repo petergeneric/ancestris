@@ -4,6 +4,7 @@ import ancestris.modules.releve.dnd.RecordTransferHandle;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.FieldSex;
+import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.PropertyDate;
 import genj.util.WordBuffer;
@@ -342,6 +343,9 @@ public class ReleveTable extends JTable {
                 } else if (value instanceof FieldSex) {
                     setText(((FieldSex) value).toString());
                     setHorizontalAlignment(SwingConstants.CENTER);
+                } else if (value instanceof FieldSimpleValue) {
+                    setText(((FieldSimpleValue) value).toString());
+                    setHorizontalAlignment(SwingConstants.LEFT);
                 } else {
                     setText(value.toString());
                     setHorizontalAlignment(SwingConstants.LEFT);

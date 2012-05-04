@@ -14,7 +14,7 @@ public class ModelMarriage extends ModelAbstract {
 
 
     final String columnName[] = {"Id", "Date", "Epoux", "Epouse", "Photo" };
-    final Class columnType[] = {Integer.class, FieldDate.class, String.class, String.class, String.class};
+    final Class columnType[] = {Integer.class, FieldDate.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor

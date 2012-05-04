@@ -137,31 +137,28 @@ public abstract class Record {
         return eventPlace;
     }
 
-    public String getCote() {
-        return cote.getValue();
+    public FieldSimpleValue getCote() {
+        return cote;
     }
 
-    public String getFreeComment() {
-        return freeComment.getValue();
+    public FieldPicture getFreeComment() {
+        return freeComment;
     }
 
-    public String getGeneralComment() {
-        return generalComment.getValue();
+    public FieldSimpleValue getGeneralComment() {
+        return generalComment;
     }
 
-    public String getNotary() {
-        return notary.getValue();
+    public FieldSimpleValue getNotary() {
+        return notary;
     }
 
-    public String getParish() {
-        return parish.getValue();
+    public FieldSimpleValue getParish() {
+        return parish;
     }
 
     //  indi ///////////////////////////////////////////////////////////////////
 
-//    public FieldSimpleValue getIndiName() {
-//        return indiFirstName;
-//    }
 
     public FieldSimpleValue getIndiLastName() {
         return indiLastName;
@@ -171,20 +168,16 @@ public abstract class Record {
         return indiFirstName;
     }
 
-    public String getIndiSex() {
-        return indiSex.getValue();
-    }
-
-    public FieldSex getIndiSexField() {
+    public FieldSex getIndiSex() {
         return indiSex;
     }
 
-    public String getIndiAge() {
-        return indiAge.getValue();
+    public FieldSimpleValue getIndiAge() {
+        return indiAge;
     }
 
-    public String getIndiBirthDate() {
-        return indiBirthDate.getValue();
+    public FieldDate getIndiBirthDate() {
+        return indiBirthDate;
     }
 
     public FieldPlace getIndiPlace() {
@@ -195,8 +188,8 @@ public abstract class Record {
         return indiOccupation;
     }
 
-    public String getIndiComment() {
-        return indiComment.getValue();
+    public FieldSimpleValue getIndiComment() {
+        return indiComment;
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -220,8 +213,8 @@ public abstract class Record {
         return indiMarriedOccupation;
     }
 
-    public String getIndiMarriedComment() {
-        return indiMarriedComment.getValue();
+    public FieldSimpleValue getIndiMarriedComment() {
+        return indiMarriedComment;
     }
 
     //  indi father ////////////////////////////////////////////////////////////
@@ -241,8 +234,8 @@ public abstract class Record {
         return indiFatherOccupation;
     }
 
-    public String getIndiFatherComment() {
-        return indiFatherComment.getValue();
+    public FieldSimpleValue getIndiFatherComment() {
+        return indiFatherComment;
     }
 
 
@@ -262,8 +255,8 @@ public abstract class Record {
         return indiMotherOccupation;
     }
 
-    public String getIndiMotherComment() {
-        return indiMotherComment.getValue();
+    public FieldSimpleValue getIndiMotherComment() {
+        return indiMotherComment;
     }
 
     //  wife ///////////////////////////////////////////////////////////////////
@@ -275,20 +268,16 @@ public abstract class Record {
         return wifeFirstName;
     }
 
-    public String getWifeSex() {
-        return wifeSex.getValue();
-    }
-
-    public FieldSex getWifeSexField() {
+    public FieldSex getWifeSex() {
         return wifeSex;
     }
 
-    public String getWifeAge() {
-        return wifeAge.getValue();
+    public FieldSimpleValue getWifeAge() {
+        return wifeAge;
     }
 
-    public String getWifeBirthDate() {
-        return wifeBirthDate.getValue();
+    public FieldDate getWifeBirthDate() {
+        return wifeBirthDate;
     }
 
     public FieldPlace getWifePlace() {
@@ -299,8 +288,8 @@ public abstract class Record {
         return wifeOccupation;
     }
 
-    public String getWifeComment() {
-        return wifeComment.getValue();
+    public FieldSimpleValue getWifeComment() {
+        return wifeComment;
     }
 
     //  wifeMarried ///////////////////////////////////////////////////////////
@@ -324,8 +313,8 @@ public abstract class Record {
         return wifeMarriedOccupation;
     }
 
-    public String getWifeMarriedComment() {
-        return wifeMarriedComment.getValue();
+    public FieldSimpleValue getWifeMarriedComment() {
+        return wifeMarriedComment;
     }
 
     //  wifeFather ///////////////////////////////////////////////////////////
@@ -345,8 +334,8 @@ public abstract class Record {
         return wifeFatherOccupation;
     }
 
-    public String getWifeFatherComment() {
-        return wifeFatherComment.getValue();
+    public FieldSimpleValue getWifeFatherComment() {
+        return wifeFatherComment;
     }
 
     public FieldSimpleValue getWifeMotherLastName() {
@@ -365,8 +354,8 @@ public abstract class Record {
         return wifeMotherOccupation;
     }
 
-    public String getWifeMotherComment() {
-        return wifeMotherComment.getValue();
+    public FieldSimpleValue getWifeMotherComment() {
+        return wifeMotherComment;
     }
 
     // wintness ///////////////////////////////////////////////////////////////
@@ -382,8 +371,8 @@ public abstract class Record {
         return witness1Occupation;
     }
 
-    public String getWitness1Comment() {
-        return witness1Comment.getValue();
+    public FieldSimpleValue getWitness1Comment() {
+        return witness1Comment;
     }
 
     public FieldSimpleValue getWitness2LastName() {
@@ -398,8 +387,8 @@ public abstract class Record {
         return witness2Occupation;
     }
 
-    public String getWitness2Comment() {
-        return witness2Comment.getValue();
+    public FieldSimpleValue getWitness2Comment() {
+        return witness2Comment;
     }
 
     public FieldSimpleValue getWitness3LastName() {
@@ -414,8 +403,8 @@ public abstract class Record {
         return witness3Occupation;
     }
 
-    public String getWitness3Comment() {
-        return witness3Comment.getValue();
+    public FieldSimpleValue getWitness3Comment() {
+        return witness3Comment;
     }
 
     public FieldSimpleValue getWitness4LastName() {
@@ -430,8 +419,8 @@ public abstract class Record {
         return witness4Occupation;
     }
 
-    public String getWitness4Comment() {
-        return witness4Comment.getValue();
+    public FieldSimpleValue getWitness4Comment() {
+        return witness4Comment;
     }
 
 //    public void setEventPlace(String juridictions) {
@@ -441,9 +430,9 @@ public abstract class Record {
     public void setEventPlace(String cityName, String cityCode, String countyName, String stateName, String countryName) {
         eventPlace.setCityName(cityName.trim());
         eventPlace.setCityCode(cityCode.trim());
-        eventPlace.setCountryName(countyName.trim());
+        eventPlace.setCountyName(countyName.trim());
         eventPlace.setStateName(stateName.trim());
-        eventPlace.setCountyName(countryName.trim());
+        eventPlace.setCountryName(countryName.trim());
     }
 
 

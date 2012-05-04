@@ -9,13 +9,16 @@ import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV1;
+import ancestris.modules.releve.file.ReleveFileGedcom;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
+import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
@@ -29,6 +32,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.AbstractAction;
@@ -47,7 +53,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -149,6 +154,7 @@ public final class ReleveTopComponent extends TopComponent  {
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), this);
         getActionMap().put(this, new AbstractAction() {
 
             @Override
@@ -165,7 +171,33 @@ public final class ReleveTopComponent extends TopComponent  {
                 } else if ( actionEvent.getActionCommand().equals("d") ) {
                     jTabbedPane1.setSelectedComponent(panelMisc);
                     panelMisc.createRecord();
-                } 
+                } else if ( actionEvent.getActionCommand().equals("g") ) {
+                    // load current gedcom
+                    boolean saveResult = true;
+                    if (dataManager.isDirty()) {
+                        // je demande s'il faut sauvegarder les données
+                        saveResult = askSaveData();
+                    }
+                    if ( saveResult ) {
+                        Context context = GedcomDirectory.getInstance().getLastContext();
+                        if (context != null && context.getGedcom() != null) {
+                            try {
+                                FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());
+                                String defaultPlace = "nouveau";
+                                if (fileBuffer.getPlaces().size() == 1 ) {
+                                    defaultPlace = fileBuffer.getPlaces().get(0);
+                                } else if ( fileBuffer.getPlaces().size() > 1 ) {
+                                    defaultPlace = askSelectDefaultPlace(fileBuffer.getPlaces());
+                                }
+                                panelConfig.setPlace(defaultPlace);
+                                // Je copie les données dans les modeles
+                                dataManager.addRecords(fileBuffer, false, defaultPlace, 1 );
+                            } catch (Exception ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -558,7 +590,6 @@ public final class ReleveTopComponent extends TopComponent  {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             String message = ex.getMessage();
             if (message.isEmpty()) {
                 message = ex.toString();
@@ -723,9 +754,16 @@ public final class ReleveTopComponent extends TopComponent  {
      */
     protected void saveFile() {
         if ( currentFile != null) {
-            FileManager.saveFile(dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
-            // je met a zero l'indicateur des modifications
-            dataManager.resetDirty();
+            StringBuilder saveResult = FileManager.saveFile(dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
+            if (saveResult.toString().isEmpty()) {
+                // je met a zero l'indicateur des modifications
+                dataManager.resetDirty();
+            } else {
+                // j'affiche les erreurs rencontrées
+                String message = saveResult.toString();
+                String title  = "Enregistrer";
+                JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             saveFileAs();
         }
@@ -738,12 +776,17 @@ public final class ReleveTopComponent extends TopComponent  {
     protected void saveFileAs() {
 
         String buttonLabel = "Enregistrer";
-        String defaultFileName = "Export_releve.txt";
         boolean askForOverwrite = true;
         Component component = this;
         String title  = "Enregistrer";
         String extension = "txt";
 
+        String defaultFileName = getDataManager().getCityName();
+        if (defaultFileName.isEmpty()) {
+            defaultFileName = "nouveau"+"."+extension;
+        } else {
+            defaultFileName += ".txt";
+        }
         // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
@@ -757,14 +800,21 @@ public final class ReleveTopComponent extends TopComponent  {
 
         int rc = chooser.showDialog(component, buttonLabel);
 
+
         // check resultFile
         File resultFile = chooser.getSelectedFile();
         if (rc != JFileChooser.APPROVE_OPTION || resultFile == null) {
             return ;
         }
 
+         // j'ajoute l'extension par defaut si l'utilisateur n'a pas mis d'extension
+        if (!resultFile.getName().contains(".")) {
+            resultFile = new File(resultFile.getAbsolutePath() + "." + extension);
+        }
+
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
+            Toolkit.getDefaultToolkit().beep();
             rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), component);
             if (rc != 0) {
                 return;
@@ -776,12 +826,19 @@ public final class ReleveTopComponent extends TopComponent  {
             // remarque : je memorise le répertoire du fichier avant d'enregistrer le fichier
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
-            // je copie les données dans le fichier
-            FileManager.saveFile(dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
-            // je met a zero l'indicateur des modifications
-            dataManager.resetDirty();
-            // je memorise le nom du fichier
-            setCurrentFile(resultFile);
+            // j'enregistre les données dans le fichier
+            StringBuilder saveResult = FileManager.saveFile(dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
+
+             if (saveResult.toString().isEmpty()) {
+                // je met a zero l'indicateur des modifications
+                dataManager.resetDirty();
+                // je memorise le nom du fichier
+                setCurrentFile(resultFile);
+            } else {
+                // j'affiche les erreurs rencontrées
+                String message = saveResult.toString();
+                JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -805,21 +862,18 @@ public final class ReleveTopComponent extends TopComponent  {
      *
      */
     protected void exportFile() {
-        // TODO ajouter l'extension si l'utilisatatuer ne l'a pas reseignée
         String buttonLabel = "Enregistrer";
-        String defaultFileName = "Export_releve.txt";
         boolean askForOverwrite = true;
         Component component = this;
         String title  = "Enregistrer";
-        String extension = "txt";
+        final String extension = "txt";
 
         // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
-        JFileChooser chooser = new JFileChooser(dir);
+        final JFileChooser chooser = new JFileChooser(dir);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setDialogTitle(title);
-        chooser.setSelectedFile(new File(defaultFileName));
         if (extension != null) {
             chooser.setFileFilter(new FileExtensionFilter(extension));
         }
@@ -829,14 +883,14 @@ public final class ReleveTopComponent extends TopComponent  {
         javax.swing.JPanel jPanelFormat;
         javax.swing.JPanel jPanelModel;
         javax.swing.ButtonGroup buttonGroupFormat;
-        javax.swing.JRadioButton jRadioButtonAll;
-        javax.swing.JRadioButton jRadioButtonEgmt;
-        javax.swing.JRadioButton jRadioButtonNimegue;
+        final javax.swing.JRadioButton jRadioButtonAll;
+        final javax.swing.JRadioButton jRadioButtonEgmt;
+        final javax.swing.JRadioButton jRadioButtonNimegue;
         javax.swing.ButtonGroup buttonGroupModel;
-        javax.swing.JRadioButton jRadioButtonBirth;
-        javax.swing.JRadioButton jRadioButtonDeath;
-        javax.swing.JRadioButton jRadioButtonMarriage;
-        javax.swing.JRadioButton jRadioButtonMisc;
+        final javax.swing.JRadioButton jRadioButtonBirth;
+        final javax.swing.JRadioButton jRadioButtonDeath;
+        final javax.swing.JRadioButton jRadioButtonMarriage;
+        final javax.swing.JRadioButton jRadioButtonMisc;
         panelExport = new javax.swing.JPanel();
 
         jPanelFormat = new javax.swing.JPanel();
@@ -888,6 +942,48 @@ public final class ReleveTopComponent extends TopComponent  {
         jRadioButtonMisc.setText(org.openide.util.NbBundle.getMessage(ReleveFileExport.class, "ReleveFileExport.jRadioButtonMisc.text")); // NOI18N
         jPanelModel.add(jRadioButtonMisc);
 
+        // je declare l'action pour proposer un nom de fichier par defaut correspondant aux choix de l'utilisateur
+        ActionListener rbActionListener = new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String cityName = getDataManager().getCityName();
+                if ( cityName.isEmpty()) {
+                    cityName = "nouveau";
+                }
+                String recordType = "";
+                if (jRadioButtonAll.isSelected()) {
+                    recordType = "_B";
+                } else if (jRadioButtonBirth.isSelected()) {
+                    recordType = "_B";
+                } else if (jRadioButtonMarriage.isSelected()) {
+                    recordType = "_M";
+                }  else if (jRadioButtonDeath.isSelected()) {
+                    recordType = "_D";
+                }  else if (jRadioButtonMisc.isSelected()) {
+                    recordType = "_V";
+                } else {
+                    recordType = "";
+                }
+                String format = "";
+                if (jRadioButtonEgmt.isSelected()) {
+                    format = "_EGMT";
+                } else if (jRadioButtonNimegue.isSelected()) {
+                    format = "_NIMEGUE";
+                }
+                // je cree le nom de fichier par defaut
+                chooser.setSelectedFile(new File(cityName+recordType+format+"."+extension));
+            }
+        };
+
+        jRadioButtonEgmt.addActionListener(rbActionListener);
+        jRadioButtonNimegue.addActionListener(rbActionListener);
+        jRadioButtonAll.addActionListener(rbActionListener);
+        jRadioButtonBirth.addActionListener(rbActionListener);
+        jRadioButtonMarriage.addActionListener(rbActionListener);
+        jRadioButtonDeath.addActionListener(rbActionListener);
+        jRadioButtonMisc.addActionListener(rbActionListener);
+
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -899,8 +995,13 @@ public final class ReleveTopComponent extends TopComponent  {
         jRadioButtonEgmt.setSelected(true);
         // je selectionne les naissances par defaut
         jRadioButtonBirth.setSelected(true);
+        // je met a jour le nom du fichier par defaut en fonction du format 
+        rbActionListener.actionPerformed(null);
 
+        // j'ajoute le panneau dans la boite de dialogue
         chooser.setAccessory(panelExport);
+
+        // j'affiche la boit de dialog
         int rc = chooser.showDialog(component, buttonLabel);
 
         // check resultFile
@@ -911,6 +1012,7 @@ public final class ReleveTopComponent extends TopComponent  {
 
         // choose an existing file?
         if (resultFile.exists() && askForOverwrite) {
+            Toolkit.getDefaultToolkit().beep();
             rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), component);
             if (rc != 0) {
                 return;
@@ -929,7 +1031,13 @@ public final class ReleveTopComponent extends TopComponent  {
                 fileFormat = FileManager.FileFormat.FILE_TYPE_NIMEGUE;
             }
 
+            // j'ajoute l'extension par defaut si l'utilisateur n'a pas mis d'extension
+            if ( ! resultFile.getName().contains(".") ) {
+                resultFile = new File (resultFile.getAbsolutePath()+"."+extension);
+            }
+
             // j'enregistre les modeles choisis la liste des modeles à enregistrer
+            StringBuilder saveResult = new StringBuilder();
             if (jRadioButtonAll.isSelected()) {
                 FileManager.saveFile(dataManager, resultFile, fileFormat);
             } else if (jRadioButtonBirth.isSelected()) {
@@ -940,6 +1048,11 @@ public final class ReleveTopComponent extends TopComponent  {
                 FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveDeathModel());
             } else if (jRadioButtonMisc.isSelected()) {
                 FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMiscModel());
+            }
+            if (! saveResult.toString().isEmpty()) {
+                // j'affiche les erreurs rencontrées
+                String message = saveResult.toString();
+                JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
             }
         }
     }

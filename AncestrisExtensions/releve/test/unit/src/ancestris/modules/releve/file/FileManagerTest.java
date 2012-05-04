@@ -1,6 +1,10 @@
 package ancestris.modules.releve.file;
 
+import ancestris.modules.releve.ConfigPanel;
+import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.RecordBirth;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
 
@@ -12,9 +16,9 @@ public class FileManagerTest extends TestCase {
     
    
     /**
-     * Test of saveFile method, of class FileManager.
+     * test splitCSV
      */
-    public void testLine() {
+    public void testLineSplitCSV() {
         char fieldSeparator = ';';
         String[] fields = { "aaa", "bbb;bb", "cc\"c\"", ""};
         FileManager.Line line = new FileManager.Line(fieldSeparator) ;
@@ -38,7 +42,26 @@ public class FileManagerTest extends TestCase {
         for(int i=0; i<fields.length; i++) {
             assertEquals("field "+i, fields[i], fields2[i]);
         }
+    }
 
+    /**
+     * test saveFile avec un repertoire de fichier inexistant
+     */
+    public void testSaveFile() {
+        File saveFile = new File("xxxx/xxx.txt");
+
+        ConfigPanel configPanel = new ConfigPanel();
+        String place = "cityname,citycode,county,state,country";
+        configPanel.setPlace(place);
+        DataManager dateManager = new DataManager(configPanel);
+
+        RecordBirth record = new RecordBirth();
+        dateManager.addRecord(record);
+
+
+
+        StringBuilder sb = FileManager.saveFile(dateManager, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
+        assertEquals("save result", true, sb.toString().contains("Error java.io.FileNotFoundException"));
 
     }
 
