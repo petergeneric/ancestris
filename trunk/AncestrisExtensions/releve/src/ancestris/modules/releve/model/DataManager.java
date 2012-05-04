@@ -96,11 +96,11 @@ public class DataManager {
    
 
     /**
-     * ajouter
-     * @param newDataManager
+     * ajouter les releves 
+     * @param fileBuffer  buffer contenant les releves a ajouter
      * @param append  si false , vide les modeles avant d'ajouter les nouveaux relevés
-     * @param defaultPlace
-     * @param forceDefaultPlace
+     * @param defaultPlace lieu par defaut des releves
+     * @param forceDefaultPlace 1=remplace les lieux des releves par le lieu par défaut, 0=n'ajoute que les releves dont le lieu est le lieu par defaut
      */
     public void addRecords(FileBuffer fileBuffer, boolean append, String defaultPlace, int forceDefaultPlace) {
         if (!append ) {

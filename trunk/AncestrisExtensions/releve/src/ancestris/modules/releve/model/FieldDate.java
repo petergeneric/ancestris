@@ -17,7 +17,16 @@ public class FieldDate extends Field {
 
     @Override
     public String toString() {
-        return eventDate.toString();
+         if (eventDate.isValid()) {
+            PointInTime pit = eventDate.getStart();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Calendar cal = Calendar.getInstance();
+            cal.set(pit.getYear(), pit.getMonth(), pit.getDay() + 1);
+            //cal.roll(Calendar.DATE, true); // soustrait un jour
+            return dateFormat.format(cal.getTime()).trim();
+        } else {
+            return "";
+        }
     }
 
     @Override
@@ -90,7 +99,7 @@ public class FieldDate extends Field {
 
     @Override
     public boolean isEmpty() {
-        return eventDate.isValid();
+        return toString().isEmpty();
     }
 
 }

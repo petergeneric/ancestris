@@ -40,6 +40,15 @@ public abstract class Field implements Comparable<Field> {
         return this.toString().compareTo(that.toString());
     }
 
+    @Override
+    public boolean equals(Object that) {
+        if (this.getClass().equals(that.getClass())) {
+            return this.toString().equals(that.toString());
+        } else {
+            return false;
+        }
+    }
+
     public static enum FieldType {
         title,
         eventType,
@@ -125,5 +134,11 @@ public abstract class Field implements Comparable<Field> {
         witness4LastName,
         witness4Occupation,
         witness4Comment
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
     }
 }

@@ -13,7 +13,7 @@ import org.openide.util.NbPreferences;
 public class ModelDeath extends ModelAbstract {
 
     final String columnName[] = {"Id", "Nom", "Sexe", "Date", "Age", "Père", "Mère", "Lieu" , "Photo" };
-    final Class columnClass[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, String.class, String.class, String.class};
+    final Class columnClass[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor
@@ -60,7 +60,7 @@ public class ModelDeath extends ModelAbstract {
                 value = getRecord(row).getIndiLastName().toString() + " " + getRecord(row).getIndiFirstName().toString();
                 break;
             case 2:
-                value = getRecord(row).getIndiSexField();
+                value = getRecord(row).getIndiSex();
                 break;
             case 3:
                 value = getRecord(row).getEventDateField();

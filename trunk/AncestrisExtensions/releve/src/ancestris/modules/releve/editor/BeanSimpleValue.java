@@ -2,8 +2,8 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSimpleValue;
-import genj.util.swing.TextFieldWidget;
 import java.awt.BorderLayout;
+import javax.swing.JTextField;
 
 /**
  * Remarque : remplace genj.edit.beans.SimpleValueBean a laquelle il manque
@@ -13,12 +13,12 @@ import java.awt.BorderLayout;
 public class BeanSimpleValue extends Bean {
 
     /** members */
-    private TextFieldWidget tfield;
+    private JTextField tfield;
     
     public BeanSimpleValue() {
 
-        tfield = new TextFieldWidget("", 8);
-        tfield.addChangeListener(changeSupport);
+        tfield = new JTextField("", 8);
+        tfield.getDocument().addDocumentListener(changeSupport);
 
         setLayout(new BorderLayout());
         add(tfield, BorderLayout.CENTER);
@@ -35,14 +35,10 @@ public class BeanSimpleValue extends Bean {
         removeAll();
         if (property == null) {
             tfield.setText("");
-            tfield.setEditable(true);
-            tfield.setVisible(true);
             add(BorderLayout.NORTH, tfield);
         } else {
             String txt = property.toString();
                 tfield.setText(txt);
-                tfield.setEditable(true);
-                tfield.setVisible(true);
                 add(BorderLayout.NORTH, tfield);
         }
         // not changed

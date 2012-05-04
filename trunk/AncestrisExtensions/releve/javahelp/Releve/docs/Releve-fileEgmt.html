@@ -5,13 +5,17 @@
 <link href="./ancestris.css" rel="stylesheet"></head>
 <body>
 <h2>Format des Fichiers EGMT</h2>
-Les quatre types de releves ont &nbsp;tous le même format. Les lignes sont contitutées de 44 champs séparés par
-des point-vigule.<br>A la lecture , certains champs&nbsp;sont ignorés à la lecture du fichier par Ancestris. <br><br>Astuce : &nbsp;Il est possible de créer un fichier au format EGMT avec
+Les quatre types de releves ont &nbsp;tous le même format. Les lignes sont contitutées de 44 champs séparés par un point-vigule.<br>A la lecture , certains champs&nbsp;sont ignorés à la lecture du fichier par Ancestris. <br><br>Si
+le caractere séparateur point-virgule est&nbsp;présent à l'intérieur
+d'un champ, le champ est mis entre guillements lors de l'écriture dans
+le fichier. De même, si le caractère guillemet est présent à
+l'intérieur d'un champ, un deuxième&nbsp;guillement est ajouté après
+celui-ci (cf RFC 4180).<br><br>Astuce : &nbsp;Il est possible de créer un fichier au format EGMT avec
 un tableur&nbsp;pour, par exemple, réutiliser des données déjà saisie avec
 un tableur<br><ol><li>créer un tableau de 44 colonnes avec le tableur,</li><li>renseigner
 &nbsp;les&nbsp;colonnes en respectant la défintion ci-dessous. Il est
 possible de laisser des cellules vides excepté la première colonne.</li><li>enregistrer les données au format CSV ou TXT ( avec point virgule comme séparateur de cellule)</li></ol><br>
-<br>
+<br><br>
 <table style="text-align: left;" border="1" cellpadding="2" cellspacing="2">
 <tbody>
 <tr>
@@ -34,22 +38,22 @@ de mariage"<br>
 </tr>
 <tr align="center">
 <td style="text-align: left;">CountyCode</td>
-<td style="width: 153px;" colspan="4" rowspan="1">x<br>
-</td>
+<td style="width: 153px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
 <td style="width: 268px; text-align: left;">numéro
 de département</td>
 </tr>
 <tr align="center">
 <td style="text-align: left;">CityName</td>
-<td style="width: 153px;" colspan="4" rowspan="1">x<br>
-</td>
+<td style="width: 153px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1"></td><td colspan="1"></td><td>x</td>
 <td style="width: 268px; text-align: left;">nom de
 la commune</td>
 </tr>
 <tr align="center">
 <td style="text-align: left;">ParishName</td>
-<td style="width: 153px;" colspan="4" rowspan="1">x<br>
-</td>
+<td style="width: 153px;" colspan="1" rowspan="1">x<br>
+</td><td colspan="1">x</td><td colspan="1">x</td><td>x</td>
 <td style="width: 268px; text-align: left;">nom de
 la paroisse s'il en a plusieurs dans la commune</td>
 </tr>
@@ -64,27 +68,27 @@ la paroisse s'il en a plusieurs dans la commune</td>
 </tr>
 <tr>
 <td style="text-align: left;">Cote</td>
-<td colspan="4" rowspan="1" style="text-align: center;">x</td>
+<td style="text-align: center;" colspan="1" rowspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
 <tr>
 <td>PhotoNo</td>
-<td colspan="4" rowspan="1" style="text-align: center;">x</td>
+<td style="text-align: center;" colspan="1" rowspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;">numéro de photo</td>
 </tr>
 <tr>
 <td>Day</td>
-<td colspan="4" rowspan="1" style="text-align: center;">x</td>
+<td style="text-align: center;" colspan="1" rowspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr align="center">
 <td style="text-align: left;">Month</td>
-<td colspan="4" rowspan="1">x</td>
+<td style="text-align: center;" colspan="1" rowspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
 <tr align="center">
 <td style="text-align: left;">Year</td>
-<td colspan="4" rowspan="1">x</td>
+<td style="text-align: center;" colspan="1" rowspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;" colspan="1">x</td><td style="text-align: center;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
 <tr align="center">
@@ -257,7 +261,7 @@ divers)&nbsp;</td>
 <td>WifePlace</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
@@ -284,7 +288,7 @@ divers)&nbsp;</td>
 <td>WifeFatherFirstName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;">Lecture
 : Ancestris utilise le même nom que &nbsp;la fille (WifeLastName) </td>
@@ -293,7 +297,7 @@ divers)&nbsp;</td>
 <td>WifeFatherDead</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
@@ -301,7 +305,7 @@ divers)&nbsp;</td>
 <td>WifeFatherComment</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
@@ -309,7 +313,7 @@ divers)&nbsp;</td>
 <td>WifeMotherLastName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
@@ -317,7 +321,7 @@ divers)&nbsp;</td>
 <td>WifeMotherFirstName</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
@@ -325,7 +329,7 @@ divers)&nbsp;</td>
 <td>WifeMotherDead</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>
@@ -333,7 +337,7 @@ divers)&nbsp;</td>
 <td>WifeMotherComment</td>
 <td style="text-align: center;">ignoré</td>
 <td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
+<td style="text-align: center;">ignoré</td>
 <td style="text-align: center; width: 153px;">x</td>
 <td style="width: 268px; text-align: left;"></td>
 </tr>

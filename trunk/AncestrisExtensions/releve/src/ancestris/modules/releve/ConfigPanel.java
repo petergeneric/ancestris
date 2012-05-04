@@ -51,10 +51,11 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         copyFreeComment.setSelected( Boolean.parseBoolean(NbPreferences.forModule(ReleveTopComponent.class).get("DefaultFreeCommentEnabled", "true")));
 
         // pour mettre à jour "isDirty"
-        stateEntry.getDocument().addDocumentListener(changeSupport);
         cityNameEntry.getDocument().addDocumentListener(changeSupport);
-        countryEntry.getDocument().addDocumentListener(changeSupport);
+        cityCodeEntry.getDocument().addDocumentListener(changeSupport);
+        stateEntry.getDocument().addDocumentListener(changeSupport);
         countyNameEntry.getDocument().addDocumentListener(changeSupport);
+        countryEntry.getDocument().addDocumentListener(changeSupport);
 
         changeSupport.setChanged(false);
     }
@@ -128,7 +129,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
                 && getStateName().isEmpty() && getCountryName().isEmpty()) {
             return "";
         } else {
-            return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getCountryName()+ ","+getStateName();
+            return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
         }
     }
 
@@ -137,37 +138,32 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
      * Cette methode est appelée quand on charge un fichier de relevé.
      * @param value
      */
-    void setPlace(String value) {
+    public void setPlace(String value) {
         String[] juridictions =  value.split(",");
         if (juridictions.length > 0 ) {
             cityNameEntry.setText(juridictions[0]);
         } else {
             cityNameEntry.setText("");
         }
-        if (juridictions.length > 0 ) {
-            cityNameEntry.setText(juridictions[0]);
+        if (juridictions.length > 1 ) {
+            cityCodeEntry.setText(juridictions[1]);
         } else {
-            cityNameEntry.setText("");
+            cityCodeEntry.setText("");
         }
         if (juridictions.length > 2 ) {
             countyNameEntry.setText(juridictions[2]);
         } else {
             countyNameEntry.setText("");
         }
-        if (juridictions.length > 1 ) {
-            stateEntry.setText(juridictions[1]);
+        if (juridictions.length > 3 ) {
+            stateEntry.setText(juridictions[3]);
         } else {
             stateEntry.setText("");
         }
-        if (juridictions.length > 3 ) {
-            countryEntry.setText(juridictions[3]);
+        if (juridictions.length > 4 ) {
+            countryEntry.setText(juridictions[4]);
         } else {
-            countyNameEntry.setText("");
-        }
-        if (juridictions.length > 3 ) {
-            countryEntry.setText(juridictions[3]);
-        } else {
-            countyNameEntry.setText("");
+            countryEntry.setText("");
         }
     }
 

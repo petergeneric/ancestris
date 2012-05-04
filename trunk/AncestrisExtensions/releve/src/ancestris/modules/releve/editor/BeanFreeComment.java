@@ -101,9 +101,6 @@ public class BeanFreeComment extends Bean {
     }
 
 
-//    public String getValue() {
-//        return spinner.getValue().toString();
-//    }
 
 
     private class PictureNameModel implements SpinnerModel {
@@ -132,9 +129,11 @@ public class BeanFreeComment extends Bean {
 
             }
             i++;
+            // je cree le format pour préserver les zeros à gauche
+            String format = String.format("%%s%%0%dd", value.length() - i);
             if ( i < value.length() ) {
                 int num = new Integer(value.substring(i,value.length())).intValue() +1;
-                value = value.substring(0,i)+String.valueOf(num);
+                value = String.format(format, value.substring(0,i), num);
             }
             return value;
         }
@@ -147,9 +146,14 @@ public class BeanFreeComment extends Bean {
 
             }
             i++;
+            // je cree le format pour préserver les zeros à gauche
+            String format = String.format("%%s%%0%dd", value.length() - i);
             if ( i < value.length() ) {
                 int num = new Integer(value.substring(i,value.length())).intValue() -1;
-                value = value.substring(0,i)+String.valueOf(num);
+                if (num >=0) {
+                    // je memorise la valeur si elle est positive
+                    value = String.format(format, value.substring(0,i), num);
+                }
             }
             return value;
         }

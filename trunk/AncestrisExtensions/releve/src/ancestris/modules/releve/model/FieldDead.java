@@ -1,7 +1,5 @@
 package ancestris.modules.releve.model;
 
-
-
 /**
  *
  * @author Michel
@@ -25,7 +23,11 @@ public class FieldDead extends Field {
 
     @Override
     public void setValue(Object value) {
-        this.value = Boolean.getBoolean(value.toString());
+        if ("décédé".equals(value.toString())) {
+             this.value = true;
+        } else {
+            this.value = Boolean.getBoolean(value.toString());
+        }
     }
 
 

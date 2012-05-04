@@ -375,8 +375,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         
         //TODO ajouter l'age des témoins
 
-        //TODO nom du nouveau fichier avec la commune
-
         fieldsPanel.setVisible(false);
         fieldsPanel.setFocusTraversalPolicyProvider(true);
         fieldsPanel.setFocusCycleRoot(true);
@@ -548,12 +546,17 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             // je memorise le numero du releve
             currentRecordIndex = recordIndex;
             // j'affiche le numero du relevé.
-            jTextFielRecordNo.setText(String.valueOf(currentRecordIndex+1));
             // j'active le bouton Delete si le releve courant est valide
             if ( currentRecordIndex == -1 ) {
                 jButtonDelete.setEnabled(false);
             } else {
-                jButtonDelete.setEnabled(true);
+                jButtonDelete.setEnabled(true);               
+            }
+            Record record = recordModel.getRecord(currentRecordIndex);
+            if (record!= null) {
+                jTextFielRecordNo.setText(String.valueOf(record.recordNo));
+            } else {
+                jTextFielRecordNo.setText("");
             }
         }
         fieldsPanel.setVisible(true);
@@ -623,7 +626,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     }
     
     public void setStandaloneMode() {
-        jButtonStandalone.setVisible(false);
+        //jButtonStandalone.setVisible(false);
         jButtonPrevious.setVisible(true);
         jButtonNext.setVisible(true);
         jTextFielRecordNo.setVisible(true);
@@ -842,8 +845,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                             NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jCheckBoxNewValueControl.text"),
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
-
-                    if (choice == 1 ) {
+                    // choice = 0 si l'utilisateur a cliqué sur OK 
+                    // choice = 1 si l'utilisateur a cliqué sur NO
+                    // choice = -1 si l'utilisateur a tapé la touche ESCAPE
+                    if (choice == 1 || choice == -1) {
                         // l'utisateur a refusé de confirmer la nouvelle valeur
                         // j'annule le commit
                         bean.getBeanField().getField().setValue(oldValue);
@@ -866,20 +871,20 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             switch (fieldType) {
                 case indiFirstName :
                     if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
-                        record.getIndiSexField().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
+                        record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
                         refreshBeanField(fieldType.indiSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSexField().getValue(), record.getIndiFirstName().getValue(), record.getIndiSexField().getValue());
+                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
                     break;
                 case indiSex :
-                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiFirstName().getValue(), oldValue, record.getIndiFirstName().getValue(), record.getIndiSexField().getValue());
+                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiFirstName().getValue(), oldValue, record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
                     break;
                 case indiMarriedFirstName :
 //                    if ( record.getIndiMarriedFirstName() != null &&  !record.getIndiMarriedFirstName().isEmpty() && record.getIndiMarriedSex().getFirstNameSex() == FieldSex.UNKNOWN) {
 //                        record.getIndiMarriedSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiMarriedFirstName())) ;
 //                        refreshBeanField(fieldType.indiMarriedSex);
 //                    }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSexField().getValue(), record.getIndiMarriedFirstName().getValue(), record.getIndiSexField().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString());
                     break;
 //                case indiMarriedSex :
 //                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiMarriedFirstName(), oldValue, record.getIndiMarriedFirstName(), record.getIndiMarriedSex().getValue());
@@ -892,20 +897,20 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     break;
                 case wifeFirstName :
                     if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
-                        record.getWifeSexField().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
+                        record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
                         refreshBeanField(fieldType.wifeSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSexField().getValue(), record.getWifeFirstName().getValue(), record.getWifeSexField().getValue());
+                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getValue(), record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
                     break;
                 case wifeSex :
-                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeFirstName().getValue(), oldValue, record.getWifeFirstName().getValue(), record.getWifeSexField().getValue());
+                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeFirstName().getValue(), oldValue, record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
                     break;
                 case wifeMarriedFirstName :
 //                    if ( record.getWifeMarriedFirstName() != null &&  !record.getWifeMarriedFirstName().isEmpty() && record.getWifeMarriedSex().getFirstNameSex() == FieldSex.UNKNOWN) {
 //                        record.getWifeMarriedSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeMarriedFirstName())) ;
 //                        refreshBeanField(fieldType.wifeMarriedSex);
 //                    }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSexField().getOppositeString(), record.getWifeMarriedFirstName().getValue(), record.getWifeSexField().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getOppositeString(), record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString());
                     break;
 //                case wifeMarriedSex :
 //                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeMarriedFirstName(), oldValue, record.getWifeMarriedFirstName(), record.getWifeMarriedSex().getValue());
@@ -1183,9 +1188,15 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     }//GEN-LAST:event_jButtonNextActionPerformed
 
     private void jButtonStandaloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStandaloneActionPerformed
-        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-        ((ReleveTopComponent)tc).setStandaloneEditor(true);
-
+        if ( standaloneMode == false ) {
+            // j'affiche l'editeur standalone
+            TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
+            ((ReleveTopComponent)tc).setStandaloneEditor(true);
+        } else {
+            // j'affiche l'editeur de la fenetre principale
+            TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
+            tc.toFront();
+        }
     }//GEN-LAST:event_jButtonStandaloneActionPerformed
 
    
