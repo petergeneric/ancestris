@@ -104,13 +104,13 @@ public class ReportRelatives {
 
             if (!find.isEmpty()) {
                 document.startSection(NbBundle.getMessage(this.getClass(), relative.key), 3);
-                document.startTable();
+                document.startTable("border=1, width=100%, cellpadding=5, cellspacing=2, frame=below, rules=rows");
                 document.addTableColumn("column-width=10%");
                 document.addTableColumn("column-width=90%");
                 document.nextTableRow("font-weight=bold");
-                document.addText("ID");
+                document.addText(NbBundle.getMessage(this.getClass(), "indi.ID"));
                 document.nextTableCell();
-                document.addText("indi_name");
+                document.addText(NbBundle.getMessage(this.getClass(), "indi.name"));
                 document.nextTableRow("font-weight=normal");
 
                 for (Indi found : find) {
