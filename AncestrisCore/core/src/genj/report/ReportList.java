@@ -111,7 +111,7 @@ import javax.swing.event.ListSelectionListener;
   /**
    * A private callback for various messages coming in.
    */
-  private class Callback extends DefaultListCellRenderer implements ListCellRenderer <Object>, ListSelectionListener {
+  private class Callback extends DefaultListCellRenderer implements ListCellRenderer, ListSelectionListener {
     
 
 
