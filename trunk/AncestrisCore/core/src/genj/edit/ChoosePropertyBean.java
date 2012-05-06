@@ -187,11 +187,12 @@ public class ChoosePropertyBean extends JComponent {
   /**
    * Tag List Cell Renderer
    */
-  class MetaDefRenderer extends DefaultListCellRenderer implements ListCellRenderer {
+  class MetaDefRenderer extends DefaultListCellRenderer implements ListCellRenderer <Object> {
 
     /**
      * Return component for rendering list element
      */
+        @Override
     public Component getListCellRendererComponent(JList list,Object value,int index,boolean isSelected,boolean cellHasFocus) {
       super.getListCellRendererComponent(list,value,index,isSelected,cellHasFocus);
         MetaProperty def = (MetaProperty)value;
