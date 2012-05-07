@@ -238,8 +238,8 @@ public class ResourceParser {
             String key = line.substring(keyStart, separatorIndex);
             String value = (separatorIndex < len) ? line.substring(valueIndex, len) : ""; // NOI18N
 
-            if (key == null) // PENDING - should join with the next comment
-            ;
+//            if (key == null) // PENDING - should join with the next comment
+//            ;
 
             int currentPos = in.position;
             int valuePosFile = 0;

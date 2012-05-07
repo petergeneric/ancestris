@@ -38,7 +38,7 @@ public class ZipArchive implements PropertyChangeListener {
             ZipFile zipInputFile = new ZipFile(inputFile);
 
             // Get Reference Bundle
-            for (Enumeration<ZipEntry> e = (Enumeration<ZipEntry>) zipInputFile.entries(); e.hasMoreElements();) {
+            for (Enumeration<? extends ZipEntry> e = ((Enumeration<? extends ZipEntry>) zipInputFile.entries()); e.hasMoreElements();) {
                 ZipEntry zipEntry = e.nextElement();
                 if (!zipEntry.isDirectory()) {
                     InputStream inputStream = zipInputFile.getInputStream(zipEntry);
