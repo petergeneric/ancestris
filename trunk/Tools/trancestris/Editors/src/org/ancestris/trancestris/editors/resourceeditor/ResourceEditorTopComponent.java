@@ -42,6 +42,34 @@ import org.openide.util.Utilities;
 @ConvertAsProperties(dtd = "-//org.ancestris.trancestris.editors.resourceeditor//ResourceEditor//EN", autostore = false)
 public final class ResourceEditorTopComponent extends TopComponent implements LookupListener {
 
+    /**
+     * @return the resourceFileView
+     */
+    public javax.swing.JList getResourceFileView() {
+        return resourceFileView;
+    }
+
+    /**
+     * @param resourceFileView the resourceFileView to set
+     */
+    public void setResourceFileView(javax.swing.JList resourceFileView) {
+        this.resourceFileView = resourceFileView;
+    }
+
+    /**
+     * @return the resourceFile
+     */
+    public ResourceFile getResourceFile() {
+        return resourceFile;
+    }
+
+    /**
+     * @param resourceFile the resourceFile to set
+     */
+    public void setResourceFile(ResourceFile resourceFile) {
+        this.resourceFile = resourceFile;
+    }
+
     private class ResourceFileModel implements ListModel {
 
         @Override
@@ -54,12 +82,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         @Override
         public Object getElementAt(int i) {
-            return resourceFile == null ? "" : resourceFile.getLine(i);
+            return getResourceFile() == null ? "" : getResourceFile().getLine(i);
         }
 
         @Override
         public int getSize() {
-            return resourceFile == null ? 0 : resourceFile.getLineCount();
+            return getResourceFile() == null ? 0 : getResourceFile().getLineCount();
         }
     }
 
@@ -78,7 +106,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             String s = value.toString();
             setText(s);
             Color color;
-            switch (resourceFile.getLineState(index)) {
+            switch (getResourceFile().getLineState(index)) {
                 // The line is the same
                 case -1:
                     color = Color.BLUE;
@@ -180,18 +208,18 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         @Override
         public void undo() throws CannotUndoException {
             undoRedoEvent = true;
-            resourceFile.setLineTranslation(index, oldValue);
-            resourceFileView.setSelectedIndex(index);
-            resourceFileView.ensureIndexIsVisible(index);
+            getResourceFile().setLineTranslation(index, oldValue);
+            getResourceFileView().setSelectedIndex(index);
+            getResourceFileView().ensureIndexIsVisible(index);
             undoRedoEvent = false;
         }
 
         @Override
         public void redo() throws CannotUndoException {
             undoRedoEvent = true;
-            resourceFile.setLineTranslation(index, newValue);
-            resourceFileView.setSelectedIndex(index);
-            resourceFileView.ensureIndexIsVisible(index);
+            getResourceFile().setLineTranslation(index, newValue);
+            getResourceFileView().setSelectedIndex(index);
+            getResourceFileView().ensureIndexIsVisible(index);
             undoRedoEvent = false;
         }
     }
@@ -331,24 +359,24 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonConfirmTranslationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmTranslationActionPerformed
-        int i = resourceFileView.getSelectedIndex();
+        int i = getResourceFileView().getSelectedIndex();
 
         logger.log(Level.INFO, "Selected index is {0}", i);
 
         if (i >= 0) {
-            String oldValue = resourceFile.getLineTranslation(i);
+            String oldValue = getResourceFile().getLineTranslation(i);
             String newValue = textAreaTranslation.getText();
             logger.log(Level.INFO, "Save translation for index {0}", i);
-            resourceFile.setLineTranslation(i, newValue);
+            getResourceFile().setLineTranslation(i, newValue);
             manager.addEdit(new MyAbstractUndoableEdit(i, oldValue, newValue));
         }
 
         // Search for the first next non translated line
-        while (i + 1 < resourceFileView.getModel().getSize()) {
-            if (resourceFile.getLineState(++i) == 0) {
+        while (i + 1 < getResourceFileView().getModel().getSize()) {
+            if (getResourceFile().getLineState(++i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
-                resourceFileView.setSelectedIndex(i);
-                resourceFileView.ensureIndexIsVisible(i);
+                getResourceFileView().setSelectedIndex(i);
+                getResourceFileView().ensureIndexIsVisible(i);
                 break;
             }
         }
@@ -361,12 +389,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         String translation = "";
         String comment = "";
 
-        int i = resourceFileView.getSelectedIndex();
+        int i = getResourceFileView().getSelectedIndex();
         logger.log(Level.INFO, "Selected index is {0}", i);
 
         if (i >= 0) {
-            translation = resourceFile.getLineTranslation(i);
-            comment = resourceFile.getLineComment(i);
+            translation = getResourceFile().getLineTranslation(i);
+            comment = getResourceFile().getLineComment(i);
         }
         textAreaComments.setText(comment);
         textAreaComments.setCaretPosition(0);
@@ -387,14 +415,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }//GEN-LAST:event_textAreaTranslationKeyTyped
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        int i = resourceFileView.getSelectedIndex();
+        int i = getResourceFileView().getSelectedIndex();
         logger.log(Level.INFO, "Selected index is {0}", i);
         // Search for the first next non translated line
         while (i - 1 >= 0) {
-            if (resourceFile.getLineState(--i) == 0) {
+            if (getResourceFile().getLineState(--i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
-                resourceFileView.setSelectedIndex(i);
-                resourceFileView.ensureIndexIsVisible(i);
+                getResourceFileView().setSelectedIndex(i);
+                getResourceFileView().ensureIndexIsVisible(i);
                 break;
             } else {
                 logger.log(Level.INFO, "index {0} is translated", i);
@@ -403,14 +431,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        int i = resourceFileView.getSelectedIndex();
+        int i = getResourceFileView().getSelectedIndex();
         logger.log(Level.INFO, "Selected index is {0}", i);
         // Search for the first next non translated line
-        while (i + 1 < resourceFileView.getModel().getSize()) {
-            if (resourceFile.getLineState(++i) == 0) {
+        while (i + 1 < getResourceFileView().getModel().getSize()) {
+            if (getResourceFile().getLineState(++i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
-                resourceFileView.setSelectedIndex(i);
-                resourceFileView.ensureIndexIsVisible(i);
+                getResourceFileView().setSelectedIndex(i);
+                getResourceFileView().ensureIndexIsVisible(i);
                 break;
             } else {
                 logger.log(Level.INFO, "index {0} is translated", i);
@@ -516,16 +544,16 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         if (!c.isEmpty()) {
             for (Iterator i = c.iterator(); i.hasNext();) {
                 ZipDirectory zipDirectory = (ZipDirectory) i.next();
-                resourceFile = zipDirectory.getResourceFile();
-                resourceFileView.updateUI();
+                setResourceFile(zipDirectory.getResourceFile());
+                getResourceFileView().updateUI();
                 manager.discardAllEdits();
-                if (resourceFile != null) {
+                if (getResourceFile() != null) {
                     logger.log(Level.INFO, "Editing file in directory {0}", zipDirectory.getName());
 
-                    resourceFileView.setSelectedIndex(0);
-                    resourceFileView.ensureIndexIsVisible(0);
+                    getResourceFileView().setSelectedIndex(0);
+                    getResourceFileView().ensureIndexIsVisible(0);
 
-                    String comment = resourceFile.getLineComment(0);
+                    String comment = getResourceFile().getLineComment(0);
                     textAreaComments.setText(comment);
                     textAreaComments.setCaretPosition(0);
                     if (Pattern.compile("NOI18N$").matcher(comment).find() == true) {
@@ -536,7 +564,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                         textAreaTranslation.setEditable(true);
                         buttonConfirmTranslation.setEnabled(false);
                     }
-                    textAreaTranslation.setText(resourceFile.getLineTranslation(0));
+                    textAreaTranslation.setText(getResourceFile().getLineTranslation(0));
                     textAreaTranslation.setCaretPosition(0);
                 } else {
                     logger.log(Level.INFO, "No file under edition");
@@ -555,7 +583,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     @Override
     public void setFont(Font font) {
         super.setFont(font);
-        resourceFileView.setFont(font);
+        getResourceFileView().setFont(font);
         textAreaTranslation.setFont(font);
         textAreaComments.setFont(font);
         NbPreferences.forModule(ResourceEditorTopComponent.class).put("Font.Name", font.getName());
