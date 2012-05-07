@@ -200,6 +200,7 @@ public class BeanDate extends Bean {
             super.setText(set.getName());
         }
 
+        @Override
         public void actionPerformed(ActionEvent event) {
             setFormat(formatToSet);
             date1.requestFocusInWindow();
