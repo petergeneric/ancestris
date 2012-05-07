@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
@@ -369,7 +370,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         }
         textAreaComments.setText(comment);
         textAreaComments.setCaretPosition(0);
-        if (comment.contains("NOI18N") == true) {
+        if (Pattern.compile("NOI18N$").matcher(comment).find() == true) {
             logger.log(Level.INFO, "index {0} shall not be translated", i);
             textAreaTranslation.setEditable(false);
             buttonConfirmTranslation.setEnabled(false);
@@ -524,9 +525,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     resourceFileView.setSelectedIndex(0);
                     resourceFileView.ensureIndexIsVisible(0);
 
-                    textAreaComments.setText(resourceFile.getLineComment(0));
+                    String comment = resourceFile.getLineComment(0);
+                    textAreaComments.setText(comment);
                     textAreaComments.setCaretPosition(0);
-                    if (resourceFile.getLineComment(0).contains("NOI18N") == true) {
+                    if (Pattern.compile("NOI18N$").matcher(comment).find() == true) {
                         logger.log(Level.INFO, "index {0} shall not be translated", i);
                         textAreaTranslation.setEditable(false);
                         buttonConfirmTranslation.setEnabled(false);
