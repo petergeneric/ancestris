@@ -372,6 +372,54 @@ public class ResourceFile {
         }
     }
 
+    public int searchNext(int index, String expression, boolean fromLocale, boolean caseSensitive) {
+        Pattern p = null;
+        if (caseSensitive == false) {
+            p = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        } else {
+            p = Pattern.compile(expression);
+
+        }
+
+        while (++index < getLineCount()) {
+            String value = "";
+            if (fromLocale == true) {
+                value = fromLanguage.getLine(content.get(index)).getValue();
+            } else {
+                value = toLanguage.getLine(content.get(index)).getValue();
+
+            }
+            if (value != null && p.matcher(value).find() == true) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    public int searchPrevious(int index, String expression, boolean fromLocale, boolean caseSensitive) {
+        Pattern p = null;
+        if (caseSensitive == false) {
+            p = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        } else {
+            p = Pattern.compile(expression);
+
+        }
+
+        while (--index > 0) {
+            String value = "";
+            if (fromLocale == true) {
+                value = fromLanguage.getLine(content.get(index)).getValue();
+            } else {
+                value = toLanguage.getLine(content.get(index)).getValue();
+
+            }
+            if (value != null && p.matcher(value).find() == true) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
     public String search(String expression, boolean fromLocale, boolean caseSensitive) {
         Pattern p = null;
         if (caseSensitive == false) {
