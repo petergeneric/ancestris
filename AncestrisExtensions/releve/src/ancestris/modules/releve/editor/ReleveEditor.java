@@ -380,8 +380,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         fieldsPanel.setFocusCycleRoot(true);
         fieldsPanel.resetKeyboardActions();
         fieldsPanel.removeAll();
-        fieldsPanel.setPreferredSize(new Dimension(200,0));
-
+        
         if (recordModel != null) {
             BeanField[] beanFields = recordModel.getFieldList(recordIndex);
             int lineNo = 0;
@@ -412,12 +411,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     case indiBirthDate:
                         label = label.substring(0,5)+". (Alt-B)";
                         bean = new BeanDate();
-                        bean.setPreferredSize(new java.awt.Dimension(200, 20));
                         break;
                     case eventDate:
                     case wifeBirthDate:
                         bean = new BeanDate();
-                        bean.setPreferredSize(new java.awt.Dimension(200, 20));
                         break;
 
                     case indiLastName:
@@ -540,8 +537,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             gridBagConstraints.weighty = 1.0;
             JLabel jLabelEnd = new javax.swing.JLabel();
             fieldsPanel.add(jLabelEnd, gridBagConstraints);
-            // je change la taille du panel pour forcer la mise à jour des scrollbars
-            fieldsPanel.setPreferredSize(new Dimension(200, 20 * lineNo));
 
             // je memorise le numero du releve
             currentRecordIndex = recordIndex;
@@ -1051,10 +1046,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         fieldsPanel = new javax.swing.JPanel();
 
         setMinimumSize(new java.awt.Dimension(200, 300));
-        setPreferredSize(new java.awt.Dimension(0, 0));
+        setOpaque(false);
+        setPreferredSize(null);
         setLayout(new java.awt.BorderLayout());
 
         editorBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        editorBar.setPreferredSize(null);
         editorBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jButtonNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png"))); // NOI18N
@@ -1121,9 +1118,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         add(editorBar, java.awt.BorderLayout.NORTH);
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(0, 0));
+        jScrollPane1.setPreferredSize(null);
 
-        fieldsPanel.setPreferredSize(new java.awt.Dimension(170, 0));
+        fieldsPanel.setPreferredSize(null);
         fieldsPanel.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(fieldsPanel);
 
