@@ -7,6 +7,7 @@ package org.ancestris.trancestris.editors.resourceeditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -248,6 +249,20 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
     }
 
+    void search(boolean next) {
+        int index = -1;
+        if (resourceFile != null) {
+            if (next) {
+                index = resourceFile.searchNext(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleCheckBox.isSelected(), caseSensitiveCheckBox.isSelected());
+            } else {
+                index = resourceFile.searchPrevious(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleCheckBox.isSelected(), caseSensitiveCheckBox.isSelected());
+            }
+            if (index > -1) {
+                resourceFileView.setSelectedIndex(index);
+            }
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -256,6 +271,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel5 = new javax.swing.JPanel();
+        expressionTextField = new javax.swing.JTextField();
+        fromLocaleCheckBox = new javax.swing.JCheckBox();
+        caseSensitiveCheckBox = new javax.swing.JCheckBox();
+        searchPreviousButton = new javax.swing.JButton();
+        searchNextButton = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         scrollPaneComments = new javax.swing.JScrollPane();
         textAreaComments = new javax.swing.JTextArea();
@@ -273,6 +295,61 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         setLayout(new java.awt.BorderLayout());
 
+        expressionTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                expressionTextFieldKeyPressed(evt);
+            }
+        });
+
+        fromLocaleCheckBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(fromLocaleCheckBox, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.fromLocaleCheckBox.text")); // NOI18N
+
+        caseSensitiveCheckBox.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(caseSensitiveCheckBox, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.caseSensitiveCheckBox.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(searchPreviousButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.searchPreviousButton.text")); // NOI18N
+        searchPreviousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchPreviousButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(searchNextButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.searchNextButton.text")); // NOI18N
+        searchNextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchNextButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addComponent(caseSensitiveCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fromLocaleCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchPreviousButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchNextButton))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchNextButton)
+                .addComponent(searchPreviousButton)
+                .addComponent(caseSensitiveCheckBox)
+                .addComponent(fromLocaleCheckBox))
+        );
+
+        add(jPanel5, java.awt.BorderLayout.NORTH);
+
+        jPanel6.setLayout(new java.awt.BorderLayout());
+
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel1.border.title"))); // NOI18N
         jPanel1.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Comment-Window")); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
@@ -285,13 +362,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jPanel1.add(scrollPaneComments);
 
-        add(jPanel1, java.awt.BorderLayout.NORTH);
+        jPanel6.add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel2.border.title"))); // NOI18N
         jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
@@ -304,7 +381,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jPanel2.add(scrollPaneResourceView);
 
-        add(jPanel2, java.awt.BorderLayout.CENTER);
+        jPanel6.add(jPanel2, java.awt.BorderLayout.CENTER);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel3.border.title"))); // NOI18N
         jPanel3.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Translation-Window")); // NOI18N
@@ -324,7 +401,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         panelTranslation.add(scrollPaneTranslation, java.awt.BorderLayout.CENTER);
 
-        jPanel4.setLayout(new java.awt.GridLayout());
+        jPanel3.add(panelTranslation);
+
+        jPanel6.add(jPanel3, java.awt.BorderLayout.SOUTH);
+
+        add(jPanel6, java.awt.BorderLayout.CENTER);
+
+        jPanel4.setLayout(new java.awt.GridLayout(1, 0));
 
         org.openide.awt.Mnemonics.setLocalizedText(previousButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.previousButton.text")); // NOI18N
         previousButton.addActionListener(new java.awt.event.ActionListener() {
@@ -351,11 +434,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         });
         jPanel4.add(nextButton);
 
-        panelTranslation.add(jPanel4, java.awt.BorderLayout.SOUTH);
-
-        jPanel3.add(panelTranslation);
-
-        add(jPanel3, java.awt.BorderLayout.SOUTH);
+        add(jPanel4, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonConfirmTranslationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmTranslationActionPerformed
@@ -446,12 +525,31 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         }
     }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void expressionTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionTextFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            search(true);
+        }
+}//GEN-LAST:event_expressionTextFieldKeyPressed
+
+    private void searchPreviousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPreviousButtonActionPerformed
+        search(false);
+}//GEN-LAST:event_searchPreviousButtonActionPerformed
+
+    private void searchNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchNextButtonActionPerformed
+        search(true);
+    }//GEN-LAST:event_searchNextButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConfirmTranslation;
+    private javax.swing.JCheckBox caseSensitiveCheckBox;
+    private javax.swing.JTextField expressionTextField;
+    private javax.swing.JCheckBox fromLocaleCheckBox;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JButton nextButton;
     private javax.swing.JPanel panelTranslation;
     private javax.swing.JButton previousButton;
@@ -459,6 +557,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JScrollPane scrollPaneComments;
     private javax.swing.JScrollPane scrollPaneResourceView;
     private javax.swing.JScrollPane scrollPaneTranslation;
+    private javax.swing.JButton searchNextButton;
+    private javax.swing.JButton searchPreviousButton;
     private javax.swing.JTextArea textAreaComments;
     private javax.swing.JTextArea textAreaTranslation;
     // End of variables declaration//GEN-END:variables
