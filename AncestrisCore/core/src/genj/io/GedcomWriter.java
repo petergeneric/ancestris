@@ -247,7 +247,7 @@ public class GedcomWriter implements IGedcomWriter {
         prop.addProperty("VERS", Version.getInstance().toString());
         prop.addProperty("NAME", "Ancestris");
         prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).
-                addProperty("ADDR", "http://www.ancestris.org, http://www.ancestris.com");
+                addProperty("ADDR", "http://www.ancestris.org");
         replaceProperties(header, "DEST", "ANY");
 
         // Replace HEAD:DATE
