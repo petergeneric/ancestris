@@ -220,7 +220,7 @@ public class WebHome extends WebSection {
         out.println("<br /><hr /><br />");
 
         // Footer
-        out.println("<p class=\"legal\">" + trs("TXT_text_pages", "<a href=\"http://www.ancestris.com\" title=\"" + version + "\" >Ancestris WebBook</a>", new Date()) + "</p>");
+        out.println("<p class=\"legal\">" + trs("TXT_text_pages", "<a href=\"http://www.ancestris.org\" title=\"" + version + "\" >Ancestris WebBook</a>", new Date()) + "</p>");
         out.println("</div>");
 
         out.println("<div class=\"spacer\">" + SPACE + "</div>");
