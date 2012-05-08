@@ -130,7 +130,7 @@ public class ZipDirectory implements PropertyChangeListener {
     }
 
     public List<String> search(String expression, boolean fromLocale, boolean caseSensitive) {
-        ArrayList<String> directoryNamesArray = new <String>ArrayList();
+        ArrayList directoryNamesArray = new ArrayList();
         for (ZipDirectory zipDirectory : dirs.values()) {
             List<String> found = zipDirectory.search(expression, fromLocale, caseSensitive);
             if (found.isEmpty() != true) {
