@@ -609,36 +609,40 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
     // End of variables declaration//GEN-END:variables
 
     private void enableAddressFields() {
+        //XXX: quick fix hard coded indexes, must be reworked after place editor API redesign
         Boolean[] show = geoObj.getPlace().getGedcom().getShowJuridictions();
         if (show == null) show = genj.gedcom.Options.getInstance().getShowJuridictions();
-        jLabel25.setEnabled(show[0] && !jCheckBox1.isSelected());
-        jLabel26.setEnabled(show[1] && !jCheckBox1.isSelected());
-        jLabel27.setEnabled(show[2] && !jCheckBox1.isSelected());
-        jLabel28.setEnabled(show[3] && !jCheckBox1.isSelected());
-        jLabel29.setEnabled(show[4] && !jCheckBox1.isSelected());
-        jLabel30.setEnabled(show[5] && !jCheckBox1.isSelected());
-        jLabel31.setEnabled(show[6] && !jCheckBox1.isSelected());
+        int MAX = show.length;
+        jLabel25.setEnabled(MAX>0 && show[0] && !jCheckBox1.isSelected());
+        jLabel26.setEnabled(MAX>1 && show[1] && !jCheckBox1.isSelected());
+        jLabel27.setEnabled(MAX>2 && show[2] && !jCheckBox1.isSelected());
+        jLabel28.setEnabled(MAX>3 && show[3] && !jCheckBox1.isSelected());
+        jLabel29.setEnabled(MAX>4 && show[4] && !jCheckBox1.isSelected());
+        jLabel30.setEnabled(MAX>5 && show[5] && !jCheckBox1.isSelected());
+        jLabel31.setEnabled(MAX>6 && show[6] && !jCheckBox1.isSelected());
 
-        jTextField6.setEnabled(show[0] && !jCheckBox1.isSelected());
-        jTextField7.setEnabled(show[1] && !jCheckBox1.isSelected());
-        jTextField8.setEnabled(show[2] && !jCheckBox1.isSelected());
-        jTextField9.setEnabled(show[3] && !jCheckBox1.isSelected());
-        jTextField2.setEnabled(show[4] && !jCheckBox1.isSelected());
-        jTextField3.setEnabled(show[5] && !jCheckBox1.isSelected());
-        jTextField4.setEnabled(show[6] && !jCheckBox1.isSelected());
+        jTextField6.setEnabled(MAX>0 && show[0] && !jCheckBox1.isSelected());
+        jTextField7.setEnabled(MAX>1 && show[1] && !jCheckBox1.isSelected());
+        jTextField8.setEnabled(MAX>2 && show[2] && !jCheckBox1.isSelected());
+        jTextField9.setEnabled(MAX>3 && show[3] && !jCheckBox1.isSelected());
+        jTextField2.setEnabled(MAX>4 && show[4] && !jCheckBox1.isSelected());
+        jTextField3.setEnabled(MAX>5 && show[5] && !jCheckBox1.isSelected());
+        jTextField4.setEnabled(MAX>6 && show[6] && !jCheckBox1.isSelected());
     }
 
     private void fillPlaceFromGeoNode() {
+        //XXX: quick fix hard coded indexes, must be reworked after place editor API redesign
         PropertyPlace tmpPlace = geoObj.getPlace();
         Boolean[] show = tmpPlace.getGedcom().getShowJuridictions();
         if (show == null) show = genj.gedcom.Options.getInstance().getShowJuridictions();
-        jTextField6.setText(show[0] ? tmpPlace.getJurisdiction(0) : "");
-        jTextField7.setText(show[1] ? tmpPlace.getJurisdiction(1) : "");
-        jTextField8.setText(show[2] ? tmpPlace.getJurisdiction(2) : "");
-        jTextField9.setText(show[3] ? tmpPlace.getJurisdiction(3) : "");
-        jTextField2.setText(show[4] ? tmpPlace.getJurisdiction(4) : "");
-        jTextField3.setText(show[5] ? tmpPlace.getJurisdiction(5) : "");
-        jTextField4.setText(show[6] ? tmpPlace.getJurisdiction(6) : "");
+        int MAX = show.length;
+        jTextField6.setText(MAX>0 && show[0] ? tmpPlace.getJurisdiction(0) : "");
+        jTextField7.setText(MAX>1 && show[1] ? tmpPlace.getJurisdiction(1) : "");
+        jTextField8.setText(MAX>2 && show[2] ? tmpPlace.getJurisdiction(2) : "");
+        jTextField9.setText(MAX>3 && show[3] ? tmpPlace.getJurisdiction(3) : "");
+        jTextField2.setText(MAX>4 && show[4] ? tmpPlace.getJurisdiction(4) : "");
+        jTextField3.setText(MAX>5 && show[5] ? tmpPlace.getJurisdiction(5) : "");
+        jTextField4.setText(MAX>6 && show[6] ? tmpPlace.getJurisdiction(6) : "");
 
         jTextField5.setText(Double.toString(geoObj.getLatitude()));
         jTextField10.setText(Double.toString(geoObj.getLongitude()));
