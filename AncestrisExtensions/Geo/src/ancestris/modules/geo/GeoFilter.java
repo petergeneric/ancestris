@@ -453,11 +453,16 @@ public class GeoFilter {
      * @return
      */
     private List<Indi> getSearchedIndis() {
+        // XXX/ getSearchedIndis is call BEFORE init in some cases.
+        // this shouldn't appear and will certainely need some refactor later
+        if (gedcom == null) {
+            return null;
+        }
         List<Indi> indis = new ArrayList<Indi>();
         Set<TopComponent> tcSet = TopComponent.getRegistry().getOpened();
         for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
             TopComponent topComponent = it.next();
-            if (topComponent instanceof SearchTopComponent && gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
+            if (topComponent instanceof SearchTopComponent &&gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
                 for (Iterator<Property> it1 = ((SearchTopComponent) topComponent).getResultProperties().iterator(); it1.hasNext();) {
                     Property prop = it1.next();
                     String tag = prop.getTag();
