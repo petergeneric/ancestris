@@ -35,6 +35,8 @@ public class ResourceFile {
     private String toBundleName = "";
     private String toModifiedName = "";
     private String directoryPath = "";
+    private Locale fromLocale = null;
+    private Locale toLocale = null;
     private ResourceStructure defaultLanguage = null;
     private ResourceStructure fromLanguage = null;
     private ResourceStructure toLanguage = null;
@@ -166,6 +168,8 @@ public class ResourceFile {
 
     void setTranslation(Locale fromLocale, Locale toLocale) {
 
+        this.fromLocale = fromLocale;
+        this.toLocale = toLocale;
         if (fromLocale.getLanguage().equals("en")) {
             fromBundleName = PREFIX + SUFFIX;
         } else {
@@ -405,7 +409,7 @@ public class ResourceFile {
 
         }
 
-        while (--index > 0) {
+        while (--index >= 0) {
             String value = "";
             if (fromLocale == true) {
                 value = fromLanguage.getLine(content.get(index)).getValue();
@@ -444,5 +448,19 @@ public class ResourceFile {
         }
 
         return null;
+    }
+
+    /**
+     * @return the fromLocale
+     */
+    public Locale getFromLocale() {
+        return fromLocale;
+    }
+
+    /**
+     * @return the toLocale
+     */
+    public Locale getToLocale() {
+        return toLocale;
     }
 }
