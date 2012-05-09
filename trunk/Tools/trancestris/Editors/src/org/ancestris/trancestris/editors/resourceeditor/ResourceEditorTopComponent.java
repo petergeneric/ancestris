@@ -253,9 +253,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         int index = -1;
         if (resourceFile != null) {
             if (next) {
-                index = resourceFile.searchNext(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleCheckBox.isSelected(), caseSensitiveCheckBox.isSelected());
+                index = resourceFile.searchNext(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
             } else {
-                index = resourceFile.searchPrevious(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleCheckBox.isSelected(), caseSensitiveCheckBox.isSelected());
+                index = resourceFile.searchPrevious(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
             }
             if (index > -1) {
                 resourceFileView.setSelectedIndex(index);
@@ -271,12 +271,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        localeButtonGroup = new javax.swing.ButtonGroup();
         jPanel5 = new javax.swing.JPanel();
         expressionTextField = new javax.swing.JTextField();
-        fromLocaleCheckBox = new javax.swing.JCheckBox();
         caseSensitiveCheckBox = new javax.swing.JCheckBox();
         searchPreviousButton = new javax.swing.JButton();
         searchNextButton = new javax.swing.JButton();
+        fromLocaleToggleButton = new javax.swing.JToggleButton();
+        toLocaleToggleButton = new javax.swing.JToggleButton();
         jPanel6 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         scrollPaneComments = new javax.swing.JScrollPane();
@@ -301,9 +303,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             }
         });
 
-        fromLocaleCheckBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(fromLocaleCheckBox, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.fromLocaleCheckBox.text")); // NOI18N
-
         caseSensitiveCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(caseSensitiveCheckBox, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.caseSensitiveCheckBox.text")); // NOI18N
 
@@ -321,6 +320,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             }
         });
 
+        localeButtonGroup.add(fromLocaleToggleButton);
+        fromLocaleToggleButton.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(fromLocaleToggleButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.fromLocaleToggleButton.text")); // NOI18N
+
+        localeButtonGroup.add(toLocaleToggleButton);
+        org.openide.awt.Mnemonics.setLocalizedText(toLocaleToggleButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.toLocaleToggleButton.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -328,9 +334,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addComponent(caseSensitiveCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fromLocaleCheckBox)
+                .addComponent(fromLocaleToggleButton)
+                .addGap(6, 6, 6)
+                .addComponent(toLocaleToggleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchPreviousButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -339,11 +347,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(searchNextButton)
                 .addComponent(searchPreviousButton)
                 .addComponent(caseSensitiveCheckBox)
-                .addComponent(fromLocaleCheckBox))
+                .addComponent(fromLocaleToggleButton)
+                .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(toLocaleToggleButton))
         );
 
         add(jPanel5, java.awt.BorderLayout.NORTH);
@@ -368,7 +377,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
@@ -543,13 +552,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JButton buttonConfirmTranslation;
     private javax.swing.JCheckBox caseSensitiveCheckBox;
     private javax.swing.JTextField expressionTextField;
-    private javax.swing.JCheckBox fromLocaleCheckBox;
+    private javax.swing.JToggleButton fromLocaleToggleButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.ButtonGroup localeButtonGroup;
     private javax.swing.JButton nextButton;
     private javax.swing.JPanel panelTranslation;
     private javax.swing.JButton previousButton;
@@ -561,6 +571,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JButton searchPreviousButton;
     private javax.swing.JTextArea textAreaComments;
     private javax.swing.JTextArea textAreaTranslation;
+    private javax.swing.JToggleButton toLocaleToggleButton;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -652,6 +663,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
                     getResourceFileView().setSelectedIndex(0);
                     getResourceFileView().ensureIndexIsVisible(0);
+                    toLocaleToggleButton.setText(getResourceFile().getToLocale().getDisplayLanguage());
+                    fromLocaleToggleButton.setText(getResourceFile().getFromLocale().getDisplayLanguage());
 
                     String comment = getResourceFile().getLineComment(0);
                     textAreaComments.setText(comment);
