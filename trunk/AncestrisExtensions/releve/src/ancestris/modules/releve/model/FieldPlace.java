@@ -18,39 +18,38 @@ public class FieldPlace extends Field {
             return "";
         } else {
             return cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName;
-        }
-        
+        }        
     }
 
     @Override
     public void setValue(Object value) {
-        String[] juridictions =  value.toString().split(",");
-        if (juridictions.length > 0 ) {
-            cityName = juridictions[0];
-        } else {
-            cityName = "";
-        }
-        if (juridictions.length > 1 ) {
-            cityCode = juridictions[1];
-        } else {
-            cityCode = "";
-        }
-        if (juridictions.length > 2 ) {
-            countyName = juridictions[2];
-        } else {
-            countyName = "";
-        }
-        if (juridictions.length > 3 ) {
-            stateName = juridictions[3];
-        } else {
-            stateName = "";
-        }
-        if (juridictions.length > 4 ) {
-            countryName = juridictions[4];
-        } else {
-            countryName = "";
-        }
-    }
+            String[] juridictions =  value.toString().split(",");
+            if (juridictions.length > 0 ) {
+                cityName = juridictions[0];
+            } else {
+                cityName = "";
+            }
+            if (juridictions.length > 1 ) {
+                cityCode = juridictions[1];
+            } else {
+                cityCode = "";
+            }
+            if (juridictions.length > 2 ) {
+                countyName = juridictions[2];
+            } else {
+                countyName = "";
+            }
+            if (juridictions.length > 3 ) {
+                stateName = juridictions[3];
+            } else {
+                stateName = "";
+            }
+            if (juridictions.length > 4 ) {
+                countryName = juridictions[4];
+            } else {
+                countryName = "";
+            }
+        } 
 
     @Override
     public String toString() {

@@ -195,7 +195,18 @@ public class ModelMarriage extends ModelAbstract {
     }
 
     @Override
-    public void putColumnLoyout(String columnLayout) {
+    public void putColumnLayout(String columnLayout) {
         NbPreferences.forModule(ReleveTopComponent.class).put("MarriageColumnLayout", columnLayout);
     }
+
+    @Override
+    public int getEditorWidth() {
+        return Integer.valueOf(NbPreferences.forModule(ReleveTopComponent.class).get("MarriageEditorWidth", "270"));
+    }
+
+    @Override
+    public void putEditorWidth(int width) {
+        NbPreferences.forModule(ReleveTopComponent.class).put("MarriageEditorWidth", String.valueOf(width));
+    }
+
 }

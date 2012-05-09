@@ -173,7 +173,17 @@ public class ModelBirth extends ModelAbstract {
     }
 
     @Override
-    public void putColumnLoyout(String columnLayout) {
+    public void putColumnLayout(String columnLayout) {
         NbPreferences.forModule(ReleveTopComponent.class).put("BirthColumnLayout", columnLayout);
+    }
+
+    @Override
+    public int getEditorWidth() {
+        return Integer.valueOf(NbPreferences.forModule(ReleveTopComponent.class).get("BirthEditorWidth", "270"));
+    }
+
+    @Override
+    public void putEditorWidth(int width) {
+        NbPreferences.forModule(ReleveTopComponent.class).put("BirthEditorWidth", String.valueOf(width));
     }
 }

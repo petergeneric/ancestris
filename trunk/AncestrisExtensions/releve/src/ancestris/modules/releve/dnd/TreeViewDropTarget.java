@@ -95,9 +95,9 @@ public class TreeViewDropTarget {
                     try {
                         TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
                         System.out.println("drop "+ data.record.getEventDateString() + " to " + entity.toString() );
-                        dropTargetDropEvent.dropComplete(true);
                         SwingUtilities.convertPointToScreen(location, treeView);
-                        MergeDialog.show(location, entity, data.record);
+                        MergeDialog.show(treeView, location, entity, data.record, true);
+                        dropTargetDropEvent.dropComplete(true);
                     } catch (Exception ex) {
                         dropTargetDropEvent.dropComplete(false);
                     }

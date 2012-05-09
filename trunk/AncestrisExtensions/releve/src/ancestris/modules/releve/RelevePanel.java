@@ -13,6 +13,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -39,11 +40,30 @@ public class RelevePanel extends javax.swing.JPanel  {
         // ça réinitialise la largeur des colonnes
         releveModel.fireTableDataChanged();
 
-        //releveEditor.revalidate();
+        // j'initialise la largeur de l'editeur avec la largeur de la session precedente
+        // Remarque : il faut differer le changement de taille car sinon jSplitPane1.getSize() est nul
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jSplitPane1.setDividerLocation(jSplitPane1.getSize().width
+                             - jSplitPane1.getInsets().right
+                             - jSplitPane1.getDividerSize()
+                             - releveModel.getEditorWidth());
+            }
+        });
+        
     }
 
+    /**
+     * sauvegarde de la configuration a la fermeture du composant
+     */
     void componentClosed() {
         releveTable.saveColumnLayout();
+        // je sauvegarde la largeur de l'editeur
+        releveModel.putEditorWidth(jSplitPane1.getSize().width
+                - jSplitPane1.getInsets().right
+                - jSplitPane1.getDividerSize()
+                - jSplitPane1.getDividerLocation() );
     }
 
     public void selectRecord(int rowIndex) {

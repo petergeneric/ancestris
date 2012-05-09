@@ -16,7 +16,6 @@ import javax.swing.TransferHandler;
  */
 public class RecordTransferHandle extends TransferHandler {
 
-
     @Override
     public int getSourceActions(JComponent c) {
         return COPY;
@@ -26,7 +25,16 @@ public class RecordTransferHandle extends TransferHandler {
     public Transferable createTransferable(JComponent c) {
         if (c instanceof ReleveTable ) {
             ReleveTable table = (ReleveTable) c ;
+            // je recupere le clone du releve 
             Record record = ((ModelAbstract)table.getModel()).getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
+            record = (Record) record.clone();
+            // je complete le lieu dans le releve
+            record.setEventPlace(
+                    table.getDataManager().getCityName(),
+                    table.getDataManager().getCityCode(),
+                    table.getDataManager().getCountyName(),
+                    table.getDataManager().getStateName(),
+                    table.getDataManager().getCountryName());
             return new TransferableRecord(record, c);
         } else {
             return null;
