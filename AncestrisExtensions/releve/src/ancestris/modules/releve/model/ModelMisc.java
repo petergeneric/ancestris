@@ -217,8 +217,18 @@ public class ModelMisc extends ModelAbstract {
     }
 
     @Override
-    public void putColumnLoyout(String columnLayout) {
+    public void putColumnLayout(String columnLayout) {
         NbPreferences.forModule(ReleveTopComponent.class).put("MiscColumnLayout", columnLayout);
+    }
+
+    @Override
+    public int getEditorWidth() {
+        return Integer.valueOf(NbPreferences.forModule(ReleveTopComponent.class).get("MiscEditorWidth", "270"));
+    }
+
+    @Override
+    public void putEditorWidth(int width) {
+        NbPreferences.forModule(ReleveTopComponent.class).put("MiscEditorWidth", String.valueOf(width));
     }
     
 }

@@ -255,7 +255,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
-        assertEquals("load count", 1, fb.getBirthCount());
+        assertEquals("load count", 1, fb.getMarriageCount());
         RecordMarriage record2 = (RecordMarriage) fb.getRecords().get(0);
 
         // je compare tous les champs
@@ -371,7 +371,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
-        assertEquals("load count", 1, fb.getBirthCount());
+        assertEquals("load count", 1, fb.getDeathCount());
         RecordDeath record2 = (RecordDeath) fb.getRecords().get(0);
 
         // je compare tous les champs
@@ -493,7 +493,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
-        assertEquals("load count", 1, fb.getBirthCount());
+        assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc record2 = (RecordMisc) fb.getRecords().get(0);
 
         // je compare tous les champs

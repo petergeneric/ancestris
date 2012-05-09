@@ -7,7 +7,7 @@ import genj.gedcom.PropertyDate;
  *
  * @author Michel
  */
-public abstract class Record {
+public abstract class Record implements Cloneable{
 
     public int recordNo;
     protected FieldEventType eventType;
@@ -100,6 +100,18 @@ public abstract class Record {
         freeComment = new FieldPicture();
         generalComment = new FieldComment();
     }
+
+    @Override
+    public Object clone() {
+	    Object object = null;
+		try {
+			object = super.clone();
+		} catch(CloneNotSupportedException cnse) {
+			cnse.printStackTrace(System.err);
+		}
+		// je renvoie le clone
+		return object;
+  	}
 
     public int getRecordNo() {
         return  recordNo;
@@ -428,6 +440,9 @@ public abstract class Record {
 //    }
 
     public void setEventPlace(String cityName, String cityCode, String countyName, String stateName, String countryName) {
+        if (eventPlace==null) {
+            eventPlace =new FieldPlace();
+        }
         eventPlace.setCityName(cityName.trim());
         eventPlace.setCityCode(cityCode.trim());
         eventPlace.setCountyName(countyName.trim());
@@ -435,6 +450,9 @@ public abstract class Record {
         eventPlace.setCountryName(countryName.trim());
     }
 
+    public void setEventPlace(FieldPlace place) {
+        eventPlace.setValue(place);
+    }
 
     /////////////////////////////////////////////////////////////////////////
    /**
@@ -724,115 +742,6 @@ public abstract class Record {
     public void setParish(String value) {
         parish.setValue(value);
     }
-
-    //  indi ///////////////////////////////////////////////////////////////////
-//    public void setIndiLastName(String value) {
-//        indiName.setLastName(value);
-//    }
-//
-//    public void setIndiFirstName(String value) {
-//        indiName.setFirstName(value);
-//    }
-
-//    public void setIndiSex(String value) {
-//        indiSex.setValue(value);
-//    }
-//
-//    public void setIndiAge(String value) {
-//        if (indiAge != null ) {
-//            indiAge.setValue(value);
-//        }
-//    }
-//
-//    public void setIndiBirthDate(String value) {
-//        indiBirthDate.setValue(value);
-//    }
-//
-//    public void setIndiPlace(String value) {
-//        indiPlace.setValue(value);
-//    }
-//
-//    public void setIndiComment(String value) {
-//        indiComment.setValue(value);
-//    }
-
-//    public void setFatherLastName(String value) {
-//        indiFatherName.getLastName();
-//    }
-//
-//    public void setFatherFirstName(String value) {
-//        indiFatherName.setFirstName(value);
-//    }
-
-    public void setFatherOccupation(String value) {
-        indiFatherOccupation.setValue(value);
-    }
-
-    public void setFatherComment(String value) {
-        indiFatherComment.setValue(value);
-    }
-
-//    public void setMotherLastName(String value) {
-//        indiMotherName.setLastName(value);
-//    }
-//
-//    public void setMotherFirstName(String value) {
-//        indiMotherName.setFirstName(value);
-//    }
-
-    public void setMotherOccupation(String value) {
-        indiMotherOccupation.setValue(value);
-    }
-
-    public void setMotherComment(String value) {
-        indiMotherComment.setValue(value);
-    }
-
-    //  wife //////////////////////////////////////////////////////////////////
-//    public void setWifeAge(String value) {
-//        wifeAge.setValue(value);
-//    }
-//
-//    public void setWifeBirthDate(String value) {
-//        wifeBirthDate.setValue(value);
-//    }
-//
-//    public void setWifePlace(String value) {
-//        wifePlace.setValue(value);
-//    }
-
-    //  witness //////////////////////////////////////////////////////////////////
-//    public void setWitness1LastName(String value) {
-//        witness1Name.getLastName();
-//    }
-//
-//    public void setWitness1FirstName(String value) {
-//        witness1Name.getFirstName();
-//    }
-//
-//    public void setWitness1Occupation(String value) {
-//        witness1Occupation.setValue(value);
-//    }
-//
-//    public void setWitness1Comment(String value) {
-//        witness1Comment.setValue(value);
-//    }
-//
-//    public void setWitness2LastName(String value) {
-//        witness2Name.getLastName();
-//    }
-//
-//    public void setWitness2FirstName(String value) {
-//        witness2Name.getFirstName();
-//    }
-//
-//    public void setWitness2Occupation(String value) {
-//        witness2Occupation.setValue(value);
-//    }
-//
-//    public void setWitness2Comment(String value) {
-//        witness2Comment.setValue(value);
-//    }
 
     ///////////////////////////////////////////////////////////////////////////
     public void setIndi(String firstName, String lastName, String stringSexe,

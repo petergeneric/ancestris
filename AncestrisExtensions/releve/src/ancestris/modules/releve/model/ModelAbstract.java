@@ -150,7 +150,9 @@ public abstract class ModelAbstract extends AbstractTableModel  {
     public abstract BeanField[] getFieldList( int row );
 
     public abstract String getColumnLayout();
-    public abstract void putColumnLoyout(String columnLayout);
+    public abstract void putColumnLayout(String columnLayout);
+    public abstract int getEditorWidth();
+    public abstract void putEditorWidth(int width);
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -200,7 +202,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
                 if (record.getEventDateString().equals("")) {
                     errorMessage.append("La date de l'évènement est vide").append("\n");
                 }
-                if (record.getIndiLastName().equals("") && record.getIndiFirstName().equals("")) {
+                if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
                     errorMessage.append("Le nom et le prénom sont vides").append("\n");
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -220,7 +222,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
             if (record.getEventDateString().equals("")) {
                 errorMessage.append("La date de l'évènement est vide").append("\n");
             }
-            if (record.getIndiLastName().equals("") && record.getIndiFirstName().equals("")) {
+            if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
                 errorMessage.append("Le nom et le prénom sont vides").append("\n");
             }
         } catch (IndexOutOfBoundsException e) {

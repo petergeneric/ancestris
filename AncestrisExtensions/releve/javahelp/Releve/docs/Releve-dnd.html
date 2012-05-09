@@ -1,0 +1,278 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="fr-fr"><head><title>Glisser-déposer</title>
+
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<link href="./ancestris.css" rel="stylesheet"></head>
+<body>
+<a name="_Top_"></a>
+<center>
+<h1><a class="mozTocH1" name="mozTocId773216"></a>Glisser-déposer
+d'un relevé&nbsp;</h1>
+</center>
+Sommaire<br>
+<div style="margin-left: 40px;"><a href="#mozTocId857376">1)
+Glisser-déposer un relevé de naissance </a><br>
+<a href="#mozTocId320163">2)
+Glisser-déposer un mariage</a><br>
+<a href="#mozTocId443492">3)
+Glisser-déposer un décès</a><br>
+<a href="#mozTocId420169">4)
+Glisser-déposer un relevé divers</a>
+<br>
+</div>
+<br>
+L'action Glisser-Déposer d'un relevé dans un individu ou une famille
+d'un GEDCOM sert à
+compléter un généalogie existante&nbsp;sans avoir besoin de
+re-saisir toutes les informations du relevé avec l'editeur d'Ancestris<br>
+<br>
+<br>
+<h1><a class="mozTocH1" name="mozTocId857376"></a>1)
+Glisser-déposer un relevé de naissance </h1>
+<p><span style="font-weight: bold;">&nbsp;Si la
+cible est un individu</span></p>
+<br>
+<div style="margin-left: 40px;">L'outil signale s'il
+existe un autre
+individu portant un même nom et une même date de naissance dans le
+GEDCOM pour éventuellement éviter de créer un doublon dans le GEDCOM.<br>
+Par défaut, le relevé de naissance est&nbsp;appliqué à l'individu.<br>
+<br>
+</div>
+<p><span style="font-weight: bold;">Si la cible est
+une famille</span></p>
+<div style="margin-left: 40px;">L'outil signale s'il
+existe un autre individu portant un même nom et une même date de
+naissance dans le GEDCOM même dans une autre famille.<br>
+Par défaut, le relevé de naissance est&nbsp;appliqué à l'enfant de
+la famille ayant le même nom, prénom et éventuellemnt la date de naissancela plus proche s'il ya des homonymes. Un nouvel
+enfant est créé s'il n'y a pas d'enfant correspondant <br>
+</div>
+<br>
+<br>
+<p>&nbsp;<span style="font-weight: bold;">Si la
+cible&nbsp;n'est ni un individu ni une famille (
+fond de
+l'arbre dynamique)</span></p>
+<p style="margin-left: 40px;">L'outil signale s'il existe
+un autre
+individu portant un même nom et une même date de naissance dans le
+GEDCOM.</p>
+<p style="margin-left: 40px;">Par défaut, un nouvel
+individu est créé et le relevé de naissance lui est&nbsp;appliqué. </p>
+<p style="margin-left: 40px;"><br>
+</p>
+<br>
+Les&nbsp;données du relevé sont copiées dans les propriétés de
+l'individu de&nbsp;la manière suivante<br>
+<br>
+<table style="text-align: left; width: 802px; height: 164px;" border="1" cellpadding="2" cellspacing="0">
+<tbody>
+<tr>
+<th style="width: 110px; text-align: center;">Relevé de naissance</th>
+<th style="width: 122px; text-align: center;">Individu</th>
+<th style="width: 77px; text-align: center;">&nbsp;</th>
+<th style="width: 467px; text-align: center;">&nbsp;</th>
+</tr>
+<tr>
+<td>IndiLastName<br>
+IndiFirstName</td>
+<td>INDI:NAME</td>
+<td>facultatif</td>
+<td>remplace le nom et prénom
+de l'individu par celui du relevé </td>
+</tr>
+<tr>
+<td>IndiSex</td>
+<td>INDI:SEX</td>
+<td>facultatif</td>
+<td>remplace le sexe de l'individu par celui du relevé</td>
+</tr>
+<tr>
+<td>IndiBirthDate</td>
+<td>INDI:BIRT:DATE</td>
+<td style="font-weight: bold;">obligatoire</td>
+<td>ajoute (ou remplace) la
+date de naissance de l'individu par la date de
+naissance du relevé IndiBirthDate ou , si cette dernière est vide, par
+la date d'évènement du relevé EventDate.</td>
+</tr>
+<tr>
+<td>IndiPlace</td>
+<td>INDI:BIRT:PLAC</td>
+<td>facultatif</td>
+<td>ajoute (ou remplace) le
+lieu de naissance. </td>
+</tr>
+<tr>
+<td>IndiComment</td>
+<td>INDI:NOTE</td>
+<td>facultatif</td>
+<td>&nbsp;&nbsp;</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>IndiFatherLastName<br>
+IndiFatherFirstName</td>
+<td>father:NAME</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>IndiFatherOccupation</td>
+<td>father:OCCU</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>IndiFatherDead<br>
+IndiFatherComment</td>
+<td>father:NOTE</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>IndiMotherLastName<br>
+IndiMotherFirstName</td>
+<td>mother:NAME</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>IndiMotherOccupation</td>
+<td>mother:OCCU</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>IndiMotherDead<br>
+IndiMotherComment</td>
+<td>mother:NOTE</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GeneralComment<br><br>
+<br>
+Witness1LastName<br>
+Witness1FirstName<br>
+Witness1Occupation<br>
+Witness1Comment<br>
+Witness2LastName<br>
+Witness2FirstName<br>
+Witness2Occupation<br>
+Witness2Comment<br>
+Witness3LastName<br>
+Witness3FirstName<br>
+Witness3Occupation<br>
+Witness3Comment<br>
+Witness4LastName<br>
+Witness4FirstName<br>
+Witness4Occupation<br>
+Witness4Comment</td>
+<td>INDI:BIRT:NOTE</td>
+<td>facultatif</td>
+<td>&nbsp;Ces champs sont concanténés et ajoutés dans la note de la naissance</td>
+</tr>
+<tr>
+<td>EventPlace</td>
+<td>INDI:BIRT:SOUR</td>
+<td style="font-weight: bold;">obligatoire</td>
+<td>recherche la source
+associée à la commune lieu de naissance. Propose de créer une source
+s'il n'y a pas de source correpondante. </td>
+</tr>
+<tr>
+<td>Cote</td>
+<td>SOUR:REFN</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Photo</td>
+<td>INDI:BIRT:SOUR:NOTE</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>Parish</td>
+<td>INDI:BIRT:SOUR:NOTE</td>
+<td>facultatif</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h1><a class="mozTocH1" name="mozTocId320163"></a>2)
+Glisser-déposer un mariage</h1>
+todo<br>
+<br>
+<br>
+<h1><a class="mozTocH1" name="mozTocId443492"></a>3)
+Glisser-déposer un décès</h1>
+todo<br>
+<br>
+<br>
+<h1><a class="mozTocH1" name="mozTocId420169"></a>4)
+Glisser-déposer un relevé divers</h1>
+&nbsp;todo<br>
+&nbsp;
+<table border="0" width="100%">
+<tbody>
+<tr>
+<td width="10%">
+<table border="0" width="100%">
+<tbody>
+<tr>
+<td bgcolor="#e8fcd9">
+<p align="center"> <font size="-1"><a href="#_Top_">Haut&nbsp;de&nbsp;la&nbsp;Page</a></font>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td width="80%">&nbsp; </td>
+<td width="10%">
+<table border="0" width="100%">
+<tbody>
+<tr>
+<td>
+<p align="center"><!--
+<font size="-1"><a href="ancestris/app/docs/first_steps/first_steps_fenetrage.html">Page&nbsp;suivante</a></font>
+-->&nbsp;
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+</body></html>

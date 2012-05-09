@@ -32,7 +32,7 @@ import javax.swing.table.TableCellRenderer;
 public class ReleveTable extends JTable {
 
     private TableSelectionListener selectionListeners = null;
-    DataManager dataManager = null;
+    private DataManager dataManager = null;
 
     public ReleveTable () {
         super();
@@ -310,12 +310,18 @@ public class ReleveTable extends JTable {
     //            result.append(dir.getDirection());
     //        }
 
-           ((ModelAbstract)getModel()).putColumnLoyout(columnLayout.toString());
+           ((ModelAbstract)getModel()).putColumnLayout(columnLayout.toString());
         }
 
     }
 
-    
+    /**
+     * @return the dataManager
+     */
+    public DataManager getDataManager() {
+        return dataManager;
+    }
+
     /**
      * Renderer pour afficher les dates avec le format jj/mm/aaaa
      */
