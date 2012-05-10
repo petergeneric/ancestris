@@ -7,7 +7,7 @@
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerDownloadAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.explorers.zipexplorer.actions.ZipExplorerDownloadAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.explorers.zipexplorer.actions.Bundle#CTL_ZipExplorerDownloadAction"/>
-                <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/document-import.png"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/explorers/zipexplorer/actions/import-icon.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -97,13 +97,17 @@
     </folder>
     <folder name="Toolbars">
         <folder name="File">
+            <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerDownloadAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerDownloadAction.instance"/>
+                <attr name="position" intvalue="1250"/>
+            </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerOpenAction.instance"/>
-                <attr name="position" intvalue="100"/>
+                <attr name="position" intvalue="1350"/>
             </file>
             <file name="org-ancestris-trancestris-explorers-zipexplorer-actions-ExplorerSaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-explorers-zipexplorer-actions-ZipExplorerSaveAction.instance"/>
-                <attr name="position" intvalue="110"/>
+                <attr name="position" intvalue="1550"/>
             </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
