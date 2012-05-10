@@ -13,7 +13,9 @@ package org.ancestris.trancestris.explorers.zipexplorer.actions;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
@@ -22,8 +24,35 @@ import org.openide.windows.WindowManager;
  * @author dominique
  */
 public class ZipExplorerDownloadActionPanel extends javax.swing.JPanel {
+
     private File localBundleFile = null;
     private String bundleUrl = null;
+    final FileNameExtensionFilter filter = new FileNameExtensionFilter("Zip files", "zip");
+    private JFileChooser fileChooser = new JFileChooser() {
+
+        @Override
+        public void approveSelection() {
+            File f = getSelectedFile();
+            if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(ZipExplorerDownloadActionPanel.class, "ZipExplorerDownloadActionPanel.Overwrite.Text"), NbBundle.getMessage(ZipExplorerDownloadActionPanel.class, "ZipExplorerDownloadActionPanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
+                switch (result) {
+                    case JOptionPane.YES_OPTION:
+                        super.approveSelection();
+                        return;
+                    case JOptionPane.NO_OPTION:
+                        return;
+                    case JOptionPane.CANCEL_OPTION:
+                        super.cancelSelection();
+                        return;
+                }
+            } else {
+                if (filter.accept(f) == false) {
+                    setSelectedFile(new File(f.getName() + ".zip"));
+                }
+            }
+            super.approveSelection();
+        }
+    };
 
     /** Creates new form ZipExplorerDownloadActionPanel */
     public ZipExplorerDownloadActionPanel() {
@@ -52,8 +81,6 @@ public class ZipExplorerDownloadActionPanel extends javax.swing.JPanel {
 
         UrlTextField.setText(org.openide.util.NbBundle.getMessage(ZipExplorerDownloadActionPanel.class, "ZipExplorerDownloadActionPanel.UrlTextField.text")); // NOI18N
 
-        localBundleTextField.setText(org.openide.util.NbBundle.getMessage(ZipExplorerDownloadActionPanel.class, "ZipExplorerDownloadActionPanel.localBundleTextField.text")); // NOI18N
-
         openFileButton.setText(org.openide.util.NbBundle.getMessage(ZipExplorerDownloadActionPanel.class, "ZipExplorerDownloadActionPanel.openFileButton.text")); // NOI18N
         openFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -70,7 +97,7 @@ public class ZipExplorerDownloadActionPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(UrlTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(localBundleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                        .addComponent(localBundleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openFileButton)))
                 .addContainerGap())
@@ -89,11 +116,9 @@ public class ZipExplorerDownloadActionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
-        final FileNameExtensionFilter filter = new FileNameExtensionFilter("Zip files", "zip");
         String dirName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Dossier", "");
         String fileName = NbPreferences.forModule(ZipExplorerOpenActionPanel.class).get("Fichier", "");
 
-        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
         if (dirName.length() > 0) {
             // Set the current directory
@@ -104,7 +129,7 @@ public class ZipExplorerDownloadActionPanel extends javax.swing.JPanel {
             fileChooser.setSelectedFile(new File(fileName));
         }
 
-        if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             localBundleFile = fileChooser.getSelectedFile();
             localBundleTextField.setText(getLocalBundleFile().getName());
             try {
