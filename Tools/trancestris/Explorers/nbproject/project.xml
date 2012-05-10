@@ -89,7 +89,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.ancestris.trancestris.explorers.zipexplorer</package>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/mail.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/mail.jar</binary-origin>
