@@ -12,6 +12,7 @@ import java.util.Locale;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -46,7 +47,12 @@ public final class ZipExplorerOpenAction implements ActionListener {
         dialog.toFront();
         if (zipExplorerOpenActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
             TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-            ((ZipExplorerTopComponent) tc).setBundles(zipFile, fromLocale, toLocale);
+            if (zipFile != null && zipFile.exists()) {
+                ((ZipExplorerTopComponent) tc).setBundles(zipFile, fromLocale, toLocale);
+            } else {
+                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(ZipExplorerOpenActionPanel.class, "ZipExplorerOpenAction.FileNotFound.text"), NotifyDescriptor.ERROR_MESSAGE);
+                DialogDisplayer.getDefault().notify(nd);
+            }
         }
     }
 }
