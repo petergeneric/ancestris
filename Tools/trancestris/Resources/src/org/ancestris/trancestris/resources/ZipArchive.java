@@ -56,7 +56,7 @@ public class ZipArchive implements PropertyChangeListener {
     }
 
     public boolean write() {
-        if (change == true) {
+        if (isChange() == true) {
             try {
                 logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
                 ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
@@ -67,11 +67,11 @@ public class ZipArchive implements PropertyChangeListener {
                 logger.log(Level.SEVERE, null, ioe);
             }
         }
-        return change;
+        return isChange();
     }
 
     public boolean saveTranslation(File outputFile) {
-        if (change == true) {
+        if (isChange() == true) {
             try {
                 logger.log(Level.INFO, "Create archive {0}", outputFile.getName());
                 ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
@@ -81,7 +81,7 @@ public class ZipArchive implements PropertyChangeListener {
                 logger.log(Level.SEVERE, null, ioe);
             }
         }
-        return change;
+        return isChange();
     }
 
     public  List<String> search (String expression, boolean fromLocale, boolean caseSensitive) {
@@ -115,5 +115,12 @@ public class ZipArchive implements PropertyChangeListener {
 
     public int getTranslatePercent () {
         return root.getTranslatedPercent();
+    }
+
+    /**
+     * @return the change
+     */
+    public boolean isChange() {
+        return change;
     }
 }
