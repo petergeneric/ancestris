@@ -10,9 +10,14 @@ import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PushbackInputStream;
+import java.util.Arrays;
 import org.openide.util.Exceptions;
 
 /**
@@ -24,16 +29,53 @@ public class ReleveFileAncestrisV1 {
     final static private String fileSignature = "ANCESTRISV1";
     final static private char fieldSeparator = ';';
 
-    public static boolean isValidFile( BufferedReader br) {
+    /**
+     * verifie si la premere ligne est conforme au format 
+     * @param inputFile
+     * @param sb  message d'erreur
+     * @return
+     */
+    public static boolean isValidFile(File inputFile, StringBuilder sb) {
+        BufferedReader br = null;
         try {
+            br = new BufferedReader( new InputStreamReader(checkUtf8Bom(new FileInputStream(inputFile)),"UTF-8"));
             String[] fields = splitLine(br);
-            if (fields == null ) {
+            if (fields == null) {
+                sb.append(fileSignature + " ").append(String.format("Le fichier %s est vide.", inputFile.getName()));
                 return false;
             }
         } catch (Exception ex) {
+            sb.append(fileSignature + " ").append(ex.getMessage());
             return false;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    // rien a faire
+                }
+            }
         }
         return true;
+    }
+
+    /**
+     * filtre le BOM UTF-8
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    static private InputStream checkUtf8Bom(InputStream is) throws IOException {
+        final byte[] utf8Bom = { (byte) 0xef, (byte) 0xbb, (byte) 0xbf};
+        PushbackInputStream pis = new PushbackInputStream(is, utf8Bom.length);
+        byte[] bomRead= new byte[utf8Bom.length];
+        if (pis.read(bomRead, 0, utf8Bom.length) == -1) {
+            return is;
+        }
+        if (!Arrays.equals(bomRead, utf8Bom )) {
+            pis.unread(bomRead);
+        }
+        return pis;
     }
 
     /**
@@ -87,12 +129,9 @@ public class ReleveFileAncestrisV1 {
      * TODO gérer la dat iincomplete
      */
     public static FileBuffer loadFile(File inputFile ) { 
-        InputStreamReader inputStreamReader = null;
         FileBuffer fileBuffer = new FileBuffer();
         try {
-            inputStreamReader = new FileReader(inputFile);
-            fileBuffer = loadFile(inputStreamReader);
-            inputStreamReader.close();
+            fileBuffer = loadFile(checkUtf8Bom(new FileInputStream(inputFile)));
             return fileBuffer;
         } catch (Exception ex) {            
             Exceptions.printStackTrace(ex);
@@ -101,13 +140,11 @@ public class ReleveFileAncestrisV1 {
         } 
     }
 
-    public static FileBuffer loadFile( InputStreamReader inputStreamReader ) {
+    public static FileBuffer loadFile( InputStream inputStream ) {
         FileBuffer fileBuffer = new FileBuffer();
-        //create BufferedReader to read file
-        BufferedReader br = new BufferedReader(inputStreamReader);
         try {
-
-            String strLine = "";
+            //create BufferedReader to read file
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
             int lineNumber = 0;
             String[] fields ;
             //read comma separated file line by line
@@ -488,11 +525,10 @@ public class ReleveFileAncestrisV1 {
                     }
 
                 } catch (Exception e) {
+                    // je trace l'erreur dans le buffer de sortie
                     fileBuffer.append("Line ").append(lineNumber).append(" ").append(e.toString()).append("\n");
-                    fileBuffer.append("   ").append(strLine).append("\n");
-                    e.printStackTrace();
                 }
-            } // for
+            } // while
 
         } catch (Exception e) {
             fileBuffer.append(e.toString()).append("\n");
@@ -511,7 +547,7 @@ public class ReleveFileAncestrisV1 {
         StringBuilder sb = new StringBuilder();
         try {
             //create BufferedReader to read csv file
-            FileWriter writer = new FileWriter(fileName, append);
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(fileName, append), "UTF-8") ;
             for (int index = 0; index < recordModel.getRowCount(); index++) {
                 Line line = new Line(fieldSeparator);
                 Record record = recordModel.getRecord(index);
