@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -22,14 +23,40 @@ public class ReleveFileNimegue {
     final static private char fieldSeparator = ';';
     final static private String fileSignature = "NIMEGUEV3";
 
-    public static boolean isValidFile(String strLine ) {
+    /**
+     * verifie si la premere ligne est conforme au format
+     * @param inputFile
+     * @param sb  message d'erreur
+     * @return
+     */
+    public static boolean isValidFile(File inputFile, StringBuilder sb) {
+        BufferedReader br = null;
         try {
-            splitLine(strLine, 1);
+            //create BufferedReader to read file
+            br = new BufferedReader(new FileReader(inputFile));
+            String strLine = br.readLine();
+            int lineNo = 1;
+            String[] fields = splitLine(strLine, lineNo);
+
+            if (fields == null) {
+                sb.append(fileSignature + " ").append(String.format("Le fichier %s est vide.", inputFile.getName()));
+                return false;
+            }
         } catch (Exception ex) {
+            sb.append(fileSignature + " ").append(ex.getMessage());
             return false;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    // rien a faire
+                }
+            }
         }
         return true;
     }
+
 
     /**
      * decoupe une ligne

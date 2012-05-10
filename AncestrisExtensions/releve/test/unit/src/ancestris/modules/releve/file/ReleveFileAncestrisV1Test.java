@@ -8,10 +8,10 @@ import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -27,29 +27,36 @@ public class ReleveFileAncestrisV1Test extends TestCase {
      * Test of isValidFile method, of class ReleveFileAncestrisV1.
      */
     public void testIsValidFile() {
+        File file;
+        try {
             String data;
-            data= "";
-            BufferedReader br;
-            
-            data= "";
-            br = new BufferedReader(new java.io.StringReader(data));
-            boolean isValid = ReleveFileAncestrisV1.isValidFile(br);
-            assertEquals("fichier vide" , isValid, false);
+            data = "";
+            StringBuilder sb;
+ 
+            data = "";
+            file = TestUtility.createFile(data);
+            sb = new StringBuilder();
+            boolean isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            assertEquals("fichier vide", false, isValid);
 
             data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;";
-            br = new BufferedReader(new java.io.StringReader(data));
-            isValid = ReleveFileAncestrisV1.isValidFile(br);
-            assertEquals("ligne incomplete", isValid, false);
+            file = TestUtility.createFile(data);
+            isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            assertEquals("ligne incomplete", false, isValid);
 
             data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
-            br = new BufferedReader(new java.io.StringReader(data));
-            isValid = ReleveFileAncestrisV1.isValidFile(br);
-            assertEquals("points virgules collés", isValid, true);
+            file = TestUtility.createFile(data);
+            isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            assertEquals("points virgules collés", true, isValid);
 
             data = "ANCESTRISV1; ; ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
-            br = new BufferedReader(new java.io.StringReader(data));
-            isValid = ReleveFileAncestrisV1.isValidFile(br);
-            assertEquals(isValid, true);
+            file = TestUtility.createFile(data);
+            isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            assertEquals(true, isValid);
+
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
             
         
     }
@@ -114,7 +121,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileAncestrisV1.
      */
-    public void testSaveFileBirth() throws Exception {
+    public void testSaveFileBirthUtf8() throws Exception {
         File file = new File("testsaveFile.txt");
         
         ConfigPanel configPanel = new ConfigPanel();
@@ -127,7 +134,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         birth.setEventDate("01/01/2000");
         birth.setCote("cote");
         birth.setFreeComment("photo");
-        birth.setIndi("firstname", "lastname", "M", "", "", "place", "occupation", "comment");
+        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "", "place", "occupation", "comment");
         birth.setIndiFather("fathername", "fatherlastname", "occupation", "comment", "dead");
         birth.setIndiMother("mothername", "motherlastname", "occupation", "comment", "dead");
         birth.setWitness1("wfirstname", "wlastname", "woccupation", "wcomment");

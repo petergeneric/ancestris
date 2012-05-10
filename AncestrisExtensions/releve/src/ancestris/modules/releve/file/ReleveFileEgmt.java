@@ -10,8 +10,11 @@ import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 /**
  *
@@ -20,20 +23,35 @@ import java.io.FileWriter;
 public class ReleveFileEgmt {
 
     final static char fieldSeparator = ';';
+    final static private String fileSignature = "EGMT";
 
     /**
-     * verifie le format de la premiere ligne du fichier
-     * @param strLine
+     * verifie si la premere ligne est conforme au format
+     * @param inputFile
+     * @param sb  message d'erreur
      * @return
      */
-    public static boolean isValidFile( BufferedReader br) {
+    public static boolean isValidFile(File inputFile, StringBuilder sb) {
+        BufferedReader br = null;
         try {
+            br = new BufferedReader( new InputStreamReader(new FileInputStream(inputFile),"UTF-8"));
             String[] fields = splitLine(br);
-            if (fields == null ) {
+
+            if (fields == null) {
+                sb.append(fileSignature + " ").append(String.format("Le fichier %s est vide.", inputFile.getName()));
                 return false;
             }
         } catch (Exception ex) {
+            sb.append(fileSignature + " ").append(ex.getMessage());
             return false;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException ex) {
+                    // rien a faire
+                }
+            }
         }
         return true;
     }
@@ -84,7 +102,7 @@ public class ReleveFileEgmt {
         try {
 
             //create BufferedReader to read file
-            BufferedReader br = new BufferedReader(new FileReader(inputFile));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile),"UTF-8"));
             String strLine = "";
             int lineNumber = 0;
 
@@ -447,7 +465,7 @@ public class ReleveFileEgmt {
 
         try {
             //create BufferedReader to read csv file
-            FileWriter writer = new FileWriter(fileName, append);
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(fileName, append), "UTF-8") ;
             for (int index = 0; index < recordModel.getRowCount(); index++) {
                 
                 Line line = new Line(fieldSeparator);

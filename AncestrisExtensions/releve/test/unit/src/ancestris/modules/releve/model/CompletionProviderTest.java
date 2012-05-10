@@ -15,84 +15,7 @@ public class CompletionProviderTest extends TestCase {
         super(testName);
     }
 
-    /**
-     * Test of addRecord method, of class CompletionProvider.
-     */
-    public void testAddRecord() {
-    }
-
-    /**
-     * Test of removeRecord method, of class CompletionProvider.
-     */
-    public void testRemoveRecord_List() {
-    }
-
-    /**
-     * Test of removeRecord method, of class CompletionProvider.
-     */
-    public void testRemoveRecord_Record() {
-    }
-
-    /**
-     * Test of updateFirstName method, of class CompletionProvider.
-     */
-    public void testUpdateFirstName() {
-    }
-
-    /**
-     * Test of updateLastName method, of class CompletionProvider.
-     */
-    public void testUpdateLastName() {
-    }
-
-    /**
-     * Test of updateEventType method, of class CompletionProvider.
-     */
-    public void testUpdateEventType() {
-    }
-
-    /**
-     * Test of getFirstNames method, of class CompletionProvider.
-     */
-    public void testGetFirstNames() {
-    }
-
-    /**
-     * Test of getLastNames method, of class CompletionProvider.
-     */
-    public void testGetLastNames() {
-    }
-
-    /**
-     * Test of getOccupations method, of class CompletionProvider.
-     */
-    public void testGetChoices() {
-    }
-
-    /**
-     * Test of getEventTypes method, of class CompletionProvider.
-     */
-    public void testGetEventTypes() {
-    }
-
-    /**
-     * Test of getPlaces method, of class CompletionProvider.
-     */
-    public void testGetPlaces() {
-    }
-
-    /**
-     * Test of getLocale method, of class CompletionProvider.
-     */
-    public void testGetLocale() {
-    }
-
-    /**
-     * Test of setLocale method, of class CompletionProvider.
-     */
-    public void testSetLocale() {
-    }
-
+   
     /**
      * Test of addGedcomCompletion method, of class CompletionProvider.
      */
@@ -102,9 +25,9 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addGedcomCompletion(gedcom);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms",  completionProvider.getFirstNames().size(), 4);
-            assertEquals("Nombre de noms",  completionProvider.getLastNames().size(), 2);
-            assertEquals("Nombre de professions",  completionProvider.getOccupations().size(), 0);
+            assertEquals("Nombre de prenoms", 5,  completionProvider.getFirstNames().size());
+            assertEquals("Nombre de noms", 2,  completionProvider.getLastNames().size());
+            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
 
             
 
@@ -123,15 +46,15 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addGedcomCompletion(gedcom);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms", completionProvider.getFirstNames().size(), 4);
-            assertEquals("Nombre de noms", completionProvider.getLastNames().size(), 2);
-            assertEquals("Nombre de professions", completionProvider.getOccupations().size(), 2);
+            assertEquals("Nombre de prenoms", 4, completionProvider.getFirstNames().size());
+            assertEquals("Nombre de noms", 2, completionProvider.getLastNames().size());
+            assertEquals("Nombre de professions", 2, completionProvider.getOccupations().size());
 
             completionProvider.removeGedcomCompletion(gedcom);
             // je verifie que les données ont bien été supprimées
-            assertEquals("Nombre de prenoms apres suppression", completionProvider.getFirstNames().size(), 0);
-            assertEquals("Nombre de noms apres suppression", completionProvider.getLastNames().size(), 0);
-            assertEquals("Nombre de professions apres suppression", completionProvider.getOccupations().size(), 0);
+            assertEquals("Nombre de prenoms apres suppression", 0, completionProvider.getFirstNames().size());
+            assertEquals("Nombre de noms apres suppression", 0, completionProvider.getLastNames().size());
+            assertEquals("Nombre de professions apres suppression", 0, completionProvider.getOccupations().size());
 
 
         } catch (GedcomException ex) {

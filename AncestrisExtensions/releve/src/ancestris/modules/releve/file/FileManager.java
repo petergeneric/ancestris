@@ -35,15 +35,16 @@ public class FileManager {
         if (strLine==null || strLine.isEmpty() ) {
             throw new Exception(String.format("Le fichier %s est vide.", inputFile.getName()));
         }
+        StringBuilder sb  = new StringBuilder();
         FileBuffer buffer = null;
-        if (ReleveFileAncestrisV1.isValidFile(br)) {
+        if (ReleveFileAncestrisV1.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileAncestrisV1.loadFile(inputFile);
-        } else if (ReleveFileEgmt.isValidFile(br)) {
+        } else if (ReleveFileEgmt.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileEgmt.loadFile(inputFile);
-        } else if (ReleveFileNimegue.isValidFile(strLine)) {
+        } else if (ReleveFileNimegue.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileNimegue.loadFile(inputFile);
         } else {
-            throw new Exception(String.format("Le fichier %s a un format inconnu", inputFile.getName()));
+            throw new Exception(String.format("Le fichier %s a un format inconnu", inputFile.getName())+ "\n" + sb.toString());
         }
         return buffer;
     }
@@ -137,11 +138,11 @@ public class FileManager {
             StringBuilder sb = new StringBuilder();
             boolean separatorFound = false;
             sb.append(value);
-            separatorFound |= value.indexOf(fieldSeparator)!=-1 ? true:false;
+            separatorFound |= value.indexOf(fieldSeparator)!=-1 ;
             for (String otherValue : otherValues) {
                 // j'ajoute les valeurs supplémentaires séparées par des virgules
                 if (!otherValue.isEmpty()) {
-                    separatorFound |= value.indexOf(fieldSeparator)!=-1 ? true:false;
+                    separatorFound |= value.indexOf(fieldSeparator)!=-1 ;
                     // je concantene les valeurs en inserant une virgule dans
                     // si la valeur précedente n'est pas vide
                     if (fieldSize > 0) {

@@ -1,69 +1,69 @@
-ANCESTRISV1;Versaille;;;;France;;N;;;27/09/1601;;;;CAPET;Louis, XIII;M;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;0
-ANCESTRISV1;Versaille;;;;France;;N;;;22/09/1601;;;;HABSBOURG;Anne;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2
-ANCESTRISV1;Versaille;;;;France;;N;;;05/09/1638;;;;CAPET;Louis, XIV;M;;;;;;;;;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5
-ANCESTRISV1;Versaille;;;;France;;N;;;21/09/1640;;;;CAPET;Philippe, I;M;;;;;;;;;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;7
-ANCESTRISV1;Versaille;;;;France;;N;;;20/09/1638;;;;HABSBOURG;Marie-Thérèse;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9
-ANCESTRISV1;Versaille;;;;France;;N;;;01/11/1661;;;;CAPET;Louis;M;;;;;;;;;;;CAPET;Louis, XIV;false;;;HABSBOURG;Marie-Thérèse;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;12
-ANCESTRISV1;Versaille;;;;France;;N;;;27/11/1635;;;;D'AUBIGNÉ;Françoise;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;14
-ANCESTRISV1;Versaille;;;;France;;N;;;28/11/1660;;;;DE BAVIÈRE;Marie, Anne, Victoire;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;17
-ANCESTRISV1;Versaille;;;;France;;N;;;06/08/1682;;;;CAPET;Louis;M;;;;;;;;;;;CAPET;Louis;false;;;DE BAVIÈRE;Marie, Anne, Victoire;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;20
-ANCESTRISV1;Versaille;;;;France;;N;;;06/12/1685;;;;DE SAVOIE;Marie-Adélaîde;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;22
-ANCESTRISV1;Versaille;;;;France;;N;;;15/02/1710;;;;CAPET;Louis, XV;M;;;;;;;;;;;CAPET;Louis;false;;;DE SAVOIE;Marie-Adélaïde;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;25
-ANCESTRISV1;Versaille;;;;France;;N;;;27/05/1652;;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;27
-ANCESTRISV1;Versaille;;;;France;;N;;;02/08/1674;;;;CAPET;Philippe, II;M;;;;;;;;;;;CAPET;Philippe, I;false;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30
-ANCESTRISV1;Versaille;;;;France;;N;;;04/05/1677;;;;DE BOURBON;Françoise, Marie;F;;;;;;;;;;;CAPET;Louis, XIV;false;;;D'AUBIGNÉ;Françoise;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;32
-ANCESTRISV1;Versaille;;;;France;;N;;;23/06/1703;;;;LESZCZYNSKA;Marie;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;35
-ANCESTRISV1;Versaille;;;;France;;N;;;04/09/1729;;;;CAPET;Louis;M;;;;;;;;;;;CAPET;Louis, XV;false;;;LESZCZYNSKA;Marie;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;38
-ANCESTRISV1;Versaille;;;;France;;N;;;04/11/1731;;;;VON SACHSEN;Marie-Josèphe;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;40
-ANCESTRISV1;Versaille;;;;France;;N;;;23/08/1754;;;;CAPET;Louis, XVI;M;;;;;;;;;;;CAPET;Louis;false;;;VON SACHSEN;Marie-Josèphe;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;43
-ANCESTRISV1;Versaille;;;;France;;N;;;02/11/1755;;;;DE HASBOURG-LORRAINE;Marie, Antoinette;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;45
-ANCESTRISV1;Versaille;;;;France;;N;;;13/12/1553;;;;CAPET;Henri, IV;M;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Assassiné par François RAVAILLAC (N2);48
-ANCESTRISV1;Versaille;;;;France;;N;;;26/04/1575;;;;DE' MEDICI;Maria;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;51
-ANCESTRISV1;Versaille;;;;France;;N;;;22/11/1602;;;;CAPET;Élisabeth;F;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;53
-ANCESTRISV1;Versaille;;;;France;;N;;;08/04/1605;;;;HASBOURG;Philippe, IV;M;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;55
-ANCESTRISV1;Versaille;;;;France;;N;;;16/04/1607;;;;CAPET;N***;M;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Note Mort sans avoir reçu le baptême complet, d'où l'absence de prénom;58
-ANCESTRISV1;Versaille;;;;France;;N;;;24/04/1608;;;;CAPET;Gaston, Jean, Baptiste;M;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;60
-ANCESTRISV1;Versaille;;;;France;;N;;;26/11/1609;;;;CAPET;Henriette, Marie;F;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;62
-ANCESTRISV1;Versaille;;;;France;;N;;;19/11/1600;;;;STUART;Charles, I;M;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;64
-ANCESTRISV1;Versaille;;;;France;;N;;;10/02/1606;;;;CAPET;Christine;F;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;67
-ANCESTRISV1;Versaille;;;;France;;M;;;21/11/1615;;;;CAPET;Louis, XIII;;,,,;;;;;;;false;;;DE' MEDICI;Maria;false;;;;;false;;;HABSBOURG;Anne;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;4
-ANCESTRISV1;Versaille;;;;France;;M;;;09/06/1660;;;;CAPET;Louis, XIV;;,,,;;;;;;;false;;;HABSBOURG;Anne;false;;;;;false;;;HABSBOURG;Marie-Thérèse;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;11
-ANCESTRISV1;Versaille;;;;France;;M;;;10/10/1683;;;;CAPET;Louis, XIV;;,,,;;;;;;;false;;;HABSBOURG;Anne;false;;;;;false;;;D'AUBIGNÉ;Françoise;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;16
-ANCESTRISV1;Versaille;;;;France;;M;;;07/03/1680;;;;CAPET;Louis;;,,,;;;;;;;false;;;HABSBOURG;Marie-Thérèse;false;;;;;false;;;DE BAVIÈRE;Marie, Anne, Victoire;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;19
-ANCESTRISV1;Versaille;;;;France;;M;;;07/12/1697;;;;CAPET;Louis;;,,,;;;;;;;false;;;DE BAVIÈRE;Marie, Anne, Victoire;false;;;;;false;;;DE SAVOIE;Marie-Adélaïde;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;24
-ANCESTRISV1;Versaille;;;;France;;M;;;16/11/1671;;;;CAPET;Philippe, I;;,,,;;;;;;;false;;;HABSBOURG;Anne;false;;;;;false;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;29
-ANCESTRISV1;Versaille;;;;France;;M;;;09/01/1692;;;;CAPET;Philippe, II;;,,,;;;;;;;false;;;D'AUBIGNÉ;Françoise;false;;;;;false;;;DE BOURBON;Françoise, Marie;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;34
-ANCESTRISV1;Versaille;;;;France;;M;;;05/09/1725;;;;CAPET;Louis, XV;;,,,;;;;;;;false;;;DE SAVOIE;Marie-Adélaïde;false;;;;;false;;;LESZCZYNSKA;Marie;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;37
-ANCESTRISV1;Versaille;;;;France;;M;;;09/02/1747;;;;CAPET;Louis;;,,,;;;;;;;false;;;LESZCZYNSKA;Marie;false;;;;;false;;;VON SACHSEN;Marie-Josèphe;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;42
-ANCESTRISV1;Versaille;;;;France;;M;;;16/05/1770;;;;CAPET;Louis, XVI;;,,,;;;;;;;false;;;VON SACHSEN;Marie-Josèphe;false;;;;;false;;;DE HASBOURG-LORRAINE;Marie, Antoinette;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;47
-ANCESTRISV1;Versaille;;;;France;;M;;;17/12/1600;;;;CAPET;Henri, IV;;,,,;;;;;;;false;;;;;false;;;;;false;;;DE' MEDICI;Maria;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;50
-ANCESTRISV1;Versaille;;;;France;;M;;;25/11/1615;;;;HASBOURG;Philippe, IV;;,,,;;;;;;;false;;;DE' MEDICI;Maria;false;;;;;false;;;CAPET;Élisabeth;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;57
-ANCESTRISV1;Versaille;;;;France;;M;;;;;;;STUART;Charles, I;;,,,;;;;;;;false;;;DE' MEDICI;Maria;false;;;;;false;;;CAPET;Henriette, Marie;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;66
-ANCESTRISV1;Versaille;;;;France;;D;;;14/05/1643;;;;CAPET;Louis, XIII;M;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1
-ANCESTRISV1;Versaille;;;;France;;D;;;20/01/1666;;;;HABSBOURG;Anne;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3
-ANCESTRISV1;Versaille;;;;France;;D;;;01/09/1715;;;;CAPET;Louis, XIV;M;,,,;;;;;;;false;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;6
-ANCESTRISV1;Versaille;;;;France;;D;;;09/06/1701;;;;CAPET;Philippe, I;M;,,,;;;;;;;false;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8
-ANCESTRISV1;Versaille;;;;France;;D;;;30/07/1683;;;;HABSBOURG;Marie-Thérèse;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10
-ANCESTRISV1;Versaille;;;;France;;D;;;14/02/1711;;;;CAPET;Louis;M;,,,;;;;;;;false;;;CAPET;Louis, XIV;false;;;HABSBOURG;Marie-Thérèse;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;13
-ANCESTRISV1;Versaille;;;;France;;D;;;15/04/1719;;;;D'AUBIGNÉ;Françoise;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;15
-ANCESTRISV1;Versaille;;;;France;;D;;;20/04/1690;;;;DE BAVIÈRE;Marie, Anne, Victoire;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;18
-ANCESTRISV1;Versaille;;;;France;;D;;;18/02/1712;;;;CAPET;Louis;M;,,,;;;;;;;false;;;CAPET;Louis;false;;;DE BAVIÉRE;Marie, Anne, Victoire;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;21
-ANCESTRISV1;Versaille;;;;France;;D;;;12/02/1712;;;;DE SAVOIE;Marie-Adélaïde;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23
-ANCESTRISV1;Versaille;;;;France;;D;;;10/05/1774;;;;CAPET;Louis, XV;M;,,,;;;;;;;false;;;CAPET;Louis;false;;;DE SAVOIE;Marie-Adélaïde;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;26
-ANCESTRISV1;Versaille;;;;France;;D;;;08/12/1722;;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;28
-ANCESTRISV1;Versaille;;;;France;;D;;;02/12/1723;;;;CAPET;Philippe, II;M;,,,;;;;;;;false;;;CAPET;Philippe, I;false;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;31
-ANCESTRISV1;Versaille;;;;France;;D;;;01/02/1749;;;;DE BOURBON;Françoise, Marie;F;,,,;;;;;;;false;;;CAPET;Louis, XIV;false;;;D'AUBIGNÉ;Françoise;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;33
-ANCESTRISV1;Versaille;;;;France;;D;;;24/06/1768;;;;LESZCZYNSKA;Marie;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;36
-ANCESTRISV1;Versaille;;;;France;;D;;;20/12/1765;;;;CAPET;Louis;M;,,,;;;;;;;false;;;CAPET;Louis, XV;false;;;LESZCZYNSKA;Marie;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;39
-ANCESTRISV1;Versaille;;;;France;;D;;;13/03/1767;;;;VON SACHSEN;Marie-Josèphe;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;41
-ANCESTRISV1;Versaille;;;;France;;D;;;02/05/0001;;;;CAPET;Louis, XVI;M;,,,;;;;;;;false;;;CAPET;Louis;false;;;VON SACHSEN;Marie-Josèphe;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;44
-ANCESTRISV1;Versaille;;;;France;;D;;;25/01/0002;;;;DE HASBOURG-LORRAINE;Marie, Antoinette;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;46
-ANCESTRISV1;Versaille;;;;France;;D;;;14/05/1610;;;;CAPET;Henri, IV;M;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;49
-ANCESTRISV1;Versaille;;;;France;;D;;;03/07/1642;;;;DE' MEDICI;Maria;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;52
-ANCESTRISV1;Versaille;;;;France;;D;;;06/10/1644;;;;CAPET;Élisabeth;F;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;54
-ANCESTRISV1;Versaille;;;;France;;D;;;17/09/1665;;;;HASBOURG;Philippe, IV;M;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;56
-ANCESTRISV1;Versaille;;;;France;;D;;;17/11/1611;;;;CAPET;N***;M;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;59
-ANCESTRISV1;Versaille;;;;France;;D;;;02/02/1660;;;;CAPET;Gaston, Jean, Baptiste;M;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;61
-ANCESTRISV1;Versaille;;;;France;;D;;;10/09/1669;;;;CAPET;Henriette, Marie;F;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;63
-ANCESTRISV1;Versaille;;;;France;;D;;;30/01/1649;;;;STUART;Charles, I;M;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;65
-ANCESTRISV1;Versaille;;;;France;;D;;;27/12/1663;;;;CAPET;Christine;F;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;68
+ANCESTRISV1;Versailles;;;;France;;N;;;27/09/1601;;;;CAPET;Louis, XIII;M;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;0
+ANCESTRISV1;Versailles;;;;France;;N;;;22/09/1601;;;;HABSBOURG;Anne;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2
+ANCESTRISV1;Versailles;;;;France;;N;;;05/09/1638;;;;CAPET;Louis, XIV;M;;;;;;;;;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5
+ANCESTRISV1;Versailles;;;;France;;N;;;21/09/1640;;;;CAPET;Philippe, I;M;;;;;;;;;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;7
+ANCESTRISV1;Versailles;;;;France;;N;;;20/09/1638;;;;HABSBOURG;Marie-Thérèse;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9
+ANCESTRISV1;Versailles;;;;France;;N;;;01/11/1661;;;;CAPET;Louis;M;;;;;;;;;;;CAPET;Louis, XIV;false;;;HABSBOURG;Marie-Thérèse;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;12
+ANCESTRISV1;Versailles;;;;France;;N;;;27/11/1635;;;;D'AUBIGNÉ;Françoise;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;14
+ANCESTRISV1;Versailles;;;;France;;N;;;28/11/1660;;;;DE BAVIÈRE;Marie, Anne, Victoire;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;17
+ANCESTRISV1;Versailles;;;;France;;N;;;06/08/1682;;;;CAPET;Louis;M;;;;;;;;;;;CAPET;Louis;false;;;DE BAVIÈRE;Marie, Anne, Victoire;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;20
+ANCESTRISV1;Versailles;;;;France;;N;;;06/12/1685;;;;DE SAVOIE;Marie-Adélaîde;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;22
+ANCESTRISV1;Versailles;;;;France;;N;;;15/02/1710;;;;CAPET;Louis, XV;M;;;;;;;;;;;CAPET;Louis;false;;;DE SAVOIE;Marie-Adélaïde;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;25
+ANCESTRISV1;Versailles;;;;France;;N;;;27/05/1652;;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;27
+ANCESTRISV1;Versailles;;;;France;;N;;;02/08/1674;;;;CAPET;Philippe, II;M;;;;;;;;;;;CAPET;Philippe, I;false;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;30
+ANCESTRISV1;Versailles;;;;France;;N;;;04/05/1677;;;;DE BOURBON;Françoise, Marie;F;;;;;;;;;;;CAPET;Louis, XIV;false;;;D'AUBIGNÉ;Françoise;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;32
+ANCESTRISV1;Versailles;;;;France;;N;;;23/06/1703;;;;LESZCZYNSKA;Marie;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;35
+ANCESTRISV1;Versailles;;;;France;;N;;;04/09/1729;;;;CAPET;Louis;M;;;;;;;;;;;CAPET;Louis, XV;false;;;LESZCZYNSKA;Marie;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;38
+ANCESTRISV1;Versailles;;;;France;;N;;;04/11/1731;;;;VON SACHSEN;Marie-Josèphe;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;40
+ANCESTRISV1;Versailles;;;;France;;N;;;23/08/1754;;;;CAPET;Louis, XVI;M;;;;;;;;;;;CAPET;Louis;false;;;VON SACHSEN;Marie-Josèphe;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;43
+ANCESTRISV1;Versailles;;;;France;;N;;;02/11/1755;;;;DE HASBOURG-LORRAINE;Marie, Antoinette;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;45
+ANCESTRISV1;Versailles;;;;France;;N;;;13/12/1553;;;;CAPET;Henri, IV;M;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Assassiné par François RAVAILLAC (N2);48
+ANCESTRISV1;Versailles;;;;France;;N;;;26/04/1575;;;;DE' MEDICI;Maria;F;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;51
+ANCESTRISV1;Versailles;;;;France;;N;;;22/11/1602;;;;CAPET;Élisabeth;F;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;53
+ANCESTRISV1;Versailles;;;;France;;N;;;08/04/1605;;;;HASBOURG;Philippe, IV;M;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;55
+ANCESTRISV1;Versailles;;;;France;;N;;;16/04/1607;;;;CAPET;N***;M;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Note Mort sans avoir reçu le baptême complet, d'où l'absence de prénom;58
+ANCESTRISV1;Versailles;;;;France;;N;;;24/04/1608;;;;CAPET;Gaston, Jean, Baptiste;M;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;60
+ANCESTRISV1;Versailles;;;;France;;N;;;26/11/1609;;;;CAPET;Henriette, Marie;F;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;62
+ANCESTRISV1;Versailles;;;;France;;N;;;19/11/1600;;;;STUART;Charles, I;M;;;;;;;;;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;64
+ANCESTRISV1;Versailles;;;;France;;N;;;10/02/1606;;;;CAPET;Christine;F;;;;;;;;;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;67
+ANCESTRISV1;Versailles;;;;France;;M;;;21/11/1615;;;;CAPET;Louis, XIII;;,,,;;;;;;;false;;;DE' MEDICI;Maria;false;;;;;false;;;HABSBOURG;Anne;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;4
+ANCESTRISV1;Versailles;;;;France;;M;;;09/06/1660;;;;CAPET;Louis, XIV;;,,,;;;;;;;false;;;HABSBOURG;Anne;false;;;;;false;;;HABSBOURG;Marie-Thérèse;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;11
+ANCESTRISV1;Versailles;;;;France;;M;;;10/10/1683;;;;CAPET;Louis, XIV;;,,,;;;;;;;false;;;HABSBOURG;Anne;false;;;;;false;;;D'AUBIGNÉ;Françoise;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;16
+ANCESTRISV1;Versailles;;;;France;;M;;;07/03/1680;;;;CAPET;Louis;;,,,;;;;;;;false;;;HABSBOURG;Marie-Thérèse;false;;;;;false;;;DE BAVIÈRE;Marie, Anne, Victoire;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;19
+ANCESTRISV1;Versailles;;;;France;;M;;;07/12/1697;;;;CAPET;Louis;;,,,;;;;;;;false;;;DE BAVIÈRE;Marie, Anne, Victoire;false;;;;;false;;;DE SAVOIE;Marie-Adélaïde;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;24
+ANCESTRISV1;Versailles;;;;France;;M;;;16/11/1671;;;;CAPET;Philippe, I;;,,,;;;;;;;false;;;HABSBOURG;Anne;false;;;;;false;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;29
+ANCESTRISV1;Versailles;;;;France;;M;;;09/01/1692;;;;CAPET;Philippe, II;;,,,;;;;;;;false;;;D'AUBIGNÉ;Françoise;false;;;;;false;;;DE BOURBON;Françoise, Marie;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;34
+ANCESTRISV1;Versailles;;;;France;;M;;;05/09/1725;;;;CAPET;Louis, XV;;,,,;;;;;;;false;;;DE SAVOIE;Marie-Adélaïde;false;;;;;false;;;LESZCZYNSKA;Marie;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;37
+ANCESTRISV1;Versailles;;;;France;;M;;;09/02/1747;;;;CAPET;Louis;;,,,;;;;;;;false;;;LESZCZYNSKA;Marie;false;;;;;false;;;VON SACHSEN;Marie-Josèphe;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;42
+ANCESTRISV1;Versailles;;;;France;;M;;;16/05/1770;;;;CAPET;Louis, XVI;;,,,;;;;;;;false;;;VON SACHSEN;Marie-Josèphe;false;;;;;false;;;DE HASBOURG-LORRAINE;Marie, Antoinette;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;47
+ANCESTRISV1;Versailles;;;;France;;M;;;17/12/1600;;;;CAPET;Henri, IV;;,,,;;;;;;;false;;;;;false;;;;;false;;;DE' MEDICI;Maria;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;50
+ANCESTRISV1;Versailles;;;;France;;M;;;25/11/1615;;;;HASBOURG;Philippe, IV;;,,,;;;;;;;false;;;DE' MEDICI;Maria;false;;;;;false;;;CAPET;Élisabeth;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;57
+ANCESTRISV1;Versailles;;;;France;;M;;;;;;;STUART;Charles, I;;,,,;;;;;;;false;;;DE' MEDICI;Maria;false;;;;;false;;;CAPET;Henriette, Marie;;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;66
+ANCESTRISV1;Versailles;;;;France;;D;;;14/05/1643;;;;CAPET;Louis, XIII;M;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1
+ANCESTRISV1;Versailles;;;;France;;D;;;20/01/1666;;;;HABSBOURG;Anne;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3
+ANCESTRISV1;Versailles;;;;France;;D;;;01/09/1715;;;;CAPET;Louis, XIV;M;,,,;;;;;;;false;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;6
+ANCESTRISV1;Versailles;;;;France;;D;;;09/06/1701;;;;CAPET;Philippe, I;M;,,,;;;;;;;false;;;CAPET;Louis, XIII;false;;;HABSBOURG;Anne;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8
+ANCESTRISV1;Versailles;;;;France;;D;;;30/07/1683;;;;HABSBOURG;Marie-Thérèse;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10
+ANCESTRISV1;Versailles;;;;France;;D;;;14/02/1711;;;;CAPET;Louis;M;,,,;;;;;;;false;;;CAPET;Louis, XIV;false;;;HABSBOURG;Marie-Thérèse;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;13
+ANCESTRISV1;Versailles;;;;France;;D;;;15/04/1719;;;;D'AUBIGNÉ;Françoise;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;15
+ANCESTRISV1;Versailles;;;;France;;D;;;20/04/1690;;;;DE BAVIÈRE;Marie, Anne, Victoire;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;18
+ANCESTRISV1;Versailles;;;;France;;D;;;18/02/1712;;;;CAPET;Louis;M;,,,;;;;;;;false;;;CAPET;Louis;false;;;DE BAVIÉRE;Marie, Anne, Victoire;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;21
+ANCESTRISV1;Versailles;;;;France;;D;;;12/02/1712;;;;DE SAVOIE;Marie-Adélaïde;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23
+ANCESTRISV1;Versailles;;;;France;;D;;;10/05/1774;;;;CAPET;Louis, XV;M;,,,;;;;;;;false;;;CAPET;Louis;false;;;DE SAVOIE;Marie-Adélaïde;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;26
+ANCESTRISV1;Versailles;;;;France;;D;;;08/12/1722;;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;28
+ANCESTRISV1;Versailles;;;;France;;D;;;02/12/1723;;;;CAPET;Philippe, II;M;,,,;;;;;;;false;;;CAPET;Philippe, I;false;;;VON DER PFALZ-SIMMERN;Charlotte-Élisabeth;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;31
+ANCESTRISV1;Versailles;;;;France;;D;;;01/02/1749;;;;DE BOURBON;Françoise, Marie;F;,,,;;;;;;;false;;;CAPET;Louis, XIV;false;;;D'AUBIGNÉ;Françoise;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;33
+ANCESTRISV1;Versailles;;;;France;;D;;;24/06/1768;;;;LESZCZYNSKA;Marie;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;36
+ANCESTRISV1;Versailles;;;;France;;D;;;20/12/1765;;;;CAPET;Louis;M;,,,;;;;;;;false;;;CAPET;Louis, XV;false;;;LESZCZYNSKA;Marie;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;39
+ANCESTRISV1;Versailles;;;;France;;D;;;13/03/1767;;;;VON SACHSEN;Marie-Josèphe;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;41
+ANCESTRISV1;Versailles;;;;France;;D;;;02/05/0001;;;;CAPET;Louis, XVI;M;,,,;;;;;;;false;;;CAPET;Louis;false;;;VON SACHSEN;Marie-Josèphe;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;44
+ANCESTRISV1;Versailles;;;;France;;D;;;25/01/0002;;;;DE HASBOURG-LORRAINE;Marie, Antoinette;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;46
+ANCESTRISV1;Versailles;;;;France;;D;;;14/05/1610;;;;CAPET;Henri, IV;M;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;49
+ANCESTRISV1;Versailles;;;;France;;D;;;03/07/1642;;;;DE' MEDICI;Maria;F;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;52
+ANCESTRISV1;Versailles;;;;France;;D;;;06/10/1644;;;;CAPET;Élisabeth;F;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;54
+ANCESTRISV1;Versailles;;;;France;;D;;;17/09/1665;;;;HASBOURG;Philippe, IV;M;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;56
+ANCESTRISV1;Versailles;;;;France;;D;;;17/11/1611;;;;CAPET;N***;M;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;59
+ANCESTRISV1;Versailles;;;;France;;D;;;02/02/1660;;;;CAPET;Gaston, Jean, Baptiste;M;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;61
+ANCESTRISV1;Versailles;;;;France;;D;;;10/09/1669;;;;CAPET;Henriette, Marie;F;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;63
+ANCESTRISV1;Versailles;;;;France;;D;;;30/01/1649;;;;STUART;Charles, I;M;,,,;;;;;;;false;;;;;false;;;;;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;65
+ANCESTRISV1;Versailles;;;;France;;D;;;27/12/1663;;;;CAPET;Christine;F;,,,;;;;;;;false;;;CAPET;Henri, IV;false;;Assassiné par François RAVAILLAC (N2);DE' MEDICI;Maria;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;68

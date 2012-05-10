@@ -5,16 +5,15 @@
 <link href="./ancestris.css" rel="stylesheet"></head>
 <body>
 <h2>Format des fichiers de relevé ANCESTRIS</h2>
-
-Les quatre types de releves ont &nbsp;tous le même format.<br>Les lignes sont contistutées de 78 champs séparés par un point-vigule.<br>Chaque ligne est terminée par&nbsp;le separateur "\r\n" .<br>Si
+Les quatre types de releves ont &nbsp;tous le même format : les lignes
+sont contistutées de 78 champs séparés par un point-vigule.<br>Le contenu des&nbsp;champs est encodé au format &nbsp;UTF-8.<br>Chaque ligne est terminée par&nbsp;le separateur "\r\n".<br><br>Si
 le caractere séparateur point-virgule est&nbsp;présent à l'intérieur
 d'un champ , le champ est mis entre guillements lors de l'écriture dans
 le fichier. De même, si le caractère guillemet est présent à
 l'intérieur d'un champ, un deuxième&nbsp;guillement est ajouté après
-celui-ci (cf RFC 4180).<br>Certains
-champs&nbsp;sont ignorés à la lecture du fichier par Ancestris en
+celui-ci (cf RFC 4180).<br><br>Certains
+champs&nbsp;sont ignorés lors de la lecture du fichier par Ancestris en
 fonction du type d'evenement, voir le tableau ci-dessous. <br><br>
-<br>
 Astuce : &nbsp;Il est possible de créer un fichier au format ANCESTRIS
 avec un tableur&nbsp;pour, par exemple, réutiliser des données déjà
 saisie avec un tableur<br><ol><li>créer un tableau de 78 colonnes avec le tableur,</li><li>mettre&nbsp;ANCESTRISV1 dans la première colonne de toutes les lignes.</li><li>renseigner
