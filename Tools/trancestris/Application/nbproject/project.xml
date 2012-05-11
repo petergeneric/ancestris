@@ -89,6 +89,10 @@
                 </dependency>
             </module-dependencies>
             <public-packages/>
+            <class-path-extension>
+                <runtime-relative-path>ext/mail.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/mail.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>
