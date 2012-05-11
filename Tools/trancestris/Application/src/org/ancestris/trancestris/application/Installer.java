@@ -24,7 +24,7 @@ import org.openide.windows.WindowManager;
  */
 public class Installer extends ModuleInstall {
 
-    private Preferences modulePreferences = NbPreferences.forModule(ZipExplorerTopComponent.class);
+    private Preferences modulePreferences = NbPreferences.forModule(Installer.class);
 
     @Override
     public boolean closing() {
@@ -66,7 +66,6 @@ public class Installer extends ModuleInstall {
                 }
             }
         });
-
     }
 
     private Locale getLocaleFromString(String str) {
