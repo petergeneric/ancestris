@@ -65,7 +65,7 @@ public class BeanField {
             case witness2FirstName:
             case witness3FirstName:
             case witness4FirstName:
-                label = "Prénom";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.FirstName");
                 break;
             case indiLastName:
             case indiMarriedLastName:
@@ -79,7 +79,7 @@ public class BeanField {
             case witness2LastName:
             case witness3LastName:
             case witness4LastName:
-                label = "Nom";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.LastName");
                 break;
             case indiOccupation:
             case indiMarriedOccupation:
@@ -93,7 +93,7 @@ public class BeanField {
             case witness2Occupation:
             case witness3Occupation:
             case witness4Occupation:
-                label = "Profession";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Occupation");
                 break;
             case indiComment:
             case indiMarriedComment:
@@ -108,11 +108,11 @@ public class BeanField {
             case witness3Comment:
             case witness4Comment:
             case generalComment:
-                label = "Commentaire";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Comment");
                 break;
             case indiSex:
             case wifeSex:
-                label = "Sexe";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Sex");
                  break;
             case indiMarriedDead:
             case indiFatherDead:
@@ -120,44 +120,44 @@ public class BeanField {
             case wifeMarriedDead:
             case wifeFatherDead:
             case wifeMotherDead:
-                label = "Décédé";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
                 break;
             case indiPlace:
             case wifePlace:
-                label = "Lieu";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Place");
                 break;
             case indiAge:
             case wifeAge:
-                label = "Age";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Age");
                 break;
             case indiBirthDate:
             case wifeBirthDate:
-                label = "Naissance";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Birth");
                 break;
 
             case eventDate:
-                label = "Date";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Date");
                 break;
             case cote:
-                label = "Cote";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Cote");
                 break;
             case parish:
-                label = "Paroisse";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Parish");
                 break;
             case eventType:
-                label = "Type d'acte";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.EventType");
                 break;
             case freeComment:
-                label = "Photo";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Picture");
                 break;
             case notary:
-                label = "Notaire";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Notary");
                 break;
             case title:
                 label = field.toString();
                 break;
             default:
-                label = "Valeur";
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Value");
                 break;
         }
 

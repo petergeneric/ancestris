@@ -33,7 +33,7 @@ public class FileManager {
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
         String strLine = br.readLine();
         if (strLine==null || strLine.isEmpty() ) {
-            throw new Exception(String.format("Le fichier %s est vide.", inputFile.getName()));
+            throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), inputFile.getName()));
         }
         StringBuilder sb  = new StringBuilder();
         FileBuffer buffer = null;
@@ -44,7 +44,7 @@ public class FileManager {
         } else if (ReleveFileNimegue.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileNimegue.loadFile(inputFile);
         } else {
-            throw new Exception(String.format("Le fichier %s a un format inconnu", inputFile.getName())+ "\n" + sb.toString());
+            throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.UnknownFormat"), inputFile.getName())+ "\n" + sb.toString());
         }
         return buffer;
     }
@@ -73,7 +73,7 @@ public class FileManager {
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, saveFile.getParent().toString());
 
             if (models.length == 0) {
-                return sb.append("Pas de releve a enregistrer");
+                return sb.append(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.NoDataToSave"));
             }
 
             switch (fileFormat) {

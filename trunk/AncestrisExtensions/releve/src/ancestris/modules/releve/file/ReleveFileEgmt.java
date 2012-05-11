@@ -38,7 +38,7 @@ public class ReleveFileEgmt {
             String[] fields = splitLine(br);
 
             if (fields == null) {
-                sb.append(fileSignature + " ").append(String.format("Le fichier %s est vide.", inputFile.getName()));
+                sb.append(fileSignature + " ").append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), inputFile.getName()));
                 return false;
             }
         } catch (Exception ex) {
@@ -67,7 +67,7 @@ public class ReleveFileEgmt {
             if (fields.length == 44) {
                 return fields;
              } else {
-                throw new Exception(String.format("Line contains %s fields. Must be %d fields", fields.length, 44));
+                throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.FieldNb"), fields.length, 44));
             }
         } else {
             return null;
@@ -438,14 +438,16 @@ public class ReleveFileEgmt {
                         }
 
                     } else {
-                        fileBuffer.append("Line ").append(lineNumber).append("\n   ");
+                        fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
+                        fileBuffer.append("\n");
                         fileBuffer.append(strLine).append("\n   ");
-                        fileBuffer.append("Error ").append("invalid line");
+                        fileBuffer.append(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.InvalidLine"));
                     }
                 } catch (Exception e) {
-                    fileBuffer.append("Line ").append(lineNumber).append("\n   ");
+                    fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
+                    fileBuffer.append("\n");
                     fileBuffer.append(strLine).append("\n   ");
-                    fileBuffer.append("Error ").append(e).append("\n");
+                    fileBuffer.append(e.getMessage()).append("\n");
                 }
             } // for
 
@@ -630,8 +632,10 @@ public class ReleveFileEgmt {
                     writer.write(line.toString());
 
                 } catch (Exception e) {
-                    sb.append("Releve ").append(line).append("\n   ");
-                    sb.append("Error ").append(e).append("\n");
+                    sb.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), index ));
+                    sb.append("\n");
+                    sb.append(line).append("\n   ");
+                    sb.append(e.getMessage()).append("\n");
                 }
             }
             writer.close();

@@ -10,7 +10,7 @@ public class RecordDeath extends Record {
     public RecordDeath() {
         super();
         
-        indiFirstName        = new FieldSimpleValue();
+        indiFirstName       = new FieldSimpleValue();
         indiLastName        = new FieldSimpleValue();
         indiSex             = new FieldSex();
         indiAge             = new FieldSimpleValue();

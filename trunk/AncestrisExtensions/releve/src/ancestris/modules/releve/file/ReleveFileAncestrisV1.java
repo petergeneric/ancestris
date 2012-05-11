@@ -41,7 +41,7 @@ public class ReleveFileAncestrisV1 {
             br = new BufferedReader( new InputStreamReader(checkUtf8Bom(new FileInputStream(inputFile)),"UTF-8"));
             String[] fields = splitLine(br);
             if (fields == null) {
-                sb.append(fileSignature + " ").append(String.format("Le fichier %s est vide.", inputFile.getName()));
+                sb.append(fileSignature + " ").append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), inputFile.getName()));
                 return false;
             }
         } catch (Exception ex) {
@@ -91,10 +91,10 @@ public class ReleveFileAncestrisV1 {
                 if (fields[0].equals(fileSignature)) {
                     return fields;
                 } else {
-                    throw new Exception(String.format("La ligne doit commencer par %s au lieu de %s", fileSignature, fields[0]));
+                    throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineBegin"), fileSignature, fields[0]));
                 }
             } else {
-                throw new Exception(String.format("Line contains %s fields. Must be %d fields", fields.length, 77));
+                throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.FieldNb"), fields.length, 77));
             }
         } else {
             return null;
@@ -518,15 +518,18 @@ public class ReleveFileAncestrisV1 {
                         fileBuffer.loadRecord(record);
                         
                     } else {
-                        fileBuffer.append("Line ").append(lineNumber).append(" ");
-                        fileBuffer.append("Type d'acte inconnu").append(" ");
+                        fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
+                        fileBuffer.append("\n");
+                        fileBuffer.append(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.UnknownEventType")).append(" ");
                         fileBuffer.append(fields[Field.eventType.ordinal()]);
                         fileBuffer.append("\n");
                     }
 
                 } catch (Exception e) {
                     // je trace l'erreur dans le buffer de sortie
-                    fileBuffer.append("Line ").append(lineNumber).append(" ").append(e.toString()).append("\n");
+                    fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
+                    fileBuffer.append("\n");
+                    fileBuffer.append(e.toString()).append("\n");
                 }
             } // while
 
@@ -932,7 +935,7 @@ public class ReleveFileAncestrisV1 {
             writer.close();
 
         } catch (Exception e) {
-            sb.append("Error ").append(e).append("\n");
+            sb.append(e).append("\n");
         }
         return sb;
     }

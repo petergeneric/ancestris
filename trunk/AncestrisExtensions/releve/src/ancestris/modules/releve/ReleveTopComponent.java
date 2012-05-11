@@ -672,7 +672,7 @@ public final class ReleveTopComponent extends TopComponent  {
      */
     private boolean askSaveData() {
         String title = NbBundle.getMessage(ReleveTopComponent.class, "LOAD_FILE");
-        String fileName = currentFile != null ? currentFile.getName() : "nouveau";
+        String fileName = currentFile != null ? currentFile.getName() : "nouveau"+".txt";
         int choice = JOptionPane.showConfirmDialog(this,
                 String.format("Vous avez modifé %s sans le sauvegarder. Voulez-vous le faire maintenant ?", fileName),
                 title,
@@ -1183,7 +1183,7 @@ public final class ReleveTopComponent extends TopComponent  {
                         panelMarriage.getCurrentRecordIndex(),
                         panelDeath.getCurrentRecordIndex(),
                         panelMisc.getCurrentRecordIndex(),
-                        jTabbedPane1.getSelectedIndex()
+                        jTabbedPane1.getSelectedIndex() != 0 ? jTabbedPane1.getSelectedIndex()-1 : 1
                      );
 
             } else {
@@ -1223,24 +1223,26 @@ public final class ReleveTopComponent extends TopComponent  {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        panelConfig = new ancestris.modules.releve.ConfigPanel();
         panelBirth = new ancestris.modules.releve.RelevePanel();
         panelMarriage = new ancestris.modules.releve.RelevePanel();
         panelDeath = new ancestris.modules.releve.RelevePanel();
         panelMisc = new ancestris.modules.releve.RelevePanel();
-        panelConfig = new ancestris.modules.releve.ConfigPanel();
 
+        setPreferredSize(null);
         setLayout(new java.awt.BorderLayout());
 
+        jTabbedPane1.setPreferredSize(null);
         jTabbedPane1.setVerifyInputWhenFocusTarget(false);
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelConfig.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/config.png")), panelConfig); // NOI18N
 
         panelBirth.setRequestFocusEnabled(false);
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), panelMarriage); // NOI18N
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), panelDeath); // NOI18N
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), panelMisc); // NOI18N
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelConfig.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/config.png")), panelConfig); // NOI18N
 
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        add(jTabbedPane1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane jTabbedPane1;

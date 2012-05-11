@@ -31,7 +31,7 @@ public class FieldTitle extends Field {
 
     @Override
     public String getValue() {
-        return "";
+        return java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("");
     }
 
    @Override
