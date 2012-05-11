@@ -57,13 +57,16 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
     /** Creates new form DownloadBundlePanel */
     public DownloadBundlePanel() {
         initComponents();
-        localBundleTextField.setText(NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", ""));
         String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", "");
         String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
         if (dirName.length() > 0) {
             localBundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
+        } else {
+            localBundleFile = new File( System.getProperty( "user.dir" ) + System.getProperty("file.separator") + fileName);
         }
-        bundleUrl = UrlTextField.getText();
+        bundleUrl = urlTextField.getText();
+        localBundleTextField.setText(localBundleFile.toString());
+
     }
 
     /** This method is called from within the constructor to
@@ -75,11 +78,12 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        UrlTextField = new javax.swing.JTextField();
+        urlTextField = new javax.swing.JTextField();
         localBundleTextField = new javax.swing.JTextField();
         openFileButton = new javax.swing.JButton();
+        urlLabel = new javax.swing.JLabel();
 
-        UrlTextField.setText(org.openide.util.NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.UrlTextField.text")); // NOI18N
+        urlTextField.setText(org.openide.util.NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text")); // NOI18N
 
         openFileButton.setText(org.openide.util.NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.openFileButton.text")); // NOI18N
         openFileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -88,6 +92,8 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
             }
         });
 
+        urlLabel.setText(org.openide.util.NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,9 +101,12 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(UrlTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(urlLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(urlTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(localBundleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                        .addComponent(localBundleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openFileButton)))
                 .addContainerGap())
@@ -106,7 +115,9 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(UrlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(urlLabel)
+                    .addComponent(urlTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(localBundleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -131,7 +142,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
 
         if (fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             localBundleFile = fileChooser.getSelectedFile();
-            localBundleTextField.setText(getLocalBundleFile().getName());
+            localBundleTextField.setText(localBundleFile.toString());
             try {
                 NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", fileChooser.getCurrentDirectory().getCanonicalPath());
             } catch (IOException ex) {
@@ -142,9 +153,10 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_openFileButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField UrlTextField;
     private javax.swing.JTextField localBundleTextField;
     private javax.swing.JButton openFileButton;
+    private javax.swing.JLabel urlLabel;
+    private javax.swing.JTextField urlTextField;
     // End of variables declaration//GEN-END:variables
 
     /**
