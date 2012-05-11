@@ -39,7 +39,8 @@ public class ReleveFileNimegue {
             String[] fields = splitLine(strLine, lineNo);
 
             if (fields == null) {
-                sb.append(fileSignature + " ").append(String.format("Le fichier %s est vide.", inputFile.getName()));
+                sb.append(fileSignature);
+                sb.append(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString(" ")).append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), inputFile.getName()));
                 return false;
             }
         } catch (Exception ex) {
@@ -565,12 +566,14 @@ public class ReleveFileNimegue {
                         fileBuffer.loadRecord(record);
                         
                     } else {
-                        fileBuffer.append("Line ").append(lineNumber).append(": ");
-                        fileBuffer.append("Type d'acte inconnu").append(" ");
+                        fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
+                        fileBuffer.append("\n");
+                        fileBuffer.append(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.UnknownEventType")).append(" ");
                         fileBuffer.append(fields[BirthField.typeActe.ordinal()]).append("\n");
                     }
                 } catch (Exception e) {
-                    fileBuffer.append("Line ").append(lineNumber).append(": ").append(e.toString()).append("\n");
+                    fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
+                    fileBuffer.append("\n");
                     fileBuffer.append(strLine).append("\n");
                     e.printStackTrace();
                 }
@@ -909,15 +912,17 @@ public class ReleveFileNimegue {
                     writer.write(line.toString());
 
                 } catch (Exception e) {
-                    sb.append("Line ").append(line).append("\n   ");
-                    sb.append("Error ").append(e).append("\n");
+                    sb.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), index ));
+                    sb.append("\n");
+                    sb.append(line).append("\n   ");
+                    sb.append(e.getMessage()).append("\n");
                     e.printStackTrace();
                 }
             }
             writer.close();
 
         } catch (Exception e) {
-            sb.append("Error ").append(e).append("\n");
+            sb.append(e.getMessage()).append("\n");
             e.printStackTrace();
         }
         return sb;

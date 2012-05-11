@@ -120,9 +120,9 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");
-        //record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "décédé");
-        record.setIndiFather("indifatherfirstname", "indifatherlastname", "indifatheroccupation", "indifathercomment", "décédé");
-        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "décédé");
+        //record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "Décédé");
+        record.setIndiFather("indifatherfirstname", "indifatherlastname", "indifatheroccupation", "indifathercomment", "Décédé");
+        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "Décédé");
         record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -163,12 +163,12 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("IndiFatherFirstName",     record.getIndiFatherFirstName().toString(),record2.getIndiFatherFirstName().toString());
         assertEquals("IndiFatherLastName",      record.getIndiFatherLastName().toString(),record2.getIndiFatherLastName().toString());
         assertEquals("IndiFatherOccupation",    record.getIndiFatherOccupation().toString(),record2.getIndiFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "décédé, indifathercomment",record2.getIndiFatherComment().toString());
+        assertEquals("IndiFatherComment",       "Décédé, indifathercomment",record2.getIndiFatherComment().toString());
         assertEquals("IndiFatherDead",          "",record2.getIndiFatherDead().toString());
         assertEquals("IndiMotherFirstName",     record.getIndiMotherFirstName().toString(),record2.getIndiMotherFirstName().toString());
         assertEquals("IndiMotherLastName",      record.getIndiMotherLastName().toString(),record2.getIndiMotherLastName().toString());
         assertEquals("IndiMotherOccupation",    record.getIndiMotherOccupation().toString(),record2.getIndiMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "décédé, indimothercomment",record2.getIndiMotherComment().toString());
+        assertEquals("IndiMotherComment",       "Décédé, indimothercomment",record2.getIndiMotherComment().toString());
         assertEquals("IndiMotherDead",          "",record2.getIndiMotherDead().toString());
 
         assertEquals("WifeFirstName",           null,record2.getWifeFirstName());
@@ -238,13 +238,13 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");
-        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "décédé");
-        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "décédé");
-        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "décédé");
+        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "Décédé");
+        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "Décédé");
+        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "Décédé");
         record.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifecomment");
-        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "décédé");
-        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifefathercomment", "décédé");
-        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifemothercomment", "décédé");
+        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "Décédé");
+        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifefathercomment", "Décédé");
+        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifemothercomment", "Décédé");
         record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -278,18 +278,18 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("IndiMarriedFirstName",    record.getIndiMarriedFirstName().toString(),record2.getIndiMarriedFirstName().toString());
         assertEquals("IndiMarriedLastName",     record.getIndiMarriedLastName().toString(),record2.getIndiMarriedLastName().toString());
         assertEquals("IndiMarriedOccupation",   "",record2.getIndiMarriedOccupation().toString());
-        assertEquals("IndiMarriedComment",      "décédé, indimarriedoccupation, indimarriedcomment",record2.getIndiMarriedComment().toString());
+        assertEquals("IndiMarriedComment",      "Décédé, indimarriedoccupation, indimarriedcomment",record2.getIndiMarriedComment().toString());
         assertEquals("IndiMarriedDead",         "",record2.getIndiMarriedDead().toString());
 
         assertEquals("IndiFatherFirstName",     record.getIndiFatherFirstName().toString(),record2.getIndiFatherFirstName().toString());
         assertEquals("IndiFatherLastName",      record.getIndiFatherLastName().toString(),record2.getIndiFatherLastName().toString());
         assertEquals("IndiFatherOccupation",    record.getIndiFatherOccupation().toString(),record2.getIndiFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "décédé, indifathercomment",record2.getIndiFatherComment().toString());
+        assertEquals("IndiFatherComment",       "Décédé, indifathercomment",record2.getIndiFatherComment().toString());
         assertEquals("IndiFatherDead",          "",record2.getIndiFatherDead().toString());
         assertEquals("IndiMotherFirstName",     record.getIndiMotherFirstName().toString(),record2.getIndiMotherFirstName().toString());
         assertEquals("IndiMotherLastName",      record.getIndiMotherLastName().toString(),record2.getIndiMotherLastName().toString());
         assertEquals("IndiMotherOccupation",    record.getIndiMotherOccupation().toString(),record2.getIndiMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "décédé, indimothercomment",record2.getIndiMotherComment().toString());
+        assertEquals("IndiMotherComment",       "Décédé, indimothercomment",record2.getIndiMotherComment().toString());
         assertEquals("IndiMotherDead",          "",record2.getIndiMotherDead().toString());
 
         assertEquals("WifeFirstName",           record.getWifeFirstName().toString(),record2.getWifeFirstName().toString());
@@ -303,18 +303,18 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("WifeMarriedFirstName",    record.getWifeMarriedFirstName().toString(),record2.getWifeMarriedFirstName().toString());
         assertEquals("WifeMarriedLastName",     record.getWifeMarriedLastName().toString(),record2.getWifeMarriedLastName().toString());
         assertEquals("WifeMarriedOccupation",   "",record2.getWifeMarriedOccupation().toString());
-        assertEquals("WifeMarriedComment",      "décédé, wifemarriedoccupation, wifemarriedcomment",record2.getWifeMarriedComment().toString());
+        assertEquals("WifeMarriedComment",      "Décédé, wifemarriedoccupation, wifemarriedcomment",record2.getWifeMarriedComment().toString());
         assertEquals("WifeMarriedDead",         "",record2.getWifeMarriedDead().toString());
 
         assertEquals("WifeFatherFirstName",     record.getWifeFatherFirstName().toString(),record2.getWifeFatherFirstName().toString());
         assertEquals("WifeFatherLastName",      record.getWifeFatherLastName().toString(),record2.getWifeFatherLastName().toString());
         assertEquals("WifeFatherOccupation",    record.getWifeFatherOccupation().toString(),record2.getWifeFatherOccupation().toString());
-        assertEquals("WifeFatherComment",       "décédé, wifefathercomment",record2.getWifeFatherComment().toString());
+        assertEquals("WifeFatherComment",       "Décédé, wifefathercomment",record2.getWifeFatherComment().toString());
         assertEquals("WifeFatherDead",          "",record2.getWifeFatherDead().toString());
         assertEquals("WifeMotherFirstName",     record.getWifeMotherFirstName().toString(),record2.getWifeMotherFirstName().toString());
         assertEquals("WifeMotherLastName",      record.getWifeMotherLastName().toString(),record2.getWifeMotherLastName().toString());
         assertEquals("WifeMotherOccupation",    record.getWifeMotherOccupation().toString(),record2.getWifeMotherOccupation().toString());
-        assertEquals("WifeMotherComment",       "décédé, wifemothercomment",record2.getWifeMotherComment().toString());
+        assertEquals("WifeMotherComment",       "Décédé, wifemothercomment",record2.getWifeMotherComment().toString());
         assertEquals("WifeMotherDead",          "",record2.getWifeMotherDead().toString());
 
         assertEquals("Witness1FirstName",     record.getWitness1FirstName().toString(),record2.getWitness1FirstName().toString());
@@ -357,9 +357,9 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");
-        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "décédé");
-        record.setIndiFather("indifatherfirstname", "indifatherlastname", "indifatheroccupation", "indifathercomment", "décédé");
-        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "décédé");
+        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "Décédé");
+        record.setIndiFather("indifatherfirstname", "indifatherlastname", "indifatheroccupation", "indifathercomment", "Décédé");
+        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "Décédé");
         record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -394,18 +394,18 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("IndiMarriedFirstName",    record.getIndiMarriedFirstName().toString(),record2.getIndiMarriedFirstName().toString());
         assertEquals("IndiMarriedLastName",     record.getIndiMarriedLastName().toString(),record2.getIndiMarriedLastName().toString());
         assertEquals("IndiMarriedOccupation",   record.getIndiMarriedOccupation().toString(),record2.getIndiMarriedOccupation().toString());
-        assertEquals("IndiMarriedComment",      "décédé, indimarriedcomment",record2.getIndiMarriedComment().toString());
+        assertEquals("IndiMarriedComment",      "Décédé, indimarriedcomment",record2.getIndiMarriedComment().toString());
         assertEquals("IndiMarriedDead",         "",record2.getIndiMarriedDead().toString());
 
         assertEquals("IndiFatherFirstName",     record.getIndiFatherFirstName().toString(),record2.getIndiFatherFirstName().toString());
         assertEquals("IndiFatherLastName",      record.getIndiFatherLastName().toString(),record2.getIndiFatherLastName().toString());
         assertEquals("IndiFatherOccupation",    record.getIndiFatherOccupation().toString(),record2.getIndiFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "décédé, indifathercomment",record2.getIndiFatherComment().toString());
+        assertEquals("IndiFatherComment",       "Décédé, indifathercomment",record2.getIndiFatherComment().toString());
         assertEquals("IndiFatherDead",          "",record2.getIndiFatherDead().toString());
         assertEquals("IndiMotherFirstName",     record.getIndiMotherFirstName().toString(),record2.getIndiMotherFirstName().toString());
         assertEquals("IndiMotherLastName",      record.getIndiMotherLastName().toString(),record2.getIndiMotherLastName().toString());
         assertEquals("IndiMotherOccupation",    record.getIndiMotherOccupation().toString(),record2.getIndiMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "décédé, indimothercomment",record2.getIndiMotherComment().toString());
+        assertEquals("IndiMotherComment",       "Décédé, indimothercomment",record2.getIndiMotherComment().toString());
         assertEquals("IndiMotherDead",          "",record2.getIndiMotherDead().toString());
 
         assertEquals("WifeFirstName",           null,record2.getWifeFirstName());
@@ -476,13 +476,13 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");
-        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "décédé");
-        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "décédé");
-        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "décédé");
+        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "Décédé");
+        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "Décédé");
+        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "Décédé");
         record.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifecomment");
-        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "décédé");
-        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifefathercomment", "décédé");
-        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifemothercomment", "décédé");
+        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "Décédé");
+        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifefathercomment", "Décédé");
+        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifemothercomment", "Décédé");
         record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -516,18 +516,18 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("IndiMarriedFirstName",    record.getIndiMarriedFirstName().toString(),record2.getIndiMarriedFirstName().toString());
         assertEquals("IndiMarriedLastName",     record.getIndiMarriedLastName().toString(),record2.getIndiMarriedLastName().toString());
         assertEquals("IndiMarriedOccupation",   "",record2.getIndiMarriedOccupation().toString());
-        assertEquals("IndiMarriedComment",      "décédé, indimarriedoccupation, indimarriedcomment",record2.getIndiMarriedComment().toString());
+        assertEquals("IndiMarriedComment",      "Décédé, indimarriedoccupation, indimarriedcomment",record2.getIndiMarriedComment().toString());
         assertEquals("IndiMarriedDead",         "",record2.getIndiMarriedDead().toString());
 
         assertEquals("IndiFatherFirstName",     record.getIndiFatherFirstName().toString(),record2.getIndiFatherFirstName().toString());
         assertEquals("IndiFatherLastName",      record.getIndiFatherLastName().toString(),record2.getIndiFatherLastName().toString());
         assertEquals("IndiFatherOccupation",    record.getIndiFatherOccupation().toString(),record2.getIndiFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "décédé, indifathercomment",record2.getIndiFatherComment().toString());
+        assertEquals("IndiFatherComment",       "Décédé, indifathercomment",record2.getIndiFatherComment().toString());
         assertEquals("IndiFatherDead",          "",record2.getIndiFatherDead().toString());
         assertEquals("IndiMotherFirstName",     record.getIndiMotherFirstName().toString(),record2.getIndiMotherFirstName().toString());
         assertEquals("IndiMotherLastName",      record.getIndiMotherLastName().toString(),record2.getIndiMotherLastName().toString());
         assertEquals("IndiMotherOccupation",    record.getIndiMotherOccupation().toString(),record2.getIndiMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "décédé, indimothercomment",record2.getIndiMotherComment().toString());
+        assertEquals("IndiMotherComment",       "Décédé, indimothercomment",record2.getIndiMotherComment().toString());
         assertEquals("IndiMotherDead",          "",record2.getIndiMotherDead().toString());
 
         assertEquals("WifeFirstName",           record.getWifeFirstName().toString(),record2.getWifeFirstName().toString());
@@ -541,18 +541,18 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("WifeMarriedFirstName",    record.getWifeMarriedFirstName().toString(),record2.getWifeMarriedFirstName().toString());
         assertEquals("WifeMarriedLastName",     record.getWifeMarriedLastName().toString(),record2.getWifeMarriedLastName().toString());
         assertEquals("WifeMarriedOccupation",   "",record2.getWifeMarriedOccupation().toString());
-        assertEquals("WifeMarriedComment",      "décédé, wifemarriedoccupation, wifemarriedcomment",record2.getWifeMarriedComment().toString());
+        assertEquals("WifeMarriedComment",      "Décédé, wifemarriedoccupation, wifemarriedcomment",record2.getWifeMarriedComment().toString());
         assertEquals("WifeMarriedDead",         "",record2.getWifeMarriedDead().toString());
 
         assertEquals("WifeFatherFirstName",     record.getWifeFatherFirstName().toString(),record2.getWifeFatherFirstName().toString());
         assertEquals("WifeFatherLastName",      record.getWifeFatherLastName().toString(),record2.getWifeFatherLastName().toString());
         assertEquals("WifeFatherOccupation",    record.getWifeFatherOccupation().toString(),record2.getWifeFatherOccupation().toString());
-        assertEquals("WifeFatherComment",       "décédé, wifefathercomment",record2.getWifeFatherComment().toString());
+        assertEquals("WifeFatherComment",       "Décédé, wifefathercomment",record2.getWifeFatherComment().toString());
         assertEquals("WifeFatherDead",          "",record2.getWifeFatherDead().toString());
         assertEquals("WifeMotherFirstName",     record.getWifeMotherFirstName().toString(),record2.getWifeMotherFirstName().toString());
         assertEquals("WifeMotherLastName",      record.getWifeMotherLastName().toString(),record2.getWifeMotherLastName().toString());
         assertEquals("WifeMotherOccupation",    record.getWifeMotherOccupation().toString(),record2.getWifeMotherOccupation().toString());
-        assertEquals("WifeMotherComment",       "décédé, wifemothercomment",record2.getWifeMotherComment().toString());
+        assertEquals("WifeMotherComment",       "Décédé, wifemothercomment",record2.getWifeMotherComment().toString());
         assertEquals("WifeMotherDead",          "",record2.getWifeMotherDead().toString());
         
         assertEquals("Witness1FirstName",     record.getWitness1FirstName().toString(),record2.getWitness1FirstName().toString());

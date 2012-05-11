@@ -279,7 +279,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jTextArea1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextArea1.setFocusable(false);
         jTextArea1.setMinimumSize(new java.awt.Dimension(200, 22));
-        jTextArea1.setPreferredSize(new java.awt.Dimension(400, 58));
+        jTextArea1.setPreferredSize(new java.awt.Dimension(460, 58));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -397,11 +397,13 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jPanel2.add(jPanelCommand, gridBagConstraints);
 
         placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.placePanel.border.title"))); // NOI18N
+        placePanel.setPreferredSize(new java.awt.Dimension(460, 150));
         placePanel.setRequestFocusEnabled(false);
         placePanel.setLayout(new java.awt.GridBagLayout());
 
         cityNameLabel.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.cityNameLabel.text")); // NOI18N
         cityNameLabel.setFocusable(false);
+        cityNameLabel.setPreferredSize(null);
         cityNameLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -411,15 +413,18 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
 
         cityNameEntry.setMinimumSize(new java.awt.Dimension(50, 20));
         cityNameEntry.setName("cityNameEntry"); // NOI18N
-        cityNameEntry.setPreferredSize(new java.awt.Dimension(120, 20));
+        cityNameEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(cityNameEntry, gridBagConstraints);
 
         cityCodeLabel.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.cityCodeLabel.text")); // NOI18N
         cityCodeLabel.setFocusable(false);
+        cityCodeLabel.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -428,16 +433,19 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         placePanel.add(cityCodeLabel, gridBagConstraints);
 
         cityCodeEntry.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.cityCodeEntry.text")); // NOI18N
-        cityCodeEntry.setPreferredSize(new java.awt.Dimension(120, 20));
+        cityCodeEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(cityCodeEntry, gridBagConstraints);
 
         countyNameLabel.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.countyNameLabel.text")); // NOI18N
         countyNameLabel.setFocusable(false);
+        countyNameLabel.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -445,12 +453,14 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         placePanel.add(countyNameLabel, gridBagConstraints);
 
         countyNameEntry.setMinimumSize(new java.awt.Dimension(50, 20));
-        countyNameEntry.setPreferredSize(new java.awt.Dimension(120, 20));
+        countyNameEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 2;
         gridBagConstraints.ipady = 2;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(countyNameEntry, gridBagConstraints);
 
@@ -458,6 +468,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         stateLabel.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.stateLabel.text")); // NOI18N
         stateLabel.setFocusable(false);
         stateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        stateLabel.setPreferredSize(null);
         stateLabel.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -467,16 +478,19 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         placePanel.add(stateLabel, gridBagConstraints);
 
         stateEntry.setMinimumSize(new java.awt.Dimension(50, 20));
-        stateEntry.setPreferredSize(new java.awt.Dimension(120, 20));
+        stateEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(stateEntry, gridBagConstraints);
 
         countryLabel.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.countryLabel.text")); // NOI18N
         countryLabel.setFocusable(false);
+        countryLabel.setPreferredSize(null);
         countryLabel.setRequestFocusEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -486,10 +500,12 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         countryLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.countryLabel.AccessibleContext.accessibleName")); // NOI18N
 
         countryEntry.setMinimumSize(new java.awt.Dimension(50, 20));
-        countryEntry.setPreferredSize(new java.awt.Dimension(120, 20));
+        countryEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(countryEntry, gridBagConstraints);
 
@@ -500,7 +516,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jPanel2.add(placePanel, gridBagConstraints);
 
         statisticPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.statisticPanel.border.title"))); // NOI18N
-        statisticPanel.setPreferredSize(new java.awt.Dimension(400, 57));
+        statisticPanel.setPreferredSize(new java.awt.Dimension(460, 80));
         statisticPanel.setRequestFocusEnabled(false);
         statisticPanel.setLayout(new java.awt.GridLayout(2, 4, 2, 2));
 
@@ -528,24 +544,33 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         birthNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         birthNumber.setText("0");
         birthNumber.setBorder(null);
+        birthNumber.setPreferredSize(null);
         statisticPanel.add(birthNumber);
 
         marriageNumber.setEditable(false);
         marriageNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         marriageNumber.setText("0");
         marriageNumber.setBorder(null);
+        marriageNumber.setPreferredSize(null);
         statisticPanel.add(marriageNumber);
 
         deathNumber.setEditable(false);
         deathNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         deathNumber.setText("0");
         deathNumber.setBorder(null);
+        deathNumber.setPreferredSize(null);
         statisticPanel.add(deathNumber);
 
         miscNumber.setEditable(false);
         miscNumber.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         miscNumber.setText("0");
         miscNumber.setBorder(null);
+        miscNumber.setPreferredSize(null);
+        miscNumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miscNumberActionPerformed(evt);
+            }
+        });
         statisticPanel.add(miscNumber);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -555,7 +580,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jPanel2.add(statisticPanel, gridBagConstraints);
 
         OptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.OptionsPanel.border.title"))); // NOI18N
-        OptionsPanel.setPreferredSize(new java.awt.Dimension(400, 119));
+        OptionsPanel.setPreferredSize(new java.awt.Dimension(460, 119));
         OptionsPanel.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxDuplicateRecord.setSelected(true);
@@ -715,6 +740,10 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
     private void jButtonExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportActionPerformed
         topComponent.exportFile();
     }//GEN-LAST:event_jButtonExportActionPerformed
+
+    private void miscNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miscNumberActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_miscNumberActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
