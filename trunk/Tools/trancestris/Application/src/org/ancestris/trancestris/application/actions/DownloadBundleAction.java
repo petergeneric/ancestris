@@ -18,6 +18,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -39,12 +41,13 @@ public final class DownloadBundleAction implements ActionListener {
         public void run() {
             try {
                 logger.log(Level.INFO, "Opening connection to {0} ...", url.getFile());
-
+                ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "DownloadBundleAction.DownloadProgress"));
                 URLConnection urlC = url.openConnection();
 
                 // Copy resource to local file, use remote file
                 // if no local file name specified
                 InputStream is = url.openStream();
+
                 // log info about resource
                 Date date = new Date(urlC.getLastModified());
                 logger.log(Level.INFO, "Copying resource (type: {0}, modified on: {1})", new Object[]{urlC.getContentType(), DateFormat.getInstance().format(date)});
@@ -52,11 +55,14 @@ public final class DownloadBundleAction implements ActionListener {
                 FileOutputStream fos = null;
                 fos = new FileOutputStream(bundleFile);
 
+                progressHandle.start();
                 int oneChar, count = 0;
                 while ((oneChar = is.read()) != -1) {
                     fos.write(oneChar);
                     count++;
                 }
+                progressHandle.finish();
+                
                 is.close();
                 fos.close();
                 logger.log(Level.INFO, " {0} byte(s) copied", count);
