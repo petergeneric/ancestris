@@ -159,7 +159,7 @@ public class SearchPanel extends javax.swing.JPanel {
         // Clear the Text Area
         resultTextArea.setText("");
         if (search.isEmpty()) {
-            resultTextArea.append(NbBundle.getMessage(SearchPanel.class, "ZipExplorerSearchPanel.searchResult.text", expressionTextField.getText()));
+            resultTextArea.append(NbBundle.getMessage(SearchPanel.class, "SearchPanel.searchResult.text", expressionTextField.getText()));
         } else {
             for (String dirName : search) {
                 resultTextArea.append(dirName + "\n");
