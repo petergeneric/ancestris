@@ -6,6 +6,8 @@ package org.ancestris.trancestris.application;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -25,6 +27,7 @@ import org.openide.windows.WindowManager;
 public class Installer extends ModuleInstall {
 
     private Preferences modulePreferences = NbPreferences.forModule(Installer.class);
+    private static final Logger logger = Logger.getLogger(Installer.class.getName());
 
     @Override
     public boolean closing() {

@@ -25,7 +25,7 @@
                       <Component id="urlTextField" pref="434" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="localBundleTextField" pref="447" max="32767" attributes="0"/>
+                      <Component id="localBundleTextField" pref="457" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="openFileButton" min="-2" max="-2" attributes="0"/>
                   </Group>
