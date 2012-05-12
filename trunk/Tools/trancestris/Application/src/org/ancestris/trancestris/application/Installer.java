@@ -75,7 +75,7 @@ public class Installer extends ModuleInstall {
 
                         if (date1.after(date2)) {
                             logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
-                            NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
+                            NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.INFORMATION_MESSAGE);
                             DialogDisplayer.getDefault().notify(nd);
                         }
                     } catch (MalformedURLException ex) {
