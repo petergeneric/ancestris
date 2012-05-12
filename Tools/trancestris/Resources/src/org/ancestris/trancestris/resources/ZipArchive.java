@@ -56,38 +56,48 @@ public class ZipArchive implements PropertyChangeListener {
     }
 
     public boolean write() {
-        if (isChange() == true) {
+        if (isChange()) {
             try {
                 logger.log(Level.INFO, "Save archive {0}", zipFile.getName());
                 ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipFile)));
                 root.writeTo(outputStream, "");
                 outputStream.close();
-
+                change = false;
+                return true;
             } catch (IOException ioe) {
                 logger.log(Level.SEVERE, null, ioe);
+                return false;
             }
+        } else {
+            return false;
         }
-        return isChange();
+    }
+
+    public boolean hasTranslation() {
+        return root.hasTranslation();
     }
 
     public boolean saveTranslation(File outputFile) {
-        if (isChange() == true) {
+        if (hasTranslation() == true) {
             try {
                 logger.log(Level.INFO, "Create archive {0}", outputFile.getName());
                 ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
                 root.saveTranslation(outputStream, "");
                 outputStream.close();
+                return true;
             } catch (IOException ioe) {
                 logger.log(Level.SEVERE, null, ioe);
+                return false;
             }
+        } else {
+            return false;
         }
-        return isChange();
     }
 
-    public  List<String> search (String expression, boolean fromLocale, boolean caseSensitive) {
-        return root.search (expression, fromLocale, caseSensitive);
+    public List<String> search(String expression, boolean fromLocale, boolean caseSensitive) {
+        return root.search(expression, fromLocale, caseSensitive);
     }
-    
+
     public ZipDirectory getRoot() {
         return root;
     }
@@ -113,7 +123,7 @@ public class ZipArchive implements PropertyChangeListener {
         change = true;
     }
 
-    public int getTranslatePercent () {
+    public int getTranslatePercent() {
         return root.getTranslatedPercent();
     }
 

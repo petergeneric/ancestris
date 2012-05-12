@@ -142,6 +142,21 @@ public class ResourceFile {
         }
     }
 
+    boolean hasTranslation() {
+        if (defaultLanguage != null) {
+            for (String bundleName : getFiles()) {
+                if (bundleName.equals(toBundleName)) {
+                    for (String modifiedBundle : getFiles()) {
+                        if (modifiedBundle.equals(toModifiedName)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public void saveTranslation(ZipOutputStream zipOutputStream) throws IOException {
         if (defaultLanguage != null) {
             for (String bundleName : getFiles()) {
