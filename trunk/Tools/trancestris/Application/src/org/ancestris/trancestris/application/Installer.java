@@ -63,6 +63,12 @@ public class Installer extends ModuleInstall {
             @Override
             public void run() {
                 String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", "");
+                String dirName = "";
+                File bundleFile = null;
+                if ((dirName = modulePreferences.get("Dossier", "")).equals("") != true) {
+                    String fileName = modulePreferences.get("Fichier", "");
+                    bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
+                }
                 if (UrlAddress.isEmpty() == false) {
                     URL url;
                     try {
@@ -75,26 +81,26 @@ public class Installer extends ModuleInstall {
 
                         if (date1.after(date2)) {
                             logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
-                            NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.INFORMATION_MESSAGE);
+                            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
                             DialogDisplayer.getDefault().notify(nd);
+                            if (nd.getValue() == DialogDescriptor.YES_OPTION) {
+                                Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                                t.start();
+                            }
+                        } else {
+                            TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                            if (bundleFile != null) {
+                                if (bundleFile.exists()) {
+                                    Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
+                                    Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                                    ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+                                }
+                            }
                         }
                     } catch (MalformedURLException ex) {
                         Exceptions.printStackTrace(ex);
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
-                    }
-                }
-
-                TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                String dirName = "";
-                if ((dirName = modulePreferences.get("Dossier", "")).equals("") != true) {
-                    String fileName = modulePreferences.get("Fichier", "");
-                    File tempfile = new File(dirName + System.getProperty("file.separator") + fileName);
-
-                    if (tempfile.exists()) {
-                        Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                        Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
-                        ((ZipExplorerTopComponent) tc).setBundles(tempfile, fromLocale, toLocale);
                     }
                 }
             }

@@ -93,10 +93,10 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
             zipFile = new File(dirName + System.getProperty("file.separator") + fileName);
         }
         initComponents();
-        jComboBox1.setSelectedItem(fromLocale.getDisplayLanguage());
-        jComboBox2.setSelectedItem(toLocale.getDisplayLanguage());
+        fromLocaleComboBox.setSelectedItem(fromLocale.getDisplayLanguage());
+        toLoacaleComboBox.setSelectedItem(toLocale.getDisplayLanguage());
         if (zipFile != null) {
-            jTextField1.setText(zipFile.toString());
+            bundleFileNameTextField.setText(zipFile.toString());
         }
     }
 
@@ -109,37 +109,37 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox(new LocaleComboBoxModel());
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox(new LocaleComboBoxModel());
+        translationLabel = new javax.swing.JLabel();
+        fromLocaleComboBox = new javax.swing.JComboBox(new LocaleComboBoxModel());
+        openFileChooserButton = new javax.swing.JButton();
+        bundleFileNameTextField = new javax.swing.JTextField();
+        toLabel = new javax.swing.JLabel();
+        toLoacaleComboBox = new javax.swing.JComboBox(new LocaleComboBoxModel());
 
         setMaximumSize(new java.awt.Dimension(32789, 24));
         setOpaque(false);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/trancestris/application/actions/translate.gif"))); // NOI18N
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(OpenZipBundlePanel.class, "OpenZipBundlePanel.jLabel1.text")); // NOI18N
+        translationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/trancestris/application/actions/translate.gif"))); // NOI18N
+        translationLabel.setText(org.openide.util.NbBundle.getMessage(OpenZipBundlePanel.class, "OpenZipBundlePanel.translationLabel.text")); // NOI18N
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        fromLocaleComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                fromLocaleComboBoxActionPerformed(evt);
             }
         });
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(OpenZipBundlePanel.class, "OpenZipBundlePanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        openFileChooserButton.setText(org.openide.util.NbBundle.getMessage(OpenZipBundlePanel.class, "OpenZipBundlePanel.openFileChooserButton.text")); // NOI18N
+        openFileChooserButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                openFileChooserButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(OpenZipBundlePanel.class, "OpenZipBundlePanel.jLabel2.text")); // NOI18N
+        toLabel.setText(org.openide.util.NbBundle.getMessage(OpenZipBundlePanel.class, "OpenZipBundlePanel.toLabel.text")); // NOI18N
 
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        toLoacaleComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                toLoacaleComboBoxActionPerformed(evt);
             }
         });
 
@@ -151,17 +151,17 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(translationLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(fromLocaleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addComponent(toLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(toLoacaleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bundleFileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(openFileChooserButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -169,19 +169,19 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(translationLabel)
+                    .addComponent(toLabel)
+                    .addComponent(fromLocaleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toLoacaleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(bundleFileNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(openFileChooserButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void openFileChooserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileChooserButtonActionPerformed
         final FileNameExtensionFilter filter = new FileNameExtensionFilter("Zip files", "zip");
         String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", "");
         String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
@@ -199,26 +199,26 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
 
         if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             zipFile = fileChooser.getSelectedFile();
-            jTextField1.setText(zipFile.getPath());
+            bundleFileNameTextField.setText(zipFile.getPath());
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_openFileChooserButtonActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        fromLocale = localeList.get((String) jComboBox1.getSelectedItem());
+    private void fromLocaleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromLocaleComboBoxActionPerformed
+        fromLocale = localeList.get((String) fromLocaleComboBox.getSelectedItem());
         NbPreferences.forModule(OpenZipBundlePanel.class).put("fromLocale", fromLocale.toString());
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_fromLocaleComboBoxActionPerformed
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        toLocale = localeList.get((String) jComboBox2.getSelectedItem());
+    private void toLoacaleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toLoacaleComboBoxActionPerformed
+        toLocale = localeList.get((String) toLoacaleComboBox.getSelectedItem());
         NbPreferences.forModule(OpenZipBundlePanel.class).put("toLocale", toLocale.toString());
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_toLoacaleComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField bundleFileNameTextField;
+    private javax.swing.JComboBox fromLocaleComboBox;
+    private javax.swing.JButton openFileChooserButton;
+    private javax.swing.JLabel toLabel;
+    private javax.swing.JComboBox toLoacaleComboBox;
+    private javax.swing.JLabel translationLabel;
     // End of variables declaration//GEN-END:variables
 
     private Locale getLocaleFromString(String str) {
