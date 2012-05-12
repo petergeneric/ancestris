@@ -18,6 +18,9 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
+import org.ancestris.trancestris.resources.ZipArchive;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDescriptor;
@@ -26,6 +29,8 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 public final class DownloadBundleAction implements ActionListener {
 
@@ -52,7 +57,7 @@ public final class DownloadBundleAction implements ActionListener {
                 // log info about resource
                 Date date = new Date(urlC.getLastModified());
                 logger.log(Level.INFO, "Copying resource (type: {0}, modified on: {1})", new Object[]{urlC.getContentType(), DateFormat.getInstance().format(date)});
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Url.LastModified", DateFormat.getInstance().format(date));
+                NbPreferences.forModule(OpenZipBundlePanel.class).putLong("Url.LastModified", date.getTime());
 
                 FileOutputStream fos = null;
                 fos = new FileOutputStream(bundleFile);
@@ -102,9 +107,27 @@ public final class DownloadBundleAction implements ActionListener {
                 NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", bundleFile.getParent());
                 NbPreferences.forModule(OpenZipBundlePanel.class).put("Fichier", bundleFile.getName());
                 NbPreferences.forModule(OpenZipBundlePanel.class).put("Url.address", url.toString());
+                if (bundleFile.exists()) {
+                    int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            Thread t = new Thread(new DownloadBundleWorker());
+                            t.start();
+/*
+                TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                ZipArchive bundles = ((ZipExplorerTopComponent) tc).getBundles();
+                if (bundles != null) {
+                    ((ZipExplorerTopComponent) tc).setBundles(bundleFile, bundles.getFromLocale(), bundles.getToLocale());
+                }
 
-                Thread t = new Thread(new DownloadBundleWorker());
-                t.start();
+ */
+                            return;
+                        case JOptionPane.NO_OPTION:
+                        case JOptionPane.CANCEL_OPTION:
+                            return;
+                    }
+                }
+
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }

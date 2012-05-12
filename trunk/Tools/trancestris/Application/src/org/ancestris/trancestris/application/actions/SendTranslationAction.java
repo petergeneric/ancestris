@@ -80,6 +80,8 @@ public final class SendTranslationAction implements ActionListener {
             SMTPTransport t = null;
 
             try {
+                progressHandle.start();
+                
                 msg.setFrom(new InternetAddress(from));
                 msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
                 msg.setSubject(subject);
@@ -106,7 +108,6 @@ public final class SendTranslationAction implements ActionListener {
                 } else {
                     t.connect();
                 }
-                progressHandle.start();
                 t.sendMessage(msg, msg.getAllRecipients());
                 progressHandle.finish();
 

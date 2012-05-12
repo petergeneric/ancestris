@@ -5,6 +5,12 @@
 package org.ancestris.trancestris.application;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +21,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.modules.ModuleInstall;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
@@ -55,6 +62,29 @@ public class Installer extends ModuleInstall {
 
             @Override
             public void run() {
+                String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", "");
+                if (UrlAddress.isEmpty() == false) {
+                    URL url;
+                    try {
+                        url = new URL(UrlAddress);
+                        URLConnection urlC = url.openConnection();
+
+                        // log info about resource
+                        Date date1 = new Date(urlC.getLastModified());
+                        Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0));
+
+                        if (date1.after(date2)) {
+                            logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
+                            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
+                            DialogDisplayer.getDefault().notify(nd);
+                        }
+                    } catch (MalformedURLException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+
                 TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
                 String dirName = "";
                 if ((dirName = modulePreferences.get("Dossier", "")).equals("") != true) {
