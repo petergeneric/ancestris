@@ -87,6 +87,11 @@
             </file>
         </folder>
     </folder>
+    <folder name="OptionsDialog">
+        <file name="Advanced.instance_hidden"/>
+        <file name="Advanced_hidden"/>
+        <file name="Keymaps.instance_hidden"/>
+    </folder>
     <folder name="Toolbars">
         <folder name="File">
             <file name="org-ancestris-trancestris-application-actions-DownloadBundleAction.shadow">
