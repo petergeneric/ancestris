@@ -4,29 +4,16 @@
  */
 package org.ancestris.trancestris.application.actions;
 
-import com.sun.mail.smtp.SMTPTransport;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -35,6 +22,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
+import org.ancestris.trancestris.application.utils.SendMessageWorker;
 
 public final class SendTranslationAction implements ActionListener {
 
@@ -48,103 +36,6 @@ public final class SendTranslationAction implements ActionListener {
     String suffix = "";
     String toLocale = "";
     String fromLocale = "";
-
-    private class SendMessageWorker implements Runnable {
-
-        final Logger logger = Logger.getLogger(SendMessageWorker.class.getName());
-
-        @Override
-        public void run() {
-            String subject = sendTranslationPanel.getSubjectFormattedTextField();
-            String name = sendTranslationPanel.getNameFormattedTextField();
-            String from = sendTranslationPanel.getEmailFormattedTextField();
-            String text = sendTranslationPanel.getMessageTextArea();
-            String to = sendTranslationPanel.getMailToFormattedTextField();
-            String mailhost = modulePreferences.get("mail.host", "");
-            String response = "";
-            ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "SendTranslationAction.SendProgress"));
-
-            Properties props = System.getProperties();
-            props.put("mail.smtp.host", mailhost);
-            props.put("mail.smtp.auth", "true");
-            if (modulePreferences.getBoolean("mail.host.TLSSupport", false) == true) {
-                props.put("mail.smtp.starttls.enable", "true");
-            }
-            props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
-
-            // Get a Session object
-            logger.log(Level.INFO, "Get session");
-            Session session = Session.getInstance(props, null);
-
-            /*
-             * Construct the message and send it.
-             */
-            logger.log(Level.INFO, "create message ...");
-            Message msg = new MimeMessage(session);
-            SMTPTransport t = null;
-
-            try {
-                progressHandle.start();
-                InternetAddress fromInternetAddress = new InternetAddress(from);
-                logger.log(Level.INFO, "setFrom {0}", fromInternetAddress);
-                msg.setFrom(fromInternetAddress);
-
-                InternetAddress toInternetAddress = new InternetAddress(to);
-                logger.log(Level.INFO, "setRecipient {0}", toInternetAddress);
-                msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-                logger.log(Level.INFO, "setSubject {0}", subject);
-                msg.setSubject(subject);
-
-                // We need a multipart message to hold the attachment.
-                MimeBodyPart mbp1 = new MimeBodyPart();
-                mbp1.setText(text);
-
-                MimeBodyPart mbp2 = new MimeBodyPart();
-                mbp2.attachFile(zipOutputFile);
-
-                MimeMultipart mp = new MimeMultipart();
-                mp.addBodyPart(mbp1);
-                mp.addBodyPart(mbp2);
-                msg.setContent(mp);
-
-                msg.setHeader("X-Mailer", "smtpsend");
-                msg.setSentDate(new Date());
-
-                logger.log(Level.INFO, "session.getTransport({0})", "smtp");
-                t = (SMTPTransport) session.getTransport("smtp");
-
-                if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
-                    logger.log(Level.INFO, "connecting login {0} ...", modulePreferences.get("mail.host.login", ""));
-                    t.connect(modulePreferences.get("mail.host.login", ""), modulePreferences.get("mail.host.password", ""));
-                    logger.log(Level.INFO, "connected");
-                } else {
-                    logger.log(Level.INFO, "connecting without password...");
-                    t.connect();
-                    logger.log(Level.INFO, "connected");
-                }
-                logger.log(Level.INFO, "sending ...");
-                t.sendMessage(msg, msg.getAllRecipients());
-                logger.log(Level.INFO, "message sent");
-                progressHandle.finish();
-
-                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
-                DialogDisplayer.getDefault().notify(nd);
-            } catch (Exception e) {
-                response = e.getMessage();
-                Logger.getLogger(SendTranslationAction.class.getPackage().getName()).log(Level.INFO, "{0}", e);
-                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.senderror")
-                        + "\n(" + response + ").", NotifyDescriptor.ERROR_MESSAGE);
-                DialogDisplayer.getDefault().notify(nd);
-            } finally {
-                try {
-                    t.close();
-                } catch (MessagingException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
@@ -183,7 +74,13 @@ public final class SendTranslationAction implements ActionListener {
                     DialogDisplayer.getDefault().notify(dd);
                     if (dd.getValue().equals(SEND)) {
                         saveValues(sendTranslationPanel);
-                        Thread t = new Thread(new SendMessageWorker());
+                        String subject = sendTranslationPanel.getSubjectFormattedTextField();
+                        String name = sendTranslationPanel.getNameFormattedTextField();
+                        String from = sendTranslationPanel.getEmailFormattedTextField();
+                        String message = sendTranslationPanel.getMessageTextArea();
+                        String to = sendTranslationPanel.getMailToFormattedTextField();
+
+                        Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
                         t.start();
                     }
                 } else {

@@ -65,10 +65,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         }
         localBundleTextField.setText(localBundleFile.toString());
 
-        bundleUrl = NbPreferences.forModule(OpenZipBundlePanel.class).get("Url.address", "");
-        if (bundleUrl.isEmpty()) {
-            bundleUrl = NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text");
-        }
+        bundleUrl = NbPreferences.forModule(OpenZipBundlePanel.class).get("Url.address", NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text"));
         urlTextField.setText(bundleUrl);
     }
 
