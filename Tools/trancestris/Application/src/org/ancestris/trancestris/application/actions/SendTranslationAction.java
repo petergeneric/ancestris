@@ -51,6 +51,8 @@ public final class SendTranslationAction implements ActionListener {
 
     private class SendMessageWorker implements Runnable {
 
+        final Logger logger = Logger.getLogger(SendMessageWorker.class.getName());
+
         @Override
         public void run() {
             String subject = sendTranslationPanel.getSubjectFormattedTextField();
@@ -71,19 +73,27 @@ public final class SendTranslationAction implements ActionListener {
             props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
 
             // Get a Session object
+            logger.log(Level.INFO, "Get session");
             Session session = Session.getInstance(props, null);
 
             /*
              * Construct the message and send it.
              */
+            logger.log(Level.INFO, "create message ...");
             Message msg = new MimeMessage(session);
             SMTPTransport t = null;
 
             try {
                 progressHandle.start();
-                
-                msg.setFrom(new InternetAddress(from));
+                InternetAddress fromInternetAddress = new InternetAddress(from);
+                logger.log(Level.INFO, "setFrom {0}", fromInternetAddress);
+                msg.setFrom(fromInternetAddress);
+
+                InternetAddress toInternetAddress = new InternetAddress(to);
+                logger.log(Level.INFO, "setRecipient {0}", toInternetAddress);
                 msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+                logger.log(Level.INFO, "setSubject {0}", subject);
                 msg.setSubject(subject);
 
                 // We need a multipart message to hold the attachment.
@@ -101,14 +111,21 @@ public final class SendTranslationAction implements ActionListener {
                 msg.setHeader("X-Mailer", "smtpsend");
                 msg.setSentDate(new Date());
 
+                logger.log(Level.INFO, "session.getTransport({0})", "smtp");
                 t = (SMTPTransport) session.getTransport("smtp");
 
                 if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+                    logger.log(Level.INFO, "connecting login {0} ...", modulePreferences.get("mail.host.login", ""));
                     t.connect(modulePreferences.get("mail.host.login", ""), modulePreferences.get("mail.host.password", ""));
+                    logger.log(Level.INFO, "connected");
                 } else {
+                    logger.log(Level.INFO, "connecting without password...");
                     t.connect();
+                    logger.log(Level.INFO, "connected");
                 }
+                logger.log(Level.INFO, "sending ...");
                 t.sendMessage(msg, msg.getAllRecipients());
+                logger.log(Level.INFO, "message sent");
                 progressHandle.finish();
 
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
