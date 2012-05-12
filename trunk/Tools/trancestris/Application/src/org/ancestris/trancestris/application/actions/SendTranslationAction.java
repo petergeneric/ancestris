@@ -25,6 +25,8 @@ import javax.mail.internet.MimeMultipart;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.netbeans.api.options.OptionsDisplayer;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -58,6 +60,7 @@ public final class SendTranslationAction implements ActionListener {
             String to = sendTranslationPanel.getMailToFormattedTextField();
             String mailhost = modulePreferences.get("mail.host", "");
             String response = "";
+            ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "SendTranslationAction.SendProgress"));
 
             Properties props = System.getProperties();
             props.put("mail.smtp.host", mailhost);
@@ -103,7 +106,9 @@ public final class SendTranslationAction implements ActionListener {
                 } else {
                     t.connect();
                 }
+                progressHandle.start();
                 t.sendMessage(msg, msg.getAllRecipients());
+                progressHandle.finish();
 
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
@@ -134,7 +139,8 @@ public final class SendTranslationAction implements ActionListener {
 
             ZipArchive zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
             if (zipArchive != null) {
-                if (zipArchive.write() == true) {
+                zipArchive.write();
+                if (zipArchive.hasTranslation() == true) {
                     archiveName = zipArchive.getName();
                     filePath = zipArchive.getZipFile().getParent();
                     prefix = archiveName.substring(0, archiveName.indexOf('.'));

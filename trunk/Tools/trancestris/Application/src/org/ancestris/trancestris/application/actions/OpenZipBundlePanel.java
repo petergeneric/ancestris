@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
@@ -42,7 +43,7 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
             }
         }
         Locale breton = new Locale("br");
-        localeList.put(breton.getDisplayLanguage(),breton);
+        localeList.put(breton.getDisplayLanguage(), breton);
 
         locales = new Locale[localeList.size()];
         SortedSet<String> sortedset = new TreeSet<String>(localeList.keySet());
@@ -81,21 +82,23 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
         @Override
         public Object getSelectedItem() {
             return selectedLocale;
-            }
         }
+    }
 
     /** Creates new form EditorOpenActionPanel */
     public OpenZipBundlePanel() {
         fromLocale = getLocaleFromString(NbPreferences.forModule(OpenZipBundlePanel.class).get("fromLocale", Locale.ENGLISH.toString()));
         toLocale = getLocaleFromString(NbPreferences.forModule(OpenZipBundlePanel.class).get("toLocale", Locale.getDefault().toString()));
-        initComponents();
-        jComboBox1.setSelectedItem(fromLocale.getDisplayLanguage());
-        jComboBox2.setSelectedItem(toLocale.getDisplayLanguage());
-        jTextField1.setText(NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", ""));
         String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", "");
         String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
         if (dirName.length() > 0) {
             zipFile = new File(dirName + System.getProperty("file.separator") + fileName);
+        }
+        initComponents();
+        jComboBox1.setSelectedItem(fromLocale.getDisplayLanguage());
+        jComboBox2.setSelectedItem(toLocale.getDisplayLanguage());
+        if (zipFile != null) {
+            jTextField1.setText(zipFile.toString());
         }
     }
 
@@ -198,13 +201,7 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
 
         if (fileChooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             zipFile = fileChooser.getSelectedFile();
-            jTextField1.setText(zipFile.getName());
-            try {
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", fileChooser.getCurrentDirectory().getCanonicalPath());
-            } catch (IOException ex) {
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", "");
-            }
-            NbPreferences.forModule(OpenZipBundlePanel.class).put("Fichier", zipFile.getName());
+            jTextField1.setText(zipFile.getPath());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -226,12 +223,12 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    private Locale getLocaleFromString(String str){
-        if (str == null || str.length() == 0)
+    private Locale getLocaleFromString(String str) {
+        if (str == null || str.length() == 0) {
             return null;
-        String locale[] = (str+"__").split("_",3);
+        }
+        String locale[] = (str + "__").split("_", 3);
 
-        return new Locale (locale[0],locale[1],locale[2]);
+        return new Locale(locale[0], locale[1], locale[2]);
     }
-
 }

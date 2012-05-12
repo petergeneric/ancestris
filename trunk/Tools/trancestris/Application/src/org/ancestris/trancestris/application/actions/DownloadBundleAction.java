@@ -25,6 +25,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 public final class DownloadBundleAction implements ActionListener {
 
@@ -51,6 +52,7 @@ public final class DownloadBundleAction implements ActionListener {
                 // log info about resource
                 Date date = new Date(urlC.getLastModified());
                 logger.log(Level.INFO, "Copying resource (type: {0}, modified on: {1})", new Object[]{urlC.getContentType(), DateFormat.getInstance().format(date)});
+                NbPreferences.forModule(OpenZipBundlePanel.class).put("Url.LastModified", DateFormat.getInstance().format(date));
 
                 FileOutputStream fos = null;
                 fos = new FileOutputStream(bundleFile);
@@ -62,7 +64,7 @@ public final class DownloadBundleAction implements ActionListener {
                     count++;
                 }
                 progressHandle.finish();
-                
+
                 is.close();
                 fos.close();
                 logger.log(Level.INFO, " {0} byte(s) copied", count);
@@ -84,19 +86,23 @@ public final class DownloadBundleAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        DialogDescriptor zipExplorerDownloadActionDescriptor = new DialogDescriptor(
+        DialogDescriptor downloadActionDescriptor = new DialogDescriptor(
                 zipExplorerDownloadActionPanel,
                 NbBundle.getMessage(OpenZipBundlePanel.class, "CTL_DownloadBundleAction"),
                 true,
                 new DownloadBundlePanelListener());
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(zipExplorerDownloadActionDescriptor);
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(downloadActionDescriptor);
 
         dialog.setVisible(true);
         dialog.toFront();
-        if (zipExplorerDownloadActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
+        if (downloadActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
             try {
                 url = new URL(zipExplorerDownloadActionPanel.getBundleUrl());
                 bundleFile = zipExplorerDownloadActionPanel.getLocalBundleFile();
+                NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", bundleFile.getParent());
+                NbPreferences.forModule(OpenZipBundlePanel.class).put("Fichier", bundleFile.getName());
+                NbPreferences.forModule(OpenZipBundlePanel.class).put("Url.address", url.toString());
+
                 Thread t = new Thread(new DownloadBundleWorker());
                 t.start();
             } catch (MalformedURLException ex) {

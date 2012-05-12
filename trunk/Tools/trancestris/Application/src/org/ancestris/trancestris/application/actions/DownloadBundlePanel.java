@@ -11,7 +11,6 @@
 package org.ancestris.trancestris.application.actions;
 
 import java.io.File;
-import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -62,7 +61,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         if (dirName.length() > 0) {
             localBundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
         } else {
-            localBundleFile = new File( System.getProperty( "user.dir" ) + System.getProperty("file.separator") + fileName);
+            localBundleFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + fileName);
         }
         bundleUrl = urlTextField.getText();
         localBundleTextField.setText(localBundleFile.toString());
@@ -142,15 +141,8 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
 
         if (fileChooser.showSaveDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             localBundleFile = fileChooser.getSelectedFile();
-            localBundleTextField.setText(localBundleFile.toString());
-            try {
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", fileChooser.getCurrentDirectory().getCanonicalPath());
-            } catch (IOException ex) {
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", "");
-            }
-            NbPreferences.forModule(OpenZipBundlePanel.class).put("Fichier", getLocalBundleFile().getName());
+            localBundleTextField.setText(localBundleFile.getPath());
         }
-
     }//GEN-LAST:event_openFileButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField localBundleTextField;
