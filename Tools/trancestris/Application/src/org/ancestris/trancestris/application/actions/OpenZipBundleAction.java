@@ -8,7 +8,6 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.openide.DialogDescriptor;
