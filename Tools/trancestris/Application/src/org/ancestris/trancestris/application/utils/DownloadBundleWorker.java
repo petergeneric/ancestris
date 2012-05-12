@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.ancestris.trancestris.application;
+package org.ancestris.trancestris.application.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.SwingUtilities;
+import org.ancestris.trancestris.application.Installer;
 import org.ancestris.trancestris.application.actions.DownloadBundleAction;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -88,10 +89,11 @@ public class DownloadBundleWorker implements Runnable {
                     if (bundles != null) {
                         ((ZipExplorerTopComponent) tc).setBundles(bundleFile, bundles.getFromLocale(), bundles.getToLocale());
                     } else {
-                        Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                        Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
-                        ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
-
+                        if (modulePreferences.get("fromLocale", "").isEmpty() == false) {
+                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
+                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                            ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+                        }
                     }
                 }
             });

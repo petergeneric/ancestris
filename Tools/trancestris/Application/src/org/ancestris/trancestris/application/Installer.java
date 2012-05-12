@@ -4,6 +4,7 @@
  */
 package org.ancestris.trancestris.application;
 
+import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,6 +16,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.DialogDescriptor;
@@ -62,7 +64,7 @@ public class Installer extends ModuleInstall {
 
             @Override
             public void run() {
-                String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", "");
+                String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text"));
                 String dirName = "";
                 File bundleFile = null;
                 if ((dirName = modulePreferences.get("Dossier", "")).equals("") != true) {
@@ -77,7 +79,7 @@ public class Installer extends ModuleInstall {
 
                         // log info about resource
                         Date date1 = new Date(urlC.getLastModified());
-                        Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0));
+                        Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));
 
                         if (date1.after(date2)) {
                             logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
@@ -86,6 +88,15 @@ public class Installer extends ModuleInstall {
                             if (nd.getValue() == DialogDescriptor.YES_OPTION) {
                                 Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
                                 t.start();
+                            } else {
+                                TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                                if (bundleFile != null) {
+                                    if (bundleFile.exists()) {
+                                        Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
+                                        Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                                        ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+                                    }
+                                }
                             }
                         } else {
                             TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
