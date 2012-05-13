@@ -93,19 +93,8 @@ public class Installer extends ModuleInstall {
                             NbPreferences.forModule(DownloadBundlePanel.class).put("Url.address", url.toString());
                             NbPreferences.forModule(DownloadBundlePanel.class).put("fromLocale", downloadBundlePanel.getFromLocale().toString());
                             NbPreferences.forModule(DownloadBundlePanel.class).put("toLocale", downloadBundlePanel.getToLocale().toString());
-                            if (bundleFile.exists()) {
-                                int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
-                                switch (result) {
-                                    case JOptionPane.YES_OPTION:
-                                        Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
-                                        t.start();
-                                        return;
-                                    case JOptionPane.NO_OPTION:
-                                    case JOptionPane.CANCEL_OPTION:
-                                        return;
-                                }
-                            }
-
+                            Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                            t.start();
                         } catch (MalformedURLException ex) {
                             Exceptions.printStackTrace(ex);
                         }
