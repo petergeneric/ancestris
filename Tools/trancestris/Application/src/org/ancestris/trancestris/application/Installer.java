@@ -24,7 +24,6 @@ import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.StatusDisplayer;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -144,6 +143,8 @@ public class Installer extends ModuleInstall {
                                     }
                                 }
                             } else {
+                                NotifyDescriptor FileUpToDate = new NotifyDescriptor.Message(NbBundle.getMessage(Installer.class, "File-Up-To-Date"), NotifyDescriptor.INFORMATION_MESSAGE);
+                                DialogDisplayer.getDefault().notify(FileUpToDate);
                                 TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
                                 if (bundleFile != null) {
                                     if (bundleFile.exists()) {
