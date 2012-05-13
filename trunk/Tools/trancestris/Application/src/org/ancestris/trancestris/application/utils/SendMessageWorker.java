@@ -60,12 +60,14 @@ public class SendMessageWorker implements Runnable {
         ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "SendTranslationAction.SendProgress"));
 
         // Get a Session object
-        logger.log(Level.INFO, "Get session");
         if (modulePreferences.getBoolean("mail.host.TLSSupport", false) == true) {
+            logger.log(Level.INFO, "Get TLS session ...");
             session = this.createTLSSession();
         } else if (modulePreferences.getBoolean("mail.host.SSLSupport", false) == true) {
+            logger.log(Level.INFO, "Get SSL session ...");
             session = this.createSSLSession();
         } else {
+            logger.log(Level.INFO, "Get no encryption session ...");
             session = this.createSession();
         }
         logger.log(Level.INFO, "... done");
@@ -93,43 +95,6 @@ public class SendMessageWorker implements Runnable {
                     + ").", NotifyDescriptor.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(nd);
         }
-        /*
-        SMTPTransport t = null;
-
-        try {
-        progressHandle.start();
-        logger.log(Level.INFO, "session.getTransport({0})", "smtp");
-        t = (SMTPTransport) session.getTransport("smtp");
-
-        if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
-        logger.log(Level.INFO, "connecting login {0} ...", modulePreferences.get("mail.host.login", "?"));
-        t.connect(modulePreferences.get("mail.host.login", ""), modulePreferences.get("mail.host.password", "?"));
-        logger.log(Level.INFO, "connected");
-        } else {
-        logger.log(Level.INFO, "connecting without password...");
-        t.connect();
-        logger.log(Level.INFO, "connected");
-        }
-        logger.log(Level.INFO, "sending ...");
-        t.sendMessage(msg, msg.getAllRecipients());
-        logger.log(Level.INFO, "message sent");
-        progressHandle.finish();
-
-        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
-        DialogDisplayer.getDefault().notify(nd);
-        } catch (Exception e) {
-        Logger.getLogger(SendTranslationAction.class.getPackage().getName()).log(Level.INFO, "{0}", e);
-        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.senderror")
-        + "\n(" + e.getMessage() + ").", NotifyDescriptor.ERROR_MESSAGE);
-        DialogDisplayer.getDefault().notify(nd);
-        } finally {
-        try {
-        t.close();
-        } catch (MessagingException ex) {
-        Exceptions.printStackTrace(ex);
-        }
-        }
-         */
     }
 
     private Session createSSLSession() {

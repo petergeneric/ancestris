@@ -28,27 +28,23 @@ public final class OpenZipBundleAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        class openZipBundlePanelActionListener implements ActionListener {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                zipFile = openZipBundlePanel.zipFile;
-                fromLocale = openZipBundlePanel.fromLocale;
-                toLocale = openZipBundlePanel.toLocale;
-            }
-        }
         DialogDescriptor zipExplorerOpenActionDescriptor = new DialogDescriptor(
                 openZipBundlePanel,
                 NbBundle.getMessage(OpenZipBundlePanel.class, "CTL_OpenZipBundleAction"),
                 true,
-                new openZipBundlePanelActionListener());
+                null);
 
         Dialog dialog = DialogDisplayer.getDefault().createDialog(zipExplorerOpenActionDescriptor);
         dialog.setVisible(true);
         dialog.toFront();
         if (zipExplorerOpenActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
+            zipFile = openZipBundlePanel.zipFile;
+            fromLocale = openZipBundlePanel.fromLocale;
+            toLocale = openZipBundlePanel.toLocale;
             NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", zipFile.getParent());
             NbPreferences.forModule(OpenZipBundlePanel.class).put("Fichier", zipFile.getName());
+            NbPreferences.forModule(OpenZipBundlePanel.class).put("fromLocale", fromLocale.toString());
+            NbPreferences.forModule(OpenZipBundlePanel.class).put("toLocale", toLocale.toString());
             TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
             if (zipFile != null && zipFile.exists()) {
                 ((ZipExplorerTopComponent) tc).setBundles(zipFile, fromLocale, toLocale);
