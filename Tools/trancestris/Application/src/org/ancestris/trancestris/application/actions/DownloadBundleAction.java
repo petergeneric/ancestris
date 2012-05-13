@@ -26,14 +26,14 @@ public final class DownloadBundleAction implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         }
     }
-    DownloadBundlePanel zipExplorerDownloadActionPanel = new DownloadBundlePanel();
+    DownloadBundlePanel downloadBundlePanel = new DownloadBundlePanel();
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         DialogDescriptor downloadActionDescriptor = new DialogDescriptor(
-                zipExplorerDownloadActionPanel,
-                NbBundle.getMessage(OpenZipBundlePanel.class, "CTL_DownloadBundleAction"),
+                downloadBundlePanel,
+                NbBundle.getMessage(DownloadBundleAction.class, "CTL_DownloadBundleAction"),
                 true,
                 new DownloadBundlePanelListener());
         Dialog dialog = DialogDisplayer.getDefault().createDialog(downloadActionDescriptor);
@@ -42,11 +42,11 @@ public final class DownloadBundleAction implements ActionListener {
         dialog.toFront();
         if (downloadActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
             try {
-                URL url = new URL(zipExplorerDownloadActionPanel.getBundleUrl());
-                File bundleFile = zipExplorerDownloadActionPanel.getLocalBundleFile();
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Dossier", bundleFile.getParent());
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Fichier", bundleFile.getName());
-                NbPreferences.forModule(OpenZipBundlePanel.class).put("Url.address", url.toString());
+                URL url = new URL(downloadBundlePanel.getBundleUrl());
+                File bundleFile = downloadBundlePanel.getLocalBundleFile();
+                NbPreferences.forModule(DownloadBundleAction.class).put("Dossier", bundleFile.getParent());
+                NbPreferences.forModule(DownloadBundleAction.class).put("Fichier", bundleFile.getName());
+                NbPreferences.forModule(DownloadBundleAction.class).put("Url.address", url.toString());
                 if (bundleFile.exists()) {
                     int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
                     switch (result) {

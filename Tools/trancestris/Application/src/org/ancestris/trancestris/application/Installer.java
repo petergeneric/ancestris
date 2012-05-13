@@ -4,6 +4,7 @@
  */
 package org.ancestris.trancestris.application;
 
+import java.awt.Dialog;
 import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -66,17 +68,54 @@ public class Installer extends ModuleInstall {
             public void run() {
                 String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text"));
                 String dirName = "";
+                URL url;
+
                 File bundleFile = null;
-                if ((dirName = modulePreferences.get("Dossier", "")).equals("") != true) {
+
+                // First Startup
+                if ((dirName = modulePreferences.get("Dossier", "")).equals("") == true) {
+                    DownloadBundlePanel downloadBundlePanel = new DownloadBundlePanel();
+                    DialogDescriptor downloadActionDescriptor = new DialogDescriptor(
+                            downloadBundlePanel,
+                            NbBundle.getMessage(DownloadBundlePanel.class, "CTL_DownloadBundleAction"),
+                            true,
+                            null);
+                    Dialog dialog = DialogDisplayer.getDefault().createDialog(downloadActionDescriptor);
+
+                    dialog.setVisible(true);
+                    dialog.toFront();
+                    if (downloadActionDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
+                        try {
+                            url = new URL(downloadBundlePanel.getBundleUrl());
+                            bundleFile = downloadBundlePanel.getLocalBundleFile();
+                            NbPreferences.forModule(DownloadBundlePanel.class).put("Dossier", bundleFile.getParent());
+                            NbPreferences.forModule(DownloadBundlePanel.class).put("Fichier", bundleFile.getName());
+                            NbPreferences.forModule(DownloadBundlePanel.class).put("Url.address", url.toString());
+                            NbPreferences.forModule(DownloadBundlePanel.class).put("fromLocale", downloadBundlePanel.getFromLocale().toString());
+                            NbPreferences.forModule(DownloadBundlePanel.class).put("toLocale", downloadBundlePanel.getToLocale().toString());
+                            if (bundleFile.exists()) {
+                                int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
+                                switch (result) {
+                                    case JOptionPane.YES_OPTION:
+                                        Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                                        t.start();
+                                        return;
+                                    case JOptionPane.NO_OPTION:
+                                    case JOptionPane.CANCEL_OPTION:
+                                        return;
+                                }
+                            }
+
+                        } catch (MalformedURLException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                } else {
                     String fileName = modulePreferences.get("Fichier", "");
                     bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
-                }
-                if (UrlAddress.isEmpty() == false) {
-                    URL url;
                     try {
                         url = new URL(UrlAddress);
                         URLConnection urlC = url.openConnection();
-
                         // log info about resource
                         Date date1 = new Date(urlC.getLastModified());
                         Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));

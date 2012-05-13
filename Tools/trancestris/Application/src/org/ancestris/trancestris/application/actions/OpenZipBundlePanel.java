@@ -205,12 +205,10 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
 
     private void fromLocaleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromLocaleComboBoxActionPerformed
         fromLocale = localeList.get((String) fromLocaleComboBox.getSelectedItem());
-        NbPreferences.forModule(OpenZipBundlePanel.class).put("fromLocale", fromLocale.toString());
     }//GEN-LAST:event_fromLocaleComboBoxActionPerformed
 
     private void toLoacaleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toLoacaleComboBoxActionPerformed
         toLocale = localeList.get((String) toLoacaleComboBox.getSelectedItem());
-        NbPreferences.forModule(OpenZipBundlePanel.class).put("toLocale", toLocale.toString());
     }//GEN-LAST:event_toLoacaleComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bundleFileNameTextField;

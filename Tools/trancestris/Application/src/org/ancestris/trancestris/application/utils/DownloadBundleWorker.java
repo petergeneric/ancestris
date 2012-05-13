@@ -90,8 +90,8 @@ public class DownloadBundleWorker implements Runnable {
                         ((ZipExplorerTopComponent) tc).setBundles(bundleFile, bundles.getFromLocale(), bundles.getToLocale());
                     } else {
                         if (modulePreferences.get("fromLocale", "").isEmpty() == false) {
-                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", Locale.ENGLISH.toString()));
+                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", Locale.getDefault().toString()));
                             ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
                         }
                     }
