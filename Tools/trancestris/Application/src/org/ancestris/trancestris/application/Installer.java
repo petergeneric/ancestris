@@ -24,6 +24,7 @@ import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -111,22 +112,37 @@ public class Installer extends ModuleInstall {
                         }
                     }
                 } else {
-                    String fileName = modulePreferences.get("Fichier", "");
+                    NotifyDescriptor checkForNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
+                    DialogDisplayer.getDefault().notify(checkForNewFile);
+                    String fileName = modulePreferences.get("Fichier", "Ancestris_Bundles.zip");
                     bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
-                    try {
-                        url = new URL(UrlAddress);
-                        URLConnection urlC = url.openConnection();
-                        // log info about resource
-                        Date date1 = new Date(urlC.getLastModified());
-                        Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));
 
-                        if (date1.after(date2)) {
-                            logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
-                            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
-                            DialogDisplayer.getDefault().notify(nd);
-                            if (nd.getValue() == DialogDescriptor.YES_OPTION) {
-                                Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
-                                t.start();
+                    if (checkForNewFile.getValue() == DialogDescriptor.YES_OPTION) {
+                        try {
+                            url = new URL(UrlAddress);
+                            URLConnection urlC = url.openConnection();
+
+                            // log info about resource
+                            Date date1 = new Date(urlC.getLastModified());
+                            Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));
+
+                            if (date1.after(date2)) {
+                                logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
+                                NotifyDescriptor downLoadNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
+                                DialogDisplayer.getDefault().notify(downLoadNewFile);
+                                if (downLoadNewFile.getValue() == DialogDescriptor.YES_OPTION) {
+                                    Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                                    t.start();
+                                } else {
+                                    TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                                    if (bundleFile != null) {
+                                        if (bundleFile.exists()) {
+                                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
+                                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                                            ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+                                        }
+                                    }
+                                }
                             } else {
                                 TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
                                 if (bundleFile != null) {
@@ -137,20 +153,20 @@ public class Installer extends ModuleInstall {
                                     }
                                 }
                             }
-                        } else {
-                            TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
-                            if (bundleFile != null) {
-                                if (bundleFile.exists()) {
-                                    Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                                    Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
-                                    ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
-                                }
+                        } catch (MalformedURLException ex) {
+                            Exceptions.printStackTrace(ex);
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    } else {
+                        TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                        if (bundleFile != null) {
+                            if (bundleFile.exists()) {
+                                Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
+                                Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                                ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
                             }
                         }
-                    } catch (MalformedURLException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
                     }
                 }
             }
