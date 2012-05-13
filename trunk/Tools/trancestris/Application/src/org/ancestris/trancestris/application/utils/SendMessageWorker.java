@@ -4,7 +4,6 @@
  */
 package org.ancestris.trancestris.application.utils;
 
-import com.sun.mail.smtp.SMTPTransport;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -69,6 +68,7 @@ public class SendMessageWorker implements Runnable {
         } else {
             session = this.createSession();
         }
+        logger.log(Level.INFO, "... done");
 
         /*
          * Construct the message and send it.
@@ -130,58 +130,83 @@ public class SendMessageWorker implements Runnable {
         }
         }
          */
-
     }
 
     private Session createSSLSession() {
+        Session session = null;
         Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.socketFactory.port", modulePreferences.get("mail.host.port", "465"));
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.host", modulePreferences.get("mail.host", ""));
         props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "465"));
 
-        Session session = Session.getDefaultInstance(props,
-                new javax.mail.Authenticator() {
+        if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+            props.put("mail.smtp.auth", "true");
+            session = Session.getDefaultInstance(props,
+                    new javax.mail.Authenticator() {
 
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
-                    }
-                });
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
+                        }
+                    });
+        } else {
+            props.put("mail.smtp.auth", "false");
+            session = Session.getInstance(props, null);
+        }
 
         return session;
     }
 
     private Session createTLSSession() {
+        Session session = null;
         Properties props = new Properties();
+
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
         props.put("mail.smtp.host", modulePreferences.get("mail.host", ""));
 
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
+        if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+            session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
 
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
-                    }
-                });
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
+                        }
+                    });
+        } else {
+            props.put("mail.smtp.auth", "false");
+            session = Session.getInstance(props, null);
+        }
+
         return session;
     }
 
     private Session createSession() {
+        Session session = null;
         Properties props = new Properties();
+
         props.put("mail.smtp.host", modulePreferences.get("mail.host", ""));
         props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
+
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
             props.put("mail.smtp.auth", "true");
+            session = Session.getDefaultInstance(props,
+                    new javax.mail.Authenticator() {
+
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(modulePreferences.get("mail.host.login", "username"), modulePreferences.get("mail.host.password", "password"));
+                        }
+                    });
         } else {
             props.put("mail.smtp.auth", "false");
+            session = Session.getInstance(props, null);
         }
 
-        return Session.getInstance(props, null);
+        return session;
     }
 
     private Message createMessage(Session session) {
