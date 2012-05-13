@@ -63,8 +63,7 @@ public class DownloadBundleWorker implements Runnable {
             logger.log(Level.INFO, "Copying resource (type: {0}, modified on: {1})", new Object[]{urlC.getContentType(), DateFormat.getInstance().format(date)});
             NbPreferences.forModule(DownloadBundleWorker.class).putLong("Url.LastModified", date.getTime());
 
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(bundleFile);
+            FileOutputStream fos = new FileOutputStream(bundleFile);
 
             progressHandle.start();
             int oneChar, count = 0;
