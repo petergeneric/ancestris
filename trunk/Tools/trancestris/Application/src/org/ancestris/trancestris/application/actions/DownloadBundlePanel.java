@@ -63,6 +63,8 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
     static Locale[] locales = null;
     private Locale fromLocale = Locale.UK;
     private Locale toLocale = Locale.getDefault();
+    String dirName = "";
+    String fileName = "";
 
     {
         for (Locale locale : Locale.getAvailableLocales()) {
@@ -123,8 +125,8 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
 
         fromLocaleComboBox.setSelectedItem(fromLocale.getDisplayLanguage());
         toLoacaleComboBox.setSelectedItem(toLocale.getDisplayLanguage());
-        String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", System.getProperty("user.dir"));
-        String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
+        dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", System.getProperty("user.dir"));
+        fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
         if (fileName.isEmpty() == true) {
             // Get only file name
             StringTokenizer st = new StringTokenizer(bundleUrl, "/");
@@ -267,8 +269,6 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileButtonActionPerformed
-        String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", "");
-        String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
 
         fileChooser.setFileFilter(filter);
         if (dirName.length() > 0) {
