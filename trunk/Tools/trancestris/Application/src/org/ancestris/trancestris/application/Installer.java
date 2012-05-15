@@ -17,7 +17,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;

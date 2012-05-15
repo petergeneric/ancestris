@@ -40,15 +40,12 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         public void approveSelection() {
             File f = getSelectedFile();
             if (f.exists() && getDialogType() == SAVE_DIALOG) {
-                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
+                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.YES_NO_OPTION);
                 switch (result) {
                     case JOptionPane.YES_OPTION:
                         super.approveSelection();
                         return;
                     case JOptionPane.NO_OPTION:
-                        return;
-                    case JOptionPane.CANCEL_OPTION:
-                        super.cancelSelection();
                         return;
                 }
             } else {
@@ -134,7 +131,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
                 fileName = st.nextToken();
             }
         }
-        
+
         localBundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
         localBundleTextField.setText(localBundleFile.toString());
 
