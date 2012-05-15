@@ -97,7 +97,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.ancestris.trancestris.editors.resourceeditor</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
