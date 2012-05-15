@@ -41,4 +41,9 @@ public class ZipDirectoryNode extends AbstractNode {
             }
         }
     }
+
+    @Override
+    public String getName () {
+        return directory.getName();
+    }
 }

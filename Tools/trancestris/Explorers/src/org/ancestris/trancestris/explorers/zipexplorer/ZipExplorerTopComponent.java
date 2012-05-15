@@ -5,12 +5,15 @@
 package org.ancestris.trancestris.explorers.zipexplorer;
 
 import java.awt.Frame;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.nodes.Children;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -60,6 +63,26 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         Lookup lookup = ExplorerUtils.createLookup(zipExplorerManager, getActionMap());
         proxyLookup = new ProxyLookup(lookup, new AbstractLookup(instanceContent));
         associateLookup(proxyLookup);
+    }
+
+    public void selectNode(String nodePath) {
+        Node findNode = newZipRootNode;
+
+        StringTokenizer st = new StringTokenizer(nodePath, "/");
+        while (st.hasMoreTokens()) {
+            String nodeName = st.nextToken();
+            findNode = findNode.getChildren().findChild(nodeName);
+            if (findNode == null) {
+                break;
+            }
+        }
+        if (findNode != null) {
+            try {
+                zipExplorerManager.setSelectedNodes(new Node[]{findNode});
+            } catch (PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
 
     /** This method is called from within the constructor to
