@@ -10,22 +10,32 @@
  */
 package org.ancestris.trancestris.application.actions;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -33,6 +43,19 @@ import org.openide.util.NbBundle;
  */
 public class SearchPanel extends javax.swing.JPanel {
 
+    private class SearchPanellinkListener implements HyperlinkListener {
+
+        @Override
+        public void hyperlinkUpdate(HyperlinkEvent evt) {
+            if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                if (tc != null) {
+                    // Show the new page in the editor pane.
+                    ((ZipExplorerTopComponent) tc).selectNode(evt.getDescription());
+                }
+            }
+        }
+    }
     ZipArchive zipArchive = null;
 
     /** Creates new form SearchPanel */
@@ -41,6 +64,9 @@ public class SearchPanel extends javax.swing.JPanel {
         initComponents();
         fromLocaleCheckBox.setText(zipArchive.getFromLocale().getDisplayLanguage());
         toLocaleCheckBox.setText(zipArchive.getToLocale().getDisplayLanguage());
+        resultEditorPane.setContentType("text/html"); // lets Java know it will be HTML
+        resultEditorPane.setEditable(false);
+        resultEditorPane.addHyperlinkListener(new SearchPanellinkListener());
     }
 
     /** This method is called from within the constructor to
@@ -53,13 +79,14 @@ public class SearchPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         localeButtonGroup = new ButtonGroup();
+        jPanel1 = new JPanel();
         expressionTextField = new JTextField();
-        resultScrollPane = new JScrollPane();
-        resultTextArea = new JTextArea();
-        searchButton = new JButton();
-        fromLocaleCheckBox = new JCheckBox();
         toLocaleCheckBox = new JCheckBox();
+        fromLocaleCheckBox = new JCheckBox();
+        searchButton = new JButton();
         caseSensitiveCheckBox = new JCheckBox();
+        resultScrollPane = new JScrollPane();
+        resultEditorPane = new JEditorPane();
 
         expressionTextField.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent evt) {
@@ -67,9 +94,12 @@ public class SearchPanel extends javax.swing.JPanel {
             }
         });
 
-        resultTextArea.setColumns(20);
-        resultTextArea.setRows(5);
-        resultScrollPane.setViewportView(resultTextArea);
+        localeButtonGroup.add(toLocaleCheckBox);
+        toLocaleCheckBox.setText("To Locale");
+
+        localeButtonGroup.add(fromLocaleCheckBox);
+        fromLocaleCheckBox.setSelected(true);
+        fromLocaleCheckBox.setText("From Locale");
 
         searchButton.setText(NbBundle.getMessage(SearchPanel.class, "SearchPanel.searchButton.text")); // NOI18N
         searchButton.addActionListener(new ActionListener() {
@@ -78,52 +108,59 @@ public class SearchPanel extends javax.swing.JPanel {
             }
         });
 
-        localeButtonGroup.add(fromLocaleCheckBox);
-        fromLocaleCheckBox.setSelected(true);
-        fromLocaleCheckBox.setText("From Locale");
-
-        localeButtonGroup.add(toLocaleCheckBox);
-        toLocaleCheckBox.setText("To Locale");
-
         caseSensitiveCheckBox.setSelected(true);
 
         caseSensitiveCheckBox.setText(NbBundle.getMessage(SearchPanel.class, "SearchPanel.caseSensitiveCheckBox.text")); // NOI18N
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(expressionTextField, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(searchButton))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(fromLocaleCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(toLocaleCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(caseSensitiveCheckBox)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+                        .addComponent(toLocaleCheckBox)
+                        .addComponent(caseSensitiveCheckBox))
+                    .addComponent(fromLocaleCheckBox))
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(expressionTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton)))
+        );
+
+        resultEditorPane.setMinimumSize(new Dimension(106, 210));
+        resultScrollPane.setViewportView(resultEditorPane);
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                    .addComponent(resultScrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(fromLocaleCheckBox)
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(toLocaleCheckBox)
-                                .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(caseSensitiveCheckBox))
-                            .addComponent(expressionTextField, GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE))
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(searchButton)))
+                .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resultScrollPane))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(toLocaleCheckBox)
-                        .addComponent(caseSensitiveCheckBox))
-                    .addComponent(fromLocaleCheckBox))
+                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                    .addComponent(expressionTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton))
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -141,9 +178,10 @@ public class SearchPanel extends javax.swing.JPanel {
     private JCheckBox caseSensitiveCheckBox;
     private JTextField expressionTextField;
     private JCheckBox fromLocaleCheckBox;
+    private JPanel jPanel1;
     private ButtonGroup localeButtonGroup;
+    private JEditorPane resultEditorPane;
     private JScrollPane resultScrollPane;
-    private JTextArea resultTextArea;
     private JButton searchButton;
     private JCheckBox toLocaleCheckBox;
     // End of variables declaration//GEN-END:variables
@@ -157,13 +195,16 @@ public class SearchPanel extends javax.swing.JPanel {
             search = zipArchive.search(expressionTextField.getText(), false, caseSensitive);
         }
         // Clear the Text Area
-        resultTextArea.setText("");
+        resultEditorPane.setText("");
         if (search.isEmpty()) {
-            resultTextArea.append(NbBundle.getMessage(SearchPanel.class, "SearchPanel.searchResult.text", expressionTextField.getText()));
+            resultEditorPane.setText(NbBundle.getMessage(SearchPanel.class, "SearchPanel.searchResult.text", expressionTextField.getText()));
         } else {
+            MessageFormat link = new MessageFormat("<a href= {0}>{0}</a>\n");
+            String resultList = "";
             for (String dirName : search) {
-                resultTextArea.append(dirName + "\n");
+                resultList += link.format(new Object[]{dirName});
             }
+            resultEditorPane.setText(resultList);
         }
     }
 }
