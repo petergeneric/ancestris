@@ -71,6 +71,34 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         this.resourceFile = resourceFile;
     }
 
+    /**
+     * @param expressionTextField the expressionTextField to set
+     */
+    public void setExpressionTextField(String expression) {
+        expressionTextField.setText(expression);
+    }
+
+    /**
+     * @param caseSensitiveCheckBox the caseSensitiveCheckBox to set
+     */
+    public void setCaseSensitiveCheckBoxSelected(boolean selected) {
+        caseSensitiveCheckBox.setSelected(selected);
+    }
+
+    /**
+     * @param fromLocaleToggleButton the fromLocaleToggleButton to set
+     */
+    public void setFromLocaleToggleButtonSelected(boolean selected) {
+        fromLocaleToggleButton.setSelected(selected);
+    }
+
+    /**
+     * @param toLocaleToggleButton the toLocaleToggleButton to set
+     */
+    public void setToLocaleToggleButtonSelected(boolean selected) {
+        toLocaleToggleButton.setSelected(selected);
+    }
+
     private class ResourceFileModel implements ListModel {
 
         @Override
