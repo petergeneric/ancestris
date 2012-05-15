@@ -10,13 +10,11 @@
  */
 package org.ancestris.trancestris.application.actions;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.ButtonGroup;
@@ -31,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import org.ancestris.trancestris.editors.resourceeditor.ResourceEditorTopComponent;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.util.NbBundle;
@@ -194,6 +193,20 @@ public class SearchPanel extends javax.swing.JPanel {
         } else {
             search = zipArchive.search(expressionTextField.getText(), false, caseSensitive);
         }
+
+        TopComponent tc = WindowManager.getDefault().findTopComponent("ResourceEditorTopComponent");
+        if (tc != null) {
+            ((ResourceEditorTopComponent) tc).setExpressionTextField(expressionTextField.getText());
+            ((ResourceEditorTopComponent) tc).setCaseSensitiveCheckBoxSelected(caseSensitive);
+            if (fromLocaleCheckBox.isSelected()) {
+                ((ResourceEditorTopComponent) tc).setFromLocaleToggleButtonSelected(true);
+                ((ResourceEditorTopComponent) tc).setToLocaleToggleButtonSelected(false);
+            } else {
+                ((ResourceEditorTopComponent) tc).setFromLocaleToggleButtonSelected(false);
+                ((ResourceEditorTopComponent) tc).setToLocaleToggleButtonSelected(true);
+            }
+        }
+
         // Clear the Text Area
         resultEditorPane.setText("");
         if (search.isEmpty()) {
