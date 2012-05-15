@@ -25,13 +25,13 @@ public final class SearchAction implements ActionListener {
         TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
         ZipArchive zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
         if (zipArchive != null) {
-            if (createDialog == null) {
+//            if (createDialog == null) {
                 SearchPanel zipExplorerSearchPanel = new SearchPanel(zipArchive);
                 DialogDescriptor dd = new DialogDescriptor(zipExplorerSearchPanel, NbBundle.getMessage(this.getClass(), "SearchPanel.title.text"));
                 dd.setModal(false);
                 dd.setOptions(new Object[]{DialogDescriptor.CLOSED_OPTION});
                 createDialog = DialogDisplayer.getDefault().createDialog(dd);
-            }
+//            }
             createDialog.setVisible(true);
         }
     }
