@@ -34,28 +34,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
     private File localBundleFile = null;
     private String bundleUrl = null;
     final FileNameExtensionFilter filter = new FileNameExtensionFilter("Zip files", "zip");
-    private JFileChooser fileChooser = new JFileChooser() {
-
-        @Override
-        public void approveSelection() {
-            File f = getSelectedFile();
-            if (f.exists() && getDialogType() == SAVE_DIALOG) {
-                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.YES_NO_OPTION);
-                switch (result) {
-                    case JOptionPane.YES_OPTION:
-                        super.approveSelection();
-                        return;
-                    case JOptionPane.NO_OPTION:
-                        return;
-                }
-            } else {
-                if (filter.accept(f) == false) {
-                    setSelectedFile(new File(f.getName() + ".zip"));
-                }
-            }
-            super.approveSelection();
-        }
-    };
+    private JFileChooser fileChooser = new JFileChooser();
     static HashMap<String, Locale> localeList = new HashMap<String, Locale>();
     static Locale[] locales = null;
     private Locale fromLocale = Locale.UK;

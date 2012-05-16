@@ -48,7 +48,7 @@ public final class DownloadBundleAction implements ActionListener {
                 NbPreferences.forModule(DownloadBundleAction.class).put("Fichier", bundleFile.getName());
                 NbPreferences.forModule(DownloadBundleAction.class).put("Url.address", url.toString());
                 if (bundleFile.exists()) {
-                    int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.OK_CANCEL_OPTION);
+                    int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.YES_NO_OPTION);
                     switch (result) {
                         case JOptionPane.YES_OPTION:
                             Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
