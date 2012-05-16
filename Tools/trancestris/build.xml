@@ -7,4 +7,36 @@
 
     <import file="nbproject/build-impl.xml"/>
 
+    <target name="build-zip" depends="suite.build-zip">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+	<!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <zip destfile="${dist.dir}/${app.name}.zip" update="true">
+            <!--zipfileset dir="res/language/etc" prefix="${app.name}/etc"/-->
+            <zipfileset dir="${harness.dir}/../platform/core/locale" prefix="${app.name}/platform/core/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/ext/locale" prefix="${app.name}/platform/modules/ext/locale"/>
+            <!--zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/-->
+        </zip>
+    </target>
+
+    <target name="build-mac" depends="suite.build-mac">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
+        <copy todir="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}">
+            <fileset dir="${harness.dir}/.." includes="platform/core/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/lib/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/ext/locale/**"/>
+        </copy>
+        <!-- Note that file permissions will not be stored in the resulting zipfile.
+             so zip task is inappropriate to create a zip archive -->
+        <exec executable="zip" dir="${dist.dir}">
+            <arg value="-yrq"/>
+            <arg value="${app.name}-osx.zip"/>
+            <arg value="${app.name}.app"/>
+        </exec>
+    </target>
 </project>
