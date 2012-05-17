@@ -92,6 +92,17 @@
         <file name="Advanced_hidden"/>
         <file name="Keymaps.instance_hidden"/>
     </folder>
+    <folder name="Services">
+        <folder name="AutoupdateType">
+            <file name="org_ancestris_trancestris_application_update_center.instance">
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.Bundle#Services/AutoupdateType/org_ancestris_trancestris_application_update_center.instance"/>
+                <attr name="enabled" boolvalue="true"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
+                <attr name="url" bundlevalue="org.ancestris.trancestris.application.Bundle#org_ancestris_trancestris_application_update_center"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="Toolbars">
         <folder name="File">
             <file name="org-ancestris-trancestris-application-actions-DownloadBundleAction.shadow">
