@@ -48,7 +48,7 @@ public class RelevePanel extends javax.swing.JPanel  {
                 jSplitPane1.setDividerLocation(jSplitPane1.getSize().width
                              - jSplitPane1.getInsets().right
                              - jSplitPane1.getDividerSize()
-                             - releveModel.getEditorWidth());
+                             - releveEditor.getEditorWidth());
             }
         });
         
@@ -60,7 +60,7 @@ public class RelevePanel extends javax.swing.JPanel  {
     void componentClosed() {
         releveTable.saveColumnLayout();
         // je sauvegarde la largeur de l'editeur
-        releveModel.putEditorWidth(jSplitPane1.getSize().width
+        releveEditor.putEditorWidth(jSplitPane1.getSize().width
                 - jSplitPane1.getInsets().right
                 - jSplitPane1.getDividerSize()
                 - jSplitPane1.getDividerLocation() );

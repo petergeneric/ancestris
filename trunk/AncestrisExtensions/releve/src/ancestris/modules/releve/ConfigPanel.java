@@ -295,8 +295,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jToolBar1.setRollover(true);
 
         jButtonNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewFile.png"))); // NOI18N
-        jButtonNew.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonNew.text")); // NOI18N
-        jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonNew.toolTipText")); // NOI18N
+        jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ReleveTopComponent.menu.new")); // NOI18N
         jButtonNew.setFocusable(false);
         jButtonNew.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNew.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -308,8 +307,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jToolBar1.add(jButtonNew);
 
         jButtonOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/OpenFile.png"))); // NOI18N
-        jButtonOpen.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonOpen.text")); // NOI18N
-        jButtonOpen.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonOpen.toolTipText")); // NOI18N
+        jButtonOpen.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ReleveTopComponent.menu.open")); // NOI18N
         jButtonOpen.setFocusable(false);
         jButtonOpen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonOpen.setPreferredSize(new java.awt.Dimension(23, 23));
@@ -320,10 +318,10 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
             }
         });
         jToolBar1.add(jButtonOpen);
+        jButtonOpen.getAccessibleContext().setAccessibleDescription("");
 
         jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/SaveFile.png"))); // NOI18N
-        jButtonSave.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonSave.text")); // NOI18N
-        jButtonSave.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonSave.toolTipText")); // NOI18N
+        jButtonSave.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ReleveTopComponent.menu.save")); // NOI18N
         jButtonSave.setFocusable(false);
         jButtonSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -333,11 +331,13 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
             }
         });
         jToolBar1.add(jButtonSave);
+        jButtonSave.getAccessibleContext().setAccessibleName("null"); // NOI18N
+        jButtonSave.getAccessibleContext().setAccessibleDescription("null"); // NOI18N
+
         jToolBar1.add(jSeparator1);
 
         jButtonImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png"))); // NOI18N
-        jButtonImport.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonImport.text")); // NOI18N
-        jButtonImport.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonImport.toolTipText")); // NOI18N
+        jButtonImport.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ReleveTopComponent.menu.import")); // NOI18N
         jButtonImport.setFocusable(false);
         jButtonImport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonImport.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -349,8 +349,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jToolBar1.add(jButtonImport);
 
         jButtonExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ExportFile16.png"))); // NOI18N
-        jButtonExport.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonExport.text")); // NOI18N
-        jButtonExport.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonExport.toolTipText")); // NOI18N
+        jButtonExport.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ReleveTopComponent.menu.export")); // NOI18N
         jButtonExport.setFocusable(false);
         jButtonExport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonExport.setPreferredSize(new java.awt.Dimension(23, 23));
@@ -364,8 +363,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         jToolBar1.add(jSeparator2);
 
         jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png"))); // NOI18N
-        jButtonHelp.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonHelp.text_1")); // NOI18N
-        jButtonHelp.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jButtonHelp.toolTipText")); // NOI18N
+        jButtonHelp.setToolTipText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ReleveTopComponent.menu.help")); // NOI18N
         jButtonHelp.setFocusable(false);
         jButtonHelp.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jButtonHelp.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -378,6 +376,8 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
             }
         });
         jToolBar1.add(jButtonHelp);
+        jButtonHelp.getAccessibleContext().setAccessibleName("null"); // NOI18N
+        jButtonHelp.getAccessibleContext().setAccessibleDescription("null"); // NOI18N
 
         jPanelCommand.add(jToolBar1);
 
@@ -432,7 +432,6 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         placePanel.add(cityCodeLabel, gridBagConstraints);
 
-        cityCodeEntry.setText(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.cityCodeEntry.text")); // NOI18N
         cityCodeEntry.setPreferredSize(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -497,7 +496,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         placePanel.add(countryLabel, gridBagConstraints);
-        countryLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.countryLabel.AccessibleContext.accessibleName")); // NOI18N
+        countryLabel.getAccessibleContext().setAccessibleName(""); // NOI18N
 
         countryEntry.setMinimumSize(new java.awt.Dimension(50, 20));
         countryEntry.setPreferredSize(null);
@@ -508,6 +507,8 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         placePanel.add(countryEntry, gridBagConstraints);
+        countryEntry.getAccessibleContext().setAccessibleName(""); // NOI18N
+        countryEntry.getAccessibleContext().setAccessibleDescription(""); // NOI18N
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

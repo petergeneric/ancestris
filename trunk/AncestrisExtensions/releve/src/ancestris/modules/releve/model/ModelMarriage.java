@@ -1,10 +1,8 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.ReleveTopComponent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -193,26 +191,6 @@ public class ModelMarriage extends ModelAbstract {
         };
 
         return beanField;
-    }
-
-    @Override
-    public String getColumnLayout() {
-       return NbPreferences.forModule(ReleveTopComponent.class).get("MarriageColumnLayout", "");
-    }
-
-    @Override
-    public void putColumnLayout(String columnLayout) {
-        NbPreferences.forModule(ReleveTopComponent.class).put("MarriageColumnLayout", columnLayout);
-    }
-
-    @Override
-    public int getEditorWidth() {
-        return Integer.valueOf(NbPreferences.forModule(ReleveTopComponent.class).get("MarriageEditorWidth", "270"));
-    }
-
-    @Override
-    public void putEditorWidth(int width) {
-        NbPreferences.forModule(ReleveTopComponent.class).put("MarriageEditorWidth", String.valueOf(width));
     }
 
 }
