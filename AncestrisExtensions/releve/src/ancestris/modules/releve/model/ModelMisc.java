@@ -1,10 +1,8 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.ReleveTopComponent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -218,24 +216,4 @@ public class ModelMisc extends ModelAbstract {
         return beanField;
     }
 
-    @Override
-    public String getColumnLayout() {
-       return NbPreferences.forModule(ReleveTopComponent.class).get("MiscColumnLayout", "");
-    }
-
-    @Override
-    public void putColumnLayout(String columnLayout) {
-        NbPreferences.forModule(ReleveTopComponent.class).put("MiscColumnLayout", columnLayout);
-    }
-
-    @Override
-    public int getEditorWidth() {
-        return Integer.valueOf(NbPreferences.forModule(ReleveTopComponent.class).get("MiscEditorWidth", "270"));
-    }
-
-    @Override
-    public void putEditorWidth(int width) {
-        NbPreferences.forModule(ReleveTopComponent.class).put("MiscEditorWidth", String.valueOf(width));
-    }
-    
 }

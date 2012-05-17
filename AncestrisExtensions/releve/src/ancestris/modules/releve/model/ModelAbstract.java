@@ -149,12 +149,6 @@ public abstract class ModelAbstract extends AbstractTableModel  {
     ///////////////////////////////////////////////////////////////////////////
     public abstract BeanField[] getFieldList( int row );
 
-    public abstract String getColumnLayout();
-    public abstract void putColumnLayout(String columnLayout);
-    public abstract int getEditorWidth();
-    public abstract void putEditorWidth(int width);
-
-
     ///////////////////////////////////////////////////////////////////////////
     // Implement Undo methods
     ///////////////////////////////////////////////////////////////////////////

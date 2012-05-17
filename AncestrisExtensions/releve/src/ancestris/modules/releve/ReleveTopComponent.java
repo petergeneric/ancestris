@@ -66,13 +66,13 @@ public final class ReleveTopComponent extends TopComponent  {
     protected Registry registry;
     private DataManager dataManager;
     private JPopupMenu popup;
-    private JMenuItem menuItemNewFile = new JMenuItem("Nouveau");
-    private JMenuItem menuItemLoadFile = new JMenuItem("Ouvrir");
-    private JMenuItem menuItemSave = new JMenuItem("Enregistrer");
-    private JMenuItem menuItemSaveAs = new JMenuItem("Enregistrer sous");
-    private JMenuItem menuItemImport = new JMenuItem("Importer");
-    private JMenuItem menuItemExport = new JMenuItem("Exporter");
-    private JMenuItem menuItemShowInfo = new JMenuItem("Information");
+    private JMenuItem menuItemNewFile   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.new"));
+    private JMenuItem menuItemLoadFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.open"));
+    private JMenuItem menuItemSave      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
+    private JMenuItem menuItemSaveAs    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
+    private JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
+    private JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
+    private JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
 
@@ -108,9 +108,9 @@ public final class ReleveTopComponent extends TopComponent  {
         popup.add(menuItemExport);
 
         popup.addSeparator();
-        menuItemShowInfo.addActionListener(popupMouseHandler);
-        menuItemShowInfo.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
-        popup.add(menuItemShowInfo);
+        menuItemHelp.addActionListener(popupMouseHandler);
+        menuItemHelp.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
+        popup.add(menuItemHelp);
 
         // je branche le clic du bouton droit de la souris sur l'afffichage
         // du popupmenu
@@ -179,7 +179,7 @@ public final class ReleveTopComponent extends TopComponent  {
                         if (context != null && context.getGedcom() != null) {
                             try {
                                 FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());
-                                String defaultPlace = "nouveau";
+                                String defaultPlace = "";
                                 if (fileBuffer.getPlaces().size() == 1 ) {
                                     defaultPlace = fileBuffer.getPlaces().get(0);
                                 } else if ( fileBuffer.getPlaces().size() > 1 ) {
@@ -347,7 +347,7 @@ public final class ReleveTopComponent extends TopComponent  {
                 importFile();
             } else if (menuItemExport.equals(e.getSource())) {
                 exportFile();
-            } else if (menuItemShowInfo.equals(e.getSource())) {
+            } else if (menuItemHelp.equals(e.getSource())) {
                 showHelp();
             }
         }
@@ -671,10 +671,18 @@ public final class ReleveTopComponent extends TopComponent  {
      * @return true si l'utisateur accepte de continuer l'action, ou false si l'utilisateur abandonne l'action
      */
     private boolean askSaveData() {
-        String title = NbBundle.getMessage(ReleveTopComponent.class, "LOAD_FILE");
-        String fileName = currentFile != null ? currentFile.getName() : "nouveau"+".txt";
+        String title = NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save");
+        String fileName;
+        if (currentFile != null) {
+            fileName = currentFile.getName();
+        } else {
+            fileName = getDataManager().getCityName();
+            if (!fileName.isEmpty()) {
+                fileName += ".txt";
+            }
+        }
         int choice = JOptionPane.showConfirmDialog(this,
-                String.format("Vous avez modifé %s sans le sauvegarder. Voulez-vous le faire maintenant ?", fileName),
+                String.format(NbBundle.getMessage(ReleveTopComponent.class, "message.saveFile"), fileName),
                 title,
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE
@@ -777,11 +785,14 @@ public final class ReleveTopComponent extends TopComponent  {
         String title  = "Enregistrer";
         String extension = "txt";
 
-        String defaultFileName = getDataManager().getCityName();
-        if (defaultFileName.isEmpty()) {
-            defaultFileName = "nouveau"+"."+extension;
+        String fileName;
+        if (currentFile != null) {
+            fileName = currentFile.getName();
         } else {
-            defaultFileName += ".txt";
+            fileName = getDataManager().getCityName();
+            if (!fileName.isEmpty()) {
+                fileName += ".txt";
+            }
         }
         // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
@@ -789,7 +800,7 @@ public final class ReleveTopComponent extends TopComponent  {
         JFileChooser chooser = new JFileChooser(dir);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setDialogTitle(title);
-        chooser.setSelectedFile(new File(defaultFileName));
+        chooser.setSelectedFile(new File(fileName));
         if (extension != null) {
             chooser.setFileFilter(new FileExtensionFilter(extension));
         }
@@ -944,7 +955,7 @@ public final class ReleveTopComponent extends TopComponent  {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 String cityName = getDataManager().getCityName();
                 if ( cityName.isEmpty()) {
-                    cityName = "nouveau";
+                    cityName = "";
                 }
                 String recordType = "";
                 if (jRadioButtonAll.isSelected()) {
@@ -1117,7 +1128,7 @@ public final class ReleveTopComponent extends TopComponent  {
         if (currentFile != null ) {
             name = currentFile.getName();
         } else {
-            name = "nouveau"+".txt";
+            name = NbBundle.getMessage(ReleveTopComponent.class,"ReleveTopComponent.newRecordTitle");
         }
         setName(name);
         // je mets a jour le titre de la fenetre

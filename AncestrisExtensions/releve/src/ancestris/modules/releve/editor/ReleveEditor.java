@@ -21,7 +21,6 @@ import ancestris.modules.releve.model.FieldEventType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.GridBagConstraints;
 import java.awt.KeyboardFocusManager;
@@ -44,6 +43,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -1047,17 +1047,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         setMinimumSize(new java.awt.Dimension(200, 300));
         setOpaque(false);
-        setPreferredSize(null);
         setLayout(new java.awt.BorderLayout());
 
         editorBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        editorBar.setPreferredSize(null);
         editorBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jButtonNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png"))); // NOI18N
-        jButtonNew.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.text")); // NOI18N
         jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText")); // NOI18N
-        jButtonNew.setActionCommand(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.actionCommand")); // NOI18N
+        jButtonNew.setActionCommand("CreateRecord"); // NOI18N
         jButtonNew.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1067,9 +1064,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         editorBar.add(jButtonNew);
 
         jButtonDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/DeleteRecord.png"))); // NOI18N
-        jButtonDelete.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonDelete.text")); // NOI18N
         jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonDelete.toolTipText")); // NOI18N
-        jButtonDelete.setActionCommand(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonDelete.actionCommand")); // NOI18N
+        jButtonDelete.setActionCommand("RemoveRecord"); // NOI18N
         jButtonDelete.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1079,7 +1075,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         editorBar.add(jButtonDelete);
 
         jButtonPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Back.png"))); // NOI18N
-        jButtonPrevious.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonPrevious.text")); // NOI18N
         jButtonPrevious.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonPrevious.toolTipText")); // NOI18N
         jButtonPrevious.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonPrevious.addActionListener(new java.awt.event.ActionListener() {
@@ -1091,13 +1086,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         jTextFielRecordNo.setEditable(false);
         jTextFielRecordNo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFielRecordNo.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jTextFielRecordNo.text")); // NOI18N
         jTextFielRecordNo.setPreferredSize(new java.awt.Dimension(26, 20));
         editorBar.add(jTextFielRecordNo);
 
         jButtonNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
-        jButtonNext.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNext.text")); // NOI18N
-        jButtonNext.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNext.toolTipText")); // NOI18N
+        jButtonNext.setToolTipText("Next"); // NOI18N
         jButtonNext.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonNext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1107,7 +1100,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         editorBar.add(jButtonNext);
 
         jButtonStandalone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/editor.png"))); // NOI18N
-        jButtonStandalone.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonStandalone.text")); // NOI18N
+        jButtonStandalone.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonStandalone.toolTipText")); // NOI18N
         jButtonStandalone.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonStandalone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1120,7 +1113,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         jScrollPane1.setPreferredSize(null);
 
-        fieldsPanel.setPreferredSize(null);
         fieldsPanel.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(fieldsPanel);
 
@@ -1241,6 +1233,24 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     break;
                 }
             }
+        }
+    }
+
+    public int getEditorWidth() {
+        if (recordModel != null) {
+            return Integer.valueOf(NbPreferences.forModule(ReleveEditor.class).get(
+                    recordModel.getClass().getSimpleName()+"Width",
+                    "270"));
+        } else {
+            return 270;
+        }
+    }
+
+    public void putEditorWidth(int width) {
+        if (recordModel != null) {
+            NbPreferences.forModule(ReleveEditor.class).put(
+                    recordModel.getClass().getSimpleName()+"Width",
+                    String.valueOf(width));
         }
     }
 

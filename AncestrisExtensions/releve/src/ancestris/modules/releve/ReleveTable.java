@@ -24,6 +24,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellRenderer;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -265,8 +266,10 @@ public class ReleveTable extends JTable {
         String columnLayout = "";
         if (getModel() instanceof ModelAbstract && getModel() != null) {
             // je recupere la largeur des colonnes de la session precedente
-            columnLayout = ((ModelAbstract)getModel()).getColumnLayout();
-
+            columnLayout = NbPreferences.forModule(ReleveTopComponent.class).get(
+                    getModel().getClass().getSimpleName()+"ColumnLayout",
+                    "");
+          
             try {
                 StringTokenizer tokens = new StringTokenizer(columnLayout, ",");
                 int n = Integer.parseInt(tokens.nextToken());
@@ -310,7 +313,9 @@ public class ReleveTable extends JTable {
     //            result.append(dir.getDirection());
     //        }
 
-           ((ModelAbstract)getModel()).putColumnLayout(columnLayout.toString());
+           NbPreferences.forModule(ReleveTopComponent.class).put(
+                   getModel().getClass().getSimpleName()+"ColumnLayout",
+                   columnLayout.toString());
         }
 
     }
