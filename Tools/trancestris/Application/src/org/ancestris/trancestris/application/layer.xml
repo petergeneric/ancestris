@@ -133,4 +133,15 @@
             </file>
         </folder>
     </folder>
+    <folder name="OptionsExport">
+        <folder name="preferences">
+            <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.Bundle#OptionsExport/preferences"/>
+            <attr name="position" intvalue="100"/>
+            <file name="optionstrancestris">
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.Bundle#OptionsExport/preferences/optionsTrancestris"/>
+                <attr name="include" stringvalue="config/Preferences/org/ancestris/trancestris/.*"/>
+            </file>
+        </folder>
+    </folder>
+
 </filesystem>
