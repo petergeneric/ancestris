@@ -173,10 +173,11 @@ public class ResourceFile {
                                     zipOutputStream.write(lineString.getBytes());
                                 }
                             }
+                            resourceFiles.remove(toModifiedName);
                             logger.log(Level.INFO, "Done");
-                            break;
                         }
                     }
+                    break;
                 }
             }
         }
