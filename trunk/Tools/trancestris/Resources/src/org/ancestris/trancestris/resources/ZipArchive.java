@@ -26,7 +26,7 @@ public class ZipArchive implements PropertyChangeListener {
     private boolean change = false;
 
     public ZipArchive(File inputFile, Locale fromLocale, Locale toLocale) {
-        logger.log(Level.INFO, "Open Archive {0}", inputFile.getName());
+        logger.log(Level.INFO, "Open Archive {0}", inputFile.getAbsolutePath());
 
         this.zipFile = inputFile;
         this.toLocale = toLocale;

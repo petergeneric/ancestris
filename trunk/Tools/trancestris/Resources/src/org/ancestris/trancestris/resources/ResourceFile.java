@@ -174,6 +174,7 @@ public class ResourceFile {
                                 }
                             }
                             logger.log(Level.INFO, "Done");
+                            break;
                         }
                     }
                 }
