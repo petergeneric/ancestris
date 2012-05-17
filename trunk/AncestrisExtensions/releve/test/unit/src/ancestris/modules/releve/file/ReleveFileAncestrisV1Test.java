@@ -80,13 +80,13 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV1.loadFile(file);
-            assertEquals("Pas de type d'acte", "Ligne 1\nType d'acte inconnu \n",  sb.getError().toString());
+            assertEquals("Pas de type d'acte", "Ligne 1.\nType d'acte inconnu. \n",  sb.getError().toString());
             file.delete();
 
             data = "ANCESTRISV1;;;;;;;X;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV1.loadFile(file);
-            assertEquals("type acte=X", "Ligne 1\nType d'acte inconnu X\n",  sb.getError().toString());
+            assertEquals("type acte=X", "Ligne 1.\nType d'acte inconnu. X\n",  sb.getError().toString());
             file.delete();
 
             data = "ANCESTRISV1;;;;;;;N;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";

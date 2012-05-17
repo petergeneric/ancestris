@@ -35,7 +35,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
     public StandaloneEditor() {
         //super(new javax.swing.JFrame(), false);
         initComponents();
-        ImageIcon icon = new ImageIcon(ReleveTopComponent.class.getResource("/ancestris/modules/releve/images/Releve.png"));
+        ImageIcon icon = new ImageIcon(StandaloneEditor.class.getResource("/ancestris/modules/releve/images/Releve.png"));
         setIconImage(icon.getImage());
         setAlwaysOnTop(true);
         // je configure les editeurs
@@ -46,15 +46,18 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
         // je configure la taille de la fenetre
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        String size = NbPreferences.forModule(ReleveTopComponent.class).get("StandaloneEditorSize", "200,400,0,0");
+        String size = NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorSize", "300,450,0,0");
         String[] dimensions = size.split(",");
         if ( dimensions.length >= 4 ) {
             int width = Integer.parseInt(dimensions[0]);
             int height = Integer.parseInt(dimensions[1]);
             int x = Integer.parseInt(dimensions[2]);
             int y = Integer.parseInt(dimensions[3]);
-            if ( width > 100 && height > 100 ) {
-                setSize(width, height);
+            if ( width < 100 ) {
+                width = 100;
+            }
+            if ( height < 100 ) {
+                height = 100;
             }
             if ( x < 10 || x > screen.width -10) {
                 x = (screen.width / 2) - (width / 2);
@@ -64,7 +67,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
             }
             setBounds(x, y, width, height);
         } else {
-            setBounds(screen.width / 2 -100, screen.height / 2- 100,200, 400);
+            setBounds(screen.width / 2 -100, screen.height / 2- 100, 300, 450);
         }
 
         // listener pour intercepter l'evenement de fermeture de la fenetre.
@@ -79,7 +82,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
                         + String.valueOf(e.getWindow().getLocation().y)
                         );
                 
-                NbPreferences.forModule(ReleveTopComponent.class).put("StandaloneEditorSize", size);
+                NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
                 TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
                 ((ReleveTopComponent)tc).standaloneEditorClosed();
             }

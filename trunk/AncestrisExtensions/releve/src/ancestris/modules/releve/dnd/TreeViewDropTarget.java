@@ -2,6 +2,7 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.dnd.TransferableRecord.TransferableData;
 import genj.gedcom.Entity;
+import genj.gedcom.Indi;
 import genj.tree.TreeView;
 import java.awt.Point;
 import java.awt.datatransfer.Transferable;
@@ -11,11 +12,44 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import javax.swing.SwingUtilities;
 
 /**
- * Cette classe contient les methode pour permmettre au un arbre dynamique d'etre
- * destinataire d'un DnD
+  * genj.tree.TreeView.getEntityAt(Point entityPos)
+  * retreive entity at given cooodinates
+  * @param entityPos  Point in TreeView coordinates
+  * @return
+  */
+/*
+  public Entity getEntityAt(Point entityPos){
+      if (model == null) return null;
+
+      // je recupere la position de Content / Treeview
+      ViewPortAdapter va = (ViewPortAdapter) content.getParent();
+      JViewport vp = (JViewport) va.getParent();
+      Point viewPosition = vp.getViewPosition();
+      // je recupere la position décalée de "content" due au centrage
+      // qui n'est pas nul quand "content" est plus petit que viewport
+      Point contentShift = content.getLocation();
+
+      // je change de repere TreeView => Content
+      Point entityContentPos = new Point();
+      entityContentPos.x = entityPos.x + viewPosition.x - contentShift.x;
+      entityContentPos.y = entityPos.y + viewPosition.y - contentShift.y;
+      // je change de repere Content => model
+      Point modelPos = view2model(entityContentPos);
+      // je recherche l'entité a cette position dans le modele
+      return model.getEntityAt(modelPos.x, modelPos.y);
+  }
+
+ */
+
+/**
+ * Cette classe contient les methode pour permmettre a un arbre dynamique d'etre
+ * destinataire d'un DnD.
+ *
+ * la fonction DragAndDrop ne peut fonctionner qui si on ajout la méthode
+ * TreeView.getEntityAt(location)dans la classe genj.tree.TreeView
+ * et si on décommenter les trois appels à cette methode dans le code ci dessous.
  * @author Michel
  */
 public class TreeViewDropTarget {
@@ -43,14 +77,12 @@ public class TreeViewDropTarget {
             Point location = dropTargetDragEvent.getLocation();
 
             //TODO créer la méthode treeView.getEntityAt(location)
-            //Entity entity = treeView.getEntityAt(location);
             Entity entity = null;
-            if (entity != null) {
+            //entity = treeView.getEntityAt(location);
+            if ( entity == null || entity instanceof Indi) {
                 dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY);
-                //System.out.println("dragOver "+ entity.getId() + " " + entity.toString());
             } else {
                 dropTargetDragEvent.rejectDrag();
-                //System.out.println("dragOver "+ location.toString());
             }
 
         }
@@ -64,14 +96,12 @@ public class TreeViewDropTarget {
             //System.out.println("dragOver "+dropTargetDragEvent.getSource().getClass().getName());
             Point location = dropTargetDragEvent.getLocation();
             //TODO créer la méthode treeView.getEntityAt(location)
-            //Entity entity = treeView.getEntityAt(location);
             Entity entity = null;
-            if (entity != null) {
+            //entity = treeView.getEntityAt(location);
+            if ( entity == null || entity instanceof Indi) {
                 dropTargetDragEvent.acceptDrag(dropTargetDragEvent.getSourceActions());
-                //System.out.println("dragOver "+ entity.getId() + " " + entity.toString());
             } else {
                 dropTargetDragEvent.rejectDrag();
-                //System.out.println("dragOver "+ location.toString());
             }
         }
 
@@ -83,9 +113,9 @@ public class TreeViewDropTarget {
 		public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
 			Point location = dropTargetDropEvent.getLocation();
             //TODO créer la méthode treeView.getEntityAt(location)
-            //Entity entity = treeView.getEntityAt(location);
             Entity entity = null;
-            if ( entity != null) {
+            //entity = treeView.getEntityAt(location);
+            if ( entity == null || entity instanceof Indi) {
                 Transferable t = dropTargetDropEvent.getTransferable();
 
                 // Check for types of data that we support
@@ -93,11 +123,13 @@ public class TreeViewDropTarget {
                     // If it was a color, accept it, and use it as the background color
                     dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY);
                     try {
-                        TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
-                        System.out.println("drop "+ data.record.getEventDateString() + " to " + entity.toString() );
-                        SwingUtilities.convertPointToScreen(location, treeView);
-                        MergeDialog.show(treeView, location, entity, data.record, true);
-                        dropTargetDropEvent.dropComplete(true);
+                        if ( treeView.getContext() != null ) {
+                            TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
+                            MergeDialog.show(treeView, treeView.getContext().getGedcom(), entity, data.record, true);
+                            dropTargetDropEvent.dropComplete(true);
+                        } else {
+                            dropTargetDropEvent.dropComplete(false);
+                        }
                     } catch (Exception ex) {
                         dropTargetDropEvent.dropComplete(false);
                     }
@@ -105,11 +137,7 @@ public class TreeViewDropTarget {
 
             } else {
                 dropTargetDropEvent.dropComplete(false);
-                System.out.println("drop "+ location.toString());
             }
         }
 	}
-
-
-
 }

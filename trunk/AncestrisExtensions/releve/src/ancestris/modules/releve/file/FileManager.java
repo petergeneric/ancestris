@@ -131,7 +131,7 @@ public class FileManager {
         }
 
         /**
-         * ajout de valeurs muti
+         * ajout de valeurs multi
          */
         public StringBuilder appendCsv(String value, String... otherValues) {
             int fieldSize = value.length();
