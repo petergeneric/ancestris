@@ -150,7 +150,7 @@ public class ModelBirth extends ModelAbstract {
             new BeanField(record, Field.FieldType.witness1FirstName),
             new BeanField(record, Field.FieldType.witness1Occupation),
             new BeanField(record, Field.FieldType.witness1Comment),
-            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.GoMother"), null),
+            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.GodMother"), null),
             new BeanField(record, Field.FieldType.witness2LastName),
             new BeanField(record, Field.FieldType.witness2FirstName),
             new BeanField(record, Field.FieldType.witness2Occupation),
