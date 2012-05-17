@@ -108,7 +108,7 @@ lieu de naissance. </td>
 <td>IndiComment</td>
 <td>INDI:NOTE</td>
 <td>facultatif</td>
-<td>&nbsp;&nbsp;</td>
+<td>&nbsp;ajoute le commentaire dans la&nbsp;note de la naissance de l'individu</td>
 </tr>
 <tr>
 <td></td>
@@ -121,7 +121,17 @@ lieu de naissance. </td>
 IndiFatherFirstName</td>
 <td>father:NAME</td>
 <td>facultatif</td>
-<td>&nbsp;</td>
+<td>Si l'individu a déjà des parents, <br><br>Si l'individu n'a pas de
+parents&nbsp;: recherche &nbsp;les familles avec les mêmes noms de
+parents et avec les dates compatibles avec celle de la naissance (date
+de mariage , date de naissance et de décès des parents)<br>S'il en a plusieurs, il sont affichés dansune liste et l'utisateur choisit.<br><br>Si
+l'individu n'a pas deja un père associée dans le gedcom : recherche les
+individus qui pourraient être le père &nbsp;(même nom et prénom, date
+de naissance et de décès cohérente avec celle de la naisance de
+l'individu). S'il en a plusieurs, il sont affichés dansune liste et
+l'utisateur choisit.<br>Si aucun père potentiel n'est trouvé, créé un
+nouvel individu qui sera le père et crée une famille avec l'individu
+comme enfant.&nbsp; <br></td>
 </tr>
 <tr>
 <td>IndiFatherOccupation</td>
@@ -147,20 +157,20 @@ IndiFatherComment</td>
 IndiMotherFirstName</td>
 <td>mother:NAME</td>
 <td>facultatif</td>
-<td>&nbsp;</td>
+<td>&nbsp;même algo que le pour le père&nbsp;IndiFatherLastName</td>
 </tr>
 <tr>
 <td>IndiMotherOccupation</td>
 <td>mother:OCCU</td>
 <td>facultatif</td>
-<td>&nbsp;</td>
+<td>&nbsp;même algo que le pour la profession du père père&nbsp;IndiFatherOccupation</td>
 </tr>
 <tr>
 <td>IndiMotherDead<br>
 IndiMotherComment</td>
 <td>mother:NOTE</td>
 <td>facultatif</td>
-<td>&nbsp;</td>
+<td>&nbsp;&nbsp;même algo que le pour le commentaire&nbsp;du père père&nbsp;IndiFatherComment</td>
 </tr>
 <tr>
 <td></td>
@@ -189,7 +199,7 @@ Witness4Occupation<br>
 Witness4Comment</td>
 <td>INDI:BIRT:NOTE</td>
 <td>facultatif</td>
-<td>&nbsp;Ces champs sont concanténés et ajoutés dans la note de la naissance</td>
+<td>&nbsp;Ces champs sont concanténés et ajoutés dans la note de la naissance de l'individu</td>
 </tr>
 <tr>
 <td>EventPlace</td>

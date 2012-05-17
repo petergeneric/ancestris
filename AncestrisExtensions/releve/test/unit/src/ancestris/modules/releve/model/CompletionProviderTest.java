@@ -25,13 +25,13 @@ public class CompletionProviderTest extends TestCase {
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addGedcomCompletion(gedcom);
             // je verifie que les données ont bien été ajoutées
-            assertEquals("Nombre de prenoms", 5,  completionProvider.getFirstNames().size());
+            assertEquals("Nombre de prenoms", 7,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms", 2,  completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
 
             
 
-        } catch (GedcomException ex) {
+        } catch (Exception ex) {
             fail("GedcomException "+ ex.toString());
         }
 
