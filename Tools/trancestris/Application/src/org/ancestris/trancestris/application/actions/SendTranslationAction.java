@@ -67,6 +67,9 @@ public final class SendTranslationAction implements ActionListener {
                     }
                     zipArchive.saveTranslation(zipOutputFile);
 
+                    // saveTranslation modify directory structures
+                    zipArchive.write();
+
                     setDefaultValues(sendTranslationPanel);
                     DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
                     dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
