@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -92,8 +93,19 @@ public class Installer extends ModuleInstall {
                             NbPreferences.forModule(DownloadBundlePanel.class).put("Url.address", url.toString());
                             NbPreferences.forModule(DownloadBundlePanel.class).put("fromLocale", downloadBundlePanel.getFromLocale().toString());
                             NbPreferences.forModule(DownloadBundlePanel.class).put("toLocale", downloadBundlePanel.getToLocale().toString());
-                            Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
-                            t.start();
+                            if (bundleFile.exists()) {
+                                int result = JOptionPane.showConfirmDialog(null, NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Text"), NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.Overwrite.Title"), JOptionPane.YES_NO_OPTION);
+                                switch (result) {
+                                    case JOptionPane.YES_OPTION:
+                                        Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                                        t.start();
+
+                                        return;
+                                    case JOptionPane.NO_OPTION:
+                                    case JOptionPane.CANCEL_OPTION:
+                                        return;
+                                }
+                            }
                         } catch (MalformedURLException ex) {
                             Exceptions.printStackTrace(ex);
                         }
