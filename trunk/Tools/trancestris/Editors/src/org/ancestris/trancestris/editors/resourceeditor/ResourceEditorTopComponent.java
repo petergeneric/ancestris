@@ -71,34 +71,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         this.resourceFile = resourceFile;
     }
 
-    /**
-     * @param expressionTextField the expressionTextField to set
-     */
-    public void setExpressionTextField(String expression) {
-        expressionTextField.setText(expression);
-    }
-
-    /**
-     * @param caseSensitiveCheckBox the caseSensitiveCheckBox to set
-     */
-    public void setCaseSensitiveCheckBoxSelected(boolean selected) {
-        caseSensitiveCheckBox.setSelected(selected);
-    }
-
-    /**
-     * @param fromLocaleToggleButton the fromLocaleToggleButton to set
-     */
-    public void setFromLocaleToggleButtonSelected(boolean selected) {
-        fromLocaleToggleButton.setSelected(selected);
-    }
-
-    /**
-     * @param toLocaleToggleButton the toLocaleToggleButton to set
-     */
-    public void setToLocaleToggleButtonSelected(boolean selected) {
-        toLocaleToggleButton.setSelected(selected);
-    }
-
     private class ResourceFileModel implements ListModel {
 
         @Override
@@ -277,13 +249,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
     }
 
-    void search(boolean next) {
+    public void search(boolean next, String expression, boolean fromLocale, boolean caseSensitive) {
         int index = -1;
         if (resourceFile != null) {
             if (next) {
-                index = resourceFile.searchNext(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
+                index = resourceFile.searchNext(getResourceFileView().getSelectedIndex(), expression, fromLocale, caseSensitive);
+
+                getResourceFileView().ensureIndexIsVisible(index);
             } else {
-                index = resourceFile.searchPrevious(getResourceFileView().getSelectedIndex(), expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
+                index = resourceFile.searchPrevious(getResourceFileView().getSelectedIndex(), expression, fromLocale, caseSensitive);
             }
             if (index > -1) {
                 resourceFileView.setSelectedIndex(index);
@@ -300,13 +274,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private void initComponents() {
 
         localeButtonGroup = new javax.swing.ButtonGroup();
-        jPanel5 = new javax.swing.JPanel();
-        expressionTextField = new javax.swing.JTextField();
-        caseSensitiveCheckBox = new javax.swing.JCheckBox();
-        searchPreviousButton = new javax.swing.JButton();
-        searchNextButton = new javax.swing.JButton();
-        fromLocaleToggleButton = new javax.swing.JToggleButton();
-        toLocaleToggleButton = new javax.swing.JToggleButton();
         jPanel6 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         scrollPaneComments = new javax.swing.JScrollPane();
@@ -324,66 +291,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         nextButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
-
-        expressionTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                expressionTextFieldKeyPressed(evt);
-            }
-        });
-
-        caseSensitiveCheckBox.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(caseSensitiveCheckBox, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.caseSensitiveCheckBox.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(searchPreviousButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.searchPreviousButton.text")); // NOI18N
-        searchPreviousButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchPreviousButtonActionPerformed(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(searchNextButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.searchNextButton.text")); // NOI18N
-        searchNextButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchNextButtonActionPerformed(evt);
-            }
-        });
-
-        localeButtonGroup.add(fromLocaleToggleButton);
-        fromLocaleToggleButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(fromLocaleToggleButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.fromLocaleToggleButton.text")); // NOI18N
-
-        localeButtonGroup.add(toLocaleToggleButton);
-        org.openide.awt.Mnemonics.setLocalizedText(toLocaleToggleButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.toLocaleToggleButton.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addComponent(caseSensitiveCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fromLocaleToggleButton)
-                .addGap(6, 6, 6)
-                .addComponent(toLocaleToggleButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchPreviousButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchNextButton))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(searchNextButton)
-                .addComponent(searchPreviousButton)
-                .addComponent(caseSensitiveCheckBox)
-                .addComponent(fromLocaleToggleButton)
-                .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(toLocaleToggleButton))
-        );
-
-        add(jPanel5, java.awt.BorderLayout.NORTH);
 
         jPanel6.setLayout(new java.awt.BorderLayout());
 
@@ -562,30 +469,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         }
     }//GEN-LAST:event_nextButtonActionPerformed
-
-    private void expressionTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionTextFieldKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            search(true);
-        }
-}//GEN-LAST:event_expressionTextFieldKeyPressed
-
-    private void searchPreviousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPreviousButtonActionPerformed
-        search(false);
-}//GEN-LAST:event_searchPreviousButtonActionPerformed
-
-    private void searchNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchNextButtonActionPerformed
-        search(true);
-    }//GEN-LAST:event_searchNextButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonConfirmTranslation;
-    private javax.swing.JCheckBox caseSensitiveCheckBox;
-    private javax.swing.JTextField expressionTextField;
-    private javax.swing.JToggleButton fromLocaleToggleButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.ButtonGroup localeButtonGroup;
     private javax.swing.JButton nextButton;
@@ -595,11 +484,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JScrollPane scrollPaneComments;
     private javax.swing.JScrollPane scrollPaneResourceView;
     private javax.swing.JScrollPane scrollPaneTranslation;
-    private javax.swing.JButton searchNextButton;
-    private javax.swing.JButton searchPreviousButton;
     private javax.swing.JTextArea textAreaComments;
     private javax.swing.JTextArea textAreaTranslation;
-    private javax.swing.JToggleButton toLocaleToggleButton;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -691,8 +577,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
                     getResourceFileView().setSelectedIndex(0);
                     getResourceFileView().ensureIndexIsVisible(0);
-                    toLocaleToggleButton.setText(getResourceFile().getToLocale().getDisplayLanguage());
-                    fromLocaleToggleButton.setText(getResourceFile().getFromLocale().getDisplayLanguage());
 
                     String comment = getResourceFile().getLineComment(0);
                     textAreaComments.setText(comment);
