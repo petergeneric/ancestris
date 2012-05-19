@@ -7,7 +7,6 @@ package org.ancestris.trancestris.editors.resourceeditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -255,7 +254,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             if (next) {
                 index = resourceFile.searchNext(getResourceFileView().getSelectedIndex(), expression, fromLocale, caseSensitive);
 
-                getResourceFileView().ensureIndexIsVisible(index);
             } else {
                 index = resourceFile.searchPrevious(getResourceFileView().getSelectedIndex(), expression, fromLocale, caseSensitive);
             }
@@ -399,7 +397,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             if (getResourceFile().getLineState(++i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 getResourceFileView().setSelectedIndex(i);
-                getResourceFileView().ensureIndexIsVisible(i);
                 break;
             }
         }
@@ -414,6 +411,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         int i = getResourceFileView().getSelectedIndex();
         logger.log(Level.INFO, "Selected index is {0}", i);
+        
+        getResourceFileView().ensureIndexIsVisible(i);
 
         if (i >= 0) {
             translation = getResourceFile().getLineTranslation(i);
@@ -445,7 +444,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             if (getResourceFile().getLineState(--i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 getResourceFileView().setSelectedIndex(i);
-                getResourceFileView().ensureIndexIsVisible(i);
                 break;
             } else {
                 logger.log(Level.INFO, "index {0} is translated", i);
@@ -461,7 +459,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             if (getResourceFile().getLineState(++i) == 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 getResourceFileView().setSelectedIndex(i);
-                getResourceFileView().ensureIndexIsVisible(i);
                 break;
             } else {
                 logger.log(Level.INFO, "index {0} is translated", i);
