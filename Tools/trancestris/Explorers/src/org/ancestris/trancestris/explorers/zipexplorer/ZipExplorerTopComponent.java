@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeSelectionModel;
+import org.ancestris.trancestris.editors.actions.EditorSearchPanel;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
@@ -223,11 +224,13 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     }
 
     public void setBundles(File zipFile, Locale fromLocale, Locale toLocale) {
+        EditorSearchPanel editorSearchPanel = EditorSearchPanel.getInstance();
 
         zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
         Frame mainWindow = WindowManager.getDefault().getMainWindow();
         mainWindow.setTitle(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_MainWindow_Title", fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage(), zipArchive.getTranslatePercent()));
-
+        editorSearchPanel.setFromLocaleToggleButtonText(fromLocale.getDisplayLanguage());
+        editorSearchPanel.setToLocaleToggleButtonText(toLocale.getDisplayLanguage());
         newZipRootNode = new ZipRootNode(zipArchive);
         zipExplorerManager.setRootContext(newZipRootNode);
         ((BeanTreeView) beanTreeView).setRootVisible(true);
