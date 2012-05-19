@@ -10,6 +10,7 @@
  */
 package org.ancestris.trancestris.application.actions;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,10 +27,11 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import org.ancestris.trancestris.editors.resourceeditor.ResourceEditorTopComponent;
+import org.ancestris.trancestris.editors.actions.EditorSearchPanel;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.util.NbBundle;
@@ -56,13 +58,17 @@ public class SearchPanel extends javax.swing.JPanel {
         }
     }
     ZipArchive zipArchive = null;
+    EditorSearchPanel editorSearchPanel = EditorSearchPanel.getInstance();
 
     /** Creates new form SearchPanel */
     public SearchPanel(ZipArchive zipArchive) {
         this.zipArchive = zipArchive;
         initComponents();
-        fromLocaleCheckBox.setText(zipArchive.getFromLocale().getDisplayLanguage());
-        toLocaleCheckBox.setText(zipArchive.getToLocale().getDisplayLanguage());
+        fromToggleButton.setText(zipArchive.getFromLocale().getDisplayLanguage());
+        toToggleButton.setText(zipArchive.getToLocale().getDisplayLanguage());
+        fromToggleButton.setSelected(editorSearchPanel.isFromLocaleToggleButtonSelected());
+        toToggleButton.setSelected(editorSearchPanel.isToLocaleToggleButtonSelected());
+        caseSensitiveCheckBox.setSelected(editorSearchPanel.isCaseSensitiveCheckBoxSelected());
         resultEditorPane.setContentType("text/html"); // lets Java know it will be HTML
         resultEditorPane.setEditable(false);
         resultEditorPane.addHyperlinkListener(new SearchPanellinkListener());
@@ -80,25 +86,21 @@ public class SearchPanel extends javax.swing.JPanel {
         localeButtonGroup = new ButtonGroup();
         jPanel1 = new JPanel();
         expressionTextField = new JTextField();
-        toLocaleCheckBox = new JCheckBox();
-        fromLocaleCheckBox = new JCheckBox();
         searchButton = new JButton();
         caseSensitiveCheckBox = new JCheckBox();
+        fromToggleButton = new JToggleButton();
+        toToggleButton = new JToggleButton();
+        jPanel2 = new JPanel();
         resultScrollPane = new JScrollPane();
         resultEditorPane = new JEditorPane();
+
+        setLayout(new BorderLayout());
 
         expressionTextField.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent evt) {
                 expressionTextFieldKeyPressed(evt);
             }
         });
-
-        localeButtonGroup.add(toLocaleCheckBox);
-        toLocaleCheckBox.setText("To Locale");
-
-        localeButtonGroup.add(fromLocaleCheckBox);
-        fromLocaleCheckBox.setSelected(true);
-        fromLocaleCheckBox.setText("From Locale");
 
         searchButton.setText(NbBundle.getMessage(SearchPanel.class, "SearchPanel.searchButton.text")); // NOI18N
         searchButton.addActionListener(new ActionListener() {
@@ -108,60 +110,90 @@ public class SearchPanel extends javax.swing.JPanel {
         });
 
         caseSensitiveCheckBox.setSelected(true);
-
         caseSensitiveCheckBox.setText(NbBundle.getMessage(SearchPanel.class, "SearchPanel.caseSensitiveCheckBox.text")); // NOI18N
+        caseSensitiveCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                caseSensitiveCheckBoxActionPerformed(evt);
+            }
+        });
+
+        localeButtonGroup.add(fromToggleButton);
+        fromToggleButton.setText("From Locale");
+        fromToggleButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                fromToggleButtonActionPerformed(evt);
+            }
+        });
+
+        localeButtonGroup.add(toToggleButton);
+        toToggleButton.setText("To Locale");
+        toToggleButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                toToggleButtonActionPerformed(evt);
+            }
+        });
+
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(expressionTextField, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(searchButton))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(fromLocaleCheckBox)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(toLocaleCheckBox)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(caseSensitiveCheckBox)
+            .addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(caseSensitiveCheckBox)
+                        .addGap(10, 10, 10)
+                        .addComponent(fromToggleButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(toToggleButton))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(expressionTextField, GroupLayout.PREFERRED_SIZE, 374, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(searchButton)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(toLocaleCheckBox)
-                        .addComponent(caseSensitiveCheckBox))
-                    .addComponent(fromLocaleCheckBox))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(fromToggleButton)
+                    .addComponent(toToggleButton)
+                    .addComponent(caseSensitiveCheckBox))
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(expressionTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton)))
         );
 
+        add(jPanel1, BorderLayout.NORTH);
+
         resultEditorPane.setMinimumSize(new Dimension(106, 210));
+        resultEditorPane.setPreferredSize(new Dimension(106, 210));
         resultScrollPane.setViewportView(resultEditorPane);
 
-        GroupLayout layout = new GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(resultScrollPane))
-                .addContainerGap())
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(Alignment.LEADING)
+            .addGap(0, 487, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                .addContainerGap())
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(Alignment.LEADING)
+            .addGap(0, 287, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
+
+        add(jPanel2, BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
@@ -173,38 +205,49 @@ public class SearchPanel extends javax.swing.JPanel {
             search();
         }
     }//GEN-LAST:event_expressionTextFieldKeyPressed
+
+    private void caseSensitiveCheckBoxActionPerformed(ActionEvent evt) {//GEN-FIRST:event_caseSensitiveCheckBoxActionPerformed
+        editorSearchPanel.setCaseSensitiveCheckBoxSelected(caseSensitiveCheckBox.isSelected());
+    }//GEN-LAST:event_caseSensitiveCheckBoxActionPerformed
+
+    private void fromToggleButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_fromToggleButtonActionPerformed
+        editorSearchPanel.setFromLocaleToggleButtonSelected(fromToggleButton.isSelected());
+    }//GEN-LAST:event_fromToggleButtonActionPerformed
+
+    private void toToggleButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_toToggleButtonActionPerformed
+        editorSearchPanel.setToLocaleToggleButtonSelected(toToggleButton.isSelected());
+    }//GEN-LAST:event_toToggleButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JCheckBox caseSensitiveCheckBox;
     private JTextField expressionTextField;
-    private JCheckBox fromLocaleCheckBox;
+    private JToggleButton fromToggleButton;
     private JPanel jPanel1;
+    private JPanel jPanel2;
     private ButtonGroup localeButtonGroup;
     private JEditorPane resultEditorPane;
     private JScrollPane resultScrollPane;
     private JButton searchButton;
-    private JCheckBox toLocaleCheckBox;
+    private JToggleButton toToggleButton;
     // End of variables declaration//GEN-END:variables
 
     private void search() {
         List<String> search = null;
         boolean caseSensitive = caseSensitiveCheckBox.isSelected();
-        if (fromLocaleCheckBox.isSelected()) {
+        if (fromToggleButton.isSelected()) {
             search = zipArchive.search(expressionTextField.getText(), true, caseSensitive);
         } else {
             search = zipArchive.search(expressionTextField.getText(), false, caseSensitive);
         }
 
-        TopComponent tc = WindowManager.getDefault().findTopComponent("ResourceEditorTopComponent");
-        if (tc != null) {
-            ((ResourceEditorTopComponent) tc).setExpressionTextField(expressionTextField.getText());
-            ((ResourceEditorTopComponent) tc).setCaseSensitiveCheckBoxSelected(caseSensitive);
-            if (fromLocaleCheckBox.isSelected()) {
-                ((ResourceEditorTopComponent) tc).setFromLocaleToggleButtonSelected(true);
-                ((ResourceEditorTopComponent) tc).setToLocaleToggleButtonSelected(false);
-            } else {
-                ((ResourceEditorTopComponent) tc).setFromLocaleToggleButtonSelected(false);
-                ((ResourceEditorTopComponent) tc).setToLocaleToggleButtonSelected(true);
-            }
+        editorSearchPanel.setExpressionTextField(expressionTextField.getText());
+        editorSearchPanel.setCaseSensitiveCheckBoxSelected(caseSensitive);
+        if (fromToggleButton.isSelected()) {
+            editorSearchPanel.setFromLocaleToggleButtonSelected(true);
+            editorSearchPanel.setToLocaleToggleButtonSelected(false);
+        } else {
+            editorSearchPanel.setFromLocaleToggleButtonSelected(false);
+            editorSearchPanel.setToLocaleToggleButtonSelected(true);
         }
 
         // Clear the Text Area
