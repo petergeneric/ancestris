@@ -106,6 +106,7 @@ public class SendMessageWorker implements Runnable {
         props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "465"));
 
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+            logger.log(Level.INFO, "Authenticated SSL session");
             props.put("mail.smtp.auth", "true");
             session = Session.getDefaultInstance(props,
                     new javax.mail.Authenticator() {
@@ -116,6 +117,7 @@ public class SendMessageWorker implements Runnable {
                         }
                     });
         } else {
+            logger.log(Level.INFO, "SSL session without Authenticatication");
             props.put("mail.smtp.auth", "false");
             session = Session.getInstance(props, null);
         }
@@ -133,6 +135,7 @@ public class SendMessageWorker implements Runnable {
         props.put("mail.smtp.host", modulePreferences.get("mail.host", ""));
 
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+            logger.log(Level.INFO, "Authenticated TLS session");
             session = Session.getInstance(props,
                     new javax.mail.Authenticator() {
 
@@ -142,6 +145,7 @@ public class SendMessageWorker implements Runnable {
                         }
                     });
         } else {
+            logger.log(Level.INFO, "TLS session without Authenticatication");
             props.put("mail.smtp.auth", "false");
             session = Session.getInstance(props, null);
         }
@@ -157,6 +161,7 @@ public class SendMessageWorker implements Runnable {
         props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
 
         if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+            logger.log(Level.INFO, "Authenticated session");
             props.put("mail.smtp.auth", "true");
             session = Session.getDefaultInstance(props,
                     new javax.mail.Authenticator() {
@@ -167,6 +172,7 @@ public class SendMessageWorker implements Runnable {
                         }
                     });
         } else {
+            logger.log(Level.INFO, "session without Authenticatication");
             props.put("mail.smtp.auth", "false");
             session = Session.getInstance(props, null);
         }
