@@ -667,27 +667,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         selectionChanged(from, context, isActionPerformed);
     }
 
-    /**
-     * (re)open a view
-     */
-    public View openView(Class<? extends ViewFactory> factory) {
-        return openView(factory, getContext());
-    }
-
-    /**
-     * (re)open a view
-     */
-    public View openView(Class<? extends ViewFactory> factory, Context context) {
-        try {
-            return openViewImpl(factory.newInstance(), context);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Workbench.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Workbench.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
     // Workbench helper
     public static void openDefaultViews(Context context) {
 
@@ -948,9 +927,6 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         }
     }
 
-    public View openViewImpl(ViewFactory factory, Context context) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     private Context getContext() {
         return null;
