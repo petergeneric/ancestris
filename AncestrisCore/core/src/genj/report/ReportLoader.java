@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import org.openide.util.Lookup;
 
 /**
  * ClassLoad for Reports
@@ -127,6 +128,18 @@ public class ReportLoader {
         } catch (ClassNotFoundException ex) {
             ReportView.LOG.log(Level.SEVERE, null, ex);
         }
+    for (Report r:Lookup.getDefault().lookupAll(Report.class)){
+                try{
+                    //TODO: le fichier n'est utilise que pour affichage ou le rapport ReportWebSite.
+                    // Ce rapport est supprime dans ancestris car il ne sert a rien compte tenu de l'exisstence
+                    // du webbook
+                    // il pourra donc etre supprime lors de la refactorisation des rapports
+                    r.putFile(new File(r.getClass().getCanonicalName()));
+                    instances.add(r);
+                } catch (Throwable t) {
+                    ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+r.getClass(), t);
+                }
+    }
     // sort 'em
     Collections.sort(instances, new Comparator<Report>() { 
       public int compare(Report a, Report b) {
