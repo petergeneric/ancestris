@@ -60,10 +60,10 @@ public class SendMessageWorker implements Runnable {
         ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DownloadBundleAction.class, "SendTranslationAction.SendProgress"));
 
         // Get a Session object
-        if (modulePreferences.getBoolean("mail.host.TLSSupport", false) == true) {
+        if (modulePreferences.getBoolean("mail.host.TLSEncryption", false) == true) {
             logger.log(Level.INFO, "Get TLS session ...");
             session = this.createTLSSession();
-        } else if (modulePreferences.getBoolean("mail.host.SSLSupport", false) == true) {
+        } else if (modulePreferences.getBoolean("mail.host.SSLEncryption", false) == true) {
             logger.log(Level.INFO, "Get SSL session ...");
             session = this.createSSLSession();
         } else {
