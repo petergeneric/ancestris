@@ -20,7 +20,7 @@
 package genj.report;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.app.Workbench;
+import ancestris.view.GenjViewInterface;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -249,10 +249,34 @@ public class ReportPlugin implements ActionProvider {
         /** callback */
         @Override
         public void actionPerformed(ActionEvent event) {
+            if (context == null)
+                return;
+//            if (! (context instanceof Context))
+//                return;
             showReportPickerOnOpen = false;
             try {
-                ReportView view = (ReportView) Workbench.getInstance().openView(ReportViewFactory.class);
-                view.startReport(report, context);
+                // XXX: Find reportview if opened, must be done using lookup
+                // XXX: quick fix to allow reoprt to be launched from right clic, Reports API must be desesigned later
+                ReportView view = null;
+                for (GenjViewInterface tc: AncestrisPlugin.lookupAll(GenjViewInterface.class)){
+//                    if (!((Context)context).getGedcom().equals(tc.getGedcom()))
+//                        continue;
+                    if (!(tc.getView() instanceof ReportView))
+                        continue;
+                    view = (ReportView)tc.getView();
+                }
+
+                if (view != null)
+                    //ReportView view = (ReportView) Workbench.getInstance().openView(ReportViewFactory.class);
+                    ((ReportView) view).startReport(report, context);
+                else {
+                    //XXX: can't be called from ancestriscore
+//                    AncestrisTopComponent win = ReportTopComponent.getFactory.create(contextToOpen);
+//        //            win.init(contextToOpen);
+//                    win.open();
+//                    win.requestActive();
+                }
+    
             } finally {
                 showReportPickerOnOpen = true;
             }
