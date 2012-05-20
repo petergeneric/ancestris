@@ -34,7 +34,7 @@ import javax.swing.JToolBar;
 /**
  * Top component which displays Genj Views.
  */
-public abstract class GenjViewTopComponent extends AncestrisTopComponent {
+public abstract class GenjViewTopComponent extends AncestrisTopComponent implements GenjViewInterface {
 
     private final static Logger LOG = Logger.getLogger("ancestris.view");
 
