@@ -102,8 +102,8 @@ public class Resources {
           result.description = ""+clazz;
         return result;
       } catch (MissingResourceException e) {
-          LOG.log(Level.INFO, "bundle notfound for class {0} ({1})",new Object[]{clazz,packgeMember});
-    return get(calcPackage(packgeMember));
+          LOG.log(Level.FINE, "bundle notfound for class {0} ({1}) revert to old properties file",new Object[]{clazz,packgeMember});
+        return get(calcPackage(packgeMember));
       }
   }
 
