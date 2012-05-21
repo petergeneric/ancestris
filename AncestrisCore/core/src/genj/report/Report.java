@@ -60,6 +60,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileFilter;
+import org.openide.util.NbBundle;
 
 
 /**
@@ -654,19 +655,26 @@ public abstract class Report implements Cloneable {
   protected Resources getResources() {
     if (resources==null) {
       // initialize resources with old way of pulling from .properties file
-      resources = new Resources(getClass().getResourceAsStream(getTypeName()+".properties"));
+        InputStream in = getClass().getResourceAsStream(getTypeName()+".properties");
+        if (in != null)
+            resources = new Resources(in);
       // check if new style resources are available from .java src
-      try {
-        // ... checking filesystem in developer mode, resource otherwise
-        File reports = new File("./src/report");
-        String src = getClass().getName().replace('.', '/')+".java";
-        InputStream in = (reports.exists()&&reports.isDirectory()) ?
-            new FileInputStream(new File(reports, src)) :
-            getClass().getResourceAsStream(src);
-        resources.load(in, true);
-      } catch (IOException e) {
-        // ignore
-      }
+        // XXX: we should remove this
+//      try {
+//        // ... checking filesystem in developer mode, resource otherwise
+//        File reports = new File("./src/report");
+//        String src = getClass().getName().replace('.', '/')+".java";
+//        InputStream in = (reports.exists()&&reports.isDirectory()) ?
+//            new FileInputStream(new File(reports, src)) :
+//            getClass().getResourceAsStream(src);
+//        resources.load(in, true);
+//      } catch (IOException e) {
+//        // ignore
+//      }
+    }
+    // no .properties file, tries Bundle
+    if (resources == null){
+      resources = Resources.get(this);
     }
     return resources;
   }
