@@ -16,7 +16,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
     private boolean dirty = false;
     
     // liste des editeurs succeptibles d'être en train de modifier un releve
-    private ArrayList<ReleveEditorListener> validationListeners = new ArrayList<ReleveEditorListener>(1);
+    private ArrayList<ReleveEditorListener> editorListeners = new ArrayList<ReleveEditorListener>(1);
 
     public ModelAbstract() {
     }
@@ -173,21 +173,21 @@ public abstract class ModelAbstract extends AbstractTableModel  {
     /**
      * @param validationListeners the validationListeners to set
      */
-    public void addReleveValidationListener(ReleveEditorListener listener) {
-        validationListeners.add(listener);
+    public void addReleveEditorListener(ReleveEditorListener listener) {
+        editorListeners.add(listener);
     }
 
     /**
      * @param validationListeners the validationListeners to set
      */
-    public void removeReleveValidationListener(ReleveEditorListener listener) {
-        validationListeners.remove(listener);
+    public void removeReleveEditorListener(ReleveEditorListener listener) {
+        editorListeners.remove(listener);
     }
 
     public String verifyRecord( ) {
         StringBuilder errorMessage = new StringBuilder();
 
-        for (ReleveEditorListener listener : validationListeners) {
+        for (ReleveEditorListener listener : editorListeners) {
             int recordIndex = listener.getCurrentRecordIndex();
 
             try {

@@ -30,10 +30,10 @@ public class RelevePanel extends javax.swing.JPanel  {
         releveTable.setTableSelectionListener(releveEditor);
     }
 
-    public void setModel(DataManager dataManager, DataManager.ModelType modelType) {
+    public void setModel(DataManager dataManager, DataManager.ModelType modelType, ConfigPanel configPanel) {
         releveModel = dataManager.getModel(modelType);
         releveTable.setModel(dataManager, modelType);
-        releveEditor.setModel(dataManager, modelType);
+        releveEditor.setModel(dataManager, modelType, configPanel);
 
         // j'envoie une notification pour initialiser l'affichage de la table et de l'editeur
         // remarque : ne pas utiliser dataManager.fireTableStructureChanged();

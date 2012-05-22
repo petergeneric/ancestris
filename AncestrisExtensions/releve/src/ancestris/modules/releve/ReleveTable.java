@@ -53,6 +53,9 @@ public class ReleveTable extends JTable {
         setDragEnabled(true);
         setDropMode(DropMode.USE_SELECTION);
         setTransferHandler(new RecordTransferHandle());
+        // je configure la table pour qu'elle s'éende sur tout la hauteur de son
+        // container afin de pouvoir faire des DnD meême si elle ne contient
+        // aucun element. 
         setFillsViewportHeight(true);
 
         // je branche le clic du bouton gauche de la souris sur les titres des colonnes

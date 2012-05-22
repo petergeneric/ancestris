@@ -1,5 +1,7 @@
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.ConfigPanel;
+import ancestris.modules.releve.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.ReleveTopComponent;
 import java.awt.Dimension;
@@ -106,16 +108,16 @@ public class StandaloneEditor extends javax.swing.JFrame {
      * @param releveDeathModel
      * @param releveMiscModel
      */
-    public void setDataManager(DataManager dataManager) {
-        birthEditor.setModel(dataManager, DataManager.ModelType.birth);
-        marriageEditor.setModel(dataManager, DataManager.ModelType.marriage);
-        deathEditor.setModel(dataManager, DataManager.ModelType.death);
-        miscEditor.setModel(dataManager, DataManager.ModelType.misc);
+    public void setDataManager(DataManager dataManager, PlaceManager placeManager) {
+        birthEditor.setModel(dataManager, DataManager.ModelType.birth, placeManager);
+        marriageEditor.setModel(dataManager, DataManager.ModelType.marriage, placeManager);
+        deathEditor.setModel(dataManager, DataManager.ModelType.death, placeManager);
+        miscEditor.setModel(dataManager, DataManager.ModelType.misc, placeManager);
 
-        // je selection le premier releve.
+        // je selection le premier releve
         selectRecord(0, 0, 0, 0, 0);
 
-        // je crée les raccourcis pour créer un noueau relevé
+        // je crée les raccourcis pour créer un nouveau relevé
         jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), jTabbedPane1);
         jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), jTabbedPane1);
         jTabbedPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), jTabbedPane1);

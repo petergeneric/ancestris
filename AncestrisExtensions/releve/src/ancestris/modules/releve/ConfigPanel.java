@@ -21,6 +21,10 @@ import genj.gedcom.Gedcom;
 import genj.tree.TreeView;
 import genj.util.ChangeSupport;
 import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import javax.swing.JComponent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -33,12 +37,15 @@ import org.openide.util.HelpCtx;
  *
  * @author Michel
  */
-public class ConfigPanel extends javax.swing.JPanel implements TableModelListener, GedcomFileListener {
+public class ConfigPanel extends javax.swing.JPanel implements TableModelListener, GedcomFileListener, FocusListener, PlaceManager {
 
     protected ChangeSupport changeSupport = new ChangeSupport(this);
     DataManager dataManager;
     Gedcom gedcomCompletion = null;
     ReleveTopComponent topComponent ;
+
+    // listeners devant être prevenus du changement de lieu
+    private ArrayList<PlaceListener>placeListeners = new ArrayList<PlaceListener>(1);
 
     /** Creates new form ConfigPanel */
     public ConfigPanel() {
@@ -66,6 +73,12 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         dataManager.getModel(DataManager.ModelType.marriage).addTableModelListener(this);
         dataManager.getModel(DataManager.ModelType.death).addTableModelListener(this);
         dataManager.getModel(DataManager.ModelType.misc).addTableModelListener(this);
+
+        cityNameEntry.addFocusListener(this);
+        cityCodeEntry.addFocusListener(this);
+        stateEntry.addFocusListener(this);
+        countyNameEntry.addFocusListener(this);
+        countryEntry.addFocusListener(this);
     }
 
     public void setTopComponent (ReleveTopComponent topComponent) {
@@ -98,73 +111,6 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
 
     public boolean getCopyFreeComment() {
         return copyFreeComment.isSelected();
-    }
-
-    public String getCityName() {
-        return cityNameEntry.getText();
-    }
-
-    public String getCityCode() {
-        return cityCodeEntry.getText();
-    }
-
-    public String getCountyName() {
-        return countyNameEntry.getText();
-    }
-
-    public String getStateName() {
-        return stateEntry.getText();
-    }
-
-    public String getCountryName() {
-        return countryEntry.getText();
-    }
-
-    /**
-     * retourne le lieu au format "cityName,cityCode,countyName,stateName,countryName"
-     * @return
-     */
-    String getPlace() {
-        if ( getCityName().isEmpty() && getCityCode().isEmpty() && getCountyName().isEmpty()
-                && getStateName().isEmpty() && getCountryName().isEmpty()) {
-            return "";
-        } else {
-            return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
-        }
-    }
-
-    /**
-     * memorise la commune du releve
-     * Cette methode est appelée quand on charge un fichier de relevé.
-     * @param value
-     */
-    public void setPlace(String value) {
-        String[] juridictions =  value.split(",");
-        if (juridictions.length > 0 ) {
-            cityNameEntry.setText(juridictions[0]);
-        } else {
-            cityNameEntry.setText("");
-        }
-        if (juridictions.length > 1 ) {
-            cityCodeEntry.setText(juridictions[1]);
-        } else {
-            cityCodeEntry.setText("");
-        }
-        if (juridictions.length > 2 ) {
-            countyNameEntry.setText(juridictions[2]);
-        } else {
-            countyNameEntry.setText("");
-        }
-        if (juridictions.length > 3 ) {
-            stateEntry.setText(juridictions[3]);
-        } else {
-            stateEntry.setText("");
-        }
-        if (juridictions.length > 4 ) {
-            countryEntry.setText(juridictions[4]);
-        } else {
-            countryEntry.setText("");
-        }
     }
 
     public boolean isDirty() {
@@ -331,8 +277,8 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
             }
         });
         jToolBar1.add(jButtonSave);
-        jButtonSave.getAccessibleContext().setAccessibleName("null"); // NOI18N
-        jButtonSave.getAccessibleContext().setAccessibleDescription("null"); // NOI18N
+        jButtonSave.getAccessibleContext().setAccessibleName(null);
+        jButtonSave.getAccessibleContext().setAccessibleDescription(null);
 
         jToolBar1.add(jSeparator1);
 
@@ -376,8 +322,8 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
             }
         });
         jToolBar1.add(jButtonHelp);
-        jButtonHelp.getAccessibleContext().setAccessibleName("null"); // NOI18N
-        jButtonHelp.getAccessibleContext().setAccessibleDescription("null"); // NOI18N
+        jButtonHelp.getAccessibleContext().setAccessibleName(null);
+        jButtonHelp.getAccessibleContext().setAccessibleDescription(null);
 
         jPanelCommand.add(jToolBar1);
 
@@ -567,11 +513,6 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         miscNumber.setText("0");
         miscNumber.setBorder(null);
         miscNumber.setPreferredSize(null);
-        miscNumber.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miscNumberActionPerformed(evt);
-            }
-        });
         statisticPanel.add(miscNumber);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -742,11 +683,6 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         topComponent.exportFile();
     }//GEN-LAST:event_jButtonExportActionPerformed
 
-    private void miscNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miscNumberActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_miscNumberActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel OptionsPanel;
     private javax.swing.JLabel birthLabel;
@@ -819,6 +755,132 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
     @Override
     public void gedcomOpened(Gedcom gedcom) {
         // rien à faire
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Implement FocusListener
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        // rien à faire;
+    }
+
+    /**
+     * notifie les PlaceListener du changement de lieu
+     * @param focusEvent
+     */
+    @Override
+    public void focusLost(FocusEvent focusEvent) {
+
+       final JComponent focusedComponent = (JComponent) focusEvent.getSource();
+
+       if ( focusedComponent == cityNameEntry
+           || focusedComponent == cityCodeEntry
+           || focusedComponent == countyNameEntry
+           || focusedComponent == stateEntry
+           || focusedComponent == countryEntry
+           ) {
+           // je notifie les listeners
+           for(PlaceListener placeListener : placeListeners) {
+               placeListener.updatePlace(getPlace());
+           }
+       }
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Implements PlaceManager
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param listener
+     */
+    @Override
+    public void addPlaceListener(PlaceListener listener) {
+        placeListeners.add(listener);
+    }
+
+    /**
+     * @param listener
+     */
+    @Override
+    public void removePlaceListener(PlaceListener listener) {
+        placeListeners.remove(listener);
+    }
+
+    /**
+     * memorise la commune du releve
+     * Cette methode est appelée quand on charge un fichier de relevé.
+     * @param value
+     */
+    @Override
+    public void setPlace(String value) {
+        String[] juridictions =  value.split(",");
+        if (juridictions.length > 0 ) {
+            cityNameEntry.setText(juridictions[0]);
+        } else {
+            cityNameEntry.setText("");
+        }
+        if (juridictions.length > 1 ) {
+            cityCodeEntry.setText(juridictions[1]);
+        } else {
+            cityCodeEntry.setText("");
+        }
+        if (juridictions.length > 2 ) {
+            countyNameEntry.setText(juridictions[2]);
+        } else {
+            countyNameEntry.setText("");
+        }
+        if (juridictions.length > 3 ) {
+            stateEntry.setText(juridictions[3]);
+        } else {
+            stateEntry.setText("");
+        }
+        if (juridictions.length > 4 ) {
+            countryEntry.setText(juridictions[4]);
+        } else {
+            countryEntry.setText("");
+        }
+
+        // je notifie les listeners
+       for(PlaceListener placeListener : placeListeners) {
+           placeListener.updatePlace(getPlace());
+       }
+    }
+
+    /**
+     * retourne le lieu au format "cityName,cityCode,countyName,stateName,countryName"
+     * @return
+     */
+    @Override
+    public String getPlace() {
+        return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
+    }
+
+    @Override
+    public String getCityName() {
+        return cityNameEntry.getText().trim();
+    }
+
+    @Override
+    public String getCityCode() {
+        return cityCodeEntry.getText().trim();
+    }
+
+    @Override
+    public String getCountyName() {
+        return countyNameEntry.getText().trim();
+    }
+
+    @Override
+    public String getStateName() {
+        return stateEntry.getText().trim();
+    }
+
+    @Override
+    public String getCountryName() {
+        return countryEntry.getText().trim();
     }
 
 }
