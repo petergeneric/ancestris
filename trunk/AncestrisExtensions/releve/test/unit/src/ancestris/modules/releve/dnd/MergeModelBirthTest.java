@@ -31,8 +31,13 @@ public class MergeModelBirthTest extends TestCase {
 
             Indi father = indi.getBiologicalFather();
             assertEquals("fatherFirstName",record.getIndiFatherFirstName().toString(), father.getFirstName());
-            //assertEquals("fatherFirstName",record.getIndiFatherFirstName(), indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
+            // la date de naissance du pere n'est pas changée car elle est déjà preceise
+            assertEquals("Naissance du pere","1 jan 1970", father.getBirthDate().getDisplayValue());
+            assertEquals("deces du pere",   "apr 1999", father.getDeathDate().getDisplayValue());
 
+            Indi mother = indi.getBiologicalMother();
+            assertEquals("Naissance du pere","ava 1985", mother.getBirthDate().getDisplayValue());
+            assertEquals("deces du pere",   "apr 2000", mother.getDeathDate().getDisplayValue());
 
         } catch (Exception ex) {
             fail(ex.getMessage());

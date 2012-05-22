@@ -145,7 +145,7 @@ public final class ReleveTopComponent extends TopComponent  {
     @Override
     public void componentOpened() {
         super.componentOpened();
-        // je crée les raccourcis pour créer un noueau relevé
+        // je crée les raccourcis pour créer un nouveau relevé
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), this);
@@ -201,10 +201,10 @@ public final class ReleveTopComponent extends TopComponent  {
         AncestrisPlugin.register(this);
         // je cree le modele de données
         dataManager = new DataManager(panelConfig);
-        panelBirth.setModel(dataManager, DataManager.ModelType.birth);
-        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage);
-        panelDeath.setModel(dataManager, DataManager.ModelType.death);
-        panelMisc.setModel(dataManager, DataManager.ModelType.misc);
+        panelBirth.setModel(dataManager, DataManager.ModelType.birth, panelConfig);
+        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, panelConfig);
+        panelDeath.setModel(dataManager, DataManager.ModelType.death, panelConfig);
+        panelMisc.setModel(dataManager, DataManager.ModelType.misc, panelConfig);
         panelConfig.setModel(dataManager);
 
         // j'affiche l'onglet de configuration
@@ -1185,7 +1185,7 @@ public final class ReleveTopComponent extends TopComponent  {
             if (standaloneEditor == null) {
                 standaloneEditor = new StandaloneEditor();
                 standaloneEditor.setVisible(true);
-                standaloneEditor.setDataManager(dataManager);
+                standaloneEditor.setDataManager(dataManager, panelConfig);
                 // je lui donne le meme titre que ReleveTopCompoenent
                 standaloneEditor.setTitle(this.getName());
                 // j'affiche les memes releves que ceux de l'editeur principal
@@ -1240,7 +1240,6 @@ public final class ReleveTopComponent extends TopComponent  {
         panelDeath = new ancestris.modules.releve.RelevePanel();
         panelMisc = new ancestris.modules.releve.RelevePanel();
 
-        setPreferredSize(null);
         setLayout(new java.awt.BorderLayout());
 
         jTabbedPane1.setPreferredSize(null);
@@ -1253,7 +1252,7 @@ public final class ReleveTopComponent extends TopComponent  {
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), panelDeath); // NOI18N
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), panelMisc); // NOI18N
 
-        add(jTabbedPane1, java.awt.BorderLayout.PAGE_START);
+        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane jTabbedPane1;

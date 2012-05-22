@@ -6,6 +6,8 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.ConfigPanel;
+import ancestris.modules.releve.PlaceListener;
+import ancestris.modules.releve.PlaceManager;
 import ancestris.modules.releve.model.BeanField;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
@@ -51,12 +53,14 @@ import org.openide.windows.WindowManager;
  *
  * @author Michel
  */
-public class ReleveEditor extends javax.swing.JPanel implements FocusListener, ReleveEditorListener, TableSelectionListener, TableModelListener {
+public class ReleveEditor extends javax.swing.JPanel implements FocusListener, ReleveEditorListener, TableSelectionListener, TableModelListener, PlaceListener {
 
     DataManager dataManager = null;
     ModelAbstract recordModel = null;
     int currentRecordIndex = -1;
     boolean standaloneMode = false;
+    private JLabel jLabelPlace = null;
+    String place;
     /**
      * bean ayant le focus par defaut (utilisé a la creation d'un releve
      */
@@ -122,15 +126,20 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * @param dataManager
      * @param modelType
      */
-    public void setModel(DataManager dataManager, DataManager.ModelType modelType) {
+    public void setModel(DataManager dataManager, DataManager.ModelType modelType, PlaceManager placeManager) {
         this.dataManager = dataManager;
         this.recordModel = dataManager.getModel(modelType);
+        // j'abonne l'editeur aux changements de données du modele
         if( standaloneMode) {
             recordModel.addTableModelListener(this);
         } else {
             // je branche la selection de releve de la table vers l'editeur
-            recordModel.addReleveValidationListener(this);
+            recordModel.addReleveEditorListener(this);
         }
+
+        // j'abonne l'editeur aux changements de lieu
+        placeManager.addPlaceListener(this);
+        place=placeManager.getPlace();
 
         // je complete le tooltip du bouton "créer" en fonction du modele
         String toolTipText = org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText");
@@ -380,6 +389,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         fieldsPanel.setFocusCycleRoot(true);
         fieldsPanel.resetKeyboardActions();
         fieldsPanel.removeAll();
+        jLabelPlace = null;
         
         if (recordModel != null) {
             BeanField[] beanFields = recordModel.getFieldList(recordIndex);
@@ -388,10 +398,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             defaultBeanFocus = null;
 
             // j'ajoute la permiere ligne avec le nom de la commune
-            addRow(lineNo, dataManager.getCityName() + "," + dataManager.getCityCode() + "," + dataManager.getCountyName(), null, null);
+            addRow(lineNo, place.toString(), null, null);
             lineNo++;
 
-            // j'affiche les beans en focntion du type de champ
+            // j'affiche les beans en fonction du type de champ
             for (int recordNo = 0; recordNo < beanFields.length; recordNo++) {
                 BeanField beanField = beanFields[recordNo];
                 Field field = beanField.getField();
@@ -607,6 +617,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             gridBagConstraints.gridy = lineNo;
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.gridwidth = 2;
+            gridBagConstraints.weightx= 1;
             gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
             jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
             if (keyStroke == null) {
@@ -617,6 +628,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
             jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
             fieldsPanel.add(jLabel1, gridBagConstraints);
+            if (lineNo == 0) {
+                jLabelPlace = jLabel1;
+            }
         }
     }
     
@@ -1251,6 +1265,18 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             NbPreferences.forModule(ReleveEditor.class).put(
                     recordModel.getClass().getSimpleName()+"Width",
                     String.valueOf(width));
+        }
+    }
+
+    /**
+     * met a jour le lieu en tete de l'editeur
+     * @param place
+     */
+    @Override
+    public void updatePlace(String place) {
+        this.place = place; 
+        if (jLabelPlace != null) {
+            jLabelPlace.setText(place);
         }
     }
 

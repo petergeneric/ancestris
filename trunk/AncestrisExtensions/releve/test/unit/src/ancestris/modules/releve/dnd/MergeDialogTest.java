@@ -34,8 +34,8 @@ public class MergeDialogTest extends TestCase {
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setEventPlace("Paris","75000","","state","country");
 
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, false);
-            dialog.tableModel.copyRecordToEntity();
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, true);
+            dialog.currentModel.copyRecordToEntity();
             dialog.dispose();
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -63,8 +63,8 @@ public class MergeDialogTest extends TestCase {
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setEventPlace("Paris","75000","","state","country");
 
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, false);
-            dialog.tableModel.copyRecordToEntity();
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, true);
+            dialog.currentModel.copyRecordToEntity();
             dialog.dispose();
         } catch (Exception ex) {
             fail(ex.getMessage());
