@@ -35,11 +35,11 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
-public final class SendAction implements ActionListener {
+public final class SendMailAction implements ActionListener {
 
     private final static java.util.ResourceBundle RESOURCES = java.util.ResourceBundle.getBundle("ancestris/modules/feedback/Bundle");
     private final static String TEXTSEPARATOR = "\n=======================================\n";
-    private final static String SEND = NbBundle.getMessage(SendAction.class, "SEND_BUTTON");
+    private final static String SEND = NbBundle.getMessage(SendMailAction.class, "SEND_BUTTON");
     private Preferences modulePreferences = NbPreferences.forModule(FeedBackPlugin.class);
     private File userDir;
     private FeedbackPanel fbPanel;
@@ -82,18 +82,19 @@ public final class SendAction implements ActionListener {
             if (dd.getValue().equals(SEND)) {
                 // on sauvegarde qq valeurs par defaut
                 saveDefaultValues(fbPanel);
-                String name = fbPanel.jtName.getText().trim();
-                String from = fbPanel.jtEmail.getText().trim();
-                String to = fbPanel.jtEmailTo.getText().trim();
-                String messageBody = fbPanel.jtaText.getText().trim();
                 String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
                 String subject = "[" + RESOURCES.getString("fb.tag.subject") + " " + TS + "] ";
                 subject += fbPanel.jtSubject.getText().trim();
-                File attachedFile = null;
-                if (fbPanel.jcbIncGenjLog.isSelected()) {
-                    attachedFile = userDir;
+                String name = fbPanel.jtName.getText().trim();
+                String from = fbPanel.jtEmail.getText().trim();
+                String message = fbPanel.jtaText.getText().trim();
+                String to = fbPanel.jtEmailTo.getText().trim();
+                File attachement = null;
+
+                if (fbPanel.jcbIncGenjLog.isSelected() == true) {
+                    attachement = userDir;
                 }
-                Thread t = new Thread(new SendMailWorker(name, from, to, subject, messageBody, attachedFile), "SendFeedback");
+                Thread t = new Thread(new SendMailWorker(name, from, to, subject, message, attachement));
                 t.start();
             }
         }
@@ -120,6 +121,94 @@ public final class SendAction implements ActionListener {
         sb.append(TEXTSEPARATOR).append(RESOURCES.getString("fb.text.comment"));
         sb.append("\n");
         return sb.toString();
+    }
+
+    private class SendWorker implements Runnable {
+
+        public void run() {
+            String TS = new SimpleDateFormat("yyMMdd-HHmm").format(new Date());
+            String subject = "[" + RESOURCES.getString("fb.tag.subject") + " " + TS + "] ";
+            subject += fbPanel.jtSubject.getText().trim();
+            String name = fbPanel.jtName.getText().trim();
+            String from = fbPanel.jtEmail.getText().trim();
+            String text = fbPanel.jtaText.getText().trim();
+            String to = fbPanel.jtEmailTo.getText().trim();
+            String mailhost = modulePreferences.get("mail.host", "");
+
+            boolean failed = false;
+            String response = "";
+
+            Properties props = System.getProperties();
+            props.put("mail.smtp.host", mailhost);
+            props.put("mail.smtp.auth", "true");
+            if (modulePreferences.getBoolean("mail.host.TLSSupport", false) == true) {
+                props.put("mail.smtp.starttls.enable", "true");
+            }
+            props.put("mail.smtp.port", modulePreferences.get("mail.host.port", "25"));
+
+            // Get a Session object
+            Session session = Session.getInstance(props, null);
+
+            /*
+             * Construct the message and send it.
+             */
+            Message msg = new MimeMessage(session);
+            SMTPTransport t = null;
+
+            try {
+                msg.setFrom(new InternetAddress(from));
+                msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+                msg.setSubject(subject);
+
+                // Attach the specified file.
+                if (fbPanel.jcbIncGenjLog.isSelected()) {
+                    // We need a multipart message to hold the attachment.
+                    MimeBodyPart mbp1 = new MimeBodyPart();
+                    mbp1.setText(text);
+                    MimeBodyPart mbp2 = new MimeBodyPart();
+                    mbp2.attachFile(userDir);
+                    MimeMultipart mp = new MimeMultipart();
+                    mp.addBodyPart(mbp1);
+                    mp.addBodyPart(mbp2);
+                    msg.setContent(mp);
+                } else {
+                    msg.setText(text);
+                }
+
+                msg.setHeader("X-Mailer", "smtpsend");
+                msg.setSentDate(new Date());
+
+                t = (SMTPTransport) session.getTransport("smtp");
+
+                if (modulePreferences.getBoolean("mail.host.AuthenticationRequired", false) == true) {
+                    t.connect(modulePreferences.get("mail.host.login", ""), modulePreferences.get("mail.host.password", ""));
+                } else {
+                    t.connect();
+                }
+                t.sendMessage(msg, msg.getAllRecipients());
+            } catch (Exception e) {
+                response = e.getMessage();
+                Logger.getLogger(SendMailAction.class.getPackage().getName()).log(Level.INFO, "{0}", e);
+                failed = true;
+            } finally {
+                try {
+                    t.close();
+                } catch (MessagingException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+
+            if (failed) {
+                NotifyDescriptor nd = new NotifyDescriptor.Message(RESOURCES.getString("fb.msg.senderror")
+                        + "\n(" + response + ").", NotifyDescriptor.ERROR_MESSAGE);
+                DialogDisplayer.getDefault().notify(nd);
+
+            } else {
+                NotifyDescriptor nd = new NotifyDescriptor.Message(RESOURCES.getString("fb.msg.thankyou"), NotifyDescriptor.INFORMATION_MESSAGE);
+                DialogDisplayer.getDefault().notify(nd);
+            }
+
+        }
     }
 
     private File sendUserDir() throws IOException {
