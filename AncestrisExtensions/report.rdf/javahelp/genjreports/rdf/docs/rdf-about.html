@@ -66,16 +66,16 @@
 
         <dl>
             <dt>general reports (no entity as <a href="rdf-about.html#rdf-about_5a">context</a> required)</dt>
-                 <dd>* Query - Large age difference between husband and wife. Variation hint: turn into a statistical report by dropping or inverting the filter and select just "avg(?diff)".</dd>
-                 <dd>* Query - Count names.</dd>
-                 <dd>* Query - Count events per place</dd>
+            <dd>* <a href="./reports/AgeDiffBewteenSpouses.txt">AgeDiffBewteenSpouses.txt</a> - Large age difference between husband and wife. Variation hint: turn into a statistical report by dropping or inverting the filter and select just "avg(?diff)".</dd>
+                 <dd>* <a href="./reports/CountFirstNames.txt">CountFirstNames.txt</a> - Count names.</dd>
+                 <dd>* <a href="./reports/CountEventsPerPlace.txt">CountEventsPerPlace.txt</a> - Count events per place</dd>
             <dt>Reports based on an individual</dt>
-                 <dd>* Query - QuickRules - Time line with birth death and marriages of close relatives.</dd>
-                 <dd>* Query - SlowRules - Ancestors without parents.</dd>
-                 <dd>* Query - SlowRules - Multimedia objects of ancestors. Variation hint: Remove the line "?indi p:id %s; r:ancestor ?a." to make it gedcom wide report and get rid of the rules.</dd>
-                 <dd>* Query - SlowRules - Migration lines per branch.</dd>
+                 <dd>* <a href="./reports/TimeLineWithCloseRelatives.txt">TimeLineWithCloseRelatives.txt</a> - <a href="./reports/QuickRules.txt">QuickRules.txt</a> - Time line with birth death and marriages of close relatives.</dd>
+                 <dd>* <a href="./reports/RootAncestors.txt">RootAncestors.txt</a> - <a href="./reports/SlowRules.txt">SlowRules.txt</a> - Ancestors without parents.</dd>
+                 <dd>* <a href="./reports/MultiMediaOfAncestors.txt">MultiMediaOfAncestors.txt</a> - <a href="./reports/SlowRules.txt">SlowRules.txt</a> - Multimedia objects of ancestors. Variation hint: Remove the line "?indi p:id %s; r:ancestor ?a." to make it gedcom wide report and get rid of the rules.</dd>
+                 <dd>* <a href="./reports/MigrationLines.txt">MigrationLines.txt</a> - <a href="./reports/SlowRules.txt">SlowRules.txt</a> - Migration lines per branch.</dd>
             <dt>* Reports based on a family</dt>
-                 <dd>* Query - Composition of a patchwork family.</dd>
+                 <dd>* <a href="./reports/PatchworkFamily.txt">PatchworkFamily.txt</a> - Composition of a patchwork family.</dd>
         </dl>
 
 
@@ -138,7 +138,7 @@
             need to put the XML file in the xQuery file.
         </p>
         <p class="justify">
-            Examples of transformation scripts:<br>
+            Examples of transformation scripts:
             <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
                 <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl">
                 <param name="text" value="<html><u>XSL</u></html>">
