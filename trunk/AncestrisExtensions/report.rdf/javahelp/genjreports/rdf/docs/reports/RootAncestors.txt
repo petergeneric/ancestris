@@ -1,0 +1,7 @@
+SELECT str(?id) ?name
+ {
+  ?indi p:id '%s'; r:ancestor ?a. 
+  ?a p:id ?id; p:NAME [rdfs:label ?name]. 
+  OPTIONAL {?a r:ancestor ?a2}
+  FILTER (!bound(?a2))
+ } 

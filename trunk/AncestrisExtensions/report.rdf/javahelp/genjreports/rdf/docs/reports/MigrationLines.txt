@@ -1,0 +1,35 @@
+SELECT DISTINCT str(?idP) ?nameP fn:substring(str(?marriedDate),1,4) str(?idA) ?placeMarried ?placeBirth ?placeDeath ?nameA
+ {
+   ?indi p:id       'I103'; 
+         r:ancestor ?patriarch.
+   {
+     ?indi r:ancestor ?ancestor.
+     ?patriarch p:id ?idP; p:NAME [rdfs:label ?nameP].
+     ?ancestor  p:id ?idA; p:NAME [rdfs:label ?nameA];
+                r:ancestor ?patriarch.
+     OPTIONAL {
+       ?ancestor  p:FAMS ?fam.
+       ?fam       p:MARR [p:DATE [rdfs:label ?marriedDate]];
+                  p:HUSB ?husb;
+                  p:WIFE ?wife.
+       ?indi r:ancestor ?husb, ?wife;
+       OPTIONAL { ?fam      p:MARR [ p:PLAC [rdfs:label ?placeMarried]]}
+     }
+     OPTIONAL { ?ancestor p:BIRT [ p:PLAC [rdfs:label ?placeBirth]]}
+     OPTIONAL { ?ancestor p:DEAT [ p:PLAC [rdfs:label ?placeDeath]]}
+     OPTIONAL {?patriarch r:ancestor ?a2}
+     FILTER (!bound(?a2))
+   } 
+   UNION
+   {
+     ?patriarch p:id ?idP; p:NAME [rdfs:label ?nameP].
+     OPTIONAL {
+       ?patriarch  p:FAMS ?fam.
+       ?fam       p:MARR [p:DATE [rdfs:label ?marriedDate]; p:PLAC [rdfs:label ?placeMarried]];
+     }
+     OPTIONAL {?patriarch r:ancestor ?a2}
+     FILTER (!bound(?a2))
+     LET (?nameA := ?nameP)
+     LET (?idA   := ?idP)
+   }
+ } order by ?nameP ?married ?nameA

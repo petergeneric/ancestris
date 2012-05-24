@@ -1,0 +1,21 @@
+SELECT
+  (str(?idHusb ) as ?idHusband)
+  (    ?yearHusb as ?birthHusband)
+  (str(?idWife ) as ?idWife)
+  (    ?yearWife as ?birthWife)
+  ?diff
+{
+  ?fam p:HUSB ?husb; 
+       p:WIFE ?wife.
+  ?husb p:id ?idHusb; 
+        p:BIRT [p:DATE [rdfs:label ?dateHusb]].
+  ?wife p:id ?idWife;  
+        p:BIRT [p:DATE [rdfs:label ?dateWife]].
+
+  LET (?yearHusb := fn:substring(str(?dateHusb),0,4))
+  LET (?yearWife := fn:substring(str(?dateWife),0,4))
+  LET (?diff := xsd:int(?yearHusb) - xsd:int(?yearWife))
+
+  FILTER (?diff > 20 || ?diff < -20)
+}
+ORDER BY ?diff
