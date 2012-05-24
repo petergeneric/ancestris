@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>RDF (SPARQL based) Report</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./ancestris.css">
+    </head>
+    <body>
+        <a name="_Top_"></a>
+        <center>
+            <h2 class="ancestris_help_title">RDF (SPARQL based) Report</h2>
+        </center>
+        <br>
+        <table border="0" width="100%">
+            <tr>
+                <td width="65%">
+                    &nbsp;
+                </td>
+                <td width="35%">
+                    <p style="font-style: italic; text-align: justify;
+                    text-justify: newspaper; font-size: 10px;">
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol,<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol.
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <p class="justify">
+            The SPARQL based reports allow to write and customise reports
+            without a development environment. As a side effect you get your
+            GedCom converted into an RDF file. When published the RDF file
+            could be used for cross-site queries.       
+        <ol>
+            <li>- <a href="rdf-about.html#rdf-about_1">Under the hood</a></li>
+            <li>- <a href="rdf-about.html#rdf-about_2">Queries</a></li>
+            <li>- <a href="rdf-about.html#rdf-about_3">Rules</a></li>
+            <li>- <a href="rdf-about.html#rdf-about_4">URI's</a></li>
+            <li>- <a href="rdf-about.html#rdf-about_5">Notes</a></li>
+            <li>- <a href="rdf-about.html#rdf-about_6">To do</a></li>
+        </ol>
+        </p>
+
+        <a name="rdf-about_1"></a>
+        <h3 class="ancestris_help_title">1 - Under the hood</h3>
+        <p class="justify">
+            The report generation undergoes four stages:
+        <dl>
+            <dt>1 - conversion (optional)</dt>
+            <dd>a. from GedCom to  <a href="rdf-about.html#rdf-about_5d">RDF</a></dd>
+            <dd>b. apply <a href="rdf-about.html#rdf-about_3">rules</a> (optional)</dd>
+            <dt>2 - execute the <span class="wiki_link_ext">SPARQL</span> query</dt>
+            <dt>3 - apply a nice <a href="rdf-about.html#rdf-about_5b">layout</a> (optional)</dt>
+        </dl>
+        <br>
+        <i><b>(1)</b> Reload the previous conversion result if the GedCom did not
+        change and the new query works with the last applied rules.<br>
+        <b>(3)</b> Choose TXT as output extension for a simple table layout.</i>
+
+        <a name="rdf-about_2"></a>
+        <h3 class="ancestris_help_title">2 - Queries</h3>
+        Each report description has one or two links to plain text files: the
+        query, and optionaly the rules. Save these files locally to use them
+        in the option group for queries.<br>
+
+        <dl>
+            <dt>general reports (no entity as <a href="rdf-about.html#rdf-about_5a">context</a> required)</dt>
+                 <dd>* Query - Large age difference between husband and wife. Variation hint: turn into a statistical report by dropping or inverting the filter and select just "avg(?diff)".</dd>
+                 <dd>* Query - Count names.</dd>
+                 <dd>* Query - Count events per place</dd>
+            <dt>Reports based on an individual</dt>
+                 <dd>* Query - QuickRules - Time line with birth death and marriages of close relatives.</dd>
+                 <dd>* Query - SlowRules - Ancestors without parents.</dd>
+                 <dd>* Query - SlowRules - Multimedia objects of ancestors. Variation hint: Remove the line "?indi p:id %s; r:ancestor ?a." to make it gedcom wide report and get rid of the rules.</dd>
+                 <dd>* Query - SlowRules - Migration lines per branch.</dd>
+            <dt>* Reports based on a family</dt>
+                 <dd>* Query - Composition of a patchwork family.</dd>
+        </dl>
+
+
+        <a name="rdf-about_3"></a>
+        <h3 class="ancestris_help_title">3 - Rules</h3>
+        <p class="justify">
+            Some queries become easier when the conversion is extended with
+            rules. In words such a rule may sound like "the wife and husband
+            in a family are spouses" or "a child is a descendant, a descendant
+            of a descendant is also an descendant".
+        </p>
+        <p class="justify">
+            Computing all descendants and all ancestors of all individuals
+            may take minutes. The execution time grows exponentialy with the
+            number of family-child relations in your database. Therefore we
+            have two set of rules, the quick rules don't generate ancestor/descendant
+            relations. Without any rules, conversion is at it fastest, but
+            only few queries will execute, with the slow rules any query
+            should execute.
+        </p>
+        <p class="justify">
+            You may copy the desired set of rules directly into the
+            corresponding option, or save a set of rules in a file
+            and specify the file name in the option.
+        </p>
+
+        <a name="rdf-about_4"></a>
+        <h3 class="ancestris_help_title">4 - URI's</h3>
+        <p class="justify">
+            When converting the GedCom to RDF, the ID's of entities should be
+            converted to URI's. When your gedcom is published somewhere with
+            a page per entity (such as INDI or FAM), it is good practice to
+            use these URL's as URI. For entities that don't have pages invent
+            URI's with a similar construction.
+        </p>
+        <p class="justify">
+            URI versus URL (in short): A URI is an identifier, it is unique,
+            might but need not resolve to a web-page. A URL is a locater and
+            does resolve to a web page.
+        </p>
+
+        <a name="rdf-about_5"></a>
+        <h3 class="ancestris_help_title">5 - Notes</h3>
+
+        <a name="rdf-about_5a"></a>
+        <h4 class="ancestris_help_title">a) Execution context</h4>
+        <p class="justify">
+            Some queries contain a <b>%s</b>. These two characters should be
+            replaced with the ID of an entity (FAM, INDI, etc.). You can do
+            the replacement in a copy of the query, or Ancestris replaces
+            the ID of the entity from which you launched the report.
+        </p>
+
+        <a name="rdf-about_5b"></a>
+        <h4 class="ancestris_help_title">b) Layout</h4>
+        <p class="justify">
+            Choose XML as output extension for a nice layout. Optionally
+            specify an XSL style sheet to inject into the XML. Note that you
+            should publish the XML and XSL in the same domain. For xQuery you
+            need to put the XML file in the xQuery file.
+        </p>
+        <p class="justify">
+            Examples of transformation scripts:<br>
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl">
+                <param name="text" value="<html><u>XSL</u></html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+            <br>
+            and
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xq">
+                <param name="text" value="<html><u>xQuery</u></html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+        </p>
+
+        <h4 class="ancestris_help_title">c) Write and customize queries</h4>
+        <p class="justify">
+            Examining the converted gedcom can help to write and customize
+            queries. Choose extension n3 or ttl for the converted file.
+            These formats have a lot in common with the
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://jena.apache.org/tutorials/sparql.html">
+                <param name="text" value="<html><u>SPARQL</u></html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+            query language. The descriptions of queries also may have hints
+            for variants.
+        </p>
+
+        <a name="rdf-about_5d"></a>
+        <h4 class="ancestris_help_title">d) RDF</h4>
+        <p class="justify">
+            The conversion to RDF does not apply an established ontology but
+            is done in a syntactical 1:1 way. The result looks a lot like the
+            GedCom mode of Ancestris' edit view.
+        </p>
+        <p class="justify">
+            Cross site queries would be easier when most use the same or
+            similar ontology, but even with different ontologies it would
+            be possible with some more effort.
+        </p>
+
+        <a name="rdf-about_6"></a>
+        <h3 class="ancestris_help_title">6 - To do</h3>
+        <p class="justify">
+            Perhaps some should be moved to the
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://trac.arvernes.dyndns.org/ancestris/report/1">
+                <param name="text" value="<html><u>French tickets</u>.</html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+        </p>
+
+        <h4 class="ancestris_help_title">a) Dedicated user interface</h4>
+        <p class="justify">
+            This plug-in would become easier to operate with a dedicated user
+            interface.<br>The options group with the queries should be
+            replaced with two edit boxes that allow to read and save plain
+            text files. One box for the query, on box for the rule. A drop
+            downlist should load a pair of built-in files in the edit-boxes.
+            Two edit boxes is enough, the current approach with a query option
+            per content type is a bit overkill.<br>The output options group
+            should use file choosers and these choosers should filter on the
+            suggested extensions.
+        </p>
+
+        <h4 class="ancestris_help_title">b) Monitor ontologies</h4>
+        <p class="justify">
+            Monitor if ontologies for family databases emerge that could
+            replace the quick-and-dirty approach.
+        </p>
+
+        <br>
+        <a href="rdf-about.html#_Top_">Top</a>
+        <br>
+        <br>
+
+            <!-- TODO describe your module, add more pages... -->
+        
+    </body>
+</html>
+<!--
+Tip: to create a link which will open in an external web browser, try:
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+    <param name="content" value="http://www.netbeans.org/">
+    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
+    <param name="textFontSize" value="medium">
+    <param name="textColor" value="blue">
+</object>
+To create a link to a help set from another module, you need to know the code name base and path, e.g.:
+<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
+(This link will behave sanely if that module is disabled or missing.)
+-->
