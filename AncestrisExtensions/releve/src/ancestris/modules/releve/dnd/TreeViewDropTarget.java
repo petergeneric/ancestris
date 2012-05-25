@@ -2,6 +2,7 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.dnd.TransferableRecord.TransferableData;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.tree.TreeView;
 import java.awt.Point;
@@ -79,7 +80,7 @@ public class TreeViewDropTarget {
             //TODO créer la méthode treeView.getEntityAt(location)
             Entity entity = null;
             //entity = treeView.getEntityAt(location);
-            if ( entity == null || entity instanceof Indi) {
+            if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY);
             } else {
                 dropTargetDragEvent.rejectDrag();
@@ -98,7 +99,7 @@ public class TreeViewDropTarget {
             //TODO créer la méthode treeView.getEntityAt(location)
             Entity entity = null;
             //entity = treeView.getEntityAt(location);
-            if ( entity == null || entity instanceof Indi) {
+            if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 dropTargetDragEvent.acceptDrag(dropTargetDragEvent.getSourceActions());
             } else {
                 dropTargetDragEvent.rejectDrag();
@@ -115,7 +116,7 @@ public class TreeViewDropTarget {
             //TODO créer la méthode treeView.getEntityAt(location)
             Entity entity = null;
             //entity = treeView.getEntityAt(location);
-            if ( entity == null || entity instanceof Indi) {
+            if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 Transferable t = dropTargetDropEvent.getTransferable();
 
                 // Check for types of data that we support

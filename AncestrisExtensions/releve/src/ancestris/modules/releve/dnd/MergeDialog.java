@@ -7,15 +7,18 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.model.Record;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.tree.TreeView;
+import genj.view.SelectionSink;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.openide.util.NbPreferences;
 
@@ -24,9 +27,9 @@ import org.openide.util.NbPreferences;
  * Elle permet d'insérer un relevé dans une entité d'un fichier GEDCOM.
  * @author Michel
  */
-public class MergeDialog extends javax.swing.JDialog {
+public class MergeDialog extends javax.swing.JDialog implements EntityActionManager {
 
-    protected MergeModel tableModel = null;
+    protected MergeModel currentModel = null;
     Component dndSourceComponent = null;
 
     /**
@@ -38,18 +41,27 @@ public class MergeDialog extends javax.swing.JDialog {
     public static MergeDialog show(Component parent, final Gedcom gedcom, final Entity entity, final Record record, boolean visible) {
 
         final MergeDialog dialog = new MergeDialog(parent);
-        dialog.setData(record, gedcom, entity);
-        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                dialog.setVisible(false);
-                dialog.componentClosed();
-                dialog.dispose();
-            }
-        });
-        dialog.setVisible(visible);
+        try {
+            dialog.intiData(record, gedcom, entity);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    dialog.setVisible(false);
+                    dialog.componentClosed();
+                    dialog.dispose();
+                }
+            });
+            dialog.setVisible(visible);
+            return dialog;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            dialog.dispose();
+            Toolkit.getDefaultToolkit().beep();
+            String title = "";
+            JOptionPane.showMessageDialog(parent, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
 
-        return dialog;
     }
 
     /**
@@ -111,49 +123,57 @@ public class MergeDialog extends javax.swing.JDialog {
 
     /**
      * Initialise le modele de données du comparateur
-     * @param entity
+     * @param selectedEntity
      * @param record
      */
-    protected void setData(Record record, Gedcom gedcom, Entity entity ) {
+    protected void intiData(Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+        List<MergeModel> models;
 
-        List<Entity> sameIndi = MergeModel.findSameIndi(record, gedcom,(Indi) entity);
-        if( sameIndi.size()>0) {
-            mergePanel1.setVisible(true);
-            mergePanel1.setIndi(record, gedcom, entity, sameIndi, this);
-        } else {
-            mergePanel1.setVisible(false);
-        }
-        // je cree le modele
-        createModel(record, gedcom, entity);
+        // je recupere les modeles contenant les entites compatibles avec le relevé
+        models = MergeModel.createMergeModel(record, gedcom, selectedEntity);
+        // j'affiche les modeles et selectionne le premier modele de la liste
+        mergePanel1.initData(models, selectedEntity, this);
     }
 
     /**
-     * cree le modele de donne et l'affiche dans la fenetre
-     * Cette methode est appelee par le contructeur de cette fenetre et par
-     * le panneau de choix des individus
+     * selectionne le modele de données et l'affiche dans la fenetre
+     * Cette methode est appelee par le panneau de choix des individus
      * @param entity
      * @param record
      */
-    protected void createModel(Record record, Gedcom gedcom, Entity entity) {
-        tableModel = MergeModel.createMergeModel(record, gedcom, entity);
-        mergeTable.setModel(tableModel);
-        tableModel.fireTableDataChanged();
+    protected void selectModel(MergeModel model) {
+        this.currentModel = model;
+        mergeTable.setModel(currentModel);
+        mergeTable.setEntityActionManager(this);
+        currentModel.fireTableDataChanged();
         // je renseigne le titre de la fenetre
-        setTitle(tableModel.getTitle());
+        setTitle(currentModel.getTitle());
         // j'affiche l'entité dans l'arbre
         if ( dndSourceComponent instanceof TreeView ) {
-            TreeView treeView = (TreeView)dndSourceComponent;
-            if (entity != null ) {
-                // je centre l'arbre sur l'entité
-                treeView.setRoot(entity);
+            if (model.getSelectedEntity() != null ) {
+                showEntity(model.getSelectedEntity(), true);
             } else {
-                if( tableModel.getRow(MergeModel.RowType.IndiFamily).entityValue!=null) {
+                if( currentModel.getRow(MergeModel.RowType.IndiFamily).entityValue instanceof Fam) {
                     // je centre l'arbre sur la famille des parents
-                    treeView.setRoot((Fam)tableModel.getRow(MergeModel.RowType.IndiFamily).entityValue);
+                    showEntity((Fam)currentModel.getRow(MergeModel.RowType.IndiFamily).entityValue, true);
                 } 
             }
         }
     }
+
+    @Override
+    public void showEntity(Entity entity, boolean setRoot) {
+         if ( dndSourceComponent instanceof TreeView ) {
+            TreeView treeView = (TreeView)dndSourceComponent;
+            if( setRoot) {
+                treeView.setRoot(entity);
+            } else {
+                treeView.setContext(new Context(entity),false);
+            }
+            treeView.show(entity);
+        }
+    }
+
    /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -224,8 +244,37 @@ public class MergeDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
+    /**
+     * copie les données du releve dans l'entité selectionnée
+     * puis affiche l'entité dans l'arbre dynamic (si la cible du dnd est l'arbre)
+     * puis ferme la fenetre 
+     * @param evt
+     */
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
-        tableModel.copyRecordToEntity();
+        currentModel.copyRecordToEntity();
+        if ( dndSourceComponent instanceof TreeView ) {
+            TreeView treeView = (TreeView)dndSourceComponent;
+            if (currentModel.getSelectedEntity() != null ) {
+                if (currentModel.getSelectedEntity() instanceof Indi) {
+                    Indi selectedIndi = (Indi ) currentModel.getSelectedEntity();
+                    if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+                        treeView.setRoot(selectedIndi.getFamilyWhereBiologicalChild());
+                        treeView.setContext(new Context(selectedIndi), false);
+                        // propagate to others
+                        try {
+                          SelectionSink.Dispatcher.fireSelection(null, treeView.getContext());
+                        } finally {
+                        }
+                    } else {
+                        // je centre l'arbre sur l'entité
+                        treeView.setRoot(currentModel.getSelectedEntity());
+                    }
+                } else {
+                    // je centre l'arbre sur l'entité
+                    treeView.setRoot(currentModel.getSelectedEntity());
+                }
+            }
+        }
         componentClosed();
         setVisible(false);
         dispose();
@@ -242,5 +291,6 @@ public class MergeDialog extends javax.swing.JDialog {
     private ancestris.modules.releve.dnd.MergePanel mergePanel1;
     private ancestris.modules.releve.dnd.MergeTable mergeTable;
     // End of variables declaration//GEN-END:variables
+
 
 }
