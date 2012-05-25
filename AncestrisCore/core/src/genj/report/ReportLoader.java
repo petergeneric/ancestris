@@ -224,16 +224,31 @@ public class ReportLoader {
    * Which reports do we have
    */
   public Report[] getReports() {
-    return instances.toArray(new Report[instances.size()]);
+      return getReports(true);
+  }
+  /**
+   * Which reports do we have
+   */
+  public Report[] getReports(boolean showHidden) {
+      List<Report> result = new ArrayList<Report>(instances.size());
+      for (Report r: instances){
+          if (!r.isHidden())
+              result.add(r);
+      }
+    return result.toArray(new Report[result.size()]);
   }
 
   /**
-   * Save options of all reports
+   * Save options of all visible reports
+   * if a report is hidden (isHidden() returns true)  this report is
+   * a (special) report whose options must be handled in an optionPanel
    */
+  // XXX: later all reports will be handled that way
   /*package*/ void saveOptions() {
     Report[] rs = getReports();
     for (int r=0;r<rs.length;r++)
-      rs[r].saveOptions();
+      if (!rs[r].isHidden())
+          rs[r].saveOptions();
   }
   
   /**
