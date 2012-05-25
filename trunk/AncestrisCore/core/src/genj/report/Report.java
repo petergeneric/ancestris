@@ -40,7 +40,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.io.CharArrayWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -172,7 +171,7 @@ public abstract class Report implements Cloneable {
   /**
    * Store report's options
    */
-  /*package*/ void saveOptions() {
+  /*package*/ public void saveOptions() {
     // if known
     if (options==null)
       return;
@@ -185,7 +184,7 @@ public abstract class Report implements Cloneable {
     // done
   }
   
-  protected Registry getRegistry() {
+      protected Registry getRegistry() {
     return registry;
   }
 
@@ -193,7 +192,18 @@ public abstract class Report implements Cloneable {
    * Get report's options
    */
   public final List<? extends Option> getOptions() {
+      return getOptions(false);
+  }
+  /**
+   * Get report options. if forceRead is true, cache is cleared to ensure
+   * that options are read from file
+   * @param forceRead
+   * @return
+   */
+  public final List<? extends Option> getOptions(boolean forceRead) {
 
+       if (forceRead)
+           options = null;
     // already calculated
     if (options!=null)
       return options;
@@ -880,6 +890,14 @@ public abstract class Report implements Cloneable {
       }
       // n/a
       return null;
+    }
+
+    /**
+     * return true if report is not shown in report list view
+     * @return
+     */
+    public boolean isHidden() {
+        return false;
     }
 
     /**
