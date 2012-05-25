@@ -12,6 +12,8 @@
 
 package ancestris.view;
 
+import genj.gedcom.Context;
+import genj.report.ReportView;
 import genj.view.View;
 
 /**
@@ -21,5 +23,5 @@ import genj.view.View;
  */
 public interface GenjViewInterface extends AncestrisViewInterface{
     View getView();
-
+    public ReportView getReportView(Context contextToOpen);
 }

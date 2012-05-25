@@ -75,10 +75,10 @@ public class ReportPlugin implements ActionProvider {
                     try {
                         ActionRun run = null;
                         if (context.getEntity() != null && report.accepts(context.getEntity()) != null) {
-                            run = new ActionRun(report.accepts(context.getEntity()), context.getEntity(), report);
+                            run = new ActionRun(report.accepts(context.getEntity()), context.getEntity(), report,context.getGedcom());
                         }
                         if (run == null && report.accepts(context.getGedcom()) != null) {
-                            run = new ActionRun(report.accepts(context.getGedcom()), context.getGedcom(), report);
+                            run = new ActionRun(report.accepts(context.getGedcom()), context.getGedcom(), report,context.getGedcom());
                         }
                         if (run != null) {
                             String cat = report.getCategory();
@@ -186,7 +186,7 @@ public class ReportPlugin implements ActionProvider {
             try {
                 String accept = report.accepts(context);
                 if (accept != null) {
-                    ActionRun run = new ActionRun(accept, context, report);
+                    ActionRun run = new ActionRun(accept, context, report,gedcom);
                     String cat = report.getCategory();
                     if (cat == null) {
                         group.add(run);
@@ -220,17 +220,20 @@ public class ReportPlugin implements ActionProvider {
         private Object context;
         /** report */
         private Report report;
+        /** gedcom */
+        private Gedcom gedcom;
+
+//        /** constructor */
+//        private ActionRun(Report report) {
+//            this(report.getName(), null, report);
+//        }
 
         /** constructor */
-        private ActionRun(Report report) {
-            this(report.getName(), null, report);
-        }
-
-        /** constructor */
-        private ActionRun(String txt, Object context, Report report) {
+        private ActionRun(String txt, Object context, Report report, Gedcom gedcom) {
             // remember
             this.context = context;
             this.report = report;
+            this.gedcom = gedcom;
             // show
             setText(txt);
 
@@ -251,35 +254,11 @@ public class ReportPlugin implements ActionProvider {
         public void actionPerformed(ActionEvent event) {
             if (context == null)
                 return;
-//            if (! (context instanceof Context))
-//                return;
-            showReportPickerOnOpen = false;
-            try {
-                // XXX: Find reportview if opened, must be done using lookup
-                // XXX: quick fix to allow reoprt to be launched from right clic, Reports API must be desesigned later
-                ReportView view = null;
-                for (GenjViewInterface tc: AncestrisPlugin.lookupAll(GenjViewInterface.class)){
-//                    if (!((Context)context).getGedcom().equals(tc.getGedcom()))
-//                        continue;
-                    if (!(tc.getView() instanceof ReportView))
-                        continue;
-                    view = (ReportView)tc.getView();
-                }
 
-                if (view != null)
-                    //ReportView view = (ReportView) Workbench.getInstance().openView(ReportViewFactory.class);
-                    ((ReportView) view).startReport(report, context);
-                else {
-                    //XXX: can't be called from ancestriscore
-//                    AncestrisTopComponent win = ReportTopComponent.getFactory.create(contextToOpen);
-//        //            win.init(contextToOpen);
-//                    win.open();
-//                    win.requestActive();
-                }
-    
-            } finally {
-                showReportPickerOnOpen = true;
-            }
+        ReportView view = AncestrisPlugin.lookup(GenjViewInterface.class).getReportView(new Context(gedcom));
+        if (view != null) {
+            view.startReport(report, context);
+        }
         }
     } //ActionRun
 
