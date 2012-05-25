@@ -27,7 +27,7 @@ public class CompletionProviderTest extends TestCase {
             // je verifie que les données ont bien été ajoutées
             assertEquals("Nombre de prenoms", 7,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms", 2,  completionProvider.getLastNames().size());
-            assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de professions", 1,  completionProvider.getOccupations().size());
 
             
 

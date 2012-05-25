@@ -442,11 +442,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                         break;
                     case indiFatherLastName:
                         label += " (Alt-X)";
-                        bean = new BeanFirstName(dataManager.getCompletionProvider());
+                        bean = new BeanLastName(dataManager.getCompletionProvider());
                         break;
                     case wifeFatherLastName:
                         label += " (Alt-Y)";
-                        bean = new BeanFirstName(dataManager.getCompletionProvider());
+                        bean = new BeanLastName(dataManager.getCompletionProvider());
                         break;
 
                     case indiFirstName:

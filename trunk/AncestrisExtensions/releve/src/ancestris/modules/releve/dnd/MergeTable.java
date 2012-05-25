@@ -1,15 +1,24 @@
 package ancestris.modules.releve.dnd;
 
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.Source;
 import genj.util.WordBuffer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
+import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -26,6 +35,7 @@ import org.openide.util.NbPreferences;
  * @author Michel
  */
 public class MergeTable extends JTable {
+    private EntityActionManager entityActionManager = null;
 
     public  MergeTable() {
         setPreferredSize(null);
@@ -36,16 +46,38 @@ public class MergeTable extends JTable {
 
     public void setModel(MergeModel model) {
         super.setModel(model);
-        setDefaultRenderer(Object.class, new MergeTableRenderer(model));
+        MergeTableRenderer mergeTableRenderer = new MergeTableRenderer(model);
+        setDefaultRenderer(Object.class, mergeTableRenderer);
+        
         loadColumnLayout();
+
+        addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                JTable target = (JTable) e.getSource();
+                int row = target.rowAtPoint(e.getPoint());
+                int column = target.columnAtPoint(e.getPoint());
+
+                if (column == 4) {
+                    Entity entity = (Entity) ((MergeModel)getModel()).getValueAt(row, column);
+                    if ( entityActionManager != null && entity != null) {
+                        entityActionManager.showEntity(entity, false);
+                    }
+                }
+
+            }
+        });
+
     }
 
     @Override
-    public TableCellEditor getCellEditor(int row, int column) {
+    public TableCellEditor getCellEditor(final int row, int column) {
         //int modelColumn = convertColumnIndexToModel(column);
-        int modelColumn = column;
-        if ((modelColumn == 1 || modelColumn == 2) && ((MergeModel)getModel()).getChoice(row, modelColumn) != null) {
+        final int modelColumn = column;
+        if ((modelColumn == 1 || modelColumn == 3) && ((MergeModel)getModel()).getChoice(row, modelColumn) != null) {
             JComboBox comboBox = new JComboBox(((MergeModel)getModel()).getChoice(row, modelColumn));
+            comboBox.setEditable(false);
             comboBox.setRenderer(new MergeCellComboRenderer());
             return new DefaultCellEditor(comboBox);
         } else {
@@ -99,6 +131,12 @@ public class MergeTable extends JTable {
 
     }
 
+    void setEntityActionManager(EntityActionManager entityActionManager) {
+        this.entityActionManager = entityActionManager;
+    }
+
+
+
     /**
      * Cette classe gère l'affichage des celleules de la table
      */
@@ -125,10 +163,14 @@ public class MergeTable extends JTable {
                 boolean isSelected, boolean hasFocus, int row, int column) {
 
             //int modelColumn = table.convertColumnIndexToModel(column);
+
+            // je choisis le format d'affichage du texte
             int modelColumn = column;
             if ( value != null ) {
                 if (value instanceof PropertyDate) {
                     setText(((PropertyDate)value).getDisplayValue());
+                } else if (value instanceof Entity) {
+                    setText(((Entity)value).getId());
                 } else {
                     setText(value.toString());
                 }
@@ -136,6 +178,7 @@ public class MergeTable extends JTable {
                 setText("");
             }
 
+            // je choisis la couleur de fond
             switch (modelColumn) {
                 case 0:
                     //setBackground(Color.lightGray);
@@ -145,46 +188,24 @@ public class MergeTable extends JTable {
                 case 1:
                 case 2:
                 case 3:
-                    switch(model.dataList.get(row).sameValue) {
-                        case -2:
-                            setBackground(Color.lightGray);
+                    switch(model.dataList.get(row).compareResult) {
+                        case NOT_APPLICABLE:
+                            setBackground(new Color(240,240,240));
                             break;
-                        case -1:
+                        case CONFLIT:
                             setBackground(Color.red);
                             break;
-                        case 0:
+                        case EQUAL:
                             setBackground(table.getBackground());
                             break;
                         default:
                             setBackground(Color.ORANGE);
                     }
-
-//                    if ( model.dataList.get(row).recordValue == null) {
-//                        setBackground(Color.lightGray);
-//                    } else if (model.dataList.get(row).entityValue == null) {
-//                        setBackground(Color.ORANGE);
-//                    } else if ( model.dataList.get(row).entityValue instanceof PropertyDate) {
-//                        if ( model.isBestBirthDate((PropertyDate)model.dataList.get(row).recordValue, (PropertyDate)model.dataList.get(row).entityValue, null)) {
-//                            setBackground(Color.ORANGE);
-//                        } else {
-//                            setBackground(table.getBackground());
-//                        }
-//
-//                    } else if ( model.dataList.get(row).entityValue instanceof Entity) {
-//                        // je compare d'abord avec compareTo() avant equals() à
-//                        // cause des objets de type Property qui doit être comparé avec compareTo()
-//
-//                        if ( ((Entity)model.dataList.get(row).entityValue).compareTo((Entity)model.dataList.get(row).recordValue)==0)  {
-//                            setBackground(table.getBackground());
-//                        } else {
-//                            setBackground(Color.ORANGE);
-//                        }
-//                    } else if ( model.dataList.get(row).entityValue.equals(model.dataList.get(row).recordValue)) {
-//                        setBackground(table.getBackground());
-//                    } else {
-//                        setBackground(Color.ORANGE);
-//                    }
                     setForeground(table.getForeground());
+                    setOpaque(true);
+                    break;
+                case 4:
+                    setForeground(Color.blue);
                     setOpaque(true);
                     break;
                 default:

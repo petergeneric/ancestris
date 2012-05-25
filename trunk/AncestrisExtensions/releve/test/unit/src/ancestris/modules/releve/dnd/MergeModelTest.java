@@ -4,7 +4,6 @@ import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.RecordBirth;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
@@ -17,6 +16,106 @@ import junit.framework.TestCase;
  * @author Michel
  */
 public class MergeModelTest extends TestCase {
+
+
+    /**
+     * testaddOccupation
+     */
+    public void testAddOccupation() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            Indi indi = (Indi)gedcom.getEntity("I1");
+            RecordBirth record = TestUtility.createBirthRecord("sansfamille1");
+
+            MergeModel.addOccupation(indi, record.getIndiFatherOccupation().toString(), record.getEventDateField(), record);
+            
+            assertEquals("Nombre de profession", 2, indi.getProperties("OCCU").length);
+            Property occupationProperty = indi.getProperties("OCCU")[1];
+            assertEquals("Profession de l'individu", record.getIndiFatherOccupation().toString(), occupationProperty.getDisplayValue());
+            assertEquals("Date de la profession", record.getEventDateField().getDisplayValue(), occupationProperty.getProperty("DATE").getDisplayValue());
+            assertEquals("Lieu de la profession", record.getEventPlace().toString(), occupationProperty.getProperty("PLAC").getDisplayValue());
+            assertEquals("Note de la profession", false, occupationProperty.getProperty("NOTE").getDisplayValue().isEmpty());
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    /**
+     * testFindParentsFamily
+     */
+    public void testIsRecordAfterThanDate() {
+        try {
+            PropertyDate recordDate = new PropertyDate();
+            PropertyDate parentBirthDate = new PropertyDate();
+            boolean result;
+
+            recordDate.setValue("1 FEB 2000");
+            parentBirthDate.setValue("1 FEB 1970");
+            result = MergeModel.isRecordAfterThanDate(recordDate, parentBirthDate, 0, MergeModel.minParentYearOld);
+            assertEquals("le releve est apres la naissance du pere ", true, result);
+
+            recordDate.setValue("1 FEB 1976");
+            parentBirthDate.setValue("1 FEB 1970");
+            result = MergeModel.isRecordAfterThanDate(recordDate, parentBirthDate, 0, MergeModel.minParentYearOld);
+            assertEquals("le releve est apres la naissance du pere ", false, result);
+
+            recordDate.setValue("1 FEB 1969");
+            parentBirthDate.setValue("1 FEB 1970");
+            result = MergeModel.isRecordAfterThanDate(recordDate, parentBirthDate, 0, MergeModel.minParentYearOld);
+            assertEquals("le releve est apres la naissance du pere ", false, result);
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    /**
+     * testFindParentsFamily
+     */
+    public void testFindSameChild() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            Fam family = (Fam)gedcom.getEntity("F1");
+            RecordBirth record;
+            List<Indi> children;
+
+            record = TestUtility.createBirthRecord("sansfamille1");
+            children = MergeModel.findSameChild(record, gedcom, family);
+            assertEquals("l'enfant n'existe pas dans la famille", 0, children.size());
+            
+            record = TestUtility.createBirthRecord("child1");
+            children = MergeModel.findSameChild(record, gedcom, family);
+            assertEquals("l'enfant existe deja dans la famille", 1, children.size());
+            assertEquals("Nom de l'enfant", record.getIndiFirstName().toString(), children.get(0).getFirstName());
+
+            record = TestUtility.createBirthRecord("child1");
+            Indi father = family.getHusband();
+            PropertyDate fatherBirtDate =  father.getBirthDate();
+            // je l'individu est né 10 ans apres la naissance du pere
+            record.getEventDateField().getStart().set(fatherBirtDate.getStart());
+            record.getEventDateField().getStart().add(0, 0, 10);
+            try {
+                children = MergeModel.findSameChild(record, gedcom, family);
+                fail("exception non levee pour pere trop jeune");
+            } catch (Exception e) {
+                // ok
+            }
+
+            record = TestUtility.createBirthRecord("child1");
+            family.getHusband().setName("firstname", "DIFFERENTNAMETHANCHILD");
+            try {
+                children = MergeModel.findSameChild(record, gedcom, family);
+                fail("exception non levee pour nom du pere different");
+            } catch (Exception e) {
+                // ok
+            }
+
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
 
    /**
      * testFindParentsFamily
@@ -113,37 +212,37 @@ public class MergeModelTest extends TestCase {
 
             // liste des individu de meme nom et meme date de naissance, mais diffrents de l'individu selectionné
             birthDate.setValue(indi.getBirthDate().getValue());
-            assertEquals("otherIndi 1",1, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("otherIndi 1",1, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
 
             // liste des individu de meme nom et meme date de naissance
-            assertEquals("otherIndi 2",2, MergeModel.findSameIndi(record, gedcom).size());
+            assertEquals("otherIndi 2",1, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
 
             birthDate.setValue("BEF 1999");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BEF 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BEF 28 FEB 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BEF 5 MAY 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BEF 2002");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BEF 2222");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
 
             birthDate.setValue("BET 1990 AND 1998");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BET 1990 AND 2002");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("BET 5 MAY 2000 AND 2002");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
 
             birthDate.setValue("AFT 1880");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("AFT 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
             birthDate.setValue("AFT MAY 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
 
             //  "@#DFRENCH R@ 25 VEND 2"
 

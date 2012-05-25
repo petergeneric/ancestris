@@ -44,8 +44,23 @@ public class TestUtility {
                 record.setCote("cote");
                 record.setFreeComment("photo");
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setEventPlace("Paris","75000","","state","country");
+                record.setGeneralComment("generalcomment");
+            return record;
+        } if ( firstName.equals("child1")) {
+            RecordBirth record = new RecordBirth();
+                record.setEventDate("01/01/2000");
+                record.setCote("cote");
+                record.setFreeComment("photo");
+                record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiplace", "indioccupation", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -98,13 +113,14 @@ public class TestUtility {
         birth.addProperty("DATE","01 JAN 1970", 1);
         birth.addProperty("PLACE","Paris", 2);
         birth.addProperty("SOUR","@S1@",3);
-
+        husband.addProperty("OCCU", "I1occupation");
+        
         Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "Wife2");
         wife.setName("Motherfirstname", "MOTHERLASTNAME");
         wife.setSex(PropertySex.FEMALE);
 
         Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "child1");
-        child1.setName("Firstname1", "FATHERLASTNAME");
+        child1.setName("OneFirstName", "FATHERLASTNAME");
         child1.setSex(PropertySex.FEMALE);
         birth = child1.addProperty("BIRT", "");
         birth.addProperty("DATE","01 JAN 2000");
@@ -112,7 +128,7 @@ public class TestUtility {
         birth.addProperty("SOUR","@S2@");
         
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
-        child2.setName("Firstname2", "FATHERLASTNAME");
+        child2.setName("TwoFirstName", "FATHERLASTNAME");
         child2.setSex(PropertySex.FEMALE);
         birth = child2.addProperty("BIRT", "");
         birth.addProperty("DATE","03 MAR 2003");
@@ -122,7 +138,7 @@ public class TestUtility {
 
 
         Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "child3");
-        child3.setName("Firstname3", "FATHERLASTNAME");
+        child3.setName("ThreeFirstName", "FATHERLASTNAME");
         child3.setSex(PropertySex.FEMALE);
 
         Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F1");
@@ -165,27 +181,27 @@ public class TestUtility {
         gedcom.setGrammar(Grammar.V55);
 
         Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "I1");
-        husband.setName("fatherFirstName", "fatherName");
+        husband.setName("FatherFirstName", "FATHERLASTNAME");
         husband.setSex(PropertySex.MALE);
         husband.addProperty("OCCU", "profession1");
 
 
         Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "I2");
-        wife.setName("motherFirstName", "motherName");
+        wife.setName("MotherFirstName", "MOTHERLASTNAME");
         wife.setSex(PropertySex.FEMALE);
         husband.addProperty("OCCU", "profession mere");
 
         Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "I3");
-        child1.setName("firstname1", "fatherName");
+        child1.setName("firstname1", "FATHERLASTNAME");
         child1.setSex(PropertySex.FEMALE);
         husband.addProperty("OCCU", "profession1");
 
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "I4");
-        child2.setName("firstname2", "fatherName");
+        child2.setName("firstname2", "FATHERLASTNAME");
         child2.setSex(PropertySex.FEMALE);
 
         Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "I5");
-        child2.setName("firstname2", "fatherName");
+        child2.setName("firstname2", "FATHERLASTNAME");
         child2.setSex(PropertySex.FEMALE);
 
         Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F1");

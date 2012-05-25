@@ -8,6 +8,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
+import java.util.List;
 import junit.framework.TestCase;
 
 /**
@@ -16,22 +17,26 @@ import junit.framework.TestCase;
  */
 public class MergeModelBirthTest extends TestCase {
 
+
     /**
      * testSaveDataComment
      */
-    public void testSaveDataParent() {
+    public void testSaveDataMarraigeDate() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordBirth record = TestUtility.createBirthRecord("sansfamille1");
-            MergeModel mergeModel;
+            List<MergeModel> models;
 
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",3,models.size());
+            models.get(1).copyRecordToEntity();
+
+            assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
 
             Indi father = indi.getBiologicalFather();
             assertEquals("fatherFirstName",record.getIndiFatherFirstName().toString(), father.getFirstName());
-            // la date de naissance du pere n'est pas changée car elle est déjà preceise
+            // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("Naissance du pere","1 jan 1970", father.getBirthDate().getDisplayValue());
             assertEquals("deces du pere",   "apr 1999", father.getDeathDate().getDisplayValue());
 
@@ -48,15 +53,41 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * testSaveDataComment
      */
+    public void testSaveDataParent() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            Indi indi = (Indi)gedcom.getEntity("sansfamille1");
+            RecordBirth record = TestUtility.createBirthRecord("sansfamille1");
+            List<MergeModel> models;
+
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",3,models.size());
+            models.get(0).copyRecordToEntity();
+
+            assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
+
+            assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+
+    /**
+     * testSaveDataComment
+     */
     public void testSaveDataComment() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordBirth record = TestUtility.createBirthRecord("sansfamille1");
-            MergeModel mergeModel;
+            List<MergeModel> models;
 
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",3,models.size());
+            models.get(0).copyRecordToEntity();
+
             String expected = "";
             expected +="indicomment, generalcomment\n";
             expected +="Parrain: w1firstname w1lastname, w1occupation, w1comment\n";
@@ -66,8 +97,9 @@ public class MergeModelBirthTest extends TestCase {
 
             // je verifie que le nouveau commentaire contient la concatenation de l'ancien commentaire et du nouveau
             indi.getPropertyByPath("INDI:BIRT:NOTE").setValue("oldcomment");
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
             expected = "oldcomment\n";
             expected +="indicomment, generalcomment\n";
             expected +="Parrain: w1firstname w1lastname, w1occupation, w1comment\n";
@@ -87,14 +119,14 @@ public class MergeModelBirthTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
-            MergeModel mergeModel;
+            List<MergeModel> models;
 
             RecordBirth record = TestUtility.createBirthRecord("I1");
-
             record.setEventPlace("Paris","75000","","state","country");
 
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
             assertEquals("IndiFirstName",record.getIndiFirstName().toString(), indi.getFirstName());
             assertEquals("IndiLastName",record.getIndiLastName().toString(), indi.getLastName());
             assertEquals("IndiSex",record.getIndiSex().getSex(), indi.getSex());
@@ -115,14 +147,14 @@ public class MergeModelBirthTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
-            MergeModel mergeModel;
+            List<MergeModel> models;
 
             RecordBirth record = TestUtility.createBirthRecord("I1");
-
             record.setEventPlace("Brest","35000","","state","country");
 
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
             assertEquals("IndiFirstName",record.getIndiFirstName().toString(), indi.getFirstName());
             assertEquals("IndiLastName",record.getIndiLastName().toString(), indi.getLastName());
             assertEquals("IndiSex",record.getIndiSex().getSex(), indi.getSex());
@@ -144,14 +176,14 @@ public class MergeModelBirthTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
 
             Indi indi = (Indi)gedcom.getEntity("I1");
-            MergeModel mergeModel;
+            List<MergeModel> models;
 
             RecordBirth record = TestUtility.createBirthRecord("I1");
-
             record.setEventPlace("Paris","75009","","state","country");
 
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
             assertEquals("IndiFirstName",record.getIndiFirstName().toString(), indi.getFirstName());
             assertEquals("IndiLastName",record.getIndiLastName().toString(), indi.getLastName());
             assertEquals("IndiSex",record.getIndiSex().getSex(), indi.getSex());
@@ -173,16 +205,17 @@ public class MergeModelBirthTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
             RecordBirth record = TestUtility.createBirthRecord("I1");
-            MergeModel mergeModel;
+            List<MergeModel> models;
 
             // je renseigne la meme date de naissance
             record.getEventDateField().setValue(indi.getBirthDate().getValue());
             record.setEventPlace("Paris","75009","","state","country");
 
-            assertEquals("otherIndi",0, MergeModel.findSameIndi(record, gedcom, indi).size());
+            assertEquals("otherIndi",0, MergeModel.findIndiWithCompatibleBirth(record, gedcom, indi).size());
 
-            mergeModel = MergeModel.createMergeModel(record, gedcom, indi);
-            mergeModel.copyRecordToEntity();
+            models = MergeModel.createMergeModel(record, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
             assertEquals("Indi First Name",record.getIndiFirstName().toString(), indi.getFirstName());
             assertEquals("Indi Last Name",record.getIndiLastName().toString(), indi.getLastName());
             assertEquals("Indi Sex",record.getIndiSex().getSex(), indi.getSex());

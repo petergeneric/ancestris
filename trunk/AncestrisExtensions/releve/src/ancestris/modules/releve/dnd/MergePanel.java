@@ -5,12 +5,12 @@
 
 package ancestris.modules.releve.dnd;
 
-import ancestris.modules.releve.model.Record;
-import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
+import genj.gedcom.Fam;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
 /**
@@ -27,22 +27,22 @@ public class MergePanel extends javax.swing.JPanel {
 
     /**
      * affiche les entites qui peuvent être concernées par le relevé.
-     * L'entité choisie par l'utisateur lors du dnd est affichée en premier
+     * et selection le premier de la liste
      * @param entities
      * @param selectedEntity
      * @param record
      * @param mergeDialog
      */
-    protected void setIndi (final Record record, Gedcom gedcom, final Entity selectedEntity, List<Entity> entities, final MergeDialog mergeDialog ) {
-        // je dimmensionne le nombre de lignes du layout
-        jPanelChoice.setLayout(new java.awt.GridLayout(entities.size()+1, 1));
+    protected void initData (List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog ) {
 
-        // j'ajoute l'entite selectionnee par l'utilisateur
-        addRadioButton(record, gedcom, selectedEntity, mergeDialog, true);
-        // j'ajoute les aures entites 
-        for( final Entity entity : entities) {
-            addRadioButton(record, gedcom, entity,  mergeDialog, false);
+        // j'ajoute les modeles
+        for(int i= 0; i< models.size(); i++) {
+            addRadioButton(i, models.get(i), selectedEntity, mergeDialog);
         }
+        // je coche bouton assicié au premier modele
+        ((JRadioButton)buttonGroupChoiceModel.getElements().nextElement()).setSelected(true);
+        // je selectionne le premier modele
+        mergeDialog.selectModel(models.get(0));
     }
 
     /**
@@ -52,37 +52,68 @@ public class MergePanel extends javax.swing.JPanel {
      * @param mergeDialog
      * @param selected
      */
-    private void addRadioButton(final Record record, final Gedcom gedcom, final Entity entity, final MergeDialog mergeDialog , boolean selected) {
-        JRadioButton jRadioButton =  new JRadioButton();
-        String message ;
-        if ( entity == null ) {
-            if ( record instanceof RecordMarriage) {
-                message = "Nouvelle famille";
+    private void addRadioButton(int position, final MergeModel model, Entity selectedEntity, final MergeDialog mergeDialog) {
+        String radioButtonText;
+        String labelText = Integer.toString(model.getNbMatch())+"/"+Integer.toString(model.getNbMatchMax());
+        JLabel jLabelNbMatch =  new JLabel();
+
+        if (  model.getSelectedEntity() == null ) {
+            if ( model instanceof MergeModelBirth) {
+                if ( selectedEntity instanceof Fam) {
+                    radioButtonText = "Nouvel enfant de la famille sélectionnée";
+                } else {
+                    radioButtonText = "Nouvel individu";
+                    if (model.getRow(MergeModel.RowType.IndiFamily).entityValue != null) {
+                       radioButtonText += " - "  +  ((Fam)model.getRow(MergeModel.RowType.IndiFamily).entityValue).getId();
+                    } else {
+                       radioButtonText += " - " + "Nouvelle famille";
+                    }
+                }
             } else {
-                message = "Nouvel individu";
+                radioButtonText = "Nouvelle famille";
             }
         } else {
-            message = entity.toString();
+            radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
+            if ( model.getSelectedEntity().equals(selectedEntity)) {
+                labelText += " "+ "(Selectionné)";
+                jLabelNbMatch.setForeground(Color.blue);
+            }
         }
-        jRadioButton.setText(message);
-        jRadioButton.setMargin(new java.awt.Insets(2, 10, 2, 2));
-        jRadioButton.setPreferredSize(null);
-        jPanelChoice.add(jRadioButton);
-        buttonGroupChoiceIndi.add(jRadioButton);
-        if (selected == true) {
-            // je selectionne le premier bouton
-            jRadioButton.setSelected(true);
-            selected = false;
-        } else {
-            jRadioButton.setSelected(false);
-        }
-        jRadioButton.addActionListener(new ActionListener() {
+        jLabelNbMatch.setText(labelText);
 
+        // je cree le radiobutton
+        JRadioButton jRadioButton =  new JRadioButton();
+        jRadioButton.setText(radioButtonText);
+        jRadioButton.setMargin(new java.awt.Insets(0, 2, 0, 2));
+        jRadioButton.setPreferredSize(null);
+        jRadioButton.setSelected(false);
+        jRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mergeDialog.createModel(record, gedcom, entity);
+                mergeDialog.selectModel(model);
             }
         });
+
+        // j'ajoute le bouton dans le groupe de boutons pour activer la selection exlusive
+        buttonGroupChoiceModel.add(jRadioButton);
+
+        // j'affiche le radiobutton dans la premiere colonne
+        java.awt.GridBagConstraints gridBagConstraints;
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = position;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        jPanelChoice.add(jRadioButton,gridBagConstraints);
+
+        // j'affiche le nombre de champs egaux dans la deuxième colonne
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = position;
+        gridBagConstraints.weightx = 0;
+        jPanelChoice.add(jLabelNbMatch, gridBagConstraints);
+
     }
 
     /** This method is called from within the constructor to
@@ -94,7 +125,7 @@ public class MergePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroupChoiceIndi = new javax.swing.ButtonGroup();
+        buttonGroupChoiceModel = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanelChoice = new javax.swing.JPanel();
 
@@ -102,9 +133,10 @@ public class MergePanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         jScrollPane1.setBorder(null);
+        jScrollPane1.setPreferredSize(null);
 
         jPanelChoice.setRequestFocusEnabled(false);
-        jPanelChoice.setLayout(new java.awt.GridLayout(3, 0));
+        jPanelChoice.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(jPanelChoice);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -112,7 +144,7 @@ public class MergePanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroupChoiceIndi;
+    private javax.swing.ButtonGroup buttonGroupChoiceModel;
     private javax.swing.JPanel jPanelChoice;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

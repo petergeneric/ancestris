@@ -43,7 +43,7 @@ public class MergeDialogTest extends TestCase {
     }
 
     /**
-     * testMergeRecordBirth avec source existante
+     * testMergeRecordBirth avec nouvel individu
      */
     public void testMergeRecordBirthIndiNull() {
         try {
