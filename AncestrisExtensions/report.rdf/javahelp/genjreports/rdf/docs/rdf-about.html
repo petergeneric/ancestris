@@ -48,9 +48,9 @@
             The report generation undergoes four stages:
         <dl>
             <dt>1 - conversion (optional)</dt>
-            <dd>a. from GedCom to  <a href="rdf-about.html#rdf-about_5d">RDF</a></dd>
+            <dd>a. from GedCom to  <a href="rdf-about.html#rdf-about_5d">RDF / TTL / N3</a></dd>
             <dd>b. apply <a href="rdf-about.html#rdf-about_3">rules</a> (optional)</dd>
-            <dt>2 - execute the <span class="wiki_link_ext">SPARQL</span> query</dt>
+            <dt>2 - execute the SPARQL query</dt>
             <dt>3 - apply a nice <a href="rdf-about.html#rdf-about_5b">layout</a> (optional)</dt>
         </dl>
         <br>
@@ -61,7 +61,7 @@
         <a name="rdf-about_2"></a>
         <h3 class="ancestris_help_title">2 - Queries</h3>
         Each report description has one or two links to plain text files: the
-        query, and optionaly the rules. Save these files locally to use them
+        query, and optionally the rules. Save these files locally to use them
         in the option group for queries.<br>
 
         <dl>
@@ -89,7 +89,7 @@
         </p>
         <p class="justify">
             Computing all descendants and all ancestors of all individuals
-            may take minutes. The execution time grows exponentialy with the
+            may take minutes. The execution time grows exponentially with the
             number of family-child relations in your database. Therefore we
             have two set of rules, the quick rules don't generate ancestor/descendant
             relations. Without any rules, conversion is at it fastest, but
@@ -105,9 +105,9 @@
         <a name="rdf-about_4"></a>
         <h3 class="ancestris_help_title">4 - URI's</h3>
         <p class="justify">
-            When converting the GedCom to RDF, the ID's of entities should be
+            When converting the GedCom, the ID's of entities should be
             converted to URI's. When your gedcom is published somewhere with
-            a page per entity (such as INDI or FAM), it is good practice to
+            a page per entity (such as I12 for an INDI and F34 for a FAM), it is good practice to
             use these URL's as URI. For entities that don't have pages invent
             URI's with a similar construction.
         </p>
@@ -144,10 +144,7 @@
                 <param name="text" value="<html><u>XSL</u></html>">
                 <param name="textFontSize" value="12px">
                 <param name="textColor" value="blue">
-            </object>
-            <br>
-            and
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            </object> and <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
                 <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xq">
                 <param name="text" value="<html><u>xQuery</u></html>">
                 <param name="textFontSize" value="12px">
@@ -171,13 +168,15 @@
         </p>
 
         <a name="rdf-about_5d"></a>
-        <h4 class="ancestris_help_title">d) RDF</h4>
-        <p class="justify">
-            The conversion to RDF does not apply an established ontology but
-            is done in a syntactical 1:1 way. The result looks a lot like the
-            GedCom mode of Ancestris' edit view.
+        <h4 class="ancestris_help_title">d) RDF /TTL N3</h4>
+            The extension determines the stored format. 
+            For local queries it doesn't matter which one you choose.
+            RDF is the most commonly supported. TTL and N3 are almost as easy to read as 
+            GedCom mode of Ancestris' edit view. These two formats also have a lot in common
+            with the query syntax.
         </p>
         <p class="justify">
+            The conversion does not comply to an established ontology but
             Cross site queries would be easier when most use the same or
             similar ontology, but even with different ontologies it would
             be possible with some more effort.
@@ -186,7 +185,7 @@
         <a name="rdf-about_6"></a>
         <h3 class="ancestris_help_title">6 - To do</h3>
         <p class="justify">
-            Perhaps some should be moved to the
+            Some sugestions for further development. Perhaps some should be moved to the
             <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
                 <param name="content" value="http://trac.arvernes.dyndns.org/ancestris/report/1">
                 <param name="text" value="<html><u>French tickets</u>.</html>">
