@@ -170,10 +170,6 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 			println("no query");
 			ok = false;
 		}
-		if (!query.trim().toLowerCase().startsWith("select ")) {
-			println("no valid select query: " + query);
-			ok = false;
-		}
 		// TODO read messages from properties
 		return ok;
 	}
