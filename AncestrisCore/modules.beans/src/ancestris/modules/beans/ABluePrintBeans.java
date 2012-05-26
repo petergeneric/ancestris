@@ -20,7 +20,6 @@ import genj.renderer.BlueprintManager;
 import genj.renderer.BlueprintRenderer;
 import genj.renderer.Options;
 import genj.util.Registry;
-import genj.util.Resources;
 import ancestris.core.pluginservice.AncestrisPlugin;
 
 import java.awt.Color;
@@ -43,8 +42,6 @@ import javax.swing.JPanel;
 public class ABluePrintBeans extends JPanel implements GedcomListener {
     //View implements ContextProvider {
 
-    /** language resources we use */
-    /*package*/ final static Resources resources = Resources.get(ABluePrintBeans.class);
     /** a dummy blueprint */
     private Blueprint emptyBluePrint = new Blueprint("");
     /** a registry we keep */
