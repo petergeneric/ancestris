@@ -93,7 +93,7 @@ public class ReportWebsite extends Report{
 
 
     protected HashMap<String, String> sosaStradonitzNumber = null;
-    public boolean displayGenJFooter = true;
+    public boolean displayAncestrisFooter = true;
     public String placeDisplayFormat = "all";
     public String secondaryLanguage = "en";
     public boolean removeAllFiles = false;
@@ -1357,11 +1357,11 @@ public class ReportWebsite extends Report{
 
     protected void makeFooter(Element appendTo, Html html) {
         // Footer
-        if (displayGenJFooter) {
+        if (displayAncestrisFooter) {
             Element divFooter = html.div("footer");
             appendTo.appendChild(divFooter);
             Element p = html.p(translateLocal("footerText") + " ");
-            p.appendChild(html.link("http://genj.sourceforge.net/", "GenealogyJ"));
+            p.appendChild(html.link("http://www.ancestris.org", "Ancestris"));
             divFooter.appendChild(p);
         }
     }
