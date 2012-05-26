@@ -168,24 +168,19 @@
         </p>
 
         <a name="rdf-about_5d"></a>
-        <h4 class="ancestris_help_title">d) RDF /TTL N3</h4>
+        <h4 class="ancestris_help_title">d) RDF /TTL / N3</h4>
             The extension determines the stored format. 
             For local queries it doesn't matter which one you choose.
-            RDF is the most commonly supported. TTL and N3 are almost as easy to read as 
+            For cross site queries RDF is recommend as the most commonly supported.
+            TTL and N3 are almost as easy to read as 
             GedCom mode of Ancestris' edit view. These two formats also have a lot in common
             with the query syntax.
-        </p>
-        <p class="justify">
-            The conversion does not comply to an established ontology but
-            Cross site queries would be easier when most use the same or
-            similar ontology, but even with different ontologies it would
-            be possible with some more effort.
         </p>
 
         <a name="rdf-about_6"></a>
         <h3 class="ancestris_help_title">6 - To do</h3>
         <p class="justify">
-            Some sugestions for further development. Perhaps some should be moved to the
+            Some suggestions for further development. Perhaps some should be moved to the
             <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
                 <param name="content" value="http://trac.arvernes.dyndns.org/ancestris/report/1">
                 <param name="text" value="<html><u>French tickets</u>.</html>">
@@ -197,22 +192,61 @@
         <h4 class="ancestris_help_title">a) Dedicated user interface</h4>
         <p class="justify">
             This plug-in would become easier to operate with a dedicated user
-            interface.<br>The options group with the queries should be
+            interface.
+        </p>
+        <p class="justify">
+            The query options group should be
             replaced with two edit boxes that allow to read and save plain
-            text files. One box for the query, on box for the rule. A drop
-            downlist should load a pair of built-in files in the edit-boxes.
+            text files. One box for the query, on box for the rules. A drop
+            downlist loads a pair of built-in files in the edit-boxes.
+            A file chooser per box allows to load custom queries and rules.
             Two edit boxes is enough, the current approach with a query option
-            per content type is a bit overkill.<br>The output options group
+            per content type is a bit overkill.
+        </p>
+        <p class="justify">
+            The output options group
             should use file choosers and these choosers should filter on the
             suggested extensions.
         </p>
 
-        <h4 class="ancestris_help_title">b) Monitor ontologies</h4>
+        <h4 class="ancestris_help_title">b) Get more from the semantic web</h4>
         <p class="justify">
-            Monitor if ontologies for family databases emerge that could
+            The semantic web uses triples of URI's: subject predicate object.
+            An ontology (also expressed in triples) explains and defines types and meanings.
+            An ontology also implies inference. A very basic one is OWL. 
+            At the moment applying full-fledged inference is slow. Common practice
+            is to apply just the rules you actually need.
+            This is a very brief introduction but it should have the most important
+            pointers to start browsing the web about the subject.
+        </p>
+        <p class="justify">
+            The conversion does not comply to an established ontology.
+            Cross site queries and inference would be easier when using
+            something like FOAF or a similar ontology. 
+            The chosen format however was quick and easy to implement
+            and is easy to recognise by GedCom tigers. Flexibility of the 
+            semantic web can deal which such an unorthodox approach.
+            It might be wise to monitor for ontologies that might emerge and could
             replace the quick-and-dirty approach.
         </p>
-
+        <p class="justify">
+            The power of the semantic web could become available when 
+            the plugin would allow to read more semantic data than just the
+            converted GedCom.
+            For example allow users to selectively download and collect whatever they want
+            into a directory. DbPedia could be an interesting almanac. 
+            Some examples example <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://dbpedia.org/page/Berlin/">
+                <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
+                <param name="textFontSize" value="medium">
+                <param name="textColor" value="blue">
+            </object> or Amsterdam on <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://www.geonames.org/2759794/amsterdam.html">
+                <param name="text" value="<html><u>http://sws.geonames.org/2759794/about.rdf</u></html>">
+                <param name="textFontSize" value="medium">
+                <param name="textColor" value="blue">
+            </object>
+        </p>
         <br>
         <a href="rdf-about.html#_Top_">Top</a>
         <br>
