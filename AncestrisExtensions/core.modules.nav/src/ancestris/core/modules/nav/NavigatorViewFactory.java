@@ -19,11 +19,10 @@
  */
 package ancestris.core.modules.nav;
 
-import ancestris.core.modules.nav.NavigatorView;
-import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import genj.view.View;
 import genj.view.ViewFactory;
+import org.openide.util.NbBundle;
 
 
 /**
@@ -36,6 +35,7 @@ public class NavigatorViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#createView(String, Gedcom, Registry)
    */
+    @Override
   public View createView() {
     return new NavigatorView();
   }
@@ -43,6 +43,7 @@ public class NavigatorViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getImage()
    */
+    @Override
   public ImageIcon getImage() {
     return img;
   }
@@ -50,8 +51,9 @@ public class NavigatorViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getName(boolean)
    */
+    @Override
   public String getTitle() {
-    return Resources.get(this).getString("title");
+    return NbBundle.getMessage(NavigatorViewFactory.class,"title");
   }
 
 } //NavigatorViewFactory

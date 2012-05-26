@@ -7,7 +7,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.ReportView;
 import genj.util.Registry;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
@@ -46,6 +45,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -71,8 +71,6 @@ public class PreviewView extends JPanel {
             imgGui = new ImageIcon(ReportView.class, "ReportGui");
     /** gedcom this view is for */
     private Gedcom gedcom;
-    /** resources */
-    static final Resources RESOURCES = Resources.get(ReportView.class);
     /** our content */
     //private Content content;
     /** our current zoom */
@@ -344,7 +342,7 @@ public class PreviewView extends JPanel {
 
         protected ActionShow() {
             setImage(imgConsole);
-            setTip(RESOURCES, "report.output");
+            setTip(NbBundle.getMessage(ReportView.class, "report.output"));
             setEnabled(false);
         }
 
