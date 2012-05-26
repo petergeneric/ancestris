@@ -33,6 +33,11 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
+        <folder name="System">
+            <file name="org-openide-actions-PageSetupAction.instance_hidden"/>
+            <file name="org-openide-actions-PrintAction.instance_hidden"/>
+            <file name="org-openide-actions-SaveAction.instance_hidden"/>
+        </folder>
         <folder name="Tools">
             <file name="org-ancestris-trancestris-application-actions-SearchAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SearchAction"/>
