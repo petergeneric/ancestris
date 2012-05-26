@@ -28,7 +28,6 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.util.GridBagHelper;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
@@ -52,6 +51,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import org.openide.util.NbBundle;
 
 import spin.Spin;
 
@@ -60,8 +60,6 @@ import spin.Spin;
  */
 public class NavigatorView extends View {
   
-  private static Resources resources = Resources.get(NavigatorView.class);
-
   private final static String 
     FATHER   = "father",
     MOTHER   = "mother",
@@ -290,7 +288,7 @@ public class NavigatorView extends View {
     result.setFocusable(false);
     result.setEnabled(false);
 //    result.setToolTipText(new MnemonicAndText(resources.getString(key)).getText("Ctrl-"));
-    result.setToolTipText(resources.getString("tip."+key));
+    result.setToolTipText(NbBundle.getMessage(NavigatorView.class, "tip."+key));
 
     // remember    
     key2popup.put(key, result);
@@ -304,7 +302,7 @@ public class NavigatorView extends View {
    */
   private JPanel createPopupPanel() {    
     
-    final TitledBorder border = BorderFactory.createTitledBorder(resources.getString("nav.navigate.title"));
+    final TitledBorder border = BorderFactory.createTitledBorder(NbBundle.getMessage(NavigatorView.class, "nav.navigate.title"));
     final JPanel result = new PopupPanel();
     result.setBorder(border);
     GridBagHelper gh = new GridBagHelper(result);

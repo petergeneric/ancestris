@@ -13,14 +13,13 @@
 package ancestris.gedcom.privacy.standard;
 
 import genj.util.Registry;
-import genj.util.Resources;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author daniel
  */
 public class Options {
-  private final static Resources RESOURCES = Resources.get(Options.class);
       private static Options instance = null;
 
       public static Options getInstance(){
@@ -96,7 +95,7 @@ public class Options {
     }
 
     public String getPrivateMask() {
-        return getPreferences().get(PRIVATE_MASK,RESOURCES.getString(PRIVATE_MASK));
+        return getPreferences().get(PRIVATE_MASK,NbBundle.getMessage(Options.class,PRIVATE_MASK));
     }
 
 
