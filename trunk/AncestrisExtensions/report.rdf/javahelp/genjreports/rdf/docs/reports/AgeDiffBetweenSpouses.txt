@@ -1,10 +1,21 @@
+###############################################
+# Large age difference between spouses
+#
+# executes in any context
+###############################################
 SELECT
-  (str(?idHusb ) as ?idHusband)
-  (    ?yearHusb as ?birthHusband)
-  (str(?idWife ) as ?idWife)
-  (    ?yearWife as ?birthWife)
+  (str(?idHusb ) as ?id_husband)
+  (str(?idWife ) as ?id_wife)
+  (    ?yearHusb as ?birth_husband)
+  (    ?yearWife as ?birth_wife)
   ?diff
 {
+  ### choose what you call large 
+
+  LET (?minDiff := 20)
+
+  ### select required data
+
   ?fam p:HUSB ?husb; 
        p:WIFE ?wife.
   ?husb p:id ?idHusb; 
@@ -12,10 +23,17 @@ SELECT
   ?wife p:id ?idWife;  
         p:BIRT [p:DATE [rdfs:label ?dateWife]].
 
+  ### get the years out of the dates
+
   LET (?yearHusb := fn:substring(str(?dateHusb),0,4))
   LET (?yearWife := fn:substring(str(?dateWife),0,4))
+
+  ### compute the difference
+
   LET (?diff := xsd:int(?yearHusb) - xsd:int(?yearWife))
 
-  FILTER (?diff > 20 || ?diff < -20)
+  ### check against chosen threshold
+
+  FILTER (?diff > ?minDiff || ?diff < -?minDiff)
 }
 ORDER BY ?diff

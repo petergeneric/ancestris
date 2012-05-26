@@ -1,4 +1,13 @@
-SELECT ?place count(?eventType) afn:localname(?eventType)
- {?entity ?e [a ?eventType; p:PLAC [rdfs:label ?place]]}
+###############################################
+# Count events per place
+#
+# executes in any context
+###############################################
+SELECT
+  ?place count(?eventType) 
+  afn:localname(?eventType)
+{
+  ?entity ?e [a ?eventType; p:PLAC [rdfs:label ?place]]
+}
  GROUP BY ?place ?eventType
  ORDER BY ?place ?eventType
