@@ -6,23 +6,22 @@ package ancestris.app;
 
 import ancestris.view.Images;
 import genj.app.Workbench;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
+import org.openide.util.NbBundle;
 
 public final class ActionNew extends Action2 {
-
-    private Resources RES = Resources.get(ActionNew.class);
 
     /** constructor */
     public ActionNew() {
 //      setAccelerator(ACC_NEW);
-        setText(RES, "CTL_ActionNew");
-        setTip(RES, "HINT_ActionNew");
+        setText(NbBundle.getMessage(ActionNew.class,"CTL_ActionNew"));
+        setTip(NbBundle.getMessage(ActionNew.class,"HINT_ActionNew"));
         setImage(Images.imgNew);
     }
 
     /** execute callback */
+    @Override
     public void actionPerformed(ActionEvent event) {
         Workbench.getInstance().newGedcom();
     }

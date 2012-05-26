@@ -7,9 +7,9 @@ package ancestris.app;
 
 import genj.app.Workbench;
 import genj.gedcom.Gedcom;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
+import org.openide.util.NbBundle;
 
 
   /**
@@ -18,14 +18,13 @@ import java.awt.event.ActionEvent;
   public class ActionSaveAs extends Action2 {
     /** gedcom */
     protected Gedcom gedcomBeingSaved;
-    private Resources RES = Resources.get(ActionSaveAs.class);
 
     /**
      * Constructor for saving gedcom
      */
     public ActionSaveAs() {
-        setText(RES.getString("CTL_ActionSaveAs"));
-     setTip(RES, "HINT_ActionSave");
+        setText(NbBundle.getMessage(ActionSaveAs.class,"CTL_ActionSaveAs"));
+     setTip(NbBundle.getMessage(ActionSaveAs.class,"HINT_ActionSave"));
       // setup
       //setImage(Images.imgSave);
     }

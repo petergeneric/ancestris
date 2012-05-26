@@ -7,9 +7,9 @@ package ancestris.app;
 import ancestris.view.Images;
 import genj.app.Workbench;
 import genj.gedcom.Context;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
+import org.openide.util.NbBundle;
 
 /**
  * Action - Save
@@ -19,11 +19,10 @@ public class ActionSave extends Action2 {
 
     /** gedcom */
     private Context contextBeingSaved = null;
-    private Resources RES = Resources.get(ActionSave.class);
 
     public ActionSave() {
-        setText(RES.getString("CTL_ActionSave"));
-        setTip(RES, "HINT_ActionSave");
+        setText(NbBundle.getMessage(ActionSave.class,"CTL_ActionSave"));
+        setTip(NbBundle.getMessage(ActionSave.class,"HINT_ActionSave"));
         // setup
         setImage(Images.imgSave);
     }

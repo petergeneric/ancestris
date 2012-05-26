@@ -6,21 +6,20 @@ package ancestris.app;
 
 import ancestris.view.Images;
 import genj.app.Workbench;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.net.URLDecoder;
+import org.openide.util.NbBundle;
 
 public class ActionOpen extends Action2 {
 
-    private Resources RES = Resources.get(ActionOpen.class);
     private URL url = null;;
 
     /** constructor - good for button or menu item */
     public ActionOpen() {
-        setTip(RES, "HINT_ActionOpen");
-        setText(RES, "CTL_ActionOpen");
+        setTip(NbBundle.getMessage(ActionOpen.class,"HINT_ActionOpen"));
+        setText(NbBundle.getMessage(ActionOpen.class,"CTL_ActionOpen"));
         setImage(Images.imgOpen);
     }
 
@@ -28,8 +27,8 @@ public class ActionOpen extends Action2 {
     @SuppressWarnings("deprecation")
     public ActionOpen(URL url) {
         this.url = url;
-        setTip(RES.getString("HINT_ActionOpen_file",URLDecoder.decode(url.getFile())));
-        setText(RES.getString("CTL_ActionOpen_file",URLDecoder.decode(url.getFile())));
+        setTip(NbBundle.getMessage(ActionOpen.class,"HINT_ActionOpen_file",URLDecoder.decode(url.getFile())));
+        setText(NbBundle.getMessage(ActionOpen.class,"CTL_ActionOpen_file",URLDecoder.decode(url.getFile())));
         setImage(Images.imgOpen);
     }
 
