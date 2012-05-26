@@ -1,3 +1,14 @@
-query.gedcom.2 = SELECT count(?indi) ?first
- {?indi a t:INDI ; p:NAME [p:first ?first] . }
- GROUP BY ?first ORDER BY ?first
+###############################################
+# Count first names
+#
+# query is broken
+###############################################
+SELECT
+ count(?indi)
+ ?first
+{
+ ?indi a t:INDI ; 
+       p:NAME [p:first ?first] . 
+}
+GROUP BY ?first 
+ORDER BY ?first
