@@ -306,17 +306,11 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 	private String getQuery(final String queryPart, final String resourceKeyBase)
 			throws FileNotFoundException, IOException {
 		final File file = new File(queryPart);
-		if (file.isFile()) {
-			final byte[] buffer = new byte[(int) file.length()];
-			new RandomAccessFile(queryPart, "r").readFully(buffer);
-			return new String(buffer, "UTF-8");
-		} else if (queryPart.trim().equals("")) {
-			return getResources().getString(resourceKeyBase + ".1");
-		} else if (queryPart.trim().matches("[0-9]*")) {
-			return getResources().getString(
-					resourceKeyBase + "." + queryPart.trim());
-		}
-		return queryPart;
+		final byte[] buffer = new byte[(int) file.length()];
+		RandomAccessFile f = new RandomAccessFile(queryPart, "r");
+		f.readFully(buffer);
+		f.close();
+		return new String(buffer, "UTF-8");
 	}
 
 	public static StringBuffer assemblePrefixes(final Model model)
