@@ -31,7 +31,6 @@ import genj.option.OptionsWidget;
 import genj.option.PropertyOption;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
-import genj.util.Resources;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
@@ -59,7 +58,6 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileFilter;
-import org.openide.util.NbBundle;
 
 
 /**

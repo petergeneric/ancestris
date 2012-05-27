@@ -1,9 +1,9 @@
 package genjreports.gedart;
 
+import genj.report.Resources;
 import java.io.InputStream;
 import java.util.Locale;
 
-import genj.util.Resources;
 
 public class GedartResources extends Resources {
 	  /** language we're trying to use */
