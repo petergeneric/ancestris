@@ -17,8 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package genj.util;
+package genj.report;
 
+import genj.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
