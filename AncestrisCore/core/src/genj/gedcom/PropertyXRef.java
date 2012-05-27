@@ -226,10 +226,11 @@ public abstract class PropertyXRef extends Property {
       return null;
     // a specialized message?
     String key = "prop."+getTag().toLowerCase()+".veto";
-    if (resources.contains(key))
-      return resources.getString(key);
+    String result = resources.getString(key,false);
     // fallback to default
-    return resources.getString("prop.xref.veto");
+    if (result == null)
+        result = resources.getString("prop.xref.veto");
+    return result;
   }
 
   /**
