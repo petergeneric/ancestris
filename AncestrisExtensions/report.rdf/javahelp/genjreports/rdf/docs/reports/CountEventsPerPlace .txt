@@ -1,7 +1,9 @@
 ###############################################
+#
 # Count events per place
 #
 # executes in any context
+#
 ###############################################
 SELECT
   ?place count(?eventType) 
