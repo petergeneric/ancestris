@@ -35,7 +35,7 @@ import genj.gedcom.Submitter;
 import genj.gedcom.MultiLineProperty.Iterator;
 import genj.option.Multiline;
 import genj.report.Report;
-import genj.util.Resources;
+import genj.report.Resources;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
