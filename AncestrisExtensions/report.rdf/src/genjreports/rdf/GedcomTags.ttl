@@ -8,15 +8,15 @@
 @prefix rel:     <http://purl.org/vocab/relationship/> .
 
 # changing these prefixes requires to change the converter
-@prefix t: <http://genj.sourceforge.net/rdf/gedcom/type/>.
-@prefix p: <http://genj.sourceforge.net/rdf/gedcom/predicate/>.
-@prefix r: <http://genj.sourceforge.net/rdf/gedcom/rule/>.
+@prefix t: <http://www.ancestris.org/rdf/gedcom/type/>.
+@prefix p: <http://www.ancestris.org/rdf/gedcom/predicate/>.
+@prefix r: <http://www.ancestris.org/rdf/gedcom/rule/>.
 
-<http://genj.sourceforge.net/rdf/gedcom/> a owl:Ontology ;
+<http://www.ancestris.org/rdf/gedcom/> a owl:Ontology ;
       rdfs:title "RDF representation of GEDCOM 5.5 (Genealogical Data Communication)" ;
       owl:versionInfo "under development";
       rdfs:comment """
-  Describes the classes an properties resulting from a GEDCOM converted on a 1:1 basis to RDF.
+  Describes the classes and properties resulting from a GEDCOM converted on a 1:1 basis to RDF.
   The GEDCOM tags are used as property names and class names. Without the usual camelCase conventions,
   different name spaces are used to distinguish between properties and classes.
 
