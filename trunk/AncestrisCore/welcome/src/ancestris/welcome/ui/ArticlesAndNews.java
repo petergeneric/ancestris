@@ -94,8 +94,8 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
 //    }
 //
     protected JComponent buildBottomContent() {
-        WebLink news = new WebLink("AllNews", true); // NOI18N
-        BundleSupport.setAccessibilityProperties( news, "AllNews" ); //NOI18N
+        WebLink news = new WebLink("ForumLists", true); // NOI18N
+        BundleSupport.setAccessibilityProperties( news, "ForumLists" ); //NOI18N
         
         WebLink articles = new WebLink( "AllArticles", true); // NOI18N
         BundleSupport.setAccessibilityProperties( articles, "AllArticles" ); //NOI18N
