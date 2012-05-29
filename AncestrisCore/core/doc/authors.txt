@@ -36,10 +36,10 @@ Les contributeurs?
     énergie incroyable. Il a commencé à nous faire des plugins, puis 
     s'est attelé à Trancestris, éditeur pour la traduction des fichiers 
     de ressources d'Ancestris, et ce n'est pas fini.
-    Yann L'Henoret, etc. etc. Si votre nom manque ici, n'hésitez pas 
-    à me le dire pour qu'il soit rajouté. Ce n'est pas une volonté de 
-    ne pas vous mettre, c'est simplement le grand age qui joue sur mes 
-    neurones.
+    Yann L'Henoret, Michel Pujol, etc. etc. Si votre nom manque ici,
+    n'hésitez pas à me le dire pour qu'il soit rajouté. Ce n'est pas
+    une volonté de ne pas vous mettre, c'est simplement le grand age
+    qui joue sur mes neurones.
     
 Les traducteurs?
     Paolo Odone pour la traduction de tout le wiki italien et celle 
