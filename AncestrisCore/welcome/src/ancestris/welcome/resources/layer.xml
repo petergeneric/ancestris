@@ -82,8 +82,8 @@ made subject to such option by the copyright holder.
                 <attr name="position" intvalue="100"/>
             </file>
 
-            <file name="whatsnew.url">
-                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/GettingStartedLinks/whatsnew.url.target"/>
+            <file name="usersmap.url">
+                <attr name="url" bundlevalue="ancestris.welcome.resources.Bundle#WelcomePage/GettingStartedLinks/usersmap.url.target"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="300"/>
             </file>
