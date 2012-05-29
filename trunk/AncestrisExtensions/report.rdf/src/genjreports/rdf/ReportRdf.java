@@ -42,13 +42,6 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 
 	public static class Queries {
 		public String qGedcom = "";
-		public String qFam = "";
-		public String qIndi = "";
-		public String qMedia = "";
-		public String qNote = "";
-		public String qRepository = "";
-		public String qSource = "";
-		public String qSubmitter = "";
 		public String qRules = "";
 	}
 
@@ -104,7 +97,7 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 
 	public void start(final Gedcom gedcom) throws IOException {
 
-		final String query = getQuery(queries.qGedcom, "query.gedcom");
+		final String query = getQuery(queries.qGedcom);
 		if (optionsOk(query))
 			run("", getModel(gedcom), query);
 	}
@@ -113,13 +106,7 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 			SecurityException, NoSuchFieldException, IllegalArgumentException,
 			IllegalAccessException {
 
-		// use reflection to get the query option for the actual type of entity
-		final String name = entity.getClass().getSimpleName();
-		final String resourceKeyBase = "query." + name.toLowerCase();
-		final String value = (String) queries.getClass().getField("q" + name)
-				.get(queries);
-
-		final String query = getQuery(value, resourceKeyBase);
+		final String query = getQuery(queries.qGedcom);
 		if (optionsOk(query))
 			run(entity.getId(), getModel(entity.getGedcom()), String.format(
 					query, entity.getId()));
@@ -205,8 +192,7 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 		progress("converting");
 		final Model rawModel = util.toRdf(gedcom, uriFormats.getURIs());
 		progress("applying rules");
-		final InfModel model = util.getInfModel(getQuery(queries.qRules,
-				"query.rules"));
+		final InfModel model = util.getInfModel(getQuery(queries.qRules));
 		progress("rules completed");
 		return model;
 	}
@@ -303,7 +289,7 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 		return fullQuery.toString();
 	}
 
-	private String getQuery(final String queryPart, final String resourceKeyBase)
+	private String getQuery(final String queryPart)
 			throws FileNotFoundException, IOException {
 		final File file = new File(queryPart);
 		final byte[] buffer = new byte[(int) file.length()];
