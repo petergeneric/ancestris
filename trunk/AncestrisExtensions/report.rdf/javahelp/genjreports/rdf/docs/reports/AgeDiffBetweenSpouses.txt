@@ -4,6 +4,11 @@
 #
 # executes in any context
 #
+# Variation hint:
+# turn into a statistical report
+# by dropping or inverting the filter
+# and select just "avg(?diff)".
+#
 ###############################################
 SELECT
   (str(?idHusb ) as ?id_husband)

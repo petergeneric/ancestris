@@ -1,0 +1,82 @@
+###############################################
+#
+# Multi media objects for ancestors
+# an optional filter turns the list into a check for saved certificates.
+#
+# replace the value for idOfRootIndi
+# or launch from a INDI context
+#
+# _SOSA properties must have been generated
+#
+###############################################
+SELECT 
+  (str(?id) as ?ID)
+  ?sosa
+  ?name 
+  ?event 
+  ?file
+{
+  ### shared by all the union parts
+
+  ?a p:id    ?id; 
+     p:NAME  [rdfs:label ?name];
+     p:_SOSA [rdfs:label ?sosa].   
+
+
+  ### objects at top level and at certain event types
+  {
+    ?a p:OBJE ?o. 
+    ?o p:FILE [rdfs:label ?file].
+    LET (?event := '-')
+  } UNION {
+    ?a p:BIRT ?e.
+    OPTIONAL {
+      ?e p:OBJE ?o. 
+      ?o p:FILE [rdfs:label ?file].
+    }
+    LET (?event := 'birth')
+  } UNION {
+    ?a p:DEAT ?e.
+    OPTIONAL {
+      ?e p:OBJE ?o. 
+      ?o p:FILE [rdfs:label ?file].
+    }
+    LET (?event := 'death')
+  } UNION {
+    ?a p:FAMS ?f.
+    OPTIONAL {
+      ?f p:OBJE ?o. 
+      ?o p:FILE [rdfs:label ?file].
+    }
+    LET (?event := 'family')
+  } UNION {
+    ?a p:FAMS ?f.
+    ?f p:MARR ?m. 
+    OPTIONAL {
+      ?m p:OBJE ?o. 
+      ?o p:FILE [rdfs:label ?file].
+    }
+    LET (?event := 'mariage')
+  }
+
+  # allmost proper sort up to 3 digits, but records with more digits get eliminated 
+  # LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,3)))
+
+  # once assigned the value does not get overwritten?
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,7)))
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,6)))
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,5)))
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,4)))
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,3)))
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,2)))
+#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,1)))
+
+  ### prevent duplicates in case GIVN and SURN are stored separately
+
+  FILTER( fn:contains(?name,'/')  )
+
+  ### OPTIONAL: are events backed by a saved certificate?
+
+  #FILTER( !bound(?file) || fn:contains(?file,'/familysearch/') )
+}
+ORDER BY ?sosaNr ?sosa ?event
