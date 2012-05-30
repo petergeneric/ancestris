@@ -94,16 +94,13 @@
         <p class="justify">
             Computing all descendants and all ancestors of all individuals
             may take minutes. The execution time grows exponentially with the
-            number of family-child relations in your database. Therefore we
+            size of your database. Therefore we
             have two set of rules, the quick rules don't generate ancestor/descendant
             relations. Without any rules, conversion is at it fastest, but
             only few queries will execute, with the slow rules any query
-            should execute.
-        </p>
-        <p class="justify">
-            You may copy the desired set of rules directly into the
-            corresponding option, or save a set of rules in a file
-            and specify the file name in the option.
+            should execute. An alternative for the slow rules is rewrite the queries 
+            and make use of custom tags like _SOSA and _TREETOP
+            that can be generated with other tools.            
         </p>
 
         <a name="rdf-about_4"></a>
@@ -209,6 +206,9 @@
         <a name="rdf-about_6"></a>
         <h3 class="ancestris_help_title">6 - To do</h3>
         <p class="justify">
+            This plugin is delivered as a proof of concept. 
+            Though it is a report framework on its own, it is squeezed into 
+            the user interface of the existing report framework.
             Some suggestions for further development.
         </p>
 
@@ -219,12 +219,13 @@
         </p>
         <p class="justify">
             The query options group should be
-            replaced with two edit boxes that allow to read and save plain
-            text files. One box for the query, on box for the rules. A drop
-            downlist loads a pair of built-in files in the edit-boxes.
-            A file chooser per box allows to load custom queries and rules.
-            Two edit boxes is enough, the current approach with a query option
-            per content type is a bit overkill.
+            replaced with edit boxes that allow to read and save plain
+            text files. A single drop
+            downlist can load a pair of built-in files in the edit-boxes.
+            This list replaces the above overview of examples.
+            The optional prefixes of the filenames indicate the required 
+            context (FAM/INDI) and rules (q/s for quick/slow).
+            A file chooser per box can load and save custom queries and rules.
         </p>
         <p class="justify">
             The output options group
@@ -236,7 +237,7 @@
         <p class="justify">
             The semantic web uses triples of URI's: subject predicate object.
             An ontology (also expressed in triples) explains and defines types and meanings.
-            An ontology also implies inference. A very basic one is OWL. 
+            An ontology also implies inference. The mother of all ontologies is OWL. 
             At the moment applying full-fledged inference is slow. Common practice
             is to apply just the rules you actually need.
             This is a very brief introduction but it should have the most important
@@ -253,12 +254,14 @@
             replace the quick-and-dirty approach.
         </p>
         <p class="justify">
-            The power of the semantic web could become available when 
+            <i>The power of the semantic web could become available when 
             the plugin would allow to read more semantic data than just the
-            converted GedCom.
+            converted GedCom.</i>
             For example allow users to selectively download and collect whatever they want
-            into a directory. <br/> 
-            DbPedia could be an interesting almanac, an example:
+            into a directory and read those files. A wizard could help with the selection.<br/> 
+            DbPedia could be an interesting almanac, 
+            for example to find famous contemporary local peaople,
+            an example of available data:
             <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
                 <param name="content" value="http://dbpedia.org/page/Berlin/">
                 <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
@@ -272,6 +275,22 @@
                 <param name="textFontSize" value="medium">
                 <param name="textColor" value="blue">
             </object>
+        </p>
+
+        <h4 class="ancestris_help_title">c) Disconnect conversion and reporting</h4>
+        <p class="justify">
+            If low priority background process are possible
+            it might be an idea to perform conversion after saving the gedcom file.
+            Performance of interactive functions should not suffer
+            from such a background process.
+            Escpecially because the slow rules may take minutes.
+            Report generation should check if the last changes are saved
+            and the conversion is completed.
+        </p>
+        <p class="justify">
+            It should also be possible to keep the rdf model synchronised.
+            That would mean deleting all the tripples related to 
+            the changed entity or property and insert them all again.
         </p>
 
         <a name="rdf-about_7"></a>
