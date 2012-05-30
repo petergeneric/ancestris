@@ -33,13 +33,13 @@
             GedCom converted into an RDF file. When published the RDF file
             could be used for cross-site queries.       
         <ol>
-            <li>- <a href="rdf-about.html#rdf-about_1">Under the hood</a></li>
-            <li>- <a href="rdf-about.html#rdf-about_2">Queries</a></li>
-            <li>- <a href="rdf-about.html#rdf-about_3">Rules</a></li>
-            <li>- <a href="rdf-about.html#rdf-about_4">URI's</a></li>
-            <li>- <a href="rdf-about.html#rdf-about_5">Notes</a></li>
-            <li>- <a href="rdf-about.html#rdf-about_6">To do</a></li>
-            <li>- <a href="rdf-about.html#rdf-about_7">Known bugs</a></li>
+            <li> <a href="rdf-about.html#rdf-about_1">Under the hood</a></li>
+            <li> <a href="rdf-about.html#rdf-about_2">Queries</a></li>
+            <li> <a href="rdf-about.html#rdf-about_3">Rules</a></li>
+            <li> <a href="rdf-about.html#rdf-about_4">URI's</a></li>
+            <li> <a href="rdf-about.html#rdf-about_5">Notes</a></li>
+            <li> <a href="rdf-about.html#rdf-about_6">To do</a></li>
+            <li> <a href="rdf-about.html#rdf-about_7">Known bugs</a></li>
         </ol>
         </p>
 
@@ -48,11 +48,11 @@
         <p class="justify">
             The report generation undergoes four stages:
         <dl>
-            <dt>1 - conversion (optional)</dt>
+            <dt>1. conversion (optional)</dt>
             <dd>a. from GedCom to  <a href="rdf-about.html#rdf-about_5d">RDF / TTL / N3</a></dd>
             <dd>b. apply <a href="rdf-about.html#rdf-about_3">rules</a> (optional)</dd>
-            <dt>2 - execute the SPARQL query</dt>
-            <dt>3 - apply a nice <a href="rdf-about.html#rdf-about_5b">layout</a> (optional)</dt>
+            <dt>2. execute the SPARQL query</dt>
+            <dt>3. apply a nice <a href="rdf-about.html#rdf-about_5b">layout</a> (optional)</dt>
         </dl>
         <br>
         <i><b>(1)</b> Reload the previous conversion result if the GedCom did not
@@ -66,11 +66,12 @@
         in the option group for queries.
         See also the notes on 
         <a href="rdf-about.html#rdf-about_5c">Localize, customize and develop queries</a>
+        and comment lines withint the query files.
         <br>
 
         <dl>
             <dt>general reports (no entity as <a href="rdf-about.html#rdf-about_5a">context</a> required)</dt>
-                 <dd>* <a href="./reports/AgeDiffBetweenSpouses.txt">AgeDiffBetweenSpouses.txt</a> - Large age difference between husband and wife. Variation hint: turn into a statistical report by dropping or inverting the filter and select just "avg(?diff)".</dd>
+                 <dd>* <a href="./reports/AgeDiffBetweenSpouses.txt">AgeDiffBetweenSpouses.txt</a> - Large age difference between husband and wife.</dd>
                  <dd>* <a href="./reports/CountFirstNames.txt">CountFirstNames.txt</a> - Count names.</dd>
                  <dd>* <a href="./reports/CountEventsPerPlace.txt">CountEventsPerPlace.txt</a> - Count events per place</dd>
             <dt>Reports based on an individual</dt>
@@ -80,7 +81,7 @@
             <dt>Reports based on a family</dt>
                  <dd>* <a href="./reports/INDI-PatchworkFamily.txt">PatchworkFamily.txt</a> - Composition of a patchwork family.</dd>
             <dt>Reports that require generated _SOSA properties</dt>
-                 <dd>* <a href="./reports/SOSA-MultiMedia.txt">SOSA-MultiMedia.txt</a> - Checklists for multimedia objects. See comment lines for variations.</dd>
+                 <dd>* <a href="./reports/SOSA-MultiMedia.txt">SOSA-MultiMedia.txt</a> - Checklists for multimedia objects.</dd>
         </dl>
 
 

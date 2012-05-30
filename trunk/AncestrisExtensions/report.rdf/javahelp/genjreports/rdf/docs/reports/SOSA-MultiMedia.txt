@@ -3,9 +3,6 @@
 # Multi media objects for ancestors
 # an optional filter turns the list into a check for saved certificates.
 #
-# replace the value for idOfRootIndi
-# or launch from a INDI context
-#
 # _SOSA properties must have been generated
 #
 ###############################################
