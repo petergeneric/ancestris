@@ -402,16 +402,20 @@ public class ResourceFile {
 
         }
 
-        while (++index < getLineCount()) {
-            String value = "";
-            if (fromLocale == true) {
-                value = fromLanguage.getLine(content.get(index)).getValue();
-            } else {
-                value = toLanguage.getLine(content.get(index)).getValue();
+        ResourceStructure searchBundle;
+        if (fromLocale == true) {
+            searchBundle = fromLanguage;
+        } else {
+            searchBundle = toLanguage;
+        }
 
-            }
-            if (value != null && p.matcher(value).find() == true) {
-                return index;
+        while (++index < getLineCount()) {
+            ResourceLine line = searchBundle.getLine(content.get(index));
+            if (line != null) {
+                String value = line.getValue();
+                if (value != null && p.matcher(value).find() == true) {
+                    return index;
+                }
             }
         }
         return -1;
@@ -425,17 +429,21 @@ public class ResourceFile {
             p = Pattern.compile(expression);
 
         }
+        
+        ResourceStructure searchBundle;
+        if (fromLocale == true) {
+            searchBundle = fromLanguage;
+        } else {
+            searchBundle = toLanguage;
+        }
 
         while (--index >= 0) {
-            String value = "";
-            if (fromLocale == true) {
-                value = fromLanguage.getLine(content.get(index)).getValue();
-            } else {
-                value = toLanguage.getLine(content.get(index)).getValue();
-
-            }
-            if (value != null && p.matcher(value).find() == true) {
-                return index;
+            ResourceLine line = searchBundle.getLine(content.get(index));
+            if (line != null) {
+                String value = line.getValue();
+                if (value != null && p.matcher(value).find() == true) {
+                    return index;
+                }
             }
         }
         return -1;
@@ -451,7 +459,11 @@ public class ResourceFile {
         }
         Iterator<ResourceLine> iterator = null;
         if (fromLocale == true) {
-            iterator = fromLanguage.iterator();
+            if (fromLanguage != null) {
+                iterator = fromLanguage.iterator();
+            } else {
+                return null;
+            }
         } else {
             iterator = toLanguage.iterator();
         }
