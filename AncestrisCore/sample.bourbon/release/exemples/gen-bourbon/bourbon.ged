@@ -598,7 +598,7 @@
 1 TITL Site Internet Archives Départementales des Yvelines
 1 TEXT
 1 REPO @R1@
-1 REPO @R2@
+1 REPO @R4@
 1 CHAN
 2 DATE 6 SEP 2011
 3 TIME 16:50:22
@@ -618,6 +618,12 @@
 1 CHAN
 2 DATE 6 SEP 2011
 3 TIME 18:12:07
+0 @R4@ REPO
+1 NAME Site Internet des Archives Départementales des Yvelines
+1 ADDR http://archives.yvelines.fr/decouvrir/archives_en_ligne/index.php
+1 CHAN
+2 DATE 6 SEP 2011
+3 TIME 18:12:07
 0 @S2@ SOUR
 1 AUTH Archives Départementales de Seine-Saint-Denis
 1 TITL Site Internet Archives Départementales de Seine-Saint-Denis
@@ -629,7 +635,7 @@
 3 TIME 16:50:48
 0 @S3@ SOUR
 1 AUTH Site Internet Archives Départementales Yvelines
-1 TITL Registre Paroissaux de Versailles
+1 TITL Registres Paroissiaux de Versailles
 1 TEXT
 1 REPO @R1@
 1 CHAN
@@ -770,12 +776,8 @@
 2 DATE 20 SEP 2011
 3 TIME 16:28:07
 0 @R3@ REPO
-1 NAME WIKIPEDIA
+1 NAME Wikipedia
 1 ADDR http://fr.wikipedia.org
-2 CITY
-2 POST
-2 STAE
-2 CTRY
 1 CHAN
 2 DATE 20 SEP 2011
 3 TIME 16:57:56
