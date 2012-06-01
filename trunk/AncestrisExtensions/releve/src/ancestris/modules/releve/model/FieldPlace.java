@@ -13,11 +13,16 @@ public class FieldPlace extends Field {
     private String countryName = "";
 
     @Override
+    public FieldPlace clone() {
+		return (FieldPlace) super.clone();
+  	}
+
+    @Override
     public String getValue() {
         if (isEmpty()) {
             return "";
         } else {
-            return cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName;
+            return cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName+",";
         }        
     }
 

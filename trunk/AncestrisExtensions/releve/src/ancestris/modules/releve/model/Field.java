@@ -1,10 +1,12 @@
 package ancestris.modules.releve.model;
 
+import org.openide.util.Exceptions;
+
 /**
  *
  * @author Michel
  */
-public abstract class Field implements Comparable<Field> {
+public abstract class Field implements Comparable<Field> , Cloneable{
 
     
 
@@ -48,6 +50,18 @@ public abstract class Field implements Comparable<Field> {
             return false;
         }
     }
+
+    @Override
+    public Field clone() {
+	    Field object = null;
+        try {
+            object = (Field) super.clone();
+        } catch (CloneNotSupportedException cnse) {
+            cnse.printStackTrace(System.err);
+        }
+		// je renvoie le clone
+		return object;
+  	}
 
     public static enum FieldType {
         title,

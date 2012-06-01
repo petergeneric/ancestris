@@ -56,7 +56,7 @@ public class ReleveQuickSearch implements SearchProvider {
                 Field field = record.getField(fieldType);
                 if (field != null && !field.isEmpty() ) {
                     if (field.toString().toLowerCase().contains(request.getText().toLowerCase())) {
-                        if (!response.addResult(createAction(tc, record,fieldType), record.getIndiFirstName().toString() + " indi " + record.getEventDateField().getStart().getYear())) {
+                        if (!response.addResult(createAction(tc, record,fieldType), record.getIndiFirstName().toString() + " indi " + record.getEventDateProperty().getStart().getYear())) {
                             return;
                         }
                     }

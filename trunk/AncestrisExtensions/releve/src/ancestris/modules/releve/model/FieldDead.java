@@ -45,5 +45,9 @@ public class FieldDead extends Field {
         return false;
     }
 
+    @Override
+    public FieldDead clone() {
+		return (FieldDead) super.clone();
+  	}
     
 }

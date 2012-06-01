@@ -48,8 +48,8 @@ import java.awt.dnd.DropTargetListener;
  * Cette classe contient les methode pour permmettre a un arbre dynamique d'etre
  * destinataire d'un DnD.
  *
- * la fonction DragAndDrop ne peut fonctionner qui si on ajout la méthode
- * TreeView.getEntityAt(location)dans la classe genj.tree.TreeView
+ * la fonction DragAndDrop ne peut fonctionner qui si on ajoute la méthode
+ * TreeView.getEntityAt(location) dans la classe genj.tree.TreeView
  * et si on décommenter les trois appels à cette methode dans le code ci dessous.
  * @author Michel
  */

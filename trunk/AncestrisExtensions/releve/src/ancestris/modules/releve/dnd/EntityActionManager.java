@@ -7,5 +7,5 @@ import genj.gedcom.Entity;
  * @author Michel
  */
 public interface EntityActionManager {
-    void showEntity(Entity entity, boolean setRoot);
+    void showEntityInDndSource(Entity entity, boolean setRoot);
 }

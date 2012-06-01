@@ -492,9 +492,9 @@ public class ReleveFileEgmt {
                     }
                     line.appendCsvFn(record.getCote().toString());
                     line.appendCsvFn(record.getFreeComment().toString());
-                    line.appendCsvFn(String.format("%02d", record.getEventDateField().getStart().getDay()+1));
-                    line.appendCsvFn(String.format("%02d", record.getEventDateField().getStart().getMonth()+1));
-                    line.appendCsvFn(String.format("%4d", record.getEventDateField().getStart().getYear()));
+                    line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getDay()+1));
+                    line.appendCsvFn(String.format("%02d", record.getEventDateProperty().getStart().getMonth()+1));
+                    line.appendCsvFn(String.format("%4d", record.getEventDateProperty().getStart().getYear()));
 
                     line.appendCsvFn(record.getIndiLastName().getValue());
                     line.appendCsvFn(record.getIndiFirstName().getValue());

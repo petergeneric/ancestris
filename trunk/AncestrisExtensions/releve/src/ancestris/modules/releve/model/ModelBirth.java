@@ -84,7 +84,7 @@ public class ModelBirth extends ModelAbstract {
                 value = getRecord(row).getIndiSex();
                 break;
             case 3:
-                value = getRecord(row).getEventDateField();
+                value = getRecord(row).getEventDateProperty();
                 break;
             case 4:
                 value = getRecord(row).getIndiFatherLastName().toString() + " " + getRecord(row).getIndiFatherFirstName().toString();

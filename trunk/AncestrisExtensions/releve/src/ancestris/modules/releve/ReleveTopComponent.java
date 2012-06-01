@@ -211,7 +211,17 @@ public final class ReleveTopComponent extends TopComponent  {
         jTabbedPane1.setSelectedComponent(panelConfig);
         
         panelConfig.setTopComponent(this);
-        //TODO je charge le fichier de la session précédente
+
+        // je charge le fichier de la session précédente
+        String lastFileName =  NbPreferences.forModule(ReleveTopComponent.class).get(
+                    "LastFileName", "");
+        if (!lastFileName.isEmpty() ) {
+            File lastFile = new File(lastFileName);
+            if (lastFile.exists() ) {
+                loadFile(lastFile, false);
+
+            } 
+        }
 
         // je charge le fichier demo
 //        loadFileDemo();
@@ -255,6 +265,13 @@ public final class ReleveTopComponent extends TopComponent  {
         panelDeath.componentClosed();
         panelMisc.componentClosed();
         panelConfig.componentClosed();
+
+        // j'enregistre le nom du fichier courant
+        if (currentFile != null) {
+            NbPreferences.forModule(ReleveTopComponent.class).put(
+                    "LastFileName",
+                    currentFile.getAbsolutePath());
+        }
         
         //
         AncestrisPlugin.unregister(this);

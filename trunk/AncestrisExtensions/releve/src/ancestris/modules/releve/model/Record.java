@@ -102,10 +102,18 @@ public abstract class Record implements Cloneable{
     }
 
     @Override
-    public Object clone() {
-	    Object object = null;
+    public Record clone() {
+	    Record object = null;
 		try {
-			object = super.clone();
+			object = (Record) super.clone();
+           
+            if (eventPlace != null) object.eventPlace = eventPlace.clone();
+            if (eventDate != null) object.eventDate = eventDate.clone();
+            if (cote != null) object.cote = cote.clone();
+            if (parish != null) object.parish = parish.clone();
+            if (freeComment != null) object.freeComment = freeComment.clone();
+            if (generalComment != null) object.generalComment = generalComment.clone();
+    
 		} catch(CloneNotSupportedException cnse) {
 			cnse.printStackTrace(System.err);
 		}
@@ -121,7 +129,7 @@ public abstract class Record implements Cloneable{
         return  eventType;
     }
 
-    public PropertyDate getEventDateField() {
+    public PropertyDate getEventDateProperty() {
         return eventDate.getPropertyDate();
     }
 

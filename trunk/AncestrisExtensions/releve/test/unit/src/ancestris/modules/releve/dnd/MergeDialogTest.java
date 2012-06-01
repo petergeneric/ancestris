@@ -2,6 +2,7 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.RecordBirth;
+import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import javax.swing.JFrame;
@@ -12,6 +13,24 @@ import junit.framework.TestCase;
  * @author Michel
  */
 public class MergeDialogTest extends TestCase {
+
+    /**
+     * testMergeRecordBirth avec source existante
+     */
+    public void testMergeRecordMarriage() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            RecordMarriage record = MergeModelMarriageTest.createMarriageRecord("M1");
+
+
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, record, true);
+            dialog.copyRecordToEntity();
+            dialog.componentClosed();
+            dialog.dispose();
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
 
    /**
      * testMergeRecordBirth avec source existante
@@ -35,7 +54,8 @@ public class MergeDialogTest extends TestCase {
             record.setEventPlace("Paris","75000","","state","country");
 
             MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, true);
-            dialog.currentModel.copyRecordToEntity();
+            dialog.copyRecordToEntity();
+            dialog.componentClosed();
             dialog.dispose();
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -64,7 +84,8 @@ public class MergeDialogTest extends TestCase {
             record.setEventPlace("Paris","75000","","state","country");
 
             MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, record, true);
-            dialog.currentModel.copyRecordToEntity();
+            dialog.copyRecordToEntity();
+            dialog.componentClosed();
             dialog.dispose();
         } catch (Exception ex) {
             fail(ex.getMessage());

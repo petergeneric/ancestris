@@ -61,4 +61,9 @@ public class FieldEventType extends Field {
     public void setTag(String tag) {
         this.tag = tag;
     }
+
+    @Override
+    public FieldEventType clone() {
+		return (FieldEventType) super.clone();
+  	}
 }

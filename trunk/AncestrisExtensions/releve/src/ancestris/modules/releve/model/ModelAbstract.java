@@ -193,7 +193,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
             try {
                 Record record = releveList.get(recordIndex);
 
-                if (record.getEventDateString().equals("")) {
+                if (record.getEventDateString().isEmpty()) {
                     errorMessage.append("La date de l'évènement est vide").append("\n");
                 }
                 if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
@@ -213,7 +213,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
         try {
             Record record = releveList.get(recordIndex);
 
-            if (record.getEventDateString().equals("")) {
+            if (record.getEventDateString().isEmpty()) {
                 errorMessage.append("La date de l'évènement est vide").append("\n");
             }
             if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
@@ -253,7 +253,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
         List<Record> duplicate = new ArrayList<Record>();
 
         for(Record record : releveList) {
-            if ( record.getEventDateField().toString().equals(referenceRecord.getEventDateField().toString())
+            if ( record.getEventDateProperty().toString().equals(referenceRecord.getEventDateProperty().toString())
                  && record.getIndiFirstName().equals(referenceRecord.getIndiFirstName())
                  && record.getIndiLastName().equals(referenceRecord.getIndiLastName())
                  && record != referenceRecord ) {

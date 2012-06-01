@@ -6,5 +6,8 @@ package ancestris.modules.releve.model;
  */
 public class FieldOccupation extends FieldSimpleValue {
 
-    
+    @Override
+    public FieldOccupation clone() {
+		return (FieldOccupation) super.clone();
+  	}
 }

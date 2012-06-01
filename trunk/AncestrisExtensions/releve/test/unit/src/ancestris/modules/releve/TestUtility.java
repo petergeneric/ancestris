@@ -1,6 +1,5 @@
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.model.RecordBirth;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -35,57 +34,7 @@ public class TestUtility {
         return file;
 
     }
-
-    static public RecordBirth createBirthRecord(String firstName) {
-
-        if ( firstName.equals("sansfamille1")) {
-            RecordBirth record = new RecordBirth();
-                record.setEventDate("01/01/2000");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead");
-                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
-                record.setGeneralComment("generalcomment");
-            return record;
-        } if ( firstName.equals("child1")) {
-            RecordBirth record = new RecordBirth();
-                record.setEventDate("01/01/2000");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead");
-                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
-                record.setGeneralComment("generalcomment");
-            return record;
-        } else {
-            RecordBirth record = new RecordBirth();
-                record.setEventDate("01/01/1980");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "indiplace", "indioccupation", "indicomment");
-                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
-                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
-                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setEventPlace("Paris","75000","","state","country");
-                record.setGeneralComment("generalcomment");
-            return record;
-        }
-    }
-
+    
     /**
      * creation 'un gedcom minimal
      * @return
