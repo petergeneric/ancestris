@@ -96,6 +96,7 @@ public class DoubleMetaphone  {
             switch (value.charAt(index)) {
             case 'A':
             case 'E':
+            case 'É':  // ajout michel
             case 'I':
             case 'O':
             case 'U':

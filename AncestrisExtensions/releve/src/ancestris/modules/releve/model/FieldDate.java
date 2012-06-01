@@ -1,62 +1,118 @@
 package ancestris.modules.releve.model;
 
+import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.PointInTime;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
  *
  * @author Michel
  */
-public class FieldDate extends Field {
+public class FieldDate extends Field implements Cloneable {
+    static private Pattern jjmmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{1,2})/([0-9]{4,4})");
+    static private Pattern mmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{4,4})");
+    static private Pattern aaaa = Pattern.compile("([0-9]{4,4})");
 
     PropertyDate eventDate = new PropertyDate();
 
     @Override
     public String toString() {
-         if (eventDate.isValid()) {
-            PointInTime pit = eventDate.getStart();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Calendar cal = Calendar.getInstance();
-            cal.set(pit.getYear(), pit.getMonth(), pit.getDay() + 1);
-            //cal.roll(Calendar.DATE, true); // soustrait un jour
-            return dateFormat.format(cal.getTime()).trim();
-        } else {
-            return "";
-        }
+         return getValueDDMMYYYY();
     }
 
     @Override
     public String getValue() {
-        if (eventDate.isValid()) {
-            PointInTime pit = eventDate.getStart();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Calendar cal = Calendar.getInstance();
-            cal.set(pit.getYear(), pit.getMonth(), pit.getDay() + 1);
-            //cal.roll(Calendar.DATE, true); // soustrait un jour
-            return dateFormat.format(cal.getTime()).trim();
-        } else {
+//        if (eventDate.isValid()) {
+//            try {
+//                // je recupere la date dans le calendrier gregorien
+//                PointInTime pit = eventDate.getStart().getPointInTime(PointInTime.GREGORIAN);
+//                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//                Calendar cal = Calendar.getInstance();
+//                cal.set(pit.getYear(), pit.getMonth(), pit.getDay() + 1);
+//                //cal.roll(Calendar.DATE, true); // soustrait un jour
+//                return dateFormat.format(cal.getTime()).trim();
+//            } catch (GedcomException ex) {
+//                return "";
+//            }
+//        } else {
+//            return "";
+//        }
+        return getValueDDMMYYYY();
+    }
+
+    public String getValueDDMMYYYY() {
+        try {
+            String result = "";
+            // je recupere la date dans le calendrier gregorien
+            PointInTime pit = eventDate.getStart().getPointInTime(PointInTime.GREGORIAN);
+            if (pit.getYear() == PointInTime.UNKNOWN )  {
+                result = "";
+            } else if ( pit.getMonth() == PointInTime.UNKNOWN) {
+                result = String.format("%04d", pit.getYear());
+            } else if ( pit.getDay() == PointInTime.UNKNOWN) {
+                result = String.format("%02d/%04d", pit.getMonth()+1, pit.getYear());
+            } else {
+                result = String.format("%02d/%02d/%04d", pit.getDay()+1, pit.getMonth()+1, pit.getYear());
+            }
+            return result;
+        } catch (GedcomException ex) {
             return "";
         }
     }
 
+    /**
+     * enregistre une date
+     * les formats acceptés sont :
+     *   dd/mm/yyyy ,
+     *   mm/yyyy ,
+     *   yyyy ,
+     *   ou les formats acceptés par PropertyDate.setValue(...)
+     * @param dateString
+     */
     @Override
     public void setValue(Object dateString) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(dateFormat.parse(dateString.toString().trim()));
-            PointInTime pit = new PointInTime(cal);
-            eventDate.setValue(eventDate.getFormat(), pit, null, null);
-        } catch (ParseException ex) {
-            //je laisse la date nulle
-        }
+            String inputDate = dateString.toString().trim();
+            Matcher matcher =  jjmmaaaa.matcher(inputDate);
+            if ( matcher.matches() ) {
+                PointInTime pit = new PointInTime(
+                        Integer.parseInt(matcher.group(1)) -1,
+                        Integer.parseInt(matcher.group(2)) -1,
+                        Integer.parseInt(matcher.group(3)));
+                eventDate.setValue(eventDate.getFormat(), pit, null, null);
+            } else {
+                matcher =  mmaaaa.matcher(inputDate);
+                if ( matcher.matches()) {
+                PointInTime pit = new PointInTime(
+                        PointInTime.UNKNOWN,
+                        Integer.parseInt(matcher.group(1)) -1,
+                        Integer.parseInt(matcher.group(2)));
+                eventDate.setValue(eventDate.getFormat(), pit, null, null);
+                } else  {
+                    matcher =  aaaa.matcher(inputDate);
+                    if ( matcher.matches()) {
+                        PointInTime pit = new PointInTime(
+                                PointInTime.UNKNOWN,
+                                PointInTime.UNKNOWN,
+                                Integer.parseInt(matcher.group(1)));
+                        eventDate.setValue(eventDate.getFormat(), pit, null, null);
+                    } else {
+                        eventDate.setValue(inputDate);
+                    }
+                }
+            }
+       
     }
 
-    public void setValue(String strDay, String strMonth, String strYear) throws NumberFormatException {
+    /**
+     * enregistre une date , le jour, mois et années etant fournis sous forme de chaines de caractere
+     * @param strDay
+     * @param strMonth
+     * @param strYear
+     * @throws NumberFormatException
+     */public void setValue(String strDay, String strMonth, String strYear) throws NumberFormatException {
         try {
             int day = PointInTime.UNKNOWN;
             int month = PointInTime.UNKNOWN;
@@ -102,4 +158,12 @@ public class FieldDate extends Field {
         return toString().isEmpty();
     }
 
+    @Override
+    public FieldDate clone() {
+	    FieldDate object = null;
+        object = new FieldDate();
+        object.getPropertyDate().setValue(getPropertyDate().getValue());
+		// je renvoie le clone
+		return object;
+  	}
 }

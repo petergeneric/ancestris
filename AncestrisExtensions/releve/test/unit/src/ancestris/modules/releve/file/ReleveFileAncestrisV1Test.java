@@ -125,7 +125,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         File file = new File("testsaveFile.txt");
         
         ConfigPanel configPanel = new ConfigPanel();
-        String place = "cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         configPanel.setPlace(place);
         
         DataManager dateManager = new DataManager(configPanel);
@@ -174,7 +174,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         File file = new File("testsaveFile.txt");
         
         ConfigPanel configPanel = new ConfigPanel();
-        String place = "cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         configPanel.setPlace(place);
 
         DataManager dateManager = new DataManager(configPanel);
@@ -228,7 +228,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         File file = new File("testsaveFile.txt");
 
         ConfigPanel configPanel = new ConfigPanel();
-        String place = "cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         configPanel.setPlace(place);
 
         DataManager dateManager = new DataManager(configPanel);
@@ -279,7 +279,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         File file = new File("testsaveFile.txt");
 
         ConfigPanel configPanel = new ConfigPanel();
-        String place = "cityname,citycode,county,state,country";
+        String place = "cityname,citycode,county,state,country,";
         configPanel.setPlace(place);
         DataManager dateManager = new DataManager(configPanel);
 

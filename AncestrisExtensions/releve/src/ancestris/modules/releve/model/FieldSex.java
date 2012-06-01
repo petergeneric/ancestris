@@ -18,6 +18,11 @@ public class FieldSex extends Field {
     private int sex = UNKNOWN;
     private String sexAsString;
 
+    @Override
+    public FieldSex clone() {
+		return (FieldSex) super.clone();
+  	}
+
     /**
      * Accessor for Sex
      */

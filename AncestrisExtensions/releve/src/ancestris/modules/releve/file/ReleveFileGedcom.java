@@ -57,7 +57,7 @@ public class ReleveFileGedcom {
                                 "" ); // countryName
                         record.setParish("");
                         //record.setEventDate( birthProperty.getProperty("DATE")!=null ? birthProperty.getProperty("DATE").toString() : "" );
-                        record.getEventDateField().setValue(birthProperty.getProperty("DATE") != null ? birthProperty.getProperty("DATE").getValue() : "");
+                        record.getEventDateProperty().setValue(birthProperty.getProperty("DATE") != null ? birthProperty.getProperty("DATE").getValue() : "");
                         record.setCote("");
                         record.setFreeComment("");
 
@@ -127,7 +127,7 @@ public class ReleveFileGedcom {
                                 "" ); // countryName
                         record.setParish("");
                         //record.setEventDate( deathProperty.getProperty("DATE")!=null ? deathProperty.getProperty("DATE").toString() : "" );
-                        record.getEventDateField().setValue(deathProperty.getProperty("DATE") != null ? deathProperty.getProperty("DATE").getValue() : "");
+                        record.getEventDateProperty().setValue(deathProperty.getProperty("DATE") != null ? deathProperty.getProperty("DATE").getValue() : "");
                         record.setCote("");
                         record.setFreeComment("");
 
@@ -179,7 +179,7 @@ public class ReleveFileGedcom {
                             "", // stateName
                             ""); // countryName
                     record.setParish("");
-                    record.getEventDateField().setValue(marriageDate != null ? marriageDate.getValue() : "");
+                    record.getEventDateProperty().setValue(marriageDate != null ? marriageDate.getValue() : "");
                     record.setCote("");
                     record.setFreeComment("");
 

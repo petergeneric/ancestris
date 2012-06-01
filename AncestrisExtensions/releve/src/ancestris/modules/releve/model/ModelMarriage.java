@@ -61,7 +61,7 @@ public class ModelMarriage extends ModelAbstract {
                 value = new Integer(getRecord(row).recordNo);
                 break;
             case 1:
-                value = getRecord(row).getEventDateField();
+                value = getRecord(row).getEventDateProperty();
                 break;
             case 2:
                 value = getRecord(row).getIndiLastName().toString() + " " + getRecord(row).getIndiFirstName().toString();

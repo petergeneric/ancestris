@@ -142,10 +142,10 @@ public class ReleveFileEgmtTest extends TestCase {
         RecordMarriage marriage2 = (RecordMarriage) fb.getRecords().get(0);
 
         // je compare tous les champs
-        assertEquals("EventDate",   marriage.getEventDateField().toString(),marriage2.getEventDateField().toString());
+        assertEquals("EventDate",   marriage.getEventDateProperty().toString(),marriage2.getEventDateProperty().toString());
         assertEquals("Cote",        marriage.getCote().toString(),marriage2.getCote().toString());
         assertEquals("parish",      marriage.getParish().toString(),marriage2.getParish().toString());
-        assertEquals("EventDate",   marriage.getEventDateField().toString(),marriage2.getEventDateField().toString());
+        assertEquals("EventDate",   marriage.getEventDateProperty().toString(),marriage2.getEventDateProperty().toString());
         assertNull("Notary",        marriage2.getNotary());
         assertNull("EventType",     marriage2.getEventType());
         assertEquals("FreeComment",    marriage.getFreeComment().toString(),marriage2.getFreeComment().toString());
@@ -258,10 +258,10 @@ public class ReleveFileEgmtTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",       death.getEventDateField().toString(),death2.getEventDateField().toString());
+        assertEquals("EventDate",       death.getEventDateProperty().toString(),death2.getEventDateProperty().toString());
         assertEquals("Cote",            death.getCote().toString(),death2.getCote().toString());
         assertEquals("parish",          death.getParish().toString(),death2.getParish().toString());
-        assertEquals("EventDate",       death.getEventDateField().toString(),death2.getEventDateField().toString());
+        assertEquals("EventDate",       death.getEventDateProperty().toString(),death2.getEventDateProperty().toString());
         assertNull("Notary",            death2.getNotary());
         assertNull("EventType",         death2.getEventType());
         assertEquals("FreeComment",    death.getFreeComment().toString(),death2.getFreeComment().toString());
@@ -378,7 +378,7 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc misc2 = (RecordMisc) fb.getRecords().get(0);
 
-        assertEquals("EventDate",   misc.getEventDateField().toString(),misc2.getEventDateField().toString());
+        assertEquals("EventDate",   misc.getEventDateProperty().toString(),misc2.getEventDateProperty().toString());
         assertEquals("EventType",   misc.getEventType().toString(),misc2.getEventType().toString());
         assertEquals("parish",      misc.getParish().toString(),misc2.getParish().toString());
         assertEquals("Notary",      misc.getNotary().toString(),misc2.getNotary().toString());
@@ -460,10 +460,10 @@ public class ReleveFileEgmtTest extends TestCase {
 
 /*
  *
- * assertEquals("EventDate",   misc.getEventDateField().toString(),misc2.getEventDateField().toString());
+ * assertEquals("EventDate",   misc.getEventDateProperty().toString(),misc2.getEventDateProperty().toString());
         assertEquals("Cote",        misc.getCote().toString(),misc2.getCote().toString());
         assertEquals("parish",      misc.getParish().toString(),misc2.getParish().toString());
-        assertEquals("EventDate",   misc.getEventDateField().toString(),misc2.getEventDateField().toString());
+        assertEquals("EventDate",   misc.getEventDateProperty().toString(),misc2.getEventDateProperty().toString());
         assertEquals("Notary",      misc.getNotary().toString(),misc2.getNotary().toString());
         assertEquals("EventType",      misc.getEventType().toString(),misc2.getEventType().toString());
         assertEquals("GeneralComment", misc.getGeneralComment().toString(),misc2.getGeneralComment().toString());

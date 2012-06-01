@@ -139,7 +139,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",       record.getEventDateField().toString(),record2.getEventDateField().toString());
+        assertEquals("EventDate",       record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
         assertEquals("Cote",            record.getCote().toString(),record2.getCote().toString());
         assertEquals("parish",          "",record2.getParish().toString());
         assertEquals("Notary",          null,record2.getNotary());
@@ -260,7 +260,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",      record.getEventDateField().toString(),record2.getEventDateField().toString());
+        assertEquals("EventDate",      record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
         assertEquals("Cote",           record.getCote().toString(),record2.getCote().toString());
         assertEquals("parish",         "",record2.getParish().toString());
         assertEquals("Notary",         null,record2.getNotary());
@@ -376,7 +376,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",       record.getEventDateField().toString(),record2.getEventDateField().toString());
+        assertEquals("EventDate",       record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
         assertEquals("Cote",            record.getCote().toString(),record2.getCote().toString());
         assertEquals("parish",          "",record2.getParish().toString());
         assertEquals("Notary",          null,record2.getNotary());
@@ -498,7 +498,7 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",      record.getEventDateField().toString(),record2.getEventDateField().toString());
+        assertEquals("EventDate",      record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
         assertEquals("Cote",           record.getCote().toString(),record2.getCote().toString());
         assertEquals("parish",         "",record2.getParish().toString());
         assertEquals("Notary",         "",record2.getNotary().toString());

@@ -382,8 +382,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      */
     public void selectRecord(int recordIndex) {
         
-        //TODO ajouter l'age des témoins
-
         fieldsPanel.setVisible(false);
         fieldsPanel.setFocusTraversalPolicyProvider(true);
         fieldsPanel.setFocusCycleRoot(true);

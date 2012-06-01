@@ -62,22 +62,54 @@ public class MergePanel extends javax.swing.JPanel {
                 if ( selectedEntity instanceof Fam) {
                     radioButtonText = "Nouvel enfant de la famille sélectionnée";
                 } else {
-                    radioButtonText = "Nouvel individu";
-                    if (model.getRow(MergeModel.RowType.IndiFamily).entityValue != null) {
-                       radioButtonText += " - "  +  ((Fam)model.getRow(MergeModel.RowType.IndiFamily).entityValue).getId();
+                    radioButtonText = "Nouvel enfant";
+                    if (model.getRow(MergeModel.RowType.IndiParentFamily).entityValue != null) {
+                       radioButtonText += " - "  +  ((Fam)model.getRow(MergeModel.RowType.IndiParentFamily).entityValue).getId();
                     } else {
                        radioButtonText += " - " + "Nouvelle famille";
+                       if ( model.getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null
+                               ||  model.getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null ) {
+                           radioButtonText +=  " ( ";
+                           if ( model.getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null ) {
+                               radioButtonText += model.getRow(MergeModel.RowType.IndiFatherLastName).entityObject.getId();
+                           }
+                           radioButtonText +=  " , ";
+                           if ( model.getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null ) {
+                               radioButtonText += model.getRow(MergeModel.RowType.IndiMotherLastName).entityObject.getId();
+                           }
+                           radioButtonText +=  " )";
+                       }
+
                     }
                 }
             } else {
                 radioButtonText = "Nouvelle famille";
             }
         } else {
-            radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
-            if ( model.getSelectedEntity().equals(selectedEntity)) {
-                labelText += " "+ "(Selectionné)";
-                jLabelNbMatch.setForeground(Color.blue);
+            if ( model instanceof MergeModelBirth) {
+                radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
+                if ( model.getSelectedEntity().equals(selectedEntity)) {
+                    labelText += " "+ "(Selectionné)";
+                    jLabelNbMatch.setForeground(Color.blue);
+
+                }
+            
+            } else if ( model instanceof MergeModelMarriage) {
+                Fam fam = (Fam) model.getSelectedEntity();
+                if ( fam != null) {
+                    radioButtonText =  "<html>"+ "Modifier" + " ";
+                    radioButtonText += fam.getHusband().toString(true);
+                    radioButtonText += "<br>";
+                    radioButtonText += fam.getWife().toString(true);
+                    radioButtonText += "</html>";
+                } else  {
+                    radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
+                }
+                 
+            } else {
+               radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
             }
+
         }
         jLabelNbMatch.setText(labelText);
 
@@ -103,7 +135,8 @@ public class MergePanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = position;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelChoice.add(jRadioButton,gridBagConstraints);
 

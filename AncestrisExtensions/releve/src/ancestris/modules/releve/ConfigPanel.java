@@ -850,12 +850,12 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
     }
 
     /**
-     * retourne le lieu au format "cityName,cityCode,countyName,stateName,countryName"
+     * retourne le lieu au format "cityName,cityCode,countyName,stateName,countryName,"
      * @return
      */
     @Override
     public String getPlace() {
-        return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
+        return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName()+",";
     }
 
     @Override

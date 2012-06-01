@@ -12,6 +12,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.UnitOfWork;
 import genj.tree.TreeView;
 import genj.view.SelectionSink;
 import java.awt.Component;
@@ -27,7 +28,7 @@ import org.openide.util.NbPreferences;
  * Elle permet d'insérer un relevé dans une entité d'un fichier GEDCOM.
  * @author Michel
  */
-public class MergeDialog extends javax.swing.JDialog implements EntityActionManager {
+public class MergeDialog extends javax.swing.JFrame implements EntityActionManager {
 
     protected MergeModel currentModel = null;
     Component dndSourceComponent = null;
@@ -55,10 +56,15 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
             return dialog;
         } catch (Exception ex) {
             ex.printStackTrace();
+            dialog.componentClosed();
             dialog.dispose();
             Toolkit.getDefaultToolkit().beep();
             String title = "";
-            JOptionPane.showMessageDialog(parent, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            if (ex.getMessage() == null) {
+                JOptionPane.showMessageDialog(parent, ex.getClass().getName()+ " See console log", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(parent, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            }
             return null;
         }
 
@@ -68,7 +74,7 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
      * Constructeur d'une fenetre
      */
     protected MergeDialog(Component parent) {
-        super(SwingUtilities.windowForComponent(parent));
+        //super(SwingUtilities.windowForComponent(parent));
         this.dndSourceComponent = parent;
         setLayout(new java.awt.BorderLayout());
         initComponents();
@@ -76,7 +82,7 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
 
         // je configure la taille de la fenetre
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        String size = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSize", "300,450,0,0");
+        String size = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSize", "560,600,0,0");
         String[] dimensions = size.split(",");
         if ( dimensions.length >= 4 ) {
             int width = Integer.parseInt(dimensions[0]);
@@ -99,13 +105,11 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
         } else {
             setBounds(screen.width / 2 -100, screen.height / 2- 100, 300, 450);
         }
-        pack();
-
     }
 
     /**
-     * cette methode est applelée à la fermeture de la fenetre
-     * Elle enregistre les preference de l'utilsateur.
+     * cette methode est appelée à la fermeture de la fenetre
+     * Elle enregistre les preference de l'utilisateur.
      */
     protected void componentClosed() {
         // j'enregistre les preferences de la table
@@ -128,9 +132,10 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
      */
     protected void intiData(Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
         List<MergeModel> models;
+        MergeRecord mergeRecord = new MergeRecord(record);
 
         // je recupere les modeles contenant les entites compatibles avec le relevé
-        models = MergeModel.createMergeModel(record, gedcom, selectedEntity);
+        models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity);
         // j'affiche les modeles et selectionne le premier modele de la liste
         mergePanel1.initData(models, selectedEntity, this);
     }
@@ -151,27 +156,65 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
         // j'affiche l'entité dans l'arbre
         if ( dndSourceComponent instanceof TreeView ) {
             if (model.getSelectedEntity() != null ) {
-                showEntity(model.getSelectedEntity(), true);
+                showEntityInDndSource(model.getSelectedEntity(), true);
             } else {
-                if( currentModel.getRow(MergeModel.RowType.IndiFamily).entityValue instanceof Fam) {
+                if( currentModel instanceof MergeModelBirth && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityValue instanceof Fam) {
                     // je centre l'arbre sur la famille des parents
-                    showEntity((Fam)currentModel.getRow(MergeModel.RowType.IndiFamily).entityValue, true);
+                    showEntityInDndSource((Fam)currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject, true);
                 } 
             }
         }
     }
 
-    @Override
-    public void showEntity(Entity entity, boolean setRoot) {
+
+    /**
+     * afffiche l'entité dans le dnd source
+     * @param entity
+     * @param setRoot positionne l'entité comme racine de l'arbre si la source de Dnd est un arbre
+     */@Override
+    public void showEntityInDndSource(Entity entity, boolean setRoot) {
          if ( dndSourceComponent instanceof TreeView ) {
             TreeView treeView = (TreeView)dndSourceComponent;
             if( setRoot) {
+                // je declare l'entité comme racine de l'arbre
                 treeView.setRoot(entity);
             } else {
+                // je centre la vue sur l'entité
                 treeView.setContext(new Context(entity),false);
             }
             treeView.show(entity);
         }
+    }
+
+    /**
+     * pour lancer le test avec junit
+     * @throws Exception
+     */
+    protected void copyRecordToEntity() throws Exception {
+        
+        currentModel.getGedcom().doUnitOfWork(new UnitOfWork() {
+            @Override
+            public void perform(Gedcom gedcom) {
+                long beforeChange = currentModel.getGedcom().getLastChange()!=null ? currentModel.getGedcom().getLastChange().getTime() : 0;
+                try {
+                    currentModel.copyRecordToEntity();
+                } catch (Throwable t) {
+                    // j'annule les modifications
+                    long afterChange = currentModel.getGedcom().getLastChange()!=null ? currentModel.getGedcom().getLastChange().getTime() : 0;
+                    if ( afterChange > beforeChange ) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                currentModel.getGedcom().undoUnitOfWork(false);
+                            }
+                        });
+                        
+                    }
+                    t.printStackTrace();
+                    throw new RuntimeException(t);
+                }
+            }
+        });
     }
 
    /** This method is called from within the constructor to
@@ -251,37 +294,53 @@ public class MergeDialog extends javax.swing.JDialog implements EntityActionMana
      * @param evt
      */
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
-        currentModel.copyRecordToEntity();
-        if ( dndSourceComponent instanceof TreeView ) {
-            TreeView treeView = (TreeView)dndSourceComponent;
-            if (currentModel.getSelectedEntity() != null ) {
-                if (currentModel.getSelectedEntity() instanceof Indi) {
-                    Indi selectedIndi = (Indi ) currentModel.getSelectedEntity();
-                    if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
-                        treeView.setRoot(selectedIndi.getFamilyWhereBiologicalChild());
-                        treeView.setContext(new Context(selectedIndi), false);
-                        // propagate to others
-                        try {
-                          SelectionSink.Dispatcher.fireSelection(null, treeView.getContext());
-                        } finally {
+        try {
+            // je copie les données du releve dans gedcom
+            copyRecordToEntity();
+
+            // j'affiche l'entité dans l'arbre dynamic
+            if (dndSourceComponent instanceof TreeView) {
+                TreeView treeView = (TreeView) dndSourceComponent;
+                if (currentModel.getSelectedEntity() != null) {
+                    if (currentModel.getSelectedEntity() instanceof Indi) {
+                        Indi selectedIndi = (Indi) currentModel.getSelectedEntity();
+                        if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+                            showEntityInDndSource(selectedIndi.getFamilyWhereBiologicalChild(), true);
+                            // propagate to others
+                            try {
+                                SelectionSink.Dispatcher.fireSelection(null, treeView.getContext());
+                            } catch (Exception ex) {
+                            } finally {
+                            }
+                        } else {
+                            // je centre l'arbre sur l'entité
+                            treeView.setRoot(currentModel.getSelectedEntity());
                         }
                     } else {
                         // je centre l'arbre sur l'entité
                         treeView.setRoot(currentModel.getSelectedEntity());
                     }
-                } else {
-                    // je centre l'arbre sur l'entité
-                    treeView.setRoot(currentModel.getSelectedEntity());
                 }
             }
+            componentClosed();
+            setVisible(false);
+            dispose();
+        } catch (Throwable ex) {
+            // je ferme la fenetre avant d'afficher le message d'erreur
+            componentClosed();
+            setVisible(false);
+            dispose();
+            Toolkit.getDefaultToolkit().beep();
+            String title = "";
+            if (ex.getMessage() == null) {
+                JOptionPane.showMessageDialog(null, ex.getClass().getName()+ " See console log", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            }
         }
-        componentClosed();
-        setVisible(false);
-        dispose();
+
 
     }//GEN-LAST:event_jButtonOKActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOK;
