@@ -25,6 +25,7 @@ and open the template in the editor.
     <indexitem text="L'Editeurs GedCom" target="ancestris.app.view.editors.gedcom"/>
     <indexitem text="La fenêtre de Recherche" target="ancestris.app.view.search"/>
     <indexitem text="La gestion des lieux" target="ancestris.app.place.management"/>
+    <indexitem text="La gestion des Sources et Lieux de dépôt" target="ancestris.app.repo.source.management"/>
     <indexitem text="La norme Gedcom" target="ancestris.app.gedcom.standard"/>
     <indexitem text="La visualisation chronologique" target="ancestris.app.view.chrono"/>
     <indexitem text="La visualisation géographique" target="ancestris.app.view.geo"/>

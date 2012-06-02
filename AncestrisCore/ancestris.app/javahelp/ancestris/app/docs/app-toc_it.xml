@@ -14,7 +14,8 @@ Arborescence de l'aide
               <tocitem text="La gestione delle finestre" target="ancestris.app.windows" />
               <tocitem text="La Gestione dei luoghi" target="ancestris.app.place.management" />
               <tocitem text="L'esploratore Gedcom" target="ancestris.app.gedcoms.manager" />
-              <tocitem expand="false" text="I Plugins - Generalità" target="ancestris.app.plugins">
+              <tocitem expand="false" text="I Plugins - Generalità" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Sources et Lieux de dépôt" target="ancestris.app.repo.source.management">
               </tocitem>
         </tocitem>
         <tocitem expand="true" text="Importare una genealogia" target="ancestris.app.genealogy.import">

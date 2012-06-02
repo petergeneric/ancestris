@@ -16,7 +16,8 @@ and open the template in the editor.
               <tocitem text="La Gestion des fenêtres" target="ancestris.app.windows" />
               <tocitem text="La Gestion des lieux" target="ancestris.app.place.management" />
               <tocitem text="L'explorateur Gedcom" target="ancestris.app.gedcoms.manager" />
-              <tocitem expand="false" text="Les Plugins - Généralités" target="ancestris.app.plugins">
+              <tocitem expand="false" text="Les Plugins - Généralités" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Sources et Lieux de dépôt" target="ancestris.app.repo.source.management">
               </tocitem>
         </tocitem>
         <tocitem expand="true" text="Importer une généalogie" target="ancestris.app.genealogy.import">
