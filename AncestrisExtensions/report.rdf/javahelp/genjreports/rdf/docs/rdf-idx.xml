@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
-    <indexitem text="RDF (SPARQL based) Report" target="genjreports.rdf.about"/>
+    <indexitem text="RDF (SPARQL based) Report - Summary" target="genjreports.rdf.about"/>
+    <indexitem text="General rules" target="genjreports.rdf.rules"/>
+    <indexitem text="Queries" target="genjreports.rdf.queries"/>
+    <indexitem text="General Reports" target="genjreports.rdf.queries1"/>
+    <indexitem text="Reports based on an individual" target="genjreports.rdf.queries2"/>
+    <indexitem text="Reports based on a family" target="genjreports.rdf.queries3"/>
+    <indexitem text="Report requiring _SOSA" target="genjreports.rdf.queries4"/>
+    <indexitem text="Miscellaneous hints" target="genjreports.rdf.hints"/>
+    <indexitem text="ToDo" target="genjreports.rdf.todo"/>
 </index>

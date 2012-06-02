@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-    <tocitem text="RDF (SPARQL based) Report">
-        <tocitem text="RDF (SPARQL based) Report" target="genjreports.rdf.about"/>
+    <tocitem expand="true" text="RDF (SPARQL based) Report">
+        <tocitem  expand="true" text="RDF (SPARQL based) Report" target="genjreports.rdf.about">
+            <tocitem text="Possible rules" target="genjreports.rdf.rules" />
+            <tocitem expand="false" text="Different queries" target="genjreports.rdf.queries">
+                <tocitem text="General Reports" target="genjreports.rdf.queries1" />
+                <tocitem text="Based on an individual" target="genjreports.rdf.queries2" />
+                <tocitem text="Based on a family" target="genjreports.rdf.queries3" />
+                <tocitem text="Requiring _SOSA tag" target="genjreports.rdf.queries4" />
+            </tocitem>
+            <tocitem text="Misc hints" target="genjreports.rdf.hints" />
+            <tocitem text="What next? ToDo" target="genjreports.rdf.todo" />
+        </tocitem>
     </tocitem>
 </toc>
