@@ -310,7 +310,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
 
-        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12));
+        resourceFileView.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         resourceFileView.setModel(new ResourceFileModel ());
         resourceFileView.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         resourceFileView.setCellRenderer(new ResourceFileCellRenderer());
@@ -334,6 +334,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaTranslation.setColumns(20);
         textAreaTranslation.setEditable(false);
         textAreaTranslation.setRows(5);
+        textAreaTranslation.setDragEnabled(true);
         textAreaTranslation.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 textAreaTranslationKeyTyped(evt);
