@@ -31,6 +31,7 @@ and open the template in the editor.
     <mapID target="ancestris.app.plugins.development" url="./advanced/advanced_plugins_development.html"/>
     <mapID target="ancestris.app.plugins.liste" url="./basic_use/basic_use_plugins_liste.html"/>
     <mapID target="ancestris.app.plugins" url="./first_steps/first_steps_ancestris_plugins.html"/>
+    <mapID target="ancestris.app.repo.source.management" url="./first_steps/first_steps_repo_and_source_management.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel1" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel2" url="app-about.html"/>
     <mapID target="ancestris.app.tools.optionswizard.OptionsWizardWizardPanel3" url="app-about.html"/>

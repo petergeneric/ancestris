@@ -11,7 +11,8 @@
               <tocitem text="La gestión de ventanas" target="ancestris.app.windows" />
               <tocitem text="La gestión de lugares" target="ancestris.app.place.management" />
               <tocitem text="GEDCOM Explorer" target="ancestris.app.gedcoms.manager" />
-              <tocitem expand="false" text="Plugins - General" target="ancestris.app.plugins">
+              <tocitem expand="false" text="Plugins - General" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Sources et Lieux de dépôt" target="ancestris.app.repo.source.management">
               </tocitem>
         </tocitem>
         <tocitem expand="true" text="Importar una genealogía" target="ancestris.app.genealogy.import">

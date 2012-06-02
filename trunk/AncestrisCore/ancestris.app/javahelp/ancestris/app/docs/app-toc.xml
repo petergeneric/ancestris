@@ -14,7 +14,8 @@ arborescence de l'aide ?
               <tocitem text="Managing the windows" target="ancestris.app.windows" />
               <tocitem text="Places hierarchy" target="ancestris.app.place.management" />
               <tocitem text="Gedcom explorer" target="ancestris.app.gedcoms.manager" />
-              <tocitem expand="false" text="Plugins - Overall View" target="ancestris.app.plugins">
+              <tocitem expand="false" text="Plugins - Overall View" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Sources et Lieux de dépôt" target="ancestris.app.repo.source.management">
               </tocitem>
         </tocitem>
         <tocitem expand="true" text="Import your genealogy" target="ancestris.app.genealogy.import">
