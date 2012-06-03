@@ -11,6 +11,8 @@
  */
 package ancestris.util;
 
+import java.util.Locale;
+
 /**
  *
  * @author daniel
@@ -34,5 +36,15 @@ public class Utilities {
     public static boolean wordsMatch(String text, String pattern) {
         pattern = pattern.replaceAll(" +", ".+");
         return text.matches(".*" + pattern + ".*");
+    }
+
+    public static Locale getLocaleFromString(String str) {
+        if (str == null || str.length() == 0) {
+            return null;
+        }
+        str.replaceAll(":", "_");
+        String locale[] = (str + "__").split("_", 3);
+
+        return new Locale(locale[0], locale[1], locale[2]);
     }
 }
