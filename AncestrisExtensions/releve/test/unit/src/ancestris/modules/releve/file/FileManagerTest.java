@@ -52,10 +52,10 @@ public class FileManagerTest extends TestCase {
         File file = null;
         try {
             String data;
-            data = "ANCESTRISV1;;;;;;;M;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
+            data = "ANCESTRISV2;;;;;;;M;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
             FileBuffer fb = FileManager.loadFile(file);
-            assertEquals("Mariage minimal", fb.getError().toString(), "");
+            assertEquals("Mariage minimal", "", fb.getError().toString());
 
         } catch (Exception ex) {
             fail("IOException "+ ex.toString());
@@ -79,7 +79,7 @@ public class FileManagerTest extends TestCase {
         RecordBirth record = new RecordBirth();
         dateManager.addRecord(record);
 
-        StringBuilder sb = FileManager.saveFile(dateManager, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
+        StringBuilder sb = FileManager.saveFile(dateManager, configPanel, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
         assertEquals("save result", true, sb.toString().contains("java.io.FileNotFoundException"));
 
     }

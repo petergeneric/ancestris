@@ -24,12 +24,12 @@ import java.util.regex.Pattern;
  */
 public class MergeQuery {
 
-    static int minMarriageYearOld = 15; // age minimum pour etre marié
-    static int minParentYearOld = 15;   // age minimum pour est parent
-    static int indiMaxYearOld = 100;    // age maximum
-    static int aboutYear = 5;           // marge d'incertitude ( date ABOUT ou ESTMATED ou CALCULATED)
+    protected static int minMarriageYearOld = 15; // age minimum pour etre marié
+    protected static int minParentYearOld = 15;   // age minimum pour etre parent
+    protected static int indiMaxYearOld = 100;    // age maximum d'un individu
+    protected static int aboutYear = 5;           // marge d'incertitude ( date ABOUT ou ESTMATED ou CALCULATED)
 
-    static DoubleMetaphone dm = new DoubleMetaphone();
+    private static final DoubleMetaphone dm = new DoubleMetaphone();
     static {
         dm.setMaxCodeLen(5);
 
@@ -973,7 +973,8 @@ public class MergeQuery {
                 startPit.set( birthDate.getStart());
                 startPit.add(0, 0, -indiMaxYearOld);
                 result = containsRefTime(recordDate.getStart(), startPit, birthDate.getStart());
-            } else if (birthDate.getFormat() == PropertyDate.ABOUT || birthDate.getFormat() == PropertyDate.ESTIMATED) {
+            } else {
+                // ABOUT, ESTIMATED, CALCULATED
                 PointInTime startPit = new PointInTime();
                 startPit.set( birthDate.getStart());
                 startPit.add(0, 0, -aboutYear);
@@ -981,9 +982,7 @@ public class MergeQuery {
                 endPit.set( birthDate.getStart());
                 endPit.add(0, 0, +aboutYear);
                 result = containsRefTime(recordDate.getStart(), startPit, endPit);
-            } else {
-                result = recordDate.getStart().compareTo(birthDate.getStart()) == 0;
-            }
+            } 
         } catch (GedcomException ex) {
             result = false;
         }
@@ -1103,7 +1102,8 @@ public class MergeQuery {
                 maxStart = Integer.MIN_VALUE;
                 pit.set(recordDate.getStart());
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-            } else if (recordDate.getFormat() == PropertyDate.ABOUT || recordDate.getFormat() == PropertyDate.ESTIMATED) {
+            } else  {
+                // ABOUT, ESTIMATED, CALCULATED
                 pit.set(recordDate.getStart());
                 minStart = pit.add(0, 0, -indiMaxYearOld-aboutYear).getJulianDay();
                 pit.set(recordDate.getStart());
@@ -1113,15 +1113,7 @@ public class MergeQuery {
                 maxStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
                 pit.set(recordDate.getStart());
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift +aboutYear).getJulianDay();
-            } else {
-                pit.set(recordDate.getStart());
-                minStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                minEnd   = minStart;
-
-                pit.set(recordDate.getStart());
-                maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-                maxEnd   = maxStart;
-            }
+            } 
 
             int birthStart;
             int birthEnd;
@@ -1141,18 +1133,15 @@ public class MergeQuery {
                 birthStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
 
                 birthEnd   =  parentBirthDate.getStart().getJulianDay();
-            } else if (parentBirthDate.getFormat() == PropertyDate.ABOUT || parentBirthDate.getFormat() == PropertyDate.ESTIMATED) {
-                 // intervalle [start2 , end2]
+            } else {
+                // ABOUT, ESTIMATED, CALCULATED
                 PointInTime startPit = new PointInTime();
                 startPit.set(parentBirthDate.getStart());
                 birthStart = startPit.add(0, 0, -aboutYear).getJulianDay();
                 PointInTime endPit = new PointInTime();
                 endPit.set(parentBirthDate.getStart());
                 birthEnd = startPit.add(0, 0, +aboutYear).getJulianDay();
-            } else {
-                birthStart = parentBirthDate.getStart().getJulianDay();
-                birthEnd   = birthStart;
-            }
+            } 
 
             if ( birthStart > maxEnd) {
                 result = false;
@@ -1232,18 +1221,14 @@ public class MergeQuery {
                 recStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
                 pit.set(recordDate.getStart());
                 recEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-            } else if (recordDate.getFormat() == PropertyDate.ABOUT || recordDate.getFormat() == PropertyDate.ESTIMATED) {
+            } else {
+                // ABOUT, ESTIMATED, CALCULATED
                 PointInTime pit = new PointInTime();
                 pit.set(recordDate.getStart());
                 recStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
                 pit.set(recordDate.getStart());
                 recEnd = pit.add(0, -minMonthShift, -minYearShift +aboutYear).getJulianDay();
-            } else {
-                PointInTime pit = new PointInTime();
-                pit.set(recordDate.getStart());
-                recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-                recEnd   = recStart;
-            }
+            } 
 
             int maxStart;
             int maxEnd;
@@ -1269,17 +1254,13 @@ public class MergeQuery {
                 pit.set(parentDeathDate.getStart());
                 maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
                 maxEnd = parentDeathDate.getStart().getJulianDay();
-            } else if (parentDeathDate.getFormat() == PropertyDate.ABOUT || parentDeathDate.getFormat() == PropertyDate.ESTIMATED) {
+            } else {
+                // ABOUT, ESTIMATED, CALCULATED
                 PointInTime pit = new PointInTime();
                 pit.set(parentDeathDate.getStart());
                 maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
                 pit.set(parentDeathDate.getStart());
                 maxEnd = pit.add(0, 0, +aboutYear).getJulianDay();
-            } else {
-                PointInTime pit = new PointInTime();
-                pit.set(parentDeathDate.getStart());
-                maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                maxEnd = parentDeathDate.getStart().getJulianDay();
             }
 
             // l'intersection des deux intervalles ne doit pas être vide.
@@ -1375,17 +1356,15 @@ public class MergeQuery {
                 } else if (recordDate.getFormat() == PropertyDate.AFTER || recordDate.getFormat() == PropertyDate.FROM) {
                     start1 = recordDate.getStart().getJulianDay();
                     end1 = Integer.MAX_VALUE;
-                } else if (recordDate.getFormat() == PropertyDate.ABOUT || recordDate.getFormat() == PropertyDate.ESTIMATED) {
+                } else {
+                    // ABOUT, ESTIMATED, CALCULATED
                     PointInTime startPit = new PointInTime();
                     startPit.set(recordDate.getStart());
                     start1 = startPit.add(0, 0, -aboutYear).getJulianDay();
                     PointInTime endPit = new PointInTime();
                     endPit.set(recordDate.getStart());
                     end1 = startPit.add(0, 0, +aboutYear).getJulianDay();
-                } else {
-                    start1 = recordDate.getStart().getJulianDay();
-                    end1 = recordDate.getEnd().getJulianDay();
-                }
+                } 
 
                 if (birthDate.getFormat() == PropertyDate.DATE) {
                     // intervalle [start2 , start2]
@@ -1402,7 +1381,8 @@ public class MergeQuery {
                     PointInTime startPit = new PointInTime();
                     startPit.set(birthDate.getStart());
                     end2 = Integer.MAX_VALUE;
-                } else if (birthDate.getFormat() == PropertyDate.ABOUT || birthDate.getFormat() == PropertyDate.ESTIMATED) {
+                } else {
+                    // ABOUT, ESTIMATED, CALCULATED
                     // intervalle [start2 , end2]
                     PointInTime startPit = new PointInTime();
                     startPit.set(birthDate.getStart());
@@ -1410,10 +1390,7 @@ public class MergeQuery {
                     PointInTime endPit = new PointInTime();
                     endPit.set(birthDate.getStart());
                     end2 = startPit.add(0, 0, +aboutYear).getJulianDay();
-                } else {
-                    start2 = birthDate.getStart().getJulianDay();
-                    end2 = birthDate.getEnd().getJulianDay();
-                }
+                } 
 
                 // je verifie si l'intervalle 1 est inclus dans l'intervalle 2
                 if (start1 >= start2  && end1 <= end2 ) {

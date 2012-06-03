@@ -1,5 +1,6 @@
 package ancestris.modules.releve.file;
 
+import ancestris.modules.releve.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.RecordMisc;
@@ -234,14 +235,16 @@ public class ReleveFileNimegue {
                                 fields[BirthField.indiFatherLastName.ordinal()],
                                 fields[BirthField.indiFatherOccupation.ordinal()],
                                 fields[BirthField.indiFatherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setIndiMother(
                                 fields[BirthField.indiMotherFirstName.ordinal()],
                                 fields[BirthField.indiMotherLastName.ordinal()],
                                 fields[BirthField.indiMotherOccupation.ordinal()],
                                 fields[BirthField.indiMotherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWitness1(
                                 fields[BirthField.witness1FirstName.ordinal()],
@@ -305,14 +308,16 @@ public class ReleveFileNimegue {
                                 fields[MarrField.indiFatherLastName.ordinal()],
                                 fields[MarrField.indiFatherOccupation.ordinal()],
                                 fields[MarrField.indiFatherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setIndiMother(
                                 fields[MarrField.indiMotherFirstName.ordinal()],
                                 fields[MarrField.indiMotherLastName.ordinal()],
                                 fields[MarrField.indiMotherOccupation.ordinal()],
                                 fields[MarrField.indiMotherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWife(
                                 fields[MarrField.wifeFirstName.ordinal()],
@@ -337,14 +342,16 @@ public class ReleveFileNimegue {
                                 fields[MarrField.wifeFatherLastName.ordinal()],
                                 fields[MarrField.wifeFatherOccupation.ordinal()],
                                 fields[MarrField.wifeFatherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWifeMother(
                                 fields[MarrField.wifeMotherFirstName.ordinal()],
                                 fields[MarrField.wifeMotherLastName.ordinal()],
                                 fields[MarrField.wifeMotherOccupation.ordinal()],
                                 fields[MarrField.wifeMotherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWitness1(
                                 fields[MarrField.witness1FirstName.ordinal()],
@@ -420,14 +427,16 @@ public class ReleveFileNimegue {
                                 fields[DeathField.indiFatherLastName.ordinal()],
                                 fields[DeathField.indiFatherOccupation.ordinal()],
                                 fields[DeathField.indiFatherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setIndiMother(
                                 fields[DeathField.indiMotherFirstName.ordinal()],
                                 fields[DeathField.indiMotherLastName.ordinal()],
                                 fields[DeathField.indiMotherOccupation.ordinal()],
                                 fields[DeathField.indiMotherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWitness1(
                                 fields[DeathField.witness1FirstName.ordinal()],
@@ -492,14 +501,16 @@ public class ReleveFileNimegue {
                                 fields[MiscField.indiFatherLastName.ordinal()],
                                 fields[MiscField.indiFatherOccupation.ordinal()],
                                 fields[MiscField.indiFatherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setIndiMother(
                                 fields[MiscField.indiMotherFirstName.ordinal()],
                                 fields[MiscField.indiMotherLastName.ordinal()],
                                 fields[MiscField.indiMotherOccupation.ordinal()],
                                 fields[MiscField.indiMotherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWife(
                                 fields[MiscField.wifeFirstName.ordinal()],
@@ -524,14 +535,16 @@ public class ReleveFileNimegue {
                                 fields[MiscField.wifeFatherLastName.ordinal()],
                                 fields[MiscField.wifeFatherOccupation.ordinal()],
                                 fields[MiscField.wifeFatherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWifeMother(
                                 fields[MiscField.wifeMotherFirstName.ordinal()],
                                 fields[MiscField.wifeMotherLastName.ordinal()],
                                 fields[MiscField.wifeMotherOccupation.ordinal()],
                                 fields[MiscField.wifeMotherComment.ordinal()],
-                                "");  //décédé
+                                "",   //décédé
+                                "");  //age
 
                         record.setWitness1(
                                 fields[MiscField.witness1FirstName.ordinal()],
@@ -591,22 +604,7 @@ public class ReleveFileNimegue {
      * @param fileName
      * TODO gérer la dat iincomplete
      */
-    public static StringBuilder saveFile(DataManager dataManager, ModelAbstract recordModel, File fileName, boolean append) {
-        // exemple
-        // NIMEGUEV3;09195;Monesple;09;Ariège;N;07/07/1674;07/1674;pujagou;6204;
-        // DEJEAN;Jean;M;indiComment fils;
-        // DEJEAN;Jean;;;
-        // SOULA;Raymonde;;;
-        // CALLES;Bernard;indiComment parrain;
-        // DEJEAN;Jeanne;indiComment marraine;
-        // commnetaire general;273;
-
-//        // exemple de code pour traiter le cas où les champs contiennent ";"
-//        Pattern p = Pattern.compile("\"([^\"]|\"\")*\"(;|$)|[^;]*(;|$)");
-//        Matcher m = p.matcher(test);
-//        while ( m.find() )
-//            System.out.println(m.group());
-
+    public static StringBuilder saveFile(PlaceManager placeManager, ModelAbstract recordModel, File fileName, boolean append) {
         StringBuilder sb = new StringBuilder();
         try {
             //create BufferedReader to read csv file
@@ -617,10 +615,10 @@ public class ReleveFileNimegue {
                 try {
                     if ( record instanceof RecordBirth ) {
                         line.appendNimegueFn("NIMEGUEV3");
-                        line.appendNimegueFn(dataManager.getCityCode());
-                        line.appendNimegueFn(dataManager.getCityName());
-                        line.appendNimegueFn(dataManager.getCountryName());
-                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn(placeManager.getCityCode());
+                        line.appendNimegueFn(placeManager.getCityName());
+                        line.appendNimegueFn(placeManager.getCountryName());
+                        line.appendNimegueFn(placeManager.getCountyName());
                         line.appendNimegueFn("N");
                         line.appendNimegueFn(record.getEventDateString());
                         line.appendNimegueFn("");
@@ -633,12 +631,16 @@ public class ReleveFileNimegue {
 
                         line.appendNimegueFn(record.getIndiFatherLastName().toString());
                         line.appendNimegueFn(record.getIndiFatherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiFatherDead().toString(), record.getIndiFatherComment().toString());
+                        line.appendNimegueFn(record.getIndiFatherAge().toString(),
+                                record.getIndiFatherDead().toString(),
+                                record.getIndiFatherComment().toString() );
                         line.appendNimegueFn(record.getIndiFatherOccupation().toString());
 
                         line.appendNimegueFn(record.getIndiMotherLastName().toString());
                         line.appendNimegueFn(record.getIndiMotherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiMotherDead().toString(), record.getIndiMotherComment().toString());
+                        line.appendNimegueFn(record.getIndiMotherAge().toString(),
+                                record.getIndiMotherDead().toString(),
+                                record.getIndiMotherComment().toString());
                         line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
                         line.appendNimegueFn(record.getWitness1LastName().toString());
@@ -667,10 +669,10 @@ public class ReleveFileNimegue {
                     } if ( record instanceof RecordMarriage ) {
 
                         line.appendNimegueFn("NIMEGUEV3");
-                        line.appendNimegueFn(dataManager.getCityCode());
-                        line.appendNimegueFn(dataManager.getCityName());
-                        line.appendNimegueFn(dataManager.getCountryName());
-                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn(placeManager.getCityCode());
+                        line.appendNimegueFn(placeManager.getCityName());
+                        line.appendNimegueFn(placeManager.getCountryName());
+                        line.appendNimegueFn(placeManager.getCountyName());
                         line.appendNimegueFn("M");
                         line.appendNimegueFn(record.getEventDateString());
                         line.appendNimegueFn("");
@@ -691,16 +693,22 @@ public class ReleveFileNimegue {
 
                         line.appendNimegueFn(record.getIndiMarriedLastName().toString());
                         line.appendNimegueFn(record.getIndiMarriedFirstName().toString());
-                        line.appendNimegueFn(record.getIndiMarriedDead().toString(), record.getIndiMarriedOccupation().toString(), record.getIndiMarriedComment().toString());
+                        line.appendNimegueFn(record.getIndiMarriedDead().toString(), 
+                                record.getIndiMarriedOccupation().toString(),
+                                record.getIndiMarriedComment().toString());
 
                         line.appendNimegueFn(record.getIndiFatherLastName().toString());
                         line.appendNimegueFn(record.getIndiFatherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiFatherDead().toString(), record.getIndiFatherComment().toString());
+                        line.appendNimegueFn(record.getIndiFatherAge().toString(),
+                                record.getIndiFatherDead().toString(),
+                                record.getIndiFatherComment().toString());
                         line.appendNimegueFn(record.getIndiFatherOccupation().toString());
 
                         line.appendNimegueFn(record.getIndiMotherLastName().toString());
                         line.appendNimegueFn(record.getIndiMotherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiMotherDead().toString(), record.getIndiMotherComment().toString());
+                        line.appendNimegueFn(record.getIndiMotherAge().toString(),
+                                record.getIndiMotherDead().toString(),
+                                record.getIndiMotherComment().toString());
                         line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
                         line.appendNimegueFn(record.getWifeLastName().toString());
@@ -721,12 +729,16 @@ public class ReleveFileNimegue {
 
                         line.appendNimegueFn(record.getWifeFatherLastName().toString());
                         line.appendNimegueFn(record.getWifeFatherFirstName().toString());
-                        line.appendNimegueFn(record.getWifeFatherDead().toString(), record.getWifeFatherComment().toString());
+                        line.appendNimegueFn(record.getWifeFatherAge().toString(),
+                                record.getWifeFatherDead().toString(),
+                                record.getWifeFatherComment().toString());
                         line.appendNimegueFn(record.getWifeFatherOccupation().toString());
 
                         line.appendNimegueFn(record.getWifeMotherLastName().toString());
                         line.appendNimegueFn(record.getWifeMotherFirstName().toString());
-                        line.appendNimegueFn(record.getWifeMotherDead().toString(), record.getWifeMotherComment().toString());
+                        line.appendNimegueFn(record.getWifeMotherAge().toString(),
+                                record.getWifeMotherDead().toString(),
+                                record.getWifeMotherComment().toString());
                         line.appendNimegueFn(record.getWifeMotherOccupation().toString());
 
                         line.appendNimegueFn(record.getWitness1LastName().toString());
@@ -755,10 +767,10 @@ public class ReleveFileNimegue {
                     } else if ( record instanceof RecordDeath ) {
 
                         line.appendNimegueFn("NIMEGUEV3");
-                        line.appendNimegueFn(dataManager.getCityCode());
-                        line.appendNimegueFn(dataManager.getCityName());
-                        line.appendNimegueFn(dataManager.getCountryName());
-                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn(placeManager.getCityCode());
+                        line.appendNimegueFn(placeManager.getCityName());
+                        line.appendNimegueFn(placeManager.getCountryName());
+                        line.appendNimegueFn(placeManager.getCountyName());
                         line.appendNimegueFn("D");
                         line.appendNimegueFn(record.getEventDateString());
                         line.appendNimegueFn("");
@@ -785,12 +797,16 @@ public class ReleveFileNimegue {
 
                         line.appendNimegueFn(record.getIndiFatherLastName().toString());
                         line.appendNimegueFn(record.getIndiFatherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiFatherDead().toString(), record.getIndiFatherComment().toString());
+                        line.appendNimegueFn(record.getIndiFatherAge().toString(),
+                                record.getIndiFatherDead().toString(),
+                                record.getIndiFatherComment().toString());
                         line.appendNimegueFn(record.getIndiFatherOccupation().toString());
 
                         line.appendNimegueFn(record.getIndiMotherLastName().toString());
                         line.appendNimegueFn(record.getIndiMotherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiMotherDead().toString(), record.getIndiMotherComment().toString());
+                        line.appendNimegueFn(record.getIndiMotherAge().toString(),
+                                record.getIndiMotherDead().toString(),
+                                record.getIndiMotherComment().toString());
                         line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
                         line.appendNimegueFn(record.getWitness1LastName().toString());
@@ -819,10 +835,10 @@ public class ReleveFileNimegue {
                     } else if ( record instanceof RecordMisc ) {
 
                         line.appendNimegueFn("NIMEGUEV3");
-                        line.appendNimegueFn(dataManager.getCityCode());
-                        line.appendNimegueFn(dataManager.getCityName());
-                        line.appendNimegueFn(dataManager.getCountryName());
-                        line.appendNimegueFn(dataManager.getCountyName());
+                        line.appendNimegueFn(placeManager.getCityCode());
+                        line.appendNimegueFn(placeManager.getCityName());
+                        line.appendNimegueFn(placeManager.getCountryName());
+                        line.appendNimegueFn(placeManager.getCountyName());
                         line.appendNimegueFn("V");
                         line.appendNimegueFn(record.getEventDateString());
                         line.appendNimegueFn("");
@@ -851,11 +867,15 @@ public class ReleveFileNimegue {
 
                         line.appendNimegueFn(record.getIndiFatherLastName().toString());
                         line.appendNimegueFn(record.getIndiFatherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiFatherDead().toString(), record.getIndiFatherComment().toString());
+                        line.appendNimegueFn(record.getIndiFatherAge().toString(),
+                                record.getIndiFatherDead().toString(),
+                                record.getIndiFatherComment().toString());
                         line.appendNimegueFn(record.getIndiFatherOccupation().toString());
                         line.appendNimegueFn(record.getIndiMotherLastName().toString());
                         line.appendNimegueFn(record.getIndiMotherFirstName().toString());
-                        line.appendNimegueFn(record.getIndiMotherDead().toString(), record.getIndiMotherComment().toString());
+                        line.appendNimegueFn(record.getIndiMotherAge().toString(),
+                                record.getIndiMotherDead().toString(),
+                                record.getIndiMotherComment().toString());
                         line.appendNimegueFn(record.getIndiMotherOccupation().toString());
 
                         line.appendNimegueFn(record.getWifeLastName().toString());
@@ -877,11 +897,15 @@ public class ReleveFileNimegue {
                         
                         line.appendNimegueFn(record.getWifeFatherLastName().toString());
                         line.appendNimegueFn(record.getWifeFatherFirstName().toString());
-                        line.appendNimegueFn(record.getWifeFatherDead().toString(), record.getWifeFatherComment().toString());
+                        line.appendNimegueFn(record.getWifeFatherAge().toString(),
+                                record.getWifeFatherDead().toString(),
+                                record.getWifeFatherComment().toString());
                         line.appendNimegueFn(record.getWifeFatherOccupation().toString());
                         line.appendNimegueFn(record.getWifeMotherLastName().toString());
                         line.appendNimegueFn(record.getWifeMotherFirstName().toString());
-                        line.appendNimegueFn(record.getWifeMotherDead().toString(), record.getWifeMotherComment().toString());
+                        line.appendNimegueFn(record.getWifeMotherAge().toString(),
+                                record.getWifeMotherDead().toString(),
+                                record.getWifeMotherComment().toString());
                         line.appendNimegueFn(record.getWifeMotherOccupation().toString());
 
                         line.appendNimegueFn(record.getWitness1LastName().toString());

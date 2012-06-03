@@ -127,7 +127,11 @@ public class BeanField {
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Place");
                 break;
             case indiAge:
+            case indiFatherAge:
+            case indiMotherAge:
             case wifeAge:
+            case wifeFatherAge:
+            case wifeMotherAge:
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Age");
                 break;
             case indiBirthDate:

@@ -1,5 +1,7 @@
 package ancestris.modules.releve.model;
 
+import ancestris.modules.releve.model.Field.FieldType;
+
 /**
  *
  * @author Michel
@@ -18,12 +20,14 @@ public class RecordBirth extends Record {
 
         indiFatherFirstName = new FieldSimpleValue();
         indiFatherLastName  = new FieldSimpleValue();
+        indiFatherAge       = new FieldAge();
         indiFatherDead      = new FieldDead();
         indiFatherOccupation= new FieldOccupation();
         indiFatherComment   = new FieldComment();
 
         indiMotherFirstName = new FieldSimpleValue();
         indiMotherLastName  = new FieldSimpleValue();
+        indiMotherAge       = new FieldAge();
         indiMotherDead      = new FieldDead();
         indiMotherOccupation= new FieldOccupation();
         indiMotherComment   = new FieldComment();
@@ -58,12 +62,14 @@ public class RecordBirth extends Record {
 
         object.indiFatherFirstName = indiFatherFirstName.clone();
         object.indiFatherLastName  = indiFatherLastName.clone();
+        object.indiFatherAge       = indiFatherAge.clone();
         object.indiFatherDead      = indiFatherDead.clone();
         object.indiFatherOccupation= indiFatherOccupation.clone();
         object.indiFatherComment   = indiFatherComment.clone();
 
         object.indiMotherFirstName = indiMotherFirstName.clone();
         object.indiMotherLastName  = indiMotherLastName.clone();
+        object.indiMotherAge       = indiMotherAge.clone();
         object.indiMotherDead      = indiMotherDead.clone();
         object.indiMotherOccupation= indiMotherOccupation.clone();
         object.indiMotherComment   = indiMotherComment.clone();

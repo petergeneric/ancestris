@@ -14,7 +14,7 @@ import genj.gedcom.Source;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -23,7 +23,7 @@ import org.openide.util.NbBundle;
  * cette classe gère les lignes affichées dans la fenetre du comparateur
  * @author Michel
  */
-public abstract class MergeModel extends AbstractTableModel implements java.lang.Comparable {
+public abstract class MergeModel extends AbstractTableModel implements java.lang.Comparable<MergeModel> {
 
     protected class MergeRow {
         RowType rowType;
@@ -31,6 +31,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         Object recordValue;
         Object entityValue;
         boolean merge;
+        boolean merge_initial;
         CompareResult compareResult ;
         Entity entityObject = null;
         //TODO  ajouter Tooltip
@@ -47,7 +48,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         NOT_APPLICABLE
     }
 
-    private HashMap<RowType, MergeRow> dataMap = new HashMap<RowType, MergeRow>();
+    private EnumMap<RowType, MergeRow> dataMap = new EnumMap<RowType, MergeRow>(RowType.class);
     private List<MergeRow> dataList = new ArrayList<MergeRow>();
     private int nbMatch = 0;
     private int nbMatchMax = 0;
@@ -270,6 +271,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             nbMatch++;
         }
         nbMatchMax++;
+        mergeRow.merge_initial = mergeRow.merge;
 
     }
 
@@ -348,6 +350,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             nbMatch++;
         }
         nbMatchMax++;
+        mergeRow.merge_initial = mergeRow.merge;
     }
 
     /**
@@ -402,6 +405,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             mergeRow.merge = false;
             mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
         }
+        mergeRow.merge_initial = mergeRow.merge;
     }
 
     /**
@@ -449,6 +453,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             nbMatch++;
         }
         nbMatchMax++;
+        mergeRow.merge_initial = mergeRow.merge;
 
     }
 
@@ -469,6 +474,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         mergeRow.recordValue = null;
         mergeRow.merge = false;
         mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+        mergeRow.merge_initial = mergeRow.merge;
     }
 
     /**
@@ -524,11 +530,11 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @return
      */
     @Override
-    public int compareTo(Object object) {
+    public int compareTo(MergeModel object) {
         if ( !(object instanceof MergeModel)) {
             return 1;
         }
-        int nombre1 = ((MergeModel) object).nbMatch;
+        int nombre1 = object.nbMatch;
         int nombre2 = this.nbMatch;
         if (nombre2 > nombre1) {
             return -1;
@@ -629,8 +635,22 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param state
      */
     void check(int rowNum, boolean state) {
-        //TODO decocher les lignes filles
         dataList.get(rowNum).merge = state;
+
+
+        // je met a jour les lignes filles
+        RowType currentRowType = dataList.get(rowNum).rowType;
+        for(int i =0 ; i < dataList.size();i++) {
+            MergeRow mergeRow = dataList.get(i);
+            if (getRowParent(mergeRow.rowType).rowType == currentRowType ) {
+                if (state == true) {
+                    // je restaure l'eata initial
+                    mergeRow.merge =  mergeRow.merge_initial;
+                } else {
+                    mergeRow.merge =  false;
+                }
+            }
+        }
     }
 
 

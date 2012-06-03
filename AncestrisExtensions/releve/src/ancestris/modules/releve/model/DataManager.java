@@ -221,25 +221,25 @@ public class DataManager {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    public String getCityName() {
-        return configPanel.getCityName();
-    }
-
-    public String getCityCode() {
-        return configPanel.getCityCode();
-    }
-
-    public String getCountyName() {
-        return configPanel.getCountyName();
-    }
-
-    public String getStateName() {
-        return configPanel.getStateName();
-    }
-
-    public String getCountryName() {
-        return configPanel.getCountryName();
-    }
+//    public String getCityName() {
+//        return configPanel.getCityName();
+//    }
+//
+//    public String getCityCode() {
+//        return configPanel.getCityCode();
+//    }
+//
+//    public String getCountyName() {
+//        return configPanel.getCountyName();
+//    }
+//
+//    public String getStateName() {
+//        return configPanel.getStateName();
+//    }
+//
+//    public String getCountryName() {
+//        return configPanel.getCountryName();
+//    }
 
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs aux modeles

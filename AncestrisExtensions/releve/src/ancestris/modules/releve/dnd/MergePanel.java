@@ -28,10 +28,9 @@ public class MergePanel extends javax.swing.JPanel {
     /**
      * affiche les entites qui peuvent être concernées par le relevé.
      * et selection le premier de la liste
-     * @param entities
-     * @param selectedEntity
-     * @param record
-     * @param mergeDialog
+     * @param models    liste des modeles
+     * @param selectedEntity  entite selectonne
+     * @param mergeDialog     fenetre principale
      */
     protected void initData (List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog ) {
 

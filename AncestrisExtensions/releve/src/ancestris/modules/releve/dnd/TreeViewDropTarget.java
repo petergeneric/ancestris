@@ -77,7 +77,6 @@ public class TreeViewDropTarget {
         public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
             Point location = dropTargetDragEvent.getLocation();
 
-            //TODO créer la méthode treeView.getEntityAt(location)
             Entity entity = null;
             //entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
@@ -96,7 +95,6 @@ public class TreeViewDropTarget {
         public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
             //System.out.println("dragOver "+dropTargetDragEvent.getSource().getClass().getName());
             Point location = dropTargetDragEvent.getLocation();
-            //TODO créer la méthode treeView.getEntityAt(location)
             Entity entity = null;
             //entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
@@ -113,7 +111,6 @@ public class TreeViewDropTarget {
         @Override
 		public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
 			Point location = dropTargetDropEvent.getLocation();
-            //TODO créer la méthode treeView.getEntityAt(location)
             Entity entity = null;
             //entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {

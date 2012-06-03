@@ -77,7 +77,9 @@ public class ReleveFileGedcom {
                                     indi.getBiologicalFather().getLastName(),
                                     indi.getBiologicalFather().getProperty("OCCU") != null ? indi.getBiologicalFather().getPropertyDisplayValue("OCCU") : "",
                                     indi.getBiologicalFather().getProperty("NOTE") != null ? indi.getBiologicalFather().getPropertyDisplayValue("NOTE") : "",
-                                    indi.getBiologicalFather().getDeathDate(false) != null ? "true" : "false");
+                                    indi.getBiologicalFather().getDeathDate(false) != null ? "true" : "false",
+                                    "" ); // age
+
                         }
 
                         if (indi.getBiologicalMother() != null) {
@@ -86,7 +88,8 @@ public class ReleveFileGedcom {
                                     indi.getBiologicalMother().getLastName(),
                                     indi.getBiologicalMother().getProperty("OCCU") != null ? indi.getBiologicalMother().getPropertyDisplayValue("OCCU") : "",
                                     indi.getBiologicalMother().getProperty("NOTE") != null ? indi.getBiologicalMother().getPropertyDisplayValue("NOTE") : "",
-                                    indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false");
+                                    indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false",
+                                    "" ); // age;
                         }
 
 //                        record.setWitness1(
@@ -147,7 +150,8 @@ public class ReleveFileGedcom {
                                     indi.getBiologicalFather().getLastName(),
                                     indi.getBiologicalFather().getPropertyValue("OCCU"),
                                     indi.getBiologicalFather().getPropertyValue("NOTE"),
-                                    indi.getBiologicalFather().getDeathDate(false) != null ? "true" : "false");
+                                    indi.getBiologicalFather().getDeathDate(false) != null ? "true" : "false",
+                                    "" ); // age;
                         }
 
                         if (indi.getBiologicalMother() != null) {
@@ -156,7 +160,8 @@ public class ReleveFileGedcom {
                                     indi.getBiologicalMother().getLastName(),
                                     indi.getBiologicalMother().getPropertyValue("OCCU"),
                                     indi.getBiologicalMother().getPropertyValue("NOTE"),
-                                    indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false");
+                                    indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false",
+                                    "" ); // age;
                         }
                         record.recordNo = lineNumber++;
                         buffer.loadRecord(record);
@@ -202,7 +207,8 @@ public class ReleveFileGedcom {
                                     husbandFather.getLastName(),
                                     husbandFather.getPropertyValue("OCCU"),
                                     husbandFather.getPropertyValue("NOTE"),
-                                    "false");
+                                    "false",
+                                    "" ); // age;
                         }
 
                         Indi husbandMother = husband.getBiologicalMother();
@@ -213,7 +219,8 @@ public class ReleveFileGedcom {
                                     husbandMother.getLastName(),
                                     husbandMother.getPropertyValue("OCCU"),
                                     husbandMother.getPropertyValue("NOTE"),
-                                    "false");
+                                    "false",
+                                    "" ); // age;
                         }
                     }
 
@@ -236,7 +243,8 @@ public class ReleveFileGedcom {
                                     wifeFather.getLastName(),
                                     wifeFather.getPropertyValue("OCCU"),
                                     wifeFather.getPropertyValue("NOTE"),
-                                    "false");
+                                    "false",
+                                    "" ); // age;
                         }
 
                         Indi wifeMother = wife.getBiologicalMother();
@@ -247,7 +255,8 @@ public class ReleveFileGedcom {
                                     wifeMother.getLastName(),
                                     wifeMother.getPropertyValue("OCCU"),
                                     wifeMother.getPropertyValue("NOTE"),
-                                    "false");
+                                    "false",
+                                    "" ); // age;
                         }
                     }
                     record.recordNo = lineNumber++;

@@ -1,5 +1,6 @@
 package ancestris.modules.releve.file;
 
+import ancestris.modules.releve.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.ModelAbstract;
@@ -18,7 +19,13 @@ import org.openide.util.NbPreferences;
 public class FileManager {
 
     private static final String FILE_DIRECTORY = "FileDirectory";
-    public static enum FileFormat { FILE_TYPE_UNKNOW,  FILE_TYPE_ANCESTRISV1, FILE_TYPE_EGMT, FILE_TYPE_NIMEGUE } ;
+    public static enum FileFormat { 
+        FILE_TYPE_UNKNOW,
+        FILE_TYPE_ANCESTRISV1,
+        FILE_TYPE_ANCESTRISV2,
+        FILE_TYPE_EGMT,
+        FILE_TYPE_NIMEGUE
+    } ;
 
     /**
      * determine le type de fichier
@@ -37,12 +44,14 @@ public class FileManager {
         }
         StringBuilder sb  = new StringBuilder();
         FileBuffer buffer = null;
-        if (ReleveFileAncestrisV1.isValidFile(inputFile, sb.append('\n'))) {
-            buffer = ReleveFileAncestrisV1.loadFile(inputFile);
+        if (ReleveFileAncestrisV2.isValidFile(inputFile, sb.append('\n'))) {
+            buffer = ReleveFileAncestrisV2.loadFile(inputFile);
         } else if (ReleveFileEgmt.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileEgmt.loadFile(inputFile);
         } else if (ReleveFileNimegue.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileNimegue.loadFile(inputFile);
+        } else if (ReleveFileAncestrisV1.isValidFile(inputFile, sb.append('\n'))) {
+            buffer = ReleveFileAncestrisV1.loadFile(inputFile);
         } else {
             throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.UnknownFormat"), inputFile.getName())+ "\n" + sb.toString());
         }
@@ -55,18 +64,18 @@ public class FileManager {
      * @param resultFile
      * @param fileType
      */
-    public static StringBuilder saveFile(DataManager dataManager, File resultFile, FileFormat fileFormat) {
-        return saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveBirthModel(), dataManager.getReleveMarriageModel(), dataManager.getReleveDeathModel(), dataManager.getReleveMiscModel());
+    public static StringBuilder saveFile(DataManager dataManager, PlaceManager placeManager, File resultFile, FileFormat fileFormat) {
+        return saveFile(placeManager, resultFile, fileFormat, dataManager.getReleveBirthModel(), dataManager.getReleveMarriageModel(), dataManager.getReleveDeathModel(), dataManager.getReleveMiscModel());
     }
 
     /**
      * Enregistre dans un fichier certains types de releves
-     * @param dataManager
+     * @param placeManager
      * @param saveFile
      * @param fileFormat format du fichier 
      * @param models  liste des modeles a enregistrer
      */
-    public static StringBuilder saveFile( DataManager dataManager, File saveFile, FileFormat fileFormat , ModelAbstract... models ) {
+    public static StringBuilder saveFile( PlaceManager placeManager, File saveFile, FileFormat fileFormat , ModelAbstract... models ) {
         StringBuilder sb = new StringBuilder();
         if (saveFile != null) {
             // j'enregistre le répertoire du fichier
@@ -77,22 +86,22 @@ public class FileManager {
             }
 
             switch (fileFormat) {
-                case FILE_TYPE_ANCESTRISV1:
-                    sb.append(ReleveFileAncestrisV1.saveFile(dataManager, models[0], saveFile, false));
+                case FILE_TYPE_ANCESTRISV2:
+                    sb.append(ReleveFileAncestrisV2.saveFile(placeManager, models[0], saveFile, false));
                     for(int i=1; i< models.length; i++) {
-                        sb.append(ReleveFileAncestrisV1.saveFile(dataManager, models[i], saveFile, true));
+                        sb.append(ReleveFileAncestrisV2.saveFile(placeManager, models[i], saveFile, true));
                     }
                     break;
                 case FILE_TYPE_EGMT:
-                    sb.append(ReleveFileEgmt.saveFile(dataManager, models[0], saveFile, false));
+                    sb.append(ReleveFileEgmt.saveFile(placeManager, models[0], saveFile, false));
                     for(int i=1; i< models.length; i++) {
-                        sb.append(ReleveFileEgmt.saveFile(dataManager, models[i], saveFile, true));
+                        sb.append(ReleveFileEgmt.saveFile(placeManager, models[i], saveFile, true));
                     }
                     break;
                 case FILE_TYPE_NIMEGUE:
-                    sb.append(ReleveFileNimegue.saveFile(dataManager, models[0], saveFile, false));
+                    sb.append(ReleveFileNimegue.saveFile(placeManager, models[0], saveFile, false));
                     for(int i=1; i< models.length; i++) {
-                        sb.append(ReleveFileNimegue.saveFile(dataManager, models[i], saveFile, true));
+                        sb.append(ReleveFileNimegue.saveFile(placeManager, models[i], saveFile, true));
                     }
                     break;
             }           

@@ -17,9 +17,9 @@ import org.openide.util.NbBundle;
  */
 class MergeModelBirth extends MergeModel {
 
-    Indi selectedIndi;
-    MergeRecord record;
-    Gedcom gedcom;
+    private Indi selectedIndi;
+    private MergeRecord record;
+    private Gedcom gedcom;
     
     /**
      * le constucteur initialise les données du modele
@@ -28,7 +28,7 @@ class MergeModelBirth extends MergeModel {
      * @param indi
      * @param record
      */
-    MergeModelBirth(MergeRecord record, Gedcom gedcom) throws Exception {
+    protected MergeModelBirth(MergeRecord record, Gedcom gedcom) throws Exception {
         this.record = record;
         this.selectedIndi = null;
         this.gedcom = gedcom;
@@ -43,7 +43,7 @@ class MergeModelBirth extends MergeModel {
      * @param indi
      * @param record
      */
-    MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi indi, Fam fam) throws Exception {
+    protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi indi, Fam fam) throws Exception {
         this.record = record;
         this.selectedIndi = indi;
         this.gedcom = gedcom;
@@ -58,7 +58,7 @@ class MergeModelBirth extends MergeModel {
      * @param indi
      * @param record
      */
-    MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
+    protected MergeModelBirth(MergeRecord record, Gedcom gedcom, Indi father, Indi mother ) throws Exception {
         this.record = record;
         this.selectedIndi = null;
         this.gedcom = gedcom;

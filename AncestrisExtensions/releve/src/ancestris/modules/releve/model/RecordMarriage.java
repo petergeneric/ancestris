@@ -12,7 +12,7 @@ public class RecordMarriage extends Record implements Cloneable{
         indiFirstName       = new FieldSimpleValue();
         indiLastName        = new FieldSimpleValue();
         indiSex             = new FieldSex();
-        indiAge             = new FieldSimpleValue();
+        indiAge             = new FieldAge();
         indiBirthDate       = new FieldDate();
         indiPlace           = new FieldPlace();
         indiOccupation      = new FieldOccupation();
@@ -27,12 +27,14 @@ public class RecordMarriage extends Record implements Cloneable{
         
         indiFatherFirstName = new FieldSimpleValue();
         indiFatherLastName  = new FieldSimpleValue();
+        indiFatherAge       = new FieldAge();
         indiFatherDead      = new FieldDead();
         indiFatherOccupation= new FieldOccupation();
         indiFatherComment   = new FieldComment();
         
         indiMotherFirstName = new FieldSimpleValue();
         indiMotherLastName  = new FieldSimpleValue();
+        indiMotherAge       = new FieldAge();
         indiMotherDead      = new FieldDead();
         indiMotherOccupation= new FieldOccupation();
         indiMotherComment   = new FieldComment();
@@ -40,7 +42,7 @@ public class RecordMarriage extends Record implements Cloneable{
         wifeFirstName       = new FieldSimpleValue();
         wifeLastName        = new FieldSimpleValue();
         wifeSex             = new FieldSex();
-        wifeAge             = new FieldSimpleValue();
+        wifeAge             = new FieldAge();
         wifeBirthDate       = new FieldDate();
         wifePlace           = new FieldPlace();
         wifeOccupation      = new FieldOccupation();
@@ -55,12 +57,14 @@ public class RecordMarriage extends Record implements Cloneable{
         
         wifeFatherFirstName = new FieldSimpleValue();
         wifeFatherLastName  = new FieldSimpleValue();
+        wifeFatherAge       = new FieldAge();
         wifeFatherDead      = new FieldDead();
         wifeFatherOccupation= new FieldOccupation();
         wifeFatherComment   = new FieldComment();
         
         wifeMotherFirstName = new FieldSimpleValue();
         wifeMotherLastName  = new FieldSimpleValue();
+        wifeMotherAge       = new FieldAge();
         wifeMotherDead      = new FieldDead();
         wifeMotherOccupation= new FieldOccupation();
         wifeMotherComment   = new FieldComment();
@@ -104,12 +108,14 @@ public class RecordMarriage extends Record implements Cloneable{
 
         object.indiFatherFirstName = indiFatherFirstName.clone();
         object.indiFatherLastName  = indiFatherLastName.clone();
+        object.indiFatherAge       = indiFatherAge.clone();
         object.indiFatherDead      = indiFatherDead.clone();
         object.indiFatherOccupation= indiFatherOccupation.clone();
         object.indiFatherComment   = indiFatherComment.clone();
 
         object.indiMotherFirstName = indiMotherFirstName.clone();
         object.indiMotherLastName  = indiMotherLastName.clone();
+        object.indiMotherAge       = indiMotherAge.clone();
         object.indiMotherDead      = indiMotherDead.clone();
         object.indiMotherOccupation= indiMotherOccupation.clone();
         object.indiMotherComment   = indiMotherComment.clone();
@@ -131,12 +137,14 @@ public class RecordMarriage extends Record implements Cloneable{
 
         object.wifeFatherFirstName = wifeFatherFirstName.clone();
         object.wifeFatherLastName  = wifeFatherLastName.clone();
+        object.wifeFatherAge       = wifeFatherAge.clone();
         object.wifeFatherDead      = wifeFatherDead.clone();
         object.wifeFatherOccupation= wifeFatherOccupation.clone();
         object.wifeFatherComment   = wifeFatherComment.clone();
 
         object.wifeMotherFirstName = wifeMotherFirstName.clone();
         object.wifeMotherLastName  = wifeMotherLastName.clone();
+        object.wifeMotherAge       = wifeMotherAge.clone();
         object.wifeMotherDead      = wifeMotherDead.clone();
         object.wifeMotherOccupation= wifeMotherOccupation.clone();
         object.wifeMotherComment   = wifeMotherComment.clone();

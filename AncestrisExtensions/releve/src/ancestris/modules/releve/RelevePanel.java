@@ -32,7 +32,7 @@ public class RelevePanel extends javax.swing.JPanel  {
 
     public void setModel(DataManager dataManager, DataManager.ModelType modelType, ConfigPanel configPanel) {
         releveModel = dataManager.getModel(modelType);
-        releveTable.setModel(dataManager, modelType);
+        releveTable.setModel(dataManager, modelType, configPanel);
         releveEditor.setModel(dataManager, modelType, configPanel);
 
         // j'envoie une notification pour initialiser l'affichage de la table et de l'editeur

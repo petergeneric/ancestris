@@ -13,7 +13,7 @@ public class RecordDeath extends Record {
         indiFirstName       = new FieldSimpleValue();
         indiLastName        = new FieldSimpleValue();
         indiSex             = new FieldSex();
-        indiAge             = new FieldSimpleValue();
+        indiAge             = new FieldAge();
         indiBirthDate       = new FieldDate();
         indiPlace           = new FieldPlace();
         indiOccupation      = new FieldOccupation();
@@ -28,12 +28,14 @@ public class RecordDeath extends Record {
         
         indiFatherFirstName = new FieldSimpleValue();
         indiFatherLastName  = new FieldSimpleValue();
+        indiFatherAge       = new FieldAge();
         indiFatherDead      = new FieldDead();
         indiFatherOccupation= new FieldOccupation();
         indiFatherComment   = new FieldComment();
         
         indiMotherFirstName = new FieldSimpleValue();
         indiMotherLastName  = new FieldSimpleValue();
+        indiMotherAge       = new FieldAge();
         indiMotherDead      = new FieldDead();
         indiMotherOccupation= new FieldOccupation();
         indiMotherComment   = new FieldComment();
@@ -77,12 +79,14 @@ public class RecordDeath extends Record {
 
         object.indiFatherFirstName = indiFatherFirstName.clone();
         object.indiFatherLastName  = indiFatherLastName.clone();
+        object.indiFatherAge       = indiFatherAge.clone();
         object.indiFatherDead      = indiFatherDead.clone();
         object.indiFatherOccupation= indiFatherOccupation.clone();
         object.indiFatherComment   = indiFatherComment.clone();
 
         object.indiMotherFirstName = indiMotherFirstName.clone();
         object.indiMotherLastName  = indiMotherLastName.clone();
+        object.indiMotherAge       = indiMotherAge.clone();
         object.indiMotherDead      = indiMotherDead.clone();
         object.indiMotherOccupation= indiMotherOccupation.clone();
         object.indiMotherComment   = indiMotherComment.clone();

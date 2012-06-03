@@ -27,14 +27,14 @@ public class RecordTransferHandle extends TransferHandler {
             ReleveTable table = (ReleveTable) c ;
             // je recupere le clone du releve 
             Record record = ((ModelAbstract)table.getModel()).getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
-            record = (Record) record.clone();
+            record = record.clone();
             // je complete le lieu dans le releve
             record.setEventPlace(
-                    table.getDataManager().getCityName(),
-                    table.getDataManager().getCityCode(),
-                    table.getDataManager().getCountyName(),
-                    table.getDataManager().getStateName(),
-                    table.getDataManager().getCountryName());
+                    table.getPlaceManager().getCityName(),
+                    table.getPlaceManager().getCityCode(),
+                    table.getPlaceManager().getCountyName(),
+                    table.getPlaceManager().getStateName(),
+                    table.getPlaceManager().getCountryName());
             return new TransferableRecord(record, c);
         } else {
             return null;
@@ -51,6 +51,7 @@ public class RecordTransferHandle extends TransferHandler {
         try {
             TransferableData data = (TransferableData)  support.getTransferable().getTransferData(TransferableRecord.recordFlavor);
             if ( data.source.equals(support.getComponent())){
+                // je refuse d'importer un releve si la destination est identique a la source
                 return false;
             }
         } catch (UnsupportedFlavorException e) {
@@ -58,9 +59,6 @@ public class RecordTransferHandle extends TransferHandler {
         } catch (IOException e) {
             return false;
         }
-//        if ( support.getComponent().equals(source)) {
-//           return false;
-//        }
 
         return true;
     }
