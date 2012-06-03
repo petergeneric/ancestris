@@ -32,13 +32,14 @@
             The SPARQL based reports allow to write and customise reports
             without a development environment. As a side effect you get your
             GedCom converted into an RDF file. When published the RDF file
-            could be used for cross-site queries.       
+            could be used in cross-site queries for mash-ups.
         <ol>
             <li> <a href="rdf-about.html#rdf-about_1">Under the hood</a></li>
             <li> <a href="rdf-about.html#rdf-about_2">Queries</a></li>
             <li> <a href="rdf-about.html#rdf-about_3">Rules</a></li>
             <li> <a href="rdf-about.html#rdf-about_4">URI's</a></li>
-            <li> <a href="rdf-about.html#rdf-about_5">Notes</a></li>
+            <li> <a href="rdf-about.html#rdf-about_5">Layout</a></li>
+            <li> <a href="rdf-about.html#rdf-about_6">RDF / TTL / N3</a></li>
         </ol>
         </p>
 
@@ -46,13 +47,17 @@
         <h3 class="ancestris_help_title">1 - Under the hood</h3>
         <p class="justify">
             The report generation undergoes four stages:
-        <dl>
-            <dt>1. conversion (optional)</dt>
-            <dd>a. from GedCom to  <a href="rdf-about.html#rdf-about_5d">RDF / TTL / N3</a></dd>
-            <dd>b. apply <a href="rdf-about.html#rdf-about_3">rules</a> (optional)</dd>
-            <dt>2. execute the SPARQL query</dt>
-            <dt>3. apply a nice <a href="rdf-about.html#rdf-about_5b">layout</a> (optional)</dt>
-        </dl>
+        <ol>
+            <li>conversion (optional)
+                <ul>
+                    <li>from GedCom format to your choice of <a href="rdf-about.html#rdf-about_6">RDF / TTL / N3</a>,
+                        and from ID's in the GedCom file to <a href="rdf-about.html#rdf-about_4">URI</a>'s in the converted file
+                    </li>
+                    <li>apply <a href="rdf-about.html#rdf-about_3">rules</a> (optional)</li>
+                </ul>
+            <li>execute the SPARQL <a href="rdf-about.html#rdf-about_2">query</a></li>
+            <li>apply a nice <a href="rdf-about.html#rdf-about_5">layout</a> (optional)</li>
+        </ol>
         <br>
         <i><b>(1)</b> Reload the previous conversion result if the GedCom did not
         change and the new query works with the last applied rules.<br>
@@ -64,7 +69,7 @@
             <a href="./rdf-examples.html">Examples<a>
         </p>         
         <p class="justify">
-          Delivered examples were initialy intented to provide examples with the most important techniques.
+          Delivered examples were initialy intented to show the most important techniques.
           Such as counting, sorting, computing, filtering and navigating through the data.
         </p>
         <h4 class="ancestris_help_title">a - customizing</h4>
@@ -138,19 +143,7 @@
         </p>
 
         <a name="rdf-about_5"></a>
-        <h3 class="ancestris_help_title">5 - Notes</h3>
-
-        <a name="rdf-about_5a"></a>
-        <h4 class="ancestris_help_title">a) Execution context</h4>
-        <p class="justify">
-            Some queries contain a <b>%s</b>. These two characters should be
-            replaced with the ID of an entity (FAM, INDI, etc.). You can do
-            the replacement in a copy of the query, or Ancestris replaces
-            the ID of the entity from which you launched the report.
-        </p>
-
-        <a name="rdf-about_5b"></a>
-        <h4 class="ancestris_help_title">b) Layout</h4>
+        <h3 class="ancestris_help_title">5 - Layout</h3>
         <p class="justify">
             Choose XML as output extension for a nice layout. Optionally
             specify an XSL style sheet to inject into the XML. Note that you
@@ -174,6 +167,15 @@
             </object>
         </p>
 
+        <a name="rdf-about_6"></a>
+        <h3 class="ancestris_help_title">6 - RDF / TTL / N3</h3>
+            The extension determines the stored format. 
+            For local queries it doesn't matter which one you choose.
+            For cross site queries RDF is recommend as the most commonly supported.
+            TTL and N3 are almost as easy to read as 
+            GedCom mode of Ancestris' edit view. These two formats also have a lot in common
+            with the query syntax.
+        </p>
         <br>
         <a href="rdf-about.html#_Top_">Top</a>
         <br>
