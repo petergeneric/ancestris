@@ -2,12 +2,7 @@
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
     <mapID target="genjreports.rdf.about" url="rdf-about.html"/>
-    <mapID target="genjreports.rdf.rules" url="rdf-rules.html"/>
-    <mapID target="genjreports.rdf.queries" url="rdf-queries.html"/>
-    <mapID target="genjreports.rdf.queries1" url="rdf-queries1.html"/>
-    <mapID target="genjreports.rdf.queries2" url="rdf-queries2.html"/>
-    <mapID target="genjreports.rdf.queries3" url="rdf-queries3.html"/>
-    <mapID target="genjreports.rdf.queries4" url="rdf-queries4.html"/>
-    <mapID target="genjreports.rdf.hints" url="rdf-hints.html"/>
+    <mapID target="genjreports.rdf.examples" url="rdf-examples.html"/>
+    <mapID target="genjreports.rdf.submit" url="rdf-submit.html"/>
     <mapID target="genjreports.rdf.todo" url="rdf-todo.html"/>
 </map>
