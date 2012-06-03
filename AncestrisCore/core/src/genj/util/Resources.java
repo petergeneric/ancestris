@@ -47,7 +47,13 @@ public class Resources {
     }
     public static Resources get(Class<?> clazz, Locale locale) {
         try {
-            Resources result = new Resources(NbBundle.getBundle(clazz));
+            ResourceBundle bundle;
+
+            if (locale == null)
+                 bundle = NbBundle.getBundle(clazz);
+            else
+                bundle = NbBundle.getBundle(findName(clazz), locale);
+            Resources result = new Resources(bundle);
             result.description = "" + clazz;
             return result;
         } catch (MissingResourceException e) {
