@@ -140,7 +140,7 @@ public class ReportWebsite extends Report{
 
     @Override
     public boolean isHidden() {
-        return false;
+        return true;
     }
 //    Console output;
 
