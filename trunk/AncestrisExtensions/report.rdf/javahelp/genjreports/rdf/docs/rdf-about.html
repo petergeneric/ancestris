@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
-        <title>RDF (SPARQL based) Report</title>
+        <title>RDF (SPARQL based) Reports</title>
         <link rel="stylesheet" href="./ancestris.css" type="text/css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="./ancestris.css">
@@ -9,7 +9,7 @@
     <body>
         <a name="_Top_"></a>
         <center>
-            <h2 class="ancestris_help_title">RDF (SPARQL based) Report</h2>
+            <h2 class="ancestris_help_title">RDF (SPARQL based) Reports</h2>
         </center>
         <br>
         <table border="0" width="100%">
@@ -20,8 +20,9 @@
                 <td width="35%">
                     <p style="font-style: italic; text-align: justify;
                     text-justify: newspaper; font-size: 10px;">
-                        <font color="#0b7700"><u>Author</u></font>: Jo Pol,<br>
-                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol.
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol.<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol, 
+                           <a href="./rdf-todo.html">You</a>.
                     </p>
                 </td>
             </tr>
@@ -38,8 +39,6 @@
             <li> <a href="rdf-about.html#rdf-about_3">Rules</a></li>
             <li> <a href="rdf-about.html#rdf-about_4">URI's</a></li>
             <li> <a href="rdf-about.html#rdf-about_5">Notes</a></li>
-            <li> <a href="rdf-about.html#rdf-about_6">To do</a></li>
-            <li> <a href="rdf-about.html#rdf-about_7">Known bugs</a></li>
         </ol>
         </p>
 
@@ -61,31 +60,48 @@
 
         <a name="rdf-about_2"></a>
         <h3 class="ancestris_help_title">2 - Queries</h3>
-        Each report description has one or two links to plain text files: the
-        query, and optionally the rules. Save these files locally to use them
-        in the option group for queries.
-        See also the notes on 
-        <a href="rdf-about.html#rdf-about_5c">Localize, customize and develop queries</a>
-        and comment lines withint the query files.
-        <br>
-
-        <dl>
-            <dt>general reports (no entity as <a href="rdf-about.html#rdf-about_5a">context</a> required)</dt>
-                 <dd>* <a href="./reports/AgeDiffBetweenSpouses.txt">AgeDiffBetweenSpouses.txt</a> - Large age difference between husband and wife.</dd>
-                 <dd>* <a href="./reports/CountFirstNames.txt">CountFirstNames.txt</a> - Count names when GIVN and SURN are not stored seperately.</dd>
-                 <dd>* <a href="./reports/CountGivnNames.txt">CountGivnNames.txt</a> - Count names when GIVN and SURN are stored seperately.</dd>
-                 <dd>* <a href="./reports/CountEventsPerPlace.txt">CountEventsPerPlace.txt</a> - Count events per place</dd>
-            <dt>Reports based on an individual</dt>
-                 <dd>* <a href="./reports/INDIq-TimeLineWithCloseRelatives.txt">TimeLineWithCloseRelatives.txt</a> - <a href="./reports/QuickRules.txt">QuickRules.txt</a> - Time line with birth death and marriages of close relatives.</dd>
-                 <dd>* <a href="./reports/INDIs-RootAncestors.txt">RootAncestors.txt</a> - <a href="./reports/SlowRules.txt">SlowRules.txt</a> - Ancestors without parents.</dd>
-                 <dd>* <a href="./reports/INDIs-MigrationLines.txt">MigrationLines.txt</a> - <a href="./reports/SlowRules.txt">SlowRules.txt</a> - Migration lines per branch.</dd>
-            <dt>Reports based on a family</dt>
-                 <dd>* <a href="./reports/INDI-PatchworkFamily.txt">PatchworkFamily.txt</a> - Composition of a patchwork family.</dd>
-            <dt>Reports that require generated _SOSA properties</dt>
-                 <dd>* <a href="./reports/SOSA-MultiMedia.txt">SOSA-MultiMedia.txt</a> - Checklists for multimedia objects.</dd>
-        </dl>
-
-
+        <p class="justify">
+            <a href="./rdf-examples.html">Examples<a>
+        </p>         
+        <p class="justify">
+          Delivered examples were initialy intented to provide examples with the most important techniques.
+          Such as counting, sorting, computing, filtering and navigating through the data.
+        </p>
+        <h4 class="ancestris_help_title">a - customizing</h4>
+        <p class="justify">
+          Some examples may contain comment with hints about variations, rather than duplicate
+          the query. Save the query between your documents as a plain text file
+          and apply the desired adjustments.
+        </p>
+        <p class="justify">
+            Examining the converted gedcom can help with further customization and with 
+            developing new queries. Choose extension n3 or ttl for the converted file.
+            These formats have a lot in common with the SPARQL
+            query language. See also the
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://jena.apache.org/tutorials/sparql.html">
+                <param name="text" value="<html><u>SPARQL tutorial</u></html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+        </p>
+        <h4 class="ancestris_help_title">b - localizing</h4>
+        <p class="justify">
+          Localizing the result can only be done by localizing queries.
+          Related problems are dates and names stored in various formats. 
+          Queries would become too complex and slow to cater for all these and other variations.
+          Once "translated" each variant would evolve along its own route
+          like wikipedia articles do.
+        </p>
+        <p class="justify">
+          One general hint about the column headings:<br/>
+          Between SELECT and the first "{", you will see constructs like 
+          <i>&lt;expression&gt;</i> or like <i>(&lt;expression&gt; as ?columnName)</i>.
+          By convention one per line.
+          You can change the former into the latter, and you can choose 
+          your own column names. Choose the names with care, they should 
+          not occur anywhere else in the query.
+        </p>
         <a name="rdf-about_3"></a>
         <h3 class="ancestris_help_title">3 - Rules</h3>
         <p class="justify">
@@ -158,152 +174,6 @@
             </object>
         </p>
 
-        <a name="rdf-about_5c"></a>
-        <h4 class="ancestris_help_title">c) Localize, customize and develop queries</h4>
-        <p class="justify">
-          Localizing the result can only be done by localizing queries.
-          Related problems are dates and names stored in various formats. 
-          Queries would become too complex and slow to cater for all these and other variations.
-          Once "translated" each variant would evolve along its own route
-          like wikipedia articles do.
-        </p>
-        <p class="justify">
-          Delivered queries were initialy intented to provide examples with the most important techniques.
-          Such as counting, sorting, computing, filtering and navigating through the data.
-          Some may contain comment with hints about variations, rather than duplicate
-          the query. Save the query between your documents as a plain text file
-          and apply the desired adjustments.
-        </p>
-        <p class="justify">
-          One general hint about the column headings:<br/>
-          Between SELECT and the first "{", you will see constructs like 
-          <i>&lt;expression&gt;</i> or like <i>(&lt;expression&gt; as ?columnName)</i>.
-          By convention one per line.
-          You can change the former into the latter, and you can choose 
-          your own column names. Choose the names with care, they should 
-          not occur anywhere else in the query.
-        </p>
-        <p class="justify">
-            Examining the converted gedcom can help with further customization and with 
-            developing new queries. Choose extension n3 or ttl for the converted file.
-            These formats have a lot in common with the SPARQL
-            query language. See also the
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="http://jena.apache.org/tutorials/sparql.html">
-                <param name="text" value="<html><u>SPARQL tutorial</u></html>">
-                <param name="textFontSize" value="12px">
-                <param name="textColor" value="blue">
-            </object>
-        </p>
-
-        <a name="rdf-about_5d"></a>
-        <h4 class="ancestris_help_title">d) RDF /TTL / N3</h4>
-            The extension determines the stored format. 
-            For local queries it doesn't matter which one you choose.
-            For cross site queries RDF is recommend as the most commonly supported.
-            TTL and N3 are almost as easy to read as 
-            GedCom mode of Ancestris' edit view. These two formats also have a lot in common
-            with the query syntax.
-        </p>
-
-        <a name="rdf-about_6"></a>
-        <h3 class="ancestris_help_title">6 - To do</h3>
-        <p class="justify">
-            This plugin is delivered as a proof of concept. 
-            Though it is a report framework on its own, it is squeezed into 
-            the user interface of the existing report framework.
-            Some suggestions for further development.
-        </p>
-
-        <h4 class="ancestris_help_title">a) Dedicated user interface</h4>
-        <p class="justify">
-            This plug-in would become easier to operate with a dedicated user
-            interface.
-        </p>
-        <p class="justify">
-            The query options group should be
-            replaced with edit boxes that allow to read and save plain
-            text files. A single drop
-            downlist can load a pair of built-in files in the edit-boxes.
-            This list replaces the above overview of examples.
-            The optional prefixes of the filenames indicate the required 
-            context (FAM/INDI) and rules (q/s for quick/slow).
-            A file chooser per box can load and save custom queries and rules.
-        </p>
-        <p class="justify">
-            The output options group
-            should use file choosers and these choosers should filter on the
-            suggested extensions.
-        </p>
-
-        <h4 class="ancestris_help_title">b) Get more from the semantic web</h4>
-        <p class="justify">
-            The semantic web uses triples of URI's: subject predicate object.
-            An ontology (also expressed in triples) explains and defines types and meanings.
-            An ontology also implies inference. The mother of all ontologies is OWL. 
-            At the moment applying full-fledged inference is slow. Common practice
-            is to apply just the rules you actually need.
-            This is a very brief introduction but it should have the most important
-            pointers to start browsing the web about the subject.
-        </p>
-        <p class="justify">
-            The conversion does not comply to an established ontology.
-            Cross site queries and inference would be easier when using
-            something like FOAF or a similar ontology. 
-            The chosen format however was quick and easy to implement
-            and is easy to recognise by GedCom tigers. Flexibility of the 
-            semantic web can deal which such an unorthodox approach.
-            It might be wise to monitor for ontologies that might emerge and could
-            replace the quick-and-dirty approach.
-        </p>
-        <p class="justify">
-            <i>The power of the semantic web could become available when 
-            the plugin would allow to read more semantic data than just the
-            converted GedCom.</i>
-            For example allow users to selectively download and collect whatever they want
-            into a directory and read those files. A wizard could help with the selection.<br/> 
-            DbPedia could be an interesting almanac, 
-            for example to find famous contemporary local peaople,
-            an example of available data:
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="http://dbpedia.org/resource/Berlin/">
-                <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
-                <param name="textFontSize" value="medium">
-                <param name="textColor" value="blue">
-            </object><br/>
-            Geonames is interesting for maps, see Amsterdam as an example
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="http://www.geonames.org/2759794/amsterdam.html">
-                <param name="text" value="<html><u>http://sws.geonames.org/2759794/about.rdf</u></html>">
-                <param name="textFontSize" value="medium">
-                <param name="textColor" value="blue">
-            </object>
-        </p>
-
-        <h4 class="ancestris_help_title">c) Disconnect conversion and reporting</h4>
-        <p class="justify">
-            If low priority background process are possible
-            it might be an idea to perform conversion after saving the gedcom file.
-            Performance of interactive functions should not suffer
-            from such a background process.
-            Escpecially because the slow rules may take minutes.
-            Report generation should check if the last changes are saved
-            and the conversion is completed.
-        </p>
-        <p class="justify">
-            It should also be possible to keep the rdf model synchronised.
-            That would mean deleting all the tripples related to 
-            the changed entity or property and insert them all again.
-        </p>
-
-        <a name="rdf-about_7"></a>
-        <h3 class="ancestris_help_title">7 - Known bugs</h3>
-        <ul>
-          <li>
-            You might have to run a context-free query before you can run
-            a query that does need a <a href="rdf-about.html#rdf-about_5a">context</a>.
-          </li>
-        </ul>
         <br>
         <a href="rdf-about.html#_Top_">Top</a>
         <br>
