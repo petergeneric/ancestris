@@ -1,22 +1,116 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" href="../ancestris.css">
-  </head>
-  <body>
-      <div class="section1">
+</head>
+<body>
+  <center>
+  <h2 class="ancestris_help_title">Probl&egrave;mes identifi&eacute;s lors de l'import</h2>
+  </center>
+  <br>
+  <p class="justify">
+    Beaucoup de logiciels ne respectant pas la norme Gedcom, il est tr&egrave;s probable que vous constatiez quelques probl&egrave;mes li&eacute;s &agrave; la migration de votre fichier. Nous ne pouvons parler que des probl&egrave;mes dont nous avons eu des remont&eacute;es. 
+    Participez &agrave; l'am&eacute;lioration d'Ancestris en nous les signalant par le biais de     
+    <a href="../basic_use/basic_use_ancestris_different_aids_available.html">la liste de discussion</a>.
+  </p>
+  <h3 class="ancestris_help_title">Probl&egrave;mes li&eacute;s au logiciel Heredis</h3>
+  <ul>
+    <li>Heredis exporte des tags &agrave; vide: il faut rajouter le Y au moins pour les principaux (DEAT, MARR, MARC, DIV).</li>
+    <li>Deux gros bogues pour les dates:
+      <ul>
+        <li>L'ann&eacute;e r&eacute;publicaine est export&eacute;e en ann&eacute;e sous forme de chiffres romains (exemple, "15 NIVO an XII"  alors que la norme Gedcom exige "15 NIVO 12").</li>
+        <li>Mauvaise gestion de l'indicateur de calendrier (julien, gr&eacute;gorien, r&eacute;publicain, ...): ainsi 
+        l'export de dates au calendrier r&eacute;publicain ne respecte pas la norme. L'indicateur de calendrier 
+        @DFRENCH R@ devrait &ecirc;tre avant la date, mais APR&Egrave;S l'indicateur de positionnement (BEF par exemple pour 
+        dire "avant telle date", etc). Heredis lui, met toujours l'indicateur de calendrier  
+        apr&egrave;s l'&eacute;tiquette DATE dans le fichier gedcom m&ecirc;me si on a des ABT, BET...AND. Ainsi, on devrait avoir: 
+        <font color="red">2 DATE BEF @DFRENCH R@ 15 NIVO 12</font> <i>(format Gedcom)</i> et on a <font color="red">2 DATE @DFRENCH R@ BEF 15 NIVO an XII</font> <i>(format Heredis)</i>.<br>
+        L'indicateur de calendrier julien doit &ecirc;tre export&eacute; tout le temps avant 1582, il peut &ecirc;tre supprim&eacute; dans ce cas.</li>
+      </ul>
+    </li>
+    <li>Tags <i>(tag = &eacute;tiquette gedcom)</i> hors-contexte:
+      <ul>
+        <li>DATE sous OJBE.</li>
+        <li>TIME sous DATE partout.</li>
+        <li>ADDR sous INDI/FAM sans RESI.</li>
+      </ul>
+    </li>
+    <li>Tags utilisateurs (ce sont des &eacute;tiquettes qui ne sont pas dans la norme Gedcom mais qui peuvent permettre &agrave; un g&eacute;n&eacute;alogiste de mettre des informations suppl&eacute;mentaires) sans "<b>_</b>" (underscore): WWW (site web), EMAIL (adresse mail), HEAL, etc.</li>
+    <li>Champs utilisateurs Heredis: C'est export&eacute; 1 TAG valeur avec le TAG &agrave; choisir dans une liste de tags Gedcom standard hors-contexte. Il faut pr&eacute;voir une correspondance.</li> 
+    <li>Sources: Mauvaise gestion des sources et des d&eacute;p&ocirc;ts.</li>
+  </ul>
+  <b>Solution Ancestris:</b> utilisation du plugin "Imports – Heredis Import".
+  <h3 class="ancestris_help_title">Probl&egrave;mes li&eacute;s au logiciel G&eacute;n&eacute;atique</h3>
+  <p class="justify">
+    Aucun retour actuellement sur des probl&egrave;mes de transfert de fichiers en provenance de G&eacute;n&eacute;atique. Ceci ne veut pas dire qu'il n'y a pas de soucis, mais simplement qu'aucun utilisateur de G&eacute;n&eacute;atique ne s'est manifest&eacute;.
+  </p>
+  <b>Solution Ancestris:</b> signaler votre probl&egrave;me par le biais de la liste de discussion.
+  <h3 class="ancestris_help_title">Probl&egrave;mes li&eacute;s au logiciel Genealogie.com</h3>
+  <ul>
+    <li>Les fichiers g&eacute;n&eacute;r&eacute;s par le site de g&eacute;n&eacute;alogie genealogie.com n'ont pas l'information relative au SUBMitter (la personne ayant collect&eacute; les informations pr&eacute;sentes dans le fichier de g&eacute;n&eacute;alogie). Une telle indication est obligatoire pour &ecirc;tre conforme &agrave; la norme.</li>
+  </ul>
+  <b>Solution Ancestris:</b> Cr&eacute;er l'information en allant dans Outils/Pr&eacute;f&eacute;rences/Donn&eacute;es/Fournisseur 
+  <h3 class="ancestris_help_title">Probl&egrave;mes li&eacute;s au logiciel LifeLines</h3>
+  <ul>
+    <li>Avec le param&eacute;trage par d&eacute;faut, LifeLines n'exporte pas l'&eacute;tiquette SUBM qui est obligatoire.</li>
+  </ul>
+  <b>Solution Ancestris:</b> Cr&eacute;er l'information en allant dans Outils/Pr&eacute;f&eacute;rences/Donn&eacute;es/Fournisseur.
+  <h3 class="ancestris_help_title">Probl&egrave;mes li&eacute;s au logiciel Family Tree Builder</h3>
+  <ul>
+    <li>Family Tree Builder (FTB) g&eacute;n&egrave;re de nombreux Tags qui lui sont propres et rendent moins lisible le fichier Gedcom.</li>
+  </ul>
+  <b>Solution Ancestris:</b> utiliser le plugin "Suppression d'&eacute;tiquettes" de la boite &agrave; Outils.
+  <br>
+  <!-- Debut des boutons Precedent - Suivant -->
+  <br>
+  <br>
+  <table border="0" width="100%">
+    <tr>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_conform_import_genealogy.html">Page&nbsp;pr&eacute;c&eacute;dente</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="80%">
+        &nbsp;
+      </td>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_new_genealogy.html">Page&nbsp;suivante</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- Fin des boutons Precedent - Suivant -->
 
-          <center><h2 class="section1">FAQ : import suivant l'origine du fichier Gedcom</h2></center>
-          <br>
-          <p>Les problèmes pouvant être rencontrés suivant l'origine du fichier Gedcom.</p>
+<!-- French Help - updated on 06/02/2012 -->
+</body>
+</html> 
 
-      <br>
-      </div>
-  </body>
-</html>
+ 
+ 
+
+
+ 
+ 
+
+
+ 
