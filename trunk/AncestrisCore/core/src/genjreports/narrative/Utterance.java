@@ -12,7 +12,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Entity;
 import genj.fo.Document;
-import genj.report.Resources;
+import genj.util.Resources;
 
 import java.util.HashMap;
 import java.util.Map;
