@@ -31,6 +31,8 @@ import genj.option.OptionsWidget;
 import genj.option.PropertyOption;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
+import genj.util.Resources;
+import genj.util.Resources.ResourcesProvider;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
@@ -46,8 +48,10 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,7 +71,7 @@ import javax.swing.filechooser.FileFilter;
  * 
  * categories: text,utility,chart,graph
  */
-public abstract class Report implements Cloneable {
+public abstract class Report implements Cloneable,ResourcesProvider {
   
   private final static PrintWriter NUL = new PrintWriter(new OutputStream() { @Override public void write(int b) { }} );
 
@@ -112,10 +116,9 @@ public abstract class Report implements Cloneable {
   private final static String userLanguage = Locale.getDefault().getLanguage();
 
   /** translation resources common to all reports */
-  static final Resources COMMON_RESOURCES = Resources.get(Report.class);
+  static final Resources COMMON_RESOURCES = ReportResources.get(Report.class);
 
-  /** translation texts */
-  private Resources resources;
+  private Map<Locale,Resources> locale2resources = new HashMap<Locale, Resources>(3);
 
   /** options */
   private List<Option> options;
@@ -614,25 +617,27 @@ public abstract class Report implements Cloneable {
   
   public final String translate(String key, Locale locale, Object... values) {
 
-    Resources resources = getResources();
+    Resources resources = getResources(locale);
     if (resources==null)
       return key;
 
-    // look it up in language
-    String result = null;
-    String lang = locale!=null ? locale.getLanguage() : userLanguage;
-    if (lang!=null) {
-      String locKey = key+'.'+lang;
-      result = resources.getString(locKey, values);
-      if (result!=locKey)
-        return result;
-    }
+    return resources.getString(key, values);
 
-    // fallback if necessary
-    result = resources.getString(key, values);
-
-    // done
-    return result;
+//    // look it up in language
+//    String result = null;
+//    String lang = locale!=null ? locale.getLanguage() : userLanguage;
+//    if (lang!=null) {
+//      String locKey = key+'.'+lang;
+//      result = resources.getString(locKey, values);
+//      if (result!=locKey)
+//        return result;
+//    }
+//
+//    // fallback if necessary
+//    result = resources.getString(key, values);
+//
+//    // done
+//    return result;
   }
 
   /**
@@ -657,35 +662,32 @@ public abstract class Report implements Cloneable {
     return rtype;
   }
 
-  /**
-   * Access to report properties
-   */
-  protected Resources getResources() {
-    if (resources==null) {
-      // initialize resources with old way of pulling from .properties file
-        InputStream in = getClass().getResourceAsStream(getTypeName()+".properties");
-        if (in != null)
-            resources = new Resources(in);
-      // check if new style resources are available from .java src
-        // XXX: we should remove this
-//      try {
-//        // ... checking filesystem in developer mode, resource otherwise
-//        File reports = new File("./src/report");
-//        String src = getClass().getName().replace('.', '/')+".java";
-//        InputStream in = (reports.exists()&&reports.isDirectory()) ?
-//            new FileInputStream(new File(reports, src)) :
-//            getClass().getResourceAsStream(src);
-//        resources.load(in, true);
-//      } catch (IOException e) {
-//        // ignore
-//      }
+    /**
+     * Access to report properties
+     */
+    /*protected*/
+    public Resources getResources() {
+        return getResources(null);
     }
-    // no .properties file, tries Bundle
-    if (resources == null){
-      resources = Resources.get(this);
+    /*protected*/
+
+    public Resources getResources(Locale locale) {
+        Resources resources = locale2resources.get(locale);
+        if (resources == null) {
+            // initialize resources with old way of pulling from .properties file
+            InputStream in = getClass().getResourceAsStream(getTypeName() + ".properties");
+            if (in != null) {
+                resources = new ReportResources(in, locale);
+            }
+            // no .properties file, tries Bundle
+            if (resources == null) {
+                resources = ReportResources.get(this.getClass(), locale);
+            }
+            locale2resources.put(locale,resources);
+        }
+
+        return resources;
     }
-    return resources;
-  }
 
   /**
    * Creates an indent for text outputs. The method supports several levels

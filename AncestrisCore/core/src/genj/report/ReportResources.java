@@ -19,7 +19,8 @@
  */
 package genj.report;
 
-import genj.util.*;
+import genj.util.AncestrisUtils;
+import genj.util.Resources;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,120 +52,53 @@ import org.openide.util.NbBundle;
  *  <li>values containing newline escapes \n are transformed into newline characters
  * </il>
  */
-public class Resources {
+public class ReportResources extends Resources{
     private static final Logger LOG = Logger.getLogger("genj.util");
   
   /** keep track of loaded resources */
-  private static Map<String, Resources> instances = new HashMap<String, Resources>();
+  private static Map<String, ReportResources> instances = new HashMap<String, ReportResources>();
 
   /** the mapping key, resource  */
-  private volatile Map<String, String> key2string;
-  private List<String> keys;
+  private volatile Map<String, String> key2string = null;
+  private List<String> keys = null;
 
-  /** the package name this resource is for */
-  private String pkg;
+  /** locale to use */
+  private Locale locale = Locale.getDefault();
+  private final static String userLanguage = Locale.getDefault().getLanguage();
 
   /** cached message formats */
   private WeakHashMap<String, MessageFormat> msgFormats = new WeakHashMap<String, MessageFormat>();
 
-  /** bundle objet to delegate if not a report resource */
-  private ResourceBundle bundle=null;
-  private String description = "";
   
   /**
    * Constructor for empty resources
    */
-  public Resources() {
-    this((InputStream)null);
+  public ReportResources() {
+      super();
+      key2string = null;
+      keys = null;
   }
   
   /**
    * Constructor for resources from explicit input stream
    */
-  public Resources(InputStream in) {
-    
-    key2string = new HashMap<String, String>();
-    keys = new ArrayList<String>(1000);
+  public ReportResources(InputStream in, Locale locale) {
+    this();
+    if (locale == null)
+        locale = Locale.getDefault();
+    this.locale = locale;
     
     if (in!=null) try {
+      key2string = new HashMap<String, String>();
+      keys = new ArrayList<String>(1000);
       load(in);
     } catch (IOException e) {
       Logger.getLogger("genj.util").log(Level.FINE, "can't read resources", e);
-    }
-  }
-  
-  /**
-   * Accessor (cached) 
-   */
-  public static Resources get(Object packgeMember) {
-    Class<?> clazz = packgeMember instanceof Class<?> ? (Class<?>)packgeMember : packgeMember.getClass();
-      try {
-          Resources result = new Resources(NbBundle.getBundle(clazz));
-          result.description = ""+clazz;
-        return result;
-      } catch (MissingResourceException e) {
-          LOG.log(Level.FINE, "bundle notfound for class {0} ({1}) revert to old properties file",new Object[]{clazz,packgeMember});
-        return get(calcPackage(packgeMember));
-      }
-  }
-
-  /**
-   * Accessor  (cached)
-   * @deprecated use get(Object...) instead
-   */
-  @Deprecated
-  private static Resources get(String packge) {
-    synchronized (instances) {
-      Resources result = instances.get(packge);
-      if (result==null) {
-        result = new Resources(packge);
-        instances.put(packge, result);
-      }
-      return result;
+      key2string = null;
+      keys = null;
     }
   }
 
-  /**
-   * Calc package for instance
-   */
-  private static String calcPackage(Object object) {
-    Class<?> clazz = object instanceof Class<?> ? (Class<?>)object : object.getClass();
-    String name = clazz.getName();
-    int last = name.lastIndexOf('.');
-    return last<0 ? "" : name.substring(0, last);
-  }
-
-  /**
-   * Calc file for package (package/resources.properties)
-   */
-  private String calcFile(String pkg, String lang, String country) {
-
-    // dots in package name become slashs - /pkg/sub/resources
-    String file = '/'+pkg.replace('.','/')+"/resources";
-    
-    // add language and country '/resources[_ll[_CC]].properties' 
-    if (lang!=null) {
-      file += '_'+lang;
-      if (country!=null) {
-        file += '_'+country;
-      }
-    }
-    
-    return file+".properties";   
-  }
-
-  /**
-   * Constructor
-   */
-  private Resources(String pkg) {
-    // remember
-    this.pkg=pkg;
-  }
-
-  private Resources(ResourceBundle bundle){
-      this.bundle = bundle;
-  }
-  
   /**
    * Load more resources from stream
    */
@@ -294,84 +228,46 @@ public class Resources {
   }
   
   /**
-   * Lazy getter for resource map
-   */
-  private Map<String,String> getKey2String() {
-    
-    // easy if already initialized - outside synchronization
-    if (key2string!=null)
-      return key2string;
-    
-    // synchronize loading - everyone will wait for this one
-    synchronized (this) {
-      
-      // check again
-      if (key2string!=null)
-        return key2string;
-      
-      // load resources for current locale now
-      Locale locale = Locale.getDefault();
-      Map<String,String> tmpKey2Val = new HashMap<String,String>();    
-      List<String> tmpKeys = new ArrayList<String>(100);
-
-      // loading english first (primary language)
-      try {
-        load(getClass().getResourceAsStream(calcFile(pkg, null, null)), tmpKeys, tmpKey2Val, false);
-      } catch (Throwable t) {
-      }
-      
-      // trying to load language specific next
-      try {
-        load(getClass().getResourceAsStream(calcFile(pkg, locale.getLanguage(), null)), tmpKeys, tmpKey2Val, false);
-      } catch (Throwable t) {
-      }
-  
-      // trying to load language and country specific next
-      try {
-        load(getClass().getResourceAsStream(calcFile(pkg, locale.getLanguage(), locale.getCountry())), tmpKeys, tmpKey2Val, false);
-      } catch (Throwable t) {
-      }
-
-      // remember
-      key2string = tmpKey2Val;
-      keys = tmpKeys;
-    }
-    
-    // done
-    return key2string;
-  }
-  
-  /**
    * Checks for given key
    */
   public boolean contains(String key) {
     return getString(key, false) != null;
   }
-  
+
   /**
    * Returns a localized string
    * @param key identifies string to return
    * @param notNull will return key if resource is not defined
    */
-  public String getString(String key, boolean notNull) {
-      String result = null;
-      if (bundle!=null){
-          try {
-            result = bundle.getString(key);
-          } catch (Exception e){
-              LOG.log(Level.FINER, "key {0} not found in {1} bundle",new Object[]{key,description});
-          }
-      } else {
-        result = getKey2String().get(key.toLowerCase());
-      }
-    if (result==null&&notNull) result = key;
-    return result;
-  }
+    @Override
+    public String getString(String key, boolean notNull) {
+        if (key2string == null) {
+            return super.getString(key, notNull);
+        }
+
+        // look it up in language
+        String result = null;
+        String lang = locale != null ? locale.getLanguage() : userLanguage;
+        if (lang != null) {
+            String locKey = key + '.' + lang;
+            result = key2string.get(locKey.toLowerCase());
+        }
+        // fallback if necessary
+        if (result == null) {
+            result = key2string.get(key.toLowerCase());
+        }
+
+        if (result == null && notNull) {
+            result = key;
+        }
+        return result;
+    }
   
   /**
    * Returns a localized string
    * @param key identifies string to return
    */
+    @Override
   public String getString(String key) {
     return getString(key, true);
   }
@@ -381,14 +277,11 @@ public class Resources {
    * @param key identifies string to return
    * @param values array of values to replace placeholders in value
    */
+    @Override
   public String getString(String key, Object... substitutes) {
-      if (bundle != null){
-          String format = getString(key,false);
-          if (format == null)
-              return key;
-        return MessageFormat.format(getString(key,false), substitutes);
+      if (key2string == null){
+          return super.getString(key, substitutes);
       }
-
     // do we have a message format already?
     MessageFormat format = msgFormats.get(key);
     if (format==null) {

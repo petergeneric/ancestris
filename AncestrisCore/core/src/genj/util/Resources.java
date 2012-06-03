@@ -12,6 +12,7 @@
 package genj.util;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -33,15 +34,49 @@ public class Resources {
      */
     // XXX: must be cached or use NbBundle equivalent code for getstring or NbBundle wrapper as sued elsewhere
     public static Resources get(Object packgeMember) {
+        return get(packgeMember,(Locale)null);
+    }
+    public static Resources get(Object packgeMember, Locale locale) {
+        if (packgeMember instanceof ResourcesProvider)
+            return ((ResourcesProvider)packgeMember).getResources(locale);
         Class<?> clazz = packgeMember instanceof Class<?> ? (Class<?>) packgeMember : packgeMember.getClass();
+        return get(clazz, locale);
+    }
+    public static Resources get(Class<?> clazz) {
+        return get(clazz,null);
+    }
+    public static Resources get(Class<?> clazz, Locale locale) {
         try {
             Resources result = new Resources(NbBundle.getBundle(clazz));
             result.description = "" + clazz;
             return result;
         } catch (MissingResourceException e) {
-            LOG.log(Level.WARNING, "resources file is non longer supported for class {0} ({1}, use Bundles.properties", new Object[]{clazz, packgeMember});
-            return null;
+            LOG.log(Level.WARNING, "resources file is non longer supported for class {0}: use Bundles.properties", clazz);
+            return new Resources();
         }
+    }
+
+    /**
+     * from NbBundle package
+     */
+        /** Finds package name for given class */
+    private static String findName(Class clazz) {
+        String pref = clazz.getName();
+        int last = pref.lastIndexOf('.');
+
+        if (last >= 0) {
+            pref = pref.substring(0, last + 1);
+
+            return pref + "Bundle"; // NOI18N
+        } else {
+            // base package, search for bundle
+            return "Bundle"; // NOI18N
+        }
+    }
+
+    public Resources(){
+        bundle = null;
+        description = "";
     }
 
     private Resources(ResourceBundle bundle) {
@@ -85,6 +120,11 @@ public class Resources {
      */
     public String getString(String key, Object... substitutes) {
         return MessageFormat.format(getString(key), substitutes);
+    }
+    public interface ResourcesProvider {
+        //XXX: getResources is equivalent to getResources(null). Should we remove this API?
+        public Resources getResources();
+        public Resources getResources(Locale locale);
     }
 } //Resources
 

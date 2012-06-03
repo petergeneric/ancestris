@@ -35,7 +35,8 @@ import genj.gedcom.Submitter;
 import genj.gedcom.MultiLineProperty.Iterator;
 import genj.option.Multiline;
 import genj.report.Report;
-import genj.report.Resources;
+//import genj.report.Resources;
+import genj.util.Resources;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -209,13 +210,12 @@ public class ReportWebsite extends Report{
         generateFiles(gedcom, rootIndi);
 
         if (secondaryLocale != null) {
-            Locale defaultLocale = Locale.getDefault();
             // Reset some variables
             personsWithImage = new ArrayList<Indi>();
             // Run again with a new lang setting
             currentLocale = secondaryLocale;
             currentLang = secondaryLocale.getLanguage();
-            resources = new Resources(getClass().getResourceAsStream("/genj/gedcom/resources_" + currentLang + ".properties"));
+            resources = Resources.get(Gedcom.class,currentLocale);
             translator = makeCssAndJSSettings();
             makeJs(destDir, translator);
             generateFiles(gedcom, rootIndi);
@@ -232,7 +232,8 @@ public class ReportWebsite extends Report{
     }
 
     /**
-     * Returns the readable name for the given tag
+     * Returns the readable name for the given tag using currentLocale.
+     * Code copied from Gedcom.java class.
      */
     public String getPropertyName(String tag, boolean plural) {
         if (currentLocale != null) {
@@ -2698,9 +2699,7 @@ public class ReportWebsite extends Report{
     }
 
     protected String translateLocal(String key, Object... values) {
-        if (currentLocale == null) {
-            return translate(key, values);
-        }
+        // if surrentLocale is null, equivalent to translate(key, values)
         return translate(key, currentLocale, values);
     }
 

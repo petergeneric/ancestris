@@ -1,16 +1,16 @@
 package genjreports.gedart;
 
-import genj.report.Resources;
+import genj.report.ReportResources;
 import java.io.InputStream;
 import java.util.Locale;
 
-
-public class GedartResources extends Resources {
+// XXX: why do we need this subclass?
+public class GedartResources extends ReportResources {
 	  /** language we're trying to use */
 	  private final static String lang = Locale.getDefault().getLanguage();
 
 	  public GedartResources(InputStream in) {
-		super(in);
+		super(in,null);
 	}
 
 	/**
