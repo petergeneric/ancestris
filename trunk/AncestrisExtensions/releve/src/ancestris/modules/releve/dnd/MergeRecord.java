@@ -1,45 +1,51 @@
 package ancestris.modules.releve.dnd;
 
-import ancestris.modules.releve.dnd.MergeModel.RowType;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.Delta;
+import genj.gedcom.time.PointInTime;
 
 
 /**
- * Cette classe encapsule un abjet de la classe Record
+ * Cette classe encapsule un objet de la classe Record
  * et ajoute des méthodes pour calculer les dates de naissance , mariage , deces
  * et des methodes pour assembler les commentaires.
  */
 public class MergeRecord {
     private Record record;
 
-    // memore les dates calculees (pour éviter de les recalculer a chaque consultation)
-    PropertyDate IndiBirthDate = null;
-    PropertyDate IndiFatherBirthDate = null;
-    PropertyDate IndiFatherDeathDate = null;
-    PropertyDate IndiMotherBirthDate = null;
-    PropertyDate IndiMotherDeathDate = null;
-    PropertyDate IndiParentMarriageDate = null;
+    // memorise les dates calculees (pour éviter de les recalculer a chaque consultation)
+    private PropertyDate IndiBirthDate = null;
+    private PropertyDate IndiDeathDate = null;
+    private PropertyDate IndiFatherBirthDate = null;
+    private PropertyDate IndiFatherDeathDate = null;
+    private PropertyDate IndiMotherBirthDate = null;
+    private PropertyDate IndiMotherDeathDate = null;
+    private PropertyDate IndiParentMarriageDate = null;
 
-    PropertyDate WifeBirthDate = null;
-    PropertyDate WifeFatherBirthDate = null;
-    PropertyDate WifeFatherDeathDate = null;
-    PropertyDate WifeMotherBirthDate = null;
-    PropertyDate WifeMotherDeathDate = null;
-    PropertyDate WifeParentMarriageDate = null;
+    private PropertyDate WifeBirthDate = null;
+    private PropertyDate WifeDeathDate = null;
+    private PropertyDate WifeFatherBirthDate = null;
+    private PropertyDate WifeFatherDeathDate = null;
+    private PropertyDate WifeMotherBirthDate = null;
+    private PropertyDate WifeMotherDeathDate = null;
+    private PropertyDate WifeParentMarriageDate = null;
 
     /**
-     * liste des types de ligne
+     * liste des types de releves
      */
-    static protected enum RecordType {
+    protected static enum RecordType {
         Birth,
         Marriage,
         Death,
         Misc
     }
+    /**
+     * type du releve 
+     */
     private RecordType type;
 
 
@@ -109,7 +115,7 @@ public class MergeRecord {
             case Marriage:
                 return makeMarriageComment();
             default:
-                //TODO makeDeathComment
+                //TODO makeDeathComment();
                 return "";
         }        
     }
@@ -132,14 +138,23 @@ public class MergeRecord {
 
     PropertyDate getIndiBirthDate() throws Exception {
         if (IndiBirthDate == null) {
-            IndiBirthDate = getBirthDate(RowType.IndiBirthDate);
+            IndiBirthDate = calculateBirthDate(
+                record.getIndiBirthDate()!=null ? record.getIndiBirthDate().getPropertyDate() : new PropertyDate(),
+                record.getIndiAge()!=null ? record.getIndiAge().getDelta() : new Delta(0,0,0) );
         }
         return IndiBirthDate;
     }
 
-    PropertyDate getIndiDeathDate() {
-        //TODO getIndiDeathDate
-        return null;
+    PropertyDate getIndiDeathDate() throws Exception {
+        if (IndiDeathDate == null) {
+            if ( type == RecordType.Death) {
+                IndiDeathDate = getEventDate();
+            } else {
+                // date de deces inconnue
+                IndiDeathDate = new PropertyDate();
+            }
+        }
+        return IndiDeathDate;
     }
 
     String getIndiPlace() {
@@ -163,7 +178,7 @@ public class MergeRecord {
 
     PropertyDate getIndiParentMarriageDate() throws Exception {
         if (IndiParentMarriageDate == null) {
-            IndiParentMarriageDate = getParentMariageDate(RowType.IndiParentMarriageDate);
+            IndiParentMarriageDate = calculateParentMariageDate(getIndiBirthDate());
         }
         return IndiParentMarriageDate;
     }
@@ -178,14 +193,18 @@ public class MergeRecord {
 
     PropertyDate getIndiFatherBirthDate() throws Exception {
         if (IndiFatherBirthDate == null) {
-            IndiFatherBirthDate = getParentBirthDate(RowType.IndiFatherBirthDate);
+            IndiFatherBirthDate = calculateParentBirthDate(record.getIndiFatherAge().getDelta(),getIndiBirthDate());
         }
         return IndiFatherBirthDate;
     }
 
     PropertyDate getIndiFatherDeathDate() throws Exception {
         if (IndiFatherDeathDate == null) {
-            IndiFatherDeathDate = getParentDeathDate(RowType.IndiFatherDeathDate);
+            IndiFatherDeathDate = calculateParentDeathDate(
+                   record.getIndiFatherDead()!=null ? record.getIndiFatherDead().getState() :false,
+                   getIndiBirthDate(),
+                   9 // le pere peut être decede au plus tot 9 mois avant la naissance
+               );
         }
         return IndiFatherDeathDate;
     }
@@ -204,14 +223,18 @@ public class MergeRecord {
 
     PropertyDate getIndiMotherBirthDate() throws Exception {
         if (IndiMotherBirthDate == null) {
-            IndiMotherBirthDate = getParentBirthDate(RowType.IndiMotherBirthDate);
+            IndiMotherBirthDate = calculateParentBirthDate(record.getIndiMotherAge().getDelta(), getIndiBirthDate());
         }
         return IndiMotherBirthDate;
     }
 
     PropertyDate getIndiMotherDeathDate() throws Exception {
         if (IndiMotherDeathDate == null) {
-            IndiMotherDeathDate = getParentDeathDate(RowType.IndiMotherDeathDate);
+            IndiMotherDeathDate = calculateParentDeathDate(
+                   record.getIndiMotherDead()!=null ? record.getIndiMotherDead().getState() : false,
+                   getIndiBirthDate(),
+                   0 // le mere peut être decedee au plus toto 0 mois avant le naissance.
+               );
         }
         return IndiMotherDeathDate;
     }
@@ -236,14 +259,22 @@ public class MergeRecord {
 
     PropertyDate getWifeBirthDate() throws Exception {
         if (WifeBirthDate == null) {
-            WifeBirthDate = getBirthDate(RowType.WifeBirthDate);
+            WifeBirthDate = calculateBirthDate(
+                record.getWifeBirthDate()!=null ? record.getWifeBirthDate().getPropertyDate() : new PropertyDate(),
+                record.getWifeAge()!=null ? record.getWifeAge().getDelta() : new Delta(0,0,0) );
         }
         return WifeBirthDate;
     }
 
-    PropertyDate getWifeDeathDate() {
-        //TODO getWifeDeathDate
-        return null;
+    PropertyDate getWifeDeathDate() throws Exception {
+        if (WifeDeathDate == null) {
+            if ( type == RecordType.Death) {
+                IndiDeathDate = getEventDate();
+            } else {
+                IndiDeathDate = new PropertyDate();
+            }
+        }
+        return WifeDeathDate;
     }
 
     String getWifePlace() {
@@ -263,7 +294,7 @@ public class MergeRecord {
 
     PropertyDate getWifeParentMarriageDate() throws Exception {
         if (WifeParentMarriageDate == null) {
-            WifeParentMarriageDate = getParentMariageDate(RowType.WifeParentMarriageDate);
+            WifeParentMarriageDate = calculateParentMariageDate(getWifeBirthDate());
         }
         return WifeParentMarriageDate;
     }
@@ -278,14 +309,18 @@ public class MergeRecord {
 
     PropertyDate getWifeFatherBirthDate() throws Exception {
         if (WifeFatherBirthDate == null) {
-            WifeFatherBirthDate = getParentBirthDate(RowType.WifeFatherBirthDate);
+            WifeFatherBirthDate = calculateParentBirthDate(record.getWifeFatherAge().getDelta(), getWifeBirthDate());
         }
         return WifeFatherBirthDate;
     }
 
     PropertyDate getWifeFatherDeathDate() throws Exception {
         if (WifeFatherDeathDate == null) {
-            WifeFatherDeathDate = getParentDeathDate(RowType.WifeFatherDeathDate);
+             WifeFatherDeathDate = calculateParentDeathDate(
+                   record.getWifeFatherDead()!=null ? record.getWifeFatherDead().getState() :false,
+                   getWifeBirthDate(),
+                   9 // le pere peut être decede avant la naissance - 9 mois
+               );
         }
         return WifeFatherDeathDate;
     }
@@ -304,14 +339,18 @@ public class MergeRecord {
 
     PropertyDate getWifeMotherBirthDate() throws Exception {
         if (WifeMotherBirthDate == null) {
-            WifeMotherBirthDate = getParentBirthDate(RowType.WifeMotherBirthDate);
+            WifeMotherBirthDate = calculateParentBirthDate(record.getWifeMotherAge().getDelta(), getWifeBirthDate());
         }
         return WifeMotherBirthDate;
     }
 
     PropertyDate getWifeMotherDeathDate() throws Exception {
         if (WifeMotherDeathDate == null) {
-            WifeMotherDeathDate = getParentDeathDate(RowType.WifeMotherDeathDate);
+            WifeMotherDeathDate = calculateParentDeathDate(
+                   record.getWifeMotherDead()!=null ? record.getWifeMotherDead().getState() : false,
+                   getWifeBirthDate(),
+                   0 // le mere peut être decedee 0 mois avant le naissance (= juste apres la naissance)
+               );
         }
         return WifeMotherDeathDate;
     }
@@ -448,7 +487,7 @@ public class MergeRecord {
     /**
      * concatene plusieurs commentaires dans une chaine , séparés par une virgule
      */
-    public String appendValue(String value, String... otherValues) {
+    private String appendValue(String value, String... otherValues) {
         int fieldSize = value.length();
         StringBuilder sb = new StringBuilder();
         sb.append(value.trim());
@@ -471,48 +510,42 @@ public class MergeRecord {
     /**
      * calcule la date de naissance de l'individu ou de l'epouse
      *  si record=RecordBirth :
-     *    retourne la date de naissance de l'individu ou a defaut date de l'evenement
+     *    retourne la date de naissance de l'individu ou a defaut date de l'evenement (c'est souvent la meme sauf si l'evenement est un bapteme qui a lieu apres la naissance)
      *  si record=RecordMarriage :
      *    retourne la date de naissance de l'individu ou a defaut dateBirth = date de son mariage -  minMarriageYearOld
-     * @param record
      * @param requiredBirth =IndiBirthDate ou WifeBirthDate
      * @return
      */
-    PropertyDate getBirthDate(RowType requiredBirth) throws Exception {
-        PropertyDate birthDate;
-        if (record instanceof RecordBirth) {
-            switch ( requiredBirth) {
-                case IndiBirthDate:
-                    // j'intialise la date avec celle de l'individu
-                    birthDate = record.getIndiBirthDate().isEmpty() ? record.getEventDateProperty() : record.getIndiBirthDate().getPropertyDate();
-                    break;
-                case WifeBirthDate:
-                    // date inconnue , la naissance de la femme n'est pas indiqué dans le releve de naissance d'un individu.
-                    birthDate = new PropertyDate();
-                    break;
-                default:
-                    throw new Exception("RowType not allowed"+requiredBirth );
-            }
+    private PropertyDate calculateBirthDate(PropertyDate birthDate, Delta age) throws Exception {
+        //PropertyDate birthDate;
 
-        } else if (record instanceof RecordMarriage) {
-            // TODO : calculer la date de naissance en fonction de l'age
-            switch ( requiredBirth) {
-                case IndiBirthDate:
-                    // j'intialise la date avec la daet de naissance  de l'individu
-                    birthDate = record.getIndiBirthDate().getPropertyDate();
-                    break;
-                case WifeBirthDate:
-                    // date inconnue , la naissance de la femme n'est pas indiqué dans le releve de naissance d'un individu.
-                    birthDate = record.getWifeBirthDate().getPropertyDate();
-                    break;
-                default:
-                    throw new Exception("RowType not allowed"+requiredBirth );
+        if (type == RecordType.Birth) {
+            if ( !birthDate.isComparable() ) {
+                birthDate = getEventDate();
             }
+        } else if (type == RecordType.Marriage) {
 
             if ( ! birthDate.isComparable() &&  record.getEventDateProperty().isComparable()) {
-                // si la date de naisasnce n'est pas valide
-                // date de son mariage -  minMarriageYearOld
-                birthDate= getDateBeforeMinusShift(record.getEventDateProperty(), MergeQuery.minMarriageYearOld);
+                // la date de naissance n'est pas valide, 
+                // je calcule la naissance a partir de l'age ou de la date de mariage
+                if (age.getYears() != 0 ) {
+                    // l'age est valide,
+                    if (age.getYears() != 0 && age.getMonths() != 0 && age.getDays() != 0) {
+                        // l'age est precis au jour près
+                        // date de naissance = date de mariage - age
+                        birthDate.setValue(record.getEventDateProperty().getValue());
+                        birthDate.getStart().add(-age.getDays(), -age.getMonths(), -age.getYears());
+                    } else {
+                        // l'age n'est pas précis au jour près.
+                        // date de naissance = date de mariage (arrondi a l'année) - age (arrondi à l'année)
+                        birthDate.setValue(String.format("CAL %d", record.getEventDateProperty().getStart().getYear()));
+                        birthDate.getStart().add(0, 0, -age.getYears());
+                    }
+                } else {
+                    // l'age n'est pas valide
+                    // date de naissance maximale = date de mariage -  minMarriageYearOld
+                    birthDate= getDateBeforeMinusShift(record.getEventDateProperty(), MergeQuery.minMarriageYearOld);
+                }
             }
         } else {
             // date inconnue
@@ -523,69 +556,117 @@ public class MergeRecord {
     }
 
 
+    
     /**
-     * calcule la date de naissance d'un parent a partir de la date de naissance d'un enfant
-     * ou de la date de mariage de l'enfant
-     * @param record
+     * calcule la date de naissance d'un parent a partir 
+     *  - soit de l'age du parent s'il est precisé dans le releve
+     *  - soit de la date de naissance de l'enfant si elle est precisée dans le relevé
+     *  - soit de la date de mariage de l'enfant (seulement pour le releve de mariage)
+     * @param requiredBirth
      * @return
      */
-    PropertyDate getParentBirthDate(RowType requiredBirth) throws Exception {
+    private PropertyDate calculateParentBirthDate(Delta parentAge, PropertyDate childBirthDate) throws Exception {
 
         PropertyDate parentBirthDate = new PropertyDate();
+        parentBirthDate.setValue(childBirthDate.getValue());
 
-        switch ( requiredBirth) {
-            case IndiFatherBirthDate:
-            case IndiMotherBirthDate:
-                // j'intialise la date avec celle de l'individu
-                parentBirthDate.setValue(getBirthDate(RowType.IndiBirthDate).getValue());
-                break;
-            case WifeFatherBirthDate:
-            case WifeMotherBirthDate:
-                // j'intialise la date avec celle de l'epouse
-                parentBirthDate.setValue(getBirthDate(RowType.WifeBirthDate).getValue());
-                break;
-            default:
-                throw new Exception("RowType not allowed"+requiredBirth );
-        }
-
-        if (record instanceof RecordBirth) {
-            // le parent doit être né avant minParentYearOld avant la naissance
-            parentBirthDate.setValue(String.format("BEF %d", parentBirthDate.getStart().add(0, 0, -MergeQuery.minParentYearOld).getYear()));
-        } else if (record instanceof RecordMarriage) {
-            // le parent doit être né avant minParentYearOld avant la naissance
-            parentBirthDate.setValue(String.format("BEF %d", parentBirthDate.getStart().add(0, 0, -MergeQuery.minParentYearOld).getYear()));
+        if ( parentAge.getYears()!=0 && record.getEventDateProperty().isComparable() ) {
+            // l'age du parent est valide
+            // parentBirthDate = eventDate - parentAge
+            parentBirthDate.setValue(record.getEventDateProperty().getValue());
+            if( parentAge.getYears()!=0 ) {
+                // l'age est valide
+                if( parentAge.getYears()!=0 && parentAge.getMonths()!=0 &&  parentAge.getDays()!=0) {
+                    //l'age est precis au jour pres.
+                    parentBirthDate.getStart().add(-parentAge.getDays(), -parentAge.getMonths(), -parentAge.getYears());
+                } else {
+                    // date appromimative car l'age n'est pas précis au jour près.
+                    parentBirthDate.setValue(String.format("CAL %d", parentBirthDate.getStart().add(0, 0, -parentAge.getYears()).getYear() ));
+                }
+            }
         } else {
-            throw new Exception("Not implemented" );
+            // l'age du parent n'est pas valide
+            // je calcule la date maximale à partir de la date de mariage ou la date de naissance de l'enfant
+            if ( parentBirthDate.isComparable()) {
+                if ( type ==  RecordType.Marriage) {
+                    // le parent doit être né  "minParentYearOld + minMarriageYearOld" années avant la naissance de l'individu
+                    // parentBirthDate = eventDat - minParentYearOld -minMarriageYearOld
+                    parentBirthDate.setValue(String.format("BEF %d",
+                            parentBirthDate.getStart().add(0, 0, -MergeQuery.minParentYearOld  -MergeQuery.minMarriageYearOld).getYear()));
+                } else {
+                    // le parent doit être né  "minParentYearOld" années avant la naissance de l'individu
+                    // parentBirthDate = eventDat - minParentYearOld
+                    parentBirthDate.setValue(String.format("BEF %d", parentBirthDate.getStart().add(0, 0, -MergeQuery.minParentYearOld).getYear()));
+                }
+            } else {
+                if ( type == RecordType.Marriage ) {
+                    // le parent doit être né  "minParentYearOld" années avant la naissance de l'individu
+                    parentBirthDate.setValue(String.format("BEF %d", parentBirthDate.getStart().add(0, 0, -MergeQuery.minParentYearOld).getYear()));
+                } else {
+                    // je sais pas calculer la date de naissance du paretn
+                    // parentBirthDate = date nulle
+                    parentBirthDate = new PropertyDate();
+                }
+            }
         }
+
         return parentBirthDate;
     }
 
     /**
      * calcule la date de deces d'un parent
      * @param record
-     * @param requiredDeath parent concerné : IndiFatherDeathDate, IndiMotherDeathDate, WifeFatherDeathDate, WifeMotherDeathDate
+     * @param dead      true si le parent est decede avant la date de l'evenement
+     * @param birthDate date de naissance de l'enfant
+     * @param monthBeforeBirth nombre de mois du deces avant la naissance de l'enfant (9 mois pour le pere, 0 mois pour la mere)
      * @return date de deces du parent
      */
-    PropertyDate getParentDeathDate(RowType requiredDeath) throws Exception {
+    private PropertyDate calculateParentDeathDate(boolean dead, PropertyDate birthDate, int monthBeforeBirth ) throws Exception {
 
         PropertyDate parentDeathDate = new PropertyDate();
-         switch ( requiredDeath) {
-            case IndiFatherDeathDate:
-            case IndiMotherDeathDate:
-                // j'initialise la date avec celle de naissance de l'individu
-                parentDeathDate.setValue(getBirthDate(RowType.IndiBirthDate).getValue());
-                // le pere doit être decede apres 9 mois avant la naissance
-                parentDeathDate.setValue(String.format("AFT %d", parentDeathDate.getStart().add(0, -9, 0).getYear()));
-                break;
-            case WifeFatherDeathDate:
-            case WifeMotherDeathDate:
-                // j'initialise la date avec la date de naissance de l'epouse
-                parentDeathDate.setValue(getBirthDate(RowType.WifeBirthDate).getValue());
-                // la mere doit être decede apres la naissance
-                parentDeathDate.setValue(String.format("AFT %d", parentDeathDate.getStart().add(0, 0, 0).getYear()));
-                break;
-            default:
-                throw new Exception("RowType not allowed "+requiredDeath );
+        
+        if (getEventDate().isComparable()) {
+            // la naissance de l'individu n'est utilisable pour determiner la date de minimale de deces du pere
+            // que si c'est une date exacte ou une date avec une borne inferieure
+            // J'ignore la date si c'est une date maximale (BEF) ou estimée
+            PointInTime birthPit = new PointInTime();
+            boolean birthDateUsefull;
+            if (birthDate.isValid()) {
+                if( birthDate.getFormat()== PropertyDate.DATE
+                      ||  birthDate.getFormat()== PropertyDate.AFTER
+                      ||  birthDate.getFormat()== PropertyDate.BETWEEN_AND
+                      ||  birthDate.getFormat()== PropertyDate.CALCULATED
+                    ) {
+                    birthDateUsefull = true;
+                    birthPit.set(birthDate.getStart());
+                    birthPit.add(0, -monthBeforeBirth, 0);
+                } else {
+                    birthDateUsefull = false;
+                }
+            } else {
+                birthDateUsefull = false;
+            }
+            
+            if ( dead) {
+                if (birthDateUsefull) {
+                    // le parent est decede entre la date de naissance et la date du releve
+                    //parentDeathDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
+                    parentDeathDate.setValue(String.format("BET %d AND %d", birthPit.getYear(), getEventDate().getStart().getYear()));
+                } else {
+                    // le parent est decede avant la date du releve
+                    parentDeathDate.setValue(String.format("BEF %d", getEventDate().getStart().getYear()));
+                }
+            } else {
+                if (birthDateUsefull ) {
+                    // le parent est decede apres la naissance 
+                    parentDeathDate.setValue(String.format("AFT %d", birthPit.getYear()));
+                } else {
+                    // date inconnue, rien a faire
+                }
+            }
+        } else {
+            // date inconnue, rien a faire
+
         }
 
         return parentDeathDate;
@@ -596,48 +677,20 @@ public class MergeRecord {
      * @param record
      * @return
      */
-    PropertyDate getParentMariageDate(RowType requiredMarriage) throws Exception {
+    private PropertyDate calculateParentMariageDate(PropertyDate childBirthDate ) throws Exception {
         PropertyDate parentMariageDate;
         if (record instanceof RecordBirth) {
-            PropertyDate birthDate;
-            switch ( requiredMarriage) {
-                case IndiParentMarriageDate:
-                    // j'initialise la date avec la date de naissance de l'individu
-                    birthDate = record.getIndiBirthDate().isEmpty() ? record.getEventDateProperty() : record.getIndiBirthDate().getPropertyDate();
-                    break;
-                case WifeParentMarriageDate:
-                    // date inconnue , la naissance de la femme n'est pas indiqué dans le releve de naissance d'un individu.
-                    birthDate = record.getWifeBirthDate().isEmpty() ? record.getEventDateProperty() : record.getWifeBirthDate().getPropertyDate();
-                    break;
-                default:
-                    throw new Exception("RowType not allowed"+requiredMarriage );
-            }
             // le mariage des parents est avant la naissance de l'enfant arrondie a l'année
-            parentMariageDate = getDateBeforeMinusShift(birthDate, 0);
+            parentMariageDate = getDateBeforeMinusShift(childBirthDate, 0);
 
         } else if (record instanceof RecordMarriage) {
-            // le mariage des parents est avant la naissance de l'epoux
-            // et avant le mariage du marié dminué de minParentYearOld
-            // TODO : calculer la date de mariage des parents en fonction de l'age de l'epoux
-            PropertyDate beforeChildBirth;
-            PropertyDate beforeChildMarriage;
-             switch ( requiredMarriage) {
-                case IndiParentMarriageDate:
-                    // date de naissance de l'epoux
-                    beforeChildBirth = getDateBeforeMinusShift(record.getIndiBirthDate().getPropertyDate(), 0);
-                    // date de mariage du mariage  -  minMarriageYearOld
-                    beforeChildMarriage = getDateBeforeMinusShift(record.getEventDateProperty(), MergeQuery.minMarriageYearOld);
-                    break;
-                case WifeParentMarriageDate:
-                    // date de naissance de l'epouse
-                    beforeChildBirth = getDateBeforeMinusShift(record.getWifeBirthDate().getPropertyDate(), 0);
-                    // date de mariage du mariage  -  minMarriageYearOld
-                    beforeChildMarriage = getDateBeforeMinusShift(record.getEventDateProperty(), MergeQuery.minMarriageYearOld);
-                    break;
-                default:
-                    throw new Exception("RowType not allowed"+requiredMarriage );
-            }
-
+            // le mariage des parents est
+            //   - avant la naissance de l'epoux
+            //   - avant le mariage du marié dminué de minParentYearOld
+            // date de mariage = BEF date de naissance de l'epoux
+            PropertyDate beforeChildBirth = getDateBeforeMinusShift(childBirthDate, 0);
+            // date de mariage = EventDate - minMarriageYearOld
+            PropertyDate beforeChildMarriage = getDateBeforeMinusShift(getEventDate(), MergeQuery.minMarriageYearOld);
             // je retiens la date la plus petite
             boolean beforeChildBirthComparable = beforeChildBirth.isComparable();
             boolean beforeChildMarriageComparable = beforeChildMarriage.isComparable();

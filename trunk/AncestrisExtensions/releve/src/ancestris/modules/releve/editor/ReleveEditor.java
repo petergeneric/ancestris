@@ -37,6 +37,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -469,6 +470,15 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                         bean = new BeanSex();
                         break;
 
+                    case indiAge:
+                    case indiFatherAge:
+                    case indiMotherAge:
+                    case wifeAge:
+                    case wifeFatherAge:
+                    case wifeMotherAge:
+                        bean = new BeanAge();
+                        break;
+
                     case indiMarriedDead:
                     case indiFatherDead:
                     case indiMotherDead:
@@ -498,8 +508,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                         bean = new BeanPlace();
                         break;
 
-                    case indiAge:
-                    case wifeAge:
                     case indiComment:
                     case indiMarriedComment:
                     case indiFatherComment:
@@ -1029,7 +1037,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         Component[] components = container.getComponents();
         for (int i = 0; i < components.length; i++) {
             Component component = components[i];
-            if ((component instanceof JTextField) || (component instanceof JComboBox || (component instanceof JCheckBox))) {
+            if ((component instanceof JTextField) || (component instanceof JFormattedTextField) || (component instanceof JComboBox) || (component instanceof JCheckBox)) {
                 component.addFocusListener(this);
             }
             if (component instanceof Container) {

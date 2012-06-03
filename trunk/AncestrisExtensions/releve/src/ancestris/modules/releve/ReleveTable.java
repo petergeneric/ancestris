@@ -34,13 +34,13 @@ public class ReleveTable extends JTable {
 
     private TableSelectionListener selectionListeners = null;
     private DataManager dataManager = null;
+    private PlaceManager placeManager = null;
 
     public ReleveTable () {
         super();
 
         // pas de redimensionnement automatique, voir loadColumnLayout()
         setAutoResizeMode(AUTO_RESIZE_OFF );
-        // setFocusable(false); a ne pas mettre, sinon les deplacements avec les fleches du clavier ne fonctionnent plus
 
         // j'ajoute le renderer pour l'affichage des dates et le choix de la font
         setDefaultRenderer(Object.class, new Renderer());
@@ -48,16 +48,24 @@ public class ReleveTable extends JTable {
         Renderer r = new Renderer();
         r.setFont(getFont());
 
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        setDragEnabled(true);
-        setDropMode(DropMode.USE_SELECTION);
-        setTransferHandler(new RecordTransferHandle());
-        // je configure la table pour qu'elle s'éende sur tout la hauteur de son
-        // container afin de pouvoir faire des DnD meême si elle ne contient
-        // aucun element. 
+        // Ne pas utiliser setFocusable, sinon les deplacements avec les
+        // fleches UP etDOWN du clavier ne fonctionnent plus
+        //setFocusable(false); 
+        
+        // Ne pas utiliser setSelectionMode car si setSelectionMode est utilisé en meme temps
+        // que setDragEnabled(true), alors les fleches UP etDOWN du clavier ne fonctionnent plus.
+        //setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        // je configure la table pour qu'elle s'étende sur toute la hauteur de son
+        // container afin de pouvoir faire des DnD même si elle ne contient
+        // aucun element.
         setFillsViewportHeight(true);
 
+        setDropMode(DropMode.USE_SELECTION);
+        setTransferHandler(new RecordTransferHandle());
+        setDragEnabled(true);
+        
         // je branche le clic du bouton gauche de la souris sur les titres des colonnes
         // pour garder visible la ligne sélectionnée quand on change l'ordre de tri
         getTableHeader().addMouseListener(new MouseAdapter() {
@@ -81,8 +89,9 @@ public class ReleveTable extends JTable {
      * Initialise le modele de données de la JTable
      * @param model
      */
-   public void setModel(DataManager dataManager, DataManager.ModelType modelType) {
+   public void setModel(DataManager dataManager, DataManager.ModelType modelType, PlaceManager placeManager) {
        this.dataManager = dataManager;
+       this.placeManager = placeManager;
        // save previous column layout
         saveColumnLayout();
         super.setModel(dataManager.getModel(modelType));
@@ -328,6 +337,13 @@ public class ReleveTable extends JTable {
      */
     public DataManager getDataManager() {
         return dataManager;
+    }
+
+    /**
+     * @return the dataManager
+     */
+    public PlaceManager getPlaceManager() {
+        return placeManager;
     }
 
     /**

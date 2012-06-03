@@ -18,9 +18,9 @@ import org.openide.util.NbBundle;
  */
 public class MergeModelMarriage extends MergeModel {
 
-    Fam selectedFamily;
-    MergeRecord record;
-    Gedcom gedcom;
+    private Fam selectedFamily;
+    private MergeRecord record;
+    private Gedcom gedcom;
 
     /**
      * le constucteur initialise les données du modele

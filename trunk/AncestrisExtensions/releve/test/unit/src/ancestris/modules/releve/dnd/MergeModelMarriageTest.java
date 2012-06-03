@@ -1,7 +1,6 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
-import ancestris.modules.releve.dnd.MergeModel.RowType;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -27,12 +26,12 @@ public class MergeModelMarriageTest extends TestCase {
             record.setFreeComment("photo");
             record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "02/02/1970", "indiplace", "indioccupation", "indicomment");
             record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
-            record.setIndiFather("indifathername", "INDIFATHERLASTNAME", "indifatheroccupation", "indifathercomment", "indifatherdead");
-            record.setIndiMother("indimothername", "INDIMOTHERLASTNAME", "indimotheroccupation", "indimothercomment", "indimotherdead");
+            record.setIndiFather("indifathername", "INDIFATHERLASTNAME", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
+            record.setIndiMother("indimothername", "INDIMOTHERLASTNAME", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");
             record.setWife("Motherfirstname", "MOTHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeoccupation", "wifecomment");
             record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "wifemarrieddead");
-            record.setWifeFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wifefathercomment", "wifefatherdead");
-            record.setWifeMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifemothercomment", "wifemotherdead");
+            record.setWifeFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wifefathercomment", "wifefatherdead", "60y");
+            record.setWifeMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifemothercomment", "wifemotherdead", "62y");
             record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -82,7 +81,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Mari : Note Profession",143,                                   occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
 
             indiParentFamily = fam.getHusband().getFamilyWhereBiologicalChild();
-            assertNotSame("Mari parent mariage date inchangé",mergeRecord.getParentMariageDate(RowType.IndiParentMarriageDate).getValue(),  indiParentFamily.getMarriageDate().getValue());
+            assertNotSame("Mari parent mariage date inchangé",mergeRecord.getIndiParentMarriageDate().getValue(),  indiParentFamily.getMarriageDate().getValue());
             assertEquals("Mari parent mariage comment",true,  indiParentFamily.getValue(new TagPath("FAM:MARR:NOTE"),"").contains(mergeRecord.getEventPlaceCityName()));
             indiFather = indiParentFamily.getHusband();
             assertEquals("Mari pere nom",mergeRecord.getIndiFatherLastName(), indiFather.getLastName());
@@ -106,7 +105,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Femme : Note Profession",143,                                   occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
 
             wifeParentFamily = fam.getWife().getFamilyWhereBiologicalChild();
-            assertEquals("Femme parent mariage date",mergeRecord.getParentMariageDate(RowType.WifeParentMarriageDate).getValue(),  wifeParentFamily.getMarriageDate().getValue());
+            assertEquals("Femme parent mariage date",mergeRecord.getWifeParentMarriageDate().getValue(),  wifeParentFamily.getMarriageDate().getValue());
             assertEquals("Femme parent mariage comment",true,  wifeParentFamily.getValue(new TagPath("FAM:MARR:NOTE"),"").contains(mergeRecord.getEventPlaceCityName()));
             wifeFather = wifeParentFamily.getHusband();
             assertEquals("Femme pere nom",mergeRecord.getWifeFatherLastName(), wifeFather.getLastName());
@@ -174,12 +173,12 @@ public class MergeModelMarriageTest extends TestCase {
 //            Indi father = indi.getBiologicalFather();
 //            assertEquals("fatherFirstName",record.getIndiFatherFirstName(), father.getFirstName());
 //            // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
-//            assertEquals("Naissance du pere","1 jan 1970", father.getBirthDate().getDisplayValue());
-//            assertEquals("deces du pere",   "apr 1999", father.getDeathDate().getDisplayValue());
+//            assertEquals("Naissance du pere","1 jan 1970", father.calculateBirthDate().getDisplayValue());
+//            assertEquals("deces du pere",   "apr 1999", father.calculateDeathDate().getDisplayValue());
 //
 //            Indi mother = indi.getBiologicalMother();
-//            assertEquals("Naissance du pere","ava 1985", mother.getBirthDate().getDisplayValue());
-//            assertEquals("deces du pere",   "apr 2000", mother.getDeathDate().getDisplayValue());
+//            assertEquals("Naissance du pere","ava 1985", mother.calculateBirthDate().getDisplayValue());
+//            assertEquals("deces du pere",   "apr 2000", mother.calculateDeathDate().getDisplayValue());
 
         } catch (Exception ex) {
             fail(ex.getMessage());

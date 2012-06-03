@@ -150,6 +150,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
         this.currentModel = model;
         mergeTable.setModel(currentModel);
         mergeTable.setEntityActionManager(this);
+        // j'affiche les données du modele dans la table
         currentModel.fireTableDataChanged();
         // je renseigne le titre de la fenetre
         setTitle(currentModel.getTitle());

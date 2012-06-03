@@ -25,8 +25,8 @@ public class MergeModelBirthTest extends TestCase {
                 record.setCote("cote");
                 record.setFreeComment("photo");
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -40,8 +40,8 @@ public class MergeModelBirthTest extends TestCase {
                 record.setCote("cote");
                 record.setFreeComment("photo");
                 record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -69,16 +69,16 @@ public class MergeModelBirthTest extends TestCase {
 
 
     /**
-     * testSaveDataComment
+     * test_RecordBirth_copyRecordToEntity_Date
      */
-    public void testSaveDataMarriageDate() {
+    public void test_RecordBirth_copyRecordToEntity_Date() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             MergeRecord mergeRecord = new MergeRecord(createBirthRecord("sansfamille1"));
             List<MergeModel> models;
             // je memorise la date de naissance du pere
-            String fatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getDisplayValue();
+            String previousFatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getValue();
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
 
@@ -86,51 +86,29 @@ public class MergeModelBirthTest extends TestCase {
             models.get(1).copyRecordToEntity();
 
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
+            assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
+
+            assertEquals("indiBirthDate",mergeRecord.getIndiBirthDate().getValue(), indi.getBirthDate().getValue());
 
             Indi father = indi.getBiologicalFather();
             assertEquals("fatherFirstName",mergeRecord.getIndiFatherFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
-            assertEquals("Naissance du pere",fatherBirthDate, father.getBirthDate().getDisplayValue());
-            assertEquals("deces du pere",   "apr 1999", father.getDeathDate().getDisplayValue());
+            assertEquals("Naissance du pere",previousFatherBirthDate, father.getBirthDate().getValue());
+            assertEquals("deces du pere",   "AFT 1999", father.getDeathDate().getValue());
 
             Indi mother = indi.getBiologicalMother();
-            assertEquals("Naissance de la mere","ava 1985", mother.getBirthDate().getDisplayValue());
-            assertEquals("deces de la mere",   "apr 1999", mother.getDeathDate().getDisplayValue());
+            assertEquals("Naissance de la mere","CAL 1928", mother.getBirthDate().getValue());
+            assertEquals("deces de la mere",    "AFT 2000", mother.getDeathDate().getValue());
 
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
     }
 
-
     /**
-     * testSaveDataComment
+     * test_RecordBirth_copyRecordToEntity_Comment
      */
-    public void testSaveDataParent() {
-        try {
-            Gedcom gedcom = TestUtility.createGedcom();
-            Indi indi = (Indi)gedcom.getEntity("sansfamille1");
-            MergeRecord mergeRecord = new MergeRecord(createBirthRecord("sansfamille1"));
-            List<MergeModel> models;
-
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",3,models.size());
-            models.get(0).copyRecordToEntity();
-
-            assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
-
-            assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
-
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        }
-    }
-
-
-    /**
-     * testSaveDataComment
-     */
-    public void testSaveDataComment() {
+    public void test_RecordBirth_copyRecordToEntity_Comment() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");

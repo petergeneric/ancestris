@@ -693,7 +693,7 @@ public final class ReleveTopComponent extends TopComponent  {
         if (currentFile != null) {
             fileName = currentFile.getName();
         } else {
-            fileName = getDataManager().getCityName();
+            fileName = panelConfig.getCityName();
             if (!fileName.isEmpty()) {
                 fileName += ".txt";
             }
@@ -775,7 +775,7 @@ public final class ReleveTopComponent extends TopComponent  {
      */
     protected void saveFile() {
         if ( currentFile != null) {
-            StringBuilder saveResult = FileManager.saveFile(dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, panelConfig, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
             if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
@@ -806,7 +806,7 @@ public final class ReleveTopComponent extends TopComponent  {
         if (currentFile != null) {
             fileName = currentFile.getName();
         } else {
-            fileName = getDataManager().getCityName();
+            fileName = panelConfig.getCityName();
             if (!fileName.isEmpty()) {
                 fileName += ".txt";
             }
@@ -851,7 +851,7 @@ public final class ReleveTopComponent extends TopComponent  {
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
             // j'enregistre les données dans le fichier
-            StringBuilder saveResult = FileManager.saveFile(dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV1);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, panelConfig, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
 
              if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
@@ -970,7 +970,7 @@ public final class ReleveTopComponent extends TopComponent  {
         ActionListener rbActionListener = new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                String cityName = getDataManager().getCityName();
+                String cityName = panelConfig.getCityName();
                 if ( cityName.isEmpty()) {
                     cityName = "";
                 }
@@ -1063,15 +1063,15 @@ public final class ReleveTopComponent extends TopComponent  {
             // j'enregistre les modeles choisis la liste des modeles à enregistrer
             StringBuilder saveResult = new StringBuilder();
             if (jRadioButtonAll.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat);
+                FileManager.saveFile(dataManager, panelConfig, resultFile, fileFormat);
             } else if (jRadioButtonBirth.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveBirthModel());
+                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveBirthModel());
             } else if (jRadioButtonMarriage.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMarriageModel());
+                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveMarriageModel());
             } else if (jRadioButtonDeath.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveDeathModel());
+                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveDeathModel());
             } else if (jRadioButtonMisc.isSelected()) {
-                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMiscModel());
+                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveMiscModel());
             }
             if (! saveResult.toString().isEmpty()) {
                 // j'affiche les erreurs rencontrées

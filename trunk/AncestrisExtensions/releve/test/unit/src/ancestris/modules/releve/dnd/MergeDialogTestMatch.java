@@ -1,7 +1,10 @@
 package ancestris.modules.releve.dnd;
 
+import genj.gedcom.PropertyAge;
+import genj.gedcom.time.Delta;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
@@ -12,7 +15,71 @@ import junit.framework.TestCase;
 public class MergeDialogTestMatch extends TestCase {
 
 
+    /**
+     * test match age
+     */
+    public void testMatchAge() {
+        Pattern pattern = Pattern.compile("^([0-9\\p{javaWhitespace}]{0,4})a ([0-9\\p{javaWhitespace}]{0,2})m ([0-9\\p{javaWhitespace}]{0,2})j?$");
+        String age;
+        Matcher matcher;
 
+        age = "10a 9m 3j" ;
+         matcher = pattern.matcher(age);
+        if (matcher.matches()) {
+            assertEquals("années", "10", matcher.group(1));
+            assertEquals("mois",   "9",  matcher.group(2));
+            assertEquals("jours",  "3",  matcher.group(3));
+        } else {
+            fail("no match");
+        }
+
+        age = "a 9m 3j" ;
+        matcher = pattern.matcher(age);
+        if (matcher.matches()) {
+            assertEquals("années", "", matcher.group(1));
+            assertEquals("mois",   "9",  matcher.group(2));
+            assertEquals("jours",  "3",  matcher.group(3));
+        } else {
+            fail("no match");
+        }
+
+        age = "1 a 9m   j" ;
+        matcher = pattern.matcher(age);
+        if (matcher.matches()) {
+            assertEquals("années", "1 ", matcher.group(1));
+            assertEquals("mois",   "9",  matcher.group(2));
+            assertEquals("jours",  "  ",  matcher.group(3));
+        } else {
+            fail("no match");
+        }
+
+        age = "1a  m  j" ;
+        matcher = pattern.matcher(age);
+        if (matcher.matches()) {
+            assertEquals("années", "1 ", matcher.group(1));
+            assertEquals("mois",   "  ",  matcher.group(2));
+            assertEquals("jours",  "  ",  matcher.group(3));
+        } else {
+            fail("no match");
+        }
+    }
+
+    /**
+     * test match age
+     */
+    public void testDelta() {
+        Delta delta = new Delta(0,0,0);
+
+        delta.setValue("12y 9m 7d");
+        assertEquals("années", 12, delta.getYears());
+        assertEquals("mois",   9,  delta.getMonths());
+        assertEquals("jours",  7,  delta.getDays());
+
+        delta.setValue("4y 7d");
+        assertEquals("années", 4, delta.getYears());
+        assertEquals("mois",   0,  delta.getMonths());
+        assertEquals("jours",  7,  delta.getDays());
+    }
     /**
      * test splitCSV
      */
@@ -194,6 +261,8 @@ public class MergeDialogTestMatch extends TestCase {
         return pattern.matcher(line).matches();
 
     }
+
+
 
 
    

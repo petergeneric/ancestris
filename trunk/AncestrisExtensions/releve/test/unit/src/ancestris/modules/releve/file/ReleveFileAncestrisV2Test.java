@@ -17,14 +17,14 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class ReleveFileAncestrisV1Test extends TestCase {
+public class ReleveFileAncestrisV2Test extends TestCase {
     
-    public ReleveFileAncestrisV1Test(String testName) {
+    public ReleveFileAncestrisV2Test(String testName) {
         super(testName);
     }
 
     /**
-     * Test of isValidFile method, of class ReleveFileAncestrisV1.
+     * Test of isValidFile method, of class ReleveFileAncestrisV2.
      */
     public void testIsValidFile() {
         File file;
@@ -36,22 +36,22 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             data = "";
             file = TestUtility.createFile(data);
             sb = new StringBuilder();
-            boolean isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            boolean isValid = ReleveFileAncestrisV2.isValidFile(file, sb);
             assertEquals("fichier vide", false, isValid);
 
-            data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;";
+            data = "ANCESTRISV2;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
-            isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            isValid = ReleveFileAncestrisV2.isValidFile(file, sb);
             assertEquals("ligne incomplete", false, isValid);
 
-            data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+            data = "ANCESTRISV2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
-            isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            isValid = ReleveFileAncestrisV2.isValidFile(file, sb);
             assertEquals("points virgules collés", true, isValid);
 
-            data = "ANCESTRISV1; ; ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+            data = "ANCESTRISV2; ; ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
-            isValid = ReleveFileAncestrisV1.isValidFile(file, sb);
+            isValid = ReleveFileAncestrisV2.isValidFile(file, sb);
             assertEquals(true, isValid);
 
         } catch (IOException ex) {
@@ -63,7 +63,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
 
     
     /**
-     * Test of loadFile method, of class ReleveFileAncestrisV1.
+     * Test of loadFile method, of class ReleveFileAncestrisV2.
      */
     public void testLoadFile() throws Exception {
         try {
@@ -73,43 +73,43 @@ public class ReleveFileAncestrisV1Test extends TestCase {
 
             data = "";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("File empty" , sb.getError().isEmpty(), true);
             file.delete();
 
-            data = "ANCESTRISV1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+            data = "ANCESTRISV2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("Pas de type d'acte", "Ligne 1.\nType d'acte inconnu. \n",  sb.getError().toString());
             file.delete();
 
-            data = "ANCESTRISV1;;;;;;;X;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+            data = "ANCESTRISV2;;;;;;;X;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("type acte=X", "Ligne 1.\nType d'acte inconnu. X\n",  sb.getError().toString());
             file.delete();
 
-            data = "ANCESTRISV1;;;;;;;N;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
+            data = "ANCESTRISV2;;;;;;;N;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("Naissance minimal", "",  sb.getError().toString());
             file.delete();
 
-            data = "ANCESTRISV1;;;;;;;M;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
+            data = "ANCESTRISV2;;;;;;;M;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("Mariage minimal", "",  sb.getError().toString());
             file.delete();
 
-            data = "ANCESTRISV1;;;;;;;D;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
+            data = "ANCESTRISV2;;;;;;;D;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("Deces minimal", "",  sb.getError().toString());
             file.delete();
 
-            data = "ANCESTRISV1;;;;;;;V;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
+            data = "ANCESTRISV2;;;;;;;V;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
-            sb = ReleveFileAncestrisV1.loadFile(file);
+            sb = ReleveFileAncestrisV2.loadFile(file);
             assertEquals("Divers minimal", "",  sb.getError().toString());
             file.delete();
 
@@ -119,7 +119,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     }
 
     /**
-     * Test of saveFile method, of class ReleveFileAncestrisV1.
+     * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileBirthUtf8() throws Exception {
         File file = new File("testsaveFile.txt");
@@ -143,10 +143,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         birth.setWitness4("wfirstname", "wlastname", "woccupation", "wcomment");
 
         dateManager.addRecord(birth);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", sb.length(), 0);
 
-        FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
+        FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getBirthCount());
         RecordBirth birth2 = (RecordBirth) fb.getRecords().get(0);
@@ -156,13 +156,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             if (birth.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
             } else {
-                if ( fieldType == FieldType.indiFatherAge || fieldType == FieldType.indiMotherAge) {
-                    assertNotNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
-                    assertEquals(String.valueOf(fieldType.ordinal()), "", birth2.getField(fieldType).toString());
-                } else {
-                    assertNotNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
-                    assertEquals(String.valueOf(fieldType.ordinal()), birth.getField(fieldType).toString(), birth2.getField(fieldType).toString());
-                }
+                assertNotNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
+                assertEquals(String.valueOf(fieldType.ordinal()), birth.getField(fieldType).toString(), birth2.getField(fieldType).toString());
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -173,7 +168,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     }
 
     /**
-     * Test of saveFile method, of class ReleveFileAncestrisV1.
+     * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileMarriage() throws Exception {
         File file = new File("testsaveFile.txt");
@@ -202,10 +197,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
         dateManager.addRecord(marriage);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
         assertEquals("save result", 0, sb.length());
 
-        FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
+        FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getMarriageCount());
         RecordMarriage marriage2 = (RecordMarriage) fb.getRecords().get(0);
@@ -215,14 +210,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             if (marriage.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
             } else {
-                if ( fieldType == FieldType.indiFatherAge || fieldType == FieldType.indiMotherAge
-                        || fieldType == FieldType.wifeFatherAge || fieldType == FieldType.wifeMotherAge) {
-                    assertNotNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
-                    assertEquals(String.valueOf(fieldType.ordinal()), "", marriage2.getField(fieldType).toString());
-                } else {
-                    assertNotNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
-                    assertEquals(String.valueOf(fieldType.ordinal()), marriage.getField(fieldType).toString(), marriage2.getField(fieldType).toString());
-                }
+                assertNotNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
+                assertEquals(String.valueOf(fieldType.ordinal()), marriage.getField(fieldType).toString(), marriage2.getField(fieldType).toString());
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -233,7 +222,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     }
 
     /**
-     * Test of saveFile method, of class ReleveFileAncestrisV1.
+     * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileDeath() throws Exception {
         File file = new File("testsaveFile.txt");
@@ -259,10 +248,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
         dateManager.addRecord(death);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
-        FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
+        FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getDeathCount());
         RecordDeath death2 = (RecordDeath) fb.getRecords().get(0);
@@ -272,14 +261,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             if (death.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
             } else {
-                if ( fieldType == FieldType.indiFatherAge || fieldType == FieldType.indiMotherAge
-                        || fieldType == FieldType.wifeFatherAge || fieldType == FieldType.wifeMotherAge) {
-                    assertNotNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
-                    assertEquals(String.valueOf(fieldType.ordinal()), "", death2.getField(fieldType).toString());
-                } else {
                 assertNotNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
                 assertEquals(String.valueOf(fieldType.ordinal()), death.getField(fieldType).toString(), death2.getField(fieldType).toString());
-                }
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -290,7 +273,7 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     }
 
     /**
-     * Test of saveFile method, of class ReleveFileAncestrisV1.
+     * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileMisc() throws Exception {
         File file = new File("testsaveFile.txt");
@@ -322,10 +305,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
         dateManager.addRecord(record);
-        StringBuilder sb = ReleveFileAncestrisV1.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
-        FileBuffer fb = ReleveFileAncestrisV1.loadFile(file);
+        FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc record2 = (RecordMisc) fb.getRecords().get(0);
@@ -335,14 +318,8 @@ public class ReleveFileAncestrisV1Test extends TestCase {
             if (record.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
             } else {
-                if ( fieldType == FieldType.indiFatherAge || fieldType == FieldType.indiMotherAge
-                        || fieldType == FieldType.wifeFatherAge || fieldType == FieldType.wifeMotherAge) {
-                    assertNotNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
-                    assertEquals(String.valueOf(fieldType.ordinal()), "", record2.getField(fieldType).toString());
-                } else {
                 assertNotNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
                 assertEquals(String.valueOf(fieldType.ordinal()), record.getField(fieldType).toString(), record2.getField(fieldType).toString());
-                }
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
