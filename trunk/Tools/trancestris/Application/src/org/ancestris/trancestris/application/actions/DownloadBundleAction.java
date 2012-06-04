@@ -58,6 +58,9 @@ public final class DownloadBundleAction implements ActionListener {
                         case JOptionPane.CANCEL_OPTION:
                             return;
                     }
+                } else {
+                    Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                    t.start();
                 }
 
             } catch (MalformedURLException ex) {
