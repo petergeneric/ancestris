@@ -125,7 +125,8 @@ public class Resources {
      * @param values array of values to replace placeholders in value
      */
     public String getString(String key, Object... substitutes) {
-        return MessageFormat.format(getString(key), substitutes);
+        String formatStr = getString(key).replace("''", "'").replace("'", "''");
+        return MessageFormat.format(formatStr, substitutes);
     }
     public interface ResourcesProvider {
         //XXX: getResources is equivalent to getResources(null). Should we remove this API?
