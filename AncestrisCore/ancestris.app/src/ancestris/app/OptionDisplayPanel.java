@@ -61,7 +61,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox(skins);
-        jComboBox1 = new javax.swing.JComboBox(initLanguages());
+        jcbLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.system")));
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -71,6 +71,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         cbTreeFollowSelection = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
         cbTableFollowEntity = new javax.swing.JCheckBox();
+        jLabel9 = new javax.swing.JLabel();
+        jcbOutputLanguage = new javax.swing.JComboBox(initLanguages(NbBundle.getMessage(App.class, "options.lang.gui")));
 
         setPreferredSize(new java.awt.Dimension(691, 503));
 
@@ -101,7 +103,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             }
         });
 
-        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jComboBox1.toolTipText")); // NOI18N
+        jcbLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbLanguage.toolTipText")); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel4.text")); // NOI18N
@@ -145,6 +147,11 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbTableFollowEntity, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTableFollowEntity.text")); // NOI18N
         cbTableFollowEntity.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.cbTableFollowEntity.toolTipText")); // NOI18N
 
+        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 1, 13));
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jLabel9.text")); // NOI18N
+
+        jcbOutputLanguage.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionDisplayPanel.jcbOutputLanguage.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -153,16 +160,16 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(48, 48, 48)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(48, 48, 48)
-                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(18, 18, 18)
+                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jcbLanguage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jcbOutputLanguage, 0, 209, Short.MAX_VALUE))
+                        .addGap(32, 32, 32)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel3)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -174,9 +181,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(3, 3, 3)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cbTreeFollowSelection, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
-                            .addComponent(cbTableFollowEntity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
-                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)))
+                            .addComponent(cbTreeFollowSelection, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                            .addComponent(cbTableFollowEntity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(79, 79, 79)
@@ -190,6 +197,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                             .addComponent(jCheckBox3))))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel9});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -198,12 +208,16 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
+                            .addComponent(jcbLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(jcbOutputLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(146, 146, 146)
+                        .addGap(121, 121, 121)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jCheckBox1))
@@ -228,7 +242,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
                 .addComponent(cbSplitJuridictions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox2)
-                .addGap(79, 79, 79))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -244,6 +258,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
+        setOutputLanguage(ancestris.app.Options.getOutputLocale(null));
 
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.Options.isRestoreViews());
@@ -264,6 +279,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         StartupOptions stopts = new StartupOptions();
 
         needRestart = stopts.setJvmLocale(getLanguage());
+        ancestris.app.Options.setOutputLocale(getOutputLanguage());
+
         needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getName());
         stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getClassPath());
 
@@ -301,7 +318,6 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -311,13 +327,16 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JComboBox jcbLanguage;
+    private javax.swing.JComboBox jcbOutputLanguage;
     // End of variables declaration//GEN-END:variables
 
-    private String[] initLanguages() {
+    private String[] initLanguages(String defaultDesc) {
         ArrayList<String> langDescr = new ArrayList<String>(locales.length);
-        langDescr.add(NbBundle.getMessage(App.class, "options.lang.system"));
+        langDescr.add(defaultDesc);
         for (Locale locale:locales){
             langDescr.add(locale.getDisplayName(locale));
         }
@@ -361,12 +380,31 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         int i = findLanguageIndex(locale);
         // Index in combo is one more this value
         i += 1;
-        jComboBox1.setSelectedIndex(i);
+        jcbLanguage.setSelectedIndex(i);
     }
 
     // null means default locale from system
     Locale getLanguage() {
-        int i = jComboBox1.getSelectedIndex()-1;
+        int i = jcbLanguage.getSelectedIndex()-1;
+        if (i<0 || i>=locales.length)
+            return null;
+        return locales[i];
+    }
+
+    /**
+     * Set the language selector accorgingly to the locale setting passed in parameter
+     * @param str
+     */
+    void setOutputLanguage(Locale locale) {
+        int i = findLanguageIndex(locale);
+        // Index in combo is one more this value
+        i += 1;
+        jcbOutputLanguage.setSelectedIndex(i);
+    }
+
+    // null means default locale from system
+    Locale getOutputLanguage() {
+        int i = jcbOutputLanguage.getSelectedIndex()-1;
         if (i<0 || i>=locales.length)
             return null;
         return locales[i];

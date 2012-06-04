@@ -91,6 +91,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   /** global report options */
   protected Options OPTIONS = Options.getInstance();
 
+
   /** options */
   protected final static int
     OPTION_YESNO    = 0,
@@ -253,7 +254,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
       return icon;
 
     // find category in report settings
-    String cat = translate("category");
+    String cat = translateGUI("category");
     if (cat.equals("category")||cat.length()==0) {
       icon = DEFAULT_ICON;
     } else {
@@ -279,7 +280,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    */
   public final String getCategory() {
     // find category in report settings
-    String cat = translate("category");
+    String cat = translateGUI("category");
     if (cat.equals("category")||cat.length()==0)
       return "";
     
@@ -534,7 +535,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
       // to localize the name they base that on a properties file in the
       // same package as the instance - problem is that this won't work
       // with our special way of resolving i18n in reports
-      String oname = translate(prefix+"."+option.getName());
+      String oname = translateGUI(prefix+"."+option.getName());
       if (oname.length()>0) option.setName(oname);
     }
 
@@ -583,7 +584,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    */
   public String translateOption(String key)
   {
-	  String result = translate(key);
+	  String result = translateGUI(key); // use GUI locale for options
 	  if (result.equals(key))
 	  {
 		  String optionKey = "option." + key;
@@ -604,6 +605,9 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     return translate(key, (Object[])null);
   }
 
+  public final String translateGUI(String key) {
+    return translate(key, Locale.getDefault(),(Object[])null);
+  }
   /**
    * Sub-classes that are accompanied by a [ReportName].properties file
    * containing simple key=value pairs can lookup internationalized
@@ -617,27 +621,14 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   
   public final String translate(String key, Locale locale, Object... values) {
 
+      if (locale == null)
+          locale = ancestris.app.Options.getOutputLocale();
     Resources resources = getResources(locale);
     if (resources==null)
       return key;
 
     return resources.getString(key, values);
 
-//    // look it up in language
-//    String result = null;
-//    String lang = locale!=null ? locale.getLanguage() : userLanguage;
-//    if (lang!=null) {
-//      String locKey = key+'.'+lang;
-//      result = resources.getString(locKey, values);
-//      if (result!=locKey)
-//        return result;
-//    }
-//
-//    // fallback if necessary
-//    result = resources.getString(key, values);
-//
-//    // done
-//    return result;
   }
 
   /**
@@ -773,7 +764,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    * @return name of the report
    */
   public String getName() {
-    String name =  translate("name");
+    String name =  translateGUI("name");
     if (name.length()==0||name.equals("name")) name = getTypeName();
     return name;
   }
@@ -785,7 +776,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    * @return name of the author
    */
   public String getAuthor() {
-    return translate("author");
+    return translateGUI("author");
   }
 
   /**
@@ -795,7 +786,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    * @return version of report
    */
   public String getVersion() {
-    return translate("version");
+    return translateGUI("version");
   }
 
   private final static Pattern PATTERN_CVS_DATE  = Pattern.compile("\\$"+"Date: (\\d\\d\\d\\d)/(\\d\\d)/(\\d\\d)( \\d\\d:\\d\\d:\\d\\d) *\\$"); // don't user [dollar]Date to avoid keywords substitution here :)
@@ -806,7 +797,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    */
   public String getLastUpdate() {
     // check for updated key
-    String result = translate("updated");
+    String result = translateGUI("updated");
       if ("updated".equals(result))
       return null;
     // look for cvs date - grab date and time
@@ -827,7 +818,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
    * @return information about report
    */
   public String getInfo() {
-    return translate("info");
+    return translateGUI("info");
   }
 
   /**
