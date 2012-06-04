@@ -35,8 +35,8 @@
             could be used in cross-site queries for mash-ups.
         <ol>
             <li> <a href="rdf-about.html#rdf-about_1">Under the hood</a></li>
-            <li> <a href="rdf-about.html#rdf-about_2">Queries</a></li>
-            <li> <a href="rdf-about.html#rdf-about_3">Rules</a></li>
+            <li> <a href="rdf-about.html#queries">Queries</a></li>
+            <li> <a href="rdf-about.html#rules">Rules</a></li>
             <li> <a href="rdf-about.html#rdf-about_4">Entity URI's</a></li>
             <li> <a href="rdf-about.html#rdf-about_5">Layout</a></li>
             <li> <a href="rdf-about.html#rdf-about_6">RDF / TTL / N3</a></li>
@@ -53,9 +53,9 @@
                     <li>from GedCom format to your choice of <a href="rdf-about.html#rdf-about_6">RDF / TTL / N3</a>,
                         and from ID's in the GedCom file to <a href="rdf-about.html#rdf-about_4">URI</a>'s in the converted file
                     </li>
-                    <li>apply <a href="rdf-about.html#rdf-about_3">rules</a> (optional)</li>
+                    <li>apply <a href="rdf-about.html#rules">rules</a> (optional)</li>
                 </ul>
-            <li>execute the SPARQL <a href="rdf-about.html#rdf-about_2">query</a></li>
+            <li>execute the SPARQL <a href="rdf-about.html#queries">query</a></li>
             <li>apply a nice <a href="rdf-about.html#rdf-about_5">layout</a> (optional)</li>
         </ol>
         <br>
@@ -63,13 +63,13 @@
         change and the new query works with the last applied rules.<br>
         <b>(3)</b> Choose TXT as output extension for a simple table layout.</i>
 
-        <a name="rdf-about_2"></a>
+        <a name="queries"></a>
         <h3 class="ancestris_help_title">2 - Queries</h3>
         <p class="justify">
             <a href="./rdf-examples.html">Examples<a>
         </p>         
         <p class="justify">
-          Delivered examples were initialy intented to show the most important techniques.
+          Delivered examples were initially intended to show the most important techniques.
           Such as counting, sorting, computing, filtering and navigating through the data.
         </p>
         <h4 class="ancestris_help_title">a - customizing</h4>
@@ -79,7 +79,7 @@
           and apply the desired adjustments.
         </p>
         <p class="justify">
-            Examining the converted gedcom can help with further customization and with 
+            Examining the converted GedCom can help with further customization and with 
             developing new queries. Choose extension n3 or ttl for the converted file.
             These formats have a lot in common with the SPARQL
             query language. See also the
@@ -107,7 +107,7 @@
           your own column names. Choose the names with care, they should 
           not occur anywhere else in the query.
         </p>
-        <a name="rdf-about_3"></a>
+        <a name="rules"></a>
         <h3 class="ancestris_help_title">3 - Rules</h3>
         <p class="justify">
             Some queries become easier when the conversion is extended with
@@ -131,7 +131,7 @@
         <h3 class="ancestris_help_title">4 - Entity URI's</h3>
         <p class="justify">
             When converting the GedCom, the ID's of entities should be
-            converted to URI's. When your gedcom is published somewhere with
+            converted to URI's. When your GedCom is published somewhere with
             a page per entity (such as I12 for an INDI and F34 for a FAM), it is good practice to
             use these URL's as URI. For entities that don't have pages invent
             URI's with a similar construction.
