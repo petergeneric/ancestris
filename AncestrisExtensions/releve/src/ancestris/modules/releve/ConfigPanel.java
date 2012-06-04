@@ -23,6 +23,7 @@ import genj.util.ChangeSupport;
 import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.event.TableModelEvent;
@@ -154,6 +155,19 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
                 miscNumber.setText(String.valueOf(model.getRowCount()));
             }
         }
+    }
+
+    /**
+     * active le listener de la souris pour l'affichage du popupmenu quand
+     * on clique avec le bouton droit de la souris
+     */
+    @Override
+    public void addMouseListener(MouseListener mouseListener) {
+        jPanelCommand.addMouseListener(mouseListener);
+        jPanel2.addMouseListener(mouseListener);
+        OptionsPanel.addMouseListener(mouseListener);
+        placePanel.addMouseListener(mouseListener);
+        statisticPanel.addMouseListener(mouseListener);
     }
 
     /** This method is called from within the constructor to

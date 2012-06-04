@@ -1443,7 +1443,7 @@ public class MergeQuery {
                 if (occupationProperty == null) {
                     occupationProperty = occu;
                 } else {
-                    if (Math.abs(occupationDate.compareTo((PropertyDate) occuDate)) <= Math.abs(occupationDate.compareTo((PropertyDate) occupationDate))) {
+                    if (Math.abs(occupationDate.compareTo((PropertyDate) occuDate)) <= Math.abs(occupationDate.compareTo( occupationDate))) {
                         occupationProperty = occu;
                     }
                 }

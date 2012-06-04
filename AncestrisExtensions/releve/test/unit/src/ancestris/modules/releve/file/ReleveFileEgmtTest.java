@@ -38,7 +38,7 @@ public class ReleveFileEgmtTest extends TestCase {
         birth.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         birth.setGeneralComment("generalcomment");
 
-        dateManager.addRecord(birth);
+        dateManager.addRecord(birth,false);
         StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", sb.length(), 0);
 
@@ -134,7 +134,7 @@ public class ReleveFileEgmtTest extends TestCase {
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         marriage.setGeneralComment("generalcomment");
 
-        dateManager.addRecord(marriage);
+        dateManager.addRecord(marriage,false);
         StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
@@ -253,7 +253,7 @@ public class ReleveFileEgmtTest extends TestCase {
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(death);
+        dateManager.addRecord(death,false);
         StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", "", sb.toString());
 
@@ -379,7 +379,7 @@ public class ReleveFileEgmtTest extends TestCase {
         misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(misc);
+        dateManager.addRecord(misc,false);
         StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 

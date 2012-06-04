@@ -104,7 +104,7 @@ public class ReleveTable extends JTable {
 
 
     public void dropRecord(Record record) {
-        int recordIndex = dataManager.addRecord(record);
+        int recordIndex = dataManager.addRecord(record, true);
 
         ((ModelAbstract)getModel()).fireTableRowsInserted(recordIndex, recordIndex);
     }

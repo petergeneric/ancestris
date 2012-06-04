@@ -158,6 +158,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             case misc:
                 jButtonNew.setToolTipText(toolTipText+ " (ALT-V)");
                 break;
+             case all:
+                jButtonNew.setVisible(false);
+                jButtonStandalone.setVisible(false);
+                break;
         }
     }
 
@@ -354,20 +358,19 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         String errorMessage = recordModel.verifyRecord(currentRecordIndex);
         if (errorMessage.isEmpty()) {
             // je cree un nouveau releve
-            Record record = recordModel.createRecord();
-            int recordIndex = dataManager.addRecord(record);
-            if (dataManager.getCopyFreeCommentEnabled() ) {
-                // je valorise le numero de photo avec la valeur par defaut
-                String defaultValue = dataManager.getDefaultFreeComment();
-                record.setFreeComment(defaultValue);
-            }
+            currentRecordIndex = recordModel.getRowCount();
+            currentRecordIndex = dataManager.createRecord(recordModel);
+//            int recordIndex = dataManager.addRecord(record, true);
+//            if (dataManager.getCopyFreeCommentEnabled() ) {
+//                // je valorise le numero de photo avec la valeur par defaut
+//                String defaultValue = dataManager.getDefaultFreeComment();
+//                record.setFreeComment(defaultValue);
+//            }
 
             // je memorise l'index du nouveau releve
             // ATTENTION : currentRecordIndex sert a distinguer l'editeur normal
             // de l'editeur indépendant dans tableChanged()
-            currentRecordIndex = recordIndex;
-            // je previens les listeners (table et editeur)
-            recordModel.fireTableRowsInserted(recordIndex, recordIndex);
+            //currentRecordIndex = recordIndex;
         } else {
             // j'affiche le message d'erreur
             Toolkit.getDefaultToolkit().beep();
@@ -656,7 +659,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * affiche le releve qui vient d'être ajouté ou supprimé dans le modele
      */
     /**
-     * Cette methode est appelée par le modele de données qunand
+     * Cette methode est appelée par le modele de données 
      * ATTENTION : elle n'est utilisée que par l'editeur independant
      * (L'éditeur normal est mis à jour par ReleveTable.TableChanged() pour
      * prendree en compte le tri choisi par l'utilisateur, voir rowSelected() )

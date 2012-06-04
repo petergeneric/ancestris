@@ -61,27 +61,39 @@ public class DataManager {
         configPanel.resetDirty();
     }
 
+    public int createRecord( ModelAbstract model) {
+        Record record = model.createRecord();
+
+        if (getCopyFreeCommentEnabled() ) {
+            // je valorise le numero de photo avec la valeur par defaut
+            String defaultValue = this.getDefaultFreeComment();
+            record.setFreeComment(defaultValue);
+        }
+        
+        return addRecord(record, true);
+    }
+
     /**
      * ajoute un nouveau releve
      * le numero de releve est calculé automatiquement
      * @param record
      * @return
      */
-    public int addRecord(Record record) {
+    public int addRecord(Record record, boolean updateGui) {
         int recordIndex = 0;
 
         // j'ajoute le releve dans le modele correspondant
         if (record instanceof RecordBirth) {
-            recordIndex = releveBirthModel.addRecord(record);
+            recordIndex = releveBirthModel.addRecord(record, updateGui);
         } else  if (record instanceof RecordMarriage) {
-            recordIndex = releveMarriageModel.addRecord(record);
+            recordIndex = releveMarriageModel.addRecord(record, updateGui);
         } else  if (record instanceof RecordDeath) {
-            recordIndex = releveDeathModel.addRecord(record);
+            recordIndex = releveDeathModel.addRecord(record, updateGui);
         } else  if (record instanceof RecordMisc) {
-            recordIndex = releveMiscModel.addRecord(record);
+            recordIndex = releveMiscModel.addRecord(record, updateGui);
         }
 
-        releveAllModel.addRecord(record);
+        releveAllModel.addRecord(record, updateGui);
 
         // j'attribue un numero au releve s'il n'est pas déjà renseigné
         if ( record.recordNo == 0 )  {
@@ -127,14 +139,14 @@ public class DataManager {
                 if (forceDefaultPlace == 1) {
                     // je supprime le lieu pour gagner de la place en mémoire
                     record.eventPlace = null;
-                    this.addRecord(record);
+                    this.addRecord(record, false);
                 } else {
                     // j'ignore le releve
                 }
             } else {
                 // je supprime le lieu pour gagner de la place en mémoire
                 record.eventPlace = null;
-                this.addRecord(record);
+                this.addRecord(record, false);
             }
         }
 

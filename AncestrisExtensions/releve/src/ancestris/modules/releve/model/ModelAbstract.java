@@ -39,7 +39,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
      * de chaque modele
      * @param record
      */
-    protected int addRecord(final Record record) {
+    protected int addRecord(final Record record, boolean updateGui) {
         releveList.add(record);
       
         // keep undo
@@ -50,8 +50,11 @@ public abstract class ModelAbstract extends AbstractTableModel  {
                 return null;
             }
         });
-
-        return releveList.size()-1;
+        int recordIndex = releveList.size()-1;
+        if (updateGui) {
+            fireTableRowsInserted(recordIndex, recordIndex);
+        }
+        return recordIndex;
     }
 
     protected void removeRecord(final Record record) {
@@ -60,7 +63,7 @@ public abstract class ModelAbstract extends AbstractTableModel  {
 
             @Override
             Record undo() {
-                addRecord(record);
+                addRecord(record, true);
                 return record;
             }
         });
