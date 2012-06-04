@@ -18,16 +18,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.List;
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -69,6 +61,7 @@ public class SearchPanel extends javax.swing.JPanel {
         fromToggleButton.setSelected(editorSearchPanel.isFromLocaleToggleButtonSelected());
         toToggleButton.setSelected(editorSearchPanel.isToLocaleToggleButtonSelected());
         caseSensitiveCheckBox.setSelected(editorSearchPanel.isCaseSensitiveCheckBoxSelected());
+        expressionTextField.setText(editorSearchPanel.getExpressionTextField());
         resultEditorPane.setContentType("text/html"); // lets Java know it will be HTML
         resultEditorPane.setEditable(false);
         resultEditorPane.addHyperlinkListener(new SearchPanellinkListener());
