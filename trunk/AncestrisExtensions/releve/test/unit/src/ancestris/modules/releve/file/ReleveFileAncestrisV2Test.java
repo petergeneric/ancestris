@@ -142,7 +142,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         birth.setWitness3("wfirstname", "wlastname", "woccupation", "wcomment");
         birth.setWitness4("wfirstname", "wlastname", "woccupation", "wcomment");
 
-        dateManager.addRecord(birth);
+        dateManager.addRecord(birth,false);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", sb.length(), 0);
 
@@ -196,7 +196,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         marriage.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(marriage);
+        dateManager.addRecord(marriage,false);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
         assertEquals("save result", 0, sb.length());
 
@@ -247,7 +247,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(death);
+        dateManager.addRecord(death,false);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
@@ -304,7 +304,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(record);
+        dateManager.addRecord(record,false);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 

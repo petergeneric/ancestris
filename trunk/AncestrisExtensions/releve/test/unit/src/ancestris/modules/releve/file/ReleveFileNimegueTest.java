@@ -128,7 +128,7 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(record);
+        dateManager.addRecord(record,false);
         StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", "", sb.toString());
 
@@ -253,7 +253,7 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-        dateManager.addRecord(record);
+        dateManager.addRecord(record,false);
         StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
         assertEquals("save result", "", sb.toString());
 
@@ -373,7 +373,7 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(record);
+        dateManager.addRecord(record,false);
         StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", "", sb.toString());
 
@@ -499,7 +499,7 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-        dateManager.addRecord(record);
+        dateManager.addRecord(record,false);
         StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
         assertEquals("save result", "", sb.toString());
 

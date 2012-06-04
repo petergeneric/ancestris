@@ -44,9 +44,13 @@ public class ModelAll extends ModelAbstract {
      * @param record
      */
     @Override
-    protected int addRecord(final Record record) {
+    protected int addRecord(final Record record, boolean updateGui) {
         releveList.add(record);
-        return releveList.size()-1;
+        int recordIndex = releveList.size()-1;
+         if (updateGui) {
+            fireTableRowsInserted(recordIndex, recordIndex);
+        }
+        return recordIndex;
     }
 
     @Override
