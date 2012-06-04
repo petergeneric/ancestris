@@ -15,6 +15,16 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 
 /**
+ * Cette classe contient les methode pour permmettre a un arbre dynamique d'etre
+ * destinataire d'un DnD.
+ *
+ * la fonction DragAndDrop ne peut fonctionner qui si on ajoute la méthode
+ * TreeView.getEntityAt(location) dans la classe genj.tree.TreeView
+ * et si on décommenter les trois appels à cette methode dans le code ci dessous.
+ * @author Michel
+ */
+
+/**
   * genj.tree.TreeView.getEntityAt(Point entityPos)
   * retreive entity at given cooodinates
   * @param entityPos  Point in TreeView coordinates
@@ -44,15 +54,6 @@ import java.awt.dnd.DropTargetListener;
 
  */
 
-/**
- * Cette classe contient les methode pour permmettre a un arbre dynamique d'etre
- * destinataire d'un DnD.
- *
- * la fonction DragAndDrop ne peut fonctionner qui si on ajoute la méthode
- * TreeView.getEntityAt(location) dans la classe genj.tree.TreeView
- * et si on décommenter les trois appels à cette methode dans le code ci dessous.
- * @author Michel
- */
 public class TreeViewDropTarget {
 
     TreeView treeView;
@@ -78,7 +79,7 @@ public class TreeViewDropTarget {
             Point location = dropTargetDragEvent.getLocation();
 
             Entity entity = null;
-            entity = treeView.getEntityAt(location);
+            //entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY);
             } else {
@@ -96,7 +97,7 @@ public class TreeViewDropTarget {
             //System.out.println("dragOver "+dropTargetDragEvent.getSource().getClass().getName());
             Point location = dropTargetDragEvent.getLocation();
             Entity entity = null;
-            entity = treeView.getEntityAt(location);
+            //entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 dropTargetDragEvent.acceptDrag(dropTargetDragEvent.getSourceActions());
             } else {
@@ -112,7 +113,7 @@ public class TreeViewDropTarget {
 		public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
 			Point location = dropTargetDropEvent.getLocation();
             Entity entity = null;
-            entity = treeView.getEntityAt(location);
+            //entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 Transferable t = dropTargetDropEvent.getTransferable();
 
