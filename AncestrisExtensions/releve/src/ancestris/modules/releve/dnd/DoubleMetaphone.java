@@ -652,6 +652,9 @@ public class DoubleMetaphone  {
                                                         2, "AI", "OI")){
                 //-- french e.g. "resnais", "artois" --//
                 result.appendAlternate('S');
+            } else if (index == value.length() - 1 && value.length()>= 2 ){
+                //-- michel : denier S muet
+                
             } else {
                 result.append('S');
             }

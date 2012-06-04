@@ -107,15 +107,15 @@ public class ModelMisc extends ModelAbstract {
             return new BeanField[0];
         }
 
-        KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks4 = KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks5 = KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks6 = KeyStroke.getKeyStroke(KeyEvent.VK_6, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks7 = KeyStroke.getKeyStroke(KeyEvent.VK_7, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks8 = KeyStroke.getKeyStroke(KeyEvent.VK_8, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks9 = KeyStroke.getKeyStroke(KeyEvent.VK_9, InputEvent.ALT_DOWN_MASK);
+         return getFieldList(record);
+    }
+
+    /**
+     * retourne la liste des bean a afficher dans l'editeur
+     * @param record
+     * @return
+     */
+    protected static BeanField[] getFieldList( Record record ) {
 
         BeanField beanField[] = {
             //new BeanField(record, record.getCityName() + "," + record.getCityCode() + "," + record.getCountyName(), null),

@@ -34,6 +34,8 @@ public class MergeRecord {
     private PropertyDate WifeMotherDeathDate = null;
     private PropertyDate WifeParentMarriageDate = null;
 
+
+
     /**
      * liste des types de releves
      */
@@ -161,12 +163,19 @@ public class MergeRecord {
         if ( record.getIndiPlace() != null) {
             return record.getIndiPlace().toString();
         } else {
+            if ( type == RecordType.Birth) {
+                return record.getEventPlace().toString();
+            }
             return "";
         }
     }
 
     String getIndiOccupation() {
         return record.getIndiOccupation().toString();
+    }
+
+    String getIndiOccupationWithDate() {
+        return record.getIndiOccupation().toString() + " (" + getEventDate().getDisplayValue()+")";
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -212,6 +221,10 @@ public class MergeRecord {
     String getIndiFatherOccupation() {
         return record.getIndiFatherOccupation().toString();
     }
+    
+    String getIndiFatherOccupationWithDate() {
+        return record.getIndiFatherOccupation().toString() + " (" + getEventDate().getDisplayValue()+")";
+    }
 
     String getIndiMotherFirstName() {
         return record.getIndiMotherFirstName().toString();
@@ -243,6 +256,9 @@ public class MergeRecord {
         return record.getIndiMotherOccupation().toString();
     }
 
+    String getIndiMotherOccupationWithDate() {
+        return record.getIndiMotherOccupation().toString() + " (" + getEventDate().getDisplayValue()+")";
+    }
     //  wife ///////////////////////////////////////////////////////////////////
 
     String getWifeFirstName() {
@@ -283,6 +299,10 @@ public class MergeRecord {
 
     String getWifeOccupation() {
         return record.getWifeOccupation().toString();
+    }
+
+    String getWifeOccupationWithDate() {
+        return record.getWifeOccupation().toString() + " (" + getEventDate().getDisplayValue()+")";
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -329,6 +349,10 @@ public class MergeRecord {
         return record.getWifeFatherOccupation().toString();
     }
 
+    String getWifeFatherOccupationWithDate() {
+        return record.getWifeFatherOccupation().toString() + " (" + getEventDate().getDisplayValue()+")";
+    }
+
     String getWifeMotherFirstName() {
         return record.getWifeMotherFirstName().toString();
     }
@@ -359,6 +383,10 @@ public class MergeRecord {
         return record.getWifeMotherOccupation().toString();
     }
 
+    String getWifeMotherOccupationWithDate() {
+        return record.getWifeMotherOccupation().toString() + " (" + getEventDate().getDisplayValue()+")";
+    }
+
 
    
 
@@ -377,40 +405,12 @@ public class MergeRecord {
     private String makeBirthComment() {
         String comment = appendValue(record.getIndiComment().toString());
 
-        String generalComment = appendValue(
-                record.getGeneralComment().toString(),
-                record.getFreeComment().toString() );
-        if (!generalComment.isEmpty()) {
-            if (!generalComment.isEmpty()) {
-                comment += "\n";
-            }
-            comment += generalComment;
-        }
-
-        String fatherComment = appendValue(
-                record.getIndiFatherComment().toString() );
-        if (!fatherComment.isEmpty()) {
-            if (!fatherComment.isEmpty()) {
-                comment += "\n";
-            }
-            comment += "Commentaire père" + ": " + fatherComment;
-        }
-
-        String motherComment = appendValue(
-                record.getIndiMotherComment().toString() );
-        if (!motherComment.isEmpty()) {
-            if (!motherComment.isEmpty()) {
-                comment += "\n";
-            }
-            comment += "Commentaire mère" + ": " + motherComment;
-        }
-
         String godFather = appendValue(
                 record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
                 record.getWitness1Occupation().toString(),
                 record.getWitness1Comment().toString());
         if (!godFather.isEmpty()) {
-            if (!comment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
             comment += "Parrain/témoin" + ": " + godFather;
@@ -420,7 +420,7 @@ public class MergeRecord {
                 record.getWitness2Occupation().toString(),
                 record.getWitness2Comment().toString());
         if (!godMother.isEmpty()) {
-            if (!comment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
             comment += "Marraine/témoin" + ": " + godMother;
@@ -434,10 +434,47 @@ public class MergeRecord {
                 record.getWitness4Occupation().toString(),
                 record.getWitness4Comment().toString());
         if (!witness.isEmpty()) {
-            if (!comment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
             comment += "Témoin(s)" + ": " + witness;
+        }
+
+        String fatherComment = appendValue(
+                record.getIndiFatherComment().toString() );
+        if (!fatherComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n' ) {
+                comment += "\n";
+            }
+            comment += "Commentaire père" + ": " + fatherComment;
+        }
+
+        String motherComment = appendValue(
+                record.getIndiMotherComment().toString() );
+        if (!motherComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += "Commentaire mère" + ": " + motherComment;
+        }
+
+        String generalComment = appendValue(
+                record.getGeneralComment().toString()
+           );
+        if (!generalComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += generalComment;
+        }
+
+        String freeComment = appendValue(
+                record.getFreeComment().toString() );
+        if (!freeComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += "Photo"+": "+freeComment;
         }
         return comment;
     }
@@ -475,7 +512,7 @@ public class MergeRecord {
                 record.getWitness4Occupation().toString(),
                 record.getWitness4Comment().toString());
         if (!witness.isEmpty()) {
-            if (!comment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
             }
             comment += "Témoin(s)" + ": " + witness;

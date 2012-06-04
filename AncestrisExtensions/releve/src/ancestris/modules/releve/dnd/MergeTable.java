@@ -43,9 +43,6 @@ public class MergeTable extends JTable {
     }
 
     public void setModel(MergeModel model) {
-        if (getModel() instanceof MergeModel) {
-            saveColumnLayout();
-        }
         super.setModel(model);
         loadColumnLayout();
         
@@ -279,7 +276,7 @@ public class MergeTable extends JTable {
                                 setBackground(greyColor);
                                 break;
                             case CONFLIT:
-                                setBackground(Color.red);
+                                setBackground(Color.PINK);
                                 break;
                             case EQUAL:
                                 setBackground(table.getBackground());

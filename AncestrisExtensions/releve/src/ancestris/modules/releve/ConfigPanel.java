@@ -73,6 +73,7 @@ public class ConfigPanel extends javax.swing.JPanel implements TableModelListene
         dataManager.getModel(DataManager.ModelType.marriage).addTableModelListener(this);
         dataManager.getModel(DataManager.ModelType.death).addTableModelListener(this);
         dataManager.getModel(DataManager.ModelType.misc).addTableModelListener(this);
+        dataManager.getModel(DataManager.ModelType.all).addTableModelListener(this);
 
         cityNameEntry.addFocusListener(this);
         cityCodeEntry.addFocusListener(this);

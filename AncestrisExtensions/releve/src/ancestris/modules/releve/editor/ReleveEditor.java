@@ -878,7 +878,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             }
 
             // je memorise l'ancienne valeur pour undo
-            if (recordModel != null) {
+            if (recordModel != null && !oldValue.equals(bean.getField().toString()) ) {
                 recordModel.fieldChanged(record, bean.getField(), oldValue);
             }
 

@@ -114,13 +114,15 @@ public class ModelBirth extends ModelAbstract {
             // y a rien a voir
             return new BeanField[0];
         }
+        return getFieldList(record);
+    }
 
-        KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks4 = KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks8 = KeyStroke.getKeyStroke(KeyEvent.VK_8, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks9 = KeyStroke.getKeyStroke(KeyEvent.VK_9, InputEvent.ALT_DOWN_MASK);
+    /**
+     * retourne la liste des bean a afficher dans l'editeur
+     * @param record
+     * @return
+     */
+    protected static BeanField[] getFieldList( Record record ) {
 
         BeanField beanField[] = {
             //new BeanField(record, record.getCityName() + "," + record.getCityCode() + "," + record.getCountyName(), null),
