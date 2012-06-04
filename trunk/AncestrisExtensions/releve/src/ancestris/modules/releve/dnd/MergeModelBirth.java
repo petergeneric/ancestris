@@ -102,7 +102,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), selectedIndi.getFirstName());
             addRow(RowType.IndiSex, record.getIndiSexString(), selectedIndi.getPropertyValue("SEX"));
             addRow(RowType.IndiBirthDate, birthDate , selectedIndi.getBirthDate());
-            addRow(RowType.IndiPlace, record.getEventPlace(), selectedIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiPlace, record.getIndiPlace(), selectedIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.EventComment, record.getEventComment(), selectedIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
 
         } else {
@@ -119,7 +119,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), "");
             addRow(RowType.IndiSex, record.getIndiSexString(), "");
             addRow(RowType.IndiBirthDate, birthDate , null);
-            addRow(RowType.IndiPlace, record.getEventPlace(), "");
+            addRow(RowType.IndiPlace, record.getIndiPlace(), "");
             addRow(RowType.EventComment, record.getEventComment(), "");
         }
     }
@@ -153,14 +153,14 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), father.getFirstName());
             addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), father.getBirthDate());
             addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), father.getDeathDate());
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupation(), father.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), MergeQuery.findOccupation(father, record.getEventDate()));
 
         } else {
             addRow(RowType.IndiFatherLastName, record.getIndiFatherLastName(), "");
             addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), "");
             addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), null);
             addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), null);
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupation(), "");
+            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), "");
         }
     }
 
@@ -170,13 +170,13 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), mother.getFirstName());
             addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), mother.getBirthDate());
             addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), mother.getDeathDate());
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupation(), mother.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(), MergeQuery.findOccupation(mother, record.getEventDate()));
         } else {
             addRow(RowType.IndiMotherLastName, record.getIndiMotherLastName(), "");
             addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), "");
             addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), null);
             addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), null);
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupation(), "");
+            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(), "");
         }
     }
 
@@ -224,7 +224,7 @@ class MergeModelBirth extends MergeModel {
             }
         }
 
-        // je cree la propriete de naissane si elle n'existait pas
+        // je cree la propriete de naissance si elle n'existait pas
         Property birthProperty = selectedIndi.getProperty("BIRT");
         if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
             if (birthProperty == null) {

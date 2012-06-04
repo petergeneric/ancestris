@@ -1,9 +1,5 @@
 package ancestris.modules.releve.model;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
-
 /**
  *
  * @author Michel
@@ -79,23 +75,28 @@ public class ModelMarriage extends ModelAbstract {
         return value;
     }
 
-
+    /**
+     * retourne la liste des bean a afficher dans l'editeur
+     *
+     * @param row numero du relevé dans le modele
+     * @return
+     */
     @Override
     public BeanField[] getFieldList( int row ) {
-        KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks4 = KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks5 = KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks6 = KeyStroke.getKeyStroke(KeyEvent.VK_6, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks7 = KeyStroke.getKeyStroke(KeyEvent.VK_7, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks8 = KeyStroke.getKeyStroke(KeyEvent.VK_8, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks9 = KeyStroke.getKeyStroke(KeyEvent.VK_9, InputEvent.ALT_DOWN_MASK);
-
         Record record = getRecord(row);
         if( record == null)  {
             return new BeanField[0];
         }
+
+        return getFieldList(record);
+    }
+
+    /**
+     * retourne la liste des bean a afficher dans l'editeur
+     * @param record
+     * @return
+     */
+    protected static BeanField[] getFieldList( Record record ) {
 
         BeanField beanField[] = {
             //new BeanField(record, record.getCityName() + "," + record.getCityCode() + "," + record.getCountyName(), null),
@@ -189,7 +190,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.witness4FirstName),
             new BeanField(record, Field.FieldType.witness4Occupation),
             new BeanField(record, Field.FieldType.witness4Comment),
-            
+
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.GeneralComment"), ks9),
             new BeanField(record, Field.FieldType.generalComment)
         };

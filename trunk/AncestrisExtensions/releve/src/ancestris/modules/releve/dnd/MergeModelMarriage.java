@@ -102,7 +102,7 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiFirstName,  record.getIndiFirstName(), husband.getFirstName());
             addRow(RowType.IndiBirthDate,  record.getIndiBirthDate(), husband.getBirthDate(false));
             addRow(RowType.IndiPlace,      record.getIndiPlace(),      husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            addRow(RowType.IndiOccupation, record.getIndiOccupation(), husband.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(),  MergeQuery.findOccupation(husband, record.getEventDate()));
 
             // Je recupere la famille de l'epoux
             Fam parentFamily = husband.getFamilyWhereBiologicalChild();
@@ -118,7 +118,7 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiFirstName,  record.getIndiFirstName(), "");
             addRow(RowType.IndiBirthDate,  record.getIndiParentMarriageDate(), null);
             addRow(RowType.IndiPlace,      record.getIndiPlace(),   "");
-            addRow(RowType.IndiOccupation, record.getIndiOccupation(), "");
+            addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), "");
 
             addRow(RowType.IndiParentFamily, record, null);
             // je recherche une estimation de la date de mariage des parents a partir du relevé
@@ -142,7 +142,7 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.WifeFirstName,  record.getWifeFirstName(), wife.getFirstName());
             addRow(RowType.WifeBirthDate,  record.getWifeBirthDate(), wife.getBirthDate(false));
             addRow(RowType.WifePlace,      record.getWifePlace(),      wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            addRow(RowType.WifeOccupation, record.getWifeOccupation(), wife.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.WifeOccupation, record.getWifeOccupationWithDate(), MergeQuery.findOccupation(wife, record.getEventDate()));
 
             // Je recupere la famille de l'epouse
             Fam parentFamily = wife.getFamilyWhereBiologicalChild();
@@ -156,7 +156,7 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.WifeFirstName,  record.getWifeFirstName(), "");
             addRow(RowType.WifeBirthDate,  record.getWifeBirthDate(), null);
             addRow(RowType.WifePlace,      record.getWifePlace(), "");
-            addRow(RowType.WifeOccupation, record.getWifeOccupation(), "");
+            addRow(RowType.WifeOccupation, record.getWifeOccupationWithDate(), "");
 
             addRow(RowType.WifeParentFamily, record, null);
             // j'affiche une estimation de la date de mariage des parents a partir du relevé
@@ -172,13 +172,13 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), husbandFather.getFirstName());
             addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), husbandFather.getBirthDate());
             addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), husbandFather.getDeathDate());
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupation(), husbandFather.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(),  MergeQuery.findOccupation(husbandFather, record.getEventDate()));
         } else {
             addRow(RowType.IndiFatherLastName, record.getIndiFatherLastName(), "", null);
             addRow(RowType.IndiFatherFirstName, record.getIndiFatherFirstName(), "");
             addRow(RowType.IndiFatherBirthDate, record.getIndiFatherBirthDate(), null);
             addRow(RowType.IndiFatherDeathDate, record.getIndiFatherDeathDate(), null);
-            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupation(), "");
+            addRow(RowType.IndiFatherOccupation, record.getIndiFatherOccupationWithDate(), "");
         }
     }
 
@@ -188,13 +188,13 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), husbandMother.getFirstName());
             addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), husbandMother.getBirthDate(false));
             addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), husbandMother.getDeathDate(false));
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupation(), husbandMother.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(),  MergeQuery.findOccupation(husbandMother, record.getEventDate()));
         } else {
             addRow(RowType.IndiMotherLastName, record.getIndiMotherLastName(), "", null);
             addRow(RowType.IndiMotherFirstName, record.getIndiMotherFirstName(), "");
             addRow(RowType.IndiMotherBirthDate, record.getIndiMotherBirthDate(), null);
             addRow(RowType.IndiMotherDeathDate, record.getIndiMotherDeathDate(), null);
-            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupation(), "");
+            addRow(RowType.IndiMotherOccupation, record.getIndiMotherOccupationWithDate(), "");
         }
     }
 
@@ -204,13 +204,13 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.WifeFatherFirstName, record.getWifeFatherFirstName(), wifeFather.getFirstName());
             addRow(RowType.WifeFatherBirthDate, record.getWifeFatherBirthDate(), wifeFather.getBirthDate());
             addRow(RowType.WifeFatherDeathDate, record.getWifeFatherDeathDate(), wifeFather.getDeathDate());
-            addRow(RowType.WifeFatherOccupation, record.getWifeFatherOccupation(), wifeFather.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.WifeFatherOccupation, record.getWifeFatherOccupationWithDate(), MergeQuery.findOccupation(wifeFather, record.getEventDate()));
         } else {
             addRow(RowType.WifeFatherLastName, record.getWifeFatherLastName(), "", null);
             addRow(RowType.WifeFatherFirstName, record.getWifeFatherFirstName(), "");
             addRow(RowType.WifeFatherBirthDate, record.getWifeFatherBirthDate(), null);
             addRow(RowType.WifeFatherDeathDate, record.getWifeFatherDeathDate(), null);
-            addRow(RowType.WifeFatherOccupation, record.getWifeFatherOccupation(), "");
+            addRow(RowType.WifeFatherOccupation, record.getWifeFatherOccupationWithDate(), "");
         }
     }
 
@@ -220,13 +220,13 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.WifeMotherFirstName, record.getWifeMotherFirstName(), wifeMother.getFirstName());
             addRow(RowType.WifeMotherBirthDate, record.getWifeMotherBirthDate(), wifeMother.getBirthDate(false));
             addRow(RowType.WifeMotherDeathDate, record.getWifeMotherDeathDate(), wifeMother.getDeathDate(false));
-            addRow(RowType.WifeMotherOccupation, record.getWifeMotherOccupation(), wifeMother.getValue(new TagPath("INDI:OCCU"), ""));
+            addRow(RowType.WifeMotherOccupation, record.getWifeMotherOccupationWithDate(), MergeQuery.findOccupation(wifeMother, record.getEventDate()));
         } else {
             addRow(RowType.WifeMotherLastName, record.getWifeMotherLastName(), "", null);
             addRow(RowType.WifeMotherFirstName, record.getWifeMotherFirstName(), "");
             addRow(RowType.WifeMotherBirthDate, record.getWifeMotherBirthDate(), null);
             addRow(RowType.WifeMotherDeathDate, record.getWifeMotherDeathDate(), null);
-            addRow(RowType.WifeMotherOccupation, record.getWifeMotherOccupation(), "");
+            addRow(RowType.WifeMotherOccupation, record.getWifeMotherOccupationWithDate(), "");
         }
     }
 

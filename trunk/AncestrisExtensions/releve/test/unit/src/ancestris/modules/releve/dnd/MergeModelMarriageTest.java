@@ -58,7 +58,7 @@ public class MergeModelMarriageTest extends TestCase {
             Indi wifeMother;
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-            assertEquals("Nombre model",2,models.size());
+            assertEquals("Nombre model",4,models.size());
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");
@@ -134,7 +134,7 @@ public class MergeModelMarriageTest extends TestCase {
             ((Indi)gedcom.getEntity("I1")).getBirthDate().setValue("BEF 1971");
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-            assertEquals("Nombre model",2,models.size());
+            assertEquals("Nombre model",4,models.size());
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F00004");

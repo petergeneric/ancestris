@@ -127,6 +127,7 @@ public final class ReleveTopComponent extends TopComponent  {
         panelMarriage.addMouseListener(mouseAdapter);
         panelDeath.addMouseListener(mouseAdapter);
         panelMisc.addMouseListener(mouseAdapter);
+        panelAll.addMouseListener(mouseAdapter);
         panelConfig.addMouseListener(mouseAdapter);
         jTabbedPane1.addMouseListener(mouseAdapter);
     }
@@ -149,6 +150,7 @@ public final class ReleveTopComponent extends TopComponent  {
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt A"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), this);
         getActionMap().put(this, new AbstractAction() {
@@ -166,6 +168,9 @@ public final class ReleveTopComponent extends TopComponent  {
                     panelDeath.createRecord();
                 } else if ( actionEvent.getActionCommand().equals("d") ) {
                     jTabbedPane1.setSelectedComponent(panelMisc);
+                    panelMisc.createRecord();
+                } else if ( actionEvent.getActionCommand().equals("a") ) {
+                    jTabbedPane1.setSelectedComponent(panelAll);
                     panelMisc.createRecord();
                 } else if ( actionEvent.getActionCommand().equals("g") ) {
                     // load current gedcom
@@ -205,6 +210,7 @@ public final class ReleveTopComponent extends TopComponent  {
         panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, panelConfig);
         panelDeath.setModel(dataManager, DataManager.ModelType.death, panelConfig);
         panelMisc.setModel(dataManager, DataManager.ModelType.misc, panelConfig);
+        panelAll.setModel(dataManager, DataManager.ModelType.all, panelConfig);
         panelConfig.setModel(dataManager);
 
         // j'affiche l'onglet de configuration
@@ -264,6 +270,7 @@ public final class ReleveTopComponent extends TopComponent  {
         panelMarriage.componentClosed();
         panelDeath.componentClosed();
         panelMisc.componentClosed();
+        panelAll.componentClosed();
         panelConfig.componentClosed();
 
         // j'enregistre le nom du fichier courant
@@ -589,6 +596,11 @@ public final class ReleveTopComponent extends TopComponent  {
                             panelMisc.selectRecord(0);
                         } else  {
                             panelMisc.selectRecord(-1);
+                        }
+                        if (dataManager.getReleveAllModel().getRowCount() > 0) {
+                            panelAll.selectRecord(0);
+                        } else  {
+                            panelAll.selectRecord(-1);
                         }
                     }
 
@@ -1126,6 +1138,13 @@ public final class ReleveTopComponent extends TopComponent  {
                 } else {
                     panelMisc.selectRecord(-1);
                 }
+                if (dataManager.getReleveAllModel().getRowCount() > 0) {
+                    panelAll.selectRecord(0);
+                } else {
+                    panelAll.selectRecord(-1);
+                }
+
+                setCurrentFile(new File(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.demoRecord")));
 
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
@@ -1256,10 +1275,10 @@ public final class ReleveTopComponent extends TopComponent  {
         panelMarriage = new ancestris.modules.releve.RelevePanel();
         panelDeath = new ancestris.modules.releve.RelevePanel();
         panelMisc = new ancestris.modules.releve.RelevePanel();
+        panelAll = new ancestris.modules.releve.RelevePanel();
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setPreferredSize(null);
         jTabbedPane1.setVerifyInputWhenFocusTarget(false);
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelConfig.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/config.png")), panelConfig); // NOI18N
 
@@ -1268,11 +1287,13 @@ public final class ReleveTopComponent extends TopComponent  {
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMarriage.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Marriage.png")), panelMarriage); // NOI18N
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelDeath.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Death.png")), panelDeath); // NOI18N
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelMisc.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/misc.png")), panelMisc); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelAll.TabConstraints.tabTitle"), panelAll); // NOI18N
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane jTabbedPane1;
+    private ancestris.modules.releve.RelevePanel panelAll;
     private ancestris.modules.releve.RelevePanel panelBirth;
     private ancestris.modules.releve.ConfigPanel panelConfig;
     private ancestris.modules.releve.RelevePanel panelDeath;

@@ -43,7 +43,6 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
 
         final MergeDialog dialog = new MergeDialog(parent);
         try {
-            dialog.intiData(record, gedcom, entity);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -53,10 +52,11 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 }
             });
             dialog.setVisible(visible);
+            dialog.initData(record, gedcom, entity);
             return dialog;
         } catch (Exception ex) {
             ex.printStackTrace();
-            dialog.componentClosed();
+            //dialog.componentClosed();
             dialog.dispose();
             Toolkit.getDefaultToolkit().beep();
             String title = "";
@@ -130,7 +130,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param selectedEntity
      * @param record
      */
-    protected void intiData(Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+    protected void initData(Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
         List<MergeModel> models;
         MergeRecord mergeRecord = new MergeRecord(record);
 

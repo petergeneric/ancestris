@@ -101,19 +101,20 @@ public class ModelDeath extends ModelAbstract {
      */
     @Override
     public BeanField[] getFieldList( int row ) {
-        KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks4 = KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks5 = KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks8 = KeyStroke.getKeyStroke(KeyEvent.VK_8, InputEvent.ALT_DOWN_MASK);
-        KeyStroke ks9 = KeyStroke.getKeyStroke(KeyEvent.VK_9, InputEvent.ALT_DOWN_MASK);
-
         Record record = getRecord(row);
         if( record == null)  {
             return new BeanField[0];
         }
+        return getFieldList(record);
+    }
 
+    /**
+     * retourne la liste des bean a afficher dans l'editeur
+     * @param record
+     * @return
+     */
+    protected static BeanField[] getFieldList( Record record ) {
+        
         BeanField beanField[] = {
             //new BeanField(record, record.getCityName() + "," + record.getStateName() + "," + record.getCountyName(), null),
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Death"), ks1),

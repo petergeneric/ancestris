@@ -10,6 +10,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Source;
+import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -863,12 +864,12 @@ public class MergeQuery {
                 // meme nom du pere
                 if (!birthRecord.getIndiFatherLastName().isEmpty()
                         && !isSameName(birthRecord.getIndiFatherLastName(), father.getLastName())) {
-                    throw new Exception("le nom du pere est different");
+                    //throw new Exception("le nom du pere est different");
                 }
                 //meme prénom du pere
                 if (!birthRecord.getIndiFatherFirstName().isEmpty()
                         && !isSameName(birthRecord.getIndiFatherFirstName(), father.getFirstName())) {
-                    throw new Exception("le prenom du pere est different");
+                    //throw new Exception("le prenom du pere est different");
                 }
 
                 // le pere doit avoir au moins minParentYearOld
@@ -886,12 +887,12 @@ public class MergeQuery {
                 // meme nom de la mere
                 if (!birthRecord.getIndiMotherLastName().isEmpty()
                         && !isSameName(birthRecord.getIndiMotherLastName(), mother.getLastName())) {
-                    throw new Exception("le nom de la mere est different");
+                    //throw new Exception("le nom de la mere est different");
                 }
                 //meme prénom de la mere
                 if (!birthRecord.getIndiMotherFirstName().isEmpty()
                         && !isSameName(birthRecord.getIndiMotherFirstName(), mother.getFirstName())) {
-                    throw new Exception("le prénom de la mere est different");
+                    //throw new Exception("le prénom de la mere est different");
                 }
                 // la mere doit avoir au moins minParentYearOld
                 if (!isRecordAfterThanDate(recordBirthDate, mother.getBirthDate(), 0, minParentYearOld)) {
@@ -1416,23 +1417,48 @@ public class MergeQuery {
      * @param occupationDate
      * @return occution property or null
      */
-    static protected Property findOccupation(final Indi indi, final String occupationName, final PropertyDate occupationDate) {
-        Property occupationProperty = null;
+//    static protected Property findOccupation(final Indi indi, final String occupationName, final PropertyDate occupationDate) {
+//        Property occupationProperty = null;
+//
+//        for(Property occu : indi.getProperties("OCCU")){
+//            if( occupationName.equals(occu.getValue())) {
+//                for( Property occuDate :  occu.getProperties("DATE")) {
+//                    if ( occupationDate.compareTo((PropertyDate)occuDate) == 0 ) {
+//                        // TODO compare des dates range
+//                        occupationProperty = occu;
+//                        break;
+//                    } else if ( ! occuDate.isValid() ) {
+//                        occupationProperty = occuDate;
+//                    }
+//                }
+//            }
+//        }
+//        return occupationProperty;
+//    }
 
-        for(Property occu : indi.getProperties("OCCU")){
-            if( occupationName.equals(occu.getValue())) {
-                for( Property occuDate :  occu.getProperties("DATE")) {
-                    if ( occupationDate.compareTo((PropertyDate)occuDate) == 0 ) {
-                        // TODO compare des dates range
+    static protected String findOccupation(Indi indi, PropertyDate occupationDate) {
+        Property occupationProperty = null;
+        for (Property occu : indi.getProperties("OCCU")) {
+            for (Property occuDate : occu.getProperties("DATE")) {
+                if (occupationProperty == null) {
+                    occupationProperty = occu;
+                } else {
+                    if (Math.abs(occupationDate.compareTo((PropertyDate) occuDate)) <= Math.abs(occupationDate.compareTo((PropertyDate) occupationDate))) {
                         occupationProperty = occu;
-                        break;
-                    } else if ( ! occuDate.isValid() ) {
-                        occupationProperty = occuDate;
                     }
                 }
+
             }
         }
-        return occupationProperty;
+        String result = "";
+        if (occupationProperty != null) {
+            result = occupationProperty.getValue();
+            String date = occupationProperty.getPropertyDisplayValue("DATE");
+            if (!date.isEmpty()) {
+                result += " (" + date + ")";
+            }
+        }
+        return result;
     }
 
     /**
@@ -1459,5 +1485,6 @@ public class MergeQuery {
 
         return source;
     }
+
 
 }

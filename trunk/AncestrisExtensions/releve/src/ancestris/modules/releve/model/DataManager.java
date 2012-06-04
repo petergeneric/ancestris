@@ -14,6 +14,7 @@ public class DataManager {
     private ModelMarriage releveMarriageModel = new ModelMarriage();
     private ModelDeath releveDeathModel  = new ModelDeath();
     private ModelMisc releveMiscModel = new ModelMisc();
+    private ModelAll   releveAllModel = new ModelAll();
     private CompletionProvider completionProvider  = new CompletionProvider();
     private ConfigPanel configPanel = null;
 
@@ -26,7 +27,7 @@ public class DataManager {
 
     // previous record
 
-    public enum ModelType { birth, marriage, death, misc }
+    public enum ModelType { birth, marriage, death, misc, all }
 
     public DataManager (ConfigPanel configPanel) {
         this.configPanel = configPanel;
@@ -42,6 +43,7 @@ public class DataManager {
         result |= releveMarriageModel.isDirty();
         result |= releveDeathModel.isDirty();
         result |= releveMiscModel.isDirty();
+        result |= releveAllModel.isDirty();
         result |= configPanel.isDirty();
         return result;
     }
@@ -55,6 +57,7 @@ public class DataManager {
         releveMarriageModel.resetDirty();
         releveDeathModel.resetDirty();
         releveMiscModel.resetDirty();
+        releveAllModel.resetDirty();
         configPanel.resetDirty();
     }
 
@@ -77,6 +80,8 @@ public class DataManager {
         } else  if (record instanceof RecordMisc) {
             recordIndex = releveMiscModel.addRecord(record);
         }
+
+        releveAllModel.addRecord(record);
 
         // j'attribue un numero au releve s'il n'est pas déjà renseigné
         if ( record.recordNo == 0 )  {
@@ -112,6 +117,7 @@ public class DataManager {
         int firstRowMarriage = releveMarriageModel.getRowCount();
         int firstRowDeath = releveDeathModel.getRowCount();
         int firstRowMisc = releveMiscModel.getRowCount();
+        int firstRowAll = releveAllModel.getRowCount();
 
         // j'ajoute les releves
         for (Record record : fileBuffer.getRecords()) {
@@ -145,6 +151,9 @@ public class DataManager {
         if (releveMiscModel.getRowCount() > firstRowMisc) {
             releveMiscModel.fireTableRowsInserted(firstRowMisc, releveMiscModel.getRowCount() - 1);
         }
+        if (releveAllModel.getRowCount() > firstRowAll) {
+            releveAllModel.fireTableRowsInserted(firstRowMisc, releveAllModel.getRowCount() - 1);
+        }
 
         // RAZ de l'etat du modele
         if (!append) {
@@ -167,6 +176,8 @@ public class DataManager {
         } else  if (record instanceof RecordMisc) {
             releveMiscModel.removeRecord(record);
         }
+
+        releveAllModel.removeRecord(record);
     }
 
     public void removeAll() {
@@ -175,6 +186,7 @@ public class DataManager {
         releveMarriageModel.removeAll();
         releveDeathModel.removeAll();
         releveMiscModel.removeAll();
+        releveAllModel.removeAll();
         lastRecordNo = 0;
         resetDirty();
     }
@@ -217,31 +229,6 @@ public class DataManager {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // accesseurs au lieu par defaut
-    ///////////////////////////////////////////////////////////////////////////
-
-
-//    public String getCityName() {
-//        return configPanel.getCityName();
-//    }
-//
-//    public String getCityCode() {
-//        return configPanel.getCityCode();
-//    }
-//
-//    public String getCountyName() {
-//        return configPanel.getCountyName();
-//    }
-//
-//    public String getStateName() {
-//        return configPanel.getStateName();
-//    }
-//
-//    public String getCountryName() {
-//        return configPanel.getCountryName();
-//    }
-
-    ///////////////////////////////////////////////////////////////////////////
     // accesseurs aux modeles
     ///////////////////////////////////////////////////////////////////////////
 
@@ -258,6 +245,8 @@ public class DataManager {
                 return releveDeathModel;
             case misc:
                 return releveMiscModel;
+            case all:
+                return releveAllModel;
             default:
                 return null;
         }
@@ -290,6 +279,13 @@ public class DataManager {
      */
     public ModelMisc getReleveMiscModel() {
         return releveMiscModel;
+    }
+
+    /**
+     * @return the releveMiscModel
+     */
+    public ModelAll getReleveAllModel() {
+        return releveAllModel;
     }
 
     public CompletionProvider getCompletionProvider() {

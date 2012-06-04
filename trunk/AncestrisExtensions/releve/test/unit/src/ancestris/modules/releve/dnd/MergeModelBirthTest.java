@@ -122,12 +122,13 @@ public class MergeModelBirthTest extends TestCase {
 
             String expected = "";
             expected +="indicomment\n";
-            expected +="generalcomment, photo\n";
-            expected +="Commentaire père: comment\n";
-            expected +="Commentaire mère: comment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
-            expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment";
+            expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
+            expected +="Commentaire père: comment\n";
+            expected +="Commentaire mère: comment\n";
+            expected +="generalcomment\n";
+            expected +="Photo: photo";
             assertEquals("comment1",expected, indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
 
             // je verifie que le nouveau commentaire contient la concatenation de l'ancien commentaire et du nouveau
@@ -137,12 +138,13 @@ public class MergeModelBirthTest extends TestCase {
             models.get(0).copyRecordToEntity();
             expected = "oldcomment\n";
             expected +="indicomment\n";
-            expected +="generalcomment, photo\n";
-            expected +="Commentaire père: comment\n";
-            expected +="Commentaire mère: comment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
-            expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment";
+            expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
+            expected +="Commentaire père: comment\n";
+            expected +="Commentaire mère: comment\n";
+            expected +="generalcomment\n";
+            expected +="Photo: photo";
             assertEquals("comment2",expected, indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
         } catch (Exception ex) {
             fail(ex.getMessage());
