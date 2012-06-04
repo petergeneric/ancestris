@@ -87,8 +87,8 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
     public OpenZipBundlePanel() {
         fromLocale = getLocaleFromString(NbPreferences.forModule(OpenZipBundlePanel.class).get("fromLocale", Locale.ENGLISH.toString()));
         toLocale = getLocaleFromString(NbPreferences.forModule(OpenZipBundlePanel.class).get("toLocale", Locale.getDefault().toString()));
-        String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", "");
-        String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "");
+        String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", System.getProperty("user.dir"));
+        String fileName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Fichier", "Ancestris_Bundles.zip");
         if (dirName.length() > 0) {
             zipFile = new File(dirName + System.getProperty("file.separator") + fileName);
         }

@@ -5,7 +5,6 @@
 package org.ancestris.trancestris.application;
 
 import java.awt.Dialog;
-import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +18,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
+import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.DialogDescriptor;
@@ -68,12 +68,16 @@ public class Installer extends ModuleInstall {
             public void run() {
                 String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text"));
                 String dirName = "";
+                String fileName = "";
+                File bundleFile = null;
                 URL url;
 
-                File bundleFile = null;
+                dirName = modulePreferences.get("Dossier", System.getProperty("user.dir"));
+                fileName = modulePreferences.get("Fichier", "Ancestris_Bundles.zip");
+                bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
 
-                // First Startup
-                if ((dirName = modulePreferences.get("Dossier", "")).equals("") == true) {
+                // No local Bundle file available 
+                if (bundleFile.exists() == false) {
                     DownloadBundlePanel downloadBundlePanel = new DownloadBundlePanel();
                     DialogDescriptor downloadActionDescriptor = new DialogDescriptor(
                             downloadBundlePanel,
@@ -99,12 +103,15 @@ public class Installer extends ModuleInstall {
                                     case JOptionPane.YES_OPTION:
                                         Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
                                         t.start();
-
                                         return;
+
                                     case JOptionPane.NO_OPTION:
                                     case JOptionPane.CANCEL_OPTION:
                                         return;
                                 }
+                            } else {
+                                Thread t = new Thread(new DownloadBundleWorker(url, bundleFile));
+                                t.start();
                             }
                         } catch (MalformedURLException ex) {
                             Exceptions.printStackTrace(ex);
@@ -113,8 +120,6 @@ public class Installer extends ModuleInstall {
                 } else {
                     NotifyDescriptor checkForNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
                     DialogDisplayer.getDefault().notify(checkForNewFile);
-                    String fileName = modulePreferences.get("Fichier", "Ancestris_Bundles.zip");
-                    bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
 
                     if (checkForNewFile.getValue() == DialogDescriptor.YES_OPTION) {
                         try {
@@ -163,8 +168,8 @@ public class Installer extends ModuleInstall {
                         TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
                         if (bundleFile != null) {
                             if (bundleFile.exists()) {
-                                Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", ""));
-                                Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", ""));
+                                Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", Locale.ENGLISH.toString()));
+                                Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", Locale.getDefault().toString()));
                                 ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
                             }
                         }
