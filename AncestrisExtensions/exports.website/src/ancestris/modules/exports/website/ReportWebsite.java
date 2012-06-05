@@ -8,6 +8,7 @@ package ancestris.modules.exports.website;
  * category = Chart
  * name     = Website
  */
+import ancestris.app.Options;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -102,7 +103,7 @@ public class ReportWebsite extends Report{
     protected static final String cssBaseFile = "html/style.css";
     /** How the tree on each person should look like */
     public int treeType = 0;
-    public String[] treeTypes = {translateLocal("treeLTR"), translateLocal("treeRTL")}; //, translateLocal("treeTopDown")};
+    public String[] treeTypes = {translateGUI("treeLTR"), translateGUI("treeRTL")}; //, translateGUI("treeTopDown")};
     protected static final String[] cssTreeFile = {"html/treel2r.css", "html/treer2l.css"};
     /** Colors of the output */
     public Color cssTextColor = Color.BLACK;
@@ -113,7 +114,7 @@ public class ReportWebsite extends Report{
 
     /** Select background image in the boxes */
     public int boxBackground = 0;
-    public String[] boxBackgrounds = {translateLocal("green"), translateLocal("blue")};
+    public String[] boxBackgrounds = {translateGUI("green"), translateGUI("blue")};
 
     protected static final String[] boxBackgroundImages = {"html/bkgr_green.png", "html/bkgr_blue.png"};
     /** Collecting data to the index */
@@ -134,7 +135,7 @@ public class ReportWebsite extends Report{
     /** Always set to what the current lang is */
     /** Always set to null or the secondary lang. Check this to know if we are having a second lang at all */
     protected Locale secondaryLocale = null;
-    protected Resources resources = null;
+    protected Resources gedcomResources = null;
     /** The output directory */
     protected File destDir = null;
 
@@ -152,7 +153,9 @@ public class ReportWebsite extends Report{
         if (gedcom == null)
             return;
 //        output = new Console("website"+gedcom.getName());
-        currentLang = Locale.getDefault().getLanguage();
+//        currentLocale = Options.getOutputLocale();
+        currentLang = Options.getOutputLocale().getLanguage();
+        gedcomResources = Resources.get(Gedcom.class,Options.getOutputLocale());
         // Validate some values set in options
         secondaryLocale = null;
         if (secondaryLanguage != null && !secondaryLanguage.equals("")
@@ -160,7 +163,7 @@ public class ReportWebsite extends Report{
             secondaryLocale = new Locale(secondaryLanguage);
             if (!secondaryLanguage.matches("[a-z]{2}") || secondaryLocale == null) {
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(
-                        translateLocal("invalidLanguage", new Object[]{secondaryLanguage}),
+                        translateGUI("invalidLanguage", new Object[]{secondaryLanguage}),
                         NotifyDescriptor.ERROR_MESSAGE));
                 return;
             }
@@ -175,7 +178,7 @@ public class ReportWebsite extends Report{
 
         // Ask for info
 
-        destDir = getDirectoryFromUser(translateLocal("qOutputDir"), translateLocal("qOk"));
+        destDir = getDirectoryFromUser(translateGUI("qOutputDir"), translateGUI("qOk"));
         if (destDir == null) {
             return; // Operation canceled by user
         }
@@ -184,14 +187,14 @@ public class ReportWebsite extends Report{
 
         // Ask if ok to overwrite if there were files
         if (destDir.list().length > 0) {
-            if (!getOptionFromUser(translateLocal("qOverwrite"), OPTION_OKCANCEL)) {
+            if (!getOptionFromUser(translateGUI("qOverwrite"), OPTION_OKCANCEL)) {
                 return; // Operation canceled by user
             }
         }
 
         Indi rootIndi = null;
         if (displaySosaStradonitz) {
-            rootIndi = (Indi) getEntityFromUser(translateLocal("selectSosaStradonitzRoot"), gedcom, Gedcom.INDI);
+            rootIndi = (Indi) getEntityFromUser(translateGUI("selectSosaStradonitzRoot"), gedcom, Gedcom.INDI);
             makeSosaStradonitzNumbering(rootIndi, 1);
         }
 
@@ -215,7 +218,7 @@ public class ReportWebsite extends Report{
             // Run again with a new lang setting
             currentLocale = secondaryLocale;
             currentLang = secondaryLocale.getLanguage();
-            resources = Resources.get(Gedcom.class,currentLocale);
+            gedcomResources = Resources.get(Gedcom.class,currentLocale);
             translator = makeCssAndJSSettings();
             makeJs(destDir, translator);
             generateFiles(gedcom, rootIndi);
@@ -236,18 +239,18 @@ public class ReportWebsite extends Report{
      * Code copied from Gedcom.java class.
      */
     public String getPropertyName(String tag, boolean plural) {
-        if (currentLocale != null) {
+//        if (currentLocale != null) {
             if (plural) {
-                String name = resources.getString(tag + ".s.name", false);
+                String name = gedcomResources.getString(tag + ".s.name", false);
                 if (name != null) {
                     return name;
                 }
             }
-            String name = resources.getString(tag + ".name", false);
+            String name = gedcomResources.getString(tag + ".name", false);
             if (name != null) {
                 return name;
             }
-        }
+//        }
         return Gedcom.getName(tag, plural);
     }
 
@@ -1346,7 +1349,7 @@ public class ReportWebsite extends Report{
         if (secondaryLocale != null) {
             divlink.appendChild(html.br());
             Locale linkToLocale = null;
-            String nameOfLang = Locale.getDefault().getDisplayLanguage(Locale.getDefault());
+            String nameOfLang = Options.getOutputLocale().getDisplayLanguage(Options.getOutputLocale());
             if (currentLocale == null) {
                 linkToLocale = secondaryLocale;
                 nameOfLang = secondaryLocale.getDisplayLanguage(secondaryLocale);
@@ -2397,8 +2400,6 @@ public class ReportWebsite extends Report{
         }
         return html.img("http://maps.google.com/maps/api/staticmap?size=300x300&maptype=roadmap&sensor=false" + lines,
                 translate("mapAncestorBirthPlace"));
-        /*		return html.link("http://maps.google.com/maps/api/staticmap?size=500x500&maptype=roadmap&sensor=false" + lines,
-        translate("mapAncestorBirthPlace"));*/
     }
 
     protected String getBirthPlaceMapRec(Indi indi, int depth, Html html) {
