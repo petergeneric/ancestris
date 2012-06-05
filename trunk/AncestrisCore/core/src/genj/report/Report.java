@@ -606,7 +606,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   }
 
   public final String translateGUI(String key) {
-    return translate(key, Locale.getDefault(),(Object[])null);
+    return translateGUI(key,(Object[])null);
   }
   /**
    * Sub-classes that are accompanied by a [ReportName].properties file
@@ -619,6 +619,10 @@ public abstract class Report implements Cloneable,ResourcesProvider {
     return translate(key, (Locale)null, values);
   }
   
+  public final String translateGUI(String key, Object... values) {
+    return translate(key, Locale.getDefault(),values);
+  }
+
   public final String translate(String key, Locale locale, Object... values) {
 
       if (locale == null)
