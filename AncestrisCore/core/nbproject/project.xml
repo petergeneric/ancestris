@@ -122,6 +122,7 @@
             </module-dependencies>
             <public-packages>
                 <package>ancestris.api.editor</package>
+                <package>ancestris.app</package>
                 <package>ancestris.core</package>
                 <package>ancestris.core.beans</package>
                 <package>ancestris.gedcom</package>
