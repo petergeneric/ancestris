@@ -13,8 +13,6 @@
 ###############################################
 SELECT DISTINCT 
 
-  ### default columns
-  #
   (?name1 as ?parent_1)
   (?name2 as ?parent_2)
   (?nameChild as ?Child)
@@ -22,14 +20,6 @@ SELECT DISTINCT
   (fn:substring(str(?dateDeath),0,10) as ?died)
   ?age
 
-  ### alternative Français
-  #
-  # (?name1 as ?parent_1)
-  # (?name2 as ?parent_2)
-  # (?nameChild as ?enfant)
-  # (fn:substring(str(?dateBirth),0,10) as ?né)
-  # (fn:substring(str(?dateDeath),0,10) as ?mort)
-  # ?âge
 {
   ### select the central family
 
