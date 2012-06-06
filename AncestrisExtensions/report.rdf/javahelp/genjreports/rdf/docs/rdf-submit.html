@@ -33,12 +33,33 @@
             >docs/reports</a>
             but don't forget to update 
             <a href="http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/javahelp/genjreports/rdf/docs/rdf-examples.html"
-            >docs/rdf-examples.html</a>
+            >docs/rdf-examples.html</a>.
         </p>
         <p class="justify">
             There is more about SVN on the <a href="http://www.arvernes.com/wiki/index.php/Ancestris">wiki-pages</a>
             of the project. 
             As an alternative you may choose to mail to one of the discussion lists, for someone else to pick up.
+        </p>
+        <h3>localization</h3>
+        <p class="justify">
+            To localize a query submit a variant of the general
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl">
+                <param name="text" value="<html><u>XSL stylesheet</u></html>">
+                <param name="textFontSize" value="12px">
+                <param name="textColor" value="blue">
+            </object>
+        </p>
+        <p class="justify">
+          You will need a stylesheet per query per language.
+          Provide links to the special stylesheets on the example page.
+        </p>
+        <p class="justify">
+          The general style sheet contains something like:
+          <code>&lt;xsl:for-each ...>&lt;th>...&lt;/th>&lt;/xsl:for-each></code>
+          replace the complete code snippet with localized column headings, for example: 
+          <code>&lt;th>Name&lt;/th>&lt;th>ID&lt;/th>&lt;th>Birth date&lt;/th></code>
+          You might also want to change the <code>&lt;tile></code> and  <code>&lt;h1></code>.
         </p>
         <br>
         <a href="rdf-about.html#_Top_">Top</a>
