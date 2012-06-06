@@ -33,9 +33,9 @@ public class ReportNameHistory extends Report {
     public int prefixPresentation = PropertyName.PREFIX_AS_IS;
     public String[] prefixPresentations = {
         // TODO use enum in PropertyName (when implemented) for the string constants
-        translate("prefixAsIs"),
-        translate("prefixLast"),
-        translate("prefixIgnore")
+        translateGUI("prefixAsIs"),
+        translateGUI("prefixLast"),
+        translateGUI("prefixIgnore")
     };
     /** whether to group non-considered names */
     public boolean makeGroupOther = false;
