@@ -184,7 +184,7 @@ public class FileChooserWidget extends JPanel {
     // from here on but sometimes that undersirable since file might
     // not contain a valid full path in the first place
     text.setText(file!=null ? file.getPath() : "");
-    if (file!=null&&file.getParentFile().isDirectory())
+    if (file!=null&&file.getParentFile()!=null && file.getParentFile().isDirectory())
       setDirectory(file.getParentFile().toString());
   }
   
