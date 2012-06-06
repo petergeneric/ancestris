@@ -1,0 +1,25 @@
+###############################################
+#
+# sosa numbers and names of ancestors without ancestors
+#
+###############################################
+SELECT
+  (MIN(?sosa)   as ?smallest_sosa)
+  (MAX(?sosa)   as ?largest_sosa)
+  (COUNT(?sosa) as ?nr_of_sosa)
+  (str(?id)     as ?ID)
+  ?name
+{
+  ### the needed data
+
+  ?a p:id       ?id; 
+     p:_TREETOP ?treetop;
+     p:_SOSA    [rdfs:label ?sosa];
+     p:NAME     [rdfs:label ?name].
+
+  ### prevent duplicates in case GIVN and SURN are stored separately
+
+  FILTER( ( fn:contains(?name,'/') || ! bound(?name) ) )
+} 
+GROUP BY ?id ?name
+#ORDER BY ?sosa # won't work
