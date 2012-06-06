@@ -98,15 +98,15 @@
         </p>
         <h4 class="ancestris_help_title">b - localizing</h4>
         <p class="justify">
-          Localizing the result can be done by changing column headings as described below, 
-          or by writing XSL transformations per query per language. 
+          For public queries the best approach is descibed on 
+          the <a href="./rdf-submit.html">submission</a> page.
+        </p>
+        <p class="justify">
+          Localizing the result can also be done by changing column headings as described below. 
           Related problems are dates and names stored in various formats. 
           Queries would become too complex and slow to cater for all these and other variations.
           Once a query is forked for a translation, each variant would evolve along its own route
-          like wikipedia articles do. So the XSL approach seems better. 
-          No instructions required for the end user to tweak the query: just select the desired XSL.
-          Once a proper transformation template is developped,
-          it should only require to replace column names and add or delete a number of columns.
+          like wikipedia articles do.
         </p>
         <p class="justify">
           A general hint about the column headings:<br/>
@@ -172,7 +172,7 @@
             need to put the XML file in the xQuery file.
         </p>
         <p class="justify">
-            Examples of transformation scripts:<br/>
+            Examples of genral transformation scripts:<br/>
             <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
                 <param name="content" value="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl">
                 <param name="text" value="<html><u>XSL</u></html>">
