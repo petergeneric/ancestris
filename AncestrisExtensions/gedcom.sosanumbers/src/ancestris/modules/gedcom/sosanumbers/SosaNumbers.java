@@ -216,6 +216,8 @@ public class SosaNumbers {
         while ((sosa = sosa >> 1) != 0) {
             generation++;
         }
+        // Sosa number = 1 generation 1; Sosa number = 2 or 3 generation 2 and so on
+        generation++;
         return "(Gen " + generation.toString() + ")";
     }
     /**
