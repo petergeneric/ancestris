@@ -68,7 +68,7 @@ import javax.swing.JPanel;
  */
 public class RecentFilesPanel extends JPanel implements Constants {
 
-    private static final int MAX_FILES = 10;
+    private static final int MAX_FILES = 5;
 
     private PropertyChangeListener changeListener;
 
