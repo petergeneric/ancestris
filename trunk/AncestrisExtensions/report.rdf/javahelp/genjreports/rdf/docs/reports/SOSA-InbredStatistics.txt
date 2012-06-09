@@ -15,6 +15,8 @@
 ###############################################
 SELECT DISTINCT
 
+  ?small
+  ?large
   ?smallest_sosa
   ?largest_sosa
   (str(?nr_of_sosa) as ?sosa_count)
@@ -22,12 +24,12 @@ SELECT DISTINCT
   ?ID
   ?name
 
-  #the next line lacks a conversion to binary
-  #(fn:string-length(str(xsd:int(?smallest_sosa)*1)) as ?smallest_generation)
-
+  #no bit-wise & opererator available
+  #(fn:string-length(?large&(?large-1)) as ?smallest_generation)
+  #(fn:string-length(?small&(?small-1)) as ?smallest_generation)
 {
-  # a nested query allows to sort the agregates
   {
+    ### a nested query allows to sort the agregates
     SELECT
       (MIN(?sosa)   as ?smallest_sosa)
       (MAX(?sosa)   as ?largest_sosa)
@@ -54,5 +56,9 @@ SELECT DISTINCT
     GROUP BY ?id ?name
   }
   LET (?diff := xsd:int(?largest_sosa) - xsd:int(?smallest_sosa) )
+
+  # get rid of the leading zeroes
+  LET (?small := xsd:int(?smallest_sosa)*1)
+  LET (?large := xsd:int(?smallest_sosa)*1)
 }
 ORDER BY DESC(?nr_of_sosa) ?smallest_sosa
