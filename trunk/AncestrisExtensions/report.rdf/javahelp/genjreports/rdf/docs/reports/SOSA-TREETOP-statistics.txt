@@ -16,7 +16,6 @@ SELECT DISTINCT
   ?diff
   ?ID
   ?name
-  (str(fn:floor( (?nr_of_sosa+1)/2 )) as ?count_corrected_for_duplicate_treetops)
 WHERE 
 {
   ?a p:_TREETOP ?dummy;
@@ -31,10 +30,14 @@ WHERE
       ### the needed data
   
       ?a p:id       ?id; 
-         p:_TREETOP ?treetop;
          p:_SOSA    [rdfs:label ?sosa];
          p:NAME     [rdfs:label ?name].
     
+      ### is it a treetop?
+
+      OPTIONAL { ?a p:FAMC ?fam }
+      FILTER ( ! bound(?fam) )
+
       ### prevent duplicates in case GIVN and SURN are stored separately
   
       FILTER( ( fn:contains(?name,'/') || ! bound(?name) ) )
