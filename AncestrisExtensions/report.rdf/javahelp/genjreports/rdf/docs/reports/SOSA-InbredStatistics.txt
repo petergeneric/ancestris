@@ -2,7 +2,11 @@
 #
 # Effects of inbreed on the sosa numbers of the tree tops.
 #
-# Puzzled about the inbred statistics.
+# _SOSA properties must have been generated before conversion.
+#       In case of inbred multiple properies are expected
+#       not multiple numers in a single properties.
+#
+# Puzzled about interpreting the numbers.
 # For example:
 #     diff = 8 = 2^3 : the 3rd generation married in the family
 # But what happens when different generations marry?
@@ -10,15 +14,19 @@
 #
 ###############################################
 SELECT DISTINCT
+
   ?smallest_sosa
   ?largest_sosa
-  (str(?nr_of_sosa) as ?count)
+  (str(?nr_of_sosa) as ?sosa_count)
   ?diff
   ?ID
   ?name
-WHERE 
+
+  #the next line lacks a conversion to binary
+  #(fn:string-length(str(xsd:int(?smallest_sosa)*1)) as ?smallest_generation)
+
 {
-  ?a p:_TREETOP ?dummy;
+  # a nested query allows to sort the agregates
   {
     SELECT
       (MIN(?sosa)   as ?smallest_sosa)
@@ -42,6 +50,7 @@ WHERE
   
       FILTER( ( fn:contains(?name,'/') || ! bound(?name) ) )
     } 
+    # group on selected items that are not agregated
     GROUP BY ?id ?name
   }
   LET (?diff := xsd:int(?largest_sosa) - xsd:int(?smallest_sosa) )
