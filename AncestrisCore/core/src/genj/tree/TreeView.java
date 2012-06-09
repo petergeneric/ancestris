@@ -594,6 +594,36 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     // done
   }
 
+  /**
+   * // XXX: we will have to check this API when we will deal wil global drag and
+   * drop in all other componants
+   *
+   * Retreive entity at given cooodinates
+   * @param entityPos  Point in TreeView coordinates
+   * @return entity over mouse pointer or null if there is no entity
+   */
+  public Entity getEntityAt(Point entityPos){
+      if (model == null) return null;
+
+      // je recupere la position de Content / Treeview
+      ViewPortAdapter va = (ViewPortAdapter) content.getParent();
+      JViewport vp = (JViewport) va.getParent();
+      Point viewPosition = vp.getViewPosition();
+      // je recupere la position décalée de "content" due au centrage
+      // qui n'est pas nul quand "content" est plus petit que viewport
+      Point contentShift = content.getLocation();
+
+      // je change de repere TreeView => Content
+      Point entityContentPos = new Point();
+      entityContentPos.x = entityPos.x + viewPosition.x - contentShift.x;
+      entityContentPos.y = entityPos.y + viewPosition.y - contentShift.y;
+      // je change de repere Content => model
+      Point modelPos = view2model(entityContentPos);
+      // je recherche l'entité a cette position dans le modele
+      return model.getEntityAt(modelPos.x, modelPos.y);
+  }
+
+
   public Entity getRoot(){
       if (model == null) return null;
       return model.getRoot();
