@@ -15,16 +15,16 @@
 ###############################################
 SELECT DISTINCT
 
-  ?small
-  ?large
+  #?small
+  #?large
   ?smallest_sosa
   ?largest_sosa
   (str(?nr_of_sosa) as ?sosa_count)
-  ?diff
+  (str(?diff) as ?difference)
   ?ID
   ?name
 
-  #no bit-wise & opererator available
+  # no bit-wise & opererator available
   #(fn:string-length(?large&(?large-1)) as ?smallest_generation)
   #(fn:string-length(?small&(?small-1)) as ?smallest_generation)
 {
