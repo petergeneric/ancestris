@@ -11,8 +11,8 @@
 #
 ###############################################
 SELECT DISTINCT 
-  ?alive
-  ?age
+  (str(?alive) as ?central_person_alive_at_event)
+  (str(?age)   as ?age_of_central_person_at_event)
   (fn:substring(str(?eventDate),0,10) as ?date)
   (?eventType as ?event)
   ?name
