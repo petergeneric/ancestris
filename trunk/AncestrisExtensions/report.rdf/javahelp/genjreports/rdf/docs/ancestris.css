@@ -173,7 +173,7 @@ p.justify  {
     margin-top: 5;
     margin-bottom: 5;
     text-align: justify;
-    text-justify: newspaper;
+    text-justify: distribute;
 }
 
 p.marge40  {
