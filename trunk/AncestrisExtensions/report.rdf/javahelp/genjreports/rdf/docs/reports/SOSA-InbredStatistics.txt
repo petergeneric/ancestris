@@ -4,7 +4,7 @@
 #
 # _SOSA properties must have been generated before conversion.
 #       In case of inbred multiple properies are expected
-#       not multiple numers in a single properties.
+#       not multiple numers in a single property.
 #       Use: View - lists and reports - tool box - choose tool to run: 
 #                                           generation of sosa numbers
 #       Not: Tools - gedcom - regenerate sosa numbers
