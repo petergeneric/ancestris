@@ -3,7 +3,12 @@
 # Multi media objects for ancestors
 # an optional filter turns the list into a check for saved certificates.
 #
-# _SOSA properties must have been generated
+# _SOSA properties must have been generated before conversion.
+#       Method 2 sorts properly:
+#       1) View - lists and reports - tool box
+#              choose tool to run: generation of sosa numbers
+#       2) Tools - gedcom - regenerate sosa numbers
+#       
 #
 ###############################################
 SELECT 
@@ -19,6 +24,9 @@ SELECT
      p:NAME  [rdfs:label ?name];
      p:_SOSA [rdfs:label ?sosa].   
 
+  ### just ancestors, not their decendants
+  
+  FILTER ( ! fn:contains(?sosa,"-") )
 
   ### objects at top level and at certain event types
   {
@@ -56,18 +64,6 @@ SELECT
     LET (?event := 'mariage')
   }
 
-  # allmost proper sort up to 3 digits, but records with more digits get eliminated 
-  # LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,3)))
-
-  # once assigned the value does not get overwritten?
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,7)))
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,6)))
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,5)))
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,4)))
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,3)))
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,2)))
-#  LET (?sosaNr := xsd:int(fn:substring(str(?sosa),1,1)))
-
   ### prevent duplicates in case GIVN and SURN are stored separately
 
   FILTER( fn:contains(?name,'/')  )
@@ -76,4 +72,4 @@ SELECT
 
   #FILTER( !bound(?file) || fn:contains(?file,'/familysearch/') )
 }
-ORDER BY ?sosaNr ?sosa ?event
+ORDER BY ?sosa ?event
