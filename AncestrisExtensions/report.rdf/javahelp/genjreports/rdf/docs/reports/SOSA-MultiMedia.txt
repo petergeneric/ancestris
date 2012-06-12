@@ -4,7 +4,7 @@
 # an optional filter turns the list into a check for saved certificates.
 #
 # _SOSA properties must have been generated before conversion.
-#       Method 2 sorts properly:
+#       Method 1 sorts properly:
 #       1) View - lists and reports - tool box
 #              choose tool to run: generation of sosa numbers
 #       2) Tools - gedcom - regenerate sosa numbers
