@@ -8,9 +8,9 @@
 @prefix rel:     <http://purl.org/vocab/relationship/> .
 
 # changing these prefixes requires to change the converter
-@prefix t: <http://www.ancestris.org/rdf/gedcom/type/>.
-@prefix p: <http://www.ancestris.org/rdf/gedcom/predicate/>.
-@prefix r: <http://www.ancestris.org/rdf/gedcom/rule/>.
+@prefix t: <http://genj.sourceforge.net/rdf/gedcom/type/>.
+@prefix p: <http://genj.sourceforge.net/rdf/gedcom/predicate/>.
+@prefix r: <http://genj.sourceforge.net/rdf/gedcom/rule/>.
 
 <http://www.ancestris.org/rdf/gedcom/> a owl:Ontology ;
       rdfs:title "RDF representation of GEDCOM 5.5 (Genealogical Data Communication)" ;
