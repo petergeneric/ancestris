@@ -302,11 +302,17 @@ public final class APlaceFormatBean extends JPanel {
 
     public String getJurisdictions() {
         StringBuilder sb = new StringBuilder();
+        StringBuilder emptyJuri = new StringBuilder();
         final String SEP = cbSpaces.isSelected() ? ", " : ",";
 
         for (JTextField juri : JURIS) {
             if (juri.getText().trim().isEmpty()) {
+                emptyJuri.append(SEP);
                 continue;
+            }
+            if (emptyJuri.length() != 0) {
+                sb.append(emptyJuri);
+                emptyJuri = new StringBuilder();
             }
             if (sb.length() != 0) {
                 sb.append(SEP);
@@ -322,7 +328,7 @@ public final class APlaceFormatBean extends JPanel {
         for (JTextField juri : JURIS) {
             juri.setText("");
         }
-        for (int i = 0; i < juris.length; i++) {
+        for (int i = 0; i < Math.min(juris.length, JURIS.length); i++) {
             JURIS[i].setText(juris[i].trim());
         }
 
@@ -341,9 +347,6 @@ public final class APlaceFormatBean extends JPanel {
         ArrayList<Boolean> showJuri = new ArrayList<Boolean>();
 
         for (int i = 0; i < JURIS.length; i++) {
-            if (JURIS[i].getText().trim().isEmpty()) {
-                continue;
-            }
             showJuri.add(SHOW_JURIS[i].isSelected());
         }
         return showJuri.toArray(new Boolean[0]);
@@ -366,9 +369,13 @@ public final class APlaceFormatBean extends JPanel {
             } else {
                 SHOW_JURIS[i].setSelected(false);
             }
-            if (JURIS[i].getText().length() == 0) {
+        }
+        for (int i = JURIS.length - 1; i >= 0; i--) {
+            if (JURIS[i].getText().length() == 0 && i < SHOW_JURIS.length) {
                 SHOW_JURIS[i].setSelected(false);
+                continue;
             }
+            break;
         }
     }
 
