@@ -364,20 +364,18 @@
     </folder>
     <folder name="QuickSearch">
         <file name="Actions_hidden"/>
-        <folder name="Familles">
+        <folder name="Fams">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
             <attr name="command" stringvalue=""/>
             <attr name="position" intvalue="10"/>
-            <file name="ancestris-app-FamQuickSearch.instance">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#QuickSearch/Familles/ancestris-app-FamQuickSearch.instance"/>
-            </file>
+            <file name="ancestris-app-FamQuickSearch.instance"/>
         </folder>
         <file name="GoToOption_hidden"/>
-        <folder name="Individus">
+        <folder name="Indis">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
             <attr name="command" stringvalue=""/>
             <attr name="position" intvalue="0"/>
-            <file name="ancestris-app-IndiQuickSearch.instance">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#QuickSearch/Individus/ancestris-app-IndiQuickSearch.instance"/>
-            </file>
+            <file name="ancestris-app-IndiQuickSearch.instance"/>
         </folder>
     </folder>
     <folder name="Services">
