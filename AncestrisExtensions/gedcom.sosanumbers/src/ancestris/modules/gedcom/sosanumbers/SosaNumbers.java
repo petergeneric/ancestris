@@ -11,6 +11,7 @@
  */
 /**
  * Extract from GenJ - Report - ReportToolBox
+ *
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 1.0
  *
@@ -72,7 +73,7 @@ public class SosaNumbers {
 
         @Override
         public void gedcomClosed(Gedcom gedcom) {
- //           gedcom.removeGedcomListener(this);
+            //           gedcom.removeGedcomListener(this);
         }
 
         @Override
@@ -80,17 +81,19 @@ public class SosaNumbers {
             String selectedEntityID = modulePreferences.get("SelectEntityDialog." + gedcom.getName(), "");
             Indi indiDeCujus = null;
             if (selectedEntityID.isEmpty()) {
-                SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), gedcom, Gedcom.INDI);
-                if ((indiDeCujus = (Indi) selectEntityDialog.getEntity()) != null) {
-                    modulePreferences.put("SelectEntityDialog." + gedcom.getName(), indiDeCujus.getId());
-                } else {
-                    modulePreferences.put("SelectEntityDialog." + gedcom.getName(), "No SOSA");
+                if (gedcom.getIndis().isEmpty() == false) {
+                    SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), gedcom, Gedcom.INDI);
+                    if ((indiDeCujus = (Indi) selectEntityDialog.getEntity()) != null) {
+                        modulePreferences.put("SelectEntityDialog." + gedcom.getName(), indiDeCujus.getId());
+                    } else {
+                        modulePreferences.put("SelectEntityDialog." + gedcom.getName(), "No SOSA");
+                    }
                 }
             } else if (!selectedEntityID.equals("No SOSA")) {
                 indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
             }
             if (indiDeCujus != null) {
- //               gedcom.addGedcomListener(this);
+                //               gedcom.addGedcomListener(this);
                 generateSosaNbs(gedcom, indiDeCujus);
             }
         }
@@ -161,10 +164,10 @@ public class SosaNumbers {
                     wife = famc.getWife();
                     if (wife != null) {
                         if ((sosaProperty = wife.getProperty(SOSA_TAG)) == null) {
-                            sosaProperty = wife.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaCounter + 1) + " " + computeGene (2 * sosaCounter + 1), setPropertyPosition(wife));
+                            sosaProperty = wife.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaCounter + 1) + " " + computeGene(2 * sosaCounter + 1), setPropertyPosition(wife));
                             sosaProperty.setGuessed(true);
                         } else {
-                            sosaProperty.setValue(sosaProperty.getValue() + ";" + formatNbrs.format(2 * sosaCounter + 1) + " " + computeGene (2 * sosaCounter + 1));
+                            sosaProperty.setValue(sosaProperty.getValue() + ";" + formatNbrs.format(2 * sosaCounter + 1) + " " + computeGene(2 * sosaCounter + 1));
                         }
                         LOG.log(Level.INFO, "{0} -> {1}", new Object[]{wife.toString(), formatNbrs.format(2 * sosaCounter + 1)});
                         listIter.add(new Pair(wife, formatNbrs.format(2 * sosaCounter + 1)));
@@ -173,10 +176,10 @@ public class SosaNumbers {
                     husband = famc.getHusband();
                     if (husband != null) {
                         if ((sosaProperty = husband.getProperty(SOSA_TAG)) == null) {
-                            sosaProperty = husband.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaCounter) + " " + computeGene (2 * sosaCounter + 1), setPropertyPosition(husband));
+                            sosaProperty = husband.addProperty(SOSA_TAG, formatNbrs.format(2 * sosaCounter) + " " + computeGene(2 * sosaCounter + 1), setPropertyPosition(husband));
                             sosaProperty.setGuessed(true);
                         } else {
-                            sosaProperty.setValue(sosaProperty.getValue() + ";" + formatNbrs.format(2 * sosaCounter) + " " + computeGene (2 * sosaCounter + 1));
+                            sosaProperty.setValue(sosaProperty.getValue() + ";" + formatNbrs.format(2 * sosaCounter) + " " + computeGene(2 * sosaCounter + 1));
                         }
                         LOG.log(Level.INFO, "{0} -> {1}", new Object[]{husband.toString(), formatNbrs.format(2 * sosaCounter)});
                         listIter.add(new Pair(husband, formatNbrs.format(2 * sosaCounter)));
@@ -211,7 +214,7 @@ public class SosaNumbers {
      * @param sosa
      * @return String
      */
-    String computeGene (Integer sosa) {
+    String computeGene(Integer sosa) {
         Integer generation = 0;
         while ((sosa = sosa >> 1) != 0) {
             generation++;
@@ -220,6 +223,7 @@ public class SosaNumbers {
         generation++;
         return "(Gen " + generation.toString() + ")";
     }
+
     /**
      *
      * @param indiDeCujus
