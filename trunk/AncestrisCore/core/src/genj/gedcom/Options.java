@@ -282,7 +282,11 @@ public class Options extends OptionProvider {
     }
 
     public String getPlaceFormat() {
-        return getPreferences().get(PLACE_FORMAT,RESOURCES.getString("option.placeFormat"));
+        String format = getPreferences().get(PLACE_FORMAT,RESOURCES.getString("option.placeFormat"));
+        format = format.replaceAll(" *, *", ",");
+        if (spaceIsSeparator())
+            format = format.replace(",", ", ");
+        return format;
     }
 
     /**
