@@ -8,7 +8,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author michel
  */
 
-@ServiceProvider(service=ancestris.core.pluginservice.AncestrisPlugin.class)
+@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
 public class CommonAncestorPlugin extends AncestrisPlugin {
   
 }
