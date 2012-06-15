@@ -3,5 +3,5 @@ OpenIDE-Module: ancestris.modules.commonAncestor
 OpenIDE-Module-Layer: ancestris/modules/commonAncestor/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/commonAncestor/Bundle.properties
 OpenIDE-Module-Requires:  org.netbeans.core.WindowSystem, org.openide.windows.WindowManager, org.netbeans.api.javahelp.Help
-OpenIDE-Module-Specification-Version: 0.8
+OpenIDE-Module-Specification-Version: 0.7.0
 
