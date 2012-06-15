@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
@@ -29,6 +30,7 @@ import org.openide.util.NbPreferences;
  */
 public class MergeTable extends JTable {
     private EntityActionManager entityActionManager = null;
+    static private Color yellowColor = new Color(240, 240, 10);
     static private Color blueColor = new Color(200, 255, 255);
     static private Color greyColor = new Color(240, 240, 240);
 
@@ -98,7 +100,7 @@ public class MergeTable extends JTable {
         CompareResult cr = ((MergeModel)getModel()).getCompareResult(row) ;
         if (column == 2 &&( cr == MergeModel.CompareResult.NOT_APPLICABLE
                   || cr == MergeModel.CompareResult.EQUAL) ) {
-            return Box.createRigidArea(c.getPreferredSize());
+            return new JLabel("");//Box.createRigidArea(c.getPreferredSize());
         }  else {
             return c;
         }
@@ -201,6 +203,9 @@ public class MergeTable extends JTable {
             if ( value != null ) {
                 if (value instanceof PropertyDate) {
                     setText(((PropertyDate)value).getDisplayValue());
+                    if ( column==1) {
+                        setToolTipText(((PropertyDate)value).getPhrase());
+                    }
                 } else if (value instanceof Source) {
                     if ( column == 4 ) {
                         setText(((Source)value).getId());
@@ -214,9 +219,16 @@ public class MergeTable extends JTable {
                         setText(((Entity)value).getDisplayValue());
                     }
                 } else {
+                    if ( mergeRow.rowType == RowType.EventComment && (column == 1 || column==3) ) {
+                        String tooltipText = "<html>";
+                        tooltipText += value.toString().replace("\n", "<br>");
+                        tooltipText += "</html>";
+                        setToolTipText(tooltipText);
+                    }
                     setText(value.toString());
                 }
             } else {
+                // la valeur est nulle
                 if ( column == 4 ) {
                     if (mergeRow.compareResult != CompareResult.NOT_APPLICABLE) {
                         switch ( mergeRow.rowType) {
@@ -225,7 +237,9 @@ public class MergeTable extends JTable {
                                 break;
                             case MarriageFamily :
                             case IndiParentFamily:
+                            case IndiMarriedFamily :
                             case WifeParentFamily:
+                            case WifeMarriedFamily:
                                 setText("Nouvelle famille");
                                 break;
                             case IndiLastName :
@@ -240,7 +254,7 @@ public class MergeTable extends JTable {
                                 setText("");
                         }
                     } else {
-                        // la comparaison n'est applicable , je n'affiche rien
+                        // la comparaison est applicable , je n'affiche rien dans la colonne 4
                         setText("");
                     }
                 } else {
@@ -255,25 +269,18 @@ public class MergeTable extends JTable {
             } else {
                 switch (modelColumn) {
                     case 0:
-                        //setBackground(Color.lightGray);
                         setBackground(greyColor);
                         setForeground(table.getForeground());
                         break;
                     case 1:
-                        switch (model.getCompareResult(row)) {
-                            case NOT_APPLICABLE:
-                                setBackground(greyColor);
-                                break;
-                            default:
-                                setBackground(table.getBackground());
-                        }
+                        setBackground(table.getBackground());
                         setForeground(table.getForeground());
                         break;
                     case 3:
                         setForeground(table.getForeground());
                         switch (model.getCompareResult(row)) {
                             case NOT_APPLICABLE:
-                                setBackground(greyColor);
+                                setBackground(table.getBackground());
                                 break;
                             case CONFLIT:
                                 setBackground(Color.PINK);
@@ -282,18 +289,16 @@ public class MergeTable extends JTable {
                                 setBackground(table.getBackground());
                                 break;
                             default:
-                                setBackground(blueColor);
+                                if (mergeRow.merge == mergeRow.merge_initial) {
+                                    setBackground(blueColor);
+                                } else {
+                                    setBackground(yellowColor);
+                                }
                         }
                         break;
                     case 4:
                         setForeground(Color.blue);
-                        switch (model.getCompareResult(row)) {
-                            case NOT_APPLICABLE:
-                                setBackground(greyColor);
-                                break;
-                            default:
-                                setBackground(table.getBackground());
-                        }
+                        setBackground(table.getBackground());
                         break;
                     default:
                         setBackground(table.getBackground());

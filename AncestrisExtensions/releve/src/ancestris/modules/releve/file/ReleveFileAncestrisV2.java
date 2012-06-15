@@ -1,7 +1,6 @@
 package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.PlaceManager;
-import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
@@ -120,7 +119,6 @@ public class ReleveFileAncestrisV2 {
     /**
      *
      * @param fileName
-     * TODO gérer la dat iincomplete
      */
     public static FileBuffer loadFile(File inputFile ) { 
         FileBuffer fileBuffer = new FileBuffer();
@@ -689,7 +687,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // IndiSex
                         line.appendCsvFn(record.getIndiPlace().toString());
                         line.appendCsvFn(record.getIndiBirthDate().toString());
-                        line.appendCsvFn(record.getIndiAge().toString());
+                        line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
                         line.appendCsvFn(record.getIndiComment().toString());
                         
@@ -718,7 +716,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); //WifeSex
                         line.appendCsvFn(record.getWifePlace().toString());
                         line.appendCsvFn(record.getWifeBirthDate().toString());
-                        line.appendCsvFn(record.getWifeAge().toString());
+                        line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifeOccupation().toString());
                         line.appendCsvFn(record.getWifeComment().toString());
                         
@@ -786,7 +784,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiSex().toString());
                         line.appendCsvFn(record.getIndiPlace().toString());
                         line.appendCsvFn(record.getIndiBirthDate().toString());
-                        line.appendCsvFn(record.getIndiAge().toString());
+                        line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
                         line.appendCsvFn(record.getIndiComment().toString());
 
@@ -882,7 +880,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiSex().toString());
                         line.appendCsvFn(record.getIndiPlace().toString());
                         line.appendCsvFn(record.getIndiBirthDate().toString());
-                        line.appendCsvFn(record.getIndiAge().toString());
+                        line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
                         line.appendCsvFn(record.getIndiComment().toString());
 
@@ -911,7 +909,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeSex().toString());
                         line.appendCsvFn(record.getWifePlace().toString());
                         line.appendCsvFn(record.getWifeBirthDate().toString());
-                        line.appendCsvFn(record.getWifeAge().toString());
+                        line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifeOccupation().toString());
                         line.appendCsvFn(record.getWifeComment().toString());
 

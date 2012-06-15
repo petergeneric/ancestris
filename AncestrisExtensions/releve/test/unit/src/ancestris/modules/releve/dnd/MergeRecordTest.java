@@ -1,8 +1,11 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.model.RecordBirth;
+import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.time.Delta;
+import genj.gedcom.time.PointInTime;
 import junit.framework.TestCase;
 
 /**
@@ -10,6 +13,50 @@ import junit.framework.TestCase;
  * @author Michel
  */
 public class MergeRecordTest extends TestCase {
+
+    /**
+     * test match age
+     */
+    public void test_getYear() {
+        
+        PointInTime pit = new PointInTime(0,5,2000);
+        Delta delta = new Delta(0,18,0);
+
+        assertEquals("jours",  "DEC 1998",  MergeRecord.getYear(pit, delta).getValue());
+    }
+    
+    /**
+     * test_getIndiMarriedMarriageDate
+     */
+    public void test_getIndiMarriedMarriageDate() {
+        try {
+            
+            {
+                RecordDeath deathRecord;
+                MergeRecord mergeRecord;
+
+                deathRecord = MergeModelDeathTest.createDeathRecord("sansfamille1");
+                mergeRecord = new MergeRecord(deathRecord);
+                deathRecord.getEventDateProperty().setValue("");
+                deathRecord.getIndiBirthDate().getPropertyDate().setValue("");
+                assertEquals("RecordDeath Date mariage ex conjoint", "",  mergeRecord.getIndiMarriedMarriageDate().getValue());
+
+                deathRecord = MergeModelDeathTest.createDeathRecord("sansfamille1");
+                mergeRecord = new MergeRecord(deathRecord);
+                deathRecord.getEventDateProperty().setValue("20 JAN 2000");
+                deathRecord.getIndiBirthDate().getPropertyDate().setValue("");
+                deathRecord.getIndiAge().setValue("");
+                assertEquals("RecordDeath Date mariage avec ex conjoint", "BEF 2000",  mergeRecord.getIndiMarriedMarriageDate().getValue());
+                assertEquals("RecordDeath Date naissance indi ", "BEF 1985",  mergeRecord.getIndiBirthDate().getValue());
+
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            fail(ex.getMessage());
+        }
+    }
 
     /**
      * test_getIndiFatherBirthDate
@@ -48,7 +95,7 @@ public class MergeRecordTest extends TestCase {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
@@ -123,7 +170,7 @@ public class MergeRecordTest extends TestCase {
             
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
@@ -188,7 +235,7 @@ public class MergeRecordTest extends TestCase {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }

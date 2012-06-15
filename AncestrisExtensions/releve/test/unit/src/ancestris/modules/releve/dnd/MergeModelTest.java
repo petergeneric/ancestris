@@ -38,7 +38,7 @@ public class MergeModelTest extends TestCase {
 
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }

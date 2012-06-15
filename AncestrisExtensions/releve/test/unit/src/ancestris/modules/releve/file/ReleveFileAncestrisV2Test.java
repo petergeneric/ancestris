@@ -238,7 +238,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         death.setCote("cote");
         death.setGeneralComment("generalcomment");
         death.setFreeComment("photo");
-        death.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");
+        death.setIndi("indifirstname", "indilastname", "M", "10y", "01/01/1990", "indiplace", "indioccupation", "indicomment");
         death.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
         death.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
         death.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");
@@ -262,7 +262,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
                 assertNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
             } else {
                 assertNotNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
-                assertEquals(String.valueOf(fieldType.ordinal()), death.getField(fieldType).toString(), death2.getField(fieldType).toString());
+                assertEquals(String.valueOf(fieldType.ordinal()), death.getField(fieldType).getValue(), death2.getField(fieldType).getValue());
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -291,7 +291,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         record.setEventType("eventname", "eventtag");
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
-        record.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");
+        record.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indicomment");
         record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
         record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
         record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");

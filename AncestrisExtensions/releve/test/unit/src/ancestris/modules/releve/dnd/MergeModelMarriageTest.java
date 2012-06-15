@@ -24,7 +24,7 @@ public class MergeModelMarriageTest extends TestCase {
             record.setCote("cote");
             record.setGeneralComment("generalcomment");
             record.setFreeComment("photo");
-            record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "02/02/1970", "indiplace", "indioccupation", "indicomment");
+            record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "02/02/1970", "indiplace", "indioccupation", "indicomments");
             record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
             record.setIndiFather("indifathername", "INDIFATHERLASTNAME", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
             record.setIndiMother("indimothername", "INDIMOTHERLASTNAME", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");
@@ -66,7 +66,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
-            assertEquals("Note mariage",253, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
+            assertEquals("Note mariage",505, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
 
             assertNotSame("Mari : Date naissance",mergeRecord.getIndiBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
             // le lieu et la date ne sont pas modifiés car la date de naissance du releve n'est pas plus precise
@@ -94,7 +94,7 @@ public class MergeModelMarriageTest extends TestCase {
 
             assertEquals("Femme : Date naissance",mergeRecord.getWifeBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
             assertEquals("Femme : lieu naissance",mergeRecord.getWifePlace(), fam.getWife().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            assertEquals("Femme : Note naissance",142, fam.getWife().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
+            assertEquals("Femme : Note naissance",147, fam.getWife().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
 
             assertEquals("Femme : Date naissance",mergeRecord.getWifeBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
             assertEquals("Femme : Profession",1, fam.getWife().getProperties(new TagPath("INDI:OCCU")).length);
@@ -142,11 +142,11 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Source mariage","S00004", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
-            assertEquals("Note mariage",253, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
+            assertEquals("Note mariage",505, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
 
             assertNotSame("Mari : Date naissance",mergeRecord.getIndiBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
             assertEquals("Mari : lieu naissance",mergeRecord.getIndiPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            assertEquals("Mari : Note naissance",142, fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
+            assertEquals("Mari : Note naissance",147, fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
 
             assertEquals("Mari : Profession",2, fam.getHusband().getProperties(new TagPath("INDI:OCCU")).length);
             Property occupation = fam.getHusband().getProperties(new TagPath("INDI:OCCU"))[1];
@@ -157,7 +157,7 @@ public class MergeModelMarriageTest extends TestCase {
 
             assertEquals("Femme : Date naissance",mergeRecord.getWifeBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
             assertEquals("Femme : lieu naissance",mergeRecord.getWifePlace(), fam.getWife().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            assertEquals("Femme : Note naissance",142, fam.getWife().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
+            assertEquals("Femme : Note naissance",147, fam.getWife().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
 
             assertEquals("Femme : Date naissance",mergeRecord.getWifeBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
             assertEquals("Femme : Profession",1, fam.getWife().getProperties(new TagPath("INDI:OCCU")).length);

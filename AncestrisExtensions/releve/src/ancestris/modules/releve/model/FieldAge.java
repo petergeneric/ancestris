@@ -24,7 +24,7 @@ public class FieldAge extends Field {
         if ( isEmpty() ) {
             return "";
         } else {
-            return delta.getValue();
+            return delta.toString();
         }
     }
 
