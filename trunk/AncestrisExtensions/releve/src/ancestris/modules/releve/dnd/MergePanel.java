@@ -6,18 +6,21 @@
 package ancestris.modules.releve.dnd;
 
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
  */
 public class MergePanel extends javax.swing.JPanel {
 
+    private MergeDialog mergeDialog = null;
     /**
      * le construteur initialise l'affichage
      */
@@ -32,16 +35,38 @@ public class MergePanel extends javax.swing.JPanel {
      * @param selectedEntity  entite selectonne
      * @param mergeDialog     fenetre principale
      */
-    protected void initData (List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog ) {
+    protected void initData (final List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog ) {
+        this.mergeDialog = mergeDialog;
+        // je vide le panneau
+        jPanelChoice.removeAll();
+        buttonGroupChoiceModel=new javax.swing.ButtonGroup();
+        jToggleButtonShowAllParents.setSelected(mergeDialog.getShowAllParents());
+
+        // j'affiche le titre
+        jLabel1.setText(MessageFormat.format(NbBundle.getMessage(MergePanel.class, "MergePanel.title"), models.size())); // NOI18N
 
         // j'ajoute les modeles
         for(int i= 0; i< models.size(); i++) {
             addRadioButton(i, models.get(i), selectedEntity, mergeDialog);
         }
-        // je coche bouton assicié au premier modele
+        // j'ajoute un label pour occuper le bas du panel
+        java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = models.size();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weighty = 1.0;
+        JLabel jLabelEnd = new javax.swing.JLabel();
+        jPanelChoice.add(jLabelEnd, gridBagConstraints);
+
+        // je coche bouton associé au premier modele
         ((JRadioButton)buttonGroupChoiceModel.getElements().nextElement()).setSelected(true);
         // je selectionne le premier modele
-        mergeDialog.selectModel(models.get(0));
+        if ( models.size() >0 ) {
+            mergeDialog.selectModel(models.get(0));
+        }
+        this.revalidate();
+        this.repaint();
     }
 
     /**
@@ -52,69 +77,14 @@ public class MergePanel extends javax.swing.JPanel {
      * @param selected
      */
     private void addRadioButton(int position, final MergeModel model, Entity selectedEntity, final MergeDialog mergeDialog) {
-        String radioButtonText;
+        //String radioButtonText;
         String labelText = Integer.toString(model.getNbMatch())+"/"+Integer.toString(model.getNbMatchMax());
         JLabel jLabelNbMatch =  new JLabel();
-
-        if (  model.getSelectedEntity() == null ) {
-            if ( model instanceof MergeModelBirth) {
-                if ( selectedEntity instanceof Fam) {
-                    radioButtonText = "Nouvel enfant de la famille sélectionnée";
-                } else {
-                    radioButtonText = "Nouvel enfant";
-                    if (model.getRow(MergeModel.RowType.IndiParentFamily).entityValue != null) {
-                       radioButtonText += " - "  +  ((Fam)model.getRow(MergeModel.RowType.IndiParentFamily).entityValue).getId();
-                    } else {
-                       radioButtonText += " - " + "Nouvelle famille";
-                       if ( model.getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null
-                               ||  model.getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null ) {
-                           radioButtonText +=  " ( ";
-                           if ( model.getRow(MergeModel.RowType.IndiFatherLastName).entityObject != null ) {
-                               radioButtonText += model.getRow(MergeModel.RowType.IndiFatherLastName).entityObject.getId();
-                           }
-                           radioButtonText +=  " , ";
-                           if ( model.getRow(MergeModel.RowType.IndiMotherLastName).entityObject != null ) {
-                               radioButtonText += model.getRow(MergeModel.RowType.IndiMotherLastName).entityObject.getId();
-                           }
-                           radioButtonText +=  " )";
-                       }
-
-                    }
-                }
-            } else {
-                radioButtonText = "Nouvelle famille";
-            }
-        } else {
-            if ( model instanceof MergeModelBirth) {
-                radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
-                if ( model.getSelectedEntity().equals(selectedEntity)) {
-                    labelText += " "+ "(Selectionné)";
-                    jLabelNbMatch.setForeground(Color.blue);
-
-                }
-            
-            } else if ( model instanceof MergeModelMarriage) {
-                Fam fam = (Fam) model.getSelectedEntity();
-                if ( fam != null) {
-                    radioButtonText =  "<html>"+ "Modifier" + " ";
-                    radioButtonText += fam.getHusband().toString(true);
-                    radioButtonText += "<br>";
-                    radioButtonText += fam.getWife().toString(true);
-                    radioButtonText += "</html>";
-                } else  {
-                    radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
-                }
-                 
-            } else {
-               radioButtonText = "Modifier "+ model.getSelectedEntity().toString();
-            }
-
-        }
         jLabelNbMatch.setText(labelText);
 
         // je cree le radiobutton
         JRadioButton jRadioButton =  new JRadioButton();
-        jRadioButton.setText(radioButtonText);
+        jRadioButton.setText(model.getSummary(selectedEntity));
         jRadioButton.setMargin(new java.awt.Insets(0, 2, 0, 2));
         jRadioButton.setPreferredSize(null);
         jRadioButton.setSelected(false);
@@ -131,19 +101,21 @@ public class MergePanel extends javax.swing.JPanel {
         // j'affiche le radiobutton dans la premiere colonne
         java.awt.GridBagConstraints gridBagConstraints;
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = position;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.weighty = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        //gridBagConstraints.weighty = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelChoice.add(jRadioButton,gridBagConstraints);
 
         // j'affiche le nombre de champs egaux dans la deuxième colonne
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = position;
         gridBagConstraints.weightx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         jPanelChoice.add(jLabelNbMatch, gridBagConstraints);
 
     }
@@ -156,17 +128,51 @@ public class MergePanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroupChoiceModel = new javax.swing.ButtonGroup();
+        jPanelToolbar = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jToggleButtonShowAllParents = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanelChoice = new javax.swing.JPanel();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.border.border.title")))); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setPreferredSize(null);
+        jPanelToolbar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanelToolbar.setLayout(new java.awt.GridBagLayout());
 
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.title")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        jPanelToolbar.add(jLabel1, gridBagConstraints);
+
+        jToggleButtonShowAllParents.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/add-spouse24.png"))); // NOI18N
+        jToggleButtonShowAllParents.setToolTipText(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.jToggleButtonShowAllParents.toolTipText")); // NOI18N
+        jToggleButtonShowAllParents.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jToggleButtonShowAllParents.setFocusable(false);
+        jToggleButtonShowAllParents.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jToggleButtonShowAllParents.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jToggleButtonShowAllParents.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleButtonShowAllParents.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonShowAllParentsActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        jPanelToolbar.add(jToggleButtonShowAllParents, gridBagConstraints);
+
+        add(jPanelToolbar, java.awt.BorderLayout.NORTH);
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBar(null);
+
+        jPanelChoice.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanelChoice.setRequestFocusEnabled(false);
         jPanelChoice.setLayout(new java.awt.GridBagLayout());
         jScrollPane1.setViewportView(jPanelChoice);
@@ -174,11 +180,22 @@ public class MergePanel extends javax.swing.JPanel {
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jToggleButtonShowAllParentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonShowAllParentsActionPerformed
+        try {
+            mergeDialog.updateData(((JToggleButton) (evt.getSource())).isSelected());
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_jToggleButtonShowAllParentsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupChoiceModel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanelChoice;
+    private javax.swing.JPanel jPanelToolbar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToggleButton jToggleButtonShowAllParents;
     // End of variables declaration//GEN-END:variables
 
 }

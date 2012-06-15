@@ -1,7 +1,6 @@
 package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.PlaceManager;
-import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
@@ -409,7 +408,6 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.wifePlace.ordinal()],
                                     "" , // profession
                                     fields[EgmtField.wifeComment.ordinal()]);
-                            //TODO :  fields[EgmtField.wifeDead.ordinal()]
                                 
                             record.setWifeFather(
                                     fields[EgmtField.wifeFatherFirstName.ordinal()],
@@ -515,7 +513,7 @@ public class ReleveFileEgmt {
                     line.appendCsvFn(record.getIndiFirstName().getValue());
                     line.appendCsvFn(record.getIndiSex().toString());
                     if (!(record instanceof RecordBirth)) {
-                        line.appendCsvFn(record.getIndiAge().toString());
+                        line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiPlace().toString());
                     } else {
                         line.appendCsvFn("");
@@ -548,19 +546,19 @@ public class ReleveFileEgmt {
                     line.appendCsvFn(record.getIndiFatherDead().toString());
                     line.appendCsvFn(record.getIndiFatherComment().toString(),
                             record.getIndiFatherOccupation().toString(),
-                            record.getIndiFatherAge().toString());
+                            record.getIndiFatherAge().getValue());
                     line.appendCsvFn(record.getIndiMotherLastName().toString());
                     line.appendCsvFn(record.getIndiMotherFirstName().toString());
                     line.appendCsvFn(record.getIndiMotherDead().toString());
                     line.appendCsvFn(record.getIndiMotherComment().toString(),
                             record.getIndiMotherOccupation().toString(),
-                            record.getIndiMotherAge().toString());
+                            record.getIndiMotherAge().getValue());
                     
                     if ((record instanceof RecordMarriage) || (record instanceof RecordMisc)) {
                         line.appendCsvFn(record.getWifeLastName().toString());
                         line.appendCsvFn(record.getWifeFirstName().toString());
                         line.appendCsvFn(""); //wifeDead
-                        line.appendCsvFn(record.getWifeAge().toString());
+                        line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifePlace().toString());
                         
                         String birthDate = "";
@@ -585,13 +583,13 @@ public class ReleveFileEgmt {
                         line.appendCsvFn(record.getWifeFatherDead().getValue());
                         line.appendCsvFn(record.getWifeFatherComment().toString(), 
                             record.getWifeFatherOccupation().toString(),
-                            record.getWifeFatherAge().toString());
+                            record.getWifeFatherAge().getValue());
                         line.appendCsvFn(record.getWifeMotherLastName().toString());
                         line.appendCsvFn(record.getWifeMotherFirstName().toString());
                         line.appendCsvFn(record.getWifeMotherDead().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString(), 
                             record.getWifeMotherOccupation().toString(),
-                            record.getWifeMotherAge().toString());
+                            record.getWifeMotherAge().getValue());
 //                        line.appendCsvFn(record.getWifeMotherOccupation());
                      } else  if (record instanceof RecordDeath ) {
                         line.appendCsvFn(record.getIndiMarriedLastName().toString());

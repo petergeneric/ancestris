@@ -1,7 +1,7 @@
 package ancestris.modules.releve.dnd;
 
-import genj.gedcom.PropertyAge;
 import genj.gedcom.time.Delta;
+import genj.gedcom.time.PointInTime;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -56,9 +56,9 @@ public class MergeDialogTestMatch extends TestCase {
         age = "1a  m  j" ;
         matcher = pattern.matcher(age);
         if (matcher.matches()) {
-            assertEquals("années", "1 ", matcher.group(1));
-            assertEquals("mois",   "  ",  matcher.group(2));
-            assertEquals("jours",  "  ",  matcher.group(3));
+            assertEquals("années", "1", matcher.group(1).trim());
+            assertEquals("mois",   "",  matcher.group(2).trim());
+            assertEquals("jours",  "",  matcher.group(3).trim());
         } else {
             fail("no match");
         }
@@ -263,6 +263,35 @@ public class MergeDialogTestMatch extends TestCase {
     }
 
 
+    /**
+     * testPropertyDateSetValue performance
+     */
+//    public void testPropertyDateSetValue() {
+//
+//        PropertyDate birthDate = new PropertyDate();
+//        birthDate.setValue( "1 JAN 2000");
+//        PropertyDate marriageDate = new PropertyDate();
+//        int yearShift = 15;
+//
+//        long start = System.currentTimeMillis();
+//        for( int i = 0; i < 100000; i++ ) {
+//            marriageDate.setValue(PropertyDate.BEFORE, MergeRecord.getYear(birthDate.getStart(), -yearShift), null, "");
+//        }
+//        long delay1= System.currentTimeMillis() -start;
+//
+//        start = System.currentTimeMillis();
+//        for( int i = 0; i < 100000; i++ ) {
+//            marriageDate.setValue(PropertyDate.BEFORE, new PointInTime(PointInTime.UNKNOWN, PointInTime.UNKNOWN, birthDate.getStart().getYear() -yearShift), null, "");
+//        }
+//        long delay2= System.currentTimeMillis() -start;
+//
+//        start = System.currentTimeMillis();
+//        for( int i = 0; i < 100000; i++ ) {
+//            marriageDate.setValue(String.format("BEF %d", birthDate.getEnd().getYear() - yearShift));
+//        }
+//        long delay3= System.currentTimeMillis() -start;
+//        System.out.print(String.format("delay1=%d  delay2=%d delay3=%d\n", delay1, delay2, delay3));
+//    }
 
 
    

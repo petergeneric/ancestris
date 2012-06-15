@@ -79,7 +79,7 @@ public class TreeViewDropTarget {
             Point location = dropTargetDragEvent.getLocation();
 
             Entity entity = null;
-            //entity = treeView.getEntityAt(location);
+            entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY);
             } else {
@@ -97,7 +97,7 @@ public class TreeViewDropTarget {
             //System.out.println("dragOver "+dropTargetDragEvent.getSource().getClass().getName());
             Point location = dropTargetDragEvent.getLocation();
             Entity entity = null;
-            //entity = treeView.getEntityAt(location);
+            entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 dropTargetDragEvent.acceptDrag(dropTargetDragEvent.getSourceActions());
             } else {
@@ -113,7 +113,7 @@ public class TreeViewDropTarget {
 		public synchronized void drop(DropTargetDropEvent dropTargetDropEvent) {
 			Point location = dropTargetDropEvent.getLocation();
             Entity entity = null;
-            //entity = treeView.getEntityAt(location);
+            entity = treeView.getEntityAt(location);
             if ( entity == null || entity instanceof Indi || entity instanceof Fam) {
                 Transferable t = dropTargetDropEvent.getTransferable();
 

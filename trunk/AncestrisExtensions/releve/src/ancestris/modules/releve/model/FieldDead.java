@@ -23,7 +23,8 @@ public class FieldDead extends Field {
 
     @Override
     public void setValue(Object value) {
-        if (java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead").equals(value.toString())) {
+        if (java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead").equals(value.toString())
+                || "true".equals(value.toString())) {
              this.value = true;
         } else {
             this.value = Boolean.getBoolean(value.toString());

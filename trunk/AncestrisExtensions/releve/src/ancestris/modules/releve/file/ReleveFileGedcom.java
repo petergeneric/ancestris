@@ -28,7 +28,6 @@ public class ReleveFileGedcom {
     /**
      *
      * @param fileName
-     * TODO gérer la dat iincomplete
      */
     public static FileBuffer loadFile(Gedcom gedcom) throws Exception {
 

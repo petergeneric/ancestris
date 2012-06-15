@@ -83,7 +83,7 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
 
             assertEquals("Nombre model",3,models.size());
-            models.get(1).copyRecordToEntity();
+            models.get(0).copyRecordToEntity();
 
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
             assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
@@ -136,15 +136,15 @@ public class MergeModelBirthTest extends TestCase {
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
-            expected = "oldcomment\n";
-            expected +="indicomment\n";
+            expected ="indicomment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire père: comment\n";
             expected +="Commentaire mère: comment\n";
             expected +="generalcomment\n";
-            expected +="Photo: photo";
+            expected +="Photo: photo\n";
+            expected += "oldcomment";
             assertEquals("comment2",expected, indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -235,7 +235,7 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("IndiBirthDate","75009 Paris Etat civil", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
@@ -255,7 +255,7 @@ public class MergeModelBirthTest extends TestCase {
             record.getEventDateProperty().setValue(indi.getBirthDate().getValue());
             record.setEventPlace("Paris","75009","","state","country");
 
-            assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithBirthRecord(mergeRecord, gedcom, indi).size());
+            assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
             assertEquals("Nombre model",1,models.size());
@@ -270,7 +270,7 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("sourec 1","75000 Paris BMS", ((Source)((PropertyXRef)sourceLink[1]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
