@@ -3,4 +3,4 @@ OpenIDE-Module: ancestris.core
 OpenIDE-Module-Install: ancestris/core/Installer.class
 OpenIDE-Module-Localizing-Bundle: ancestris/core/Bundle.properties
 OpenIDE-Module-Specification-Version: 0.7.0
-
+AutoUpdate-Essential-Module: true
