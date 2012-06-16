@@ -8,13 +8,21 @@ import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import javax.swing.SpinnerNumberModel;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.NbBundle;
 
 final class OptionFormatPanel extends javax.swing.JPanel {
 
     private final OptionFormatOptionsPanelController controller;
     // Values
-    String[] indis = new String[]{"Charles de Gaulle", "de Gaulle, Charles"};
-    String[] dates = new String[]{"25 FEB 1587 (Format Gedcom)", "25 Fév 1587 (Format local court)", "25 Février 1587 (Format local long)", "25/02/1587 (Format numérique européen)"};
+    String[] indis = new String[]{
+        NbBundle.getMessage(OptionFormatPanel.class, "name.format1"),
+        NbBundle.getMessage(OptionFormatPanel.class, "name.format2")};
+
+    String[] dates = new String[]{
+        NbBundle.getMessage(OptionFormatPanel.class, "date.format.gedcom"),
+        NbBundle.getMessage(OptionFormatPanel.class, "date.format.short"),
+        NbBundle.getMessage(OptionFormatPanel.class, "date.format.long"),
+        NbBundle.getMessage(OptionFormatPanel.class, "date.format.num")};
 
     OptionFormatPanel(OptionFormatOptionsPanelController controller) {
         this.controller = controller;
