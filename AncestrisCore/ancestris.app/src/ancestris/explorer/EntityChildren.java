@@ -68,8 +68,12 @@ class EntityChildren extends Children.SortedArray implements GedcomListener{
       // an entity we're not looking at?
       if (!entities.getTag().equals(entity.getTag()))
         return;
-
-      add(new EntityNode[]{new EntityNode(entity)});
+      for (Node n:getNodes()){
+          EntityNode en = (EntityNode)n;
+          if (en.getEntity().equals(entity)){
+            remove(new EntityNode[]{en});
+          }
+      }
 
       refresh();
     }
