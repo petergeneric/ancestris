@@ -1,7 +1,16 @@
 ###############################################
 #
-# Multi media objects for ancestors
-# an optional filter turns the list into a check for saved certificates.
+# Multi media objects of ancestors
+#
+# shows a line per
+#   INDI:OBJE:FILE 
+#   INDI:*:OBJE:FILE 
+#   INDI:*:OBJE:NOTE 
+#   INDI:FAMS:*:OBJE:FILE 
+#   INDI:FAMS:*:OBJE:NOTE
+# * = BIRT/BAPM/MARR/DIV/DEAT/BURI
+# notes only if starting with "http://" or "https://" 
+# MARR/DIV only for males
 #
 # _SOSA properties must have been generated before conversion.
 #       Method 1 sorts properly:
@@ -11,16 +20,17 @@
 #       
 #
 ###############################################
-SELECT 
+SELECT DISTINCT
   (str(?id) as ?ID)
   ?sosa
   ?name 
-  ?event 
+  ?event
+  ( fn:substring(str(?date),0,4) as ?year)
   ?file
 {
   ### shared by all the union parts
 
-  ?a p:id    ?id; 
+  ?indi p:id    ?id; 
      p:NAME  [rdfs:label ?name];
      p:_SOSA [rdfs:label ?sosa].   
 
@@ -28,48 +38,90 @@ SELECT
   
   FILTER ( ! fn:contains(?sosa,"-") )
 
-  ### objects at top level and at certain event types
+  ### INDI:OBJE:FILE 
   {
-    ?a p:OBJE ?o. 
-    ?o p:FILE [rdfs:label ?file].
+    ?indi p:OBJE ?object. 
+    ?object p:FILE [rdfs:label ?file].
     LET (?event := '-')
   } UNION {
-    ?a p:BIRT ?e.
-    OPTIONAL {
-      ?e p:OBJE ?o. 
-      ?o p:FILE [rdfs:label ?file].
-    }
-    LET (?event := 'birth')
-  } UNION {
-    ?a p:DEAT ?e.
-    OPTIONAL {
-      ?e p:OBJE ?o. 
-      ?o p:FILE [rdfs:label ?file].
-    }
-    LET (?event := 'death')
-  } UNION {
-    ?a p:FAMS ?f.
-    OPTIONAL {
-      ?f p:OBJE ?o. 
-      ?o p:FILE [rdfs:label ?file].
-    }
-    LET (?event := 'family')
-  } UNION {
-    ?a p:FAMS ?f.
-    ?f p:MARR ?m. 
-    OPTIONAL {
-      ?m p:OBJE ?o. 
-      ?o p:FILE [rdfs:label ?file].
-    }
-    LET (?event := 'mariage')
-  }
 
+    ### INDI:*:OBJE:FILE
+
+    ?indi ?eventType ?e.
+    LET ( ?event := fn:substring(str(?eventType),54,60) )
+    FILTER( ?event="BIRT" || ?event="DEAT"
+         || ?event="BAPM" || ?event="BURI"
+          )
+    OPTIONAL {
+      ?e p:DATE [rdfs:label ?date]. 
+    }
+    OPTIONAL {
+      ?e p:OBJE ?object. 
+      ?object p:FILE [rdfs:label ?file].
+    }
+  } UNION {
+
+    ### INDI:FAMS:*:OBJE:FILE
+
+    ?indi p:FAMS ?fams;
+          p:SEX  [rdfs:label ?sex].
+    FILTER( ?sex="M" )
+
+    ?fams ?eventType ?e.
+    LET ( ?event := fn:substring(str(?eventType),54,60) )
+    FILTER( ?event="MARR" || ?event="DIV" )
+
+    OPTIONAL {
+      ?e p:DATE [rdfs:label ?date]. 
+    }
+    OPTIONAL {
+      ?e p:OBJE ?object. 
+      ?object p:FILE [rdfs:label ?file].
+    }
+  } UNION {
+
+    ### INDI:*:OBJE:NOTE
+    ?indi ?eventType ?e.
+    LET ( ?event := fn:substring(str(?eventType),54,160) )
+    FILTER( ?event="BIRT" || ?event="DEAT"
+         || ?event="BAPM" || ?event="BURI"
+          )
+
+    OPTIONAL {
+      ?e p:DATE [rdfs:label ?date]. 
+    }
+    OPTIONAL {
+      ?e p:NOTE [rdfs:label ?note].
+      FILTER( fn:starts-with(?note,"http://")
+           || fn:starts-with(?note,"https://")
+            )
+      LET (?file := fn:substring(?note,0,80) )
+    }
+  } UNION {
+
+    ### INDI:FAMS:*:OBJE:NOTE
+
+    ?indi p:FAMS ?fams;
+          p:SEX [rdfs:label ?sex].
+    FILTER( ?sex="M" )
+
+    ?fams ?eventType ?e.
+    LET ( ?event := fn:substring(str(?eventType),54,160) )
+    FILTER( ?event="MARR" || ?event="DIV" )
+
+    OPTIONAL {
+      ?e p:DATE [rdfs:label ?date]. 
+    }
+    OPTIONAL {
+      ?e p:NOTE [rdfs:label ?note].
+      FILTER( fn:starts-with(?note,"http://")
+           || fn:starts-with(?note,"https://") 
+            )
+      LET (?file := fn:substring(?note,0,80) )
+    }
+  }
   ### prevent duplicates in case GIVN and SURN are stored separately
 
   FILTER( fn:contains(?name,'/')  )
-
-  ### OPTIONAL: are events backed by a saved certificate?
-
-  #FILTER( !bound(?file) || fn:contains(?file,'/familysearch/') )
 }
-ORDER BY ?sosa ?event
+ORDER BY ?sosa ?date ?event
