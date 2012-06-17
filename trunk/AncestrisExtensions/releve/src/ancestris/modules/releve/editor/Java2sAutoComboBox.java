@@ -1,6 +1,5 @@
 package ancestris.modules.releve.editor;
 
-import java.awt.event.ItemEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.event.ChangeListener;
@@ -16,6 +15,17 @@ public class Java2sAutoComboBox extends JComboBox {
     AutoTextFieldEditor(java.util.List list) {
       editor = new Java2sAutoTextField(list, Java2sAutoComboBox.this);
     }
+
+    @Override
+    public void setItem(Object anObject) {
+        if (anObject == null) {
+            editor.setText("");
+        } else {
+            editor.setText(anObject.toString());
+        }
+    }
+
+
   }
 
   public Java2sAutoComboBox(java.util.List list) {
@@ -32,6 +42,8 @@ public class Java2sAutoComboBox extends JComboBox {
 
     });
     setEditor(autoTextFieldEditor);
+    setPrototypeDisplayValue("AAAAAAAAAAA");
+    revalidate();
   }
 
   /**
@@ -56,6 +68,10 @@ public class Java2sAutoComboBox extends JComboBox {
     autoTextFieldEditor.getAutoTextFieldEditor().setCaseSensitive(flag);
   }
 
+  public void setUpperAllFirstChar(boolean flag) {
+    autoTextFieldEditor.getAutoTextFieldEditor().setUpperAllFirstChar(flag);
+  }
+
   public boolean isStrict() {
     return autoTextFieldEditor.getAutoTextFieldEditor().isStrict();
   }
@@ -69,22 +85,27 @@ public class Java2sAutoComboBox extends JComboBox {
   }
 
   public void setDataList(java.util.List list) {
+    isFired = true;
+    Object selectedObject = getEditor().getItem();
     autoTextFieldEditor.getAutoTextFieldEditor().setDataList(list);
-    setModel(new DefaultComboBoxModel(list.toArray()));
+    setModel(new DefaultComboBoxModel(list.toArray()));   
+    setSelectedItem(selectedObject);
+    isFired = false;
   }
 
-  public void setSelectedValue(Object obj) {
+  protected void setSelectedValue(Object obj) {
     if (isFired) {
       return;
     } else {
       isFired = true;
       setSelectedItem(obj);
-      fireItemStateChanged(new ItemEvent(this, 701, selectedItemReminder,
-          1));
+      //fireItemStateChanged(new ItemEvent(this, 701, selectedItemReminder,
+      //    1));
       isFired = false;
       return;
     }
   }
+
 
   @Override
   protected void fireActionEvent() {

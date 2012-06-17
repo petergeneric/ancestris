@@ -508,7 +508,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
                     case indiPlace:
                     case wifePlace:
-                        bean = new BeanPlace();
+                        bean = new BeanPlace(dataManager.getCompletionProvider());
                         break;
 
                     case indiComment:
@@ -852,6 +852,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     case eventType:
                         completionList = dataManager.getCompletionProvider().getEventTypes();
                         break;
+//                    case indiPlace:
+//                    case wifePlace:
+//                        completionList = dataManager.getCompletionProvider().getPlaces();
+//                        break;
                 }
 
                 //je verifie si c'est une nouvelle valeur

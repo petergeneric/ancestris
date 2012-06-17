@@ -36,10 +36,10 @@ public class BeanEventType extends Bean {
         if (eventType == null) {
             // j'affiche le premier element de la liste pas defaut
             //cListEventType.setText(cListEventType.getDataList().get(0).toString());
-            cListEventType.setSelectedValue(cListEventType.getDataList().get(0).toString());
+            cListEventType.getEditor().setItem(cListEventType.getDataList().get(0).toString());
         } else {
             //cListEventType.setText(eventType.toString());
-            cListEventType.setSelectedValue(eventType.toString());
+            cListEventType.getEditor().setItem(eventType.toString());
         }
         
         // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
@@ -51,7 +51,7 @@ public class BeanEventType extends Bean {
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
                 //cListEventType.setText(eventType.toString());
-                cListEventType.setSelectedValue(eventType.toString());
+                cListEventType.getEditor().setItem(eventType.toString());
             }
         });
     }
@@ -62,10 +62,10 @@ public class BeanEventType extends Bean {
         if (eventType == null) {
             // j'affiche le premier element de la liste pas defaut
             //cListEventType.setText(cListEventType.getDataList().get(0).toString());
-            cListEventType.setSelectedValue(cListEventType.getDataList().get(0).toString());
+            cListEventType.getEditor().setItem(cListEventType.getDataList().get(0).toString());
         } else {
             //cListEventType.setText(eventType.toString());
-            cListEventType.setSelectedValue(eventType.toString());
+            cListEventType.getEditor().setItem(eventType.toString());
         }
     }
 
@@ -79,7 +79,7 @@ public class BeanEventType extends Bean {
 
         // je supprime les espaces aux extremetes
         //String value = cListEventType.getText().trim();
-        String value = cListEventType.getSelectedItem().toString().trim();
+        String value = cListEventType.getEditor().getItem().toString().trim();
         // parse tag,name
         int separatorIndex = value.indexOf(' ');
 
@@ -93,6 +93,6 @@ public class BeanEventType extends Bean {
         }
 
         // j'affiche la valeur mise en forme
-        cListEventType.setSelectedValue(fieldEventType.toString());
+        cListEventType.getEditor().setItem(fieldEventType.toString());
     }
 }

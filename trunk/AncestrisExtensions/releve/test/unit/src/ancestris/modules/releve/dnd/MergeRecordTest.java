@@ -3,10 +3,12 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
+import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import junit.framework.TestCase;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -21,8 +23,12 @@ public class MergeRecordTest extends TestCase {
         
         PointInTime pit = new PointInTime(0,5,2000);
         Delta delta = new Delta(0,18,0);
-
-        assertEquals("jours",  "DEC 1998",  MergeRecord.getYear(pit, delta).getValue());
+        try {
+            assertEquals("jours", "DEC 1998", MergeRecord.getYear(pit, delta).getValue());
+        } catch (GedcomException ex) {
+            ex.printStackTrace(System.err);
+            fail(ex.getMessage());
+        }
     }
     
     /**

@@ -6,10 +6,10 @@
         <tocitem text="Les tables" target="Releve.table"/>
         <tocitem text="L'editeur" target="Releve.editor"/>
         <tocitem text="Configuration" target="Releve.config"/>
-           <tocitem text="Gestion des fichiers" target="Releve.file"/>
-           <tocitem text="Fichier ANCESTRIS" target="Releve.fileAncestris"/>
-           <tocitem text="Fichier EGMT" target="Releve.fileEgmt"/>
-           <tocitem text="Fichier NIMEGUE" target="Releve.fileNimegue"/>
-       
+        <tocitem text="Gestion des fichiers" target="Releve.file"/>
+        <tocitem text="Fichier ANCESTRIS" target="Releve.fileAncestris"/>
+        <tocitem text="Fichier EGMT" target="Releve.fileEgmt"/>
+        <tocitem text="Fichier NIMEGUE" target="Releve.fileNimegue"/>
+        <tocitem text="Copie vers gedcom" target="copytogedcom"/>
     </tocitem>
 </toc>
