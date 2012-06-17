@@ -1,0 +1,35 @@
+###############################################
+#
+# Ancestors without ancestors, like _TREETOP
+# an exercise embedded in other queries
+#
+# replace the value for idOfRootIndi
+# or launch from a INDI context
+#
+###############################################
+SELECT 
+  (str(?id) as ?ID)
+  ?name
+{
+  ### for which individual do you want the report?
+
+  LET (?idOfRootIndi := '%s')
+
+  ### the neded data
+
+  ?indi p:id ?idOfRootIndi; 
+        r:ancestor ?a. 
+
+  ?a p:id ?id; 
+     p:NAME [rdfs:label ?name]. 
+
+  ### does the ancestor have ancestors?  
+
+  OPTIONAL {?a r:ancestor ?a2}
+  FILTER (!bound(?a2))
+
+  ### prevent duplicates in case GIVN and SURN are stored separately
+
+  FILTER( fn:contains(?name,'/')  )
+
+} 

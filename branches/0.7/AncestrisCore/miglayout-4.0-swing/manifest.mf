@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: lib.miglayout
+OpenIDE-Module-Localizing-Bundle: lib/miglayout/Bundle.properties
+OpenIDE-Module-Specification-Version: 4.0.0
+

@@ -1,0 +1,56 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="../../docs/ancestris.css">
+    </head>
+    <body>
+        <div class="section1">
+            <center><h2 class="section1">Module Géo<br>Edition d'un lieu</h2></center>
+            <br>
+            <a name="edit_lieu"></a>
+            <h3 class="section1">Fenêtre d'édition d'un lieu</h3>
+            <br>
+            Cette fenêtre permet de modifier plusieurs informations se rapportant aux lieux :
+            <ul>
+                <li>
+                    <b>Bouton Gedcom</b> : L'ordre des juridictions des lieux dans votre généalogie : tous les lieux du fichier Gedcom sont sur ce format-là. Ceci donne un nom à chacune des jurisdictions. En terme de fichier Gedcom, c'est l'enregistrement "PLAC" dans l'entête du fichier que toutes les étiquettes "PLAC" devront suivre.<br>
+                    <br>
+                </li>
+                <li>
+                    <b>Préférences</b> : les préférences en général sur les composants d'un lieu : les juridictions, leur séquence, et si elles sont obligatoires ou non. Le bouton fait apparaître la fenêtre de préférence d'Ancestris comme si vous y accédiez depuis le menu principal. Ceci permet à Ancestris de savoir la signification de chaque jurisdictions d'un lieu.
+                    <ul class="warning"><li>Attention : si la liste des juridictions de votre généalogie n'est pas la même que celle des préférences,
+                            l'éditeur de lieu va peut-être placer les juridictions aux mauvais endroits. <br><br>
+                            Par exemple, si l'on ouvre un fichier où se trouve <br><br><i>lieudit,commune,code_insee,departement</i><br><br>
+                            dans le format des lieux du Gedcom (bouton Format Gedcom),
+                            et que les préférences de lieux disent <br><br><i>Lieudit:1, Commune:2, Code Insee:3, Code Postal:4, Département:5</i><br><br>
+                            alors la fenêtre d'édition des lieux fera apparaître la juridiction "Département" dans la case "Code Postal" de la fenêtre,
+                            car c'est la 4è juridiction dans cet exemple.<br>
+                            Le mieux dans ce cas est de temporairement changer les préférences de lieux d'Ancestris pour s'aligner sur le Gedcom.<br>
+                            Si vous souhaitez faire l'inverse, c'est-à-dire réaligner les juridictions du Gedcom à celles de vos préférences Ancestris, alors il vous faudra passer les lieux à la moulinette de la boîte à outils d'Ancestris.
+                        </li></ul>
+                    <br>
+                </li>
+                <li>
+                    <b>Description à conserver</b> : les jurisdictions d'un lieu dans le fichier Gedcom que vous pouvez les changer avant d'appuyer sur le bouton OK.
+                    <br><br>
+                </li>
+                <li>
+                    <b>Latitude et longitude</b> : les coordonnées géographiques d'un lieu dans le fichier paramètre en local sur votre ordinateur. A vérifier avant d'enregistrer.
+                    <br><br>
+                </li>
+            </ul>
+            <br>
+            Au lancement de la fenêtre du lieu, c'est la partie gauche de la fenêtre qui est utilisée. Le lieu est recherché sur Internet et les réponses possibles sont affichées dans la liste.
+            Sélectionnez le lieu qui convient et cliquez sur le bouton "Choisir ce lieu" pour le faire apparaître dans la partie droite de l'éditeur de lieu.<br>
+            Si le lieu n'est pas trouvé, vous pouvez éventuellement changer son nom dans le champ en haut à gauche et relancer la recherche en appuyant sur le bouton "Rechercher".
+            <br>
+            <br>
+            <br>
+        </div>
+    </body>
+</html>

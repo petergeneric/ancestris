@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../ancestris.css">
+</head>
+<body>
+  <center>
+  <h2 class="ancestris_help_title">Gestione delle fonti<br>e dei luoghi di conservazione</h2>
+  </center>
+  <br>
+  <p class="justify">
+    Le informazioni che sono alla base di ogni genealogia possono essere il risultato di ricerche personali (Archivi, notai,...), di scambi con altri genealogisti, della raccolta di informazioni orali, carte di famiglia, ecc...<br>
+    Qualunque ne sia l'origine ogni buon genealogista &egrave; obbligato a pubblicare le sue fonti. Non esiste genealogia ben fatta senza fonti.
+  </p>
+  <br>
+  <b>Due parole chiave</b><br>
+  <ul>
+    <li><b>Il luogo di conservazione</b> (per la norma Gedcom, REPO, dall'inglese "repository", luogo di stoccaggio, di deposito): E' un luogo di <b><u>deposito fisico</u></b> di un documento <b><u>originale</u></b> (municipio, archivio di stato, parrocchia ecc... o pi&ugrave; semplicemente un classificatore in casa vostra).</li>
+    <li><b>La fonte</b>, in inglese "source" (SOUR): &egrave; il documento che contiene l'informazione (un registro parocchiale, una lista di leva, ecc..).</li>
+  </ul>
+  <p class="justify">
+    Benche si tratti di due entit&agrave; differenti, &egrave; pi&ugrave; logico e pi&ugrave; efficente creare il luogo di conservazione prima di creare la fonte. Da una parte la fonte &egrave; contenuta in un luogo di conservazione, dall'altra quando si crea una fonte bisogna fare un collegamento verso il suo luogo di conservazione.<br>
+  </p>
+  <a name="first_steps_repo_and_source_management_1"></a>  
+  <h3 class="ancestris_help_title">Creazione di un luogo di conservazione</h3>
+  <ul>
+    <li>clic destro in uno spazio vuoto della Tabella delle entit&agrave;, dell'Albero dinamico o di un editore,</li>
+    <li>selezionare la riga "Gedcom <i>vostro_file.ged</i>", poi nel sotto-menu "Creare un luogo di conservazione".</li>
+    <li>cliccare su "Eseguire e creare un luogo di conservazione".</li> 
+    <li>l'<a href="../basic_use/basic_use_view_editors_gedcom.html">'editore Gedcom</a> presenta una arborescenza di questo tipo:</li>
+  </ul>
+  <br>
+  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_SOUR.png" width="628" height="108" hspace="5" vspace="5" alt="Esempio di un luogo di conservazione."><br>
+  Questa finestra presenta un certo numero di etichette (tags) per difetto che si possono modificare, per adattarle ai vostri elementi di informazione. Andiamo dunque a <i>gestire le etichette</i>.<br>
+  <br>
+  <b>Gestire le etichette</b><br>
+  <ul>
+    <li>Cancellazione di un etichetta:</li>
+      <ul>
+        <li>clic destro sulla riga, poi nel menu cliccare su "Taglia" (per esempio per cancellare STAE, inutilizzato in Italia).</li>
+      </ul>
+    <li>Aggiunta di una etichetta:</li>
+      <ul>
+        <li>un clic destro sulla prima riga (<font color="red"><b>1</b></font>) "@Rx@ REPO", poi clic sinistro 
+        su "Lista delle propriet&agrave; Gedcom" vi permette di scegliere tra le etichette predefinite (l'opzione in 
+        basso "Aggiungi le sub-propriet&agrave; per difetto" deve essere spuntata). Cliccare su "OK" per confermare. 
+        La "Lista delle propriet&agrave; Gedcom" propone le etichette che possono essere usate nel rispetto della 
+        grammatica Gedcom, relativamente al termine in oggetto.</li>
+        <li>Un clic destro su certe etichette, poi clic sinistro su "Aggiungi una propriet&agrave;", vi proporr&agrave; delle sub-etichette tra le etichette gi&agrave; utilizzate a questo livello.</li>
+      </ul>
+  </ul>
+  <p class="justify">
+    Cosi abbiamo creato un luogo di conservazione, che potr&agrave; essere riutilizzato per tutto l'insieme 
+    della vostra genealogia D'ora in avanti esso comparir&agrave; nel menu a tendina che si aprir&agrave; alle 
+    prossime creazioni di "luoghi di conservazione".<br>
+    I luoghi di conservazione sono listati nell'<a href="../first_steps/first_steps_gedcoms_manager.html">esploratore Gedcom</a> 
+    e nella <a href="../basic_use/basic_use_view_table_ancestris.html">Tabella delle entit&agrave;</a>, 
+    da cui possono essere estratti per essere modificati (ad esempio per l'ortografia).
+  </p>
+  <a name="first_steps_repo_and_source_management_2"></a>  
+  <h3 class="ancestris_help_title">Creazione di una fonte</h3>
+  <ul>
+    <li>clic destro in uno spazio vuoto della Tabella, dell'albero o di un editore,</li>
+    <li>selezionare la riga "Gedcom <i>vostro_file.ged</i>", poi nel sotto-menu, "Creare Fonte",</li>
+    <li>cliccare su "Eseguire e creare una Fonte".</li>
+    <li>l'editore Gedcom presenta una arborescenza che dovete completare con gli elementi relativi.</li>
+  </ul>
+  <br>
+  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_REPO.png" width="326" height="132" hspace="5" vspace="5" alt="Un esempio di Fonte."><br>
+  <br>
+  <p>
+    Piccola spiegazione di testo (<font color="red"><b>2</b></font>):
+    <ul>
+      <ul>
+        <li>AUTH ( Autore): cio&egrave; "Estensore o Depositario del documento".</li>
+        <li>TITL (Titolo): qui usato come "Intestazione del documento".</li>
+      </ul>
+    </ul>
+  </p>
+  Potete modificare le etichette (tags) con lo stesso principio usato per REPO.<br>
+  <br> 
+  Rimane da localizzare la fonte, cio&egrave; creare un legame con un luogo di conservazione.
+  <ul>
+    <ul>
+      <li>clic destro sulla prima riga "@Sx@ SOUR" (<font color="red"><b>1</b></font>), discendere fino a fonte 'Sx'</li>
+      <li>nel sotto-menu, selezionare "Creare o collegare un luogo di conservazione".</li>
+      <li>nel menu a tendina, reperire il luogo, confermare con "Eseguire e creare luogo di conservazione".</li>
+      Una nuova riga si &egrave; creata nella finestra dell'editore Gedcom (<font color="red"><b>3</b></font>).
+    </ul>
+  </ul>
+  <p class="justify">
+    Cosi si &egrave; creata una fonte, essa potr&agrave; essere riutilizzata per l'insieme della vostra genealogia. 
+    D'ora in avanti essa comparir&agrave; nel menu a tendina che si aprir&agrave; alle prossime creazioni di 
+    "Fonte". I diversi utilizzi di una fonte sono ricapitolati alla fine dell'entit&agrave; 
+    (<font color="red"><b>4</b></font>).<br> 
+    Le Fonti sono listate nell'<a href="../first_steps/first_steps_gedcoms_manager.html">Esploratore Gedcom</a> 
+    e nella <a href="../basic_use/basic_use_view_table_ancestris.html">Tabella delle entit&agrave;</a>, 
+    da cui esse possono venir visualizzate per essere modificate (ad esempio per l'ortografia).</p> 
+  </p>
+  <br>
+  <p class="justify">
+    <u>Una buona gestione delle fonti ha bisogno di qualche precisazione supplementare</u>.<br>
+    <br>
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Innanzi tutto bisogna registrare il suo numero di registro o filza o segnatura(<font color="red"><b>*</b></font>) (CALN):
+    <ul>
+      <ul>
+        <li>partendo dalla finestra "SOUR": clic destro sulla riga REPO, selezionare "Aggiungere una propriet&agrave;".</li>
+        <li>un clic su "Numero di repertorio CALN" crea uno spazio di inserimento.</li>
+      </ul>
+    </ul>
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Poi, il tipo di supporto media usato per questa fonte:
+    <ul>
+      <ul>
+        <li>un clic sinistro sulla riga "CALN" poi, su "Lista delle propriet&agrave; Gedcom" vi propone l'etichetta "MEDI".</li>
+        <li>un clic su "Ok" crea una zona di inserimento associata ad un menu a tendina prestabilito (volendo si possono aggiungere altri tipi di supporto del media).</li> 
+       </ul>
+    </ul>
+  </p>
+  <br>
+  (<font color="red"><b>*</b></font>)numero che serve ad identificare un pezzo in una collezione. Le norme di codifica nazionali degli Archivi non vengono sempre rispettate. La segnatura puo essere di questo tipo di formato:<br>
+  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_CALN.png" width="646" height="70" hspace="5" vspace="5" alt="Un esempio di segnatura."><br>
+  <br>    
+  <p class="justify">
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;E per finire di censire le vostre informazioni, creare una etichetta "dati" (DATA in Gedcom). Ormai lo sapete fare, sempre lo stesso principio:
+    <ul>
+      <ul>
+        <li>clic destro sulla prima riga "Lista delle propriet&agrave; Gedcom", selezionare "Dati". Se l'opzione in basso "Aggiungere le sub propriet&agrave; per difetto" &egrave; spuntata, avrete per prima la sua sotto-etichetta EVEN.</li>
+        <li>un menu a tendina &egrave; associato a EVEN, ormai lo sapete. Confermare con "OK".<br>
+        Potete usare questo spazio a piacere (per esempio, per un registro contenente numerosi tipi di atti).</li>
+        <li>a partire dalla riga EVEN, clic destro per "Aggiungere una propriet&agrave; Gedcom" e scegliere "DATE" e "PLAC". Sempre "OK" per confermare.</li>
+        <li>Non vi resta pi&ugrave; che completare le zone di censimento.</li>
+        Si possono aggiungere tante sub-etichette quante ne servono.
+      </ul>
+    </ul>
+  </p>
+  <br>
+  <table border="1" width="100%" class="ancestris_stop_tip">
+    <tr>
+      <td>
+        <table border="0" width="100%">
+          <tr>
+            <td width="15%">
+              <center><img src="../images/idea.png" width="35" height="39" alt="Suggerimento"></center>
+            </td>
+            <td>
+              Per selezionare due etchette alla volta:<br> Ctrl (premuto) + clic sinistro su ogni riga.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <p>
+    Il vostro editore ora deve somigliare a questo:
+    <pre>
+    @S1@ SOUR
+      AUTH Archivio Parrocchiale di S.Maria Assunta
+      TITL Libro dei Battesimi 1850- 1879
+      DATA
+        EVEN BIRT
+          DATE 1850-1879
+          PLAC ,Rossiglione,16160,Genova,Liguria,Italia
+      REPO Archivio capitolare Diocesi di Acqui (R1)
+        CALN AD2E047/10
+          MEDI electronic
+      CHAN 2 Feb 2009, 13:06:24
+    </pre>
+    L'ordine delle etichette potr&agrave; essere differente.
+  </p>
+  <br>
+  <p class="justify">
+  Adesso tutto &egrave; pronto per poter passare alla tappa successiva <a href="../first_steps/first_steps_genealogy_import.html">Importare</a> o <a href="../first_steps/first_steps_new_genealogy.html">creare una genealogia</a>.
+  </p>
+  <br>
+  <!-- Debut des boutons Precedent - Suivant -->
+  <br>
+  <br>
+  <table border="0" width="100%">
+    <tr>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_ancestris_plugins.html">Pagina precedente</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="80%">
+        &nbsp;
+      </td>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_genealogy_import.html">Pagina seguente</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- Fin des boutons Precedent - Suivant -->
+
+<!-- Italian Help - updated on 06/03/2012 -->
+</body>
+</html>
+

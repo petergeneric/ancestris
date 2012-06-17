@@ -1,0 +1,86 @@
+0 HEAD 
+1 SOUR GENJ
+2 VERS version
+2 NAME GenealogyJ
+2 CORP Nils Meier
+3 ADDR http://genj.sourceforge.net
+1 DEST ANY
+1 DATE 17 JUN 2003
+2 TIME 14:23:07
+1 GEDC 
+2 VERS 5.5
+2 FORM Lineage-Linked
+1 CHAR ANSEL
+1 FILE test.ged
+0 @I001@ INDI 
+1 NAME John /Smith/
+1 SEX F
+1 NOTE husband gender!=MALE
+1 BIRT 
+2 DATE 13
+1 BURI 
+2 DATE 10
+2 NOTE burial before death
+1 DEAT 
+2 DATE 11
+2 NOTE death before birth
+1 ADOP 
+2 DATE 12
+2 NOTE adop before birth after death
+1 RETI 
+2 DATE 14
+2 NOTE retirement with age 1 (younger than 45 yrs)
+1 BAPM 
+2 DATE 30
+2 NOTE baptism with age 17 (older than 10)
+1 FAMS @F001@
+1 CHAN 
+2 DATE 10 JUN 2003
+3 TIME 15:45:58
+0 @I002@ INDI 
+1 NAME Mary /Smith/
+1 SEX F
+1 BIRT 
+2 DATE 18
+1 DEAT 
+2 DATE 23
+1 OBJE 
+2 FILE foo
+2 NOTE file doesn't exist
+1 CHAN 
+2 DATE 16 JUN 2003
+3 TIME 12:43:32
+1 FAMS @F001@
+0 @F001@ FAM 
+1 WIFE @I002@
+1 HUSB @I001@
+1 MARR 
+2 DATE 20
+2 NOTE age of spouses &lt; minAgeMARR
+2 NOTE marr after death of husband
+1 CHAN 
+2 DATE 16 JUN 2003
+3 TIME 12:38:25
+1 DIV 
+2 DATE 19
+2 NOTE divorce before marriage
+1 ENGA 
+2 DATE 
+2 NOTE !valid()
+1 CHIL @I003@
+0 @I003@ INDI 
+1 NAME Sue /Smith/
+1 CHAN 
+2 DATE 17 JUN 2003
+3 TIME 14:23:05
+1 SEX M
+1 BIRT 
+2 _TODO fix the date
+3 FOO just more custom stuff
+2 DATE 24
+2 NOTE birt after death of mother
+2 NOTE birt after divorce of parents
+1 TEST 
+2 NOTE Tag not defined in grammar
+1 FAMC @F001@
+0 TRLR 

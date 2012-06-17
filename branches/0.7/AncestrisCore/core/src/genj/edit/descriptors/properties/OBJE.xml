@@ -1,0 +1,4 @@
+<col>
+ <row><label path=".:TITL"/><bean path=".:TITL" wx="1"/></row>
+ <row><bean path=".:FILE" wx="1" wy="1"/></row>
+</col>
