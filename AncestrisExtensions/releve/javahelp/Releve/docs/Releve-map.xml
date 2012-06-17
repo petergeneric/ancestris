@@ -5,6 +5,7 @@
     <mapID target="Releve.editor" url="Releve-editor.html"/>
     <mapID target="Releve.table" url="Releve-table.html"/>
     <mapID target="Releve.config" url="Releve-config.html"/>
+    <mapID target="Releve.copytogedcom" url="Releve-copytogedcom.html"/>
     <mapID target="Releve.file" url="Releve-file.html"/>
     <mapID target="Releve.fileAncestris" url="Releve-fileAncestris.html"/>
     <mapID target="Releve.fileEgmt" url="Releve-fileEgmt.html"/>

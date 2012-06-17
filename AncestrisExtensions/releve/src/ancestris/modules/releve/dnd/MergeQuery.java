@@ -180,12 +180,12 @@ public class MergeQuery {
                         maxChildPith.add(0,0,+aboutYear);
                     }
 
-                    Delta delta = Delta.get(maxChildPith, recordBirthDate.getStart());
+                    Delta delta = Delta.get(maxChildPith, recordBirthDate.getStart(), PointInTime.GREGORIAN);
                     if ( delta.getYears()> maxParentYearOld - minMarriageYearOld) {
                         foundChild = true;
                     }
 
-                    delta = Delta.get(recordBirthDate.getStart(), maxChildPith);
+                    delta = Delta.get(recordBirthDate.getStart(), maxChildPith, PointInTime.GREGORIAN);
                     if ( delta.getYears()> maxParentYearOld - minMarriageYearOld) {
                         foundChild = true;
                     }
@@ -1469,49 +1469,49 @@ public class MergeQuery {
             PointInTime pit = new PointInTime();
 
             if (recordDate.getFormat() == PropertyDate.DATE) {
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
                 minEnd   = minStart;
 
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
                 maxEnd   = maxStart;
             } else if (recordDate.getFormat() == PropertyDate.BETWEEN_AND || recordDate.getFormat() == PropertyDate.FROM_TO) {
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                pit.set(recordDate.getEnd());
+                pit.set(recordDate.getEnd().getPointInTime(PointInTime.GREGORIAN));
                 minEnd = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
 
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-                pit.set(recordDate.getEnd());
+                pit.set(recordDate.getEnd().getPointInTime(PointInTime.GREGORIAN));
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
             } else if (recordDate.getFormat() == PropertyDate.FROM || recordDate.getFormat() == PropertyDate.AFTER) {
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
                 minEnd = Integer.MAX_VALUE;
 
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
                 maxEnd = Integer.MAX_VALUE;
             } else if (recordDate.getFormat() == PropertyDate.TO || recordDate.getFormat() == PropertyDate.BEFORE) {
                 minStart = Integer.MIN_VALUE;
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minEnd = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
 
                 maxStart = Integer.MIN_VALUE;
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
             } else  {
                 // ABOUT, ESTIMATED, CALCULATED
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minStart = pit.add(0, 0, -indiMaxYearOld-aboutYear).getJulianDay();
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 minEnd = pit.add(0, 0, -indiMaxYearOld+aboutYear).getJulianDay();
 
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
-                pit.set(recordDate.getStart());
+                pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 maxEnd = pit.add(0, -minMonthShift, -minYearShift +aboutYear).getJulianDay();
             } 
 
@@ -1525,21 +1525,21 @@ public class MergeQuery {
                 birthStart = parentBirthDate.getStart().getJulianDay();
                 birthEnd   =  parentBirthDate.getEnd().getJulianDay();
             } else if (parentBirthDate.getFormat() == PropertyDate.FROM || parentBirthDate.getFormat() == PropertyDate.AFTER) {
-                birthStart = parentBirthDate.getStart().getJulianDay();
+                birthStart = parentBirthDate.getStart().getPointInTime(PointInTime.GREGORIAN).getJulianDay();
                 birthEnd   =  Integer.MAX_VALUE;
             } else if (parentBirthDate.getFormat() == PropertyDate.TO || parentBirthDate.getFormat() == PropertyDate.BEFORE) {
                 //birthStart =  Integer.MIN_VALUE;
-                pit.set(parentBirthDate.getStart());
+                pit.set(parentBirthDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 birthStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
 
                 birthEnd   =  parentBirthDate.getStart().getJulianDay();
             } else {
                 // ABOUT, ESTIMATED, CALCULATED
                 PointInTime startPit = new PointInTime();
-                startPit.set(parentBirthDate.getStart());
+                startPit.set(parentBirthDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 birthStart = startPit.add(0, 0, -aboutYear).getJulianDay();
                 PointInTime endPit = new PointInTime();
-                endPit.set(parentBirthDate.getStart());
+                endPit.set(parentBirthDate.getStart().getPointInTime(PointInTime.GREGORIAN));
                 birthEnd = startPit.add(0, 0, +aboutYear).getJulianDay();
             } 
 
@@ -1580,7 +1580,7 @@ public class MergeQuery {
      * @param minDiff
      * @return true si indiFirthDate + minMonthDiff + minYearDiff <= recordBirthDate
      */
-    static protected boolean isRecordBeforeThanDate(PropertyDate recordDate, PropertyDate parentDeathDate, int minMonthShift, int minYearShift) {
+    static protected boolean isRecordBeforeThanDate(PropertyDate recordDate, PropertyDate parentDeathDate, int minMonthShift, int minYearShift) throws GedcomException {
         boolean result;
         if (recordDate == null ) {
             return true;
@@ -1594,84 +1594,80 @@ public class MergeQuery {
             return true;
         }
 
-        try {
-            int recStart;
-            int recEnd;
+        int recStart;
+        int recEnd;
 
-            if (recordDate.getFormat() == PropertyDate.DATE) {
-                PointInTime pit = new PointInTime();
-                pit.set(recordDate.getStart());
-                recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-                recEnd   = recStart;
-            } else if (recordDate.getFormat() == PropertyDate.BETWEEN_AND || recordDate.getFormat() == PropertyDate.FROM_TO) {
-                PointInTime pit = new PointInTime();
-                pit.set(recordDate.getStart());
-                recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-                pit.set(recordDate.getEnd());
-                recEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-            } else if (recordDate.getFormat() == PropertyDate.FROM || recordDate.getFormat() == PropertyDate.AFTER) {
-                PointInTime pit = new PointInTime();
-                pit.set(recordDate.getStart());
-                recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-                pit.set(recordDate.getStart());
-                recEnd = pit.add(0, 0, +indiMaxYearOld).getJulianDay();
-            } else if (recordDate.getFormat() == PropertyDate.TO || recordDate.getFormat() == PropertyDate.BEFORE) {
-                PointInTime pit = new PointInTime();
-                pit.set(recordDate.getStart());
-                recStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                pit.set(recordDate.getStart());
-                recEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
-            } else {
-                // ABOUT, ESTIMATED, CALCULATED
-                PointInTime pit = new PointInTime();
-                pit.set(recordDate.getStart());
-                recStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
-                pit.set(recordDate.getStart());
-                recEnd = pit.add(0, -minMonthShift, -minYearShift +aboutYear).getJulianDay();
-            } 
+        if (recordDate.getFormat() == PropertyDate.DATE) {
+            PointInTime pit = new PointInTime();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+            recEnd   = recStart;
+        } else if (recordDate.getFormat() == PropertyDate.BETWEEN_AND || recordDate.getFormat() == PropertyDate.FROM_TO) {
+            PointInTime pit = new PointInTime();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+            pit.set(recordDate.getEnd().getPointInTime(PointInTime.GREGORIAN));
+            recEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+        } else if (recordDate.getFormat() == PropertyDate.FROM || recordDate.getFormat() == PropertyDate.AFTER) {
+            PointInTime pit = new PointInTime();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recStart = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recEnd = pit.add(0, 0, +indiMaxYearOld).getJulianDay();
+        } else if (recordDate.getFormat() == PropertyDate.TO || recordDate.getFormat() == PropertyDate.BEFORE) {
+            PointInTime pit = new PointInTime();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recEnd = pit.add(0, -minMonthShift, -minYearShift).getJulianDay();
+        } else {
+            // ABOUT, ESTIMATED, CALCULATED
+            PointInTime pit = new PointInTime();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recStart = pit.add(0, -minMonthShift, -minYearShift-aboutYear).getJulianDay();
+            pit.set(recordDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            recEnd = pit.add(0, -minMonthShift, -minYearShift +aboutYear).getJulianDay();
+        }
 
-            int maxStart;
-            int maxEnd;
+        int maxStart;
+        int maxEnd;
 
-            if (parentDeathDate.getFormat() == PropertyDate.DATE) {
-                PointInTime pit = new PointInTime();
-                pit.set(parentDeathDate.getStart());
-                maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                maxEnd = parentDeathDate.getStart().getJulianDay();
-            } else if (parentDeathDate.getFormat() == PropertyDate.BETWEEN_AND || parentDeathDate.getFormat() == PropertyDate.FROM_TO) {
-                PointInTime pit = new PointInTime();
-                pit.set(parentDeathDate.getStart());
-                maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                maxEnd = parentDeathDate.getEnd().getJulianDay();
-            } else if (parentDeathDate.getFormat() == PropertyDate.FROM || parentDeathDate.getFormat() == PropertyDate.AFTER) {
-                PointInTime pit = new PointInTime();
-                pit.set(parentDeathDate.getStart());
-                maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();                
-                pit.set(parentDeathDate.getStart());
-                maxEnd = pit.add(0, 0, +indiMaxYearOld).getJulianDay();
-            } else if (parentDeathDate.getFormat() == PropertyDate.TO || parentDeathDate.getFormat() == PropertyDate.BEFORE) {
-                PointInTime pit = new PointInTime();
-                pit.set(parentDeathDate.getStart());
-                maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                maxEnd = parentDeathDate.getStart().getJulianDay();
-            } else {
-                // ABOUT, ESTIMATED, CALCULATED
-                PointInTime pit = new PointInTime();
-                pit.set(parentDeathDate.getStart());
-                maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
-                pit.set(parentDeathDate.getStart());
-                maxEnd = pit.add(0, 0, +aboutYear).getJulianDay();
-            }
+        if (parentDeathDate.getFormat() == PropertyDate.DATE) {
+            PointInTime pit = new PointInTime();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
+            maxEnd = parentDeathDate.getStart().getJulianDay();
+        } else if (parentDeathDate.getFormat() == PropertyDate.BETWEEN_AND || parentDeathDate.getFormat() == PropertyDate.FROM_TO) {
+            PointInTime pit = new PointInTime();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
+            maxEnd = parentDeathDate.getEnd().getJulianDay();
+        } else if (parentDeathDate.getFormat() == PropertyDate.FROM || parentDeathDate.getFormat() == PropertyDate.AFTER) {
+            PointInTime pit = new PointInTime();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxEnd = pit.add(0, 0, +indiMaxYearOld).getJulianDay();
+        } else if (parentDeathDate.getFormat() == PropertyDate.TO || parentDeathDate.getFormat() == PropertyDate.BEFORE) {
+            PointInTime pit = new PointInTime();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
+            maxEnd = parentDeathDate.getStart().getJulianDay();
+        } else {
+            // ABOUT, ESTIMATED, CALCULATED
+            PointInTime pit = new PointInTime();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxStart = pit.add(0, 0, -indiMaxYearOld).getJulianDay();
+            pit.set(parentDeathDate.getStart().getPointInTime(PointInTime.GREGORIAN));
+            maxEnd = pit.add(0, 0, +aboutYear).getJulianDay();
+        }
 
-            // l'intersection des deux intervalles ne doit pas être vide.
-            if ( recEnd >= maxStart && maxEnd >= recStart ) {
-                result = true;
-            } else {
-                result = false;
-
-            }
-        } catch (GedcomException ex) {
+        // l'intersection des deux intervalles ne doit pas être vide.
+        if ( recEnd >= maxStart && maxEnd >= recStart ) {
+            result = true;
+        } else {
             result = false;
+
         }
         return result;
     }

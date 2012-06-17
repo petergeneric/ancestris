@@ -11,7 +11,8 @@ public class FieldPlace extends Field {
     private String countyName = "";
     private String stateName = "";
     private String countryName = "";
-
+    private String locality = "";
+    
     @Override
     public FieldPlace clone() {
 		return (FieldPlace) super.clone();
@@ -22,7 +23,7 @@ public class FieldPlace extends Field {
         if (isEmpty()) {
             return "";
         } else {
-            return cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName+",";
+            return cityName+ ","+ cityCode+ ","+ countyName+ ","+stateName+ ","+countryName+","+locality;
         }        
     }
 
@@ -54,6 +55,11 @@ public class FieldPlace extends Field {
             } else {
                 countryName = "";
             }
+            if (juridictions.length > 5 ) {
+                locality = juridictions[5];
+            } else {
+                locality = "";
+            }
         } 
 
     @Override
@@ -63,7 +69,7 @@ public class FieldPlace extends Field {
    
     @Override
     public boolean isEmpty() {
-        return cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty();
+        return cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty() && locality.isEmpty();
     }
 
     public String getCityName() {
@@ -124,5 +130,18 @@ public class FieldPlace extends Field {
         this.countryName = countryName;
     }
 
+    /**
+     * @return the locality
+     */
+    public String getLocality() {
+        return countryName;
+    }
+
+    /**
+     * @param locality the countyCode to set
+     */
+    public void setLocality(String locality) {
+        this.locality = locality;
+    }
 
 }

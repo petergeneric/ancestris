@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -27,6 +28,8 @@ public class CompletionProvider {
 
     private HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
     private HashMap<String, Integer> gedcomFirstNameSex = new HashMap<String, Integer>();
+
+
 
     /**
      * langue a utiliser pour faire la complétion.
@@ -174,6 +177,16 @@ public class CompletionProvider {
         // EventPlace
         if ( record.getEventPlace()!= null && record.getEventPlace().isEmpty()== false) {
             places.add(record.getEventPlace().getValue(), record.getEventPlace());
+        }
+
+        // IndiPlace
+        if ( record.getIndiPlace()!= null && record.getIndiPlace().isEmpty()== false) {
+            places.add(record.getIndiPlace().getValue(), record.getIndiPlace());
+        }
+
+        // WifePlace
+        if ( record.getWifePlace()!= null && record.getWifePlace().isEmpty()== false) {
+            places.add(record.getWifePlace().getValue(), record.getWifePlace());
         }
 
         // EventType
@@ -324,6 +337,16 @@ public class CompletionProvider {
             places.remove(record.getEventPlace().getValue(), record.getEventPlace());
         }
 
+        // IndiPlace
+        if ( record.getIndiPlace()!= null && record.getIndiPlace().isEmpty()== false) {
+            places.remove(record.getIndiPlace().getValue(), record.getIndiPlace());
+        }
+
+        // WifePlace
+        if ( record.getWifePlace()!= null && record.getWifePlace().isEmpty()== false) {
+            places.remove(record.getWifePlace().getValue(), record.getWifePlace());
+        }
+
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
             eventTypes.remove(record.getEventType().getTag(), record.getEventType());
@@ -426,6 +449,11 @@ public class CompletionProvider {
             occupations.add(occupation, gedcomField);
         }
 
+        for ( String place : PropertyChoiceValue.getChoices(gedcom, "PLAC", false)) {
+            places.add(place, gedcomField, false);
+        }
+        places.fireKeysListener();
+
         // je créee une statistique des sexes/ prénom pour les prénoms du gedcom
         for(Indi indi : gedcom.getIndis()) {
             String firstName = indi.getFirstName() ;
@@ -462,6 +490,9 @@ public class CompletionProvider {
         }
         for ( String occupation : occupations.getKeys()) {
             occupations.remove(occupation, gedcomField);
+        }
+        for ( String place : places.getKeys()) {
+            places.remove(place, gedcomField);
         }
 
         // je vide la statistique des sexes/ prénom des prénoms du gedcom
@@ -562,12 +593,26 @@ public class CompletionProvider {
     /**
      * retourne les lieux triées par ordre alphabétique
      */
-    public List<String> getPlaces() {
+    public List getPlaces() {
         return places.getKeys();
     }
 
     public Locale getLocale() {
         return locale;
+    }
+
+    /**
+     * ajoute un listener
+     */
+    public void addPlacesListener(CompletionListener listener) {
+       places.addKeysListener(listener);
+    }
+
+    /**
+     * supprime un listner
+     */
+    public void removePlacesListener(CompletionListener listener) {
+       places.removeKeysListener(listener);
     }
 
     /**
@@ -686,17 +731,19 @@ public class CompletionProvider {
         }
 
         /**
-         * Add a key
+         * Add a key and its reference
+         * @return whether the reference was actually added (could have been known already)
          */
-        public boolean add(KEY key) {
-            return add(key, null);
+        public boolean add(KEY key, REF reference) {
+            return add(key, reference, true);
+
         }
 
         /**
          * Add a key and its reference
          * @return whether the reference was actually added (could have been known already)
          */
-        public boolean add(KEY key, REF reference) {
+        public boolean add(KEY key, REF reference, boolean fireListeners) {
             // null is ignored
             if (key == null) {
                 return false;
@@ -706,6 +753,9 @@ public class CompletionProvider {
             if (references == null) {
                 references = new HashSet<REF>();
                 key2references.put(key, references);
+                if (fireListeners) {
+                    fireKeysListener();
+                }
             }
             // safety check for reference==null - might be
             // and still was necessary to keep key
@@ -719,10 +769,15 @@ public class CompletionProvider {
             return true;
         }
 
+        public boolean remove(KEY key, REF reference) {
+            return remove(key, reference, true);
+
+        }
+
         /**
          * Remove a reference for given key
          */
-        public boolean remove(KEY key, REF reference) {
+        public boolean remove(KEY key, REF reference, boolean fireListeners) {
             // null is ignored
             if (key == null) {
                 return false;
@@ -739,6 +794,9 @@ public class CompletionProvider {
             // remove value
             if (references.isEmpty()) {
                 key2references.remove(key);
+                if(fireListeners) {
+                    fireKeysListener();
+                }
             }
             return true;
         }
@@ -750,6 +808,37 @@ public class CompletionProvider {
             return new ArrayList<KEY>(key2references.keySet());
         }
 
-    }
+        private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
 
+        /**
+         * retourne les prénoms triées par ordre alphabétique
+         */
+        protected void addKeysListener(CompletionListener listener) {
+            keysListener.add(listener);
+        }
+
+        /**
+         * retourne les prénoms triées par ordre alphabétique
+         */
+        protected void removeKeysListener(CompletionListener listener) {
+            keysListener.remove(listener);
+        }
+
+        /**
+         * retourne les prénoms triées par ordre alphabétique
+         */
+        protected void fireKeysListener() {
+            final List<KEY> keys = new ArrayList<KEY>(key2references.keySet());
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    for (CompletionListener listener : keysListener) {
+                        listener.keyUpdated(keys);
+                    }
+                }
+            });
+
+        }
+    }
 }

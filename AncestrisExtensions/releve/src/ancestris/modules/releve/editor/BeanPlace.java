@@ -1,22 +1,32 @@
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.model.CompletionListener;
+import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldPlace;
-import genj.util.swing.TextFieldWidget;
 import java.awt.BorderLayout;
+import java.util.List;
 
 /**
- * Remarque : remplace genj.edit.beans.SimpleValueBean a laquelle il manque
- * dans le constructeur "defaultFocus = tfield;"
+ * 
  * @author Michel
  */
-public class BeanPlace extends Bean {
+public class BeanPlace extends Bean implements CompletionListener {
 
-    /** members */
-    private TextFieldWidget tfield;
+    //private Java2sAutoTextField tfield;
+    private Java2sAutoComboBox tfield;
+    CompletionProvider completionProvider;
     
-    public BeanPlace() {
-        tfield = new TextFieldWidget("", 8);
+    public BeanPlace(CompletionProvider completionProvider) {
+        this.completionProvider = completionProvider;
+        //tfield = new Java2sAutoTextField(completionProvider.getPlaces());
+        tfield = new Java2sAutoComboBox(completionProvider.getPlaces());
+        completionProvider.addPlacesListener(this);
+
+        tfield.setStrict(false);
+        tfield.setCaseSensitive(false);
+        tfield.setUpperAllFirstChar(true);
+        tfield.setLocale(completionProvider.getLocale());
         tfield.addChangeListener(changeSupport);
 
         setLayout(new BorderLayout());
@@ -31,21 +41,25 @@ public class BeanPlace extends Bean {
     public void setFieldImpl() {
 
         final FieldPlace placeField = (FieldPlace) getField();
-        removeAll();
         if (placeField == null) {
-            tfield.setText("");
-            tfield.setEditable(true);
-            tfield.setVisible(true);
-            add(BorderLayout.NORTH, tfield);
+            //tfield.setText("");
+            tfield.getEditor().setItem("");
         } else {
-            String txt = placeField.toString();
-                tfield.setText(txt);
-                tfield.setEditable(true);
-                tfield.setVisible(true);
-                add(BorderLayout.NORTH, tfield);
+            //tfield.setText(placeField.toString());
+            tfield.getEditor().setItem(placeField.toString());
         }
-        // not changed
-        changeSupport.setChanged(false);
+    }
+
+    @Override
+    protected void replaceValueImpl(Field field) {
+        final FieldPlace placeField = (FieldPlace) getField();
+        if (placeField == null) {
+            //tfield.setText("");
+            tfield.getEditor().setItem("");
+        } else {
+            //tfield.setText(placeField.toString());
+            tfield.getEditor().setItem(placeField.toString());
+        }
     }
 
     /**
@@ -54,18 +68,30 @@ public class BeanPlace extends Bean {
     @Override
     protected void commitImpl() {
         FieldPlace placeField = (FieldPlace) getField();
-        String value = tfield.getText().trim();
+        String oldValue = placeField.toString();
+        String value = tfield.getEditor().getItem().toString().trim();
         placeField.setValue(value);
-        tfield.setText(value);
+        // je mets a jour la liste de completion
+        completionProvider.updatePlaces(placeField, oldValue);
+        tfield.getEditor().setItem(placeField.toString());
     }
 
+    
     @Override
-    protected void replaceValueImpl(Field field) {
-        FieldPlace placeField = (FieldPlace) field;
-        if (placeField == null) {
-            tfield.setText("");
-          } else {
-            tfield.setText(placeField.toString());
-        }
+    public void removeNotify() {
+        completionProvider.removePlacesListener(this);
+        super.removeNotify();
     }
+
+    /**
+     * Implemente CompletionListener
+     * copie la nouvelle liste de completion
+     * @param keyList
+     */
+    @Override
+    public void keyUpdated(List keyList) {
+        tfield.setDataList(keyList);
+    }
+
+
 }

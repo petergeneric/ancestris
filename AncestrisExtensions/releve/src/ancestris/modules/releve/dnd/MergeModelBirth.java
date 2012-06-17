@@ -313,12 +313,12 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la date de naissance du pere
             if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, record.getIndiFatherBirthDate(), record.getEventPlace(), record);
+                copyBirthDate(father, record.getIndiFatherBirthDate(), "", record);
             }
 
             // je copie la date de décès du pere
             if (isChecked(RowType.IndiFatherDeathDate)) {
-                copyDeathDate(father, record.getIndiFatherDeathDate(), record.getEventPlace(), record);
+                copyDeathDate(father, record.getIndiFatherDeathDate(), "", record);
             }
 
             // je copie la profession du pere
@@ -345,12 +345,12 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la date de naissance de la mere
             if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, record.getIndiMotherBirthDate(), record.getEventPlace(), record);
+                copyBirthDate(mother, record.getIndiMotherBirthDate(), "", record);
             }
 
             // je copie la date de décès de la mere
             if (isChecked(RowType.IndiMotherDeathDate)) {
-                copyDeathDate(mother, record.getIndiMotherDeathDate(), record.getEventPlace(), record);
+                copyDeathDate(mother, record.getIndiMotherDeathDate(), "", record);
             }
 
             // je met à jour la profession de la mere

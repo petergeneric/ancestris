@@ -73,8 +73,8 @@ public class Java2sAutoTextField extends JTextField {
                 StringBuilder s3 = new StringBuilder();
                 for( int j = 0 ; j < s.length(); j++) {
                     if ( (i+j == 0 )
-                        || (( i>0 && j==0) && ((s1.charAt(i-1) == ' ') || (s1.charAt(i-1) == '-') ))
-                        || (( j>0) && ((s.charAt(j-1) == ' ') || (s.charAt(j-1) == '-') ))
+                        || (( i>0 && j==0) && ((s1.charAt(i-1) == ' ') || (s1.charAt(i-1) == '-') || (s1.charAt(i-1) == ',') ))
+                        || (( j>0) && ((s.charAt(j-1) == ' ') || (s.charAt(j-1) == '-') || (s.charAt(j-1) == '-') ))
                         ) {
                         s3.append( s.substring(j,j+1).toUpperCase(getLocale()));
                     } else {
@@ -149,8 +149,12 @@ public class Java2sAutoTextField extends JTextField {
          */
         public void setText(String s ) {
             try {
-                super.remove(0, getLength());
-                super.insertString(0, s, null);
+                String oldValue = super.getText(0,getLength());
+                if (!oldValue.equals(s)) {
+                    super.remove(0, getLength());
+                    super.insertString(0, s, null);
+                    changeSupport.fireChangeEvent();
+                }
             } catch (BadLocationException ex) {
                 //Exceptions.printStackTrace(ex);
             }
@@ -161,7 +165,7 @@ public class Java2sAutoTextField extends JTextField {
 
     public Java2sAutoTextField(List list) {
         isCaseSensitive = false;
-        isStrict = true;
+        isStrict = false;
         autoComboBox = null;
         if (list == null) {
             throw new IllegalArgumentException("values can not be null");
@@ -174,7 +178,7 @@ public class Java2sAutoTextField extends JTextField {
 
     Java2sAutoTextField(List list, Java2sAutoComboBox b) {
         isCaseSensitive = false;
-        isStrict = true;
+        isStrict = false;
         autoComboBox = null;
         if (list == null) {
             throw new IllegalArgumentException("values can not be null");

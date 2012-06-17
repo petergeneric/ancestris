@@ -54,6 +54,18 @@ public class RelevePanel extends javax.swing.JPanel  {
         
     }
 
+    @Override
+    public void setBounds(int x,
+                      int y,
+                      int width,
+                      int height) {
+        super.setBounds(x, y, width, height);
+        jSplitPane1.setDividerLocation(width
+                             - jSplitPane1.getInsets().right
+                             - jSplitPane1.getDividerSize()
+                             - releveEditor.getEditorWidth());
+    }
+
     /**
      * sauvegarde de la configuration a la fermeture du composant
      */

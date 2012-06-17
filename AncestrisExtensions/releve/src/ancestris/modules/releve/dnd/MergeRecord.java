@@ -4,6 +4,7 @@ import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
+import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
@@ -868,15 +869,18 @@ public class MergeRecord {
     }
 
     
-    static private PointInTime getYear(PointInTime pit) {
-        return new PointInTime(PointInTime.UNKNOWN,PointInTime.UNKNOWN,pit.getYear());
+    static private PointInTime getYear(PointInTime pit) throws GedcomException {
+        PointInTime gregorianPit = pit.getPointInTime(PointInTime.GREGORIAN);
+        return new PointInTime(PointInTime.UNKNOWN,PointInTime.UNKNOWN,gregorianPit.getYear());
     }
-    static private PointInTime getYear(PointInTime pit, int shiftYear) {
-        return new PointInTime(PointInTime.UNKNOWN,PointInTime.UNKNOWN,pit.getYear()+shiftYear);
+    static private PointInTime getYear(PointInTime pit, int shiftYear) throws GedcomException {
+        PointInTime gregorianPit = pit.getPointInTime(PointInTime.GREGORIAN);
+        return new PointInTime(PointInTime.UNKNOWN,PointInTime.UNKNOWN,gregorianPit.getYear()+shiftYear);
     }
 
-    static protected PointInTime getYear(PointInTime refPit, Delta age) {
-        PointInTime pit = new PointInTime(refPit.getDay(), refPit.getMonth(),refPit.getYear());
+    static protected PointInTime getYear(PointInTime refPit, Delta age) throws GedcomException {
+        PointInTime gregorianPit = refPit.getPointInTime(PointInTime.GREGORIAN);
+        PointInTime pit = new PointInTime(gregorianPit.getDay(), gregorianPit.getMonth(),gregorianPit.getYear());
 
         pit.add( -age.getDays(), -age.getMonths(), -age.getYears() );
 
@@ -1214,7 +1218,7 @@ public class MergeRecord {
      * @param yearShift
      * @return
      */
-    static private PropertyDate calulateDateBeforeMinusShift(PropertyDate birthDate, int yearShift, String phrase) {
+    static private PropertyDate calulateDateBeforeMinusShift(PropertyDate birthDate, int yearShift, String phrase) throws GedcomException {
         // le mariage des parents est avant la naissance de l'enfant arrondie a l'année
         PropertyDate marriageDate = new PropertyDate();
         if (birthDate.getFormat() == PropertyDate.BETWEEN_AND || birthDate.getFormat() == PropertyDate.FROM_TO) {

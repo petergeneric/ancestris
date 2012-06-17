@@ -11,7 +11,7 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
-import ancestris.modules.releve.file.ReleveFileAncestrisV1;
+import ancestris.modules.releve.file.ReleveFileAncestrisV2;
 import ancestris.modules.releve.file.ReleveFileGedcom;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
@@ -1113,7 +1113,7 @@ public final class ReleveTopComponent extends TopComponent  {
                 //ReleveFileGedcom.loadFile(context.getGedcom(), fileBuffer);
 
                 InputStream is = getClass().getResourceAsStream("/ancestris/modules/releve/file/bourbons.txt");
-                fileBuffer = ReleveFileAncestrisV1.loadFile(is);
+                fileBuffer = ReleveFileAncestrisV2.loadFile(is);
                 dataManager.addRecords(fileBuffer, false, fileBuffer.getPlaces().get(0), 1);
                 panelConfig.setPlace(fileBuffer.getPlaces().get(0));
                 setCurrentFile(null);
