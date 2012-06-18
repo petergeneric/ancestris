@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../ancestris.css">
+</head>
+<body>
+  <center>
+  <h2 class="ancestris_help_title">Gestion des Sources <br>et Lieux de stockage</h2>
+  </center>
+  <br>
+  <p class="justify">
+    Les informations qui sont &agrave; la base de toute g&eacute;n&eacute;alogie peuvent &ecirc;tre le r&eacute;sultat de recherches personnelles (Archives, notaires,...), de partage avec d'autres g&eacute;n&eacute;alogistes, le recueil d'informations orales, papiers de famille, etc...<br>
+    Quelle qu’en soit l'origine, tout bon g&eacute;n&eacute;alogiste se doit d'afficher ses sources. Il n'est pas une g&eacute;n&eacute;alogie sans sources.
+  </p>
+  <br>
+  <b>Deux mots-cl&eacute;s</b><br>
+  <ul>
+    <li><b>Le lieu de stockage</b> (pour la norme Gedcom, REPO, de l'anglais "repository", lieu de stockage, de d&eacute;p&ocirc;t): C'est le lieu de <b><u>d&eacute;p&ocirc;t physique</u></b> d'un document <b><u>original</u></b> (mairie, archives d&eacute;partementales, etc... ou simplement un classeur chez vous).</li>
+    <li><b>La source</b> (SOUR): c'est le document qui contient l'information (un registre paroissial, une table d&eacute;cennale, etc..).</li>
+  </ul>
+  <p class="justify">
+  Bien qu'il s'agisse de deux entit&eacute;s diff&eacute;rentes, il est plus logique et plus efficient de cr&eacute;er le lieu de stockage avant de cr&eacute;er la source. D'une part la source est contenue dans le lieu de stockage, d'autre part, lors de la cr&eacute;ation d'une source vous devrez faire un lien vers son lieu de stockage.<br>
+  </p>
+  <a name="first_steps_repo_and_source_management_1"></a>  
+  <h3 class="ancestris_help_title">Cr&eacute;ation d'un lieu de stockage</h3>
+  <ul>
+    <li>clic droit dans un endroit vide de la Table des entit&eacute;s, de l'Arbre dynamique ou d'un &eacute;diteur</li>
+    <li>s&eacute;lectionner la ligne "Gedcom <i>votre_fichier</i>.ged", puis dans le sous-menu "Cr&eacute;er un (des)	lieu(x) de stockage".</li>
+    <li>cliquer sur "Ex&eacute;cuter et cr&eacute;er un lieu de stockage".</li> 
+    <li>l'<a href="../basic_use/basic_use_view_editors_gedcom.html">&eacute;diteur Gedcom</a> affiche une arborescence de ce type:</li>
+  </ul>
+  <br>
+  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_SOUR.png" width="628" height="108" hspace="5" vspace="5" alt="Exemple d'un lieu de stockage."><br>
+  Cette fen&ecirc;tre affiche un certain nombre d'&eacute;tiquettes par d&eacute;faut que vous pouvez modifier, pour l'adapter &agrave; vos &eacute;l&eacute;ments d'information. Vous allez donc <i>g&eacute;rer les &eacute;tiquettes</i>.<br>
+  <br>
+  <b>G&eacute;rer les &eacute;tiquettes</b><br>
+  <ul>
+    <li>Suppression d'une &eacute;tiquette:</li>
+      <ul>
+        <li>clic droit sur la ligne, puis dans le menu cliquer sur "Couper" (par exemple, pour supprimer STAE, inutilis&eacute; en France).</li>
+      </ul>
+    <li>Ajout d'une &eacute;tiquette:</li>
+      <ul>
+        <li>un clic droit sur la 1&egrave;re ligne (<font color="red"><b>1</b></font>) "@Rx@ REPO", puis clic gauche sur "Liste des	propri&eacute;t&eacute;s Gedcom" vous permet de choisir parmi des labels pr&eacute;-&eacute;tablis (l'option tout en bas "Ajouter les sous-propri&eacute;t&eacute;s par d&eacute;faut" doit &ecirc;tre coch&eacute;e). Cliquer sur "OK" pour confirmer.<br>
+        La "Liste des propri&eacute;t&eacute;s Gedcom" propose les &eacute;tiquettes pouvant &ecirc;tre utilis&eacute;es dans le respect de la	grammaire Gedcom, selon la cible point&eacute;e.</li>
+        <li>Un clic droit sur certaines &eacute;tiquettes, puis clic gauche sur "Ajouter une propri&eacute;t&eacute;", vous proposera des sous-&eacute;tiquettes parmi les &eacute;tiquettes d&eacute;j&agrave; utilis&eacute;es &agrave; ce niveau.</li>
+      </ul>
+  </ul>
+  <p class="justify">
+    Un lieu de d&eacute;p&ocirc;t est maintenant cr&eacute;&eacute;, il pourra &ecirc;tre r&eacute;utilis&eacute; pour l'ensemble de votre g&eacute;n&eacute;alogie. D&eacute;sormais, il appara&icirc;tra dans le menu d&eacute;roulant qui s'ouvrira lors des prochaines cr&eacute;ations de "Lieux de stockage".<br>
+    Les lieux de stockage sont list&eacute;s dans l'<a href="../first_steps/first_steps_gedcoms_manager.html">Explorateur Gedcom</a> et dans la <a href="../basic_use/basic_use_view_table_ancestris.html">Table des entit&eacute;s</a>, d'o&ugrave; ils peuvent extraits pour &ecirc;tre modifi&eacute;s (orthographe, par exemple).
+  </p>
+  <a name="first_steps_repo_and_source_management_2"></a>  
+  <h3 class="ancestris_help_title">Cr&eacute;ation d'une source</h3>
+  <ul>
+    <li>clic droit dans un endroit vide de la Table, de l'arbre ou d'un &eacute;diteur</li>
+    <li>s&eacute;lectionner la ligne "Gedcom <i>votre fichier</i>.ged'", puis dans le sous-menu, "Cr&eacute;er une (des) Source(s)"</li>
+    <li>cliquer sur  "Ex&eacute;cuter et cr&eacute;er une Source".</li>       
+    <li>l'&eacute;diteur Gedcom affiche une arborescence &agrave; compl&eacute;ter avec vos &eacute;l&eacute;ments d'information.</li>
+  </ul>
+  <br>
+  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_REPO.png" width="326" height="132" hspace="5" vspace="5" alt="Un exemple de Source."><br>
+  <br>
+  <p>
+    Petite explication de texte (<font color="red"><b>2</b></font>):
+    <ul>
+      <ul>
+        <li>AUTH ( Auteur): comprendre "D&eacute;positaire ou Cr&eacute;ateur du document".</li>
+        <li>TITL (Titre): utilis&eacute;, ici, comme "Intitul&eacute; du document".</li>
+      </ul>
+    </ul>
+  </p>
+  Vous pouvez modifier les &eacute;tiquettes sur le m&ecirc;me principe que pour REPO.<br>
+  <br> 
+  Il reste &agrave; localiser la source, c'est-&agrave;-dire cr&eacute;er un lien avec un lieu de stockage.
+  <ul>
+    <ul>
+      <li>clic droit sur la 1&egrave;re ligne "@Sx@ SOUR" (<font color="red"><b>1</b></font>), descendre sur Source 'Sx'</li>
+      <li>dans le sous-menu, s&eacute;lectionner "Cr&eacute;er  ou &eacute;tablir une liaison vers un Lieu de Stockage".</li>
+      <li>dans le menu d&eacute;roulant, rep&eacute;rer le lieu, confirmer par "Ex&eacute;cuter et Cr&eacute;er un Lieu de 	Stockage"</li>
+      Une nouvelle ligne est cr&eacute;&eacute;e dans la fen&ecirc;tre de l'&eacute;diteur Gedcom (<font color="red"><b>3</b></font>).
+    </ul>
+  </ul>
+  <p class="justify">
+    Une source est maintenant cr&eacute;&eacute;e, elle  pourra &ecirc;tre r&eacute;utilis&eacute;e pour l'ensemble de votre g&eacute;n&eacute;alogie. D&eacute;sormais, elle appara&icirc;tra dans le menu d&eacute;roulant qui s'ouvrira lors des prochaines cr&eacute;ations de "Source(s)". Les diff&eacute;rentes utilisations d'une source sont r&eacute;capitul&eacute;es en fin d'entit&eacute;  (<font color="red"><b>4</b></font>).<br> 
+    Les Sources sont list&eacute;es dans l'<a href="../first_steps/first_steps_gedcoms_manager.html">Explorateur Gedcom</a> et dans la <a href="../basic_use/basic_use_view_table_ancestris.html">Table des entit&eacute;s</a>, d'o&ugrave; elles peuvent &ecirc;tre affich&eacute;es pour &ecirc;tre modifi&eacute;es (orthographe, par exemple).</p> 
+  </p>
+  <br>
+  <p class="justify">
+    <u>Une bonne gestion des sources</u> n&eacute;cessite <u>quelques pr&eacute;cisions suppl&eacute;mentaires</u>.<br>
+    <br>
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Tout d'abord, il faut enregistrer sa c&ocirc;te(<font color="red"><b>*</b></font>) (CALN):
+    <ul>
+      <ul>
+        <li>&agrave; partir de la fen&ecirc;tre "SOUR": clic droit sur la ligne REPO, s&eacute;lectionner "Ajouter une 	propri&eacute;t&eacute;".</li>
+        <li>un clic sur "Num&eacute;ro de r&eacute;pertoire CALN" cr&eacute;e une zone de saisie.</li>
+      </ul>
+    </ul>
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Puis, le type de support m&eacute;dia utilis&eacute; pour cette source:
+    <ul>
+      <ul>
+        <li>clic gauche sur la ligne "CALN" puis, sur "Liste des propri&eacute;t&eacute;s Gedcom" vous propose le label "MEDI".</li>
+        <li>un clic sur "Ok" cr&eacute;e une zone de saisie associ&eacute;e &agrave; un menu d&eacute;roulant pr&eacute;-&eacute;tabli (si besoin, vous pouvez ajouter des types de support).</li> 
+       </ul>
+    </ul>
+  </p>
+  <br>
+  (<font color="red"><b>*</b></font>)num&eacute;ro qui sert &agrave; identifier une pi&egrave;ce dans une collection. Les normes de codifications nationales des A.D. ne sont pas toujours respect&eacute;es. La cote peut &ecirc;tre de ce type de format:<br>
+  <img src="../images/screenshots/screenshot_first_steps_repo_and_source_management_tag_CALN.png" width="646" height="70" hspace="5" vspace="5" alt="Un exemple de c&ocirc;te."><br>
+  <br>    
+  <p class="justify">
+    <img src="../images/blue-sqr-mid.gif" width="12" height="12">&nbsp;Et pour finir d'enregistrer vos informations, cr&eacute;er une &eacute;tiquette "donn&eacute;es" (DATA en Gedcom). Vous savez faire, toujours le m&ecirc;me principe:
+    <ul>
+      <ul>
+        <li>clic droit sur la 1&egrave;re ligne "Liste des propri&eacute;t&eacute;s Gedcom", s&eacute;lectionner "Donn&eacute;es". Si l'option tout en bas "Ajouter les sous-propri&eacute;t&eacute;s par d&eacute;faut" est coch&eacute;e, vous aurez en prime sa sous-&eacute;tiquette EVEN.</li>
+        <li>un menu d&eacute;roulant est associ&eacute; &agrave; EVEN, m&ecirc;me pas besoin d'&eacute;crire. Choisir, confirmer par "OK".<br>
+        Vous pouvez utiliser cette zone &agrave; votre gr&eacute; (par exemple, pour un registre contenant plusieurs types d'actes).</li>
+        <li>&agrave; partir de la ligne EVEN, clic droit pour "Ajouter une propri&eacute;t&eacute; Gedcom" et choisir "DATE" et "PLAC". Toujours "OK" pour confirmer.</li>
+        <li>Il ne vous reste plus qu'&agrave; compl&eacute;ter les zones de saisie.</li>
+        On peut ajouter autant de sous-&eacute;tiquettes que n&eacute;cessaire.
+      </ul>
+    </ul>
+  </p>
+  <br>
+  <table border="1" width="100%" class="ancestris_stop_tip">
+    <tr>
+      <td>
+        <table border="0" width="100%">
+          <tr>
+            <td width="15%">
+              <center><img src="../images/idea.png" width="35" height="39"></center>
+            </td>
+            <td>
+              Pour s&eacute;lectionner deux &eacute;tiquettes &agrave; la fois:<br> Ctrl (maintenu) + clic gauche sur chaque ligne.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <p>
+    Votre &eacute;diteur doit maintenant ressembler &agrave; &ccedil;a:
+    <pre>
+    @S1@ SOUR
+      AUTH Archives D&eacute;partementales du Cantal
+      TITL Site Internet Arch. D&eacute;p. Cantal - Allanche - 1850-1859 - Naissances
+      DATA
+        EVEN BIRT
+          DATE 1850-1859
+          PLAC ,Allanche,15160,Cantal,Auvergne, France
+      REPO Archives D&eacute;partementales du Cantal (R1)
+        CALN AD2E047/10
+          MEDI electronic
+      CHAN 2 F&eacute;v 2009, 13:06:24
+    </pre>
+    L'ordre des &eacute;tiquettes peut &ecirc;tre diff&eacute;rent.
+  </p>
+  <br>
+  <p class="justify">
+  Maintenant tout est pr&ecirc;t pour pouvoir passer &agrave; l'&eacute;tape suivante <a href="../first_steps/first_steps_genealogy_import.html">Importer</a> ou <a href="../first_steps/first_steps_new_genealogy.html">cr&eacute;er une g&eacute;n&eacute;alogie</a>.
+  </p>
+  <br>
+  <!-- Debut des boutons Precedent - Suivant -->
+  <br>
+  <br>
+  <table border="0" width="100%">
+    <tr>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_ancestris_plugins.html">Page&nbsp;pr&eacute;c&eacute;dente</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="80%">
+        &nbsp;
+      </td>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_genealogy_import.html">Page&nbsp;suivante</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- Fin des boutons Precedent - Suivant -->
+
+<!-- French Help - updated on 06/02/2012 -->
+</body>
+</html>
+

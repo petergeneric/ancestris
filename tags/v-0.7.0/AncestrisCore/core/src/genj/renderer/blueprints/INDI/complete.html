@@ -1,0 +1,57 @@
+ <table border="0">
+ <tr>
+  <td rowspan=5>
+   <media/>
+  </td>
+  <td>
+   <br>
+  </td>
+  <td>
+   <table>
+    <tr>
+     <td>
+      <b><name tag=INDI></b>:&nbsp;<font color=blue><b><prop path=INDI></b></font>&nbsp;-&nbsp;
+      <b><name tag=SEX></b>:&nbsp;<prop path=INDI:SEX img=yes txt=no>
+     </td>
+    </tr>
+    <tr>
+     <td valign="top">
+      <b><name tag=NAME></b>:&nbsp;
+      <prop path=INDI:NAME>
+     </td>
+    </tr>
+    <tr>
+     <td valign="top">
+      <b><name tag=ADDR></b>:&nbsp;<prop path=INDI:RESI:ADDR>,
+      <prop path=INDI:RESI:ADDR:CITY>&nbsp<prop path=INDI:RESI:ADDR:CTRY>
+     </td>
+    </tr>
+    <tr>
+     <td valign="top">
+      <u><b><name tag=OCCU></b></u>:&nbsp;<prop path=INDI:OCCU>
+     </td>
+    </tr>
+   </table>
+  </td>
+ </tr>
+ </table>
+ <table width="100%" border="0">
+ <tr>
+  <td valign="up" width="20%">&nbsp;
+  <b><name tag=BIRT></b>:&nbsp;
+  </td>
+  <td>
+   <prop path=INDI:BIRT:DATE img=no>,
+   <prop path=INDI:BIRT:PLAC >
+  </td>
+ </tr>
+ <tr>
+  <td valign="up" width="20%">&nbsp;
+  <b><name tag=DEAT></b>:&nbsp;
+  </td>
+  <td>
+   <prop path=INDI:DEAT:DATE>,
+   <prop path=INDI:DEAT:PLAC >
+  </td>
+ </tr>
+ </table>

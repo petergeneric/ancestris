@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../ancestris.css">
+</head>
+<body>
+  <center>
+  <h2 class="ancestris_help_title">Problemi riscontrati al momento dell'importazione</h2>
+  </center>
+  <br>
+  <p class="justify">
+    Molti programmi non rispettano la norma Gedcom, quindi &egrave; molto facile che voi constatiate che vi sono problemi legati alla migrazione del vostro file. Parliamo soltanto dei problemi di cui ci siamo accorti o ci avete segnalato. 
+    Partecipate al miglioramento di Ancestris segnalandone altri per mezzo 
+    <a href="../basic_use/basic_use_ancestris_different_aids_available.html">della lista di discussione</a>.
+  </p>
+  <h3 class="ancestris_help_title">Problemi legati al programma Heredis</h3>
+  <ul>
+    <li>Heredis esporta i tags (etichette) a vuoto: bisogna aggiungere la Y almeno per i principali (DEAT, MARR, MARC, DIV).</li>
+    <li>Due grossi errori per le date:
+      <ul>
+        <li>L'anno repubblicano (francese) &egrave; esportato in anno scritto in cifre romane (esempio, "15 NIVO anno XII" mentre la norma Gedcom esige "15 NIVO 12").</li>
+        <li>Cattiva gestione dell'indicatore del tipo di calendario (juliano, gregoriano, repubblicano, ...): 
+        così l'esportazione delle date del calendario repubblicano non rispetta la norma. 
+        L'indicatore di calendario @DFRENCH R@ dovrebbe essere prima della data, ma DOPO l'indicatore 
+        di posizionamento (BEF per esempio per dire"prima di tale data", ecc). 
+        Heredis, invece mette sempre l'indicatore di calendario dopo l'etichetta DATE 
+        nel file gedcom, anche se abbiamo degli ABT, BET...AND. Così dovremmo 
+        avere: <font color="red">2 DATE BEF @DFRENCH R@ 15 NIVO 12</font> <i>(formato 
+        Gedcom)</i> invece abbiamo <font color="red">2 DATE @DFRENCH R@ BEF 15 
+        NIVO an XII</font> <i>(formato Heredis).</i>.<br>
+        L'indicatore di calendario juliano deve essere esportato sempre per date anteriori al 1582, pu&ograve; essere soppresso in questi casi.</li>
+      </ul>
+    </li>
+    <li>Tags <i>(tag = etichetta gedcom)</i> fuori contesto:
+      <ul>
+        <li>DATE sotto OBJE.</li>
+        <li>TIME sotto DATE ovunque.</li>
+        <li>ADDR sotto INDI/FAM senza RESI.</li>
+      </ul>
+    </li>
+    <li>Tags utenti (sono delle etichette che non esistono nella norma Gedcom ma che possono permettere a un genealogista di aggiungere informazioni supplementari) senza "<b>_</b>" (trattino basso): WWW (sito web), EMAIL (indirizzo mail), HEAL, ecc.</li>
+    <li>Campi utente Heredis: E' esportato 1 TAG valore con il TAG da scegliere in una lista di tags Gedcom standard fuori contesto. Bisogna prevedere una corrispondenza.</li> 
+    <li>Fonti: Cattiva gestione delle fonti e dei luoghi di conservazione.</li>
+  </ul>
+  <b>Soluzione Ancestris:</b> utilizzare il plugin "Importazione – Heredis Import".
+  <h3 class="ancestris_help_title">Problemi legati al programma G&eacute;n&eacute;atique</h3>
+  <p class="justify">
+    Nessuna evidenza al momento di problemi di transfert dei files provenienti da G&eacute;n&eacute;atique. Questo non vuol dire che non ce ne potrebbero essere, ma pi&ugrave; semplicemente che nessun utente di G&eacute;n&eacute;atique ci ha informato.
+  </p>
+  <b>Solution Ancestris:</b> segnalare il vostro eventuale problema per mezzo della lista di discussione.
+  <h3 class="ancestris_help_title">Problemi legati al programma Genealogie.com</h3>
+  <ul>
+    <li>I files generati dal sito di genealogia genealogie.com non contengono l'informazione relativa al SUBMitter (la persona che ha raccolto i dati presenti nel file di genealogia). Una tale indicazione &egrave; obbligatoria per essere conforme alla norma.</li>
+  </ul>
+  <b>Soluzione Ancestris:</b> Creare il SUBMitter con MENU/Strumenti/Preferenze/Dati/Fornitore
+  <h3 class="ancestris_help_title">Problemi legati al programma LifeLines</h3>
+  <ul>
+    <li>Con i parametri per difetto, LifeLines non esporta il Tag SUBM che &egrave; obbligatorio.</li>
+  </ul>
+  <b>Soluzione Ancestris:</b> Creare l'informazione con Strumenti/Preferenze/Dati/Fornitore.
+  <h3 class="ancestris_help_title">Problemi legati al programma Family Tree Builder</h3>
+  <ul>
+    <li>Family Tree Builder (FTB) genera numerosi Tags proprietari che rendono meno leggibile il file Gedcom.</li>
+  </ul>
+  <b>Soluzione Ancestris:</b> usare il plugin "Cancellazione di etichette" di Strumenti/Gedcom.
+  <br>
+  <!-- Debut des boutons Precedent - Suivant -->
+  <br>
+  <br>
+  <table border="0" width="100%">
+    <tr>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_conform_import_genealogy.html">Pagina precedente</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="80%">
+        &nbsp;
+      </td>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+              <font size="-1">
+              <a href="../first_steps/first_steps_new_genealogy.html">Pagina seguente</a>
+              </font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- Fin des boutons Precedent - Suivant -->
+
+<!-- Italian Help - updated on 06/07/2012 -->
+</body>
+</html> 
+
+ 
+ 
+
+
+ 
+ 
+
+
+ 
