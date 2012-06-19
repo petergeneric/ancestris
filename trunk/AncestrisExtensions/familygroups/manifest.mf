@@ -5,5 +5,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/modules/familygroups/Bundle.properti
 OpenIDE-Module-Requires: 
   ancestris.modules.document.view,
   ancestris.modules.optionspanel
-OpenIDE-Module-Specification-Version: 0.7.0
+OpenIDE-Module-Specification-Version: 0.8.0
 

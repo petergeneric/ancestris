@@ -4,5 +4,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/modules/imports/heredis/Bundle.prope
 OpenIDE-Module-Requires: 
   ancestris.modules.console,
   ancestris.modules.imports.wizard
-OpenIDE-Module-Specification-Version: 0.7.0
+OpenIDE-Module-Specification-Version: 0.8.0
 
