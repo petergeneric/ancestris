@@ -4,5 +4,5 @@ OpenIDE-Module: ancestris.modules.gedcom.utilities
 OpenIDE-Module-Layer: ancestris/modules/gedcom/utilities/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/utilities/Bundle.properties
 OpenIDE-Module-Provides: ancestris.modules.gedcom.utilities
-OpenIDE-Module-Specification-Version: 0.7.0
+OpenIDE-Module-Specification-Version: 0.8.0
 

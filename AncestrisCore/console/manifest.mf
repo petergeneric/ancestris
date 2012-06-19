@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: ancestris.modules.console
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/console/Bundle.properties
 OpenIDE-Module-Provides: ancestris.modules.console
-OpenIDE-Module-Specification-Version: 0.7.0
+OpenIDE-Module-Specification-Version: 0.8.0
 

@@ -4,4 +4,4 @@ OpenIDE-Module: ancestris.api.imports
 OpenIDE-Module-Localizing-Bundle: ancestris/api/imports/Bundle.properties
 OpenIDE-Module-Provides: ancestris.api.imports.api
 OpenIDE-Module-Requires: ancestris.modules.console
-OpenIDE-Module-Specification-Version: 0.7.0
+OpenIDE-Module-Specification-Version: 0.8.0
