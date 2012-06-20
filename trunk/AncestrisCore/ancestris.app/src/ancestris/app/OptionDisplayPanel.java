@@ -25,6 +25,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     // Values
     Locale[] locales = {
         new Locale("br"),
+        new Locale("da"),
         Locale.GERMAN,
         Locale.ENGLISH,
         new Locale("es"),
