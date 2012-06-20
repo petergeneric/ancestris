@@ -23,10 +23,10 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author daniel
  */
-@ServiceProvider(position=300,service=LookAndFeelProvider.class)
-public class LnFJtattoo extends LookAndFeelProvider{
+@ServiceProvider(position=311,service=LookAndFeelProvider.class)
+public class LnFJtattooSmart extends LookAndFeelProvider{
 
-    private static final String KEY = "lnf_Jtattoo";
+    private static final String KEY = "lnf_JtattooSmart";
 
     @Override
     public String getName() {
@@ -35,7 +35,7 @@ public class LnFJtattoo extends LookAndFeelProvider{
 
     @Override
     public String getDisplayName() {
-        return NbBundle.getMessage(LnFJtattoo.class, KEY);
+        return NbBundle.getMessage(LnFJtattooSmart.class, KEY);
     }
 
     @Override
