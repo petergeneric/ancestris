@@ -187,7 +187,7 @@ public class ChoosePropertyBean extends JComponent {
   /**
    * Tag List Cell Renderer
    */
-  class MetaDefRenderer extends DefaultListCellRenderer implements ListCellRenderer {
+  class MetaDefRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
 
     /**
      * Return component for rendering list element

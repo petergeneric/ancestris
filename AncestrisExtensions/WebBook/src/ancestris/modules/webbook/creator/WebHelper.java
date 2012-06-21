@@ -23,8 +23,6 @@ import java.util.List;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import com.sun.image.codec.jpeg.*;
-
 import ancestris.modules.webbook.Log;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.transfer.FTPRegister;
@@ -33,6 +31,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.imageio.ImageIO;
 import org.openide.filesystems.FileUtil;
 
 /**
@@ -672,14 +671,9 @@ public class WebHelper {
             createDir(outfile, false);
 
             // save thumbnail image to OUTFILE
-            out = new BufferedOutputStream(new FileOutputStream(outfile));
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-            JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(thumbImage);
-            int qual = Math.max(0, Math.min(quality, 100));
-            param.setQuality((float) qual / 100.0f, false);
-            encoder.setJPEGEncodeParam(param);
-            encoder.encode(thumbImage);
-            out.close();
+            // XXX: previously used com.sun.image.codec.jpeg.* with jpeg
+            // XXX:quality 100. Should we use png images instead?
+            ImageIO.write(thumbImage, "jpeg", out_file);
             result = true;
         } catch (Exception e) {
             // e.printStackTrace();
