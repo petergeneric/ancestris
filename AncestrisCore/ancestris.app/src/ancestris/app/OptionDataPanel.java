@@ -9,6 +9,7 @@ import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import org.openide.awt.StatusDisplayer;
 
+@SuppressWarnings(value={"unchecked", "rawtypes"})
 final class OptionDataPanel extends javax.swing.JPanel {
 
     private final OptionDataOptionsPanelController controller;

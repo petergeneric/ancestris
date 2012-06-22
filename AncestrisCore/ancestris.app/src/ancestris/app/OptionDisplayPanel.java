@@ -19,6 +19,7 @@ import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
 
+@SuppressWarnings(value={"unchecked", "rawtypes"})
 final class OptionDisplayPanel extends javax.swing.JPanel {
 
     private final OptionDisplayOptionsPanelController controller;

@@ -10,6 +10,7 @@ import javax.swing.SpinnerNumberModel;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle;
 
+@SuppressWarnings(value={"unchecked", "rawtypes"})
 final class OptionFormatPanel extends javax.swing.JPanel {
 
     private final OptionFormatOptionsPanelController controller;
