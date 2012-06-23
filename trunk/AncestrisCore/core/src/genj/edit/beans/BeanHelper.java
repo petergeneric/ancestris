@@ -48,7 +48,7 @@ public class BeanHelper {
     public static String formatToolTip(PropertyBean bean, String tag, String tip) {
         if (tag != null) {
             if (tip != null && tip.length() == 0) {
-                tip = bean.RESOURCES.getString("HINT_" + tag, false); // NOI18N
+                tip = PropertyBean.RESOURCES.getString("HINT_" + tag, false); // NOI18N
             }
             if (tip == null) {
                 tip = Gedcom.getInfo(tag);
