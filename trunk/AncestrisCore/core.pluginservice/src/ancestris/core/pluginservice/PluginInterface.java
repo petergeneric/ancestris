@@ -5,6 +5,7 @@
 package ancestris.core.pluginservice;
 
 import java.util.Collection;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -19,5 +20,5 @@ public interface PluginInterface {
 
     public String getPluginVersion();
     public boolean launchModule(Object o);
-    public Collection<Class> getDefaultOpenedViews();
+    public Collection<Class<? extends TopComponent>> getDefaultOpenedViews();
 }

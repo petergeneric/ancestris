@@ -86,8 +86,8 @@ public final class NewGedcomWizardIterator implements WizardDescriptor.Instantia
     }
 
     @Override
-    public Set instantiate() throws IOException {
-        return Collections.EMPTY_SET;
+    public Set<Object> instantiate() throws IOException {
+        return (Set<Object>)Collections.EMPTY_SET;
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -104,7 +105,7 @@ public abstract class AncestrisPlugin implements PluginInterface {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Collection<Class> getDefaultOpenedViews() {
-        return new ArrayList<Class>();
+    public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
+        return new ArrayList<Class<? extends TopComponent>>();
     }
 }
