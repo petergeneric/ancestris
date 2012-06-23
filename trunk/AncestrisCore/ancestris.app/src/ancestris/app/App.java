@@ -174,14 +174,14 @@ public class App {
 
         try {
             // get XlibWrapper.SetToolkitErrorHandler() and XSetErrorHandler() methods
-            Class xlibwrapperClass = Class.forName("sun.awt.X11.XlibWrapper");
+            Class<?> xlibwrapperClass = Class.forName("sun.awt.X11.XlibWrapper");
             final Method setToolkitErrorHandlerMethod = xlibwrapperClass.getDeclaredMethod("SetToolkitErrorHandler", (Class[])null);
-            final Method setErrorHandlerMethod = xlibwrapperClass.getDeclaredMethod("XSetErrorHandler", new Class[]{Long.TYPE});
+            final Method setErrorHandlerMethod = xlibwrapperClass.getDeclaredMethod("XSetErrorHandler", new Class<?>[]{Long.TYPE});
             setToolkitErrorHandlerMethod.setAccessible(true);
             setErrorHandlerMethod.setAccessible(true);
 
             // get XToolkit.saved_error_handler field
-            Class xtoolkitClass = Class.forName("sun.awt.X11.XToolkit");
+            Class<?> xtoolkitClass = Class.forName("sun.awt.X11.XToolkit");
             final Field savedErrorHandlerField = xtoolkitClass.getDeclaredField("saved_error_handler");
             savedErrorHandlerField.setAccessible(true);
 

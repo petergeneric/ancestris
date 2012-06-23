@@ -25,7 +25,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
 
     @Override
     protected Class<?>[] cookieClasses() {
-        return new Class[]{
+        return new Class<?>[]{
                     String.class
                 };
     }

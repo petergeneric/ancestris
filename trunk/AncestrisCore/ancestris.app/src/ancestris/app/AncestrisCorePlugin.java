@@ -2,28 +2,29 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ancestris.app;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.TopComponent;
 
 /**
  *
  * @author daniel
  */
-@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
-public class AncestrisCorePlugin extends AncestrisPlugin{
+@ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
+public class AncestrisCorePlugin extends AncestrisPlugin {
 
     @Override
-    public Collection<Class> getDefaultOpenedViews() {
-        return Arrays.asList(new Class[]{
-            TreeTopComponent.class,
-            TableTopComponent.class,
-            EditTopComponent.class
-        });
-    }
+    public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
+        List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(3);
+        result.add(TreeTopComponent.class);
+        result.add(TableTopComponent.class);
+        result.add(EditTopComponent.class);
+        return result;
 
+    }
 }

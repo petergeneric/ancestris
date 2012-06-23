@@ -72,7 +72,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent impleme
         if (view != null) {
             atc.open();
             atc.requestActive();
-            return (ReportView) view;
+            return view;
         }
 
         //XXX: can't be called from ancestriscore

@@ -48,7 +48,7 @@ public class FormatOptionsWidget extends JPanel {
   private Action validAction;
   private Document doc;
   private FileChooserWidget chooseFile;
-  private JComboBox chooseFormat;
+  private JComboBox<Format> chooseFormat;
   
   /**
    * Constructor

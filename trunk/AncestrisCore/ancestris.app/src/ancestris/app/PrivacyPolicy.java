@@ -399,7 +399,7 @@ public class PrivacyPolicy {
 
     // Find a sub-property by tag and type
     @SuppressWarnings("unchecked")
-    private Property getPropertyFor(Property prop, String tag, Class type) {
+    private Property getPropertyFor(Property prop, String tag, Class<?> type) {
         // check children
         for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
             Property child = prop.getProperty(i);

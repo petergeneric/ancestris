@@ -75,6 +75,7 @@ public class AActions{
     }
 
     // use reflection to gain access to package-private methods
+    @SuppressWarnings("rawtypes")
     static Action alwaysEnabled(Map map) {
 
         Method alwaysEnabledMethod = null;

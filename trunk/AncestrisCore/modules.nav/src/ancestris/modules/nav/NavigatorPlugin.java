@@ -13,9 +13,12 @@
 package ancestris.modules.nav;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -25,7 +28,9 @@ import org.openide.util.lookup.ServiceProvider;
 public class NavigatorPlugin extends AncestrisPlugin{
 
     @Override
-    public Collection<Class> getDefaultOpenedViews() {
-        return Arrays.asList(new Class[]{NavigatorTopComponent.class});
+    public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
+        List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
+        result.add(NavigatorTopComponent.class);
+        return result;
     }
 }
