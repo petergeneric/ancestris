@@ -406,7 +406,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return openAction(map);
     }
 
-    static public Action openAction(Map map) {
+    static public Action openAction(Map<String,Object> map) {
         return new OpenGenjViewAction((AncestrisTopComponent) map.get("component"), map);
     }
 

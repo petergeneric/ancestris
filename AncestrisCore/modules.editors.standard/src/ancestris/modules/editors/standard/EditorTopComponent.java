@@ -22,6 +22,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -53,7 +54,7 @@ public class EditorTopComponent extends AncestrisTopComponent
     private static EditorTopComponent factory;
 
     /*package*/ final static Logger LOG = Logger.getLogger("ancestris.edit");
-    private final Map<Class, Editor> panels = new HashMap<Class, Editor>();
+    private final Map<Class<? extends Property>, Editor> panels = new HashMap<Class<? extends Property>, Editor>();
     private Callback callback = new Callback();
     private boolean isIgnoreSetContext = false;
     private boolean isChangeSource = false;

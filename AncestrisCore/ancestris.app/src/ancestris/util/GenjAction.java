@@ -75,7 +75,7 @@ public final class GenjAction  extends Action2 {
 //        return createGenjAction(map);
     }
 
-    static public Action createGenjAction(Map map) {
+    static public Action createGenjAction(Map<String,Object> map) {
         Action delegate = (Action)map.get("delegate");
         String displayName = (String)map.get("displayName"); // NOI18N
         String iconBase = (String)map.get("iconBase"); // NOI18N

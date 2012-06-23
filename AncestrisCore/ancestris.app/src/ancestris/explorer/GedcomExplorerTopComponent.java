@@ -4,9 +4,7 @@
  */
 package ancestris.explorer;
 
-import genj.view.ContextProvider;
 import genj.view.ViewContext;
-import ancestris.gedcom.GedcomDirectory;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import org.openide.util.NbBundle;
@@ -28,6 +26,7 @@ import org.openide.windows.RetainLocation;
 @ConvertAsProperties(dtd = "-//ancestris.explorer//GedcomExplorer//EN",
 autostore = false)
 @RetainLocation("ancestris-explorer")
+@SuppressWarnings({"rawtypes","unchecked"})
 public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider/*, ContextProvider*/{
 
     private static GedcomExplorerTopComponent instance;

@@ -62,7 +62,7 @@ public class Lifecycle {
 
     // Code from NbBundel source
     /** Finds package name for given class */
-    private static String findName(Class clazz) {
+    private static String findName(Class<?> clazz) {
         String pref = clazz.getName();
         int last = pref.lastIndexOf('.');
 
