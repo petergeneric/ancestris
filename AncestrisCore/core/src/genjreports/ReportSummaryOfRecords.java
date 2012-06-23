@@ -227,7 +227,7 @@ public class ReportSummaryOfRecords extends Report {
     // patch for NAME
     String value;
     if (prop instanceof PropertyName)
-      value = ((PropertyName)prop).getName();
+      value = ((PropertyName)prop).getDisplayValue();
     else
       value = prop.getDisplayValue();
 
