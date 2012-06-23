@@ -12,6 +12,9 @@ import java.util.jar.Manifest;
  *
  * @author daniel
  */
+// 
+// XXX: will be changed to ModuleInfo use 
+@SuppressWarnings("rawtypes")
 public class PluginHelper {
     static public Attributes getManifestMainAttributes(Class clazz) {
         Manifest manifest;
