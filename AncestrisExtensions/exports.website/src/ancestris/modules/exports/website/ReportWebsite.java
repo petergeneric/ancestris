@@ -9,66 +9,25 @@ package ancestris.modules.exports.website;
  * name     = Website
  */
 import ancestris.app.Options;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.Media;
-import genj.gedcom.MultiLineProperty;
-import genj.gedcom.Note;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyChange;
-import genj.gedcom.PropertyComparator;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyEvent;
-import genj.gedcom.PropertyFamilyChild;
-import genj.gedcom.PropertyFamilySpouse;
-import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyMedia;
-import genj.gedcom.PropertyNote;
-import genj.gedcom.PropertyRepository;
-import genj.gedcom.PropertySex;
-import genj.gedcom.PropertySource;
-import genj.gedcom.PropertyXRef;
-import genj.gedcom.Repository;
-import genj.gedcom.Source;
-import genj.gedcom.Submitter;
 import genj.gedcom.MultiLineProperty.Iterator;
+import genj.gedcom.*;
 import genj.option.Multiline;
 import genj.report.Report;
-//import genj.report.Resources;
 import genj.util.Resources;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -1727,7 +1686,7 @@ public class ReportWebsite extends Report{
         }
 
         // Add all other attributes
-        reportUnhandledProperties(prop, (String[]) handledProperties.toArray(new String[0]));
+        reportUnhandledProperties(prop, handledProperties.toArray(new String[0]));
         Element otherProperties = getAllProperties(prop, html, handledProperties);
         if (otherProperties != null) {
             appendTo.appendChild(otherProperties);
