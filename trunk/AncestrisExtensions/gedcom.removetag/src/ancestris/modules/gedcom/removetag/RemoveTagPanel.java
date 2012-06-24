@@ -55,11 +55,11 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         tagTextField = new javax.swing.JTextField();
-        selectedEntityComboBox = new javax.swing.JComboBox();
+        selectedEntityComboBox = new javax.swing.JComboBox<String>();
         tagLabel = new javax.swing.JLabel();
         selectedEntityLabel = new javax.swing.JLabel();
 
-        selectedEntityComboBox.setModel(new javax.swing.DefaultComboBoxModel(entityList));
+        selectedEntityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(entityList));
 
         tagLabel.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.tagLabel.text")); // NOI18N
 
@@ -91,7 +91,7 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox selectedEntityComboBox;
+    private javax.swing.JComboBox<String> selectedEntityComboBox;
     private javax.swing.JLabel selectedEntityLabel;
     private javax.swing.JLabel tagLabel;
     private javax.swing.JTextField tagTextField;
