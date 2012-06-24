@@ -1,38 +1,40 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
+import genj.view.ViewContext;
 
 import java.util.List;
 
 /**
  * A test for validation
+ *
  * @author nmeier
  */
 @SuppressWarnings("unchecked")
 abstract class Test {
 
     private TagPath[] pathTriggers;
-    private Class typeTrigger;
+    private Class<? extends Object> typeTrigger;
 
     /**
      * Constructor
      */
-    Test(String pathTrigger, Class typeTrigger) {
+    Test(String pathTrigger, Class<? extends Object> typeTrigger) {
         this(new String[]{pathTrigger}, typeTrigger);
     }
 
     /**
      * Constructor
      */
-    Test(String[] pathTriggers, Class typeTrigger) {
+    Test(String[] pathTriggers, Class<? extends Object> typeTrigger) {
         if (pathTriggers != null) {
             this.pathTriggers = new TagPath[pathTriggers.length];
             for (int i = 0; i < pathTriggers.length; i++) {
@@ -63,6 +65,6 @@ abstract class Test {
     /**
      * Perform Test on prop&path - fill issues with instances of Issue
      */
-    abstract void test(Property prop, TagPath path, List issues, GedcomValidate report);
+    abstract void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report);
 } //Test
 

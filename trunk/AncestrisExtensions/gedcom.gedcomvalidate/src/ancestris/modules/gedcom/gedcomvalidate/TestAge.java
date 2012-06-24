@@ -78,7 +78,7 @@ public class TestAge extends Test {
   /**
    * Test individual(s)'s age at given date property 
    */
-  /*package*/ void test(Property prop, TagPath trigger, List issues, GedcomValidate report) {
+  /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
     
     // get to the date
     PropertyDate date ;

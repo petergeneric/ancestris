@@ -47,9 +47,9 @@ public final class GedcomValidateAction implements ActionListener {
                     doc.addTableColumn("column-width=10%");
                     doc.addTableColumn("column-width=25%");
                     doc.addTableColumn("column-width=65%");
-                    Iterator iterator = result.listIterator();
+                    Iterator <ViewContext>iterator = result.listIterator();
                     while (iterator.hasNext()) {
-                        ViewContext c = (ViewContext) iterator.next();
+                        ViewContext c = iterator.next();
                         doc.nextTableRow();
                         // doc.addText(c.getEntity().getId());
                         doc.addLink(c.getEntity().getId(), c.getEntity());

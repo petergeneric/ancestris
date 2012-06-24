@@ -42,7 +42,7 @@ import org.openide.util.NbBundle;
   /**
    * test a prop for existance
    */
-  /*package*/ void test(Property prop, TagPath trigger, List issues, GedcomValidate report) {
+  /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     // check for property by path1
     Property prop1 = prop.getProperty(path1);

@@ -86,7 +86,7 @@ import org.openide.util.NbBundle;
   /**
    * test a prop (PropertyDate.class) at given path
    */
-  /*package*/ void test(Property prop, TagPath trigger, List issues, GedcomValidate report) {
+  /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     Entity entity = prop.getEntity();
     PropertyDate date1;

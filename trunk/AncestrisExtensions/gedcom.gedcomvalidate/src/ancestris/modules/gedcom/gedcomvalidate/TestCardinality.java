@@ -33,12 +33,12 @@ public class TestCardinality extends Test {
     /**
      * Do the test
      */
-    void test(Property prop, TagPath path, List issues, GedcomValidate report) {
+    void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         MetaProperty itsmeta = prop.getMetaProperty();
 
         // check children that occur more than once
-        Map seen = new HashMap();
+        Map <String, Property>seen = new HashMap<String, Property>();
         for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
             Property child = prop.getProperty(i);
             String tag = child.getTag();
@@ -47,7 +47,7 @@ public class TestCardinality extends Test {
                 if (!seen.containsKey(tag)) {
                     seen.put(tag, child);
                 } else {
-                    Property first = (Property) seen.get(tag);
+                    Property first = seen.get(tag);
                     if (first != null) {
                         seen.put(tag, null);
                         issues.add(new ViewContext(first).setText(NbBundle.getMessage(this.getClass(), "err.cardinality.max", prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality())));
