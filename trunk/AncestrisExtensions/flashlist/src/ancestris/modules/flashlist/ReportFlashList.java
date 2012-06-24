@@ -161,7 +161,7 @@ public class ReportFlashList extends Report {
      * the report's entry point Our main logic
      */
     public Document start(Gedcom gedcom, String documentName) {
-        Collection indis = gedcom.getEntities(Gedcom.INDI);
+        Collection <Indi>indis = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
         Indi indiDeCujus = null;
 
         //Get location and lastname options based on PLAC tag in gedcom and user input
@@ -180,12 +180,12 @@ public class ReportFlashList extends Report {
         }
 
         // prepare our index
-        Map primary = new TreeMap();
+        Map <String, Object>primary = new TreeMap<String, Object>();
         int countIndiv = 0;
         counterIncrement = (int) Math.pow(10, counterIncrement);
         LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.StartingAnalysis"));
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            analyze((Indi) it.next(), primary, indiDeCujus);
+        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
+            analyze(it.next(), primary, indiDeCujus);
             if (counterIncrement > 1) {
                 countIndiv++;
                 if ((int) Math.floor(countIndiv / counterIncrement) * counterIncrement == countIndiv) {
@@ -222,8 +222,8 @@ public class ReportFlashList extends Report {
         // loop on 3 main maps to perform a couple of operations:
         // - write the main file
         // - assign geo coordinates to group by lastnames into totals (if code included)
-        for (Iterator ps = primary.keySet().iterator(); ps.hasNext();) {
-            String p = (String) ps.next();
+        for (Iterator <String>ps = primary.keySet().iterator(); ps.hasNext();) {
+            String p = ps.next();
 
             // primary key (by default Cntry/State)
             // secod parameter is a meaningful anchor for easier external referencing to this flash list
@@ -231,12 +231,12 @@ public class ReportFlashList extends Report {
             displayHeader(doc, p, repeatHeader);
             String secondaryKey = "";
 
-            Map secondary = (Map) lookup(primary, p, null);
-            for (Iterator ss = secondary.keySet().iterator(); ss.hasNext();) {
-                String s = (String) ss.next();
-                Map tertiary = (Map) lookup(secondary, s, null);
-                for (Iterator ts = tertiary.keySet().iterator(); ts.hasNext();) {
-                    String t = (String) ts.next();
+            Map <String, Object>secondary = (Map) lookup(primary, p, null);
+            for (Iterator <String>ss = secondary.keySet().iterator(); ss.hasNext();) {
+                String s = ss.next();
+                Map <String, Object>tertiary = (Map) lookup(secondary, s, null);
+                for (Iterator <String>ts = tertiary.keySet().iterator(); ts.hasNext();) {
+                    String t = ts.next();
                     Range range = (Range) lookup(tertiary, t, null);
 
                     String lformat = FORMAT_LNORMAL;
@@ -341,11 +341,11 @@ public class ReportFlashList extends Report {
             }
 
             modulePreferences.put("SurnLoc", recordKeyText);
-            List table = Arrays.asList(recordKeys);
+            List <String>table = Arrays.asList(recordKeys);
             recordKey = table.indexOf(recordKeyText);
 
-            List tag = Arrays.asList(gedcom.getPlaceFormat().split("\\,")); // original tag
-            ArrayList choices = new ArrayList((Collection) Arrays.asList(gedcom.getPlaceFormat().split("\\,"))); // list used for selection only
+            List <String>tag = Arrays.asList(gedcom.getPlaceFormat().split("\\,")); // original tag
+            ArrayList <String>choices = new ArrayList<String>(Arrays.asList(gedcom.getPlaceFormat().split("\\,"))); // list used for selection only
 
             recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1"), "XXX");
 
@@ -509,7 +509,7 @@ public class ReportFlashList extends Report {
     /**
      * Analyze an individual
      */
-    private void analyze(Indi indi, Map primary, Indi indiDeCujus) {
+    private void analyze(Indi indi, Map <String, Object>primary, Indi indiDeCujus) {
 
         // consider non-empty last names only
         String name = indi.getLastName();
@@ -526,9 +526,9 @@ public class ReportFlashList extends Report {
 
         try {
             // loop over all dates in indi
-            for (Iterator dates = indi.getProperties(PropertyDate.class).iterator(); dates.hasNext();) {
+            for (Iterator <PropertyDate>dates = indi.getProperties(PropertyDate.class).iterator(); dates.hasNext();) {
                 // consider valid dates only
-                PropertyDate date = (PropertyDate) dates.next();
+                PropertyDate date = dates.next();
                 if (!date.isValid()) {
                     continue;
                 }
@@ -548,12 +548,12 @@ public class ReportFlashList extends Report {
             }
 
             // loop over all dates in family of indi
-            for (Iterator families = Arrays.asList(indi.getFamiliesWhereSpouse()).iterator();
+            for (Iterator <Fam>families = Arrays.asList(indi.getFamiliesWhereSpouse()).iterator();
                     families.hasNext();) {
-                Fam family = (Fam) families.next();
-                for (Iterator dates = family.getProperties(PropertyDate.class).iterator(); dates.hasNext();) {
+                Fam family = families.next();
+                for (Iterator <PropertyDate>dates = family.getProperties(PropertyDate.class).iterator(); dates.hasNext();) {
                     // consider valid dates only
-                    PropertyDate date = (PropertyDate) dates.next();
+                    PropertyDate date = dates.next();
                     if (!date.isValid()) {
                         continue;
                     }
@@ -580,7 +580,7 @@ public class ReportFlashList extends Report {
     /**
      * Analyze all cities for given indi, start, end & property
      */
-    private void analyzeCities(String name, int start, int end, Property prop, Map primary, boolean isSosa) {
+    private void analyzeCities(String name, int start, int end, Property prop, Map <String, Object>primary, boolean isSosa) {
         // Consider places of events only
         if (!isEvent(prop)) {
             return;
@@ -613,16 +613,16 @@ public class ReportFlashList extends Report {
     /**
      * Analyze all places for given indi, start, end & property
      */
-    private void analyzePlaces(String name, int start, int end, Property prop, Map primary, boolean isSosa) {
+    private void analyzePlaces(String name, int start, int end, Property prop, Map <String, Object>primary, boolean isSosa) {
         // Consider places of events only
         if (!isEvent(prop)) {
             return;
         }
 
         // loop over places
-        for (Iterator places = prop.getProperties(PropertyPlace.class).iterator(); places.hasNext();) {
+        for (Iterator <PropertyPlace>places = prop.getProperties(PropertyPlace.class).iterator(); places.hasNext();) {
             // Get place
-            PropertyPlace place = (PropertyPlace) places.next();
+            PropertyPlace place = places.next();
 
             // if PLAC tag in the gedcom, use locations as per specified by user
             String loc1 = "";
@@ -675,12 +675,12 @@ public class ReportFlashList extends Report {
     private boolean isEvent(Property prop) {
         // returns true if property is in list of events, false otherwise
         String strTable[] = {"ADOP", "ANUL", "BIRT", "BAPM", "BARM", "BASM", "BLES", "BURI", "CENS", "CHR", "CHRA", "CONF", "CREM", "DEAT", "DIV", "DIVF", "EMIG", "ENGA", "EVEN", "FCOM", "GRAD", "IMMI", "MARR", "MARB", "MARC", "MARL", "MARS", "NATU", "ORDN", "RETI", "PROB", "WILL"};
-        List listOfEvents = Arrays.asList(strTable);
+        List <String>listOfEvents = Arrays.asList(strTable);
         return listOfEvents.contains(prop.getTag());
         // done
     }
 
-    private void keep(String loc1, String loc2, String loc3, String name, int start, int end, Map primary, Property prop, boolean isSosa) {
+    private void keep(String loc1, String loc2, String loc3, String name, int start, int end, Map <String, Object>primary, Property prop, boolean isSosa) {
 
         // calculate primary and secondary key
         String ps, ss, ts;
@@ -734,8 +734,8 @@ public class ReportFlashList extends Report {
         if (!existPLACTag) {
             ts = "";
         }
-        Map secondary = (Map) lookup(primary, ps, TreeMap.class);
-        Map tertiary = (Map) lookup(secondary, ss, TreeMap.class);
+        Map <String, Object>secondary = (Map) lookup(primary, ps, TreeMap.class);
+        Map <String, Object>tertiary = (Map) lookup(secondary, ss, TreeMap.class);
         Range range = (Range) lookup(tertiary, ts, Range.class);
         range.add(start, end, isSosa, prop.getTag());
         // done
@@ -744,7 +744,7 @@ public class ReportFlashList extends Report {
     /**
      * Lookup an object in a map with a default class
      */
-    private Object lookup(Map<String, Object> index, String key, Class fallback) {
+    private Object lookup(Map<String, Object> index, String key, Class <? extends Object>fallback) {
         // look up and create lazily if necessary
         Object result = index.get(key);
         if (result == null) {

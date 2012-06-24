@@ -44,7 +44,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         repeatHeaderCheckBox = new javax.swing.JCheckBox();
         minSosaLabel = new javax.swing.JLabel();
         addTOCCheckBox = new javax.swing.JCheckBox();
-        displayLegendComboBox = new javax.swing.JComboBox(initDisplayLegendComboBox());
+        displayLegendComboBox = new javax.swing.JComboBox<String>(initDisplayLegendComboBox());
         displayZerosCheckBox = new javax.swing.JCheckBox();
         filterKey1TextField = new javax.swing.JTextField();
         filterKey2TextField = new javax.swing.JTextField();
@@ -52,7 +52,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         yearSpanFormattedTextField = new javax.swing.JFormattedTextField();
         nbEventsFormattedTextField = new javax.swing.JFormattedTextField();
         minSosaFormattedTextField = new javax.swing.JFormattedTextField();
-        counterIncrementComboBox = new javax.swing.JComboBox(initCounterIncrementComboBox());
+        counterIncrementComboBox = new javax.swing.JComboBox<String>(initCounterIncrementComboBox());
         jLabel1 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(displayLegendLabel, org.openide.util.NbBundle.getMessage(FlashListPanel.class, "FlashListPanel.displayLegendLabel.text")); // NOI18N
@@ -219,9 +219,9 @@ final class FlashListPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox addTOCCheckBox;
-    private javax.swing.JComboBox counterIncrementComboBox;
+    private javax.swing.JComboBox<String> counterIncrementComboBox;
     private javax.swing.JLabel counterIncrementLabel;
-    private javax.swing.JComboBox displayLegendComboBox;
+    private javax.swing.JComboBox<String> displayLegendComboBox;
     private javax.swing.JLabel displayLegendLabel;
     private javax.swing.JCheckBox displayZerosCheckBox;
     private javax.swing.JLabel filterKey1Label;
