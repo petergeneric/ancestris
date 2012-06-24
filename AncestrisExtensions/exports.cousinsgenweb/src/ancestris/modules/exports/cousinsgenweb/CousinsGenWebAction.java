@@ -1,11 +1,10 @@
 package ancestris.modules.exports.cousinsgenweb;
 
+import ancestris.app.App;
 import genj.gedcom.Context;
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
-import ancestris.app.App;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,11 +41,17 @@ public final class CousinsGenWebAction implements ActionListener {
             NbBundle.getMessage(CousinsGenWebPanel.class, "CTL_CousinsGenWebAction"),
             true,
             new CousinGenWebPanelDescriptorActionListener());
-    /** option - Index jurisdiction for analysis in PLAC tags */
+    /**
+     * option - Index jurisdiction for analysis in PLAC tags
+     */
     public int depPos = 0;
-    /** option - Index jurisdiction for analysis in PLAC tags */
+    /**
+     * option - Index jurisdiction for analysis in PLAC tags
+     */
     public int cityPos = 0;
-    /** option - Meaningfull length for the Department Juridiction field to keep */
+    /**
+     * option - Meaningfull length for the Department Juridiction field to keep
+     */
     public int depLen = 0;
     File file = null;
     InputOutput io = null;
@@ -63,19 +68,19 @@ public final class CousinsGenWebAction implements ActionListener {
 
             if (cousinGenWebPanelDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
                 Gedcom myGedcom = context.getGedcom();
-                Collection<? extends Entity> indis = myGedcom.getEntities(Gedcom.INDI);
+                Collection<Indi> indis = (Collection<Indi>) (myGedcom.getEntities(Gedcom.INDI));
                 io = IOProvider.getDefault().getIO(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.TabTitle") + " " + myGedcom.getName(), true);
                 io.getOut().println(String.format(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.Start"), myGedcom.getName()));
 
                 // prepare our index
-                Map primary = new TreeMap();
-                for (Iterator it = indis.iterator(); it.hasNext();) {
-                    analyze((Indi) it.next(), primary);
+                Map<String, Object> primary = new TreeMap<String, Object>();
+                for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+                    analyze(it.next(), primary);
                 }
 
                 // Create all the files
-                for (Iterator ps = primary.keySet().iterator(); ps.hasNext();) {
-                    String p = (String) ps.next();
+                for (Iterator<String> ps = primary.keySet().iterator(); ps.hasNext();) {
+                    String p = ps.next();
 
                     try {
                         export(p, primary, file);
@@ -95,7 +100,7 @@ public final class CousinsGenWebAction implements ActionListener {
     /**
      * Analyze an individual
      */
-    private void analyze(Indi indi, Map primary) {
+    private void analyze(Indi indi, Map<String, Object> primary) {
 
         // consider non-empty last names only
         String name = indi.getLastName();
@@ -104,9 +109,9 @@ public final class CousinsGenWebAction implements ActionListener {
         }
 
         // loop over all dates in indi
-        for (Iterator places = indi.getProperties(PropertyPlace.class).iterator(); places.hasNext();) {
+        for (Iterator<PropertyPlace> places = indi.getProperties(PropertyPlace.class).iterator(); places.hasNext();) {
 
-            PropertyPlace place = (PropertyPlace) places.next();
+            PropertyPlace place = places.next();
 
             String dept = place.getJurisdiction(depPos);
             if (dept == null) {
@@ -129,12 +134,12 @@ public final class CousinsGenWebAction implements ActionListener {
         }
     }
 
-    private void keep(String name, String place, String dept, Map primary) {
+    private void keep(String name, String place, String dept, Map<String, Object> primary) {
 
         // calculate primary and secondary key
         // remember
-        Map secondary = (Map) lookup(primary, dept, TreeMap.class);
-        Map namelist = (Map) lookup(secondary, place, TreeMap.class);
+        Map<String, Object> secondary = (Map<String, Object>) lookup(primary, dept, TreeMap.class);
+        Map<String, Object> namelist = (Map<String, Object>) lookup(secondary, place, TreeMap.class);
         lookup(namelist, name, TreeMap.class);
         // done
     }
@@ -142,7 +147,7 @@ public final class CousinsGenWebAction implements ActionListener {
     /**
      * Lookup an object in a map with a default class
      */
-    private Object lookup(Map index, String key, Class fallback) {
+    private Object lookup(Map<String, Object> index, String key, Class<? extends Object> fallback) {
         // look up and create lazily if necessary
         Object result = index.get(key);
         if (result == null) {
@@ -158,18 +163,18 @@ public final class CousinsGenWebAction implements ActionListener {
         return result;
     }
 
-    private void export(String dept, Map primary, File dir) throws IOException {
+    private void export(String dept, Map<String, Object> primary, File dir) throws IOException {
         File file = new File(dir, dept + ".csv");
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
 
         io.getOut().println(("DepartmentJur") + " : " + dept);
-        Map secondary = (Map) lookup(primary, dept, null);
-        for (Iterator ss = secondary.keySet().iterator(); ss.hasNext();) {
-            String s = (String) ss.next();
+        Map<String, Object> secondary = (Map) lookup(primary, dept, null);
+        for (Iterator<String> ss = secondary.keySet().iterator(); ss.hasNext();) {
+            String s = ss.next();
 
-            Map namelist = (Map) lookup(secondary, s, null);
-            for (Iterator ns = namelist.keySet().iterator(); ns.hasNext();) {
-                String t = (String) ns.next();
+            Map<String, Object> namelist = (Map) lookup(secondary, s, null);
+            for (Iterator<String> ns = namelist.keySet().iterator(); ns.hasNext();) {
+                String t = ns.next();
                 io.getOut().println("  " + t + " ; " + s);
                 out.write(t + " ; " + s);
                 out.newLine();
