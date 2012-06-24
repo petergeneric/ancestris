@@ -33,7 +33,7 @@ public class TestPlace extends Test {
   /**
    * test place for place format
    */
-  /*package*/ void test(Property prop, TagPath path, List issues, GedcomValidate report) {
+  /*package*/ void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
     
     PropertyPlace place = (PropertyPlace)prop;
     

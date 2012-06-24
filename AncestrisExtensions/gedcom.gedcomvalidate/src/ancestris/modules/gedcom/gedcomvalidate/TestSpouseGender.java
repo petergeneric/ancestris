@@ -35,7 +35,7 @@ import org.openide.util.NbBundle;
     /**
      * @see validate.Test#test(genj.gedcom.Property, genj.gedcom.TagPath, java.util.List)
      */
-    /*package*/ void test(Property prop, TagPath path, List issues, GedcomValidate report) {
+    /*package*/ void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         // assuming family
         Fam fam = (Fam) prop;
@@ -65,7 +65,7 @@ import org.openide.util.NbBundle;
      * Calculate an issue for indi in fam
      * @param role HUSB or WIFE
      */
-    private void addIssue(List issues, Fam fam, String role, GedcomValidate report) {
+    private void addIssue(List<ViewContext> issues, Fam fam, String role, GedcomValidate report) {
 
         PropertyXRef xref = (PropertyXRef) fam.getProperty(role);
         Indi indi = (Indi) xref.getTargetEntity();

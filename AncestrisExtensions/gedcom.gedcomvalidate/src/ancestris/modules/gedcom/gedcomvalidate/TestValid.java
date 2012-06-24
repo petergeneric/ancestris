@@ -35,7 +35,8 @@ import org.openide.util.NbBundle;
   /**
    * @see validate.Test#test(genj.gedcom.Property, genj.gedcom.TagPath, java.util.List)
    */
-  /*package*/ void test(Property prop, TagPath path, List issues, GedcomValidate report) {
+  /*package*/@Override
+ void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
     
     // always an issue with private
     if (!report.isPrivateValueValid&&prop.isPrivate()) {

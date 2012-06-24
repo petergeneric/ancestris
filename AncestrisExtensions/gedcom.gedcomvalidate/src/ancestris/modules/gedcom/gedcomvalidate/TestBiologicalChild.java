@@ -35,19 +35,19 @@ public class TestBiologicalChild extends Test {
   /**
    * Test individual(s)'s being-child associations  
    */
-  /*package*/ void test(Property prop, TagPath trigger, List issues, GedcomValidate report) {
+  /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
     // loop over all famc
-    List famcs = prop.getProperties(PropertyFamilyChild.class);
-    for (ListIterator it = famcs.listIterator(); it.hasNext(); ) {
-      PropertyFamilyChild famc = (PropertyFamilyChild)it.next();
+    List<PropertyFamilyChild> famcs = prop.getProperties(PropertyFamilyChild.class);
+    for (ListIterator<PropertyFamilyChild> it = famcs.listIterator(); it.hasNext(); ) {
+      PropertyFamilyChild famc = it.next();
       if (famc.isValid() && Boolean.FALSE.equals(famc.isBiological()))
         it.remove();
     }
     
     // more than one?
-    if (famcs.size()>1) for (Iterator it = famcs.iterator(); it.hasNext() ;) {
-      issues.add(new ViewContext((Property)it.next()).setText(NbBundle.getMessage(this.getClass(), "warn.famc.biological")));
+    if (famcs.size()>1) for (Iterator<? extends Property> it = famcs.iterator(); it.hasNext() ;) {
+      issues.add(new ViewContext(it.next()).setText(NbBundle.getMessage(this.getClass(), "warn.famc.biological")));
     }
     
     // done

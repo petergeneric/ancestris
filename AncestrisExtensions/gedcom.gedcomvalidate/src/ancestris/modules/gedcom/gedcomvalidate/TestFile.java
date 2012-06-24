@@ -31,7 +31,7 @@ public class TestFile extends Test {
     /**
      * Do the test
      */
-    void test(Property prop, TagPath path, List issues, GedcomValidate report) {
+    void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         // assuming PropertyFile
         PropertyFile file = (PropertyFile) prop;
