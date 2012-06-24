@@ -123,8 +123,8 @@ public class FTPLoader {
             return null;
         }
         List<File> files = Arrays.asList(strs);
-        for (Iterator it = files.iterator(); it.hasNext();) {
-            File file = (File) it.next();
+        for (Iterator<File> it = files.iterator(); it.hasNext();) {
+            File file = it.next();
             if (file.isDirectory()) {
                 filesRet.addAll(getFilesRecursively(file));
             } else {

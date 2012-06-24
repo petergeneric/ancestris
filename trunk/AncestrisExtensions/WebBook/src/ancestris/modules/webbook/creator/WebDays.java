@@ -72,7 +72,7 @@ public class WebDays extends WebSection {
         Calendar calEnd = Calendar.getInstance();
         calEnd.set(2009, 0, 1);
 
-        Iterator it = wh.getDays(wh.gedcom).iterator();
+        Iterator <String>it = wh.getDays(wh.gedcom).iterator();
         String lastMonth = "";
         int cpt = 1, iDays = 1, cptm = 0;
         out.println("<div class=\"daycal\">");

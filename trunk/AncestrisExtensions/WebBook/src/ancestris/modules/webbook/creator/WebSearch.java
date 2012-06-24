@@ -76,7 +76,7 @@ public class WebSearch extends WebSection {
         exportSearch(dir, searchFile);
 
         // Create js content file
-        List indis = wh.getIndividuals(wh.gedcom, null);
+        List<Indi> indis = wh.getIndividuals(wh.gedcom, null);
         exportResources(dir, resourceFile, indis);
     }
 
@@ -140,25 +140,25 @@ public class WebSearch extends WebSection {
      * Exports resource file
      */
     @SuppressWarnings("unchecked")
-    private void exportResources(File dir, String exportfile, List indis) {
+    private void exportResources(File dir, String exportfile, List<Indi> indis) {
         File file = wh.getFileForName(dir, exportfile);
         PrintWriter out = wh.getWriter(file, UTF8);
         if (out == null) {
             return;
         }
 
-        Map<String, List> table = new TreeMap<String, List>();
+        Map<String, List<String>> table = new TreeMap<String, List<String>>();
 
         //Produce firstNames list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             String word = indi.getFirstName();
             String key = "";
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -169,14 +169,14 @@ public class WebSearch extends WebSection {
 
         //Produce lastNames list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             String word = wh.getLastName(indi, DEFCHAR);
             String key = "";
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -187,11 +187,11 @@ public class WebSearch extends WebSection {
 
         //Produce places list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
-            List places = indi.getProperties(PropertyPlace.class);
-            for (Iterator itp = places.iterator(); itp.hasNext();) {
-                PropertyPlace place = (PropertyPlace) itp.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
+            List<PropertyPlace> places = indi.getProperties(PropertyPlace.class);
+            for (Iterator<PropertyPlace> itp = places.iterator(); itp.hasNext();) {
+                PropertyPlace place = itp.next();
                 if (place == null) {
                     continue;
                 }
@@ -200,7 +200,7 @@ public class WebSearch extends WebSection {
                 if (word != null) {
                     key = cleanString(word);
                 }
-                List<String> ids = (List<String>) table.get(key);
+                List<String> ids = table.get(key);
                 if (ids == null) {
                     ids = new ArrayList<String>();
                 }
@@ -212,14 +212,14 @@ public class WebSearch extends WebSection {
 
         //Produce ids list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             String word = indi.getId();
             String key = "";
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -230,14 +230,14 @@ public class WebSearch extends WebSection {
 
         //Produce sosa list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             String word = wh.getSosa(indi);
             String key = "";
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -248,8 +248,8 @@ public class WebSearch extends WebSection {
 
         //Produce births list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             PropertyDate date = (indi == null) ? null : indi.getBirthDate();
             if ((indi == null) || (date == null)) {
                 continue;
@@ -268,7 +268,7 @@ public class WebSearch extends WebSection {
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -279,9 +279,9 @@ public class WebSearch extends WebSection {
 
         //Produce marriages list
         table.clear();
-        List families = new ArrayList(wh.gedcom.getEntities(Gedcom.FAM));
-        for (Iterator it = families.iterator(); it.hasNext();) {
-            Fam family = (Fam) it.next();
+        List<Fam> families = new ArrayList(wh.gedcom.getEntities(Gedcom.FAM));
+        for (Iterator<Fam> it = families.iterator(); it.hasNext();) {
+            Fam family = it.next();
             PropertyDate date = (family == null) ? null : family.getMarriageDate();
             if ((family == null) || (date == null)) {
                 continue;
@@ -300,7 +300,7 @@ public class WebSearch extends WebSection {
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -318,8 +318,8 @@ public class WebSearch extends WebSection {
 
         //Produce death list
         table.clear();
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             PropertyDate date = (indi == null) ? null : indi.getDeathDate();
             if ((indi == null) || (date == null)) {
                 continue;
@@ -338,7 +338,7 @@ public class WebSearch extends WebSection {
             if (word != null) {
                 key = cleanString(word);
             }
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             if (ids == null) {
                 ids = new ArrayList<String>();
             }
@@ -357,19 +357,19 @@ public class WebSearch extends WebSection {
      * Write file from table
      */
     @SuppressWarnings("unchecked")
-    private void writeTable(PrintWriter out, String tableName, Map table) {
+    private void writeTable(PrintWriter out, String tableName, Map<String, List<String>> table) {
 
         StringBuffer list = new StringBuffer("var " + tableName + " = [");
         StringBuffer listID = new StringBuffer("var " + tableName + "ID = [");
         int cpt = 0, cptID = 0;
-        for (Iterator itk = table.keySet().iterator(); itk.hasNext();) {
-            String key = (String) itk.next();
+        for (Iterator<String> itk = table.keySet().iterator(); itk.hasNext();) {
+            String key = itk.next();
             list.append((cpt == 0 ? "" : ",") + "\"" + key + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
-            List<String> ids = (List<String>) table.get(key);
+            List<String> ids = table.get(key);
             cptID = 0;
-            for (Iterator it = ids.iterator(); it.hasNext();) {
-                String id = (String) it.next();
+            for (Iterator<String> it = ids.iterator(); it.hasNext();) {
+                String id = it.next();
                 listID.append((cptID == 0 ? "" : "|") + id);
                 cptID++;
             }
@@ -386,15 +386,15 @@ public class WebSearch extends WebSection {
     /**
      * Write file from table
      */
-    private void writeTableIndis(PrintWriter out, List indis) {
+    private void writeTableIndis(PrintWriter out, List<Indi> indis) {
 
         //out.println("var ID = [\"I001\",\"I002\",\"I003\",\"I004\",\"I005\"]");
         //out.println("var IDdisplay = [\"Frederic Lapeyre (01 Mar 1952) (I001) |001|I001\",\"Jean Philippe Frederic Surrel|001|I002\",\"Sebastien Aubry|002|I003\",\"Raymond Fred|003|I004\",\"Fred Surrel|001|I005\"]");
         StringBuffer list = new StringBuffer("var ID = [");
         StringBuffer listID = new StringBuffer("var IDdisplay = [");
         int cpt = 0;
-        for (Iterator it1 = indis.iterator(); it1.hasNext();) {
-            Indi indi = (Indi) it1.next();
+        for (Iterator<Indi> it1 = indis.iterator(); it1.hasNext();) {
+            Indi indi = it1.next();
             list.append((cpt == 0 ? "" : ",") + "\"" + indi.getId() + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
             listID.append(phpText(indi));

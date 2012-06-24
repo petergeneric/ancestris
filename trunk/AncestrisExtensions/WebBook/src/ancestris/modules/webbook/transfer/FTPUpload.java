@@ -263,8 +263,8 @@ public class FTPUpload {
 
         log.write(trs("upload_starting"));
         try {
-            for (Iterator it = localFiles.iterator(); it.hasNext();) {
-                File file = (File) it.next();
+            for (Iterator<File> it = localFiles.iterator(); it.hasNext();) {
+                File file = it.next();
                 currentLocalDir = getFileDir(file);
 
                 // Quit if task has been cancelled or is finished
@@ -371,8 +371,8 @@ public class FTPUpload {
             String remoteDir = "";
             currentRemoteDir = "";
             String file = "";
-            for (Iterator it = listToRemove.iterator(); it.hasNext();) {
-                String key = (String) it.next();
+            for (Iterator<String> it = listToRemove.iterator(); it.hasNext();) {
+                String key = it.next();
                 remoteDir = getFileDir(key);
                 file = getFile(key);
                 if (remoteDir.compareTo(currentRemoteDir) != 0) {

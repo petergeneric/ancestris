@@ -89,7 +89,7 @@ public class WebSources extends WebSection {
      */
     private void exportData(File dir) {
 
-        List sources = wh.getSources(wh.gedcom);
+        List<Source> sources = wh.getSources(wh.gedcom);
         // Go through items to display and produce corresponding pages
         String fileStr = "";
         File file = null;
@@ -115,8 +115,8 @@ public class WebSources extends WebSection {
         String src_abbr = "";
         String src_author = "";
         String description = "";
-        for (Iterator it = sources.iterator(); it.hasNext();) {
-            Source src = (Source) it.next();
+        for (Iterator <Source>it = sources.iterator(); it.hasNext();) {
+            Source src = it.next();
             src_title = src.getTitle();
             if ((src_title == null) || (src_title.length() == 0)) {
                 src_title = src.toString();
@@ -148,8 +148,8 @@ public class WebSources extends WebSection {
         // export detailed pages
         cpt = 0;
         out = null;
-        for (Iterator it = sources.iterator(); it.hasNext();) {
-            Source src = (Source) it.next();
+        for (Iterator<Source> it = sources.iterator(); it.hasNext();) {
+            Source src = it.next();
             cpt++;
             currentPage = (cpt / nbPerPage) + 1;
             previousPage = (currentPage == 1) ? 1 : currentPage - 1;
@@ -287,8 +287,8 @@ public class WebSources extends WebSection {
         // Print pictures of SOUR entity
         if ((wp.param_media_GeneSources.equals("1")) && !files.isEmpty()) {
             out.println("<span class=\"srcitems1\">" + htmlText(trs("src_media")) + ":</span><span class=\"srcimage\">");
-            for (Iterator it = files.iterator(); it.hasNext();) {
-                PropertyFile file = (PropertyFile) it.next();
+            for (Iterator <PropertyFile>it = files.iterator(); it.hasNext();) {
+                PropertyFile file = it.next();
                 out.println("<span class=\"srcimage1\">");
                 out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"), true, true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
                 out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
@@ -301,14 +301,14 @@ public class WebSources extends WebSection {
             List<PropertyFile> mediasOfEntity = new ArrayList<PropertyFile>();     // temp list
             out.println("<span class=\"srcitems1\">" + htmlText(trs("src_associations")) + ":</span>");
             out.println("<span class=\"srcitems2\">");
-            for (Iterator it = list.iterator(); it.hasNext();) {
-                Entity target = (Entity) it.next();
+            for (Iterator <Entity>it = list.iterator(); it.hasNext();) {
+                Entity target = it.next();
                 out.println(wrapEntity(target));
                 out.println("<br />");
                 if (!(wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type1")))) {
                     mediasOfEntity.addAll(target.getProperties(PropertyFile.class));
-                    for (Iterator itm = mediasOfEntity.iterator(); itm.hasNext();) {
-                        PropertyFile file = (PropertyFile) itm.next();
+                    for (Iterator <PropertyFile>itm = mediasOfEntity.iterator(); itm.hasNext();) {
+                        PropertyFile file = itm.next();
                         if (isUnderSource(file, anchor)) {                        // Add files only for files under same id source
                             files.add(file);
                         }
@@ -316,8 +316,8 @@ public class WebSources extends WebSection {
                     mediasOfEntity.clear();
                     if (!files.isEmpty()) {
                         out.println("</span><span class=\"srcimage0\">");
-                        for (Iterator itm = files.iterator(); itm.hasNext();) {
-                            PropertyFile file = (PropertyFile) itm.next();
+                        for (Iterator<PropertyFile> itm = files.iterator(); itm.hasNext();) {
+                            PropertyFile file = itm.next();
                             out.println("<span class=\"srcimage1\">");
                             out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"),
                                     wp.param_media_DisplaySources.equals(NbBundle.getMessage(WebBookVisualPanel3.class, "sourceType.type3")),
@@ -349,8 +349,8 @@ public class WebSources extends WebSection {
     private void calcPages() {
         String sourcefile = "", fileStr = "";
         int cpt = 0;
-        for (Iterator it = wh.getSources(wh.gedcom).iterator(); it.hasNext();) {
-            Source src = (Source) it.next();
+        for (Iterator<Source> it = wh.getSources(wh.gedcom).iterator(); it.hasNext();) {
+            Source src = it.next();
             cpt++;
             sourcefile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix;
             if (fileStr.compareTo(sourcefile) != 0) {
@@ -376,21 +376,19 @@ public class WebSources extends WebSection {
     /**
      * Comparator to sort entities
      */
-    private Comparator sortEntities = new Comparator() {
+    private Comparator<Entity> sortEntities = new Comparator<Entity>() {
 
-        public int compare(Object o1, Object o2) {
-            if ((o1 == null) && (o2 != null)) {
+        public int compare(Entity ent1, Entity ent2) {
+            if ((ent1 == null) && (ent2 != null)) {
                 return -1;
             }
-            if ((o1 != null) && (o2 == null)) {
+            if ((ent1 != null) && (ent2 == null)) {
                 return +1;
             }
-            if ((o1 == null) && (o2 == null)) {
+            if ((ent1 == null) && (ent2 == null)) {
                 return 0;
             }
 
-            Entity ent1 = (Entity) o1;
-            Entity ent2 = (Entity) o2;
             String str1 = "";
             String str2 = "";
 

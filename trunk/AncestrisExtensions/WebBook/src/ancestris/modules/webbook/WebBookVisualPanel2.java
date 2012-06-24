@@ -186,11 +186,11 @@ public final class WebBookVisualPanel2 extends JPanel {
             return null;
         }
         // Get all individuals and stop when sosa 1 is found
-        Collection entities = gedcom.getEntities(Gedcom.INDI);
+        Collection<Indi> entities = (Collection<Indi>) gedcom.getEntities(Gedcom.INDI);
         Property[] props = null;
         String sosaStr = "";
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             props = indi.getProperties("_SOSA");
             if (props == null) {
                 continue;
@@ -205,7 +205,7 @@ public final class WebBookVisualPanel2 extends JPanel {
         }
 
         // If we are here, no sosa was found, take first element
-        return (Indi) entities.iterator().next();
+        return entities.iterator().next();
     }
 
     /**

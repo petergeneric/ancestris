@@ -78,8 +78,8 @@ public class WebIndividuals extends WebSection {
         String listfile = "";
 
         // Go through individuals
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             cpt++;
 
             // Check if need to increment lastname
@@ -195,8 +195,8 @@ public class WebIndividuals extends WebSection {
         String name = "";
         int iNames = 0;
         String listfile = "";
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             String lastname = wh.getLastName(indi, DEFCHAR);
             String str = htmlAnchorText(lastname);
             if (str == null) {

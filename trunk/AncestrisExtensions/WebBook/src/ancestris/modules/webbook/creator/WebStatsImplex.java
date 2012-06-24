@@ -1,9 +1,9 @@
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
  */
 package ancestris.modules.webbook.creator;
 
@@ -26,6 +26,7 @@ import java.util.Vector;
 
 /**
  * Ancestris
+ *
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 0.1
  */
@@ -34,12 +35,12 @@ public class WebStatsImplex extends WebSection {
     private static final boolean DEBUG = false;
     private static final String STACK_SEPARATOR = "\n";
     private double dImplexFactor;
-    Vector vecGenerationInfo = new Vector();
-    private HashSet setIndi = new HashSet();
-    private HashSet setCommonAncestor = new HashSet();
-    private TreeMap mapImplexCommonIndi = new TreeMap();
+    Vector<GenerationInfo> vecGenerationInfo = new Vector<GenerationInfo>();
+    private HashSet<String> setIndi = new HashSet<String>();
+    private HashSet<String> setCommonAncestor = new HashSet<String>();
+    private TreeMap<String, Indi> mapImplexCommonIndi = new TreeMap<String, Indi>();
     private double dConsanguinityFactor;
-    private TreeMap mapConsanguinityCommonIndi = new TreeMap();
+    private TreeMap<String, ConsanguinityInfo> mapConsanguinityCommonIndi = new TreeMap<String, ConsanguinityInfo>();
 
     private class GenerationInfo {
 
@@ -154,7 +155,8 @@ public class WebStatsImplex extends WebSection {
 
     /**
      * Print report header.
-     * @param indi  Root individual.
+     *
+     * @param indi Root individual.
      */
     private void printHeader(PrintWriter out, Indi indi) {
 
@@ -197,9 +199,9 @@ public class WebStatsImplex extends WebSection {
 
         // Iteration on generations
         out.println("<tbody>");
-        Iterator itr = vecGenerationInfo.iterator();
+        Iterator<GenerationInfo> itr = vecGenerationInfo.iterator();
         while (itr.hasNext()) {
-            GenerationInfo info = (GenerationInfo) itr.next();
+            GenerationInfo info = itr.next();
 
             // Print line
             out.println("<tr>");
@@ -223,9 +225,9 @@ public class WebStatsImplex extends WebSection {
         out.println("<p class=\"column1\">");
         // Scan common individuals
         Collection col = mapImplexCommonIndi.values();
-        itr = col.iterator();
+        Iterator<Indi> itr1 = col.iterator();
         while (itr.hasNext()) {
-            out.println(wrapEntity((Indi) itr.next()));
+            out.println(wrapEntity(itr1.next()));
             out.println("<br />");
         }
         out.println("</p>");
@@ -243,10 +245,10 @@ public class WebStatsImplex extends WebSection {
         out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("implex_header_consanguinity_common_ancestors")) + "</span></p>");
 
         // Scan common individuals
-        Collection col = mapConsanguinityCommonIndi.values();
-        Iterator itr = col.iterator();
+        Collection<ConsanguinityInfo> col = mapConsanguinityCommonIndi.values();
+        Iterator<ConsanguinityInfo> itr = col.iterator();
         while (itr.hasNext()) {
-            ConsanguinityInfo info = (ConsanguinityInfo) itr.next();
+            ConsanguinityInfo info = itr.next();
             out.println("<span class=\"column1f\">");
             out.println(wrapEntity(info.indi));
             out.println("</span>");
@@ -258,18 +260,19 @@ public class WebStatsImplex extends WebSection {
 
     /**
      * Compute the implex factor.
-     * @param indi  Root individual.
+     *
+     * @param indi Root individual.
      */
     @SuppressWarnings("unchecked")
     private void computeImplexFactor(Indi indi) {
         // Initialize the first generation with the selected individual
-        List listIndi = new ArrayList();
+        List<Indi> listIndi = new ArrayList<Indi>();
         listIndi.add(indi);
 
         // Compute statistics one generation after the other
         int iLevel = 1;
         while (!listIndi.isEmpty()) {
-            List listParent = new ArrayList();
+            List<Indi> listParent = new ArrayList<Indi>();
             computeGeneration(iLevel, listIndi, listParent);
             listIndi = listParent;
             iLevel++;
@@ -279,9 +282,9 @@ public class WebStatsImplex extends WebSection {
         int iPossibleCumul = 0;
         int iKnownCumul = 0;
         int iDiffCumul = 0;
-        Iterator itr = vecGenerationInfo.iterator();
+        Iterator<GenerationInfo> itr = vecGenerationInfo.iterator();
         while (itr.hasNext()) {
-            GenerationInfo info = (GenerationInfo) itr.next();
+            GenerationInfo info = itr.next();
 
             // Compute possible
             info.iPossibleCount = (int) Math.pow(2.0f, info.iLevel - 1);
@@ -310,7 +313,8 @@ public class WebStatsImplex extends WebSection {
 
     /**
      * Add an individual and all its ancestors in the common ancestor list.
-     * @param indi   Common ancestor.
+     *
+     * @param indi Common ancestor.
      */
     @SuppressWarnings("unchecked")
     private void addCommonAncestor(Indi indi) {
@@ -332,20 +336,21 @@ public class WebStatsImplex extends WebSection {
 
     /**
      * Computes statistics for the specified generation.
-     * @param iLevel       Current generation level.
-     * @param listIndi     Individuals of a generation.
-     * @param listParent   [return] Individuals of the next generation.
+     *
+     * @param iLevel Current generation level.
+     * @param listIndi Individuals of a generation.
+     * @param listParent [return] Individuals of the next generation.
      */
     @SuppressWarnings("unchecked")
-    private void computeGeneration(int iLevel, List listIndi, List listParent) {
+    private void computeGeneration(int iLevel, List<Indi> listIndi, List<Indi> listParent) {
         // Prepare generation information
         GenerationInfo info = new GenerationInfo(iLevel);
         vecGenerationInfo.add(info);
 
         // Scan individual of the generation
-        Iterator itr = listIndi.iterator();
+        Iterator<Indi> itr = listIndi.iterator();
         while (itr.hasNext()) {
-            Indi indi = (Indi) itr.next();
+            Indi indi = itr.next();
 
             // Get ancestor ID and search it in the list
             String strId = indi.getId();
@@ -387,7 +392,8 @@ public class WebStatsImplex extends WebSection {
 
     /**
      * Compute consanguinity factor.
-     * @param indi  Root individual.
+     *
+     * @param indi Root individual.
      */
     private void computeConsanguinityFactor(Indi indi) {
         // Initialize value
@@ -399,23 +405,24 @@ public class WebStatsImplex extends WebSection {
             return;
         }
 
-        Stack vecWife = new Stack();
-        Stack vecHusband = new Stack();
+        Stack<String> vecWife = new Stack<String>();
+        Stack<String> vecHusband = new Stack<String>();
         checkRightTree(famc.getWife(), 0, vecWife, famc.getHusband(), 0, vecHusband);
     }
 
     /**
      * Check the ancestors of one parent to compute the consanguinity factor.
-     * @param indiRight    Current individual.
-     * @param iLevelRight  Current generation level.
-     * @param stackRight   Current ancestor list.
-     * @param indiLeft     Current individual of other the tree.
-     * @param iLevelLeft   Current generation level of other the tree.
-     * @param stackLeft    Current ancestor list of other the tree.
+     *
+     * @param indiRight Current individual.
+     * @param iLevelRight Current generation level.
+     * @param stackRight Current ancestor list.
+     * @param indiLeft Current individual of other the tree.
+     * @param iLevelLeft Current generation level of other the tree.
+     * @param stackLeft Current ancestor list of other the tree.
      */
     @SuppressWarnings("unchecked")
-    private void checkRightTree(Indi indiRight, int iLevelRight, Stack stackRight,
-            Indi indiLeft, int iLevelLeft, Stack stackLeft) {
+    private void checkRightTree(Indi indiRight, int iLevelRight, Stack<String> stackRight,
+            Indi indiLeft, int iLevelLeft, Stack<String> stackLeft) {
         // Exit if an individual is missing
         if (indiRight == null || indiLeft == null) {
             return;
@@ -446,16 +453,17 @@ public class WebStatsImplex extends WebSection {
 
     /**
      * Search reference individual in the the ancestors of second parent.
-     * @param indiRight    Reference individual.
-     * @param iLevelRight  Reference generation level.
-     * @param stackRight   Reference ancestor.
-     * @param indiLeft     Current individual.
-     * @param iLevelLeft   Current generation level.
-     * @param stackLeft    Current ancestor list.
+     *
+     * @param indiRight Reference individual.
+     * @param iLevelRight Reference generation level.
+     * @param stackRight Reference ancestor.
+     * @param indiLeft Current individual.
+     * @param iLevelLeft Current generation level.
+     * @param stackLeft Current ancestor list.
      */
     @SuppressWarnings("unchecked")
-    private void searchInLeftTree(Indi indiRight, int iLevelRight, Stack stackRight,
-            Indi indiLeft, int iLevelLeft, Stack stackLeft) {
+    private void searchInLeftTree(Indi indiRight, int iLevelRight, Stack<String> stackRight,
+            Indi indiLeft, int iLevelLeft, Stack<String> stackLeft) {
         // Exit if an individual is missing
         if (indiRight == null || indiLeft == null) {
             return;
@@ -473,7 +481,7 @@ public class WebStatsImplex extends WebSection {
         String strIdRight = indiRight.getId();
         if (strIdRight.equals(strIdLeft)) {
             // Check if indivividual is already in list
-            ConsanguinityInfo info = (ConsanguinityInfo) mapConsanguinityCommonIndi.get(strIdRight);
+            ConsanguinityInfo info = mapConsanguinityCommonIndi.get(strIdRight);
             if (info == null) {
                 // Create info about individual
                 info = new ConsanguinityInfo();
@@ -482,7 +490,7 @@ public class WebStatsImplex extends WebSection {
 
             // Save ancestor list in debug mode
             if (DEBUG) {
-                Iterator itrStack = stackRight.iterator();
+                Iterator<String> itrStack = stackRight.iterator();
                 while (itrStack.hasNext()) {
                     info.stackIndi.push(itrStack.next());
                 }
