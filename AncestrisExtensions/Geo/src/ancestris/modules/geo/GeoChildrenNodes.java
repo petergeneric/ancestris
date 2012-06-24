@@ -11,7 +11,7 @@ import org.openide.nodes.Node;
  *
  * @author frederic
  */
-class GeoChildrenNodes extends Children.Keys {
+class GeoChildrenNodes extends Children.Keys<GeoNodeObject> {
 
     private GeoPlacesList geoPlacesList = null;
     private boolean isPlace = false;
@@ -29,8 +29,8 @@ class GeoChildrenNodes extends Children.Keys {
     }
 
     @Override
-    protected Node[] createNodes(Object key) {
-        GeoNodeObject obj = (GeoNodeObject) key;
+    protected Node[] createNodes(GeoNodeObject key) {
+        GeoNodeObject obj = key;
         return new Node[]{new GeoNode(obj)};
     }
 

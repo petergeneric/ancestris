@@ -151,21 +151,19 @@ class GeoInternetSearch {
     /**
      * Comparator to sort places
      */
-    public Comparator sortPlaces = new Comparator() {
+    public Comparator<GeoNodeObject> sortPlaces = new Comparator<GeoNodeObject>() {
 
-        public int compare(Object o1, Object o2) {
-            GeoNodeObject obj1 = (GeoNodeObject) o1;
-            GeoNodeObject obj2 = (GeoNodeObject) o2;
-            if (obj1 == null) {
+        public int compare(GeoNodeObject o1, GeoNodeObject o2) {
+            if (o1 == null) {
                 return +1;
             }
-            if (obj2 == null) {
+            if (o2 == null) {
                 return -1;
             }
             Collator myCollator = Collator.getInstance();
             myCollator.setStrength(Collator.PRIMARY);
             myCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
-            return myCollator.compare(obj1.getPlaceAsLongString().toLowerCase(), obj2.getPlaceAsLongString().toLowerCase());
+            return myCollator.compare(o1.getPlaceAsLongString().toLowerCase(), o2.getPlaceAsLongString().toLowerCase());
         }
     };
 }
