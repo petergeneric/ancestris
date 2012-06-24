@@ -1,12 +1,13 @@
 package ancestris.modules.imports.wizard;
 
+import ancestris.api.imports.Import;
 import java.util.Vector;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class ImportVisualWarning extends JPanel {
 
-    Vector importList = new Vector();
+    Vector <Import>importList = new Vector<Import>();
 
     /** Creates new form ImportVisualWarning */
     public ImportVisualWarning() {
