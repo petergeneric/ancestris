@@ -22,7 +22,7 @@ import org.openide.util.actions.CallableSystemAction;
 // your code. You can copy-paste the code below wherever you need.
 public final class ImportWizardAction extends CallableSystemAction {
 
-    private WizardDescriptor.Panel[] panels;
+    private WizardDescriptor.Panel<WizardDescriptor>[] panels;
 
     @Override
     public void performAction() {
@@ -58,7 +58,7 @@ public final class ImportWizardAction extends CallableSystemAction {
      * Initialize panels representing individual wizard's steps and sets
      * various properties for them influencing wizard appearance.
      */
-    private WizardDescriptor.Panel[] getPanels() {
+    private WizardDescriptor.Panel<WizardDescriptor>[] getPanels() {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
                         new ImportWizardWarning(),
