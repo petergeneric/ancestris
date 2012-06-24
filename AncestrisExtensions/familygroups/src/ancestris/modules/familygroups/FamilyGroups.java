@@ -214,9 +214,9 @@ public class FamilyGroups {
                     if (tree.size() < getMaxGroupSize()) {
 
                         String prefix = "" + tree.size();
-                        Iterator it = tree.iterator();
+                        Iterator <Indi>it = tree.iterator();
                         while (it.hasNext()) {
-                            Indi indi = (Indi) it.next();
+                            Indi indi = it.next();
 
                             doc.nextTableRow();
                             doc.addText(prefix);
@@ -260,7 +260,7 @@ public class FamilyGroups {
     /**
      * Iterate over an individual who's part of a sub-tree
      */
-    private void iterate(Indi indi, Tree tree, Set unvisited) {
+    private void iterate(Indi indi, Tree tree, Set <Indi>unvisited) {
         // individuals we need to check
         Stack<Indi> todos = new Stack<Indi>();
 
