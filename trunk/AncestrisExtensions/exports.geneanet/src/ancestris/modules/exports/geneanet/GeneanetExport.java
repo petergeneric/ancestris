@@ -46,6 +46,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -196,9 +197,9 @@ public class GeneanetExport {
         /*
          * List all unexported Individuals
          */
-        Iterator iterator = indiMap.keySet().iterator();
+        Iterator <String>iterator = indiMap.keySet().iterator();
         while (iterator.hasNext()) {
-            String key = (String) iterator.next();
+            String key = iterator.next();
             GwIndi indi = indiMap.get(key);
 
             if (indi.canBeExported() == true && indi.isDescribed() == false) {
@@ -274,9 +275,9 @@ public class GeneanetExport {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
 
             out.write("encoding: utf-8\n\n");
-            Iterator familysIterator = familys.iterator();
+            Iterator <Fam>familysIterator = familys.iterator();
             while (familysIterator.hasNext()) {
-                Fam family = (Fam) familysIterator.next();
+                Fam family = familysIterator.next();
                 Indi husband = family.getHusband();
                 Indi wife = family.getWife();
 
@@ -525,10 +526,10 @@ public class GeneanetExport {
                 }
             }
 
-            Iterator it = indiMap.entrySet().iterator();
+            Iterator <Map.Entry<String, GwIndi>>it = indiMap.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                GwIndi indi = (GwIndi) entry.getValue();
+                Map.Entry<String, GwIndi> entry = it.next();
+                GwIndi indi = entry.getValue();
                 if (indi.canBeExported()) {
                     /*
                      * indi Notes
