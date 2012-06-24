@@ -25,7 +25,7 @@ class GeoPlacesList implements GedcomListener {
     private static SortedMap<Gedcom, GeoPlacesList> instances;
     private final Gedcom gedcom;
     private GeoNodeObject[] geoNodes;
-    private List listeners = new ArrayList(10);
+    private List<GeoPlacesListener> listeners = new ArrayList<GeoPlacesListener>(10);
     private boolean stopListening = false;
 
     public GeoPlacesList(Gedcom gedcom) {
@@ -62,11 +62,11 @@ class GeoPlacesList implements GedcomListener {
 
     @SuppressWarnings("unchecked")
     public synchronized void launchPlacesSearch() {
-        Collection entities = gedcom.getEntities();
+        Collection <Entity>entities = gedcom.getEntities();
         List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Entity ent = (Entity) it.next();
-            getPropertiesRecursively((Property) ent, placesProps, PropertyPlace.class);
+        for (Iterator <Entity>it = entities.iterator(); it.hasNext();) {
+            Entity ent = it.next();
+            getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
         }
 
         // search the geo objects locally and else on internet
@@ -81,7 +81,7 @@ class GeoPlacesList implements GedcomListener {
     }
 
     @SuppressWarnings("unchecked")
-    public void getPropertiesRecursively(Property parent, List props, Class clazz) {
+    public void getPropertiesRecursively(Property parent, List props, Class<? extends Property> clazz) {
         Property[] children = parent.getProperties();
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];
@@ -136,7 +136,7 @@ class GeoPlacesList implements GedcomListener {
 
     @SuppressWarnings("unchecked")
     public void notifyListeners(String change) {
-        GeoPlacesListener[] gpls = (GeoPlacesListener[]) listeners.toArray(new GeoPlacesListener[listeners.size()]);
+        GeoPlacesListener[] gpls = listeners.toArray(new GeoPlacesListener[listeners.size()]);
         for (int l = 0; l < gpls.length; l++) {
             try {
                 gpls[l].geoPlacesChanged(this, change);

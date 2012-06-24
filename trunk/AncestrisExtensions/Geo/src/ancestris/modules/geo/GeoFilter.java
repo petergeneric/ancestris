@@ -248,12 +248,12 @@ public class GeoFilter {
             return null;
         }
         // Get all individuals and stop when sosa 1 is found
-        Collection entities = gedcom.getEntities(Gedcom.INDI);
+        Collection <Indi>entities = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
         Property[] props = null;
         int sosaNb = 0;
         String sosaStr = "";
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator <Indi>it = entities.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             props = indi.getProperties("_SOSA");
             if (props == null) {
                 continue;
@@ -268,7 +268,7 @@ public class GeoFilter {
         }
 
         // If we are here, no sosa was found, take first element
-        return (Indi) entities.iterator().next();
+        return entities.iterator().next();
     }
 
     /**
@@ -279,7 +279,7 @@ public class GeoFilter {
     public Indi askRootIndi() {
         Indi rootSosa = null;
         Entity[] ents = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-        JComboBox jlist = new JComboBox(ents);
+        JComboBox <Entity>jlist = new JComboBox<Entity>(ents);
 
         // set selected item to current decujus
         if (decujusIndi != null) {
@@ -388,12 +388,12 @@ public class GeoFilter {
             return null;
         }
         
-        Collection indis = gedcom.getEntities(Gedcom.INDI);
+        Collection<Indi> indis = (Collection<Indi>) gedcom.getEntities(Gedcom.INDI);
         HashSet<Indi> otherIndis = new HashSet<Indi>();
 
         // get all non ancestors
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             if (!ancestorsList.contains(indi)) {
                 otherIndis.add(indi);
             }
@@ -401,8 +401,8 @@ public class GeoFilter {
 
         // Get cousins now by flaging all non ancestors that are descendants of ancestors
         List<Indi> cousinsList = new ArrayList<Indi>();
-        for (Iterator it = ancestorsList.iterator(); it.hasNext();) {
-            Indi ancestor = (Indi) it.next();
+        for (Iterator <Indi>it = ancestorsList.iterator(); it.hasNext();) {
+            Indi ancestor = it.next();
             HashSet<Indi> descendants = new HashSet<Indi>();
             getDescendants(ancestor, otherIndis, descendants);
             cousinsList.addAll(descendants);
@@ -435,12 +435,12 @@ public class GeoFilter {
         if (ancestorsList == null && cousinsList == null || gedcom == null) {
             return null;
         }
-        Collection indis = gedcom.getEntities(Gedcom.INDI);
+        Collection <Indi>indis = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
         List<Indi> otherIndisList = new ArrayList<Indi>();
 
         // get all non ancestors
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             if (ancestorsList != null && !ancestorsList.contains(indi) && cousinsList != null && !cousinsList.contains(indi)) {
                 otherIndisList.add(indi);
             }

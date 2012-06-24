@@ -186,9 +186,9 @@ public class WebService {
 		toponym.setName(toponymElement.getChildText("name"));
 		toponym.setAlternateNames(toponymElement.getChildText("alternateNames"));
                 if (toponymElement.getChild("alternateName") != null) {
-                   Iterator it = toponymElement.getChildren("alternateName").iterator();
+                   Iterator <Element>it = (Iterator <Element>)toponymElement.getChildren("alternateName").iterator();
                    while (it.hasNext()) {
-                      Element el = (Element)it.next();
+                      Element el = it.next();
                       if (el.getAttributeValue("lang").equals("post")) {
                          toponym.setPostcode(el.getText());
                       }

@@ -658,18 +658,16 @@ class GeoNodeObject {
     /**
      * Comparator to sort events
      */
-    public Comparator sortEvents = new Comparator() {
+    public Comparator<GeoNodeObject> sortEvents = new Comparator<GeoNodeObject>() {
 
-        public int compare(Object o1, Object o2) {
-            GeoNodeObject obj1 = (GeoNodeObject) o1;
-            GeoNodeObject obj2 = (GeoNodeObject) o2;
-            if (obj1 == null) {
+        public int compare(GeoNodeObject o1, GeoNodeObject o2) {
+            if (o1 == null) {
                 return +1;
             }
-            if (obj2 == null) {
+            if (o2 == null) {
                 return -1;
             }
-            return obj1.toString().compareTo(obj2.toString());
+            return o1.toString().compareTo(o2.toString());
         }
     };
 
