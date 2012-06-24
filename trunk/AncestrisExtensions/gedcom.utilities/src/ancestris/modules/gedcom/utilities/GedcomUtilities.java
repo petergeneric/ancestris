@@ -55,7 +55,7 @@ public class GedcomUtilities {
     public void deleteTags(String tagToRemove, int entityType) {
         LOG.log(Level.INFO, "deleting_tag {0}", tagToRemove);
 
-        Collection entities;
+        Collection<? extends Entity> entities;
         Entity entity;
         int iCounter = 0;
 
@@ -65,12 +65,12 @@ public class GedcomUtilities {
             entities = gedcom.getEntities(entityTypes[entityType]);
         }
 
-        List propsToDelete = new ArrayList();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            entity = (Entity) it.next();
+        List<Property> propsToDelete = new ArrayList<Property>();
+        for (Iterator<? extends Entity> it = entities.iterator(); it.hasNext();) {
+            entity = it.next();
             getPropertiesRecursively(entity, propsToDelete, tagToRemove);
-            for (Iterator props = propsToDelete.iterator(); props.hasNext();) {
-                Property prop = (Property) props.next();
+            for (Iterator<Property> props = propsToDelete.iterator(); props.hasNext();) {
+                Property prop = props.next();
                 if (prop != null) {
                     Property parent = prop.getParent();
                     if (parent != null) {
@@ -85,7 +85,7 @@ public class GedcomUtilities {
         LOG.log(Level.INFO, "DeletedNb {0}", iCounter);
     }
 
-    private void getPropertiesRecursively(Property parent, List props, String tag) {
+    private void getPropertiesRecursively(Property parent, List<Property> props, String tag) {
         Property[] children = parent.getProperties();
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];
