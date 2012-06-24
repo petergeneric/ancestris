@@ -94,8 +94,8 @@ public class WebRepSosa extends WebSection {
         int gen = 0;
 
         linkForGen.clear();
-        for (Iterator it = ancestors.iterator(); it.hasNext();) {
-            Ancestor ancestor = (Ancestor) it.next();
+        for (Iterator<Ancestor> it = ancestors.iterator(); it.hasNext();) {
+            Ancestor ancestor = it.next();
             if (ancestor.gen < Integer.valueOf(wp.param_ancestorMinGen)) {
                 continue;
             }
@@ -123,10 +123,10 @@ public class WebRepSosa extends WebSection {
         cptPage = 0;
         cptIndi = 0;
         gen = 0;
-        SortedSet sources = new TreeSet(wh.sortSources);       // Ensure list is sorted with no duplicates
+        SortedSet<Source> sources = new TreeSet<Source>(wh.sortSources);       // Ensure list is sorted with no duplicates
 
-        for (Iterator it = ancestors.iterator(); it.hasNext();) {
-            Ancestor ancestor = (Ancestor) it.next();
+        for (Iterator<Ancestor> it = ancestors.iterator(); it.hasNext();) {
+            Ancestor ancestor = it.next();
             if (ancestor.gen < Integer.valueOf(wp.param_ancestorMinGen) || ancestor.gen > Integer.valueOf(wp.param_ancestorMaxGen)) {
                 continue;
             }
@@ -213,7 +213,7 @@ public class WebRepSosa extends WebSection {
         doc.println(SPACE + "</div>");
     }
 
-    void closeGeneration(int gen, SortedSet sources, PrintWriter doc, int cptPage, int maxPage) {
+    void closeGeneration(int gen, SortedSet<Source> sources, PrintWriter doc, int cptPage, int maxPage) {
         doc.println("<div class=\"spacer\">" + SPACE + "</div>");
         doc.println("</div>");
         if (!wp.param_ancestorSource.equals(NbBundle.getMessage(WebBookVisualPanel4.class, "sourceTypeAncestor.type1")) && !sources.isEmpty()) {
@@ -247,10 +247,10 @@ public class WebRepSosa extends WebSection {
     /**
      * Write sources
      */
-    void writeSourceList(SortedSet sources, PrintWriter doc) {
+    void writeSourceList(SortedSet<Source> sources, PrintWriter doc) {
         // display sources
-        for (Iterator s = sources.iterator(); s.hasNext();) {
-            Source src = (Source) s.next();
+        for (Iterator<Source> s = sources.iterator(); s.hasNext();) {
+            Source src = s.next();
             // display source and title
             doc.println("<br /><a href=\"" + linkSource(src.getId()) + "\">(" + src.getId() + ")</a>");
             doc.println(SPACE);
@@ -278,8 +278,8 @@ public class WebRepSosa extends WebSection {
         } else {
             out.println("<small>" + htmlText(trs("RepSosaOptions.unlimited")) + "</small><br />");
         }
-        for (Iterator it = linkForGen.keySet().iterator(); it.hasNext();) {
-            Integer gen = (Integer) it.next();
+        for (Iterator<Integer> it = linkForGen.keySet().iterator(); it.hasNext();) {
+            Integer gen = it.next();
             out.println("<a href=\"" + linkForGen.get(gen) + "#gen-" + gen + "\">" + gen + "</a>" + SPACE + SPACE);
         }
         out.println("</p>");

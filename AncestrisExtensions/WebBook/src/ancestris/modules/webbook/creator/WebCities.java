@@ -82,7 +82,7 @@ public class WebCities extends WebSection {
         printLinks(out, sectionPrefix + sectionSuffix, this);
 
         // Create link for each last name
-        Iterator it = wh.getCities(wh.gedcom).iterator();
+        Iterator <String>it = wh.getCities(wh.gedcom).iterator();
         char last = ' ';
         int cpt = 1, iNames = 1;
         out.println("<p class=\"nameblock\">");
@@ -128,7 +128,7 @@ public class WebCities extends WebSection {
             linkForLetter.put(l.toString(), "0");
         }
 
-        Iterator it = wh.getCities(wh.gedcom).iterator();
+        Iterator<String> it = wh.getCities(wh.gedcom).iterator();
         while (it.hasNext()) {
             String name = it.next().toString();
             String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase() : DEFCHAR;

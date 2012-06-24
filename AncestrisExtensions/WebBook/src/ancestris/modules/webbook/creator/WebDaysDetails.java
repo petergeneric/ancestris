@@ -64,7 +64,7 @@ public class WebDaysDetails extends WebSection {
      */
     private void exportData(File dir) {
 
-        List days = wh.getDays(wh.gedcom);
+        List <String>days = wh.getDays(wh.gedcom);
         // Go through days
         String fileStr = "";
         File file = null;
@@ -77,8 +77,8 @@ public class WebDaysDetails extends WebSection {
                 nextPage = 0,
                 lastPage = (nbDays / nbPerPage) + 1;
 
-        for (Iterator it = days.iterator(); it.hasNext();) {
-            String day = (String) it.next();
+        for (Iterator <String>it = days.iterator(); it.hasNext();) {
+            String day = it.next();
             cpt++;
             currentPage = (cpt / nbPerPage) + 1;
             previousPage = (currentPage == 1) ? 1 : currentPage - 1;
@@ -128,8 +128,8 @@ public class WebDaysDetails extends WebSection {
         List<Property> listProps = wh.getDaysProps(date);
         Collections.sort(listProps, sortEvents);
         boolean first = true;
-        for (Iterator p = listProps.iterator(); p.hasNext();) {
-            Property prop = (Property) p.next();
+        for (Iterator<Property> p = listProps.iterator(); p.hasNext();) {
+            Property prop = p.next();
             if ((prop == null) || (prop.getValue().length() == 0)) {
                 continue;
             }
@@ -153,21 +153,18 @@ public class WebDaysDetails extends WebSection {
     /**
      * Comparator to sort events for a day
      */
-    private Comparator sortEvents = new Comparator() {
+    private Comparator<Property> sortEvents = new Comparator<Property>() {
 
-        public int compare(Object o1, Object o2) {
-            if ((o1 == null) && (o2 != null)) {
+        public int compare(Property prop1, Property prop2) {
+            if ((prop1 == null) && (prop2 != null)) {
                 return -1;
             }
-            if ((o1 != null) && (o2 == null)) {
+            if ((prop1 != null) && (prop2 == null)) {
                 return +1;
             }
-            if ((o1 == null) && (o2 == null)) {
+            if ((prop1 == null) && (prop2 == null)) {
                 return 0;
             }
-
-            Property prop1 = (Property) o1;
-            Property prop2 = (Property) o2;
 
             // Otherwise, sort on dates
             PropertyDate date1 = (PropertyDate) prop1;
@@ -202,8 +199,8 @@ public class WebDaysDetails extends WebSection {
     private void calcPages() {
         String dayfile = "", fileStr = "";
         int cpt = 0;
-        for (Iterator it = wh.getDays(wh.gedcom).iterator(); it.hasNext();) {
-            String day = (String) it.next();
+        for (Iterator<String> it = wh.getDays(wh.gedcom).iterator(); it.hasNext();) {
+            String day = it.next();
             cpt++;
             dayfile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix;
             if (fileStr.compareTo(dayfile) != 0) {

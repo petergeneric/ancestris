@@ -141,8 +141,8 @@ public class WebIndividualsDetails extends WebSection {
                 nextPage = 0,
                 lastPage = (nbIndis / nbPerPage) + 1;
 
-        for (Iterator it = wh.getIndividuals(wh.gedcom, sortIndividuals).iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = wh.getIndividuals(wh.gedcom, sortIndividuals).iterator(); it.hasNext();) {
+            Indi indi = it.next();
             cpt++;
             currentPage = (cpt / nbPerPage) + 1;
             previousPage = (currentPage == 1) ? 1 : currentPage - 1;
@@ -235,8 +235,8 @@ public class WebIndividualsDetails extends WebSection {
             }
             if (!files.isEmpty()) {
                 out.println("<p class=\"image\">");
-                for (Iterator it = files.iterator(); it.hasNext();) {
-                    PropertyFile file = (PropertyFile) it.next();
+                for (Iterator <? extends Property>it = files.iterator(); it.hasNext();) {
+                    PropertyFile file = (PropertyFile)it.next();
                     if ((file == null) || (file.getFile() == null)) {
                         continue;
                     }
@@ -404,7 +404,7 @@ public class WebIndividualsDetails extends WebSection {
 
         // Families (spouses and corresponding kids)
         // (note: will need xref for the relations of the weddings XREF later so better do it here)
-        List xrefList = indi.getProperties(PropertyXRef.class);
+        List <PropertyXRef>xrefList = indi.getProperties(PropertyXRef.class);
         Fam[] families = indi.getFamiliesWhereSpouse();
         Arrays.sort(families, new PropertyComparator("FAM:MARR:DATE"));
         if (!wp.param_dispSpouse.equals("1")) {
@@ -471,8 +471,8 @@ public class WebIndividualsDetails extends WebSection {
         // (xrefList loaded earlier)
         boolean displayRelation = false;
         if (wp.param_dispRelations.equals("1") && (xrefList.size() > 0)) {
-            for (Iterator it = xrefList.iterator(); it.hasNext();) {
-                PropertyXRef xref = (PropertyXRef) it.next();
+            for (Iterator <PropertyXRef>it = xrefList.iterator(); it.hasNext();) {
+                PropertyXRef xref = it.next();
                 Entity target = xref.getTargetEntity();
                 boolean isXref = xref.getTag().compareTo("XREF") == 0;
                 boolean isAsso = xref.getTag().compareTo("ASSO") == 0;
@@ -538,10 +538,10 @@ public class WebIndividualsDetails extends WebSection {
         // Note
         boolean displayNote = false;
         if (wp.param_dispNotes.equals("1")) {
-            HashSet notes = getNotes(indi);
+            HashSet <Property>notes = getNotes(indi);
             if (notes.size() > 0) {
-                for (Iterator it = notes.iterator(); it.hasNext();) {
-                    Property note = (Property) it.next();
+                for (Iterator <Property>it = notes.iterator(); it.hasNext();) {
+                    Property note = it.next();
                     String noteStr = note.toString().trim();
                     Property parent = note.getParent();
                     String parentTag = htmlText(parent.getPropertyName());
@@ -598,8 +598,8 @@ public class WebIndividualsDetails extends WebSection {
     private void calcPages() {
         String personfile = "", fileStr = "";
         int cpt = 0;
-        for (Iterator it = wh.getIndividuals(wh.gedcom, sortIndividuals).iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator <Indi>it = wh.getIndividuals(wh.gedcom, sortIndividuals).iterator(); it.hasNext();) {
+            Indi indi = it.next();
             cpt++;
             personfile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix;
             if (fileStr.compareTo(personfile) != 0) {

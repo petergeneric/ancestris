@@ -80,8 +80,8 @@ class GedcomStats {
         if (propDateMin == null) {
             propDateMin = new PropertyDate(2100);
         }
-        for (Iterator it = gens.keySet().iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = gens.keySet().iterator(); it.hasNext();) {
+            Indi indi = it.next();
             Integer calcGens = gens.get(indi);
             if (calcGens == nbGen) {
                 PropertyDate propDate = indi.getBirthDate();
@@ -108,10 +108,10 @@ class GedcomStats {
 
 
         //  number of places, main locations
-        Collection entities = gedcom.getEntities();
+        Collection<Entity> entities = gedcom.getEntities();
         List<Property> placesProps = new ArrayList<Property>();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Entity ent = (Entity) it.next();
+        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
+            Entity ent = it.next();
             wh.getPropertiesRecursively((Property) ent, placesProps, PropertyPlace.class);
         }
         nbPlaces = wh.getTotalCitiesCount();
@@ -121,8 +121,8 @@ class GedcomStats {
         Integer val = 0;
         String juridic = "";
         Map<String, Integer> placeTop = new TreeMap<String, Integer>();
-        for (Iterator it = placesProps.iterator(); it.hasNext();) {
-            Property prop = (Property) it.next();
+        for (Iterator<Property> it = placesProps.iterator(); it.hasNext();) {
+            Property prop = it.next();
             if (prop instanceof PropertyPlace) {
                 juridic = ((PropertyPlace)prop).getCity().trim();
             } 
@@ -142,11 +142,11 @@ class GedcomStats {
 
 
         // number of families and those with kids and average number of kids per marriage
-        Collection families = gedcom.getEntities(Gedcom.FAM);
+        Collection<Fam> families = (Collection<Fam>) gedcom.getEntities(Gedcom.FAM);
         nbFams = families.size();
         int cptKids = 0, cptFams = 0;
-        for (Iterator it = families.iterator(); it.hasNext();) {
-            Fam family = (Fam) it.next();
+        for (Iterator<Fam> it = families.iterator(); it.hasNext();) {
+            Fam family = it.next();
             int nb = family.getNoOfChildren();
             if (nb > 0) {
                 cptFams++;
@@ -210,11 +210,11 @@ class GedcomStats {
         int nbA1 = 0, nbA2 = 0;
 
         // get all individuals from Gedcom
-        List indis = wh.getIndividuals(indiRef.getGedcom(), null);
+        List<Indi> indis = wh.getIndividuals(indiRef.getGedcom(), null);
 
         // loop to look for longuest line
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             nbGenTemp = 0;
             nbAncestorsTemp = 0;
             gens = new TreeMap<Indi,Integer>();

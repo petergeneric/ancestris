@@ -87,7 +87,7 @@ public class WebLastnames extends WebSection {
         printLinks(out, sectionPrefix + sectionSuffix, this);
 
         // Create link for each last name
-        Iterator it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
+        Iterator <String>it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
         char last = ' ';
         int cpt = 1, iNames = 1;
         out.println("<p class=\"nameblock\">");
@@ -133,7 +133,7 @@ public class WebLastnames extends WebSection {
             linkForLetter.put(l.toString(), "0");
         }
 
-        Iterator it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
+        Iterator <String>it = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
         while (it.hasNext()) {
             String name = it.next().toString();
             String l = (name.length() > 0) ? name.substring(0, 1).toUpperCase() : DEFCHAR;

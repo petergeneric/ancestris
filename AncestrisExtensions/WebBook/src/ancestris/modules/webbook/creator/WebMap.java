@@ -219,8 +219,8 @@ public class WebMap extends WebSection {
         int max = 0;
     }
     private Map<String, CityFlash> citiesFlash = new TreeMap<String, CityFlash>();               // key is fullName
-    private Set ancestors = null;
-    private Set cousins = null;
+    private Set<Indi> ancestors = null;
+    private Set<Indi> cousins = null;
 
     /**
      *  Main export function for the data
@@ -266,8 +266,8 @@ public class WebMap extends WebSection {
         for (Iterator it = wh.getCities(wh.gedcom).iterator(); it.hasNext();) {
             String city = (String) it.next();
             List<Property> listProps = wh.getCitiesProps(city);
-            for (Iterator p = listProps.iterator(); p.hasNext();) {
-                Property prop = (Property) p.next();
+            for (Iterator<Property> p = listProps.iterator(); p.hasNext();) {
+                Property prop = p.next();
                 if ((prop == null) || (prop.getValue().length() == 0)) {
                     continue;
                 }
@@ -286,8 +286,8 @@ public class WebMap extends WebSection {
 
         // Calculates max volumes for later
         int maxVolume = 0;
-        for (Iterator it = citiesFlash.keySet().iterator(); it.hasNext();) {
-            String city = (String) it.next();
+        for (Iterator<String> it = citiesFlash.keySet().iterator(); it.hasNext();) {
+            String city = it.next();
             CityFlash cityFlash = citiesFlash.get(city);
             if (cityFlash != null) {
                 Integer total = (Integer) (cityFlash.nbBirths + cityFlash.nbMarriages + cityFlash.nbDeaths + cityFlash.nbOther);

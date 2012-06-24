@@ -34,7 +34,7 @@ public class WebMedia extends WebSection {
     private final static String POPUPTAG = "popup.htm";
     private int nbPhotoPerRow = 3;
     //
-    List<Property> medias = null;
+    List<PropertyFile> medias = null;
 
     /**
      * Constructor
@@ -57,13 +57,13 @@ public class WebMedia extends WebSection {
         List<Entity> entities = new ArrayList<Entity>();
         entities.addAll(wh.gedcom.getEntities(Gedcom.INDI));
         entities.addAll(wh.gedcom.getEntities(Gedcom.FAM));
-        medias = new ArrayList<Property>();
+        medias = new ArrayList<PropertyFile>();
         List<Property> mediasOfEntity = new ArrayList<Property>();
-        for (Iterator ite = entities.iterator(); ite.hasNext();) {
-            Entity ent = (Entity) ite.next();
+        for (Iterator<Entity> ite = entities.iterator(); ite.hasNext();) {
+            Entity ent = ite.next();
             mediasOfEntity.addAll(ent.getProperties(PropertyFile.class));
-            for (Iterator itm = mediasOfEntity.iterator(); itm.hasNext();) {
-                PropertyFile media = (PropertyFile) itm.next();
+            for (Iterator<Property> itm = mediasOfEntity.iterator(); itm.hasNext();) {
+                PropertyFile media = (PropertyFile)itm.next();
                 if (!isUnderSource(media)) {
                     medias.add(media);
                 }
@@ -104,7 +104,7 @@ public class WebMedia extends WebSection {
     /**
      * Exports data for page
      */
-    private void exportData(File dir, List medias) {
+    private void exportData(File dir, List<PropertyFile> medias) {
 
         // Go through items to display and produce corresponding pages
         String fileStr = "";
@@ -143,8 +143,8 @@ public class WebMedia extends WebSection {
 
         String file_title = "", file_entity = "", href = "", anchor = "";
         char last = ' ';
-        for (Iterator it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = (PropertyFile) it.next();
+        for (Iterator <PropertyFile>it = medias.iterator(); it.hasNext();) {
+            PropertyFile media = it.next();
             href = getPageForMedia(media);
             file_entity = wrapEntity(media.getEntity());
             file_title = wrapString(media, wh.getTitle(media, DEFCHAR));
@@ -175,8 +175,8 @@ public class WebMedia extends WebSection {
         // export detailed pages
         cpt = 0;
         out = null;
-        for (Iterator it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = (PropertyFile) it.next();
+        for (Iterator<PropertyFile> it = medias.iterator(); it.hasNext();) {
+            PropertyFile media = it.next();
             cpt++;
             currentPage = ((cpt - 1) / nbPerPage) + 1;
             previousPage = (currentPage == 1) ? 1 : currentPage - 1;
@@ -290,21 +290,18 @@ public class WebMedia extends WebSection {
     /**
      * Comparator to sort entities
      */
-    private Comparator sortEntities = new Comparator() {
+    private Comparator<Property> sortEntities = new Comparator<Property>() {
 
-        public int compare(Object o1, Object o2) {
-            if ((o1 == null) && (o2 != null)) {
+        public int compare(Property p1, Property p2) {
+            if ((p1 == null) && (p2 != null)) {
                 return -1;
             }
-            if ((o1 != null) && (o2 == null)) {
+            if ((p1 != null) && (p2 == null)) {
                 return +1;
             }
-            if ((o1 == null) && (o2 == null)) {
+            if ((p1 == null) && (p2 == null)) {
                 return 0;
             }
-
-            Property p1 = (Property) o1;
-            Property p2 = (Property) o2;
 
             String str1 = htmlAnchorText(getEntityName(p1.getEntity()));
             String str2 = htmlAnchorText(getEntityName(p2.getEntity()));
@@ -347,11 +344,11 @@ public class WebMedia extends WebSection {
     /**
      * Calculate pages for section details
      */
-    private void calcPages(List medias) {
+    private void calcPages(List<PropertyFile> medias) {
         String mediafile = "";
         int cpt = 0;
-        for (Iterator it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = (PropertyFile) it.next();
+        for (Iterator<PropertyFile> it = medias.iterator(); it.hasNext();) {
+            PropertyFile media = it.next();
             mediafile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix + "#" + media.hashCode();
             mediaPage.put(Integer.valueOf(media.hashCode()), mediafile);
             cpt++;
@@ -368,7 +365,7 @@ public class WebMedia extends WebSection {
     /**
      * Calculate if there is a link to the letters
      */
-    private void calcLetters(List<Property> medias) {
+    private void calcLetters(List<PropertyFile> medias) {
 
         // Initialise to zero
         linkForLetter.put(DEFCHAR, "0");
@@ -378,8 +375,8 @@ public class WebMedia extends WebSection {
 
         // Calculate
         char letter = ' ';
-        for (Iterator it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = (PropertyFile) it.next();
+        for (Iterator<PropertyFile> it = medias.iterator(); it.hasNext();) {
+            PropertyFile media = it.next();
             String str = htmlAnchorText(getEntityName(media.getEntity()));
             if (str == null) {
                 continue;

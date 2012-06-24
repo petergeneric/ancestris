@@ -125,7 +125,7 @@ public class WebStatsFrequent extends WebSection {
 
         if (type == TYPE_LASTNAME) {
             lastnamesList.clear();
-            Iterator itr = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
+            Iterator<String> itr = wh.getLastNames(DEFCHAR, sortLastnames).iterator();
             while (itr.hasNext()) {
                 Info iOccu = new Info();
                 iOccu.key = itr.next().toString();
@@ -136,7 +136,7 @@ public class WebStatsFrequent extends WebSection {
         }
         if (type == TYPE_LOCATION) {
             citiesList.clear();
-            Iterator itr = wh.getCities(wh.gedcom).iterator();
+            Iterator<String> itr = wh.getCities(wh.gedcom).iterator();
             while (itr.hasNext()) {
                 Info iOccu = new Info();
                 iOccu.key = itr.next().toString();
@@ -147,7 +147,7 @@ public class WebStatsFrequent extends WebSection {
         }
         if (type == TYPE_DATE) {
             daysList.clear();
-            Iterator itr = wh.getDays(wh.gedcom).iterator();
+            Iterator<String> itr = wh.getDays(wh.gedcom).iterator();
             while (itr.hasNext()) {
                 Info iOccu = new Info();
                 iOccu.key = itr.next().toString();
@@ -161,11 +161,9 @@ public class WebStatsFrequent extends WebSection {
      * Comparator to sort by frequency
      */
     @SuppressWarnings("unchecked")
-    private Comparator sortbyFrequency = new Comparator() {
+    private Comparator<Info> sortbyFrequency = new Comparator<Info>() {
 
-        public int compare(Object o1, Object o2) {
-            Info info1 = (Info) o1;
-            Info info2 = (Info) o2;
+        public int compare(Info info1, Info info2) {
             if (info2.frequency == info1.frequency) {
                 return sortLastnames.compare(info1.key, info2.key);
             }
@@ -234,9 +232,9 @@ public class WebStatsFrequent extends WebSection {
     /**
      * Print row element
      */
-    private void printRowElement(int type, PrintWriter out, int i, List list, String here2Dir, Map<String, String> pages) {
+    private void printRowElement(int type, PrintWriter out, int i, List<Info> list, String here2Dir, Map<String, String> pages) {
         if (i < list.size()) {
-            Info info = (Info) list.get(i);
+            Info info = list.get(i);
             String text = null;
             String anchor = null;
             String page = null;

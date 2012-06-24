@@ -502,13 +502,11 @@ public class WebSection {
     /**
      * Comparator to sort Lastnames
      */
-    public Comparator sortLastnames = new Comparator() {
+    public Comparator<String> sortLastnames = new Comparator<String>() {
 
-        public int compare(Object o1, Object o2) {
-            String orig1 = (String) o1;
-            String orig2 = (String) o2;
-            String name1 = htmlAnchorText((String) o1);
-            String name2 = htmlAnchorText((String) o2);
+        public int compare(String orig1, String orig2) {
+            String name1 = htmlAnchorText(orig1);
+            String name2 = htmlAnchorText(orig2);
             if (name1.startsWith(DEFCHAR)) {
                 if (name2.startsWith(DEFCHAR)) {
                     return orig1.compareTo(orig2);
@@ -528,11 +526,9 @@ public class WebSection {
      * Comparator to sort Individuals
      */
     @SuppressWarnings("unchecked")
-    public Comparator sortIndividuals = new Comparator() {
+    public Comparator <Indi>sortIndividuals = new Comparator<Indi>() {
 
-        public int compare(Object o1, Object o2) {
-            Indi indi1 = (Indi) o1;
-            Indi indi2 = (Indi) o2;
+        public int compare(Indi indi1, Indi indi2) {
             int sort = sortLastnames.compare(wh.getLastName(indi1, DEFCHAR), wh.getLastName(indi2, DEFCHAR));
             if (sort == 0) {
                 return sortLastnames.compare(indi1.getFirstName(), indi2.getFirstName());
@@ -552,15 +548,13 @@ public class WebSection {
         }
         String kw = "Généalogie, Genealogy, ancestors, ancêtres, descendance, famille, family tree";
         List<String> listnames = wh.getLastNames(DEFCHAR, sortLastnames);
-        SortedMap<Integer, String> volumePerName = new TreeMap<Integer, String>(new Comparator() {
+        SortedMap<Integer, String> volumePerName = new TreeMap<Integer, String>(new Comparator<Integer>() {
 
-            public int compare(Object o1, Object o2) {
-                Integer i1 = (Integer) o1;
-                Integer i2 = (Integer) o2;
+            public int compare(Integer i1, Integer i2) {
                 return (i2.compareTo(i1));
             }
         });
-        Iterator it = listnames.iterator();
+        Iterator<String> it = listnames.iterator();
         while (it.hasNext()) {
             String key = it.next().toString();
             if (key.length() > 0) {
@@ -568,8 +562,8 @@ public class WebSection {
             }
         }
         int cpt = 0;
-        for (it = volumePerName.keySet().iterator(); it.hasNext();) {
-            Integer k = (Integer) it.next();
+        for (Iterator<Integer> it1 = volumePerName.keySet().iterator(); it.hasNext();) {
+            Integer k = it1.next();
             kw += ", " + volumePerName.get(k);
             cpt++;
             if (cpt > 50) {
@@ -937,8 +931,8 @@ public class WebSection {
         }
         Collections.sort(listEvents);
 
-        for (Iterator s = listEvents.iterator(); s.hasNext();) {
-            String event = (String) s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
+        for (Iterator <String>s = listEvents.iterator(); s.hasNext();) {
+            String event = s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
             String[] eventBits = event.split("\\|", -1);
             // eventIcon
             strClear += "<img src='" + themeDirLink + "ev_" + eventBits[3] + ".png" + "' alt='' />";

@@ -37,10 +37,7 @@ import org.openide.filesystems.FileUtil;
 /**
  * Ancestris
  *
- * Tools for WebBook:
- * - file and directory manipulation
- * - gedcom sets
- * - misc
+ * Tools for WebBook: - file and directory manipulation - gedcom sets - misc
  *
  *
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
@@ -53,8 +50,8 @@ public class WebHelper {
     public WebBookParams wp;
     //
     public Indi indiDeCujus = null;
-    private List individualsList = null;
-    private List sourcesList = null;
+    private List<Indi> individualsList = null;
+    private List<Source> sourcesList = null;
     private FTPRegister uploadRegister = null;
     /**
      * Variables
@@ -82,7 +79,8 @@ public class WebHelper {
     private Set<Indi> listOfCousins = new HashSet<Indi>();
     private boolean initCousins = false;
 
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * CONSTRUCTOR
      */
     public WebHelper(Gedcom gedcom, Log log, WebBookParams wp) {
@@ -91,7 +89,8 @@ public class WebHelper {
         this.wp = wp;
     }
 
-    /***************************************************************************
+    /**
+     * *************************************************************************
      * TOOLS FOR FILE MANIPULATION
      */
     //
@@ -108,14 +107,16 @@ public class WebHelper {
 
     /**
      * Clean Dir
-     **/
+     *
+     */
     public void cleanLocalDir() {
         emptyDir(new File(wp.param_localWebDir), false);
     }
 
     /**
      * Empty Dir
-     **/
+     *
+     */
     public boolean emptyDir(File dir, boolean removeDir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
@@ -135,7 +136,8 @@ public class WebHelper {
 
     /**
      * Create Dir
-     **/
+     *
+     */
     public File createDir(String outfile, boolean create) {
 
         String parent = (new File(outfile)).getAbsoluteFile().getParent();
@@ -165,8 +167,10 @@ public class WebHelper {
     }
 
     /**
-     * In case of PHP site, ensure we have an index.php file in the directory in case surfer goes direct to the directory
-     **/
+     * In case of PHP site, ensure we have an index.php file in the directory in
+     * case surfer goes direct to the directory
+     *
+     */
     private void putSecurityFile(File dir) {
         if (wp.param_PHP_Support.equals("1")) {
             File file = getFileForName(dir, "index.php");
@@ -205,7 +209,8 @@ public class WebHelper {
     }
 
     /**
-     * Clean file name from drive letters (windows), colon ":", starting file separators and spaces
+     * Clean file name from drive letters (windows), colon ":", starting file
+     * separators and spaces
      */
     public String getCleanFileName(String input, String defchar) {
 
@@ -249,7 +254,9 @@ public class WebHelper {
             // get resource directory where images are
             URL dirURL = wp.getClass().getClassLoader().getResource(wp.getClass().getName().replace(".", "/") + ".class");
             if (dirURL.getProtocol().equals("jar")) {
-                /* A JAR path */
+                /*
+                 * A JAR path
+                 */
                 String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
                 JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
                 Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
@@ -572,13 +579,17 @@ public class WebHelper {
 
     }
 
-    /** A convenience method to throw an exception */
+    /**
+     * A convenience method to throw an exception
+     */
     private void abort(String msg) throws IOException {
         log.write(log.ERROR, "abort - " + msg);
         throw new IOException(msg);
     }
 
-    /** Detect image */
+    /**
+     * Detect image
+     */
     public boolean isImage(String infile) {
         if (infile == null) {
             return false;
@@ -589,7 +600,9 @@ public class WebHelper {
                 || infile.toLowerCase().endsWith(".gif"));
     }
 
-    /** Get image size */
+    /**
+     * Get image size
+     */
     String getImageSize(String absoluteFile, String quote) {
         Image image = Toolkit.getDefaultToolkit().getImage(absoluteFile);
         mediaTracker.addImage(image, 0);
@@ -608,7 +621,9 @@ public class WebHelper {
         return "" + imageWidth + quote + "," + quote + imageHeight;
     }
 
-    /** Scale image */
+    /**
+     * Scale image
+     */
     public boolean scaleImage(String infile, String outfile, int width, int height, int quality) {
         return scaleImage(infile, outfile, width, height, quality, true);
     }
@@ -701,7 +716,8 @@ public class WebHelper {
 
     /**
      * Read a file into a string
-     **/
+     *
+     */
     public String readFile(String filename) throws IOException {
 
         if ((filename == null) || (filename.length() == 0)) {
@@ -738,7 +754,8 @@ public class WebHelper {
 
     /**
      * Writes a file from a string
-     **/
+     *
+     */
     public boolean writeFile(String filename, String text) throws IOException {
         if ((filename == null) || (filename.length() == 0)) {
             return false;
@@ -754,7 +771,8 @@ public class WebHelper {
         return true;
     }
 
-    /***************************************************************************
+    /**
+     * *************************************************************************
      *
      *
      *
@@ -779,7 +797,7 @@ public class WebHelper {
      *
      *
      *
-     * 
+     *
      */
     //
     /**
@@ -827,24 +845,25 @@ public class WebHelper {
     }
 
     /**
-     * Return sorted list of lastnames of Gedcom file
-     * Do NOT use getLastNames() function of genj because it returns all lastnames found and we only want one last name per person here
-     * (Genj itself only accesses individuals using the first lastname found for them)
+     * Return sorted list of lastnames of Gedcom file Do NOT use getLastNames()
+     * function of genj because it returns all lastnames found and we only want
+     * one last name per person here (Genj itself only accesses individuals
+     * using the first lastname found for them)
      */
     @SuppressWarnings("unchecked")
-    public List<String> getLastNames(String defchar, Comparator sortLastnames) {
+    public List<String> getLastNames(String defchar, Comparator<String> sortLastnames) {
         if (!initLastname) {
             initLastname = buildLastnamesList(gedcom, defchar, sortLastnames);
         }
-        return (List) new ArrayList((Collection) listOfLastnames.keySet());
+        return (List<String>) new ArrayList<String>((Collection) listOfLastnames.keySet());
     }
 
     public int getTotalNamesCount() {
         if (!initLastname) {
-            initLastname = buildLastnamesList(gedcom, DEFCHAR, new Comparator() {
+            initLastname = buildLastnamesList(gedcom, DEFCHAR, new Comparator<String>() {
 
-                public int compare(Object t1, Object t2) {
-                    return ((String) t1).compareTo(((String) t2));
+                public int compare(String t1, String t2) {
+                    return (t1.compareTo(t2));
                 }
             });
         }
@@ -864,11 +883,11 @@ public class WebHelper {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean buildLastnamesList(Gedcom gedcom, String defchar, Comparator sortLastnames) {
+    private boolean buildLastnamesList(Gedcom gedcom, String defchar, Comparator<String> sortLastnames) {
         listOfLastnames = new TreeMap<String, Integer>(sortLastnames);
-        List indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        List<Indi> indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             String str = getLastName(indi, defchar);
             Integer counter = listOfLastnames.get(str);
             if (counter == null) {
@@ -890,43 +909,42 @@ public class WebHelper {
     }
 
     /**
-     * Return sorted list of individuals (Indi) of Gedcom file
-     * Lastnames are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
+     * Return sorted list of individuals (Indi) of Gedcom file Lastnames are
+     * sorted according to their anchor-compatible equivallent strings (A-Z a-z
+     * '-' characters only)
      */
     @SuppressWarnings("unchecked")
-    public List<Indi> getIndividuals(Gedcom gedcom, Comparator sort) {
-        Comparator sortIndividuals = sort;
+    public List<Indi> getIndividuals(Gedcom gedcom, Comparator<Indi> sort) {
+        Comparator<Indi> sortIndividuals = sort;
         if (sortIndividuals == null) {
-            sortIndividuals = new Comparator() {
+            sortIndividuals = new Comparator<Indi>() {
 
-                public int compare(Object t1, Object t2) {
-                    return ((Indi) t1).compareTo(((Indi) t2));
+                public int compare(Indi t1, Indi t2) {
+                    return (t1.compareTo(t2));
                 }
             };
         }
         if (individualsList == null) {
-            individualsList = new ArrayList(gedcom.getEntities(Gedcom.INDI));
+            individualsList = new ArrayList<Indi>((Collection<Indi>) gedcom.getEntities(Gedcom.INDI));
             Collections.sort(individualsList, sortIndividuals);
         }
         return individualsList;
     }
 
     /**
-     * Return sorted list of sources of Gedcom file
-     * Sources are sorted by codes
+     * Return sorted list of sources of Gedcom file Sources are sorted by codes
      */
     @SuppressWarnings("unchecked")
-    public List<Entity> getSources(Gedcom gedcom) {
+    public List<Source> getSources(Gedcom gedcom) {
         if (sourcesList == null) {
-            sourcesList = new ArrayList(gedcom.getEntities(Gedcom.SOUR));
+            sourcesList = new ArrayList<Source>((Collection<Source>) gedcom.getEntities(Gedcom.SOUR));
             Collections.sort(sourcesList, sortSources);
         }
         return sourcesList;
     }
 
     /**
-     * Return sorted list of sources of entity
-     * Sources are sorted by codes
+     * Return sorted list of sources of entity Sources are sorted by codes
      */
     @SuppressWarnings("unchecked")
     public List<Source> getSources(Indi indi) {
@@ -981,38 +999,37 @@ public class WebHelper {
     /**
      * Comparator to sort Individuals
      */
-    public Comparator sortSources = new Comparator() {
+    public Comparator<Source> sortSources = new Comparator<Source>() {
 
-        public int compare(Object o1, Object o2) {
-            Source src1 = (Source) o1;
-            Source src2 = (Source) o2;
-            return (extractNumber(src1.getId()) - extractNumber(src2.getId()));
+        public int compare(Source o1, Source o2) {
+            return (extractNumber(o1.getId()) - extractNumber(o2.getId()));
         }
     };
 
     /**
-     * Return sorted list of cities of Gedcom file
-     * Cities are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
+     * Return sorted list of cities of Gedcom file Cities are sorted according
+     * to their anchor-compatible equivallent strings (A-Z a-z '-' characters
+     * only)
      */
     @SuppressWarnings("unchecked")
     public List<String> getCities(Gedcom gedcom) {
         if (!initCity) {
-            initCity = buildCitiesList(gedcom, new Comparator() {
+            initCity = buildCitiesList(gedcom, new Comparator<String>() {
 
-                public int compare(Object t1, Object t2) {
-                    return ((String) t1).compareTo(((String) t2));
+                public int compare(String t1, String t2) {
+                    return (t1.compareTo(t2));
                 }
             });
         }
-        return (List) new ArrayList((Collection) listOfCities.keySet());
+        return new ArrayList<String>((Collection) listOfCities.keySet());
     }
 
     public int getTotalCitiesCount() {
         if (!initCity) {
-            initCity = buildCitiesList(gedcom, new Comparator() {
+            initCity = buildCitiesList(gedcom, new Comparator<String>() {
 
-                public int compare(Object t1, Object t2) {
-                    return ((String) t1).compareTo(((String) t2));
+                public int compare(String t1, String t2) {
+                    return (t1.compareTo(t2));
                 }
             });
         }
@@ -1037,19 +1054,19 @@ public class WebHelper {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean buildCitiesList(Gedcom gedcom, Comparator sortStrings) {
+    private boolean buildCitiesList(Gedcom gedcom, Comparator<String> sortStrings) {
 
-        Collection entities = gedcom.getEntities();
+        Collection<Entity> entities = gedcom.getEntities();
         List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Entity ent = (Entity) it.next();
-            getPropertiesRecursively((Property) ent, placesProps, PropertyPlace.class);
+        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
+            Entity ent = it.next();
+            getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
         }
 
         listOfCities = new TreeMap<String, Info>(sortStrings);
         String juridic = "";
-        for (Iterator it = placesProps.iterator(); it.hasNext();) {
-            Property prop = (Property) it.next();
+        for (Iterator<? extends Property> it = placesProps.iterator(); it.hasNext();) {
+            Property prop = it.next();
             if (prop instanceof PropertyPlace) {
                 juridic = ((PropertyPlace) prop).getCity().trim();
             } else {
@@ -1088,15 +1105,16 @@ public class WebHelper {
     }
 
     /**
-     * Return sorted list of days in the year for Gedcom file
-     * Days are sorted according to their anchor-compatible equivallent strings (A-Z a-z '-' characters only)
+     * Return sorted list of days in the year for Gedcom file Days are sorted
+     * according to their anchor-compatible equivallent strings (A-Z a-z '-'
+     * characters only)
      */
     @SuppressWarnings("unchecked")
     public List<String> getDays(Gedcom gedcom) {
         if (!initDay) {
             initDay = buildDaysList(gedcom);
         }
-        return (List<String>) new ArrayList((Collection) listOfDays.keySet());
+        return new ArrayList<String>((Collection) listOfDays.keySet());
     }
 
     public int getDaysCount(String day) {
@@ -1118,16 +1136,16 @@ public class WebHelper {
     private boolean buildDaysList(Gedcom gedcom) {
 
         listOfDays = new TreeMap<String, Info>();
-        Collection entities = gedcom.getEntities();
+        Collection<Entity> entities = gedcom.getEntities();
         List<Property> datesProps = new ArrayList<Property>();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Entity ent = (Entity) it.next();
-            getPropertiesRecursively((Property) ent, datesProps, PropertyDate.class);
+        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
+            Entity ent = it.next();
+            getPropertiesRecursively(ent, datesProps, PropertyDate.class);
         }
 
         String day = "";
-        for (Iterator it = datesProps.iterator(); it.hasNext();) {
-            Property prop = (Property) it.next();
+        for (Iterator<Property> it = datesProps.iterator(); it.hasNext();) {
+            Property prop = it.next();
             day = getDay(prop);
             if (day != null) {
                 Integer val = null;
@@ -1191,8 +1209,8 @@ public class WebHelper {
             initAncestors = buildAncestors(rootIndi);
         }
         Set<Indi> list = new HashSet<Indi>();
-        for (Iterator it = listOfAncestors.iterator(); it.hasNext();) {
-            Ancestor ancestor = (Ancestor) it.next();
+        for (Iterator<Ancestor> it = listOfAncestors.iterator(); it.hasNext();) {
+            Ancestor ancestor = it.next();
             list.add(ancestor.indi);
         }
         return list;
@@ -1221,7 +1239,9 @@ public class WebHelper {
 
     /**
      * Recurse over a generation list up to the maximum number of generations
-     * @param generation the current generation (sosa,indi,fam) - the list of all individuals in that generation
+     *
+     * @param generation the current generation (sosa,indi,fam) - the list of
+     * all individuals in that generation
      * @param gen the current generation
      */
     @SuppressWarnings("unchecked")
@@ -1271,11 +1291,9 @@ public class WebHelper {
             recursion(nextGeneration, gen + 1);
         }
     }
-    Comparator sortAncestors = new Comparator() {
+    Comparator<Ancestor> sortAncestors = new Comparator<Ancestor>() {
 
-        public int compare(Object o1, Object o2) {
-            Ancestor a1 = (Ancestor) o1;
-            Ancestor a2 = (Ancestor) o2;
+        public int compare(Ancestor a1, Ancestor a2) {
             return a1.sosa - a2.sosa;
         }
     };
@@ -1293,21 +1311,21 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     private boolean buildCousins(Indi rootIndi) {
         // declarations
-        List indis = new ArrayList(rootIndi.getGedcom().getEntities(Gedcom.INDI));
-        Set ancestors = getAncestors(rootIndi);
-        Set otherIndis = new HashSet();
+        List<Indi> indis = new ArrayList(rootIndi.getGedcom().getEntities(Gedcom.INDI));
+        Set<Indi> ancestors = getAncestors(rootIndi);
+        Set<Indi> otherIndis = new HashSet<Indi>();
 
         // get all non ancestors
-        for (Iterator it = indis.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
+            Indi indi = it.next();
             if (!ancestors.contains(indi)) {
                 otherIndis.add(indi);
             }
         }
 
         // Get cousins now by flaging all non ancestors that are descendants of ancestors
-        for (Iterator it = ancestors.iterator(); it.hasNext();) {
-            Indi ancestor = (Indi) it.next();
+        for (Iterator<Indi> it = ancestors.iterator(); it.hasNext();) {
+            Indi ancestor = it.next();
             Set<Indi> descendants = new HashSet<Indi>();
             getDescendants(ancestor, otherIndis, descendants);
             listOfCousins.addAll(descendants);
@@ -1341,9 +1359,8 @@ public class WebHelper {
     }
 
     /**
-     * Check if entity is private
-     * Individual : see above
-     * Family : private if either husband or wife is private
+     * Check if entity is private Individual : see above Family : private if
+     * either husband or wife is private
      */
     public boolean isPrivate(Entity ent) {
         if (ent instanceof Indi) {
@@ -1369,6 +1386,4 @@ public class WebHelper {
         return getPrivacyPolicy().getPrivateMask();
     }
 } // End_of_Report
-
-
 
