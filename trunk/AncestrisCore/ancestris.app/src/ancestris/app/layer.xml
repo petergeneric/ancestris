@@ -118,12 +118,6 @@
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_SearchAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="ancestris-app-TableAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.TableTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TableAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
             <file name="ancestris-app-TimelineAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="component" methodvalue="ancestris.app.TimelineTopComponent.getFactory"/>
@@ -286,10 +280,6 @@
                 <attr name="position" intvalue="-1000"/>
             </file>
             <file name="Separator1.instance_hidden"/>
-            <file name="TableAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TableAction.instance"/>
-                <attr name="position" intvalue="-900"/>
-            </file>
             <file name="TreeAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TreeAction.instance"/>
                 <attr name="position" intvalue="-800"/>
@@ -527,8 +517,6 @@
             </folder>
             <folder name="ancestris-properties">
             </folder>
-            <folder name="ancestris-table">
-            </folder>
             <folder name="ancestris-editor">
             </folder>
 
@@ -537,11 +525,6 @@
             <file name="ancestris-nav.wsmode" url="modes/ancestris-nav.wsmode"/>
             <file name="ancestris-output.wsmode" url="modes/ancestris-output.wsmode"/>
             <file name="ancestris-properties.wsmode" url="modes/ancestris-properties.wsmode"/>
-            <file name="ancestris-table.wsmode" url="modes/ancestris-table.wsmode"/>
-            <!--
-            <file name="ccenter.wsmode" url="outputWsmode.xml"/>
-            <file name="table.wsmode" url="tableWsmode.xml"/>
-            -->
         </folder>
     </folder>
     <folder name="OptionsExport">
