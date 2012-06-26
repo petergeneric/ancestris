@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ancestris.app;
+package ancestris.modules.views.table;
 
-import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.GenjViewTopComponent;
 import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -26,6 +26,7 @@ public final class TableTopComponent extends GenjViewTopComponent {
     private static TableTopComponent factory;
     private static ViewFactory viewfactory = new TableViewFactory();
 
+    @Override
     public ViewFactory getViewFactory() {
         // to call setcontext when table size panel is correct
         setSizeCorrect(false);
@@ -44,12 +45,14 @@ public final class TableTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
+    @Override
     public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
+    @Override
     public void readProperties(java.util.Properties p) {
         super.readProperties(p);
     }

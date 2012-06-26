@@ -6,10 +6,9 @@ package ancestris.app;
 
 import ancestris.api.lnf.LookAndFeelProvider;
 import ancestris.startup.settings.StartupOptions;
-import genj.util.AncestrisPreferences;
 import ancestris.util.Lifecycle;
-import genj.table.TableView;
 import genj.tree.TreeView;
+import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.List;
@@ -271,7 +270,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         cbSplitJuridictions.setSelected(Boolean.valueOf(editPrefs.get("isSplitJurisdictions", "")));
         setOpenEditor(editPrefs.get("isOpenEditor", ""));
         cbTreeFollowSelection.setSelected(TreeView.isFollowSelection());
-        cbTableFollowEntity.setSelected(TableView.getFollowEntity());
+//XXX:        cbTableFollowEntity.setSelected(TableView.getFollowEntity());
     }
 
     void store() {
@@ -299,7 +298,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         editPrefs.put("isOpenEditor", getOpenEditor());
         TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());
-        TableView.setFollowEntity(cbTableFollowEntity.isSelected());
+//XXX:        TableView.setFollowEntity(cbTableFollowEntity.isSelected());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
         if (needRestart)

@@ -16,6 +16,6 @@
   </constraints>
   <bounds x="0" y="0" width="0" height="0" />
   <frame state="0"/>
-    <active-tc  id="TimelineTopComponent_1" />
+    <active-tc  id="TableTopComponent_1" />
     <empty-behavior permanent="true"/>
 </mode>
