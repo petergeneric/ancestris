@@ -6,7 +6,6 @@
 
 package ancestris.modules.releve;
 
-import ancestris.app.TreeTopComponent;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.dnd.TreeViewDropTarget;
@@ -15,6 +14,7 @@ import ancestris.modules.releve.model.ModelBirth;
 import ancestris.modules.releve.model.ModelDeath;
 import ancestris.modules.releve.model.ModelMisc;
 import ancestris.modules.releve.model.ModelMarriage;
+import ancestris.modules.views.tree.TreeTopComponent;
 import genj.app.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;

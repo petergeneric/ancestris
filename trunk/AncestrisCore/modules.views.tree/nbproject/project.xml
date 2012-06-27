@@ -73,6 +73,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>ancestris.modules.views.tree</package>
                 <package>genj.tree</package>
             </public-packages>
         </data>
