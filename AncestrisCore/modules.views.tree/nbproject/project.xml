@@ -72,7 +72,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>genj.tree</package>
+            </public-packages>
         </data>
     </configuration>
 </project>

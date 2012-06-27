@@ -18,76 +18,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package genj.tree;
+//XXX: genj.tree is publically exported as plugin set a dependancy on TreeView
+// We must remove this like (redesign DnD logic or write some Interface API)
 
 import genj.common.SelectEntityWidget;
-import genj.gedcom.Context;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyXRef;
+import genj.gedcom.*;
 import genj.io.Filter;
 import genj.print.PrintAction;
 import genj.print.PrintRenderer;
-import genj.renderer.Blueprint;
-import genj.renderer.BlueprintManager;
-import genj.renderer.BlueprintRenderer;
-import genj.renderer.ChooseBlueprintAction;
-import genj.renderer.DPI;
 import genj.renderer.Options;
-import genj.renderer.RenderSelectionHintKey;
+import genj.renderer.*;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2;
-import genj.util.swing.ButtonHelper;
-import genj.util.swing.DialogHelper;
-import genj.util.swing.ImageIcon;
-import genj.util.swing.PopupWidget;
-import genj.util.swing.ScrollPaneWidget;
-import genj.util.swing.SliderWidget;
-import genj.util.swing.UnitGraphics;
-import genj.util.swing.ViewPortAdapter;
-import genj.util.swing.ViewPortOverview;
 import genj.util.swing.Action2.Group;
-import genj.view.ActionProvider;
-import genj.view.ContextProvider;
-import genj.view.MySelectionListener;
-import genj.view.ScreenshotAction;
-import genj.view.SelectionSink;
-import genj.view.SettingsAction;
-import genj.view.ToolBar;
-import genj.view.View;
-import genj.view.ViewContext;
-import ancestris.core.pluginservice.AncestrisPlugin;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import genj.util.swing.ImageIcon;
+import genj.util.swing.*;
+import genj.view.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.JViewport;
+import java.util.*;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
