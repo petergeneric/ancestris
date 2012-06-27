@@ -124,12 +124,6 @@
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TimelineAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="ancestris-app-TreeAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.TreeTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TreeAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
             <file name="ancestris-explorer-GedcomExplorerAction.instance">
                 <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerAction"/>
@@ -280,10 +274,6 @@
                 <attr name="position" intvalue="-1000"/>
             </file>
             <file name="Separator1.instance_hidden"/>
-            <file name="TreeAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TreeAction.instance"/>
-                <attr name="position" intvalue="-800"/>
-            </file>
             <file name="TimelineAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TimelineAction.instance"/>
                 <attr name="position" intvalue="-700"/>

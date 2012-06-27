@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-modules-views-tree-TreeAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.modules.views.tree.Bundle"/>
+                <attr name="component" methodvalue="ancestris.modules.views.tree.TreeTopComponent.getFactory"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.views.tree.Bundle#CTL_MENU_TreeAction"/>
+                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>    
+    <folder name="Menu">
+        <folder name="View">
+            <file name="TreeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-views-tree-TreeAction.instance"/>
+                <attr name="position" intvalue="-800"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

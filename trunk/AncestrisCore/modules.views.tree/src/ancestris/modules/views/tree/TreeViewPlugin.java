@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ancestris.app;
+package ancestris.modules.views.tree;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import java.util.ArrayList;
@@ -16,12 +16,12 @@ import org.openide.windows.TopComponent;
  * @author daniel
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-public class AncestrisCorePlugin extends AncestrisPlugin {
+public class TreeViewPlugin extends AncestrisPlugin {
 
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
-        List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(3);
-        result.add(EditTopComponent.class);
+        List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
+        result.add(TreeTopComponent.class);
         return result;
 
     }
