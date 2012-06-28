@@ -86,8 +86,11 @@ public class IndiMatcher extends EntityMatcher<Indi> {
     private int compareBirthDate(Indi leftIndi, Indi rightIndi) {
         PropertyDate leftIndiBirthDate = leftIndi.getBirthDate();
         PropertyDate rightIndiBirthDate = rightIndi.getBirthDate();
-
-        return leftIndiBirthDate.getStart().compareTo(rightIndiBirthDate.getStart());
+        if (leftIndiBirthDate != null && rightIndiBirthDate != null) {
+            return Math.abs(leftIndiBirthDate.getStart().compareTo(rightIndiBirthDate.getStart()));
+        } else {
+            return 5000;
+        }
     }
 
     private boolean compareBirthPlace(Indi leftIndi, Indi rightIndi) {
@@ -114,8 +117,11 @@ public class IndiMatcher extends EntityMatcher<Indi> {
     private int compareDeathDate(Indi leftIndi, Indi rightIndi) {
         PropertyDate leftIndiDeathDate = leftIndi.getDeathDate();
         PropertyDate rightIndiDeathDate = rightIndi.getDeathDate();
-
-        return leftIndiDeathDate.getStart().compareTo(rightIndiDeathDate.getStart());
+        if (leftIndiDeathDate != null && rightIndiDeathDate != null) {
+            return Math.abs(leftIndiDeathDate.getStart().compareTo(rightIndiDeathDate.getStart()));
+        } else {
+            return 5000;
+        }
     }
 
     private boolean compareDeathPlace(Indi leftIndi, Indi rightIndi) {
