@@ -99,13 +99,6 @@
                 <attr name="iconBase" stringvalue="ancestris/app/Help.png"/>
             </file>
 
-            <file name="ancestris-app-EntityAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.EntityTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_EntityAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-                <attr name="iconBase" stringvalue="ancestris/app/New.png"/>
-            </file>
             <file name="ancestris-app-ReportAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="component" methodvalue="ancestris.app.ReportTopComponent.getFactory"/>
@@ -269,10 +262,6 @@
         </folder>
         <file name="Versioning_hidden"/>
         <folder name="View">
-            <file name="EntityAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-EntityAction.instance"/>
-                <attr name="position" intvalue="-1000"/>
-            </file>
             <file name="Separator1.instance_hidden"/>
             <file name="TimelineAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TimelineAction.instance"/>
