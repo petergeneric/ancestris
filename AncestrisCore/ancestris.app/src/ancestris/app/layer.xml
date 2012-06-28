@@ -105,12 +105,6 @@
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_ReportAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            <file name="ancestris-app-SearchAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.SearchTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_SearchAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
             <file name="ancestris-app-TimelineAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="component" methodvalue="ancestris.app.TimelineTopComponent.getFactory"/>
