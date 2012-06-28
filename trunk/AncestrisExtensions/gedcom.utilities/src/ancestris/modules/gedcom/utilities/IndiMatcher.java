@@ -55,7 +55,7 @@ public class IndiMatcher extends EntityMatcher<Indi> {
         double count = 0;
         for (Property leftName : leftNames) {
             for (Property rightName : rightNames) {
-                if (((PropertyName)leftName).getLastName().equals(((PropertyName)rightName).getLastName())) {
+                if (((PropertyName) leftName).getLastName().equals(((PropertyName) rightName).getLastName())) {
                     count++;
                     break;
                 }
@@ -71,7 +71,7 @@ public class IndiMatcher extends EntityMatcher<Indi> {
 
         for (Property leftName : leftNames) {
             for (Property rightName : rightNames) {
-                if (((PropertyName)leftName).getFirstName().equals(((PropertyName)rightName).getFirstName())) {
+                if (((PropertyName) leftName).getFirstName().equals(((PropertyName) rightName).getFirstName())) {
                     count++;
                     break;
                 }
@@ -90,10 +90,19 @@ public class IndiMatcher extends EntityMatcher<Indi> {
     private boolean compareBirthPlace(Indi leftIndi, Indi rightIndi) {
         Property leftIndiBirthProperty = leftIndi.getProperty("BIRT");
         Property rightIndiBirthProperty = rightIndi.getProperty("BIRT");
-        PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiBirthProperty.getProperty("PLAC");
-        PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiBirthProperty.getProperty("PLAC");
-        if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
-            return true;
+
+        if (leftIndiBirthProperty != null && rightIndiBirthProperty != null) {
+            PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiBirthProperty.getProperty("PLAC");
+            PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiBirthProperty.getProperty("PLAC");
+            if (rightIndiPropertyPlace != null && leftIndiPropertyPlace != null) {
+                if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -109,12 +118,21 @@ public class IndiMatcher extends EntityMatcher<Indi> {
     private boolean compareDeathPlace(Indi leftIndi, Indi rightIndi) {
         Property leftIndiDeathProperty = leftIndi.getProperty("DEAT");
         Property rightIndiDeathProperty = rightIndi.getProperty("DEAT");
-        PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiDeathProperty.getProperty("PLAC");
-        PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiDeathProperty.getProperty("PLAC");
-        if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
-            return true;
+        if (leftIndiDeathProperty != null && rightIndiDeathProperty != null) {
+            PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiDeathProperty.getProperty("PLAC");
+            PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiDeathProperty.getProperty("PLAC");
+            if (leftIndiDeathProperty != null && rightIndiDeathProperty != null) {
+                if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
+
     }
 }
