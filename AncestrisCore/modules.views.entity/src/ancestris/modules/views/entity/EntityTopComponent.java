@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ancestris.app;
+package ancestris.modules.views.entity;
 
 import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
