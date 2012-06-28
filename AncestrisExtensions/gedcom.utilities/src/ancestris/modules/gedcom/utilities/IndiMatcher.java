@@ -121,7 +121,7 @@ public class IndiMatcher extends EntityMatcher<Indi> {
         if (leftIndiDeathProperty != null && rightIndiDeathProperty != null) {
             PropertyPlace rightIndiPropertyPlace = (PropertyPlace) rightIndiDeathProperty.getProperty("PLAC");
             PropertyPlace leftIndiPropertyPlace = (PropertyPlace) leftIndiDeathProperty.getProperty("PLAC");
-            if (leftIndiDeathProperty != null && rightIndiDeathProperty != null) {
+            if (rightIndiPropertyPlace != null && leftIndiPropertyPlace != null) {
                 if (rightIndiPropertyPlace.compareTo(leftIndiPropertyPlace) == 0) {
                     return true;
                 } else {
