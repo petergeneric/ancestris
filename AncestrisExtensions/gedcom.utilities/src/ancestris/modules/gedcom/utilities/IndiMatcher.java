@@ -1,6 +1,7 @@
 package ancestris.modules.gedcom.utilities;
 
 import genj.gedcom.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -13,31 +14,33 @@ public class IndiMatcher extends EntityMatcher<Indi> {
 
     @Override
     public int compareEntities(Indi leftIndi, Indi rightIndi) {
+        String a = "qq " + "\n";
         if ((leftIndi.getSex() == rightIndi.getSex())) {
-            // Compare LastName
-            int lastNameScore = compareLastNames(leftIndi, rightIndi);
-            if (lastNameScore > 80) {
-                // Compare FistNames
-                int firstNameScore = compareFirstNames(leftIndi, rightIndi);
-                if (firstNameScore > 80) {
-                    if (compareBirthPlace(leftIndi, rightIndi)) {
-                        if (compareBirthDate(leftIndi, rightIndi) < 4000) {
-                            if (compareDeathPlace(leftIndi, rightIndi)) {
+            // compare Birth dates
+            if (compareBirthDate(leftIndi, rightIndi) < 4000) {
+                // Compare LastName
+                int lastNameScore = compareLastNames(leftIndi, rightIndi);
+                if (lastNameScore > 80) {
+                    // Compare FistNames
+                    int firstNameScore = compareFirstNames(leftIndi, rightIndi);
+                    if (firstNameScore > 80) {
+                        if (compareBirthPlace(leftIndi, rightIndi)) {
+                            if (compareBirthDate(leftIndi, rightIndi) < 4000) {
                                 if (compareDeathDate(leftIndi, rightIndi) < 4000) {
                                     return 100;
                                 } else {
                                     return 80;
                                 }
                             } else {
-                                return 75;
+                                return 50;
                             }
                         } else {
-                            return 50;
+                            return 0;
                         }
-                    } else {
-                        return 25;
-                    }
 
+                    } else {
+                        return 0;
+                    }
                 } else {
                     return 0;
                 }
