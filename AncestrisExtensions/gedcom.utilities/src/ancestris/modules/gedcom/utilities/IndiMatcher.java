@@ -1,8 +1,8 @@
 package ancestris.modules.gedcom.utilities;
 
 import genj.gedcom.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -14,7 +14,6 @@ public class IndiMatcher extends EntityMatcher<Indi> {
 
     @Override
     public int compareEntities(Indi leftIndi, Indi rightIndi) {
-        String a = "qq " + "\n";
         if ((leftIndi.getSex() == rightIndi.getSex())) {
             // compare Birth dates
             if (compareBirthDate(leftIndi, rightIndi) < 4000) {
@@ -87,10 +86,16 @@ public class IndiMatcher extends EntityMatcher<Indi> {
         PropertyDate leftIndiBirthDate = leftIndi.getBirthDate();
         PropertyDate rightIndiBirthDate = rightIndi.getBirthDate();
         if (leftIndiBirthDate != null && rightIndiBirthDate != null) {
-            return Math.abs(leftIndiBirthDate.getStart().compareTo(rightIndiBirthDate.getStart()));
-        } else {
-            return 5000;
+            if (leftIndiBirthDate.isValid() && rightIndiBirthDate.isValid()) {
+                try {
+                    return Math.abs(leftIndiBirthDate.getStart().getJulianDay() - rightIndiBirthDate.getStart().getJulianDay());
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
+        return 5000;
+
     }
 
     private boolean compareBirthPlace(Indi leftIndi, Indi rightIndi) {
@@ -118,10 +123,15 @@ public class IndiMatcher extends EntityMatcher<Indi> {
         PropertyDate leftIndiDeathDate = leftIndi.getDeathDate();
         PropertyDate rightIndiDeathDate = rightIndi.getDeathDate();
         if (leftIndiDeathDate != null && rightIndiDeathDate != null) {
-            return Math.abs(leftIndiDeathDate.getStart().compareTo(rightIndiDeathDate.getStart()));
-        } else {
-            return 5000;
+            if (leftIndiDeathDate.isValid() && rightIndiDeathDate.isValid()) {
+                try {
+                    return Math.abs(leftIndiDeathDate.getStart().getJulianDay() - rightIndiDeathDate.getStart().getJulianDay());
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
+        return 5000;
     }
 
     private boolean compareDeathPlace(Indi leftIndi, Indi rightIndi) {
