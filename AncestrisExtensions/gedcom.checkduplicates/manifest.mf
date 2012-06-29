@@ -1,6 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: ancestris.modules.gedcom.checkduplicates
-OpenIDE-Module-Layer: ancestris/modules/gedcom/checkduplicates/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/checkduplicates/Bundle.properties
 OpenIDE-Module-Specification-Version: 0.8.0
 

@@ -11,6 +11,7 @@ import ancestris.modules.gedcom.utilities.PotentialMatch;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.Dialog;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,8 @@ public class CheckDuplicates implements Runnable {
             List<? extends Entity> rightEntity = new ArrayList(rightGedcom.getEntities(tag));
 
             log.log(Level.INFO, "Checking: {0}", tag);
-
+            
+            progressHandle.progress(MessageFormat.format(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicates.Checking"), tag));
             if (leftEntity != null && rightEntity != null) {
                 potentialMatches.addAll((entitiesMatchers.get(tag)).getPotentialMatches(leftEntity, rightEntity));
             }
