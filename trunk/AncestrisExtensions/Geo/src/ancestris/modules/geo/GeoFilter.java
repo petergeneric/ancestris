@@ -11,7 +11,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import ancestris.app.EditTopComponent;
-import ancestris.app.SearchTopComponent;
+import ancestris.modules.utilities.search.SearchTopComponent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
