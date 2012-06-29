@@ -72,7 +72,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>ancestris.modules.utilities.search</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
