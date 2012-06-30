@@ -6,14 +6,14 @@
 
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.PlaceManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -30,10 +30,10 @@ public class RelevePanel extends javax.swing.JPanel  {
         releveTable.setTableSelectionListener(releveEditor);
     }
 
-    public void setModel(DataManager dataManager, DataManager.ModelType modelType, ConfigPanel configPanel) {
+    public void setModel(DataManager dataManager, DataManager.ModelType modelType, PlaceManager placeManager) {
         releveModel = dataManager.getModel(modelType);
-        releveTable.setModel(dataManager, modelType, configPanel);
-        releveEditor.setModel(dataManager, modelType, configPanel);
+        releveTable.setModel(dataManager, modelType, placeManager);
+        releveEditor.setModel(dataManager, modelType, placeManager);
 
         // j'envoie une notification pour initialiser l'affichage de la table et de l'editeur
         // remarque : ne pas utiliser dataManager.fireTableStructureChanged();
@@ -42,29 +42,31 @@ public class RelevePanel extends javax.swing.JPanel  {
 
         // j'initialise la largeur de l'editeur avec la largeur de la session precedente
         // Remarque : il faut differer le changement de taille car sinon jSplitPane1.getSize() est nul
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                jSplitPane1.setDividerLocation(jSplitPane1.getSize().width
-                             - jSplitPane1.getInsets().right
-                             - jSplitPane1.getDividerSize()
-                             - releveEditor.getEditorWidth());
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                jSplitPane1.setDividerLocation(jSplitPane1.getSize().width
+//                             - jSplitPane1.getInsets().right
+//                             - jSplitPane1.getDividerSize()
+//                             - releveEditor.getEditorWidth());
+//
+//            }
+//        });
+        jSplitPane1.setDividerLocation(releveEditor.getEditorWidth());
         
     }
 
-    @Override
-    public void setBounds(int x,
-                      int y,
-                      int width,
-                      int height) {
-        super.setBounds(x, y, width, height);
-        jSplitPane1.setDividerLocation(width
-                             - jSplitPane1.getInsets().right
-                             - jSplitPane1.getDividerSize()
-                             - releveEditor.getEditorWidth());
-    }
+//    @Override
+//    public void setBounds(int x,
+//                      int y,
+//                      int width,
+//                      int height) {
+//        super.setBounds(x, y, width, height);
+//        jSplitPane1.setDividerLocation(width
+//                             - jSplitPane1.getInsets().right
+//                             - jSplitPane1.getDividerSize()
+//                             - releveEditor.getEditorWidth());
+//    }
 
     /**
      * sauvegarde de la configuration a la fermeture du composant
@@ -72,10 +74,11 @@ public class RelevePanel extends javax.swing.JPanel  {
     void componentClosed() {
         releveTable.saveColumnLayout();
         // je sauvegarde la largeur de l'editeur
-        releveEditor.putEditorWidth(jSplitPane1.getSize().width
-                - jSplitPane1.getInsets().right
-                - jSplitPane1.getDividerSize()
-                - jSplitPane1.getDividerLocation() );
+//        releveEditor.putEditorWidth(jSplitPane1.getSize().width
+//                - jSplitPane1.getInsets().right
+//                - jSplitPane1.getDividerSize()
+//                - jSplitPane1.getDividerLocation() );
+        releveEditor.putEditorWidth(jSplitPane1.getDividerLocation() );
     }
 
     public void selectRecord(int rowIndex) {
@@ -137,15 +140,24 @@ public class RelevePanel extends javax.swing.JPanel  {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
+        editorPanel = new javax.swing.JPanel();
+        releveEditor = new ancestris.modules.releve.editor.ReleveEditor();
         tablePanel = new javax.swing.JPanel();
         jScrollPaneTable = new javax.swing.JScrollPane();
         releveTable = new ancestris.modules.releve.ReleveTable();
-        editorPanel = new javax.swing.JPanel();
-        releveEditor = new ancestris.modules.releve.editor.ReleveEditor();
 
         setLayout(new java.awt.BorderLayout());
 
-        jSplitPane1.setResizeWeight(1.0);
+        jSplitPane1.setRequestFocusEnabled(false);
+
+        editorPanel.setPreferredSize(new java.awt.Dimension(270, 100));
+        editorPanel.setLayout(new java.awt.BorderLayout(4, 4));
+
+        releveEditor.setFont(new java.awt.Font("Arial", 2, 11)); // NOI18N
+        releveEditor.setMinimumSize(new java.awt.Dimension(100, 300));
+        editorPanel.add(releveEditor, java.awt.BorderLayout.CENTER);
+
+        jSplitPane1.setLeftComponent(editorPanel);
 
         tablePanel.setPreferredSize(new java.awt.Dimension(0, 0));
         tablePanel.setLayout(new java.awt.BorderLayout());
@@ -162,16 +174,7 @@ public class RelevePanel extends javax.swing.JPanel  {
 
         tablePanel.add(jScrollPaneTable, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setLeftComponent(tablePanel);
-
-        editorPanel.setPreferredSize(new java.awt.Dimension(270, 100));
-        editorPanel.setLayout(new java.awt.BorderLayout(4, 4));
-
-        releveEditor.setFont(new java.awt.Font("Arial", 2, 11));
-        releveEditor.setMinimumSize(new java.awt.Dimension(100, 300));
-        editorPanel.add(releveEditor, java.awt.BorderLayout.CENTER);
-
-        jSplitPane1.setRightComponent(editorPanel);
+        jSplitPane1.setRightComponent(tablePanel);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

@@ -1,6 +1,5 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.ConfigPanel;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.RecordBirth;
@@ -106,13 +105,12 @@ public class ReleveFileNimegueTest extends TestCase {
      * Test de l'enregistrement d'une naissance
      */
     public void testSaveFileBirth() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordBirth record = new RecordBirth();
         record.setEventDate("11/11/2000");
@@ -128,8 +126,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(record,false);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
@@ -227,13 +225,12 @@ public class ReleveFileNimegueTest extends TestCase {
      * Test de l'enregistrement d'un mariage
      */
     public void testSaveFileMarriage() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordMarriage record = new RecordMarriage();
         record.setEventDate("29/02/2012");
@@ -253,8 +250,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-        dateManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(record,false);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
         assertEquals("save result", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
@@ -351,13 +348,12 @@ public class ReleveFileNimegueTest extends TestCase {
      * Test de l'enregistrement d'un deces
      */
     public void testSaveFileDeath() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordDeath record = new RecordDeath();
         record.setEventDate("11/11/2000");
@@ -373,8 +369,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(record,false);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);
@@ -471,13 +467,12 @@ public class ReleveFileNimegueTest extends TestCase {
      * Test de l'enregistrement d'un divers
      */
     public void testSaveFileMisc() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordMisc record = new RecordMisc();
         record.setEventDate("29/02/2012");
@@ -499,8 +494,8 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-        dateManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileNimegue.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(record,false);
+        StringBuilder sb = ReleveFileNimegue.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
         assertEquals("save result", "", sb.toString());
 
         FileBuffer fb = ReleveFileNimegue.loadFile(file);

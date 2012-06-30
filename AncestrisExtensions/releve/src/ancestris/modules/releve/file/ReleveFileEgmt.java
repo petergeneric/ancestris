@@ -1,6 +1,6 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.PlaceManager;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
@@ -463,7 +463,7 @@ public class ReleveFileEgmt {
                     fileBuffer.append(e.getMessage()).append("\n");
                 }
             } // for
-
+            br.close();
         } catch (Exception e) {
             System.out.println("Exception while reading file: " + e);
             throw e;

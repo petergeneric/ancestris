@@ -1,9 +1,5 @@
 package ancestris.modules.releve.model;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
-
 /**
  *
  * @author Michel
@@ -53,7 +49,7 @@ public class ModelDeath extends ModelAbstract {
     }
 
     @Override
-    public Class getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnClass[column];
     }
 

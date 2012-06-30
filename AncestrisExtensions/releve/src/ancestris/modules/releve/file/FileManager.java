@@ -1,6 +1,6 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.PlaceManager;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.ModelAbstract;

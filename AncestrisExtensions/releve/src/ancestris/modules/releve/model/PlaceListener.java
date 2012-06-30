@@ -1,4 +1,4 @@
-package ancestris.modules.releve;
+package ancestris.modules.releve.model;
 
 /**
  * Interface pour les listeners de la selection de releves dans la table

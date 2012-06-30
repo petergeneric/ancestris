@@ -1,8 +1,7 @@
 package ancestris.modules.releve.editor;
 
-import ancestris.modules.releve.ConfigPanel;
-import ancestris.modules.releve.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.ReleveTopComponent;
 import java.awt.Dimension;
 import java.awt.Toolkit;

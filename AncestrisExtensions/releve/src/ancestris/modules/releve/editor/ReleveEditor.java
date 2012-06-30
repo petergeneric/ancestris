@@ -5,9 +5,8 @@
  */
 package ancestris.modules.releve.editor;
 
-import ancestris.modules.releve.ConfigPanel;
-import ancestris.modules.releve.PlaceListener;
-import ancestris.modules.releve.PlaceManager;
+import ancestris.modules.releve.model.PlaceListener;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.BeanField;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
@@ -60,8 +59,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     ModelAbstract recordModel = null;
     int currentRecordIndex = -1;
     boolean standaloneMode = false;
-    private JLabel jLabelPlace = null;
-    String place;
     /**
      * bean ayant le focus par defaut (utilisé a la creation d'un releve
      */
@@ -92,10 +89,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         getActionMap().put(this, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( actionEvent.getActionCommand().equals("c")
-                    || actionEvent.getActionCommand().equals("m")
-                    || actionEvent.getActionCommand().equals("d")
-                    || actionEvent.getActionCommand().equals("v") ) {
+                if ( actionEvent.getActionCommand().equals("c") ) {
                     jButtonNewActionPerformed(actionEvent);
                 } else if ( actionEvent.getActionCommand().equals("s") ) {
                     jButtonDeleteActionPerformed(actionEvent);
@@ -140,7 +134,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         // j'abonne l'editeur aux changements de lieu
         placeManager.addPlaceListener(this);
-        place=placeManager.getPlace();
+        jLabelPlace.setText(placeManager.getPlace());
 
         // je complete le tooltip du bouton "créer" en fonction du modele
         String toolTipText = org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText");
@@ -391,17 +385,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         fieldsPanel.setFocusCycleRoot(true);
         fieldsPanel.resetKeyboardActions();
         fieldsPanel.removeAll();
-        jLabelPlace = null;
+        int lineNo = 0;
         
         if (recordModel != null) {
             BeanField[] beanFields = recordModel.getFieldList(recordIndex);
-            int lineNo = 0;
             KeyStroke keyStroke = null;
             defaultBeanFocus = null;
-
-            // j'ajoute la permiere ligne avec le nom de la commune
-            addRow(lineNo, place.toString(), null, null);
-            lineNo++;
 
             // j'affiche les beans en fonction du type de champ
             for (int recordNo = 0; recordNo < beanFields.length; recordNo++) {
@@ -636,15 +625,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             }
 
             jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-            fieldsPanel.add(jLabel1, gridBagConstraints);
-            if (lineNo == 0) {
-                jLabelPlace = jLabel1;
-            }
+            fieldsPanel.add(jLabel1, gridBagConstraints);           
         }
     }
     
     public void setStandaloneMode() {
-        //jButtonStandalone.setVisible(false);
+        jButtonFile.setVisible(false);
         jButtonPrevious.setVisible(true);
         jButtonNext.setVisible(true);
         jTextFielRecordNo.setVisible(true);
@@ -804,7 +790,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
             // je demande confirmation à l'utilisateur si c'est un nouveau nom, prénom, profession ou TypeEventTag
             String newValue = bean.getBeanField().getField().toString();
             if (dataManager.getNewValueControlEnabled() && !newValue.isEmpty()) {
-                List completionList = null;
+                List<String> completionList = null;
                 // je determine la liste de completion qui doit etre utilisee
                 switch (fieldType) {
                     case indiFirstName :
@@ -863,8 +849,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     // je demande à l'utilisateur s'il veut enregistrer cette nouvelle valeur
                     Toolkit.getDefaultToolkit().beep();
                     int choice = JOptionPane.showConfirmDialog(this,
-                            String.format("Confirmez-vous la saisie de ce nouveau %s : %s ", bean.getBeanField().getLabel(), newValue),
-                            NbBundle.getMessage(ConfigPanel.class, "ConfigPanel.jCheckBoxNewValueControl.text"),
+                            String.format(NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.confirmNewValue"), bean.getBeanField().getLabel(), newValue),
+                            NbBundle.getMessage(ReleveTopComponent.class, "ReleveOptionsPanel.jCheckBoxNewValueControl.text"),
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
                     // choice = 0 si l'utilisateur a cliqué sur OK 
@@ -894,7 +880,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 case indiFirstName :
                     if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
                         record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
-                        refreshBeanField(fieldType.indiSex);
+                        refreshBeanField(FieldType.indiSex);
                     }
                     dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
                     break;
@@ -920,7 +906,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 case wifeFirstName :
                     if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
                         record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
-                        refreshBeanField(fieldType.wifeSex);
+                        refreshBeanField(FieldType.wifeSex);
                     }
                     dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getValue(), record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
                     break;
@@ -1063,6 +1049,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     private void initComponents() {
 
         editorBar = new javax.swing.JPanel();
+        jButtonFile = new javax.swing.JButton();
+        jButtonConfig = new javax.swing.JButton();
         jButtonNew = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
         jButtonPrevious = new javax.swing.JButton();
@@ -1070,6 +1058,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jButtonNext = new javax.swing.JButton();
         jButtonStandalone = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
+        jPanelPlace = new javax.swing.JPanel();
+        jLabelPlace = new javax.swing.JLabel();
+        jButtonPlace = new javax.swing.JButton();
         fieldsPanel = new javax.swing.JPanel();
 
         setMinimumSize(new java.awt.Dimension(200, 300));
@@ -1078,6 +1070,27 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         editorBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         editorBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        jButtonFile.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonFile.text")); // NOI18N
+        jButtonFile.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jButtonFile.setBorderPainted(false);
+        jButtonFile.setPreferredSize(new java.awt.Dimension(40, 25));
+        jButtonFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFileActionPerformed(evt);
+            }
+        });
+        editorBar.add(jButtonFile);
+
+        jButtonConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Settings.png"))); // NOI18N
+        jButtonConfig.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonConfig.toolTipText")); // NOI18N
+        jButtonConfig.setPreferredSize(new java.awt.Dimension(29, 25));
+        jButtonConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConfigActionPerformed(evt);
+            }
+        });
+        editorBar.add(jButtonConfig);
 
         jButtonNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewRecord.png"))); // NOI18N
         jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText")); // NOI18N
@@ -1138,10 +1151,34 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         add(editorBar, java.awt.BorderLayout.NORTH);
 
-        jScrollPane1.setPreferredSize(null);
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jPanelPlace.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanelPlace.setLayout(new java.awt.BorderLayout());
+
+        jLabelPlace.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelPlace.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabelPlace.setName("");
+        jLabelPlace.setOpaque(true);
+        jPanelPlace.add(jLabelPlace, java.awt.BorderLayout.CENTER);
+
+        jButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/registre.png"))); // NOI18N
+        jButtonPlace.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.toolTipText")); // NOI18N
+        jButtonPlace.setName("");
+        jButtonPlace.setPreferredSize(new java.awt.Dimension(29, 25));
+        jButtonPlace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPlaceActionPerformed(evt);
+            }
+        });
+        jPanelPlace.add(jButtonPlace, java.awt.BorderLayout.EAST);
+
+        jPanel1.add(jPanelPlace, java.awt.BorderLayout.NORTH);
 
         fieldsPanel.setLayout(new java.awt.GridBagLayout());
-        jScrollPane1.setViewportView(fieldsPanel);
+        jPanel1.add(fieldsPanel, java.awt.BorderLayout.CENTER);
+
+        jScrollPane1.setViewportView(jPanel1);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -1215,15 +1252,38 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         }
     }//GEN-LAST:event_jButtonStandaloneActionPerformed
 
+    private void jButtonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileActionPerformed
+        // j'affiche le menu Fichier
+        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
+        ((ReleveTopComponent)tc).showPopupMenu(jButtonFile, 0, jButtonFile.getHeight());
+    }//GEN-LAST:event_jButtonFileActionPerformed
+
+    private void jButtonConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigActionPerformed
+        // J'affiche le panneau des options
+        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
+        ((ReleveTopComponent)tc).showOptionPanel();
+    }//GEN-LAST:event_jButtonConfigActionPerformed
+
+    private void jButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaceActionPerformed
+         TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
+        ((ReleveTopComponent)tc).showConfigPanel();
+    }//GEN-LAST:event_jButtonPlaceActionPerformed
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel editorBar;
     private javax.swing.JPanel fieldsPanel;
+    private javax.swing.JButton jButtonConfig;
     private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonFile;
     private javax.swing.JButton jButtonNew;
     private javax.swing.JButton jButtonNext;
+    private javax.swing.JButton jButtonPlace;
     private javax.swing.JButton jButtonPrevious;
     private javax.swing.JButton jButtonStandalone;
+    private javax.swing.JLabel jLabelPlace;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelPlace;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFielRecordNo;
     // End of variables declaration//GEN-END:variables
@@ -1287,10 +1347,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      */
     @Override
     public void updatePlace(String place) {
-        this.place = place; 
-        if (jLabelPlace != null) {
-            jLabelPlace.setText(place);
-        }
+        jLabelPlace.setText(place);
     }
 
 }

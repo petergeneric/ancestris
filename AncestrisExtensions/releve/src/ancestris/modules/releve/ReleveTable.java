@@ -9,6 +9,7 @@ import ancestris.modules.releve.model.ModelBirth;
 import ancestris.modules.releve.model.ModelDeath;
 import ancestris.modules.releve.model.ModelMarriage;
 import ancestris.modules.releve.model.ModelMisc;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.PropertyDate;
 import genj.util.WordBuffer;

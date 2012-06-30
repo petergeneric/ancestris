@@ -677,9 +677,9 @@ public class MergeQuery {
             recordBirthDate = record.getEventDate();
         }
 
-        Collection entities = gedcom.getIndis();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        Collection<Indi> entities = gedcom.getIndis();
+        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
+            Indi indi = it.next();
 
             if (families!= null) {
                 boolean found = false;
@@ -843,9 +843,9 @@ public class MergeQuery {
         // je recupere la date de mariage du releve
         PropertyDate marriageDate = marriageRecord.getEventDate();
 
-        Collection entities = gedcom.getIndis();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        Collection<Indi> entities = gedcom.getIndis();
+        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
+            Indi indi = it.next();
 
             if (excludedFamilies != null) {
                 boolean found = false;

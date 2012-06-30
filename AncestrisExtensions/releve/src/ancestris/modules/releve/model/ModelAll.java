@@ -75,7 +75,7 @@ public class ModelAll extends ModelAbstract {
     }
 
     @Override
-    public Class getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnType[column];
     }
     
