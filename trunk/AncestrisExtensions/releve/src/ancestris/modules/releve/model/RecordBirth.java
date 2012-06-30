@@ -1,7 +1,5 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.model.Field.FieldType;
-
 /**
  *
  * @author Michel

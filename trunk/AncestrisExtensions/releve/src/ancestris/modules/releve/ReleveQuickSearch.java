@@ -1,10 +1,10 @@
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.model.Record;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.ModelAbstract;
+import ancestris.modules.releve.model.Record;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;

@@ -45,7 +45,7 @@ public class ModelMarriage extends ModelAbstract {
     }
 
     @Override
-    public Class getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnType[column];
     }
     

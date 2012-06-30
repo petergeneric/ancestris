@@ -1,7 +1,5 @@
 package ancestris.modules.releve.model;
 
-import org.openide.util.Exceptions;
-
 /**
  *
  * @author Michel

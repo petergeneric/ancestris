@@ -1,6 +1,5 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.ConfigPanel;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.RecordBirth;
@@ -20,10 +19,10 @@ public class ReleveFileEgmtTest extends TestCase {
      * Test of saveFile method, of class ReleveFileEgmt.
      */
     public void testSaveFileBirth() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
-        DataManager dateManager = new DataManager(configPanel);
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace("");
 
         RecordBirth birth = new RecordBirth();
         birth.setEventDate("11/11/2000");
@@ -38,8 +37,8 @@ public class ReleveFileEgmtTest extends TestCase {
         birth.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         birth.setGeneralComment("generalcomment");
 
-        dateManager.addRecord(birth,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(birth,false);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", sb.length(), 0);
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -111,10 +110,10 @@ public class ReleveFileEgmtTest extends TestCase {
      * Test of saveFile method, of class ReleveFileEgmt.
      */
     public void testSaveFileMarriage() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
-        DataManager dateManager = new DataManager(configPanel);
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace("");
 
         RecordMarriage marriage = new RecordMarriage();
         marriage.setEventDate("11/01/2000");
@@ -134,8 +133,8 @@ public class ReleveFileEgmtTest extends TestCase {
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         marriage.setGeneralComment("generalcomment");
 
-        dateManager.addRecord(marriage,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(marriage,false);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -231,13 +230,12 @@ public class ReleveFileEgmtTest extends TestCase {
      * Test de l'enregistrement d'un deces
      */
     public void testSaveFileDeath() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordDeath death = new RecordDeath();
         death.setEventDate("11/11/2000");
@@ -253,8 +251,8 @@ public class ReleveFileEgmtTest extends TestCase {
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(death,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(death,false);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", "", sb.toString());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);
@@ -353,10 +351,10 @@ public class ReleveFileEgmtTest extends TestCase {
      * Test of saveFile method, of class ReleveFileEgmt.
      */
     public void testSaveFileMisc() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
-        DataManager dateManager = new DataManager(configPanel);
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace("");
 
         RecordMisc misc = new RecordMisc();
         misc.setEventDate("11/01/2000");
@@ -379,8 +377,8 @@ public class ReleveFileEgmtTest extends TestCase {
         misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(misc,false);
-        StringBuilder sb = ReleveFileEgmt.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(misc,false);
+        StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileEgmt.loadFile(file);

@@ -1,6 +1,5 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.ConfigPanel;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.RecordBirth;
@@ -55,8 +54,9 @@ public class FileManagerTest extends TestCase {
             data = "ANCESTRISV2;;;;;;;M;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
             FileBuffer fb = FileManager.loadFile(file);
+            file.delete();
             assertEquals("Mariage minimal", "", fb.getError().toString());
-
+            
         } catch (Exception ex) {
             fail("IOException "+ ex.toString());
             if (file!= null) {
@@ -71,15 +71,13 @@ public class FileManagerTest extends TestCase {
     public void testSaveFile() {
         File saveFile = new File("xxxx/xxx.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country";
-        configPanel.setPlace(place);
-        DataManager dateManager = new DataManager(configPanel);
-
+        DataManager dateManager = new DataManager();
+        dateManager.setPlace(place);
         RecordBirth record = new RecordBirth();
         dateManager.addRecord(record,false);
 
-        StringBuilder sb = FileManager.saveFile(dateManager, configPanel, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
+        StringBuilder sb = FileManager.saveFile(dateManager, dateManager, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
         assertEquals("save result", true, sb.toString().contains("java.io.FileNotFoundException"));
 
     }

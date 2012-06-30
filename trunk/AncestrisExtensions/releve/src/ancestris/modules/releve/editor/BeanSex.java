@@ -14,18 +14,18 @@ import javax.swing.KeyStroke;
  */
 public class BeanSex extends Bean {
 
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox1;
 
     public BeanSex() {
         setLayout(new java.awt.BorderLayout());
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox<String>();
 
         // l'ordre des valeurs dans la combobox doit correspondre à l'ordre des
         // valeurs predefinies dans FieldSex
         //  UNKNOWN = 0;
         //  MALE = 1;
         //  FEMALE = 2;
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Inconnu", "Masculin", "Feminin" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]{"Inconnu", "Masculin", "Feminin" }));
         jComboBox1.addActionListener(changeSupport);
         add(jComboBox1, java.awt.BorderLayout.CENTER);
         defaultFocus = jComboBox1;

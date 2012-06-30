@@ -38,8 +38,8 @@ public class ReleveFileGedcom {
             int lineNumber = 0;
 
             //read comma separated file line by line
-            for (Iterator it = gedcom.getEntities().iterator(); it.hasNext();) {
-                Entity entity = (Entity) it.next();
+            for (Iterator<Entity> it = gedcom.getEntities().iterator(); it.hasNext();) {
+                Entity entity = it.next();
 
                 if (entity instanceof Indi) {
                     Indi indi = (Indi) entity;

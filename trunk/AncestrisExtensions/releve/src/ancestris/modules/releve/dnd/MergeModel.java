@@ -727,8 +727,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 mergeRow.merge = true;
                 mergeRow.compareResult = CompareResult.EQUAL;
             } else {
-                if ((rowType == rowType.IndiParentFamily && record.getIndiFatherLastName().isEmpty() && record.getIndiMotherLastName().isEmpty())
-                        || (rowType == rowType.WifeParentFamily && record.getWifeFatherLastName().isEmpty() && record.getWifeMotherLastName().isEmpty())
+                if ((rowType == RowType.IndiParentFamily && record.getIndiFatherLastName().isEmpty() && record.getIndiMotherLastName().isEmpty())
+                        || (rowType == RowType.WifeParentFamily && record.getWifeFatherLastName().isEmpty() && record.getWifeMotherLastName().isEmpty())
                         ) {
                     // j'interdis la creation d'un nouvelle famille si le nom du pere et de la mere sont vide.
                     mergeRow.merge = false;
@@ -876,7 +876,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
 
     @Override
-    public Class getColumnClass(int col) {
+    public Class<?> getColumnClass(int col) {
         return columnClass[col];
     }
 

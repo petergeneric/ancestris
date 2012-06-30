@@ -1,6 +1,5 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.ConfigPanel;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field.FieldType;
@@ -122,13 +121,12 @@ public class ReleveFileAncestrisV2Test extends TestCase {
      * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileBirthUtf8() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
         
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country,";
-        configPanel.setPlace(place);
         
-        DataManager dateManager = new DataManager(configPanel);
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordBirth birth = new RecordBirth();
         birth.setEventDate("01/01/2000");
@@ -142,8 +140,8 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         birth.setWitness3("wfirstname", "wlastname", "woccupation", "wcomment");
         birth.setWitness4("wfirstname", "wlastname", "woccupation", "wcomment");
 
-        dateManager.addRecord(birth,false);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveBirthModel(), file, false);
+        dataManager.addRecord(birth,false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getReleveBirthModel(), file, false);
         assertEquals("verify save error", sb.length(), 0);
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
@@ -171,13 +169,12 @@ public class ReleveFileAncestrisV2Test extends TestCase {
      * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileMarriage() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
         
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country,";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordMarriage marriage = new RecordMarriage();
         marriage.setEventDate("01/01/2000");
@@ -196,8 +193,8 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         marriage.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         marriage.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(marriage,false);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveMarriageModel(), file, false);
+        dataManager.addRecord(marriage,false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getReleveMarriageModel(), file, false);
         assertEquals("save result", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
@@ -225,13 +222,12 @@ public class ReleveFileAncestrisV2Test extends TestCase {
      * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileDeath() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country,";
-        configPanel.setPlace(place);
-
-        DataManager dateManager = new DataManager(configPanel);
+        
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordDeath death = new RecordDeath();
         death.setEventDate("11/11/2000");
@@ -247,8 +243,8 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         death.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(death,false);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveDeathModel(), file, false);
+        dataManager.addRecord(death,false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getReleveDeathModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
@@ -276,12 +272,11 @@ public class ReleveFileAncestrisV2Test extends TestCase {
      * Test of saveFile method, of class ReleveFileAncestrisV2.
      */
     public void testSaveFileMisc() throws Exception {
-        File file = new File("testsaveFile.txt");
+        File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        ConfigPanel configPanel = new ConfigPanel();
         String place = "cityname,citycode,county,state,country,";
-        configPanel.setPlace(place);
-        DataManager dateManager = new DataManager(configPanel);
+        DataManager dataManager = new DataManager();
+        dataManager.setPlace(place);
 
         RecordMisc record = new RecordMisc();
         record.setEventDate("29/02/2012");
@@ -304,8 +299,8 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
-        dateManager.addRecord(record,false);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(configPanel, dateManager.getReleveMiscModel(), file, false);
+        dataManager.addRecord(record,false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getReleveMiscModel(), file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);

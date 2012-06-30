@@ -1,10 +1,12 @@
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldEventType;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -13,11 +15,14 @@ import javax.swing.KeyStroke;
  *
  * @author Michel
  */
-public class BeanEventType extends Bean {
+public class BeanEventType extends Bean implements CompletionListener {
     //private Java2sAutoTextField cListEventType;
     private Java2sAutoComboBox cListEventType;
+    private CompletionProvider completionProvider;
 
     public BeanEventType(CompletionProvider completionProvider) {
+        this.completionProvider = completionProvider;
+        completionProvider.addEventTypesListener(this);
         setLayout(new java.awt.BorderLayout());
         cListEventType = new Java2sAutoComboBox(completionProvider.getEventTypes());
         cListEventType.setStrict(false);        
@@ -95,4 +100,25 @@ public class BeanEventType extends Bean {
         // j'affiche la valeur mise en forme
         cListEventType.getEditor().setItem(fieldEventType.toString());
     }
+
+    /**
+     * je supprime la declaration de listener
+     * avant que l'objet ne soit detruit
+     */
+    @Override
+    public void removeNotify() {
+        completionProvider.removeEventTypesListener(this);
+        super.removeNotify();
+    }
+
+    /**
+     * Implemente CompletionListener
+     * copie la nouvelle liste de completion
+     * @param keyList
+     */
+    @Override
+    public void keyUpdated(List<String> keyList) {
+        cListEventType.setDataList(keyList);
+    }
+
 }

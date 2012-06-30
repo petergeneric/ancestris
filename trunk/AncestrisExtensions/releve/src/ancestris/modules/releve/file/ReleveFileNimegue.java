@@ -1,7 +1,6 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.PlaceManager;
-import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.ModelAbstract;
 import ancestris.modules.releve.model.RecordMisc;
 import ancestris.modules.releve.model.RecordBirth;
@@ -189,7 +188,7 @@ public class ReleveFileNimegue {
 
             //create BufferedReader to read file
             BufferedReader br = new BufferedReader(new FileReader(inputFile));
-            String strLine = "";
+            String strLine;
             int lineNumber = 0;
 
             //read comma separated file line by line
@@ -588,10 +587,10 @@ public class ReleveFileNimegue {
                     fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
                     fileBuffer.append("\n");
                     fileBuffer.append(strLine).append("\n");
-                    e.printStackTrace();
+                    e.printStackTrace(System.err);
                 }
             } // for
-
+            br.close();
         } catch (Exception e) {
             fileBuffer.append(e.toString()).append("\n");
         }
@@ -940,14 +939,14 @@ public class ReleveFileNimegue {
                     sb.append("\n");
                     sb.append(line).append("\n   ");
                     sb.append(e.getMessage()).append("\n");
-                    e.printStackTrace();
+                    e.printStackTrace(System.err);
                 }
             }
             writer.close();
 
         } catch (Exception e) {
             sb.append(e.getMessage()).append("\n");
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
         return sb;
     }
