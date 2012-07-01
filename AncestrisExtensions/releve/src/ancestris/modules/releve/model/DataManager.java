@@ -461,7 +461,7 @@ public class DataManager implements PlaceManager {
      */
     @Override
     public String getPlace() {
-        return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName()+",";
+        return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
     }
 
     @Override

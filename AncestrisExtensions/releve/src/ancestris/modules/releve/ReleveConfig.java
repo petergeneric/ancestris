@@ -42,7 +42,7 @@ public class ReleveConfig extends javax.swing.JDialog {
         cityCodeEntry.setText(dataManager.getCityCode());
         countyNameEntry.setText(dataManager.getCountyName());
         stateEntry.setText(dataManager.getStateName());
-        countryEntry.setText(dataManager.getCountyName());   
+        countryEntry.setText(dataManager.getCountryName());   
         
         final int width = getWidth();
         final int height = getHeight();
@@ -82,7 +82,8 @@ public class ReleveConfig extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.placePanel.border.title"))); // NOI18N
-        placePanel.setPreferredSize(new java.awt.Dimension(460, 150));
+        placePanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        placePanel.setPreferredSize(null);
         placePanel.setRequestFocusEnabled(false);
         placePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -213,6 +214,8 @@ public class ReleveConfig extends javax.swing.JDialog {
         placePanel.add(jTextArea1, gridBagConstraints);
 
         getContentPane().add(placePanel, java.awt.BorderLayout.CENTER);
+
+        jPanelButton.setPreferredSize(null);
 
         jButtonOk.setText(org.openide.util.NbBundle.getMessage(ReleveConfig.class, "ReleveConfig.jButtonOk.text")); // NOI18N
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
