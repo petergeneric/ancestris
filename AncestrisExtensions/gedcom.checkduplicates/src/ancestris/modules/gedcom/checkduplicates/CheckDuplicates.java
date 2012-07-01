@@ -13,8 +13,8 @@ import genj.gedcom.Gedcom;
 import java.awt.Dialog;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
@@ -33,7 +33,7 @@ public class CheckDuplicates implements Runnable {
     EntityMatcher entityMatcher = null;
     private Gedcom leftGedcom;
     private Gedcom rightGedcom;
-    private HashMap<String, EntityMatcher> entitiesMatchers = new HashMap();
+    private TreeMap<String, EntityMatcher> entitiesMatchers = new TreeMap<String, EntityMatcher>();
 
     {
         entitiesMatchers.put(Gedcom.INDI, new IndiMatcher());
@@ -51,36 +51,43 @@ public class CheckDuplicates implements Runnable {
 
     @Override
     public void run() {
-        List<PotentialMatch<? extends Entity>> potentialMatches = new ArrayList();
+        TreeMap<String, List<PotentialMatch<? extends Entity>>> MatchesMap = new TreeMap<String, List<PotentialMatch<? extends Entity>>>();
         ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicates.Check-In-Progress"));
-        CheckDuplicatePanel openZipBundlePanel = new CheckDuplicatePanel();
-        DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
-                openZipBundlePanel,
-                NbBundle.getMessage(CheckDuplicatePanel.class, "CTL_CheckDuplicateAction"),
-                true,
-                DialogDescriptor.INFORMATION_MESSAGE,
-                null,
-                null);
+        EntityViewPanel entityViewPanel = null;
+        DialogDescriptor checkDuplicatePanelDescriptor = null;
         progressHandle.start();
         for (String tag : entitiesMatchers.keySet()) {
             List<? extends Entity> leftEntity = new ArrayList(leftGedcom.getEntities(tag));
             List<? extends Entity> rightEntity = new ArrayList(rightGedcom.getEntities(tag));
 
             log.log(Level.INFO, "Checking: {0}", tag);
-            
+
             progressHandle.progress(MessageFormat.format(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicates.Checking"), tag));
             if (leftEntity != null && rightEntity != null) {
+                List<PotentialMatch<? extends Entity>> potentialMatches = new ArrayList();
                 potentialMatches.addAll((entitiesMatchers.get(tag)).getPotentialMatches(leftEntity, rightEntity));
+                MatchesMap.put(tag, potentialMatches);
             }
         }
         progressHandle.finish();
 
-        for (PotentialMatch<? extends Entity> match : potentialMatches) {
-            String tmp = match.getLeft().getTag() + " left " + match.getLeft().getId() + " right " + match.getRight().getId() + " %" + match.getCertainty();
-            openZipBundlePanel.addElement(tmp);
+        for (String tag : MatchesMap.keySet()) {
+            List<PotentialMatch<? extends Entity>> potentialMatches = MatchesMap.get(tag);
+            for (PotentialMatch<? extends Entity>match : potentialMatches) {
+                entityViewPanel = new EntityViewPanel(match);
+                checkDuplicatePanelDescriptor = new DialogDescriptor(
+                        entityViewPanel,
+                        NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title", tag),
+                        true,
+                        DialogDescriptor.YES_NO_OPTION,
+                        null,
+                        null);
+
+                Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
+                dialog.setVisible(true);
+                dialog.setModal(false);
+                dialog.toFront();
+            }
         }
-        Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
-        dialog.setVisible(true);
-        dialog.toFront();
     }
 }
