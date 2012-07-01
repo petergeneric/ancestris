@@ -1,7 +1,0 @@
-<col>
- <row><label path=".:TYPE"/><bean path=".:TYPE" wx="1"/></row>
- <row><bean path=".:DATE"/></row>
- <row><bean path=".:PLAC" wx="1"/></row>
- <row><label path=".:NOTE"/></row>
- <row><bean path=".:NOTE" wx="1" wy="1"/></row>
-</col>
