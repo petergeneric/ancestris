@@ -127,6 +127,7 @@ public class DataManager implements PlaceManager {
     public void addRecords(FileBuffer fileBuffer, boolean append, String defaultPlace, int forceDefaultPlace) {
         if (!append ) {
             removeAll();
+            setPlace(defaultPlace);
         }
 
         // je recupere le nombre de lignes
@@ -420,28 +421,28 @@ public class DataManager implements PlaceManager {
         if (!value.equals(getPlace())) {
 
             String[] juridictions = value.split(",");
-            if (juridictions.length > 0) {
-                cityName = juridictions[0];
+            if (juridictions.length > 1) {
+                cityName = juridictions[1];
             } else {
                 cityName = "";
             }
-            if (juridictions.length > 1) {
-                cityCode = juridictions[1];
+            if (juridictions.length > 2) {
+                cityCode = juridictions[2];
             } else {
                 cityCode = "";
             }
-            if (juridictions.length > 2) {
-                county = juridictions[2];
+            if (juridictions.length > 3) {
+                county = juridictions[3];
             } else {
                 county = "";
             }
-            if (juridictions.length > 3) {
-                state = juridictions[3];
+            if (juridictions.length > 4) {
+                state = juridictions[4];
             } else {
                 state = "";
             }
-            if (juridictions.length > 4) {
-                country = juridictions[4];
+            if (juridictions.length > 5) {
+                country = juridictions[5];
             } else {
                 country = "";
             }
@@ -461,7 +462,7 @@ public class DataManager implements PlaceManager {
      */
     @Override
     public String getPlace() {
-        return getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
+        return ","+getCityName()+ ","+getCityCode()+ ","+getCountyName()+ ","+getStateName()+ ","+getCountryName();
     }
 
     @Override
