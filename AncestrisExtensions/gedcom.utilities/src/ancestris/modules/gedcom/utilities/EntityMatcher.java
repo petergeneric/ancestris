@@ -17,11 +17,13 @@ public abstract class EntityMatcher<T extends Entity> implements Matcher<T> {
     @Override
     public List<PotentialMatch<T>> getPotentialMatches(List<T> left, List<T> right) {
         List<PotentialMatch<T>> matches = new ArrayList<PotentialMatch<T>>();
-
+        List<String> compareDone = new ArrayList<String> ();
+        
         int numberOfCompares = 0;
         for (T leftEntity : left) {
+            compareDone.add(leftEntity.getId());
             for (T rightEntity : right) {
-                if (leftEntity.getId().equals(rightEntity.getId()) == false) {
+                if ( compareDone.contains(rightEntity.getId()) == false) {
                     numberOfCompares++;
                     int diff = compareEntities(leftEntity, rightEntity);
                     if (diff > 50) {
