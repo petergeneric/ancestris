@@ -88,7 +88,7 @@ public class EntityViewPanel extends javax.swing.JPanel {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
 
-        leftLabel.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.leftLabel.text")); // NOI18N
+        leftLabel.setText("jLabel1");
 
         leftTextArea.setColumns(20);
         leftTextArea.setRows(5);
@@ -111,7 +111,7 @@ public class EntityViewPanel extends javax.swing.JPanel {
 
         jSplitPane1.setLeftComponent(jPanel1);
 
-        rightLabel.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.rightLabel.text")); // NOI18N
+        rightLabel.setText("jLabel2");
 
         rightTextArea.setColumns(20);
         rightTextArea.setRows(5);
@@ -136,7 +136,7 @@ public class EntityViewPanel extends javax.swing.JPanel {
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
-        jLabel3.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.jLabel3.text")); // NOI18N
+        jLabel3.setText("jLabel3");
         add(jLabel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
