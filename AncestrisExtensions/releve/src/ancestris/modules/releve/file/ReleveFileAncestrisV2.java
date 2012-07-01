@@ -147,7 +147,7 @@ public class ReleveFileAncestrisV2 {
                     if ( fields == null) {
                         break;
                     }
-
+                    
                     if (fields[Field.eventType.ordinal()].equals("N")) {
                         RecordBirth record = new RecordBirth();
 
@@ -526,6 +526,10 @@ public class ReleveFileAncestrisV2 {
                         }
                         fileBuffer.loadRecord(record);
                         
+                    } else if (fields[Field.eventType.ordinal()].equals("N/M/D/V")) {
+                        // je decompte l'entete
+                        lineNumber--;
+                        continue;
                     } else {
                         fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
                         fileBuffer.append("\n");
@@ -566,6 +570,13 @@ public class ReleveFileAncestrisV2 {
         try {
             //create BufferedReader to read csv file
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(fileName, append), "UTF-8") ;
+            
+            // j'ajoute l'entete si le mode append n'est pas demandé
+            if( ! append) {
+                writer.write(getHeader().toString());
+            }
+            
+            // j'ajoute les autres lignes
             for (int index = 0; index < recordModel.getRowCount(); index++) {
                 Line line = new Line(fieldSeparator);
                 Record record = recordModel.getRecord(index);
@@ -969,6 +980,110 @@ public class ReleveFileAncestrisV2 {
             sb.append(e).append("\n");
         }
         return sb;
+    }
+    
+    
+    /**
+     * retourn la ligne d'entete
+     * @return 
+     */
+    static private Line getHeader() {
+        Line line = new Line(fieldSeparator);
+        line.appendCsvFn(fileSignature);
+        line.appendCsvFn("CityName");
+        line.appendCsvFn("CityCode");
+        line.appendCsvFn("County");
+        line.appendCsvFn("State");
+        line.appendCsvFn("Country");
+        line.appendCsvFn("Parish");
+        line.appendCsvFn("N/M/D/V");
+        line.appendCsvFn("EventTypeTag"); 
+        line.appendCsvFn("EventTypeName");
+        line.appendCsvFn("EventDate");
+        line.appendCsvFn("Cote");
+        line.appendCsvFn("FreeComment");
+        line.appendCsvFn("Notary"); 
+
+        line.appendCsvFn("IndiLastName");
+        line.appendCsvFn("IndiFirstName");
+        line.appendCsvFn("IndiSex");
+        line.appendCsvFn("IndiPlace"); 
+        line.appendCsvFn("IndiBirthDate"); 
+        line.appendCsvFn("IndiAge"); 
+        line.appendCsvFn("IndiOccupation"); 
+        line.appendCsvFn("IndiComment");
+
+        line.appendCsvFn("IndiMarriedLastName"); 
+        line.appendCsvFn("IndiMarriedFirstName"); 
+        line.appendCsvFn("IndiMarriedDead");
+        line.appendCsvFn("IndiMarriedOccupation"); 
+        line.appendCsvFn("IndiMarriedComment"); 
+
+        line.appendCsvFn("IndiFatherLastName");
+        line.appendCsvFn("IndiFatherFirstName");
+        line.appendCsvFn("IndiFatherAge");
+        line.appendCsvFn("IndiFatherDead");
+        line.appendCsvFn("IndiFatherOccupation");
+        line.appendCsvFn("IndiFatherComment");
+        line.appendCsvFn("IndiMotherLastName");
+        line.appendCsvFn("IndiMotherFirstName");
+        line.appendCsvFn("IndiMotherAge");
+        line.appendCsvFn("IndiMotherDead");
+        line.appendCsvFn("IndiMotherOccupation");
+        line.appendCsvFn("IndiMotherComment");
+
+        line.appendCsvFn("WifeLastName");
+        line.appendCsvFn("WifeFirstName");
+        line.appendCsvFn("WifeSex");
+        line.appendCsvFn("WifePlace");
+        line.appendCsvFn("WifeBirthDate");
+        line.appendCsvFn("WifeAge");
+        line.appendCsvFn("WifeOccupation");
+        line.appendCsvFn("WifeComment");
+
+        line.appendCsvFn("WifeMarriedLastName");
+        line.appendCsvFn("WifeMarriedFirstName");
+        line.appendCsvFn("WifeMarriedDead");
+        line.appendCsvFn("WifeMarriedOccupation");
+        line.appendCsvFn("WifeMarriedComment");
+
+        line.appendCsvFn("WifeFatherLastName");
+        line.appendCsvFn("WifeFatherFirstName");
+        line.appendCsvFn("WifeFatherAge");
+        line.appendCsvFn("WifeFatherDead");
+        line.appendCsvFn("WifeFatherOccupation");
+        line.appendCsvFn("WifeFatherComment");
+        line.appendCsvFn("WifeMotherLastName");
+        line.appendCsvFn("WifeMotherFirstName");
+        line.appendCsvFn("WifeMotherAge");
+        line.appendCsvFn("WifeMotherDead");
+        line.appendCsvFn("WifeMotherOccupation");
+        line.appendCsvFn("WifeMotherComment");
+
+        line.appendCsvFn("Witness1LastName");
+        line.appendCsvFn("Witness1FirstName");
+        line.appendCsvFn("Witness1Occupation");
+        line.appendCsvFn("Witness1Comment");
+
+        line.appendCsvFn("Witness2LastName");
+        line.appendCsvFn("Witness2FirstName");
+        line.appendCsvFn("Witness2Occupation");
+        line.appendCsvFn("Witness2Comment");
+
+        line.appendCsvFn("Witness3LastName");
+        line.appendCsvFn("Witness3FirstName");
+        line.appendCsvFn("Witness3Occupation");
+        line.appendCsvFn("Witness3Comment");
+
+        line.appendCsvFn("Witness4LastName");
+        line.appendCsvFn("Witness4FirstName");
+        line.appendCsvFn("Witness4Occupation");
+        line.appendCsvFn("Witness4Comment");
+
+        line.appendCsvFn("GeneralComment");
+        line.appendCsv("RecordNo"); 
+        line.appendCsv("\n");
+        return line;
     }
 
    
