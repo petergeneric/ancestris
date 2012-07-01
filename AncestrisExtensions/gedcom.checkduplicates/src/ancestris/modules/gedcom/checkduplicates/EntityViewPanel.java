@@ -22,11 +22,11 @@ public class EntityViewPanel extends javax.swing.JPanel {
         Entity left = potentialMatche.getLeft();
         Entity right = potentialMatche.getRight();
         initComponents();
-        jLabel1.setText(left.getId());
-        jTextArea1.setText(getText(left));
+        leftLabel.setText(left.getId());
+        leftTextArea.setText(getText(left));
         
-        jLabel2.setText(right.getId());
-        jTextArea2.setText(getText(right));
+        rightLabel.setText(right.getId());
+        rightTextArea.setText(getText(right));
 
         jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatche.getCertainty()) + "%");
 
@@ -72,13 +72,13 @@ public class EntityViewPanel extends javax.swing.JPanel {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        leftLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        leftTextArea = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        rightLabel = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        rightTextArea = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
@@ -88,55 +88,48 @@ public class EntityViewPanel extends javax.swing.JPanel {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.jLabel1.text")); // NOI18N
+        leftLabel.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.leftLabel.text")); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(5);
-        jTextArea1.setMinimumSize(new java.awt.Dimension(297, 17));
-        jTextArea1.setName(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.jTextArea1.name")); // NOI18N
-        jTextArea1.setPreferredSize(new java.awt.Dimension(297, 85));
-        jScrollPane1.setViewportView(jTextArea1);
+        leftTextArea.setColumns(20);
+        leftTextArea.setRows(5);
+        jScrollPane3.setViewportView(leftTextArea);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(leftLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(leftLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
 
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.jLabel2.text")); // NOI18N
+        rightLabel.setText(org.openide.util.NbBundle.getMessage(EntityViewPanel.class, "EntityViewPanel.rightLabel.text")); // NOI18N
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setEditable(false);
-        jTextArea2.setRows(5);
-        jTextArea2.setMinimumSize(new java.awt.Dimension(291, 17));
-        jTextArea2.setPreferredSize(new java.awt.Dimension(291, 85));
-        jScrollPane2.setViewportView(jTextArea2);
+        rightTextArea.setColumns(20);
+        rightTextArea.setRows(5);
+        jScrollPane4.setViewportView(rightTextArea);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-            .addComponent(jScrollPane2)
+            .addComponent(rightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+            .addComponent(jScrollPane4)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel2)
+                .addComponent(rightLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(jPanel2);
@@ -147,15 +140,15 @@ public class EntityViewPanel extends javax.swing.JPanel {
         add(jLabel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JLabel leftLabel;
+    private javax.swing.JTextArea leftTextArea;
+    private javax.swing.JLabel rightLabel;
+    private javax.swing.JTextArea rightTextArea;
     // End of variables declaration//GEN-END:variables
 }
