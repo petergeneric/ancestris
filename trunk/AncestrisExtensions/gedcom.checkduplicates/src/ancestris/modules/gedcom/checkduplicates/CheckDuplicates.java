@@ -55,7 +55,9 @@ public class CheckDuplicates implements Runnable {
         ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicates.Check-In-Progress"));
         EntityViewPanel entityViewPanel = null;
         DialogDescriptor checkDuplicatePanelDescriptor = null;
+        
         progressHandle.start();
+        
         for (String tag : entitiesMatchers.keySet()) {
             List<? extends Entity> leftEntity = new ArrayList(leftGedcom.getEntities(tag));
             List<? extends Entity> rightEntity = new ArrayList(rightGedcom.getEntities(tag));
@@ -69,6 +71,7 @@ public class CheckDuplicates implements Runnable {
                 MatchesMap.put(tag, potentialMatches);
             }
         }
+        
         progressHandle.finish();
 
         for (String tag : MatchesMap.keySet()) {
@@ -79,7 +82,7 @@ public class CheckDuplicates implements Runnable {
                         entityViewPanel,
                         NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title", tag),
                         true,
-                        DialogDescriptor.YES_NO_OPTION,
+                        DialogDescriptor.YES_NO_CANCEL_OPTION,
                         null,
                         null);
 
@@ -87,6 +90,9 @@ public class CheckDuplicates implements Runnable {
                 dialog.setVisible(true);
                 dialog.setModal(false);
                 dialog.toFront();
+                if (checkDuplicatePanelDescriptor.getValue() == DialogDescriptor.CANCEL_OPTION) {
+                    return;
+                }
             }
         }
     }
