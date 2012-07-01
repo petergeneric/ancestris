@@ -4,14 +4,15 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.app.App;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
-import ancestris.app.EditTopComponent;
 import ancestris.modules.utilities.search.SearchTopComponent;
+import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -499,11 +500,15 @@ public class GeoFilter {
         if (gedcom == null) {
             return null;
         }
-        Set<TopComponent> tcSet = TopComponent.getRegistry().getOpened();
-        for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
-            TopComponent topComponent = it.next();
-            if (topComponent instanceof EditTopComponent && gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
-                Entity ent = ((EditTopComponent) topComponent).getContext().getEntity();
+        // Quick replace Editor search by ControlCenter api
+        Context context = App.center.getSelectedContext(true);
+//        Set<TopComponent> tcSet = TopComponent.getRegistry().getOpened();
+//        for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
+//            TopComponent topComponent = it.next();
+//            if (topComponent instanceof EditTopComponent && gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
+//                Entity ent = ((EditTopComponent) topComponent).getContext().getEntity();
+        Entity ent = context.getEntity();
+        if (ent == null) return null;
                 if (ent instanceof Indi) {
                     return (Indi) ent;
                 } else if (ent instanceof Fam) {
@@ -516,8 +521,8 @@ public class GeoFilter {
                         return indi;
                     }
                 }
-            }
-        }
+//            }
+//        }
         return null;
     }
 

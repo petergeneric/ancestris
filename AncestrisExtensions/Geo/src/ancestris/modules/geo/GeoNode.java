@@ -4,8 +4,6 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.app.EditTopComponent;
-import genj.gedcom.Context;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -177,11 +175,12 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
 
             } else if (actionName.equals("ACTION_EditEvent")) {
-                EditTopComponent etc = getEditTopComponent(obj);
-                if (etc != null) {
-                    etc.requestActive();
-                    etc.setContext(new Context(obj.getProperty()),true);
-                }
+                //XXX: 0.8 we must find editor using lookup
+//                EditTopComponent etc = getEditTopComponent(obj);
+//                if (etc != null) {
+//                    etc.requestActive();
+//                    etc.setContext(new Context(obj.getProperty()),true);
+//                }
             } else if (actionName.equals("ACTION_HelpPlace")) {
                 String id = "ancestris.app.view.geo.menuplace";
                 Help help = Lookup.getDefault().lookup(Help.class);
@@ -216,21 +215,22 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
         return theList;
     }
 
-    private EditTopComponent getEditTopComponent(GeoNodeObject obj) {
-        EditTopComponent theEditor = null;
-        if (obj == null) {
-            return theEditor;
-        }
-        // get map top component
-        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-            if (tc instanceof EditTopComponent) {
-                EditTopComponent gmtc = (EditTopComponent) tc;
-                if (gmtc.getGedcom() == obj.getGedcom()) {
-                    theEditor = gmtc;
-                    break;
-                }
-            }
-        }
-        return theEditor;
-    }
+    //XXX: 0.8 we must find editor using lookup
+//    private EditTopComponent getEditTopComponent(GeoNodeObject obj) {
+//        EditTopComponent theEditor = null;
+//        if (obj == null) {
+//            return theEditor;
+//        }
+//        // get map top component
+//        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+//            if (tc instanceof EditTopComponent) {
+//                EditTopComponent gmtc = (EditTopComponent) tc;
+//                if (gmtc.getGedcom() == obj.getGedcom()) {
+//                    theEditor = gmtc;
+//                    break;
+//                }
+//            }
+//        }
+//        return theEditor;
+//    }
 }

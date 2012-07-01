@@ -71,6 +71,7 @@
             </test-dependencies>
             <public-packages>
                 <package>ancestris.modules.beans</package>
+                <package>genj.edit.beans</package>
             </public-packages>
         </data>
     </configuration>

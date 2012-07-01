@@ -5,11 +5,7 @@
 package ancestris.app;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.windows.TopComponent;
 
 /**
  *
@@ -17,12 +13,4 @@ import org.openide.windows.TopComponent;
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
 public class AncestrisCorePlugin extends AncestrisPlugin {
-
-    @Override
-    public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
-        List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(3);
-        result.add(EditTopComponent.class);
-        return result;
-
-    }
 }

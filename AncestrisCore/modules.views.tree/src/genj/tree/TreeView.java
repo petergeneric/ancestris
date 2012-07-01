@@ -1203,7 +1203,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   private class Sticky extends Action2 {
     /** constructor */
     protected Sticky() {
-      super.setImage(genj.edit.Images.imgStickOff);
+      super.setImage(ancestris.core.resources.Images.imgStickOff);
       super.setTip(RESOURCES, "action.stick.tip");
       super.setSelected(false);
     }
@@ -1213,7 +1213,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
     @Override
     public boolean setSelected(boolean selected) {
-      super.setImage(selected ? genj.edit.Images.imgStickOn : genj.edit.Images.imgStickOff);
+      super.setImage(selected ? ancestris.core.resources.Images.imgStickOn : ancestris.core.resources.Images.imgStickOff);
       return super.setSelected(selected);
     }
   } //Sticky

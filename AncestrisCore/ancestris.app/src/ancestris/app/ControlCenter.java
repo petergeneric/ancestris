@@ -148,11 +148,11 @@ public class ControlCenter extends JPanel{
         //XXX: to be changed, as of 20110916: quick fix for File to URL conversion
         private String getDefaultFile(Collection<String> files) {
             // ne pas ouvrir si onlyempty est positionne
-            if (files != null && !files.isEmpty() && !ancestris.core.Options.getAlwaysOpenDefault()) {
+            if (files != null && !files.isEmpty() && !ancestris.core.Options.getInstance().getAlwaysOpenDefault()) {
                 return null;
             }
 
-            File defaultFile = new File(ancestris.core.Options.getDefaultGedcom());
+            File defaultFile = new File(ancestris.core.Options.getInstance().getDefaultGedcom());
             if (defaultFile == null) {
                 return null;
             }
@@ -323,7 +323,7 @@ public class ControlCenter extends JPanel{
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {
-        String defaultFile = ancestris.core.Options.getDefaultGedcom();
+        String defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }

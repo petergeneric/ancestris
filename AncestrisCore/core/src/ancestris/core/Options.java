@@ -20,19 +20,64 @@ import genj.util.Registry;
  * @author daniel
  */
 public class Options {
-    private static AncestrisPreferences appOptions = Registry.get(Options.class);
+    private static AncestrisPreferences appOptions;
+    //FIXME: use enums?
+    public final static int NAME_NONE=0;
+    public final static int NAME_FIRSTCAP=1;
+    public final static int NAME_ALLCAPS=2;
 
-    public static String getDefaultGedcom(){
+    private Options() {
+        appOptions = Registry.get(Options.class);
+    }
+    
+    public static Options getInstance() {
+        return OptionsHolder.INSTANCE;
+    }
+    
+    private static class OptionsHolder {
+
+        private static final Options INSTANCE = new Options();
+    }
+
+  /*
+ * XXX: will have to find some smart way to provide custom editor for those properties
+  private final static Resources RES = Resources.get(Options.class);
+  public final static String[] correctNames = { 
+    RES.getString("option.correctName.none"),
+    RES.getString("option.correctName.caps"),
+    RES.getString("option.correctName.allcaps")
+  };
+ */
+
+  /** option - whether we correct names */
+    public int getCorrectName() {
+        return appOptions.get("correctName",0);
+    }
+
+    public void setCorrectName(int correctName) {
+        appOptions.put("correctName",correctName);
+    }
+
+  /** option - whether to split jurisdictions into their components when editing places */
+    public boolean isSplitJurisdictions() {
+        return appOptions.get("isSplitJurisdictions",false);
+    }
+
+    public void setSplitJurisdictions(boolean isSplitJurisdictions) {
+        appOptions.put("isSplitJurisdictions",isSplitJurisdictions);
+    }
+  
+  public String getDefaultGedcom(){
         return  appOptions.get("gedcomFile","");
     }
-    public static boolean  getAlwaysOpenDefault(){
+    public boolean  getAlwaysOpenDefault(){
         return  appOptions.get("alwaysOpenDefault",false);
     }
 
-    public static void setDefaultGedcom(String def){
+    public void setDefaultGedcom(String def){
         appOptions.put("gedcomFile",def);
     }
-    public static void setAlwaysOpenDefault(boolean alwaysOpen){
+    public void setAlwaysOpenDefault(boolean alwaysOpen){
         appOptions.put("alwaysOpenDefault",alwaysOpen);
     }
 
@@ -41,10 +86,10 @@ public class Options {
      * Defaults to "Don't show hidden files"
      * @param def
      */
-    public static void setShowHidden(boolean  def){
+    public void setShowHidden(boolean  def){
         appOptions.put("showHidden",def);
     }
-    public static boolean getShowHidden(){
+    public boolean getShowHidden(){
         return appOptions.get("showHidden",false);
     }
 }
