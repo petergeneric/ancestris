@@ -1074,7 +1074,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jButtonFile.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonFile.text")); // NOI18N
         jButtonFile.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jButtonFile.setBorderPainted(false);
-        jButtonFile.setPreferredSize(new java.awt.Dimension(40, 25));
+        jButtonFile.setFocusable(false);
+        jButtonFile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonFile.setMargin(new java.awt.Insets(22, 14, 22, 14));
+        jButtonFile.setMaximumSize(null);
+        jButtonFile.setMinimumSize(new java.awt.Dimension(49, 25));
+        jButtonFile.setPreferredSize(new java.awt.Dimension(49, 25));
         jButtonFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFileActionPerformed(evt);
@@ -1175,6 +1180,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         jPanel1.add(jPanelPlace, java.awt.BorderLayout.NORTH);
 
+        fieldsPanel.setName(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.fieldsPanel.name")); // NOI18N
         fieldsPanel.setLayout(new java.awt.GridBagLayout());
         jPanel1.add(fieldsPanel, java.awt.BorderLayout.CENTER);
 
