@@ -13,15 +13,18 @@ final class LanguagePanel extends javax.swing.JPanel {
     private final LanguageOptionsPanelController controller;
     // Values
     Locale[] locales = {
-        Locale.ENGLISH,
-        Locale.FRENCH,
+        new Locale("br"),
+        new Locale("da"),
         Locale.GERMAN,
+        Locale.ENGLISH,
         new Locale("es"),
+        Locale.FRENCH,
+        Locale.ITALIAN,
         new Locale("nl"),
         new Locale("no"),
-        Locale.ITALIAN,
         new Locale("pl"),
-        new Locale("br")
+        new Locale("fi"),
+        new Locale("sv")
     };
 
     LanguagePanel(LanguageOptionsPanelController controller) {
