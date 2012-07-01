@@ -124,7 +124,9 @@
                 <package>ancestris.api.editor</package>
                 <package>ancestris.app</package>
                 <package>ancestris.core</package>
+                <package>ancestris.core.actions</package>
                 <package>ancestris.core.beans</package>
+                <package>ancestris.core.resources</package>
                 <package>ancestris.gedcom</package>
                 <package>ancestris.gedcom.privacy</package>
                 <package>ancestris.util</package>
@@ -136,26 +138,21 @@
                 <package>genj.chart</package>
                 <package>genj.common</package>
                 <package>genj.crypto</package>
-                <package>genj.edit</package>
-                <package>genj.edit.actions</package>
-                <package>genj.edit.beans</package>
-                <package>genj.entity</package>
                 <package>genj.fo</package>
                 <package>genj.gedcom</package>
+                <package>genj.gedcom.images</package>
                 <package>genj.gedcom.time</package>
                 <package>genj.io</package>
-                <package>genj.lnf</package>
                 <package>genj.option</package>
                 <package>genj.print</package>
                 <package>genj.renderer</package>
                 <package>genj.report</package>
-                <package>genj.search</package>
-                <package>genj.table</package>
                 <package>genj.timeline</package>
-                <package>genj.tree</package>
                 <package>genj.util</package>
                 <package>genj.util.swing</package>
                 <package>genj.view</package>
+                <package>swingx.dnd.tree</package>
+                <package>swingx.tree</package>
             </public-packages>
         </data>
     </configuration>

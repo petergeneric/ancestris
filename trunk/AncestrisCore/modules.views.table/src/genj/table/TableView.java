@@ -418,7 +418,7 @@ public class TableView extends View {
 
         /** constructor */
         protected Sticky() {
-            super.setImage(genj.edit.Images.imgStickOff);
+            super.setImage(ancestris.core.resources.Images.imgStickOff);
             super.setTip(resources, "action.stick.tip");
             super.setSelected(false);
         }
@@ -431,7 +431,7 @@ public class TableView extends View {
 
         @Override
         public boolean setSelected(boolean selected) {
-            super.setImage(selected ? genj.edit.Images.imgStickOn : genj.edit.Images.imgStickOff);
+            super.setImage(selected ? ancestris.core.resources.Images.imgStickOn : ancestris.core.resources.Images.imgStickOff);
             return super.setSelected(selected);
         }
     } //Sticky

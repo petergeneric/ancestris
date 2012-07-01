@@ -15,7 +15,6 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.util.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
-import genj.edit.beans.EventBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -562,33 +561,33 @@ public final class FamilyPanel extends JPanel {
 
     public static boolean editEvent(PropertyEvent prop, boolean isNew) {
         String title;
-
-        if (isNew) {
-            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", prop);
-        } else {
-            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.edit.title", prop);
-        }
-        if (prop == null) {
-            return false;
-        }
-        final EventBean propEditor = new EventBean();
-        propEditor.setContext(prop);
-        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(propEditor), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
-        DialogDisplayer.getDefault().notify(nd);
-        if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
-            return false;
-        }
-        try {
-            prop.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    propEditor.commit();
-                }
-            });
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
-            return false;
-        }
+//XXX: 0.8 commented temporarily
+//        if (isNew) {
+//            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.new.title", prop);
+//        } else {
+//            title = NbBundle.getMessage(FamilyPanel.class, "dialog.indi.edit.title", prop);
+//        }
+//        if (prop == null) {
+//            return false;
+//        }
+//        final EventBean propEditor = new EventBean();
+//        propEditor.setContext(prop);
+//        NotifyDescriptor nd = new NotifyDescriptor(new JScrollPane(propEditor), title, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.PLAIN_MESSAGE, null, null);
+//        DialogDisplayer.getDefault().notify(nd);
+//        if (!nd.getValue().equals(NotifyDescriptor.OK_OPTION)) {
+//            return false;
+//        }
+//        try {
+//            prop.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                public void perform(Gedcom gedcom) throws GedcomException {
+//                    propEditor.commit();
+//                }
+//            });
+//        } catch (GedcomException ex) {
+//            Exceptions.printStackTrace(ex);
+//            return false;
+//        }
         return true;
     }
 

@@ -83,14 +83,6 @@
             </file>
         </folder>
         <folder name="Window">
-            <!--
-            <file name="ancestris-app-EditAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.EditTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_EditAction"/>
-                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
-            </file>
--->
             <file name="ancestris-app-EditAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="component" methodvalue="ancestris.app.EditTopComponent.getFactory"/>

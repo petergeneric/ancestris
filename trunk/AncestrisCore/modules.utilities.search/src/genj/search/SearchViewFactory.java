@@ -30,7 +30,7 @@ import genj.view.ViewFactory;
 public class SearchViewFactory implements ViewFactory {
   
   /** image */
-  /*package*/ static final ImageIcon IMG = new ImageIcon(SearchViewFactory.class, "View"); 
+  /*package*/ static final ImageIcon IMG = new ImageIcon(SearchViewFactory.class, "images/View"); 
   
   /**
    * @see genj.view.ViewFactory#createView(java.lang.String, genj.gedcom.Gedcom, genj.util.Registry, genj.view.ViewManager)

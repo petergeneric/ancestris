@@ -118,8 +118,8 @@ public class SearchView extends View {
   
   /** images */
   private final static ImageIcon
-    IMG_START = new ImageIcon(SearchView.class, "Start"),
-    IMG_STOP  = new ImageIcon(SearchView.class, "Stop" );
+    IMG_START = new ImageIcon(SearchView.class, "images/Start"),
+    IMG_STOP  = new ImageIcon(SearchView.class, "images/Stop" );
   
   /** worker */
   private Worker worker;

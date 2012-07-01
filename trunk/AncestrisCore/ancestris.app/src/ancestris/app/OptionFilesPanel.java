@@ -213,8 +213,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     void load() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
 
-        setGedcomFile(ancestris.core.Options.getDefaultGedcom());
-        jcbAlwaysOpen.setSelected(ancestris.core.Options.getAlwaysOpenDefault());
+        setGedcomFile(ancestris.core.Options.getInstance().getDefaultGedcom());
+        jcbAlwaysOpen.setSelected(ancestris.core.Options.getInstance().getAlwaysOpenDefault());
         setReportDir(gedcomPrefs.get("reportDir", ""));
 
 
@@ -226,8 +226,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     void store() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
 
-        ancestris.core.Options.setDefaultGedcom(getGedcomFile());
-        ancestris.core.Options.setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
+        ancestris.core.Options.getInstance().setDefaultGedcom(getGedcomFile());
+        ancestris.core.Options.getInstance().setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
         ancestris.app.Options.setMaxLogSizeKB(Integer.valueOf(jSpinner1.getValue().toString()));
         Registry.get(App.class).put("logLevel",getLogLevel());

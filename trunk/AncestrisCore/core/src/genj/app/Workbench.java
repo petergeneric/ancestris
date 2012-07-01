@@ -759,7 +759,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
 
     /** getDefaultFile() **/
     private String getDefaultFile(boolean dirOnly) {
-        String defaultFile = ancestris.core.Options.getDefaultGedcom();
+        String defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }
@@ -803,7 +803,7 @@ public class Workbench /*extends JPanel*/ implements SelectionSink, GedcomMetaLi
         if (accessory != null) {
             chooser.setAccessory(accessory);
         }
-        chooser.setFileHidingEnabled(!Options.getShowHidden());
+        chooser.setFileHidingEnabled(!Options.getInstance().getShowHidden());
         if (JFileChooser.APPROVE_OPTION != chooser.showDialog()) {
             return null;
         }

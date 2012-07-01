@@ -86,7 +86,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        String defaultFile = ancestris.core.Options.getDefaultGedcom();
+        String defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
         if (defaultFile.isEmpty()) {
             return "";
         }
