@@ -62,9 +62,9 @@ public abstract class Accessor {
     static {
         // invokes static initializer of SearchRequest class
         // that will assign value to the DEFAULT field above
-        Class c = SearchRequest.class;
+        //Class c = SearchRequest.class;
         try {
-            Class.forName(c.getName(), true, c.getClassLoader());
+            Class.forName(SearchRequest.class.getName(), true, SearchRequest.class.getClassLoader());
         } catch (ClassNotFoundException ex) {
             assert false : ex;
         }

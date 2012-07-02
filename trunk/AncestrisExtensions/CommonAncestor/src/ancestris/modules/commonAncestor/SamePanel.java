@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.Set;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
@@ -55,7 +56,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private Indi individu1;
     private Indi individu2;
     private CommonAncestorTree commonAncestorTree = new CommonAncestorTree();
-    private DefaultListModel ancestorListModel = new DefaultListModel();
+    private DefaultListModel<Indi> ancestorListModel = new DefaultListModel<Indi>();
     protected Registry registry;
     Component owner;
     protected PreviewTopComponent previewTopComponent = null;
@@ -80,7 +81,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         registry = new Registry(Registry.get(SamePanel.class), getClass().getName());
         initComponents();
         jCheckBoxAutoPreview.setSelected(false);
-        // j'affecte un modele à liste
+        // j'affecte un modele à la liste
         jListAncestors.setModel(ancestorListModel);
 
         // Provider individu 1
@@ -98,12 +99,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // j'intialise la combobox de l'option "marie/femme au centre"
-        jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel(new String[]{
+        jComboBoxHusbandOrWife.setModel(new DefaultComboBoxModel<String>(new String[]{
                     org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.husband"),
                     org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.wife")}));
 
         // j'intialise la combobox avec la liste des noms des types de fichiers
-        jComboBoxFileType.setModel(new javax.swing.DefaultComboBoxModel(commonAncestorTree.getFileTypeNames().toArray()));
+        jComboBoxFileType.setModel(new DefaultComboBoxModel<String>(commonAncestorTree.getFileTypeNames().toArray(new String[commonAncestorTree.getFileTypeNames().size()])));
         // j'affiche le type de fichier enregistrée pendant la session précédente
         if (jComboBoxFileType.getModel().getSize() > 0) {
             // je selectionne la valeur par defaut enregistrée pendant la session précédente
@@ -230,7 +231,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
             int husband_or_wife_first = jComboBoxHusbandOrWife.getSelectedIndex();
             Indi ancestor = null;
             if (jListAncestors.getSelectedIndex() >= 0) {
-                ancestor = (Indi) ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
+                ancestor = ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
             }
             boolean displayRecentYears =  jCheckBoxRecentEvent.isSelected();
             boolean displayId = jCheckBoxDisplayedId.isSelected();
@@ -243,7 +244,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      */
     private void saveFile() {
         if (ancestorListModel.size() > 0) {
-            Indi ancestor = (Indi) ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
+            Indi ancestor = ancestorListModel.getElementAt(jListAncestors.getSelectedIndex());
 
             int husband_or_wife_first = jComboBoxHusbandOrWife.getSelectedIndex();
             String fileTypeName = (String) jComboBoxFileType.getModel().getSelectedItem();
@@ -458,7 +459,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelSearch2 = new javax.swing.JPanel();
         jLabelAncestorList = new javax.swing.JLabel();
         jScrollPaneAncestortList = new javax.swing.JScrollPane();
-        jListAncestors = new javax.swing.JList();
+        jListAncestors = new javax.swing.JList<Indi>();
         jPanelPreview = new javax.swing.JPanel();
         jCheckBoxAutoPreview = new javax.swing.JCheckBox();
         jCheckBoxSeparatedWindow = new javax.swing.JCheckBox();
@@ -466,9 +467,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelOptions = new javax.swing.JPanel();
         jCheckBoxDisplayedId = new javax.swing.JCheckBox();
         jCheckBoxRecentEvent = new javax.swing.JCheckBox();
-        jComboBoxHusbandOrWife = new javax.swing.JComboBox();
+        jComboBoxHusbandOrWife = new javax.swing.JComboBox<String>();
         jPanelExportFile = new javax.swing.JPanel();
-        jComboBoxFileType = new javax.swing.JComboBox();
+        jComboBoxFileType = new javax.swing.JComboBox<String>();
         jButtonSaveFile = new javax.swing.JButton();
         jPanelHelp = new javax.swing.JPanel();
         jButtonHelp = new javax.swing.JButton();
@@ -496,7 +497,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jLabelIndividu1.getAccessibleContext().setAccessibleName(null);
 
         jTextFieldIndividu1.setEditable(false);
-        jTextFieldIndividu1.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jTextFieldIndividu1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jTextFieldIndividu1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jTextFieldIndividu1.setBorder(null);
         jTextFieldIndividu1.setMinimumSize(new java.awt.Dimension(50, 20));
@@ -550,7 +551,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jLabelIndividu2.getAccessibleContext().setAccessibleName("");
 
         jTextFieldIndividu2.setEditable(false);
-        jTextFieldIndividu2.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jTextFieldIndividu2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jTextFieldIndividu2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jTextFieldIndividu2.setBorder(null);
         jTextFieldIndividu2.setMinimumSize(new java.awt.Dimension(50, 20));
@@ -602,11 +603,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jScrollPaneAncestortList.setMinimumSize(new java.awt.Dimension(100, 82));
         jScrollPaneAncestortList.setPreferredSize(new java.awt.Dimension(100, 84));
 
-        jListAncestors.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jListAncestors.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListAncestors.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         jListAncestors.setMinimumSize(new java.awt.Dimension(80, 80));
@@ -708,7 +704,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jCheckBoxRecentEvent.getAccessibleContext().setAccessibleName("");
 
         jComboBoxHusbandOrWife.setMaximumRowCount(2);
-        jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "husband first", "wife first" }));
+        jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "husband first", "wife first" }));
         jComboBoxHusbandOrWife.setPreferredSize(new java.awt.Dimension(70, 24));
         jComboBoxHusbandOrWife.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -727,7 +723,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         jPanelExportFile.setLayout(new java.awt.BorderLayout(0, 10));
 
         jComboBoxFileType.setMaximumRowCount(3);
-        jComboBoxFileType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PDF", "PNG", "SVG" }));
+        jComboBoxFileType.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "PDF", "PNG", "SVG" }));
         jComboBoxFileType.setMinimumSize(new java.awt.Dimension(50, 18));
         jComboBoxFileType.setName("jComboBoxFileType"); // NOI18N
         jComboBoxFileType.setPreferredSize(new java.awt.Dimension(30, 20));
@@ -857,12 +853,12 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private javax.swing.JCheckBox jCheckBoxDisplayedId;
     private javax.swing.JCheckBox jCheckBoxRecentEvent;
     private javax.swing.JCheckBox jCheckBoxSeparatedWindow;
-    private javax.swing.JComboBox jComboBoxFileType;
-    private javax.swing.JComboBox jComboBoxHusbandOrWife;
+    private javax.swing.JComboBox<String> jComboBoxFileType;
+    private javax.swing.JComboBox<String> jComboBoxHusbandOrWife;
     private javax.swing.JLabel jLabelAncestorList;
     private javax.swing.JLabel jLabelIndividu1;
     private javax.swing.JLabel jLabelIndividu2;
-    private javax.swing.JList jListAncestors;
+    private javax.swing.JList<Indi> jListAncestors;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelExportFile;
     private javax.swing.JPanel jPanelFile;

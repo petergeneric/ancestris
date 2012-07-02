@@ -65,7 +65,7 @@ import org.openide.util.Utilities;
  * ListCellRenderer for SearchResults
  * @author Jan Becicka
  */
-class SearchResultRender extends JLabel implements ListCellRenderer {
+class SearchResultRender extends JLabel implements ListCellRenderer<ItemResult> {
 
     private QuickSearchPopup popup;
 
@@ -88,13 +88,12 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
         this.popup = popup;
         configRenderer();
     }
-
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends ItemResult>  list, ItemResult value, int index, boolean isSelected, boolean cellHasFocus) {
         if (!(value instanceof ItemResult)) {
             return null;
         }
 
-        ItemResult ir = (ItemResult) value;
+        ItemResult ir = value;
         List<? extends KeyStroke> shortcut = ir.getShortcut();
         resultLabel.setText(ir.getDisplayName());
         if (shortcut != null && shortcut.size() > 0 && shortcut.get(0) != null) {
@@ -230,5 +229,5 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
     private static boolean isSolaris () {
         String osName = System.getProperty ("os.name");
         return osName != null && osName.startsWith ("SunOS");
-    }
+    }   
 }
