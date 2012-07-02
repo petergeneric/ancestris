@@ -110,6 +110,8 @@ public class ReportLoader {
    */
   private ReportLoader() {
     try {
+        // XXX: we will ave to remove finding reports this way and use Lookup.
+        // XXX: PackageUtils class will be removed too
             for (Class clazz:PackageUtils.getClassesForPackage("genjreports","Report")) {
                 Report r;
                 try{
