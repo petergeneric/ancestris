@@ -41,6 +41,7 @@ import javax.swing.JLabel;
  */
 public class DateBean extends PropertyBean {
 
+    //XXX: don't try to access resources in another module this way!
   private final static ImageIcon PIT = new ImageIcon(PropertyBean.class, "/genj/gedcom/images/Time");
   private final static NestedBlockLayout 
     H = new NestedBlockLayout("<row><choose/><date1/><label2/><date2/><phrase/></row>"),

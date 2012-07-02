@@ -890,6 +890,7 @@ public class BlueprintRenderer {
       }
       // image?
       if (HINT_VALUE_TRUE.equals(attributes.get(HINT_KEY_IMG))) 
+          //XXX: prop or prop.getParent may be null. We must handle this before prop is rendered
         render(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false), g, r);
       // text?
       if (!HINT_VALUE_FALSE.equals(attributes.get(HINT_KEY_TXT)))
