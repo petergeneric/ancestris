@@ -19,18 +19,13 @@ import ancestris.modules.releve.ReleveEditorListener;
 import ancestris.modules.releve.TableSelectionListener;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.FieldEventType;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
+import java.awt.*;
 import java.awt.event.FocusEvent;
-import java.awt.GridBagConstraints;
-import java.awt.KeyboardFocusManager;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
@@ -66,6 +61,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
     public ReleveEditor() {
         initComponents();
+
+        // je force la largeur du jbutton pour contenir le texte en entier et 
+        // et la hauteur egale aux autres boutons
+        Rectangle2D rect = jButtonFile.getFont().getStringBounds(jButtonFile.getText(), jButtonFile.getFontMetrics(jButtonFile.getFont()).getFontRenderContext());
+        jButtonFile.setPreferredSize(new Dimension((int)rect.getWidth()+jButtonFile.getMargin().left+jButtonFile.getMargin().right+8+jButtonFile.getInsets().left+jButtonFile.getInsets().right, 25));
+        
         jButtonPrevious.setVisible(false);
         jTextFielRecordNo.setVisible(false);
         jButtonNext.setVisible(false);
@@ -1072,13 +1073,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         editorBar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jButtonFile.setText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonFile.text")); // NOI18N
-        jButtonFile.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jButtonFile.setBorderPainted(false);
-        jButtonFile.setFocusable(false);
-        jButtonFile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonFile.setMargin(new java.awt.Insets(22, 14, 22, 14));
-        jButtonFile.setMaximumSize(null);
-        jButtonFile.setMinimumSize(new java.awt.Dimension(49, 25));
+        jButtonFile.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jButtonFile.setPreferredSize(new java.awt.Dimension(49, 25));
         jButtonFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1101,6 +1096,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jButtonNew.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonNew.toolTipText")); // NOI18N
         jButtonNew.setActionCommand("CreateRecord"); // NOI18N
         jButtonNew.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButtonNew.setPreferredSize(new java.awt.Dimension(29, 25));
         jButtonNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNewActionPerformed(evt);
@@ -1112,6 +1108,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.jButtonDelete.toolTipText")); // NOI18N
         jButtonDelete.setActionCommand("RemoveRecord"); // NOI18N
         jButtonDelete.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        jButtonDelete.setPreferredSize(new java.awt.Dimension(29, 25));
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteActionPerformed(evt);
@@ -1180,7 +1177,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
         jPanel1.add(jPanelPlace, java.awt.BorderLayout.NORTH);
 
-        fieldsPanel.setName(org.openide.util.NbBundle.getMessage(ReleveEditor.class, "ReleveEditor.fieldsPanel.name")); // NOI18N
+        fieldsPanel.setName(""); // NOI18N
         fieldsPanel.setLayout(new java.awt.GridBagLayout());
         jPanel1.add(fieldsPanel, java.awt.BorderLayout.CENTER);
 
@@ -1258,12 +1255,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         }
     }//GEN-LAST:event_jButtonStandaloneActionPerformed
 
-    private void jButtonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileActionPerformed
-        // j'affiche le menu Fichier
-        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-        ((ReleveTopComponent)tc).showPopupMenu(jButtonFile, 0, jButtonFile.getHeight());
-    }//GEN-LAST:event_jButtonFileActionPerformed
-
     private void jButtonConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigActionPerformed
         // J'affiche le panneau des options
         TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
@@ -1274,6 +1265,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
          TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
         ((ReleveTopComponent)tc).showConfigPanel();
     }//GEN-LAST:event_jButtonPlaceActionPerformed
+
+    private void jButtonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileActionPerformed
+        // j'affiche le menu Fichier
+        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
+        ((ReleveTopComponent)tc).showPopupMenu(jButtonFile, 0, jButtonFile.getHeight());
+    }//GEN-LAST:event_jButtonFileActionPerformed
 
    
     // Variables declaration - do not modify//GEN-BEGIN:variables

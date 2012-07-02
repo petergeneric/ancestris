@@ -116,7 +116,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jPanel2.add(jTextArea1, gridBagConstraints);
 
         OptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.OptionsPanel.border.title"))); // NOI18N
-        OptionsPanel.setPreferredSize(null);
         OptionsPanel.setLayout(new java.awt.GridBagLayout());
 
         jCheckBoxDuplicateRecord.setSelected(true);
@@ -203,7 +202,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         jPanel2.add(fillerPanelVertical, gridBagConstraints);
-        fillerPanelVertical.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.fillerPanelVertical.AccessibleContext.accessibleName")); // NOI18N
+        fillerPanelVertical.getAccessibleContext().setAccessibleName(""); // NOI18N
 
         jScrollPane1.setViewportView(jPanel2);
 
