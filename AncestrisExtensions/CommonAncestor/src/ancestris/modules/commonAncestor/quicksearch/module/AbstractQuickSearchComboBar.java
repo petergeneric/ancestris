@@ -227,8 +227,8 @@ public abstract class AbstractQuickSearchComboBar extends javax.swing.JPanel imp
 
     /** Actually invokes action selected in the results list */
     public void invokeSelectedItem() {
-        JList list = displayer.getList();
-        ResultsModel.ItemResult ir = (ItemResult) list.getSelectedValue();
+        JList<ItemResult> list = displayer.getList();
+        ResultsModel.ItemResult ir = list.getSelectedValue();
 
         // special handling of invocation of "more results item" (three dots)
         if (ir != null) {

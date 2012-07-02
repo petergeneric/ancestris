@@ -42,6 +42,7 @@
 
 package ancestris.modules.commonAncestor.quicksearch.module;
 
+import ancestris.modules.commonAncestor.quicksearch.module.ResultsModel.ItemResult;
 import ancestris.modules.commonAncestor.quicksearch.spi.SearchRequest;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,7 +61,7 @@ import javax.swing.Timer;
  *
  * @author Jan Becicka
  */
-public final class ResultsModel extends AbstractListModel implements ActionListener {
+public final class ResultsModel extends AbstractListModel<ItemResult> implements ActionListener {
 
     private static ResultsModel instance;
 
@@ -114,7 +115,7 @@ public final class ResultsModel extends AbstractListModel implements ActionListe
         return size;
     }
 
-    public Object getElementAt (int index) {
+    public ItemResult getElementAt (int index) {
         if (results == null) {
             return null;
         }

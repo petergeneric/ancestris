@@ -107,7 +107,7 @@ public class QuickSearchPopup extends javax.swing.JPanel
     }
 
     void invoke() {
-        ItemResult result = ((ItemResult) jList1.getModel().getElementAt(jList1.getSelectedIndex()));
+        ItemResult result = jList1.getModel().getElementAt(jList1.getSelectedIndex());
         if (result != null) {
             RecentSearches.getDefault().add(result);
             result.getAction().run();
@@ -142,7 +142,7 @@ public class QuickSearchPopup extends javax.swing.JPanel
         }
     }
 
-    public JList getList() {
+    public JList<ItemResult> getList() {
         return jList1;
     }
 
@@ -199,7 +199,7 @@ public class QuickSearchPopup extends javax.swing.JPanel
         java.awt.GridBagConstraints gridBagConstraints;
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        jList1 = new javax.swing.JList<ItemResult>();
         statusPanel = new javax.swing.JPanel();
         searchingSep = new javax.swing.JSeparator();
         searchingLabel = new javax.swing.JLabel();
@@ -213,7 +213,6 @@ public class QuickSearchPopup extends javax.swing.JPanel
         jScrollPane1.setBorder(null);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane1.setViewportBorder(null);
 
         jList1.setFocusable(false);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -300,7 +299,7 @@ private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:even
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel hintLabel;
     private javax.swing.JSeparator hintSep;
-    private javax.swing.JList jList1;
+    private javax.swing.JList<ItemResult> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel noResultsLabel;
     private javax.swing.JLabel searchingLabel;
