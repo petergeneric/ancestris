@@ -13,7 +13,7 @@ public class IndiMatcher extends EntityMatcher<Indi> {
     private static final Logger log = Logger.getLogger(IndiMatcher.class.getName());
 
     @Override
-    public int compareEntities(Indi leftIndi, Indi rightIndi) {
+    public int compare(Indi leftIndi, Indi rightIndi) {
         if ((leftIndi.getSex() == rightIndi.getSex())) {
             // compare Birth dates
             if (compareBirthDate(leftIndi, rightIndi) < 4000) {

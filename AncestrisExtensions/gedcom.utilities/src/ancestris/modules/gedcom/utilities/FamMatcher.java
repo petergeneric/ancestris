@@ -11,7 +11,7 @@ import genj.gedcom.PropertyDate;
 public class FamMatcher extends EntityMatcher<Fam> {
 
     @Override
-    public int compareEntities(Fam left, Fam right) {
+    public int compare(Fam left, Fam right) {
         Indi leftHusband = left.getHusband();
         Indi rightHusband = right.getHusband();
         if (leftHusband != null && rightHusband != null) {

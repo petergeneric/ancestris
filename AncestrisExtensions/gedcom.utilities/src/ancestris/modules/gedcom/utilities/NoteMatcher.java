@@ -9,7 +9,7 @@ import genj.gedcom.Note;
 public class NoteMatcher extends EntityMatcher<Note> {
 
     @Override
-    public int compareEntities(Note left, Note right) {
+    public int compare(Note left, Note right) {
         if (left.getValue().equals(right.getValue())) {
             return 100;
         } else {
