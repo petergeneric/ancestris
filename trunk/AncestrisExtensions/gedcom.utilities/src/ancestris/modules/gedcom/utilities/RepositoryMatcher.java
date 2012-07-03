@@ -10,7 +10,7 @@ import genj.gedcom.Repository;
 public class RepositoryMatcher extends EntityMatcher<Repository> {
 
     @Override
-    public int compareEntities(Repository left, Repository right) {
+    public int compare(Repository left, Repository right) {
         Property leftName = left.getProperty("NAME");
         Property rightName = right.getProperty("NAME");
         if (leftName != null && rightName != null) {

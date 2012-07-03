@@ -9,7 +9,7 @@ import genj.gedcom.Source;
 public class SourceMatcher extends EntityMatcher<Source> {
 
     @Override
-    public int compareEntities(Source left, Source right) {
+    public int compare(Source left, Source right) {
         if (left.getTitle().equals(right.getTitle())) {
             if (left.getText().equals(right.getText())) {
                 return 100;
