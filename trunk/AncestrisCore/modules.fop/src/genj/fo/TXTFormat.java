@@ -47,7 +47,7 @@ public class TXTFormat extends Format {
 //    transformer.transform(doc.getDOMSource(), new SAXResult(handler));
 
     // grab xsl transformer
-    Transformer transformer = getTemplates("./contrib/xslt/fo2txt.xsl").newTransformer();
+    Transformer transformer = getTemplates("resources/fo2txt.xsl").newTransformer();
     
     // do the transformation
     transformer.transform(doc.getDOMSource(), new StreamResult(out));
