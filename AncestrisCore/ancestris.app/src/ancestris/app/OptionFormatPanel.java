@@ -289,18 +289,18 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
     void load() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
-        AncestrisPreferences reportPrefs = Registry.get(genj.report.Options.class);
+//XXX:        AncestrisPreferences reportPrefs = Registry.get(genj.report.Options.class);
 
-        setSymbolBirt(reportPrefs.get("birthSymbol", ""));
-        setSymbolBapm(reportPrefs.get("baptismSymbol", ""));
-        setSymbolChildOf(reportPrefs.get("childOfSymbol", ""));
-        setSymbolEngm(reportPrefs.get("engagingSymbol", ""));
-        setSymbolMarr(reportPrefs.get("marriageSymbol", ""));
-        setSymbolDivc(reportPrefs.get("divorceSymbol", ""));
-        setSymbolOccu(reportPrefs.get("occuSymbol", ""));
-        setSymbolResi(reportPrefs.get("resiSymbol", ""));
-        setSymbolDeat(reportPrefs.get("deathSymbol", ""));
-        setSymbolBuri(reportPrefs.get("burialSymbol", ""));
+//        setSymbolBirt(reportPrefs.get("birthSymbol", ""));
+//        setSymbolBapm(reportPrefs.get("baptismSymbol", ""));
+//        setSymbolChildOf(reportPrefs.get("childOfSymbol", ""));
+//        setSymbolEngm(reportPrefs.get("engagingSymbol", ""));
+//        setSymbolMarr(reportPrefs.get("marriageSymbol", ""));
+//        setSymbolDivc(reportPrefs.get("divorceSymbol", ""));
+//        setSymbolOccu(reportPrefs.get("occuSymbol", ""));
+//        setSymbolResi(reportPrefs.get("resiSymbol", ""));
+//        setSymbolDeat(reportPrefs.get("deathSymbol", ""));
+//        setSymbolBuri(reportPrefs.get("burialSymbol", ""));
         jSpinner3.setValue(genj.gedcom.Options.getInstance().getValueLineBreak());
         setImageSize(gedcomPrefs.get("maxImageFileSizeKB", ""));
         setDisplayNames(gedcomPrefs.get("nameFormat", ""));
@@ -309,18 +309,18 @@ final class OptionFormatPanel extends javax.swing.JPanel {
 
     void store() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
-        AncestrisPreferences reportPrefs = Registry.get(genj.report.Options.class);
+//XXX:        AncestrisPreferences reportPrefs = Registry.get(genj.report.Options.class);
 
-        reportPrefs.put("birthSymbol", getSymbolBirt());
-        reportPrefs.put("baptismSymbol", getSymbolBapm());
-        reportPrefs.put("childOfSymbol", getSymbolChildOf());
-        reportPrefs.put("engagingSymbol", getSymbolEngm());
-        reportPrefs.put("marriageSymbol", getSymbolMarr());
-        reportPrefs.put("divorceSymbol", getSymbolDivc());
-        reportPrefs.put("occuSymbol", getSymbolOccu());
-        reportPrefs.put("resiSymbol", getSymbolResi());
-        reportPrefs.put("deathSymbol", getSymbolDeat());
-        reportPrefs.put("burialSymbol", getSymbolBuri());
+//        reportPrefs.put("birthSymbol", getSymbolBirt());
+//        reportPrefs.put("baptismSymbol", getSymbolBapm());
+//        reportPrefs.put("childOfSymbol", getSymbolChildOf());
+//        reportPrefs.put("engagingSymbol", getSymbolEngm());
+//        reportPrefs.put("marriageSymbol", getSymbolMarr());
+//        reportPrefs.put("divorceSymbol", getSymbolDivc());
+//        reportPrefs.put("occuSymbol", getSymbolOccu());
+//        reportPrefs.put("resiSymbol", getSymbolResi());
+//        reportPrefs.put("deathSymbol", getSymbolDeat());
+//        reportPrefs.put("burialSymbol", getSymbolBuri());
         genj.gedcom.Options.getInstance().setValueLineBreak(Integer.valueOf(jSpinner3.getValue().toString()));
         gedcomPrefs.put("maxImageFileSizeKB", getImageSize());
         gedcomPrefs.put("nameFormat", getDisplayNames());

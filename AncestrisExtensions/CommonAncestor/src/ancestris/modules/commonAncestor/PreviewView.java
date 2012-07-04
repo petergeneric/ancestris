@@ -64,6 +64,7 @@ public class PreviewView extends JPanel {
     private JScrollPane result;
     private ActionShow actionShow = new ActionShow();
     /** statics */
+    // XXX: mus not depends on report module to (only) get those images...
     private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
             imgStop = new ImageIcon(ReportView.class, "Stop"),
             imgSave = new ImageIcon(ReportView.class, "Save"),

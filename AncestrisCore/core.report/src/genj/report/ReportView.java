@@ -399,7 +399,7 @@ public class ReportView extends View {
     // document
     if (object instanceof genj.fo.Document) {
 
-      genj.fo.Document doc = (genj.fo.Document) object;
+            genj.fo.Document doc = (genj.fo.Document) object;
       String title = "Document " + doc.getTitle();
 
       Registry foRegistry = Registry.get(getClass());
@@ -541,7 +541,7 @@ public class ReportView extends View {
       if (result.isVisible() && result.getViewport().getView() instanceof ContextListWidget) {
         ContextListWidget list = (ContextListWidget)result.getViewport().getView();
         String title = REGISTRY.get("lastreport", "Report");
-        genj.fo.Document doc = new genj.fo.Document(title);
+                genj.fo.Document doc = new genj.fo.Document(title);
         doc.startSection(title);
         for (Context c : list.getContexts()) {
           if (c instanceof ViewContext)

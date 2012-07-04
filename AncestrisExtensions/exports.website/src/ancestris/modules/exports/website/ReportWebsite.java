@@ -47,7 +47,7 @@ public class ReportWebsite extends Report{
     public boolean reportDisplayIndividualMap = true;
     public boolean omitXmlDeclaration = false;
     public String reportTitle = "Relatives";
-    @Multiline
+//    @Multiline
     public String reportWelcomeText = "On these pages my ancestors are presented";
     public boolean displaySosaStradonitz = false;
 

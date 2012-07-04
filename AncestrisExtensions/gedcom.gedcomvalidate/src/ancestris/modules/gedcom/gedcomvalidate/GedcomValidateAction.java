@@ -52,7 +52,7 @@ public final class GedcomValidateAction implements ActionListener {
                         ViewContext c = iterator.next();
                         doc.nextTableRow();
                         // doc.addText(c.getEntity().getId());
-                        doc.addLink(c.getEntity().getId(), c.getEntity());
+                        doc.addLink(c.getEntity().getId(), c.getEntity().getAnchor());
                         doc.nextTableCell();
                         doc.addText(c.getEntity().toString(false));
                         doc.nextTableCell();

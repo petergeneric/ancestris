@@ -15,6 +15,7 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.GenjViewInterface;
 import genj.gedcom.Context;
 import genj.report.Report;
+import genj.report.ReportPlugin;
 import genj.report.ReportView;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -29,7 +30,8 @@ public final class WebSiteAction implements ActionListener {
 
     public void actionPerformed(ActionEvent ev) {
         Report report = WebSiteExportPlugin.getReport();
-        ReportView view = AncestrisPlugin.lookup(GenjViewInterface.class).getReportView(context);
+//        ReportView view = AncestrisPlugin.lookup(GenjViewInterface.class).getReportView(context);
+        ReportView view = ReportPlugin.getReportView(context);
         if (view != null) {
             view.startReport(report, context.getGedcom());
         }

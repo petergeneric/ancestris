@@ -128,6 +128,13 @@ public class Entity extends Property {
   }
   
   /**
+   * return "unique" id string (may be used as link target or anchor)
+   */
+  public String getAnchor(){
+      return getTag()+"_"+getId();
+  }
+  
+  /**
    * @see genj.gedcom.Property#toString()
    */
   public final String toString() {

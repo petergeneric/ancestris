@@ -8,7 +8,6 @@
 
 package ancestris.modules.commonAncestor.graphics;
 
-import genj.report.Report;
 
 import java.io.IOException;
 

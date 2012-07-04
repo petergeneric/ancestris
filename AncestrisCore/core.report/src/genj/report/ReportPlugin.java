@@ -20,6 +20,8 @@
 package genj.report;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.core.report.ReportTopComponent;
+import ancestris.view.AncestrisTopComponent;
 import ancestris.view.GenjViewInterface;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -254,14 +256,44 @@ public class ReportPlugin implements ActionProvider {
         public void actionPerformed(ActionEvent event) {
             if (context == null)
                 return;
-
-        ReportView view = AncestrisPlugin.lookup(GenjViewInterface.class).getReportView(new Context(gedcom));
+        //XXX: !!!    
+        ReportView view = getReportView(null/*context*/);
         if (view != null) {
             view.startReport(report, context);
         }
         }
     } //ActionRun
 
+    public static ReportView getReportView(Context contextToOpen) {
+        // XXX: Find reportview if opened, must be done using lookup
+        // XXX: quick fix to allow reoprt to be launched from right clic, Reports API must be desesigned later
+        ReportView view = null;
+        AncestrisTopComponent atc = null;
+        for (GenjViewInterface tc : AncestrisPlugin.lookupAll(GenjViewInterface.class)) {
+//                    if (!((Context)context).getGedcom().equals(tc.getGedcom()))
+//                        continue;
+            if (!(tc.getView() instanceof ReportView)) {
+                continue;
+            }
+            atc = (AncestrisTopComponent) tc;
+            view = (ReportView) tc.getView();
+        }
+
+        if (view != null) {
+            atc.open();
+            atc.requestActive();
+            return view;
+        }
+
+        //XXX: can't be called from ancestriscore
+        AncestrisTopComponent win = ReportTopComponent.getFactory().create(contextToOpen);
+        //            win.init(contextToOpen);
+        win.open();
+        win.requestActive();
+        return (ReportView) ((GenjViewInterface) win).getView();
+    }
+
+    
 //XXX:    @Override
 //  public void viewOpened(View view) {
 //    if (view instanceof ReportView) {
