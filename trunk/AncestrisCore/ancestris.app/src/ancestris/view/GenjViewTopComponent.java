@@ -11,12 +11,10 @@
  */
 package ancestris.view;
 
-import ancestris.app.ReportTopComponent;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.report.ReportView;
 import genj.util.swing.Action2.Group;
 import genj.view.ActionProvider;
 import genj.view.ActionProvider.Purpose;
@@ -52,36 +50,6 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent impleme
      */
     public abstract ViewFactory getViewFactory();
     private GenjViewProxy viewProxy = null;
-
-    // XXX: horrible!
-    public ReportView getReportView(Context contextToOpen) {
-        // XXX: Find reportview if opened, must be done using lookup
-        // XXX: quick fix to allow reoprt to be launched from right clic, Reports API must be desesigned later
-        ReportView view = null;
-        AncestrisTopComponent atc = null;
-        for (GenjViewInterface tc : AncestrisPlugin.lookupAll(GenjViewInterface.class)) {
-//                    if (!((Context)context).getGedcom().equals(tc.getGedcom()))
-//                        continue;
-            if (!(tc.getView() instanceof ReportView)) {
-                continue;
-            }
-            atc = (AncestrisTopComponent) tc;
-            view = (ReportView) tc.getView();
-        }
-
-        if (view != null) {
-            atc.open();
-            atc.requestActive();
-            return view;
-        }
-
-        //XXX: can't be called from ancestriscore
-        AncestrisTopComponent win = ReportTopComponent.getFactory().create(contextToOpen);
-        //            win.init(contextToOpen);
-        win.open();
-        win.requestActive();
-        return (ReportView) ((GenjViewInterface) win).getView();
-    }
 
     /**
      * return Genj View proxyinstance for this view factory if applicable

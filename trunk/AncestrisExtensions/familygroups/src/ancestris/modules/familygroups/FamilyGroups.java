@@ -221,7 +221,7 @@ public class FamilyGroups {
                             doc.nextTableRow();
                             doc.addText(prefix);
                             doc.nextTableCell();
-                            doc.addLink(indi.getId(), indi);
+                            doc.addLink(indi.getId(), indi.getAnchor());
                             doc.nextTableCell();
                             doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
 
@@ -232,7 +232,7 @@ public class FamilyGroups {
                         doc.nextTableRow();
                         doc.addText(String.format("%d", tree.size()));
                         doc.nextTableCell();
-                        doc.addLink(oldestIndividual.getId(), oldestIndividual);
+                        doc.addLink(oldestIndividual.getId(), oldestIndividual.getAnchor());
                         doc.nextTableCell();
                         doc.addText(oldestIndividual.getName() + " (" + oldestIndividual.getBirthAsString() + " - " + oldestIndividual.getDeathAsString() + ")");
                     }

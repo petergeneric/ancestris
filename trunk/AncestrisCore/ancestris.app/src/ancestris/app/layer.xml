@@ -83,20 +83,6 @@
             </file>
         </folder>
         <folder name="Window">
-            <file name="ancestris-app-EditAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.EditTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_EditAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Help.png"/>
-            </file>
-
-            <file name="ancestris-app-ReportAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.ReportTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_ReportAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
             <file name="ancestris-app-TimelineAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="component" methodvalue="ancestris.app.TimelineTopComponent.getFactory"/>
@@ -272,10 +258,6 @@
             <file name="Separator1_1.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-200"/>
-            </file>
-            <file name="ReportAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-ReportAction.instance"/>
-                <attr name="position" intvalue="-100"/>
             </file>
 
             <file name="org-netbeans-core-actions-HTMLViewAction.shadow_hidden"/>
@@ -507,11 +489,6 @@
             <file name="ui">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/ui"/>
                 <attr name="include" stringvalue="config/Toolbars/.*|config/Windows2Local/Modes/.*|config/Windows2Local/WindowManager.wswmgr"/>
-            </file>
-            <file name="reports">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/reports"/>
-                <attr name="include" stringvalue="ancestris/[^/]*|ancestris/gedart/.*|ancestris/almanac/.*"/>
-                <attr name="exclude" stringvalue="ancestris/ancestris.log.*"/>
             </file>
             <file name="gedcoms">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/gedcoms"/>

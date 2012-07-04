@@ -19,6 +19,7 @@
  */
 package genj.report;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import genj.view.View;
@@ -36,7 +37,9 @@ public class ReportViewFactory implements ViewFactory {
    * Factory method - create instance of view
    */
   public View createView() {
-    return new ReportView();
+      View reportView = new ReportView();
+      AncestrisPlugin.register(reportView);
+    return reportView;
   }
   
   /**

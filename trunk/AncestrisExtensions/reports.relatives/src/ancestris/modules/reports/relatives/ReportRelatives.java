@@ -19,11 +19,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import org.openide.util.NbBundle;
 
 /**
@@ -114,7 +110,7 @@ public class ReportRelatives {
                 document.nextTableRow("font-weight=normal");
 
                 for (Indi found : find) {
-                    document.addLink(found.getId(), found);
+                    document.addLink(found.getId(), found.getAnchor());
                     document.nextTableCell();
                     document.addText(found.getName());
                     document.nextTableRow("font-weight=normal");

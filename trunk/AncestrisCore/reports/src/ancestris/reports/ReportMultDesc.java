@@ -347,14 +347,14 @@ public class ReportMultDesc extends Report {
             doc.nextParagraph();
             doc.addText("====> " + translate("see") + " ");
             if (reportNumberScheme != NUM_NONE) {
-                doc.addLink(label, fam);
+                doc.addLink(label, fam.getAnchor());
             } else {
-                doc.addLink(fam.getDisplayValue(), fam);
+                doc.addLink(fam.getDisplayValue(), fam.getAnchor());
             }
         }
 
         void anchor(Fam fam, Document doc) {
-            doc.addAnchor(fam);
+            doc.addAnchor(fam.getAnchor());
         }
 
         void endIndi(Indi indi, Document doc) {
