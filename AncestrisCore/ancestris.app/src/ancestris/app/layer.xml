@@ -83,12 +83,6 @@
             </file>
         </folder>
         <folder name="Window">
-            <file name="ancestris-app-TimelineAction.instance">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
-                <attr name="component" methodvalue="ancestris.app.TimelineTopComponent.getFactory"/>
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_MENU_TimelineAction"/>
-                <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
-            </file>
             <file name="ancestris-explorer-GedcomExplorerAction.instance">
                 <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerAction"/>
@@ -235,10 +229,6 @@
         <file name="Versioning_hidden"/>
         <folder name="View">
             <file name="Separator1.instance_hidden"/>
-            <file name="TimelineAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-TimelineAction.instance"/>
-                <attr name="position" intvalue="-700"/>
-            </file>
             <file name="Separator1_1_2.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-600"/>

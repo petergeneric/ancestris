@@ -1,4 +1,4 @@
-package ancestris.reports;
+package ancestris.modules.almanac;
 
 /**
  * Reports are Freeware Code Snippets
