@@ -42,7 +42,7 @@ public class HTMLFormat extends Format {
   protected void formatImpl(Document doc, OutputStream out) throws Throwable {
     
     // grab xsl transformer
-    Transformer transformer = getTemplates("./contrib/xslt/fo2html.xsl").newTransformer();
+    Transformer transformer = getTemplates("resources/fo2html.xsl").newTransformer();
     
     // do the transformation
     transformer.transform(doc.getDOMSource(), new StreamResult(out));

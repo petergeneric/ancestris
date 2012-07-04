@@ -49,7 +49,7 @@ public class CSVFormat extends Format {
   protected void formatImpl(Document doc, OutputStream out) throws Throwable {
     
     // grab xsl transformer
-    Transformer transformer = getTemplates("./contrib/xslt/fo2csv.xsl").newTransformer();
+    Transformer transformer = getTemplates("resources/fo2csv.xsl").newTransformer();
     
     // do the transformation
     transformer.transform(doc.getDOMSource(), new StreamResult(out));
