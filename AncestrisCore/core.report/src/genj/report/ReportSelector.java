@@ -68,10 +68,6 @@ class ReportSelector extends JPanel {
     
     JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
     top.add(new JLabel(res.getString("report.reports")));
-    JButton reload = new JButton(new ActionReload());
-    reload.setFocusable(false);
-    reload.setMargin(new Insets(0,0,0,0));
-    top.add(reload);
     
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(list), BorderLayout.WEST);
@@ -104,28 +100,6 @@ class ReportSelector extends JPanel {
       list.setSelection(report);
   }
   
-
-  /**
-   * Action: RELOAD
-   */
-  private class ActionReload extends Action2 {
-    protected ActionReload() {
-      setImage(imgReload);
-      setTip(Resources.get(this), "report.reload.tip");
-      setEnabled(!ReportLoader.getInstance().isReportsInClasspath());
-    }
-    public void actionPerformed(ActionEvent event) {
-      // .. do it (forced!);
-      ReportLoader.clear();
-      // .. get them
-      Report reports[] = ReportLoader.getInstance().getReports();
-      // .. update
-      list.setReports(reports);
-      // .. done
-    }
-  } //ActionReload
-
-
   /** Selected report */
   Report getReport() {
     

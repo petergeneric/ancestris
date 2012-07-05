@@ -3,35 +3,25 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.report;
 
-import genj.util.EnvironmentChecker;
-import genj.util.PackageUtils;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import org.openide.util.Lookup;
 
 /**
@@ -39,225 +29,117 @@ import org.openide.util.Lookup;
  */
 public class ReportLoader {
 
-  /** reports we have */
-  private List<Report> instances = new ArrayList<Report>(10);
-  
-  /** report files */
-  private Map<File,String> file2reportclass = new HashMap<File, String>(10);
-  
-  /** classpath */
-  private List<URL> classpath = new ArrayList<URL>(10);
-  
-  /** whether reports are in classpath */
-  private boolean isReportsInClasspath = false;
-  
-  /** a singleton */
-  private volatile static ReportLoader singleton;
-  
-  /**
-   * Clears the report loader's state effectively forcing a reload
-   */
-  /*package*/ static void clear() {
-    singleton = null;
-  }
-  
-  /** 
-   * Access
-   */
-  public static ReportLoader getInstance() {
-    
-    // not known yet?
-    if (singleton==null) {
-      synchronized (ReportLoader.class) {
-        if (singleton==null) {
-          singleton = new ReportLoader();
-        }
-      }
+    /**
+     * reports we have
+     */
+    private List<Report> instances = new ArrayList<Report>(10);
+    /**
+     * a singleton
+     */
+    private volatile static ReportLoader singleton;
+
+    /**
+     * Clears the report loader's state effectively forcing a reload
+     */
+    /*
+     * package
+     */ static void clear() {
+        singleton = null;
     }
-      
-    // done
-    return singleton;
-      
-  }
-  
-  /**
-   * Report by class name
-   */
-  public Report getReportByName(String classname) {
-    for (Report report : instances) {
-      if (report.getClass().getName().equals(classname))
-        return report;
-    }
-    return null;
-    
-  }
-  
-  /**
-   * dir resolver
-   */
-  public static File getReportDirectory() {
-    
-    // where are the reports 
-    return new File(EnvironmentChecker.getProperty(
-      new String[]{ "ancestris.report.dir", "user.home.ancestris/report"},
-      "report",
-      "find report class-files"
-    ));
-  }
-  
-  /**
-   * Constructor
-   */
-  private ReportLoader() {
-    try {
-        // XXX: we will ave to remove finding reports this way and use Lookup.
-        // XXX: PackageUtils class will be removed too
-            for (Class clazz:PackageUtils.getClassesForPackage("genjreports","Report")) {
-                Report r;
-                try{
-                    r= (Report)clazz.newInstance();
-                    //TODO: le fichier n'est utilise que pour affichage ou le rapport ReportWebSite.
-                    // Ce rapport est supprime dans ancestris car il ne sert a rien compte tenu de l'exisstence
-                    // du webbook
-                    // il pourra donc etre supprime lors de la refactorisation des rapports
-                    r.putFile(new File(clazz.getCanonicalName()));
-                    instances.add(r);
-                } catch (Throwable t) {
-                    ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+clazz, t);
+
+    /**
+     * Access
+     */
+    public static ReportLoader getInstance() {
+
+        // not known yet?
+        if (singleton == null) {
+            synchronized (ReportLoader.class) {
+                if (singleton == null) {
+                    singleton = new ReportLoader();
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            ReportView.LOG.log(Level.SEVERE, null, ex);
         }
-    for (Report r:Lookup.getDefault().lookupAll(Report.class)){
-                try{
-                    //TODO: le fichier n'est utilise que pour affichage ou le rapport ReportWebSite.
-                    // Ce rapport est supprime dans ancestris car il ne sert a rien compte tenu de l'exisstence
-                    // du webbook
-                    // il pourra donc etre supprime lors de la refactorisation des rapports
-                    r.putFile(new File(r.getClass().getCanonicalName()));
-                    instances.add(r);
+
+        // done
+        return singleton;
+
+    }
+
+    /**
+     * Report by class name
+     */
+    public Report getReportByName(String classname) {
+        for (Report report : instances) {
+            if (report.getClass().getName().equals(classname)) {
+                return report;
+            }
+        }
+        return null;
+
+    }
+
+    /**
+     * Constructor
+     */
+    private ReportLoader() {
+        instances = new ArrayList<Report>(Lookup.getDefault().lookupAll(Report.class));
+        // sort 'em
+        Collections.sort(instances, new Comparator<Report>() {
+
+            public int compare(Report a, Report b) {
+                // 20063008 this can actually fail if the report is bad
+                try {
+                    return a.getName().compareTo(b.getName());
                 } catch (Throwable t) {
-                    ReportView.LOG.log(Level.WARNING, "Failed to instantiate "+r.getClass(), t);
+                    return 0;
                 }
+            }
+        });
+
+        // done
     }
-    // sort 'em
-    Collections.sort(instances, new Comparator<Report>() { 
-      public int compare(Report a, Report b) {
-        // 20063008 this can actually fail if the report is bad
-        try {
-          return a.getName().compareTo(b.getName());
-        } catch (Throwable t) {
-          return 0;
-        }
-      }
-    });
-    
-    // done
-  }
-  
-  /**
-   * Parse directory for lib- and report files
-   */
-  private void parseDir(File dir, String pkg) { 
 
-    // make sure dir is good
-    if (!dir.isDirectory())
-      return;
-
-    // loop files and directories
-    String[] files = dir.list();
-    for (int i=0;i<files.length;i++) {
-      File file = new File(dir, files[i]);
-      
-      // dir?
-      if (file.isDirectory()) {
-        parseDir(file, (pkg==null?"":pkg+".")+file.getName());
-        continue;
-      }
-
-      // report class file?
-      String report = isReport(file, pkg);
-      if (report!=null) {
-        file2reportclass.put(file, report);
-        continue;
-      } 
-      
-      // library?
-      if (isLibrary(file)) {
-        try {
-          ReportView.LOG.info("report library "+file.toURI().toURL());
-          classpath.add(file.toURI().toURL());
-        } catch (MalformedURLException e) {
-          // n/a
-        }
-      }
-      
-      // next 
+    /**
+     * Which reports do we have
+     */
+    public Report[] getReports() {
+        return getReports(true);
     }
-      
-    // done
-  }
-  
-  /**
-   * Criteria for library
-   */
-  private boolean isLibrary(File file) {
-    return 
-      !file.isDirectory() &&
-      (file.getName().endsWith(".jar") || file.getName().endsWith(".zip"));
-  }
-  
-  /**
-   * Criteria for report
-   */
-  private String isReport(File file, String pkg) {
-    if ( (pkg!=null&&pkg.startsWith("genj")) || 
-         file.isDirectory() ||
-         !file.getName().endsWith(".class") ||
-         !file.getName().startsWith("Report") ||
-         file.getName().indexOf("$")>0 )
-      return null;
-    String name = file.getName();
-    return (pkg==null?"":pkg+".") + name.substring(0, name.length()-".class".length());
-  }
 
-  /**
-   * Which reports do we have
-   */
-  public Report[] getReports() {
-      return getReports(true);
-  }
-  /**
-   * Which reports do we have
-   */
-  public Report[] getReports(boolean showHidden) {
-      List<Report> result = new ArrayList<Report>(instances.size());
-      for (Report r: instances){
-          if (!r.isHidden())
-              result.add(r);
-      }
-    return result.toArray(new Report[result.size()]);
-  }
+    /**
+     * Which reports do we have
+     */
+    public Report[] getReports(boolean showHidden) {
+        List<Report> result = new ArrayList<Report>(instances.size());
+        for (Report r : instances) {
+            if (!r.isHidden()) {
+                result.add(r);
+            }
+        }
+        return result.toArray(new Report[result.size()]);
+    }
 
-  /**
-   * Save options of all visible reports
-   * if a report is hidden (isHidden() returns true)  this report is
-   * a (special) report whose options must be handled in an optionPanel
-   */
-  // XXX: later all reports will be handled that way
-  /*package*/ void saveOptions() {
-    Report[] rs = getReports();
-    for (int r=0;r<rs.length;r++)
-      if (!rs[r].isHidden())
-          rs[r].saveOptions();
-  }
-  
-  /**
-   * Whether reports are in classpath
-   */
-  /*package*/ boolean isReportsInClasspath() {
-    return isReportsInClasspath;
-  }
-
+    /**
+     * Save options of all visible reports if a report is hidden (isHidden()
+     * returns true) this report is a (special) report whose options must be
+     * handled in an optionPanel
+     *
+     * Those hodden reports extend Report class and can contribute to context
+     * menu.
+     *
+     * XXX: we will have to use netbean context actions intead of using the old
+     * API
+     */
+    // XXX: later all reports will be handled that way
+  /*
+     * package
+     */ void saveOptions() {
+        Report[] rs = getReports();
+        for (int r = 0; r < rs.length; r++) {
+            if (!rs[r].isHidden()) {
+                rs[r].saveOptions();
+            }
+        }
+    }
 } //ReportLoader

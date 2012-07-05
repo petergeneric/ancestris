@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
  *
  * @author daniel
  */
+        // XXX: PackageUtils class will be removed 
 public class PackageUtils {
 
     public static List<Class> getClassesForPackage(String pckgname) throws ClassNotFoundException {

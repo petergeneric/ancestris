@@ -97,7 +97,7 @@ class ReportDetail extends JPanel {
       tpInfo   .setText("");
     } else {
       editorKit.setFrom(report.getClass());
-      lFile    .setText(report.getFile().getName());
+      lFile    .setText("non applicable");
       lAuthor  .setText(report.getAuthor());
       lVersion .setText(getReportVersion(report));
       tpInfo   .setText(report.getInfo().replaceAll("\n", "<br>"));
