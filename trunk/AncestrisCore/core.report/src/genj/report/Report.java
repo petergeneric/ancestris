@@ -127,9 +127,6 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   /** image */
   private Icon icon;
 
-  /** file */
-  private File file;
-  
   /** outs */
   private PrintWriter out = NUL;
   private Component owner = null;
@@ -633,18 +630,6 @@ public abstract class Report implements Cloneable,ResourcesProvider {
 
     return resources.getString(key, values);
 
-  }
-
-  /**
-   * Filename
-   */
-  public void putFile(File setFile) {
-    // setFile would make it appear as report option
-    file = setFile;
-  }
-
-  public File getFile() {
-    return file;
   }
 
   /**

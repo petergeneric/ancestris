@@ -11,9 +11,10 @@ class GedartTemplates extends TreeMap<String, GedartTemplate> {
 
 	public GedartTemplates() {
 		// first templates in report/gedart/templates
-		File gedartDir = new File(ReportLoader.getReportDirectory(),
-				"gedart/templates");
-		putAll(new GedartTemplates(gedartDir));
+            // XXX: Does not work in ancestris, see SamplePrivider implementation
+//		File gedartDir = new File(ReportLoader.getReportDirectory(),
+//				"gedart/templates");
+//		putAll(new GedartTemplates(gedartDir));
 
 		// second templates in {user.home.ancestris}/gedart/contrib-templates
 		File dir = new File(EnvironmentChecker.getProperty(
