@@ -5,6 +5,7 @@
  */
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.model.PlaceListener;
 import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.BeanField;
@@ -58,6 +59,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * bean ayant le focus par defaut (utilisé a la creation d'un releve
      */
     Bean defaultBeanFocus = null;
+    private MenuCommandProvider menuCommandeProvider;
 
     public ReleveEditor() {
         initComponents();
@@ -122,9 +124,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
      * @param dataManager
      * @param modelType
      */
-    public void setModel(DataManager dataManager, DataManager.ModelType modelType, PlaceManager placeManager) {
+    public void setModel(DataManager dataManager, DataManager.ModelType modelType, PlaceManager placeManager, MenuCommandProvider menuCommandeProvider) {
         this.dataManager = dataManager;
         this.recordModel = dataManager.getModel(modelType);
+        this.menuCommandeProvider = menuCommandeProvider;
         // j'abonne l'editeur aux changements de données du modele
         if( standaloneMode) {
             recordModel.addTableModelListener(this);
@@ -1246,30 +1249,25 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
     private void jButtonStandaloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStandaloneActionPerformed
         if ( standaloneMode == false ) {
             // j'affiche l'editeur standalone
-            TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-            ((ReleveTopComponent)tc).setStandaloneEditor(true);
+            menuCommandeProvider.showStandalone(true);
         } else {
-            // j'affiche l'editeur de la fenetre principale
-            TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-            tc.toFront();
+            // j'affiche l'editeur de la fenetre principale au premier plan
+            menuCommandeProvider.showToFront();
         }
     }//GEN-LAST:event_jButtonStandaloneActionPerformed
 
     private void jButtonConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigActionPerformed
         // J'affiche le panneau des options
-        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-        ((ReleveTopComponent)tc).showOptionPanel();
+        menuCommandeProvider.showOptionPanel();
     }//GEN-LAST:event_jButtonConfigActionPerformed
 
     private void jButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlaceActionPerformed
-         TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-        ((ReleveTopComponent)tc).showConfigPanel();
+        menuCommandeProvider.showConfigPanel();
     }//GEN-LAST:event_jButtonPlaceActionPerformed
 
     private void jButtonFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileActionPerformed
         // j'affiche le menu Fichier
-        TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-        ((ReleveTopComponent)tc).showPopupMenu(jButtonFile, 0, jButtonFile.getHeight());
+        menuCommandeProvider.showPopupMenu(jButtonFile, 0, jButtonFile.getHeight());
     }//GEN-LAST:event_jButtonFileActionPerformed
 
    
