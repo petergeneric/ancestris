@@ -29,12 +29,12 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 
 @ActionID(category = "Tools",
-id = "ancestris.modules.gedcom.history.DisplayHistoryAction")
-@ActionRegistration(displayName = "#CTL_DisplayHistoryAction")
+id = "ancestris.modules.gedcom.history.ClearHistoryAction")
+@ActionRegistration(displayName = "#CTL_ClearHistoryAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3333)
 })
-public final class DisplayHistoryAction implements ActionListener {
+public final class ClearHistoryAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -43,10 +43,8 @@ public final class DisplayHistoryAction implements ActionListener {
                 Context context = App.center.getSelectedContext(true);
                 if (context != null) {
                     String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
-
-                    GedcomHistoryTopComponent GedcomHistoryTopComponent = new GedcomHistoryTopComponent(((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName));
-                    GedcomHistoryTopComponent.open();
-                    GedcomHistoryTopComponent.requestActive();
+                    GedcomHistory gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName);
+                    gedcomHistory.clear ();
                 }
                 break;
             }
