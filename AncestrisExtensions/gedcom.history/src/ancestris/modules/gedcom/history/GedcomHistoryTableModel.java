@@ -20,6 +20,8 @@ package ancestris.modules.gedcom.history;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 
@@ -27,7 +29,7 @@ import org.openide.util.NbBundle;
  *
  * @author Lemovice <lemovice at ancestris-dot-org>
  */
-class HistoryTableModel extends AbstractTableModel {
+class GedcomHistoryTableModel extends AbstractTableModel implements ChangeListener {
 
     final static int date = 0;
     final static int entityTag = 1;
@@ -47,8 +49,9 @@ class HistoryTableModel extends AbstractTableModel {
     };
     private ArrayList<EntityHistory> gedcomHistoryList = null;
 
-    public HistoryTableModel(GedcomHistory gedcomHistory) {
+    public GedcomHistoryTableModel(GedcomHistory gedcomHistory) {
         gedcomHistoryList = gedcomHistory.getHistoryList();
+        gedcomHistory.addChangeListener(this);
     }
 
     @Override
@@ -58,7 +61,7 @@ class HistoryTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return gedcomHistoryList.size();
+        return gedcomHistoryList == null ? 0 : gedcomHistoryList.size();
     }
 
     @Override
@@ -68,25 +71,29 @@ class HistoryTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        EntityHistory entityHistory = gedcomHistoryList.get(row);
-        switch (col) {
-            case date:
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-                return dateFormat.format(entityHistory.getDate().getTime());
-            case entityTag:
-                return entityHistory.getEntityTag();
-            case entityId:
-                return entityHistory.getEntityId();
-            case action:
-                return entityHistory.getAction();
-            case property:
-                return entityHistory.getProperty();
-            case oldValue:
-                return entityHistory.getOldValue();
-            case newValue:
-                return entityHistory.getNewValue();
-            default:
-                return "";
+        if (gedcomHistoryList != null) {
+            EntityHistory entityHistory = gedcomHistoryList.get(row);
+            switch (col) {
+                case date:
+                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                    return dateFormat.format(entityHistory.getDate().getTime());
+                case entityTag:
+                    return entityHistory.getEntityTag();
+                case entityId:
+                    return entityHistory.getEntityId();
+                case action:
+                    return entityHistory.getAction();
+                case property:
+                    return entityHistory.getProperty();
+                case oldValue:
+                    return entityHistory.getOldValue();
+                case newValue:
+                    return entityHistory.getNewValue();
+                default:
+                    return "";
+            }
+        } else {
+            return "";
         }
     }
 
@@ -108,5 +115,10 @@ class HistoryTableModel extends AbstractTableModel {
      */
     @Override
     public void setValueAt(Object value, int row, int col) {
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent ce) {
+        fireTableRowsInserted(gedcomHistoryList.size() - 1, gedcomHistoryList.size() - 1);
     }
 }

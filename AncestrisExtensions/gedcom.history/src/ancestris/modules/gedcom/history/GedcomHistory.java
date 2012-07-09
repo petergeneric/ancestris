@@ -6,8 +6,11 @@ package ancestris.modules.gedcom.history;
 
 import genj.gedcom.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -20,6 +23,8 @@ public class GedcomHistory implements GedcomListener {
     private static final Logger log = Logger.getLogger(GedcomHistoryPlugin.class.getName());
     private String gedcomName = "";
     private ArrayList<EntityHistory> historyList = null;
+    // listeners
+    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     public GedcomHistory() {
     }
@@ -61,12 +66,14 @@ public class GedcomHistory implements GedcomListener {
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
         log.log(Level.INFO, "Entity {0} id {1} added", new Object[]{entity.getTag(), entity.getId()});
         historyList.add(new EntityHistory(EntityHistory.CREATED, entity, "", ""));
+        fireChange();
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
         log.log(Level.INFO, "Entity {0} id {1} deleted", new Object[]{entity.getTag(), entity.getId()});
         historyList.add(new EntityHistory(EntityHistory.DELETED, entity, "", ""));
+        fireChange();
     }
 
     @Override
@@ -75,6 +82,7 @@ public class GedcomHistory implements GedcomListener {
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.UPDATED, property, "", property.getValue()));
+            fireChange();
         }
     }
 
@@ -84,6 +92,7 @@ public class GedcomHistory implements GedcomListener {
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.CREATED, added, "", added.getValue()));
+            fireChange();
         }
     }
 
@@ -93,6 +102,30 @@ public class GedcomHistory implements GedcomListener {
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.DELETED, deleted, "", ""));
+            fireChange();
+        }
+    }
+
+    /**
+     * Adds a Listener which will be notified when data changes
+     */
+    public void addChangeListener(ChangeListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("listener can't be null");
+        }
+        listeners.add(listener);
+    }
+
+    /**
+     * Removes a Listener from receiving notifications
+     */
+    public void removeChangeListener(ChangeListener listener) {
+        listeners.remove(listener);
+    }
+
+    public void fireChange() {
+        for (ChangeListener listener : listeners) {
+            listener.stateChanged(new ChangeEvent(this));
         }
     }
 }
