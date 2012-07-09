@@ -17,14 +17,17 @@
  */
 package ancestris.modules.gedcom.history;
 
+import ancestris.view.AncestrisDockModes;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.NbBundle;
+import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.modules.gedcom.history//GedcomHistory//EN", autostore = false)
+@RetainLocation(AncestrisDockModes.TABLE)
 @TopComponent.Description(preferredID = "GedcomHistoryTopComponent", //iconBase="SET/PATH/TO/ICON/HERE", 
 persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "explorer", openAtStartup = false)
