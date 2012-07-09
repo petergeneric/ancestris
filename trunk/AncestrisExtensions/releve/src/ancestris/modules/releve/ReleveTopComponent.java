@@ -253,6 +253,22 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             result = askSaveData();
         }
 
+        if (result) {
+             // sauvegarde la largeur des colonnes
+            // remarque : Netbeans n'appelle pas componentClosed() quand on ferme 
+            // L'application ancestris, j'aoute donc l'enregistrement des preferences ici.
+            panelBirth.componentClosed();
+            panelMarriage.componentClosed();
+            panelDeath.componentClosed();
+            panelMisc.componentClosed();
+            panelAll.componentClosed();
+            // j'enregistre le nom du fichier courant
+            if (currentFile != null) {
+                NbPreferences.forModule(ReleveTopComponent.class).put(
+                        "LastFileName",
+                        currentFile.getAbsolutePath());
+            }
+        }
         return result;
     }
 
