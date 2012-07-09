@@ -61,7 +61,7 @@ import org.openide.windows.WindowManager;
 @RetainLocation(AncestrisDockModes.PROPERTIES)
 // je declare la classe ServiceProvider pour que ses instances soient visibles
 //@ServiceProvider(service=ReleveTopComponent.class)
-public final class ReleveTopComponent extends TopComponent  {    
+public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {    
     private static final String PREFERRED_ID = "ReleveTopComponent";
     private static final String FILE_DIRECTORY = "FileDirectory";
     protected Registry registry;
@@ -216,11 +216,11 @@ public final class ReleveTopComponent extends TopComponent  {
         AncestrisPlugin.register(this);
         // je cree le modele de données
         dataManager = new DataManager();
-        panelBirth.setModel(dataManager, DataManager.ModelType.birth, dataManager);
-        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, dataManager);
-        panelDeath.setModel(dataManager, DataManager.ModelType.death, dataManager);
-        panelMisc.setModel(dataManager, DataManager.ModelType.misc, dataManager);
-        panelAll.setModel(dataManager, DataManager.ModelType.all, dataManager);
+        panelBirth.setModel(dataManager, DataManager.ModelType.birth, dataManager, this);
+        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, dataManager, this);
+        panelDeath.setModel(dataManager, DataManager.ModelType.death, dataManager, this);
+        panelMisc.setModel(dataManager, DataManager.ModelType.misc, dataManager, this);
+        panelAll.setModel(dataManager, DataManager.ModelType.all, dataManager, this);
 
         
         //panelConfig.setTopComponent(this);
@@ -265,7 +265,7 @@ public final class ReleveTopComponent extends TopComponent  {
     @Override
     public void componentClosed() {
         // je ferme l'editeur independant
-        setStandaloneEditor(false);
+        showStandalone(false);
 
         // sauvegarde la largeur des colonnes
         panelBirth.componentClosed();
@@ -326,6 +326,7 @@ public final class ReleveTopComponent extends TopComponent  {
      * @param x
      * @param y
      */
+    @Override
     public void showPopupMenu(Component invoker, int x, int y ) {
         popup.show(invoker, x, y);
     }
@@ -370,6 +371,7 @@ public final class ReleveTopComponent extends TopComponent  {
     /**
      * Affiche le panneau contenant les options
      */
+    @Override
     public void showOptionPanel() {
         OptionsDisplayer.getDefault().open("Extensions/Releve");
     }
@@ -377,8 +379,17 @@ public final class ReleveTopComponent extends TopComponent  {
     /**
      * Affiche les informations du registre
      */
+    @Override
     public void showConfigPanel() {
         ReleveConfig.show(WindowManager.getDefault().getMainWindow(), dataManager);
+    }
+
+    /**
+     * Affiche la fenetre principale au premier plan
+     */
+    @Override
+    public void showToFront() {
+        this.toFront();
     }
 
     /**
@@ -987,7 +998,7 @@ public final class ReleveTopComponent extends TopComponent  {
                 if ( cityName.isEmpty()) {
                     cityName = "";
                 }
-                String recordType = "";
+                String recordType;
                 if (jRadioButtonAll.isSelected()) {
                     recordType = "_B";
                 } else if (jRadioButtonBirth.isSelected()) {
@@ -1108,7 +1119,7 @@ public final class ReleveTopComponent extends TopComponent  {
         if (result) {
             dataManager.removeAll();
 
-            FileBuffer fileBuffer = new FileBuffer();
+            FileBuffer fileBuffer;
             try {
                 //Context context = GedcomDirectory.getInstance().getContext(0);
                 //ReleveFileGedcom.loadFile(context.getGedcom(), fileBuffer);
@@ -1217,12 +1228,13 @@ public final class ReleveTopComponent extends TopComponent  {
      * affiche ou masque l'éditeur independant
      * @param show
      */
-    public void setStandaloneEditor(boolean show) {
+    @Override
+    public void showStandalone(boolean show) {
         if (show) {
             if (standaloneEditor == null) {
                 standaloneEditor = new StandaloneEditor();
                 standaloneEditor.setVisible(true);
-                standaloneEditor.setDataManager(dataManager, dataManager);
+                standaloneEditor.setDataManager(dataManager, dataManager, this);
                 // je lui donne le meme titre que ReleveTopCompoenent
                 standaloneEditor.setTitle(this.getName());
                 // j'affiche les memes releves que ceux de l'editeur principal
@@ -1256,6 +1268,7 @@ public final class ReleveTopComponent extends TopComponent  {
      * ferme sa fenetre.
      * @param show
      */
+    @Override
     public void standaloneEditorClosed() {
         // j'efface la reference de l'editeur
          standaloneEditor = null;
