@@ -32,7 +32,7 @@ persistenceType = TopComponent.PERSISTENCE_NEVER)
 public final class GedcomHistoryTopComponent extends TopComponent {
 
     GedcomHistory gedcomHistory = null;
-    HistoryTableModel historyTableModel = null;
+    GedcomHistoryTableModel historyTableModel = null;
 
     public GedcomHistoryTopComponent() {
         initComponents();
@@ -42,7 +42,7 @@ public final class GedcomHistoryTopComponent extends TopComponent {
 
     public GedcomHistoryTopComponent(GedcomHistory gedcomHistory) {
         this.gedcomHistory = gedcomHistory;
-        this.historyTableModel = new HistoryTableModel(gedcomHistory);
+        this.historyTableModel = new GedcomHistoryTableModel(gedcomHistory);
         initComponents();
         setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent"));
         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
@@ -56,27 +56,27 @@ public final class GedcomHistoryTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        gedcomHistoryScrollPane = new javax.swing.JScrollPane();
+        gedcomHistoryTable = new javax.swing.JTable();
 
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setModel(historyTableModel);
-        jScrollPane1.setViewportView(jTable1);
+        gedcomHistoryTable.setAutoCreateRowSorter(true);
+        gedcomHistoryTable.setModel(historyTableModel);
+        gedcomHistoryScrollPane.setViewportView(gedcomHistoryTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(gedcomHistoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(gedcomHistoryScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane gedcomHistoryScrollPane;
+    private javax.swing.JTable gedcomHistoryTable;
     // End of variables declaration//GEN-END:variables
 
     @Override
