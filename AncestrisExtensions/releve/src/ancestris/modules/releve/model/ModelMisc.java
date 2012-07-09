@@ -126,6 +126,7 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Participant1"), ks2),
             new BeanField(record, Field.FieldType.indiLastName),
             new BeanField(record, Field.FieldType.indiFirstName),
+            new BeanField(record, Field.FieldType.indiSex),
             new BeanField(record, Field.FieldType.indiAge),
             new BeanField(record, Field.FieldType.indiBirthDate),
             new BeanField(record, Field.FieldType.indiPlace),
@@ -165,7 +166,7 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeOccupation),
             new BeanField(record, Field.FieldType.wifeComment),
 
-            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExMarrried"), null),
+            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExMarried"), null),
             new BeanField(record, Field.FieldType.wifeMarriedLastName),
             new BeanField(record, Field.FieldType.wifeMarriedFirstName),
             new BeanField(record, Field.FieldType.wifeMarriedDead),
@@ -181,7 +182,7 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeFatherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Mother"), ks7),
-             new BeanField(record, Field.FieldType.wifeMotherLastName),
+            new BeanField(record, Field.FieldType.wifeMotherLastName),
             new BeanField(record, Field.FieldType.wifeMotherFirstName),
             new BeanField(record, Field.FieldType.wifeMotherAge),
             new BeanField(record, Field.FieldType.wifeMotherDead),
