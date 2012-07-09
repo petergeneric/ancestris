@@ -119,7 +119,7 @@ public class ModelDeath extends ModelAbstract {
             new BeanField(record, Field.FieldType.cote),
             new BeanField(record, Field.FieldType.freeComment),
 
-            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Dead"), ks2),
+            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Deceased"), ks2),
             new BeanField(record, Field.FieldType.indiLastName),
             new BeanField(record, Field.FieldType.indiFirstName),
             new BeanField(record, Field.FieldType.indiSex),
