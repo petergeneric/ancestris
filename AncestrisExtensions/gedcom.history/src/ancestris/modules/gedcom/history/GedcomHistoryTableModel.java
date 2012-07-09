@@ -29,7 +29,7 @@ import org.openide.util.NbBundle;
  *
  * @author Lemovice <lemovice at ancestris-dot-org>
  */
-class GedcomHistoryTableModel extends AbstractTableModel implements ChangeListener {
+class GedcomHistoryTableModel extends AbstractTableModel {
 
     final static int date = 0;
     final static int entityTag = 1;
@@ -51,7 +51,6 @@ class GedcomHistoryTableModel extends AbstractTableModel implements ChangeListen
 
     public GedcomHistoryTableModel(GedcomHistory gedcomHistory) {
         gedcomHistoryList = gedcomHistory.getHistoryList();
-        gedcomHistory.addChangeListener(this);
     }
 
     @Override
@@ -115,10 +114,5 @@ class GedcomHistoryTableModel extends AbstractTableModel implements ChangeListen
      */
     @Override
     public void setValueAt(Object value, int row, int col) {
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent ce) {
-        fireTableRowsInserted(gedcomHistoryList.size() - 1, gedcomHistoryList.size() - 1);
     }
 }

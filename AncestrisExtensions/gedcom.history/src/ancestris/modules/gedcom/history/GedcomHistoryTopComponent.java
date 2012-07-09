@@ -18,6 +18,8 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.view.AncestrisDockModes;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.NbBundle;
 import org.openide.windows.RetainLocation;
@@ -28,18 +30,19 @@ import org.openide.windows.TopComponent;
  */
 @ConvertAsProperties(dtd = "-//ancestris.modules.gedcom.history//GedcomHistory//EN", autostore = false)
 @RetainLocation(AncestrisDockModes.TABLE)
-@TopComponent.Description(preferredID = "GedcomHistoryTopComponent", //iconBase="SET/PATH/TO/ICON/HERE", 
+@TopComponent.Description(preferredID = "GedcomHistoryTopComponent",
+//iconBase="SET/PATH/TO/ICON/HERE", 
 persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "explorer", openAtStartup = false)
 //@TopComponent.OpenActionRegistration(displayName = "#CTL_GedcomHistoryAction", preferredID = "GedcomHistoryTopComponent")
-public final class GedcomHistoryTopComponent extends TopComponent {
+public final class GedcomHistoryTopComponent extends TopComponent implements ChangeListener {
 
     GedcomHistory gedcomHistory = null;
     GedcomHistoryTableModel historyTableModel = null;
 
     public GedcomHistoryTopComponent() {
         initComponents();
-        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent"));
+        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", new Object [] {gedcomHistory.getGedcomName()}));
         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
     }
 
@@ -84,12 +87,14 @@ public final class GedcomHistoryTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        if (gedcomHistory != null)
+        gedcomHistory.addChangeListener(this);
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        if (gedcomHistory != null)
+        gedcomHistory.removeChangeListener(this);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -102,5 +107,10 @@ public final class GedcomHistoryTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent ce) {
+        historyTableModel.fireTableRowsInserted(gedcomHistory.getHistoryList().size() - 1, gedcomHistory.getHistoryList().size() - 1);
     }
 }

@@ -34,6 +34,9 @@ public class GedcomHistory implements GedcomListener {
         this.historyList = new ArrayList<EntityHistory>();
     }
 
+    public void clear () {
+        historyList.clear();
+    }
     /**
      * @return the gedcomName
      */
