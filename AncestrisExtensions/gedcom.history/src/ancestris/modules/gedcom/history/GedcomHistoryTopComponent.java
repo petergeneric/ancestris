@@ -17,9 +17,16 @@
  */
 package ancestris.modules.gedcom.history;
 
+import ancestris.app.App;
 import ancestris.view.AncestrisDockModes;
+import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.view.SelectionSink;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.NbBundle;
 import org.openide.windows.RetainLocation;
@@ -40,9 +47,32 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     GedcomHistory gedcomHistory = null;
     GedcomHistoryTableModel historyTableModel = null;
 
+    private class RowListener implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent event) {
+            if (event.getValueIsAdjusting()) {
+                return;
+            }
+
+            Context context = App.center.getSelectedContext(true);
+            if (context != null) {
+                String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.getSelectedRow(), GedcomHistoryTableModel.entityId);
+                Gedcom myGedcom = context.getGedcom();
+
+                if (currentId != null && myGedcom != null) {
+                    Entity entity = myGedcom.getEntity(currentId);
+                    if (entity != null) {
+                        SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
+                    }
+                }
+            }
+        }
+    }
+
     public GedcomHistoryTopComponent() {
         initComponents();
-        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", new Object [] {gedcomHistory.getGedcomName()}));
+        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
     }
 
@@ -50,8 +80,9 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
         this.gedcomHistory = gedcomHistory;
         this.historyTableModel = new GedcomHistoryTableModel(gedcomHistory);
         initComponents();
-        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent"));
+        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
+        gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
     }
 
     /**
@@ -87,14 +118,16 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
 
     @Override
     public void componentOpened() {
-        if (gedcomHistory != null)
-        gedcomHistory.addChangeListener(this);
+        if (gedcomHistory != null) {
+            gedcomHistory.addChangeListener(this);
+        }
     }
 
     @Override
     public void componentClosed() {
-        if (gedcomHistory != null)
-        gedcomHistory.removeChangeListener(this);
+        if (gedcomHistory != null) {
+            gedcomHistory.removeChangeListener(this);
+        }
     }
 
     void writeProperties(java.util.Properties p) {

@@ -20,8 +20,6 @@ package ancestris.modules.gedcom.history;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 
@@ -31,13 +29,13 @@ import org.openide.util.NbBundle;
  */
 class GedcomHistoryTableModel extends AbstractTableModel {
 
-    final static int date = 0;
-    final static int entityTag = 1;
-    final static int entityId = 2;
-    final static int action = 3;
-    final static int property = 4;
-    final static int oldValue = 5;
-    final static int newValue = 6;
+    public final static int date = 0;
+    public final static int entityTag = 1;
+    public final static int entityId = 2;
+    public final static int action = 3;
+    public final static int property = 4;
+    public final static int oldValue = 5;
+    public final static int newValue = 6;
     private String[] columnNames = {
         NbBundle.getMessage(this.getClass(), "HistoryTableModel.columnNames.date"),
         NbBundle.getMessage(this.getClass(), "HistoryTableModel.columnNames.entityTag"),
