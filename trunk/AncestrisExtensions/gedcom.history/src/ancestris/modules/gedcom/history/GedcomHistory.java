@@ -6,12 +6,11 @@ package ancestris.modules.gedcom.history;
 
 import genj.gedcom.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.openide.util.ChangeSupport;
 
 /**
  *
@@ -21,10 +20,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class GedcomHistory implements GedcomListener {
 
     private static final Logger log = Logger.getLogger(GedcomHistoryPlugin.class.getName());
+    private final ChangeSupport changeSupport = new ChangeSupport(this);
     private String gedcomName = "";
     private ArrayList<EntityHistory> historyList = null;
     // listeners
-    private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     public GedcomHistory() {
     }
@@ -34,9 +33,10 @@ public class GedcomHistory implements GedcomListener {
         this.historyList = new ArrayList<EntityHistory>();
     }
 
-    public void clear () {
+    public void clear() {
         historyList.clear();
     }
+
     /**
      * @return the gedcomName
      */
@@ -113,22 +113,17 @@ public class GedcomHistory implements GedcomListener {
      * Adds a Listener which will be notified when data changes
      */
     public void addChangeListener(ChangeListener listener) {
-        if (listener == null) {
-            throw new IllegalArgumentException("listener can't be null");
-        }
-        listeners.add(listener);
+        changeSupport.addChangeListener(listener);
     }
 
     /**
      * Removes a Listener from receiving notifications
      */
     public void removeChangeListener(ChangeListener listener) {
-        listeners.remove(listener);
+        changeSupport.removeChangeListener(listener);
     }
 
     public void fireChange() {
-        for (ChangeListener listener : listeners) {
-            listener.stateChanged(new ChangeEvent(this));
-        }
+        changeSupport.fireChange();
     }
 }
