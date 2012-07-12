@@ -48,7 +48,9 @@ class GedcomHistoryTableModel extends AbstractTableModel {
     private ArrayList<EntityHistory> gedcomHistoryList = null;
 
     public GedcomHistoryTableModel(GedcomHistory gedcomHistory) {
-        gedcomHistoryList = gedcomHistory.getHistoryList();
+        if (gedcomHistory != null) {
+            gedcomHistoryList = gedcomHistory.getHistoryList();
+        }
     }
 
     @Override
@@ -75,7 +77,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
                     return dateFormat.format(entityHistory.getDate().getTime());
                 case entityTag:
-                    return entityHistory.getEntityTag();
+                    return NbBundle.getMessage(this.getClass(), "HistoryTableModel.entityName." + entityHistory.getEntityTag());
                 case entityId:
                     return entityHistory.getEntityId();
                 case action:
