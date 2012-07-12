@@ -83,7 +83,11 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                 case action:
                     return entityHistory.getAction();
                 case property:
-                    return entityHistory.getProperty();
+                    if (entityHistory.getProperty().startsWith("_")) {
+                        return entityHistory.getProperty();
+                    } else {
+                        return NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertyName." + entityHistory.getProperty());
+                    }
                 case oldValue:
                     return entityHistory.getOldValue();
                 case newValue:
