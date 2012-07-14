@@ -38,18 +38,11 @@ public final class DisplayHistoryAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
-            if (pluginInterface instanceof GedcomHistoryPlugin) {
-                Context context = App.center.getSelectedContext(true);
-                if (context != null) {
-                    String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
-
-                    GedcomHistoryTopComponent GedcomHistoryTopComponent = new GedcomHistoryTopComponent(((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName));
-                    GedcomHistoryTopComponent.open();
-                    GedcomHistoryTopComponent.requestActive();
-                }
-                break;
-            }
+        Context context = App.center.getSelectedContext(true);
+        if (context != null) {
+            GedcomHistoryTopComponent GedcomHistoryTopComponent = new GedcomHistoryTopComponent();
+            GedcomHistoryTopComponent.open();
+            GedcomHistoryTopComponent.requestActive();
         }
     }
 }
