@@ -48,9 +48,13 @@ class GedcomHistoryTableModel extends AbstractTableModel {
     private ArrayList<EntityHistory> gedcomHistoryList = null;
 
     public GedcomHistoryTableModel(GedcomHistory gedcomHistory) {
-        if (gedcomHistory != null) {
-            gedcomHistoryList = gedcomHistory.getHistoryList();
+        if (gedcomHistory == null) {
+            throw new IllegalArgumentException("gedcomHistory can't be null");
         }
+        if (gedcomHistory.getHistoryList() == null) {
+            throw new IllegalArgumentException("gedcomHistoryList can't be null");
+        }
+        gedcomHistoryList = gedcomHistory.getHistoryList();
     }
 
     @Override

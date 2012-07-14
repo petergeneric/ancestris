@@ -53,7 +53,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
         gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcomName));
         gedcomHistoryMap.remove(gedcomName);
         try {
-            if (gedcomHistory.getHistoryList().isEmpty() ==  false) {
+            if (gedcomHistory.getHistoryList().isEmpty() == false) {
                 // create JAXB context and instantiate marshaller
                 JAXBContext context = JAXBContext.newInstance(GedcomHistory.class);
                 Marshaller m = context.createMarshaller();
@@ -70,31 +70,35 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
     @Override
     public void gedcomOpened(Gedcom gedcom) {
         String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
-        File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
-        File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
-        log.log(Level.INFO, "opening history file {0}", historyFile.getAbsoluteFile());
+        if (gedcomHistoryMap.containsKey(gedcomName) == false) {
+            File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
+            File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
+            log.log(Level.INFO, "opening history file {0}", historyFile.getAbsoluteFile());
 
-        if (historyFile.exists() == true) {
-            try {
-                JAXBContext context = JAXBContext.newInstance(GedcomHistory.class);
-
-                Unmarshaller um = context.createUnmarshaller();
-                GedcomHistory gedcomHistory;
+            if (historyFile.exists() == true) {
                 try {
-                    gedcomHistory = (GedcomHistory) um.unmarshal(new FileReader(historyFile));
-                    gedcomHistoryMap.put(gedcomName, gedcomHistory);
-                    gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
-                } catch (FileNotFoundException ex) {
+                    JAXBContext context = JAXBContext.newInstance(GedcomHistory.class);
+
+                    Unmarshaller um = context.createUnmarshaller();
+                    GedcomHistory gedcomHistory;
+                    try {
+                        gedcomHistory = (GedcomHistory) um.unmarshal(new FileReader(historyFile));
+                        gedcomHistoryMap.put(gedcomName, gedcomHistory);
+                        gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+                    } catch (FileNotFoundException ex) {
+                        gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
+                        gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+                    }
+                } catch (JAXBException ex) {
                     gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
                     gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
                 }
-            } catch (JAXBException ex) {
+            } else {
                 gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
                 gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
             }
         } else {
-            gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
-            gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+            log.log(Level.INFO, "history file already open");
         }
     }
 

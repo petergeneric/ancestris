@@ -18,16 +18,20 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.app.App;
+import ancestris.core.pluginservice.PluginInterface;
 import ancestris.view.AncestrisDockModes;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.view.SelectionSink;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -44,6 +48,7 @@ persistenceType = TopComponent.PERSISTENCE_NEVER)
 //@TopComponent.OpenActionRegistration(displayName = "#CTL_GedcomHistoryAction", preferredID = "GedcomHistoryTopComponent")
 public final class GedcomHistoryTopComponent extends TopComponent implements ChangeListener {
 
+    private static final Logger log = Logger.getLogger(GedcomHistoryTopComponent.class.getName());
     GedcomHistory gedcomHistory = null;
     GedcomHistoryTableModel historyTableModel = null;
 
@@ -71,18 +76,32 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     }
 
     public GedcomHistoryTopComponent() {
-        initComponents();
-        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
-        setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
-    }
+        Context context = App.center.getSelectedContext(true);
+        if (context != null) {
+            String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
+            for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+                if (pluginInterface instanceof GedcomHistoryPlugin) {
 
-    public GedcomHistoryTopComponent(GedcomHistory gedcomHistory) {
-        this.gedcomHistory = gedcomHistory;
-        this.historyTableModel = new GedcomHistoryTableModel(gedcomHistory);
-        initComponents();
-        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
-        setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
-        gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
+                    this.gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName);
+                    // during the plugin first install GedcomHistoryTopComponent is call before moduleinstall.start
+                    if (this.gedcomHistory != null) {
+                        this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory);
+                        initComponents();
+                        setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
+                        setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
+                        gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
+                    } else {
+                        log.log(Level.INFO, "No history recorder found for {0}", gedcomName);
+                    }
+                    return;
+                }
+            }
+            log.log(Level.INFO, "No Instance of GedcomHistoryPlugin found");
+
+        } else {
+            log.log(Level.INFO, "No context found");
+        }
+
     }
 
     /**
