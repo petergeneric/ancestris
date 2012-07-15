@@ -101,7 +101,7 @@ public class GedcomHistory implements GedcomListener {
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        log.log(Level.INFO, "Entity {0} id {1} Property  {2} removed", new Object[]{deleted.getEntity().getTag(), deleted.getEntity().getId(), deleted.getTag()});
+        log.log(Level.INFO, "Entity {0} id {1} Property  {2} removed", new Object[]{property.getEntity().getTag(), property.getEntity().getId(), property.getTag()});
         // Do not archive PropertyChange modification
         if (!(property instanceof PropertyChange)) {
             historyList.add(new EntityHistory(EntityHistory.DELETED, deleted, "", ""));
