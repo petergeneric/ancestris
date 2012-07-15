@@ -17,6 +17,8 @@
  */
 package ancestris.modules.gedcom.history;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.TagPath;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,13 +31,13 @@ import org.openide.util.NbBundle;
  */
 class GedcomHistoryTableModel extends AbstractTableModel {
 
-    public final static int date = 0;
-    public final static int entityTag = 1;
-    public final static int entityId = 2;
-    public final static int action = 3;
-    public final static int property = 4;
-    public final static int oldValue = 5;
-    public final static int newValue = 6;
+    public final static int DATE = 0;
+    public final static int ENTITY_TAG = 1;
+    public final static int ENTITY_ID = 2;
+    public final static int ACTION = 3;
+    public final static int PROPERTY = 4;
+    public final static int OLD_VALUE = 5;
+    public final static int NEW_VALUE = 6;
     private String[] columnNames = {
         NbBundle.getMessage(this.getClass(), "HistoryTableModel.columnNames.date"),
         NbBundle.getMessage(this.getClass(), "HistoryTableModel.columnNames.entityTag"),
@@ -46,8 +48,9 @@ class GedcomHistoryTableModel extends AbstractTableModel {
         NbBundle.getMessage(this.getClass(), "HistoryTableModel.columnNames.newValue")
     };
     private ArrayList<EntityHistory> gedcomHistoryList = null;
+    private final Gedcom gedcom;
 
-    public GedcomHistoryTableModel(GedcomHistory gedcomHistory) {
+    public GedcomHistoryTableModel(GedcomHistory gedcomHistory, Gedcom gedcom) {
         if (gedcomHistory == null) {
             throw new IllegalArgumentException("gedcomHistory can't be null");
         }
@@ -55,6 +58,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
             throw new IllegalArgumentException("gedcomHistoryList can't be null");
         }
         gedcomHistoryList = gedcomHistory.getHistoryList();
+        this.gedcom = gedcom;
     }
 
     @Override
@@ -77,24 +81,33 @@ class GedcomHistoryTableModel extends AbstractTableModel {
         if (gedcomHistoryList != null) {
             EntityHistory entityHistory = gedcomHistoryList.get(row);
             switch (col) {
-                case date:
+                case DATE:
                     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
                     return dateFormat.format(entityHistory.getDate().getTime());
-                case entityTag:
+                case ENTITY_TAG:
                     return NbBundle.getMessage(this.getClass(), "HistoryTableModel.entityName." + entityHistory.getEntityTag());
-                case entityId:
+                case ENTITY_ID:
                     return entityHistory.getEntityId();
-                case action:
-                    return entityHistory.getAction();
-                case property:
-                    if (entityHistory.getProperty().startsWith("_")) {
-                        return entityHistory.getProperty();
-                    } else {
-                        return NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertyName." + entityHistory.getProperty());
+                case ACTION:
+                    return NbBundle.getMessage(this.getClass(), "HistoryTableModel.action." + entityHistory.getAction());
+                case PROPERTY:
+                    String propertySeparator = NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertySeparator");
+                    String propertyPath = "";
+                    String[] splitPath = entityHistory.getPropertyPath().split(TagPath.SEPARATOR_STRING);
+
+                    // skip entity tag
+                    for (int i = 1; i < splitPath.length; i++) {
+                        String pathElt = splitPath[i].indexOf('#') == -1 ? splitPath[i] : splitPath[i].substring(0, splitPath[i].indexOf('#'));
+                        if (pathElt.startsWith("_")) {
+                            propertyPath += (i == 1?"":propertySeparator) + pathElt;
+                        } else {
+                            propertyPath += (i == 1?"":propertySeparator) + NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertyName." + pathElt);
+                        }
                     }
-                case oldValue:
+                    return propertyPath;
+                case OLD_VALUE:
                     return entityHistory.getOldValue();
-                case newValue:
+                case NEW_VALUE:
                     return entityHistory.getNewValue();
                 default:
                     return "";

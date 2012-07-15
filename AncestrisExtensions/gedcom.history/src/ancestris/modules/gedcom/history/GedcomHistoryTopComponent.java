@@ -51,6 +51,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     private static final Logger log = Logger.getLogger(GedcomHistoryTopComponent.class.getName());
     GedcomHistory gedcomHistory = null;
     GedcomHistoryTableModel historyTableModel = null;
+    private Gedcom gedcom = null;
 
     private class RowListener implements ListSelectionListener {
 
@@ -60,18 +61,14 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                 return;
             }
 
-            Context context = App.center.getSelectedContext(true);
-            if (context != null) {
-                String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.getSelectedRow(), GedcomHistoryTableModel.entityId);
-                Gedcom myGedcom = context.getGedcom();
+                String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.getSelectedRow(), GedcomHistoryTableModel.ENTITY_ID);
 
-                if (currentId != null && myGedcom != null) {
-                    Entity entity = myGedcom.getEntity(currentId);
+                if (currentId != null && gedcom != null) {
+                    Entity entity = gedcom.getEntity(currentId);
                     if (entity != null) {
                         SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
                     }
                 }
-            }
         }
     }
 
@@ -83,9 +80,9 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                 if (pluginInterface instanceof GedcomHistoryPlugin) {
 
                     this.gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName);
-                    // during the plugin first install GedcomHistoryTopComponent is call before moduleinstall.start
                     if (this.gedcomHistory != null) {
-                        this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory);
+                        this.gedcom = context.getGedcom();
+                        this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.gedcom);
                         initComponents();
                         setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
                         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
