@@ -22,10 +22,12 @@ import ancestris.core.pluginservice.PluginInterface;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.modules.Places;
 import org.openide.util.Lookup;
 
 @ActionID(category = "Tools",
@@ -43,8 +45,13 @@ public final class ClearHistoryAction implements ActionListener {
                 Context context = App.center.getSelectedContext(true);
                 if (context != null) {
                     String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
-                    GedcomHistory gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName);
-                    gedcomHistory.clear ();
+                    File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
+                    File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
+
+                    ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName).clear();
+                    if (historyFile.exists() == true) {
+                        historyFile.delete();
+                    }
                 }
                 break;
             }
