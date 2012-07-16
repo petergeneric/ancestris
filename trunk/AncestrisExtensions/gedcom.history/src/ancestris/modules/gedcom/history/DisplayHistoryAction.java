@@ -18,15 +18,16 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.app.App;
-import ancestris.core.pluginservice.PluginInterface;
 import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.Lookup;
+import org.openide.windows.TopComponent;
 
 @ActionID(category = "Tools",
 id = "ancestris.modules.gedcom.history.DisplayHistoryAction")
@@ -40,9 +41,22 @@ public final class DisplayHistoryAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context = App.center.getSelectedContext(true);
         if (context != null) {
-            GedcomHistoryTopComponent GedcomHistoryTopComponent = new GedcomHistoryTopComponent();
-            GedcomHistoryTopComponent.open();
-            GedcomHistoryTopComponent.requestActive();
+            Gedcom gedcom = context.getGedcom();
+            GedcomHistoryTopComponent gedcomHistoryTopComponent = null;
+            Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
+            for (TopComponent topComponent : openedTopComponent) {
+                if (topComponent instanceof GedcomHistoryTopComponent) {
+                    if (((GedcomHistoryTopComponent) topComponent).getGedcom().equals(gedcom) == true) {
+                        gedcomHistoryTopComponent = (GedcomHistoryTopComponent) topComponent;
+                        return;
+                    }
+                }
+            }
+            if (gedcomHistoryTopComponent == null) {
+                gedcomHistoryTopComponent = new GedcomHistoryTopComponent();
+            }
+            gedcomHistoryTopComponent.open();
+            gedcomHistoryTopComponent.requestActive();
         }
     }
 }
