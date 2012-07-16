@@ -82,7 +82,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
             EntityHistory entityHistory = gedcomHistoryList.get(row);
             switch (col) {
                 case DATE:
-                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     return dateFormat.format(entityHistory.getDate().getTime());
                 case ENTITY_TAG:
                     return NbBundle.getMessage(this.getClass(), "HistoryTableModel.entityName." + entityHistory.getEntityTag());
