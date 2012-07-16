@@ -61,14 +61,14 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                 return;
             }
 
-                String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.getSelectedRow(), GedcomHistoryTableModel.ENTITY_ID);
+            String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.getSelectedRow(), GedcomHistoryTableModel.ENTITY_ID);
 
-                if (currentId != null && gedcom != null) {
-                    Entity entity = gedcom.getEntity(currentId);
-                    if (entity != null) {
-                        SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
-                    }
+            if (currentId != null && getGedcom() != null) {
+                Entity entity = getGedcom().getEntity(currentId);
+                if (entity != null) {
+                    SelectionSink.Dispatcher.fireSelection(new Context(entity), true);
                 }
+            }
         }
     }
 
@@ -82,7 +82,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                     this.gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName);
                     if (this.gedcomHistory != null) {
                         this.gedcom = context.getGedcom();
-                        this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.gedcom);
+                        this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.getGedcom());
                         initComponents();
                         setName(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName()));
                         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
@@ -161,5 +161,12 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     @Override
     public void stateChanged(ChangeEvent ce) {
         historyTableModel.fireTableRowsInserted(gedcomHistory.getHistoryList().size() - 1, gedcomHistory.getHistoryList().size() - 1);
+    }
+
+    /**
+     * @return the gedcom
+     */
+    public Gedcom getGedcom() {
+        return gedcom;
     }
 }
