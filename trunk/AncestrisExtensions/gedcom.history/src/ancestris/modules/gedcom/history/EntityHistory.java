@@ -33,18 +33,15 @@ public class EntityHistory {
     public EntityHistory() {
     }
 
-    public EntityHistory(String action, Property property, String oldValue, String NewValue) {
-        Entity parentEntity = property.getEntity();
-        if (parentEntity != null) {
+    public EntityHistory(String action, Entity entity, Property property, String oldValue, String NewValue) {
             this.action = action;
             this.date = new GregorianCalendar();
-            this.entityTag = parentEntity.getTag();
-            this.entityId = parentEntity.getId();
+            this.entityTag = entity.getTag();
+            this.entityId = entity.getId();
             this.property = property.getTag();
             this.propertyPath = property.getPath(true).toString();
             this.newValue = NewValue;
             this.oldValue = oldValue;
-        }
     }
 
     /**
