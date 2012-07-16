@@ -17,6 +17,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -26,6 +27,7 @@ import javax.xml.bind.Unmarshaller;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -71,6 +73,14 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
 
         gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcomName));
         gedcomHistoryMap.remove(gedcomName);
+        Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
+        for (TopComponent topComponent : openedTopComponent) {
+            if (topComponent instanceof GedcomHistoryTopComponent) {
+                if (((GedcomHistoryTopComponent) topComponent).getGedcom().equals(gedcom) == true) {
+                    topComponent.close();
+                }
+            }
+        }
     }
 
     @Override
