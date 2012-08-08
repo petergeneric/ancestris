@@ -33,7 +33,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.io.File;
 
-import javax.swing.ImageIcon;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -41,8 +40,9 @@ import org.openide.util.lookup.ServiceProvider;
  * or descendants of a particular individual.
  * The report itself can be in HTML, tex, rtf, or plain text format,
  * and additional formats can be added.
- * @author Bill Kelly
- * @version 0.9
+ * @author Bill Kelly (original) 
+ * @author Frédéric Lapeyre (modifications from august 2012)
+ * @version 0.91
  */
 @SuppressWarnings("unchecked")
 @ServiceProvider(service=Report.class)
@@ -154,7 +154,7 @@ public class ReportNarrative extends Report {
       ad.set("DATE", dateFormatter.getDisplayValue());
       doc.addText(ad.toString());
       doc.addText(" ");
-      doc.addExternalLink("GenealogyJ", "http://genj.sourceforge.net");
+      doc.addExternalLink("Ancestris", "http://www.ancestris.org");
       ad = getUtterance("doc.ad.2");
       ad.set("DATE", new Date().toString());
       doc.addText(ad.toString());
@@ -572,7 +572,7 @@ public class ReportNarrative extends Report {
                   }
               }
 
-              doc.addText(" ");
+              doc.nextParagraph();
 
               // Increment i by n-1 if n (> 1) events were processed below.
               if (prop instanceof PropertyEvent) {
@@ -584,6 +584,7 @@ public class ReportNarrative extends Report {
               } else if (prop.getTag().equals("OCCU")) {
                 if (prop.getValue().length() > 0) {
                   doc.addText(" ");
+                  doc.nextParagraph();
                   boolean past = true;
                   if (indi.getDeathDate() == null) {
                     Delta age = indi.getAge(PointInTime.getPointInTime(System.currentTimeMillis()));
@@ -607,6 +608,8 @@ public class ReportNarrative extends Report {
                   writeNodeSource(prop);
                 }
               } else if (prop.getTag().equals("NOTE")) {
+                doc.addText(" ");
+                doc.nextParagraph();
                 if (prop instanceof PropertyXRef) {
                   Entity ref = ((PropertyXRef)prop).getTargetEntity();
                   addUtterance("phrase.note", ref.getValue());
