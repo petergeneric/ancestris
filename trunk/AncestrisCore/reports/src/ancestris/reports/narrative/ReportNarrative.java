@@ -34,6 +34,7 @@ import java.util.Set;
 import java.io.File;
 
 import javax.swing.ImageIcon;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * ReportNarrative generates a text document containing the ancestors
@@ -44,6 +45,7 @@ import javax.swing.ImageIcon;
  * @version 0.9
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportNarrative extends Report {
 /* TODO priorities:
    _ in text
