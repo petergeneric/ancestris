@@ -13,6 +13,7 @@ package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.util.swing.SelectEntityDialog;
 import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -23,6 +24,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 public final class GenerateSosaAction implements ActionListener {
 
@@ -33,7 +35,7 @@ public final class GenerateSosaAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             myGedcom = context.getGedcom();
 
             SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), myGedcom, Gedcom.INDI);

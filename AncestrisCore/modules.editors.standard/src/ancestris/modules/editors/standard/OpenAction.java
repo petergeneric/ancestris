@@ -12,17 +12,18 @@
 
 package ancestris.modules.editors.standard;
 
-import genj.gedcom.Context;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.AncestrisTopComponent;
-import ancestris.app.App;
+import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.openide.util.Utilities;
 
 public final class OpenAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Context contextToOpen = App.center.getSelectedContext(true);
+        Context contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
         if (contextToOpen != null) {
             AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
 //            win.init(contextToOpen);

@@ -2,17 +2,18 @@ package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
 import ancestris.gedcom.GedcomDirectory;
-import genj.app.Workbench;
+import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
+import org.openide.filesystems.FileUtil;
+import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -37,20 +38,24 @@ public final class ImportWizardAction extends CallableSystemAction {
         boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
         if (!cancelled) {
             importMethod = ((ImportVisualImport) (panels[1].getComponent())).getImportClass();
-            try {
                 File inputFile = ((ImportVisualImport) (panels[1].getComponent())).getInputFile();
                 File outFile = new File (System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
                 if (importMethod.run(inputFile, outFile, NAME) == true) {
-                    Context context = Workbench.getInstance().openGedcom(outFile.toURI().toURL());
+                    Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
                     Gedcom importedGedcom = context.getGedcom();
                     importedGedcom.setName(inputFile.getName());
                     importedGedcom.setOrigin(null);
-                    GedcomDirectory.getInstance().getDummyNode(context).fire(true);
+                try {
+                     Node n = null;
+            n = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(Node.class);
+
+                } catch (ContextNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                    
+//                            myNode(context).fire(true);
                     outFile.delete();
                 }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
     }
 

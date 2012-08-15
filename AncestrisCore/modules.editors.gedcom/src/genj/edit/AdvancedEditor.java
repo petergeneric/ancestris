@@ -34,7 +34,7 @@ import genj.util.swing.DialogHelper;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
 import genj.view.ActionProvider;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

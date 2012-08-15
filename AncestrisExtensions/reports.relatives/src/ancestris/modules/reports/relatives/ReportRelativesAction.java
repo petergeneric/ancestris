@@ -11,7 +11,7 @@
  */
 package ancestris.modules.reports.relatives;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.document.view.DocumentViewTopComponent;
 import ancestris.util.swing.SelectEntityDialog;
 import genj.fo.Document;
@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 public final class ReportRelativesAction implements ActionListener {
 
@@ -32,7 +33,7 @@ public final class ReportRelativesAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom myGedcom = context.getGedcom();
             DocumentViewTopComponent window = DocumentViewTopComponent.findInstance();
 

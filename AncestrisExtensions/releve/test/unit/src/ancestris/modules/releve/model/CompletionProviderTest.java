@@ -1,7 +1,6 @@
 package ancestris.modules.releve.model;
 
 import ancestris.modules.releve.TestUtility;
-import genj.app.Workbench;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import junit.framework.TestCase;

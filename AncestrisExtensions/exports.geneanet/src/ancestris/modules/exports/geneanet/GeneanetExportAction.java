@@ -42,6 +42,7 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
 
 public final class GeneanetExportAction implements ActionListener {
@@ -81,7 +82,7 @@ public final class GeneanetExportAction implements ActionListener {
         // Create the file chooser
         Context context;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             myGedcom = context.getGedcom();
             Preferences modulePreferences = NbPreferences.forModule(GeneanetExport.class);
             if (modulePreferences.getInt("RestricitionDuration", -1) == -1) {

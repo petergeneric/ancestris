@@ -1,20 +1,10 @@
 package ancestris.modules.releve.model;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import genj.app.GedcomFileListener;
-import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.PropertyChoiceValue;
-import genj.gedcom.PropertyName;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import genj.gedcom.*;
+import java.util.*;
 import javax.swing.SwingUtilities;
 
 /**
@@ -32,6 +22,10 @@ public class CompletionProvider implements GedcomFileListener {
     private HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
     private HashMap<String, Integer> gedcomFirstNameSex = new HashMap<String, Integer>();
 
+    // Register in ancestris lookup for GedcomFileListener
+    public CompletionProvider(){
+        AncestrisPlugin.register(this);
+    }
 
 
     /**
@@ -438,7 +432,6 @@ public class CompletionProvider implements GedcomFileListener {
      * @param gedcom
      */
     protected void addGedcomCompletion(Gedcom gedcom) {
-        Context context = GedcomDirectory.getInstance().getLastContext();
         if (gedcom == null) {
             // rien a faire
             return;
@@ -774,11 +767,8 @@ public class CompletionProvider implements GedcomFileListener {
      */
     @Override
     public void gedcomClosed(Gedcom gedcom) {
-        Context context = GedcomDirectory.getInstance().getLastContext();
-        if (context != null && context.getGedcom() != null ) {
-            if ( completionGedcom != null && completionGedcom.equals(context.getGedcom()) ){
-                removeGedcomCompletion();
-            }
+        if ( completionGedcom != null && completionGedcom.equals(gedcom) ){
+            removeGedcomCompletion();
         }
     }
 

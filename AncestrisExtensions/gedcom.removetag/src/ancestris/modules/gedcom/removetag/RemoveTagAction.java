@@ -23,6 +23,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 public final class RemoveTagAction implements ActionListener {
 
@@ -30,7 +31,7 @@ public final class RemoveTagAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context;
         RemoveTagPanel removeTagPanel = new RemoveTagPanel();
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = context.getGedcom();
 
             // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params

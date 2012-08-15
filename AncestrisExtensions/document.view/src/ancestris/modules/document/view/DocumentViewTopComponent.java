@@ -1,13 +1,13 @@
 package ancestris.modules.document.view;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.HTMLFormat;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -27,6 +27,7 @@ import org.openide.cookies.SaveCookie;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Utilities;
 
 /**
  * Top component which displays something.
@@ -82,7 +83,7 @@ public final class DocumentViewTopComponent extends TopComponent {
                     String description = e.getDescription();
                     if (description.contains("#INDI_") || description.contains("#FAM_")) {
                         Gedcom myGedcom = null;
-                        Context context = App.center.getSelectedContext(true);
+                        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null) {
                             myGedcom = context.getGedcom();
                             String CurrentId = description.substring(description.indexOf("_") + 1);

@@ -4,7 +4,7 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -24,6 +24,7 @@ import javax.swing.JComboBox;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
 /**
@@ -501,7 +502,10 @@ public class GeoFilter {
             return null;
         }
         // Quick replace Editor search by ControlCenter api
-        Context context = App.center.getSelectedContext(true);
+        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+        if (context == null){
+            return null;
+        }
 //        Set<TopComponent> tcSet = TopComponent.getRegistry().getOpened();
 //        for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
 //            TopComponent topComponent = it.next();

@@ -3,7 +3,7 @@ package ancestris.modules.editors.standard.actions;
 import ancestris.api.editor.AncestrisEditor;
 import genj.edit.actions.CreateSpouse;
 import genj.gedcom.Indi;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 

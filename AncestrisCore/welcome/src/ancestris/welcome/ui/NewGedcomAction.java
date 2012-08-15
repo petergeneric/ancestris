@@ -42,12 +42,9 @@
 package ancestris.welcome.ui;
 
 import ancestris.api.newgedcom.NewGedcom;
+import ancestris.app.ActionNew;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.view.SelectionSink;
-import ancestris.app.ActionNew;
-import ancestris.gedcom.GedcomDirectory;
-import genj.app.Workbench;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -62,15 +59,17 @@ public class NewGedcomAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         NewGedcom wiz = Lookup.getDefault().lookup(NewGedcom.class);
+        //XXX: use dao wizards
+        wiz = null;
         if (wiz != null){
-            Context context = wiz.create();
-            if ( context != null){
-                Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
-                GedcomDirectory.getInstance().registerGedcom(context);
-                GedcomDirectory.getInstance().updateModified(context.getGedcom());
-                Workbench.openDefaultViews(firstIndiContext);
-                SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
-            }
+//            Context context = wiz.create();
+//            if ( context != null){
+//                Context firstIndiContext = new Context(context.getGedcom().getFirstEntity(Gedcom.INDI));
+//                GedcomDirectory.getInstance().registerGedcom(context);
+//                GedcomDirectory.getInstance().updateModified(context.getGedcom());
+//                Workbench.openDefaultViews(firstIndiContext);
+//                SelectionSink.Dispatcher.fireSelection((Component) null, new Context(context.getGedcom().getFirstEntity(Gedcom.INDI)), true);
+//            }
         } else {
             new ActionNew().actionPerformed(e); //NOI18N
         }

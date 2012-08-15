@@ -73,17 +73,6 @@
                 <package>org.jfree.ui.action</package>
                 <package>org.jfree.ui.tabbedui</package>
                 <package>org.jfree.util</package>
-                <package>spin</package>
-                <package>spin.demo</package>
-                <package>spin.demo.async</package>
-                <package>spin.demo.complex</package>
-                <package>spin.demo.dispatcher</package>
-                <package>spin.demo.exception</package>
-                <package>spin.demo.progress</package>
-                <package>spin.demo.prompt</package>
-                <package>spin.off</package>
-                <package>spin.over</package>
-                <package>spin.proxy</package>
                 <package>swingx</package>
                 <package>swingx.dnd</package>
                 <package>swingx.docking</package>
@@ -108,10 +97,6 @@
             <class-path-extension>
                 <runtime-relative-path>ext/swingx-0.7.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/swingx-0.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/spin-1.5.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/spin-1.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/junit.jar</runtime-relative-path>

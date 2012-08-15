@@ -19,14 +19,13 @@
  */
 package genj.edit.actions;
 
-import genj.app.Workbench;
 import java.awt.event.ActionEvent;
 
 import genj.edit.EditViewFactory;
 import ancestris.core.resources.Images;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 
 /**
  * ActionEdit - edit an entity

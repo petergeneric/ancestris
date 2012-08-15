@@ -30,8 +30,6 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.util.Registry;
 import genj.view.ContextProvider;
-import genj.view.MySelectionListener;
-import genj.view.SelectionSink;
 import genj.view.ViewContext;
 
 import java.awt.BorderLayout;
@@ -44,7 +42,7 @@ import javax.swing.SwingUtilities;
 /**
  * The basic version of an editor for a entity. Tries to hide Gedcom complexity from the user while being flexible in what it offers to edit information pertaining to an entity.
  */
-/* package */class BasicEditor extends Editor implements SelectionSink, ContextProvider {
+/* package */class BasicEditor extends Editor implements ContextProvider {
 
   final static Registry REGISTRY = Registry.get(BasicEditor.class);
   
@@ -81,15 +79,6 @@ import javax.swing.SwingUtilities;
     // done
   }
   
-  /**
-   * By being a selection sink ourselves we can make sure that non-context-entity
-   * properties don't leak through
-   */
-  public void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
-    if (isActionPerformed || (context.getEntities().size()==1 && context.getEntity()==currentEntity))
-      SelectionSink.Dispatcher.fireSelection(this, context, isActionPerformed);
-  }
-
   /**
    * Callback - our current context
    */

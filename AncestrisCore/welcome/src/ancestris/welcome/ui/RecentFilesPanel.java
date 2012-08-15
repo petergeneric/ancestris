@@ -41,40 +41,41 @@
  * Version 2 license, then the option applies only if the new code is
  * made subject to such option by the copyright holder.
  */
-
 package ancestris.welcome.ui;
 
-import ancestris.util.RecentFiles;
-import ancestris.util.RecentFiles.GedcomFileInformation;
 import ancestris.app.ActionOpen;
+import ancestris.gedcom.RecentFiles;
 import ancestris.welcome.content.ActionButton;
 import ancestris.welcome.content.BundleSupport;
 import ancestris.welcome.content.Constants;
+import genj.gedcom.Gedcom;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.net.URLDecoder;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
 
 /**
  * Panel showing all recent files as clickable buttons.
- * 
+ *
+ * Modified to support Gedcom Files
+ *
  * @author S. Aubrecht
  */
 public class RecentFilesPanel extends JPanel implements Constants {
 
     private static final int MAX_FILES = 5;
-
-    private PropertyChangeListener changeListener;
+    private PropertyChangeListener changeListener = null;
 
     /** Creates a new instance of RecentFilesPanel */
     public RecentFilesPanel() {
-        super( new BorderLayout() );
+        super(new BorderLayout());
         setOpaque(false);
     }
 
@@ -82,76 +83,76 @@ public class RecentFilesPanel extends JPanel implements Constants {
     public void addNotify() {
         super.addNotify();
         removeAll();
-        add( rebuildContent(), BorderLayout.CENTER );
-//        RecentProjects.getDefault().addPropertyChangeListener( getPropertyChangeListener() );
+        add(rebuildContent(), BorderLayout.CENTER);
+        RecentFiles.getDefault().addPropertyChangeListener(getPropertyChangeListener());
     }
 
     @Override
     public void removeNotify() {
         super.removeNotify();
-//        RecentProjects.getDefault().removePropertyChangeListener( getPropertyChangeListener() );
+        RecentFiles.getDefault().removePropertyChangeListener(getPropertyChangeListener());
     }
 
-//    private PropertyChangeListener getPropertyChangeListener() {
-//        if( null == changeListener ) {
-//            changeListener = new PropertyChangeListener() {
-//                @Override
-//                public void propertyChange(PropertyChangeEvent e) {
-//                    if( RecentProjects.PROP_RECENT_PROJECT_INFO.equals( e.getPropertyName() ) ) {
-//                        removeAll();
-//                        add( rebuildContent(), BorderLayout.CENTER );
-//                        invalidate();
-//                        revalidate();
-//                        repaint();
-//                    }
-//                }
-//            };
-//        }
-//        return changeListener;
-//    }
-//
-    private JPanel rebuildContent() {
-        JPanel panel = new JPanel( new GridBagLayout() );
-        panel.setOpaque( false );
-        int row = 0;
-        List<GedcomFileInformation> files = RecentFiles.getDefault().getRecentFilesInformation();
-        for( GedcomFileInformation p : files ) {
-            addFile( panel, row++, p );
-            if( row >= MAX_FILES )
-                break;
+    private PropertyChangeListener getPropertyChangeListener() {
+        if (null == changeListener) {
+            changeListener = new PropertyChangeListener() {
+
+                @Override
+                public void propertyChange(PropertyChangeEvent e) {
+                    if (RecentFiles.PROP_RECENT_FILE_INFO.equals(e.getPropertyName())) {
+                        removeAll();
+                        add(rebuildContent(), BorderLayout.CENTER);
+                        invalidate();
+                        revalidate();
+                        repaint();
+                    }
+                }
+            };
         }
-        if( 0 == row ) {
-            panel.add( new JLabel(BundleSupport.getLabel( "NoRecentFile" )), //NOI18N
-                    new GridBagConstraints( 0,row,1,1,1.0,1.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                        new Insets(10,10,10,10), 0, 0 ) );
+        return changeListener;
+    }
+
+    private JPanel rebuildContent() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setOpaque(false);
+        int row = 0;
+        List<FileObject> files = RecentFiles.getDefault().getAll();
+        for (FileObject p : files) {
+            addFile(panel, row++, p);
+            if (row >= MAX_FILES) {
+                break;
+            }
+        }
+        if (0 == row) {
+            panel.add(new JLabel(BundleSupport.getLabel("NoRecentFile")), //NOI18N
+                    new GridBagConstraints(0, row, 1, 1, 1.0, 1.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                    new Insets(10, 10, 10, 10), 0, 0));
         } else {
-            panel.add( new JLabel(), new GridBagConstraints( 0,row,1,1,0.0,1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                new Insets(0,0,0,0), 0, 0 ) );
+            panel.add(new JLabel(), new GridBagConstraints(0, row, 1, 1, 0.0, 1.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                    new Insets(0, 0, 0, 0), 0, 0));
         }
         return panel;
     }
 
-    private void addFile( JPanel panel, int row, final GedcomFileInformation file ) {
-        OpenGedcomFileAction action = new OpenGedcomFileAction( file );
-        ActionButton b = new ActionButton( action, file.getURL().toString(), false, "RecentFile" ); //NOI18N
-        b.setFont( BUTTON_FONT );
-        b.getAccessibleContext().setAccessibleName( b.getText() );
-        b.getAccessibleContext().setAccessibleDescription(
-                BundleSupport.getAccessibilityDescription( "RecentFile", b.getText() ) ); //NOI18N
-        b.setIcon(file.getIcon());
-        panel.add( b, new GridBagConstraints( 0,row,1,1,1.0,0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(2,2,2,2), 0, 0 ) );
-    }
-
-    @SuppressWarnings("deprecation")
-    private static class OpenGedcomFileAction extends ActionOpen {
-        private GedcomFileInformation file;
-        public OpenGedcomFileAction( GedcomFileInformation file ) {
-            super( file.getURL());
-            setText(URLDecoder.decode((new File(file.getURL().getFile())).getName()));
-            this.file = file;
+    private void addFile(JPanel panel, int row, final FileObject file) {
+        ActionOpen action = new ActionOpen(file);
+        action.setText(file.getNameExt());
+        ActionButton b;
+        try {
+            b = new ActionButton(action, file.getURL().toString(), false, "RecentFile"); //NOI18N
+        } catch (FileStateInvalidException ex) {
+            return;
         }
+        b.setFont(BUTTON_FONT);
+        b.getAccessibleContext().setAccessibleName(b.getText());
+        b.getAccessibleContext().setAccessibleDescription(
+                BundleSupport.getAccessibilityDescription("RecentFile", b.getText())); //NOI18N
+        //FIXME: Only gedcom are shown. We could probably resolve Mime type 
+        // and get icon from this or DAO. Not sure it is possible
+        b.setIcon(Gedcom.getImage());
+        panel.add(b, new GridBagConstraints(0, row, 1, 1, 1.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
     }
 }

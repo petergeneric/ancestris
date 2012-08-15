@@ -1,6 +1,6 @@
 package ancestris.modules.gedcom.checkduplicates;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
@@ -15,6 +15,7 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.Cancellable;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
+import org.openide.util.Utilities;
 
 @ActionID(id = "ancestris.modules.gedcom.checkduplicates.CheckDuplicateAction", category = "Tools")
 @ActionRegistration(iconInMenu = true, displayName = "#CTL_CheckDuplicateAction")
@@ -29,7 +30,7 @@ public final class CheckDuplicateAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom myGedcom = context.getGedcom();
             theTask = RP.create(new CheckDuplicates(myGedcom, myGedcom));
             final ProgressHandle progressHandle = ProgressHandleFactory.createHandle("task thats shows progress", new Cancellable() {

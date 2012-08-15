@@ -21,6 +21,7 @@ package genj.tree;
 //XXX: genj.tree is publically exported as plugin set a dependancy on TreeView
 // We must remove this like (redesign DnD logic or write some Interface API)
 
+import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.*;
 import genj.io.Filter;

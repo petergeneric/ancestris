@@ -217,7 +217,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         // je notifie les composants pour rafraichir les options
         for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
             if (jCheckBoxGedcomCompletion.isSelected()) {
-                Context context = GedcomDirectory.getInstance().getLastContext();
+                Context context = GedcomDirectory.getDefault().getLastContext();
                 if (context != null && context.getGedcom() != null) {
                     // j'active le dnd sur les vues du gedcom
                     jButtonActivateDndActionPerformed(null);
@@ -236,7 +236,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
      * @param evt
      */
     private void jButtonActivateDndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActivateDndActionPerformed
-        Context context = GedcomDirectory.getInstance().getLastContext();
+        Context context = GedcomDirectory.getDefault().getLastContext();
         if (context != null && context.getGedcom() != null) {
             for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
                 TreeView view = (TreeView) tc.getView();

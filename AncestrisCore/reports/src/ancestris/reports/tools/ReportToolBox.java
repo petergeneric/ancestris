@@ -7,19 +7,13 @@
  */
 package ancestris.reports.tools;
 
-import genj.app.Workbench;
 import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import genj.util.swing.Action2;
-
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.swing.JOptionPane;
 
 
@@ -1385,14 +1379,15 @@ public class ReportToolBox extends Report {
  /**
   * Open Gedcom file
   */
-@SuppressWarnings("deprecation")
   private Gedcom openGedcomFile(String filepath) {
-        try {
-            return Workbench.getInstance().openGedcom((new File(filepath)).toURI().toURL()).getGedcom();
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ReportToolBox.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+    throw new UnsupportedOperationException("Open gedcom file must be recoded in toolbox");
+    //XXX:
+//        try {
+//            return Workbench.getInstance().openGedcom((new File(filepath)).toURI().toURL()).getGedcom();
+//        } catch (MalformedURLException ex) {
+//            Logger.getLogger(ReportToolBox.class.getName()).log(Level.SEVERE, null, ex);
+//            return null;
+//        }
             //    // Variables
             //    Gedcom gedcomX = null;
             //    Origin originX = null;
@@ -1468,7 +1463,8 @@ public class ReportToolBox extends Report {
   * Save Gedcom file
   */
   private boolean saveGedcom(Gedcom gedcomX) {
-      return Workbench.getInstance().saveGedcom(new Context(gedcomX));
+    throw new UnsupportedOperationException("Save gedcom file must be recoded in toolbox");
+//      return Workbench.getInstance().saveGedcom(new Context(gedcomX));
     }
 
 

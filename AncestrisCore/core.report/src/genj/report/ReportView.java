@@ -32,7 +32,7 @@ import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
