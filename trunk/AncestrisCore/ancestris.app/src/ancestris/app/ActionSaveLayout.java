@@ -20,13 +20,16 @@ import java.util.List;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 
+// ActionSaveLayout is registered in App Module installer. I don't think it is a good idea.
+// FIXME: may be we could register as a global service or create e constructor and register here
 public final class ActionSaveLayout implements ActionListener,GedcomFileListener {
 
     public void actionPerformed(ActionEvent e) {
-        Context selected = App.center.getSelectedContext(true);
+        Context selected = Utilities.actionsGlobalContext().lookup(Context.class);
         if (selected == null){
             return;
         }

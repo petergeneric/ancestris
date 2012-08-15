@@ -4,15 +4,11 @@
  */
 package ancestris.explorer;
 
-import genj.gedcom.Context;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomMetaListener;
-import genj.gedcom.Property;
 import ancestris.gedcom.GedcomDirectory;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.table.AbstractTableModel;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 
@@ -22,11 +18,11 @@ import org.openide.nodes.Node;
  */
 class GedcomFileChildren extends Children.Keys<Gedcom> {
 
-    private GedcomFileListener model;
-
-    public GedcomFileChildren() {
-        model = new GedcomFileListener(this);
-    }
+//    private GedcomFileListener model;
+//
+//    public GedcomFileChildren() {
+//        model = new GedcomFileListener(this);
+//    }
 
     protected Node[] createNodes(Gedcom key) {
         return new Node[]{new GedcomFileNode(key)};
@@ -34,17 +30,17 @@ class GedcomFileChildren extends Children.Keys<Gedcom> {
 
     protected void addNotify() {
         super.addNotify();
-        GedcomDirectory.getInstance().addListener(model);
+//XXX:        GedcomMgr.getDefault().addListener(model);
         updateGedcoms();
     }
 
     protected void removeNotify() {
-        GedcomDirectory.getInstance().removeListener(model);
+//XXX:        GedcomMgr.getDefault().removeListener(model);
         super.removeNotify();
     }
 
     void updateGedcoms() {
-        List<Context> contexts = GedcomDirectory.getInstance().getContexts();
+        List<Context> contexts = GedcomDirectory.getDefault().getContexts();
         List<Gedcom> gedcoms = new ArrayList<Gedcom>();
         for (Context context : contexts) {
             gedcoms.add(context.getGedcom());
@@ -52,55 +48,25 @@ class GedcomFileChildren extends Children.Keys<Gedcom> {
         setKeys(gedcoms);
     }
 
+    //XXX:
     /**
      * our model
      */
-    private static class GedcomFileListener implements GedcomDirectory.Listener, GedcomMetaListener {
-
-        GedcomFileChildren children;
-
-        public GedcomFileListener(GedcomFileChildren gfc) {
-            this.children = gfc;
-        }
-
-        public void gedcomRegistered(Context context) {
-            context.getGedcom().addGedcomListener(this);
-            children.updateGedcoms();
-        }
-
-        public void gedcomUnregistered(Context context) {
-            context.getGedcom().removeGedcomListener(this);
-            children.updateGedcoms();
-        }
-
-        public void gedcomHeaderChanged(Gedcom gedcom) {
-        }
-
-        public void gedcomWriteLockAcquired(Gedcom gedcom) {
-        }
-
-        public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
-        }
-
-        public void gedcomAfterUnitOfWork(Gedcom gedcom) {
-        }
-
-        public void gedcomWriteLockReleased(Gedcom gedcom) {
-        }
-
-        public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        }
-
-        public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        }
-
-        public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        }
-
-        public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        }
-
-        public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        }
-    }
+//    private static class GedcomFileListener implements GedcomDirectory.Listener {
+//
+//        GedcomFileChildren children;
+//
+//        public GedcomFileListener(GedcomFileChildren gfc) {
+//            this.children = gfc;
+//        }
+//
+//        public void gedcomRegistered(Context context) {
+//            children.updateGedcoms();
+//        }
+//
+//        public void gedcomUnregistered(Context context) {
+//            children.updateGedcoms();
+//        }
+//
+//    }
 }

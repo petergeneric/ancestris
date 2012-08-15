@@ -4,12 +4,11 @@
  */
 package ancestris.app;
 
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import genj.view.SelectionSink;
-import ancestris.gedcom.GedcomDirectory;
+import ancestris.view.SelectionSink;
 import ancestris.util.Utilities;
 import java.awt.Component;
 import org.netbeans.spi.quicksearch.SearchProvider;
@@ -27,7 +26,7 @@ public class IndiQuickSearch implements SearchProvider {
      */
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized (this) {
-            for (Context context : GedcomDirectory.getInstance().getContexts()) {
+            for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
                     if (Utilities.wordsMatch(indi.getName().toLowerCase(),request.getText().toLowerCase())) {
                         if (!response.addResult(createAction(indi), indi.getName())) {

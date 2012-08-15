@@ -10,7 +10,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Note;
 import genj.util.swing.Action2;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.MyContext;
