@@ -5,9 +5,11 @@
 
 package ancestris.modules.geo;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
+import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -16,7 +18,11 @@ import java.awt.event.ActionListener;
 public final class GeoListAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         GeoListTopComponent tc = new GeoListTopComponent();
-        tc.init(App.center.getSelectedContext(true));
+        Context c = Utilities.actionsGlobalContext().lookup(Context.class);
+        if (c==null){
+            return;
+        }
+        tc.init(c);
         tc.open();
         tc.requestActive();
     }

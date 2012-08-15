@@ -29,7 +29,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.UnitOfWork;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
 
 import java.awt.BorderLayout;

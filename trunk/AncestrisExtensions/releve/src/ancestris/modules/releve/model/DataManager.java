@@ -229,7 +229,7 @@ public class DataManager implements PlaceManager {
         valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
         boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
         if ( completion ) {
-            Context context = GedcomDirectory.getInstance().getLastContext();
+            Context context = GedcomDirectory.getDefault().getLastContext();
             if (context != null && context.getGedcom() != null) {
                 completionProvider.addGedcomCompletion(context.getGedcom());
             } else {

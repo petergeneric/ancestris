@@ -23,7 +23,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.gedcom.UnitOfWork;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;

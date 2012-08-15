@@ -190,7 +190,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                         saveResult = askSaveData();
                     }
                     if ( saveResult ) {
-                        Context context = GedcomDirectory.getInstance().getLastContext();
+                        Context context = GedcomDirectory.getDefault().getLastContext();
                         if (context != null && context.getGedcom() != null) {
                             try {
                                 FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());

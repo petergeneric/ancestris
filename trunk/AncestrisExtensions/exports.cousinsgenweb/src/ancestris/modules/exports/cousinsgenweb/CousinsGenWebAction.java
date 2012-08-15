@@ -20,6 +20,7 @@ import java.util.TreeMap;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 
@@ -61,7 +62,7 @@ public final class CousinsGenWebAction implements ActionListener {
         // Create the file chooser
         Context context;
 
-        if ((context = App.center.getSelectedContext(true)) != null) {
+        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Dialog dialog = DialogDisplayer.getDefault().createDialog(cousinGenWebPanelDescriptor);
             dialog.setVisible(true);
             dialog.toFront();

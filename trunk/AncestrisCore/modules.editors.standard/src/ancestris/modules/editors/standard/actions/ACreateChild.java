@@ -5,7 +5,7 @@ import genj.edit.actions.CreateChild;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 

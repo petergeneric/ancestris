@@ -39,7 +39,7 @@ import genj.util.swing.UnitGraphics;
 import genj.util.swing.ViewPortAdapter;
 import genj.view.ContextProvider;
 import genj.view.ScreenshotAction;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.SettingsAction;
 import genj.view.ToolBar;
 import genj.view.View;

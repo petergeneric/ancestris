@@ -4,7 +4,7 @@ import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
 import ancestris.modules.commonAncestor.graphics.GraphicsOutputFactory;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;

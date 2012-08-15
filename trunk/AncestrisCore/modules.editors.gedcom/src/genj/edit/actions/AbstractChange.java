@@ -30,7 +30,7 @@ import genj.util.swing.DialogHelper;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 
 import java.awt.event.ActionEvent;
 

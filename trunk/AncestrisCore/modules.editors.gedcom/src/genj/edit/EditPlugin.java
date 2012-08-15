@@ -21,7 +21,6 @@ package genj.edit;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.GedcomFileListener;
-import genj.app.Priority;
 import genj.crypto.Enigma;
 import genj.edit.actions.CreateAlias;
 import genj.edit.actions.CreateAssociation;
@@ -73,7 +72,6 @@ import java.util.logging.Logger;
 /**
  * our editing plugin
  */
-@Priority(priority=Priority.HIGH)
 public class EditPlugin implements GedcomFileListener,ActionProvider {
   
   private final static Resources RESOURCES = Resources.get(EditPlugin.class);

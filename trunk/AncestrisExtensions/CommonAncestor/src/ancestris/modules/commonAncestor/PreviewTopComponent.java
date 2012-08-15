@@ -58,7 +58,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         PreviewTopComponent previewTopComponent = null;
         // get current current gedcom
         //Context currentContext = App.center.getSelectedContext(true);
-        Context currentContext = GedcomDirectory.getInstance().getLastContext();
+        Context currentContext = GedcomDirectory.getDefault().getLastContext();
         previewTopComponent = new PreviewTopComponent();
         previewTopComponent.init(currentContext, samePanel);
         previewTopComponent.addAncestorListener(previewTopComponent);            

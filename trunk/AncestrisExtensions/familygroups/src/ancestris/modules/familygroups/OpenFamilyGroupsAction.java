@@ -1,6 +1,6 @@
 package ancestris.modules.familygroups;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.document.view.DocumentViewTopComponent;
 import genj.fo.Document;
 import genj.gedcom.Context;
@@ -12,6 +12,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 public final class OpenFamilyGroupsAction implements ActionListener {
 
@@ -23,7 +24,7 @@ public final class OpenFamilyGroupsAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         
         window = DocumentViewTopComponent.findInstance();
-        context = App.center.getSelectedContext(true);
+        context = Utilities.actionsGlobalContext().lookup(Context.class);
         if (context != null) {
             if (modulePreferences.getInt("minGroupSize", -1) == -1) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(FamilyGroups.class, "OpenFamilyGroupsAction.setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);

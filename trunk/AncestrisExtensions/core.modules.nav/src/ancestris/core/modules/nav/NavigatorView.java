@@ -19,6 +19,7 @@
  */
 package ancestris.core.modules.nav;
 
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -31,7 +32,6 @@ import genj.util.GridBagHelper;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
-import genj.view.SelectionSink;
 import genj.view.View;
 
 import java.awt.BorderLayout;

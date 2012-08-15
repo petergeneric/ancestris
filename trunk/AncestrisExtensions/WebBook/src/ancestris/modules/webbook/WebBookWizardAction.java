@@ -7,7 +7,6 @@ package ancestris.modules.webbook;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.app.App;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.text.MessageFormat;
@@ -18,6 +17,7 @@ import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.util.actions.CallableSystemAction;
 
 // An example action demonstrating how the wizard could be called from within
@@ -113,13 +113,13 @@ public final class WebBookWizardAction extends CallableSystemAction {
     }
 
     public Gedcom getGedcom() {
-        Context context = App.center.getSelectedContext(true);
+        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
         Gedcom gedcom = null;
 
         if (context != null) {
             gedcom = context.getGedcom(); // get selected gedcom
             if (gedcom == null) { // if none selected, take first one
-                Iterator<Context> it = GedcomDirectory.getInstance().getContexts().iterator();
+                Iterator<Context> it = GedcomDirectory.getDefault().getContexts().iterator();
                 if (it.hasNext()) { // well, apparently no gedcom exist in the list
                     gedcom = (it.next()).getGedcom();
                 }

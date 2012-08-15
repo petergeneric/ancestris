@@ -12,7 +12,7 @@ import genj.util.swing.DialogHelper;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.ToolBar;
 import java.awt.CardLayout;
 import java.awt.Desktop;

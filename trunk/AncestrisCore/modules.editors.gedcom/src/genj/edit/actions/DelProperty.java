@@ -27,7 +27,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 
 import java.awt.event.ActionEvent;
 import java.util.HashSet;

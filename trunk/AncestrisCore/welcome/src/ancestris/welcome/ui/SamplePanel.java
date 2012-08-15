@@ -45,8 +45,6 @@
 package ancestris.welcome.ui;
 
 import ancestris.api.sample.SampleProvider;
-import ancestris.util.RecentFiles;
-import ancestris.util.RecentFiles.GedcomFileInformation;
 import ancestris.app.ActionOpen;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.welcome.content.ActionButton;
@@ -58,11 +56,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.util.Collection;
-import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Panel showing all recent files as clickable buttons.
@@ -131,7 +128,7 @@ public class SamplePanel extends JPanel implements Constants {
 
     private static class OpenGedcomFileAction extends ActionOpen {
         public OpenGedcomFileAction( SampleProvider sample ) {
-            super( sample.getSampleGedcomURL());
+            super(FileUtil.toFileObject(sample.getSampleGedcomFile()));
             setText(sample.getName());
             setTip(sample.getDescription());
 

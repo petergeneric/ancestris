@@ -1,6 +1,6 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import ancestris.app.App;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.document.view.DocumentViewTopComponent;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
@@ -15,6 +15,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 public final class GedcomValidateAction implements ActionListener {
 
@@ -27,7 +28,7 @@ public final class GedcomValidateAction implements ActionListener {
         window = DocumentViewTopComponent.findInstance();
         Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
 
-        context = App.center.getSelectedContext(true);
+        context = Utilities.actionsGlobalContext().lookup(Context.class);
         if (context != null) {
             if (modulePreferences.getInt("maxLife", -1) == -1) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GedcomValidate.class, "setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
