@@ -4,13 +4,14 @@
  */
 package ancestris.explorer;
 
-import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import genj.util.swing.Action2;
 import ancestris.app.ActionClose;
 import ancestris.app.ActionSave;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import ancestris.util.MyContext;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
+import genj.util.swing.Action2;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Node.Cookie;
 import org.openide.nodes.NodeTransfer;
@@ -67,7 +67,11 @@ class GedcomFileNode extends AbstractNode implements ExplorerNode {
     }
 
     public <T extends Cookie> T getCookie(Class<T>  clazz) {
-        return GedcomDirectory.getInstance().getDummyNode(context).getCookie(clazz);
+        try {
+            return GedcomDirectory.getDefault().getDataObject(context).getCookie(clazz);
+        } catch (ContextNotFoundException ex) {
+            return null;
+        }
     }
 
     protected void createPasteTypes(Transferable t, List<PasteType> s) {

@@ -8,7 +8,7 @@ import genj.gedcom.Property;
 import genj.util.swing.Action2;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.app.GedcomFileListener;
 import genj.view.SelectionListener;

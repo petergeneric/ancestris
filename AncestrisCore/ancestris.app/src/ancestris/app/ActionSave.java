@@ -4,12 +4,13 @@
  */
 package ancestris.app;
 
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
-import genj.app.Workbench;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  * Action - Save
@@ -35,11 +36,11 @@ public class ActionSave extends Action2 {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (contextBeingSaved != null){
-            Workbench.getInstance().saveGedcom(contextBeingSaved);
+            GedcomDirectory.getDefault().saveGedcom(contextBeingSaved);
         } else {
-            Context context = App.center.getSelectedContext(true);
+            Context context = Utilities.actionsGlobalContext().lookup(Context.class);
             if (context != null)  {
-                Workbench.getInstance().saveGedcom(context);
+                GedcomDirectory.getDefault().saveGedcom(context);
             }
         }
     }

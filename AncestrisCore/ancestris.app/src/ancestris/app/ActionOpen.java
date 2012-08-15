@@ -4,17 +4,17 @@
  */
 package ancestris.app;
 
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
-import genj.app.Workbench;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
-import java.net.URL;
-import java.net.URLDecoder;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
 public class ActionOpen extends Action2 {
 
-    private URL url = null;;
+    private FileObject file = null; 
 
     /** constructor - good for button or menu item */
     public ActionOpen() {
@@ -24,20 +24,19 @@ public class ActionOpen extends Action2 {
     }
 
     /** constructor - good for button or menu item */
-    @SuppressWarnings("deprecation")
-    public ActionOpen(URL url) {
-        this.url = url;
-        setTip(NbBundle.getMessage(ActionOpen.class,"HINT_ActionOpen_file",URLDecoder.decode(url.getFile())));
-        setText(NbBundle.getMessage(ActionOpen.class,"CTL_ActionOpen_file",URLDecoder.decode(url.getFile())));
+    public ActionOpen(FileObject file) {
+        this.file = file;
+        setTip(NbBundle.getMessage(ActionOpen.class,"HINT_ActionOpen_file",FileUtil.getFileDisplayName(file)));
+        setText(NbBundle.getMessage(ActionOpen.class,"CTL_ActionOpen_file",FileUtil.getFileDisplayName(file)));
         setImage(Images.imgOpen);
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        if (url != null) {
-            Workbench.getInstance().openGedcom(url);
+        if (file != null) {
+            GedcomDirectory.getDefault().openGedcom(file);
         } else {
-            Workbench.getInstance().openGedcom();
+            GedcomDirectory.getDefault().openGedcom();
         }
     }
 

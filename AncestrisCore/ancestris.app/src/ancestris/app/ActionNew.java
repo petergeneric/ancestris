@@ -4,8 +4,8 @@
  */
 package ancestris.app;
 
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
-import genj.app.Workbench;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
@@ -23,7 +23,7 @@ public final class ActionNew extends Action2 {
     /** execute callback */
     @Override
     public void actionPerformed(ActionEvent event) {
-        Workbench.getInstance().newGedcom();
+        GedcomDirectory.getDefault().newGedcom();
     }
 } //ActionNew
 

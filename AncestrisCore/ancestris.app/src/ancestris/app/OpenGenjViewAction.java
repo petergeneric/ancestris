@@ -5,12 +5,14 @@
 
 package ancestris.app;
 
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.util.swing.Action2;
 import genj.util.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.util.Map;
+import org.openide.util.Utilities;
 
 /** Opens a Genj top component.
  *
@@ -33,7 +35,7 @@ final public class OpenGenjViewAction extends Action2  {
     /** execute callback */
     @Override
   public void actionPerformed(ActionEvent e) {
-        Context contextToOpen = App.center.getSelectedContext(true);
+        Context contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
         if (contextToOpen != null){
             AncestrisTopComponent win = component.create(contextToOpen);
 //            win.init(contextToOpen);

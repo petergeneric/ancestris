@@ -19,12 +19,11 @@
  */
 package ancestris.app;
 
-import genj.gedcom.Gedcom;
 import ancestris.gedcom.GedcomDirectory;
+import genj.gedcom.Gedcom;
 import genj.util.DirectAccessTokenizer;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,12 +31,9 @@ import javax.swing.JPanel;
 
 import org.openide.util.Exceptions;
 import genj.gedcom.Context;
-import ancestris.explorer.GedcomExplorerTopComponent;
-import genj.app.Workbench;
 import java.net.URL;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
-import org.openide.util.Utilities;
 
 /**
  * The central component of the GenJ application
@@ -91,11 +87,8 @@ public class ControlCenter extends JPanel{
     public void nbDoExit(Runnable postExitCode) {
         final Semaphore sem = new Semaphore();
         sem.acquire();
-        // force a commit
-        for (Context context:GedcomDirectory.getInstance().getContexts())
-            Workbench.getInstance().fireCommit(context);
 
-            for (Context context:GedcomDirectory.getInstance().getContexts()){
+            for (Context context:GedcomDirectory.getDefault().getContexts()){
 //            // next gedcom
 //            Gedcom gedcom = context.getGedcom();
 //            // changes need saving?
@@ -120,7 +113,7 @@ public class ControlCenter extends JPanel{
 //                }
 //                // no - skip it
 //            }
-            if (!Workbench.getInstance().closeGedcom(context, false))
+            if (!GedcomDirectory.getDefault().closeGedcom(context))
                     postExitCode = null;
             // next gedcom
         }
@@ -152,7 +145,7 @@ public class ControlCenter extends JPanel{
                 return null;
             }
 
-            File defaultFile = new File(ancestris.core.Options.getInstance().getDefaultGedcom());
+            File defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
             if (defaultFile == null) {
                 return null;
             }
@@ -201,10 +194,7 @@ public class ControlCenter extends JPanel{
 
                         // check if it's a local file
                         File local = new File(restore);
-                        if (local.exists()) {
-                            local.toURI().toURL().toString();
-                        }
-                        Workbench.getInstance().openGedcom(new URL(restore));
+                        GedcomDirectory.getDefault().openGedcom(local);
 
                     } catch (Throwable t) {
                         App.LOG.log(Level.WARNING, "cannot restore " + uriStr, t);
@@ -222,11 +212,8 @@ public class ControlCenter extends JPanel{
 
                         // check if it's a local file
                         File local = new File(restore);
-                        if (local.exists()) {
-                            local.toURI().toURL().toString();
-                        }
 
-                        Workbench.getInstance().openGedcom(new URL(restore));
+                        GedcomDirectory.getDefault().openGedcom(local);
                     } catch (Throwable t) {
                         App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
                     }
@@ -241,37 +228,10 @@ public class ControlCenter extends JPanel{
         }
     } //LastOpenLoader
 
-    //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
-    public Context getSelectedContext(boolean firstIfNoneSelected){
-        Collection<? extends Context> selected = Utilities.actionsGlobalContext().lookupAll(Context.class);
-
-        Context c;
-        if (selected.isEmpty())
-            c = GedcomExplorerTopComponent.getDefault().getContext();
-        else {
-            c = Utilities.actionsGlobalContext().lookup(Context.class);
-        }
-        if (!firstIfNoneSelected)
-            return c;
-        if (c!=null)
-            return c;
-        return GedcomDirectory.getInstance().getContext(0);
-    }
-
-    /**
-     * @deprecated use getSelectedContext().getGedcom()
-     */
-    @Deprecated
-    public Gedcom getSelectedGedcom(boolean firstIfNoneSelected) {
-        Context ctx = getSelectedContext(firstIfNoneSelected);
-        return ctx==null?null:ctx.getGedcom();
-    }
-
-
     public Collection<String> getOpenedGedcoms() {
         // Remember open gedcoms
         Collection<String> save = new ArrayList<String>();
-        for (Context context: GedcomDirectory.getInstance().getContexts()){
+        for (Context context: GedcomDirectory.getDefault().getContexts()){
             // next gedcom
             Gedcom gedcom = context.getGedcom();
             if (gedcom.getOrigin() == null)
@@ -297,7 +257,7 @@ public class ControlCenter extends JPanel{
      * @deprecated use getOpenedContext()
      */
     @Deprecated
-    public Gedcom getOpenedGedcom(String gedName) {
+    private Gedcom getOpenedGedcom(String gedName) {
         Context c = getOpenedContext(gedName);
         return c == null?null:c.getGedcom();
     }
@@ -313,7 +273,7 @@ public class ControlCenter extends JPanel{
         if (url == null) {
             return null;
         }
-        for (Context context: GedcomDirectory.getInstance().getContexts()){
+        for (Context context: GedcomDirectory.getDefault().getContexts()){
             if (url.equals(context.getGedcom().getOrigin().toString())){
                 return context;
             }
@@ -321,25 +281,5 @@ public class ControlCenter extends JPanel{
         return null;
     }
 
-    /** getDefaultFile() **/
-    private String getDefaultFile(boolean dirOnly) {
-        String defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
-        if (defaultFile.isEmpty()) {
-            return "";
-        }
-        File local = new File(defaultFile);
-        if (dirOnly) {
-            return local.getParent();
-        }
-        if (!local.exists()) {
-            return "";
-        }
-        try {
-            local.toURI().toURL().toString();
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return "";
-    }
 } //ControlCenter
 

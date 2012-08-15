@@ -4,7 +4,7 @@
  */
 package ancestris.app;
 
-import genj.app.Workbench;
+import ancestris.gedcom.GedcomDirectory;
 import java.io.File;
 import javax.swing.JMenuItem;
 import org.netbeans.api.actions.Openable;
@@ -34,7 +34,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
     protected void performAction(Node[] nodes) {
         if (fileToOpen != null) {
             try {
-                Workbench.getInstance().openGedcom(fileToOpen.toURI().toURL());
+                GedcomDirectory.getDefault().openGedcom(fileToOpen);
             } catch (Exception e) {
                 System.out.println("Error opening default gedcom:" + e);
             }
@@ -86,16 +86,14 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        String defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
-        if (defaultFile.isEmpty()) {
+        File defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
+        if (defaultFile == null) {
             return "";
         }
-        File local = null;
         try {
             // check if it's a local file
-            local = new File(defaultFile);
-            fileToOpen = local;
-            if (!local.exists()) {
+            fileToOpen = defaultFile;
+            if (!defaultFile.exists()) {
                 return null;
             }
         } catch (Throwable t) {
@@ -103,16 +101,16 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
         }
 
         if (nameOnly) {
-            defaultFile = local.getName();
+            return defaultFile.getName();
         }
-        return defaultFile;
+        return defaultFile.getAbsolutePath();
     }
 
     public boolean calcState() {
-        String str = getDefaultFile(false);
-        return (str != null && !str.isEmpty());
+        return ancestris.core.Options.getInstance().getDefaultGedcom() != null;
     }
 
+    //XXX: don't use getDefaultFile(false)
     public void open() {
 
         String str = getDefaultFile(false);

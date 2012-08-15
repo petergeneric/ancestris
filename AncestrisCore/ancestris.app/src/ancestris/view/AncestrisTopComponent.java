@@ -3,19 +3,17 @@
  */
 package ancestris.view;
 
-import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.gedcom.GedcomDirectory;
 import ancestris.app.App;
 import ancestris.app.ModePersisterTopComponent;
 import ancestris.app.OpenGenjViewAction;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDataObject;
+import ancestris.gedcom.GedcomDirectory;
+import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import genj.view.SelectionListener;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.HashMap;
@@ -23,14 +21,8 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import org.openide.awt.UndoRedo;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -108,7 +100,12 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     @Override
     public UndoRedo getUndoRedo() {
-        return GedcomDirectory.getInstance().getUndoRedo(context);
+        try {
+            return GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(GedcomDataObject.class).getUndoRedo();
+        } catch (ContextNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
     }
 
     String getDefaultMode() {
@@ -176,7 +173,12 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
                 context.getGedcom().getRegistry().put("context", context.toString());
             }
 
-        AbstractNode n = GedcomDirectory.getInstance().getDummyNode(context);
+        Node n = null;
+        try {
+            n = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(Node.class);
+        } catch (ContextNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         if (n != null && n != dummyNode) {
             // Create a dummy node for the save button
             setActivatedNodes(new Node[]{n});

@@ -7,12 +7,14 @@ package ancestris.app;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.SpinnerNumberModel;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 @SuppressWarnings(value={"unchecked", "rawtypes"})
@@ -267,11 +269,12 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner nbBackups;
     // End of variables declaration//GEN-END:variables
 
-    void setGedcomFile(String str) {
-        if (str.equals("")) {
-            str = ""; //System.getProperty("user.home") + File.separator + "maGenealogie.ged";
+    void setGedcomFile(File file) {
+        try {
+            jTextField2.setText(file.getCanonicalPath());
+        } catch (Exception ex) {
+            jTextField2.setText("");
         }
-        jTextField2.setText(str);
     }
 
     String getGedcomFile() {

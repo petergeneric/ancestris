@@ -5,11 +5,13 @@
 
 package ancestris.app;
 
-import genj.app.Workbench;
+import ancestris.gedcom.GedcomDirectory;
+import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 
   /**
@@ -31,7 +33,7 @@ import org.openide.util.NbBundle;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Workbench.getInstance().saveAsGedcom(App.center.getSelectedContext(true));
+        GedcomDirectory.getDefault().saveAsGedcom(Utilities.actionsGlobalContext().lookup(Context.class));
     }
 
   } // ActionSave
