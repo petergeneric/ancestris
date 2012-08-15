@@ -25,7 +25,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
 import genj.view.ContextProvider;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
 
 import java.awt.Component;

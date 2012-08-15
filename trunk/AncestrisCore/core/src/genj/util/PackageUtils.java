@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  *
  * @author daniel
  */
-        // XXX: PackageUtils class will be removed 
+        // XXX: PackageUtils class will be removed . It is used only for almanac
 public class PackageUtils {
 
     public static List<Class> getClassesForPackage(String pckgname) throws ClassNotFoundException {

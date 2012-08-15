@@ -11,7 +11,6 @@
  */
 package ancestris.util;
 
-import genj.app.ProgressListener;
 import genj.util.Trackable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,11 +18,13 @@ import javax.swing.Timer;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author daniel
  */
+@ServiceProvider(service=ProgressListener.class)
 public class ProgressBar implements ProgressListener {
 
     ProgressHandle handle;

@@ -9,9 +9,10 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package genj.app;
+package ancestris.util;
 
 import genj.util.Trackable;
+import org.openide.util.Lookup;
 
 /**
  * Progress Callback
@@ -29,4 +30,20 @@ public interface ProgressListener {
    * @param process
    */
   public void processStopped(Trackable process);
+  
+  public class Dispatcher{
+    public static void processStarted(Trackable process) {
+//        for (ProgressListener listener : AncestrisPlugin.lookupAll(ProgressListener.class)) {
+        for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
+            listener.processStarted(process);
+        }
+    }
+
+    public static void processStopped(Trackable process) {
+//        for (ProgressListener listener : AncestrisPlugin.lookupAll(ProgressListener.class)) {
+        for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
+            listener.processStopped(process);
+        }
+    }
+  }
 }

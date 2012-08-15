@@ -301,6 +301,7 @@ public class Gedcom implements Comparable {
   
   /**
    * Adds a Listener which will be notified when data changes
+   * XXX: convert to pcs
    */
   public void addGedcomListener(GedcomListener listener) {
     if (listener==null)

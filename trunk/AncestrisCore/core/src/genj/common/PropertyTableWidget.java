@@ -34,7 +34,7 @@ import genj.util.swing.LinkWidget;
 import genj.util.swing.SortableTableModel;
 import genj.util.swing.SortableTableModel.Directive;
 import genj.view.ContextProvider;
-import genj.view.SelectionSink;
+import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
 
 import java.awt.BorderLayout;
