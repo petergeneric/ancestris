@@ -12,7 +12,7 @@
 package ancestris.modules.wizards.newgedcom;
 
 import ancestris.api.newgedcom.NewGedcom;
-import genj.app.Workbench;
+import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -60,7 +60,7 @@ public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
         if (context == null){
             Gedcom gedcom = new Gedcom();
             gedcom.setName(org.openide.util.NbBundle.getMessage(CreateNewGedcom.class, "newgedcom.name"));
-            Workbench.getInstance().setDefault(gedcom);
+//XXX:            GedcomDirectory.getInstance().setDefault(gedcom);
 
             // remember
             context = new Context(gedcom);
