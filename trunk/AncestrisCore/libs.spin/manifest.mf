@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.libs.spin
+OpenIDE-Module-Localizing-Bundle: ancestris/libs/spin/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
