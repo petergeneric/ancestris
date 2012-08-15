@@ -14,6 +14,7 @@ package ancestris.core;
 
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
+import java.io.File;
 
 /**
  *
@@ -67,10 +68,15 @@ public class Options {
         appOptions.put("isSplitJurisdictions",isSplitJurisdictions);
     }
   
-  public String getDefaultGedcom(){
-        return  appOptions.get("gedcomFile","");
-    }
-    public boolean  getAlwaysOpenDefault(){
+  public File getDefaultGedcom(){
+          String defaultFile = appOptions.get("gedcomFile","");
+        if (defaultFile.isEmpty()) {
+            return null;
+        }
+        return new File(defaultFile);
+  }
+  
+  public boolean  getAlwaysOpenDefault(){
         return  appOptions.get("alwaysOpenDefault",false);
     }
 

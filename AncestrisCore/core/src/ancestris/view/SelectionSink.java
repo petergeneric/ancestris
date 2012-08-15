@@ -1,9 +1,13 @@
-package genj.view;
+package ancestris.view;
 
-import genj.app.Workbench;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.gedcom.Context;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import genj.util.swing.DialogHelper;
 import genj.util.swing.DialogHelper.ComponentVisitor;
+import genj.view.MySelectionListener;
+import genj.view.SelectionListener;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -15,6 +19,10 @@ import javax.swing.RootPaneContainer;
 
 /**
  * A sink for selection events
+ */
+/**
+ * XXX: must be removed as in netbeans selection is implemented with global context lookup
+ * any component can receive a selection event thru a lookup.result listener
  */
 public interface SelectionSink {
 
@@ -81,8 +89,49 @@ public interface SelectionSink {
         }
       });
       if (!isMuted())
-        Workbench.getInstance().fireSelection(listener,context, isActionPerformed);
+        fireSelection(listener,context, isActionPerformed);
     }
+    
+    
+    private static void fireSelection(MySelectionListener from, Context context, boolean isActionPerformed) {
+//TODO: mieux controler. Devra atre refait lors du basculement total dans l'environnement NB
+//    // appropriate?
+//    if (context.getGedcom()!= this.context.getGedcom()) {
+//      LOG.log(Level.FINER, "context selection on unknown gedcom", new Throwable());
+//      return;
+//    }
+        // following a link?
+        if (isActionPerformed && context.getProperties().size() == 1) {
+            Property p = context.getProperty();
+            if (p instanceof PropertyXRef) {
+                context = new Context(((PropertyXRef) p).getTarget());
+            }
+        }
+//
+//    // already known?
+//    if (!isActionPerformed && this.context.equals(context))
+//      return;
+//
+//    LOG.fine("fireSelection("+context+","+isActionPerformed+")");
+//
+//    // remember
+//    this.context = context;
+//
+//    if (context.getGedcom()!=null)
+//      REGISTRY.put(context.getGedcom().getName()+".context", context.toString());
+//
+        // notify
+        for (SelectionListener listener : AncestrisPlugin.lookupAll(SelectionListener.class)) {
+            if (!listener.equals(from)) {
+                listener.setContext(context, isActionPerformed);
+            }
+        }
+        if (from != null) {
+            from.setMyContext(context, isActionPerformed);
+        }
+    }
+
+
 
     /**
      * Fire a selection event.

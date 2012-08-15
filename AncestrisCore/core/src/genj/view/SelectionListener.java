@@ -20,7 +20,7 @@
 package genj.view;
 
 import genj.gedcom.Context;
-
+//XXX: Remove this interface? Utilities.getGlobal... listener should do the job
 public interface SelectionListener {
 
   public void setContext(Context context, boolean isActionPerformed);

@@ -34,6 +34,9 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -48,6 +51,8 @@ import org.openide.util.Exceptions;
  * either relative to the same 'directory' of the original or
  * pulled from the same archive.
  */
+//XXX: DAN: we must evaluate the replacement of this class with FileObject
+//wich seem have the same goal: IO abstraction
 public abstract class Origin {
   
   private static Logger LOG = Logger.getLogger( "genj.util");
@@ -93,6 +98,21 @@ public abstract class Origin {
 
   }
 
+/**
+   * Factory method to create an instance for given url
+   * @param url either http://host/dir/file or ftp://dir/file or
+   *   protocol://[host/]dir/file.zip#file 
+   */
+  public static Origin create(FileObject file) {
+      FOOrigin o;
+        try {
+            o = new FOOrigin(file.getURL());
+        } catch (FileStateInvalidException ex) {
+            return null;
+        }
+      o.setFileObject(file);
+      return o;
+  }
   /**
    * Open this origin for input
    * @return stream to read from
@@ -352,6 +372,84 @@ public abstract class Origin {
 
   } //DefaultOrigin
  
+
+    /**
+   * A default origin 
+   */
+  private static class FOOrigin extends Origin {
+      
+      private FileObject fileObject;
+
+        public void setFileObject(FileObject fileObject) {
+            this.fileObject = fileObject;
+        }
+
+    /**
+     * Constructor
+     */
+    protected FOOrigin(URL url) {
+        super(url);
+    }
+    
+    /**
+     * @see genj.util.Origin#open()
+     */
+    public InputStream open() throws IOException {
+        return fileObject.getInputStream();
+    }
+    
+    /**
+     * @see genj.util.Origin#openImpl(java.lang.String)
+     */
+    protected InputStream openImpl(String name) throws IOException {
+        FileObject fo = null;
+        if (fileObject.isFolder()){
+            fo = fileObject.getFileObject(name);
+        } else {
+            fo = fileObject.getFileObject("../"+name);
+        }
+        return fo.getInputStream();
+    }
+
+    /**
+     * list directory of origin if file
+     */
+    public String[] list() {
+      File dir = getFile();
+      if (dir==null) 
+        throw new IllegalArgumentException("list() not supported by url protocol");
+      if (!dir.isDirectory())
+        dir = dir.getParentFile();
+      return dir.list();
+    }
+    
+    /**
+     * @see genj.util.Origin#getFile()
+     */
+        @Override
+    public File getFile() {
+            return FileUtil.toFile(fileObject);
+    }
+
+    /**
+     * @see genj.util.Origin#getFile(java.lang.String)
+     */
+        @Override
+    public File getFile(String file) {
+      
+      // good argument?
+      if (file.length()<1) return null;
+      
+      // Absolute file specification?
+      if (ABSOLUTE.matcher(file).matches()) 
+        return new File(file);
+
+      // should be in parent directory
+          return new File(getFile().getParent(), file);
+      }
+
+
+  } //FOOrigin
 
   /**
    * Class which stands for an origin of a resource - this Origin

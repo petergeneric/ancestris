@@ -446,6 +446,29 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
   }
 
   /**
+   * Return File from key (using absolute path ATM)
+   */
+  //TODO: use FileObject?
+  public File get(String key, File def) {
+      String path = get(key, (String)null);
+      if (path == null)
+          return null;
+      return new File(path);
+  }
+
+  /**
+   * Remember a File
+   */
+  public void put(String key, File value) {
+      if (value != null){
+          put(key,value.getAbsolutePath());
+      }else{
+          put(key,(String)null);
+      }
+  }
+  
+  
+  /**
    * Remember an array of values
    */
   public void put(String key, Map<String,?> values) {
