@@ -17,13 +17,12 @@
  */
 package ancestris.modules.gedcom.history;
 
-import ancestris.app.App;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.view.AncestrisDockModes;
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.view.SelectionSink;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
@@ -33,6 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 
@@ -73,7 +73,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     }
 
     public GedcomHistoryTopComponent() {
-        Context context = App.center.getSelectedContext(true);
+        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
         if (context != null) {
             String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
             for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {

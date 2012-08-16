@@ -17,7 +17,6 @@
  */
 package ancestris.modules.gedcom.history;
 
-import ancestris.app.App;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
@@ -27,6 +26,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
 @ActionID(category = "Tools",
@@ -39,7 +39,7 @@ public final class DisplayHistoryAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Context context = App.center.getSelectedContext(true);
+        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
         if (context != null) {
             Gedcom gedcom = context.getGedcom();
             GedcomHistoryTopComponent gedcomHistoryTopComponent = null;
