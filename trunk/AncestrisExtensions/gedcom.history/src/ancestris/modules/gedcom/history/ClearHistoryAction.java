@@ -17,7 +17,6 @@
  */
 package ancestris.modules.gedcom.history;
 
-import ancestris.app.App;
 import ancestris.core.pluginservice.PluginInterface;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
@@ -29,6 +28,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.modules.Places;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 
 @ActionID(category = "Tools",
 id = "ancestris.modules.gedcom.history.ClearHistoryAction")
@@ -42,7 +42,7 @@ public final class ClearHistoryAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
             if (pluginInterface instanceof GedcomHistoryPlugin) {
-                Context context = App.center.getSelectedContext(true);
+                Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                 if (context != null) {
                     String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
                     File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());

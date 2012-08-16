@@ -17,10 +17,10 @@
  */
 package ancestris.modules.gedcom.history;
 
-import ancestris.app.App;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.gedcom.Context;
 import org.openide.modules.ModuleInstall;
+import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
 
 public class Installer extends ModuleInstall {
@@ -34,7 +34,7 @@ public class Installer extends ModuleInstall {
             @Override
             public void run() {
                 AncestrisPlugin.register(gedcomHistoryPlugin = new GedcomHistoryPlugin());
-                Context context = App.center.getSelectedContext(true);
+                Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                 // On first install when a gedcom is already open
                 // we need to open the history file.
                 if (context != null && context.getGedcom() != null) {
