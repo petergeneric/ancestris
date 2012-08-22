@@ -24,7 +24,6 @@
 package ancestris.modules.exports.geneanet;
 
 import genj.gedcom.Context;
-import ancestris.app.App;
 import genj.gedcom.Gedcom;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;

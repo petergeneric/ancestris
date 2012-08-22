@@ -1,6 +1,5 @@
 package ancestris.modules.exports.cousinsgenweb;
 
-import ancestris.app.App;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;

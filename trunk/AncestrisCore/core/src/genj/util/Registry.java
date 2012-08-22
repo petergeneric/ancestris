@@ -624,6 +624,11 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
    * Remembers a collection of Strings
    */
   public void put(String key, Collection<?> values) {
+      
+      if (values == null){
+          put(key,(String) null);
+          return;
+      }
 
     // Remember
     int l = values.size();

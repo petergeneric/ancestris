@@ -34,12 +34,14 @@ import genj.gedcom.Context;
 import java.net.URL;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
 
 /**
  * The central component of the GenJ application
  */
 // XXX: this entire class must be at least redesigned or removed
-public class ControlCenter extends JPanel{
+public class ControlCenter {
 
     /** members */
 
@@ -55,7 +57,7 @@ public class ControlCenter extends JPanel{
      * - otherwise load files
      *
      */
-    public void load(Collection<String> files) {
+    public void load(Collection<FileObject> files) {
         SwingUtilities.invokeLater(new ActionAutoOpen(files));
     }  
 
@@ -88,31 +90,8 @@ public class ControlCenter extends JPanel{
         final Semaphore sem = new Semaphore();
         sem.acquire();
 
-            for (Context context:GedcomDirectory.getDefault().getContexts()){
-//            // next gedcom
-//            Gedcom gedcom = context.getGedcom();
-//            // changes need saving?
-//            if (gedcom.hasChanged()) {
-//                // close file officially
-//                int rc = DialogHelper.openDialog(
-//                        null, DialogHelper.WARNING_MESSAGE,
-//                        resources.getString("cc.savechanges?", gedcom.getName()),
-//                        Action2.yesNoCancel(), ControlCenter.this);
-//                // cancel - we're done
-//                if (rc == 2) {
-//                    return;
-//                }
-//                // yes - close'n save it
-//                if (rc == 0) {
-//                    // block exit
-//                    sem.acquire();
-//                    // run save
-//                    App.workbenchHelper.saveGedcomImpl(gedcom, new Filter[0]);
-//                    sem.release(postExitCode);
-////            return;
-//                }
-//                // no - skip it
-//            }
+        StartupFiles.getDefault().addOpenedGedcoms();
+        for (Context context:GedcomDirectory.getDefault().getContexts()){
             if (!GedcomDirectory.getDefault().closeGedcom(context))
                     postExitCode = null;
             // next gedcom
@@ -127,12 +106,12 @@ public class ControlCenter extends JPanel{
     private class ActionAutoOpen implements Runnable {
 
         /** files to load */
-        private Collection<String> files = null;
+        private Collection<FileObject> files = null;
 
         /** constructor */
-        private ActionAutoOpen(Collection<String> theFiles) {
+        private ActionAutoOpen(Collection<FileObject> theFiles) {
             if (theFiles == null) {
-                theFiles = new ArrayList<String>();
+                theFiles = new ArrayList<FileObject>();
             }
 // TODO: demander l'ouverture d'un fichier gedcom si aucun fichier n'est ouvert. Comment?
             files = theFiles;
@@ -184,74 +163,58 @@ public class ControlCenter extends JPanel{
 
             // Loop over files to open
             if (files != null && !files.isEmpty()) {
-                for (String uriStr: files) {
-                    if (getOpenedGedcom(uriStr) != null) {
+                for (FileObject file: files) {
+                    try {
+                        //XXX: to be removed: getOpenGedcom must be replace by some GedcomDirectory.isOpened()
+                        String uriStr = file.getURL().toString();
+                        if (getOpenedGedcom(uriStr) != null) {
+                            break;
+                        }
+                        GedcomDirectory.getDefault().openGedcom(file);
+                        // XXX: should we save and restore save passwords, and how?
+    //                    try {
+    //                        DirectAccessTokenizer tokens = new DirectAccessTokenizer(uriStr, ",", false);
+    //                        String restore = tokens.get(0);
+    //
+    //                        // check if it's a local file
+    //                        File local = new File(restore);
+    //                        GedcomDirectory.getDefault().openGedcom(local);
+    //
+    //                    } catch (Throwable t) {
+    //                    }
+    //                    }
+
+                        // next
+                    } catch (FileStateInvalidException ex) {
                         break;
                     }
-                    try {
-                        DirectAccessTokenizer tokens = new DirectAccessTokenizer(uriStr, ",", false);
-                        String restore = tokens.get(0);
-
-                        // check if it's a local file
-                        File local = new File(restore);
-                        GedcomDirectory.getDefault().openGedcom(local);
-
-                    } catch (Throwable t) {
-                        App.LOG.log(Level.WARNING, "cannot restore " + uriStr, t);
-                    }
-
-                    // next
                 }
             }
 
             // open default file if necessary
-            {
-                String restore = getDefaultFile(files);
-                if (restore != null && getOpenedGedcom(restore) == null) {
-                    try {
-
-                        // check if it's a local file
-                        File local = new File(restore);
-
-                        GedcomDirectory.getDefault().openGedcom(local);
-                    } catch (Throwable t) {
-                        App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
-                    }
-
-                    // next
-                }
-            }
+            //XXX: temporarily disabled
+//            {
+//                String restore = getDefaultFile(files);
+//                if (restore != null && getOpenedGedcom(restore) == null) {
+//                    try {
+//
+//                        // check if it's a local file
+//                        File local = new File(restore);
+//
+//                        GedcomDirectory.getDefault().openGedcom(local);
+//                    } catch (Throwable t) {
+//                        App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
+//                    }
+//
+//                    // next
+//                }
+//            }
 
 
             // done
             App.center.isReady(-1);
         }
     } //LastOpenLoader
-
-    public Collection<String> getOpenedGedcoms() {
-        // Remember open gedcoms
-        Collection<String> save = new ArrayList<String>();
-        for (Context context: GedcomDirectory.getDefault().getContexts()){
-            // next gedcom
-            Gedcom gedcom = context.getGedcom();
-            if (gedcom.getOrigin() == null)
-                continue;
-            // remember as being open, password and open views
-            File file = gedcom.getOrigin().getFile();
-            if (file == null || file.exists()) {
-                StringBuffer restore = new StringBuffer();
-                restore.append(gedcom.getOrigin());
-                restore.append(",");
-                if (gedcom.hasPassword()) {
-                    restore.append(gedcom.getPassword());
-                }
-                save.add(restore.toString());
-            }
-            // next gedcom
-        }
-        // Done
-        return save;
-    }
 
     /**
      * @deprecated use getOpenedContext()

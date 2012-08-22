@@ -66,8 +66,7 @@ public class Installer extends ModuleInstall {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
             public void run() {
-                Collection<String> pfiles = genj.util.Registry.get(App.class).get("gedcoms", (Collection<String>) null);
-                App.center.load(pfiles);
+                App.center.load(StartupFiles.getDefault().getAll());
                 GedcomExplorerTopComponent.getDefault().open();
             }
         });
@@ -75,8 +74,9 @@ public class Installer extends ModuleInstall {
 
     @Override
     //XXX: this doesn't seem to be called before gedcom unregister
+    // XXX: unregisters are done in nbDoExit, to be refactored
     public boolean closing() {
-        genj.util.Registry.get(App.class).put("gedcoms", App.center.getOpenedGedcoms());
+//        StartupFiles.getDefault().addOpenedGedcoms();
         return App.closing();
     }
 

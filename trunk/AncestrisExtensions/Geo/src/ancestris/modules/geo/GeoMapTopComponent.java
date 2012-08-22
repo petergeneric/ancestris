@@ -6,7 +6,6 @@ package ancestris.modules.geo;
 
 import genj.gedcom.Context;
 import ancestris.view.AncestrisTopComponent;
-import ancestris.app.App;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.AncestrisDockModes;
