@@ -101,7 +101,8 @@ public class App {
             }
         }
 
-        if (!x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
+        // XXX: this is not necessary anymore for jdk > 1.6.23
+        if (false && !x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
             x11ErrorHandlerFixInstalled = true;
             EventQueue.invokeLater(new Runnable() {
 
@@ -110,30 +111,6 @@ public class App {
                 }
             });
         }
-        /**
-         * Workaround for http://bugs.sun.com/view_bug.do?bug_id=5076635
-         * reflection ne fonctionne pas: http://forums.oracle.com/forums/thread.jspa?messageID=5220729&#5220729
-         * voir http://forums.oracle.com/forums/thread.jspa?messageID=5208759&#5208759
-         */
-//        if (!EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
-//            try {
-//                // Can't use Toolkit.getDefaultToolkit().setDesktopProperty("awt.multiClickInterval", new Integer(450));
-//                // as it is protected
-//                Method setDesktopPropertyMeth = Toolkit.class.getDeclaredMethod("setDesktopProperty", String.class,Object.class);
-//                setDesktopPropertyMeth.setAccessible(true);
-//                setDesktopPropertyMeth.invoke(Toolkit.getDefaultToolkit(), "awt.multiClickInterval",new Integer(450));
-//            } catch (NoSuchMethodException ex) {
-//                Exceptions.printStackTrace(ex);
-//            } catch (SecurityException ex) {
-//                Exceptions.printStackTrace(ex);
-//            } catch (IllegalAccessException ex) {
-//                Exceptions.printStackTrace(ex);
-//            } catch (IllegalArgumentException ex) {
-//                Exceptions.printStackTrace(ex);
-//            } catch (InvocationTargetException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//        }
     }
     /* TODO: sauvegarde des fichiers ouverts fait dans le hook du code exit
      * car dans le cas de la fermeture de l'application par le bouton fermer de la fenetre
