@@ -45,14 +45,14 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     /**
      * @return the resourceFileView
      */
-    public javax.swing.JList getResourceFileView() {
+    public javax.swing.JList<String> getResourceFileView() {
         return resourceFileView;
     }
 
     /**
      * @param resourceFileView the resourceFileView to set
      */
-    public void setResourceFileView(javax.swing.JList resourceFileView) {
+    public void setResourceFileView(javax.swing.JList<String> resourceFileView) {
         this.resourceFileView = resourceFileView;
     }
 
@@ -70,7 +70,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         this.resourceFile = resourceFile;
     }
 
-    private class ResourceFileModel implements ListModel {
+    private class ResourceFileModel implements ListModel<String> {
 
         @Override
         public void addListDataListener(ListDataListener listdatalistener1) {
@@ -81,7 +81,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         }
 
         @Override
-        public Object getElementAt(int i) {
+        public String getElementAt(int i) {
             return getResourceFile() == null ? "" : getResourceFile().getLine(i);
         }
 
@@ -91,20 +91,19 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         }
     }
 
-    private class ResourceFileCellRenderer extends JTextArea implements ListCellRenderer {
+    private class ResourceFileCellRenderer extends JTextArea implements ListCellRenderer<String> {
 
         // This is the only method defined by ListCellRenderer.
         // We just reconfigure the JLabel each time we're called.
         @Override
         public Component getListCellRendererComponent(
-                JList list,
-                Object value, // value to display
+                JList<? extends String> list,
+                String value, // value to display
                 int index, // cell index
                 boolean isSelected, // is the cell selected
                 boolean cellHasFocus) // the list and the cell have the focus
         {
-            String s = value.toString();
-            setText(s);
+            setText(value);
             Color color;
             switch (getResourceFile().getLineState(index)) {
                 // The line is the same
@@ -229,7 +228,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
      */
     static final String ICON_PATH = "org/ancestris/trancestris/editors/resourceeditor/Advanced.png";
     private static final String PREFERRED_ID = "ResourceEditorTopComponent";
-    private Lookup.Result result = null;
+    private Lookup.Result<? extends ZipDirectory> result = null;
     private ResourceFile resourceFile = null;
     private static final Logger logger = Logger.getLogger(ResourceEditorTopComponent.class.getName());
     private UndoRedo.Manager manager = new UndoRedo.Manager();
@@ -278,7 +277,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         textAreaComments = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         scrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
-        resourceFileView = new javax.swing.JList();
+        resourceFileView = new javax.swing.JList<String>();
         jPanel3 = new javax.swing.JPanel();
         panelTranslation = new javax.swing.JPanel();
         scrollPaneTranslation = new javax.swing.JScrollPane();
@@ -412,20 +411,23 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         int i = getResourceFileView().getSelectedIndex();
         logger.log(Level.INFO, "Selected index is {0}", i);
-        
+
         getResourceFileView().ensureIndexIsVisible(i);
 
         if (i >= 0) {
             translation = getResourceFile().getLineTranslation(i);
             comment = getResourceFile().getLineComment(i);
         }
-        textAreaComments.setText(comment);
-        textAreaComments.setCaretPosition(0);
         if (Pattern.compile("NOI18N$").matcher(comment).find() == true) {
             logger.log(Level.INFO, "index {0} shall not be translated", i);
+            textAreaComments.setText(NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.NoTranslation"));
+            textAreaComments.setCaretPosition(0);
             textAreaTranslation.setEditable(false);
             buttonConfirmTranslation.setEnabled(false);
         } else {
+            comment = Pattern.compile("(#\\s)|(#\t)").matcher(comment).replaceAll("");
+            textAreaComments.setText(comment);
+            textAreaComments.setCaretPosition(0);
             textAreaTranslation.setEditable(true);
             buttonConfirmTranslation.setEnabled(false);
         }
@@ -478,7 +480,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JButton nextButton;
     private javax.swing.JPanel panelTranslation;
     private javax.swing.JButton previousButton;
-    private javax.swing.JList resourceFileView;
+    private javax.swing.JList<String> resourceFileView;
     private javax.swing.JScrollPane scrollPaneComments;
     private javax.swing.JScrollPane scrollPaneResourceView;
     private javax.swing.JScrollPane scrollPaneTranslation;
@@ -489,7 +491,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files
      * only, i.e. deserialization routines; otherwise you could get a
-     * non-deserialized instance. To obtain the singleton instance, use {@link #findInstance}.
+     * non-deserialized instance. To obtain the singleton instance, use
+     * {@link #findInstance}.
      */
     public static synchronized ResourceEditorTopComponent getDefault() {
         if (instance == null) {
@@ -499,8 +502,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     }
 
     /**
-     * Obtain the ResourceEditorTopComponent instance. Never call {@link #getDefault}
-     * directly!
+     * Obtain the ResourceEditorTopComponent instance. Never call
+     * {@link #getDefault} directly!
      */
     public static synchronized ResourceEditorTopComponent findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
@@ -562,11 +565,11 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
     @Override
     public void resultChanged(LookupEvent le) {
-        Lookup.Result r = (Lookup.Result) le.getSource();
-        Collection c = r.allInstances();
+        Lookup.Result<ZipDirectory> r = (Lookup.Result<ZipDirectory>) le.getSource();
+        Collection<? extends ZipDirectory> c = r.allInstances();
         if (!c.isEmpty()) {
-            for (Iterator i = c.iterator(); i.hasNext();) {
-                ZipDirectory zipDirectory = (ZipDirectory) i.next();
+            for (Iterator<? extends ZipDirectory> i = c.iterator(); i.hasNext();) {
+                ZipDirectory zipDirectory = i.next();
                 setResourceFile(zipDirectory.getResourceFile());
                 getResourceFileView().updateUI();
                 manager.discardAllEdits();
@@ -577,13 +580,16 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     getResourceFileView().ensureIndexIsVisible(0);
 
                     String comment = getResourceFile().getLineComment(0);
-                    textAreaComments.setText(comment);
-                    textAreaComments.setCaretPosition(0);
                     if (Pattern.compile("NOI18N$").matcher(comment).find() == true) {
                         logger.log(Level.INFO, "index {0} shall not be translated", i);
+                        textAreaComments.setText(NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.NoTranslation"));
+                        textAreaComments.setCaretPosition(0);
                         textAreaTranslation.setEditable(false);
                         buttonConfirmTranslation.setEnabled(false);
                     } else {
+                        comment = Pattern.compile("(#\\s)|(#\t)").matcher(comment).replaceAll("");
+                        textAreaComments.setText(comment);
+                        textAreaComments.setCaretPosition(0);
                         textAreaTranslation.setEditable(true);
                         buttonConfirmTranslation.setEnabled(false);
                     }
