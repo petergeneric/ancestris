@@ -88,7 +88,7 @@ public class PropertiesLike extends Properties {
             StringBuffer buff = new StringBuffer("###");
             buff.append(comments);
             buff.append(LF);
-            Enumeration en = this.keys();
+            Enumeration<Object> en = this.keys();
             while (en.hasMoreElements()) {
                 String key = (String) en.nextElement();
                 String value = getProperty(key);
