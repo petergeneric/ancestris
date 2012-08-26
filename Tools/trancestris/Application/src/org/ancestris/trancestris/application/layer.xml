@@ -86,11 +86,8 @@
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
             <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
         </folder>
-        <folder name="Window">
-            <file name="Action.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-application-Action.instance"/>
-            </file>
-        </folder>
+        <file name="GoTo_hidden"/>
+        <file name="Window_hidden"/>
     </folder>
     <folder name="OptionsDialog">
         <file name="Advanced.instance_hidden"/>
