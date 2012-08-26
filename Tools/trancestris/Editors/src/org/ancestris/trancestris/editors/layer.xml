@@ -25,21 +25,10 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
-        <folder name="Window">
-            <file name="org-ancestris-trancestris-editors-resourceeditor-ResourceEditorAction.instance">
-                <attr name="component" methodvalue="org.ancestris.trancestris.editors.resourceeditor.ResourceEditorTopComponent.findInstance"/>
-                <attr name="displayName" bundlevalue="org.ancestris.trancestris.editors.resourceeditor.Bundle#CTL_ResourceEditorAction"/>
-                <attr name="iconBase" stringvalue="org/ancestris/trancestris/editors/resourceeditor/Advanced.png"/>
-                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
-            </file>
-        </folder>
+        <folder name="Window"/>
     </folder>
     <folder name="Menu">
-        <folder name="Window">
-            <file name="ResourceEditorAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/org-ancestris-trancestris-editors-resourceeditor-ResourceEditorAction.instance"/>
-            </file>
-        </folder>
+        <folder name="Window"/>
     </folder>
     <folder name="Toolbars">
         <file name="Clipboard_hidden"/>
