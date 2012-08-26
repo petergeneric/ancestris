@@ -43,7 +43,7 @@ final class LanguagePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox(initLanguages());
+        jComboBox1 = new javax.swing.JComboBox<String>(initLanguages());
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LanguagePanel.class, "LanguagePanel.jLabel1.text")); // NOI18N
@@ -65,7 +65,7 @@ final class LanguagePanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 68, Short.MAX_VALUE)
+            .addGap(0, 72, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(22, 22, 22)
@@ -74,6 +74,8 @@ final class LanguagePanel extends javax.swing.JPanel {
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(23, Short.MAX_VALUE)))
         );
+
+        jLabel1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(LanguagePanel.class, "LanguagePanel.jLabel1.text")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
@@ -122,7 +124,7 @@ final class LanguagePanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
     private String[] initLanguages() {

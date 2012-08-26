@@ -54,7 +54,7 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
         }
     }
 
-    private class LocaleComboBoxModel extends DefaultComboBoxModel {
+    private class LocaleComboBoxModel extends DefaultComboBoxModel<String> {
 
         String selectedLocale = Locale.getDefault().getDisplayLanguage();
 
@@ -68,7 +68,7 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
         }
 
         @Override
-        public Object getElementAt(int i) {
+        public String getElementAt(int i) {
             return locales[i].getDisplayLanguage();
         }
 
@@ -110,11 +110,11 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         translationLabel = new javax.swing.JLabel();
-        fromLocaleComboBox = new javax.swing.JComboBox(new LocaleComboBoxModel());
+        fromLocaleComboBox = new javax.swing.JComboBox<String>(new LocaleComboBoxModel());
         openFileChooserButton = new javax.swing.JButton();
         bundleFileNameTextField = new javax.swing.JTextField();
         toLabel = new javax.swing.JLabel();
-        toLoacaleComboBox = new javax.swing.JComboBox(new LocaleComboBoxModel());
+        toLoacaleComboBox = new javax.swing.JComboBox<String>(new LocaleComboBoxModel());
 
         setMaximumSize(new java.awt.Dimension(32789, 24));
         setOpaque(false);
@@ -212,10 +212,10 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_toLoacaleComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bundleFileNameTextField;
-    private javax.swing.JComboBox fromLocaleComboBox;
+    private javax.swing.JComboBox<String> fromLocaleComboBox;
     private javax.swing.JButton openFileChooserButton;
     private javax.swing.JLabel toLabel;
-    private javax.swing.JComboBox toLoacaleComboBox;
+    private javax.swing.JComboBox<String> toLoacaleComboBox;
     private javax.swing.JLabel translationLabel;
     // End of variables declaration//GEN-END:variables
 

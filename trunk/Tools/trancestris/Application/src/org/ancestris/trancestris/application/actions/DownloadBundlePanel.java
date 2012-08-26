@@ -62,7 +62,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         }
     }
 
-    private class LocaleComboBoxModel extends DefaultComboBoxModel {
+    private class LocaleComboBoxModel extends DefaultComboBoxModel <String>{
 
         String selectedLocale = Locale.getDefault().getDisplayLanguage();
 
@@ -76,7 +76,7 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         }
 
         @Override
-        public Object getElementAt(int i) {
+        public String getElementAt(int i) {
             return locales[i].getDisplayLanguage();
         }
 
@@ -167,9 +167,9 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         localBundleTextField = new javax.swing.JTextField();
         openFileButton = new javax.swing.JButton();
         urlLabel = new javax.swing.JLabel();
-        fromLocaleComboBox = new javax.swing.JComboBox(new LocaleComboBoxModel());
+        fromLocaleComboBox = new javax.swing.JComboBox<String>(new LocaleComboBoxModel());
         translationLabel = new javax.swing.JLabel();
-        toLoacaleComboBox = new javax.swing.JComboBox(new LocaleComboBoxModel());
+        toLoacaleComboBox = new javax.swing.JComboBox<String>(new LocaleComboBoxModel());
         toLabel = new javax.swing.JLabel();
 
         openFileButton.setText(org.openide.util.NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.openFileButton.text")); // NOI18N
@@ -270,11 +270,11 @@ public class DownloadBundlePanel extends javax.swing.JPanel {
         toLocale = localeList.get((String) toLoacaleComboBox.getSelectedItem());
 }//GEN-LAST:event_toLoacaleComboBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox fromLocaleComboBox;
+    private javax.swing.JComboBox<String> fromLocaleComboBox;
     private javax.swing.JTextField localBundleTextField;
     private javax.swing.JButton openFileButton;
     private javax.swing.JLabel toLabel;
-    private javax.swing.JComboBox toLoacaleComboBox;
+    private javax.swing.JComboBox<String> toLoacaleComboBox;
     private javax.swing.JLabel translationLabel;
     private javax.swing.JLabel urlLabel;
     private javax.swing.JTextField urlTextField;
