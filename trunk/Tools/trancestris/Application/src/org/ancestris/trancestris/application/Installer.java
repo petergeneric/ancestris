@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
@@ -61,9 +62,34 @@ public class Installer extends ModuleInstall {
     }
 
     @Override
+    public void validate() throws IllegalStateException {
+        /*
+         * 29/08/2012 Update properties according our new ancestris website
+         * Should be removed in next trancestris major version
+         */
+        
+        // Update center
+        Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate/org_ancestris_trancestris_application_update_center");
+        p.put("originalUrl", "http://dl.ancestris.org/trancestris/nbm/core/new.updates.xml");
+        try {
+            p.flush();
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        // bundles file
+        Preferences p1 = NbPreferences.root().node("/org/ancestris/trancestris/application");
+        p1.put("Url.address", "http://www.dl.ancestris.org/trancestris/bundles/Ancestris_Bundles.zip");
+        try {
+            p1.flush();
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    @Override
     public void restored() {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-
             @Override
             public void run() {
                 String UrlAddress = NbPreferences.forModule(Installer.class).get("Url.address", NbBundle.getMessage(DownloadBundlePanel.class, "DownloadBundlePanel.urlTextField.text"));
