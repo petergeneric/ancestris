@@ -14,22 +14,18 @@ package ancestris.app;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -46,14 +42,22 @@ public abstract class StartupFiles {
     protected PropertyChangeSupport pch;
 
     /**
-     * Adds a FileObject to the files do be opened at startup time. 
-     * 
+     * Adds a FileObject to the files do be opened at startup time.
+     *
      * @param gedcomFile
      */
     public abstract void add(FileObject gedcomFile);
 
+    /**
+     * Gets all Gedcoms to open at startup:
+     * <li>All gedcoms opened when closing the application
+     * <li>every other gedcom (eg default gedcom in preferences as
+     * done in default implementation)
+     *
+     * @return
+     */
     public abstract List<FileObject> getAll();
-    
+
     /**
      * Remove all gedcoms from registry
      */
@@ -65,7 +69,7 @@ public abstract class StartupFiles {
     public void addOpenedGedcoms() {
         // Remember open gedcoms
         removeAll();
-        for (Context context: GedcomDirectory.getDefault().getContexts()){
+        for (Context context : GedcomDirectory.getDefault().getContexts()) {
             try {
                 add(GedcomDirectory.getDefault().getDataObject(context).getPrimaryFile());
             } catch (ContextNotFoundException ex) {
@@ -86,12 +90,10 @@ public abstract class StartupFiles {
         }
     }
 
-    
     public StartupFiles() {
-            pch = new PropertyChangeSupport(this);
+        pch = new PropertyChangeSupport(this);
     }
 
-    
     /**
      * Adds a listener, use WeakListener or properly remove listeners
      *
@@ -149,6 +151,9 @@ public abstract class StartupFiles {
                     PROP_STARTUP_FILE_INFO, null, null));
         }
 
+        /**
+         * add default gedcom (always or only in no file is to be opened)
+         */
         @Override
         public List<FileObject> getAll() {
             List<String> list = REGISTRY.get(KEY, new ArrayList<String>());
@@ -159,14 +164,22 @@ public abstract class StartupFiles {
                 } catch (MalformedURLException ex) {
                 }
             }
+            // ne pas ouvrir si onlyempty est positionne
+            if (result == null || result.isEmpty() || ancestris.core.Options.getInstance().getAlwaysOpenDefault()) {
+                URL defaultURL = ancestris.core.Options.getInstance().getDefaultGedcom();
+                if (defaultURL != null) {
+                    FileObject defaultGedcom = URLMapper.findFileObject(defaultURL);
+                    if (defaultGedcom!=null && !result.contains(defaultGedcom)) {
+                        result.add(defaultGedcom);
+                    }
+                }
+            }
             return result;
         }
 
         @Override
         public void removeAll() {
-            REGISTRY.put(KEY,(List<String>)null);
+            REGISTRY.put(KEY, (List<String>) null);
         }
-        
-        
     }
 }

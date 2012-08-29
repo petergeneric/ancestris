@@ -4,17 +4,18 @@
  */
 package ancestris.app;
 
+import ancestris.util.URLUtil;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.io.File;
-import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.SpinnerNumberModel;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.StatusDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 @SuppressWarnings(value={"unchecked", "rawtypes"})
@@ -30,15 +31,15 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         // TODO listen to changes in form fields and call controller.changed()
     }
 
-    private void chooseFileDir(javax.swing.JTextField jTF, boolean dirOnly, boolean arg) {
+    private void chooseFileDir(javax.swing.JTextField jTF, boolean dirOnly) {
         String str = jTF.getText();
-        fc = new JFileChooser(str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "");
+        fc = new JFileChooser(str != null ? str : "");
         if (dirOnly) {
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         }
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTF.setText(fc.getSelectedFile().getAbsolutePath() + (arg ? " %" : ""));
+            jTF.setText(fc.getSelectedFile().getAbsolutePath());
         }
     }
 
@@ -201,11 +202,11 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        chooseFileDir(jTextField3, true, false);
+        chooseFileDir(jTextField3, true);
 }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        chooseFileDir(jTextField2, false, false);
+        chooseFileDir(jTextField2, false);
 }//GEN-LAST:event_jButton2ActionPerformed
 
     private void logLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logLevelActionPerformed
@@ -269,16 +270,20 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner nbBackups;
     // End of variables declaration//GEN-END:variables
 
-    void setGedcomFile(File file) {
+    // FIXME: we probably have to improve user interface (escape char, ...)
+    // only support file:/... type urls, so convert url to absolute file path
+    void setGedcomFile(URL file) {
+        jTextField2.setText("");
         try {
-            jTextField2.setText(file.getCanonicalPath());
-        } catch (Exception ex) {
-            jTextField2.setText("");
+            if ("file".equals(file.getProtocol())) {
+                jTextField2.setText(new File(file.toURI()).getAbsolutePath());
+            }
+        } catch (URISyntaxException ex) {
         }
     }
 
-    String getGedcomFile() {
-        return jTextField2.getText();
+    private URL getGedcomFile() {
+        return URLUtil.toURL(jTextField2.getText());
     }
 
     void setReportDir(String str) {

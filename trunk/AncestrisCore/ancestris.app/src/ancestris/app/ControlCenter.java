@@ -117,47 +117,6 @@ public class ControlCenter {
             files = theFiles;
         }
 
-        //XXX: to be changed, as of 20110916: quick fix for File to URL conversion
-        private String getDefaultFile(Collection<String> files) {
-            // ne pas ouvrir si onlyempty est positionne
-            if (files != null && !files.isEmpty() && !ancestris.core.Options.getInstance().getAlwaysOpenDefault()) {
-                return null;
-            }
-
-            File defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
-            if (defaultFile == null) {
-                return null;
-            }
-            if (!defaultFile.exists()) {
-                return null;
-            }
-            String defaultFilePath = null;
-            try {
-                defaultFilePath = defaultFile.getCanonicalPath();
-            } catch (Exception ex) {
-                return null;
-            }
-            String filepath = null;
-
-            for (String file : files) {
-                try {
-                    DirectAccessTokenizer tokens = new DirectAccessTokenizer(file, ",", false);
-                    filepath = (new File(new URL(tokens.get(0)).getFile())).getCanonicalPath();
-                } catch (Exception ex) {
-                    continue;
-                }
-                if (defaultFilePath.equals(filepath)) {
-                    return null;
-                }
-            }
-            try {
-//                return (new URL("file", "", defaultFile.getAbsolutePath())).toString();
-                return (defaultFile.toURI().toURL().toString());
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-
         /** run */
         public void run() {
 
@@ -190,26 +149,6 @@ public class ControlCenter {
                     }
                 }
             }
-
-            // open default file if necessary
-            //XXX: temporarily disabled
-//            {
-//                String restore = getDefaultFile(files);
-//                if (restore != null && getOpenedGedcom(restore) == null) {
-//                    try {
-//
-//                        // check if it's a local file
-//                        File local = new File(restore);
-//
-//                        GedcomDirectory.getDefault().openGedcom(local);
-//                    } catch (Throwable t) {
-//                        App.LOG.log(Level.WARNING, "cannot restore " + restore, t);
-//                    }
-//
-//                    // next
-//                }
-//            }
-
 
             // done
             App.center.isReady(-1);

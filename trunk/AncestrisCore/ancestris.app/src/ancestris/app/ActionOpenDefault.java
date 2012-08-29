@@ -6,9 +6,13 @@ package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
 import java.io.File;
+import java.net.URL;
 import javax.swing.JMenuItem;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.StatusDisplayer;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -16,7 +20,7 @@ import org.openide.util.actions.CookieAction;
 
 public final class ActionOpenDefault extends CookieAction implements Openable {
 
-    private File fileToOpen = null;
+    private FileObject fileToOpen = null;
     
     @Override
     protected int mode() {
@@ -86,14 +90,14 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        File defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
+        URL defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
         if (defaultFile == null) {
             return "";
         }
         try {
             // check if it's a local file
-            fileToOpen = defaultFile;
-            if (!defaultFile.exists()) {
+            fileToOpen = URLMapper.findFileObject(defaultFile);
+            if (!fileToOpen.isValid()) {
                 return null;
             }
         } catch (Throwable t) {
@@ -101,9 +105,9 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
         }
 
         if (nameOnly) {
-            return defaultFile.getName();
+            return fileToOpen.getNameExt();
         }
-        return defaultFile.getAbsolutePath();
+        return FileUtil.getFileDisplayName(fileToOpen);
     }
 
     public boolean calcState() {

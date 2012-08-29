@@ -19,8 +19,6 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataLoaderPool;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
@@ -172,7 +170,9 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     // Remember context
     @Override
     public void setContext(Context context, boolean isActionPerformed) {
-        this.context = context;
+        if (this.context != null && this.context.sameGedcom(context)) {
+            this.context = context;
+        }
     }
 
     public Context getContext() {
