@@ -15,6 +15,9 @@ package ancestris.core;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -68,21 +71,23 @@ public class Options {
         appOptions.put("isSplitJurisdictions",isSplitJurisdictions);
     }
   
-  public File getDefaultGedcom(){
-          String defaultFile = appOptions.get("gedcomFile","");
-        if (defaultFile.isEmpty()) {
+  public URL getDefaultGedcom(){
+        try {
+            String defaultFile = appOptions.get("gedcomFile","");
+          return new URL(defaultFile);
+        } catch (MalformedURLException ex) {
             return null;
         }
-        return new File(defaultFile);
   }
   
-  public boolean  getAlwaysOpenDefault(){
+    public void setDefaultGedcom(URL def){
+        appOptions.put("gedcomFile",def.toString());
+    }
+
+    public boolean  getAlwaysOpenDefault(){
         return  appOptions.get("alwaysOpenDefault",false);
     }
 
-    public void setDefaultGedcom(String def){
-        appOptions.put("gedcomFile",def);
-    }
     public void setAlwaysOpenDefault(boolean alwaysOpen){
         appOptions.put("alwaysOpenDefault",alwaysOpen);
     }

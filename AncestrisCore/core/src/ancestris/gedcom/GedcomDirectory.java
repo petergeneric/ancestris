@@ -473,14 +473,17 @@ public abstract class GedcomDirectory {
                 null, title, action, "ged",
                 EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
 
-        File gedcomDir = ancestris.core.Options.getInstance().getDefaultGedcom();
-        if (gedcomDir != null) {
-            gedcomDir = gedcomDir.getParentFile();
-        }
+        //FIXME: gedcoms were  opened in same dir as default gedcom
+        // will be changed later
+//        File gedcomDir = ancestris.core.Options.getInstance().getDefaultGedcom();
+//        if (gedcomDir != null) {
+//            gedcomDir = gedcomDir.getParentFile();
+//        }
 //        if (gedcomDir == null || gedcomDir.trim().isEmpty()) {
 //            gedcomDir = "user.home";
 //        }
-        File directory = REGISTRY.get("last.dir", gedcomDir);
+//        File directory = REGISTRY.get("last.dir", gedcomDir);
+        File directory = REGISTRY.get("last.dir", new File (""));
         chooser.setCurrentDirectory(directory);
         if (defaultFilename != null) {
             chooser.setSelectedFile(new File(directory, defaultFilename));
