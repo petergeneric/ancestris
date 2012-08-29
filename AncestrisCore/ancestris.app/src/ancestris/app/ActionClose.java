@@ -27,6 +27,9 @@ public class ActionClose extends Action2 {
      * constructor
      */
     public ActionClose() {
+        //FIXME: we must set tooltip accordingly to gedcom object selected 
+        // (gobal Lookup listener?)
+        // FIXME: we must enable and disable this action depending on curent selection
         setText(NbBundle.getMessage(ActionClose.class, "CTL_ActionClose"));
         setImage(Images.imgClose);
         setEnabled(enabled);
