@@ -70,7 +70,7 @@ public class Installer extends ModuleInstall {
         
         // Update center
         Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate/org_ancestris_trancestris_application_update_center");
-        p.put("originalUrl", "http://dl.ancestris.org/trancestris/nbm/core/new.updates.xml");
+        p.put("originalUrl", "http://dl.ancestris.org/trancestris/nbm/core/updates.xml");
         try {
             p.flush();
         } catch (BackingStoreException ex) {
