@@ -7,21 +7,27 @@ package org.ancestris.trancestris.application;
 import java.awt.Dialog;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
+import org.ancestris.trancestris.application.actions.TipOfTheDayAction;
 import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
+import org.jdesktop.swingx.JXTipOfTheDay;
+import org.jdesktop.swingx.tips.TipLoader;
+import org.jdesktop.swingx.tips.TipOfTheDayModel;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -67,7 +73,7 @@ public class Installer extends ModuleInstall {
          * 29/08/2012 Update properties according our new ancestris website
          * Should be removed in next trancestris major version
          */
-        
+
         // Update center
         Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate/org_ancestris_trancestris_application_update_center");
         p.put("originalUrl", "http://dl.ancestris.org/trancestris/nbm/core/updates.xml");
@@ -76,7 +82,7 @@ public class Installer extends ModuleInstall {
         } catch (BackingStoreException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
         // bundles file
         Preferences p1 = NbPreferences.root().node("/org/ancestris/trancestris/application");
         p1.put("Url.address", "http://www.dl.ancestris.org/trancestris/bundles/Ancestris_Bundles.zip");
@@ -201,6 +207,27 @@ public class Installer extends ModuleInstall {
                         }
                     }
                 }
+
+                try {
+                    final JXTipOfTheDay jXTipOfTheDay = new JXTipOfTheDay(loadModel());
+                    jXTipOfTheDay.setCurrentTip(getStartingTipLocation());
+                    jXTipOfTheDay.showDialog(null, new JXTipOfTheDay.ShowOnStartupChoice() {
+                        @Override
+                        public boolean isShowingOnStartup() {
+                            return isStartupChoiceOption();
+                        }
+
+                        @Override
+                        public void setShowingOnStartup(boolean showOnStartup) {
+                            setStartupChoiceOption(showOnStartup);
+                            setNextStartingTipLocation(jXTipOfTheDay.getCurrentTip(), jXTipOfTheDay.getModel().getTipCount());
+                        }
+                    });
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+
+
             }
         });
     }
@@ -212,5 +239,63 @@ public class Installer extends ModuleInstall {
         String locale[] = (str + "__").split("_", 3);
 
         return new Locale(locale[0], locale[1], locale[2]);
+    }
+
+    private TipOfTheDayModel loadModel() throws Exception {
+        //Load the tips into the tip loader:
+        InputStream propertiesIn = getClass().getResourceAsStream("tips.properties");
+        Properties properties = new Properties();
+        properties.load(propertiesIn);
+        return TipLoader.load(properties);
+    }
+
+    //Return whether the tip dialog should be shown at start up:
+    private static boolean isStartupChoiceOption() {
+        Preferences pref = NbPreferences.forModule(TipOfTheDayAction.class);
+        boolean s = pref.getBoolean("StartUpPref", true);
+        return s;
+    }
+
+    //Store whether the tip dialog should be shown at start up:
+    private static void setStartupChoiceOption(boolean val) {
+        NbPreferences.forModule(TipOfTheDayAction.class).putBoolean("StartUpPref", val);
+        System.out.println("Show Tips on Startup: " + val);
+    }
+
+    //Get the tip to be shown,
+    //via the NbPreferences API:
+    private static int getStartingTipLocation() {
+        Preferences pref = NbPreferences.forModule(TipOfTheDayAction.class);
+        //Return the first tip if pref is null:
+        if (pref == null) {
+            return 0;
+            //Otherwise, return the tip found via NbPreferences API,
+            //with '0' as the default:    
+        } else {
+            int s = pref.getInt("StartTipPref", 0);
+            return s;
+        }
+    }
+
+    //Set the tip that will be shown next time,
+    //we receive the current tip and the total tips:
+    private static void setNextStartingTipLocation(int loc, int tot) {
+
+        int nextTip = 0;
+        //Back to zero if the maximum is reached:
+        if (loc + 1 == tot) {
+            nextTip = 0;
+            //Otherwise find the next tip and store it:
+        } else {
+            nextTip = loc + 1;
+        }
+
+        //Store the tip, via the NbPreferences API,
+        //so that it will be stored in the NetBeans user directory:
+        NbPreferences.forModule(TipOfTheDayAction.class).putInt("StartTipPref", nextTip);
+
+        System.out.println("Total tips: " + tot);
+        System.out.println("Current tip location: " + loc);
+        System.out.println("Future tip location: " + nextTip);
     }
 }
