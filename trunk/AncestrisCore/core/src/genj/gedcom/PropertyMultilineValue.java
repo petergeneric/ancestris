@@ -107,7 +107,7 @@ public class PropertyMultilineValue extends Property implements MultiLinePropert
        * Constructor
        */
       /*package*/ ConcContIterator(String top, String initValue) {
-        valueLineBreak = Options.getInstance().getValueLineBreak();
+        valueLineBreak = GedcomOptions.getInstance().getValueLineBreak();
         firstTag = top;
         setValue(initValue);
       }

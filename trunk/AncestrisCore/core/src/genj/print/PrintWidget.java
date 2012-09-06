@@ -23,7 +23,7 @@ import genj.option.Option;
 import genj.option.OptionListener;
 import genj.option.OptionsWidget;
 import genj.renderer.DPI;
-import genj.renderer.Options;
+import genj.renderer.RenderOptions;
 import genj.renderer.RenderPreviewHintKey;
 import genj.util.Resources;
 import genj.util.swing.Action2;
@@ -62,7 +62,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * A PrintDialog */
+ * A PrintDialog
+ */
 public class PrintWidget extends JTabbedPane {
   
   /*package*/ final static Resources RESOURCES = Resources.get(PrintWidget.class);
@@ -76,7 +77,8 @@ public class PrintWidget extends JTabbedPane {
   private JCheckBox fit, empties;
   
   /**
-   * Constructor   */
+   * Constructor
+   */
   public PrintWidget(PrintTask task) {
     
     // remember 
@@ -163,8 +165,8 @@ public class PrintWidget extends JTabbedPane {
     private double zoom = 0.2D;
     private int gap = 5; // pixels
     private DPI dpi = new DPI(
-        (int)(Options.getInstance().getDPI().horizontal() * zoom),
-        (int)(Options.getInstance().getDPI().vertical  () * zoom)
+        (int)(RenderOptions.getInstance().getDPI().horizontal() * zoom),
+        (int)(RenderOptions.getInstance().getDPI().vertical  () * zoom)
       );
     
     /**

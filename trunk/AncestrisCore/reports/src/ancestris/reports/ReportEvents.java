@@ -81,9 +81,6 @@ public class ReportEvents extends Report {
     /** year of the date limit */
     public String year = "";
 
-    /** the marriage symbol */
-    private final static String TXT_MARR_SYMBOL = genj.gedcom.Options.getInstance().getTxtMarriageSymbol();
-    
     /** time reporting variables */
     private String timestamp;
     private final static SimpleDateFormat 

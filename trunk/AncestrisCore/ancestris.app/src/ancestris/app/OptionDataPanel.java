@@ -368,8 +368,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBox3ActionPerformed
 
     void load() {
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
-        genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
+        genj.gedcom.GedcomOptions gedcomOptions = genj.gedcom.GedcomOptions.getInstance();
 
         setSubmName(gedcomPrefs.get("submName", ""));
         setSubmCity(gedcomPrefs.get("submCity", ""));
@@ -380,18 +380,18 @@ final class OptionDataPanel extends javax.swing.JPanel {
         setSubmWeb(gedcomPrefs.get("submWeb", ""));
         jCheckBox1.setSelected(gedcomOptions.isUpperCaseNames());
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
-        cbCreateSpouse.setSelected(genj.gedcom.Options.getInstance().getCreateSpouse());
-        placeFormat.setJurisdictions(genj.gedcom.Options.getInstance().getPlaceFormat());
-        placeFormat.setShowJuridcitions(genj.gedcom.Options.getInstance().getShowJuridictions());
-        placeFormat.setSortOrder(genj.gedcom.Options.getInstance().getPlaceSortOrder());
-        placeFormat.setDisplayFormat(genj.gedcom.Options.getInstance().getPlaceDisplayFormat());
+        cbCreateSpouse.setSelected(genj.gedcom.GedcomOptions.getInstance().getCreateSpouse());
+        placeFormat.setJurisdictions(genj.gedcom.GedcomOptions.getInstance().getPlaceFormat());
+        placeFormat.setShowJuridcitions(genj.gedcom.GedcomOptions.getInstance().getShowJuridictions());
+        placeFormat.setSortOrder(genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder());
+        placeFormat.setDisplayFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceDisplayFormat());
 
         //FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
         jCheckBox19.setSelected(ancestris.app.Options.isWriteBOM());
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
-        cbAddNameSubtags.setSelected(genj.gedcom.Options.getInstance().getAddNameSubtags());
+        cbAddNameSubtags.setSelected(genj.gedcom.GedcomOptions.getInstance().getAddNameSubtags());
         jtGivenTag.setText(gedcomOptions.getGivenTag());
         jCheckBox3.setSelected(!gedcomOptions.getGivenTag().isEmpty());
         jCheckBox3ActionPerformed(new java.awt.event.ActionEvent(this,0,null));
@@ -400,8 +400,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }
 
     void store() {
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
-        genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
+        genj.gedcom.GedcomOptions gedcomOptions = genj.gedcom.GedcomOptions.getInstance();
 
         gedcomPrefs.put("submName", getSubmName());
         gedcomPrefs.put("submCity", getSubmCity());
@@ -424,7 +424,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomPrefs.put("defaultEncoding", getEncoding());
         ancestris.app.Options.setWriteBOM(jCheckBox19.isSelected());
         ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
-        genj.gedcom.Options.getInstance().setAddNameSubtags(cbAddNameSubtags.isSelected());
+        genj.gedcom.GedcomOptions.getInstance().setAddNameSubtags(cbAddNameSubtags.isSelected());
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
         gedcomOptions.setGivenTag(jCheckBox3.isSelected()?jtGivenTag.getText().trim():"");
         gedcomOptions.setSpaceIsSeparator(cbSpaceIsSep.isSelected());

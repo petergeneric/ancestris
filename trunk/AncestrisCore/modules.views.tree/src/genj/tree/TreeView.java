@@ -27,7 +27,7 @@ import genj.gedcom.*;
 import genj.io.Filter;
 import genj.print.PrintAction;
 import genj.print.PrintRenderer;
-import genj.renderer.Options;
+import genj.renderer.RenderOptions;
 import genj.renderer.*;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -108,7 +108,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   public TreeView() {
 
     // remember
-    DPI dpi = Options.getInstance().getDPI();
+    DPI dpi = RenderOptions.getInstance().getDPI();
     DPMM = new Point2D.Float(
       dpi.horizontal() / 2.54F / 10,
       dpi.vertical() / 2.54F / 10

@@ -165,8 +165,8 @@ public abstract class StartupFiles {
                 }
             }
             // ne pas ouvrir si onlyempty est positionne
-            if (result == null || result.isEmpty() || ancestris.core.Options.getInstance().getAlwaysOpenDefault()) {
-                URL defaultURL = ancestris.core.Options.getInstance().getDefaultGedcom();
+            if (result == null || result.isEmpty() || ancestris.core.CoreOptions.getInstance().getAlwaysOpenDefault()) {
+                URL defaultURL = ancestris.core.CoreOptions.getInstance().getDefaultGedcom();
                 if (defaultURL != null) {
                     FileObject defaultGedcom = URLMapper.findFileObject(defaultURL);
                     if (defaultGedcom!=null && !result.contains(defaultGedcom)) {

@@ -154,7 +154,7 @@ public abstract class GedcomDirectory {
 
                 public void perform(Gedcom gedcom) throws GedcomException {
 
-                    AncestrisPreferences submPref = Registry.get(genj.gedcom.Options.class);
+                    AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
 
                     // Create submitter
                     Submitter submitter = (Submitter) gedcom.createEntity(Gedcom.SUBM);
@@ -168,10 +168,10 @@ public abstract class GedcomDirectory {
                     gedcom.createEntity("HEAD", "");
 
                     // Create place format
-                    gedcom.setPlaceFormat(genj.gedcom.Options.getInstance().getPlaceFormat());
-                    gedcom.setShowJuridictions(genj.gedcom.Options.getInstance().getShowJuridictions());
-                    gedcom.setPlaceSortOrder(genj.gedcom.Options.getInstance().getPlaceSortOrder());
-                    gedcom.setPlaceDisplayFormat(genj.gedcom.Options.getInstance().getPlaceDisplayFormat());
+                    gedcom.setPlaceFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceFormat());
+                    gedcom.setShowJuridictions(genj.gedcom.GedcomOptions.getInstance().getShowJuridictions());
+                    gedcom.setPlaceSortOrder(genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder());
+                    gedcom.setPlaceDisplayFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceDisplayFormat());
                 }
             });
         } catch (GedcomException e) {
@@ -211,7 +211,7 @@ public abstract class GedcomDirectory {
     /**
      * Opens a Gedcom FileObject.
      *
-     * Use DataObject loaders to file the proper handler et then register it in local
+     * Use DataObject loaders to find the proper handler and then register it in local
      * gedcom registry
      *
      * @param input Gedcom FileObject
@@ -491,7 +491,7 @@ public abstract class GedcomDirectory {
         if (accessory != null) {
             chooser.setAccessory(accessory);
         }
-        chooser.setFileHidingEnabled(!ancestris.core.Options.getInstance().getShowHidden());
+        chooser.setFileHidingEnabled(!ancestris.core.CoreOptions.getInstance().getShowHidden());
         if (JFileChooser.APPROVE_OPTION != chooser.showDialog()) {
             return null;
         }

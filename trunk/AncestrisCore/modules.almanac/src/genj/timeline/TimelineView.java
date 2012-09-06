@@ -28,7 +28,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.renderer.DPI;
-import genj.renderer.Options;
+import genj.renderer.RenderOptions;
 import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -158,7 +158,7 @@ public class TimelineView extends View {
   public TimelineView() {
     
     // remember
-    DPI = Options.getInstance().getDPI();
+    DPI = RenderOptions.getInstance().getDPI();
     DPC = new Point2D.Float(
       DPI.horizontal() / 2.54F,
       DPI.vertical() / 2.54F

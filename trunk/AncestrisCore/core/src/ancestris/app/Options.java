@@ -35,6 +35,7 @@ import java.util.Locale;
 public class Options {
 
     /** singleton */
+        //XXX: preference path must be defined in core options namespace
     private final static AncestrisPreferences coreOptions = Registry.get(Options.class);
 
     /**

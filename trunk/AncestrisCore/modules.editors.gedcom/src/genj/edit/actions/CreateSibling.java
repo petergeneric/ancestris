@@ -24,7 +24,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Options;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
@@ -96,7 +96,7 @@ public class CreateSibling extends CreateRelationship {
         Indi wife = (Indi)ged.createEntity(Gedcom.INDI).addDefaultProperties();
         
         husband.setName("", sibling.getLastName());
-        if (Options.getInstance().setWifeLastname)
+        if (GedcomOptions.getInstance().isSetWifeLastname())
           wife.setName("", sibling.getLastName());
         
         fam.setHusband(husband);

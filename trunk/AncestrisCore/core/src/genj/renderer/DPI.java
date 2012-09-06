@@ -57,7 +57,7 @@ public class DPI {
   public static DPI get(Graphics graphics) {
     DPI dpi = (DPI)((Graphics2D)graphics).getRenderingHint(KEY);
     if (dpi==null)
-      dpi = Options.getInstance().getDPI();
+      dpi = RenderOptions.getInstance().getDPI();
     return dpi;
   }
   

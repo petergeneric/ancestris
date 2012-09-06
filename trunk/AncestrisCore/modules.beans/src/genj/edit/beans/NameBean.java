@@ -19,7 +19,7 @@
  */
 package genj.edit.beans;
 
-import ancestris.core.Options;
+import ancestris.core.CoreOptions;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
@@ -155,13 +155,13 @@ public class NameBean extends PropertyBean {
     
     Gedcom ged = p.getGedcom();
     if (ged!=null) {
-      switch (Options.getInstance().getCorrectName()) {
+      switch (CoreOptions.getInstance().getCorrectName()) {
       // John DOE
-      case Options.NAME_ALLCAPS:
+      case CoreOptions.NAME_ALLCAPS:
         last = last.toUpperCase(ged.getLocale());
         cLast.setText(last);
       // John Doe
-      case Options.NAME_FIRSTCAP:
+      case CoreOptions.NAME_FIRSTCAP:
         if (first.length()>0) {
           first = Character.toString(first.charAt(0)).toUpperCase(ged.getLocale()) + first.substring(1);
           cFirst.setText(first);

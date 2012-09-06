@@ -20,6 +20,7 @@ import genj.util.Registry;
  */
 public class Options {
 
+        //XXX: preference path must be defined in core options namespace
     static public int getNbBackups() {
         return Registry.get(Options.class).get("backups.nb",10);
     }

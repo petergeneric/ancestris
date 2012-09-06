@@ -1276,7 +1276,7 @@ public abstract class Property implements Comparable<Property> {
             // check property against policy if applicable
             if (prop != null && policy.isPrivate(prop)) {
                 // we didn't have a mask yet or the prefix is not empty? use mask
-                value = (masked++ == 0 || prefix.trim().length() > 0) ? Options.getInstance().maskPrivate : "";
+                value = (masked++ == 0 || prefix.trim().length() > 0) ? GedcomOptions.getInstance().getMaskPrivate() : "";
             }
             // append if value is good
             if (value != null) {

@@ -287,6 +287,23 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
     return def;
   }
 
+    /**
+     * Returns Enum parameter for Key
+     *
+     * @param key key value
+     * @param def default value fo key
+     *
+     * @return
+     */
+    public <T extends Enum<T>> T get(String key, T def) {
+        try {
+            return Enum.valueOf(def.getDeclaringClass(), key);
+        } catch (Exception e) {
+            return def;
+        }
+
+    }
+
   /**
    * Returns dimension parameter by key
    */
@@ -555,6 +572,13 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
   public void put(String key, int value) {
     put(key,""+value);
   }
+
+    /**
+     * Remembers an enum value
+     */
+    public void put (String key, Enum value){
+        put(key,value.name());
+    }
 
   /**
    * Remembers a point value

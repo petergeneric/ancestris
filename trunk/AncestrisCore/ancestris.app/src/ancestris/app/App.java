@@ -101,7 +101,7 @@ public class App {
             }
         }
 
-        // XXX: this is not necessary anymore for jdk > 1.6.23
+        // FIXME: this is not necessary anymore for jdk > 1.6.23. We will remove this code after testing 
         if (false && !x11ErrorHandlerFixInstalled && !EnvironmentChecker.isMac() && !EnvironmentChecker.isWindows()) {
             x11ErrorHandlerFixInstalled = true;
             EventQueue.invokeLater(new Runnable() {

@@ -67,6 +67,15 @@ public interface AncestrisPreferences {
     int get(String key, int def);
 
     /**
+     * Returns Enum parameter for Key
+     * @param <T>
+     * @param key
+     * @param def
+     * @return 
+     */
+    <T extends Enum<T>> T get (String key, T def);
+
+    /**
      * Returns dimension parameter by key
      */
     Dimension get(String key, Dimension def);
@@ -159,6 +168,11 @@ public interface AncestrisPreferences {
      * Remembers an int value
      */
     void put(String key, int value);
+
+    /**
+     * Remembers an enum value
+     */
+    void put (String key, Enum value);
 
     /**
      * Remembers a point value
