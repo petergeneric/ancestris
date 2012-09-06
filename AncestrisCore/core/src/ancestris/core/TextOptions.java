@@ -19,53 +19,35 @@
  *
  * $Revision: 1.18 $ $Author: nmeier $ $Date: 2010-01-27 14:11:45 $
  */
-package genj.report;
+package ancestris.core;
 
 import genj.gedcom.Gedcom;
-import genj.option.Option;
-import genj.option.OptionProvider;
-import genj.option.PropertyOption;
+import genj.util.AncestrisPreferences;
+import genj.util.Registry;
 
-import java.util.List;
 
 /**
- * Options for report package
+ * Options for report package and various text output
  */
-public class Options extends OptionProvider {
+public class TextOptions {
 
     /** 'singleton' instance */
-    private static Options instance = new Options();
-    /** Positions after decimal point */
-    private int positions = 2;
-    /** indent per level in reports */
-    private int indentPerLevel = 5;
-    /** birth symbol in reports */
-    private String birthSymbol = "*";
-    /** baptism symbol in reports */
-    private String baptismSymbol = "~";
-    /** engagement symbol in reports */
-    private String engagingSymbol = "o";
-    /** marriage symbol in reports */
-    private String marriageSymbol = "oo";
-    /** divorce symbol in reports */
-    private String divorceSymbol = "o|o";
-    /** death symbol in reports */
-    private String deathSymbol = "+";
-    /** burial symbol in reports */
-    private String burialSymbol = "[]";
-    /** occupation symbol in reports */
-    private String occuSymbol = "=";
-    /** residence symbol in reports */
-    private String resiSymbol = "^";
-    /** child of symbol in reports */
-    private String childOfSymbol = "/";
-    /** tag marking private */
-    public String privateTag = "_PRIV";
-    /** whether information pertaining to deceased people is public */
-    public boolean deceasedIsPublic = true;
-    /** number of years an event is private */
-    public int yearsEventsArePrivate = 0;
+    private static AncestrisPreferences textOptions;
 
+    private TextOptions() {
+        //XXX: preference path must be defined in core options namespace
+        textOptions = Registry.get(TextOptions.class);
+    }
+
+    public static TextOptions getInstance() {
+        return OptionsHolder.INSTANCE;
+    }
+
+    private static class OptionsHolder {
+
+        private static final TextOptions INSTANCE = new TextOptions();
+    }
+    
     private String trim(String symbol, String fallback) {
         if (symbol == null) {
             return fallback;
@@ -82,99 +64,99 @@ public class Options extends OptionProvider {
     }
 
     public int getIndentPerLevel() {
-        return indentPerLevel;
+        return textOptions.get("indentPerLevel",2);
     }
 
     public void setIndentPerLevel(int set) {
-        indentPerLevel = Math.max(2, set);
+        textOptions.put("indentPerLevel", Math.max(2, set));
     }
 
     public int getPositions() {
-        return positions;
+        return textOptions.get("positions",5);
     }
 
     public void setPositions(int set) {
-        positions = Math.max(0, set);
+        textOptions.put("positions", Math.max(0, set));
     }
 
     public String getBirthSymbol() {
-        return birthSymbol;
+        return textOptions.get("birthSymbol","*");
     }
 
     public void setBirthSymbol(String set) {
-        birthSymbol = trim(set, "*");
+        textOptions.put("birthSymbol", trim(set, "*"));
     }
 
     public String getBaptismSymbol() {
-        return baptismSymbol;
+        return textOptions.get("baptismSymbol","~");
     }
 
     public void setBaptismSymbol(String set) {
-        baptismSymbol = trim(set, "~");
+        textOptions.put("baptismSymbol", trim(set, "~"));
     }
 
     public String getEngagingSymbol() {
-        return engagingSymbol;
+        return textOptions.get("engagingSymbol","o");
     }
 
     public void setEngagingSymbol(String set) {
-        engagingSymbol = trim(set, "o");
+        textOptions.put("engagingSymbol", trim(set, "o"));
     }
 
     public String getMarriageSymbol() {
-        return marriageSymbol;
+        return textOptions.get("marriageSymbol","oo");
     }
 
     public void setMarriageSymbol(String set) {
-        marriageSymbol = trim(set, "oo");
+        textOptions.put("marriageSymbol", trim(set, "oo"));
     }
 
     public String getDivorceSymbol() {
-        return divorceSymbol;
+        return textOptions.get("divorceSymbol","o|o");
     }
 
     public void setDivorceSymbol(String set) {
-        divorceSymbol = trim(set, "o|o");
+        textOptions.put("divorceSymbol", trim(set, "o|o"));
     }
 
     public String getDeathSymbol() {
-        return deathSymbol;
+        return textOptions.get("deathSymbol","+");
     }
 
     public void setDeathSymbol(String set) {
-        deathSymbol = trim(set, "+");
+        textOptions.put("deathSymbol", trim(set, "+"));
     }
 
     public String getBurialSymbol() {
-        return burialSymbol;
+        return textOptions.get("burialSymbol","[]");
     }
 
     public void setBurialSymbol(String set) {
-        burialSymbol = trim(set, "[]");
+        textOptions.put("burialSymbol", trim(set, "[]"));
     }
 
     public String getOccuSymbol() {
-        return occuSymbol;
+        return textOptions.get("occuSymbol","=");
     }
 
     public void setOccuSymbol(String set) {
-        occuSymbol = trim(set, "=");
+        textOptions.put("occuSymbol", trim(set, "="));
     }
 
     public String getResiSymbol() {
-        return resiSymbol;
+        return textOptions.get("resiSymbol","^");
     }
 
     public void setResiSymbol(String set) {
-        resiSymbol = trim(set, "^");
+        textOptions.put("resiSymbol", trim(set, "^"));
     }
 
     public String getChildOfSymbol() {
-        return childOfSymbol;
+        return textOptions.get("childOfSymbol","/");
     }
 
     public void setChildOfSymbol(String set) {
-        childOfSymbol = trim(set, "/");
+        textOptions.put("childOfSymbol", trim(set, "/"));
     }
 
     public String getSymbol(String tag) {
@@ -211,28 +193,4 @@ public class Options extends OptionProvider {
 
         return Gedcom.getName(tag);
     }
-
-    /**
-     * callback - provide options during system init
-     */
-    public List<? extends Option> getOptions() {
-        // load report async
-        new Thread(new Runnable() {
-
-            public void run() {
-                ReportLoader.getInstance();
-            }
-        }).start();
-
-        // introspect for options
-        return PropertyOption.introspect(getInstance());
-    }
-
-    /**
-     * accessor - singleton instance
-     */
-    public static Options getInstance() {
-        return instance;
-    }
-} //Options
-
+} 

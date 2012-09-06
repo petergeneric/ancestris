@@ -614,7 +614,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         //XXX: quick fix hard coded indexes, must be reworked after place editor API redesign
         Boolean[] show = geoObj.getPlace().getGedcom().getShowJuridictions();
         if (show == null) {
-            show = genj.gedcom.Options.getInstance().getShowJuridictions();
+            show = genj.gedcom.GedcomOptions.getInstance().getShowJuridictions();
         }
         int MAX = show.length;
         jLabel25.setEnabled(MAX > 0 && show[0] && !jCheckBox1.isSelected());
@@ -639,7 +639,7 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         PropertyPlace tmpPlace = geoObj.getPlace();
         Boolean[] show = tmpPlace.getGedcom().getShowJuridictions();
         if (show == null) {
-            show = genj.gedcom.Options.getInstance().getShowJuridictions();
+            show = genj.gedcom.GedcomOptions.getInstance().getShowJuridictions();
         }
         int MAX = show.length;
         jTextField6.setText(MAX > 0 && show[0] ? tmpPlace.getJurisdiction(0) : "");
@@ -781,9 +781,9 @@ public class GeoPlaceEditor extends javax.swing.JPanel implements PreferenceChan
         // build the ret string as the gedcom PLAC string in the getPlaceSortOrder sequence
         String placeOrder = gedcom.getPlaceSortOrder();
         if (placeOrder == null) {
-            placeOrder = genj.gedcom.Options.getInstance().getPlaceSortOrder();
+            placeOrder = genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder();
             if (placeOrder == null)
-                // TODO workraround for bug from Jean-Marie BARBAULT
+                // TODO: workraround for bug from Jean-Marie BARBAULT
                 placeOrder = "0,1,2,3,4,5,6";
         }
         String order[] = placeOrder.split(",");

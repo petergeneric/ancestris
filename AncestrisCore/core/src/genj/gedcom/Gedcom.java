@@ -57,6 +57,7 @@ public class Gedcom implements Comparable {
 
   public final static String PASSWORD_UNKNOWN = "unknown";
   
+  //XXX: replace this by enum?
   public static final String
    // standard Gedcom encodings 
     UNICODE  = "UNICODE", 
@@ -184,7 +185,7 @@ public class Gedcom implements Comparable {
   private Map<String,Integer> propertyTag2valueCount = new HashMap<String,Integer>();
 
   /** encoding */
-  private String encoding = ENCODINGS[Math.min(ENCODINGS.length-1, Options.getInstance().defaultEncoding)];
+  private String encoding = ENCODINGS[Math.min(ENCODINGS.length-1, GedcomOptions.getInstance().getDefaultEncoding())];
     
   /** language */
   private String language = null;
@@ -913,7 +914,7 @@ public class Gedcom implements Comparable {
     // 0..(n-1) though (Philip reported a file like that). So just for that case 
     // let's start at n and let the loop for checking existing IDs move forward
     // once if necessary
-    int id = Options.getInstance().isFillGapsInIDs ? 1 : (id2entity.isEmpty() ? 1 : id2entity.size());
+    int id = GedcomOptions.getInstance().isFillGapsInIDs() ? 1 : (id2entity.isEmpty() ? 1 : id2entity.size());
     
     StringBuilder buf = new StringBuilder(maxIDLength);
     
@@ -941,7 +942,7 @@ public class Gedcom implements Comparable {
     // in tableview there's not really a need to add leading zeros for readability.
     buf.setLength(0);
     buf.append(id);
-    while(buf.length()<Options.getInstance().getEntityIdLength())
+    while(buf.length()<GedcomOptions.getInstance().getEntityIdLength())
         buf.insert(0, '0');
 
     return getEntityPrefix(entity) + buf;
@@ -1038,7 +1039,7 @@ public class Gedcom implements Comparable {
       if (!lock.undos.isEmpty()) {
         undoHistory.add(lock.undos);
         
-        while (undoHistory.size()>Options.getInstance().getNumberOfUndos()) {
+        while (undoHistory.size()>GedcomOptions.getInstance().getNumberOfUndos()) {
           undoHistory.remove(0);
           isDirty = true;
         }
@@ -1323,12 +1324,12 @@ public class Gedcom implements Comparable {
 
   /** show place fomat getter and setter (thru registry) */
   public void setShowJuridictions(Boolean[] showFormat){
-      getRegistry().put(Options.SHOW_PLACE_FORMAT,showFormat);
+      getRegistry().put(GedcomOptions.SHOW_PLACE_FORMAT,showFormat);
   }
 
   /** if no show-place-juridiction in gedcom registry then returns null that means show everything */
   public Boolean[] getShowJuridictions(){
-      return getRegistry().get(Options.SHOW_PLACE_FORMAT, (Boolean[])null);
+      return getRegistry().get(GedcomOptions.SHOW_PLACE_FORMAT, (Boolean[])null);
   }
 
   /**
@@ -1336,14 +1337,14 @@ public class Gedcom implements Comparable {
    * @param placeSortOrder if format 1,0,2 for example which means 2nd jurisdiction, then 1rst and 3rd
    */
     public void setPlaceSortOrder(String placeSortOrder) {
-        getRegistry().put(Options.PLACE_SORT_ORDER, placeSortOrder);
+        getRegistry().put(GedcomOptions.PLACE_SORT_ORDER, placeSortOrder);
     }
     /**
      * get Place sort order. Null means default, @see PropertyPlace.getValueStartingWithCity()
      * @return
      */
     public String getPlaceSortOrder() {
-        return getRegistry().get(Options.PLACE_SORT_ORDER, (String)null);
+        return getRegistry().get(GedcomOptions.PLACE_SORT_ORDER, (String)null);
     }
 
     /**
@@ -1351,7 +1352,7 @@ public class Gedcom implements Comparable {
      * @param placeDisplayFormat
      */
     public void setPlaceDisplayFormat(String placeDisplayFormat) {
-        getRegistry().put(Options.PLACE_DISPLAY_FORMAT, placeDisplayFormat);
+        getRegistry().put(GedcomOptions.PLACE_DISPLAY_FORMAT, placeDisplayFormat);
     }
 
     /**
@@ -1359,7 +1360,7 @@ public class Gedcom implements Comparable {
      * @return
      */
     public String getPlaceDisplayFormat() {
-        return getRegistry().get(Options.PLACE_DISPLAY_FORMAT, (String)null);
+        return getRegistry().get(GedcomOptions.PLACE_DISPLAY_FORMAT, (String)null);
     }
 
   /**

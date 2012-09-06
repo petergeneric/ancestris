@@ -5,6 +5,7 @@
 package ancestris.app;
 
 import ancestris.api.lnf.LookAndFeelProvider;
+import ancestris.core.CoreOptions;
 import ancestris.startup.settings.StartupOptions;
 import ancestris.util.Lifecycle;
 import genj.util.AncestrisPreferences;
@@ -256,8 +257,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
     void load() {
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
-//XXX:        AncestrisPreferences editPrefs = Registry.get(genj.edit.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
 
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
@@ -265,9 +265,9 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.Options.isRestoreViews());
-//XXX:        setAutoCommit(editPrefs.get("isAutoCommit", ""));
+//XXX: to be removed (see optiondatapanel)        setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
-//XXX:        cbSplitJuridictions.setSelected(Boolean.valueOf(editPrefs.get("isSplitJurisdictions", "")));
+        cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
 //XXX:        setOpenEditor(editPrefs.get("isOpenEditor", ""));
 //XXX:        cbTreeFollowSelection.setSelected(TreeView.isFollowSelection());
 //XXX:        cbTableFollowEntity.setSelected(TableView.getFollowEntity());
@@ -276,8 +276,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     void store() {
         boolean needRestart = false;
 
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.Options.class);
-//XXX:        AncestrisPreferences editPrefs = Registry.get(genj.edit.Options.class);
+        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
 
         StartupOptions stopts = new StartupOptions();
 
@@ -293,8 +292,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 //XXX:        editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
 
-//XXX:        genj.edit.Options.getInstance().isSplitJurisdictions = cbSplitJuridictions.isSelected();
-//XXX:        editPrefs.put("isSplitJurisdictions", String.valueOf(cbSplitJuridictions.isSelected()));
+        CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
 
 //XXX:        editPrefs.put("isOpenEditor", getOpenEditor());
 //XXX:        TreeView.setFollowSelection(cbTreeFollowSelection.isSelected());

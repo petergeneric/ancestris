@@ -20,7 +20,8 @@
 package genj.gedcom.time;
 
 import genj.gedcom.GedcomException;
-import genj.gedcom.Options;
+import genj.gedcom.GedcomOptions;
+import genj.gedcom.GedcomOptions.GedcomDateFormat;
 import genj.util.DirectAccessTokenizer;
 import genj.util.Resources;
 import genj.util.WordBuffer;
@@ -33,11 +34,6 @@ import java.text.SimpleDateFormat;
  */
 public class PointInTime implements Comparable<PointInTime> {
   
-  public final static int
-    FORMAT_GEDCOM = 0,
-    FORMAT_SHORT = 1,
-    FORMAT_LONG = 2,
-    FORMAT_NUMERIC = 3;
 
   /** resources */
   /*package*/ final static Resources resources = Resources.get(PointInTime.class);
@@ -481,7 +477,7 @@ public class PointInTime implements Comparable<PointInTime> {
   public WordBuffer getValue(WordBuffer buffer) {
     if (calendar!=GREGORIAN)
       buffer.append(calendar.escape);
-    toString(buffer, FORMAT_GEDCOM);
+    toString(buffer, GedcomDateFormat.GEDCOM);
     return buffer;
   }
     
@@ -496,7 +492,7 @@ public class PointInTime implements Comparable<PointInTime> {
    * String representation
    */
   public WordBuffer toString(WordBuffer buffer) {
-    return toString(buffer, Options.getInstance().dateFormat);
+    return toString(buffer, GedcomOptions.getInstance().getDateFormat());
   }
   
   /** our numeric format */
@@ -527,7 +523,7 @@ public class PointInTime implements Comparable<PointInTime> {
   /**
    * String representation
    */
-  public WordBuffer toString(WordBuffer buffer, int format) {
+  public WordBuffer toString(WordBuffer buffer, GedcomDateFormat format) {
     
     int yearAdjusted = year;
     boolean bc = false;
@@ -538,7 +534,7 @@ public class PointInTime implements Comparable<PointInTime> {
     }
     
     // numeric && gregorian && complete
-    if (format==FORMAT_NUMERIC) {
+    if (format==GedcomDateFormat.NUMERIC) {
       if (calendar==GREGORIAN&&isComplete()) {
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.set( yearAdjusted, month, day+1);
@@ -552,13 +548,13 @@ public class PointInTime implements Comparable<PointInTime> {
       }
       
       // fallback to short
-      format = FORMAT_SHORT;
+      format = GedcomDateFormat.SHORT;
     }
     
     // has to be valid
     if (!isValid()) {
       // we can generate a ? for rendering something meaningful, but not into a gedcom value
-      if (format!=FORMAT_GEDCOM)
+      if (format!=GedcomDateFormat.GEDCOM)
         buffer.append("?");
       return buffer;
     }
@@ -569,12 +565,12 @@ public class PointInTime implements Comparable<PointInTime> {
         if (day!=UNKNOWN) {
           buffer.append(day+1);
         }
-        buffer.append(format==FORMAT_GEDCOM ? calendar.getMonth(month) : calendar.getDisplayMonth(month, format==FORMAT_SHORT));
+        buffer.append(format==GedcomDateFormat.GEDCOM ? calendar.getMonth(month) : calendar.getDisplayMonth(month, format==GedcomDateFormat.SHORT));
       }
-      buffer.append(format==FORMAT_GEDCOM ? calendar.getYear(yearAdjusted) : calendar.getDisplayYear(yearAdjusted));
+      buffer.append(format==GedcomDateFormat.GEDCOM ? calendar.getYear(yearAdjusted) : calendar.getDisplayYear(yearAdjusted));
       
       // add calendar indicator for julian
-      if (format!=FORMAT_GEDCOM&&calendar==JULIAN)
+      if (format!=GedcomDateFormat.GEDCOM&&calendar==JULIAN)
         buffer.append("(j)");
       
       // add bc for gregorian

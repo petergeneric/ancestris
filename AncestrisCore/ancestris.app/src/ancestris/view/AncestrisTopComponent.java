@@ -448,7 +448,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     }
 
-    //FIXME: revoir la synchro avec le CC
+    //XXX: revoir la synchro avec le CC
     public void waitStartup(String name) {
         final String gedName = name;
         new Thread(new Runnable() {

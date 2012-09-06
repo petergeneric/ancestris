@@ -37,12 +37,13 @@ import javax.swing.JComponent;
 /**
  * Blueprint/Renderer Options
  */
-public class Options extends OptionProvider {
+public class RenderOptions extends OptionProvider {
 
-  private final static Resources RESOURCES = Resources.get(Options.class);
+        //XXX: preference path must be defined in core options namespace
+  private final static Resources RESOURCES = Resources.get(RenderOptions.class);
 
   /** singleton */
-  private final static Options instance = new Options();
+  private final static RenderOptions instance = new RenderOptions();
 
   /** the default font */
   private Font defaultFont = new Font("SansSerif", 0, 11);
@@ -56,7 +57,7 @@ public class Options extends OptionProvider {
   /**
    * singleton access
    */
-  public static Options getInstance() {
+  public static RenderOptions getInstance() {
     return instance;
   }
 
@@ -132,4 +133,4 @@ public class Options extends OptionProvider {
 
   } //ScreenResolutionOption
 
-} //Options
+} 

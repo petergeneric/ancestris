@@ -360,7 +360,7 @@ public class Fam extends Entity {
     Indi husband = getHusband();
     if (husband!=null) {
       result.append(husband.toString(showIds));
-      result.append(Options.getInstance().getTxtMarriageSymbol());
+      result.append(GedcomOptions.getInstance().getTxtMarriageSymbol());
     }
     
     Indi wife = getWife();

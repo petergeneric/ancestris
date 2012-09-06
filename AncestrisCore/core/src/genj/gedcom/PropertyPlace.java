@@ -33,7 +33,7 @@ import java.util.StringTokenizer;
  */
 public class PropertyPlace extends PropertyChoiceValue {
 
-  private final static boolean USE_SPACES = Options.getInstance().isUseSpacedPlaces;
+  private final static boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();;
 
   public final static ImageIcon
     IMAGE = Grammar.V55.getMeta(new TagPath("INDI:BIRT:PLAC")).getImage();
@@ -294,7 +294,7 @@ public class PropertyPlace extends PropertyChoiceValue {
       return -1;
 
     // look for a city key in the hierarchy
-    Set<String> cityKeys = Options.getInstance().placeHierarchyCityKeys;
+    Set<String> cityKeys = GedcomOptions.getInstance().getPlaceHierarchyCityKeys();
     String[] format = getFormat();
     for (int i=0; i<format.length;i++) {
       if (cityKeys.contains(format[i].toLowerCase()))

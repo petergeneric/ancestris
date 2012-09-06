@@ -126,11 +126,11 @@ public class ControlCenter {
                     try {
                         //XXX: to be removed: getOpenGedcom must be replace by some GedcomDirectory.isOpened()
                         String uriStr = file.getURL().toString();
-                        if (getOpenedGedcom(uriStr) != null) {
+                        if (getOpenedContext(uriStr) != null) {
                             break;
                         }
                         GedcomDirectory.getDefault().openGedcom(file);
-                        // XXX: should we save and restore save passwords, and how?
+                        // FIXME: should we save and restore passwords, and how?
     //                    try {
     //                        DirectAccessTokenizer tokens = new DirectAccessTokenizer(uriStr, ",", false);
     //                        String restore = tokens.get(0);
@@ -156,14 +156,9 @@ public class ControlCenter {
     } //LastOpenLoader
 
     /**
-     * @deprecated use getOpenedContext()
+     * @deprecated will use GedcomDirectory API
      */
     @Deprecated
-    private Gedcom getOpenedGedcom(String gedName) {
-        Context c = getOpenedContext(gedName);
-        return c == null?null:c.getGedcom();
-    }
-
     public Context getOpenedContext(String gedName) {
 
         if (gedName == null) {

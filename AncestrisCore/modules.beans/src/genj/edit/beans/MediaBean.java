@@ -134,7 +134,7 @@ public class MediaBean extends PropertyBean implements ContextProvider {
     
     // add new OBJEs for props that need them
     Gedcom gedcom = property.getGedcom();
-    boolean inline = Options.getInstance().isUseInline || !property.getGedcom().getGrammar().getMeta(new TagPath("OBJE")).allows("FILE");
+    boolean inline = GedcomOptions.getInstance().isUseInline() || !property.getGedcom().getGrammar().getMeta(new TagPath("OBJE")).allows("FILE");
     for (FileInput source : propsNeedingOBJEs.keySet()) {
       Media media = null;
       for (Property prop : propsNeedingOBJEs.get(source))  {

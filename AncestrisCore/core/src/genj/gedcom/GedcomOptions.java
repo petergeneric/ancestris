@@ -19,35 +19,57 @@
  */
 package genj.gedcom;
 
-import genj.option.Option;
-import genj.option.OptionProvider;
-import genj.option.PropertyOption;
+import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import genj.util.Resources;
-
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
- * Application options
+ * Set of option for general gedcom file preferences
  */
-public class Options extends OptionProvider {
+public class GedcomOptions {
   
-  private final static Resources RESOURCES = Resources.get(Options.class);
+  private final static Resources RESOURCES = Resources.get(GedcomOptions.class);
   
   /** singleton */
-  private final static Options instance = new Options();
+    private static AncestrisPreferences gedcomOptions;
+
+    private GedcomOptions() {
+        //XXX: preference path must be defined in core options namespace
+        gedcomOptions = Registry.get(GedcomOptions.class);
+    }
+
+    public static GedcomOptions getInstance() {
+        return OptionsHolder.INSTANCE;
+    }
+
+    private static class OptionsHolder {
+
+        private static final GedcomOptions INSTANCE = new GedcomOptions();
+    }
   
+ 
   /** option - whether to use spaces in separating places */
-  public boolean isUseSpacedPlaces = true;
+    public boolean isUseSpacedPlaces() {
+        return gedcomOptions.get("isUseSpacedPlaces",true);
+    }
+
+    public void setUseSpacedPlaces(boolean isUseSpacedPlaces) {
+        gedcomOptions.put("isUseSpacedPlaces", isUseSpacedPlaces);
+    }
   
   /** option - whether id-gaps should be filled */
-  public boolean isFillGapsInIDs = false;
+    public boolean isFillGapsInIDs() {
+        return gedcomOptions.get("isFillGapsInIDs",false);
+    }
+
+    public void setFillGapsInIDs(boolean isFillGapsInIDs) {
+        gedcomOptions.put("isFillGapsInIDs", isFillGapsInIDs);
+    }
   
   /** option - whether to convert last names to uppercase */
-  //public boolean isUpperCaseNames = false;
     private static final String UPPERCASE_NAME   = "gedcom.isUpperCaseNames";         // NOI18N
     public void setUpperCaseNames(boolean value) {
         getPreferences().put(UPPERCASE_NAME, value);
@@ -58,141 +80,143 @@ public class Options extends OptionProvider {
 
   
   /** option - whether to set wife's last name when person is created */
-  public boolean setWifeLastname = true;
+    public boolean isSetWifeLastname() {
+        return gedcomOptions.get("setWifeLastname",true);
+    }
+
+    public void setSetWifeLastname(boolean setWifeLastname) {
+        gedcomOptions.put("setWifeLastname", setWifeLastname);
+    }
   
   /** option - whether to add GIVN|SURN information on name changes */
-  public boolean isAddGivenSurname = false;
+    public boolean isAddGivenSurname() {
+        return gedcomOptions.get("isAddGivenSurname",false);
+    }
+
+    public void setAddGivenSurname(boolean isAddGivenSurname) {
+        gedcomOptions.put("isAddGivenSurname", isAddGivenSurname);
+    }
   
   /** option - whether to main AGE information for events */
-  public boolean isAddAge = false;
+    public boolean isAddAge() {
+        return gedcomOptions.get("isAddAge",false);
+    }
+
+    public void setAddAge(boolean isAddAge) {
+        gedcomOptions.put("isAddAge", isAddAge);
+    }
   
   /** option - whether to prefer inline over records for notes and medias */
-  public boolean isUseInline = false;
+    public boolean isUseInline() {
+        return gedcomOptions.get("isUseInline", false);
+    }
+
+    public void setUseInline(boolean isUseInline) {
+        gedcomOptions.put("isUseInline", isUseInline);
+    }
   
   /** option - whether to use "last,first" or "first last" */
-  public int nameFormat = 1;
-  public final static String[] nameFormats = {
+    public NameFormat getNameFormat(){
+        return gedcomOptions.get("nameFormat",NameFormat.LAST);
+    }
+  
+    public void setNameFormat(NameFormat format){
+        gedcomOptions.put("nameFormat",format);
+    }
+
+    //TODO: same as dateformat
+  public enum NameFormat{FIRST, LAST};
+    public final static String[] nameFormats = {
     RESOURCES.getString("option.nameFormat.first"),
     RESOURCES.getString("option.nameFormat.last")
 };
 
+  /** option - place hierarchy keys for city NOT EDITABLE ATM */
+  Set<String> getPlaceHierarchyCityKeys(){
+      return new HashSet<String>(Arrays.asList(new String[]{ "city", "commune", "ville", "stadt"}));
+  }
+
+  /** option - private information mask */
+    public String getMaskPrivate(){
+        return gedcomOptions.get("maskPrivate","...");
+    }
+    public void setMaskPrivate(String mask){
+        gedcomOptions.put("maskPrivate", mask);
+    }
+    
+  /** option - how to display dates */
+  public GedcomDateFormat getDateFormat(){
+      return gedcomOptions.get("dateFormat",GedcomDateFormat.SHORT);
+  }
+  public void setDateFormat(GedcomDateFormat format){
+      gedcomOptions.put("dateFormat",format);
+  }
+
+  //XXX: move to pointintime?
+public enum GedcomDateFormat{
+      GEDCOM("option.dateFormat.gedcom"),
+      SHORT("option.dateFormat.short"),
+      LONG("option.dateFormat.long"),
+      NUMERIC("option.dateFormat.numeric");
+      private final String description;
+      private GedcomDateFormat(String desc){
+          description = desc;
+      }
+      public String getDescription(){
+          return RESOURCES.getString(description);
+      }
+}
+
   /** option - maximum image files size to be loaded */  
-  private int maxImageFileSizeKB = 128;
+  public void setMaxImageFileSizeKB(int max) {
+    gedcomOptions.put("maxImageFileSizeKB",Math.max(4,max));
+  }
+  
+  public int getMaxImageFileSizeKB() {
+    return gedcomOptions.get("maxImageFileSizeKB",128);
+  }
+  
   
   /** option - where lines of multi line values should be broken */
-  private int valueLineBreak = 255;
-  
-  /** option - text symbol for marriage */
-  protected String txtMarriageSymbol = "+";
-
-  /** option - number of undos */
-  protected int numberOfUndos = 10;
-  
-  /** option - place hierarchy keys for city NOT EDITABLE ATM */
-  protected Set<String> placeHierarchyCityKeys = new HashSet<String>(Arrays.asList(new String[]{ "city", "commune", "ville", "stadt"}));
-  
-  /** option - private information mask */
-  public String maskPrivate = "...";
-    
-  /** option - default encoding is the last one in gedcom's list available */
-  protected int defaultEncoding = Gedcom.ENCODINGS.length-1;
-  
-  /** option - how to display dates */
-  public int dateFormat = 1;
-  
-  public final static String[] dateFormats = {
-      RESOURCES.getString("option.dateFormat.gedcom"),
-      RESOURCES.getString("option.dateFormat.short"),
-      RESOURCES.getString("option.dateFormat.long"),
-      RESOURCES.getString("option.dateFormat.numeric")
-  };
-
-  /**
-   * Singleton access
-   */
-  public static Options getInstance() {
-    return instance;
-  }
-
-  /**
-   * accessor - maxImageFileSizeKB
-   */
-  public void setMaxImageFileSizeKB(int max) {
-    maxImageFileSizeKB = Math.max(4,max);
-  }
-  
-  /**
-   * accessor - maxImageFileSizeKB
-   */
-  public int getMaxImageFileSizeKB() {
-    return maxImageFileSizeKB;
-  }
-  
-  /**
-   * accessor - valueLineBreak
-   */
   public int getValueLineBreak() {
-    return (valueLineBreak>246)?246:valueLineBreak;
+      int valueLineBreak = gedcomOptions.get("valueLineBreak",246);
+    return (valueLineBreak>MAX_LINE_BREAK)?MAX_LINE_BREAK:valueLineBreak;
   }
 
-  /**
-   * accessor - valueLineBreak
-   */
   public void setValueLineBreak(int set) {
-    valueLineBreak = Math.max(40,set);
+    gedcomOptions.put("valueLineBreak",Math.max(40,Math.min(set, MAX_LINE_BREAK)));
   }
+  private static final int MAX_LINE_BREAK = 246;
 
-  /**
-   * accessor - text marriage symbol
-   */
+  /** option - text symbol for marriage */
   public String getTxtMarriageSymbol() {
-    return txtMarriageSymbol;
+    return gedcomOptions.get("txtMarriageSymbol","+");
   }
-
-  /**
-   * accessor - text marriage symbol
-   */
   public void setTxtMarriageSymbol(String set) {
+      String txtMarriageSymbol;
     if (set!=null&&set.trim().length()>0)
       txtMarriageSymbol = ' '+set.trim()+' ';
     else
       txtMarriageSymbol = " + ";
+    gedcomOptions.put("txtMarriageSymbol",txtMarriageSymbol);
   }
 
-  /**
-   * accessor - number of undos
-   */
+    /** option - number of undos */
   public int getNumberOfUndos() {
-    return numberOfUndos;
+      return gedcomOptions.get("numberOfUndos",10);
   }
-
-  /**
-   * accessor - number of undos
-   */
   public void setNumberOfUndos(int i) {
-    numberOfUndos = Math.max(10,i);
+    gedcomOptions.put("numberOfUndos",Math.max(10,i));
   }
 
-  /** 
-   * Provider callback 
-   */
-  public List<? extends Option> getOptions() {
-    return PropertyOption.introspect(instance);
-  }
-
-  /**
-   * accessor - default encoding
-   */
+  /** option - default encoding is the last one in gedcom's list available */
+  //XXX: don't rely on ENCODINGS implementation (use enums)
   public int getDefaultEncoding() {
-    return defaultEncoding;
+      return gedcomOptions.get("defaultEncoding", Gedcom.ENCODINGS.length-1);
   }
-
-  /**
-   * accessor - default encoding
-   */
   public void setDefaultEncoding(int setEncoding) {
     if (setEncoding>=0&&setEncoding<Gedcom.ENCODINGS.length)
-      defaultEncoding = setEncoding;
+      gedcomOptions.put("defaultEncoding", setEncoding);
   }
   
   public static String[] getDefaultEncodings() {
@@ -202,8 +226,8 @@ public class Options extends OptionProvider {
   /**
    * Ancestris way
    */
-    private Registry getPreferences() {
-        return Registry.get(genj.gedcom.Options.class);
+    private AncestrisPreferences getPreferences() {
+        return gedcomOptions;
     }
 
     private static final String ADD_NAME_SUBTAGS   = "gedcom.addNameSubtags";         // NOI18N
@@ -225,7 +249,7 @@ public class Options extends OptionProvider {
         return getPreferences().get(GIVEN_TAG, "NICK");
     }
 
-//XXX:    private static final String NAME_SPECIAL   = "gedcom.specialCharInName";         // NOI18N
+//TODO:    private static final String NAME_SPECIAL   = "gedcom.specialCharInName";         // NOI18N
 //    /**
 //     * Can NAME tag have special chars. For instance comma separators or bracket markers.
 //     * <ul><li/>If so, NAME tag can be fully parsed to get every NAME structure parts in most cases.
@@ -331,4 +355,4 @@ public class Options extends OptionProvider {
         }
         return result;
     }
-} //Options
+} 

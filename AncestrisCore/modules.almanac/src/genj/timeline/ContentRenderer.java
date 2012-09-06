@@ -21,7 +21,7 @@ package genj.timeline;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyDate;
-import genj.renderer.Options;
+import genj.renderer.RenderOptions;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.UnitGraphics;
 
@@ -209,7 +209,7 @@ public class ContentRenderer {
     }
 
     // draw its text 
-    g.setFont(Options.getInstance().getDefaultFont());
+    g.setFont(RenderOptions.getInstance().getDefaultFont());
     g.setColor(em ? cSelected : cText);
     String txt = event.content;
     g.draw(txt, event.from, level+1, 0, 1, dx, 0);

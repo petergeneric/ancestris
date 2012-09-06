@@ -15,7 +15,7 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
 import genj.renderer.MediaRenderer;
-import genj.report.Options;
+import ancestris.core.TextOptions;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -415,7 +415,7 @@ public class GraphicsTreeElements implements TreeElements {
 
         // Date and place of birth
         if (birthDate != null || birthPlace != null) {
-            centerString(graphics, Options.getInstance().getBirthSymbol(), x + 7, currentY);
+            centerString(graphics, TextOptions.getInstance().getBirthSymbol(), x + 7, currentY);
             if (birthDate != null) {
                 graphics.drawString(birthDate.getDisplayValue(), x + 13, currentY);
                 currentY += LINE_HEIGHT;
@@ -428,7 +428,7 @@ public class GraphicsTreeElements implements TreeElements {
 
         // Date and place of death
         if (i.getDeathDate() != null || i.getProperty(PATH_INDIDEATPLAC) != null) {
-            centerString(graphics, Options.getInstance().getDeathSymbol(), x + 7, currentY);
+            centerString(graphics, TextOptions.getInstance().getDeathSymbol(), x + 7, currentY);
             if (deathDate != null) {
                 graphics.drawString(deathDate.getDisplayValue(), x + 13, currentY);
                 currentY += LINE_HEIGHT;
@@ -538,7 +538,7 @@ public class GraphicsTreeElements implements TreeElements {
 
         // Date and place of marriage
         if (f.getMarriageDate() != null) {
-            centerString(graphics, Options.getInstance().getMarriageSymbol(), x + 13, currentY);
+            centerString(graphics, TextOptions.getInstance().getMarriageSymbol(), x + 13, currentY);
             if (marriageDate != null) {
                 graphics.drawString(marriageDate.getDisplayValue(), x + 25, currentY);
                 currentY += LINE_HEIGHT;
@@ -553,7 +553,7 @@ public class GraphicsTreeElements implements TreeElements {
 
         // Date and place of divorce
         if (draw_divorce && f.getDivorceDate() != null) {
-            centerString(graphics, Options.getInstance().getDivorceSymbol(), x + 13, currentY);
+            centerString(graphics, TextOptions.getInstance().getDivorceSymbol(), x + 13, currentY);
             if (divorceDate != null) {
                 graphics.drawString(divorceDate.getDisplayValue(), x + 25, currentY);
                 currentY += LINE_HEIGHT;

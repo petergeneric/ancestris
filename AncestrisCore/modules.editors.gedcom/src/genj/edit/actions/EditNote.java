@@ -25,7 +25,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
 import genj.gedcom.Note;
-import genj.gedcom.Options;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.TagPath;
@@ -125,7 +125,7 @@ public class EditNote extends Action2 {
         Note newNote = (Note)select.getSelection();
         
         // inline?
-        if (newNote==null&&!(note instanceof PropertyNote)&&Options.getInstance().isUseInline) {
+        if (newNote==null&&!(note instanceof PropertyNote)&&GedcomOptions.getInstance().isUseInline()) {
           if (note!=null)
             note.setValue(text.getText());
           else

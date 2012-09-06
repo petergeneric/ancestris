@@ -18,7 +18,7 @@ import genj.gedcom.Property;
 import genj.renderer.Blueprint;
 import genj.renderer.BlueprintManager;
 import genj.renderer.BlueprintRenderer;
-import genj.renderer.Options;
+import genj.renderer.RenderOptions;
 import genj.util.Registry;
 import ancestris.core.pluginservice.AncestrisPlugin;
 
@@ -127,7 +127,7 @@ public class ABluePrintBeans extends JPanel implements GedcomListener {
         g.setColor(Color.white);
         g.fillRect(0, 0, bounds.width, bounds.height);
         g.setColor(Color.black);
-        g.setFont(Options.getInstance().getDefaultFont());
+        g.setFont(RenderOptions.getInstance().getDefaultFont());
 
 //    if (entity==null||renderer==null)
         if (renderer == null) {

@@ -12,7 +12,7 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
-import genj.report.Options;
+import ancestris.core.TextOptions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -352,7 +352,7 @@ public class DocReport {
 }
 	
 	public class reportEntity extends reportProperty{
-		Options OPTIONS = Options.getInstance();
+		TextOptions OPTIONS = TextOptions.getInstance();
 
 		reportEntity(Entity e){
 			super(e);

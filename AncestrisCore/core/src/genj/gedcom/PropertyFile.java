@@ -133,16 +133,18 @@ public class PropertyFile extends Property {
   }
   
   /**
-   * The files location (if externally accessible)    */
+   * The files location (if externally accessible) 
+   */
   public File getFile() {
     Gedcom gedcom = getGedcom();
     return gedcom!=null ? gedcom.getOrigin().getFile(file) : null;
   }
 
   /**
-   * Resolve the maximum load (whether to return kb)   */
+   * Resolve the maximum load (whether to return kb)
+   */
   public static int getMaxValueAsIconSize(boolean kb) {
-    return (kb ? 1 : 1024) * Options.getInstance().getMaxImageFileSizeKB();
+    return (kb ? 1 : 1024) * GedcomOptions.getInstance().getMaxImageFileSizeKB();
   }
 
   /**

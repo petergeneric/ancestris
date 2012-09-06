@@ -17,7 +17,7 @@ import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertySex;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
-import genj.report.Options;
+import ancestris.core.TextOptions;
 import genj.report.Report;
 
 import java.io.BufferedWriter;
@@ -147,7 +147,7 @@ public class ReportForYEd extends Report {
 	private final String XML_TAIL = getString("XmlTail");
 
 	private static final String INDI_COLORS[] = createIndiColors();
-	private static final Options OPTIONS = Options.getInstance();
+	private static final TextOptions OPTIONS = TextOptions.getInstance();
 
 	private int edgeCount = 0;
 	private File reportFile;

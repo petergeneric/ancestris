@@ -21,6 +21,7 @@
  */
 package genj.report;
 
+import ancestris.core.TextOptions;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -89,7 +90,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   };
 
   /** global report options */
-  protected Options OPTIONS = Options.getInstance();
+  protected TextOptions OPTIONS = TextOptions.getInstance();
 
 
   /** options */

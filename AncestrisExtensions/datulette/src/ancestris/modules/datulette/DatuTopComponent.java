@@ -5,6 +5,7 @@
 package ancestris.modules.datulette;
 
 import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.WordBuffer;
@@ -118,7 +119,7 @@ public final class DatuTopComponent extends TopComponent {
                 pit.set(to);
             } catch (GedcomException ex) {
             }
-            result = pit.toString(new WordBuffer(), PointInTime.FORMAT_LONG).toString();
+            result = pit.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG).toString();
         } else {
             // Pit limits
             PointInTime pitMini = new PointInTime();
@@ -159,7 +160,7 @@ public final class DatuTopComponent extends TopComponent {
                 pitMaxi.set(to);
             } catch (GedcomException ex) {
             }
-            result = String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.FromTo"), pitMini.toString(new WordBuffer(), PointInTime.FORMAT_LONG), pitMaxi.toString(new WordBuffer(), PointInTime.FORMAT_LONG));
+            result = String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.FromTo"), pitMini.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG), pitMaxi.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG));
         }
 
         return result;

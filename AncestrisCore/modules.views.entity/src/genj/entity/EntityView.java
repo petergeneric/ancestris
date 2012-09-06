@@ -29,7 +29,7 @@ import genj.renderer.Blueprint;
 import genj.renderer.BlueprintManager;
 import genj.renderer.ChooseBlueprintAction;
 import genj.renderer.BlueprintRenderer;
-import genj.renderer.Options;
+import genj.renderer.RenderOptions;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.view.ContextProvider;
@@ -185,7 +185,7 @@ public class EntityView extends View implements ContextProvider {
     g.setColor(Color.white);
     g.fillRect(0,0,bounds.width,bounds.height);
     g.setColor(Color.black);
-    g.setFont(Options.getInstance().getDefaultFont());
+    g.setFont(RenderOptions.getInstance().getDefaultFont());
 
     if (context==null||renderer==null)
       return;

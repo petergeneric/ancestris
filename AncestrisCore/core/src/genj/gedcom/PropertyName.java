@@ -112,7 +112,7 @@ public class PropertyName extends Property {
      * @return
      */
     public String getGivenName(){
-        String tagGiven = Options.getInstance().getGivenTag();
+        String tagGiven = GedcomOptions.getInstance().getGivenTag();
         String firstNames[] = firstName.split(",");
         String given = null;
         if (tagGiven.isEmpty()){
@@ -324,7 +324,7 @@ public class PropertyName extends Property {
 
         WordBuffer b = new WordBuffer();
 
-        if (Options.getInstance().nameFormat == 1) {
+        if (GedcomOptions.getInstance().getNameFormat() == GedcomOptions.NameFormat.LAST) {
 
             String last = getLastName(true);
             if (last.length() == 0) {
@@ -397,7 +397,7 @@ public class PropertyName extends Property {
         String old = hasParent ? getValue() : null;
 
         // check for uppercase lastname
-        if (Options.getInstance().isUpperCaseNames()) {
+        if (GedcomOptions.getInstance().isUpperCaseNames()) {
             NameParser parser = new NameParser(last);
             last = parser.getPrefix() + parser.getLast().toUpperCase();
         }
@@ -405,7 +405,7 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memorey
-        first = normalizeName(first,Options.getInstance().spaceIsSeparator());
+        first = normalizeName(first,GedcomOptions.getInstance().spaceIsSeparator());
         last = normalizeName(last,false);
         suff = suff.trim();
         nPfx = nPfx.trim();
@@ -428,7 +428,7 @@ public class PropertyName extends Property {
 
         // update GIVN|SURN - IF we have a parent
         if (hasParent) {
-            boolean add = Options.getInstance().getAddNameSubtags();
+            boolean add = GedcomOptions.getInstance().getAddNameSubtags();
 
             addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);
             addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);

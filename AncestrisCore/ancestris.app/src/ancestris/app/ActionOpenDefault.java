@@ -90,7 +90,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
      *
      */
     private String getDefaultFile(boolean nameOnly) {
-        URL defaultFile = ancestris.core.Options.getInstance().getDefaultGedcom();
+        URL defaultFile = ancestris.core.CoreOptions.getInstance().getDefaultGedcom();
         if (defaultFile == null) {
             return "";
         }
@@ -111,7 +111,7 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
     }
 
     public boolean calcState() {
-        return ancestris.core.Options.getInstance().getDefaultGedcom() != null;
+        return ancestris.core.CoreOptions.getInstance().getDefaultGedcom() != null;
     }
 
     //XXX: don't use getDefaultFile(false)

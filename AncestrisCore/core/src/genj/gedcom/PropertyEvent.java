@@ -126,7 +126,7 @@ public class PropertyEvent extends Property {
     // got age?
     PropertyAge age = (PropertyAge) getProperty("AGE");
     if (age==null) {
-      if (date==null || !Options.getInstance().isAddAge)
+      if (date==null || !GedcomOptions.getInstance().isAddAge())
         return;
       age = (PropertyAge)addProperty("AGE", "");
     }

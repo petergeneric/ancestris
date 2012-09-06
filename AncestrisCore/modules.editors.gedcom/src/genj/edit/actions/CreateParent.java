@@ -24,7 +24,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Options;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertySex;
@@ -142,11 +142,11 @@ public class CreateParent extends CreateRelationship {
 
             // 20040619 adding missing spouse automatically now
             // 20050405 whether we created a new family or the family didn't have all parents
-            if (genj.gedcom.Options.getInstance().getCreateSpouse() && family.getNoOfSpouses() < 2) {
+            if (genj.gedcom.GedcomOptions.getInstance().getCreateSpouse() && family.getNoOfSpouses() < 2) {
                 Indi spouse = (Indi) ged.createEntity(Gedcom.INDI);
                 spouse.addDefaultProperties();
                 family.setSpouse(spouse);
-                if (Options.getInstance().setWifeLastname || spouse.getSex() == PropertySex.MALE) {
+                if (GedcomOptions.getInstance().isSetWifeLastname() || spouse.getSex() == PropertySex.MALE) {
                     spouse.setName("", lastname);
                 }
             }
@@ -154,7 +154,7 @@ public class CreateParent extends CreateRelationship {
         }
 
         // set name of parent if new
-        if (parentIsNew && (((Indi) parent).getSex() == PropertySex.MALE || Options.getInstance().setWifeLastname)) {
+        if (parentIsNew && (((Indi) parent).getSex() == PropertySex.MALE || GedcomOptions.getInstance().isSetWifeLastname())) {
             ((Indi) parent).setName("", lastname);
         }
 
