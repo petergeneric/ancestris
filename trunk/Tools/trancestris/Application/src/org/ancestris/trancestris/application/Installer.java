@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.application.actions.SendTranslationAction;
@@ -71,45 +72,52 @@ public class Installer extends ModuleInstall {
             }
 
             // Send Translation
-            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Send.confirm"), NotifyDescriptor.YES_NO_OPTION);
-            DialogDisplayer.getDefault().notify(nd);
-            if (nd.getValue() == DialogDescriptor.YES_OPTION) {
-                if (zipArchive.hasTranslation() == true) {
-                    archiveName = zipArchive.getName();
-                    filePath = zipArchive.getZipFile().getParent();
-                    prefix = archiveName.substring(0, archiveName.indexOf('.'));
-                    suffix = archiveName.substring(archiveName.indexOf('.') + 1);
-                    toLocale = zipArchive.getToLocale().getLanguage();
-                    fromLocale = zipArchive.getFromLocale().getLanguage();
+            if (modulePreferences.get("mail.host", "").equals("") == false) {
+                if (zipArchive.hasTranslation() == true && modulePreferences.getBoolean("SendOnExit", true)) {
+                    ConfirmationCheckBox confirmationCheckBox = new ConfirmationCheckBox(NbBundle.getMessage(Installer.class, "Send.CheckBox"));
+                    confirmationCheckBox.setSelected(true);
 
-                    zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
-                    if (!zipOutputFile.exists()) {
-                        try {
-                            zipOutputFile.createNewFile();
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
+                    NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Send.confirm"), NotifyDescriptor.YES_NO_OPTION);
+                    nd.setAdditionalOptions(new Object[]{confirmationCheckBox});
+                    DialogDisplayer.getDefault().notify(nd);
+                    modulePreferences.putBoolean("SendOnExit", confirmationCheckBox.isSelected());
+                    if (nd.getValue() == DialogDescriptor.OK_OPTION) {
+                        archiveName = zipArchive.getName();
+                        filePath = zipArchive.getZipFile().getParent();
+                        prefix = archiveName.substring(0, archiveName.indexOf('.'));
+                        suffix = archiveName.substring(archiveName.indexOf('.') + 1);
+                        toLocale = zipArchive.getToLocale().getLanguage();
+                        fromLocale = zipArchive.getFromLocale().getLanguage();
+
+                        zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
+                        if (!zipOutputFile.exists()) {
+                            try {
+                                zipOutputFile.createNewFile();
+                            } catch (IOException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
                         }
-                    }
-                    zipArchive.saveTranslation(zipOutputFile);
+                        zipArchive.saveTranslation(zipOutputFile);
 
-                    // saveTranslation modify directory structures
-                    zipArchive.write();
+                        // saveTranslation modify directory structures
+                        zipArchive.write();
 
-                    setDefaultValues(sendTranslationPanel);
-                    DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(SendTranslationAction.class, "SendTranslationPanel.title"));
-                    dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
-                    DialogDisplayer.getDefault().createDialog(dd);
-                    DialogDisplayer.getDefault().notify(dd);
-                    if (dd.getValue().equals(SEND)) {
-                        saveValues(sendTranslationPanel);
-                        String subject = sendTranslationPanel.getSubjectFormattedTextField();
-                        String name = sendTranslationPanel.getNameFormattedTextField();
-                        String from = sendTranslationPanel.getEmailFormattedTextField();
-                        String message = sendTranslationPanel.getMessageTextArea();
-                        String to = sendTranslationPanel.getMailToFormattedTextField();
+                        setDefaultValues(sendTranslationPanel);
+                        DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(SendTranslationAction.class, "SendTranslationPanel.title"));
+                        dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
+                        DialogDisplayer.getDefault().createDialog(dd);
+                        DialogDisplayer.getDefault().notify(dd);
+                        if (dd.getValue().equals(SEND)) {
+                            saveValues(sendTranslationPanel);
+                            String subject = sendTranslationPanel.getSubjectFormattedTextField();
+                            String name = sendTranslationPanel.getNameFormattedTextField();
+                            String from = sendTranslationPanel.getEmailFormattedTextField();
+                            String message = sendTranslationPanel.getMessageTextArea();
+                            String to = sendTranslationPanel.getMailToFormattedTextField();
 
-                        Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
-                        t.start();
+                            Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
+                            t.start();
+                        }
                     }
                 }
             }
@@ -157,7 +165,7 @@ public class Installer extends ModuleInstall {
                 String fileName = "";
                 File bundleFile = null;
                 URL url;
-                
+
                 dirName = modulePreferences.get("Dossier", System.getProperty("user.dir"));
                 fileName = modulePreferences.get("Fichier", "Ancestris_Bundles.zip");
                 bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
@@ -203,11 +211,16 @@ public class Installer extends ModuleInstall {
                             Exceptions.printStackTrace(ex);
                         }
                     }
-                } else {
+                } else if (modulePreferences.getBoolean("Check-New-File-On-Server", true)) {
                     NotifyDescriptor checkForNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
-                    DialogDisplayer.getDefault().notify(checkForNewFile);
+                    ConfirmationCheckBox confirmationCheckBox = new ConfirmationCheckBox(NbBundle.getMessage(Installer.class, "Check-New-File-On-Server.CheckBox"));
+                    confirmationCheckBox.setSelected(true);
 
-                    if (checkForNewFile.getValue() == DialogDescriptor.YES_OPTION) {
+                    checkForNewFile.setAdditionalOptions(new Object[]{confirmationCheckBox});
+
+                    DialogDisplayer.getDefault().notify(checkForNewFile);
+                    modulePreferences.putBoolean("Check-New-File-On-Server", confirmationCheckBox.isSelected());
+                    if (checkForNewFile.getValue() == DialogDescriptor.OK_OPTION) {
                         try {
                             url = new URL(UrlAddress);
                             URLConnection urlC = url.openConnection();
@@ -260,7 +273,20 @@ public class Installer extends ModuleInstall {
                             }
                         }
                     }
+                } else {
+                    TopComponent tc = WindowManager.getDefault().findTopComponent("ZipExplorerTopComponent");
+                    if (bundleFile != null) {
+                        if (bundleFile.exists()) {
+                            Locale fromLocale = getLocaleFromString(modulePreferences.get("fromLocale", Locale.ENGLISH.toString()));
+                            Locale toLocale = getLocaleFromString(modulePreferences.get("toLocale", Locale.getDefault().toString()));
+                            ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
+                        }
+                    }
+
                 }
+
+                // Tip of the day
+                TipOfTheDay tipOfTheDay = new TipOfTheDay();
 
                 // set mail properties
                 if (modulePreferences.get("mail.host", "").equals("")) {
@@ -268,10 +294,6 @@ public class Installer extends ModuleInstall {
                     DialogDisplayer.getDefault().notify(nd1);
                     OptionsDisplayer.getDefault().open("SendTranslation");
                 }
-
-
-                // Tip of the day
-                TipOfTheDay tipOfTheDay = new TipOfTheDay();
 
             }
         });
