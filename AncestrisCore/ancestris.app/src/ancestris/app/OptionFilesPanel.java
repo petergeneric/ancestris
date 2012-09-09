@@ -283,6 +283,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     }
 
     private URL getGedcomFile() {
+        if (jTextField2.getText().trim().isEmpty())
+            return null;
         return URLUtil.toURL(jTextField2.getText());
     }
 

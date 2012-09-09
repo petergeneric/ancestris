@@ -71,7 +71,9 @@ public class CoreOptions {
 
     public URL getDefaultGedcom() {
         try {
-            String defaultFile = appOptions.get("gedcomFile", "");
+            String defaultFile = appOptions.get("gedcomFile", (String)null);
+            if (defaultFile == null)
+                return null;
             return new URL(defaultFile);
         } catch (MalformedURLException ex) {
             return null;
@@ -79,7 +81,7 @@ public class CoreOptions {
     }
 
     public void setDefaultGedcom(URL def) {
-        appOptions.put("gedcomFile", def.toString());
+        appOptions.put("gedcomFile", (def == null)?(String)null:def.toString());
     }
 
     public boolean getAlwaysOpenDefault() {
