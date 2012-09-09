@@ -42,6 +42,7 @@ public class URLUtil {
      * tries to convert text to a URL. If 'text' is a valid URL text representation
      * then return this URL. If not, then tries to convert 'text' to a File and return
      * this File URL. Returns null on error.
+     * if text is empty string, return curent working directory
      * @param text
      * @return 
      */

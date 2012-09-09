@@ -24,6 +24,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
+import static ancestris.gedcom.Bundle.*;
 import ancestris.util.TimingUtility;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionSink;
@@ -48,6 +49,8 @@ import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
@@ -96,13 +99,21 @@ public abstract class GedcomDirectory {
 
     /**
      * create a new gedcom file
-     *
+     * when creating a new gedcom, the new file is always created on disk ATM
+     * TODO: should we change this behaviour?
      */
     //FIXME: use dao.createfromtemplate?
+    @NbBundle.Messages({
+        "create.action=Create",
+        "create.title=Create Gedcom",
+        "# {0} - file path",
+        "file.exists=File {0} already exists. Proceed?"
+     })            
+
     public Context newGedcom() {
 
         // let user choose a file
-        File file = chooseFile(RES.getString("cc.create.title"), RES.getString("cc.create.action"), null);
+        File file = chooseFile(create_title(), create_action(), null);
         if (file == null) {
             return null;
         }
@@ -110,7 +121,7 @@ public abstract class GedcomDirectory {
             file = new File(file.getAbsolutePath() + ".ged");
         }
         if (file.exists()) {
-            int rc = DialogHelper.openDialog(RES.getString("cc.create.title"), DialogHelper.WARNING_MESSAGE, RES.getString("cc.open.file_exists", file.getName()), Action2.yesNo(), null);
+            int rc = DialogHelper.openDialog(create_title(), DialogHelper.WARNING_MESSAGE, file_exists(file.getName()), Action2.yesNo(), null);
             if (rc != 0) {
                 return null;
             }
@@ -130,15 +141,16 @@ public abstract class GedcomDirectory {
         Context context = GedcomMgr.getDefault().setGedcom(gedcom);
         try {
             setDefault(gedcom);
-            // remember
-//XXX:            GedcomDirectory.getInstance().registerGedcom(context);
             Indi firstIndi = (Indi) context.getGedcom().getFirstEntity(Gedcom.INDI);
             if (firstIndi == null) {
                 firstIndi = (Indi) context.getGedcom().createEntity(Gedcom.INDI);
             }
-//XXX:            GedcomDirectory.getInstance().updateModified(gedcom);
-            openDefaultViews(new Context(firstIndi));
-            SelectionSink.Dispatcher.fireSelection((Component) null, new Context(firstIndi), true);
+
+            // save gedcom file
+            GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(file));
+            
+            // and reopens the file
+            return openGedcom(FileUtil.toFileObject(file));
         } catch (Exception e) {
             Exceptions.printStackTrace(e);
         }
@@ -150,9 +162,9 @@ public abstract class GedcomDirectory {
         try {
             // note: dans ce cas pas besoin de memoriser dans le undo history mais cela
             // permet de positionner le gedcom dans l'etat change
-            gedcom.doUnitOfWork(new UnitOfWork() {
-
-                public void perform(Gedcom gedcom) throws GedcomException {
+//            gedcom.doUnitOfWork(new UnitOfWork() {
+//
+//                public void perform(Gedcom gedcom) throws GedcomException {
 
                     AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
 
@@ -172,8 +184,8 @@ public abstract class GedcomDirectory {
                     gedcom.setShowJuridictions(genj.gedcom.GedcomOptions.getInstance().getShowJuridictions());
                     gedcom.setPlaceSortOrder(genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder());
                     gedcom.setPlaceDisplayFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceDisplayFormat());
-                }
-            });
+//                }
+//            });
         } catch (GedcomException e) {
             Exceptions.printStackTrace(e);
         }
