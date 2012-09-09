@@ -58,7 +58,7 @@ public class TipOfTheDayPanel extends javax.swing.JPanel {
         layout.rowHeights = new int[] {0, 0, 0};
         setLayout(layout);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("/home/lemovice/Téléchargements/light_bulb_on.png")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/trancestris/tipoftheday/light_bulb_on.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;

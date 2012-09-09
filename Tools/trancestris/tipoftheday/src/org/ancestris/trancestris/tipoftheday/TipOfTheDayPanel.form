@@ -29,7 +29,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/T&#xe9;l&#xe9;chargements/light_bulb_on.png"/>
+          <Image iconType="3" name="/org/ancestris/trancestris/tipoftheday/light_bulb_on.png"/>
         </Property>
       </Properties>
       <Constraints>
