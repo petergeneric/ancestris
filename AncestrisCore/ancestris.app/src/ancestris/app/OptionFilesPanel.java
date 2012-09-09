@@ -275,7 +275,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     void setGedcomFile(URL file) {
         jTextField2.setText("");
         try {
-            if ("file".equals(file.getProtocol())) {
+            if (file != null && "file".equals(file.getProtocol())) {
                 jTextField2.setText(new File(file.toURI()).getAbsolutePath());
             }
         } catch (URISyntaxException ex) {
