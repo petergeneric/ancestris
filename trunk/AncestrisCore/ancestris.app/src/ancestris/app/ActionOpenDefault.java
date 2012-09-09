@@ -18,7 +18,8 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CookieAction;
 
-public final class ActionOpenDefault extends CookieAction implements Openable {
+//XXX: I think there is a mismatch in Openable use
+public final class ActionOpenDefault extends CookieAction {//implements Openable {
 
     private FileObject fileToOpen = null;
     
@@ -84,15 +85,15 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
         return item;
     }
 
-    /*
-     * GetDefaultFile
-     * Take advantage to initialise fileToOpen
-     *
+    /**
+     * return the display name for defaukt file to open
+     * @param nameOnly if true return only filename and extension
+     * @return 
      */
     private String getDefaultFile(boolean nameOnly) {
         URL defaultFile = ancestris.core.CoreOptions.getInstance().getDefaultGedcom();
         if (defaultFile == null) {
-            return "";
+            return null;
         }
         try {
             // check if it's a local file
@@ -114,15 +115,15 @@ public final class ActionOpenDefault extends CookieAction implements Openable {
         return ancestris.core.CoreOptions.getInstance().getDefaultGedcom() != null;
     }
 
-    //XXX: don't use getDefaultFile(false)
-    public void open() {
-
-        String str = getDefaultFile(false);
-        setEnabled((str != null && !str.isEmpty()));
-
-        String statusText = StatusDisplayer.getDefault().getStatusText()
-                + (str != null ? "" : " - " + org.openide.util.NbBundle.getMessage(ActionOpenDefault.class, "OptionPanel.notexist.statustext"));
-        StatusDisplayer.getDefault().setStatusText(statusText);
-    }
+    //XXX: I think there is a mismatch in Openable use
+//    public void open() {
+//
+//        String str = getDefaultFile(false);
+//        setEnabled((str != null && !str.isEmpty()));
+//
+//        String statusText = StatusDisplayer.getDefault().getStatusText()
+//                + (str != null ? "" : " - " + org.openide.util.NbBundle.getMessage(ActionOpenDefault.class, "OptionPanel.notexist.statustext"));
+//        StatusDisplayer.getDefault().setStatusText(statusText);
+//    }
 
 }
