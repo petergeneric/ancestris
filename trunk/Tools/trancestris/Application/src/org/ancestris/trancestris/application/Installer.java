@@ -7,6 +7,7 @@ package org.ancestris.trancestris.application;
 import java.awt.Dialog;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -18,16 +19,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.application.actions.SendTranslationAction;
 import org.ancestris.trancestris.application.actions.SendTranslationPanel;
+import org.ancestris.trancestris.application.utils.ConfirmationCheckBox;
 import org.ancestris.trancestris.application.utils.DownloadBundleWorker;
 import org.ancestris.trancestris.application.utils.SendMessageWorker;
-import org.ancestris.trancestris.application.utils.TipOfTheDay;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
+import org.ancestris.trancestris.tipoftheday.TipOfTheDay;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -282,11 +283,11 @@ public class Installer extends ModuleInstall {
                             ((ZipExplorerTopComponent) tc).setBundles(bundleFile, fromLocale, toLocale);
                         }
                     }
-
                 }
 
-                // Tip of the day
-                TipOfTheDay tipOfTheDay = new TipOfTheDay();
+                //Load the tips into the tip loader:
+                InputStream propertiesIn = getClass().getResourceAsStream("tips.properties");
+                new TipOfTheDay(propertiesIn);
 
                 // set mail properties
                 if (modulePreferences.get("mail.host", "").equals("")) {
