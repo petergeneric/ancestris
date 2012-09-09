@@ -221,17 +221,18 @@ public class Installer extends ModuleInstall {
 
                     DialogDisplayer.getDefault().notify(checkForNewFile);
                     modulePreferences.putBoolean("Check-New-File-On-Server", confirmationCheckBox.isSelected());
-                    if (checkForNewFile.getValue() == DialogDescriptor.OK_OPTION) {
+                    if (checkForNewFile.getValue() == NotifyDescriptor.YES_OPTION) {
                         try {
                             url = new URL(UrlAddress);
                             URLConnection urlC = url.openConnection();
+                            logger.log(Level.INFO, "Use URL: {0}", urlC.getURL());
 
                             // log info about resource
                             Date date1 = new Date(urlC.getLastModified());
                             Date date2 = new Date(NbPreferences.forModule(Installer.class).getLong("Url.LastModified", 0L));
+                            logger.log(Level.INFO, "Server date {0} local date {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
 
                             if (date1.after(date2)) {
-                                logger.log(Level.INFO, "Server {0} local {1})", new Object[]{DateFormat.getInstance().format(date1), DateFormat.getInstance().format(date1)});
                                 NotifyDescriptor downLoadNewFile = new NotifyDescriptor.Confirmation(NbBundle.getMessage(Installer.class, "New-File-On-Server"), NotifyDescriptor.YES_NO_OPTION);
                                 DialogDisplayer.getDefault().notify(downLoadNewFile);
                                 if (downLoadNewFile.getValue() == DialogDescriptor.YES_OPTION) {
