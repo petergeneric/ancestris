@@ -31,7 +31,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=NewGedcom.class)
 public class CreateNewGedcom implements INewGedcomProvider,NewGedcom {
     
-    private static final genj.gedcom.Options gedcomOptions = genj.gedcom.Options.getInstance();
+    private static final genj.gedcom.GedcomOptions gedcomOptions = genj.gedcom.GedcomOptions.getInstance();
     private Context context = null;
 
     @Override
