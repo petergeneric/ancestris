@@ -4,7 +4,6 @@
  */
 package ancestris.modules.feedback;
 
-import genj.Version;
 import genj.util.EnvironmentChecker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +20,7 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -92,7 +92,7 @@ public final class SendAction implements ActionListener {
         Properties p = System.getProperties();
         StringBuilder sb = new StringBuilder();
         sb.append("Ancestris ");
-        sb.append(Version.getInstance().getBuildString());
+        sb.append(Lookup.getDefault().lookup(ancestris.app.Version.class).getBuildString());
         sb.append(" (");
         sb.append(Locale.getDefault());
         sb.append(")\nOS : ");
