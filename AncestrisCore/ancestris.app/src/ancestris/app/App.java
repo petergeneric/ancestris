@@ -19,39 +19,28 @@
  */
 package ancestris.app;
 
-import genj.Version;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.util.DialogManagerImp;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import genj.util.swing.DialogHelper;
-import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.util.DialogManagerImp;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
+import java.util.logging.*;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Main Class for GenJ Application
@@ -63,19 +52,8 @@ public class App {
     /*package*/ static File LOGFILE;
     private static Startup startup;
     public static ControlCenter center;
-//    public static WorkbenchHelper workbenchHelper;
 
     private static boolean x11ErrorHandlerFixInstalled = false;
-
-    private static AppPlugin appplugin = new AppPlugin();
-
-    public static String getPluginVersion() {
-        return appplugin.getPluginVersion();
-    }
-
-    public static String getPluginShortDescription() {
-        return appplugin.getPluginShortDescription();
-    }
 
     /**
      * GenJ Main Method
@@ -254,7 +232,7 @@ public class App {
                 }
 
                 // Startup Information
-                LOG.info("version = " + Version.getInstance().getBuildString());
+                LOG.info("version = " + Lookup.getDefault().lookup(Version.class).getBuildString());
                 LOG.info("date = " + new Date());
                 EnvironmentChecker.log();
 
@@ -454,7 +432,20 @@ public class App {
         }
     }
 
-  private static class AppPlugin extends AncestrisPlugin{
+  @ServiceProvider(service=Version.class)
+  public static class AppPlugin extends AncestrisPlugin implements Version{
+
+        public String getBuildString() {
+            return getPluginVersion();
+        }
+
+        public String getVersionString() {
+            return getPluginVersion();
+        }
+
+        public String getDescription() {
+            return getPluginShortDescription();
+        }
   }
 
 } //App

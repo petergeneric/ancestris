@@ -19,7 +19,6 @@
  */
 package genj.io;
 
-import genj.Version;
 import genj.crypto.Enigma;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -27,23 +26,18 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.time.PointInTime;
 import genj.util.Resources;
-import genj.util.Trackable;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.UnmappableCharacterException;
-import java.nio.charset.UnsupportedCharsetException;
+import java.nio.charset.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import org.openide.util.Lookup;
 
 /**
  * GedcomWriter is a custom write for Gedcom compatible information. Normally
@@ -244,7 +238,7 @@ public class GedcomWriter implements IGedcomWriter {
         // replace HEAD:SOUR
         Property prop;
         prop = replaceProperties(header, "SOUR", "ANCESTRIS");
-        prop.addProperty("VERS", Version.getInstance().toString());
+        prop.addProperty("VERS", Lookup.getDefault().lookup(ancestris.app.Version.class).getVersionString());
         prop.addProperty("NAME", "Ancestris");
         prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).
                 addProperty("ADDR", "http://www.ancestris.org");

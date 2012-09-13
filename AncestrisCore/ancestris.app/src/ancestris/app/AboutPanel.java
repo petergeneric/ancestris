@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -122,10 +123,10 @@ public class AboutPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11));
-        jLabel3.setText(App.getPluginVersion());
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11)); // NOI18N
+        jLabel3.setText(Lookup.getDefault().lookup(Version.class).getVersionString());
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel2.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel2.text")); // NOI18N
 
         jLabel1.setBackground(new java.awt.Color(240, 176, 111));
@@ -133,19 +134,19 @@ public class AboutPanel extends javax.swing.JPanel {
         jLabel1.setPreferredSize(new java.awt.Dimension(640, 335));
         jLabel1.setIcon(new ImageIcon(App.class.getResource("/ancestris/app/splash.gif")));
 
-        jLabel5.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel5.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel5.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel5.text")); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel6.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel6.text")); // NOI18N
 
-        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel8.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel8.text")); // NOI18N
 
-        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel9.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel9.setText(java);
 
-        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 0, 11));
+        jLabel10.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel10.setText(systeme);
 
         jLabel11.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
@@ -197,7 +198,7 @@ public class AboutPanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,11 +217,11 @@ public class AboutPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE))
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE))
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -230,9 +231,9 @@ public class AboutPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)))
+                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(298, 298, 298))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );

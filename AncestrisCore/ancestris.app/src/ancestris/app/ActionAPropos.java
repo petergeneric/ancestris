@@ -110,8 +110,9 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private void displayVersions() {
         String title = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jbVersions.text");
         String text = "<html><br><b>"
-                + App.getPluginShortDescription() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>"
-                + App.getPluginVersion();
+                + Lookup.getDefault().lookup(Version.class).getDescription()
+                + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>"
+                + Lookup.getDefault().lookup(Version.class).getVersionString();
         text += "<br><br><br><b>" + NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_VersionTitle") + "&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</b><br>";
         text += "<table border='0'>";
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
