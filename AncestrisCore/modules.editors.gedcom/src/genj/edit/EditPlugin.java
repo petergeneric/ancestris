@@ -20,7 +20,7 @@
 package genj.edit;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.crypto.Enigma;
 import genj.edit.actions.CreateAlias;
 import genj.edit.actions.CreateAssociation;

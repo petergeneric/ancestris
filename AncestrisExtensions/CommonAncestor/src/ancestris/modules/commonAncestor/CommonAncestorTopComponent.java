@@ -2,7 +2,7 @@ package ancestris.modules.commonAncestor;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.view.SelectionListener;

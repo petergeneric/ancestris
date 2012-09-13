@@ -20,19 +20,14 @@
 package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
-import genj.gedcom.Gedcom;
 import genj.util.DirectAccessTokenizer;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.JPanel;
 
 import org.openide.util.Exceptions;
 import genj.gedcom.Context;
-import java.net.URL;
-import java.util.logging.Level;
 import javax.swing.SwingUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
@@ -123,30 +118,9 @@ public class ControlCenter {
             // Loop over files to open
             if (files != null && !files.isEmpty()) {
                 for (FileObject file: files) {
-                    try {
-                        //XXX: to be removed: getOpenGedcom must be replace by some GedcomDirectory.isOpened()
-                        String uriStr = file.getURL().toString();
-                        if (getOpenedContext(uriStr) != null) {
-                            break;
-                        }
                         GedcomDirectory.getDefault().openGedcom(file);
                         // FIXME: should we save and restore passwords, and how?
-    //                    try {
-    //                        DirectAccessTokenizer tokens = new DirectAccessTokenizer(uriStr, ",", false);
-    //                        String restore = tokens.get(0);
-    //
-    //                        // check if it's a local file
-    //                        File local = new File(restore);
-    //                        GedcomDirectory.getDefault().openGedcom(local);
-    //
-    //                    } catch (Throwable t) {
-    //                    }
-    //                    }
 
-                        // next
-                    } catch (FileStateInvalidException ex) {
-                        break;
-                    }
                 }
             }
 

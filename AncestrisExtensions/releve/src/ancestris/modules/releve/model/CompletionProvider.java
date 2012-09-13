@@ -2,7 +2,7 @@ package ancestris.modules.releve.model;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.*;
 import java.util.*;
 import javax.swing.SwingUtilities;

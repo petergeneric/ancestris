@@ -13,7 +13,7 @@ package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.swing.SelectEntityDialog;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
