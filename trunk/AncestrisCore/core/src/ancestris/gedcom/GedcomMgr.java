@@ -16,7 +16,6 @@ import ancestris.util.ProgressListener;
 import ancestris.util.TimingUtility;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionSink;
-import genj.app.GedcomFileListener;
 import genj.common.ContextListWidget;
 import genj.gedcom.*;
 import genj.io.*;

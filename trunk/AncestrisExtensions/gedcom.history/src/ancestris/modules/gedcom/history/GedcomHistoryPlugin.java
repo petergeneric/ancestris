@@ -12,7 +12,7 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.io.*;

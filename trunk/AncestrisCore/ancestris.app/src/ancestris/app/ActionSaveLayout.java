@@ -11,7 +11,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;

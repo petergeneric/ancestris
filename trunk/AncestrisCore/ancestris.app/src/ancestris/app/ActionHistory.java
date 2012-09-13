@@ -10,7 +10,7 @@ import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
 import ancestris.view.SelectionSink;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.view.SelectionListener;
 import java.awt.Color;
 import java.awt.Component;

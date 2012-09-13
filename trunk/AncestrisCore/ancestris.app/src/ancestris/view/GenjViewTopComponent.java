@@ -12,7 +12,7 @@
 package ancestris.view;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import genj.app.GedcomFileListener;
+import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.util.swing.Action2.Group;

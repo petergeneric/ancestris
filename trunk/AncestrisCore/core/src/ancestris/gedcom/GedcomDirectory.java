@@ -74,6 +74,14 @@ public abstract class GedcomDirectory {
     public abstract List<Context> getContexts();
 
     /**
+     * Gets context for a FileObject if it has been registered
+     * null otherwise
+     * @param file
+     * @return 
+     */
+    public abstract Context getContext(FileObject file);
+
+    /**
      * Gets the {@link GedcomDataObject} registered for context 
      * @param context
      * @return
@@ -98,19 +106,23 @@ public abstract class GedcomDirectory {
     protected abstract boolean unregisterGedcomImpl(Context context);
 
     /**
-     * create a new gedcom file
-     * when creating a new gedcom, the new file is always created on disk ATM
-     * TODO: should we change this behaviour?
+     * create a new gedcom file.
+     * 
      */
-    //FIXME: use dao.createfromtemplate?
     @NbBundle.Messages({
         "create.action=Create",
         "create.title=Create Gedcom",
         "# {0} - file path",
         "file.exists=File {0} already exists. Proceed?"
      })            
-
     public Context newGedcom() {
+    /*
+     * when creating a new gedcom, the new file is always created on disk ATM
+     * TODO: should we change this behaviour?
+     */
+        //FIXME: use dao.createfromtemplate?
+        //FIXME: use DataObject template/wizard. the file is created from data
+        // in setGedcom
 
         // let user choose a file
         File file = chooseFile(create_title(), create_action(), null);
@@ -157,14 +169,9 @@ public abstract class GedcomDirectory {
         return context;
     }
 
-    //XXX: use DataObject template/wizard
+    //FIXME: to be removed when dao template will be used for gedcom
     private void setDefault(Gedcom gedcom) {
         try {
-            // note: dans ce cas pas besoin de memoriser dans le undo history mais cela
-            // permet de positionner le gedcom dans l'etat change
-//            gedcom.doUnitOfWork(new UnitOfWork() {
-//
-//                public void perform(Gedcom gedcom) throws GedcomException {
 
                     AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
 
@@ -184,8 +191,6 @@ public abstract class GedcomDirectory {
                     gedcom.setShowJuridictions(genj.gedcom.GedcomOptions.getInstance().getShowJuridictions());
                     gedcom.setPlaceSortOrder(genj.gedcom.GedcomOptions.getInstance().getPlaceSortOrder());
                     gedcom.setPlaceDisplayFormat(genj.gedcom.GedcomOptions.getInstance().getPlaceDisplayFormat());
-//                }
-//            });
         } catch (GedcomException e) {
             Exceptions.printStackTrace(e);
         }
@@ -224,13 +229,17 @@ public abstract class GedcomDirectory {
      * Opens a Gedcom FileObject.
      *
      * Use DataObject loaders to find the proper handler and then register it in local
-     * gedcom registry
+     * gedcom registry. Il file is already opened, doesn't open twice and return 
+     * the saved context
      *
      * @param input Gedcom FileObject
      *
      * @return
      */
     public Context openGedcom(FileObject input) {
+        Context context = getContext(input);
+        if (context != null)
+            return context;
         try {
             DataObject dao = DataObject.find(input);
             GedcomDataObject gdao = dao.getLookup().lookup(GedcomDataObject.class);
@@ -238,7 +247,7 @@ public abstract class GedcomDirectory {
                 return null;
             }
             registerGedcom(gdao);
-            Context context = gdao.getContext();
+            context = gdao.getContext();
             openDefaultViews(context);
             //FIXME: etait true. Cela faisait changer le root dans l'arbre
             // bizarre car cela ne devrait pas etre le cas meme avec true...
@@ -248,7 +257,7 @@ public abstract class GedcomDirectory {
         } catch (Exception e) {
             LOG.info(e.toString());
         }
-        return null;
+        return context;
     }
 
     /**
@@ -673,8 +682,26 @@ public abstract class GedcomDirectory {
             gedcomsOpened.remove(context.getGedcom());
             return true;
         }
+/**
+ * 
+ * @param gedName
+ * @return 
+ */
+        @Override
+    public Context getContext(FileObject file) {
 
-        /**
+        if (file == null) {
+            return null;
+        }
+            for (Gedcom g : gedcomsOpened.keySet()) {
+            if (file.equals(gedcomsOpened.get(g).getPrimaryFile())){
+                return gedcomsOpened.get(g).getContext();
+            }
+        }
+        return null;
+    }
+
+    /**
          * accessor gedcoms
          */
         public List<Context> getContexts() {
