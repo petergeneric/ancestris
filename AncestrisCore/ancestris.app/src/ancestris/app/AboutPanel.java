@@ -17,6 +17,7 @@
  */
 package ancestris.app;
 
+import ancestris.api.core.Version;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

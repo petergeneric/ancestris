@@ -21,9 +21,11 @@
  */
 package ancestris.core;
 
+import ancestris.util.Utilities;
 import genj.gedcom.Gedcom;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
+import java.util.Locale;
 
 
 /**
@@ -192,5 +194,24 @@ public class TextOptions {
         }
 
         return Gedcom.getName(tag);
+    }
+    /**
+     * get and set locale for outputs (reports, ...)
+     */
+    public Locale getOutputLocale() {
+        return getOutputLocale(Locale.getDefault());
+    }
+
+    public Locale getOutputLocale(Locale defaultLocale) {
+        String outLocale = textOptions.get("locale.output", (String) null);
+        return outLocale == null ? defaultLocale : Utilities.getLocaleFromString(outLocale);
+    }
+
+    public void setOutputLocale(Locale outLoc) {
+        if (outLoc == null) {
+            textOptions.put("locale.output", (String) null);
+        } else {
+            textOptions.put("locale.output", outLoc.toString());
+        }
     }
 } 

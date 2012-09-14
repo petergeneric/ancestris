@@ -19,6 +19,7 @@
  */
 package ancestris.app;
 
+import ancestris.api.core.Version;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.DialogManagerImp;
 import genj.option.OptionProvider;
@@ -215,7 +216,7 @@ public class App {
 
                 // Setup File Logging and check environment
                 LOGFILE = new File(home, "ancestris.log");
-                Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), Options.getMaxLogSizeKB() * 1024, 1, true);
+                Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), AppOptions.getMaxLogSizeKB() * 1024, 1, true);
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
                 LOG.addHandler(handler);

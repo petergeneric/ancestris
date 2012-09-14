@@ -221,7 +221,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         setReportDir(gedcomPrefs.get("reportDir", ""));
 
 
-        jSpinner1.setValue(ancestris.app.Options.getMaxLogSizeKB());
+        jSpinner1.setValue(ancestris.app.AppOptions.getMaxLogSizeKB());
         setLogLevel(Registry.get(App.class).get("logLevel", "INFO"));
         nbBackups.setValue((genj.io.Options.getNbBackups()));
     }
@@ -232,7 +232,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         ancestris.core.CoreOptions.getInstance().setDefaultGedcom(getGedcomFile());
         ancestris.core.CoreOptions.getInstance().setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
-        ancestris.app.Options.setMaxLogSizeKB(Integer.valueOf(jSpinner1.getValue().toString()));
+        ancestris.app.AppOptions.setMaxLogSizeKB(Integer.valueOf(jSpinner1.getValue().toString()));
         Registry.get(App.class).put("logLevel",getLogLevel());
 
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionPanel.saved.statustext"));

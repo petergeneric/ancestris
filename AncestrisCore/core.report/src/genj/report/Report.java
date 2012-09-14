@@ -37,31 +37,16 @@ import genj.util.Resources.ResourcesProvider;
 import genj.util.swing.Action2;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.DialogHelper;
-
 import java.awt.Component;
 import java.awt.Graphics;
-import java.io.CharArrayWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 
@@ -624,7 +609,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   public final String translate(String key, Locale locale, Object... values) {
 
       if (locale == null)
-          locale = ancestris.app.Options.getOutputLocale();
+          locale = OPTIONS.getOutputLocale();
     Resources resources = getResources(locale);
     if (resources==null)
       return key;

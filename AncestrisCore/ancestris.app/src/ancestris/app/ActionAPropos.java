@@ -10,6 +10,7 @@
  */
 package ancestris.app;
 
+import ancestris.api.core.Version;
 import ancestris.core.pluginservice.PluginInterface;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;

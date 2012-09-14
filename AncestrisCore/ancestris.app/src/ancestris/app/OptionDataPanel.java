@@ -389,7 +389,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         //FIXME:        cbSpaces.setSelected(genj.gedcom.Options.getInstance().isUseSpacedPlaces)setAddressSpaces(gedcomPrefs.get("isUseSpacedPlaces", ""));
         setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
-        jCheckBox19.setSelected(ancestris.app.Options.isWriteBOM());
+        jCheckBox19.setSelected(ancestris.app.AppOptions.isWriteBOM());
         cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
         cbAddNameSubtags.setSelected(genj.gedcom.GedcomOptions.getInstance().getAddNameSubtags());
         jtGivenTag.setText(gedcomOptions.getGivenTag());
@@ -422,7 +422,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 //FIXME:        gedcomPrefs.put("isUseSpacedPlaces", getAddressSpaces());
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
         gedcomPrefs.put("defaultEncoding", getEncoding());
-        ancestris.app.Options.setWriteBOM(jCheckBox19.isSelected());
+        ancestris.app.AppOptions.setWriteBOM(jCheckBox19.isSelected());
         ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
         genj.gedcom.GedcomOptions.getInstance().setAddNameSubtags(cbAddNameSubtags.isSelected());
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));

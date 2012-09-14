@@ -6,6 +6,7 @@ package ancestris.app;
 
 import ancestris.api.lnf.LookAndFeelProvider;
 import ancestris.core.CoreOptions;
+import ancestris.core.TextOptions;
 import ancestris.startup.settings.StartupOptions;
 import ancestris.util.Lifecycle;
 import genj.util.AncestrisPreferences;
@@ -261,10 +262,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
-        setOutputLanguage(ancestris.app.Options.getOutputLocale(null));
+        setOutputLanguage(TextOptions.getInstance().getOutputLocale(null));
 
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
-        jCheckBox1.setSelected(ancestris.app.Options.isRestoreViews());
+        jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
 //XXX: to be removed (see optiondatapanel)        setAutoCommit(editPrefs.get("isAutoCommit", ""));
         setUndos(gedcomPrefs.get("numberOfUndos", ""));
         cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
@@ -281,14 +282,14 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         StartupOptions stopts = new StartupOptions();
 
         needRestart = stopts.setJvmLocale(getLanguage());
-        ancestris.app.Options.setOutputLocale(getOutputLanguage());
+        TextOptions.getInstance().setOutputLocale(getOutputLanguage());
 
         needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getName());
         stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider)jComboBox2.getSelectedItem()).getClassPath());
 
         stopts.applyChanges();
 
-        ancestris.app.Options.setRestoreViews(jCheckBox1.isSelected());
+        ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
 //XXX:        editPrefs.put("isAutoCommit", getAutoCommit());
         gedcomPrefs.put("numberOfUndos", getUndos());
 
