@@ -92,7 +92,7 @@ public final class SendAction implements ActionListener {
         Properties p = System.getProperties();
         StringBuilder sb = new StringBuilder();
         sb.append("Ancestris ");
-        sb.append(Lookup.getDefault().lookup(ancestris.app.Version.class).getBuildString());
+        sb.append(Lookup.getDefault().lookup(ancestris.api.core.Version.class).getBuildString());
         sb.append(" (");
         sb.append(Locale.getDefault());
         sb.append(")\nOS : ");

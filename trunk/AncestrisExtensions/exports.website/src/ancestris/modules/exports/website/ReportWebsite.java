@@ -8,10 +8,9 @@ package ancestris.modules.exports.website;
  * category = Chart
  * name     = Website
  */
-import ancestris.app.Options;
+import ancestris.core.TextOptions;
 import genj.gedcom.MultiLineProperty.Iterator;
 import genj.gedcom.*;
-import genj.option.Multiline;
 import genj.report.Report;
 import genj.util.Resources;
 import java.awt.Color;
@@ -113,8 +112,8 @@ public class ReportWebsite extends Report{
             return;
 //        output = new Console("website"+gedcom.getName());
 //        currentLocale = Options.getOutputLocale();
-        currentLang = Options.getOutputLocale().getLanguage();
-        gedcomResources = Resources.get(Gedcom.class,Options.getOutputLocale());
+        currentLang = TextOptions.getInstance().getOutputLocale().getLanguage();
+        gedcomResources = Resources.get(Gedcom.class,TextOptions.getInstance().getOutputLocale());
         // Validate some values set in options
         secondaryLocale = null;
         if (secondaryLanguage != null && !secondaryLanguage.equals("")
@@ -1308,7 +1307,7 @@ public class ReportWebsite extends Report{
         if (secondaryLocale != null) {
             divlink.appendChild(html.br());
             Locale linkToLocale = null;
-            String nameOfLang = Options.getOutputLocale().getDisplayLanguage(Options.getOutputLocale());
+            String nameOfLang = TextOptions.getInstance().getOutputLocale().getDisplayLanguage(TextOptions.getInstance().getOutputLocale());
             if (currentLocale == null) {
                 linkToLocale = secondaryLocale;
                 nameOfLang = secondaryLocale.getDisplayLanguage(secondaryLocale);
