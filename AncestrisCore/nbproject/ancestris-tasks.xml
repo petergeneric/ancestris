@@ -26,8 +26,10 @@
         <property name="buildnumber" value="${info.entry.commit(revision)}" />
     </target>
     <target name="build-bundles" description="Builds the zip bundles for translators">
-        <basename property="current.dir" file="${basedir}"/>
-        <property name="properties.dir" location="../../bundles/${current.dir}"/>
+        <property name="parent.dir" location=".."/>
+        <basename property="parent.dirName" file="${parent.dir}"/>
+        <basename property="current.dirName" file="${basedir}"/>
+        <property name="properties.dir" location="../../bundles/${parent.dirName}/${current.dirName}"/>
         <copy verbose="true" todir="${properties.dir}">
             <fileset dir="." casesensitive="yes">
                 <include name="build/classes/**/*.properties"/>
