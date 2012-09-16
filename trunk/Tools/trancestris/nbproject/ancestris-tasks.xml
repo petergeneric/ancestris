@@ -25,7 +25,22 @@
         </xmlproperty>
         <property name="buildnumber" value="${info.entry.commit(revision)}" />
     </target>
-    <target name="jar" depends="init,compile,-manifest-prep,jar-prep" unless="is.jar.uptodate">
+    <target name="build-bundles" description="Builds the zip bundles for translators">
+        <property name="grandparent.dir" location="../.."/>
+        <basename property="grandparent.dirName" file="${grandparent.dir}"/>
+
+        <property name="parent.dir" location=".."/>
+        <basename property="parent.dirName" file="${parent.dir}"/>
+        <basename property="current.dirName" file="${basedir}"/>
+        <property name="properties.dir" location="../../../bundles/${grandparent.dirName}/${parent.dirName}/${current.dirName}"/>
+        <copy verbose="true" todir="${properties.dir}">
+            <fileset dir="." casesensitive="yes">
+                <include name="build/classes/**/*.properties"/>
+            </fileset>
+            <mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" />
+        </copy>
+    </target>
+    <target name="jar" depends="init,compile,-manifest-prep,jar-prep,build-bundles" unless="is.jar.uptodate">
         <copy file="${manifest.mf-temp}" tofile="/tmp/manifest"/>
         <!-- XXX it seems that using <manifest> forces the JAR to be recreated each time -->
         <!-- (presumably due to the variable OIDE-M-I-V) -->
