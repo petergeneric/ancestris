@@ -104,22 +104,26 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 boolean cellHasFocus) // the list and the cell have the focus
         {
             setText(value);
-            Color color;
+            Color foreground;
+            Color background;
             switch (getResourceFile().getLineState(index)) {
                 // The line is the same
                 case -1:
-                    color = Color.BLUE;
+                    foreground = Color.BLUE;
+                    background = list.getBackground();
                     break;
 
                 // the line is not translated
                 case 0:
-                    color = Color.RED;
+                    foreground = Color.RED;
+                    background = Color.LIGHT_GRAY;
                     break;
 
                 // the line is translated or non modifiable
                 case 1:
                 default:
-                    color = list.getForeground();
+                    foreground = list.getForeground();
+                    background = list.getBackground();
                     break;
             }
             if (isSelected) {
@@ -129,8 +133,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 //                    setBackground(list.getSelectionBackground());
 //                    setForeground(list.getSelectionForeground());
             } else {
-                setBackground(list.getBackground());
-                setForeground(color);
+                setBackground(background);
+                setForeground(foreground);
             }
             setEnabled(list.isEnabled());
             setFont(list.getFont());
