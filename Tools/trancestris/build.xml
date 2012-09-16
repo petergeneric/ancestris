@@ -25,24 +25,7 @@
         </replace>
     </target>
     
-    <target name="build-zip-bundles" depends="-init" description="Builds the zip bundles for translators">
-        <property name="properties.dir" location="${app.name}-properties"/>
-        <copy todir="${properties.dir}">
-            <fileset dir="." casesensitive="yes">
-                <include name="**/build/classes/**/*.properties"/>
-            </fileset>
-            <mapper type="regexp" from="^(.*)/build/classes/(.*\.properties)" to="\1/src/\2" />
-        </copy>
-        
-        <zip destfile="${dist.dir}/${app.name}-bundles-${app.version}.zip">
-            <zipfileset dir="${properties.dir}">
-                <include name="**/*.properties"/>
-            </zipfileset>
-        </zip>
-        <delete dir="${properties.dir}"/>
-    </target>
-
-    <target name="build-zip" depends="suite.build-zip,build-zip-bundles">
+    <target name="build-zip" depends="suite.build-zip">
         <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
         <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
         <echo message="${app.name}: update zip-distribution with own stuff"/>
