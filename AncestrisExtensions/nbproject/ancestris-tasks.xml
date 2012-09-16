@@ -32,7 +32,7 @@
         <property name="properties.dir" location="../../bundles/${parent.dirName}/${current.dirName}"/>
         <copy verbose="true" todir="${properties.dir}">
             <fileset dir="." casesensitive="yes">
-                <include name="build/classes/**/*.properties"/>
+                <include name="build/classes/**/Bundle*.properties"/>
             </fileset>
             <mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" />
         </copy>
