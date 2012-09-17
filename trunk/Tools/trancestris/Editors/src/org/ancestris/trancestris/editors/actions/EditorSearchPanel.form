@@ -32,17 +32,19 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="caseSensitiveCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="fromLocaleToggleButton" max="32767" attributes="0"/>
+              <Component id="fromLocaleToggleButton" pref="76" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-              <Component id="toLocaleToggleButton" pref="86" max="32767" attributes="0"/>
+              <Component id="toLocaleToggleButton" pref="81" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="expressionTextField" pref="178" max="32767" attributes="0"/>
+              <Component id="expressionTextField" pref="165" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="searchPreviousButton" pref="93" max="32767" attributes="0"/>
+              <Component id="searchPreviousButton" pref="88" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="searchNextButton" pref="68" max="32767" attributes="0"/>
+              <Component id="searchNextButton" pref="75" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -55,6 +57,7 @@
               <Component id="toLocaleToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="searchPreviousButton" alignment="3" min="-2" max="-2" attributes="0"/>
               <Component id="searchNextButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -111,6 +114,13 @@
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/ancestris/trancestris/editors/actions/Bundle.properties" key="EditorSearchPanel.toLocaleToggleButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/org/ancestris/trancestris/editors/actions/Search24x24.png"/>
         </Property>
       </Properties>
     </Component>

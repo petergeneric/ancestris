@@ -54,6 +54,7 @@ public class EditorSearchPanel extends javax.swing.JPanel {
         searchNextButton = new javax.swing.JButton();
         fromLocaleToggleButton = new javax.swing.JToggleButton();
         toLocaleToggleButton = new javax.swing.JToggleButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), null));
 
@@ -87,22 +88,26 @@ public class EditorSearchPanel extends javax.swing.JPanel {
         localebuttonGroup.add(toLocaleToggleButton);
         toLocaleToggleButton.setText(org.openide.util.NbBundle.getMessage(EditorSearchPanel.class, "EditorSearchPanel.toLocaleToggleButton.text")); // NOI18N
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/ancestris/trancestris/editors/actions/Search24x24.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(caseSensitiveCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fromLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(fromLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
                 .addGap(6, 6, 6)
-                .addComponent(toLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                .addComponent(toLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchPreviousButton, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                .addComponent(searchPreviousButton, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE))
+                .addComponent(searchNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,7 +117,8 @@ public class EditorSearchPanel extends javax.swing.JPanel {
                 .addComponent(expressionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(toLocaleToggleButton)
                 .addComponent(searchPreviousButton)
-                .addComponent(searchNextButton))
+                .addComponent(searchNextButton)
+                .addComponent(jLabel1))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -139,6 +145,7 @@ public class EditorSearchPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox caseSensitiveCheckBox;
     private javax.swing.JTextField expressionTextField;
     private javax.swing.JToggleButton fromLocaleToggleButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.ButtonGroup localebuttonGroup;
     private javax.swing.JButton searchNextButton;
     private javax.swing.JButton searchPreviousButton;
