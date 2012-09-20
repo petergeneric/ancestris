@@ -275,10 +275,12 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private void initComponents() {
 
         localeButtonGroup = new javax.swing.ButtonGroup();
+        jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         scrollPaneComments = new javax.swing.JScrollPane();
         textAreaComments = new javax.swing.JTextArea();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         scrollPaneResourceView = new javax.swing.JScrollPane(resourceFileView);
         resourceFileView = new javax.swing.JList<String>();
@@ -293,21 +295,30 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         setLayout(new java.awt.BorderLayout());
 
+        jPanel5.setLayout(new java.awt.BorderLayout());
+        jPanel5.add(new org.ancestris.trancestris.editors.actions.EditorSearchPanel(this), java.awt.BorderLayout.NORTH);
+        add(jPanel5, java.awt.BorderLayout.NORTH);
+
         jPanel6.setLayout(new java.awt.BorderLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel1.border.title"))); // NOI18N
         jPanel1.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Comment-Window")); // NOI18N
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
+        textAreaComments.setEditable(false);
         textAreaComments.setBackground(new java.awt.Color(184, 207, 229));
         textAreaComments.setColumns(20);
-        textAreaComments.setEditable(false);
         textAreaComments.setRows(5);
         scrollPaneComments.setViewportView(textAreaComments);
 
         jPanel1.add(scrollPaneComments);
 
         jPanel6.add(jPanel1, java.awt.BorderLayout.NORTH);
+
+        jSplitPane1.setDividerSize(10);
+        jSplitPane1.setForeground(java.awt.Color.black);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setResizeWeight(0.75);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel2.border.title"))); // NOI18N
         jPanel2.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-FileToTranslate-Window")); // NOI18N
@@ -326,7 +337,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jPanel2.add(scrollPaneResourceView);
 
-        jPanel6.add(jPanel2, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setTopComponent(jPanel2);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.jPanel3.border.title"))); // NOI18N
         jPanel3.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ToolTip-Translation-Window")); // NOI18N
@@ -334,8 +345,8 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         panelTranslation.setLayout(new java.awt.BorderLayout());
 
-        textAreaTranslation.setColumns(20);
         textAreaTranslation.setEditable(false);
+        textAreaTranslation.setColumns(20);
         textAreaTranslation.setRows(5);
         textAreaTranslation.setDragEnabled(true);
         textAreaTranslation.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -349,7 +360,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jPanel3.add(panelTranslation);
 
-        jPanel6.add(jPanel3, java.awt.BorderLayout.SOUTH);
+        jSplitPane1.setBottomComponent(jPanel3);
+
+        jPanel6.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         add(jPanel6, java.awt.BorderLayout.CENTER);
 
@@ -479,7 +492,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.ButtonGroup localeButtonGroup;
     private javax.swing.JButton nextButton;
     private javax.swing.JPanel panelTranslation;

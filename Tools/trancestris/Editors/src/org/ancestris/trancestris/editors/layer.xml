@@ -42,21 +42,22 @@
                 <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-editors-actions-ReduceFontAction.instance"/>
             </file>
         </folder>
-        <folder name="Edit">
+        <!--folder name="Edit">
             <file name="org-ancestris-trancestris-editors-actions-EditorSearchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-ancestris-trancestris-editors-actions-EditorSearchAction.instance"/>
+                <attr name="position" intvalue="200"/>
             </file>
-        </folder>
+        </folder-->
 
         <file name="UndoRedo_hidden"/>
     </folder>
     <folder name="Windows2">
         <folder name="Components">
-            <file name="ResourceEditorTopComponent.settings" url="ResourceEditorTopComponentSettings.xml"/>
+            <file name="ResourceEditorTopComponent.settings" url="resourceeditor/ResourceEditorTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
             <folder name="editor">
-                <file name="ResourceEditorTopComponent.wstcref" url="ResourceEditorTopComponentWstcref.xml"/>
+                <file name="ResourceEditorTopComponent.wstcref" url="resourceeditor/ResourceEditorTopComponentWstcref.xml"/>
             </folder>
         </folder>
     </folder>
