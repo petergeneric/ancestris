@@ -20,20 +20,21 @@ import org.openide.windows.WindowManager;
  */
 public class EditorSearchPanel extends javax.swing.JPanel {
 
-    private ResourceEditorTopComponent tc = null;
+    private ResourceEditorTopComponent resourceEditorTopComponent = null;
     private static EditorSearchPanel instance = null;
 
     /**
      * Creates new form EditorSearchPanel
      */
-    private EditorSearchPanel() {
+    public EditorSearchPanel(ResourceEditorTopComponent resourceEditorTopComponent) {
         initComponents();
-        tc = (ResourceEditorTopComponent) WindowManager.getDefault().findTopComponent("ResourceEditorTopComponent");
+        this.resourceEditorTopComponent = resourceEditorTopComponent;
+        instance = this;
     }
 
     public static EditorSearchPanel getInstance() {
         if (instance == null) {
-            instance = new EditorSearchPanel();
+            instance = new EditorSearchPanel((ResourceEditorTopComponent) WindowManager.getDefault().findTopComponent("ResourceEditorTopComponent"));
         }
         return instance;
     }
@@ -96,18 +97,18 @@ public class EditorSearchPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(caseSensitiveCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fromLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                .addComponent(fromLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
                 .addGap(6, 6, 6)
-                .addComponent(toLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                .addComponent(toLocaleToggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                .addComponent(expressionTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchPreviousButton, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                .addComponent(searchPreviousButton, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+                .addComponent(searchNextButton, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,21 +125,21 @@ public class EditorSearchPanel extends javax.swing.JPanel {
 
     private void expressionTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_expressionTextFieldKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (tc != null) {
-                tc.search(true, expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
+            if (resourceEditorTopComponent != null) {
+                resourceEditorTopComponent.search(true, expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
             }
         }
 }//GEN-LAST:event_expressionTextFieldKeyPressed
 
     private void searchPreviousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPreviousButtonActionPerformed
-        if (tc != null) {
-            tc.search(false, expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
+        if (resourceEditorTopComponent != null) {
+            resourceEditorTopComponent.search(false, expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
         }
 }//GEN-LAST:event_searchPreviousButtonActionPerformed
 
     private void searchNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchNextButtonActionPerformed
-        if (tc != null) {
-            tc.search(true, expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
+        if (resourceEditorTopComponent != null) {
+            resourceEditorTopComponent.search(true, expressionTextField.getText(), fromLocaleToggleButton.isSelected(), caseSensitiveCheckBox.isSelected());
         }
 }//GEN-LAST:event_searchNextButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
