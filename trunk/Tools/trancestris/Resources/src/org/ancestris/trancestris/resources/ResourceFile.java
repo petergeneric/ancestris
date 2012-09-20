@@ -429,7 +429,7 @@ public class ResourceFile {
             p = Pattern.compile(expression);
 
         }
-        
+
         ResourceStructure searchBundle;
         if (fromLocale == true) {
             searchBundle = fromLanguage;
@@ -465,7 +465,11 @@ public class ResourceFile {
                 return null;
             }
         } else {
-            iterator = toLanguage.iterator();
+            if (toLanguage != null) {
+                iterator = toLanguage.iterator();
+            } else {
+                return null;
+            }
         }
 
         while (iterator.hasNext()) {
