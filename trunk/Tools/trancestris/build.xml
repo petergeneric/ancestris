@@ -17,7 +17,7 @@
             </classpath>
         </taskdef>
     -->
-    <target name="build" depends="suite.build,build-bundles" description="Build all modules in the suite."/>
+    <!--target name="build" depends="suite.build,build-bundles" description="Build all modules in the suite."/-->
     
     <target name="build-launchers" depends="suite.build-launchers">
         <replace file="build/launcher/etc/${app.name}.conf">
@@ -58,7 +58,7 @@
             <arg value="${app.name}.app"/>
         </exec>
     </target>
-    <target name="build-bundles" description="Builds the zip bundles for translators">
+    <!--target name="build-bundles" description="Builds the zip bundles for translators">
         <property name="parent.dir" location=".."/>
         <basename property="parent.dirName" file="${parent.dir}"/>
         <basename property="current.dirName" file="${basedir}"/>
@@ -68,7 +68,7 @@
             <fileset dir="." casesensitive="yes">
                 <include name="branding/**/*.properties"/>
             </fileset>
-            <!--mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" /-->
+            <mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" />
         </copy>
-    </target>
+    </target-->
 </project>
