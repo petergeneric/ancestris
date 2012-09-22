@@ -5,7 +5,6 @@
 
 package ancestris.modules.geo;
 
-import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

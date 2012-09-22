@@ -4,7 +4,6 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
