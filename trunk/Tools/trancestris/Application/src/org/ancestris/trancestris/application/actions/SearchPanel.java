@@ -64,8 +64,6 @@ public class SearchPanel extends javax.swing.JPanel {
         toToggleButton.setSelected(editorSearchPanel.isToLocaleToggleButtonSelected());
         caseSensitiveCheckBox.setSelected(editorSearchPanel.isCaseSensitiveCheckBoxSelected());
         expressionTextField.setText(editorSearchPanel.getExpressionTextField());
-        resultEditorPane.setContentType("text/html"); // lets Java know it will be HTML
-        resultEditorPane.setEditable(false);
         resultEditorPane.addHyperlinkListener(new SearchPanellinkListener());
     }
 
@@ -132,37 +130,36 @@ public class SearchPanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(caseSensitiveCheckBox)
-                        .addGap(10, 10, 10)
-                        .addComponent(fromToggleButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(toToggleButton))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(expressionTextField, GroupLayout.PREFERRED_SIZE, 374, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(searchButton)))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(caseSensitiveCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(fromToggleButton)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(toToggleButton)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(expressionTextField, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(searchButton)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(caseSensitiveCheckBox)
                     .addComponent(fromToggleButton)
                     .addComponent(toToggleButton)
-                    .addComponent(caseSensitiveCheckBox))
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(expressionTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton)))
+                    .addComponent(searchButton))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel1, BorderLayout.NORTH);
 
+        resultEditorPane.setEditable(false);
+        resultEditorPane.setContentType("text/html"); // NOI18N
         resultEditorPane.setMinimumSize(new Dimension(106, 210));
         resultEditorPane.setPreferredSize(new Dimension(106, 210));
         resultScrollPane.setViewportView(resultEditorPane);
@@ -171,20 +168,19 @@ public class SearchPanel extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(Alignment.LEADING)
-            .addGap(0, 487, Short.MAX_VALUE)
+            .addGap(0, 421, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+                    .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(Alignment.LEADING)
-            .addGap(0, 287, Short.MAX_VALUE)
+            .addGap(0, 256, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .addComponent(resultScrollPane, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -249,9 +245,9 @@ public class SearchPanel extends javax.swing.JPanel {
         if (search.isEmpty()) {
             resultEditorPane.setText(NbBundle.getMessage(SearchPanel.class, "SearchPanel.searchResult.text", expressionTextField.getText()));
         } else {
-            MessageFormat oddlink = new MessageFormat("<tr><td bgcolor=Silver><a href= {0}>{0}</a></td></tr>");
-            MessageFormat evenlink = new MessageFormat("<tr><td bgcolor=white><a href= {0}>{0}</a></td></tr>");
-            String resultList = "<table cellpadding=0>";
+            MessageFormat oddlink = new MessageFormat("<p align=\"left\" bgcolor=Silver><a href= {0}>{0}</a></p>");
+            MessageFormat evenlink = new MessageFormat("<p align=\"left\" bgcolor=white><a href= {0}>{0}</a></p>");
+            String resultList = "<style>p {margin-top: 0em; margin-bottom: 2em;}</style>";
             int i = 0;
 
             for (String dirName : search) {
@@ -261,7 +257,6 @@ public class SearchPanel extends javax.swing.JPanel {
                     resultList += evenlink.format(new Object[]{dirName});
                 }
             }
-            resultList += "</table>";
             resultEditorPane.setText(resultList);
         }
     }
