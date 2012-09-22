@@ -4,42 +4,20 @@
  */
 package ancestris.modules.geo;
 
-import genj.gedcom.Context;
-import ancestris.view.AncestrisTopComponent;
-import ancestris.view.AncestrisViewInterface;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.AncestrisDockModes;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.AncestrisViewInterface;
+import genj.gedcom.Context;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import javax.swing.AbstractAction;
-import javax.swing.JColorChooser;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.ToolTipManager;
+import java.util.*;
+import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import org.geonames.Style;
 import org.geonames.Toponym;
@@ -51,17 +29,17 @@ import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 import org.netbeans.api.javahelp.Help;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
+import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
@@ -164,7 +142,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (gpl.getPlaces() == null) {
             gpl.launchPlacesSearch();
         } else {
-            geoPlacesChanged(gpl, "gedcom");
+            geoPlacesChanged(gpl, GeoPlacesList.TYPEOFCHANGE_GEDCOM);
         }
         gpl.addGeoPlacesListener(this);
     }
@@ -272,7 +250,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
         });
 
-        jSpinner1.setFont(new java.awt.Font("DejaVu Sans", 0, 10));
         jSpinner1.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jSpinner1.toolTipText")); // NOI18N
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -367,7 +344,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
+                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,25 +518,24 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(jCheckBox8)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox9)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox10)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jCheckBox11))
-                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel4)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jLabel5)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addComponent(jCheckBox8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox11))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -608,7 +584,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, 0, 290, Short.MAX_VALUE)
+                    .addComponent(jPanel4, 0, 610, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -648,8 +624,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
-            .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -665,7 +641,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1006, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 3363, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -884,12 +860,13 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     @Override
     public void componentClosed() {
         if (getGedcom() != null) {
-            GeoPlacesList gpl = GeoPlacesList.getInstance(getGedcom());
-            gpl.removeGeoPlacesListener(this);
+            GeoPlacesList gpl2 = GeoPlacesList.getInstance(getGedcom());
+            gpl2.removeGeoPlacesListener(this);
         }
         AncestrisPlugin.register(this);
     }
 
+    @Override
     public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -926,6 +903,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         p.setProperty("geoFilter.otherEvents", Boolean.toString(geoFilter.otherEvents));
     }
 
+    @Override
     public void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         final String gedName = p.getProperty("gedcom");
@@ -973,7 +951,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         } else {
             //    Toolkit.getDefaultToolkit().beep();
         }
-        return;
     }
 
     private void customiseFromSettings() {
@@ -1014,9 +991,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
-        if (change.equals("cood")) {
-        } else if (change.equals("name")) {
-        } else if (change.equals("gedcom")) {
+        if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES)) {
+        } else if (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) {
+        } else if (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM)) {
             markers = gpl.getPlaces();
             geoFilter.calculatesIndividuals(getGedcom(), true); // refresh lists from gedcom changes
         }
