@@ -4,17 +4,8 @@
  */
 package ancestris.modules.geo;
 
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyPlace;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import genj.gedcom.*;
+import java.util.*;
 
 /**
  *
@@ -22,6 +13,9 @@ import java.util.TreeMap;
  */
 class GeoPlacesList implements GedcomListener {
 
+    public static String TYPEOFCHANGE_GEDCOM = "gedcom";
+    public static String TYPEOFCHANGE_COORDINATES = "coord";
+    public static String TYPEOFCHANGE_NAME = "name";
     private static SortedMap<Gedcom, GeoPlacesList> instances;
     private final Gedcom gedcom;
     private GeoNodeObject[] geoNodes;
@@ -62,21 +56,20 @@ class GeoPlacesList implements GedcomListener {
 
     @SuppressWarnings("unchecked")
     public synchronized void launchPlacesSearch() {
-        Collection <Entity>entities = gedcom.getEntities();
+        Collection<Entity> entities = gedcom.getEntities();
         List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
-        for (Iterator <Entity>it = entities.iterator(); it.hasNext();) {
+        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
             Entity ent = it.next();
             getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
         }
 
         // search the geo objects locally and else on internet
         new GeoInternetSearch(this, placesProps).executeSearch(gedcom);
-        return;
     }
 
     public void setPlaces(GeoNodeObject[] result) {
         geoNodes = result;
-        notifyListeners("gedcom");
+        notifyListeners(TYPEOFCHANGE_GEDCOM);
         startListening();
     }
 
@@ -147,11 +140,11 @@ class GeoPlacesList implements GedcomListener {
     }
 
     public void refreshPlaceCoord() {
-        notifyListeners("coord");
+        notifyListeners(TYPEOFCHANGE_COORDINATES);
     }
 
     public void refreshPlaceName() {
-        notifyListeners("name");
+        notifyListeners(TYPEOFCHANGE_NAME);
     }
 
     public void reloadPlaces() {
