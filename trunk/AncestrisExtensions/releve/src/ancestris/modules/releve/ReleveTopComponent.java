@@ -45,11 +45,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.openide.util.Exceptions;
-import org.openide.util.HelpCtx;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
+import org.openide.util.*;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -190,7 +186,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                         saveResult = askSaveData();
                     }
                     if ( saveResult ) {
-                        Context context = GedcomDirectory.getDefault().getLastContext();
+                        // je convertis le fichier GEDCOM courant en releve
+                        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null && context.getGedcom() != null) {
                             try {
                                 FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());

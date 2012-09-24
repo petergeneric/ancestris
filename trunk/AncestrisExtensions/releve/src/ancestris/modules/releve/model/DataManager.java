@@ -5,6 +5,7 @@ import ancestris.modules.releve.file.FileBuffer;
 import genj.gedcom.Context;
 import java.util.ArrayList;
 import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -229,7 +230,7 @@ public class DataManager implements PlaceManager {
         valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
         boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
         if ( completion ) {
-            Context context = GedcomDirectory.getDefault().getLastContext();
+            Context context = Utilities.actionsGlobalContext().lookup(Context.class);
             if (context != null && context.getGedcom() != null) {
                 completionProvider.addGedcomCompletion(context.getGedcom());
             } else {

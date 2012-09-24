@@ -26,7 +26,7 @@ public class ReleveFileGedcom {
     }
 
     /**
-     *
+     * convertis eun fichier GEDCOm en releve
      * @param fileName
      */
     public static FileBuffer loadFile(Gedcom gedcom) throws Exception {
