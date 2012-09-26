@@ -1,0 +1,28 @@
+###############################################
+#
+# Count events per place
+#
+# executes in any context
+#
+###############################################
+#
+# TODO: retrieve some external data to complete the example
+#
+###############################################
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX t: <http://genj.sourceforge.net/rdf/GedcomTags/type#> 
+PREFIX r: <http://genj.sourceforge.net/rdf/GedcomTags/rule#> 
+PREFIX p: <http://genj.sourceforge.net/rdf/GedcomTags/predicate#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+PREFIX  fn: <http://www.w3.org/2005/xpath-functions#> 
+PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#> 
+PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#> 
+
+SELECT
+  ?place count(?place)
+{
+  ?entity ?e [a ?eventType; p:PLAC [rdfs:label ?place]]
+}
+ GROUP BY ?place 
+ ORDER BY ?place

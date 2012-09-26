@@ -1,0 +1,6 @@
+﻿@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+<http://sws.geonames.org/4942939/> rdf:label ", Malden, , , Middlesex Co, MA, USA".
+<http://sws.geonames.org/5128581/> rdf:label ", New York City, , , , NY, USA".
+<http://sws.geonames.org/2964529/> rdf:label ", Dunganstown, , , Wexford Co, , Ireland".
+<http://sws.geonames.org/4140963/> rdf:label ", Washington, , , , DC, USA".
+<http://sws.geonames.org/4930956/> rdf:label ", Boston, , , Suffolk Co, MA, USA".
