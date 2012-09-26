@@ -1,0 +1,176 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Semantic Web mash ups</title>
+        <link rel="stylesheet" href="./ancestris.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="./ancestris.css">
+    </head>
+    <body>
+        <a name="_Top_"></a>
+        <center>
+            <h2 class="ancestris_help_title">Semantic Web mash ups</h2>
+        </center>
+        <br>
+        <table border="0" width="100%">
+            <tr>
+                <td width="65%">
+                    &nbsp;
+                </td>
+                <td width="35%">
+                    <p style="font-style: italic; text-align: justify;
+                    text-justify: newspaper; font-size: 10px;">
+                        <font color="#0b7700"><u>Author</u></font>: Jo Pol.<br>
+                        <font color="#0b7700"><u>Maintenance</u></font>: Jo Pol, You.
+                    </p>
+                </td>
+             </tr>
+        </table>
+        <br>
+
+        <p class="justify">
+            With external tools you can combine your converted gedcom with more semantic data data on the web.
+        </p>
+
+        <a name="semantic-intro"></a>
+        <h3 class="ancestris_help_title">Introduction to the semantic web</h3>
+
+        <p class="justify">
+            The semantic web uses triples of URI's: subject predicate object.
+            These triples can be stored in different formats. RDF is the most widely supprted format.
+            The turtle format is much less verbose and therefore easier to read.
+        </p>
+        <p class="justify">
+            An ontology (also expressed in triples) explains and defines types and meanings.
+            An ontology also implies inference. The mother of all ontologies is OWL. 
+            At the moment applying full-fledged inference is slow. Common practice
+            is to apply just the rules you actually need.
+            This is a very brief introduction but it should have the most important
+            pointers to start browsing the web about the subject.
+        </p>
+        <p class="justify">
+            The conversion performed by the plugin does not comply to an established ontology.
+            Cross site queries and inference would be easier when using
+            something like FOAF or a similar ontology. 
+            The chosen format however was quick and easy to implement
+            and is easy to recognise by GedCom tigers.
+            It might be wise to monitor for ontologies that might emerge and could
+            replace the quick-and-dirty approach.
+            A start is made with an ontology to bridge the gap between the unortodox format and the web.
+            The status is not clear but you can find the plain text file
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="in the code base">
+                <param name="text" value="<html><u>http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/GedcomTags.ttl</u></html>">
+                <param name="textFontSize" value="medium">
+                <param name="textColor" value="blue">
+            </object><br/>
+        </p>
+
+        <h3 class="ancestris_help_title">Mash up in short</h3>
+
+        <a name="rdf-data"></a>
+        <p class="justify">
+            To mash up anything you need external data. 
+            DbPedia could be an interesting almanac, 
+            for example to find famous contemporary local people.
+            GeoNames is interesting for maps.
+            For a start you could download some intersting cities that are relevant for your family-tree.
+            <br>A DBPedia example:
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://dbpedia.org/resource/Berlin/">
+                <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
+                <param name="textFontSize" value="medium">
+                <param name="textColor" value="blue">
+            </object>
+            <br/>Amsterdam from GeoNames
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="http://www.geonames.org/2759794/amsterdam.html">
+                <param name="text" value="<html><u>http://sws.geonames.org/2759794/about.rdf</u></html>">
+                <param name="textFontSize" value="medium">
+                <param name="textColor" value="blue">
+            </object><br/>
+            You may find more intersting resources via the
+            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                <param name="content" value="LOD cloud diagram">
+                <param name="text" value="<html><u>http://richard.cyganiak.de/2007/10/lod/</u></html>">
+                <param name="textFontSize" value="medium">
+                <param name="textColor" value="blue">
+            </object><br/>
+        </p>
+
+        <p class="justify">
+            Jena is just an example of available tools.
+            Convert your GedCom with the RDF-plugin of Ancestris. 
+            aThen you can use the jena command line tools 
+            to merge it with relevant resources you from the web and execute queries.
+        </p>
+        <h4>More than you want to know:</h4>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="jena.apache.org">
+            <param name="text" value="<html><u>http://jena.apache.org/documentation/query/cmds.html</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+        <h4>The least you want to know:</h4>
+        <p>
+            Follow the download link, get apache-jena and unpack it. 
+            Open a command line window and adjust <em>x.y.z</em> each <em>PATH_TO</em>
+            in the commands below to your situation. 
+        </p>
+        <p>Windows</p>
+        <pre>
+            set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
+            %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO\*.rdf > c:\PATH_TO\merged.n3
+            %JENAROOT%\bat\arq.bat --graph c:\PATH_TO\merged.rdf --graph c:\PATH_TO\gedcom.ttl -graph c:\PATH_TO\links.n3 --query c:\PATH_TO\query.arq
+        </pre>
+        <p>Mac / Unix</p>
+        <pre>
+            set JENAROOT=/PATH_TO/apache-jena-x.y.z
+            $JENAROOT/bin/rdfcat -out N3 /PATH_TO/*.rdf > /PATH_TO/merged.n3
+            $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl -graph /PATH_TO/links.n3 --query /PATH_TO/query.arq
+        </pre>
+        <p>
+            The file <em>merged.n3</em> is intended for data downloaded from the web. You may have to delete warnings at the top of the file.
+            Note that the variable JENAROOT is not just to provide shorthands, but required by the tool.
+            The query files for the plugin lack namespace prefixes and therfore can't be used by the tool as-is.
+            Files to try with the Kennedies:<br/>
+        </p>
+        <ul>
+            <li>a query <a href="./reports/mashup.arq">mashup.arq</a></li>
+            <li>linking downloaded data with gedcom data <a href="./reports/links.n3">links.n3</a></li>
+            <li>downloaded and merged <a href="./reports/cashed.ttl">merged.n3</a></li>
+        </ul>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="mashup.arq">
+            <param name="text" value="<html><u>http://jena.apache.org/documentation/query/cmds.html</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+        <h3>FAQ</h3>
+        <dl>
+            <dt>the query complains about prefixes</dt>
+            <dd>Remove the warninngs about illegal characters in the file <em>merged.n3</em></dd>
+            <dt>...</dt>
+            <dd>...</dd>
+        </dl>
+        <br>
+        <br>
+        <br>
+        <br>
+        <a href="rdf-todo.html#_Top_">Top</a>
+        <br>
+        <br>
+    </body>
+</html>
+<!--
+Tip: to create a link which will open in an external web browser, try on the end of a line/paragraph:
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+    <param name="content" value="http://www.netbeans.org/">
+    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
+    <param name="textFontSize" value="medium">
+    <param name="textColor" value="blue">
+</object>
+To create a link to a help set from another module, you need to know the code name base and path, e.g.:
+<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
+(This link will behave sanely if that module is disabled or missing.)
+-->

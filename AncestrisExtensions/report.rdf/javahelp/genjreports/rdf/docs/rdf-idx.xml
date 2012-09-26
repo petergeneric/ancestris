@@ -4,6 +4,7 @@
     <indexitem text="SPARQL reports - Title" target="genjreports.rdf.title"/>
     <indexitem text="SPARQL reports - General description" target="genjreports.rdf.about"/>
     <indexitem text="SPARQL reports - examples" target="genjreports.rdf.examples"/>
+    <indexitem text="SPARQL reports - mashups" target="genjreports.rdf.mashups"/>
     <indexitem text="SPARQL reports - submit examples" target="genjreports.rdf.submit"/>
     <indexitem text="SPARQL reports - ToDo" target="genjreports.rdf.todo"/>
 </index>
