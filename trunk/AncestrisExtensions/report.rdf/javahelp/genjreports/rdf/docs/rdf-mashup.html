@@ -9,7 +9,7 @@
     <body>
         <a name="_Top_"></a>
         <center>
-            <h2 class="ancestris_help_title">Semantic Web mash ups</h2>
+            <h2 class="ancestris_help_title">Semantic Web: mash ups and batches</h2>
         </center>
         <br>
         <table border="0" width="100%">
@@ -29,7 +29,8 @@
         <br>
 
         <p class="justify">
-            With external tools you can combine your converted gedcom with more semantic data data on the web.
+            With external tools you can combine your converted gedcom with more semantic data data 
+            than just a single family tree.
         </p>
 
         <a name="semantic-intro"></a>
@@ -70,7 +71,7 @@
 
         <a name="rdf-data"></a>
         <p class="justify">
-            To mash up anything you need external data. 
+            You can query multiple family trees at once and/or data from the web.
             DbPedia could be an interesting almanac, 
             for example to find famous contemporary local people.
             GeoNames is interesting for maps.
@@ -112,7 +113,7 @@
             <param name="textColor" value="blue">
         </object>
         <h4>The least you want to know:</h4>
-        <p>
+        <p class="justify">
             Follow the download link, get apache-jena and unpack it. 
             Open a command line window and adjust <em>x.y.z</em> each <em>PATH_TO</em>
             in the commands below to your situation. 
@@ -129,7 +130,7 @@
             $JENAROOT/bin/rdfcat -out N3 /PATH_TO/*.rdf > /PATH_TO/merged.n3
             $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl -graph /PATH_TO/links.n3 --query /PATH_TO/query.arq
         </pre>
-        <p>
+        <p class="justify">
             The file <em>merged.n3</em> is intended for data downloaded from the web. You may have to delete warnings at the top of the file.
             Note that the variable JENAROOT is not just to provide shorthands, but required by the tool.
             The query files for the plugin lack namespace prefixes and therfore can't be used by the tool as-is.
@@ -146,6 +147,11 @@
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
+        <h3>Batches</h3>
+        <p class="justify">
+            In case you are running the multiple queries over and over again,
+            you could create a batch file with the appopriate commands.
+        </p>
         <h3>FAQ</h3>
         <dl>
             <dt>the query complains about prefixes</dt>

@@ -4,6 +4,7 @@
     <tocitem expand="true" text="RDF / SPARQL based reports" target="genjreports.rdf.title">
         <tocitem text="general description" target="genjreports.rdf.about" />
         <tocitem text="examples" target="genjreports.rdf.examples" />
+        <tocitem text="mashups and batches" target="genjreports.rdf.mashup" />
         <tocitem text="submit more examples" target="genjreports.rdf.submit" />
         <tocitem text="What next? ToDo" target="genjreports.rdf.todo" />
     </tocitem>
