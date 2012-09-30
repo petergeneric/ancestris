@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
-        <title>Semantic Web: mash ups and batches</title>
+        <title>Batches and Semantic Web mash ups</title>
         <link rel="stylesheet" href="./ancestris.css" type="text/css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="./ancestris.css">
@@ -9,7 +9,7 @@
     <body>
         <a name="_Top_"></a>
         <center>
-            <h2 class="ancestris_help_title">Semantic Web: mash ups and batches</h2>
+            <h2 class="ancestris_help_title">Batches and Semantic Web mash ups</h2>
         </center>
         <br>
         <table border="0" width="100%">
@@ -124,6 +124,9 @@
             in the commands below to your situation. 
             Note that the variable JENAROOT is not just to provide shorthands,
             but is required by the other commands.
+            Creation and using the file <code>merged.n3</code> is optional,
+            it is intended for data downloaded from the web. 
+            The option <code>--help</code> explains more about the commands.
         </p>
         <p>Windows</p>
         <pre>
@@ -138,9 +141,7 @@
             $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl -graph /PATH_TO/links.n3 --query /PATH_TO/query.arq > /PATH_TO/result.txt
         </pre>
         <p class="justify">
-            Creation and using the file <code>merged.n3</code> is optional,
-            it is intended for data downloaded from the web. 
-            Files to try with the Kennedies:<br/>
+            Mashup example for the Kennedy family tree:<br/>
         </p>
         <ul>
             <li>a query <a href="./reports/mashup.arq">mashup.arq</a></li>
@@ -166,7 +167,7 @@
                    if you want to use them with the command line.
                 </p></li></ul>
             </dd>
-            <dt>The XML produced by the plugin looks like a nice table, the batch result is plain xml.</dt>
+            <dt>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</dt>
             <dd>The plugin inserts an XSLT reference into the xml. 
                 The browsers applies that transformation into HTML.
                 With the batch tool, you have to insert that XSLT reference by yourself.
