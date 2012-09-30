@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
-        <title>Semantic Web mash ups</title>
+        <title>Semantic Web: mash ups and batches</title>
         <link rel="stylesheet" href="./ancestris.css" type="text/css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="./ancestris.css">
@@ -29,25 +29,25 @@
         <br>
 
         <p class="justify">
-            With external tools you can combine your converted gedcom with more semantic data data 
-            than just a single family tree.
+            With external tools you can query more than just a single family tree,
+            or create a batch that generates mutiple reports in one go.
         </p>
 
         <a name="semantic-intro"></a>
         <h3 class="ancestris_help_title">Introduction to the semantic web</h3>
 
         <p class="justify">
+            This is a very brief introduction but it should have the most important
+            pointers to start browsing the web about the subject.
             The semantic web uses triples of URI's: subject predicate object.
             These triples can be stored in different formats. RDF is the most widely supprted format.
             The turtle format is much less verbose and therefore easier to read.
-        </p>
-        <p class="justify">
-            An ontology (also expressed in triples) explains and defines types and meanings.
-            An ontology also implies inference. The mother of all ontologies is OWL. 
+            The triples get meanings with ontologies (also expressed in triples)
+            though a human can guess a lot without following the mathematical definitions.
+            The mother of all ontologies is OWL. An ontology also implies inference. 
+            For example: A isAncesterOf B, B isAncestorOf C -> A isAncestorOf C.
             At the moment applying full-fledged inference is slow. Common practice
             is to apply just the rules you actually need.
-            This is a very brief introduction but it should have the most important
-            pointers to start browsing the web about the subject.
         </p>
         <p class="justify">
             The conversion performed by the plugin does not comply to an established ontology.
@@ -71,7 +71,9 @@
 
         <a name="rdf-data"></a>
         <p class="justify">
-            You can query multiple family trees at once and/or data from the web.
+            The plugin lets you query just a single family tree. 
+            The used techniques however allow to 
+            cross-query multiple family trees and/or data from the web.
             DbPedia could be an interesting almanac, 
             for example to find famous contemporary local people.
             GeoNames is interesting for maps.
@@ -99,11 +101,14 @@
             </object><br/>
         </p>
 
+        <h3 class="ancestris_help_title">Batches in short</h3>
         <p class="justify">
+            The plugin uses the jena library to perform its tasks. 
+            Jena has also command line tools that can perform the same tasks and more, 
+            except for the conversion from the gedcom to triples.
             Jena is just an example of available tools.
-            Convert your GedCom with the RDF-plugin of Ancestris. 
-            aThen you can use the jena command line tools 
-            to merge it with relevant resources you from the web and execute queries.
+            You can use the command line tools for mashups and/or
+            create batches to run multiple queries with a single command.
         </p>
         <h4>More than you want to know:</h4>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
@@ -114,32 +119,33 @@
         </object>
         <h4>The least you want to know:</h4>
         <p class="justify">
-            Follow the download link, get apache-jena and unpack it. 
-            Open a command line window and adjust <em>x.y.z</em> each <em>PATH_TO</em>
+            Look for downloads via the link above, get apache-jena and unpack it. 
+            Open a command line window and adjust <code>x.y.z</code> and each <code>PATH_TO</code>
             in the commands below to your situation. 
+            Note that the variable JENAROOT is not just to provide shorthands,
+            but is required by the other commands.
         </p>
         <p>Windows</p>
         <pre>
             set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
             %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO\*.rdf > c:\PATH_TO\merged.n3
-            %JENAROOT%\bat\arq.bat --graph c:\PATH_TO\merged.rdf --graph c:\PATH_TO\gedcom.ttl -graph c:\PATH_TO\links.n3 --query c:\PATH_TO\query.arq
+            %JENAROOT%\bat\arq.bat --graph c:\PATH_TO\merged.rdf --graph c:\PATH_TO\gedcom.ttl -graph c:\PATH_TO\links.n3 --query c:\PATH_TO\query.arq > c:\PATH_TO\result.txt
         </pre>
         <p>Mac / Unix</p>
         <pre>
             set JENAROOT=/PATH_TO/apache-jena-x.y.z
             $JENAROOT/bin/rdfcat -out N3 /PATH_TO/*.rdf > /PATH_TO/merged.n3
-            $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl -graph /PATH_TO/links.n3 --query /PATH_TO/query.arq
+            $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl -graph /PATH_TO/links.n3 --query /PATH_TO/query.arq > /PATH_TO/result.txt
         </pre>
         <p class="justify">
-            The file <em>merged.n3</em> is intended for data downloaded from the web. You may have to delete warnings at the top of the file.
-            Note that the variable JENAROOT is not just to provide shorthands, but required by the tool.
-            The query files for the plugin lack namespace prefixes and therfore can't be used by the tool as-is.
+            Creation and using the file <code>merged.n3</code> is optional,
+            it is intended for data downloaded from the web. 
             Files to try with the Kennedies:<br/>
         </p>
         <ul>
             <li>a query <a href="./reports/mashup.arq">mashup.arq</a></li>
+            <li>downloaded and merged data <a href="./reports/cashed.ttl">merged.n3</a></li>
             <li>linking downloaded data with gedcom data <a href="./reports/links.n3">links.n3</a></li>
-            <li>downloaded and merged <a href="./reports/cashed.ttl">merged.n3</a></li>
         </ul>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
             <param name="content" value="mashup.arq">
@@ -147,17 +153,28 @@
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
-        <h3>Batches</h3>
-        <p class="justify">
-            In case you are running the multiple queries over and over again,
-            you could create a batch file with the appopriate commands.
-        </p>
-        <h3>FAQ</h3>
+        <h3 class="ancestris_help_title">FAQ</h3>
         <dl>
-            <dt>the query complains about prefixes</dt>
-            <dd>Remove the warninngs about illegal characters in the file <em>merged.n3</em></dd>
-            <dt>...</dt>
-            <dd>...</dd>
+            <dt>The <code>arq</code> command complains about prefixes.</dt>
+            <dd><p>This might have one of the following causes:</p>
+                <ul><li><p>
+                    Remove the warninngs about illegal characters in the file <em>merged.n3</em>
+                </p></li><li><p>
+                   The mashup example for the Kennedy's contains explicit namespace prefixes.
+                   The other examples don't, the plugin fills in the prefixes.
+                   So copy the header of the mashup query into the other queries 
+                   if you want to use them with the command line.
+                </p></li></ul>
+            </dd>
+            <dt>The XML produced by the plugin looks like a nice table, the batch result is plain xml.</dt>
+            <dd>The plugin inserts an XSLT reference into the xml. 
+                The browsers applies that transformation into HTML.
+                With the batch tool, you have to insert that XSLT reference by yourself.
+                By the way, most browsers don't like cross-site scripting,
+                so the XML and XSLT file should be in the same doamin.
+            </dd>
+            <dt><p>...</p></dt>
+            <dd><p>...</p></dd>
         </dl>
         <br>
         <br>
