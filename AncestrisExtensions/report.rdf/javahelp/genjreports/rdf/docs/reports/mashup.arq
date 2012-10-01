@@ -1,25 +1,26 @@
-###############################################
+###########################################################
 #
-# Count events per place
+# Count events per place 
+# mashed up with co-ordinates and other external data
 #
-# executes in any context
+# see the batch/mashup help page for the required context
 #
-###############################################
-#
-# TODO: retrieve some external data to complete the example
-#
-###############################################
+###########################################################
 
-PREFIX rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-PREFIX rdfs:       <http://www.w3.org/2000/01/rdf-schema#> 
-PREFIX xsd:        <http://www.w3.org/2001/XMLSchema#> 
-PREFIX wgs84_pos:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+### from external data
+PREFIX rdf:         <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:        <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX xsd:         <http://www.w3.org/2001/XMLSchema#> 
+PREFIX wgs84_pos:   <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX gn:          <http://www.geonames.org/ontology#>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-
+### from converted gedcom
 PREFIX t: <http://genj.sourceforge.net/rdf/GedcomTags/type#> 
 PREFIX r: <http://genj.sourceforge.net/rdf/GedcomTags/rule#> 
 PREFIX p: <http://genj.sourceforge.net/rdf/GedcomTags/predicate#> 
 
+### language extensions
 PREFIX  fn: <http://www.w3.org/2005/xpath-functions#> 
 PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#> 
 PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#> 
@@ -29,14 +30,23 @@ SELECT DISTINCT
   (count(?place) as ?nr_of_events)
   ?lat
   ?long
+  (str(?foundingDate) as ?founding_date)
 {
   ?entity ?e [a ?eventType; p:PLAC [rdfs:label ?place]].
   OPTIONAL
   {
-    ?gn rdf:label ?place;
-        wgs84_pos:lat ?lat;
-        wgs84_pos:long ?long.
+    ?geonames rdf:label ?place;
+              a gn:Feature;
+              wgs84_pos:lat ?lat;
+              wgs84_pos:long ?long.
+  }
+  OPTIONAL
+  {
+    ?dbpedia rdf:label ?place;
+             a dbpedia-owl:Settlement;
+             dbpedia-owl:foundingDate ?foundingDate.
   }
 }
- GROUP BY ?place ?lat ?long
- ORDER BY DESC(?lat) ?place
+GROUP BY ?place ?lat ?long ?foundingDate
+ORDER BY ?lat ?place
+# ORDER BY DESC(?lat) ?place
