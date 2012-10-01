@@ -159,7 +159,8 @@
             <dt>The <code>arq</code> command complains about prefixes.</dt>
             <dd><p>This might have one of the following causes:</p>
                 <ul><li><p>
-                    Remove the warninngs about illegal characters in the file <em>merged.n3</em>
+                    Remove the warninngs about illegal characters
+                    in the file <code>merged.n3</code>
                 </p></li><li><p>
                    The mashup example for the Kennedy's contains explicit namespace prefixes.
                    The other examples don't, the plugin fills in the prefixes.
@@ -167,12 +168,22 @@
                    if you want to use them with the command line.
                 </p></li></ul>
             </dd>
-            <dt>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</dt>
-            <dd>The plugin inserts an XSLT reference into the xml. 
-                The browsers applies that transformation into HTML.
-                With the batch tool, you have to insert that XSLT reference by yourself.
-                By the way, most browsers don't like cross-site scripting,
-                so the XML and XSLT file should be in the same doamin.
+            <dt><p>The <code>arq</code> command complains about Triples not terminated by DOT</p></dt>
+            <dd><p>The format N3 and TTL may reduce the predicates
+                   <code>rdf:type</code> and <code>owl:sameAs</code> to
+                   "a" respectively "=". 
+                   It looks like <code>arq</code> does not (yet?) support the latter. 
+                   So replace the predicate "=" by "owl:sameAs"
+                   in the file <code>merged.n3</code>
+                </p>
+            </dd>
+            <dt><p>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</p></dt>
+            <dd><p>The plugin inserts an XSLT reference into the xml. 
+                   The browsers applies that transformation into HTML.
+                   With the batch tool, you have to insert that XSLT reference by yourself.
+                   By the way, most browsers don't like cross-site scripting,
+                   so the XML and XSLT file should be in the same doamin.
+                </p>
             </dd>
             <dt><p>...</p></dt>
             <dd><p>...</p></dd>
