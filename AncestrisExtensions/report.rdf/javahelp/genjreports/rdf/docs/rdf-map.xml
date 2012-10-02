@@ -4,7 +4,7 @@
     <mapID target="genjreports.rdf.title" url="rdf-title.html"/>
     <mapID target="genjreports.rdf.about" url="rdf-about.html"/>
     <mapID target="genjreports.rdf.examples" url="rdf-examples.html"/>
-    <mapID target="genjreports.rdf.mashups" url="rdf-mashups.html"/>
+    <mapID target="genjreports.rdf.mashup" url="rdf-mashup.html"/>
     <mapID target="genjreports.rdf.submit" url="rdf-submit.html"/>
     <mapID target="genjreports.rdf.todo" url="rdf-todo.html"/>
 </map>
