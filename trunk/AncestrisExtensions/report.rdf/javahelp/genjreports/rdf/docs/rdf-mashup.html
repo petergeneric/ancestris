@@ -32,6 +32,12 @@
             With external tools you can query more than just a single family tree,
             or create a batch that generates mutiple reports in one go.
         </p>
+        <ol>
+            <li> <a href="rdf-about.html#semantic-intro">Introduction to the semantic web</a></li>
+            <li> <a href="rdf-about.html#batches">Batches in short</a></li>
+            <li> <a href="rdf-about.html#mashup">Mash up in short</a></li>
+            <li> <a href="rdf-about.html#FAQ">FAQ</a></li>
+        </ol>
 
         <a name="semantic-intro"></a>
         <h3 class="ancestris_help_title">Introduction to the semantic web</h3>
@@ -59,49 +65,17 @@
             replace the quick-and-dirty approach.
             A start is made with an ontology to bridge the gap between the unortodox format and the web.
             The status is not clear but you can find the plain text file
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="in the code base">
-                <param name="text" value="<html><u>http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/GedcomTags.ttl</u></html>">
-                <param name="textFontSize" value="medium">
-                <param name="textColor" value="blue">
-            </object><br/>
         </p>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="in the code base">
+            <param name="text" value="<html><u>http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/GedcomTags.ttl</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object><br/>
 
-        <h3 class="ancestris_help_title">Mash up in short</h3>
-
-        <a name="rdf-data"></a>
-        <p class="justify">
-            The plugin lets you query just a single family tree. 
-            The used techniques however allow to 
-            cross-query multiple family trees and/or data from the web.
-            DbPedia could be an interesting almanac, 
-            for example to find famous contemporary local people.
-            GeoNames is interesting for maps.
-            For a start you could download some intersting cities that are relevant for your family-tree.
-            <br>A DBPedia example:
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="http://dbpedia.org/resource/Berlin/">
-                <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
-                <param name="textFontSize" value="medium">
-                <param name="textColor" value="blue">
-            </object>
-            <br/>Amsterdam from GeoNames
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="http://www.geonames.org/2759794/amsterdam.html">
-                <param name="text" value="<html><u>http://sws.geonames.org/2759794/about.rdf</u></html>">
-                <param name="textFontSize" value="medium">
-                <param name="textColor" value="blue">
-            </object><br/>
-            You may find more intersting resources via the
-            <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                <param name="content" value="LOD cloud diagram">
-                <param name="text" value="<html><u>http://richard.cyganiak.de/2007/10/lod/</u></html>">
-                <param name="textFontSize" value="medium">
-                <param name="textColor" value="blue">
-            </object><br/>
-        </p>
-
+        <a name="batches"></a>
         <h3 class="ancestris_help_title">Batches in short</h3>
+
         <p class="justify">
             The plugin uses the jena library to perform its tasks. 
             Jena has also command line tools that can perform the same tasks and more, 
@@ -110,6 +84,7 @@
             You can use the command line tools for mashups and/or
             create batches to run multiple queries with a single command.
         </p>
+
         <h4>More than you want to know:</h4>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
             <param name="content" value="jena.apache.org">
@@ -117,6 +92,7 @@
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
+
         <h4>The least you want to know:</h4>
         <p class="justify">
             Look for downloads via the link above, get apache-jena and unpack it. 
@@ -131,40 +107,86 @@
         <p>Windows</p>
         <pre>
             set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
-            %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO\*.rdf > c:\PATH_TO\merged.n3
-            %JENAROOT%\bat\arq.bat --graph c:\PATH_TO\merged.rdf --graph c:\PATH_TO\gedcom.ttl --graph c:\PATH_TO\links.n3 --query c:\PATH_TO\query.arq > c:\PATH_TO\result.txt
+            %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO_DOWNLOADS\*.rdf > merged.n3
+            %JENAROOT%\bat\arq.bat --graph merged.rdf --graph gedcom.ttl --graph links.n3 --query query.arq > result.txt
         </pre>
         <p>Mac / Unix</p>
         <pre>
             set JENAROOT=/PATH_TO/apache-jena-x.y.z
-            $JENAROOT/bin/rdfcat -out N3 /PATH_TO/*.rdf > /PATH_TO/merged.n3
-            $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl --graph /PATH_TO/links.n3 --query /PATH_TO/query.arq > /PATH_TO/result.txt
+            $JENAROOT/bin/rdfcat -out N3 /PATH_TO_DOWNLOADS/*.rdf > merged.n3
+            $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --graph links.n3 --query query.arq > result.txt
         </pre>
+
+        <a name="mashup"></a>
+        <h3 class="ancestris_help_title">Mash up in short</h3>
+
+        <a name="rdf-data"></a>
         <p class="justify">
-            Mashup example for the Kennedy family tree:<br/>
+            The plugin lets you query just a single family tree. 
+            The used techniques however allow to 
+            cross-query multiple family trees and/or data from the web.
+            DbPedia could be an interesting almanac, 
+            for example to find famous contemporary local people.
+            GeoNames is interesting for maps.
+            For a start you could download some intersting cities that are relevant for your family-tree.
         </p>
-        <ul>
-            <li>a query <a href="./kennedy-mashup/mashup.arq">mashup.arq</a></li>
-            <li>downloaded and merged data <a href="./kennedy-mashup/merged.n3">merged.n3</a></li>
-            <li>linking downloaded data with gedcom data <a href="./kennedy-mashup/links.n3">links.n3</a></li>
-            <li>check for duplicate keys <a href="./kennedy-mashup/checkDuplicates.arq">checkDuplicates.arq</a></li>
-        </ul>
+        <p>A DBPedia example:</p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="mashup.arq">
-            <param name="text" value="<html><u>http://jena.apache.org/documentation/query/cmds.html</u></html>">
+            <param name="content" value="http://dbpedia.org/resource/Berlin/">
+            <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
+        <p>Amsterdam from GeoNames</p>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://www.geonames.org/2759794/amsterdam.html">
+            <param name="text" value="<html><u>http://sws.geonames.org/2759794/about.rdf</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+        <p>You may find more intersting resources via the</p>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="LOD cloud diagram">
+            <param name="text" value="<html><u>http://richard.cyganiak.de/2007/10/lod/</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+
+        <p class="justify">
+            The files for a possible approach:
+        </p>
+        <ul>
+            <li><a href="./kennedy-mashup/mashup.arq">mashup.arq</a>
+                a sample query, you may want to select other properties.
+            </li>
+            <li><a href="./kennedy-mashup/checkDuplicates.arq">checkDuplicates.arq</a>
+                checks for duplicate keys in your variant of <code>links.n3</code> file.
+            </li>
+        </ul>
+        <p class="justify">
+            with external data for the Kennedy family
+        </p>
+        <ul>
+            <li><a href="./kennedy-mashup/merged.n3">merged.n3</a>
+                downloaded and merged data   
+            </li>
+            <li><a href="./kennedy-mashup/links.n3">links.n3</a>
+                linking downloaded data to gedcom data 
+            </li>
+        </ul>
+
+        <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
+
         <dl>
             <dt>The <code>arq</code> command complains about prefixes.</dt>
             <dd><p>This might have one of the following causes:</p>
                 <p>a) Remove the warninngs about illegal characters
-                   in the file <code>merged.n3</code>
+                   in your variant of <code>merged.n3</code>
                 </p><p>
                    b) The mashup example contains explicit namespace prefixes.
-                   The other examples don't, the plugin fills in the prefixes.
-                   So copy the header of the mashup query into the other queries 
+                   The other <a href="rdf-examples.html">examples</a> don't, the plugin fills in the prefixes.
+                   So copy the required prefixes of the mashup query into the other queries 
                    if you want to use them with the command line.
                 </p>
             </dd>
@@ -181,26 +203,52 @@
             <dd><p>The plugin inserts an XSLT reference into the xml. 
                    Browsers apply that transformation into HTML.
                    With the batch tool, you have to insert that XSLT reference by yourself, add as second line:
-                   <br><code>&lt;?xml-stylesheet type="text/xsl" href="result-to-html.xsl"?&gt;</code><br>
-                   By the way, most browsers don't like cross-site scripting,
-                   so the XML and XSL file should be in the same doamin.
+                   <br><code>&lt;?xml-stylesheet type="text/xsl" href="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl"?&gt;</code><br>
+                   NOTE that most browsers don't like cross-site scripting,
+                   so save the XSL file in the same domain as your query result.
                 </p>
             </dd>
             <dt><p>How to collect the resources for <code>merged.n3</code>?</p></dt>
-            <dd><p>Run the mashup query. 
+            <dd><p>Run the mashup query without the <code>links.n3</code> and without the <code>merged.n3</code> files. 
+                </p>
+                <p class="justify">
                    Find the places with show-on-map on www.geonames.org
                    The baloon with details has a "semantic web rdf" link, download it. 
-                   Drop the "about.rdf" when you add the "isDefinedBy" to <code>links.n3</code>
+                   Add the corresponding "isDefinedBy" to your variant of <code>links.n3</code>
                    with a plain text editor.
-                   Run merge, then run the mashup query again.
-                   Translate the seeAlso URLs from <code>http://dbpedia.org/resource/*</code>
+                </p>
+                <p class="justify">
+                   Run merge, then run the mashup query again but now 
+                   with your variants of the <code>links.n3</code> and <code>merged.n3</code> files.
+                </p>
+                <p class="justify">
+                   Translate the "seeAlso" URLs from <code>http://dbpedia.org/resource/*</code>
                    to <code>http://dbpedia.org/data/*.n3</code>
                    and/or <code>http://dbpedia.org/data/*.rdf</code>
                    and download the translated URLs.
-                   Which URL(s) to add as "seeAlso" <code>links.n3</code> is less clear.
-                   You may want to explore what is commonly avalable anyhow via 
-                   <code>http://wiki.dbpedia.org/OnlineAccess#h28-6</code>
+                   Add the corresponding "seeAlso" to your variant of <code>links.n3</code>
+                   with a plain text editor, 
+                   I haven't found out yet which variant of the URL to use exactly.
                 </p>
+                <p>Run merge again for the final run of the mashup query.</p>
+            </dd>
+            <dt><p>What dbPedia properties are commonly available?</p></dt>
+            <dd>
+                <p>Find available properties in a variation of the following query</p>
+                <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                    <param name="content" value="dbpedia.org/snorql">
+                    <param name="text" value="<html><u>http://dbpedia.org/snorql/?query=SELECT+DISTINCT+%3Fproperty%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands%3B%0D%0A++++%3Fproperty+%3Fvalue%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29</u></html>">
+                    <param name="textFontSize" value="medium">
+                    <param name="textColor" value="blue">
+                </object>
+                <p>Try interesting properties in a variation of the following query</p>
+                <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+                    <param name="content" value="dbpedia.org/snorql">
+                    <param name="text" value="<html><u>http://dbpedia.org/snorql/?query=SELECT+DISTINCT+*+%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands.%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3Apopulation+%3Fpopulation}%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3ApopulationAsOf+%3FpopulationAsOf}%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29</u></html>">
+                    <param name="textFontSize" value="medium">
+                    <param name="textColor" value="blue">
+                </object>
+                <p>The restriction to a smaller region keeps the queries relatively quick.</p>
             </dd>
             <dt><p>...</p></dt>
             <dd><p>...</p></dd>
@@ -215,7 +263,7 @@
     </body>
 </html>
 <!--
-Tip: to create a link which will open in an external web browser, try on the end of a line/paragraph:
+Tip: to create a link which will open in an external web browser, outside a paragraph:
 <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
     <param name="content" value="http://www.netbeans.org/">
     <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
