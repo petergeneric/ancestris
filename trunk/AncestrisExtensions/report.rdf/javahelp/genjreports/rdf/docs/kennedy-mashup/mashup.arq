@@ -1,9 +1,10 @@
 ###########################################################
 #
 # Count events per place 
-# mashed up with co-ordinates and other external data
+# mashed up with external data
 #
-# see the batch/mashup help page for the required context
+# could be used by the pluging
+# see the mashup help page 
 #
 ###########################################################
 
@@ -27,26 +28,39 @@ PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#>
 
 SELECT DISTINCT 
   ?place
-  (count(?place) as ?nr_of_events)
+  (COUNT(?place)   as ?nr_of_events)
+  (MIN(?eventYear) as ?from)
+  (MAX(?eventYear) as ?to)
   ?lat
   ?long
   (str(?foundingDate) as ?founding_date)
+  ?see_also
 {
-  ?entity ?e [a ?eventType; p:PLAC [rdfs:label ?place]].
+  ?entity ?eventType [ p:PLAC [ rdfs:label ?place ]].
   OPTIONAL
   {
-    ?geonames rdf:label ?place;
-              a gn:Feature;
-              wgs84_pos:lat ?lat;
-              wgs84_pos:long ?long.
+    ?entity ?eventType [ p:DATE [ rdfs:label ?eventDate ]].
+    LET(?eventYear := fn:substring(str(?eventDate),1,4))
   }
   OPTIONAL
   {
-    ?dbpedia rdf:label ?place;
-             a dbpedia-owl:Settlement;
-             dbpedia-owl:foundingDate ?foundingDate.
+    ?p  rdfs:label       ?place;
+        rdfs:isDefinedBy ?gn.
+    ?gn wgs84_pos:lat    ?lat;
+        wgs84_pos:long   ?long.
+  }
+  OPTIONAL
+  {
+    ?p  rdfs:label       ?place;
+        rdfs:seeAlso     ?see_also.
+  }
+  OPTIONAL
+  {
+    ?p   rdfs:label               ?place;
+         rdfs:seeAlso             ?dbp.
+    ?dbp dbpedia-owl:foundingDate ?foundingDate.
   }
 }
-GROUP BY ?place ?lat ?long ?foundingDate
-ORDER BY ?lat ?place
-# ORDER BY DESC(?lat) ?place
+GROUP BY ?place ?lat ?long ?foundingDate ?see_also
+#ORDER BY ?lat ?place
+ ORDER BY DESC(?lat) DESC(?nr_of_events) ?place

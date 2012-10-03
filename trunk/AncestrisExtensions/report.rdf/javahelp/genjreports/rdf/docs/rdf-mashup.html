@@ -132,13 +132,13 @@
         <pre>
             set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
             %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO\*.rdf > c:\PATH_TO\merged.n3
-            %JENAROOT%\bat\arq.bat --graph c:\PATH_TO\merged.rdf --graph c:\PATH_TO\gedcom.ttl -graph c:\PATH_TO\links.n3 --query c:\PATH_TO\query.arq > c:\PATH_TO\result.txt
+            %JENAROOT%\bat\arq.bat --graph c:\PATH_TO\merged.rdf --graph c:\PATH_TO\gedcom.ttl --graph c:\PATH_TO\links.n3 --query c:\PATH_TO\query.arq > c:\PATH_TO\result.txt
         </pre>
         <p>Mac / Unix</p>
         <pre>
             set JENAROOT=/PATH_TO/apache-jena-x.y.z
             $JENAROOT/bin/rdfcat -out N3 /PATH_TO/*.rdf > /PATH_TO/merged.n3
-            $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl -graph /PATH_TO/links.n3 --query /PATH_TO/query.arq > /PATH_TO/result.txt
+            $JENAROOT/bin/arq --graph /PATH_TO/merged.n3 --graph /PATH_TO/gedcom.ttl --graph /PATH_TO/links.n3 --query /PATH_TO/query.arq > /PATH_TO/result.txt
         </pre>
         <p class="justify">
             Mashup example for the Kennedy family tree:<br/>
@@ -147,6 +147,7 @@
             <li>a query <a href="./kennedy-mashup/mashup.arq">mashup.arq</a></li>
             <li>downloaded and merged data <a href="./kennedy-mashup/merged.n3">merged.n3</a></li>
             <li>linking downloaded data with gedcom data <a href="./kennedy-mashup/links.n3">links.n3</a></li>
+            <li>check for duplicate keys <a href="./kennedy-mashup/checkDuplicates.arq">checkDuplicates.arq</a></li>
         </ul>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
             <param name="content" value="mashup.arq">
@@ -158,17 +159,16 @@
         <dl>
             <dt>The <code>arq</code> command complains about prefixes.</dt>
             <dd><p>This might have one of the following causes:</p>
-                <ul><li><p>
-                    Remove the warninngs about illegal characters
-                    in the file <code>merged.n3</code>
-                </p></li><li><p>
-                   The mashup example for the Kennedy's contains explicit namespace prefixes.
+                <p>a) Remove the warninngs about illegal characters
+                   in the file <code>merged.n3</code>
+                </p><p>
+                   b) The mashup example contains explicit namespace prefixes.
                    The other examples don't, the plugin fills in the prefixes.
                    So copy the header of the mashup query into the other queries 
                    if you want to use them with the command line.
-                </p></li></ul>
+                </p>
             </dd>
-            <dt>The <code>arq</code> command complains about Triples not terminated by DOT</dt>
+            <dt><p>The <code>arq</code> command complains about Triples not terminated by DOT</p></dt>
             <dd><p>The format N3 and TTL may reduce the predicates
                    <code>rdf:type</code> and <code>owl:sameAs</code> to
                    "a" respectively "=". 
@@ -177,15 +177,32 @@
                    in the file <code>merged.n3</code>
                 </p>
             </dd>
-            <dt>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</dt>
+            <dt><p>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</p></dt>
             <dd><p>The plugin inserts an XSLT reference into the xml. 
-                   The browsers applies that transformation into HTML.
-                   With the batch tool, you have to insert that XSLT reference by yourself.
+                   Browsers apply that transformation into HTML.
+                   With the batch tool, you have to insert that XSLT reference by yourself, add as second line:
+                   <br><code>&lt;?xml-stylesheet type="text/xsl" href="result-to-html.xsl"?&gt;</code><br>
                    By the way, most browsers don't like cross-site scripting,
-                   so the XML and XSLT file should be in the same doamin.
+                   so the XML and XSL file should be in the same doamin.
                 </p>
             </dd>
-            <dt>...</dt>
+            <dt><p>How to collect the resources for <code>merged.n3</code>?</p></dt>
+            <dd><p>Run the mashup query. 
+                   Find the places with show-on-map on www.geonames.org
+                   The baloon with details has a "semantic web rdf" link, download it. 
+                   Drop the "about.rdf" when you add the "isDefinedBy" to <code>links.n3</code>
+                   with a plain text editor.
+                   Run merge, then run the mashup query again.
+                   Translate the seeAlso URLs from <code>http://dbpedia.org/resource/*</code>
+                   to <code>http://dbpedia.org/data/*.n3</code>
+                   and/or <code>http://dbpedia.org/data/*.rdf</code>
+                   and download the translated URLs.
+                   Which URL(s) to add as "seeAlso" <code>links.n3</code> is less clear.
+                   You may want to explore what is commonly avalable anyhow via 
+                   <code>http://wiki.dbpedia.org/OnlineAccess#h28-6</code>
+                </p>
+            </dd>
+            <dt><p>...</p></dt>
             <dd><p>...</p></dd>
         </dl>
         <br>
