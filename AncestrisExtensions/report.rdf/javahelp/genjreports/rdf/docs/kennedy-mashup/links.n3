@@ -1,17 +1,33 @@
-﻿@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix dbpedia:  <http://dbpedia.org/resource/> .
-<http://sws.geonames.org/4942939/> rdf:label ", Malden, , , Middlesex Co, MA, USA".
-<http://sws.geonames.org/5128581/> rdf:label ", New York City, , , , NY, USA".
-<http://sws.geonames.org/2964529/>             rdf:label ", Dunganstown, , , Wexford Co, , Ireland".
-<http://sws.geonames.org/4140963/>             rdf:label ", Washington, , , , DC, USA".
-<http://dbpedia.org/resource/Washington,_D.C.> rdf:label ", Washington, , , , DC, USA".
-<http://sws.geonames.org/4930956/>             rdf:label ", Boston, , , Suffolk Co, MA, USA".
-dbpedia:Boston                                 rdf:label ", Boston, , , Suffolk Co, MA, USA".
+﻿###########################################################
+#
+# Connects places in the converted gedcom file
+# with semantic data found elsewhere on the web.
+#
+# PLEASE change the IDs: <http://my.domain.com/gedcom/p...>
+# The IDs here should be different from the ranges
+# chosen for your converted gedcom file(s).
+# You may use this link file with any tree or stick to just one.
+# NOTE that gedcom URIs should be unique per family tree.
+#
+###########################################################
 
-#http://sws.geonames.org/*/about.rdf
-#http://dbpedia.org/data/Malden,_Massachusetts.n3
-#http://dbpedia.org/data/Malden,_Massachusetts.rdf
-#http://dbpedia.org/data/New_York_City.n3
-#http://dbpedia.org/data/New_York_City.rdf
-#http://dbpedia.org/data/Washington,_D.C..n3
-#http://dbpedia.org/data/Washington,_D.C..rdf
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dbpedia:  <http://dbpedia.org/resource/> .
+
+<http://my.domain.com/gedcom/p1>
+     rdfs:label ", Malden, , , Middlesex Co, MA, USA";
+     rdfs:isDefinedBy <http://sws.geonames.org/4942939/>.
+<http://my.domain.com/gedcom/p2>
+     rdfs:label ", New York City, , , , NY, USA";
+     rdfs:isDefinedBy <http://sws.geonames.org/5128581/>.
+<http://my.domain.com/gedcom/p3>
+     rdfs:label ", Dunganstown, , , Wexford Co, , Ireland";
+     rdfs:isDefinedBy <http://sws.geonames.org/2964529/>.
+<http://my.domain.com/gedcom/p4>
+     rdfs:label ", Washington, , , , DC, USA";
+     rdfs:isDefinedBy <http://sws.geonames.org/4140963/>;
+     rdfs:seeAlso <http://dbpedia.org/resource/Washington,_D.C.>.
+<http://my.domain.com/gedcom/p5>
+     rdfs:label ", Boston, , , Suffolk Co, MA, USA";
+     rdfs:isDefinedBy <http://sws.geonames.org/4930956/>;
+     rdfs:seeAlso dbpedia:Boston.
