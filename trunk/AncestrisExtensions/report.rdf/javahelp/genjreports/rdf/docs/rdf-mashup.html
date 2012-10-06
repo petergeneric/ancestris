@@ -67,8 +67,8 @@
             The status is not clear but you can find the plain text file
         </p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="in the code base">
-            <param name="text" value="<html><u>http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/GedcomTags.ttl</u></html>">
+            <param name="content" value="http://arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/GedcomTags.ttl">
+            <param name="text" value="<html><u>in the code base</u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object><br/>
@@ -87,8 +87,8 @@
 
         <h4>More than you want to know:</h4>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="jena.apache.org">
-            <param name="text" value="<html><u>http://jena.apache.org/documentation/query/cmds.html</u></html>">
+            <param name="content" value="jena.apache.orghttp://jena.apache.org/documentation/query/cmds.html">
+            <param name="text" value="<html><u></u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
@@ -132,22 +132,22 @@
         </p>
         <p>A DBPedia example:</p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="http://dbpedia.org/resource/Berlin/">
-            <param name="text" value="<html><u>http://dbpedia.org/data/Berlin.n3</u></html>">
+            <param name="content" value="http://dbpedia.org/data/Berlin.n3">
+            <param name="text" value="<html><u>http://dbpedia.org/page/Berlin</u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
         <p>Amsterdam from GeoNames</p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="http://www.geonames.org/2759794/amsterdam.html">
-            <param name="text" value="<html><u>http://sws.geonames.org/2759794/about.rdf</u></html>">
+            <param name="content" value="http://sws.geonames.org/2759794/about.rdf">
+            <param name="text" value="<html><u>http://www.geonames.org/2759794/amsterdam.html</u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
         <p>You may find more intersting resources via the</p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="LOD cloud diagram">
-            <param name="text" value="<html><u>http://richard.cyganiak.de/2007/10/lod/</u></html>">
+            <param name="content" value="http://richard.cyganiak.de/2007/10/lod/">
+            <param name="text" value="<html><u>LOD cloud diagram</u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
@@ -190,7 +190,7 @@
                    if you want to use them with the command line.
                 </p>
             </dd>
-            <dt><p>The <code>arq</code> command complains about Triples not terminated by DOT</p></dt>
+            <dt>The <code>arq</code> command complains about Triples not terminated by DOT</dt>
             <dd><p>The format N3 and TTL may reduce the predicates
                    <code>rdf:type</code> and <code>owl:sameAs</code> to
                    "a" respectively "=". 
@@ -199,7 +199,7 @@
                    in the file <code>merged.n3</code>
                 </p>
             </dd>
-            <dt><p>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</p></dt>
+            <dt>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</dt>
             <dd><p>The plugin inserts an XSLT reference into the xml. 
                    Browsers apply that transformation into HTML.
                    With the batch tool, you have to insert that XSLT reference by yourself, add as second line:
@@ -208,7 +208,7 @@
                    so save the XSL file in the same domain as your query result.
                 </p>
             </dd>
-            <dt><p>How to collect the external resources?</p></dt>
+            <dt>How to collect the external resources?</dt>
             <dd><p>Run the mashup query without the <code>links.n3</code> and without the <code>merged.n3</code> files. 
                 </p>
                 <p class="justify">
@@ -232,25 +232,25 @@
                 </p>
                 <p>Run merge again for the final run of the mashup query.</p>
             </dd>
-            <dt><p>What dbPedia properties are commonly available?</p></dt>
+            <dt>What dbPedia properties are commonly available?</dt>
             <dd>
                 <p>Find available properties in a variation of the following query</p>
                 <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                    <param name="content" value="dbpedia.org/snorql">
-                    <param name="text" value="<html><u>http://dbpedia.org/snorql/?query=SELECT+DISTINCT+%3Fproperty%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands%3B%0D%0A++++%3Fproperty+%3Fvalue%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29</u></html>">
+                    <param name="content" value="http://dbpedia.org/snorql/?query=SELECT+DISTINCT+%3Fproperty%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands%3B%0D%0A++++%3Fproperty+%3Fvalue%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29">
+                    <param name="text" value="<html><u>dbpedia.org/snorql</u></html>">
                     <param name="textFontSize" value="medium">
                     <param name="textColor" value="blue">
                 </object>
                 <p>Try interesting properties in a variation of the following query</p>
                 <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                    <param name="content" value="dbpedia.org/snorql">
-                    <param name="text" value="<html><u>http://dbpedia.org/snorql/?query=SELECT+DISTINCT+*+%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands.%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3Apopulation+%3Fpopulation}%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3ApopulationAsOf+%3FpopulationAsOf}%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29</u></html>">
+                    <param name="content" value="http://dbpedia.org/snorql/?query=SELECT+DISTINCT+*+%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands.%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3Apopulation+%3Fpopulation}%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3ApopulationAsOf+%3FpopulationAsOf}%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29">
+                    <param name="text" value="<html><u>dbpedia.org/snorql</u></html>">
                     <param name="textFontSize" value="medium">
                     <param name="textColor" value="blue">
                 </object>
                 <p>The restriction to a smaller region keeps the queries relatively quick.</p>
             </dd>
-            <dt><p>...</p></dt>
+            <dt>...</dt>
             <dd><p>...</p></dd>
         </dl>
         <br>
