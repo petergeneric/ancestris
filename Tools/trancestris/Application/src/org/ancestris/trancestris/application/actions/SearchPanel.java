@@ -18,11 +18,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.MessageFormat;
 import java.util.List;
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.StyleSheet;
 import org.ancestris.trancestris.editors.actions.EditorSearchPanel;
 import org.ancestris.trancestris.explorers.zipexplorer.ZipExplorerTopComponent;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -65,6 +75,8 @@ public class SearchPanel extends javax.swing.JPanel {
         caseSensitiveCheckBox.setSelected(editorSearchPanel.isCaseSensitiveCheckBoxSelected());
         expressionTextField.setText(editorSearchPanel.getExpressionTextField());
         resultEditorPane.addHyperlinkListener(new SearchPanellinkListener());
+        StyleSheet styleSheet = ((HTMLDocument) resultEditorPane.getDocument()).getStyleSheet();
+        styleSheet.addRule("p {margin-top: 0px; margin-bottom: 2px;}");
     }
 
     /**
@@ -247,7 +259,7 @@ public class SearchPanel extends javax.swing.JPanel {
         } else {
             MessageFormat oddlink = new MessageFormat("<p align=\"left\" bgcolor=Silver><a href= {0}>{0}</a></p>");
             MessageFormat evenlink = new MessageFormat("<p align=\"left\" bgcolor=white><a href= {0}>{0}</a></p>");
-            String resultList = "<style>p {margin-top: 0em; margin-bottom: 2em;}</style>";
+            String resultList = "";
             int i = 0;
 
             for (String dirName : search) {
