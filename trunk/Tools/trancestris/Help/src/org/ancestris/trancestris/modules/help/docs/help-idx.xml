@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
+<index version="2.0">
+    <indexitem text="About Trancestris" target="org.ancestris.trancestris.modules.help.about"/>
+    <indexitem text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
+        <indexitem text="Mail configuration" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
+    </indexitem>
+</index>
