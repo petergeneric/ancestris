@@ -7,6 +7,9 @@ and open the template in the editor.
 <index version="2.0">
     <indexitem text="Trancestris" target="org.ancestris.trancestris.modules.help.title"/>
     <indexitem text="Overview" target="org.ancestris.trancestris.modules.help.about"/>
+    <indexitem text="First Steps" target="org.ancestris.trancestris.modules.help.first-steps">
+        <indexitem text="Starting with Ancestris" target="org.ancestris.trancestris.modules.help.first-steps-1"/>
+    </indexitem>
     <indexitem text="Configuration" target="org.ancestris.trancestris.modules.help.configuration">
         <indexitem text="Mail configuration" target="org.ancestris.trancestris.modules.help.configuration.mail"/>
     </indexitem>
