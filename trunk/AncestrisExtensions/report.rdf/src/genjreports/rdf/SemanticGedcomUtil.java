@@ -74,10 +74,6 @@ public class SemanticGedcomUtil {
 					rdfModel.addLiteral(propertyResource, name.getLastName());
 					rdfModel.addLiteral(propertyResource, name.getSuffix());
 				}
-				if (property instanceof PropertyPlace) {
-					// TODO add lat/long using cached locations from the GEO
-					// report?
-				}
 			}
 		}
 	}
