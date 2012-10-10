@@ -32,12 +32,16 @@ import com.hp.hpl.jena.rdf.model.*;
  */
 public class Mashup
 {
+    private static final int DOWNLOAD_INTERVAL = 5000;
+
     private static final Logger logger = Logger.getLogger(Mashup.class.getName());
 
     private final URI idPrefix;
     private final File file;
     private final String language;
     private Model model;
+    private Date lastGeoNamesRequest;
+    private Date lastDbpediaRequest;
 
     /**
      * Downloads and links external data for all places.
@@ -118,6 +122,7 @@ public class Mashup
 
     private void download(final String geoNamesUri)
     {
+        lastGeoNamesRequest = Nice.sleep(DOWNLOAD_INTERVAL, lastGeoNamesRequest);
         model.read(geoNamesUri + "about.rdf");
         for (final String uri : runQuery(geoNamesUri, seeAlso, "dbpedia.org"))
         {
@@ -131,6 +136,7 @@ public class Mashup
 
     private void downloadDbPedia(final String uri)
     {
+        lastDbpediaRequest = Nice.sleep(DOWNLOAD_INTERVAL, lastDbpediaRequest);
         try
         {
             String url = URLDecoder.decode(uri, "UTF-8").replace("/resource/", "/data/") + ".rdf";
