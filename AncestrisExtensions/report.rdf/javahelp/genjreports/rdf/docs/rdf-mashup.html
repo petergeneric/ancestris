@@ -108,13 +108,13 @@
         <pre>
             set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
             %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO_DOWNLOADS\*.rdf > merged.n3
-            %JENAROOT%\bat\arq.bat --graph merged.rdf --graph gedcom.ttl --graph links.n3 --query query.arq > result.txt
+            %JENAROOT%\bat\arq.bat --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
         </pre>
         <p>Mac / Unix</p>
         <pre>
             set JENAROOT=/PATH_TO/apache-jena-x.y.z
             $JENAROOT/bin/rdfcat -out N3 /PATH_TO_DOWNLOADS/*.rdf > merged.n3
-            $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --graph links.n3 --query query.arq > result.txt
+            $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
         </pre>
 
         <a name="mashup"></a>
@@ -151,30 +151,48 @@
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
-
         <p class="justify">
-            The files for a possible approach:
+            The merge command shown above allows to collect any data you want. 
+            The procedure below is a semi-automated method to collect related data 
+            From GeoNames and DbPedia.
+        </p>
+        <p class="justify">
+            The required files:
         </p>
         <ul>
+            <li>Your gedcom converted to ttl, n3 or rdf.
+            </li>
             <li><a href="./kennedy-mashup/mashup.arq">mashup.arq</a>
                 a sample query, you may want to select other properties.
             </li>
-            <li><a href="./kennedy-mashup/checkDuplicates.arq">checkDuplicates.arq</a>
-                checks for duplicate keys in your variant of <code>links.n3</code> file.
+            <li>
+                A tab separated file with GeoNameId's paired with
+                unique values of INDI:*:PLAC and/or FAM:*:PLAC.
+                An example with just a few places for the Kennedy tree:
+                <a href="./kennedy-mashup/mashupInput.txt">mashupInput.txt</a>
             </li>
         </ul>
         <p class="justify">
-            with external data for the Kennedy family
+            Get the places with the mashup query without using the <code>merged.n3</code> file. 
         </p>
-        <ul>
-            <li><a href="./kennedy-mashup/merged.n3">merged.n3</a> (very big)
-                downloaded and merged data   
-            </li>
-            <li><a href="./kennedy-mashup/links.n3">links.n3</a>
-                linking downloaded data to gedcom data 
-            </li>
-        </ul>
-
+        <p class="justify">
+            Search the places on www.geonames.org with the show-on-map button
+            The baloons with details shows a GeoNameId.
+            Create a the <code>mashupInput.text</code> from the query results and found IDs.
+        </p>
+        <p class="justify">
+            The following example of commands download an merge the data.
+            It is for Windows-7 and a beta release of Ancestris with the SPAQRL plugin installed.
+            You need to set the CLASSPATH just once.
+        </p>
+        <pre>
+            set CLASSPATH %CLASSPATH%;C:\Users\user\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar
+            set CLASSPATH %CLASSPATH%;C:\Users\user\Appdata\Roaming\.ancestris\trunk\ancestris-libs-jena.jar
+            java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/places/ merged.n3</pre>
+        </pre>
+        <p class="justify">
+            Run the mashup query again but now with  the <code>merged.n3</code> file.
+        </p>
         <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
 
@@ -191,7 +209,8 @@
                 </p>
             </dd>
             <dt>The <code>arq</code> command complains about Triples not terminated by DOT</dt>
-            <dd><p>The format N3 and TTL may reduce the predicates
+            <dd><p class="justify">
+                   The format N3 and TTL may reduce the predicates
                    <code>rdf:type</code> and <code>owl:sameAs</code> to
                    "a" respectively "=". 
                    It looks like <code>arq</code> does not (yet?) support the latter. 
@@ -200,37 +219,16 @@
                 </p>
             </dd>
             <dt>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</dt>
-            <dd><p>The plugin inserts an XSLT reference into the xml. 
+            <dd><p class="justify">
+                   The plugin inserts an XSLT reference into the xml. 
                    Browsers apply that transformation into HTML.
                    With the batch tool, you have to insert that XSLT reference by yourself, add as second line:
-                   <br><code>&lt;?xml-stylesheet type="text/xsl" href="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl"?&gt;</code><br>
+                </p>
+               <pre>&lt;?xml-stylesheet type="text/xsl" href="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl"?&gt;</pre>
+                <p class="justify">
                    NOTE that most browsers don't like cross-site scripting,
                    so save the XSL file in the same domain as your query result.
                 </p>
-            </dd>
-            <dt>How to collect the external resources?</dt>
-            <dd><p>Run the mashup query without the <code>links.n3</code> and without the <code>merged.n3</code> files. 
-                </p>
-                <p class="justify">
-                   Find the places with show-on-map on www.geonames.org
-                   The baloon with details has a "semantic web rdf" link, download it. 
-                   Add the corresponding "isDefinedBy" to your variant of <code>links.n3</code>
-                   with a plain text editor.
-                </p>
-                <p class="justify">
-                   Run merge, then run the mashup query again but now 
-                   with your variants of the <code>links.n3</code> and <code>merged.n3</code> files.
-                </p>
-                <p class="justify">
-                   Translate the "seeAlso" URLs from <code>http://dbpedia.org/resource/*</code>
-                   to <code>http://dbpedia.org/data/*.n3</code>
-                   and/or <code>http://dbpedia.org/data/*.rdf</code>
-                   and download the translated URLs.
-                   Add the corresponding "seeAlso" to your variant of <code>links.n3</code>
-                   with a plain text editor, 
-                   I haven't found out yet which variant of the URL to use exactly.
-                </p>
-                <p>Run merge again for the final run of the mashup query.</p>
             </dd>
             <dt>What dbPedia properties are commonly available?</dt>
             <dd>
