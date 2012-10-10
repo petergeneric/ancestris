@@ -8,7 +8,7 @@
 #
 ###########################################################
 
-### from external data
+### external data
 PREFIX rdf:         <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 PREFIX rdfs:        <http://www.w3.org/2000/01/rdf-schema#> 
 PREFIX xsd:         <http://www.w3.org/2001/XMLSchema#> 
@@ -16,7 +16,7 @@ PREFIX wgs84_pos:   <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX gn:          <http://www.geonames.org/ontology#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-### from converted gedcom
+### converted gedcom
 PREFIX t: <http://genj.sourceforge.net/rdf/GedcomTags/type#> 
 PREFIX r: <http://genj.sourceforge.net/rdf/GedcomTags/rule#> 
 PREFIX p: <http://genj.sourceforge.net/rdf/GedcomTags/predicate#> 
@@ -52,13 +52,12 @@ SELECT DISTINCT
   OPTIONAL
   {
     ?p  rdfs:label       ?place;
-        rdfs:seeAlso     ?see_also.
-  }
-  OPTIONAL
-  {
-    ?p   rdfs:label               ?place;
-         rdfs:seeAlso             ?dbp.
-    ?dbp dbpedia-owl:foundingDate ?foundingDate.
+        rdfs:isDefinedBy ?gn.
+    ?gn rdfs:seeAlso     ?dbp.
+    OPTIONAL
+    {
+      ?dbp dbpedia-owl:foundingDate ?foundingDate.
+    }
   }
 }
 GROUP BY ?place ?lat ?long ?foundingDate ?see_also

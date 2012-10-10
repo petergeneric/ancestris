@@ -167,31 +167,36 @@
             </li>
             <li>
                 A tab separated file with GeoNameId's paired with
-                unique values of INDI:*:PLAC and/or FAM:*:PLAC.
+                unique values of INDI:*:PLAC and/or FAM:*:PLAC.<br/>
                 An example with just a few places for the Kennedy tree:
                 <a href="./kennedy-mashup/mashupInput.txt">mashupInput.txt</a>
             </li>
         </ul>
         <p class="justify">
-            Get the places with the mashup query without using the <code>merged.n3</code> file. 
+            Get the places with the mashup query as shown above
+            but without using the <code>merged.n3</code> file. 
         </p>
         <p class="justify">
             Search the places on www.geonames.org with the show-on-map button
             The baloons with details shows a GeoNameId.
             Create a the <code>mashupInput.text</code> from the query results and found IDs.
+            See <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
         </p>
         <p class="justify">
-            The following example of commands download an merge the data.
-            It is for Windows-7 and a beta release of Ancestris with the SPAQRL plugin installed.
-            You need to set the CLASSPATH just once.
+            The following commands download an merge the data.
+            The example is for Windows-7 and a beta release of Ancestris.
+            For an official release replace "trunk" with the release number, for example "0.8",
+            Other components of the path may vary depending on the configuration
+            of your operating system.
         </p>
         <pre>
-            set CLASSPATH %CLASSPATH%;C:\Users\user\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar
-            set CLASSPATH %CLASSPATH%;C:\Users\user\Appdata\Roaming\.ancestris\trunk\ancestris-libs-jena.jar
+            set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar
+            set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\jena-2.6.4.jar
+            set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\arq-2.8.7.jar
             java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/places/ merged.n3</pre>
         </pre>
         <p class="justify">
-            Run the mashup query again but now with  the <code>merged.n3</code> file.
+            Run the mashup query again but now with the <code>merged.n3</code> file.
         </p>
         <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
