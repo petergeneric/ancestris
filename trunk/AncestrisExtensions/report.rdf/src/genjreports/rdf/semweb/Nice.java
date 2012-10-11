@@ -18,7 +18,7 @@ public class Nice
             if (duration < interval)
             {
                 final long l = interval - duration;
-                logger.log(Level.INFO, "waiting " + l + " miliseconds to prevent a ban by the provider");
+                logger.log(Level.INFO, "waiting " + l + " miliseconds to prevent a download ban");
                 try
                 {
                     Thread.sleep(l);
