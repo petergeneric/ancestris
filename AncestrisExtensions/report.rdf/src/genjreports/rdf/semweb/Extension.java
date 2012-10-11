@@ -27,11 +27,14 @@ public enum Extension
     public String language()
     {
         // http://jena.apache.org/documentation/io/iohowto.html
+
         // The built-in languages are "RDF/XML", "RDF/XML-ABBREV", "N-TRIPLE", "N3" and "TURTLE". In
         // addition, for Turtle output the language can be specified as: "N3-PP", "N3-PLAIN" or
         // "N3-TRIPLE", which controls the style of N3 produced.
+
         // For output, "RDF/XML", produces regular output reasonably efficiently, but it is not readable.
         // In contrast, "RDF/XML-ABBREV", produces readable output without much regard to efficiency.
+
         return language;
     }
 }

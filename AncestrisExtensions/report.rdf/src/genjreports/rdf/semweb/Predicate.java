@@ -25,6 +25,7 @@ public enum Predicate
     sameAs(rdfs), //
     hasLabel(rdfs), //
     isDefinedBy(rdfs), //
+    isA(rdf), //
     ;
     private final Prefix prefix;
     private final Property property;

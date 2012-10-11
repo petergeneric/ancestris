@@ -19,8 +19,9 @@ import java.util.Map;
 
 public enum Prefix
 {
-    xsd("http://www.w3.org/2001/XMLSchema#"), //
+    rdf("http://www.w3.org/1999/02/22-rdf-syntax-ns#"), //
     rdfs("http://www.w3.org/2000/01/rdf-schema#"), //
+    xsd("http://www.w3.org/2001/XMLSchema#"), //
     ;
     public final String uri;
     public static final Map<String, String> NAME_ID_MAP = new HashMap<String, String>();
