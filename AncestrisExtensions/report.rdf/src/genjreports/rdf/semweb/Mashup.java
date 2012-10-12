@@ -88,7 +88,7 @@ public class Mashup
      */
     public void add(final Map<String, String> placeNameIdMap) throws FileNotFoundException
     {
-        logger.info(Arrays.deepToString(placeNameIdMap.keySet().toArray()));
+        logger.log(Level.FINE,Arrays.deepToString(placeNameIdMap.keySet().toArray()));
         if (model == null)
         {
             model = ModelFactory.createDefaultModel();
@@ -102,6 +102,7 @@ public class Mashup
             final Resource subject = createResource(idPrefix + placeNameIdMap.get(place));
             addPlace(place, placeNameIdMap.get(place), subject);
         }
+        logger.log(Level.INFO,"loaded " + model.size() + " statements");
         model.write(new FileOutputStream(file), language);
     }
 
@@ -185,17 +186,41 @@ public class Mashup
 
     public static void main(final String[] args) throws URISyntaxException, IOException
     {
-        logger.log(Level.INFO, "started");
-        final Map<String, String> places = new HashMap<String, String>();
-        final BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(args[0]))));
-        String line;
-        while ((line = br.readLine()) != null)
+        final String message = "expected arguments: input file (per line GeoNameID, tab, place name), URI, output file";
+        if (args.length < 3)
         {
-            final String[] fields = line.split("\t");
-            places.put(line.substring(fields[0].length() + 1), fields[0]);
+            logger.log(Level.SEVERE, message);
+            return;
         }
-        new Mashup(new URI(args[1]), new File(args[2])).add(places);
-        br.close();
+        final File inputFile = new File(args[0]);
+        final URI uri = new URI(args[1]);
+        final File outputFile = new File(args[2]);
+        final Map<String, String> places = new HashMap<String, String>();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile)));
+        String line;
+        logger.log(Level.INFO, "started");
+        try
+        {
+            while ((line = reader.readLine()) != null)
+            {
+                final String[] fields = line.split("\t");
+                if (fields.length > 1)
+                {
+                    final String geoNameId = fields[0].replaceAll("[^0-9]*", "");
+                    final String placeLiteral = line.substring(fields[0].length() + 1).trim();
+                    if (geoNameId.length() > 0 && placeLiteral.length() > 0)
+                        places.put(line.substring(fields[0].length() + 1), geoNameId);
+                }
+            }
+            if (places.isEmpty())
+                logger.log(Level.WARNING, message);
+            else
+                new Mashup(uri, outputFile).add(places);
+        }
+        finally
+        {
+            reader.close();
+        }
         logger.log(Level.INFO, "finished");
     }
 }
