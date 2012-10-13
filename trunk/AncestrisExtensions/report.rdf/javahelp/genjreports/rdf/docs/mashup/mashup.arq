@@ -28,7 +28,7 @@ PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#>
 
 SELECT DISTINCT 
   ?place
-  (COUNT(?place)   as ?nr_of_events)
+    (str(COUNT(?place))   as ?nr_of_events)
   (MIN(?eventYear) as ?from)
   (MAX(?eventYear) as ?to)
   ?lat
