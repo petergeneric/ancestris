@@ -204,8 +204,15 @@
             </p></li>
             <li><p class="justify">
                 The commands below download and merge the data.
-                The kennedy example took 7 minutes and resulted into over 20MB of data.
-                <br/><br/>
+                Not everything might be actually downloaded in one go.
+                Repeat until the log does not show anything more attempted to download.
+                Very persistent failures might be dead links,
+                try them in a browser to check.
+                <p><p class="justify">
+                An inital run with the Kennedy example took 7 minutes,
+                resulted into over 20MB of data but fetched
+                less than a third of dbpeadia resources.
+                <p><p class="justify">
                 The example is for Windows-7 and a beta release of Ancestris.
                 For an official release replace "trunk" with the release number, for example "0.8",
                 Other components of the path may vary depending on the configuration
@@ -247,11 +254,14 @@ java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/p
                    in the file <code>merged.n3</code>
                 </p>
             </dd>
-            <dt>The XML produced by the plugin looks like a nice table, the batch produces plain xml.</dt>
+            <dt>The XML produced by the plugin looks like a nice table
+               (at least in an IE tab of Firefox), the batch produces plain xml.
+            </dt>
             <dd><p class="justify">
                    The plugin inserts an XSLT reference into the xml. 
                    Browsers apply that transformation into HTML.
-                   With the batch tool, you have to insert that XSLT reference by yourself, add as second line:
+                   You may choose to do XSLT processing with JavaScript or 
+                   insert on XSLT reference manually, add as second line:
                 </p>
                <pre>&lt;?xml-stylesheet type="text/xsl" href="http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl"?&gt;</pre>
                 <p class="justify">
@@ -260,22 +270,13 @@ java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/p
                 </p>
             </dd>
             <dt>What dbPedia properties are commonly available?</dt>
-            <dd>
-                <p>Find available properties in a variation of the following query</p>
-                <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                    <param name="content" value="http://dbpedia.org/snorql/?query=SELECT+DISTINCT+%3Fproperty%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands%3B%0D%0A++++%3Fproperty+%3Fvalue%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29">
-                    <param name="text" value="<html><u>dbpedia.org/snorql</u></html>">
-                    <param name="textFontSize" value="medium">
-                    <param name="textColor" value="blue">
-                </object>
-                <p>Try interesting properties in a variation of the following query</p>
-                <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-                    <param name="content" value="http://dbpedia.org/snorql/?query=SELECT+DISTINCT+*+%0D%0A{+%3Fsettlement+%0D%0A++++rdf%3Atype+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2FSettlement%3E%3B%0D%0A++++%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2Fcountry%3E+%3ANetherlands.%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3Apopulation+%3Fpopulation}%0D%0A++OPTIONAL+{%3Fsettlement+dbpedia2%3ApopulationAsOf+%3FpopulationAsOf}%0D%0A}%0D%0AORDER+BY+DESC%28%3Fsettlement+%29">
-                    <param name="text" value="<html><u>dbpedia.org/snorql</u></html>">
-                    <param name="textFontSize" value="medium">
-                    <param name="textColor" value="blue">
-                </object>
-                <p>The restriction to a smaller region keeps the queries relatively quick.</p>
+            <dd>Try the queries:
+                <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
+                  </li><li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a>
+                  </li><li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a>
+                  </li><li><a href="./mashup/dbpediaProperties.arq">dbpediaProperties.arq</a>
+                  </li>
+                </ul>
             </dd>
             <dt>...</dt>
             <dd><p>...</p></dd>
