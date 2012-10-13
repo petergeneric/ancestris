@@ -207,7 +207,7 @@ public class Mashup
                 if (fields.length > 1)
                 {
                     final String geoNameId = fields[0].replaceAll("[^0-9]*", "");
-                    final String placeLiteral = line.substring(fields[0].length() + 1).trim();
+                    final String placeLiteral = fields[1].trim();
                     if (geoNameId.length() > 0 && placeLiteral.length() > 0)
                         places.put(line.substring(fields[0].length() + 1), geoNameId);
                 }
