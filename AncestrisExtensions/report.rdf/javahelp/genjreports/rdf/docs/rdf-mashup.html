@@ -46,6 +46,7 @@
             This is a very brief introduction but it should have the most important
             pointers to start browsing the web about the subject.
             The semantic web uses triples of URI's: subject predicate object.
+            These triples are alo called statements.
             These triples can be stored in different formats. RDF is the most widely supprted format.
             The turtle format is much less verbose and therefore easier to read.
             The triples get meanings with ontologies (also expressed in triples)
@@ -106,15 +107,15 @@
         </p>
         <p>Windows</p>
         <pre>
-            set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
-            %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO_DOWNLOADS\*.rdf > merged.n3
-            %JENAROOT%\bat\arq.bat --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
+        set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
+        %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO_DOWNLOADS\*.rdf > merged.n3
+        %JENAROOT%\bat\arq.bat --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
         </pre>
         <p>Mac / Unix</p>
         <pre>
-            set JENAROOT=/PATH_TO/apache-jena-x.y.z
-            $JENAROOT/bin/rdfcat -out N3 /PATH_TO_DOWNLOADS/*.rdf > merged.n3
-            $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
+        set JENAROOT=/PATH_TO/apache-jena-x.y.z
+        $JENAROOT/bin/rdfcat -out N3 /PATH_TO_DOWNLOADS/*.rdf > merged.n3
+        $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
         </pre>
 
         <a name="mashup"></a>
@@ -122,29 +123,14 @@
 
         <a name="rdf-data"></a>
         <p class="justify">
-            The plugin lets you query just a single family tree. 
+            The GUI lets you query just a single family tree. 
             The used techniques however allow to 
             cross-query multiple family trees and/or data from the web.
             DbPedia could be an interesting almanac, 
             for example to find famous contemporary local people.
             GeoNames is interesting for maps.
-            For a start you could download some intersting cities that are relevant for your family-tree.
         </p>
-        <p>A DBPedia example:</p>
-        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="http://dbpedia.org/data/Berlin.n3">
-            <param name="text" value="<html><u>http://dbpedia.org/page/Berlin</u></html>">
-            <param name="textFontSize" value="medium">
-            <param name="textColor" value="blue">
-        </object>
-        <p>Amsterdam from GeoNames</p>
-        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="http://sws.geonames.org/2759794/about.rdf">
-            <param name="text" value="<html><u>http://www.geonames.org/2759794/amsterdam.html</u></html>">
-            <param name="textFontSize" value="medium">
-            <param name="textColor" value="blue">
-        </object>
-        <p>You may find more intersting resources via the</p>
+        <p class="justify">You may find more intersting resources via the</p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
             <param name="content" value="http://richard.cyganiak.de/2007/10/lod/">
             <param name="text" value="<html><u>LOD cloud diagram</u></html>">
@@ -152,51 +138,89 @@
             <param name="textColor" value="blue">
         </object>
         <p class="justify">
-            The merge command shown above allows to collect any data you want. 
+            The rdfcat command shown above allows to collect any data you want. 
             The procedure below is a semi-automated method to collect related data 
-            From GeoNames and DbPedia.
+            from GeoNames and DbPedia.
         </p>
         <p class="justify">
-            The required files:
+            Required files:
         </p>
         <ul>
-            <li>Your gedcom converted to ttl, n3 or rdf.
-            </li>
-            <li><a href="./kennedy-mashup/mashup.arq">mashup.arq</a>
-                a sample query, you may want to select other properties.
-            </li>
             <li>
-                A tab separated file with GeoNameId's paired with
-                unique values of INDI:*:PLAC and/or FAM:*:PLAC.<br/>
-                An example with just a few places for the Kennedy tree:
-                <a href="./kennedy-mashup/mashupInput.txt">mashupInput.txt</a>
+                A family database in gedcom format.
+            </li>
+            <li>A local copy of <a href="./mashup/mashup.arq">mashup.arq</a>
+            </li>
+            <li>Rules: an empty file or a local copy from the 
+                <a href="rdf-examples.html">examples</a> that is
+                required for other quries you fancy.
             </li>
         </ul>
         <p class="justify">
-            Get the places with the mashup query as shown above
-            but without using the <code>merged.n3</code> file. 
+            Intermediate results:
         </p>
+        <ul>
+            <li>
+                A family database converted to N3, TTL or RDF.
+            </li>
+            <li>
+                A tab separated file with GeoNameId's paired with
+                unique values of INDI:*:PLAC and/or FAM:*:PLAC.
+                An example with most places for the Kennedy tree:
+                <a href="./mashup/kennedyMashupInput.txt">mashupInput.txt</a>
+            </li>
+        </ul>
         <p class="justify">
-            Search the places on www.geonames.org with the show-on-map button
-            The baloons with details shows a GeoNameId.
-            Create a the <code>mashupInput.text</code> from the query results and found IDs.
-            See <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
+            Result:
         </p>
+        <ul>
+            <li>
+                A <code>merged.n3</code> file for the arq command above.
+            </li>
+        </ul>
         <p class="justify">
-            The following commands download an merge the data.
-            The example is for Windows-7 and a beta release of Ancestris.
-            For an official release replace "trunk" with the release number, for example "0.8",
-            Other components of the path may vary depending on the configuration
-            of your operating system.
+            Steps to take:
         </p>
-        <pre>
-            set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar
-            set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\jena-2.6.4.jar
-            set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\arq-2.8.7.jar
-            java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/places/ merged.n3</pre>
-        </pre>
+        <ul>
+            <li><p class="justify">
+                Convert the gedom and get the places with the mashup query using the GUI:
+                <a href="./images/initMashup.jpg">screenshot</a>.
+            </p></li>
+            <li><p class="justify">
+                Read the query results with a spreadsheet program:
+                Read with "|" as separator
+                (<a href="./images/barAsSeparator.jpg">screenshot</a>),
+                save with tabs as separator
+                (<a href="./images/saveAsTextWithTabs.jpg">screenshot</a>).
+                Delete the header rows and all quotes.
+            </p></li>
+            <li><p class="justify">
+                Put GeoNameIDs in the first column.
+                Keep the places in the second column,
+                together with all their jurisdictions and separators between them.
+                Search the places on www.geonames.org with the show-on-map button
+                The baloons with details shows a GeoNameId:
+                <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
+            </p></li>
+            <li><p class="justify">
+                The commands below download and merge the data.
+                The kennedy example took 7 minutes and resulted into over 20MB of data.
+                <br/><br/>
+                The example is for Windows-7 and a beta release of Ancestris.
+                For an official release replace "trunk" with the release number, for example "0.8",
+                Other components of the path may vary depending on the configuration
+                of your operating system.
+                </p>
+<pre>
+set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar
+set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\jena-2.6.4.jar
+set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\arq-2.8.7.jar
+java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/places/ merged.n3</pre>
+</pre>
+            </li>
+        </ul>
         <p class="justify">
-            Run the mashup query again but now with the <code>merged.n3</code> file.
+            Now you are ready to run any mashup query with the <code>arq</code> command shown above with both graph files.
         </p>
         <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
@@ -204,7 +228,7 @@
         <dl>
             <dt>The <code>arq</code> command complains about prefixes.</dt>
             <dd><p>This might have one of the following causes:</p>
-                <p>a) Remove the warninngs about illegal characters
+                <p>a) Remove the warninngs
                    in your variant of <code>merged.n3</code>
                 </p><p>
                    b) The mashup example contains explicit namespace prefixes.
