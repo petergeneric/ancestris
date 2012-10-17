@@ -204,8 +204,11 @@
             </p></li>
             <li><p class="justify">
                 The commands below download and merge the data.
-                Not everything might be actually downloaded in one go.
-                Repeat until the log does not show anything more attempted to download.
+                The free services of GeoNames and DbPedia are not allways reliable.
+                Run the query <a href="./mashup/downloaded.arq">downloaded.arq</a>
+                with an inverted filter (<1) to see what is lacking.
+                Repeat with significant intervals, the mashup command is designed not 
+                to download again what is already present.
                 Very persistent failures might be dead links,
                 try them in a browser to check.
                 <p><p class="justify">
@@ -259,7 +262,7 @@ java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/p
             </dt>
             <dd><p class="justify">
                    The plugin inserts an XSLT reference into the xml. 
-                   Browsers apply that transformation into HTML.
+                   Browsers may apply that transformation into HTML.
                    You may choose to do XSLT processing with JavaScript or 
                    insert on XSLT reference manually, add as second line:
                 </p>
@@ -270,7 +273,7 @@ java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/p
                 </p>
             </dd>
             <dt>What dbPedia properties are commonly available?</dt>
-            <dd>Try the queries:
+            <dd>Try the mashup queries:
                 <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
                   </li><li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a>
                   </li><li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a>
@@ -278,6 +281,8 @@ java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/p
                   </li>
                 </ul>
             </dd>
+            <dt>Does dbpedia have resources in my language?</dt>
+            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a></p></dd>
             <dt>...</dt>
             <dd><p>...</p></dd>
         </dl>
