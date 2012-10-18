@@ -22,10 +22,10 @@ import com.hp.hpl.jena.rdf.model.Property;
 public enum Predicate
 {
     seeAlso(rdfs), //
-    sameAs(rdfs), //
+    sameAs(owl), //
     hasLabel(rdfs), //
     isDefinedBy(rdfs), //
-    isA(rdf), //
+    type(rdf), //
     ;
     private final Prefix prefix;
     private final Property property;
@@ -41,7 +41,12 @@ public enum Predicate
         return prefix + ":" + name();
     }
 
-    public Property property()
+    public String toUri()
+    {
+        return prefix.uri + name();
+    }
+
+    public Property toProperty()
     {
         return property;
     }
