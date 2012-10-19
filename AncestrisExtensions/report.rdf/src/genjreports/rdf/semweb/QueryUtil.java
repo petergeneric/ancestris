@@ -14,14 +14,14 @@
 // @formatter:on
 package genjreports.rdf.semweb;
 
-import static genjreports.rdf.semweb.Predicate.*;
-
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 
 import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.*;
 
 /**
  * Manager of downloads from the semantic web.
@@ -58,11 +58,11 @@ public class QueryUtil
      *        filter for the searched objects
      * @return
      */
-    public Set<String> getProperties(final String subject, final Predicate predicate, final String objectRegEx)
+    public Set<String> getProperties(final String subject, final Property predicate, final String objectRegEx)
     {
         final String format = "select distinct ?n {<%s> <%s> ?n. FILTER regex(str(?n),'%s')}";
-        final String q = String.format(format, subject, predicate.toUri(), objectRegEx);
-        return runQuery(q);
+        final String q = String.format(format, subject, predicate.getURI(), objectRegEx);
+        return run(q);
     }
 
     /**
@@ -76,8 +76,8 @@ public class QueryUtil
     {
         // TODO ??? http://fr.dbpedia.org/ontology/wikiPageInterLanguageLink
         final String format = "select distinct ?n {<%s> <%s> ?n. FILTER regex(str(?n),'%s')}";
-        final String q = String.format(format, uri, sameAs.toUri(), dbpediaFilter);
-        return runQuery(q);
+        final String q = String.format(format, uri, OWL.sameAs.getURI(), dbpediaFilter);
+        return run(q);
     }
 
     /**
@@ -87,6 +87,11 @@ public class QueryUtil
      * @return the first column of the query result
      */
     public Set<String> runQuery(final String query)
+    {
+        return run(query);
+    }
+
+    private Set<String> run(final String query)
     {
         logger.log(Level.FINE, "query: " + query);
         final QueryExecution queryExecution = QueryExecutionFactory.create(query, Syntax.syntaxARQ, model, new QuerySolutionMap());
