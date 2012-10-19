@@ -21,7 +21,6 @@ import java.net.*;
 import java.util.*;
 import java.util.logging.*;
 
-import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.JenaException;
 
@@ -34,27 +33,27 @@ public class DownloadManager
 {
     private static final Logger logger = Logger.getLogger(DownloadManager.class.getName());
 
-    private final Model model;
+    private final Set<String> read = new HashSet<String>();
+    private final Set<String> warnings = new HashSet<String>();
     private final Set<String> tried = new HashSet<String>();
-    private final Set<String> found;
-    private final String dbpediaFilter;
+    private final Set<String> found = new HashSet<String>();
+    private final QueryUtil queryUtil;
+    private final Model model;
 
-    public DownloadManager(final Model model, final String languages) throws IOException
+    public DownloadManager(final Model model, final QueryUtil queryUtil) throws IOException
     {
-
         if (model == null)
             throw new IllegalArgumentException("model should not be null");
+
+        final String pfx1 = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ";
+        final String pfx2 = pfx1 + "?gn  {?l rdfs:hasLabel ?p;rdfs:isDefinedBy ?gn.";
+        final String pfx3 = pfx2 + "?gn rdfs:seeAlso ?dbp.";
+        found.addAll(queryUtil.runQuery(pfx2 + "?gn ?pr ?x.}"));
+        found.addAll(queryUtil.runQuery(pfx3 + "?dbp ?pr ?x.FILTER(!regex(str(?pr),'sameAs'))}"));
+        found.addAll(queryUtil.runQuery(pfx3 + "?x ?pr ?dbp.FILTER(!regex(str(?pr),'sameAs'))}"));
+
+        this.queryUtil = queryUtil;
         this.model = model;
-
-        if (languages == null || languages.length() == 0)
-            dbpediaFilter = "/dbpedia.org";
-        else
-            dbpediaFilter = "/((" + languages + ")[.])?dbpedia.org";
-
-        final String pfx = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>";
-        Arrays.deepToString(runQuery(pfx + "SELECT ?dbp {?l rdfs:hasLabel ?p;rdfs:isDefinedBy ?gn.?gn rdfs:seeAlso ?dbp.","dbp").toArray());
-        found = runQuery(pfx + " SELECT ?dbp {?l rdfs:hasLabel ?p;rdfs:isDefinedBy ?gn.?gn rdfs:seeAlso ?dbp.?dbp a ?t. }", "dbp");
-        found.addAll(runQuery(pfx + " SELECT ?gn {?l rdfs:hasLabel ?p;rdfs:isDefinedBy ?gn.?gn a ?t. }", "gn"));
     }
 
     public Set<String> downloadGeoNames(final String uri) throws URISyntaxException, IOException
@@ -62,13 +61,12 @@ public class DownloadManager
         if (tried.contains(uri))
             return new HashSet<String>();
         download(uri, uri + "about.rdf");
-        final Set<String> same = runQuery(uri, sameAs, "geonames.org");
+        tried.add(uri);
+        final Set<String> same = queryUtil.getProperties(uri, sameAs, "geonames.org");
         for (final String uri2 : same)
-            if (!found.contains(uri2))
-                downloadGeoNames(uri2);
-        for (final String uri2 : runQuery(uri, seeAlso, "dbpedia.org"))
-            if (!found.contains(uri2))
-                same.addAll(downloadDbPedia(uri2));
+            downloadGeoNames(uri2);
+        for (final String uri2 : queryUtil.getProperties(uri, seeAlso, "dbpedia.org"))
+            same.addAll(downloadDbPedia(uri2));
         return same;
     }
 
@@ -77,10 +75,10 @@ public class DownloadManager
         if (tried.contains(uri))
             return new HashSet<String>();
         download(uri, toDbpediaUrl(uri));
-        final Set<String> same = runQuery(uri, sameAs, dbpediaFilter);
+        tried.add(uri);
+        final Set<String> same = queryUtil.getSameDbpediaResources(uri);
         for (final String uri2 : same)
-            if (!found.contains(uri))
-                downloadDbPedia(uri2);
+            downloadDbPedia(uri2);
         return same;
     }
 
@@ -88,16 +86,17 @@ public class DownloadManager
     {
         if (tried.contains(uri) || found.contains(uri))
             return;
-        tried.add(uri);
         Nice.sleep(new URI(url).getHost());
         logger.log(Level.INFO, "reading: " + url);
         try
         {
+            read.add(url);
             model.read(url);
         }
         catch (final JenaException e)
         {
             logger.log(Level.WARNING, url + " " + e.getMessage());
+            warnings.add(uri + " " + e.getMessage());
         }
     }
 
@@ -107,32 +106,11 @@ public class DownloadManager
         return decoded.replace("/resource/", "/data/") + ".rdf";
     }
 
-    private Set<String> runQuery(final String uri, final Predicate predicate, final String filterRegEx)
+    public void logOverwiew()
     {
-        final String format = "select distinct ?n {<%s> <%s> ?n. FILTER regex(str(?n),'%s')}";
-        final String q = String.format(format, uri, predicate.toUri(), filterRegEx);
-        return runQuery(q, "n");
-    }
-
-    private Set<String> runQuery(final String q, final String columnName)
-    {
-        logger.log(Level.FINE, "query: " + q);
-        final QueryExecution queryExecution = QueryExecutionFactory.create(q, Syntax.syntaxARQ, model, new QuerySolutionMap());
-        final Set<String> result = new HashSet<String>();
-        try
-        {
-            final ResultSet resultSet = queryExecution.execSelect();
-            while (resultSet.hasNext())
-            {
-                final QuerySolution row = resultSet.next();
-                result.add(row.get(columnName).asResource().getURI());
-            }
-        }
-        finally
-        {
-            queryExecution.close();
-        }
-        logger.log(Level.INFO, Arrays.deepToString(result.toArray()));
-        return result;
+        if (!read.isEmpty())
+            logger.log(Level.INFO, "DOWNLOADED: " + Arrays.deepToString(read.toArray()));
+        if (!warnings.isEmpty())
+            logger.log(Level.WARNING, Arrays.deepToString(warnings.toArray()));
     }
 }

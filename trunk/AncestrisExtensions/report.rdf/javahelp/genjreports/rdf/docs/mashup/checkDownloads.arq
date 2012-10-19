@@ -1,7 +1,7 @@
 ###################################################################
 #
-# find what has been downloaded but is not found
-# invert the filter to list what should have been downloaded
+# find what should have been downloaded but is not found
+# invert the filter to list what has been downloaded
 #
 # Only the semi-automatically downloaded data is required
 #
@@ -52,7 +52,7 @@ SELECT ?resource
     }
     GROUP BY ?resource
   }
-  FILTER (?count > 0)
+  FILTER (?count < 1)
 }
 ORDER BY ?resource
 
