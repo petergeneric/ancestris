@@ -14,8 +14,6 @@
 // @formatter:on
 package genjreports.rdf.semweb;
 
-import static genjreports.rdf.semweb.Predicate.*;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -23,6 +21,7 @@ import java.util.logging.*;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.JenaException;
+import com.hp.hpl.jena.vocabulary.*;
 
 /**
  * Manager of downloads from the semantic web.
@@ -62,10 +61,10 @@ public class DownloadManager
             return new HashSet<String>();
         download(uri, uri + "about.rdf");
         tried.add(uri);
-        final Set<String> same = queryUtil.getProperties(uri, sameAs, "geonames.org");
+        final Set<String> same = queryUtil.getProperties(uri, OWL.sameAs, "geonames.org");
         for (final String uri2 : same)
             downloadGeoNames(uri2);
-        for (final String uri2 : queryUtil.getProperties(uri, seeAlso, "dbpedia.org"))
+        for (final String uri2 : queryUtil.getProperties(uri, RDFS.seeAlso, "dbpedia.org"))
             same.addAll(downloadDbPedia(uri2));
         return same;
     }

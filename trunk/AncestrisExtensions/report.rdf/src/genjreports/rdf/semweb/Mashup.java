@@ -15,7 +15,6 @@
 package genjreports.rdf.semweb;
 
 import static com.hp.hpl.jena.rdf.model.ResourceFactory.*;
-import static genjreports.rdf.semweb.Predicate.*;
 
 import java.io.*;
 import java.net.*;
@@ -23,6 +22,7 @@ import java.util.*;
 import java.util.logging.*;
 
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.*;
 
 /**
  * Manager of data from the semantic web related to place name literals.
@@ -119,14 +119,14 @@ public class Mashup
             final Resource gnResource = createResource(geoNameUri);
             final Set<String> more = downloadManager.downloadGeoNames(geoNameUri);
 
-            model.add(subject, hasLabel.toProperty(), place);
-            model.add(subject, isDefinedBy.toProperty(), gnResource);
+            model.add(subject, RDFS.label, place);
+            model.add(subject, RDFS.isDefinedBy, gnResource);
             for (final String uri : more)
             {
                 if (uri.matches(".*geonames.org/.*"))
-                    model.add(subject, isDefinedBy.toProperty(), createResource(uri));
+                    model.add(subject, RDFS.isDefinedBy, createResource(uri));
                 else
-                    model.add(gnResource, seeAlso.toProperty(), createResource(uri));
+                    model.add(gnResource, RDFS.seeAlso, createResource(uri));
             }
         }
         // make absolutely sure the last changes are flushed 
