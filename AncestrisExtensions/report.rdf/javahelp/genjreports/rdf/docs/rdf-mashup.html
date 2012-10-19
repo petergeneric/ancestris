@@ -205,21 +205,21 @@
             <li><p class="justify">
                 The commands below download and merge the data.
                 The free services of GeoNames and DbPedia are not allways reliable.
-                Run the query <a href="./mashup/downloaded.arq">downloaded.arq</a>
-                with an inverted filter (<1) to see what is lacking.
+                Run the query <a href="./mashup/checkDownloads.arq">checkDownloads.arq</a>
+                to see what is lacking.
                 Repeat with significant intervals, the mashup command is designed not 
                 to download again what is already present.
                 Very persistent failures might be dead links,
                 try them in a browser to check.
                 <p><p class="justify">
-                An inital run with the Kennedy example took some 7 minutes,
-                resulted into some 30MB of data but fetched
-                less than a third of dbpeadia resources.
+                An inital run with the Kennedy example took some 8 minutes and
+                into some 35MB of data (inluding German and French resources).
                 <p><p class="justify">
                 The example is for Windows-7 and a beta release of Ancestris.
                 For an official release replace "trunk" with the release number, for example "0.8",
                 Other components of the path may vary depending on the configuration
-                of your operating system.
+                of your operating system. An optional fourth argument specifies 
+                additional languages for dbpedia resources. For example "fr" or "fr|de".
                 </p>
 <pre>
 set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar

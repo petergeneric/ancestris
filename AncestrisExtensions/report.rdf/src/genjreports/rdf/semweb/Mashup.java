@@ -39,8 +39,9 @@ public class Mashup
 
     /** output file format */
     private final String language;
-    private Model model;
-    private DownloadManager downloadManager;
+    private final DownloadManager downloadManager;
+    private final QueryUtil queryUtil;
+    private final Model model;
 
     /**
      * Creates an object to download and link data from the semantic web for place name literals.
@@ -70,7 +71,8 @@ public class Mashup
             model.read(new FileInputStream(file), (String) null, language);
         else
             model.setNsPrefixes(Prefix.NAME_URI_MAP);
-        downloadManager = new DownloadManager(model, languages);
+        queryUtil = new QueryUtil(model, languages);
+        downloadManager = new DownloadManager(model, queryUtil);
     }
 
     /**
@@ -101,8 +103,15 @@ public class Mashup
      */
     public void add(final Map<String, String> placeNameIdMap) throws IOException, URISyntaxException
     {
+        long count = model.size();
         for (final String place : placeNameIdMap.keySet())
         {
+            // flush after each place, but not twice after the last
+            if (count < model.size())
+            {
+                model.write(new FileOutputStream(file), language);
+                count = model.size();
+            }
             logger.info(place);
             final String geoNameId = placeNameIdMap.get(place);
             final String geoNameUri = "http://sws.geonames.org/" + geoNameId + "/";
@@ -119,9 +128,11 @@ public class Mashup
                 else
                     model.add(gnResource, seeAlso.toProperty(), createResource(uri));
             }
-            // flush each place
-            model.write(new FileOutputStream(file), language);
         }
+        // make absolutely sure the last changes are flushed 
+        model.write(new FileOutputStream(file), language);
+        
+        downloadManager.logOverwiew();
         logger.log(Level.INFO, model.size() + " statements");
     }
 
@@ -133,6 +144,7 @@ public class Mashup
             logger.log(Level.SEVERE, message);
             return;
         }
+        logger.log(Level.INFO, "started");
         final File inputFile = new File(args[0]);
         final URI uri = new URI(args[1]);
         final File outputFile = new File(args[2]);
@@ -142,7 +154,6 @@ public class Mashup
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile)));
         String line;
-        logger.log(Level.INFO, "started");
         try
         {
             while ((line = reader.readLine()) != null)
