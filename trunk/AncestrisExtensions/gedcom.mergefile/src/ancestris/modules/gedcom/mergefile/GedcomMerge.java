@@ -28,7 +28,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author lemovice
  */
-@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
+@ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
 public class GedcomMerge extends AncestrisPlugin {
 
     private final static Logger LOG = Logger.getLogger(GedcomMerge.class.getName(), null);
@@ -42,7 +42,7 @@ public class GedcomMerge extends AncestrisPlugin {
          */
         final Gedcom gedcomACopy = copyGedcom(gedcomA);
         linkGedcom(gedcomACopy);
-        
+
         final Gedcom gedcomBCopy = copyGedcom(gedcomB);
         linkGedcom(gedcomBCopy);
 
@@ -144,12 +144,12 @@ public class GedcomMerge extends AncestrisPlugin {
      */
     private boolean linkGedcom(Gedcom gedcomX) {
         // Links gedcom XReferences
-        List ents = gedcomX.getEntities();
-        for (Iterator it = ents.iterator(); it.hasNext();) {
-            Entity ent = (Entity) it.next();
-            List ps = ent.getProperties(PropertyXRef.class);
-            for (Iterator it2 = ps.iterator(); it2.hasNext();) {
-                PropertyXRef xref = (PropertyXRef) it2.next();
+        List<Entity> ents = gedcomX.getEntities();
+        for (Iterator<Entity> it = ents.iterator(); it.hasNext();) {
+            Entity ent = it.next();
+            List<PropertyXRef> ps = ent.getProperties(PropertyXRef.class);
+            for (Iterator<PropertyXRef> it2 = ps.iterator(); it2.hasNext();) {
+                PropertyXRef xref = it2.next();
                 Property target = xref.getTarget();
                 if (target == null) {
                     try {
@@ -258,11 +258,11 @@ public class GedcomMerge extends AncestrisPlugin {
         // Both format exist and are not null
         String[] tags1 = pf1.split("\\,");
         int[] placeMap = new int[tags1.length];
-        ArrayList tags2 = new ArrayList((Collection) Arrays.asList(pf2.split("\\,")));
-        ArrayList tagsTemp = new ArrayList((Collection) Arrays.asList(pf2.split("\\,")));
+        ArrayList<String> tags2 = new ArrayList<String>((Collection<String>) Arrays.asList(pf2.split("\\,")));
+        ArrayList<String> tagsTemp = new ArrayList<String>((Collection<String>) Arrays.asList(pf2.split("\\,")));
         for (int i = 0; i < tags1.length; i++) {
-            String tag = (String) tags1[i];
-            String selection = (String) tags2.get(0);
+            String tag = tags1[i];
+            String selection = tags2.get(0);
             int iSel = tags2.indexOf(selection);
             placeMap[i] = tagsTemp.indexOf(selection);
             if (tags2.size() > 1) {
@@ -276,19 +276,19 @@ public class GedcomMerge extends AncestrisPlugin {
     /**
      * Remap a list of jurisdictions
      */
-    private void remapPlaces(List entities, int[] placeMap) {
+    private void remapPlaces(List<Entity> entities, int[] placeMap) {
 
         if (placeMap == null) {
             return;
         }
 
         // Loop on all entities to get their place tag and remap it
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Entity entity = (Entity) it.next();
-            List places = entity.getProperties(PropertyPlace.class);
-            for (Iterator itp = places.iterator();
+        for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
+            Entity entity = it.next();
+            List<PropertyPlace> places = entity.getProperties(PropertyPlace.class);
+            for (Iterator<PropertyPlace> itp = places.iterator();
                     itp.hasNext();) {
-                Property propPlace = (Property) itp.next();
+                Property propPlace = itp.next();
                 String place = propPlace.toString();
                 //log.write("remap:"+place);
                 String[] placeTab = place.split("\\,", -1);
