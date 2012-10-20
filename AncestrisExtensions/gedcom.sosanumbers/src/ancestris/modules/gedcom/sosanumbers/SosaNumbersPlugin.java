@@ -12,13 +12,11 @@
 package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.util.swing.SelectEntityDialog;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.util.prefs.Preferences;
-import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -47,16 +45,7 @@ public class SosaNumbersPlugin extends AncestrisPlugin implements GedcomFileList
         Preferences modulePreferences = NbPreferences.forModule(SosaNumbers.class);
         String selectedEntityID = modulePreferences.get("SelectEntityDialog." + gedcom.getName(), "");
         Indi indiDeCujus = null;
-        if (selectedEntityID.isEmpty()) {
-            if (gedcom.getIndis().isEmpty() == false) {
-                SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"), gedcom, Gedcom.INDI);
-                if ((indiDeCujus = (Indi) selectEntityDialog.getEntity()) != null) {
-                    modulePreferences.put("SelectEntityDialog." + gedcom.getName(), indiDeCujus.getId());
-                } else {
-                    modulePreferences.put("SelectEntityDialog." + gedcom.getName(), "No SOSA");
-                }
-            }
-        } else if (!selectedEntityID.equals("No SOSA")) {
+        if (!selectedEntityID.isEmpty()) {
             indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
         }
         if (indiDeCujus != null) {
