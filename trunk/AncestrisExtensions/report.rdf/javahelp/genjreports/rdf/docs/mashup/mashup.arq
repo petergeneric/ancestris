@@ -6,11 +6,6 @@
 # - the converted gedcom
 # - the end result of the semi-automated download for GeoNames and DbPedia 
 #
-# TODO: The gedcom conversion uses rdfs:label,
-#       that should have been rdfs:hasLabel
-#       querys should be alterd along with the conversion.
-#       Additional help page with change notes to alert users?
-#
 #########################################################################
 
 ### from external data
@@ -56,7 +51,7 @@ SELECT DISTINCT
   OPTIONAL
   {
     ?placeLink
-        rdfs:hasLabel    ?place;
+        rdfs:label       ?place;
         rdfs:isDefinedBy ?gn.
     ?gn wgs84_pos:lat    ?lat;
         wgs84_pos:long   ?long.

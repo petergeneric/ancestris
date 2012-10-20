@@ -34,7 +34,7 @@ SELECT ?property ?count
     (count(?gn) as ?count)
   {
     ?placeLink
-         rdfs:hasLabel    ?place;
+         rdfs:label    ?place;
          rdfs:isDefinedBy ?gn.
     ?gn  ?property        ?type.
   }
