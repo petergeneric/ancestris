@@ -2,6 +2,7 @@ package ancestris.modules.gedcom.mergefile;
 
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomMgr;
+import static ancestris.modules.gedcom.mergefile.Bundle.CTL_GedcomMergeAction;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -27,7 +28,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
 @ActionID(category = "Tools", id = "ancestris.modules.gedcom.merge.GedcomMergeAction")
-@ActionRegistration(iconBase = "ancestris/modules/gedcom/merge/arrow_merge_270_left.png",
+@ActionRegistration(iconBase = "ancestris/modules/gedcom/mergefile/arrow_merge_270_left.png",
 displayName = "#CTL_GedcomMergeAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom", position = 3333)
@@ -58,11 +59,11 @@ public final class GedcomMergeWizardAction implements ActionListener {
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
             }
         }
-        WizardDescriptor wiz = new WizardDescriptor(new WizardDescriptor.ArrayIterator<WizardDescriptor>(panels));
+        WizardDescriptor wizardDescriptor = new WizardDescriptor(new WizardDescriptor.ArrayIterator<WizardDescriptor>(panels));
         // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
-        wiz.setTitleFormat(new MessageFormat("{0}"));
-        wiz.setTitle("...dialog title...");
-        if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
+        wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
+        wizardDescriptor.setTitle(CTL_GedcomMergeAction());
+        if (DialogDisplayer.getDefault().notify(wizardDescriptor) == WizardDescriptor.FINISH_OPTION) {
             Context mergedGedcomContext;
 
             GedcomMergeWizardPanel2 gedcomMergeWizardPanel2 = (GedcomMergeWizardPanel2) panels.get(1);
