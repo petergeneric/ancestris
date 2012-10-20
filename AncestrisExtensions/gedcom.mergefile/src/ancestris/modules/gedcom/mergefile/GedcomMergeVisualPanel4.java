@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "stepIndex4=Merge gedcom file name",
+    "stepIndex4=Name of the merged gedcom file",
     "create.action=Create",
     "create.title=Create Gedcom",
     "# {0} - file path",
