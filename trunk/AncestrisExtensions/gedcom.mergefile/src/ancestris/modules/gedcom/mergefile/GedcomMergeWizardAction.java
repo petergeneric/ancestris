@@ -33,7 +33,7 @@ displayName = "#CTL_GedcomMergeAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom", position = 3333)
 })
-@NbBundle.Messages("CTL_GedcomMergeAction=Merge 2 Gedcom")
+@NbBundle.Messages("CTL_GedcomMergeAction=Merge 2 Gedcom Files")
 public final class GedcomMergeWizardAction implements ActionListener {
 
     private final static Logger LOG = Logger.getLogger(GedcomMergeWizardAction.class.getName(), null);
