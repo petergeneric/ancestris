@@ -37,14 +37,14 @@ SELECT ?resource
     {
       {
         ?placeLink
-           rdfs:hasLabel    ?place;
+           rdfs:label    ?place;
            rdfs:isDefinedBy ?resource.
         OPTIONAL { ?resource a ?type. }
       }
       UNION
       {
         ?placeLink
-           rdfs:hasLabel    ?place;
+           rdfs:label    ?place;
            rdfs:isDefinedBy ?gn.
         ?gn rdfs:seeAlso ?resource.
         OPTIONAL{ ?resource a ?type. }

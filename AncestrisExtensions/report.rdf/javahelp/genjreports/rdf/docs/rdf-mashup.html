@@ -146,14 +146,33 @@
             Required files:
         </p>
         <ul>
-            <li>
+            <li><p class="justify">
                 A family database in gedcom format.
+                </p>
             </li>
-            <li>A local copy of <a href="./mashup/mashup.arq">mashup.arq</a>
+            <li><p class="justify">
+                A local copy of <a href="./mashup/mashup.arq">mashup.arq</a>
+                </p>
             </li>
-            <li>Rules: an empty file or a local copy from the 
+            <li><p class="justify">
+                Rules: an empty file or a local copy from the 
                 <a href="rdf-examples.html">examples</a> that is
                 required for other quries you fancy.
+                </p>
+            </li>
+            <li><p class="justify">
+                A local variant of <a href="./mashup/mashup.bat">mashup.bat</a> (Windows) 
+                or <a href="./mashup/mashup.sh">mashup.sh</a> (Linux/Unix/Mac).
+                Adjust the value of the variables JENAROOT and MODS
+                according to the configuration of your system.
+                Also adjust the last two arguments of the last line.
+                </p><p class="justify">
+                The example value for the variable MODS is for a beta release of Ancestris.
+                For an official release replace "trunk" with the release number, for example "0.8",
+                Other components of the paths may vary depending on the configuration
+                of your operating system. The optional fourth argument for the final command specifies 
+                additional languages for dbpedia resources. For example "fr" or "fr|de".
+                </p>
             </li>
         </ul>
         <p class="justify">
@@ -203,36 +222,24 @@
                 <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
             </p></li>
             <li><p class="justify">
-                The commands below download and merge the data.
-                The free services of GeoNames and DbPedia are not allways reliable.
+                Run your version of the mashup.bat or mashup.sh, it takes two arguents:
+                mashupInput.txt mashupOutput.n3.
+                </p><p class="justify">
+                Now you are ready to run any mashup query with the <code>arq</code> command
+                (shown under <a href="batches">batches</a>) with both graph files.
+                However, the free services of GeoNames and DbPedia are not allways reliable.
                 Run the query <a href="./mashup/checkDownloads.arq">checkDownloads.arq</a>
                 to see what is lacking.
                 Repeat with significant intervals, the mashup command is designed not 
                 to download again what is already present.
                 Very persistent failures might be dead links,
                 try them in a browser to check.
-                <p><p class="justify">
-                An inital run with the Kennedy example took some 8 minutes and
-                into some 35MB of data (inluding German and French resources).
-                <p><p class="justify">
-                The example is for Windows-7 and a beta release of Ancestris.
-                For an official release replace "trunk" with the release number, for example "0.8",
-                Other components of the path may vary depending on the configuration
-                of your operating system. An optional fourth argument specifies 
-                additional languages for dbpedia resources. For example "fr" or "fr|de".
+                </p><p class="justify">
+                An inital run with the Kennedy example took some 8 minutes
+                resulting into some 35MB of data (inluding German and French resources).
                 </p>
-<pre>
-set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\genjreports-rdf.jar
-set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\jena-2.6.4.jar
-set CLASSPATH=%CLASSPATH%;C:\Users\username\Appdata\Roaming\.ancestris\trunk\modules\ext\arq-2.8.7.jar
-java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/places/ merged.n3</pre>
-</pre>
             </li>
         </ul>
-        <p class="justify">
-            Now you are ready to run any mashup query with the <code>arq</code> command
-            (shown under <a href="batches">batches</a>) with both graph files.
-        </p>
         <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
 
@@ -273,7 +280,7 @@ java genjreports.rdf.semweb.Mashup mashupInput.txt http://my.domain.com/gedcom/p
                    so save the XSL file in the same domain as your query result.
                 </p>
             </dd>
-            <dt>What dbPedia properties are commonly available?</dt>
+            <dt>What properties are commonly available?</dt>
             <dd>Try the mashup queries:
                 <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
                   </li><li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a>

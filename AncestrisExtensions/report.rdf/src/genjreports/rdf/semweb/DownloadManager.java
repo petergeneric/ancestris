@@ -45,7 +45,7 @@ public class DownloadManager
             throw new IllegalArgumentException("model should not be null");
 
         final String pfx1 = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ";
-        final String pfx2 = pfx1 + "?gn  {?l rdfs:hasLabel ?p;rdfs:isDefinedBy ?gn.";
+        final String pfx2 = pfx1 + "?gn  {?l rdfs:label ?p;rdfs:isDefinedBy ?gn.";
         final String pfx3 = pfx2 + "?gn rdfs:seeAlso ?dbp.";
         found.addAll(queryUtil.runQuery(pfx2 + "?gn ?pr ?x.}"));
         found.addAll(queryUtil.runQuery(pfx3 + "?dbp ?pr ?x.FILTER(!regex(str(?pr),'sameAs'))}"));

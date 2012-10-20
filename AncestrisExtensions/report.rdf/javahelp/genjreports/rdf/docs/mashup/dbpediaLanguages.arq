@@ -32,7 +32,7 @@ SELECT DISTINCT
   (count(?dbp) as ?count)
 {
   ?placeLink
-     rdfs:hasLabel    ?place;
+     rdfs:label    ?place;
      rdfs:isDefinedBy ?gn.
   ?gn rdfs:seeAlso ?dbp.
   ?dbp owl:sameAs ?alt.
