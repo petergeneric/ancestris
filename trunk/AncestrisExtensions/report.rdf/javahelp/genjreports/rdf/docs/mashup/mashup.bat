@@ -1,5 +1,5 @@
 set JENAROOT=D:\apache-jena-2.7.3\apache-jena-2.7.3
-set MODS=C:\Users\Falkink\Appdata\Roaming\.ancestris\trunk\modules
+set MODS=C:\Users\user\Appdata\Roaming\.ancestris\trunk\modules
 
 set CLASSPATH=.;%MODS%\genjreports-rdf.jar
 

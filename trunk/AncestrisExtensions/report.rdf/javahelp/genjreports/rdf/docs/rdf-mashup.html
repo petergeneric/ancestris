@@ -97,8 +97,8 @@
         <h4>The least you want to know:</h4>
         <p class="justify">
             Look for downloads via the link above, get apache-jena and unpack it. 
-            Open a command line window and adjust <code>x.y.z</code> and each <code>PATH_TO</code>
-            in the commands below to your situation. 
+            Open a command line window and adjust the commands below to your situation:
+            each <code>PATH_TO</code> and possibly adjust the jena version to the one you downloaded.
             Note that the variable JENAROOT is not just to provide shorthands,
             but is required by the other commands.
             Creation and using the file <code>merged.n3</code> is optional,
@@ -107,13 +107,13 @@
         </p>
         <p>Windows</p>
         <pre>
-        set JENAROOT=C:\PATH_TO\apache-jena-x.y.z
+        set JENAROOT=C:\PATH_TO\apache-jena-2.7.3
         %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO_DOWNLOADS\*.rdf > merged.n3
         %JENAROOT%\bat\arq.bat --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
         </pre>
         <p>Mac / Unix</p>
         <pre>
-        set JENAROOT=/PATH_TO/apache-jena-x.y.z
+        set JENAROOT=/PATH_TO/apache-jena-2.7.3
         $JENAROOT/bin/rdfcat -out N3 /PATH_TO_DOWNLOADS/*.rdf > merged.n3
         $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
         </pre>
