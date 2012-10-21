@@ -49,7 +49,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
         File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
         GedcomHistory gedcomHistory = gedcomHistoryMap.get(gedcomName);
 
-        if (gedcomHistory.getHistoryList().isEmpty() == false) {
+        if (gedcomHistory != null && gedcomHistory.getHistoryList().isEmpty() == false) {
             log.log(Level.INFO, "saving history File {0}", historyFile.getAbsoluteFile());
             try {
                 // create JAXB context and instantiate marshaller
