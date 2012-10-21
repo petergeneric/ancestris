@@ -45,6 +45,7 @@ public final class GedcomMergeVisualPanel3 extends JPanel {
         jEditorPane1.setContentType("text/html"); // NOI18N
         jEditorPane1.setEditable(false);
         jEditorPane1.setText(org.openide.util.NbBundle.getMessage(GedcomMergeVisualPanel3.class, "GedcomMergeVisualPanel3.jEditorPane1.text")); // NOI18N
+        jEditorPane1.setDisabledTextColor(new java.awt.Color(32, 32, 32));
         jEditorPane1.setEnabled(false);
         jScrollPane1.setViewportView(jEditorPane1);
 
