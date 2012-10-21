@@ -34,7 +34,6 @@ public class GedcomMerge extends AncestrisPlugin {
     private final static Logger LOG = Logger.getLogger(GedcomMerge.class.getName(), null);
 
     public void merge(final Gedcom gedcomA, Gedcom gedcomB, final Gedcom mergedGedcom) {
-        List<? extends Entity> entities;
         Map<String, Integer> entityId = new HashMap<String, Integer>();
 
         /*
@@ -187,18 +186,19 @@ public class GedcomMerge extends AncestrisPlugin {
 
         // Allocate new ids
         int iCounter = startFrom;
+        
+        // Check for exiting ids
+        while (IDs2Entities.containsKey(iCounter) == true) {
+            // Entity is already numbered correctly
+            Entities2IDs.put(IDs2Entities.get(iCounter), iCounter);
+            IDs2Entities.remove(iCounter);
+            iCounter++;
+        }
+        
+        // Numbering remaining entities
         for (Integer id : IDs2Entities.keySet()) {
-            if (id == iCounter) {
-                Entities2IDs.put(IDs2Entities.get(id), iCounter);
-                iCounter++;
-            } else {
-                iCounter = startFrom;
-                // Find first free Id
-                while (IDs2Entities.containsKey(iCounter) || Entities2IDs.containsValue(iCounter)) {
-                    iCounter++;
-                }
-                Entities2IDs.put(IDs2Entities.get(id), iCounter);
-            }
+            Entities2IDs.put(IDs2Entities.get(id), iCounter);
+            iCounter++;
         }
 
         // set final ids
@@ -219,7 +219,7 @@ public class GedcomMerge extends AncestrisPlugin {
 
         LOG.log(Level.INFO, "First Free Id {0}", startFrom + entities.size());
 
-        return iCounter;
+        return startFrom + entities.size();
     }
 
     /**

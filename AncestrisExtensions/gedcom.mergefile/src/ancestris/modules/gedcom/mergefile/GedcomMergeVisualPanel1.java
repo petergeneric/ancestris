@@ -34,11 +34,13 @@ public final class GedcomMergeVisualPanel1 extends JPanel {
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
+        jScrollPane1.setEnabled(false);
 
         jEditorPane1.setBorder(null);
         jEditorPane1.setContentType("text/html"); // NOI18N
-        jEditorPane1.setEditable(false);
         jEditorPane1.setText(org.openide.util.NbBundle.getMessage(GedcomMergeVisualPanel1.class, "GedcomMergeVisualPanel1.jEditorPane1.text")); // NOI18N
+        jEditorPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jEditorPane1.setDisabledTextColor(new java.awt.Color(32, 32, 32));
         jEditorPane1.setEnabled(false);
         jScrollPane1.setViewportView(jEditorPane1);
 
