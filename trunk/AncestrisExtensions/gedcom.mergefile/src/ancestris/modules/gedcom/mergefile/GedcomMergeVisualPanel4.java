@@ -18,6 +18,7 @@ import org.openide.util.NbBundle;
 public final class GedcomMergeVisualPanel4 extends JPanel {
 
     private File gedcomMergeFile;
+    public static final String PROP_MERGED_GEDCOM_NAME = "mergedGedcomName";
 
     /**
      * Creates new form GedcomMergeVisualPanel4
@@ -101,7 +102,11 @@ public final class GedcomMergeVisualPanel4 extends JPanel {
                 int rc = DialogHelper.openDialog(create_title(), DialogHelper.WARNING_MESSAGE, file_exists(gedcomMergeFile.getName()), Action2.yesNo(), null);
                 if (rc == 0) {
                     jTextField1.setText(gedcomMergeFile.toString());
+                    firePropertyChange(PROP_MERGED_GEDCOM_NAME, 0, 1);
                 }
+            } else {
+                jTextField1.setText(gedcomMergeFile.toString());
+                firePropertyChange(PROP_MERGED_GEDCOM_NAME, 0, 1);
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed

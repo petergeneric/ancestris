@@ -10,6 +10,7 @@ import org.openide.util.NbBundle;
 public final class GedcomMergeVisualPanel3 extends JPanel {
 
     private Context gedcomContext;
+    public static final String PROP_SECOND_GEDCOM   = "secondGedcom"; 
 
     /**
      * Creates new form GedcomMergeVisualPanel3
@@ -88,6 +89,8 @@ public final class GedcomMergeVisualPanel3 extends JPanel {
         // Choose Gedcom File 
         if ((gedcomContext = GedcomDirectory.getDefault().openGedcom()) != null) {
             jTextField1.setText(gedcomContext.getGedcom().getOrigin().getFile().toString());
+            firePropertyChange(PROP_SECOND_GEDCOM, 0, 1);
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
