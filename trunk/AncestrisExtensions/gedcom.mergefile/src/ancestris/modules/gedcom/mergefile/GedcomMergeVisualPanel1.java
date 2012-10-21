@@ -28,18 +28,19 @@ public final class GedcomMergeVisualPanel1 extends JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jEditorPane1 = new javax.swing.JEditorPane();
 
         setBorder(null);
 
+        jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setEditable(false);
-        jTextArea1.setRows(5);
-        jTextArea1.setText(org.openide.util.NbBundle.getMessage(GedcomMergeVisualPanel1.class, "GedcomMergeVisualPanel1.jTextArea1.text")); // NOI18N
-        jTextArea1.setEnabled(false);
-        jScrollPane1.setViewportView(jTextArea1);
+        jEditorPane1.setBorder(null);
+        jEditorPane1.setContentType("text/html"); // NOI18N
+        jEditorPane1.setEditable(false);
+        jEditorPane1.setText(org.openide.util.NbBundle.getMessage(GedcomMergeVisualPanel1.class, "GedcomMergeVisualPanel1.jEditorPane1.text")); // NOI18N
+        jEditorPane1.setEnabled(false);
+        jScrollPane1.setViewportView(jEditorPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -52,14 +53,14 @@ public final class GedcomMergeVisualPanel1 extends JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }
