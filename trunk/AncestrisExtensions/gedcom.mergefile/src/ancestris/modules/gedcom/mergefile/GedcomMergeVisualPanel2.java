@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 import static ancestris.modules.gedcom.mergefile.Bundle.*;
 
-@NbBundle.Messages("stepIndex2=Chose first gedcom file")
+@NbBundle.Messages("stepIndex2=Chose first gedcom file to merge")
 public final class GedcomMergeVisualPanel2 extends JPanel {
 
     private Context gedcomContext;
