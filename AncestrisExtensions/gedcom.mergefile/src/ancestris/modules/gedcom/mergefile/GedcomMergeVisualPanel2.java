@@ -1,15 +1,16 @@
 package ancestris.modules.gedcom.mergefile;
 
 import ancestris.gedcom.GedcomDirectory;
+import static ancestris.modules.gedcom.mergefile.Bundle.stepIndex2;
 import genj.gedcom.Context;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
-import static ancestris.modules.gedcom.mergefile.Bundle.*;
 
 @NbBundle.Messages("stepIndex2=Chose first gedcom file to merge")
 public final class GedcomMergeVisualPanel2 extends JPanel {
 
     private Context gedcomContext;
+    public static final String PROP_FIRST_GEDCOM   = "firstGedcom"; 
 
     /**
      * Creates new form GedcomMergeVisualPanel2
@@ -87,6 +88,7 @@ public final class GedcomMergeVisualPanel2 extends JPanel {
         // Choose Gedcom File 
         if ((gedcomContext = GedcomDirectory.getDefault().openGedcom()) != null) {
             jTextField1.setText(gedcomContext.getGedcom().getOrigin().getFile().toString());
+            firePropertyChange(PROP_FIRST_GEDCOM, 0, 1); 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
