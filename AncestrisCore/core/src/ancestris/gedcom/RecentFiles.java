@@ -117,7 +117,12 @@ public abstract class RecentFiles {
             List<FileObject> result = new ArrayList<FileObject>(5);
             for (String file : list) {
                 try {
-                    result.add(URLMapper.findFileObject(new URL(file)));
+                    FileObject fo = URLMapper.findFileObject(new URL(file));
+                    // if fo is null no FileObject can be found for this file
+                    // (ie file hase been deleted) so don't put in history
+                    if (fo != null){
+                        result.add(URLMapper.findFileObject(new URL(file)));
+                    }
                 } catch (MalformedURLException ex) {
                 }
             }
