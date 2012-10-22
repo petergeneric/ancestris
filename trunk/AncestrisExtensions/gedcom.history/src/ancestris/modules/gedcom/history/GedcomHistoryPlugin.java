@@ -37,7 +37,7 @@ import org.openide.windows.TopComponent;
 public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileListener {
 
     private final static Logger log = Logger.getLogger(GedcomHistoryPlugin.class.getName());
-    private final static HashMap<String, GedcomHistory> gedcomHistoryMap = new <String, GedcomHistory>HashMap();
+    private final static HashMap<Gedcom, GedcomHistory> gedcomHistoryMap = new <String, GedcomHistory>HashMap();
 
     @Override
     public void commitRequested(Context context) {
@@ -47,7 +47,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
 
         File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
         File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
-        GedcomHistory gedcomHistory = gedcomHistoryMap.get(gedcomName);
+        GedcomHistory gedcomHistory = gedcomHistoryMap.get(context.getGedcom());
 
         if (gedcomHistory != null && gedcomHistory.getHistoryList().isEmpty() == false) {
             log.log(Level.INFO, "saving history File {0}", historyFile.getAbsoluteFile());
@@ -71,9 +71,9 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
 
         log.log(Level.INFO, "closing gedcom {0}", gedcomName);
 
-        if (gedcomHistoryMap.get(gedcomName) != null) {
-            gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcomName));
-            gedcomHistoryMap.remove(gedcomName);
+        if (gedcomHistoryMap.get(gedcom) != null) {
+            gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcom));
+            gedcomHistoryMap.remove(gedcom);
             Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
             for (TopComponent topComponent : openedTopComponent) {
                 if (topComponent instanceof GedcomHistoryTopComponent) {
@@ -90,7 +90,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
     @Override
     public void gedcomOpened(Gedcom gedcom) {
         String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
-        if (gedcomHistoryMap.containsKey(gedcomName) == false) {
+        if (gedcomHistoryMap.containsKey(gedcom) == false) {
             File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
             File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
             log.log(Level.INFO, "opening history file {0}", historyFile.getAbsoluteFile());
@@ -103,26 +103,26 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
                     GedcomHistory gedcomHistory;
                     try {
                         gedcomHistory = (GedcomHistory) um.unmarshal(new FileReader(historyFile));
-                        gedcomHistoryMap.put(gedcomName, gedcomHistory);
-                        gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+                        gedcomHistoryMap.put(gedcom, gedcomHistory);
+                        gedcom.addGedcomListener(gedcomHistoryMap.get(gedcom));
                     } catch (FileNotFoundException ex) {
-                        gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
-                        gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+                        gedcomHistoryMap.put(gedcom, new GedcomHistory(gedcomName));
+                        gedcom.addGedcomListener(gedcomHistoryMap.get(gedcom));
                     }
                 } catch (JAXBException ex) {
-                    gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
-                    gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+                    gedcomHistoryMap.put(gedcom, new GedcomHistory(gedcomName));
+                    gedcom.addGedcomListener(gedcomHistoryMap.get(gedcom));
                 }
             } else {
-                gedcomHistoryMap.put(gedcomName, new GedcomHistory(gedcomName));
-                gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
+                gedcomHistoryMap.put(gedcom, new GedcomHistory(gedcomName));
+                gedcom.addGedcomListener(gedcomHistoryMap.get(gedcom));
             }
         } else {
             log.log(Level.INFO, "history file already open for gedcom {0}", gedcomName);
         }
     }
 
-    public GedcomHistory getGedcomHistory(String gedcomName) {
-        return gedcomHistoryMap.get(gedcomName);
+    public GedcomHistory getGedcomHistory(Gedcom gedcom) {
+        return gedcomHistoryMap.get(gedcom);
     }
 }

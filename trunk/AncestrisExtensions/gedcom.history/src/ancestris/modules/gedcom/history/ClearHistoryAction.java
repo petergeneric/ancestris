@@ -48,7 +48,7 @@ public final class ClearHistoryAction implements ActionListener {
                     File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
                     File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
 
-                    ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName).clear();
+                    ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(context.getGedcom()).clear();
                     if (historyFile.exists() == true) {
                         historyFile.delete();
                     }

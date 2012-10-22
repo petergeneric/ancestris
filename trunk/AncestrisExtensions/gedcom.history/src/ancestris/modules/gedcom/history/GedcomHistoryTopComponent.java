@@ -79,7 +79,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
             for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
                 if (pluginInterface instanceof GedcomHistoryPlugin) {
 
-                    this.gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(gedcomName);
+                    this.gedcomHistory = ((GedcomHistoryPlugin) pluginInterface).getGedcomHistory(context.getGedcom());
                     if (this.gedcomHistory != null) {
                         this.gedcom = context.getGedcom();
                         this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.getGedcom());
