@@ -83,6 +83,7 @@ public class GedcomMerge extends AncestrisPlugin {
                             LOG.log(Level.SEVERE, null, ex);
                         }
                     }
+
                     /*
                      * Copy all GedcomB entities in GedcomA
                      */
@@ -186,19 +187,22 @@ public class GedcomMerge extends AncestrisPlugin {
 
         // Allocate new ids
         int iCounter = startFrom;
-        
-        // Check for exiting ids
-        while (IDs2Entities.containsKey(iCounter) == true) {
-            // Entity is already numbered correctly
-            Entities2IDs.put(IDs2Entities.get(iCounter), iCounter);
-            IDs2Entities.remove(iCounter);
-            iCounter++;
-        }
-        
-        // Numbering remaining entities
-        for (Integer id : IDs2Entities.keySet()) {
-            Entities2IDs.put(IDs2Entities.get(id), iCounter);
-            iCounter++;
+
+        while (!IDs2Entities.isEmpty()) {
+            if (IDs2Entities.containsKey(iCounter) == true) {
+                // Entity is already numbered correctly
+                Entities2IDs.put(IDs2Entities.get(iCounter), iCounter);
+                IDs2Entities.remove(iCounter);
+                iCounter++;
+            }
+
+            Iterator<Integer> it = IDs2Entities.keySet().iterator();
+            if (it.hasNext()) {
+                Integer id = it.next();
+                Entities2IDs.put(IDs2Entities.get(id), iCounter);
+                IDs2Entities.remove(id);
+                iCounter++;
+            }
         }
 
         // set final ids
