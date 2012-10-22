@@ -71,15 +71,19 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
 
         log.log(Level.INFO, "closing gedcom {0}", gedcomName);
 
-        gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcomName));
-        gedcomHistoryMap.remove(gedcomName);
-        Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
-        for (TopComponent topComponent : openedTopComponent) {
-            if (topComponent instanceof GedcomHistoryTopComponent) {
-                if (((GedcomHistoryTopComponent) topComponent).getGedcom().equals(gedcom) == true) {
-                    topComponent.close();
+        if (gedcomHistoryMap.get(gedcomName) != null) {
+            gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcomName));
+            gedcomHistoryMap.remove(gedcomName);
+            Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
+            for (TopComponent topComponent : openedTopComponent) {
+                if (topComponent instanceof GedcomHistoryTopComponent) {
+                    if (((GedcomHistoryTopComponent) topComponent).getGedcom().equals(gedcom) == true) {
+                        topComponent.close();
+                    }
                 }
             }
+        } else {
+            log.log(Level.INFO, "No history register found for gedcom {0}", gedcomName);
         }
     }
 
@@ -114,7 +118,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
                 gedcom.addGedcomListener(gedcomHistoryMap.get(gedcomName));
             }
         } else {
-            log.log(Level.INFO, "history file already open");
+            log.log(Level.INFO, "history file already open for gedcom {0}", gedcomName);
         }
     }
 
