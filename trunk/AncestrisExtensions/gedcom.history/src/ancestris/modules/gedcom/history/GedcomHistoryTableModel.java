@@ -89,7 +89,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                 case ENTITY_ID:
                     return entityHistory.getEntityId();
                 case ACTION:
-                    return NbBundle.getMessage(this.getClass(), "HistoryTableModel.action." + entityHistory.getAction());
+                    return NbBundle.getMessage(this.getClass(), "HistoryTableModel.Action." + entityHistory.getAction());
                 case PROPERTY:
                     String propertySeparator = NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertySeparator");
                     String propertyPath = "";
