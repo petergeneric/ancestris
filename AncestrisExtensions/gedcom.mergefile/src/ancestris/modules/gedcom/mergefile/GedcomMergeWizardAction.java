@@ -33,7 +33,8 @@ displayName = "#CTL_GedcomMergeAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom", position = 3333)
 })
-@NbBundle.Messages("CTL_GedcomMergeAction=Merge Tool")
+@NbBundle.Messages({
+    "CTL_GedcomMergeAction=Merge Tool",})
 public final class GedcomMergeWizardAction implements ActionListener {
 
     private final static Logger LOG = Logger.getLogger(GedcomMergeWizardAction.class.getName(), null);
@@ -41,10 +42,17 @@ public final class GedcomMergeWizardAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        panels.add(new GedcomMergeWizardPanel1());
-        panels.add(new GedcomMergeWizardPanel2());
-        panels.add(new GedcomMergeWizardPanel3());
-        panels.add(new GedcomMergeWizardPanel4());
+        GedcomMergeWizardPanel1 gedcomMergeWizardPanel1 = new GedcomMergeWizardPanel1();
+        GedcomMergeWizardPanel2 gedcomMergeWizardPanel2 = new GedcomMergeWizardPanel2();
+        GedcomMergeWizardPanel3 gedcomMergeWizardPanel3 = new GedcomMergeWizardPanel3();
+        GedcomMergeWizardPanel4 gedcomMergeWizardPanel4 = new GedcomMergeWizardPanel4(gedcomMergeWizardPanel2.getComponent(), gedcomMergeWizardPanel3.getComponent());
+        GedcomMergeWizardPanel5 gedcomMergeWizardPanel5 = new GedcomMergeWizardPanel5();
+
+        panels.add(gedcomMergeWizardPanel1);
+        panels.add(gedcomMergeWizardPanel2);
+        panels.add(gedcomMergeWizardPanel3);
+        panels.add(gedcomMergeWizardPanel4);
+        panels.add(gedcomMergeWizardPanel5);
         String[] steps = new String[panels.size()];
         for (int i = 0; i < panels.size(); i++) {
             Component c = panels.get(i).getComponent();
@@ -64,35 +72,11 @@ public final class GedcomMergeWizardAction implements ActionListener {
         wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
         wizardDescriptor.setTitle(CTL_GedcomMergeAction());
         if (DialogDisplayer.getDefault().notify(wizardDescriptor) == WizardDescriptor.FINISH_OPTION) {
-            Context mergedGedcomContext;
+            Context leftGedcomContext = gedcomMergeWizardPanel2.getComponent().getGedcomContext();
+            Context rightGedcomContext = gedcomMergeWizardPanel3.getComponent().getGedcomContext();
+            File gedcomMergeFile = gedcomMergeWizardPanel5.getComponent().getGedcomMergeFile();
 
-            GedcomMergeWizardPanel2 gedcomMergeWizardPanel2 = (GedcomMergeWizardPanel2) panels.get(1);
-            Context gedcomAContext = gedcomMergeWizardPanel2.getComponent().getGedcomContext();
-
-            GedcomMergeWizardPanel3 gedcomMergeWizardPanel3 = (GedcomMergeWizardPanel3) panels.get(2);
-            Context gedcomBContext = gedcomMergeWizardPanel3.getComponent().getGedcomContext();
-
-            GedcomMergeWizardPanel4 gedcomMergeWizardPanel4 = (GedcomMergeWizardPanel4) panels.get(3);
-            File gedcomMergeFile = gedcomMergeWizardPanel4.getComponent().getGedcomMergeFile();
-
-
-            // form the origin
-            Gedcom mergedGedcom;
-            try {
-                mergedGedcom = new Gedcom(Origin.create(gedcomMergeFile.toURI().toURL()));
-            } catch (MalformedURLException ex) {
-                LOG.log(Level.WARNING, "unexpected exception creating new gedcom", ex);
-                return;
-            }
-            new GedcomMerge().merge(gedcomAContext.getGedcom(), gedcomBContext.getGedcom(), mergedGedcom);
-            mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
-            Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
-
-            // save gedcom file
-            GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(gedcomMergeFile));
-
-            // and reopens the file
-            GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(gedcomMergeFile));
+            new GedcomMerge(leftGedcomContext.getGedcom(), rightGedcomContext.getGedcom(), gedcomMergeFile).run();
         }
     }
 }
