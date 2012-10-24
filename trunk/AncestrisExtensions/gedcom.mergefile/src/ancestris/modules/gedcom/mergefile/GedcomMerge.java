@@ -1,10 +1,10 @@
 /*
  * Ancestris - http://www.ancestris.org
- * 
+ *
  * Copyright 2012 Ancestris
- * 
+ *
  * Author: lemovice (lemovice-at-ancestris-dot-org).
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -12,8 +12,12 @@
 package ancestris.modules.gedcom.mergefile;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDirectory;
+import ancestris.gedcom.GedcomMgr;
 import genj.gedcom.*;
+import genj.util.AncestrisPreferences;
 import genj.util.Origin;
+import genj.util.Registry;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,60 +26,99 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
+// import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lemovice
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-public class GedcomMerge extends AncestrisPlugin {
+public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
     private final static Logger LOG = Logger.getLogger(GedcomMerge.class.getName(), null);
+    private final Gedcom leftGedcom;
+    private final Gedcom rightGedcom;
+    private final File gedcomMergeFile;
 
-    public void merge(final Gedcom gedcomA, Gedcom gedcomB, final Gedcom mergedGedcom) {
+    public GedcomMerge() {
+        this.leftGedcom = null;
+        this.rightGedcom = null;
+        this.gedcomMergeFile = null;
+    }
+
+    public GedcomMerge(Gedcom leftGedcom, Gedcom rightGedcom, File gedcomMergeFile) {
+        this.leftGedcom = leftGedcom;
+        this.rightGedcom = rightGedcom;
+        this.gedcomMergeFile = gedcomMergeFile;
+    }
+
+    @Override
+    public void run() {
         Map<String, Integer> entityId = new HashMap<String, Integer>();
+        ProgressHandle progressHandle = ProgressHandleFactory.createHandle(org.openide.util.NbBundle.getMessage(Bundle.class, "merge.progress"));
 
-        /*
-         * Duplicate Gedcom file
-         */
-        final Gedcom gedcomACopy = copyGedcom(gedcomA);
-        linkGedcom(gedcomACopy);
+        if (this.leftGedcom == null) {
+            return;
+        }
+        progressHandle.start();
 
-        final Gedcom gedcomBCopy = copyGedcom(gedcomB);
-        linkGedcom(gedcomBCopy);
-
-        /*
-         * Re number all entities Ids for GedcomA
-         */
-        for (String entityType : Gedcom.ENTITIES) {
-            entityId.put(entityType, settingIDs(gedcomACopy, entityType, 1));
+        // form the origin
+        final Gedcom mergedGedcom;
+        try {
+            mergedGedcom = new Gedcom(Origin.create(gedcomMergeFile.toURI().toURL()));
+        } catch (MalformedURLException ex) {
+            LOG.log(Level.WARNING, "unexpected exception creating new gedcom", ex);
+            return;
         }
 
         /*
-         * Re number all entities Ids for GedcomA
+         * Duplicate original Gedcom files
+         */
+        final Gedcom leftGedcomCopy = copyGedcom(leftGedcom);
+        linkGedcom(leftGedcomCopy);
+
+        final Gedcom rightGedcomCopy = copyGedcom(rightGedcom);
+        linkGedcom(rightGedcomCopy);
+
+        /*
+         * Re number all entities Ids for leftGedcom
          */
         for (String entityType : Gedcom.ENTITIES) {
-            settingIDs(gedcomBCopy, entityType, entityId.get(entityType));
+            entityId.put(entityType, settingIDs(leftGedcomCopy, entityType, 1));
         }
 
         /*
-         * remap places of entities in the GedcomB
+         * Re number all entities Ids for leftGedcom
          */
-        int[] placeMap = mapPlaceFormat(gedcomA, gedcomB);
+        for (String entityType : Gedcom.ENTITIES) {
+            settingIDs(rightGedcomCopy, entityType, entityId.get(entityType));
+        }
+
+        /*
+         * remap places of entities in the rightGedcom
+         */
+        int[] placeMap = mapPlaceFormat(leftGedcom, rightGedcom);
         if (placeMap != null) {
-            remapPlaces(gedcomBCopy.getEntities(), placeMap);
+            remapPlaces(rightGedcomCopy.getEntities(), placeMap);
         }
         try {
-            gedcomA.doUnitOfWork(new UnitOfWork() {
+            mergedGedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
                     /*
-                     * Copy all GedcomA entities in GedcomA
+                     * Copy all leftGedcom entities in mergedGedcom
                      */
-                    List<Entity> gedcomAEntities = gedcomACopy.getEntities();
-                    for (Entity srcEntity : gedcomAEntities) {
+                    List<Entity> leftGedcomEntities = leftGedcomCopy.getEntities();
+                    for (Entity srcEntity : leftGedcomEntities) {
                         try {
                             Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
                             copyPropertiesCluster(srcEntity, destEntity);
@@ -85,22 +128,81 @@ public class GedcomMerge extends AncestrisPlugin {
                     }
 
                     /*
-                     * Copy all GedcomB entities in GedcomA
+                     * Copy all rightGedcom entities in mergedGedcom
                      */
-                    List<Entity> gedcomBEntities = gedcomBCopy.getEntities();
-                    for (Entity srcEntity : gedcomBEntities) {
+                    List<Entity> rightGedcomEntities = rightGedcomCopy.getEntities();
+                    for (Entity srcEntity : rightGedcomEntities) {
                         try {
                             Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
                             copyPropertiesCluster(srcEntity, destEntity);
                         } catch (GedcomException ex) {
                             LOG.log(Level.SEVERE, null, ex);
                         }
+                    }
+
+                    // Create submitter
+                    AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
+
+                    Submitter submitter = (Submitter) mergedGedcom.createEntity(Gedcom.SUBM);
+                    submitter.setName(submPref.get("submName", ""));
+                    submitter.setCity(submPref.get("submCity", ""));
+                    submitter.setPhone(submPref.get("submPhone", ""));
+                    submitter.setEmail(submPref.get("submEmail", ""));
+                    submitter.setCountry(submPref.get("submCountry", ""));
+                    submitter.setWeb(submPref.get("submWeb", ""));
+
+                    mergedGedcom.createEntity("HEAD", "");
+
+                    String placeFormat = leftGedcom.getPlaceFormat();
+                    if (placeFormat != null) {
+                        mergedGedcom.setPlaceFormat(placeFormat);
+                    }
+
+                    Boolean[] showJuridictions = leftGedcom.getShowJuridictions();
+                    if (showJuridictions != null) {
+                        mergedGedcom.setShowJuridictions(showJuridictions);
+                    }
+
+                    String placeSortOrder = leftGedcom.getPlaceSortOrder();
+                    if (placeSortOrder != null) {
+                        mergedGedcom.setPlaceSortOrder(placeSortOrder);
+                    }
+
+                    String placeDisplayFormat = leftGedcom.getPlaceDisplayFormat();
+                    if (placeDisplayFormat != null) {
+                        mergedGedcom.setPlaceDisplayFormat(placeDisplayFormat);
                     }
                 }
             });
         } catch (GedcomException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
+
+        progressHandle.finish();
+
+        GedcomMergeResultPanel gedcomMergeResultPanel = new GedcomMergeResultPanel(mergedGedcom);
+
+        // display merge result
+        DialogDescriptor gedcomMergeResultDescriptor = new DialogDescriptor(
+                gedcomMergeResultPanel,
+                org.openide.util.NbBundle.getMessage(Bundle.class, "merge.result.dialog"),
+                true,
+                new Object[]{NotifyDescriptor.OK_OPTION},
+                DialogDescriptor.OK_OPTION,
+                DialogDescriptor.DEFAULT_ALIGN,
+                null,
+                null);
+        DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor).setVisible(true);
+
+        Context mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
+        Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
+
+        // save gedcom file
+        GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+
+        // and reopens the file
+        GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+
     }
 
     /**
