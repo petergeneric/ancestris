@@ -44,12 +44,13 @@ public class DownloadManager
         if (model == null)
             throw new IllegalArgumentException("model should not be null");
 
-        final String pfx1 = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ";
-        final String pfx2 = pfx1 + "?gn  {?l rdfs:label ?p;rdfs:isDefinedBy ?gn.";
-        final String pfx3 = pfx2 + "?gn rdfs:seeAlso ?dbp.";
-        found.addAll(queryUtil.runQuery(pfx2 + "?gn ?pr ?x.}"));
-        found.addAll(queryUtil.runQuery(pfx3 + "?dbp ?pr ?x.FILTER(!regex(str(?pr),'sameAs'))}"));
-        found.addAll(queryUtil.runQuery(pfx3 + "?x ?pr ?dbp.FILTER(!regex(str(?pr),'sameAs'))}"));
+        final String pfx = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT DISTINCT ";
+        final String p1 = "?l rdfs:label ?p;rdfs:isDefinedBy ?gn.";
+        final String p2 = p1 + "?gn rdfs:seeAlso ?dbp.";
+        final String f = "FILTER(!regex(str(?pr),'sameAs'))";
+        found.addAll(queryUtil.runQuery(pfx + "?gn  {" + p1 + "?gn ?pr ?x.}"));
+        found.addAll(queryUtil.runQuery(pfx + "?dbp {" + p2 + "?dbp ?pr ?x." + f + "}"));
+        found.addAll(queryUtil.runQuery(pfx + "?dbp {" + p2 + "?x ?pr ?dbp." + f + "}"));
 
         this.queryUtil = queryUtil;
         this.model = model;
