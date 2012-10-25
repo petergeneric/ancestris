@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "stepIndex4=Name of the merged gedcom file",})
+    "stepIndex4=Information summary of the gedcom files",})
 public final class GedcomMergeVisualPanel4 extends JPanel implements PropertyChangeListener {
 
     private final GedcomMergeVisualPanel2 gedcomMergeVisualPanel2;
