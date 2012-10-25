@@ -283,8 +283,8 @@ public final class GedcomMergeVisualPanel4 extends JPanel implements PropertyCha
         if (GedcomMergeVisualPanel2.PROP_FIRST_GEDCOM.equals(pce.getPropertyName())) {
             Gedcom gedcom = gedcomMergeVisualPanel2.getGedcomContext().getGedcom();
             if (gedcom != null) {
-                leftGedcomNameLabel.setText(gedcom.getName());
-                leftGedcomDateLabel.setText(gedcom.getLastChange().getDateDisplayValue());
+                leftGedcomNameLabel.setText(gedcom.getName() != null?gedcom.getName():"");
+                leftGedcomDateLabel.setText(gedcom.getLastChange() != null?gedcom.getLastChange().getDateDisplayValue():"");
                 leftGedcomIndividuals.setText(Integer.toString(gedcom.getEntities(Gedcom.INDI).size()));
                 leftGedcomFamilies.setText(Integer.toString(gedcom.getEntities(Gedcom.FAM).size()));
                 leftGedcomSubmitters.setText(Integer.toString(gedcom.getEntities(Gedcom.SUBM).size()));
@@ -296,8 +296,8 @@ public final class GedcomMergeVisualPanel4 extends JPanel implements PropertyCha
         } else if (GedcomMergeVisualPanel3.PROP_SECOND_GEDCOM.equals(pce.getPropertyName())) {
             Gedcom gedcom = gedcomMergeVisualPanel3.getGedcomContext().getGedcom();
             if (gedcom != null) {
-                rightGedcomNameLabel.setText(gedcom.getName());
-                rightGedcomDateLabel.setText(gedcom.getLastChange().getDateDisplayValue());
+                rightGedcomNameLabel.setText(gedcom.getName() != null?gedcom.getName():"");
+                rightGedcomDateLabel.setText(gedcom.getLastChange() != null?gedcom.getLastChange().getDateDisplayValue():"");
                 rightGedcomIndividuals.setText(Integer.toString(gedcom.getEntities(Gedcom.INDI).size()));
                 rightGedcomFamilies.setText(Integer.toString(gedcom.getEntities(Gedcom.FAM).size()));
                 rightGedcomSubmitters.setText(Integer.toString(gedcom.getEntities(Gedcom.SUBM).size()));
