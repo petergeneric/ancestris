@@ -11,7 +11,7 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "stepIndex5=Name of the merged gedcom file",
     "create.action=Create",
-    "create.title=Create Gedcom",
+    "create.title=Output File",
     "# {0} - file path",
     "file.exists=File {0} already exists. Proceed?"
 })
