@@ -17,7 +17,8 @@ package genjreports.rdf.semweb;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.logging.*;
+
+import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.JenaException;
@@ -87,7 +88,7 @@ public class DownloadManager
         if (tried.contains(uri) || found.contains(uri))
             return;
         Nice.sleep(new URI(url).getHost());
-        logger.log(Level.INFO, "reading: " + url);
+        logger.info("reading: " + url);
         try
         {
             read.add(url);
@@ -95,7 +96,7 @@ public class DownloadManager
         }
         catch (final JenaException e)
         {
-            logger.log(Level.WARNING, url + " " + e.getMessage());
+            logger.warn(url + " " + e.getMessage());
             warnings.add(uri + " " + e.getMessage());
         }
     }
@@ -109,8 +110,8 @@ public class DownloadManager
     public void logOverwiew()
     {
         if (!read.isEmpty())
-            logger.log(Level.INFO, "DOWNLOADED: " + Arrays.deepToString(read.toArray()));
+            logger.info("DOWNLOADED: " + Arrays.deepToString(read.toArray()));
         if (!warnings.isEmpty())
-            logger.log(Level.WARNING, Arrays.deepToString(warnings.toArray()));
+            logger.warn(Arrays.deepToString(warnings.toArray()));
     }
 }

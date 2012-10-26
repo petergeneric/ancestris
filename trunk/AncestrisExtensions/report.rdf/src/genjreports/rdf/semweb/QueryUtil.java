@@ -16,7 +16,8 @@ package genjreports.rdf.semweb;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
+
+import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.query.ResultSet;
@@ -93,7 +94,7 @@ public class QueryUtil
 
     private Set<String> run(final String query)
     {
-        logger.log(Level.FINE, "query: " + query);
+        logger.debug("query: " + query);
         final QueryExecution queryExecution = QueryExecutionFactory.create(query, Syntax.syntaxARQ, model, new QuerySolutionMap());
         final Set<String> result = new HashSet<String>();
         try
@@ -111,7 +112,7 @@ public class QueryUtil
             queryExecution.close();
         }
         if (!result.isEmpty())
-            logger.log(Level.INFO, Arrays.deepToString(result.toArray()));
+            logger.info(Arrays.deepToString(result.toArray()));
         return result;
     }
 }

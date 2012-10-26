@@ -17,8 +17,8 @@ package genjreports.rdf.semweb;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 public class Nice
 {
@@ -36,7 +36,7 @@ public class Nice
     public static void sleep(final String host)
     {
 	if (!hostLastTimeMap.containsKey(host))
-            logger.log(Level.INFO, "ready to download " + host);
+            logger.info("ready to download " + host);
         else
         {
             if (!hostIntervalMap.containsKey(host))
@@ -46,7 +46,7 @@ public class Nice
             if (duration < interval)
             {
                 final long l = interval - duration;
-                logger.log(Level.INFO, "waiting " + l + " miliseconds to prevent a download ban from " + host);
+                logger.info("waiting " + l + " miliseconds to prevent a download ban from " + host);
                 try
                 {
                     Thread.sleep(l);
