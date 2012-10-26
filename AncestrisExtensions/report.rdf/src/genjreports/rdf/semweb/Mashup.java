@@ -19,7 +19,8 @@ import static com.hp.hpl.jena.rdf.model.ResourceFactory.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.logging.*;
+
+import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.*;
@@ -133,7 +134,7 @@ public class Mashup
         model.write(new FileOutputStream(file), language);
         
         downloadManager.logOverwiew();
-        logger.log(Level.INFO, model.size() + " statements");
+        logger.info(model.size() + " statements");
     }
 
     public static void main(final String[] args) throws URISyntaxException, IOException
@@ -141,10 +142,10 @@ public class Mashup
         final String message = "expected arguments: input file " + "(per line: GeoNameID, tab, place name), URI, output file";
         if (args.length < 3)
         {
-            logger.log(Level.SEVERE, message);
+            logger.fatal(message);
             return;
         }
-        logger.log(Level.INFO, "started");
+        logger.info("started");
         final File inputFile = new File(args[0]);
         final URI uri = new URI(args[1]);
         final File outputFile = new File(args[2]);
@@ -168,7 +169,7 @@ public class Mashup
                 }
             }
             if (places.isEmpty())
-                logger.log(Level.WARNING, message);
+                logger.warn(message);
             else
                 mashup.add(places);
         }
@@ -180,6 +181,6 @@ public class Mashup
         {
             reader.close();
         }
-        logger.log(Level.INFO, "finished");
+        logger.info("finished");
     }
 }
