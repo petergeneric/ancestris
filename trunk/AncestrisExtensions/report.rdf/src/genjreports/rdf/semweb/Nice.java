@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 
 public class Nice
 {
-    private static final Logger logger = Logger.getLogger(Mashup.class.getName());
+    private static final Logger logger = Logger.getLogger(Nice.class.getName());
 
     private static Map<String,Date> hostLastTimeMap = new HashMap<String,Date>();
     private static Map<String,Long> hostIntervalMap = new HashMap<String,Long>();

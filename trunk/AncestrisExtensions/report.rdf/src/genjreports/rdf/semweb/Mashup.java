@@ -108,33 +108,37 @@ public class Mashup
         for (final String place : placeNameIdMap.keySet())
         {
             // flush after each place, but not twice after the last
-            if (count < model.size())
-            {
-                model.write(new FileOutputStream(file), language);
-                count = model.size();
-            }
+            count = flushIfChanged(count);
             logger.info(place);
             final String geoNameId = placeNameIdMap.get(place);
             final String geoNameUri = "http://sws.geonames.org/" + geoNameId + "/";
             final Resource subject = createResource(idPrefix + geoNameId);
-            final Resource gnResource = createResource(geoNameUri);
-            final Set<String> more = downloadManager.downloadGeoNames(geoNameUri);
-
             model.add(subject, RDFS.label, place);
-            model.add(subject, RDFS.isDefinedBy, gnResource);
-            for (final String uri : more)
+            for (final String gnUri : downloadManager.downloadGeoNames(geoNameUri))
             {
-                if (uri.matches(".*geonames.org/.*"))
-                    model.add(subject, RDFS.isDefinedBy, createResource(uri));
-                else
-                    model.add(gnResource, RDFS.seeAlso, createResource(uri));
+                model.add(subject, RDFS.isDefinedBy, createResource(gnUri));
+                for (final String dbpUri : queryUtil.getProperties(gnUri, RDFS.seeAlso, "dbpedia.org"))
+                    for (final String uri : downloadManager.downloadDbPedia(dbpUri))
+                        // TODO download further related resources, but how to configure what?
+                        model.add(subject, RDFS.seeAlso, createResource(uri));
             }
+
         }
-        // make absolutely sure the last changes are flushed 
+        // make absolutely sure the last changes are flushed
         model.write(new FileOutputStream(file), language);
-        
+
         downloadManager.logOverwiew();
         logger.info(model.size() + " statements");
+    }
+
+    private long flushIfChanged(long count) throws FileNotFoundException
+    {
+        if (count < model.size())
+        {
+            model.write(new FileOutputStream(file), language);
+            count = model.size();
+        }
+        return count;
     }
 
     public static void main(final String[] args) throws URISyntaxException, IOException
