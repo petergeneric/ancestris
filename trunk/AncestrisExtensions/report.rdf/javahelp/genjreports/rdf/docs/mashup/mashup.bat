@@ -1,6 +1,8 @@
 set JENAROOT=D:\apache-jena-2.7.3\apache-jena-2.7.3
 set MODS=C:\Users\user\Appdata\Roaming\.ancestris\trunk\modules
 
+echo off
+
 set CLASSPATH=.;%MODS%\genjreports-rdf.jar
 
 rem CLASSPATH=%CLASSPATH%;%MODS%\ext\arq-2.8.7.jar
@@ -19,5 +21,7 @@ rem CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\slf4j-api-1.5.8.jar
 rem CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\slf4j-log4j12-1.6.4.jar
 set CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\xercesImpl-2.10.0.jar
 set CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\xml-apis-1.4.01.jar
+
+echo on
 
 java genjreports.rdf.semweb.Mashup %1 http://my.domain.com/gedcom/places/ %2 "de|fr"
