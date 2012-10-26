@@ -66,8 +66,7 @@ public class DownloadManager
         final Set<String> same = queryUtil.getProperties(uri, OWL.sameAs, "geonames.org");
         for (final String uri2 : same)
             downloadGeoNames(uri2);
-        for (final String uri2 : queryUtil.getProperties(uri, RDFS.seeAlso, "dbpedia.org"))
-            same.addAll(downloadDbPedia(uri2));
+        same.add(uri);
         return same;
     }
 
@@ -80,6 +79,7 @@ public class DownloadManager
         final Set<String> same = queryUtil.getSameDbpediaResources(uri);
         for (final String uri2 : same)
             downloadDbPedia(uri2);
+        same.add(uri);
         return same;
     }
 

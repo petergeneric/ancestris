@@ -171,7 +171,7 @@
                 For an official release replace "trunk" with the release number, for example "0.8",
                 Other components of the paths may vary depending on the configuration
                 of your operating system. The optional fourth argument for the final command specifies 
-                additional languages for dbpedia resources. For example "fr" or "fr|de".
+                additional languages for DbPedia resources. For example "fr" or "fr|de".
                 </p>
             </li>
         </ul>
@@ -186,7 +186,10 @@
                 A tab separated file with GeoNameId's paired with
                 unique values of INDI:*:PLAC and/or FAM:*:PLAC.
                 An example with most places for the Kennedy tree:
-                <a href="./mashup/kennedyMashupInput.txt">mashupInput.txt</a>
+                <a href="./mashup/kennedyMashupInput.txt">mashupInput.txt</a>.
+                A third an forth column may contain from and to dates in the format "yyyy-mm-dd".
+                In that case the log will show the first ten persons from DbPedia related to the place
+                living in the period. Downloading these contemporaries is not yet implemented.
             </li>
         </ul>
         <p class="justify">
@@ -287,7 +290,7 @@
                   </li>
                 </ul>
             </dd>
-            <dt>Does dbpedia have resources in my language?</dt>
+            <dt>Does DbPedia have resources in my language?</dt>
             <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a></p></dd>
             <dt>...</dt>
             <dd><p>...</p></dd>
