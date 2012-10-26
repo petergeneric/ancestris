@@ -46,8 +46,8 @@
             This is a very brief introduction but it should have the most important
             pointers to start browsing the web about the subject.
             The semantic web uses triples of URI's: subject predicate object.
-            These triples are alo called statements.
-            These triples can be stored in different formats. RDF is the most widely supprted format.
+            These triples are also called statements.
+            These triples can be stored in different formats. RDF is the most widely supported format.
             The turtle format is much less verbose and therefore easier to read.
             The triples get meanings with ontologies (also expressed in triples)
             though a human can guess a lot without following the mathematical definitions.
@@ -64,7 +64,7 @@
             and is easy to recognise by GedCom tigers.
             It might be wise to monitor for ontologies that might emerge and could
             replace the quick-and-dirty approach.
-            A start is made with an ontology to bridge the gap between the unortodox format and the web.
+            A start is made with an ontology to bridge the gap between the unorthodox format and the web.
             The status is not clear but you can find the plain text file
         </p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
@@ -130,7 +130,7 @@
             for example to find famous contemporary local people.
             GeoNames is interesting for maps.
         </p>
-        <p class="justify">You may find more intersting resources via the</p>
+        <p class="justify">You may find more interesting resources via the</p>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
             <param name="content" value="http://richard.cyganiak.de/2007/10/lod/">
             <param name="text" value="<html><u>LOD cloud diagram</u></html>">
@@ -218,22 +218,20 @@
                 Keep the places in the second column,
                 together with all their jurisdictions and separators between them.
                 Search the places on www.geonames.org with the show-on-map button
-                The baloons with details shows a GeoNameId:
+                The balloons with details shows a GeoNameId:
                 <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
             </p></li>
             <li><p class="justify">
-                Run your version of the mashup.bat or mashup.sh, it takes two arguents:
+                Run your version of the mashup.bat or mashup.sh, it takes two arguments:
                 mashupInput.txt mashupOutput.n3.
                 </p><p class="justify">
                 Now you are ready to run any mashup query with the <code>arq</code> command
                 (shown under <a href="batches">batches</a>) with both graph files.
                 However, the free services of GeoNames and DbPedia are not allways reliable.
-                Run the query <a href="./mashup/checkDownloads.arq">checkDownloads.arq</a>
-                to see what is lacking.
-                Repeat with significant intervals, the mashup command is designed not 
-                to download again what is already present.
-                Very persistent failures might be dead links,
-                try them in a browser to check.
+                The mashup command is designed not to download again what is already present
+                and the logging ends with an overview what this run has downloaded.
+                Repeat with significant intervals, until the overview reduces
+                to a small list of apparent failures: possibly dead links.
                 </p><p class="justify">
                 An inital run with the Kennedy example took some 8 minutes
                 resulting into some 35MB of data (inluding German and French resources).
@@ -246,7 +244,7 @@
         <dl>
             <dt>The <code>arq</code> command complains about prefixes.</dt>
             <dd><p>This might have one of the following causes:</p>
-                <p>a) Remove the warninngs
+                <p>a) Remove the warnings
                    in your variant of <code>merged.n3</code>
                 </p><p>
                    b) The mashup example contains explicit namespace prefixes.
