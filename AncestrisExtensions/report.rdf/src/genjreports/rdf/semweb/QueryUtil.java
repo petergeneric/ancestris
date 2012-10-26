@@ -63,14 +63,15 @@ public class QueryUtil
     {
         final String format = "select distinct ?n {<%s> <%s> ?n. FILTER regex(str(?n),'%s')}";
         final String q = String.format(format, subject, predicate.getURI(), objectRegEx);
-        return run(q);
+        return queryModel(q);
     }
 
     /**
      * Gets DbPedia resources related with owl:sameAs. The desired language variants are specified at
      * construction time of this object instance.
      * 
-     * @param uri typically a DbPedia resource
+     * @param uri
+     *        typically a DbPedia resource
      * @return URI's of DbPedia resources
      */
     public Set<String> getSameDbpediaResources(final String uri)
@@ -78,24 +79,75 @@ public class QueryUtil
         // TODO ??? http://fr.dbpedia.org/ontology/wikiPageInterLanguageLink
         final String format = "select distinct ?n {<%s> <%s> ?n. FILTER regex(str(?n),'%s')}";
         final String q = String.format(format, uri, OWL.sameAs.getURI(), dbpediaFilter);
-        return run(q);
+        return queryModel(q);
     }
 
     /**
-     * Runs a SPARQL with {@link Syntax.syntaxARQ}
+     * Gets DbPedia person related to a place and living in a period. The desired language variants are
+     * specified at construction time of this object instance.
+     * 
+     * @param placeURI
+     *        DbPedia resource of a place
+     * @param from
+     *        start of the period (inclusive)
+     * @param to
+     *        end of the period (exclusive)
+     * @param limit TODO
+     * @return URI's of DbPedia resources of persons
+     */
+    public static Set<String> getPersons(final String placeURI, final String from, final String to, final int limit)
+    {
+        final String dateRegex = "\\d{4}[-./]\\d{2}[-./]\\d{2}";
+        if (!from.matches(dateRegex)||!to.matches(dateRegex))
+        {
+            logger.warn("illegal date: "+placeURI+" - "+from+" - "+to);
+            return new HashSet<String>();
+        }
+        final StringBuffer sb = new StringBuffer();
+        sb.append(" PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>");
+        sb.append(" PREFIX foaf: <http://xmlns.com/foaf/0.1/>");
+        sb.append(" PREFIX dbo: <http://dbpedia.org/ontology/>");
+        sb.append(" SELECT DISTINCT ?person");
+        sb.append(" {");
+        sb.append(" ?person ?predicate <%s> .");
+        sb.append(" FILTER (!regex(str(?predicate),'(monument|building|states)','i')).");
+        sb.append(" ?person dbo:birthDate ?birth .");
+        sb.append(" ?person dbo:deathDate ?death .");
+        sb.append(" FILTER");
+        sb.append(" (  (?birth >= '%s'^^xsd:date && ?birth < '%s'^^xsd:date)");
+        sb.append(" || (?death >= '%s'^^xsd:date && ?death < '%s'^^xsd:date)");
+        sb.append(" ).");
+        sb.append(" } ORDER BY ?birth LIMIT %s");
+        return queryDbpedia(String.format(sb.toString(), placeURI, from, to, from, to, limit));
+    }
+
+    /**
+     * Runs a SPARQL query with {@link Syntax.syntaxARQ}
      * 
      * @param query
      * @return the first column of the query result
      */
     public Set<String> runQuery(final String query)
     {
-        return run(query);
+        return queryModel(query);
     }
 
-    private Set<String> run(final String query)
+    private Set<String> queryModel(final String query)
+    {
+        final QueryExecution queryExecution = QueryExecutionFactory.create(query, Syntax.syntaxARQ, model, new QuerySolutionMap());
+        return run(query, queryExecution);
+    }
+
+    private static Set<String> queryDbpedia(final String query)
+    {
+        Nice.sleep("http://dbpedia.org/sparql");
+        final QueryExecution queryExecution = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
+        return run(query, queryExecution);
+    }
+
+    private static Set<String> run(final String query, final QueryExecution queryExecution)
     {
         logger.debug("query: " + query);
-        final QueryExecution queryExecution = QueryExecutionFactory.create(query, Syntax.syntaxARQ, model, new QuerySolutionMap());
         final Set<String> result = new HashSet<String>();
         try
         {
