@@ -79,7 +79,7 @@ public class QueryUtil
         // TODO ??? http://fr.dbpedia.org/ontology/wikiPageInterLanguageLink
         final String format = "select distinct ?n {<%s> <%s> ?n. FILTER regex(str(?n),'%s')}";
         final String q = String.format(format, uri, OWL.sameAs.getURI(), dbpediaFilter);
-        return queryModel(q);
+        return queryDbpedia(q);
     }
 
     /**
