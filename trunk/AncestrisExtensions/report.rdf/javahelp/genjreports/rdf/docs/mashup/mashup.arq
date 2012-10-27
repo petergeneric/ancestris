@@ -37,7 +37,6 @@ SELECT DISTINCT
   ?lat
   ?long
   ?dbpedia_resource 
-  (str(?foundingDate) as ?founding_date)
 {
   OPTIONAL
   {
@@ -57,14 +56,12 @@ SELECT DISTINCT
         wgs84_pos:long   ?long.
     OPTIONAL
     {
-      ?gn rdfs:seeAlso     ?dbp.
+      ?placeLink
+          rdfs:label       ?place;
+          rdfs:seeAlso     ?dbp.
       LET ( ?dbpedia_resource := fn:substring(str(?dbp),28) )
-      OPTIONAL
-      {
-        ?dbp dbpedia-owl:foundingDate ?foundingDate.
-      }
     }
   }
 }
-GROUP BY ?place ?lat ?long ?foundingDate ?dbpedia_resource 
+GROUP BY ?place ?lat ?long ?dbpedia_resource 
 ORDER BY ?dbpedia_resource ?place

@@ -107,9 +107,8 @@ public class Mashup
      * @throws UnsupportedEncodingException
      *         if the operating system does not support UTF-8 to decode dbpedia URI's
      */
-    public Set<String> addPlaceResources(final String place, final String geoNameId) throws URISyntaxException, IOException, UnsupportedEncodingException
+    public void addPlaceResources(final String place, final String geoNameId) throws URISyntaxException, IOException, UnsupportedEncodingException
     {
-        final Set<String> result = new HashSet<String>();
         flush(false);
         logger.info(place);
         final String geoNameUri = "http://sws.geonames.org/" + geoNameId + "/";
@@ -119,13 +118,12 @@ public class Mashup
         {
             model.add(subject, RDFS.isDefinedBy, createResource(gnUri));
             for (final String dbpUri : queryUtil.getProperties(gnUri, RDFS.seeAlso, "dbpedia.org"))
-                for (final String uri : downloadManager.downloadDbPedia(dbpUri))
-                {
+            {
+                model.add(subject, RDFS.seeAlso, createResource(dbpUri));
+                for (final String uri : queryUtil.getSameDbpediaResources(dbpUri))
                     model.add(subject, RDFS.seeAlso, createResource(uri));
-                    result.add(uri);
-                }
+            }
         }
-        return result;
     }
 
     private void flush(final boolean force) throws FileNotFoundException
@@ -163,19 +161,9 @@ public class Mashup
                 {
                     final String geoNameId = fields[0].replaceAll("[^0-9]*", "");
                     final String placeLiteral = fields[1].trim();
+
                     if (geoNameId.length() > 0 && placeLiteral.length() > 0)
-                    {
-                        Set<String> places = mashup.addPlaceResources(placeLiteral, geoNameId);
-                        if (fields.length > 3 && !places.isEmpty())
-                        {
-                            for (final String placeURI : places)
-                                QueryUtil.getPersons(placeURI, fields[2].trim(), fields[3].trim(), 10);
-                            // TODO download the persons, exclude countries
-//                        } else {
-//                            for (final String placeURI : places)
-//                                QueryUtil.getPersons(placeURI, "1960-01-01", "1962-01-01", 10);
-                        }
-                    }
+                        mashup.addPlaceResources(placeLiteral, geoNameId);
                 }
             }
             reader.close();

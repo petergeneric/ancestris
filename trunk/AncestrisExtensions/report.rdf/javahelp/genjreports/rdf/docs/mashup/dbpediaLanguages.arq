@@ -33,9 +33,9 @@ SELECT DISTINCT
 {
   ?placeLink
      rdfs:label    ?place;
-     rdfs:isDefinedBy ?gn.
-  ?gn rdfs:seeAlso ?dbp.
-  ?dbp owl:sameAs ?alt.
+     rdfs:seeAlso ?dbp.
+      SERVICE <http://dbpedia.org/sparql>
+      { ?dbp owl:sameAs ?alt. }
   FILTER regex(str(?alt),"[.]dbpedia[.]org")
   LET (?domain := substr(str(?alt),8,2))
 }

@@ -29,16 +29,21 @@ PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#>
 
 SELECT ?property ?count
 {
-  SELECT 
-    ?property
-    (count(?dbp) as ?count)
   {
-    ?placeLink
-         rdfs:label       ?place;
-         rdfs:isDefinedBy ?gn.
-    ?gn  rdfs:seeAlso     ?dbp.
-    ?resource ?property   ?dbp.
+    SELECT 
+      ?property
+      (count(?dbp) as ?count)
+    {
+      _:link
+           rdfs:label    ?place;
+           rdfs:seeAlso     ?dbp.
+      SERVICE <http://dbpedia.org/sparql>
+      { 
+        _:resource ?property ?dbp.
+      }
+    }
+    GROUP BY ?property
   }
-  GROUP BY ?property
+  FILTER(?count > 9)
 }
 ORDER BY ?count ?property

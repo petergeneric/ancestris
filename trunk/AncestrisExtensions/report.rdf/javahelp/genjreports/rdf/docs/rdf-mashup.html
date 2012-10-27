@@ -30,7 +30,7 @@
 
         <p class="justify">
             With external tools you can query more than just a single family tree,
-            or create a batch that generates mutiple reports in one go.
+            or create a batch that generates multiple reports in one go.
         </p>
         <ol>
             <li> <a href="rdf-mashup.html#semantic-intro">Introduction to the semantic web</a></li>
@@ -227,20 +227,16 @@
             <li><p class="justify">
                 Run your version of the mashup.bat or mashup.sh, it takes two arguments:
                 mashupInput.txt mashupOutput.n3.
-                </p><p class="justify">
-                Now you are ready to run any mashup query with the <code>arq</code> command
-                (shown under <a href="batches">batches</a>) with both graph files.
-                However, the free services of GeoNames and DbPedia are not allways reliable.
-                The mashup command is designed not to download again what is already present
-                and the logging ends with an overview what this run has downloaded.
-                Repeat with significant intervals, until the overview reduces
-                to a small list of apparent failures: possibly dead links.
-                </p><p class="justify">
-                An inital run with the Kennedy example took some 8 minutes
-                resulting into some 35MB of data (inluding German and French resources).
+                Execution for the Kennedy example took some 6 minutes
+                resulting into some 250KB of data.
                 </p>
             </li>
         </ul>
+        <p class="justify">
+          Now you are ready to run any mashup query with the <code>arq</code> command
+          (shown under <a href="#batches">batches</a>) with both graph files.
+        </p>
+
         <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
 
@@ -292,6 +288,17 @@
             </dd>
             <dt>Does DbPedia have resources in my language?</dt>
             <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a></p></dd>
+            <dt>Some places do have a GeoNameID in the mashup input, 
+                but <a href="./mashup/mashup.arq">mashup.arg</a> shows no coordinates.
+            </dt>
+            <dd><p>
+                The free services of GeoNames and DbPedia are not allways reliable
+                so you might have to repeat <a href="./mashup/mashup.bat">mashup.bat</a>
+                or <a href="./mashup/mashup.sh">mashup.sh</a>.
+                The mashup command is designed not to download from GeoNames again
+                what is already present. DbPedia is allways queried to create direct links,
+                but nothing is downloaded because it is too much and not required.
+            </p></dd>
             <dt>...</dt>
             <dd><p>...</p></dd>
         </dl>
