@@ -361,7 +361,7 @@ public class ReleveFileEgmtTest extends TestCase {
         misc.setCote("cote");
         misc.setParish("parish");
         misc.setNotary("Notary");
-        misc.setEventType("eventtag", "");
+        misc.setEventType("eventname");
         misc.setGeneralComment("generalcomment");
         misc.setFreeComment("photo");
         misc.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1980", "indiplace", "indioccupation", "indicomment");

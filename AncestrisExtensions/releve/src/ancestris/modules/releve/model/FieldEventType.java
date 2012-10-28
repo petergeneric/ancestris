@@ -7,30 +7,27 @@ package ancestris.modules.releve.model;
 public class FieldEventType extends Field {
 
     private String name ="";
-    private String tag  ="";
-
+    
     @Override
     public String toString() {
-        return getTag()+" "+getName();
+        return getName();
     }
 
     @Override
     public String [] getValue() {
-        String[] value= new String[2];
-        value[0] = getTag();
-        value[1] = getName();
+        String[] value= new String[1];
+        value[0] = getName();
         return value;
     }
 
     @Override
     public void setValue(Object value) {
-        this.setTag(((String[]) value)[0]);
-        this.setName(((String[]) value)[1]);
+        this.setName(value.toString());
     }
 
     @Override
     public boolean isEmpty() {
-        return tag.isEmpty() && name.isEmpty();
+        return name.isEmpty();
     }
 
 
@@ -46,20 +43,6 @@ public class FieldEventType extends Field {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the tag
-     */
-    public String getTag() {
-        return tag;
-    }
-
-    /**
-     * @param tag the tag to set
-     */
-    public void setTag(String tag) {
-        this.tag = tag;
     }
 
     @Override

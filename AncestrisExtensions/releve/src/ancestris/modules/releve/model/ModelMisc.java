@@ -70,7 +70,7 @@ public class ModelMisc extends ModelAbstract {
                 value = getRecord(row).getEventDateProperty();
                 break;
             case 2:
-                value = getRecord(row).getEventType().getTag();
+                value = getRecord(row).getEventType().getName();
                 break;
             case 3:
                 value = getRecord(row).getIndiLastName().toString() + " " + getRecord(row).getIndiFirstName().toString();

@@ -42,8 +42,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  *

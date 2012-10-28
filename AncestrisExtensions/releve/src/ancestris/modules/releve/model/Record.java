@@ -729,9 +729,8 @@ public abstract class Record implements Cloneable{
 
 
    
-    public void setEventType(String name, String tag) {
+    public void setEventType(String name) {
         eventType.setName(name);
-        eventType.setTag(tag);
     }
 
     public void setEventDate(String dateString) {
