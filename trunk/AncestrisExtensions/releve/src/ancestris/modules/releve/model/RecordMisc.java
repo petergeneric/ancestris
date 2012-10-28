@@ -17,7 +17,7 @@ public class RecordMisc extends Record {
         indiSex             = new FieldSex();
         indiAge             = new FieldAge();
         indiBirthDate       = new FieldDate();
-        indiPlace           = new FieldPlace();
+        indBirthiPlace           = new FieldPlace();
         indiOccupation      = new FieldOccupation();
         indiComment         = new FieldComment();
 
@@ -45,7 +45,7 @@ public class RecordMisc extends Record {
         wifeFirstName       = new FieldSimpleValue();
         wifeLastName        = new FieldSimpleValue();
         wifeSex             = new FieldSex();
-        wifePlace           = new FieldPlace();
+        wifeBirthPlace           = new FieldPlace();
         wifeBirthDate       = new FieldDate();
         wifeAge             = new FieldAge();
         wifeOccupation      = new FieldOccupation();
@@ -102,7 +102,7 @@ public class RecordMisc extends Record {
         object.indiSex             = indiSex.clone();
         object.indiAge             = indiAge.clone();
         object.indiBirthDate       = indiBirthDate.clone();
-        object.indiPlace           = indiPlace.clone();
+        object.indBirthiPlace           = indBirthiPlace.clone();
         object.indiOccupation      = indiOccupation.clone();
         object.indiComment         = indiComment.clone();
 
@@ -131,7 +131,7 @@ public class RecordMisc extends Record {
         object.wifeSex             = wifeSex.clone();
         object.wifeAge             = wifeAge.clone();
         object.wifeBirthDate       = wifeBirthDate.clone();
-        object.wifePlace           = wifePlace.clone();
+        object.wifeBirthPlace           = wifeBirthPlace.clone();
         object.wifeOccupation      = wifeOccupation.clone();
         object.wifeComment         = wifeComment.clone();
 

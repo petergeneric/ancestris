@@ -15,7 +15,7 @@ public class RecordDeath extends Record {
         indiSex             = new FieldSex();
         indiAge             = new FieldAge();
         indiBirthDate       = new FieldDate();
-        indiPlace           = new FieldPlace();
+        indBirthiPlace           = new FieldPlace();
         indiOccupation      = new FieldOccupation();
         indiComment         = new FieldComment();
 
@@ -67,7 +67,7 @@ public class RecordDeath extends Record {
         object.indiSex             = indiSex.clone();
         object.indiAge             = indiAge.clone();
         object.indiBirthDate       = indiBirthDate.clone();
-        object.indiPlace           = indiPlace.clone();
+        object.indBirthiPlace           = indBirthiPlace.clone();
         object.indiOccupation      = indiOccupation.clone();
         object.indiComment         = indiComment.clone();
 
