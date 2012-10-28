@@ -27,68 +27,83 @@
              </tr>
         </table>
         <br>
+        <p class="justify">
+            Developing netbeans GUI's is beyond my scope
+            so I hope somebody else jumps in.
+        </p>
 
-        <a name="rdf-about_6"></a>
-        <h3 class="ancestris_help_title">6 - To do</h3>
+        <h3 class="ancestris_help_title">current status: proof of concept</h3>
         <p class="justify">
             This plugin is delivered as a proof of concept. 
-            Though it is a report framework on its own, it is squeezed into 
-            the user interface of the existing report framework.
-            Some suggestions for further development.
+            Though it is a report framework on its own,
+            part of the functionality is squeezed into 
+            the user interface of an existing report framework.
+            The mashup functionality is even only available
+            with bacth files.
         </p>
 
-        <h4 class="ancestris_help_title">a) Dedicated user interface</h4>
+        <h3 class="ancestris_help_title">design for the future</h3>
         <p class="justify">
-            This plug-in would become easier to operate with a dedicated user
-            interface.
+            The functionality would be easier to use with 
+            a dedicated user interface.
+            What is needed in my opinion:
         </p>
-        <p class="justify">
-            The query options group should be
-            replaced with edit boxes that allow to read and save plain
-            text files. A single drop
-            down list can load a pair of built-in files in the edit-boxes.
-            This list replaces the above overview of examples.
-            The optional prefixes of the filenames indicate the required 
-            context (FAM/INDI) and rules (q/s for quick/slow).
-            A file chooser per box can load and save custom queries and rules.
-        </p>
-        <p class="justify">
-            The output options group
-            should use file choosers and these choosers should filter on the
-            suggested extensions.
-        </p>
+        <ul>
+          <li>
+            <p>options per gedcom</p>
+            <ul>
+              <li>URI templates (family, individual, note, object, repository, source, sbumitter, place)</li>
+              <li>name and location of converted gedcom</li>
+              <li>name and location of the file with rules (allow to save/ choose the built-in examples)</li>
+              <li>name and location of collected mashup input data
+                  (preferably exported by the geo-plugin)
+              </li>
+              <li>name and location of collected mashup output data</li>
+              <li>desired languages for dbpedia data (checkboxes for languages retuned by 
+                  <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>)
+              </li>
+              <li>checkbox: save the  converted gedcom whenever the gedcom itself is saved
+                  (especially with all the rules applied it takes a while)
+              </li>
+            </ul>
+          </li><li>
+            <p>menu comands</p>
+            <ul>
+              <li>save converted gedcom</li>
+              <li>collect mashup data</li>
+            </ul>
+          </li><li>
+            <p>report dialog (from the general menu or the context menu of an entity)</p>
+            <ul>
+              <li>An entity chooser.<br/>
+                  When the dialog was opened from a context menu of an entity,
+                  that instance should be initialy presented.
+                  The chosen query may dictate another type of entity,
+                  The OK button should be disabled until tat conflict is resolved.
+              </li>
+              <li>name and location of the query file (allow to save/choose the built-in examples)</li>
+              <li>checkbox 1: use converted gedcom</li>
+              <li>checkbox 2: use mashup output</li>
+              <li>name and location of the output file</li>
+              <li>name and location of the xsl file to insert into xml output
+                 (allow to save http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl)
+              </li>
+            </ul>
+            One or both of the checkboxes 1 and 2 should be checked, 
+            selecting a built-in query automaticaly checks the apropriate ones.
+            Prefixes of the built-in quiries indicate which rules should have been applied,
+            disable the built in queries that need more rules than has been applied.
+          </li>
+        </ul>
 
-        <h4 class="ancestris_help_title">b) Get more from the semantic web</h4>
-        <p class="justify">
-             A wizard could help to collect external data as described in the mashup section.
-             The tools described there allow to disconnect conversion and reporting.
-             Less stechnical users however may have problems using them.
-        </p>
 
-        <h4 class="ancestris_help_title">c) Disconnect conversion and reporting</h4>
-        <p class="justify">
-            If low priority background process are possible
-            it might be an idea to perform conversion after saving the GedCom file.
-            Performance of interactive functions should not suffer
-            from such a background process.
-            Especially because the slow rules may take minutes.
-            Report generation should check if the last changes are saved
-            and the conversion is completed.
-        </p>
-        <p class="justify">
-            It should also be possible to keep the rdf model synchronised.
-            That would mean deleting all the triples related to 
-            the changed entity or property and insert them all again.
-        </p>
-
-        <h4 class="ancestris_help_title">d) Cancel query execution</h4>
         <p class="justify">
             A mistake in a query might cause to execute forever.
             It should be executed in a subprocess that can be killed when the users chooses so.
+            Same applies to conversion with custom rules.
         </p>
 
-        <a name="rdf-about_7"></a>
-        <h3 class="ancestris_help_title">7 - Known bugs</h3>
+        <h3 class="ancestris_help_title">Known bugs</h3>
         <ul>
           <li>
             You might have to run a context-free query before you can run
