@@ -188,7 +188,7 @@ public class CompletionProvider implements GedcomFileListener {
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
-            eventTypes.add(record.getEventType().getTag(), record.getEventType());
+            eventTypes.add(record.getEventType().getName(), record.getEventType());
         }
     }
 
@@ -346,7 +346,7 @@ public class CompletionProvider implements GedcomFileListener {
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
-            eventTypes.remove(record.getEventType().getTag(), record.getEventType());
+            eventTypes.remove(record.getEventType().getName(), record.getEventType());
         }
     }
 
@@ -750,8 +750,8 @@ public class CompletionProvider implements GedcomFileListener {
         if (oldValue != null && ! oldValue.isEmpty()) {
             eventTypes.remove(oldValue, field);
         }
-        if ( field.getTag().isEmpty()==false) {
-            eventTypes.add(field.getTag(), field);
+        if ( field.getName().isEmpty()==false) {
+            eventTypes.add(field.getName(), field);
         }
     }
 

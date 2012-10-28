@@ -479,7 +479,7 @@ public class ReleveFileNimegueTest extends TestCase {
         record.setCote("cote");
         record.setParish("parish");
         record.setNotary("Notary");
-        record.setEventType("eventname", "eventtag");
+        record.setEventType("eventname");
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "indiage", "01/01/1990", "indiplace", "indioccupation", "indicomment");

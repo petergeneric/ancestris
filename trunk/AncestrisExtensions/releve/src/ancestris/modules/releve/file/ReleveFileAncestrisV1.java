@@ -107,7 +107,7 @@ public class ReleveFileAncestrisV1 {
     enum Field {
         ancetris,
         nomCommune, codeCommune, nomDepartement, stateName, countryName, parish,
-        eventType, eventTypeTag, eventTypeName,
+        eventType, eventTypeName, eventTypeTag,
         eventDate, cote, freeComment, notaryComment,
         indiLastName, indiFirstName, indiSex, indiPlace, indiBirthDate, indiAge, indiOccupation, indiComment,
         indiMarriedLastName, indiMarriedFirstName, indiMarriedDead, indiMarriedOccupation, indiMarriedComment,
@@ -424,7 +424,7 @@ public class ReleveFileAncestrisV1 {
 
                     } else if (fields[Field.eventType.ordinal()].equals("V")) {
                         RecordMisc record = new RecordMisc();
-                        record.setEventType(fields[Field.eventTypeName.ordinal()], fields[Field.eventTypeTag.ordinal()]);
+                        record.setEventType(fields[Field.eventTypeName.ordinal()]);
                         record.setNotary(fields[Field.notaryComment.ordinal()]);
 
                         record.setEventPlace(
@@ -866,8 +866,8 @@ public class ReleveFileAncestrisV1 {
                         line.appendCsvFn(placeManager.getCountryName());
                         line.appendCsvFn(record.getParish().toString());
                         line.appendCsvFn("V");
-                        line.appendCsvFn(record.getEventType().getTag());
                         line.appendCsvFn(record.getEventType().getName());
+                        line.appendCsvFn("");
                         line.appendCsvFn(record.getEventDateString());
                         line.appendCsvFn(record.getCote().toString());
                         line.appendCsvFn(record.getFreeComment().toString());

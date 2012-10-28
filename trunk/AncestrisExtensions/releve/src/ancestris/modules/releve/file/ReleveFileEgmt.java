@@ -347,11 +347,11 @@ public class ReleveFileEgmt {
                         } else  {
                             RecordMisc record = new RecordMisc();
                             if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("contrat de mariage")) {
-                                record.setEventType("contrat de mariage", "MARC");
+                                record.setEventType("MARC");
                             } else if (fields[EgmtField.typeActe.ordinal()].toLowerCase().equals("testament")) {
-                                record.setEventType("testament", "WILL");
+                                record.setEventType("WILL");
                             } else {
-                                record.setEventType(fields[EgmtField.typeActe.ordinal()], "");
+                                record.setEventType(fields[EgmtField.typeActe.ordinal()]);
                             }
 
 

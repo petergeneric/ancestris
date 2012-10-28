@@ -471,8 +471,7 @@ public class ReleveFileNimegue {
                         record.setEventDate(fields[MiscField.eventDate.ordinal()]);
                         //record.dateIncomplete = fields[MiscField.dateIncomplete.ordinal()];
                         record.setEventType(
-                                fields[MiscField.eventTypeName.ordinal()],
-                                fields[MiscField.eventTypeTag.ordinal()]);
+                                fields[MiscField.eventTypeName.ordinal()]);
 
                         record.setCote(fields[MiscField.cote.ordinal()]);
                         record.setFreeComment(fields[MiscField.libre.ordinal()]);
@@ -845,8 +844,8 @@ public class ReleveFileNimegue {
                         line.appendNimegueFn(record.getFreeComment().toString());
 
                         line.appendNimegueFn(record.getEventType().getName());
-                        line.appendNimegueFn(record.getEventType().getTag());
-
+                        line.appendNimegueFn(""); // EventTypeTag
+                        
                         line.appendNimegueFn(record.getIndiLastName().getValue());
                         line.appendNimegueFn(record.getIndiFirstName().getValue());
                         line.appendNimegueFn(record.getIndiSex().toString());

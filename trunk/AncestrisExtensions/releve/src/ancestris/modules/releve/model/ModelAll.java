@@ -100,7 +100,7 @@ public class ModelAll extends ModelAbstract {
                         value = "D";
                     } else {
                         if (record.getEventType() != null) {
-                            value = record.getEventType().getTag();
+                            value = record.getEventType().getName();
                         } else {
                             value = "V";
                         }

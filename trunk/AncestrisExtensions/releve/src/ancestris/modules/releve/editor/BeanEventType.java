@@ -85,17 +85,9 @@ public class BeanEventType extends Bean implements CompletionListener {
         // je supprime les espaces aux extremetes
         //String value = cListEventType.getText().trim();
         String value = cListEventType.getEditor().getItem().toString().trim();
-        // parse tag,name
-        int separatorIndex = value.indexOf(' ');
 
         // j'enregistre les valeurs dans la variable field
-        if ( separatorIndex == -1 ) {
-            fieldEventType.setTag(value);
-            fieldEventType.setName("");
-        } else {
-            fieldEventType.setTag(value.substring(0,separatorIndex));
-            fieldEventType.setName(value.substring(separatorIndex+1,value.length()));
-        }
+        fieldEventType.setName(value.trim());
 
         // j'affiche la valeur mise en forme
         cListEventType.getEditor().setItem(fieldEventType.toString());

@@ -283,7 +283,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         record.setCote("cote");
         record.setParish("parish");
         record.setNotary("Notary");
-        record.setEventType("eventname", "eventtag");
+        record.setEventType("eventname");
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
         record.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indicomment");
