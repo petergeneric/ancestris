@@ -139,7 +139,13 @@
         </object>
         <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
             <param name="content" value="http://www.w3.org/wiki/SparqlEndpoints">
-            <param name="text" value="<html><u>a list of SPARQL end points</u></html>">
+            <param name="text" value="<html><u>a wiki list of SPARQL end points</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+        </object>
+        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://labs.mondeca.com/sparqlEndpointsStatus/">
+            <param name="text" value="<html><u>a list with the status of SPARQL end points</u></html>">
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
@@ -297,7 +303,10 @@
                 </ul>
             </dd>
             <dt>Does DbPedia have resources in my language?</dt>
-            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a></p></dd>
+            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>
+                   Note that not all can be queried directly.
+                </p>
+            </dd>
             <dt>Some places do have a GeoNameID in the mashup input, 
                 but <a href="./mashup/mashup.arq">mashup.arg</a> shows no coordinates.
             </dt>
@@ -307,7 +316,7 @@
                 or <a href="./mashup/mashup.sh">mashup.sh</a>.
                 The mashup command is designed not to download from GeoNames again
                 what is already present. DbPedia is allways queried to create direct links,
-                but nothing is downloaded because it is too much and not required.
+                but nothing is downloaded because it is too much and can be queried directly.
             </p></dd>
             <dt>...</dt>
             <dd><p>...</p></dd>
