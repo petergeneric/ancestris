@@ -116,11 +116,11 @@ public class ReleveFileNimegue {
         codeCommune, nomCommune, codeDepartement, nomDepartement,
         typeActe,
         eventDate, dateIncomplete, cote, libre,
-        indiLastName, indiFirstName, indiPlace, indiBirthDate, indiAge, indiComment, indiOccupation,
+        indiLastName, indiFirstName, indiBirthPlace, indiBirthDate, indiAge, indiComment, indiOccupation,
         indiMarriedLastName, indiMarriedFirstName, indiMarriedComment,
         indiFatherLastName, indiFatherFirstName, indiFatherComment, indiFatherOccupation,
         indiMotherLastName, indiMotherFirstName, indiMotherComment, indiMotherOccupation,
-        wifeLastName, wifeFirstName, wifePlace, wifeBirthDate, wifeAge, wifeComment, wifeOccupation,
+        wifeLastName, wifeFirstName, wifeBirthPlace, wifeBirthDate, wifeAge, wifeComment, wifeOccupation,
         wifeMarriedLastName, wifeMarriedFirstName, wifeMarriedComment,
         wifeFatherLastName, wifeFatherFirstName, wifeFatherComment, wifeFatherOccupation,
         wifeMotherLastName, wifeMotherFirstName, wifeMotherComment, wifeMotherOccupation,
@@ -138,7 +138,7 @@ public class ReleveFileNimegue {
         codeCommune, nomCommune, codeDepartement, nomDepartement,
         typeActe,
         eventDate, dateIncomplete, cote, libre,
-        indiLastName, indiFirstName, indiPlace, indiBirthDate, indiSex, indiAge, indiComment, indiOccupation,
+        indiLastName, indiFirstName, indiBirthPlace, indiBirthDate, indiSex, indiAge, indiComment, indiOccupation,
         wifeLastName, wifeFirstName, wifeComment, wifeOccupation,
         indiFatherLastName, indiFatherFirstName, indiFatherComment, indiFatherOccupation,
         indiMotherLastName, indiMotherFirstName, indiMotherComment, indiMotherOccupation,
@@ -155,11 +155,11 @@ public class ReleveFileNimegue {
         typeActe,
         eventDate, dateIncomplete, cote, libre,
         eventTypeName, eventTypeTag,
-        indiLastName, indiFirstName, indiSex, indiPlace, indiBirthDate, indiAge, indiComment, indiOccupation,
+        indiLastName, indiFirstName, indiSex, indiBirthPlace, indiBirthDate, indiAge, indiComment, indiOccupation,
         indiMarriedLastName, indiMarriedFirstName, indiMarriedComment,
         indiFatherLastName, indiFatherFirstName, indiFatherComment, indiFatherOccupation,
         indiMotherLastName, indiMotherFirstName, indiMotherComment, indiMotherOccupation,
-        wifeLastName, wifeFirstName, wifeSex, wifePlace, wifeBirthDate, wifeAge, wifeComment, wifeOccupation,
+        wifeLastName, wifeFirstName, wifeSex, wifeBirthPlace, wifeBirthDate, wifeAge, wifeComment, wifeOccupation,
         wifeMarriedLastName, wifeMarriedFirstName, wifeMarriedComment,
         wifeFatherLastName, wifeFatherFirstName, wifeFatherComment, wifeFatherOccupation,
         wifeMotherLastName, wifeMotherFirstName, wifeMotherComment, wifeMotherOccupation,
@@ -290,7 +290,7 @@ public class ReleveFileNimegue {
                                 "M",
                                 fields[MarrField.indiAge.ordinal()],
                                 fields[MarrField.indiBirthDate.ordinal()],
-                                fields[MarrField.indiPlace.ordinal()],
+                                fields[MarrField.indiBirthPlace.ordinal()],
                                 fields[MarrField.indiOccupation.ordinal()],
                                 fields[MarrField.indiComment.ordinal()]);
 
@@ -324,7 +324,7 @@ public class ReleveFileNimegue {
                                 "F",
                                 fields[MarrField.wifeAge.ordinal()],
                                 fields[MarrField.wifeBirthDate.ordinal()],
-                                fields[MarrField.wifePlace.ordinal()],
+                                fields[MarrField.wifeBirthPlace.ordinal()],
                                 fields[MarrField.wifeOccupation.ordinal()],
                                 fields[MarrField.wifeComment.ordinal()]); 
 
@@ -409,7 +409,7 @@ public class ReleveFileNimegue {
                                 fields[DeathField.indiSex.ordinal()],
                                 fields[DeathField.indiAge.ordinal()],
                                 fields[DeathField.indiBirthDate.ordinal()],
-                                fields[DeathField.indiPlace.ordinal()],
+                                fields[DeathField.indiBirthPlace.ordinal()],
                                 fields[DeathField.indiOccupation.ordinal()],
                                 fields[DeathField.indiComment.ordinal()]);
 
@@ -482,7 +482,7 @@ public class ReleveFileNimegue {
                                 fields[MiscField.indiSex.ordinal()],
                                 fields[MiscField.indiAge.ordinal()],
                                 fields[MiscField.indiBirthDate.ordinal()],
-                                fields[MiscField.indiPlace.ordinal()],
+                                fields[MiscField.indiBirthPlace.ordinal()],
                                 fields[MiscField.indiOccupation.ordinal()],
                                 fields[MiscField.indiComment.ordinal()]);
 
@@ -516,7 +516,7 @@ public class ReleveFileNimegue {
                                 fields[MiscField.wifeSex.ordinal()],
                                 fields[MiscField.wifeAge.ordinal()],
                                 fields[MiscField.wifeBirthDate.ordinal()],
-                                fields[MiscField.wifePlace.ordinal()],
+                                fields[MiscField.wifeBirthPlace.ordinal()],
                                 fields[MiscField.wifeOccupation.ordinal()],
                                 fields[MiscField.wifeComment.ordinal()]); 
 

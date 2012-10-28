@@ -79,10 +79,10 @@ public class ReleveFileEgmt {
         typeActe,
         codeDepartement, nomCommune, paroisse, notaire, cote, folio,
         day,month,year,
-        indiLastName, indiFirstName, indiSex, indiAge, indiPlace, indiComment,
+        indiLastName, indiFirstName, indiSex, indiAge, indiBirthPlace, indiComment,
         indiFatherFirstName, indiFatherDead, indiFatherComment,
         indiMotherLastName, indiMotherFirstName, indiMotherDead, indiMotherComment,
-        wifeLastName, wifeFirstName, wifeDead, wifeAge, wifePlace, wifeComment,
+        wifeLastName, wifeFirstName, wifeDead, wifeAge, wifeBirthPlace, wifeComment,
         wifeFatherFirstName, wifeFatherDead, wifeFatherComment,
         wifeMotherLastName, wifeMotherFirstName, wifeMotherDead, wifeMotherComment,
         heirComment,
@@ -200,7 +200,7 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiSex.ordinal()],
                                     fields[EgmtField.indiAge.ordinal()],
                                     "", // pas de date de naissance a la naissance
-                                    fields[EgmtField.indiPlace.ordinal()],
+                                    fields[EgmtField.indiBirthPlace.ordinal()],
                                     "", // pas de profession a la naissance
                                     fields[EgmtField.indiComment.ordinal()]);
 
@@ -226,7 +226,7 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiSex.ordinal()].equals("M") ? "F" : "M",
                                     fields[EgmtField.wifeAge.ordinal()],
                                     "" , // date de naissance
-                                    fields[EgmtField.wifePlace.ordinal()],
+                                    fields[EgmtField.wifeBirthPlace.ordinal()],
                                     "" , // profession
                                     fields[EgmtField.wifeComment.ordinal()]);
                             //TODO : deces de l'epouse est ignoré , fields[EgmtField.wifeDead.ordinal()]
@@ -293,7 +293,7 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiSex.ordinal()],
                                     fields[EgmtField.indiAge.ordinal()],
                                     "", // date de naissance
-                                    fields[EgmtField.indiPlace.ordinal()],
+                                    fields[EgmtField.indiBirthPlace.ordinal()],
                                     "", // pas de profession a la naissance
                                     fields[EgmtField.indiComment.ordinal()]);
 
@@ -379,7 +379,7 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiSex.ordinal()],
                                     fields[EgmtField.indiAge.ordinal()],
                                     "", // date de naissance
-                                    fields[EgmtField.indiPlace.ordinal()],
+                                    fields[EgmtField.indiBirthPlace.ordinal()],
                                     "", // pas de profession a la naissance
                                     fields[EgmtField.indiComment.ordinal()]);
                             
@@ -405,7 +405,7 @@ public class ReleveFileEgmt {
                                     fields[EgmtField.indiSex.ordinal()].equals("M") ? "F" : "M",
                                     fields[EgmtField.wifeAge.ordinal()],
                                     "", // date de naissance
-                                    fields[EgmtField.wifePlace.ordinal()],
+                                    fields[EgmtField.wifeBirthPlace.ordinal()],
                                     "" , // profession
                                     fields[EgmtField.wifeComment.ordinal()]);
                                 

@@ -100,11 +100,11 @@ public class ReleveFileAncestrisV2 {
         nomCommune, codeCommune, nomDepartement, stateName, countryName, parish,
         eventType, eventTypeName, eventTypeComment,
         eventDate, cote, freeComment, notaryComment,
-        indiLastName, indiFirstName, indiSex, indiPlace, indiBirthDate, indiAge, indiOccupation, indiComment,
+        indiLastName, indiFirstName, indiSex, indiBirthPlace, indiBirthDate, indiAge, indiOccupation, indiComment,
         indiMarriedLastName, indiMarriedFirstName, indiMarriedDead, indiMarriedOccupation, indiMarriedComment,
         indiFatherLastName, indiFatherFirstName, indiFatherAge, indiFatherDead, indiFatherOccupation, indiFatherComment,
         indiMotherLastName, indiMotherFirstName, indiMotherAge, indiMotherDead, indiMotherOccupation, indiMotherComment,
-        wifeLastName, wifeFirstName, wifeSex, wifePlace, wifeBirthDate, wifeAge, wifeOccupation, wifeComment,
+        wifeLastName, wifeFirstName, wifeSex, wifeBirthPlace, wifeBirthDate, wifeAge, wifeOccupation, wifeComment,
         wifeMarriedLastName, wifeMarriedFirstName, wifeMarriedDead, wifeMarriedOccupation, wifeMarriedComment,
         wifeFatherLastName, wifeFatherFirstName, wifeFatherAge, wifeFatherDead, wifeFatherOccupation, wifeFatherComment,
         wifeMotherLastName, wifeMotherFirstName, wifeMotherAge, wifeMotherDead, wifeMotherOccupation, wifeMotherComment,
@@ -239,7 +239,7 @@ public class ReleveFileAncestrisV2 {
                                 "M",
                                 fields[Field.indiAge.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
-                                fields[Field.indiPlace.ordinal()],
+                                fields[Field.indiBirthPlace.ordinal()],
                                 fields[Field.indiOccupation.ordinal()],
                                 fields[Field.indiComment.ordinal()]);
 
@@ -273,7 +273,7 @@ public class ReleveFileAncestrisV2 {
                                 "F",
                                 fields[Field.wifeAge.ordinal()],
                                 fields[Field.wifeBirthDate.ordinal()],
-                                fields[Field.wifePlace.ordinal()],
+                                fields[Field.wifeBirthPlace.ordinal()],
                                 fields[Field.wifeOccupation.ordinal()],
                                 fields[Field.wifeComment.ordinal()]);
 
@@ -352,7 +352,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiSex.ordinal()],
                                 fields[Field.indiAge.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
-                                fields[Field.indiPlace.ordinal()],
+                                fields[Field.indiBirthPlace.ordinal()],
                                 fields[Field.indiOccupation.ordinal()],
                                 fields[Field.indiComment.ordinal()]);
 
@@ -434,7 +434,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiSex.ordinal()],
                                 fields[Field.indiAge.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
-                                fields[Field.indiPlace.ordinal()],
+                                fields[Field.indiBirthPlace.ordinal()],
                                 fields[Field.indiOccupation.ordinal()],
                                 fields[Field.indiComment.ordinal()]);
 
@@ -468,7 +468,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeSex.ordinal()],
                                 fields[Field.wifeAge.ordinal()],
                                 fields[Field.wifeBirthDate.ordinal()],
-                                fields[Field.wifePlace.ordinal()],
+                                fields[Field.wifeBirthPlace.ordinal()],
                                 fields[Field.wifeOccupation.ordinal()],
                                 fields[Field.wifeComment.ordinal()]);  //décédé
 

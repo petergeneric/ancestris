@@ -14,7 +14,7 @@ public class RecordMarriage extends Record implements Cloneable{
         indiSex             = new FieldSex();
         indiAge             = new FieldAge();
         indiBirthDate       = new FieldDate();
-        indiPlace           = new FieldPlace();
+        indBirthiPlace           = new FieldPlace();
         indiOccupation      = new FieldOccupation();
         indiComment         = new FieldComment();
 
@@ -44,7 +44,7 @@ public class RecordMarriage extends Record implements Cloneable{
         wifeSex             = new FieldSex();
         wifeAge             = new FieldAge();
         wifeBirthDate       = new FieldDate();
-        wifePlace           = new FieldPlace();
+        wifeBirthPlace           = new FieldPlace();
         wifeOccupation      = new FieldOccupation();
         wifeComment         = new FieldComment();
 
@@ -96,7 +96,7 @@ public class RecordMarriage extends Record implements Cloneable{
         object.indiSex             = indiSex.clone();
         object.indiAge             = indiAge.clone();
         object.indiBirthDate       = indiBirthDate.clone();
-        object.indiPlace           = indiPlace.clone();
+        object.indBirthiPlace           = indBirthiPlace.clone();
         object.indiOccupation      = indiOccupation.clone();
         object.indiComment         = indiComment.clone();
 
@@ -125,7 +125,7 @@ public class RecordMarriage extends Record implements Cloneable{
         object.wifeSex             = wifeSex.clone();
         object.wifeAge             = wifeAge.clone();
         object.wifeBirthDate       = wifeBirthDate.clone();
-        object.wifePlace           = wifePlace.clone();
+        object.wifeBirthPlace           = wifeBirthPlace.clone();
         object.wifeOccupation      = wifeOccupation.clone();
         object.wifeComment         = wifeComment.clone();
 
