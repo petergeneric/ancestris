@@ -385,7 +385,7 @@
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url" stringvalue="http://arvernes.dyndns.org/files/ancestris/0.7/extensions/updates.xml"/>
+                <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/0.7/extensions/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
@@ -396,7 +396,7 @@
                 <attr name="enabled" boolvalue="true"/>
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-                <attr name="url" stringvalue="http://arvernes.dyndns.org/files/ancestris/0.7/core/updates.xml"/>
+                <attr name="url" stringvalue="http://dl.ancestris.org/ancestris/nbm/0.7/core/updates.xml"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
 <!--                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
                 <attr name="category" stringvalue="STANDARD"/>
