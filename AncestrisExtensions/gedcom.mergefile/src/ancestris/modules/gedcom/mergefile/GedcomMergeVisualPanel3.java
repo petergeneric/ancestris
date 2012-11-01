@@ -1,15 +1,18 @@
 package ancestris.modules.gedcom.mergefile;
 
 import ancestris.gedcom.GedcomDirectory;
-import static ancestris.modules.gedcom.mergefile.Bundle.stepIndex3;
-import genj.gedcom.Context;
+import static ancestris.modules.gedcom.mergefile.Bundle.*;
+import java.io.File;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
-@NbBundle.Messages("stepIndex3=Chose second gedcom file to merge")
+@NbBundle.Messages({
+    "stepIndex3=Chose second gedcom file to merge",
+    "stepIndex3.open.title=Open Second gedcom file",
+    "stepIndex3.open.action=Open",})
 public final class GedcomMergeVisualPanel3 extends JPanel {
 
-    private Context gedcomContext;
+    private File gedcomFile;
     public static final String PROP_SECOND_GEDCOM   = "secondGedcom"; 
 
     /**
@@ -86,11 +89,12 @@ public final class GedcomMergeVisualPanel3 extends JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        // Choose Gedcom File 
-        if ((gedcomContext = GedcomDirectory.getDefault().openGedcom()) != null) {
-            jTextField1.setText(gedcomContext.getGedcom().getOrigin().getFile().toString());
+        // Choose Gedcom File
+        if ((gedcomFile = GedcomDirectory.getDefault().chooseFile(stepIndex3_open_title(), stepIndex3_open_action(), null)) != null) {
+            jTextField1.setText(gedcomFile.toString());
             firePropertyChange(PROP_SECOND_GEDCOM, 0, 1);
-
+        } else {
+            jTextField1.setText("");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -103,7 +107,7 @@ public final class GedcomMergeVisualPanel3 extends JPanel {
     /**
      * @return the gedcomContext
      */
-    public Context getGedcomContext() {
-        return gedcomContext;
+    public File getGedcomFile() {
+        return gedcomFile;
     }
 }

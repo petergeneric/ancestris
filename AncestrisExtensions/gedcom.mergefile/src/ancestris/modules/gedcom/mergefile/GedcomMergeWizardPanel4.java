@@ -18,14 +18,7 @@ public class GedcomMergeWizardPanel4 implements WizardDescriptor.Panel<WizardDes
      */
     private GedcomMergeVisualPanel4 component;
     private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1);
-    private final GedcomMergeVisualPanel2 gedcomMergeVisualPanel2;
-    private final GedcomMergeVisualPanel3 gedcomMergeVisualPanel3;
 
-    GedcomMergeWizardPanel4 (GedcomMergeVisualPanel2 gedcomMergeVisualPanel2, GedcomMergeVisualPanel3 gedcomMergeVisualPanel3) {
-        this.gedcomMergeVisualPanel2 = gedcomMergeVisualPanel2;
-        this.gedcomMergeVisualPanel3 = gedcomMergeVisualPanel3;
-        
-    }
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
@@ -33,7 +26,7 @@ public class GedcomMergeWizardPanel4 implements WizardDescriptor.Panel<WizardDes
     @Override
     public GedcomMergeVisualPanel4 getComponent() {
         if (component == null) {
-            component = new GedcomMergeVisualPanel4(gedcomMergeVisualPanel2, gedcomMergeVisualPanel3);
+            component = new GedcomMergeVisualPanel4();
             component.addPropertyChangeListener(this);
         }
         return component;
@@ -49,7 +42,7 @@ public class GedcomMergeWizardPanel4 implements WizardDescriptor.Panel<WizardDes
 
     @Override
     public boolean isValid() {
-        return true;
+        return component.getGedcomMergeFile() != null;
     }
 
     @Override
