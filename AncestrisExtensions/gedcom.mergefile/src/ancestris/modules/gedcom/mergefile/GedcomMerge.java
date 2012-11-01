@@ -14,10 +14,12 @@ package ancestris.modules.gedcom.mergefile;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomMgr;
+import static ancestris.modules.gedcom.mergefile.Bundle.open_mergeGedcom;
 import genj.gedcom.*;
 import genj.util.AncestrisPreferences;
 import genj.util.Origin;
 import genj.util.Registry;
+import java.awt.Dialog;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,12 +28,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JButton;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -39,6 +43,8 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lemovice
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
+@NbBundle.Messages({
+    "open.mergeGedcom=Open result file",})
 public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
     private final static Logger LOG = Logger.getLogger(GedcomMerge.class.getName(), null);
@@ -195,34 +201,36 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             LOG.log(Level.SEVERE, null, ex);
         }
 
-        mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
-        Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
-
-        // save gedcom file
-        GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
-
         GedcomMgr.getDefault().gedcomClose(rightGedcomContext);
         GedcomMgr.getDefault().gedcomClose(leftGedcomContext);
 
         progressHandle.finish();
 
         GedcomMergeResultPanel gedcomMergeResultPanel = new GedcomMergeResultPanel(leftGedcom, rightGedcom, mergedGedcom);
-
+        JButton openMergeGedcomButton = new JButton(open_mergeGedcom());
         // display merge result
         DialogDescriptor gedcomMergeResultDescriptor = new DialogDescriptor(
                 gedcomMergeResultPanel,
                 org.openide.util.NbBundle.getMessage(Bundle.class, "merge.result.dialog"),
                 true,
-                new Object[]{NotifyDescriptor.OK_OPTION},
+                new Object[]{openMergeGedcomButton, NotifyDescriptor.CANCEL_OPTION},
                 DialogDescriptor.OK_OPTION,
                 DialogDescriptor.DEFAULT_ALIGN,
                 null,
                 null);
-        DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor).setVisible(true);
+        Dialog gedcomMergeResultDialog = DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor);
+        gedcomMergeResultDialog.setVisible(true);
 
-        // and reopens the file
-        GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+        if (gedcomMergeResultDescriptor.getValue() == openMergeGedcomButton) {
+            mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
+            Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
 
+            // save gedcom file
+            GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+
+            // and reopens the file
+            GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+        }
     }
 
     /**
