@@ -6,6 +6,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertyXRef;
 import genj.gedcom.time.PointInTime;
 
 import java.util.Calendar;
@@ -20,7 +21,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.reasoner.rulesys.GenericRuleReasoner;
 import com.hp.hpl.jena.reasoner.rulesys.Rule;
 import com.hp.hpl.jena.util.PrintUtil;
-import genj.gedcom.PropertyXRef;
 
 public class SemanticGedcomUtil {
 

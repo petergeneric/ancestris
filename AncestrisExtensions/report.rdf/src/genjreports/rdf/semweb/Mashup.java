@@ -18,8 +18,6 @@ import static com.hp.hpl.jena.rdf.model.ResourceFactory.*;
 
 import java.io.*;
 import java.net.*;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -139,8 +137,10 @@ public class Mashup
     {
         if (args.length < 3)
         {
+            System.err.println("");
             System.err.println("mandatory arguments: input file , URI, output file");
-            System.err.println("optional argument: dbpedia languages, for example 'de' or 'de|fr'");
+            System.err.println("optional 4th argument: dbpedia languages, for example 'de' or 'de|fr'");
+            System.err.println("output file extensions: ttl/n3/nt/rdf");
             System.err.println("per inputline: GeoNameID, tab, place name");
             return;
         }

@@ -41,12 +41,24 @@
             The mashup functionality is even only available
             with bacth files.
         </p>
+        <h4>Known bugs</h4>
+        <ul>
+          <li>
+            You might have to run a context-free query before you can run
+            a query that should be launched for an entity.
+          </li>
+          <li>
+            Output files are kept open. Retry with a new name or restart the application.
+          </li>
+        </ul>
 
         <h3 class="ancestris_help_title">design for the future</h3>
         <p class="justify">
             The functionality would be easier to use with 
             a dedicated user interface.
-            What is needed in my opinion:
+            The following design would replace
+            the class ReportRdf
+            and the batch files mashup.bat (Windows) / mashup.sh (Mac/Linux).
         </p>
         <ul>
           <li>
@@ -58,7 +70,7 @@
               <li>name and location of collected mashup input data
                   (preferably exported by the geo-plugin)
               </li>
-              <li>name and location of collected mashup output data</li>
+              <li>name and location of collected mashup output data file</li>
               <li>desired languages for dbpedia data (checkboxes for languages retuned by 
                   <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>)
               </li>
@@ -69,30 +81,42 @@
           </li><li>
             <p>menu comands</p>
             <ul>
-              <li>save converted gedcom</li>
-              <li>collect mashup data</li>
+              <li>save converted gedcom. Invokes: new <a href="http://anonymous:password@arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/SemanticGedcomUtil.java">SemanticGedcomUtil</a>().toRdf(...)</li>
+              <li>collect mashup data. Invokes: <a href="http://anonymous:password@arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/semweb/Mashup.java">Mashup</a>.main(...)</li>
             </ul>
           </li><li>
-            <p>report dialog (from the general menu or the context menu of an entity)</p>
+            <p>report dialog, from the general menu or the context menu of an entity.
+               The OK button invokes: new <a href="http://anonymous:password@arvernes.dyndns.org/fgenj/trunk/AncestrisExtensions/report.rdf/src/genjreports/rdf/semweb/Query.java">Query</a>(...).toXXX(...)
+            </p>
             <ul>
               <li>An entity chooser.<br/>
                   When the dialog was opened from a context menu of an entity,
-                  that instance should be initialy presented.
+                  that instance should be initialy selected.
                   The chosen query may dictate another type of entity,
-                  The OK button should be disabled until tat conflict is resolved.
+                  The OK button should be disabled until that conflict is resolved.
+                  A "%s" in the query should be replaced by the selected entity.
               </li>
-              <li>name and location of the query file (allow to save/choose the built-in examples)</li>
-              <li>checkbox 1: use converted gedcom</li>
-              <li>checkbox 2: use mashup output</li>
-              <li>name and location of the output file</li>
-              <li>name and location of the xsl file to insert into xml output
-                 (allow to save http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl)
+              <li>An edit box for the query.<br/>
+                  Show line numbers to help fix syntax errors.<br/>
+                  Additional controls to read from or write to the file system or 
+                  load one of the built-in example queries.
+                  Prefixes of the built-in quiries indicate which rules should have been applied,
+                  disable the built in queries that need more rules
+                  than have been applied with the last conversion of the gedcom..
+              </li>
+              <li>checkboxes<ul>
+                  <li>use converted gedcom</li>
+                  <li>use mashup output</li>
+                  <li>use all files of the mashup output location</li>
+                </ul>
+                At least one should be checked, 
+                selecting a built-in query automaticaly checks the apropriate ones.
+              </li>
+              <li>name and location of the output file (or show in a window)</li>
+              <li>name and location of the xsl file (style sheet) to insert into xml output
+                 (an additional control saves http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl)
               </li>
             </ul>
-            One or both of the checkboxes 1 and 2 should be checked, 
-            selecting a built-in query automaticaly checks the apropriate ones.
-            Prefixes of the built-in quiries indicate which rules should have been applied,
-            disable the built in queries that need more rules than has been applied.
           </li>
         </ul>
 
@@ -103,13 +127,6 @@
             Same applies to conversion with custom rules.
         </p>
 
-        <h3 class="ancestris_help_title">Known bugs</h3>
-        <ul>
-          <li>
-            You might have to run a context-free query before you can run
-            a query that should be launched for an entity.
-          </li>
-        </ul>
         <br>
         <a href="rdf-todo.html#_Top_">Top</a>
         <br>
