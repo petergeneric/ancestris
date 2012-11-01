@@ -12,6 +12,7 @@
 package ancestris.modules.gedcom.mergefile;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDataObject;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomMgr;
 import genj.gedcom.*;
@@ -32,9 +33,10 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
-// import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -44,34 +46,58 @@ import org.openide.util.lookup.ServiceProvider;
 public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
     private final static Logger LOG = Logger.getLogger(GedcomMerge.class.getName(), null);
-    private final Gedcom leftGedcom;
-    private final Gedcom rightGedcom;
+    private final File leftGedcomFile;
+    private final File rightGedcomFile;
     private final File gedcomMergeFile;
 
     public GedcomMerge() {
-        this.leftGedcom = null;
-        this.rightGedcom = null;
+        this.leftGedcomFile = null;
+        this.rightGedcomFile = null;
         this.gedcomMergeFile = null;
     }
 
-    public GedcomMerge(Gedcom leftGedcom, Gedcom rightGedcom, File gedcomMergeFile) {
-        this.leftGedcom = leftGedcom;
-        this.rightGedcom = rightGedcom;
+    public GedcomMerge(File leftGedcom, File rightGedcom, File gedcomMergeFile) {
+        this.leftGedcomFile = leftGedcom;
+        this.rightGedcomFile = rightGedcom;
         this.gedcomMergeFile = gedcomMergeFile;
     }
 
     @Override
     public void run() {
         Map<String, Integer> entityId = new HashMap<String, Integer>();
+        final Gedcom leftGedcom;
+        final Gedcom rightGedcom;
+        final Gedcom mergedGedcom;
         ProgressHandle progressHandle = ProgressHandleFactory.createHandle(org.openide.util.NbBundle.getMessage(Bundle.class, "merge.progress"));
 
-        if (this.leftGedcom == null) {
+        if (leftGedcomFile == null) {
             return;
         }
         progressHandle.start();
+        try {
+            DataObject dataObject = DataObject.find(FileUtil.toFileObject(leftGedcomFile));
+            GedcomDataObject gedcomDataObject = dataObject.getLookup().lookup(GedcomDataObject.class);
+            if (gedcomDataObject == null) {
+                return;
+            }
+            leftGedcom = gedcomDataObject.getContext().getGedcom();
+        } catch (DataObjectNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+            return;
+        }
 
-        // form the origin
-        final Gedcom mergedGedcom;
+        try {
+            DataObject dataObject = DataObject.find(FileUtil.toFileObject(rightGedcomFile));
+            GedcomDataObject gedcomDataObject = dataObject.getLookup().lookup(GedcomDataObject.class);
+            if (gedcomDataObject == null) {
+                return;
+            }
+            rightGedcom = gedcomDataObject.getContext().getGedcom();
+        } catch (DataObjectNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+            return;
+        }
+
         try {
             mergedGedcom = new Gedcom(Origin.create(gedcomMergeFile.toURI().toURL()));
         } catch (MalformedURLException ex) {
@@ -96,7 +122,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         }
 
         /*
-         * Re number all entities Ids for leftGedcom
+         * Re number all entities Ids for rightGedcom
          */
         for (String entityType : Gedcom.ENTITIES) {
             settingIDs(rightGedcomCopy, entityType, entityId.get(entityType));
@@ -114,9 +140,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    /*
-                     * Copy all leftGedcom entities in mergedGedcom
-                     */
+
                     List<Entity> leftGedcomEntities = leftGedcomCopy.getEntities();
                     for (Entity srcEntity : leftGedcomEntities) {
                         try {
@@ -151,7 +175,10 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
                     submitter.setCountry(submPref.get("submCountry", ""));
                     submitter.setWeb(submPref.get("submWeb", ""));
 
+                    // set Gedcom Header
                     mergedGedcom.createEntity("HEAD", "");
+
+                    mergedGedcom.setSubmitter(submitter);
 
                     String placeFormat = leftGedcom.getPlaceFormat();
                     if (placeFormat != null) {
@@ -180,7 +207,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
         progressHandle.finish();
 
-        GedcomMergeResultPanel gedcomMergeResultPanel = new GedcomMergeResultPanel(mergedGedcom);
+        GedcomMergeResultPanel gedcomMergeResultPanel = new GedcomMergeResultPanel(leftGedcom, rightGedcom, mergedGedcom);
 
         // display merge result
         DialogDescriptor gedcomMergeResultDescriptor = new DialogDescriptor(
@@ -193,7 +220,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
                 null,
                 null);
         DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor).setVisible(true);
-
+        
         Context mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
         Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
 

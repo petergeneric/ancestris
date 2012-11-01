@@ -42,7 +42,7 @@ public class GedcomMergeWizardPanel3 implements WizardDescriptor.Panel<WizardDes
 
     @Override
     public boolean isValid() {
-        return component.getGedcomContext() != null;
+        return component.getGedcomFile() != null;
     }
 
     @Override
