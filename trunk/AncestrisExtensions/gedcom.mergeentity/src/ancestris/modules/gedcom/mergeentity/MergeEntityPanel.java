@@ -1,18 +1,46 @@
 package ancestris.modules.gedcom.mergeentity;
 
+import ancestris.gedcom.GedcomDirectory;
+import ancestris.modules.gedcom.mergeentity.node.EntityChildFactory;
+import ancestris.modules.gedcom.mergeentity.node.EntityNode;
+import genj.gedcom.*;
+import java.util.Collection;
+import org.openide.nodes.Children;
+import org.openide.util.Exceptions;
+
 /**
  *
  * @author lemovice
  */
-
-
 public class MergeEntityPanel extends javax.swing.JPanel {
+
+    Gedcom gedcom = GedcomDirectory.getDefault().getSelectedContext(true).getGedcom();
+    EntityComboBoxModel leftEntityComboBoxModel;
+    EntityComboBoxModel rightEntityComboBoxModel;
+    DisplayEntityPanel leftDisplayEntityPanel;
+    DisplayEntityPanel rightDisplayEntityPanel;
 
     /**
      * Creates new form MergeEntityPanel
      */
     public MergeEntityPanel() {
+        Collection<? extends Entity> entities = gedcom.getEntities(Gedcom.ENTITIES[0]);
+
+        leftEntityComboBoxModel = new EntityComboBoxModel();
+        rightEntityComboBoxModel = new EntityComboBoxModel();
+
         initComponents();
+
+        entityTypeComboBox.setSelectedItem(Gedcom.ENTITIES[0]);
+
+        leftEntityComboBoxModel.addAll(entities);
+        leftEntityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
+        leftEntityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
+
+        rightEntityComboBoxModel.addAll(entities);
+        rightEntityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
+        rightEntityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
+
     }
 
     /**
@@ -24,43 +52,61 @@ public class MergeEntityPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel7 = new javax.swing.JPanel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        entityTypeComboBox = new javax.swing.JComboBox<String>();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
+        leftEntityComboBox = new javax.swing.JComboBox<Entity>();
         jPanel6 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
+        rightEntityComboBox = new javax.swing.JComboBox<Entity>();
         jPanel5 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        jButton1 = new javax.swing.JButton();
 
+        setMinimumSize(new java.awt.Dimension(648, 364));
         setLayout(new java.awt.BorderLayout());
+
+        jPanel7.setLayout(new javax.swing.BoxLayout(jPanel7, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel7.add(filler1);
+
+        entityTypeComboBox.setModel(new EntityTypeComboBoxModel());
+        entityTypeComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.entityTypeComboBox.toolTipText")); // NOI18N
+        entityTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entityTypeComboBoxActionPerformed(evt);
+            }
+        });
+        jPanel7.add(entityTypeComboBox);
+        jPanel7.add(filler2);
+
+        add(jPanel7, java.awt.BorderLayout.NORTH);
 
         jSplitPane1.setResizeWeight(0.5);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 290, Short.MAX_VALUE)
-        );
+        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+
+        leftEntityComboBox.setModel(leftEntityComboBoxModel);
+        leftEntityComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leftEntityComboBoxActionPerformed(evt);
+            }
+        });
+        jPanel4.add(leftEntityComboBox);
 
         jPanel1.add(jPanel4, java.awt.BorderLayout.NORTH);
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 203, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 290, Short.MAX_VALUE)
-        );
+        jPanel6.setLayout(new java.awt.BorderLayout());
+
+        leftDisplayEntityPanel = new DisplayEntityPanel ();
+        jPanel6.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel6, java.awt.BorderLayout.CENTER);
 
@@ -69,46 +115,163 @@ public class MergeEntityPanel extends javax.swing.JPanel {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         jPanel3.setBackground(java.awt.Color.blue);
+        jPanel3.setLayout(new javax.swing.BoxLayout(jPanel3, javax.swing.BoxLayout.LINE_AXIS));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 203, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 290, Short.MAX_VALUE)
-        );
+        rightEntityComboBox.setModel(rightEntityComboBoxModel);
+        rightEntityComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rightEntityComboBoxActionPerformed(evt);
+            }
+        });
+        jPanel3.add(rightEntityComboBox);
 
         jPanel2.add(jPanel3, java.awt.BorderLayout.NORTH);
 
-        jPanel5.setBackground(java.awt.Color.black);
+        jPanel5.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 203, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 290, Short.MAX_VALUE)
-        );
+        rightDisplayEntityPanel = new DisplayEntityPanel ();
+        jPanel5.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
         jPanel2.add(jPanel5, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setRightComponent(jPanel2);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
+
+        jPanel8.setLayout(new javax.swing.BoxLayout(jPanel8, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel8.add(filler3);
+
+        jButton1.setText(org.openide.util.NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel8.add(jButton1);
+
+        add(jPanel8, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void entityTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entityTypeComboBoxActionPerformed
+        String selectedItem = (String) entityTypeComboBox.getSelectedItem();
+        Collection<? extends Entity> entities = gedcom.getEntities(selectedItem);
+
+        leftEntityComboBoxModel.clear();
+        leftEntityComboBoxModel.addAll(entities);
+        leftEntityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
+        leftEntityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
+
+        rightEntityComboBoxModel.clear();
+        rightEntityComboBoxModel.addAll(entities);
+        rightEntityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
+        rightEntityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
+    }//GEN-LAST:event_entityTypeComboBoxActionPerformed
+
+    private void leftEntityComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftEntityComboBoxActionPerformed
+        Entity selectedEntity = (Entity) leftEntityComboBoxModel.getSelectedItem();
+        if (selectedEntity != null) {
+            leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(selectedEntity), true), selectedEntity));
+        } else {
+            leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode());
+        }
+    }//GEN-LAST:event_leftEntityComboBoxActionPerformed
+
+    private void rightEntityComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightEntityComboBoxActionPerformed
+        Entity selectedEntity = (Entity) rightEntityComboBoxModel.getSelectedItem();
+        if (selectedEntity != null) {
+            rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(selectedEntity), true), selectedEntity));
+        } else {
+            rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode());
+        }
+    }//GEN-LAST:event_rightEntityComboBoxActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            final Entity leftSelectedEntity = (Entity) leftEntityComboBoxModel.getSelectedItem();
+            final Entity rightSelectedEntity = (Entity) rightEntityComboBoxModel.getSelectedItem();
+            gedcom.doUnitOfWork(new UnitOfWork() {
+
+                @Override
+                public void perform(Gedcom gedcom) throws GedcomException {
+                    /*
+                     * Merge the 2 selected entities
+                     */
+                    for (Property property : rightSelectedEntity.getProperties()) {
+                        if (leftSelectedEntity.getProperty(property.getTag()) == null) {
+                            // Copy new property
+                            MergePropertiesRecursively(property, leftSelectedEntity.addProperty(property.getTag(), property.getValue()));
+                        }
+                    }
+
+                    /*
+                     * delete the right entity
+                     */
+                    gedcom.deleteEntity(rightSelectedEntity);
+                }
+            });
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        /*
+         * Update comboBoxs
+         */
+        String selectedItem = (String) entityTypeComboBox.getSelectedItem();
+        Collection<? extends Entity> entities = gedcom.getEntities(selectedItem);
+
+        leftEntityComboBoxModel.clear();
+        leftEntityComboBoxModel.addAll(entities);
+        leftEntityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
+        leftEntityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
+
+        rightEntityComboBoxModel.clear();
+        rightEntityComboBoxModel.addAll(entities);
+        rightEntityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
+        rightEntityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
+    }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> entityTypeComboBox;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JComboBox<Entity> leftEntityComboBox;
+    private javax.swing.JComboBox<Entity> rightEntityComboBox;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Copy properties beneath a property to another property (copy a cluster)
+     */
+    private void MergePropertiesRecursively(Property srcProperty, Property destProperty) {
+
+        if (srcProperty == null || destProperty == null) {
+            return;
+        }
+
+        Property[] srcProperties = srcProperty.getProperties();
+
+        for (Property property : srcProperties) {
+            // Xref properties shall not be copy
+            if (!(property instanceof PropertyXRef)) {
+                MergePropertiesRecursively(property, destProperty.addProperty(property.getTag(), property.getValue()));
+            } else {
+                // Update Xref
+                PropertyXRef propertyXRef = (PropertyXRef) property;
+                PropertyXRef target = propertyXRef.getTarget();
+                if (target != null) {
+                    MergePropertiesRecursively(property, destProperty.addProperty(property.getTag(), property.getValue()));
+                } else {
+                }
+            }
+        }
+    }
 }
