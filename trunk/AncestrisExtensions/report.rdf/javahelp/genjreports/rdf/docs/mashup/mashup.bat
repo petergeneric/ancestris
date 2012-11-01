@@ -1,7 +1,27 @@
-set JENAROOT=D:\apache-jena-2.7.3\apache-jena-2.7.3
-set MODS=C:\Users\user\Appdata\Roaming\.ancestris\trunk\modules
+@set MODS=C:\Users\user\Appdata\Roaming\.ancestris\trunk\modules
+@set JENAROOT=D:\apache-jena-2.7.3\apache-jena-2.7.3
 
-echo off
+@rem # you may also want to customise the java command at the end
+@rem ################### en customize
+
+@echo off
+
+echo MODS=%MODS%
+echo JENAROOT=%JENAROOT%
+echo input=%1
+echo output=%2
+
+if EXIST %JENAROOT% goto :okJena
+echo please fix: JENAROOT does not exist
+pause
+exit /B
+:okJena
+
+if EXIST %MODS% goto :okMods
+echo please fix: MODS does not exist
+pause
+exit /B
+:okMods
 
 set CLASSPATH=.;%MODS%\genjreports-rdf.jar
 
@@ -22,6 +42,9 @@ rem CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\slf4j-log4j12-1.6.4.jar
 set CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\xercesImpl-2.10.0.jar
 set CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\xml-apis-1.4.01.jar
 
+set OPTS= -Xmx1024M -Dlog4j.configuration=file:%JENAROOT%/jena-log4j.properties
+
 echo on
 
-java genjreports.rdf.semweb.Mashup %1 http://my.domain.com/gedcom/places/ %2 "de|fr"
+java %OPTS% genjreports.rdf.semweb.Mashup %1 http://my.domain.com/gedcom/places/ %2 "de|fr"
+pause

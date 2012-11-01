@@ -16,7 +16,7 @@ package genjreports.rdf.semweb;
 
 public enum Extension
 {
-    ttl("TURTLE"), n3("N-TRIPLE"), rdf("RDF/XML-ABBREV");
+    ttl("TURTLE"), n3("N3"), nt("N-TRIPPLE"), rdf("RDF/XML-ABBREV");
     private String language;
 
     private Extension(final String language)
