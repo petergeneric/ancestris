@@ -12,7 +12,6 @@
 package ancestris.modules.gedcom.mergefile;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.gedcom.GedcomDataObject;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomMgr;
 import genj.gedcom.*;
@@ -33,9 +32,6 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -65,6 +61,9 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
     @Override
     public void run() {
         Map<String, Integer> entityId = new HashMap<String, Integer>();
+        Context leftGedcomContext;
+        Context rightGedcomContext;
+        Context mergedGedcomContext;
         final Gedcom leftGedcom;
         final Gedcom rightGedcom;
         final Gedcom mergedGedcom;
@@ -73,30 +72,21 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         if (leftGedcomFile == null) {
             return;
         }
-        progressHandle.start();
-        try {
-            DataObject dataObject = DataObject.find(FileUtil.toFileObject(leftGedcomFile));
-            GedcomDataObject gedcomDataObject = dataObject.getLookup().lookup(GedcomDataObject.class);
-            if (gedcomDataObject == null) {
-                return;
-            }
-            leftGedcom = gedcomDataObject.getContext().getGedcom();
-        } catch (DataObjectNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-            return;
-        }
 
-        try {
-            DataObject dataObject = DataObject.find(FileUtil.toFileObject(rightGedcomFile));
-            GedcomDataObject gedcomDataObject = dataObject.getLookup().lookup(GedcomDataObject.class);
-            if (gedcomDataObject == null) {
-                return;
-            }
-            rightGedcom = gedcomDataObject.getContext().getGedcom();
-        } catch (DataObjectNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+        progressHandle.start();
+
+        // Open Gedcom
+        leftGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
+        if (leftGedcomContext == null) {
             return;
         }
+        leftGedcom = leftGedcomContext.getGedcom();
+
+        rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
+        if (rightGedcomContext == null) {
+            return;
+        }
+        rightGedcom = rightGedcomContext.getGedcom();
 
         try {
             mergedGedcom = new Gedcom(Origin.create(gedcomMergeFile.toURI().toURL()));
@@ -205,6 +195,15 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             LOG.log(Level.SEVERE, null, ex);
         }
 
+        mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
+        Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
+
+        // save gedcom file
+        GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+
+        GedcomMgr.getDefault().gedcomClose(rightGedcomContext);
+        GedcomMgr.getDefault().gedcomClose(leftGedcomContext);
+
         progressHandle.finish();
 
         GedcomMergeResultPanel gedcomMergeResultPanel = new GedcomMergeResultPanel(leftGedcom, rightGedcom, mergedGedcom);
@@ -220,12 +219,6 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
                 null,
                 null);
         DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor).setVisible(true);
-        
-        Context mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
-        Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
-
-        // save gedcom file
-        GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
 
         // and reopens the file
         GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
