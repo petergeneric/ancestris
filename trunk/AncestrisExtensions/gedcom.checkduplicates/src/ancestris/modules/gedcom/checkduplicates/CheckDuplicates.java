@@ -48,7 +48,7 @@ public class CheckDuplicates implements Runnable {
 
     @Override
     public void run() {
-        final TreeMap<String, List<PotentialMatch<? extends Entity>>> MatchesMap = new TreeMap<String, List<PotentialMatch<? extends Entity>>>();
+        final TreeMap<String, List<PotentialMatch<? extends Entity>>> matchesMap = new TreeMap<String, List<PotentialMatch<? extends Entity>>>();
         try {
             for (String tag : entitiesMatchers.keySet()) {
                 List<? extends Entity> leftEntity = new ArrayList(leftGedcom.getEntities(tag));
@@ -58,7 +58,7 @@ public class CheckDuplicates implements Runnable {
 
                 if (leftEntity != null && rightEntity != null) {
                     List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(leftEntity, rightEntity);
-                    MatchesMap.put(tag, potentialMatches);
+                    matchesMap.put(tag, potentialMatches);
                 }
             }
 
@@ -66,30 +66,21 @@ public class CheckDuplicates implements Runnable {
 
                 @Override
                 public void run() {
-                    CheckDuplicatesPanel entityViewPanel = null;
-                    DialogDescriptor checkDuplicatePanelDescriptor = null;
+                    CheckDuplicatesPanel entityViewPanel = new CheckDuplicatesPanel(matchesMap);
+                    DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
+                            entityViewPanel,
+                            NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title"),
+                            true,
+                            new Object [] {DialogDescriptor.CLOSED_OPTION},
+                            DialogDescriptor.CLOSED_OPTION,
+                            DialogDescriptor.DEFAULT_ALIGN,
+                            null,
+                            null);
 
-                    for (String tag : MatchesMap.keySet()) {
-                        List<PotentialMatch<? extends Entity>> potentialMatches = MatchesMap.get(tag);
-                        for (PotentialMatch<? extends Entity> match : potentialMatches) {
-                            entityViewPanel = new CheckDuplicatesPanel(match);
-                            checkDuplicatePanelDescriptor = new DialogDescriptor(
-                                    entityViewPanel,
-                                    NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title", tag),
-                                    true,
-                                    DialogDescriptor.YES_NO_CANCEL_OPTION,
-                                    null,
-                                    null);
-
-                            Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
-                            dialog.setVisible(true);
-                            dialog.setModal(false);
-                            dialog.toFront();
-                            if (checkDuplicatePanelDescriptor.getValue() == DialogDescriptor.CANCEL_OPTION) {
-                                return;
-                            }
-                        }
-                    }
+                    Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
+                    dialog.setVisible(true);
+                    dialog.setModal(false);
+                    dialog.toFront();
                 }
             });
         } catch (InterruptedException ex) {
