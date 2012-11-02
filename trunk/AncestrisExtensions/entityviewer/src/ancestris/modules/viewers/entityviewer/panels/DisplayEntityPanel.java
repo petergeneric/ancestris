@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.mergeentity;
+package ancestris.modules.viewers.entityviewer.panels;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -18,7 +18,6 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
 
     private ExplorerManager explorerManager = new ExplorerManager();
     private TreeTableView beanTreeView = new TreeTableView();
-    private Node[] selectedNodes;
     /**
      * Creates new form DisplayEntityPanel
      */

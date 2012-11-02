@@ -1,6 +1,5 @@
-package ancestris.modules.gedcom.mergeentity.node;
+package ancestris.modules.viewers.entityviewer.nodes;
 
-import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import java.util.Arrays;
 import java.util.List;
@@ -13,12 +12,11 @@ import org.openide.util.lookup.Lookups;
  *
  * @author lemovice
  */
-public class EntityChildFactory extends ChildFactory<Property> {
-
+public class PropertyChildFactory extends ChildFactory<Property> {
     private final Property property;
 
-    public EntityChildFactory(Entity entity) {
-        this.property = entity;
+    public PropertyChildFactory(Property property) {
+        this.property = property;
     }
 
     @Override

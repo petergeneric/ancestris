@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.mergeentity;
+package ancestris.modules.viewers.entityviewer.models;
 
 import genj.gedcom.Gedcom;
 import java.util.ArrayList;
