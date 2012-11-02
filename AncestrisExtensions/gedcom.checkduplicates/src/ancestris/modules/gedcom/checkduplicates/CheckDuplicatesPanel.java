@@ -5,8 +5,9 @@ import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
 import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
 import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.Entity;
-import genj.gedcom.Property;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
 import org.openide.nodes.Children;
 
 /**
@@ -35,10 +36,9 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
             while (potentialMatchIterator.hasNext()) {
                 PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
                 Entity left = potentialMatch.getLeft();
-//                leftLabel.setText(left.getId());
                 leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
                 Entity right = potentialMatch.getRight();
-//                rightLabel.setText(right.getId());
                 rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
                 jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
@@ -69,27 +69,49 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         jSplitPane1.setResizeWeight(0.5);
+        jSplitPane1.setName(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.jSplitPane1.name")); // NOI18N
 
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
-        jPanel1.setLayout(new java.awt.BorderLayout());
 
         leftEntityPanel.setLayout(new java.awt.BorderLayout());
 
         leftDisplayEntityPanel = new DisplayEntityPanel ();
         leftEntityPanel.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jPanel1.add(leftEntityPanel, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(leftEntityPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         jSplitPane1.setLeftComponent(jPanel1);
-
-        jPanel2.setLayout(new java.awt.BorderLayout());
 
         rightEntityPanel.setLayout(new java.awt.BorderLayout());
 
         rightDisplayEntityPanel = new DisplayEntityPanel ();
         rightEntityPanel.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jPanel2.add(rightEntityPanel, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(rightEntityPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         jSplitPane1.setRightComponent(jPanel2);
 
@@ -116,11 +138,13 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2))
+                .addComponent(jButton2)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,23 +162,34 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        while (tagIterator.hasNext()) {
-            potentialMatches = matchesMap.get(tagIterator.next());
-            potentialMatchIterator = potentialMatches.iterator();
-            while (potentialMatchIterator.hasNext()) {
-                PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
-                Entity left = potentialMatch.getLeft();
-//                leftLabel.setText(left.getId());
-                leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
-                Entity right = potentialMatch.getRight();
-//                rightLabel.setText(right.getId());
-                rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+        if (potentialMatchIterator.hasNext()) {
+            PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
+            Entity left = potentialMatch.getLeft();
+            leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
 
-                jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
-                return;
+            Entity right = potentialMatch.getRight();
+            rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+            jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+        } else {
+            while (tagIterator.hasNext()) {
+                potentialMatches = matchesMap.get(tagIterator.next());
+                potentialMatchIterator = potentialMatches.iterator();
+                if (potentialMatchIterator.hasNext()) {
+                    PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
+                    Entity left = potentialMatch.getLeft();
+                    leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
+                    Entity right = potentialMatch.getRight();
+                    rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+                    jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+                    return;
+                }
+
+                jButton2.setEnabled(false);
             }
         }
-        jButton2.setEnabled(false);
     }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
