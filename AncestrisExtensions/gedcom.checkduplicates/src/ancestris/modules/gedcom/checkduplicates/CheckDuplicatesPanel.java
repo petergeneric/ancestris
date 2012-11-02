@@ -6,9 +6,7 @@ import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
 import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import org.openide.nodes.Children;
 
 /**
@@ -17,52 +15,36 @@ import org.openide.nodes.Children;
  */
 public class CheckDuplicatesPanel extends javax.swing.JPanel {
 
-    private static int LINESIZE = 80;
-    DisplayEntityPanel leftDisplayEntityPanel;
-    DisplayEntityPanel rightDisplayEntityPanel;
+    private DisplayEntityPanel leftDisplayEntityPanel;
+    private DisplayEntityPanel rightDisplayEntityPanel;
+    private TreeMap<String, List<PotentialMatch<? extends Entity>>> matchesMap;
+    private List<PotentialMatch<? extends Entity>> potentialMatches;
+    private Iterator<String> tagIterator;
+    private Iterator<PotentialMatch<? extends Entity>> potentialMatchIterator;
+
     /**
      * Creates new form CheckDuplicatesPanel
      */
-    public CheckDuplicatesPanel(PotentialMatch<? extends Entity> potentialMatche) {
-        Entity left = potentialMatche.getLeft();
-        Entity right = potentialMatche.getRight();
+    public CheckDuplicatesPanel(TreeMap<String, List<PotentialMatch<? extends Entity>>> matchesMap) {
         initComponents();
-        leftLabel.setText(left.getId());
-        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left)); 
-        rightLabel.setText(right.getId());
-        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right)); 
+        this.matchesMap = matchesMap;
+        tagIterator = matchesMap.keySet().iterator();
+        while (tagIterator.hasNext()) {
+            potentialMatches = matchesMap.get(tagIterator.next());
+            potentialMatchIterator = potentialMatches.iterator();
+            while (potentialMatchIterator.hasNext()) {
+                PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
+                Entity left = potentialMatch.getLeft();
+//                leftLabel.setText(left.getId());
+                leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+                Entity right = potentialMatch.getRight();
+//                rightLabel.setText(right.getId());
+                rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-        jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatche.getCertainty()) + "%");
-
-    }
-
-    private String getText(Property prop) {
-
-        String text = "";
-        if (!(prop instanceof Entity)) {
-            text += " " + prop.getTag() + ": " + prop.toString() + "\n";
-        }
-        List listProp = new LinkedList();
-        Property[] properties = prop.getProperties();
-        listProp.addAll(Arrays.asList(properties));
-        Property propItem = null;
-        while (listProp.size() > 0) {
-            propItem = (Property) ((LinkedList) listProp).removeFirst();
-            int indent = (propItem.getPath().length() - 2) * 3 + 1;
-            Property[] subProps = propItem.getProperties();
-            listProp.addAll(0, Arrays.asList(subProps));
-            StringBuffer str = new StringBuffer(indent);
-            for (int i = 0; i < indent; i++) {
-                str.append(" ");
+                jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+                return;
             }
-            String value = propItem.toString();
-            if (value.length() > LINESIZE) {
-                value = value.substring(0, LINESIZE) + "...";
-            }
-            text += str + propItem.getTag() + ": " + value + "\n";
         }
-
-        return text;
     }
 
     /**
@@ -76,12 +58,13 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        leftLabel = new javax.swing.JLabel();
         leftEntityPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        rightLabel = new javax.swing.JLabel();
         rightEntityPanel = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -89,9 +72,6 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
         jPanel1.setLayout(new java.awt.BorderLayout());
-
-        leftLabel.setText("jLabel1");
-        jPanel1.add(leftLabel, java.awt.BorderLayout.NORTH);
 
         leftEntityPanel.setLayout(new java.awt.BorderLayout());
 
@@ -103,9 +83,6 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
         jSplitPane1.setLeftComponent(jPanel1);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
-
-        rightLabel.setText("jLabel2");
-        jPanel2.add(rightLabel, java.awt.BorderLayout.NORTH);
 
         rightEntityPanel.setLayout(new java.awt.BorderLayout());
 
@@ -119,16 +96,75 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         jLabel3.setText("jLabel3");
-        add(jLabel3, java.awt.BorderLayout.SOUTH);
+
+        jButton1.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.jButton2.text")); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel3)
+                .addComponent(jButton1)
+                .addComponent(jButton2))
+        );
+
+        add(jPanel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        while (tagIterator.hasNext()) {
+            potentialMatches = matchesMap.get(tagIterator.next());
+            potentialMatchIterator = potentialMatches.iterator();
+            while (potentialMatchIterator.hasNext()) {
+                PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
+                Entity left = potentialMatch.getLeft();
+//                leftLabel.setText(left.getId());
+                leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+                Entity right = potentialMatch.getRight();
+//                rightLabel.setText(right.getId());
+                rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+                jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+                return;
+            }
+        }
+        jButton2.setEnabled(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel leftEntityPanel;
-    private javax.swing.JLabel leftLabel;
     private javax.swing.JPanel rightEntityPanel;
-    private javax.swing.JLabel rightLabel;
     // End of variables declaration//GEN-END:variables
 }
