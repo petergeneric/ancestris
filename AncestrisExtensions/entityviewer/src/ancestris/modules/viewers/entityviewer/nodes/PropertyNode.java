@@ -1,5 +1,7 @@
-package ancestris.modules.gedcom.mergeentity.node;
+package ancestris.modules.viewers.entityviewer.nodes;
 
+import ancestris.modules.viewers.entityviewer.PropertyTag2Icon;
+import ancestris.modules.viewers.entityviewer.PropertyTag2Name;
 import java.awt.Image;
 import org.openide.ErrorManager;
 import org.openide.nodes.AbstractNode;

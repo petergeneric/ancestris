@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.mergeentity.node;
+package ancestris.modules.viewers.entityviewer;
 
 import java.util.HashMap;
 import org.openide.util.NbBundle;
@@ -22,7 +22,7 @@ public class EntityTag2Name {
         }
     };
 
-    static String getTagName(String entityTag) {
+    static public String getTagName(String entityTag) {
         if (entityTag2Name.get(entityTag) != null) {
             return entityTag2Name.get(entityTag);
         } else {

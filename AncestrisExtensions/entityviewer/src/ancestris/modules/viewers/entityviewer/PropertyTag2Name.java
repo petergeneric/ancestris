@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.mergeentity.node;
+package ancestris.modules.viewers.entityviewer;
 
 import java.util.HashMap;
 import org.openide.util.NbBundle;
@@ -145,7 +145,7 @@ public class PropertyTag2Name {
         }
     };
 
-    static String getTagName(String propertyTag) {
+    static public String getTagName(String propertyTag) {
         if (property2Icon.get(propertyTag) != null) {
             return property2Icon.get(propertyTag);
         } else {
