@@ -1,32 +1,36 @@
 package ancestris.modules.gedcom.checkduplicates;
 
 import ancestris.modules.gedcom.utilities.PotentialMatch;
+import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
+import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
+import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import org.openide.nodes.Children;
 
 /**
  *
  * @author lemovice
  */
-public class EntityViewPanel extends javax.swing.JPanel {
+public class CheckDuplicatesPanel extends javax.swing.JPanel {
 
     private static int LINESIZE = 80;
-
+    DisplayEntityPanel leftDisplayEntityPanel;
+    DisplayEntityPanel rightDisplayEntityPanel;
     /**
-     * Creates new form EntityViewPanel
+     * Creates new form CheckDuplicatesPanel
      */
-    public EntityViewPanel(PotentialMatch<? extends Entity> potentialMatche) {
+    public CheckDuplicatesPanel(PotentialMatch<? extends Entity> potentialMatche) {
         Entity left = potentialMatche.getLeft();
         Entity right = potentialMatche.getRight();
         initComponents();
         leftLabel.setText(left.getId());
-        leftTextArea.setText(getText(left));
-        
+        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left)); 
         rightLabel.setText(right.getId());
-        rightTextArea.setText(getText(right));
+        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right)); 
 
         jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatche.getCertainty()) + "%");
 
@@ -73,64 +77,42 @@ public class EntityViewPanel extends javax.swing.JPanel {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         leftLabel = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        leftTextArea = new javax.swing.JTextArea();
+        leftEntityPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         rightLabel = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        rightTextArea = new javax.swing.JTextArea();
+        rightEntityPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
-        jSplitPane1.setDividerSize(1);
         jSplitPane1.setResizeWeight(0.5);
 
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         leftLabel.setText("jLabel1");
+        jPanel1.add(leftLabel, java.awt.BorderLayout.NORTH);
 
-        leftTextArea.setColumns(20);
-        leftTextArea.setRows(5);
-        jScrollPane3.setViewportView(leftTextArea);
+        leftEntityPanel.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(leftLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-            .addComponent(jScrollPane3)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(leftLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
-        );
+        leftDisplayEntityPanel = new DisplayEntityPanel ();
+        leftEntityPanel.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
+
+        jPanel1.add(leftEntityPanel, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setLeftComponent(jPanel1);
 
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
         rightLabel.setText("jLabel2");
+        jPanel2.add(rightLabel, java.awt.BorderLayout.NORTH);
 
-        rightTextArea.setColumns(20);
-        rightTextArea.setRows(5);
-        jScrollPane4.setViewportView(rightTextArea);
+        rightEntityPanel.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rightLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-            .addComponent(jScrollPane4)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(rightLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
-        );
+        rightDisplayEntityPanel = new DisplayEntityPanel ();
+        rightEntityPanel.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
+
+        jPanel2.add(rightEntityPanel, java.awt.BorderLayout.CENTER);
 
         jSplitPane1.setRightComponent(jPanel2);
 
@@ -143,12 +125,10 @@ public class EntityViewPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JPanel leftEntityPanel;
     private javax.swing.JLabel leftLabel;
-    private javax.swing.JTextArea leftTextArea;
+    private javax.swing.JPanel rightEntityPanel;
     private javax.swing.JLabel rightLabel;
-    private javax.swing.JTextArea rightTextArea;
     // End of variables declaration//GEN-END:variables
 }
