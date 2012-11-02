@@ -88,7 +88,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         }
         leftGedcom = leftGedcomContext.getGedcom();
 
-        rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
+        rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(leftGedcomFile));
         if (rightGedcomContext == null) {
             return;
         }
