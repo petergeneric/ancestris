@@ -2,12 +2,9 @@ package ancestris.modules.viewers.entityviewer.panels;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.tree.TreeSelectionModel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.explorer.view.TreeTableView;
 import org.openide.nodes.Node;
 
 /**
@@ -17,7 +14,7 @@ import org.openide.nodes.Node;
 public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerManager.Provider {
 
     private ExplorerManager explorerManager = new ExplorerManager();
-    private TreeTableView beanTreeView = new TreeTableView();
+    private BeanTreeView beanTreeView = new BeanTreeView();
     /**
      * Creates new form DisplayEntityPanel
      */

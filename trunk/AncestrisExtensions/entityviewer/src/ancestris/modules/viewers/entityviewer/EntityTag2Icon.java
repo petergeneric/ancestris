@@ -13,8 +13,8 @@ public class EntityTag2Icon {
     private static final HashMap<String, String> entity2Icon = new HashMap<String, String>() {
 
         {
-            put("INDI", "ancestris/modules/viewers/entityviewer/resources/Indi.png");
-            put("FAM", "ancestris/modules/viewers/entityviewer/resources/Fam.png");
+            put("INDI", "ancestris/modules/viewers/entityviewer/resources/Individual.png");
+            put("FAM", "ancestris/modules/viewers/entityviewer/resources/Family.png");
             put("OBJE", "ancestris/modules/viewers/entityviewer/resources/Media.png");
             put("NOTE", "ancestris/modules/viewers/entityviewer/resources/Note.png");
             put("SOUR", "ancestris/modules/viewers/entityviewer/resources/Source.png");
