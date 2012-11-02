@@ -19,13 +19,12 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
 @ActionID(category = "Tools", id = "ancestris.modules.gedcom.merge.GedcomMergeAction")
-@ActionRegistration(iconBase = "ancestris/modules/gedcom/mergefile/arrow_merge_270_left.png",
+@ActionRegistration(iconBase = "ancestris/modules/gedcom/mergefile/MergeFileIcon.png",
 displayName = "#CTL_GedcomMergeAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom", position = 3333)
 })
-@NbBundle.Messages({
-    "CTL_GedcomMergeAction=Merge Tool",})
+@NbBundle.Messages("CTL_GedcomMergeAction=Merge Tool")
 public final class GedcomMergeWizardAction implements ActionListener {
 
     private final static Logger LOG = Logger.getLogger(GedcomMergeWizardAction.class.getName(), null);
