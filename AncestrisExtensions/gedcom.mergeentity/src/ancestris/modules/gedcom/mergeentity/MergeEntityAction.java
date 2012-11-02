@@ -14,7 +14,7 @@ import org.openide.util.NbBundle;
 
 @ActionID(category = "Tools",
 id = "ancestris.modules.gedcom.mergeentity.MergeEntityAction")
-@ActionRegistration(iconBase = "ancestris/modules/gedcom/mergeentity/arrow_merge.png",
+@ActionRegistration(iconBase = "ancestris/modules/gedcom/mergeentity/mergeEntity.png",
 displayName = "#CTL_MergeEntityAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom", position = 3333)

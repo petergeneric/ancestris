@@ -1,8 +1,11 @@
 package ancestris.modules.gedcom.mergeentity;
 
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.modules.gedcom.mergeentity.node.EntityChildFactory;
-import ancestris.modules.gedcom.mergeentity.node.EntityNode;
+import ancestris.modules.viewers.entityviewer.models.EntityComboBoxModel;
+import ancestris.modules.viewers.entityviewer.models.EntityTypeComboBoxModel;
+import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
+import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
+import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.*;
 import java.util.Collection;
 import org.openide.nodes.Children;
@@ -76,7 +79,6 @@ public class MergeEntityPanel extends javax.swing.JPanel {
         jPanel7.add(filler1);
 
         entityTypeComboBox.setModel(new EntityTypeComboBoxModel());
-        entityTypeComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(MergeEntityPanel.class, "MergeEntityPanel.entityTypeComboBox.toolTipText")); // NOI18N
         entityTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 entityTypeComboBoxActionPerformed(evt);
