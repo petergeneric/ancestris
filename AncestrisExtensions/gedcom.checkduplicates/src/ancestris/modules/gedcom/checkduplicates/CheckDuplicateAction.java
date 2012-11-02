@@ -1,6 +1,5 @@
 package ancestris.modules.gedcom.checkduplicates;
 
-import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;

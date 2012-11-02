@@ -66,13 +66,13 @@ public class CheckDuplicates implements Runnable {
 
                 @Override
                 public void run() {
-                    EntityViewPanel entityViewPanel = null;
+                    CheckDuplicatesPanel entityViewPanel = null;
                     DialogDescriptor checkDuplicatePanelDescriptor = null;
 
                     for (String tag : MatchesMap.keySet()) {
                         List<PotentialMatch<? extends Entity>> potentialMatches = MatchesMap.get(tag);
                         for (PotentialMatch<? extends Entity> match : potentialMatches) {
-                            entityViewPanel = new EntityViewPanel(match);
+                            entityViewPanel = new CheckDuplicatesPanel(match);
                             checkDuplicatePanelDescriptor = new DialogDescriptor(
                                     entityViewPanel,
                                     NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title", tag),
