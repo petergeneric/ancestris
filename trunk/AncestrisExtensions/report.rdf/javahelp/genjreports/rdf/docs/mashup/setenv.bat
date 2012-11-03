@@ -42,9 +42,6 @@ rem CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\slf4j-log4j12-1.6.4.jar
 set CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\xercesImpl-2.10.0.jar
 set CLASSPATH=%CLASSPATH%;%JENAROOT%\lib\xml-apis-1.4.01.jar
 
-set OPTS= -Xmx1024M -Dlog4j.configuration=file:%JENAROOT%/jena-log4j.properties
+set JAVA_OPTS= -Xmx1024M -Dlog4j.configuration=file:%JENAROOT%/jena-log4j.properties
 
 echo on
-
-java %OPTS% genjreports.rdf.semweb.Mashup %1 http://my.domain.com/gedcom/places/ %2 "de|fr"
-pause

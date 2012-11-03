@@ -19,7 +19,4 @@ set CLASSPATH=$CLASSPATH:$MODS/genjreports-rdf.jar
 #set CLASSPATH=$CLASSPATH$;$JENAROOT$/lib/slf4j-log4j12-1.6.4.jar
  set CLASSPATH=$CLASSPATH$;$JENAROOT$/lib/xercesImpl-2.10.0.jar
  set CLASSPATH=$CLASSPATH$;$JENAROOT$/lib/xml-apis-1.4.01.jar
-
-set OPTS=-Xmx1024M -Dlog4j.configuration=file:$JENAROOT$/jena-log4j.properties
-
 java $OPTS$ genjreports.rdf.semweb.Mashup kennedyMashupInput.txt http://my.domain.com/gedcom/places/ kennedyMashupOutput.n3 "de|fr"

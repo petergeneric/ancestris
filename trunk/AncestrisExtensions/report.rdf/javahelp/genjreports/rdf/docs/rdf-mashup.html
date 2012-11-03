@@ -34,8 +34,8 @@
         </p>
         <ol>
             <li> <a href="rdf-mashup.html#semantic-intro">Introduction to the semantic web</a></li>
-            <li> <a href="rdf-mashup.html#batches">Batches in short</a></li>
-            <li> <a href="rdf-mashup.html#mashup">Mash up in short</a></li>
+            <li> <a href="rdf-mashup.html#batches">Batches</a></li>
+            <li> <a href="rdf-mashup.html#GeoNameIDs">GeoNameIDs</a></li>
             <li> <a href="rdf-mashup.html#FAQ">FAQ</a></li>
         </ol>
 
@@ -73,58 +73,9 @@
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object><br/>
-
-        <a name="batches"></a>
-        <h3 class="ancestris_help_title">Batches in short</h3>
-
         <p class="justify">
-            The plugin uses the jena library to perform its tasks. 
-            Jena has also command line tools that can perform the same tasks and more, 
-            except for the conversion from the gedcom to triples.
-            Jena is just an example of available tools.
-            You can use the command line tools for mashups and/or
-            create batches to run multiple queries with a single command.
-        </p>
-
-        <h4>More than you want to know:</h4>
-        <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-            <param name="content" value="jena.apache.orghttp://jena.apache.org/documentation/query/cmds.html">
-            <param name="text" value="<html><u></u></html>">
-            <param name="textFontSize" value="medium">
-            <param name="textColor" value="blue">
-        </object>
-
-        <h4>The least you want to know:</h4>
-        <p class="justify">
-            Look for downloads via the link above, get apache-jena and unpack it. 
-            Open a command line window and adjust the commands below to your situation:
-            each <code>PATH_TO</code> and possibly adjust the jena version to the one you downloaded.
-            Note that the variable JENAROOT is not just to provide shorthands,
-            but is required by the other commands.
-            Creation and using the file <code>merged.n3</code> is optional,
-            it is intended for data downloaded from the web. 
-            The option <code>--help</code> explains more about the commands.
-        </p>
-        <p>Windows</p>
-        <pre>
-        set JENAROOT=C:\PATH_TO\apache-jena-2.7.3
-        %JENAROOT%\bat\rdfcat.bat -out N3 c:\PATH_TO_DOWNLOADS\*.rdf > merged.n3
-        %JENAROOT%\bat\arq.bat --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
-        </pre>
-        <p>Mac / Unix</p>
-        <pre>
-        set JENAROOT=/PATH_TO/apache-jena-2.7.3
-        $JENAROOT/bin/rdfcat -out N3 /PATH_TO_DOWNLOADS/*.rdf > merged.n3
-        $JENAROOT/bin/arq --graph merged.n3 --graph gedcom.ttl --query mashup.arq > result.txt
-        </pre>
-
-        <a name="mashup"></a>
-        <h3 class="ancestris_help_title">Mash up in short</h3>
-
-        <a name="rdf-data"></a>
-        <p class="justify">
-            The GUI lets you query just a single family tree. 
-            The used techniques however allow to 
+            The current GUI lets you query just a single family tree. 
+            The batch commands however allow to 
             cross-query multiple family trees and/or data from the web.
             DbPedia could be an interesting almanac, 
             for example to find famous contemporary local people.
@@ -149,113 +100,118 @@
             <param name="textFontSize" value="medium">
             <param name="textColor" value="blue">
         </object>
+
+
+        <a name="batches"></a>
+        <h3 class="ancestris_help_title">Batches</h3>
+
         <p class="justify">
-            The rdfcat command shown above allows to collect any data you want.
-            SPARQL end points allow online access.
-            The procedure below is a semi-automated method to download related data 
-            from GeoNames and store shortcuts to DbPedia place descriptions.
+            The plugin uses the jena library to perform its tasks. 
+            On http://jena.apache.org you can also find command line tools for similar tasks.
+            The plugin functionality can also be executed from a command line.
+            Thus you can assemble a list of reports you want to run every once in while,
+            in stead of having to launch them one by one.
         </p>
         <p class="justify">
-            Required files:
+            Below some examples of commands. 
+            Run without arguments to show all possible arguments.
+            Before these commands will run you will have to set
+            some environment variables. The files
+            <a href="./mashup/setenv.bat">setenv.bat</a> (for Windows) and
+            <a href="./mashup/setenv.sh">setenv.sh</a> (for Mac / Unix)
+            are examples, you will have to adjust them
+            depending on the configuration of your system. 
+            The example value for the variable MODS is for a beta release of Ancestris.
+            For an official release replace "trunk" with the release number, for example "0.8",
+            Other components of the paths may vary depending on the configuration
+            of your operating system.
         </p>
-        <ul>
-            <li><p class="justify">
-                A family database in gedcom format.
-                </p>
-            </li>
-            <li><p class="justify">
-                A local copy of <a href="./mashup/mashup.arq">mashup.arq</a>
-                </p>
-            </li>
-            <li><p class="justify">
-                Rules: an empty file or a local copy from the 
-                <a href="rdf-examples.html">examples</a> that is
-                required for other quries you fancy.
-                </p>
-            </li>
-            <li><p class="justify">
-                A local variant of <a href="./mashup/mashup.bat">mashup.bat</a> (Windows) 
-                or <a href="./mashup/mashup.sh">mashup.sh</a> (Linux/Unix/Mac).
-                Adjust the value of the variables JENAROOT and MODS
-                according to the configuration of your system.
-                Also adjust the last two arguments of the last line.
-                </p><p class="justify">
-                The example value for the variable MODS is for a beta release of Ancestris.
-                For an official release replace "trunk" with the release number, for example "0.8",
-                Other components of the paths may vary depending on the configuration
-                of your operating system. The optional fourth argument for the final command specifies 
-                additional languages for DbPedia resources. For example "fr" or "fr|de".
-                </p>
-            </li>
-        </ul>
+<pre>
+java genjreports.rdf.GedcomToRdfConverter -rules slowRules.txt -uri http://my.dom.com/gc/ -gedcom family.ged > gedcom.ttl
+java genjreports.rdf.semweb.Selection mashup.arq muInput.tsv gedcom.ttl muOutput.ttl
+java genjreports.rdf.semweb.Mashup muInput.tsv http://my.dom.com/gc/places/ muOutput.ttl "de|fr"
+java genjreports.rdf.semweb.Selection classmates.arq report.txt gedcom.ttl muOutput.ttl *.rdf
+</pre>
         <p class="justify">
-            Intermediate results:
+            Note that the command line allows to run a query against
+            multiple sources. The report view runs queries just against
+            the converted gedcom. 
+            The mashup command builds a bridge between your family data
+            and data on the web. This command is not (yet?) available in the GUI.
+            With the <a href="./mashup/kennedyMashupInput.tsv">Kennedy</a>
+            example it may take 6 minutes to create 250KB. 
         </p>
-        <ul>
-            <li>
-                A family database converted to N3, TTL or RDF.
-            </li>
-            <li>
-                A tab separated file with GeoNameId's paired with
-                unique values of INDI:*:PLAC and/or FAM:*:PLAC.
-                An example with most places for the Kennedy tree:
-                <a href="./mashup/kennedyMashupInput.txt">mashupInput.txt</a>.
-                A third an forth column may contain from and to dates in the format "yyyy-mm-dd".
-                In that case the log will show the first ten persons from DbPedia related to the place
-                living in the period. Downloading these contemporaries is not yet implemented.
-            </li>
-        </ul>
         <p class="justify">
-            Result:
+            The commands and their files above are shown in the following diagram.
         </p>
-        <ul>
-            <li>
-                A <code>merged.n3</code> file for the arq command above.
-            </li>
-        </ul>
+        <img src="./images/chart.jpg"/>
+
+
+        <a name="#GeoNameIDs"></a>
+        <h3 class="ancestris_help_title">GeoNameIDs</h3>
+
+
+
         <p class="justify">
-            Steps to take:
+            GeoNameIDs can create a bridge between
+            your family data and the data on the web. 
+            The file <code>muOutput.ttl</code> in the diagram is the bridge,
+            the mashup command builds the bridge.
+            As long as the geo plugin does not provide an export,
+            you will have to create the file <code>muInput.tsv</code>
+            with the <a href="./mashup/mashup.arq">mashup query</a>.
+            The first time you run the query,
+            it won't produce GeoName URI's in the first column.
         </p>
-        <ul>
-            <li><p class="justify">
-                Convert the gedom and get the places with the mashup query using the GUI:
-                <a href="./images/initMashup.jpg">screenshot</a>.
-            </p></li>
-            <li><p class="justify">
-                Read the query results with a spreadsheet program:
-                Read with "|" as separator
-                (<a href="./images/barAsSeparator.jpg">screenshot</a>),
-                save with tabs as separator
-                (<a href="./images/saveAsTextWithTabs.jpg">screenshot</a>).
-                Delete the header rows and all quotes.
-            </p></li>
-            <li><p class="justify">
-                Put GeoNameIDs in the first column.
-                Keep the places in the second column,
-                together with all their jurisdictions and separators between them.
-                Search the places on www.geonames.org with the show-on-map button
-                The balloons with details shows a GeoNameId:
-                <a href="./images/FindGeoNamesID.jpg">screenshot</a>.
-            </p></li>
-            <li><p class="justify">
-                Run your version of the mashup.bat or mashup.sh, it takes two arguments:
-                mashupInput.txt mashupOutput.n3.
-                Execution for the Kennedy example took some 6 minutes
-                resulting into some 250KB of data.
-                </p>
-            </li>
-        </ul>
+
         <p class="justify">
-          Now you are ready to run any mashup query with the <code>arq</code> command
-          (shown under <a href="#batches">batches</a>) with both graph files.
-          For example <a href="./mashup/classmates.arq">classmates.arq</a>, 
-          <a href="./mashup/mashup.arq">mashup.arq</a> will now show 
-          coordinates.
+            The mashup command needs a tab separated file as input,
+            so make sure to run the mashup query with tsv as output.
+            You will have to add missing GeoNameIDs in the first column.
+            You might use a spreadheet program,
+            but make sure to save as a tab separated file,
+            <a href="./images/saveAsTextWithTabs.jpg">screenshot</a>.
+            Keep the places in the second column,
+            together with all their jurisdictions and separators between them.
+            Search the places on www.geonames.org with the show-on-map button
+            The balloons with details shows a GeoNameId:
         </p>
+        <img src="./images/FindGeoNamesID.jpg"/>.
+
 
         <a name="FAQ"></a>
         <h3 class="ancestris_help_title">FAQ</h3>
 
+        <dl>
+            <dt>What properties are commonly available?</dt>
+            <dd>Try the mashup queries:
+                <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
+                  </li><li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a>
+                  </li><li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a>
+                  </li><li><a href="./mashup/dbpediaProperties.arq">dbpediaProperties.arq</a>
+                  </li>
+                </ul>
+            </dd>
+            <dt>Does DbPedia have resources in my language?</dt>
+            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>
+                   Note that not all can be queried directly.
+                </p>
+            </dd>
+            <dt>Some places do have a GeoNameID in the mashup input, 
+                but <a href="./mashup/mashup.arq">mashup.arg</a> shows no coordinates.
+            </dt>
+            <dd><p>
+                The free services of GeoNames and DbPedia are not allways reliable
+                so you might have to repeat <a href="./mashup/mashup.bat">mashup.bat</a>
+                or <a href="./mashup/mashup.sh">mashup.sh</a>.
+                The mashup command is designed not to download from GeoNames again
+                what is already present. DbPedia is allways queried to create direct links,
+                but nothing is downloaded because it is too much and can be queried directly.
+            </p></dd>
+            <dt>...</dt>
+            <dd><p>...</p></dd>
+        </dl>
+        <p class="justify">FAQ about jena command utils</p>
         <dl>
             <dt>The <code>arq</code> command complains about prefixes.</dt>
             <dd><p>This might have one of the following causes:</p>
@@ -293,33 +249,6 @@
                    so save the XSL file in the same domain as your query result.
                 </p>
             </dd>
-            <dt>What properties are commonly available?</dt>
-            <dd>Try the mashup queries:
-                <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
-                  </li><li><a href="./mashup/geonamesRelatedEntities.arq">geonamesRelatedEntities.arq</a>
-                  </li><li><a href="./mashup/dbpediaRelatedEntities.arq">dbpediaRelatedEntities.arq</a>
-                  </li><li><a href="./mashup/dbpediaProperties.arq">dbpediaProperties.arq</a>
-                  </li>
-                </ul>
-            </dd>
-            <dt>Does DbPedia have resources in my language?</dt>
-            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>
-                   Note that not all can be queried directly.
-                </p>
-            </dd>
-            <dt>Some places do have a GeoNameID in the mashup input, 
-                but <a href="./mashup/mashup.arq">mashup.arg</a> shows no coordinates.
-            </dt>
-            <dd><p>
-                The free services of GeoNames and DbPedia are not allways reliable
-                so you might have to repeat <a href="./mashup/mashup.bat">mashup.bat</a>
-                or <a href="./mashup/mashup.sh">mashup.sh</a>.
-                The mashup command is designed not to download from GeoNames again
-                what is already present. DbPedia is allways queried to create direct links,
-                but nothing is downloaded because it is too much and can be queried directly.
-            </p></dd>
-            <dt>...</dt>
-            <dd><p>...</p></dd>
         </dl>
         <br>
         <br>
