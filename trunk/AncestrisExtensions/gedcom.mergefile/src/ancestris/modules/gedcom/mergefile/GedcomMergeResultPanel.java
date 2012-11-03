@@ -31,7 +31,7 @@ public final class GedcomMergeResultPanel extends JPanel {
         rightGedcomSources.setText(Integer.toString(rightGedcom.getEntities(Gedcom.SOUR).size()));
 
         MergedGedcomNameLabel.setText(MergedGedcom.getName());
-        MergedGedcomDateLabel.setText(MergedGedcom.getLastChange().getDateDisplayValue());
+        MergedGedcomDateLabel.setText(rightGedcom.getLastChange() != null ? MergedGedcom.getLastChange().getDateDisplayValue() : "");
         MergedGedcomIndividuals.setText(Integer.toString(MergedGedcom.getEntities(Gedcom.INDI).size()));
         MergedGedcomFamilies.setText(Integer.toString(MergedGedcom.getEntities(Gedcom.FAM).size()));
         MergedGedcomSubmitters.setText(Integer.toString(MergedGedcom.getEntities(Gedcom.SUBM).size()));
