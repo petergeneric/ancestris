@@ -5,9 +5,7 @@ import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
 import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
 import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.Entity;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.LinkedList;
 import org.openide.nodes.Children;
 
 /**
@@ -18,31 +16,29 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
 
     private DisplayEntityPanel leftDisplayEntityPanel;
     private DisplayEntityPanel rightDisplayEntityPanel;
-    private TreeMap<String, List<PotentialMatch<? extends Entity>>> matchesMap;
-    private List<PotentialMatch<? extends Entity>> potentialMatches;
-    private Iterator<String> tagIterator;
-    private Iterator<PotentialMatch<? extends Entity>> potentialMatchIterator;
+    LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList;
+    int linkedListIndex;
+    int linkedListSize;
 
     /**
      * Creates new form CheckDuplicatesPanel
      */
-    public CheckDuplicatesPanel(TreeMap<String, List<PotentialMatch<? extends Entity>>> matchesMap) {
+    public CheckDuplicatesPanel(LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList) {
         initComponents();
-        this.matchesMap = matchesMap;
-        tagIterator = matchesMap.keySet().iterator();
-        while (tagIterator.hasNext()) {
-            potentialMatches = matchesMap.get(tagIterator.next());
-            potentialMatchIterator = potentialMatches.iterator();
-            while (potentialMatchIterator.hasNext()) {
-                PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
-                Entity left = potentialMatch.getLeft();
-                leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+        this.matchesLinkedList = matchesLinkedList;
+        this.linkedListIndex = 0;
+        this.linkedListSize = matchesLinkedList.size() - 1;
+        if (linkedListSize > 0) {
+            PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
+            Entity left = potentialMatch.getLeft();
+            leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
 
-                Entity right = potentialMatch.getRight();
-                rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+            Entity right = potentialMatch.getRight();
+            rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-                jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
-                return;
+            jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+            if (linkedListIndex < linkedListSize) {
+                nextButton.setEnabled(true);
             }
         }
     }
@@ -63,8 +59,9 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
         rightEntityPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        mergeButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
+        previousButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -84,7 +81,7 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -105,7 +102,7 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -119,17 +116,27 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
 
         jLabel3.setText("jLabel3");
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        mergeButton.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.mergeButton.text")); // NOI18N
+        mergeButton.setEnabled(false);
+        mergeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                mergeButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        nextButton.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.nextButton.text")); // NOI18N
+        nextButton.setEnabled(false);
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                nextButtonActionPerformed(evt);
+            }
+        });
+
+        previousButton.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesPanel.class, "CheckDuplicatesPanel.previousButton.text")); // NOI18N
+        previousButton.setEnabled(false);
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButtonActionPerformed(evt);
             }
         });
 
@@ -139,67 +146,76 @@ public class CheckDuplicatesPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                .addGap(104, 104, 104)
+                .addComponent(previousButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(mergeButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(nextButton)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel3)
-                .addComponent(jButton1)
-                .addComponent(jButton2))
+                .addComponent(mergeButton)
+                .addComponent(nextButton)
+                .addComponent(previousButton))
         );
 
         add(jPanel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void mergeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mergeButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_mergeButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (potentialMatchIterator.hasNext()) {
-            PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
-            Entity left = potentialMatch.getLeft();
-            leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        linkedListIndex += 1;
+        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
+        Entity left = potentialMatch.getLeft();
+        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
 
-            Entity right = potentialMatch.getRight();
-            rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+        Entity right = potentialMatch.getRight();
+        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-            jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
-        } else {
-            while (tagIterator.hasNext()) {
-                potentialMatches = matchesMap.get(tagIterator.next());
-                potentialMatchIterator = potentialMatches.iterator();
-                if (potentialMatchIterator.hasNext()) {
-                    PotentialMatch<? extends Entity> potentialMatch = potentialMatchIterator.next();
-                    Entity left = potentialMatch.getLeft();
-                    leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
-
-                    Entity right = potentialMatch.getRight();
-                    rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
-
-                    jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
-                    return;
-                }
-
-                jButton2.setEnabled(false);
-            }
+        jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+        if (linkedListIndex >= linkedListSize) {
+            nextButton.setEnabled(false);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+        if (linkedListIndex > 0) {
+            previousButton.setEnabled(true);
+        }
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        linkedListIndex -= 1;
+        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
+        Entity left = potentialMatch.getLeft();
+        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
+        Entity right = potentialMatch.getRight();
+        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+        jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
+        if (linkedListIndex <= 0) {
+            previousButton.setEnabled(false);
+        }
+        if (linkedListIndex < linkedListSize) {
+            nextButton.setEnabled(true);
+        }
+    }//GEN-LAST:event_previousButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel leftEntityPanel;
+    private javax.swing.JButton mergeButton;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JButton previousButton;
     private javax.swing.JPanel rightEntityPanel;
     // End of variables declaration//GEN-END:variables
 }
