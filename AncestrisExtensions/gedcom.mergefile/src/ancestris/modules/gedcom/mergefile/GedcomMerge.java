@@ -82,13 +82,13 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         progressHandle.start();
 
         // Open Gedcom
-        leftGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
+        leftGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(leftGedcomFile));
         if (leftGedcomContext == null) {
             return;
         }
         leftGedcom = leftGedcomContext.getGedcom();
 
-        rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(leftGedcomFile));
+        rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
         if (rightGedcomContext == null) {
             return;
         }
@@ -102,26 +102,11 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         }
 
         /*
-         * Duplicate original Gedcom files
-         */
-        final Gedcom leftGedcomCopy = copyGedcom(leftGedcom);
-        linkGedcom(leftGedcomCopy);
-
-        final Gedcom rightGedcomCopy = copyGedcom(rightGedcom);
-        linkGedcom(rightGedcomCopy);
-
-        /*
-         * Re number all entities Ids for leftGedcom
+         * Re number all entities Ids
          */
         for (String entityType : Gedcom.ENTITIES) {
-            entityId.put(entityType, settingIDs(leftGedcomCopy, entityType, 1));
-        }
-
-        /*
-         * Re number all entities Ids for rightGedcom
-         */
-        for (String entityType : Gedcom.ENTITIES) {
-            settingIDs(rightGedcomCopy, entityType, entityId.get(entityType));
+            int lastID = settingIDs(leftGedcom, entityType, 1);
+            settingIDs(rightGedcom, entityType, lastID);
         }
 
         /*
@@ -129,37 +114,38 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
          */
         int[] placeMap = mapPlaceFormat(leftGedcom, rightGedcom);
         if (placeMap != null) {
-            remapPlaces(rightGedcomCopy.getEntities(), placeMap);
+            remapPlaces(rightGedcom.getEntities(), placeMap);
         }
         try {
+            // Copy Entities by type without recording change
+            for (String entityType : Gedcom.ENTITIES) {
+
+                Collection<? extends Entity> leftGedcomEntities = leftGedcom.getEntities(entityType);
+                for (Entity srcEntity : leftGedcomEntities) {
+                    try {
+                        Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
+                        copyPropertiesCluster(srcEntity, destEntity);
+                    } catch (GedcomException ex) {
+                        LOG.log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                Collection<? extends Entity> rightGedcomEntities = rightGedcom.getEntities(entityType);
+                for (Entity srcEntity : rightGedcomEntities) {
+                    try {
+                        Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
+                        copyPropertiesCluster(srcEntity, destEntity);
+                    } catch (GedcomException ex) {
+                        LOG.log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            // We need to record the change date of the gedcom
             mergedGedcom.doUnitOfWork(new UnitOfWork() {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-
-                    List<Entity> leftGedcomEntities = leftGedcomCopy.getEntities();
-                    for (Entity srcEntity : leftGedcomEntities) {
-                        try {
-                            Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
-                            copyPropertiesCluster(srcEntity, destEntity);
-                        } catch (GedcomException ex) {
-                            LOG.log(Level.SEVERE, null, ex);
-                        }
-                    }
-
-                    /*
-                     * Copy all rightGedcom entities in mergedGedcom
-                     */
-                    List<Entity> rightGedcomEntities = rightGedcomCopy.getEntities();
-                    for (Entity srcEntity : rightGedcomEntities) {
-                        try {
-                            Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
-                            copyPropertiesCluster(srcEntity, destEntity);
-                        } catch (GedcomException ex) {
-                            LOG.log(Level.SEVERE, null, ex);
-                        }
-                    }
-
                     // Create submitter
                     AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
 
@@ -231,66 +217,6 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             // and reopens the file
             GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
         }
-    }
-
-    /**
-     * duplicate a gedcom object
-     */
-    private Gedcom copyGedcom(Gedcom srcGedcom) {
-        File GedcomFile = new File(srcGedcom.getOrigin().getFile().getAbsolutePath() + "~");
-        if (GedcomFile.exists()) {
-            GedcomFile.delete();
-        }
-
-        Gedcom destGedcom = null;
-
-        try {
-            destGedcom = new Gedcom(Origin.create(new URL("file", "", GedcomFile.getAbsolutePath())));
-            destGedcom.setEncoding(srcGedcom.getEncoding());
-            destGedcom.setLanguage(srcGedcom.getLanguage());
-            destGedcom.setPassword(srcGedcom.getPassword());
-            destGedcom.setPlaceFormat(srcGedcom.getPlaceFormat());
-
-            // Get all entities from srcGedcom and copy them to destGedcom
-            List<Entity> originEntities = srcGedcom.getEntities();
-            for (Entity srcEntity : originEntities) {
-                LOG.log(Level.INFO, "copying entity {0} Id {1}", new Object[]{srcEntity.getTag(), srcEntity.getId()});
-                Entity destEntity = destGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
-                copyPropertiesCluster(srcEntity, destEntity);
-            }
-        } catch (MalformedURLException ex) {
-            destGedcom = null;
-            LOG.log(Level.SEVERE, null, ex);
-        } catch (GedcomException ex) {
-            destGedcom = null;
-            LOG.log(Level.SEVERE, null, ex);
-        }
-
-        return destGedcom;
-    }
-
-    /**
-     * Links Gedcom XReferences
-     */
-    private boolean linkGedcom(Gedcom gedcomX) {
-        // Links gedcom XReferences
-        List<Entity> ents = gedcomX.getEntities();
-        for (Iterator<Entity> it = ents.iterator(); it.hasNext();) {
-            Entity ent = it.next();
-            List<PropertyXRef> ps = ent.getProperties(PropertyXRef.class);
-            for (Iterator<PropertyXRef> it2 = ps.iterator(); it2.hasNext();) {
-                PropertyXRef xref = it2.next();
-                Property target = xref.getTarget();
-                if (target == null) {
-                    try {
-                        xref.link();
-                    } catch (GedcomException e) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     /**
@@ -368,9 +294,12 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         Property[] srcProperties = srcProperty.getProperties();
 
         for (Property property : srcProperties) {
-            // Xref properties shall not be copy
-            if (!property.getTag().equals("XREF")) {
-                copyPropertiesCluster(property, destProperty.addProperty(property.getTag(), property.getValue()));
+            if (property.getTag().equals("CHAN")) {
+                Property addedProperty = destProperty.addProperty(property.getTag(), property.getValue());
+                ((PropertyChange)addedProperty).setTime(((PropertyChange)property).getTime());
+            } else if (!property.getTag().equals("XREF")) { // Xref properties shall not be copy
+                Property addedProperty = destProperty.addProperty(property.getTag(), property.getValue());
+                copyPropertiesCluster(property, addedProperty);
             }
         }
     }
