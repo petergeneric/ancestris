@@ -7,4 +7,5 @@
     <mapID target="genjreports.rdf.mashup" url="rdf-mashup.html"/>
     <mapID target="genjreports.rdf.submit" url="rdf-submit.html"/>
     <mapID target="genjreports.rdf.todo" url="rdf-todo.html"/>
+    <mapID target="genjreports.rdf.releaseNotes" url="rdf-releaseNotes.html"/>
 </map>
