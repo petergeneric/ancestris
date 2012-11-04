@@ -24,8 +24,9 @@ public abstract class Record implements Cloneable{
     protected FieldSex indiSex;
     protected FieldAge indiAge;
     protected FieldDate indiBirthDate;
+    protected FieldPlace indiBirthPlace;
     protected FieldOccupation indiOccupation;
-    protected FieldPlace indBirthiPlace;
+    protected FieldPlace indiResidence;
     protected FieldComment indiComment;
     
     protected FieldSimpleValue indiMarriedFirstName;
@@ -33,11 +34,13 @@ public abstract class Record implements Cloneable{
     //protected FieldSex indiMarriedSex;
     protected FieldComment indiMarriedComment;
     protected FieldOccupation indiMarriedOccupation;
+    protected FieldPlace indiMarriedResidence;
     protected FieldDead indiMarriedDead;
 
     protected FieldSimpleValue indiFatherFirstName;
     protected FieldSimpleValue indiFatherLastName;
     protected FieldOccupation indiFatherOccupation;
+    protected FieldPlace indiFatherResidence;
     protected FieldAge indiFatherAge;
     protected FieldDead indiFatherDead;
     protected FieldComment indiFatherComment;
@@ -45,6 +48,7 @@ public abstract class Record implements Cloneable{
     protected FieldSimpleValue indiMotherFirstName;
     protected FieldSimpleValue indiMotherLastName;
     protected FieldOccupation indiMotherOccupation;
+    protected FieldPlace indiMotherResidence;
     protected FieldAge indiMotherAge;
     protected FieldDead indiMotherDead;
     protected FieldComment indiMotherComment;
@@ -54,8 +58,9 @@ public abstract class Record implements Cloneable{
     protected FieldSex wifeSex;
     protected FieldAge wifeAge;
     protected FieldDate wifeBirthDate;
-    protected FieldOccupation wifeOccupation;
     protected FieldPlace wifeBirthPlace;
+    protected FieldOccupation wifeOccupation;
+    protected FieldPlace wifeResidence;
     protected FieldComment wifeComment;
     
     protected FieldSimpleValue wifeMarriedFirstName;
@@ -63,11 +68,13 @@ public abstract class Record implements Cloneable{
     //protected FieldSex wifeMarriedSex;
     protected FieldComment wifeMarriedComment;
     protected FieldOccupation wifeMarriedOccupation;
+    protected FieldPlace wifeMarriedResidence;
     protected FieldDead wifeMarriedDead;
     
     protected FieldSimpleValue wifeFatherFirstName;
     protected FieldSimpleValue wifeFatherLastName;
     protected FieldOccupation wifeFatherOccupation;
+    protected FieldPlace wifeFatherResidence;
     protected FieldAge wifeFatherAge;
     protected FieldDead wifeFatherDead;
     protected FieldComment wifeFatherComment;
@@ -75,6 +82,7 @@ public abstract class Record implements Cloneable{
     protected FieldSimpleValue wifeMotherFirstName;
     protected FieldSimpleValue wifeMotherLastName;
     protected FieldOccupation wifeMotherOccupation;
+    protected FieldPlace wifeMotherResidence;
     protected FieldAge wifeMotherAge;
     protected FieldDead wifeMotherDead;
     protected FieldComment wifeMotherComment;
@@ -205,13 +213,17 @@ public abstract class Record implements Cloneable{
     }
 
     public FieldPlace getIndiPlace() {
-        return indBirthiPlace;
+        return indiBirthPlace;
     }
 
     public FieldOccupation getIndiOccupation() {
         return indiOccupation;
     }
 
+    public FieldPlace getIndiResidence() {
+        return indiResidence;
+    }
+    
     public FieldSimpleValue getIndiComment() {
         return indiComment;
     }
@@ -235,6 +247,10 @@ public abstract class Record implements Cloneable{
 
     public FieldOccupation getIndiMarriedOccupation() {
         return indiMarriedOccupation;
+    }
+
+    public FieldPlace getIndiMarriedResidence() {
+        return indiMarriedResidence;
     }
 
     public FieldSimpleValue getIndiMarriedComment() {
@@ -262,6 +278,10 @@ public abstract class Record implements Cloneable{
         return indiFatherOccupation;
     }
 
+    public FieldPlace getIndiFatherResidence() {
+        return indiFatherResidence;
+    }
+
     public FieldSimpleValue getIndiFatherComment() {
         return indiFatherComment;
     }
@@ -285,6 +305,10 @@ public abstract class Record implements Cloneable{
 
     public FieldOccupation getIndiMotherOccupation() {
         return indiMotherOccupation;
+    }
+
+    public FieldPlace getIndiMotherResidence() {
+        return indiMotherResidence;
     }
 
     public FieldSimpleValue getIndiMotherComment() {
@@ -320,6 +344,10 @@ public abstract class Record implements Cloneable{
         return wifeOccupation;
     }
 
+    public FieldPlace getWifeResidence() {
+        return wifeResidence;
+    }
+
     public FieldSimpleValue getWifeComment() {
         return wifeComment;
     }
@@ -343,6 +371,10 @@ public abstract class Record implements Cloneable{
 
     public FieldOccupation getWifeMarriedOccupation() {
         return wifeMarriedOccupation;
+    }
+
+    public FieldPlace getWifeMarriedResidence() {
+        return wifeMarriedResidence;
     }
 
     public FieldSimpleValue getWifeMarriedComment() {
@@ -370,6 +402,10 @@ public abstract class Record implements Cloneable{
         return wifeFatherOccupation;
     }
 
+    public FieldPlace getWifeFatherResidence() {
+        return wifeFatherResidence;
+    }
+
     public FieldSimpleValue getWifeFatherComment() {
         return wifeFatherComment;
     }
@@ -392,6 +428,10 @@ public abstract class Record implements Cloneable{
 
     public FieldOccupation getWifeMotherOccupation() {
         return wifeMotherOccupation;
+    }
+
+    public FieldPlace getWifeMotherResidence() {
+        return wifeMotherResidence;
     }
 
     public FieldSimpleValue getWifeMotherComment() {
@@ -527,10 +567,13 @@ public abstract class Record implements Cloneable{
                     field = indiBirthDate;
                     break;
                 case indiPlace:
-                    field = indBirthiPlace;
+                    field = indiBirthPlace;
                     break;
                 case indiOccupation:
                     field = indiOccupation;
+                    break;
+                case indiResidence:
+                    field = indiResidence;
                     break;
                 case indiComment:
                     field = indiComment;
@@ -551,6 +594,9 @@ public abstract class Record implements Cloneable{
                 case indiMarriedOccupation:
                     field = indiMarriedOccupation;
                     break;
+                case indiMarriedResidence:
+                    field = indiMarriedResidence;
+                    break;
                 case indiMarriedComment:
                     field = indiMarriedComment;
                     break;
@@ -570,6 +616,9 @@ public abstract class Record implements Cloneable{
                 case indiFatherOccupation:
                     field = indiFatherOccupation;
                     break;
+                case indiFatherResidence:
+                    field = indiFatherResidence;
+                    break;
                 case indiFatherComment:
                     field = indiFatherComment;
                     break;
@@ -587,6 +636,9 @@ public abstract class Record implements Cloneable{
                     break;
                 case indiMotherOccupation:
                     field = indiMotherOccupation;
+                    break;
+                case indiMotherResidence:
+                    field = indiMotherResidence;
                     break;
                 case indiMotherComment:
                     field = indiMotherComment;
@@ -614,6 +666,9 @@ public abstract class Record implements Cloneable{
                 case wifeOccupation:
                     field = wifeOccupation;
                     break;
+                case wifeResidence:
+                    field = wifeResidence;
+                    break;
                 case wifeComment:
                     field = wifeComment;
                     break;
@@ -632,6 +687,9 @@ public abstract class Record implements Cloneable{
 //                    break;
                 case wifeMarriedOccupation:
                     field = wifeMarriedOccupation;
+                    break;
+                case wifeMarriedResidence:
+                    field = wifeMarriedResidence;
                     break;
                 case wifeMarriedComment:
                     field = wifeMarriedComment;
@@ -652,6 +710,9 @@ public abstract class Record implements Cloneable{
                 case wifeFatherOccupation:
                     field = wifeFatherOccupation;
                     break;
+                case wifeFatherResidence:
+                    field = wifeFatherResidence;
+                    break;
                 case wifeFatherComment:
                     field = wifeFatherComment;
                     break;
@@ -669,6 +730,9 @@ public abstract class Record implements Cloneable{
                     break;
                 case wifeMotherOccupation:
                     field = wifeMotherOccupation;
+                    break;
+                case wifeMotherResidence:
+                    field = wifeMotherResidence;
                     break;
                 case wifeMotherComment:
                     field = wifeMotherComment;
@@ -785,7 +849,7 @@ public abstract class Record implements Cloneable{
     ///////////////////////////////////////////////////////////////////////////
     public void setIndi(String firstName, String lastName, String stringSexe,
             String stringAge, String stringBirthDate,
-            String stringBirthPlace, String profession, String comment) {
+            String stringBirthPlace, String profession, String residence, String comment) {
         indiFirstName.setValue(firstName.trim());
         indiLastName.setValue(lastName.trim());
         indiSex.setValue(stringSexe.trim());
@@ -797,41 +861,48 @@ public abstract class Record implements Cloneable{
             // la date de naissance n'est pas utilisée pour une naissance car c'est la même que la date de l'evenement
             indiBirthDate.setValue(stringBirthDate.trim());
         }
-        if (indBirthiPlace != null) {
+        if (indiBirthPlace != null) {
             // le lieu n'est pas utilisée pour une naissance
-            indBirthiPlace.setValue(stringBirthPlace.trim());
+            indiBirthPlace.setValue(stringBirthPlace.trim());
         }
         if (indiOccupation != null) {
             // la profession n'est pas utilisée pour une naissance
             indiOccupation.setValue(profession.trim());
         }
+        if (indiResidence != null) {
+            // la profession n'est pas utilisée pour une naissance
+            indiResidence.setValue(residence.trim());
+        }
         indiComment.setValue(comment.trim());
     }
 
-    public void setIndiMarried(String firstName, String lastName, /*String stringSexe, */String profession, String comment, String dead) {
+    public void setIndiMarried(String firstName, String lastName, /*String stringSexe, */String profession, String residence, String comment, String dead) {
         indiMarriedFirstName.setValue(firstName.trim());
         indiMarriedLastName.setValue(lastName.trim());
         //indiMarriedSex.setValue(stringSexe.trim());
         indiMarriedOccupation.setValue(profession.trim());
+        indiMarriedResidence.setValue(residence.trim());
         indiMarriedComment.setValue(comment.trim());
         if (indiMarriedDead != null) {
             indiMarriedDead.setValue(dead.trim());
         }
     }
 
-    public void setIndiFather(String firstName, String lastName, String profession, String comment, String dead, String age) {
+    public void setIndiFather(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
         indiFatherFirstName.setValue(firstName.trim());
         indiFatherLastName.setValue(lastName.trim());
         indiFatherOccupation.setValue(profession.trim());
+        indiFatherResidence.setValue(residence.trim());
         indiFatherComment.setValue(comment.trim());
         indiFatherDead.setValue(dead.trim());
         indiFatherAge.setValue(age.trim());
     }
 
-    public void setIndiMother(String firstName, String lastName, String profession, String comment, String dead, String age) {
+    public void setIndiMother(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
         indiMotherFirstName.setValue(firstName.trim());
         indiMotherLastName.setValue(lastName.trim());
         indiMotherOccupation.setValue(profession.trim());
+        indiMotherResidence.setValue(residence.trim());
         indiMotherComment.setValue(comment.trim());
         indiMotherDead.setValue(dead.trim());
         indiMotherAge.setValue(age.trim());
@@ -839,7 +910,7 @@ public abstract class Record implements Cloneable{
 
     public void setWife(String firstName, String lastName, String sex,
             String stringAge, String stringBirthDate,
-            String stringBirthPlace, String profession, String comment) {
+            String stringBirthPlace, String profession, String residence, String comment) {
         wifeFirstName.setValue(firstName.trim());
         wifeLastName.setValue(lastName.trim());
         if (wifeSex != null) {
@@ -850,31 +921,35 @@ public abstract class Record implements Cloneable{
         wifeBirthDate.setValue(stringBirthDate.trim());
         wifeBirthPlace.setValue(stringBirthPlace.trim());
         wifeOccupation.setValue(profession.trim());
+        wifeResidence.setValue(residence.trim());
         wifeComment.setValue(comment.trim());
     }
 
-    public void setWifeMarried(String firstName, String lastName, /*String stringSexe, */String profession, String comment, String dead) {
+    public void setWifeMarried(String firstName, String lastName, /*String stringSexe, */String profession, String residence, String comment, String dead) {
         wifeMarriedFirstName.setValue(firstName.trim());
         wifeMarriedLastName.setValue(lastName.trim());
         //wifeMarriedSex.setValue(stringSexe.trim());
         wifeMarriedOccupation.setValue(profession.trim());
+        wifeMarriedResidence.setValue(residence.trim());
         wifeMarriedComment.setValue(comment.trim());
         wifeMarriedDead.setValue(dead.trim());
     }
 
-    public void setWifeFather(String firstName, String lastName, String profession, String comment, String dead, String age) {
+    public void setWifeFather(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
         wifeFatherFirstName.setValue(firstName.trim());
         wifeFatherLastName.setValue(lastName.trim());
         wifeFatherOccupation.setValue(profession.trim());
+        wifeFatherResidence.setValue(residence.trim());
         wifeFatherComment.setValue(comment.trim());
         wifeFatherDead.setValue(dead.trim());
         wifeFatherAge.setValue(age.trim());
     }
 
-    public void setWifeMother(String firstName, String lastName, String profession, String comment, String dead, String age) {
+    public void setWifeMother(String firstName, String lastName, String profession, String residence, String comment, String dead, String age) {
         wifeMotherFirstName.setValue(firstName.trim());
         wifeMotherLastName.setValue(lastName.trim());
         wifeMotherOccupation.setValue(profession.trim());
+        wifeMotherResidence.setValue(residence.trim());
         wifeMotherComment.setValue(comment.trim());
         wifeMotherDead.setValue(dead.trim());
         wifeMotherAge.setValue(age.trim());

@@ -82,7 +82,9 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt X"), this);
         // je crée le racourci pour copier le nom de l'épouse dans le nom du père de l'épouse
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt Y"), this);
-        // je crée le racourci pour copier la date de l'evenement dans la date de naissaance
+        // je crée le racourci pour donner le focus a l'age de l'individu
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt A"), this);
+        // je crée le racourci pour copier la date de l'evenement dans la date de naissance
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt B"), this);
         // je crée le racourci pour copier la meme valeur que celle de l'enregistrement précédent
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS , InputEvent.ALT_MASK), this);
@@ -106,6 +108,8 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                     copyIndiNameToIndiFatherName();
                 } else if ( actionEvent.getActionCommand().equals("y") ) {
                     copyWifeNameToWifeFatherName();
+                } else if ( actionEvent.getActionCommand().equals("a") ) {
+                    giveFocusToIndiAge();
                 } else if ( actionEvent.getActionCommand().equals("b") ) {
                     copyEventDateToIndiBirthDate();
                 } else if ( actionEvent.getActionCommand().equals("=") ) {
@@ -161,6 +165,33 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
         }
     }
 
+     /**
+     * Deplace le focus sur l'ag de l'individu
+     */
+    private void giveFocusToIndiAge() {
+        
+        Bean indiAge = null;
+
+        // je cherche le champ contenant le nom de l'individu
+        for(Component component : fieldsPanel.getComponents()) {
+            if ( component instanceof Bean) {
+                Bean bean = ((Bean) component);
+                if ( bean.getBeanField().getFieldType() == Field.FieldType.indiAge ) {
+                    indiAge = bean;
+                    break;
+                }
+            }
+        }
+
+        // je deplace vers le bean
+        if ( indiAge != null  ) {
+            // je donne le focus au bean indiAge
+            indiAge.requestFocusInWindow();
+        } else {
+            // j'emets un beep
+            Toolkit.getDefaultToolkit().beep();
+        }
+    }
 
     /**
      * Copie le nom de l'individu dans le nom du pere de l'individu
@@ -465,6 +496,10 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                         break;
 
                     case indiAge:
+                        label += " (Alt-A)";
+                        bean = new BeanAge();
+                        break;
+
                     case indiFatherAge:
                     case indiMotherAge:
                     case wifeAge:
@@ -499,6 +534,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
                     case indiPlace:
                     case wifePlace:
+                    case indiResidence:
+                    case indiMarriedResidence:
+                    case indiFatherResidence:
+                    case indiMotherResidence:
+                    case wifeResidence:
+                    case wifeMarriedResidence:
+                    case wifeFatherResidence:
+                    case wifeMotherResidence:                    
                         bean = new BeanPlace(dataManager.getCompletionProvider());
                         break;
 

@@ -20,10 +20,10 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/2003");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead", "72y");
-                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "marriedcomment", "dead");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
+                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "marriedcomment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -36,7 +36,7 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/1988");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiplace", "indioccupation", "indicomment");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiplace", "indioccupation", "indiResidence", "indicomment");
                 //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
                 //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");

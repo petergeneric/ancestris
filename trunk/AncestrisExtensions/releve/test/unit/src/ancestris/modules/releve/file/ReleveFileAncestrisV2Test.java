@@ -132,9 +132,9 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         birth.setEventDate("01/01/2000");
         birth.setCote("cote");
         birth.setFreeComment("photo");
-        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "", "place", "occupation", "comment");
-        birth.setIndiFather("fathername", "fatherlastname", "occupation", "comment", "dead", "70y");
-        birth.setIndiMother("mothername", "motherlastname", "occupation", "comment", "dead", "72y");
+        birth.setIndi("Élisabeth-Adélaîde", "lastname", "M", "", "", "place", "occupation", "indiResidence",  "comment");
+        birth.setIndiFather("fathername", "fatherlastname", "occupation", "indiFatherResidence", "comment", "dead", "70y");
+        birth.setIndiMother("mothername", "motherlastname", "occupation", "indiMotherResidence", "comment", "dead", "72y");
         birth.setWitness1("wfirstname", "wlastname", "woccupation", "wcomment");
         birth.setWitness2("wfirstname", "wlastname", "woccupation", "wcomment");
         birth.setWitness3("wfirstname", "wlastname", "woccupation", "wcomment");
@@ -154,8 +154,17 @@ public class ReleveFileAncestrisV2Test extends TestCase {
             if (birth.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
             } else {
-                assertNotNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
-                assertEquals(String.valueOf(fieldType.ordinal()), birth.getField(fieldType).toString(), birth2.getField(fieldType).toString());
+                if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
+                     || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
+                     || fieldType == FieldType.wifeResidence || fieldType == FieldType.wifeMarriedResidence
+                     || fieldType == FieldType.wifeFatherResidence || fieldType == FieldType.wifeMotherResidence
+                     ) {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), "", birth2.getField(fieldType).toString());
+                } else {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), birth.getField(fieldType).toString(), birth2.getField(fieldType).toString());
+                }
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -180,14 +189,14 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         marriage.setEventDate("01/01/2000");
         marriage.setCote("cote");
         marriage.setFreeComment("photo");
-        marriage.setIndi("indifirstname", "indilastname", "M", "indiage", "01/02/1990", "indiplace", "indioccupation", "indicomment");
-        marriage.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
-        marriage.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
-        marriage.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");
-        marriage.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifecomment");
-        marriage.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "wifemarrieddead");
-        marriage.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifefathercomment", "wifefatherdead", "70y");
-        marriage.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifemothercomment", "wifemotherdead", "72y");
+        marriage.setIndi("indifirstname", "indilastname", "M", "indiage", "01/02/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
+        marriage.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
+        marriage.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
+        marriage.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
+        marriage.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
+        marriage.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "wifemarrieddead");
+        marriage.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "wifefatherdead", "70y");
+        marriage.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "wifemotherdead", "72y");
         marriage.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         marriage.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         marriage.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -207,8 +216,17 @@ public class ReleveFileAncestrisV2Test extends TestCase {
             if (marriage.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
             } else {
-                assertNotNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
-                assertEquals(String.valueOf(fieldType.ordinal()), marriage.getField(fieldType).toString(), marriage2.getField(fieldType).toString());
+                if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
+                     || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
+                     || fieldType == FieldType.wifeResidence || fieldType == FieldType.wifeMarriedResidence
+                     || fieldType == FieldType.wifeFatherResidence || fieldType == FieldType.wifeMotherResidence
+                     ) {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), "", marriage2.getField(fieldType).toString());
+                } else {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), marriage2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), marriage.getField(fieldType).toString(), marriage2.getField(fieldType).toString());
+                }
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -234,10 +252,10 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         death.setCote("cote");
         death.setGeneralComment("generalcomment");
         death.setFreeComment("photo");
-        death.setIndi("indifirstname", "indilastname", "M", "10y", "01/01/1990", "indiplace", "indioccupation", "indicomment");
-        death.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
-        death.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
-        death.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");
+        death.setIndi("indifirstname", "indilastname", "M", "10y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
+        death.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
+        death.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
+        death.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
         death.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         death.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         death.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -257,8 +275,17 @@ public class ReleveFileAncestrisV2Test extends TestCase {
             if (death.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
             } else {
-                assertNotNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
-                assertEquals(String.valueOf(fieldType.ordinal()), death.getField(fieldType).getValue(), death2.getField(fieldType).getValue());
+                if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
+                     || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
+                     || fieldType == FieldType.wifeResidence || fieldType == FieldType.wifeMarriedResidence
+                     || fieldType == FieldType.wifeFatherResidence || fieldType == FieldType.wifeMotherResidence
+                     ) {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), "", death2.getField(fieldType).toString());
+                } else {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), death2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), death.getField(fieldType).getValue(), death2.getField(fieldType).getValue());
+                }
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
@@ -286,14 +313,14 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         record.setEventType("eventname");
         record.setGeneralComment("generalcomment");
         record.setFreeComment("photo");
-        record.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indicomment");
-        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indimarriedcomment", "indimarrieddead");
-        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indifathercomment", "indifatherdead", "70y");
-        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indimothercomment", "indimotherdead", "72y");
-        record.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifecomment");
-        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifemarriedcomment", "wifemarrieddead");
-        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifefathercomment", "wifefatherdead", "70y");
-        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifemothercomment", "wifemotherdead", "72y");
+        record.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
+        record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
+        record.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
+        record.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
+        record.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
+        record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "wifemarrieddead");
+        record.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "wifefatherdead", "70y");
+        record.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "wifemotherdead", "72y");
         record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
         record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -313,8 +340,17 @@ public class ReleveFileAncestrisV2Test extends TestCase {
             if (record.getField(fieldType) == null) {
                 assertNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
             } else {
-                assertNotNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
-                assertEquals(String.valueOf(fieldType.ordinal()), record.getField(fieldType).toString(), record2.getField(fieldType).toString());
+                if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
+                     || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
+                     || fieldType == FieldType.wifeResidence || fieldType == FieldType.wifeMarriedResidence
+                     || fieldType == FieldType.wifeFatherResidence || fieldType == FieldType.wifeMotherResidence
+                     ) {
+                    assertNotNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), "", record2.getField(fieldType).toString());
+                } else { 
+                    assertNotNull(String.valueOf(fieldType.ordinal()), record2.getField(fieldType));
+                    assertEquals(String.valueOf(fieldType.ordinal()), record.getField(fieldType).toString(), record2.getField(fieldType).toString());
+                }
             }
         }
         assertEquals("place count", 1, fb.getPlaces().size());
