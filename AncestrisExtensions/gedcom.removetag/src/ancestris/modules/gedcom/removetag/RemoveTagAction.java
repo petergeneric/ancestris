@@ -20,10 +20,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
+@ActionID(id = "ancestris.modules.gedcom.removetag.RemoveTagAction",
+category = "Tools")
+@ActionRegistration(iconBase = "ancestris/modules/gedcom/removetag/RemoveTagIcon.png",
+iconInMenu = true,
+displayName = "#CTL_RemoveTagAction")
+@ActionReference(path = "Menu/Tools/Gedcom")
 public final class RemoveTagAction implements ActionListener {
 
     @Override
@@ -37,7 +46,7 @@ public final class RemoveTagAction implements ActionListener {
             NotifyDescriptor notifyDescriptor = new NotifyDescriptor(
                     removeTagPanel, // instance of your panel
                     NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagAction"), // title of the dialog
-                    NotifyDescriptor.OK_CANCEL_OPTION, 
+                    NotifyDescriptor.OK_CANCEL_OPTION,
                     NotifyDescriptor.QUESTION_MESSAGE, // ... of a question type => a question mark icon
                     null,
                     NotifyDescriptor.OK_OPTION // default option is "Ok"
@@ -50,7 +59,7 @@ public final class RemoveTagAction implements ActionListener {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            new GedcomUtilities(gedcom).deleteTags(tag, selectedentity);
+                            GedcomUtilities.deleteTags(gedcom, tag, selectedentity);
                         }
                     }); // end of doUnitOfWork
                 } catch (GedcomException ex) {

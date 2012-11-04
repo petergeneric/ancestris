@@ -20,10 +20,19 @@ import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
+@ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction",
+category = "Tools")
+@ActionRegistration(iconBase = "ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png",
+iconInMenu = true,
+displayName = "#CTL_GenerateSosaAction")
+@ActionReference(path = "Menu/Tools/Gedcom")
 public final class GenerateSosaAction implements ActionListener {
 
     Gedcom myGedcom = null;
