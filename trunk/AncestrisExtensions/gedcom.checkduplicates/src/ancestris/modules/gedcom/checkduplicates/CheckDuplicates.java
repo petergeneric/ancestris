@@ -80,7 +80,7 @@ public class CheckDuplicates implements Runnable {
                         dialog.setModal(false);
                         dialog.toFront();
                     } else {
-                        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.noDuplicates"), NotifyDescriptor.INFORMATION_MESSAGE);
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicates.noDuplicates"), NotifyDescriptor.INFORMATION_MESSAGE);
                         DialogDisplayer.getDefault().notify(nd);
 
                     }
