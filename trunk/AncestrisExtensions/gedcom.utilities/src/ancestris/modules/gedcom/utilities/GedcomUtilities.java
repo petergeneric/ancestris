@@ -11,6 +11,7 @@
  */
 /**
  * Extract from GenJ - Report - ReportToolBox
+ *
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 1.0
  *
@@ -46,13 +47,8 @@ public class GedcomUtilities {
         Gedcom.REPO
     };
     private final static Logger LOG = Logger.getLogger(GedcomUtilities.class.getName(), null);
-    private Gedcom gedcom = null;
 
-    public GedcomUtilities(Gedcom gedcom) {
-        this.gedcom = gedcom;
-    }
-
-    public void deleteTags(String tagToRemove, int entityType) {
+    public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType) {
         LOG.log(Level.INFO, "deleting_tag {0}", tagToRemove);
 
         Collection<? extends Entity> entities;
@@ -85,7 +81,7 @@ public class GedcomUtilities {
         LOG.log(Level.INFO, "DeletedNb {0}", iCounter);
     }
 
-    private void getPropertiesRecursively(Property parent, List<Property> props, String tag) {
+    private static void getPropertiesRecursively(Property parent, List<Property> props, String tag) {
         Property[] children = parent.getProperties();
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];

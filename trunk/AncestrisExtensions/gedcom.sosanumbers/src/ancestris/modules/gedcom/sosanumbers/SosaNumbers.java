@@ -45,8 +45,8 @@ public class SosaNumbers implements GedcomListener {
         final DecimalFormat formatNbrs = new DecimalFormat("0");
 
         // Clean gedcom file for all SOSA and SOSA_ABBO tags
-        new GedcomUtilities(gedcom).deleteTags(SOSA_TAG, GedcomUtilities.ENT_INDI);
-        new GedcomUtilities(gedcom).deleteTags(DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
+        GedcomUtilities.deleteTags(gedcom, SOSA_TAG, GedcomUtilities.ENT_INDI);
+        GedcomUtilities.deleteTags(gedcom, DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
 
         try {
             Indi wife;
