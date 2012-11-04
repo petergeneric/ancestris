@@ -1,5 +1,6 @@
 package ancestris.modules.gedcom.checkduplicates;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.gedcom.utilities.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -15,12 +16,14 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lemovice left and right entities could be the same.
  */
-public class CheckDuplicates implements Runnable {
+@ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
+public class CheckDuplicates extends AncestrisPlugin implements Runnable {
 
     private static final Logger log = Logger.getLogger(CheckDuplicates.class.getName());
     private Gedcom leftGedcom;
@@ -30,12 +33,17 @@ public class CheckDuplicates implements Runnable {
         {
             put(Gedcom.INDI, new IndiMatcher());
             put(Gedcom.FAM, new FamMatcher());
-            put(Gedcom.NOTE, new NoteMatcher());
-            put(Gedcom.SOUR, new SourceMatcher());
-            put(Gedcom.REPO, new RepositoryMatcher());
+//            put(Gedcom.NOTE, new NoteMatcher());
+//            put(Gedcom.SOUR, new SourceMatcher());
+//            put(Gedcom.REPO, new RepositoryMatcher());
             put(Gedcom.SUBM, new SubmitterMatcher());
         }
     };
+    
+    public CheckDuplicates() {
+        this.leftGedcom = null;
+        this.rightGedcom = null;
+    }
 
     public CheckDuplicates(Gedcom leftGedcom, Gedcom rightGedcom) {
         this.leftGedcom = leftGedcom;
@@ -45,6 +53,9 @@ public class CheckDuplicates implements Runnable {
     @Override
     public void run() {
         final LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList<PotentialMatch<? extends Entity>>();
+        if (leftGedcom == null || rightGedcom == null) {
+            return;
+        }
         try {
             for (String tag : entitiesMatchers.keySet()) {
                 List<? extends Entity> leftEntity = new ArrayList(leftGedcom.getEntities(tag));
