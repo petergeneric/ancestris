@@ -1,6 +1,5 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.document.view.DocumentViewTopComponent;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
@@ -13,10 +12,19 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
+@ActionID(id = "ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction",
+category = "Tools")
+@ActionRegistration(iconInMenu = true,
+displayName = "#CTL_GedcomValidateAction",
+iconBase = "ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png")
+@ActionReference(path = "Menu/Tools/Gedcom", position = 95)
 public final class GedcomValidateAction implements ActionListener {
 
     private Context context;
@@ -48,7 +56,7 @@ public final class GedcomValidateAction implements ActionListener {
                     doc.addTableColumn("column-width=10%");
                     doc.addTableColumn("column-width=25%");
                     doc.addTableColumn("column-width=65%");
-                    Iterator <ViewContext>iterator = result.listIterator();
+                    Iterator<ViewContext> iterator = result.listIterator();
                     while (iterator.hasNext()) {
                         ViewContext c = iterator.next();
                         doc.nextTableRow();
