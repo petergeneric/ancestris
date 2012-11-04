@@ -32,7 +32,9 @@ import org.openide.util.Utilities;
 
 @ActionID(category = "Tools",
 id = "ancestris.modules.gedcom.history.ClearHistoryAction")
-@ActionRegistration(displayName = "#CTL_ClearHistoryAction")
+@ActionRegistration(iconInMenu = true,
+displayName = "#CTL_ClearHistoryAction",
+iconBase = "ancestris/modules/gedcom/history/ClearHistoryIcon.png")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3333)
 })
