@@ -33,7 +33,7 @@ public class Selection
      * @param args query-file, output-file, files with triples 
      * @throws IOException
      */
-    public void main(final String[] args) throws IOException
+    public static void main(final String[] args) throws IOException
     {
         final String query = readQuery(args[0]);
         final OutputStream output = new FileOutputStream(args[1]);
