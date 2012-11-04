@@ -24,11 +24,11 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class ReleveFileAncestrisV2 {
+public class ReleveFileAncestrisV3 {
 
-    final static private String fileSignature = "ANCESTRISV2";
+    final static private String fileSignature = "ANCESTRISV3";
     final static private char fieldSeparator = ';';
-    final static private int nbFields = 82;
+    final static private int nbFields = 90;
 
     /**
      * verifie si la premere ligne est conforme au format 
@@ -37,9 +37,8 @@ public class ReleveFileAncestrisV2 {
      * @return
      */
     public static boolean isValidFile(File inputFile, StringBuilder sb) {
-        BufferedReader br = null;
         try {
-            br = new BufferedReader( new InputStreamReader(checkUtf8Bom(new FileInputStream(inputFile)),"UTF-8"));
+            BufferedReader br = new BufferedReader( new InputStreamReader(checkUtf8Bom(new FileInputStream(inputFile)),"UTF-8"));
             String[] fields = splitLine(br);
             if (fields == null) {
                 sb.append(fileSignature + " ").append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), inputFile.getName()));
@@ -100,14 +99,14 @@ public class ReleveFileAncestrisV2 {
         nomCommune, codeCommune, nomDepartement, stateName, countryName, parish,
         eventType, eventTypeName, eventTypeComment,
         eventDate, cote, freeComment, notaryComment,
-        indiLastName, indiFirstName, indiSex, indiBirthPlace, indiBirthDate, indiAge, indiOccupation, indiComment,
-        indiMarriedLastName, indiMarriedFirstName, indiMarriedDead, indiMarriedOccupation, indiMarriedComment,
-        indiFatherLastName, indiFatherFirstName, indiFatherAge, indiFatherDead, indiFatherOccupation, indiFatherComment,
-        indiMotherLastName, indiMotherFirstName, indiMotherAge, indiMotherDead, indiMotherOccupation, indiMotherComment,
-        wifeLastName, wifeFirstName, wifeSex, wifeBirthPlace, wifeBirthDate, wifeAge, wifeOccupation, wifeComment,
-        wifeMarriedLastName, wifeMarriedFirstName, wifeMarriedDead, wifeMarriedOccupation, wifeMarriedComment,
-        wifeFatherLastName, wifeFatherFirstName, wifeFatherAge, wifeFatherDead, wifeFatherOccupation, wifeFatherComment,
-        wifeMotherLastName, wifeMotherFirstName, wifeMotherAge, wifeMotherDead, wifeMotherOccupation, wifeMotherComment,
+        indiLastName, indiFirstName, indiSex, indiBirthPlace, indiBirthDate, indiAge, indiOccupation, indiResidence,indiComment,
+        indiMarriedLastName, indiMarriedFirstName, indiMarriedDead, indiMarriedOccupation, indiMarriedResidence,indiMarriedComment,
+        indiFatherLastName, indiFatherFirstName, indiFatherAge, indiFatherDead, indiFatherOccupation, indiFatherResidence,indiFatherComment,
+        indiMotherLastName, indiMotherFirstName, indiMotherAge, indiMotherDead, indiMotherOccupation, indiMotherResidence, indiMotherComment,
+        wifeLastName, wifeFirstName, wifeSex, wifeBirthPlace, wifeBirthDate, wifeAge, wifeOccupation, wifeResidence,wifeComment,
+        wifeMarriedLastName, wifeMarriedFirstName, wifeMarriedDead, wifeMarriedOccupation, wifeMarriedResidence, wifeMarriedComment,
+        wifeFatherLastName, wifeFatherFirstName, wifeFatherAge, wifeFatherDead, wifeFatherOccupation, wifeFatherResidence, wifeFatherComment,
+        wifeMotherLastName, wifeMotherFirstName, wifeMotherAge, wifeMotherDead, wifeMotherOccupation, wifeMotherResidence, wifeMotherComment,
         witness1LastName, witness1FirstName, witness1Occupation, witness1Comment,
         witness2LastName, witness2FirstName, witness2Occupation, witness2Comment,
         witness3LastName, witness3FirstName, witness3Occupation, witness3Comment,
@@ -138,12 +137,11 @@ public class ReleveFileAncestrisV2 {
             //create BufferedReader to read file
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
             int lineNumber = 0;
-            String[] fields = new String[0];
             while (true) {
                 try {
                     lineNumber++;
                     // je lis la ligne suivante
-                    fields = splitLine(br);
+                    String[] fields = splitLine(br);
                     if ( fields == null) {
                         break;
                     }
@@ -167,7 +165,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiLastName.ordinal()],
                                 fields[Field.indiSex.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
-                                "", // pas de date de naossance a la naissance
+                                "", // pas de date de naissance a la naissance
                                 "", // pas de lieu a la naissance
                                 "", // pas de profession a la naissance
                                 "", // pas de residence a la naissance
@@ -177,7 +175,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format
+                                fields[Field.indiFatherResidence.ordinal()],
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
@@ -186,7 +184,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMotherResidence.ordinal()],
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
@@ -244,7 +242,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
                                 fields[Field.indiOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiResidence.ordinal()],
                                 fields[Field.indiComment.ordinal()]);
 
                         record.setIndiMarried(
@@ -252,7 +250,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMarriedLastName.ordinal()],
                                 //"F",
                                 fields[Field.indiMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMarriedResidence.ordinal()],
                                 fields[Field.indiMarriedComment.ordinal()],
                                 fields[Field.indiMarriedDead.ordinal()]);
 
@@ -260,7 +258,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiFatherResidence.ordinal()],
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
@@ -269,7 +267,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMotherResidence.ordinal()],
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
@@ -282,7 +280,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeBirthDate.ordinal()],
                                 fields[Field.wifeBirthPlace.ordinal()],
                                 fields[Field.wifeOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeResidence.ordinal()],
                                 fields[Field.wifeComment.ordinal()]);
 
                         record.setWifeMarried(
@@ -290,7 +288,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeMarriedLastName.ordinal()],
                                 //"M",
                                 fields[Field.wifeMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeMarriedResidence.ordinal()],
                                 fields[Field.wifeMarriedComment.ordinal()],
                                 fields[Field.wifeMarriedDead.ordinal()]);
 
@@ -298,7 +296,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeFatherFirstName.ordinal()],
                                 fields[Field.wifeFatherLastName.ordinal()],
                                 fields[Field.wifeFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeFatherResidence.ordinal()],
                                 fields[Field.wifeFatherComment.ordinal()],
                                 fields[Field.wifeFatherDead.ordinal()],
                                 fields[Field.wifeFatherAge.ordinal()]);
@@ -307,7 +305,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeMotherFirstName.ordinal()],
                                 fields[Field.wifeMotherLastName.ordinal()],
                                 fields[Field.wifeMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeMotherResidence.ordinal()],
                                 fields[Field.wifeMotherComment.ordinal()],
                                 fields[Field.wifeMotherDead.ordinal()],
                                 fields[Field.wifeMotherAge.ordinal()]);
@@ -365,7 +363,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
                                 fields[Field.indiOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiResidence.ordinal()],
                                 fields[Field.indiComment.ordinal()]);
 
                         record.setIndiMarried(
@@ -373,7 +371,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMarriedLastName.ordinal()],
                                 //fields[Field.indiMarriedSex.ordinal()].equals("M") ? "F" : "M",
                                 fields[Field.indiMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMarriedResidence.ordinal()],
                                 fields[Field.indiMarriedComment.ordinal()],
                                 fields[Field.indiMarriedDead.ordinal()]); 
 
@@ -381,7 +379,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiFatherResidence.ordinal()],
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
@@ -390,7 +388,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMotherResidence.ordinal()],
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
@@ -451,7 +449,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
                                 fields[Field.indiOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiResidence.ordinal()],
                                 fields[Field.indiComment.ordinal()]);
 
                         record.setIndiMarried(
@@ -459,7 +457,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMarriedLastName.ordinal()],
                                 //fields[Field.indiSex.ordinal()].equals("M") ? "F" : "M",
                                 fields[Field.indiMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMarriedResidence.ordinal()],
                                 fields[Field.indiMarriedComment.ordinal()],
                                 fields[Field.indiMarriedDead.ordinal()]);
 
@@ -467,7 +465,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiFatherResidence.ordinal()],
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
@@ -476,7 +474,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.indiMotherResidence.ordinal()],
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
@@ -489,7 +487,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeBirthDate.ordinal()],
                                 fields[Field.wifeBirthPlace.ordinal()],
                                 fields[Field.wifeOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeResidence.ordinal()],
                                 fields[Field.wifeComment.ordinal()]);  //décédé
 
                         record.setWifeMarried(
@@ -497,7 +495,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeMarriedLastName.ordinal()],
                                 //fields[Field.wifeSex.ordinal()].equals("M") ? "F" : "M",
                                 fields[Field.wifeMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeMarriedResidence.ordinal()],
                                 fields[Field.wifeMarriedComment.ordinal()],
                                 fields[Field.wifeMarriedDead.ordinal()]);
 
@@ -505,7 +503,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeFatherFirstName.ordinal()],
                                 fields[Field.wifeFatherLastName.ordinal()],
                                 fields[Field.wifeFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeFatherResidence.ordinal()],
                                 fields[Field.wifeFatherComment.ordinal()],
                                 fields[Field.wifeFatherDead.ordinal()],
                                 fields[Field.wifeFatherAge.ordinal()]);
@@ -514,7 +512,7 @@ public class ReleveFileAncestrisV2 {
                                 fields[Field.wifeMotherFirstName.ordinal()],
                                 fields[Field.wifeMotherLastName.ordinal()],
                                 fields[Field.wifeMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                fields[Field.wifeMotherResidence.ordinal()],
                                 fields[Field.wifeMotherComment.ordinal()],
                                 fields[Field.wifeMotherDead.ordinal()],
                                 fields[Field.wifeMotherAge.ordinal()]);
@@ -627,12 +625,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiBirthDate().toString()); // IndiBirthDate
                         line.appendCsvFn(""); // age
                         line.appendCsvFn(""); // occupation
+                        line.appendCsvFn(""); // residence
                         line.appendCsvFn(record.getIndiComment().toString());
 
                         line.appendCsvFn(""); // IndiMarriedLastName
                         line.appendCsvFn(""); // IndiMarriedFirstName
                         line.appendCsvFn(""); // IndiMarriedDead
                         line.appendCsvFn(""); // IndiMarriedOccupation
+                        line.appendCsvFn(""); // residence
                         line.appendCsvFn(""); // IndiMarriedComment
 
                         line.appendCsvFn(record.getIndiFatherLastName().toString());
@@ -640,12 +640,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiFatherAge().getValue());
                         line.appendCsvFn(record.getIndiFatherDead().getValue());
                         line.appendCsvFn(record.getIndiFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndiFatherResidence().toString());
                         line.appendCsvFn(record.getIndiFatherComment().toString());
                         line.appendCsvFn(record.getIndiMotherLastName().toString());
                         line.appendCsvFn(record.getIndiMotherFirstName().toString());
                         line.appendCsvFn(record.getIndiMotherAge().getValue());
                         line.appendCsvFn(record.getIndiMotherDead().getValue());
                         line.appendCsvFn(record.getIndiMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndiMotherResidence().toString());
                         line.appendCsvFn(record.getIndiMotherComment().toString());
 
                         line.appendCsvFn(""); // WifeLastName
@@ -655,12 +657,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // WifeBirthDate
                         line.appendCsvFn(""); // WifeAge
                         line.appendCsvFn(""); // WifeOccupation
+                        line.appendCsvFn(""); // WifeResidence
                         line.appendCsvFn(""); // WifeComment
 
                         line.appendCsvFn(""); // WifeMarriedLastName
                         line.appendCsvFn(""); // WifeMarriedFirstName
                         line.appendCsvFn(""); // WifeMarriedDead
                         line.appendCsvFn(""); // WifeMarriedOccupation
+                        line.appendCsvFn(""); // WifeMarriedResidence
                         line.appendCsvFn(""); // WifeMarriedComment
 
                         line.appendCsvFn(""); // WifeFatherLastName
@@ -668,12 +672,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // WifeFatherAge
                         line.appendCsvFn(""); // WifeFatherDead
                         line.appendCsvFn(""); // WifeFatherOccupation
+                        line.appendCsvFn(""); // WifeFatherResidence
                         line.appendCsvFn(""); // WifeFatherComment
                         line.appendCsvFn(""); // WifeMotherLastName
                         line.appendCsvFn(""); // WifeMotherFirstName
                         line.appendCsvFn(""); // WifeMotherAge
                         line.appendCsvFn(""); // WifeMotherDead
                         line.appendCsvFn(""); // WifeMotherOccupation
+                        line.appendCsvFn(""); // WifeMotherResidence
                         line.appendCsvFn(""); // WifeMotherComment
 
                         line.appendCsvFn(record.getWitness1LastName().toString());
@@ -723,12 +729,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiBirthDate().toString());
                         line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
+                        line.appendCsvFn(record.getIndiResidence().toString());
                         line.appendCsvFn(record.getIndiComment().toString());
                         
                         line.appendCsvFn(record.getIndiMarriedLastName().toString());
                         line.appendCsvFn(record.getIndiMarriedFirstName().toString());
                         line.appendCsvFn(record.getIndiMarriedDead().getValue());
                         line.appendCsvFn(record.getIndiMarriedOccupation().toString());
+                        line.appendCsvFn(record.getIndiMarriedResidence().toString());
                         line.appendCsvFn(record.getIndiMarriedComment().toString());
 
                         line.appendCsvFn(record.getIndiFatherLastName().toString());
@@ -736,6 +744,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiFatherAge().getValue());
                         line.appendCsvFn(record.getIndiFatherDead().getValue());
                         line.appendCsvFn(record.getIndiFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndiFatherResidence().toString());
                         line.appendCsvFn(record.getIndiFatherComment().toString());
                         
                         line.appendCsvFn(record.getIndiMotherLastName().toString());
@@ -743,6 +752,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiMotherAge().getValue());
                         line.appendCsvFn(record.getIndiMotherDead().getValue());
                         line.appendCsvFn(record.getIndiMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndiMotherResidence().toString());
                         line.appendCsvFn(record.getIndiMotherComment().toString());
                         
                         line.appendCsvFn(record.getWifeLastName().toString());
@@ -752,12 +762,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeBirthDate().toString());
                         line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifeOccupation().toString());
+                        line.appendCsvFn(record.getWifeResidence().toString());
                         line.appendCsvFn(record.getWifeComment().toString());
                         
                         line.appendCsvFn(record.getWifeMarriedLastName().toString());
                         line.appendCsvFn(record.getWifeMarriedFirstName().toString());
                         line.appendCsvFn(record.getWifeMarriedDead().getValue());
                         line.appendCsvFn(record.getWifeMarriedOccupation().toString());
+                        line.appendCsvFn(record.getWifeMarriedResidence().toString());
                         line.appendCsvFn(record.getWifeMarriedComment().toString());
 
                         line.appendCsvFn(record.getWifeFatherLastName().toString());
@@ -765,12 +777,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeFatherAge().getValue());
                         line.appendCsvFn(record.getWifeFatherDead().getValue());
                         line.appendCsvFn(record.getWifeFatherOccupation().toString());
+                        line.appendCsvFn(record.getWifeFatherResidence().toString());
                         line.appendCsvFn(record.getWifeFatherComment().toString());
                         line.appendCsvFn(record.getWifeMotherLastName().toString());
                         line.appendCsvFn(record.getWifeMotherFirstName().toString());
                         line.appendCsvFn(record.getWifeMotherAge().getValue());
                         line.appendCsvFn(record.getWifeMotherDead().getValue());
                         line.appendCsvFn(record.getWifeMotherOccupation().toString());
+                        line.appendCsvFn(record.getWifeMotherResidence().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString());
 
                         line.appendCsvFn(record.getWitness1LastName().toString());
@@ -820,12 +834,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiBirthDate().toString());
                         line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
+                        line.appendCsvFn(record.getIndiResidence().toString());
                         line.appendCsvFn(record.getIndiComment().toString());
 
                         line.appendCsvFn(record.getIndiMarriedLastName().toString());
                         line.appendCsvFn(record.getIndiMarriedFirstName().toString());
                         line.appendCsvFn(record.getIndiMarriedDead().getValue());
                         line.appendCsvFn(record.getIndiMarriedOccupation().toString());
+                        line.appendCsvFn(record.getIndiMarriedResidence().toString());
                         line.appendCsvFn(record.getIndiMarriedComment().toString());
 
                         line.appendCsvFn(record.getIndiFatherLastName().toString());
@@ -833,12 +849,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiFatherAge().getValue());
                         line.appendCsvFn(record.getIndiFatherDead().getValue());
                         line.appendCsvFn(record.getIndiFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndiFatherResidence().toString());
                         line.appendCsvFn(record.getIndiFatherComment().toString());
                         line.appendCsvFn(record.getIndiMotherLastName().toString());
                         line.appendCsvFn(record.getIndiMotherFirstName().toString());
                         line.appendCsvFn(record.getIndiMotherAge().getValue());
                         line.appendCsvFn(record.getIndiMotherDead().getValue());
                         line.appendCsvFn(record.getIndiMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndiMotherResidence().toString());
                         line.appendCsvFn(record.getIndiMotherComment().toString());
 
                         line.appendCsvFn(""); // WifeLastName
@@ -848,12 +866,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // WifeBirthDate
                         line.appendCsvFn(""); // WifeAge
                         line.appendCsvFn(""); // WifeOccupation
+                        line.appendCsvFn(""); // WifeResidence
                         line.appendCsvFn(""); // WifeComment
 
                         line.appendCsvFn(""); // WifeMarriedLastName
                         line.appendCsvFn(""); // WifeMarriedFirstName
                         line.appendCsvFn(""); // WifeMarriedDead
                         line.appendCsvFn(""); // WifeMarriedOccupation
+                        line.appendCsvFn(""); // WifeMarriedResidence
                         line.appendCsvFn(""); // WifeMarriedComment
 
                         line.appendCsvFn(""); // WifeFatherLastName
@@ -861,12 +881,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // WifeFatherAge
                         line.appendCsvFn(""); // WifeFatherDead
                         line.appendCsvFn(""); // WifeFatherOccupation
+                        line.appendCsvFn(""); // WifeFatherResidence
                         line.appendCsvFn(""); // WifeFatherComment
                         line.appendCsvFn(""); // WifeMotherLastName
                         line.appendCsvFn(""); // WifeMotherFirstName
                         line.appendCsvFn(""); // WifeMotherAge
                         line.appendCsvFn(""); // WifeMotherDead
                         line.appendCsvFn(""); // WifeMotherOccupation
+                        line.appendCsvFn(""); // WifeMotherResidence
                         line.appendCsvFn(""); // WifeMotherComment
 
                         line.appendCsvFn(record.getWitness1LastName().toString());
@@ -916,12 +938,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiBirthDate().toString());
                         line.appendCsvFn(record.getIndiAge().getValue());
                         line.appendCsvFn(record.getIndiOccupation().toString());
+                        line.appendCsvFn(record.getIndiResidence().toString());
                         line.appendCsvFn(record.getIndiComment().toString());
 
                         line.appendCsvFn(record.getIndiMarriedLastName().toString());
                         line.appendCsvFn(record.getIndiMarriedFirstName().toString());
                         line.appendCsvFn(record.getIndiMarriedDead().getValue());
                         line.appendCsvFn(record.getIndiMarriedOccupation().toString());
+                        line.appendCsvFn(record.getIndiMarriedResidence().toString());
                         line.appendCsvFn(record.getIndiMarriedComment().toString());
 
                         line.appendCsvFn(record.getIndiFatherLastName().toString());
@@ -929,6 +953,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiFatherAge().getValue());
                         line.appendCsvFn(record.getIndiFatherDead().getValue());
                         line.appendCsvFn(record.getIndiFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndiFatherResidence().toString());
                         line.appendCsvFn(record.getIndiFatherComment().toString());
 
                         line.appendCsvFn(record.getIndiMotherLastName().toString());
@@ -936,6 +961,7 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getIndiMotherAge().getValue());
                         line.appendCsvFn(record.getIndiMotherDead().getValue());
                         line.appendCsvFn(record.getIndiMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndiMotherResidence().toString());
                         line.appendCsvFn(record.getIndiMotherComment().toString());
 
                         line.appendCsvFn(record.getWifeLastName().toString());
@@ -945,12 +971,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeBirthDate().toString());
                         line.appendCsvFn(record.getWifeAge().getValue());
                         line.appendCsvFn(record.getWifeOccupation().toString());
+                        line.appendCsvFn(record.getWifeResidence().toString());
                         line.appendCsvFn(record.getWifeComment().toString());
 
                         line.appendCsvFn(record.getWifeMarriedLastName().toString());
                         line.appendCsvFn(record.getWifeMarriedFirstName().toString());
                         line.appendCsvFn(record.getWifeMarriedDead().getValue());
                         line.appendCsvFn(record.getWifeMarriedOccupation().toString());
+                        line.appendCsvFn(record.getWifeMarriedResidence().toString());
                         line.appendCsvFn(record.getWifeMarriedComment().toString());
 
                         line.appendCsvFn(record.getWifeFatherLastName().toString());
@@ -958,12 +986,14 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeFatherAge().getValue());
                         line.appendCsvFn(record.getWifeFatherDead().getValue());
                         line.appendCsvFn(record.getWifeFatherOccupation().toString());
+                        line.appendCsvFn(record.getWifeFatherResidence().toString());
                         line.appendCsvFn(record.getWifeFatherComment().toString());
                         line.appendCsvFn(record.getWifeMotherLastName().toString());
                         line.appendCsvFn(record.getWifeMotherFirstName().toString());
                         line.appendCsvFn(record.getWifeMotherAge().getValue());
                         line.appendCsvFn(record.getWifeMotherDead().getValue());
                         line.appendCsvFn(record.getWifeMotherOccupation().toString());
+                        line.appendCsvFn(record.getWifeMotherResidence().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString());
 
                         line.appendCsvFn(record.getWitness1LastName().toString());
@@ -1034,12 +1064,14 @@ public class ReleveFileAncestrisV2 {
         line.appendCsvFn("IndiBirthDate"); 
         line.appendCsvFn("IndiAge"); 
         line.appendCsvFn("IndiOccupation"); 
+        line.appendCsvFn("IndiResidence"); 
         line.appendCsvFn("IndiComment");
 
         line.appendCsvFn("IndiMarriedLastName"); 
         line.appendCsvFn("IndiMarriedFirstName"); 
         line.appendCsvFn("IndiMarriedDead");
         line.appendCsvFn("IndiMarriedOccupation"); 
+        line.appendCsvFn("IndiMarriedResidence"); 
         line.appendCsvFn("IndiMarriedComment"); 
 
         line.appendCsvFn("IndiFatherLastName");
@@ -1047,12 +1079,14 @@ public class ReleveFileAncestrisV2 {
         line.appendCsvFn("IndiFatherAge");
         line.appendCsvFn("IndiFatherDead");
         line.appendCsvFn("IndiFatherOccupation");
+        line.appendCsvFn("IndiFatherResidence"); 
         line.appendCsvFn("IndiFatherComment");
         line.appendCsvFn("IndiMotherLastName");
         line.appendCsvFn("IndiMotherFirstName");
         line.appendCsvFn("IndiMotherAge");
         line.appendCsvFn("IndiMotherDead");
         line.appendCsvFn("IndiMotherOccupation");
+        line.appendCsvFn("IndiMotherResidence"); 
         line.appendCsvFn("IndiMotherComment");
 
         line.appendCsvFn("WifeLastName");
@@ -1062,12 +1096,14 @@ public class ReleveFileAncestrisV2 {
         line.appendCsvFn("WifeBirthDate");
         line.appendCsvFn("WifeAge");
         line.appendCsvFn("WifeOccupation");
+        line.appendCsvFn("WifeResidence"); 
         line.appendCsvFn("WifeComment");
 
         line.appendCsvFn("WifeMarriedLastName");
         line.appendCsvFn("WifeMarriedFirstName");
         line.appendCsvFn("WifeMarriedDead");
         line.appendCsvFn("WifeMarriedOccupation");
+        line.appendCsvFn("WifeMarriedResidence"); 
         line.appendCsvFn("WifeMarriedComment");
 
         line.appendCsvFn("WifeFatherLastName");
@@ -1075,12 +1111,14 @@ public class ReleveFileAncestrisV2 {
         line.appendCsvFn("WifeFatherAge");
         line.appendCsvFn("WifeFatherDead");
         line.appendCsvFn("WifeFatherOccupation");
+        line.appendCsvFn("WifeFatherResidence"); 
         line.appendCsvFn("WifeFatherComment");
         line.appendCsvFn("WifeMotherLastName");
         line.appendCsvFn("WifeMotherFirstName");
         line.appendCsvFn("WifeMotherAge");
         line.appendCsvFn("WifeMotherDead");
         line.appendCsvFn("WifeMotherOccupation");
+        line.appendCsvFn("WifeMotherResidence"); 
         line.appendCsvFn("WifeMotherComment");
 
         line.appendCsvFn("Witness1LastName");

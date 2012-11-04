@@ -288,15 +288,15 @@ public class ReleveTable extends JTable {
                     "");
             if (columnLayout.isEmpty()) {
                 if (getModel() instanceof ModelBirth) {
-                    columnLayout = "7,20,120,36,75,120,120,70";
+                    columnLayout = "9,20,120,36,75,120,120,70";
                 } else if (getModel() instanceof ModelMarriage) {
-                    columnLayout = "5,20,75,120,120,75";
+                    columnLayout = "9,20,75,120,120,75";
                 } else if (getModel() instanceof ModelDeath) {
                     columnLayout = "9,20,120,30,75,40,120,120,80,70";
                 } else if (getModel() instanceof ModelMisc) {
-                    columnLayout = "6,20,75,58,120,120,75";
+                    columnLayout = "9,20,75,58,120,120,75";
                 } else {
-                    columnLayout = "6,20,75,30,120,120,70";
+                    columnLayout = "9,20,75,30,120,120,70";
                 }
             }
             try {

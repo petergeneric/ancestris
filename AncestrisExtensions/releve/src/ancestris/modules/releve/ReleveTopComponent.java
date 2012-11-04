@@ -156,7 +156,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt A"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), this);
         getActionMap().put(this, new AbstractAction() {
@@ -175,7 +175,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 } else if ( actionEvent.getActionCommand().equals("d") ) {
                     jTabbedPane1.setSelectedComponent(panelMisc);
                     panelMisc.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("a") ) {
+                } else if ( actionEvent.getActionCommand().equals("t") ) {
                     jTabbedPane1.setSelectedComponent(panelAll);
                     panelMisc.createRecord();
                 } else if ( actionEvent.getActionCommand().equals("g") ) {
@@ -812,7 +812,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     protected void saveFile() {
         if ( currentFile != null) {
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
             if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
@@ -888,7 +888,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
             // j'enregistre les données dans le fichier
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
 
              if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
@@ -1134,9 +1134,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
             FileBuffer fileBuffer;
             try {
-                //Context context = GedcomDirectory.getInstance().getContext(0);
-                //ReleveFileGedcom.loadFile(context.getGedcom(), fileBuffer);
-
                 InputStream is = getClass().getResourceAsStream("/ancestris/modules/releve/file/bourbons.txt");
                 fileBuffer = ReleveFileAncestrisV2.loadFile(is);
                 dataManager.addRecords(fileBuffer, false, fileBuffer.getPlaces().get(0), 1);

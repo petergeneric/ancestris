@@ -77,7 +77,7 @@ public class FileManagerTest extends TestCase {
         RecordBirth record = new RecordBirth();
         dateManager.addRecord(record,false);
 
-        StringBuilder sb = FileManager.saveFile(dateManager, dateManager, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
+        StringBuilder sb = FileManager.saveFile(dateManager, dateManager, saveFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
         assertEquals("save result", true, sb.toString().contains("java.io.FileNotFoundException"));
 
     }
