@@ -17,7 +17,9 @@ import org.openide.util.TaskListener;
 import org.openide.util.Utilities;
 
 @ActionID(id = "ancestris.modules.gedcom.checkduplicates.CheckDuplicateAction", category = "Tools")
-@ActionRegistration(iconInMenu = true, displayName = "#CTL_CheckDuplicateAction")
+@ActionRegistration(iconInMenu = true,
+displayName = "#CTL_CheckDuplicateAction",
+iconBase = "ancestris/modules/gedcom/checkduplicates/CheckDuplicateIcon.png")
 @ActionReference(path = "Menu/Tools/Gedcom")
 public final class CheckDuplicateAction implements ActionListener {
 
