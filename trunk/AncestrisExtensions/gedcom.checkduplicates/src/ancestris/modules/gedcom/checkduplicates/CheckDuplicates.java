@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 
 /**
@@ -43,7 +44,7 @@ public class CheckDuplicates implements Runnable {
 
     @Override
     public void run() {
-        final LinkedList <PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList <PotentialMatch<? extends Entity>>();
+        final LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList<PotentialMatch<? extends Entity>>();
         try {
             for (String tag : entitiesMatchers.keySet()) {
                 List<? extends Entity> leftEntity = new ArrayList(leftGedcom.getEntities(tag));
@@ -61,21 +62,28 @@ public class CheckDuplicates implements Runnable {
 
                 @Override
                 public void run() {
-                    CheckDuplicatesPanel entityViewPanel = new CheckDuplicatesPanel(matchesLinkedList);
-                    DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
-                            entityViewPanel,
-                            NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title"),
-                            true,
-                            new Object[]{DialogDescriptor.CLOSED_OPTION},
-                            DialogDescriptor.CLOSED_OPTION,
-                            DialogDescriptor.DEFAULT_ALIGN,
-                            null,
-                            null);
+                    // There is duplicates let displaying them
+                    if (matchesLinkedList.size() > 0) {
+                        CheckDuplicatesPanel entityViewPanel = new CheckDuplicatesPanel(matchesLinkedList);
+                        DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
+                                entityViewPanel,
+                                NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title"),
+                                true,
+                                new Object[]{DialogDescriptor.CLOSED_OPTION},
+                                DialogDescriptor.CLOSED_OPTION,
+                                DialogDescriptor.DEFAULT_ALIGN,
+                                null,
+                                null);
 
-                    Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
-                    dialog.setVisible(true);
-                    dialog.setModal(false);
-                    dialog.toFront();
+                        Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
+                        dialog.setVisible(true);
+                        dialog.setModal(false);
+                        dialog.toFront();
+                    } else {
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.noDuplicates"), NotifyDescriptor.INFORMATION_MESSAGE);
+                        DialogDisplayer.getDefault().notify(nd);
+
+                    }
                 }
             });
         } catch (InterruptedException ex) {
