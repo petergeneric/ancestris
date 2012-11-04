@@ -31,7 +31,9 @@ import org.openide.windows.TopComponent;
 
 @ActionID(category = "Tools",
 id = "ancestris.modules.gedcom.history.DisplayHistoryAction")
-@ActionRegistration(displayName = "#CTL_DisplayHistoryAction")
+@ActionRegistration(iconInMenu = true,
+displayName = "#CTL_DisplayHistoryAction",
+iconBase = "ancestris/modules/gedcom/history/DisplayHistoryIcon.png")
 @ActionReferences({
     @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3333)
 })
