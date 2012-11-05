@@ -5,7 +5,6 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyName;
-import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.time.PointInTime;
 
@@ -79,7 +78,7 @@ public class SemanticGedcomUtil {
 	}
 
 	private static XSDDateTime toXsdDateTime(final PointInTime pit) {
-		String x = pit.toString()+" "+pit.getValue()+" "+pit.getYear()+" "+ pit.getMonth()+" "+ pit.getDay();
+		//String x = pit.toString()+" "+pit.getValue()+" "+pit.getYear()+" "+ pit.getMonth()+" "+ pit.getDay();
 		final Calendar calendar = new GregorianCalendar(pit.getYear(), pit.getMonth(), pit.getDay()+2);
 		return new XSDDateTime(calendar);
 	}

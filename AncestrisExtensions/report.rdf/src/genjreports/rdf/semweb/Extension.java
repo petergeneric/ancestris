@@ -14,6 +14,8 @@
 // @formatter:on
 package genjreports.rdf.semweb;
 
+import java.io.File;
+
 public enum Extension
 {
     ttl("TURTLE"), n3("N3"), nt("N-TRIPPLE"), rdf("RDF/XML-ABBREV");
@@ -36,5 +38,10 @@ public enum Extension
         // In contrast, "RDF/XML-ABBREV", produces readable output without much regard to efficiency.
 
         return language;
+    }
+
+    public static Extension valueOf(final File file)
+    {
+        return valueOf(file.getName().replaceAll(".*\\.", "").toLowerCase());
     }
 }

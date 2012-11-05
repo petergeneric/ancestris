@@ -23,14 +23,14 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.core.Prologue;
 
-public class Selection
+public class Select
 {
     private final Model model;
     private final ResultSet resultSet;
 
     /**
-     * 
-     * @param args query-file, output-file, files with triples 
+     * @param args
+     *        query-file, output-file, files with triples
      * @throws IOException
      */
     public static void main(final String[] args) throws IOException
@@ -41,13 +41,13 @@ public class Selection
         final String[] fileNames = Arrays.copyOfRange(args, 2, args.length - 2);
 
         if (format.equals("txt"))
-            new PrintStream(output).println(new Selection(query, fileNames).toText());
+            new PrintStream(output).println(new Select(query, fileNames).toText());
         else if (format.equals("csv"))
-            new Selection(query, fileNames).toCsv(output);
+            new Select(query, fileNames).toCsv(output);
         else if (format.equals("xml"))
-            new Selection(query, fileNames).toXml(output);
+            new Select(query, fileNames).toXml(output);
         else if (format.equals("tsv"))
-            new Selection(query, fileNames).toTsv(output);
+            new Select(query, fileNames).toTsv(output);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Selection
      * @throws IOException
      *         in case of problems with the query file
      */
-    public Selection(final String query, final String... fileNames) throws IOException
+    public Select(final String query, final String... fileNames) throws IOException
     {
 
         model = ModelFactory.createDefaultModel();
@@ -75,7 +75,7 @@ public class Selection
      * @throws IOException
      *         in case of problems with the query file
      */
-    public Selection(final String query, final File... files) throws IOException
+    public Select(final String query, final File... files) throws IOException
     {
 
         model = ModelFactory.createDefaultModel();
@@ -84,22 +84,38 @@ public class Selection
         resultSet = execute(query);
     }
 
-    private ResultSet execute(final String query)
+    private ResultSet execute(final String queryFileName) throws IOException
     {
-        return QueryExecutionFactory.create(query, Syntax.syntaxARQ, model, new QuerySolutionMap()).execSelect();
-    }
-
-    private void readIntoModel(final File file) throws FileNotFoundException
-    {
-        final String ext = file.getName().replaceAll(".*[.]", "").toLowerCase();
+        final byte[] bytes = new byte[(int) new File(queryFileName).length()];
+        final InputStream inputStream = new FileInputStream(queryFileName);
         try
         {
-            final String language = Extension.valueOf(ext).language();
-            model.read(new FileInputStream(file), (String) null, language);
+            inputStream.read(bytes);
         }
-        catch (IllegalArgumentException e)
+        finally
+        {
+            inputStream.close();
+        }
+        final String q = new String(bytes);
+        final QuerySolutionMap qsm = new QuerySolutionMap();
+        return QueryExecutionFactory.create(q, Syntax.syntaxARQ, model, qsm).execSelect();
+    }
+
+    private void readIntoModel(final File file) throws IOException
+    {
+        final FileInputStream inputStream = new FileInputStream(file);
+        try
+        {
+            final String language = Extension.valueOf(file).language();
+            model.read(inputStream, (String) null, language);
+        }
+        catch (final IllegalArgumentException e)
         {
             // just skip;
+        }
+        finally
+        {
+            inputStream.close();
         }
     }
 
