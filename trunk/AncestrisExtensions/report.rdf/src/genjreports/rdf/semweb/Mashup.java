@@ -66,9 +66,7 @@ public class Mashup
         this.file = file;
         this.idPrefix = idPrefix;
 
-        final String extension = file.getName().trim().replaceAll(".*\\.", "").toLowerCase();
-        rdfLanguage = Extension.valueOf(extension).language();
-
+        rdfLanguage = Extension.valueOf(file).language();
         model = ModelFactory.createDefaultModel();
         if (file.exists())
             model.read(new FileInputStream(file), (String) null, rdfLanguage);

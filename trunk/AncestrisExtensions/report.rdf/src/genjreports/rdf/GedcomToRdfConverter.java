@@ -2,11 +2,9 @@ package genjreports.rdf;
 
 import genj.gedcom.Gedcom;
 import genj.io.GedcomReaderFactory;
-import genj.util.Origin;
-import genjreports.rdf.ReportRdf.Extension;
+import genjreports.rdf.semweb.Extension;
 
-import java.io.File;
-import java.net.URL;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,12 +17,12 @@ public class GedcomToRdfConverter {
 	private static final String LS = System.getProperty("line.separator");
 
 	private static final String HELP = "=== OPTIONS === " + Arrays.deepToString(Option.values()) + //
-			LS + "rules  : filename or number of query.rules section in " + ReportRdf.class.getSimpleName() + ".properties" + //
-			LS + "         2 includes ancestors and descendants but may take minutes" + //
+			LS + "rules  : filename" + //
 			LS + "format : default ttl; possible values: " + Arrays.deepToString(Extension.values()) + //
 			LS + "uri    : default for the options FAM, INDI, OBJE, NOTE, REPO, SOUR, SUBM" + //
 			LS + "         default for uri is " + ReportRdf.DEFAULT_URI + //
-			LS + "gedcom : filename, preceding options are applied to the conversion";
+			LS + "         make sure to add a terminator " + //
+			LS + "gedcom : filename, only preceding options are applied to the conversion";
 
 	private static enum Option {
 		rules, format, uri, FAM, INDI, OBJE, NOTE, REPO, SOUR, SUBM, gedcom
@@ -36,7 +34,7 @@ public class GedcomToRdfConverter {
 			throw createException("missing arguments");
 
 		final ReportRdf reporter = new ReportRdf();
-		String language = Extension.ttl.getLanguage();
+		String language = Extension.ttl.language();
 		Logger.getLogger("").setLevel(Level.OFF);
 
 		for (int i = 0; i < args.length; i++) {
@@ -95,7 +93,7 @@ public class GedcomToRdfConverter {
 
 	private static String toLanguage(final String value) {
 		try {
-			return Extension.valueOf(value).getLanguage();
+			return Extension.valueOf(value).language();
 		} catch (final IllegalArgumentException e) {
 			throw createException("invalid value for " + Option.format + ": " + value);
 		}
@@ -113,9 +111,9 @@ public class GedcomToRdfConverter {
 		}
 	}
 
-	private static Gedcom readGedcom(final String url) throws Exception {
+	private static Gedcom readGedcom(final String file) throws Exception {
 
-		return GedcomReaderFactory.createReader(Origin.create(new URL(url)), null).read();
+		return GedcomReaderFactory.createReader(new FileInputStream(file), null).read();
 	}
 
 /*	@Test(expected = IllegalArgumentException.class)
