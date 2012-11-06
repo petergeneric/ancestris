@@ -19,4 +19,9 @@ public class SourceMatcher extends EntityMatcher<Source> {
         }
         return 0;
     }
+
+    @Override
+    protected String[] getKeys(Source entity) {
+        return new String[] {entity.getTitle()};
+    }
 }

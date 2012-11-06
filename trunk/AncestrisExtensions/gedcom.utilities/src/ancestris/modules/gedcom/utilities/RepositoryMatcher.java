@@ -20,4 +20,9 @@ public class RepositoryMatcher extends EntityMatcher<Repository> {
         }
         return 0;
     }
+
+    @Override
+    protected String[] getKeys(Repository entity) {
+        return new String[]{entity.getValue()};
+    }
 }

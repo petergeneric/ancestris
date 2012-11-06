@@ -1,8 +1,8 @@
 package ancestris.modules.gedcom.utilities;
 
-import genj.gedcom.Fam;
-import genj.gedcom.Indi;
-import genj.gedcom.PropertyDate;
+import genj.gedcom.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -34,5 +34,30 @@ public class FamMatcher extends EntityMatcher<Fam> {
             }
         }
         return 0;
+    }
+
+    @Override
+    protected String[] getKeys(Fam entity) {
+        List<String> keys = new ArrayList<String>();
+        List<PropertyName> husbandNames;
+        List<PropertyName> wifeNames;
+        if (entity.getHusband() != null) {
+                husbandNames = entity.getHusband().getProperties(PropertyName.class);
+        } else {
+            husbandNames = new ArrayList<PropertyName> ();
+            husbandNames.add(new PropertyName("?", "?"));
+        }
+        if (entity.getWife() != null) {
+                wifeNames = entity.getHusband().getProperties(PropertyName.class);
+        } else {
+            wifeNames = new ArrayList<PropertyName> ();
+            wifeNames.add(new PropertyName("?", "?"));
+        }
+        for (Property husbandName : husbandNames) {
+            for (Property wifeName : wifeNames) {
+                keys.add(((PropertyName) husbandName).getFirstName() + ((PropertyName) wifeName).getFirstName());
+            }
+        }
+        return keys.toArray(new String[0]);
     }
 }

@@ -21,4 +21,9 @@ public class SubmitterMatcher extends EntityMatcher<Submitter> {
         }
         return 0;
     }
+
+    @Override
+    protected String[] getKeys(Submitter entity) {
+        return new String [] {entity.getName()};
+    }
 }
