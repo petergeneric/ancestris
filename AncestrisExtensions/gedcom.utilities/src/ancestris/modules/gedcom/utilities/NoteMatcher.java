@@ -16,4 +16,9 @@ public class NoteMatcher extends EntityMatcher<Note> {
             return 0;
         }
     }
+
+    @Override
+    protected String[] getKeys(Note entity) {
+        return new String[]{entity.getValue()};
+    }
 }

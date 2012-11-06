@@ -1,6 +1,8 @@
 package ancestris.modules.gedcom.utilities;
 
 import genj.gedcom.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
 
@@ -153,5 +155,18 @@ public class IndiMatcher extends EntityMatcher<Indi> {
             return false;
         }
 
+    }
+
+    @Override
+    protected String[] getKeys(Indi entity) {
+        List<String> keys = new ArrayList<String>();
+        List<PropertyName> names = entity.getProperties(PropertyName.class);
+        for (PropertyName name : names) {
+//            for (String firstName : name.getFirstNames(true)) {
+//                keys.add(name.getLastName() + firstName);
+//            }
+            keys.add(name.getLastName());
+        }
+        return keys.toArray(new String[0]);
     }
 }
