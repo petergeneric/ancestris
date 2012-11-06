@@ -33,7 +33,7 @@ public final class CheckDuplicateAction implements ActionListener {
 
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom myGedcom = context.getGedcom();
-            theTask = RP.create(new CheckDuplicates(myGedcom, myGedcom));
+            theTask = RP.create(new CheckDuplicates(myGedcom));
             final ProgressHandle progressHandle = ProgressHandleFactory.createHandle("task thats shows progress", new Cancellable() {
 
                 @Override
