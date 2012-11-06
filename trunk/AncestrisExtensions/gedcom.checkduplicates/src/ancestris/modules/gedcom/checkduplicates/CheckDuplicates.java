@@ -1,7 +1,9 @@
 package ancestris.modules.gedcom.checkduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.gedcom.utilities.*;
+import ancestris.modules.gedcom.utilities.EntityMatcher;
+import ancestris.modules.gedcom.utilities.IndiMatcher;
+import ancestris.modules.gedcom.utilities.PotentialMatch;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.Dialog;
@@ -26,45 +28,41 @@ import org.openide.util.lookup.ServiceProvider;
 public class CheckDuplicates extends AncestrisPlugin implements Runnable {
 
     private static final Logger log = Logger.getLogger(CheckDuplicates.class.getName());
-    private Gedcom leftGedcom;
-    private Gedcom rightGedcom;
+    private Gedcom gedcom;
     private TreeMap<String, EntityMatcher> entitiesMatchers = new TreeMap<String, EntityMatcher>() {
 
         {
             put(Gedcom.INDI, new IndiMatcher());
-            put(Gedcom.FAM, new FamMatcher());
+//            put(Gedcom.FAM, new FamMatcher());
 //            put(Gedcom.NOTE, new NoteMatcher());
 //            put(Gedcom.SOUR, new SourceMatcher());
 //            put(Gedcom.REPO, new RepositoryMatcher());
-            put(Gedcom.SUBM, new SubmitterMatcher());
+//            put(Gedcom.SUBM, new SubmitterMatcher());
         }
     };
     
     public CheckDuplicates() {
-        this.leftGedcom = null;
-        this.rightGedcom = null;
+        this.gedcom = null;
     }
 
-    public CheckDuplicates(Gedcom leftGedcom, Gedcom rightGedcom) {
-        this.leftGedcom = leftGedcom;
-        this.rightGedcom = rightGedcom;
+    public CheckDuplicates(Gedcom leftGedcom) {
+        this.gedcom = leftGedcom;
     }
 
     @Override
     public void run() {
         final LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList<PotentialMatch<? extends Entity>>();
-        if (leftGedcom == null || rightGedcom == null) {
+        if (gedcom == null) {
             return;
         }
         try {
             for (String tag : entitiesMatchers.keySet()) {
-                List<? extends Entity> leftEntity = new ArrayList(leftGedcom.getEntities(tag));
-                List<? extends Entity> rightEntity = new ArrayList(rightGedcom.getEntities(tag));
+                List<? extends Entity> entities = new ArrayList(gedcom.getEntities(tag));
 
                 log.log(Level.INFO, "Checking: {0}", tag);
 
-                if (leftEntity != null && rightEntity != null) {
-                    List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(leftEntity, rightEntity);
+                if (entities != null) {
+                    List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
                     matchesLinkedList.addAll(potentialMatches);
                 }
             }
