@@ -23,13 +23,15 @@
                 <package>org.apache.log4j.or</package>
                 <package>org.apache.log4j.or.jms</package>
                 <package>org.apache.log4j.or.sax</package>
+                <package>org.apache.log4j.pattern</package>
+                <package>org.apache.log4j.rewrite</package>
                 <package>org.apache.log4j.spi</package>
                 <package>org.apache.log4j.varia</package>
                 <package>org.apache.log4j.xml</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/log4j-1.2.13.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/log4j-1.2.13.jar</binary-origin>
+                <runtime-relative-path>ext/log4j-1.2.17.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/log4j-1.2.17.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
