@@ -26,8 +26,6 @@
                 <package>com.hp.hpl.jena.datatypes</package>
                 <package>com.hp.hpl.jena.datatypes.xsd</package>
                 <package>com.hp.hpl.jena.datatypes.xsd.impl</package>
-                <package>com.hp.hpl.jena.db</package>
-                <package>com.hp.hpl.jena.db.impl</package>
                 <package>com.hp.hpl.jena.enhanced</package>
                 <package>com.hp.hpl.jena.graph</package>
                 <package>com.hp.hpl.jena.graph.compose</package>
@@ -35,14 +33,12 @@
                 <package>com.hp.hpl.jena.graph.query</package>
                 <package>com.hp.hpl.jena.graph.query.regexptrees</package>
                 <package>com.hp.hpl.jena.mem</package>
-                <package>com.hp.hpl.jena.mem.faster</package>
                 <package>com.hp.hpl.jena.n3</package>
                 <package>com.hp.hpl.jena.n3.turtle</package>
                 <package>com.hp.hpl.jena.n3.turtle.parser</package>
                 <package>com.hp.hpl.jena.ontology</package>
                 <package>com.hp.hpl.jena.ontology.impl</package>
                 <package>com.hp.hpl.jena.query</package>
-                <package>com.hp.hpl.jena.query.larq</package>
                 <package>com.hp.hpl.jena.rdf.arp</package>
                 <package>com.hp.hpl.jena.rdf.arp.impl</package>
                 <package>com.hp.hpl.jena.rdf.arp.lang</package>
@@ -84,15 +80,14 @@
                 <package>com.hp.hpl.jena.sparql.graph</package>
                 <package>com.hp.hpl.jena.sparql.lang</package>
                 <package>com.hp.hpl.jena.sparql.lang.arq</package>
-                <package>com.hp.hpl.jena.sparql.lang.rdql</package>
                 <package>com.hp.hpl.jena.sparql.lang.sparql_10</package>
                 <package>com.hp.hpl.jena.sparql.lang.sparql_11</package>
                 <package>com.hp.hpl.jena.sparql.lib</package>
                 <package>com.hp.hpl.jena.sparql.mgt</package>
                 <package>com.hp.hpl.jena.sparql.modify</package>
                 <package>com.hp.hpl.jena.sparql.modify.request</package>
-                <package>com.hp.hpl.jena.sparql.modify.submission</package>
                 <package>com.hp.hpl.jena.sparql.path</package>
+                <package>com.hp.hpl.jena.sparql.path.eval</package>
                 <package>com.hp.hpl.jena.sparql.pfunction</package>
                 <package>com.hp.hpl.jena.sparql.pfunction.library</package>
                 <package>com.hp.hpl.jena.sparql.procedure</package>
@@ -116,10 +111,72 @@
                 <package>com.hp.hpl.jena.vocabulary</package>
                 <package>com.hp.hpl.jena.xmloutput</package>
                 <package>com.hp.hpl.jena.xmloutput.impl</package>
+                <package>com.ibm.icu.impl</package>
+                <package>com.ibm.icu.impl.data</package>
+                <package>com.ibm.icu.lang</package>
+                <package>com.ibm.icu.math</package>
+                <package>com.ibm.icu.text</package>
+                <package>com.ibm.icu.util</package>
+                <package>javax.xml</package>
+                <package>javax.xml.datatype</package>
+                <package>javax.xml.namespace</package>
+                <package>javax.xml.parsers</package>
+                <package>javax.xml.stream</package>
+                <package>javax.xml.stream.events</package>
+                <package>javax.xml.stream.util</package>
+                <package>javax.xml.transform</package>
+                <package>javax.xml.transform.dom</package>
+                <package>javax.xml.transform.sax</package>
+                <package>javax.xml.transform.stax</package>
+                <package>javax.xml.transform.stream</package>
+                <package>javax.xml.validation</package>
+                <package>javax.xml.xpath</package>
                 <package>jena</package>
                 <package>jena.cmdline</package>
-                <package>jena.util</package>
+                <package>org.apache.html.dom</package>
+                <package>org.apache.jena.iri</package>
+                <package>org.apache.jena.iri.impl</package>
+                <package>org.apache.wml</package>
+                <package>org.apache.wml.dom</package>
+                <package>org.apache.xerces.dom</package>
+                <package>org.apache.xerces.dom.events</package>
+                <package>org.apache.xerces.dom3.as</package>
+                <package>org.apache.xerces.impl</package>
+                <package>org.apache.xerces.impl.dtd</package>
+                <package>org.apache.xerces.impl.dtd.models</package>
+                <package>org.apache.xerces.impl.dv</package>
+                <package>org.apache.xerces.impl.dv.dtd</package>
+                <package>org.apache.xerces.impl.dv.util</package>
+                <package>org.apache.xerces.impl.dv.xs</package>
+                <package>org.apache.xerces.impl.io</package>
+                <package>org.apache.xerces.impl.msg</package>
+                <package>org.apache.xerces.impl.validation</package>
+                <package>org.apache.xerces.impl.xpath</package>
+                <package>org.apache.xerces.impl.xpath.regex</package>
+                <package>org.apache.xerces.impl.xs</package>
+                <package>org.apache.xerces.impl.xs.identity</package>
+                <package>org.apache.xerces.impl.xs.models</package>
+                <package>org.apache.xerces.impl.xs.opti</package>
+                <package>org.apache.xerces.impl.xs.traversers</package>
+                <package>org.apache.xerces.impl.xs.util</package>
+                <package>org.apache.xerces.jaxp</package>
+                <package>org.apache.xerces.jaxp.datatype</package>
+                <package>org.apache.xerces.jaxp.validation</package>
+                <package>org.apache.xerces.parsers</package>
+                <package>org.apache.xerces.stax</package>
+                <package>org.apache.xerces.stax.events</package>
+                <package>org.apache.xerces.util</package>
+                <package>org.apache.xerces.xinclude</package>
+                <package>org.apache.xerces.xni</package>
+                <package>org.apache.xerces.xni.grammars</package>
+                <package>org.apache.xerces.xni.parser</package>
+                <package>org.apache.xerces.xpointer</package>
+                <package>org.apache.xerces.xs</package>
+                <package>org.apache.xerces.xs.datatypes</package>
+                <package>org.apache.xml.serialize</package>
+                <package>org.apache.xmlcommons</package>
                 <package>org.openjena.atlas</package>
+                <package>org.openjena.atlas.data</package>
                 <package>org.openjena.atlas.event</package>
                 <package>org.openjena.atlas.io</package>
                 <package>org.openjena.atlas.iterator</package>
@@ -133,6 +190,7 @@
                 <package>org.openjena.atlas.logging</package>
                 <package>org.openjena.atlas.logging.java</package>
                 <package>org.openjena.atlas.test</package>
+                <package>org.openjena.atlas.web</package>
                 <package>org.openjena.riot</package>
                 <package>org.openjena.riot.checker</package>
                 <package>org.openjena.riot.lang</package>
@@ -142,35 +200,58 @@
                 <package>org.openjena.riot.pipeline.normalize</package>
                 <package>org.openjena.riot.system</package>
                 <package>org.openjena.riot.tokens</package>
+                <package>org.openjena.riot.web</package>
+                <package>org.slf4j</package>
+                <package>org.slf4j.helpers</package>
+                <package>org.slf4j.impl</package>
+                <package>org.slf4j.spi</package>
+                <package>org.w3c.dom</package>
+                <package>org.w3c.dom.bootstrap</package>
+                <package>org.w3c.dom.css</package>
+                <package>org.w3c.dom.events</package>
+                <package>org.w3c.dom.html</package>
+                <package>org.w3c.dom.ls</package>
+                <package>org.w3c.dom.ranges</package>
+                <package>org.w3c.dom.stylesheets</package>
+                <package>org.w3c.dom.traversal</package>
+                <package>org.w3c.dom.views</package>
+                <package>org.w3c.dom.xpath</package>
+                <package>org.xml.sax</package>
+                <package>org.xml.sax.ext</package>
+                <package>org.xml.sax.helpers</package>
                 <package>riotcmd</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jena-2.6.4.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jena-2.6.4.jar</binary-origin>
+                <runtime-relative-path>ext/jena-iri-0.9.3.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jena-iri-0.9.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/slf4j-api-1.5.8.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/slf4j-api-1.5.8.jar</binary-origin>
+                <runtime-relative-path>ext/xml-apis-1.4.01.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/xml-apis-1.4.01.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/iri-0.8.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/iri-0.8.jar</binary-origin>
+                <runtime-relative-path>ext/slf4j-log4j12-1.6.4.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/slf4j-log4j12-1.6.4.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jena-arq-2.9.3.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jena-arq-2.9.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/xercesImpl-2.10.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/xercesImpl-2.10.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/icu4j-3.4.4.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/icu4j-3.4.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/slf4j-log4j12-1.5.8.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/slf4j-log4j12-1.5.8.jar</binary-origin>
+                <runtime-relative-path>ext/jena-core-2.7.3.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jena-core-2.7.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/xercesImpl-2.7.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/xercesImpl-2.7.1.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/arq-2.8.7.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/arq-2.8.7.jar</binary-origin>
+                <runtime-relative-path>ext/slf4j-api-1.6.4.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/slf4j-api-1.6.4.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
