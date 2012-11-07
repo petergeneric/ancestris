@@ -6,6 +6,8 @@ import genj.gedcom.Gedcom;
 import genj.report.Report;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
+import genjreports.rdf.gedsem.SemanticGedcomUtil;
+import genjreports.rdf.gedsem.UriFormats;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +39,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Report.class)
 public class ReportRdf extends Report /*implements BatchCompatible */{
 
-	static final String DEFAULT_URI = "http://my.domain.com/gedcom/{0}.html";
 	static final String DEFAULT_STYLE_SHEET = "http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl";
 
 	public static class Queries {
@@ -52,30 +53,6 @@ public class ReportRdf extends Report /*implements BatchCompatible */{
 		public String reportFileName = "report.txt";
 		public boolean askForOverwrite = true;
 	};
-
-	public static class UriFormats {
-		
-		public String fam = DEFAULT_URI;
-		public String indi = DEFAULT_URI;
-		public String obje = DEFAULT_URI;
-		public String note = DEFAULT_URI;
-		public String repo = DEFAULT_URI;
-		public String sour = DEFAULT_URI;
-		public String subm = DEFAULT_URI;
-
-		private Map<String, String> getURIs() {
-			Map<String, String> uris;
-			uris = new HashMap<String, String>();
-			uris.put("FAM", fam);
-			uris.put("INDI", indi);
-			uris.put("OBJE", obje);
-			uris.put("NOTE", note);
-			uris.put("REPO", repo);
-			uris.put("SOUR", sour);
-			uris.put("SUBM", subm);
-			return uris;
-		}
-	}
 
 	public enum Extension {
 		ttl("TURTLE"), n3("N3"), nt("N-TRIPPLE"), rdf("RDF/XML-ABBREV");

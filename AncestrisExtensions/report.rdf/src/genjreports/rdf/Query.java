@@ -15,7 +15,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.core.Prologue;
-import genjreports.rdf.ReportRdf.Extension;
+import genjreports.rdf.semweb.Extension;
 
 public class Query {
 
@@ -44,7 +44,7 @@ public class Query {
 		final Model model = ModelFactory.createDefaultModel();
 		for (final String fileName : range) {
 			final String ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
-			final String language = Extension.valueOf(ext).getLanguage();
+			final String language = Extension.valueOf(ext).language();
 			model.read(new FileInputStream(fileName), (String) null, language);
 		}
 		return model;

@@ -1,4 +1,4 @@
- package genjreports.rdf;
+ package genjreports.rdf.gedsem;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
