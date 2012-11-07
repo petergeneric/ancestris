@@ -91,7 +91,8 @@ public class Select
      *        recommended to save a local copy.
      * @return this object for chaining. The following example reads all triple files from folder x and
      *         executes two queries, the second one overwrites the previous results. If folder x contains
-     *         arq files, they might be processed in random order depending on the presence of output files.
+     *         arq files, they might be processed in random order depending on the presence of output
+     *         files.
      *         <code>new Select().process(new File("x").listFiles()).process("an.xsl","out.html").process("y.arq","z.arq")</code>
      *         In contrast with {@link main}: as soon as one of the arguments in a single call causes an
      *         exception, the rest will be ignored.
@@ -108,7 +109,10 @@ public class Select
         {
             final String ext = file.getName().replaceAll(".*[.]", "").toLowerCase();
             if (inputFormats.contains(ext))
-                readGraph(file);
+            {
+                final String language = Extension.valueOf(file).language();
+                model.read(new FileInputStream(file), (String) null, language);
+            }
             else if ("xsl".equals(ext))
                 xsl = file;
             else if (!"arq".equals(ext))
@@ -117,35 +121,37 @@ public class Select
                 throw new IllegalStateException("no output file yet");
             else if (model.size() == 0)
                 throw new IllegalStateException("no input yet");
-            else {
+            else
+            {
                 final ResultSet resultSet = executeSelect(file);
-                final FileOutputStream o = new FileOutputStream(outputFile);
+                final OutputStream outputStream = new FileOutputStream(outputFile);
                 try
                 {
-                    writeResultSet(ext, resultSet, o);
+                    final String outExt = outputFile.getName().replaceAll(".*[.]", "").toLowerCase();
+                    writeResultSet(outExt, resultSet, outputStream);
                 }
                 finally
                 {
-                    o.close();
+                    outputStream.close();
                 }
             }
         }
         return this;
     }
 
-    private void writeResultSet(final String ext, final ResultSet resultSet, final FileOutputStream output) throws IOException,
+    private void writeResultSet(final String ext, final ResultSet resultSet, final OutputStream outputStream) throws IOException,
             TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError
     {
         if ("tsv".equals(ext))
-            ResultSetFormatter.outputAsTSV(output, resultSet);
+            ResultSetFormatter.outputAsTSV(outputStream, resultSet);
         else if ("csv".equals(ext))
-            ResultSetFormatter.outputAsCSV(output, resultSet);
+            ResultSetFormatter.outputAsCSV(outputStream, resultSet);
         else if ("xml".equals(ext))
-            ResultSetFormatter.outputAsXML(output, resultSet);
+            ResultSetFormatter.outputAsXML(outputStream, resultSet);
         else if ("txt".equals(ext))
         {
             final Prologue prologue = new Prologue(PrefixMapping.Factory.create().setNsPrefixes(model.getNsPrefixMap()));
-            output.write(ResultSetFormatter.asText(resultSet, prologue).getBytes());
+            outputStream.write(ResultSetFormatter.asText(resultSet, prologue).getBytes());
         }
         else if (!ext.startsWith(ext))
             throw new IllegalArgumentException("output extension not supported: " + ext);
@@ -154,7 +160,7 @@ public class Select
             final ByteArrayOutputStream xml = new ByteArrayOutputStream();
             ResultSetFormatter.outputAsXML(xml, resultSet);
             final StreamSource xmlStreamSource = new StreamSource(new ByteArrayInputStream(xml.toByteArray()));
-            readXsl().transform(xmlStreamSource, new StreamResult(output));
+            readXsl().transform(xmlStreamSource, new StreamResult(outputStream));
         }
     }
 
@@ -184,19 +190,4 @@ public class Select
         final QuerySolutionMap qsm = new QuerySolutionMap();
         return QueryExecutionFactory.create(q, querySyntax, model, qsm).execSelect();
     }
-
-    private void readGraph(final File file) throws IOException
-    {
-        final FileInputStream inputStream = new FileInputStream(file);
-        try
-        {
-            final String language = Extension.valueOf(file).language();
-            model.read(inputStream, (String) null, language);
-        }
-        finally
-        {
-            inputStream.close();
-        }
-    }
-
 }
