@@ -1,4 +1,4 @@
-package genjreports.rdf;
+package genjreports.rdf.gedsem;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;

@@ -42,6 +42,13 @@ public enum Extension
 
     public static Extension valueOf(final File file)
     {
-        return valueOf(file.getName().replaceAll(".*\\.", "").toLowerCase());
+        try
+        {
+            return valueOf(file.getName().replaceAll(".*\\.", "").toLowerCase());
+        }
+        catch (IllegalArgumentException e)
+        {
+            return null;
+        }
     }
 }
