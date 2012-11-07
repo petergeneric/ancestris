@@ -18,7 +18,7 @@ public class LnFJtattooTexture extends LookAndFeelProvider {
 
     @Override
     public String getName() {
-        return "com.jtattoo.plaf.acryl.TextureLookAndFeel";
+        return "com.jtattoo.plaf.texture.TextureLookAndFeel";
     }
 
     @Override
