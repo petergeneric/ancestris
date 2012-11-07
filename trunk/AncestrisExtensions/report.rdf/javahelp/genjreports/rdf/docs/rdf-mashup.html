@@ -116,21 +116,26 @@
             Run without arguments to show all possible arguments.
         </p>
 <pre>
-java genjreports.rdf.GedcomToRdf<u>Converter</u> -rules slowRules.txt -gedcom family.ged > gedcom.ttl
-java genjreports.rdf.semweb.<u>Selection mashup.arq</u> muInput.tsv gedcom.ttl muOutput.ttl
+java %JAVA_OPTS% genjreports.rdf.GedcomToRdf<u>Converter</u> -rules slowRules.txt -gedcom family.ged > gedcom.ttl
+java %JAVA_OPTS% genjreports.rdf.semweb.<u>Select</u> muInput.tsv gedcom.ttl muOutput.ttl <u>mashup.arq</u>
 java %JAVA_OPTS% genjreports.rdf.semweb.<u>Mashup</u> muInput.tsv http://my.dom.com/gc/places/ muOutput.ttl "de|fr"
-java genjreports.rdf.semweb.<u>Selection classmates.arq</u> report.txt gedcom.ttl muOutput.ttl *.rdf
+java %JAVA_OPTS% genjreports.rdf.semweb.<u>Select</u> report.txt gedcom.ttl muOutput.ttl *.rdf <u>classmates.arq</u>
 </pre>
         <ul>
           <li>
             Before these commands will run you will have to
             <a href="#setenv">set</a> some environment variables.
           </li>
-          <li>On Mac / Unix you can omit %JAVA_OPTS%.</li>
+          <li>On Mac / Unix %JAVA_OPTS% becomes $JAVA_OPTS$.</li>
           <li>
             The selection command allows to run a query against
             multiple sources. The report view runs queries just against
             the converted gedcom. 
+          </li>
+          <li>
+            The GUI allows to run reports for a specific entity, 
+            something the command line can't: you would have to duplicate the queryfile
+            and replace %s manually with the desired ID.
           </li>
           <li>
             The mashup command builds a bridge between your family data
@@ -146,6 +151,7 @@ java genjreports.rdf.semweb.<u>Selection classmates.arq</u> report.txt gedcom.tt
         </p>
         <p class="justify">
             The commands and their files above are shown in the following diagram.
+            Note that muInput.tsv is output for one command and input for the next
         </p>
         <img src="./images/chart.jpg"/>
 
