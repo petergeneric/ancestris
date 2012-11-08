@@ -61,7 +61,8 @@ public class Select
 
     /**
      * Passes the arguments on to {@link #process(String...)}. Processing continues with the next
-     * argument in case of exceptions.
+     * argument in case an argument causes an exception. Exceptions are report on stderr without stack
+     * traces.
      * 
      * @param args
      */
@@ -76,8 +77,7 @@ public class Select
             }
             catch (final Exception e)
             {
-                System.err.println(e.getMessage());
-                System.err.println("skipping " + arg);
+                System.err.println("skipping " + arg + ": " + e.getMessage());
             }
         }
     }
@@ -90,9 +90,9 @@ public class Select
      *        is actually HTML depends on the XSL. The default XSL is {@link #DEFAULT_XSL} though it is
      *        recommended to save a local copy.
      * @return this object for chaining. The following example reads all triple files from folder x and
-     *         executes two queries, the second one overwrites the previous results. If folder x contains
-     *         arq files, they might be processed in random order depending on the presence of output
-     *         files.
+     *         executes the first query, the second query fails to prevent overwriting the previous
+     *         results. If folder x contains arq files, they might be processed in random order depending
+     *         on the presence of output files.
      *         <code>new Select().process(new File("x").listFiles()).process("an.xsl","out.html").process("y.arq","z.arq")</code>
      *         In contrast with {@link main}: as soon as one of the arguments in a single call causes an
      *         exception, the rest will be ignored.
@@ -129,6 +129,8 @@ public class Select
                 {
                     final String outExt = outputFile.getName().replaceAll(".*[.]", "").toLowerCase();
                     writeResultSet(outExt, resultSet, outputStream);
+                    // do not overwrite with anther query
+                    outputFile = null;
                 }
                 finally
                 {
