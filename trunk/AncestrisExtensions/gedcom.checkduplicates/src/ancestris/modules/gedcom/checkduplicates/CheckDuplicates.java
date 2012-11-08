@@ -1,9 +1,7 @@
 package ancestris.modules.gedcom.checkduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.gedcom.utilities.EntityMatcher;
-import ancestris.modules.gedcom.utilities.IndiMatcher;
-import ancestris.modules.gedcom.utilities.PotentialMatch;
+import ancestris.modules.gedcom.utilities.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.Dialog;
@@ -33,20 +31,23 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
 
         {
             put(Gedcom.INDI, new IndiMatcher());
-//            put(Gedcom.FAM, new FamMatcher());
-//            put(Gedcom.NOTE, new NoteMatcher());
-//            put(Gedcom.SOUR, new SourceMatcher());
-//            put(Gedcom.REPO, new RepositoryMatcher());
-//            put(Gedcom.SUBM, new SubmitterMatcher());
+            put(Gedcom.FAM, new FamMatcher());
+            put(Gedcom.NOTE, new NoteMatcher());
+            put(Gedcom.SOUR, new SourceMatcher());
+            put(Gedcom.REPO, new RepositoryMatcher());
+            put(Gedcom.SUBM, new SubmitterMatcher());
         }
     };
+    private final List<String> entities2Ckeck;
     
     public CheckDuplicates() {
         this.gedcom = null;
+        this.entities2Ckeck = null;
     }
 
-    public CheckDuplicates(Gedcom leftGedcom) {
+    public CheckDuplicates(Gedcom leftGedcom, List<String>entities2Ckeck) {
         this.gedcom = leftGedcom;
+        this.entities2Ckeck = entities2Ckeck;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
             return;
         }
         try {
-            for (String tag : entitiesMatchers.keySet()) {
+            for (String tag : entities2Ckeck) {
                 List<? extends Entity> entities = new ArrayList(gedcom.getEntities(tag));
 
                 log.log(Level.INFO, "Checking: {0}", tag);
@@ -91,7 +92,6 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
                     } else {
                         NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicates.noDuplicates"), NotifyDescriptor.INFORMATION_MESSAGE);
                         DialogDisplayer.getDefault().notify(nd);
-
                     }
                 }
             });
