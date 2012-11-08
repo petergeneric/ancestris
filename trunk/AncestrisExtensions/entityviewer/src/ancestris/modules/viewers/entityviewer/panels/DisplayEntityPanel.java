@@ -69,4 +69,11 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the beanTreeView
+     */
+    public BeanTreeView getBeanTreeView() {
+        return beanTreeView;
+    }
 }
