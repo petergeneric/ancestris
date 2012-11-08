@@ -15,7 +15,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 // import org.junit.Test;
 
-public class GedcomToRdfConverter
+public class Convert
 {
 
     private static final String LS = System.getProperty("line.separator");

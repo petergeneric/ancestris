@@ -2,12 +2,12 @@ package genjreports.rdf;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-//import genj.report.BatchCompatible;
 import genj.report.Report;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
 import genjreports.rdf.gedsem.SemanticGedcomUtil;
 import genjreports.rdf.gedsem.UriFormats;
+import genjreports.rdf.semweb.Extension;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,253 +36,263 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service=Report.class)
-public class ReportRdf extends Report /*implements BatchCompatible */{
+@ServiceProvider(service = Report.class)
+public class ReportRdf extends Report /* implements BatchCompatible */
+{
 
-	static final String DEFAULT_STYLE_SHEET = "http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl";
+    static final String DEFAULT_STYLE_SHEET = "http://www.w3.org/TR/rdf-sparql-XMLres/result-to-html.xsl";
 
-	public static class Queries {
-		public String qGedcom = "";
-		public String qRules = "";
-	}
+    public static class Queries
+    {
+        public String qGedcom = "";
+        public String qRules = "";
+    }
 
-	public static class DisplayFormats {
-		public String styleSheet = DEFAULT_STYLE_SHEET;
-		public String convertedFileName = "gedcom.ttl";
-		public boolean reuseConversion = false;
-		public String reportFileName = "report.txt";
-		public boolean askForOverwrite = true;
-	};
+    public static class DisplayFormats
+    {
+        public String styleSheet = DEFAULT_STYLE_SHEET;
+        public String convertedFileName = "gedcom.ttl";
+        public boolean reuseConversion = false;
+        public String reportFileName = "report.txt";
+        public boolean askForOverwrite = true;
+    };
 
-	public enum Extension {
-		ttl("TURTLE"), n3("N3"), nt("N-TRIPPLE"), rdf("RDF/XML-ABBREV");
-		// RDF/XML-ABBREV is less verbose, use RDF/XML for large models
-		private final String language;
+    public UriFormats uriFormats = new UriFormats();
+    public DisplayFormats output = new DisplayFormats();
+    public Queries queries = new Queries();
 
-		private Extension(final String language) {
-			this.language = language;
-		}
+    public void start(final Gedcom gedcom) throws IOException
+    {
 
-		public String getLanguage() {
-			return language;
-		}
-	}
+        final String query = getQuery(queries.qGedcom);
+        if (optionsOk(query))
+            run("", getModel(gedcom), query);
+    }
 
-	public UriFormats uriFormats = new UriFormats();
-	public DisplayFormats output = new DisplayFormats();
-	public Queries queries = new Queries();
+    public void start(final Entity entity) throws IOException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+    {
 
-	public void start(final Gedcom gedcom) throws IOException {
+        final String query = getQuery(queries.qGedcom);
+        if (optionsOk(query))
+            run(entity.getId(), getModel(entity.getGedcom()), String.format(query, entity.getId()));
+    }
 
-		final String query = getQuery(queries.qGedcom);
-		if (optionsOk(query))
-			run("", getModel(gedcom), query);
-	}
+    public void run(final String id, final Model model, final String query) throws FileNotFoundException, IOException
+    {
 
-	public void start(final Entity entity) throws IOException,
-			SecurityException, NoSuchFieldException, IllegalArgumentException,
-			IllegalAccessException {
+        progress("executing query");
+        final ResultSet resultSet = execSelect(assembleQuery(query, model), model);
+        if (resultSet == null || !resultSet.hasNext())
+        {
+            progress("no results");
+            return;
+        }
+        progress("query completed");
 
-		final String query = getQuery(queries.qGedcom);
-		if (optionsOk(query))
-			run(entity.getId(), getModel(entity.getGedcom()), String.format(
-					query, entity.getId()));
-	}
+        final String extension = extractExtension(output.reportFileName);
+        if (extension.equals("xml"))
+        {
+            if (output.styleSheet.trim().length() > 0)
+                write(output.reportFileName, ResultSetFormatter.asXMLString(resultSet, output.styleSheet));
+            else
+                write(output.reportFileName, ResultSetFormatter.asXMLString(resultSet));
+        }
+        else if (extension.equals("txt"))
+        {
+            write(output.reportFileName, ResultSetFormatter.asText(resultSet));
+        }
+    }
 
-	public void run(final String id, final Model model, final String query)
-			throws FileNotFoundException, IOException {
+    private boolean optionsOk(final String query)
+    {
 
-		progress("executing query");
-		final ResultSet resultSet = execSelect(assembleQuery(query, model),
-				model);
-		if (resultSet == null || !resultSet.hasNext()) {
-			progress("no results");
-			return;
-		}
-		progress("query completed");
+        boolean ok = true;
+        if (output.convertedFileName.trim().length() > 0)
+        {
+            final String ext = extractExtension(output.convertedFileName);
+            try
+            {
+                Extension.valueOf(ext);
+            }
+            catch (final IllegalArgumentException e)
+            {
+                println(output.convertedFileName + " should have one of the extensions " + Arrays.deepToString(Extension.values()));
+                ok = false;
+            }
+        }
+        // TODO if not reuse there should be a convertedFileName
+        // [extension of] report output
+        if (query.trim().length() == 0)
+        {
+            println("no query");
+            ok = false;
+        }
+        // TODO read messages from properties
+        return ok;
+    }
 
-		final String extension = extractExtension(output.reportFileName);
-		if (extension.equals("xml")) {
-			if (output.styleSheet.trim().length() > 0)
-				write(output.reportFileName, ResultSetFormatter.asXMLString(
-						resultSet, output.styleSheet));
-			else
-				write(output.reportFileName, ResultSetFormatter
-						.asXMLString(resultSet));
-		} else if (extension.equals("txt")) {
-			write(output.reportFileName, ResultSetFormatter.asText(resultSet));
-		}
-	}
+    private String extractExtension(final String reportFileName)
+    {
+        return reportFileName.trim().replaceAll(".*\\.", "").toLowerCase();
+    }
 
-	private boolean optionsOk(final String query) {
+    private Model getModel(final Gedcom gedcom) throws FileNotFoundException, IOException
+    {
 
-		boolean ok = true;
-		if (output.convertedFileName.trim().length() > 0) {
-			final String ext = extractExtension(output.convertedFileName);
-			try {
-				Extension.valueOf(ext);
-			} catch (final IllegalArgumentException e) {
-				println(output.convertedFileName
-						+ " should have one of the extensions "
-						+ Arrays.deepToString(Extension.values()));
-				ok = false;
-			}
-		}
-		// TODO if not reuse there should be a convertedFileName
-		// [extension of] report output
-		if (query.trim().length() == 0) {
-			println("no query");
-			ok = false;
-		}
-		// TODO read messages from properties
-		return ok;
-	}
+        final Model model;
+        final String fileName = output.convertedFileName.trim();
+        final String extension = extractExtension(output.convertedFileName);
+        final String language = Extension.valueOf(extension).language();
+        if (output.reuseConversion)
+        {
+            progress("reading " + fileName);
+            model = ModelFactory.createDefaultModel();
+            model.read(new FileInputStream(fileName), (String) null, language);
+            progress("reading completed");
+        }
+        else
+        {
+            model = convert(gedcom);
+            writeConvertedGedcom(model, fileName);
+        }
+        // TODO read the other RDF files from the folder and its sub-folders
+        return model;
+    }
 
-	private String extractExtension(final String reportFileName) {
-		return reportFileName.trim().replaceAll(".*\\.", "").toLowerCase();
-	}
+    public InfModel convert(final Gedcom gedcom) throws FileNotFoundException, IOException
+    {
 
-	private Model getModel(final Gedcom gedcom) throws FileNotFoundException,
-			IOException {
+        final SemanticGedcomUtil util = new SemanticGedcomUtil();
+        progress("converting");
+        final Model rawModel = util.toRdf(gedcom, uriFormats.getURIs());
+        progress("applying rules");
+        final InfModel model = util.getInfModel(getQuery(queries.qRules));
+        progress("rules completed");
+        return model;
+    }
 
-		final Model model;
-		final String fileName = output.convertedFileName.trim();
-		final String extension = extractExtension(output.convertedFileName);
-		final String language = Extension.valueOf(extension).getLanguage();
-		if (output.reuseConversion) {
-			progress("reading "+fileName);
-			model = ModelFactory.createDefaultModel();
-			model.read(new FileInputStream(fileName), (String) null, language);
-			progress("reading completed");
-		} else {
-			model = convert(gedcom);
-			writeConvertedGedcom(model, fileName);
-		}
-		// TODO read the other RDF files from the folder and its sub-folders
-		return model;
-	}
+    private void progress(final String string)
+    {
 
-	public InfModel convert(final Gedcom gedcom) throws FileNotFoundException,
-			IOException {
+        final DateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss.SSS ");
+        final Date date = new Date();
+        getOut().println(dateFormat.format(date) + string);
+        getOut().flush();
+    }
 
-		final SemanticGedcomUtil util = new SemanticGedcomUtil();
-		progress("converting");
-		final Model rawModel = util.toRdf(gedcom, uriFormats.getURIs());
-		progress("applying rules");
-		final InfModel model = util.getInfModel(getQuery(queries.qRules));
-		progress("rules completed");
-		return model;
-	}
+    private void writeConvertedGedcom(final Model model, final String fileName) throws FileNotFoundException
+    {
+        if (fileName.length() == 0)
+            return;
+        final String language;
+        try
+        {
+            language = Extension.valueOf(extractExtension(fileName)).language();
+        }
+        catch (final IllegalArgumentException exception)
+        {
+            return;
+        }
+        if (fileName.startsWith("#"))
+        {
+            model.write(getOut(), language);
+            return;
+        }
+        final File file = new File(fileName);
+        if (!doNotOverwrite(file))
+        {
+            writeProgress(file);
+            model.write(new FileOutputStream(file), language);
+        }
+    }
 
-	private void progress(final String string) {
+    private void write(final String fileName, final String content) throws IOException
+    {
+        if (fileName.startsWith("#"))
+        {
+            getOut().println("############################################");
+            getOut().println(content);
+            getOut().flush();
+            return;
+        }
+        final File file = new File(fileName);
+        if (doNotOverwrite(file))
+            return;
+        writeProgress(file);
+        final FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+        try
+        {
+            fileOutputStream.write(content.getBytes());
+        }
+        finally
+        {
+            fileOutputStream.close();
+        }
+    }
 
-		final DateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss.SSS ");
-		final Date date = new Date();
-		getOut().println(dateFormat.format(date) + string);
-		getOut().flush();
-	}
+    private boolean doNotOverwrite(final File file)
+    {
+        if (file.exists() && output.askForOverwrite)
+        {
+            final String format = getResources().getString("overwrite.question");
+            final String prompt = MessageFormat.format(format, file.getAbsoluteFile());
+            final int rc = DialogHelper.openDialog(getName(), DialogHelper.WARNING_MESSAGE, prompt, Action2.yesNo(), null);
+            return (rc != 0);
+        }
+        return false;
+    }
 
-	private void writeConvertedGedcom(final Model model, final String fileName)
-			throws FileNotFoundException {
-		if (fileName.length() == 0)
-			return;
-		final String language;
-		try {
-			language = Extension.valueOf(extractExtension(fileName))
-					.getLanguage();
-		} catch (final IllegalArgumentException exception) {
-			return;
-		}
-		if (fileName.startsWith("#")) {
-			model.write(getOut(), language);
-			return;
-		}
-		final File file = new File(fileName);
-		if (!doNotOverwrite(file)) {
-			writeProgress(file);
-			model.write(new FileOutputStream(file), language);
-		}
-	}
+    private void writeProgress(final File file)
+    {
+        final String format = getResources().getString("progress.writing");
+        final String prompt = MessageFormat.format(format, file.getAbsoluteFile());
+        getOut().println(prompt);
+        getOut().flush();
+    }
 
-	private void write(final String fileName, final String content)
-			throws IOException {
-		if (fileName.startsWith("#")) {
-			getOut().println("############################################");
-			getOut().println(content);
-			getOut().flush();
-			return;
-		}
-		final File file = new File(fileName);
-		if (doNotOverwrite(file))
-			return;
-		writeProgress(file);
-		new FileOutputStream(fileName).write(content.getBytes());
-	}
+    private ResultSet execSelect(final String query, final Model model)
+    {
+        try
+        {
+            final QueryExecution queryExecution = QueryExecutionFactory.create(query, Syntax.syntaxARQ, model, new QuerySolutionMap());
+            final ResultSet resultSet = queryExecution.execSelect();
+            progress("query executed");
+            flush();
+            return resultSet;
+        }
+        catch (final QueryParseException exception)
+        {
+            println(exception.getMessage());
+            println(query);
+            flush();
+        }
+        return null;
+    }
 
-	private boolean doNotOverwrite(final File file) {
-		if (file.exists() && output.askForOverwrite) {
-			final String format = getResources()
-					.getString("overwrite.question");
-			final String prompt = MessageFormat.format(format, file
-					.getAbsoluteFile());
-			final int rc = DialogHelper
-					.openDialog(getName(), DialogHelper.WARNING_MESSAGE,
-							prompt, Action2.yesNo(), null);
-			return (rc != 0);
-		}
-		return false;
-	}
+    String assembleQuery(final String query, final Model model) throws IOException, FileNotFoundException, UnsupportedEncodingException
+    {
+        final StringBuffer fullQuery = assemblePrefixes(model);
+        fullQuery.append(getResources().getString("query.function.prefixes"));
+        fullQuery.append(query);
+        return fullQuery.toString();
+    }
 
-	private void writeProgress(final File file) {
-		final String format = getResources().getString("progress.writing");
-		final String prompt = MessageFormat.format(format, file
-				.getAbsoluteFile());
-		getOut().println(prompt);
-		getOut().flush();
-	}
+    private String getQuery(final String queryPart) throws FileNotFoundException, IOException
+    {
+        final File file = new File(queryPart);
+        final byte[] buffer = new byte[(int) file.length()];
+        RandomAccessFile f = new RandomAccessFile(queryPart, "r");
+        f.readFully(buffer);
+        f.close();
+        return new String(buffer, "UTF-8");
+    }
 
-	private ResultSet execSelect(final String query, final Model model) {
-		try {
-			final QueryExecution queryExecution = QueryExecutionFactory.create(
-					query, Syntax.syntaxARQ, model, new QuerySolutionMap());
-			final ResultSet resultSet = queryExecution.execSelect();
-			progress("query executed");
-			flush();
-			return resultSet;
-		} catch (final QueryParseException exception) {
-			println(exception.getMessage());
-			println(query);
-			flush();
-		}
-		return null;
-	}
-
-	String assembleQuery(final String query, final Model model)
-			throws IOException, FileNotFoundException,
-			UnsupportedEncodingException {
-		final StringBuffer fullQuery = assemblePrefixes(model);
-		fullQuery.append(getResources().getString("query.function.prefixes"));
-		fullQuery.append(query);
-		return fullQuery.toString();
-	}
-
-	private String getQuery(final String queryPart)
-			throws FileNotFoundException, IOException {
-		final File file = new File(queryPart);
-		final byte[] buffer = new byte[(int) file.length()];
-		RandomAccessFile f = new RandomAccessFile(queryPart, "r");
-		f.readFully(buffer);
-		f.close();
-		return new String(buffer, "UTF-8");
-	}
-
-	public static StringBuffer assemblePrefixes(final Model model)
-			throws FileNotFoundException, IOException {
-		final Map<String, String> prefixMap = model.getNsPrefixMap();
-		final StringBuffer query = new StringBuffer();
-		for (final Object prefix : prefixMap.keySet().toArray())
-			query.append(String.format("PREFIX %s: <%s> \n", prefix.toString(),
-					prefixMap.get(prefix).toString()));
-		return query;
-	}
+    public static StringBuffer assemblePrefixes(final Model model) throws FileNotFoundException, IOException
+    {
+        final Map<String, String> prefixMap = model.getNsPrefixMap();
+        final StringBuffer query = new StringBuffer();
+        for (final Object prefix : prefixMap.keySet().toArray())
+            query.append(String.format("PREFIX %s: <%s> \n", prefix.toString(), prefixMap.get(prefix).toString()));
+        return query;
+    }
 }
