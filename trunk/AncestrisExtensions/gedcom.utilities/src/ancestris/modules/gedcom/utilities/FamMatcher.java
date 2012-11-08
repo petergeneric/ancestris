@@ -48,7 +48,7 @@ public class FamMatcher extends EntityMatcher<Fam> {
             husbandNames.add(new PropertyName("?", "?"));
         }
         if (entity.getWife() != null) {
-                wifeNames = entity.getHusband().getProperties(PropertyName.class);
+                wifeNames = entity.getWife().getProperties(PropertyName.class);
         } else {
             wifeNames = new ArrayList<PropertyName> ();
             wifeNames.add(new PropertyName("?", "?"));
