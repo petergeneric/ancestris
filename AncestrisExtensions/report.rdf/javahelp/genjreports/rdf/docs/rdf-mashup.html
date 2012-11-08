@@ -117,8 +117,8 @@
         </p>
 <pre>
 java %JAVA_OPTS% genjreports.rdf.<u>Gedsem.Convert</u> -rules slowRules.txt -gedcom family.ged -format ttl > gedcom.ttl
-java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> muInput.tsv gedcom.ttl muOutput.ttl <u>mashup.arq</u>
-java %JAVA_OPTS% genjreports.rdf.<u>semweb.Mashup</u> muInput.tsv http://my.dom.com/gc/places/ muOutput.ttl "de|fr"
+java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> mashup.tsv gedcom.ttl mashup.ttl <u>mashup.arq</u>
+java %JAVA_OPTS% genjreports.rdf.<u>semweb.Mashup</u> mashup.tsv http://my.dom.com/gc/places/ mushup.ttl "de|fr"
 java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOutput.ttl *.rdf <u>classmates.arq</u>
 </pre>
         <ul>
@@ -143,7 +143,7 @@ java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOu
           </li>
           <li>
             The Mashup commands takes some 6 minutes and creates about 250KB
-            with the <a href="./mashup/kennedyMashupInput.tsv">Kennedy</a> example,
+            with the <a href="./mashup/kennedyMashup.tsv">Kennedy</a> example,
           </li>
         </ul>
         <p class="justify">
@@ -182,7 +182,7 @@ java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOu
             <a href="./mashup/log4j.properties">log4j.properties</a>
             and the variable JAVA_OPTS. 
             The mashup will work without this file,
-            but logging will be limioted to a warning and not produce progress information.
+            but logging will be limited to some warnings and not produce progress information.
         </p>
 
 
