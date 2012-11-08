@@ -116,10 +116,10 @@
             Run without arguments to show all possible arguments.
         </p>
 <pre>
-java %JAVA_OPTS% genjreports.rdf.GedcomToRdf<u>Converter</u> -rules slowRules.txt -gedcom family.ged > gedcom.ttl
-java %JAVA_OPTS% genjreports.rdf.semweb.<u>Select</u> muInput.tsv gedcom.ttl muOutput.ttl <u>mashup.arq</u>
-java %JAVA_OPTS% genjreports.rdf.semweb.<u>Mashup</u> muInput.tsv http://my.dom.com/gc/places/ muOutput.ttl "de|fr"
-java %JAVA_OPTS% genjreports.rdf.semweb.<u>Select</u> report.txt gedcom.ttl muOutput.ttl *.rdf <u>classmates.arq</u>
+java %JAVA_OPTS% genjreports.rdf.<u>Gedsem.Convert</u> -rules slowRules.txt -gedcom family.ged -format ttl > gedcom.ttl
+java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> muInput.tsv gedcom.ttl muOutput.ttl <u>mashup.arq</u>
+java %JAVA_OPTS% genjreports.rdf.<u>semweb.Mashup</u> muInput.tsv http://my.dom.com/gc/places/ muOutput.ttl "de|fr"
+java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOutput.ttl *.rdf <u>classmates.arq</u>
 </pre>
         <ul>
           <li>
@@ -248,13 +248,11 @@ java %JAVA_OPTS% genjreports.rdf.semweb.<u>Select</u> report.txt gedcom.ttl muOu
                 what is already present. DbPedia is allways queried to create direct links,
                 but nothing is downloaded because it is too much and can be queried directly.
             </p></dd>
-            <dt>Lexical error at line 1, column 2.  Encountered: "\u00bb" (187), after : "\u00ef"
-            <br/>skipping mashup.arq
-            </dt>
+            <dt>skipping mashup.arq: Lexical error at line 1, column 2.  Encountered: "\u00bb" (187), after : "\u00ef"</dt>
             <dd><p>You probably saved the arq file as an UTF-8 with a byte-order-mark.
-                   Typically Window's NotePad does that.
+                   Typically Window's NotePad adds that BOM.
                    Normaly these bytes do not show, but with the command "type"
-                   in a command window, these characters show up as funny characters.
+                   in a command window, they show up as funny characters.
                    Try to save as ANSII.
             </p></dd>
 
