@@ -30,6 +30,7 @@ PREFIX afn: <http://jena.hpl.hp.com/ARQ/function#>
 PREFIX apf: <http://jena.hpl.hp.com/ARQ/property#> 
 
 SELECT DISTINCT 
+  ?gn
   ?place
   (COUNT(?place)   as ?events)
   (MIN(?eventYear) as ?from)
@@ -63,5 +64,5 @@ SELECT DISTINCT
     }
   }
 }
-GROUP BY ?place ?lat ?long ?dbpedia_resource 
+GROUP BY ?place ?lat ?long ?dbpedia_resource ?gn
 ORDER BY ?dbpedia_resource ?place
