@@ -19,15 +19,16 @@ public class IndiMatcher extends EntityMatcher<Indi> {
         if ((leftIndi.getSex() == rightIndi.getSex())) {
             // compare Birth dates
             if (compareBirthDate(leftIndi, rightIndi) < 4000) {
-                // Compare LastName
-                int lastNameScore = compareLastNames(leftIndi, rightIndi);
-                if (lastNameScore > 80) {
-                    // Compare FistNames
-                    int firstNameScore = compareFirstNames(leftIndi, rightIndi);
-                    if (firstNameScore > 80) {
-                        if (compareBirthPlace(leftIndi, rightIndi)) {
-                            if (compareBirthDate(leftIndi, rightIndi) < 4000) {
-                                if (compareDeathDate(leftIndi, rightIndi) < 4000) {
+                // compare Death dates
+                if (compareDeathDate(leftIndi, rightIndi) < 4000) {
+                    // Compare LastName
+                    int lastNameScore = compareLastNames(leftIndi, rightIndi);
+                    if (lastNameScore >= 50) {
+                        // Compare FistNames
+                        int firstNameScore = compareFirstNames(leftIndi, rightIndi);
+                        if (firstNameScore > 80) {
+                            if (compareBirthPlace(leftIndi, rightIndi)) {
+                                if (compareDeathPlace(leftIndi, rightIndi)) {
                                     return 100;
                                 } else {
                                     return 80;
@@ -35,22 +36,12 @@ public class IndiMatcher extends EntityMatcher<Indi> {
                             } else {
                                 return 50;
                             }
-                        } else {
-                            return 0;
                         }
-
-                    } else {
-                        return 0;
                     }
-                } else {
-                    return 0;
                 }
-            } else {
-                return 0;
             }
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     private int compareLastNames(Indi leftIndi, Indi rightIndi) {
@@ -97,7 +88,6 @@ public class IndiMatcher extends EntityMatcher<Indi> {
             }
         }
         return 5000;
-
     }
 
     private boolean compareBirthPlace(Indi leftIndi, Indi rightIndi) {
