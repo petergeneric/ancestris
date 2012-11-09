@@ -2,6 +2,8 @@ package ancestris.modules.viewers.entityviewer.nodes;
 
 import ancestris.modules.viewers.entityviewer.PropertyTag2Icon;
 import ancestris.modules.viewers.entityviewer.PropertyTag2Name;
+import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyXRef;
 import java.awt.Image;
 import org.openide.ErrorManager;
 import org.openide.nodes.AbstractNode;
@@ -24,7 +26,13 @@ public class PropertyNode extends AbstractNode {
     public String getDisplayName() {
         genj.gedcom.Property obj = getLookup().lookup(genj.gedcom.Property.class);
         if (obj != null) {
-            return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getValue();
+            if (obj instanceof PropertyAssociation) {
+                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
+            } else if (obj instanceof PropertyXRef) {
+                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
+            } else {
+                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getValue();
+            }
         } else {
             return null;
         }
@@ -69,7 +77,7 @@ public class PropertyNode extends AbstractNode {
         sheet.put(set);
         return sheet;
     }
-    
+
     @Override
     public boolean canDestroy() {
         return true;
