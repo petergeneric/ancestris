@@ -8,7 +8,7 @@ set CLASSPATH=%CLASSPATH%;%MODS%\modules\docs\genjreports-rdf.jar
 set CLASSPATH=%CLASSPATH%;%MODS%\modules\ext\*
 set JAVA_OPTS= -Xmx1024M -Dlog4j.configuration=file:log4j.properties
 
-rem ### required for gedsem 
+rem ### additional requirements for gedsem 
 set CLASSPATH=%CLASSPATH%;%APP%\ancestris\modules\ancestris-core.jar
 set CLASSPATH=%CLASSPATH%;%APP%\ancestris\modules\ancestris-libs-genj.jar
 set CLASSPATH=%CLASSPATH%;%APP%\platform\lib\*
