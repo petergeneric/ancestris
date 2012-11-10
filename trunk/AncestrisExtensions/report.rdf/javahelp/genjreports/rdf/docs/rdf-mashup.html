@@ -35,7 +35,6 @@
         <ul>
             <li> <a href="rdf-mashup.html#semantic-intro">Introduction to the semantic web</a></li>
             <li> <a href="rdf-mashup.html#batches">Batches</a></li>
-            <li> <a href="rdf-mashup.html#setenv">Set Environment Variables</a></li>
             <li> <a href="rdf-mashup.html#GeoNameIDs">GeoNameIDs</a></li>
             <li> <a href="rdf-mashup.html#FAQ">FAQ</a></li>
         </ul>
@@ -109,81 +108,55 @@
         <p class="justify">
             The plugin uses the jena library to perform its tasks. 
             Jena.apache and other products also have command line tools for similar tasks.
+        </p>
+        <p class="justify">
             The plugin functionality can also be executed from a command line.
             Thus you can assemble a list of reports you want to run every once in while,
             in stead of having to launch them one by one.
-            Below some examples of commands. 
-            Run without arguments to show all possible arguments.
-        </p>
-<pre>
-java %JAVA_OPTS% genjreports.rdf.<u>Gedsem.Convert</u> -rules slowRules.txt -gedcom family.ged -format ttl > gedcom.ttl
-java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> mashup.tsv gedcom.ttl mashup.ttl <u>mashup.arq</u>
-java %JAVA_OPTS% genjreports.rdf.<u>semweb.Mashup</u> mashup.tsv http://my.dom.com/gc/places/ mushup.ttl "de|fr"
-java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOutput.ttl *.rdf <u>classmates.arq</u>
-</pre>
-        <ul>
-          <li>
-            Before these commands will run you will have to
-            <a href="#setenv">set</a> some environment variables.
-          </li>
-          <li>On Mac / Unix %JAVA_OPTS% becomes $JAVA_OPTS$.</li>
-          <li>
-            The selection command allows to run a query against
-            multiple sources. The report view runs queries just against
+            Note that the command line version allows to run a query against
+            multiple sources, the report view runs queries just against
             the converted gedcom. 
-          </li>
-          <li>
             The GUI allows to run reports for a specific entity, 
-            something the command line can't: you would have to duplicate the queryfile
+            something the command line can't:
+            you would have to duplicate the queryfile
             and replace %s manually with the desired ID.
-          </li>
-          <li>
-            The mashup command builds a bridge between your family data
-            and data on the web. This command is not (yet?) available in the GUI.
-          </li>
-          <li>
-            The Mashup commands takes some 6 minutes and creates about 250KB
-            with the <a href="./mashup/kennedyMashup.tsv">Kennedy</a> example,
-          </li>
+        </p>
+        <p class="justify">
+            To get started: create a new folder and download the files
+        </p>
+        <ul><li><a href="./mashup/reports.bat">reports.bat<a> (Windows) or
+                <a href="./mashup/reports.sh">resports.sh</a> (Mac/Unix)
+            </li>
+            <li><a href="./mashup/mashup.arq">mashup.arq</a></li>
+            <li><a href="./mashup/classmates.arq">classmates.arq</a></li>
+            <li><a href="./mashup/log4j.proprties">log4j.proprties</a>
+                (configures the progress shown by the slow semweb.Mashup)
+            </li>
+            <li>an empty file called mashup.ttl</li>
         </ul>
         <p class="justify">
-            
+            Edit the reports file, follow the instructions inside it.
+            The diagram below illustrates what the reports command file
+            will do when launched.
         </p>
         <p class="justify">
-            The commands and their files above are shown in the following diagram.
-            Note that muInput.tsv is output for one command and input for the next
+            Note that semweb.Mashup uses places to build a bridge between your family data
+            and data on the web. This function is not (yet?) available in the GUI.
+            The mashup takes some 6 minutes and creates about 250KB
+            with the Kennedy example.
+            The reports command pauses a few times to let you inspect the intermediate results.
+            One of these times it asks to add missing GeoNameID's.
+            If you chose the Kennedy example,
+            you can overwrite the generated tsv with the
+            <a href="./mashup/kennedyMashup.tsv">kennedyMashup.tsv</a>,
+            otherwise follow <a href="#GeoNamesIDs">these instructions</a>.
+            Once you get the hang of it, you can duplicate the last
+            semeweb.Select with other query files and output files.
         </p>
+
         <img src="./images/chart.jpg"/>
 
 
-
-        <a name="#setenv"></a>
-        <h3 class="ancestris_help_title">Set Environment Variables</h3>
-        <p class="justify">
-            The batch commands need some environment variables. The files
-            <a href="./mashup/setenv.bat">setenv.bat</a> (for Windows) and
-            <a href="./mashup/setenv.sh">setenv.sh</a> (for Mac / Unix)
-            are examples to set them, you will have to adjust them
-            depending on the configuration of your system. 
-        </p>
-        <p class="justify">
-            The example value for the variable MODS is for a beta release of Ancestris.
-            For an official release replace "trunk" with the release number, for example "0.8".
-            Other components of the paths may vary depending on the configuration
-            of your operating system.
-        </p>
-        <p class="justify">
-            Until deivered along with Ancestris, you need to download the jars listed 
-            <a href="forum.ancestris.org/index.php?topic=76.msg192">here</a>
-            and add the download folder to the classpath.
-        </p>
-        <p class="justify">
-            Mashup shows progress with logging which can be customised with
-            <a href="./mashup/log4j.properties">log4j.properties</a>
-            and the variable JAVA_OPTS. 
-            The mashup will work without this file,
-            but logging will be limited to some warnings and not produce progress information.
-        </p>
 
 
 
@@ -223,6 +196,11 @@ java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOu
         <h3 class="ancestris_help_title">FAQ</h3>
 
         <dl>
+            <dt>Does DbPedia have resources in my language?</dt>
+            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>
+                   Note that not all can be queried directly.
+                </p>
+            </dd>
             <dt>What properties are commonly available?</dt>
             <dd>Try the mashup queries:
                 <ul>   <li><a href="./mashup/geonamesProperties.arq">geonamesProperties.arq</a>
@@ -232,25 +210,20 @@ java %JAVA_OPTS% genjreports.rdf.<u>semweb.Select</u> report.txt gedcom.ttl muOu
                   </li>
                 </ul>
             </dd>
-            <dt>Does DbPedia have resources in my language?</dt>
-            <dd><p>Try the mashup query <a href="./mashup/geonamesProperties.arq">dbpediaLanguages.arq</a>
-                   Note that not all can be queried directly.
-                </p>
-            </dd>
             <dt>Some places do have a GeoNameID in the mashup input, 
-                but <a href="./mashup/mashup.arq">mashup.arg</a> shows no coordinates.
+                but the result of semweb.Select with mashup.arg
+                shows no coordinates.
             </dt>
             <dd><p>
                 The free services of GeoNames and DbPedia are not allways reliable
-                so you might have to repeat <a href="./mashup/mashup.bat">mashup.bat</a>
-                or <a href="./mashup/mashup.sh">mashup.sh</a>.
-                The mashup command is designed not to download from GeoNames again
+                so you might have to repeat semweb.Mashup.
+                The command semweb.Mashup is designed not to download from GeoNames again
                 what is already present. DbPedia is allways queried to create direct links,
                 but nothing is downloaded because it is too much and can be queried directly.
             </p></dd>
             <dt>skipping mashup.arq: Lexical error at line 1, column 2.  Encountered: "\u00bb" (187), after : "\u00ef"</dt>
             <dd><p>You probably saved the arq file as an UTF-8 with a byte-order-mark.
-                   Typically Window's NotePad adds that BOM.
+                   Typically Window's NotePad adds that BOM when you choose to save as UTF-8.
                    Normaly these bytes do not show, but with the command "type"
                    in a command window, they show up as funny characters.
                    Try to save as ANSII.
