@@ -28,6 +28,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
      */
     public CheckDuplicatesResultPanel(LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList) {
         initComponents();
+        // Synchronize Horizontal and Vertical scroll bars
         leftDisplayEntityPanel.getVerticalScrollBar().setModel(rightDisplayEntityPanel.getVerticalScrollBar().getModel());
         leftDisplayEntityPanel.getHorizontalScrollBar().setModel(rightDisplayEntityPanel.getHorizontalScrollBar().getModel());
         this.matchesLinkedList = matchesLinkedList;
@@ -58,9 +59,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
         leftEntityPanel = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
         rightEntityPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         duplicateIndexLabel = new javax.swing.JLabel();
@@ -68,12 +67,14 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         nextButton = new javax.swing.JButton();
         previousButton = new javax.swing.JButton();
 
+        setMinimumSize(new java.awt.Dimension(720, 438));
+        setOpaque(false);
+        setRequestFocusEnabled(false);
         setLayout(new java.awt.BorderLayout());
 
         jSplitPane1.setResizeWeight(0.5);
+        jSplitPane1.setMinimumSize(new java.awt.Dimension(666, 374));
         jSplitPane1.setName("");
-
-        jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
 
         leftEntityPanel.setMinimumSize(new java.awt.Dimension(333, 374));
         leftEntityPanel.setPreferredSize(new java.awt.Dimension(333, 374));
@@ -83,21 +84,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         leftDisplayEntityPanel = new DisplayEntityPanel ();
         leftEntityPanel.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        jSplitPane1.setLeftComponent(jPanel1);
+        jSplitPane1.setRightComponent(leftEntityPanel);
 
         rightEntityPanel.setMinimumSize(new java.awt.Dimension(333, 374));
         rightEntityPanel.setPreferredSize(new java.awt.Dimension(333, 374));
@@ -106,21 +93,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         rightDisplayEntityPanel = new DisplayEntityPanel ();
         rightEntityPanel.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        jSplitPane1.setRightComponent(jPanel2);
+        jSplitPane1.setLeftComponent(rightEntityPanel);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -219,8 +192,6 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_previousButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel duplicateIndexLabel;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel leftEntityPanel;
