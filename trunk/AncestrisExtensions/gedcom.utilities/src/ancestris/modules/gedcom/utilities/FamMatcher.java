@@ -22,7 +22,7 @@ public class FamMatcher extends EntityMatcher<Fam> {
                     if (new IndiMatcher().compare(leftWife,rightWife) >= 80) {
                         PropertyDate leftwhen = left.getWhen();
                         PropertyDate rightwhen = right.getWhen();
-                        if (leftwhen.isComparable() && rightwhen.isComparable()) {
+                        if (leftwhen != null && leftwhen.isComparable() && leftwhen != null && rightwhen.isComparable()) {
                             if (leftwhen.compareTo(rightwhen) <= 4000) {
                                 // should we compare chlidrens ?
                                 return 100;
