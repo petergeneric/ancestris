@@ -6,8 +6,12 @@ import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
 import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
 import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.Entity;
+import java.awt.Dialog;
 import java.util.LinkedList;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.nodes.Children;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -63,9 +67,10 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         rightEntityPanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         duplicateIndexLabel = new javax.swing.JLabel();
-        mergeButton = new javax.swing.JButton();
+        expandAllButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         previousButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(720, 438));
         setOpaque(false);
@@ -99,10 +104,10 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
 
         duplicateIndexLabel.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.duplicateIndexLabel.text")); // NOI18N
 
-        mergeButton.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.mergeButton.text")); // NOI18N
-        mergeButton.addActionListener(new java.awt.event.ActionListener() {
+        expandAllButton.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.expandAllButton.text")); // NOI18N
+        expandAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mergeButtonActionPerformed(evt);
+                expandAllButtonActionPerformed(evt);
             }
         });
 
@@ -122,17 +127,26 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.jButton1.text")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(duplicateIndexLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                .addComponent(duplicateIndexLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addGap(104, 104, 104)
                 .addComponent(previousButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mergeButton)
+                .addComponent(expandAllButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nextButton)
                 .addContainerGap())
@@ -141,20 +155,62 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(duplicateIndexLabel)
-                .addComponent(mergeButton)
+                .addComponent(expandAllButton)
                 .addComponent(nextButton)
-                .addComponent(previousButton))
+                .addComponent(previousButton)
+                .addComponent(jButton1))
         );
 
         add(jPanel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mergeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mergeButtonActionPerformed
+    private void expandAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expandAllButtonActionPerformed
         leftDisplayEntityPanel.getBeanTreeView().expandAll();
         rightDisplayEntityPanel.getBeanTreeView().expandAll();
-    }//GEN-LAST:event_mergeButtonActionPerformed
+    }//GEN-LAST:event_expandAllButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        next();
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        previous();
+    }//GEN-LAST:event_previousButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
+        MergeEntityPanel mergeEntityPanel = new MergeEntityPanel(potentialMatch.getLeft(), potentialMatch.getRight());
+        DialogDescriptor mergeEntityPanelDescriptor = new DialogDescriptor(
+                mergeEntityPanel,
+                NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title"),
+                true,
+                new Object[]{DialogDescriptor.OK_OPTION, DialogDescriptor.CANCEL_OPTION},
+                DialogDescriptor.OK_OPTION,
+                DialogDescriptor.DEFAULT_ALIGN,
+                null,
+                null);
+
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(mergeEntityPanelDescriptor);
+        dialog.setVisible(true);
+        dialog.setModal(false);
+        dialog.toFront();
+        if (mergeEntityPanelDescriptor.getValue().equals(DialogDescriptor.OK_OPTION)) {
+            next ();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel duplicateIndexLabel;
+    private javax.swing.JButton expandAllButton;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JPanel leftEntityPanel;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JButton previousButton;
+    private javax.swing.JPanel rightEntityPanel;
+    // End of variables declaration//GEN-END:variables
+
+    private void next() {
         linkedListIndex += 1;
         PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
         Entity left = potentialMatch.getLeft();
@@ -171,9 +227,9 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         if (linkedListIndex > 0) {
             previousButton.setEnabled(true);
         }
-    }//GEN-LAST:event_nextButtonActionPerformed
+    }
 
-    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+    private void previous() {
         linkedListIndex -= 1;
         PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
         Entity left = potentialMatch.getLeft();
@@ -189,15 +245,5 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         if (linkedListIndex < linkedListSize) {
             nextButton.setEnabled(true);
         }
-    }//GEN-LAST:event_previousButtonActionPerformed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel duplicateIndexLabel;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JPanel leftEntityPanel;
-    private javax.swing.JButton mergeButton;
-    private javax.swing.JButton nextButton;
-    private javax.swing.JButton previousButton;
-    private javax.swing.JPanel rightEntityPanel;
-    // End of variables declaration//GEN-END:variables
+    }
 }
