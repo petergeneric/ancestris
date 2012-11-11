@@ -1,13 +1,9 @@
 #####################################################
-### replace USERNAME, put the proper duo last
-### depending on the configuration of you system
-### you might need other paths to ancestris
+### you might need other paths depending 
+### on the configuration of your system
 ###--------------------------------------------------
-export APP=/PATH_TO/ancestris
-export MODS=/PATH_TO/.ancestris/0.8
-###
-export APP=/PATH_TO/ancestris-20121002/ancestris
-export MODS=/PATH_TO/.ancestris/trunk
+export APP=~/Library/Application%20Support/ancestris
+export MODS=~/.ancestris otherwise
 #####################################################
 ### put the desired file last
 ###--------------------------------------------------
