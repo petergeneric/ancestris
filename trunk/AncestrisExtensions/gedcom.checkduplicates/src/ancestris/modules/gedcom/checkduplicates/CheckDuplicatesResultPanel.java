@@ -14,7 +14,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author lemovice
  */
-@Messages("CheckDuplicatesResultPanel.duplicateIndexLabel.text=Duplicate {0} of {1} estimate matching {2}%")
+@Messages("CheckDuplicatesResultPanel.duplicateIndexLabel.text=<html>Duplicate <font color=red>{0}</font> of {1} estimate matching <font color=blue>{2}</font>%<html>")
 public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
 
     private DisplayEntityPanel leftDisplayEntityPanel;
