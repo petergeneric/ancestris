@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
-@NbBundle.Messages("CheckDuplicatesVisualPanel2.title=Presentation")
+@NbBundle.Messages("CheckDuplicatesVisualPanel2.title=Entities selection")
 public final class CheckDuplicatesVisualPanel2 extends JPanel {
 
     private ArrayList<String> selectedEntities = new ArrayList<String>() {

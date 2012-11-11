@@ -38,7 +38,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder justification="3" title="Entity to Check">
+            <TitledBorder justification="3" title="Entities to Check">
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesVisualPanel2.jPanel1.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
               <Color PropertyName="color" blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
             </TitledBorder>
