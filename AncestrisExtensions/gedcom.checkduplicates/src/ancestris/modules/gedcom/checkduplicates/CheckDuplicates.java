@@ -5,10 +5,7 @@ import ancestris.modules.gedcom.utilities.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.Dialog;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -39,13 +36,13 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
         }
     };
     private final List<String> entities2Ckeck;
-    
+
     public CheckDuplicates() {
         this.gedcom = null;
         this.entities2Ckeck = null;
     }
 
-    public CheckDuplicates(Gedcom leftGedcom, List<String>entities2Ckeck) {
+    public CheckDuplicates(Gedcom leftGedcom, List<String> entities2Ckeck) {
         this.gedcom = leftGedcom;
         this.entities2Ckeck = entities2Ckeck;
     }
@@ -53,6 +50,7 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
     @Override
     public void run() {
         final LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList<PotentialMatch<? extends Entity>>();
+        final HashMap<String, Integer> duplicatesHashMap = new HashMap<String, Integer>();
         if (gedcom == null) {
             return;
         }
@@ -64,7 +62,15 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
 
                 if (entities != null) {
                     List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
+                    Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
+
+                        @Override
+                        public int compare(PotentialMatch e1, PotentialMatch e2) {
+                            return e2.getCertainty() - e1.getCertainty();
+                        }
+                    });
                     matchesLinkedList.addAll(potentialMatches);
+                    duplicatesHashMap.put(tag, potentialMatches.size());
                 }
             }
 
@@ -74,7 +80,7 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
                 public void run() {
                     // There is duplicates let displaying them
                     if (matchesLinkedList.size() > 0) {
-                        CheckDuplicatesPanel entityViewPanel = new CheckDuplicatesPanel(matchesLinkedList);
+                        CheckDuplicatesResultPanel entityViewPanel = new CheckDuplicatesResultPanel(matchesLinkedList);
                         DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
                                 entityViewPanel,
                                 NbBundle.getMessage(CheckDuplicates.class, "CheckDuplicatePanelDescriptor.title"),

@@ -19,9 +19,7 @@
     <Container class="javax.swing.JSplitPane" name="jSplitPane1">
       <Properties>
         <Property name="resizeWeight" type="double" value="0.5"/>
-        <Property name="name" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesPanel.jSplitPane1.name" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
+        <Property name="name" type="java.lang.String" value=""/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
@@ -48,7 +46,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="leftEntityPanel" pref="280" max="32767" attributes="0"/>
+                      <Component id="leftEntityPanel" pref="274" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -81,7 +79,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="rightEntityPanel" pref="325" max="32767" attributes="0"/>
+                      <Component id="rightEntityPanel" pref="331" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -116,7 +114,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabel3" pref="359" max="32767" attributes="0"/>
+                  <Component id="duplicateIndexLabel" pref="359" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
                   <Component id="previousButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -130,7 +128,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="duplicateIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="mergeButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="previousButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -139,15 +137,17 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel3">
+        <Component class="javax.swing.JLabel" name="duplicateIndexLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel3"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesResultPanel.duplicateIndexLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="mergeButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesPanel.mergeButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesResultPanel.mergeButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -157,7 +157,7 @@
         <Component class="javax.swing.JButton" name="nextButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesPanel.nextButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesResultPanel.nextButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -168,7 +168,7 @@
         <Component class="javax.swing.JButton" name="previousButton">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesPanel.previousButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/gedcom/checkduplicates/Bundle.properties" key="CheckDuplicatesResultPanel.previousButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
