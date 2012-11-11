@@ -14,7 +14,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author lemovice
  */
-@Messages("CheckDuplicatesResultPanel.duplicateIndexLabel.text=Duplicate {0} of {1} % {2}")
+@Messages("CheckDuplicatesResultPanel.duplicateIndexLabel.text=Duplicate {0} of {1} estimate matching {2}%")
 public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
 
     private DisplayEntityPanel leftDisplayEntityPanel;
@@ -39,7 +39,6 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             Entity right = potentialMatch.getRight();
             rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-//            jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
             duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), (linkedListSize + 1), potentialMatch.getCertainty()));
             if (linkedListIndex < linkedListSize) {
                 nextButton.setEnabled(true);
@@ -184,7 +183,6 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         Entity right = potentialMatch.getRight();
         rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-//        jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
         duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), (linkedListSize + 1), potentialMatch.getCertainty()));
 
         if (linkedListIndex >= linkedListSize) {
@@ -204,7 +202,6 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         Entity right = potentialMatch.getRight();
         rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-//        jLabel3.setText("Estimate Percentage of duplication " + Integer.toString(potentialMatch.getCertainty()) + "%");
         duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), (linkedListSize + 1), potentialMatch.getCertainty()));
         if (linkedListIndex <= 0) {
             previousButton.setEnabled(false);
