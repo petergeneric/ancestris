@@ -19,16 +19,15 @@ public class FamMatcher extends EntityMatcher<Fam> {
                 Indi leftWife = left.getWife();
                 Indi rightWife = right.getWife();
                 if (leftWife != null && rightWife != null) {
-                    if (new IndiMatcher().compare(leftWife,rightWife) >= 80) {
-                        PropertyDate leftwhen = left.getWhen();
-                        PropertyDate rightwhen = right.getWhen();
+                    if (new IndiMatcher().compare(leftWife, rightWife) >= 80) {
+                        PropertyDate leftwhen = left.getMarriageDate();
+                        PropertyDate rightwhen = right.getMarriageDate();
                         if (leftwhen != null && leftwhen.isComparable() && leftwhen != null && rightwhen.isComparable()) {
                             if (leftwhen.compareTo(rightwhen) <= 4000) {
-                                // should we compare chlidrens ?
                                 return 100;
                             }
                         }
-                        return 50;
+                        return 80;
                     }
                 }
             }
@@ -42,15 +41,15 @@ public class FamMatcher extends EntityMatcher<Fam> {
         List<PropertyName> husbandNames;
         List<PropertyName> wifeNames;
         if (entity.getHusband() != null) {
-                husbandNames = entity.getHusband().getProperties(PropertyName.class);
+            husbandNames = entity.getHusband().getProperties(PropertyName.class);
         } else {
-            husbandNames = new ArrayList<PropertyName> ();
+            husbandNames = new ArrayList<PropertyName>();
             husbandNames.add(new PropertyName("?", "?"));
         }
         if (entity.getWife() != null) {
-                wifeNames = entity.getWife().getProperties(PropertyName.class);
+            wifeNames = entity.getWife().getProperties(PropertyName.class);
         } else {
-            wifeNames = new ArrayList<PropertyName> ();
+            wifeNames = new ArrayList<PropertyName>();
             wifeNames.add(new PropertyName("?", "?"));
         }
         for (Property husbandName : husbandNames) {
