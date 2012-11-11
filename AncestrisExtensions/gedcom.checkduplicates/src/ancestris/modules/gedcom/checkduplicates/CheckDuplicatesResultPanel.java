@@ -28,6 +28,8 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
      */
     public CheckDuplicatesResultPanel(LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList) {
         initComponents();
+        leftDisplayEntityPanel.getVerticalScrollBar().setModel(rightDisplayEntityPanel.getVerticalScrollBar().getModel());
+        leftDisplayEntityPanel.getHorizontalScrollBar().setModel(rightDisplayEntityPanel.getHorizontalScrollBar().getModel());
         this.matchesLinkedList = matchesLinkedList;
         this.linkedListIndex = 0;
         this.linkedListSize = matchesLinkedList.size() - 1;
@@ -73,6 +75,9 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(297, 291));
 
+        leftEntityPanel.setMinimumSize(new java.awt.Dimension(333, 374));
+        leftEntityPanel.setPreferredSize(new java.awt.Dimension(333, 374));
+        leftEntityPanel.setRequestFocusEnabled(false);
         leftEntityPanel.setLayout(new java.awt.BorderLayout());
 
         leftDisplayEntityPanel = new DisplayEntityPanel ();
@@ -84,16 +89,18 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+            .addComponent(leftEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(jPanel1);
 
+        rightEntityPanel.setMinimumSize(new java.awt.Dimension(333, 374));
+        rightEntityPanel.setPreferredSize(new java.awt.Dimension(333, 374));
         rightEntityPanel.setLayout(new java.awt.BorderLayout());
 
         rightDisplayEntityPanel = new DisplayEntityPanel ();
@@ -105,12 +112,12 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+            .addComponent(rightEntityPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jSplitPane1.setRightComponent(jPanel2);
@@ -148,7 +155,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(duplicateIndexLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
+                .addComponent(duplicateIndexLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                 .addGap(104, 104, 104)
                 .addComponent(previousButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
