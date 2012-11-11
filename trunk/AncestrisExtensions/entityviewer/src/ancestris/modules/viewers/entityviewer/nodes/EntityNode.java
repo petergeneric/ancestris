@@ -19,7 +19,6 @@ public class EntityNode extends AbstractNode {
 
     public EntityNode(Children create, Entity entity) {
         super(create, Lookups.singleton(entity));
-        setDisplayName(EntityTag2Name.getTagName(entity.getTag()) + entity.getValue());
     }
 
     public EntityNode() {

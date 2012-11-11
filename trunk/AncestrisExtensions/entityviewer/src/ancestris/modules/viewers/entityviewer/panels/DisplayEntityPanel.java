@@ -2,6 +2,7 @@ package ancestris.modules.viewers.entityviewer.panels;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.JScrollBar;
 import javax.swing.tree.TreeSelectionModel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
@@ -75,5 +76,13 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
      */
     public BeanTreeView getBeanTreeView() {
         return beanTreeView;
+    }
+
+    public JScrollBar getHorizontalScrollBar() {
+        return jScrollPane1.getHorizontalScrollBar();
+    }
+    
+    public JScrollBar getVerticalScrollBar() {
+        return jScrollPane1.getVerticalScrollBar();
     }
 }
