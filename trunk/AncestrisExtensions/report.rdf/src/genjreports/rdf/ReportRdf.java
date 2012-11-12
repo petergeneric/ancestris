@@ -21,8 +21,9 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+
+import org.openide.util.lookup.ServiceProvider;
 
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -34,7 +35,6 @@ import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.InfModel;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = Report.class)
 public class ReportRdf extends Report /* implements BatchCompatible */
@@ -164,7 +164,7 @@ public class ReportRdf extends Report /* implements BatchCompatible */
 
         final SemanticGedcomUtil util = new SemanticGedcomUtil();
         progress("converting");
-        final Model rawModel = util.toRdf(gedcom, uriFormats.getURIs());
+        util.toRdf(gedcom, uriFormats.getURIs());
         progress("applying rules");
         final InfModel model = util.getInfModel(getQuery(queries.qRules));
         progress("rules completed");
