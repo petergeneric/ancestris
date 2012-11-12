@@ -1,3 +1,17 @@
+// @formatter:off
+/*
+ * Copyright 2012, J. Pol
+ *
+ * This file is part of free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation.
+ *
+ * This package is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details. A copy of the GNU General Public License is
+ * available at <http://www.gnu.org/licenses/>.
+ */
+// @formatter:on
 package genjreports.rdf.gedsem;
 
 import genj.gedcom.Gedcom;
@@ -7,11 +21,12 @@ import genjreports.rdf.semweb.Extension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.hp.hpl.jena.rdf.model.Model;
 
 // import org.junit.Test;
 
@@ -25,7 +40,6 @@ public class Convert
             LS + "format : default ttl; possible values: " + Arrays.deepToString(Extension.values()) + //
             LS + "uri    : default for the options FAM, INDI, OBJE, NOTE, REPO, SOUR, SUBM" + //
             LS + "         default for uri is " + UriFormats.DEFAULT_URI + //
-            LS + "         make sure to add a terminator " + //
             LS + "gedcom : filename, only preceding options are applied to the conversion";
 
     private static enum Option
@@ -55,51 +69,69 @@ public class Convert
                 break;
             case gedcom:
                 final SemanticGedcomUtil util = new SemanticGedcomUtil();
-                Model rdf = util.toRdf(readGedcom(value), uriFormats.getURIs());
+                final Map<String, String> uriMap = uriFormats.getURIs();
+                util.toRdf(readGedcom(value), uriMap).write(System.out, language);
+                System.out.println("conversion done");
                 if (qRules != null)
-                    rdf = util.getInfModel(read(qRules));
-                rdf.write(System.out, language);
+                {
+                    System.out.println("applying rules");
+                    util.getInfModel(qRules).write(System.out, language);
+                    System.out.println("rules done");
+                }
                 break;
             case rules:
-                qRules = value;
+                qRules = read(qRules);
                 break;
             case FAM:
-                uriFormats.fam = value;
+                uriFormats.fam = chekURI(value);
                 break;
             case INDI:
-                uriFormats.indi = value;
+                uriFormats.indi = chekURI(value);
                 break;
             case OBJE:
-                uriFormats.obje = value;
+                uriFormats.obje = chekURI(value);
                 break;
             case NOTE:
-                uriFormats.note = value;
+                uriFormats.note = chekURI(value);
                 break;
             case REPO:
-                uriFormats.repo = value;
+                uriFormats.repo = chekURI(value);
                 break;
             case SOUR:
-                uriFormats.sour = value;
+                uriFormats.sour = chekURI(value);
                 break;
             case SUBM:
-                uriFormats.subm = value;
+                uriFormats.subm = chekURI(value);
                 break;
             case uri:
-                uriFormats.subm = value;
-                uriFormats.fam = value;
-                uriFormats.indi = value;
-                uriFormats.obje = value;
-                uriFormats.note = value;
-                uriFormats.repo = value;
-                uriFormats.sour = value;
+                uriFormats.subm = chekURI(value);
+                uriFormats.fam = chekURI(value);
+                uriFormats.indi = chekURI(value);
+                uriFormats.obje = chekURI(value);
+                uriFormats.note = chekURI(value);
+                uriFormats.repo = chekURI(value);
+                uriFormats.sour = chekURI(value);
                 break;
             }
         }
     }
 
+    private static String chekURI(final String value) throws URISyntaxException
+    {
+        try {
+        return new URI(value).toString();
+        } catch (URISyntaxException e) {
+            throw createException(value+" "+e.getMessage());
+        }
+    }
+
     private static String read(final String fileName) throws IOException
     {
-        final File file = new File(fileName);
+        File file = new File(fileName);
+        if (!file.exists())
+            throw createException(fileName+" does not exist");
+        if (file.isDirectory())
+            throw createException(fileName+" should be plain text file but is a directory");
         final byte[] bytes = new byte[(int) file.length()];
         final FileInputStream inputStream = new FileInputStream(file);
         try
@@ -149,8 +181,13 @@ public class Convert
         }
     }
 
-    private static Gedcom readGedcom(final String file) throws Exception
+    private static Gedcom readGedcom(final String fileName) throws Exception
     {
+        File file = new File(fileName);
+        if (!file.exists())
+            throw createException(fileName+" does not exist");
+        if (file.isDirectory())
+            throw createException(fileName+" should be a gedcom file but is a directory");
 
         return GedcomReaderFactory.createReader(new FileInputStream(file), null).read();
     }
