@@ -1,14 +1,7 @@
 package ancestris.modules.gedcom.checkduplicates;
 
-import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
-import ancestris.modules.gedcom.utilities.matchers.NoteMatcher;
-import ancestris.modules.gedcom.utilities.matchers.SubmitterMatcher;
-import ancestris.modules.gedcom.utilities.matchers.IndiMatcher;
-import ancestris.modules.gedcom.utilities.matchers.SourceMatcher;
-import ancestris.modules.gedcom.utilities.matchers.RepositoryMatcher;
-import ancestris.modules.gedcom.utilities.matchers.FamMatcher;
-import ancestris.modules.gedcom.utilities.matchers.EntityMatcher;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.modules.gedcom.utilities.matchers.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
@@ -45,15 +38,18 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
         }
     };
     private final List<String> entities2Ckeck;
+    Map<String, ? extends Options> selectedOptions;
 
     public CheckDuplicates() {
         this.gedcom = null;
         this.entities2Ckeck = null;
+        this.selectedOptions = null;
     }
 
-    public CheckDuplicates(Gedcom leftGedcom, List<String> entities2Ckeck) {
+    public CheckDuplicates(Gedcom leftGedcom, List<String> entities2Ckeck, Map<String, ? extends Options> selectedOptions) {
         this.gedcom = leftGedcom;
         this.entities2Ckeck = entities2Ckeck;
+        this.selectedOptions = selectedOptions;
     }
 
     @Override
@@ -68,8 +64,20 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
                 List<? extends Entity> entities = new ArrayList(gedcom.getEntities(tag));
 
                 log.log(Level.INFO, "Checking: {0}", tag);
-
                 if (entities != null) {
+                    if (tag.equals(Gedcom.INDI)) {
+                        (entitiesMatchers.get(tag)).setOptions((IndiMatcherOptions) selectedOptions.get(Gedcom.INDI));
+                    } else if (tag.equals(Gedcom.FAM)) {
+                        (entitiesMatchers.get(tag)).setOptions((FamMatcherOptions) selectedOptions.get(Gedcom.FAM));
+                    } else if (tag.equals(Gedcom.NOTE)) {
+                        (entitiesMatchers.get(tag)).setOptions((NoteMatcherOptions) selectedOptions.get(Gedcom.NOTE));
+                    } else if (tag.equals(Gedcom.REPO)) {
+                        (entitiesMatchers.get(tag)).setOptions((RepositoryMatcherOptions) selectedOptions.get(Gedcom.REPO));
+                    } else if (tag.equals(Gedcom.SOUR)) {
+                        (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SOUR));
+                    } else if (tag.equals(Gedcom.SUBM)) {
+                        (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SUBM));
+                    }
                     List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
                     Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
 

@@ -51,5 +51,6 @@ public class CheckDuplicatesWizardPanel2 implements WizardDescriptor.Panel<Wizar
     public void storeSettings(WizardDescriptor wiz) {
         // use wiz.putProperty to remember current panel state
         wiz.putProperty("selectedEntities", ((CheckDuplicatesVisualPanel2) getComponent()).getSelectedEntities());
+        wiz.putProperty("selectedOptions", ((CheckDuplicatesVisualPanel2) getComponent()).getSelectedOptions());
     }
 }

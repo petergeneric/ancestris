@@ -1,6 +1,7 @@
 package ancestris.modules.gedcom.checkduplicates;
 
 import static ancestris.modules.gedcom.checkduplicates.Bundle.*;
+import ancestris.modules.gedcom.utilities.matchers.Options;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.Component;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -64,7 +66,8 @@ public final class CheckDuplicatesWizardAction implements ActionListener {
             if (DialogDisplayer.getDefault().notify(wizardDescriptor) == WizardDescriptor.FINISH_OPTION) {
                 Gedcom myGedcom = context.getGedcom();
                 List<String> entities2Ckeck = (List<String>)wizardDescriptor.getProperty("selectedEntities");
-                theTask = RP.create(new CheckDuplicates(myGedcom, entities2Ckeck));
+                TreeMap<String, ? extends Options> selectedOptions = (TreeMap<String, ? extends Options>)wizardDescriptor.getProperty("selectedOptions");
+                theTask = RP.create(new CheckDuplicates(myGedcom, entities2Ckeck, selectedOptions));
                 final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(CheckDuplicates_runing(), new Cancellable() {
 
                     @Override
