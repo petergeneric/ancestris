@@ -108,7 +108,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                     .addComponent(indiCheckAllNamesRadioButton)
                     .addComponent(indiAllFirstNamesRadioButton)
                     .addComponent(indiCheckFamiliesRadioButton))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         individualsOptionPanelLayout.setVerticalGroup(
             individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,7 +125,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                 .addComponent(indiCheckFamiliesRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(indiEmptyValuesValidRadioButton)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jPanel7.add(individualsOptionPanel, "individualsOptions");
@@ -146,7 +146,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(famMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(famEmptyValuesValidRadioButton))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         familiesOptionPanelLayout.setVerticalGroup(
             familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +157,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                     .addComponent(famMaxDateIntervalLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(famEmptyValuesValidRadioButton)
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         jPanel7.add(familiesOptionPanel, "familiesOptions");
@@ -166,11 +166,11 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         submittersOptionPanel.setLayout(submittersOptionPanelLayout);
         submittersOptionPanelLayout.setHorizontalGroup(
             submittersOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
+            .addGap(0, 210, Short.MAX_VALUE)
         );
         submittersOptionPanelLayout.setVerticalGroup(
             submittersOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+            .addGap(0, 103, Short.MAX_VALUE)
         );
 
         jPanel7.add(submittersOptionPanel, "submittersOptions");
@@ -183,7 +183,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         );
         repositoriesOptionPanelLayout.setVerticalGroup(
             repositoriesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+            .addGap(0, 168, Short.MAX_VALUE)
         );
 
         jPanel7.add(repositoriesOptionPanel, "repositoriesOptions");
@@ -196,7 +196,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         );
         sourcesOptionPanel1Layout.setVerticalGroup(
             sourcesOptionPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+            .addGap(0, 168, Short.MAX_VALUE)
         );
 
         jPanel7.add(sourcesOptionPanel1, "sourcesOptions");
@@ -209,7 +209,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         );
         emptyPanelLayout.setVerticalGroup(
             emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+            .addGap(0, 168, Short.MAX_VALUE)
         );
 
         jPanel7.add(emptyPanel, "emptyPanel");
@@ -267,7 +267,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(individualsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(familiesCheckBox)
@@ -276,8 +276,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sourcesCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repositoriesCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(repositoriesCheckBox))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -288,15 +287,15 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -414,6 +413,7 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         
         FamMatcherOptions famMatcherOptions = (FamMatcherOptions)selectedOptions.get(Gedcom.FAM);
         famMatcherOptions.setDateinterval((Integer)famMaxDateIntervalSpinner.getValue());
+        famMatcherOptions.setEmptyValueValid(famEmptyValuesValidRadioButton.isSelected());
         return selectedOptions;
     }
 }
