@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.matchers;
 
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -8,13 +8,20 @@ import java.util.List;
  *
  * @author lemovice
  */
-public class FamMatcher extends EntityMatcher<Fam> {
+public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
 
+    public FamMatcher () {
+        super ();
+        this.options = new FamMatcherOptions ();
+    }
+    
     @Override
     public int compare(Fam left, Fam right) {
         Indi leftHusband = left.getHusband();
         Indi rightHusband = right.getHusband();
         if (leftHusband != null && rightHusband != null) {
+            IndiMatcherOptions indiMatcherOptions = new IndiMatcherOptions();
+            indiMatcherOptions.setDateinterval(options.getDateinterval());
             if (new IndiMatcher().compare(leftHusband, rightHusband) >= 80) {
                 Indi leftWife = left.getWife();
                 Indi rightWife = right.getWife();
@@ -23,7 +30,7 @@ public class FamMatcher extends EntityMatcher<Fam> {
                         PropertyDate leftwhen = left.getMarriageDate();
                         PropertyDate rightwhen = right.getMarriageDate();
                         if (leftwhen != null && leftwhen.isComparable() && leftwhen != null && rightwhen.isComparable()) {
-                            if (leftwhen.compareTo(rightwhen) <= 4000) {
+                            if (leftwhen.compareTo(rightwhen) <= options.getDateinterval()) {
                                 return 100;
                             }
                         }

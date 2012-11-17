@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.matchers;
 
 import genj.gedcom.Source;
 
@@ -6,7 +6,12 @@ import genj.gedcom.Source;
  *
  * @author lemovice
  */
-public class SourceMatcher extends EntityMatcher<Source> {
+public class SourceMatcher extends EntityMatcher<Source, SourceMatcherOptions> {
+
+    public SourceMatcher() {
+        super();
+        this.options = new SourceMatcherOptions();
+    }
 
     @Override
     public int compare(Source left, Source right) {
@@ -22,6 +27,6 @@ public class SourceMatcher extends EntityMatcher<Source> {
 
     @Override
     protected String[] getKeys(Source entity) {
-        return new String[] {entity.getTitle()};
+        return new String[]{entity.getTitle()};
     }
 }

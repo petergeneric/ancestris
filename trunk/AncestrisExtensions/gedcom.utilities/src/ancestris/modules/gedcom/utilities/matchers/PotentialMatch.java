@@ -4,7 +4,7 @@
  * See LICENSE.TXT for details.
  */
 
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.matchers;
 
 public class PotentialMatch <T> {
 	private T left;

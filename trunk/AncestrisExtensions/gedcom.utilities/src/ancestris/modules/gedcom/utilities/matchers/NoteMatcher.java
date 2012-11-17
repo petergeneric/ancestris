@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.matchers;
 
 import genj.gedcom.Note;
 
@@ -6,7 +6,13 @@ import genj.gedcom.Note;
  *
  * @author lemovice
  */
-public class NoteMatcher extends EntityMatcher<Note> {
+public class NoteMatcher extends EntityMatcher<Note, NoteMatcherOptions> {
+
+    
+    public NoteMatcher() {
+        super();
+        this.options = new NoteMatcherOptions();
+    }
 
     @Override
     public int compare(Note left, Note right) {
