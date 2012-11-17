@@ -4,8 +4,6 @@ import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
 import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
 import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
 import genj.gedcom.Entity;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyXRef;
 import org.openide.nodes.Children;
 
 /**
@@ -39,61 +37,47 @@ public class MergeEntityPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        leftPanel = new javax.swing.JPanel();
+        rightPanel = new javax.swing.JPanel();
 
         setMinimumSize(new java.awt.Dimension(648, 364));
-        setLayout(new java.awt.BorderLayout());
 
         jSplitPane1.setResizeWeight(0.5);
 
-        jPanel6.setLayout(new java.awt.BorderLayout());
+        leftPanel.setLayout(new java.awt.BorderLayout());
 
         leftDisplayEntityPanel = new DisplayEntityPanel ();
-        jPanel6.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
+        leftPanel.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setLeftComponent(jPanel6);
+        jSplitPane1.setLeftComponent(leftPanel);
 
-        jPanel5.setLayout(new java.awt.BorderLayout());
+        rightPanel.setLayout(new java.awt.BorderLayout());
 
         rightDisplayEntityPanel = new DisplayEntityPanel ();
-        jPanel5.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
+        rightPanel.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setRightComponent(jPanel5);
+        jSplitPane1.setRightComponent(rightPanel);
 
-        add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JPanel leftPanel;
+    private javax.swing.JPanel rightPanel;
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * Copy properties beneath a property to another property (copy a cluster)
-     */
-    private void MergePropertiesRecursively(Property srcProperty, Property destProperty) {
-
-        if (srcProperty == null || destProperty == null) {
-            return;
-        }
-
-        Property[] srcProperties = srcProperty.getProperties();
-
-        for (Property property : srcProperties) {
-            // Xref properties shall not be copy
-            if (!(property instanceof PropertyXRef)) {
-                MergePropertiesRecursively(property, destProperty.addProperty(property.getTag(), property.getValue()));
-            } else {
-                // Update Xref
-                PropertyXRef propertyXRef = (PropertyXRef) property;
-                PropertyXRef target = propertyXRef.getTarget();
-                if (target != null) {
-                    MergePropertiesRecursively(property, destProperty.addProperty(property.getTag(), property.getValue()));
-                } else {
-                }
-            }
-        }
-    }
 }

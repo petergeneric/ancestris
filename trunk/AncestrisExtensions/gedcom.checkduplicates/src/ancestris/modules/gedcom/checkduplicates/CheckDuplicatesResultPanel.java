@@ -1,7 +1,7 @@
 package ancestris.modules.gedcom.checkduplicates;
 
 import static ancestris.modules.gedcom.checkduplicates.Bundle.CheckDuplicatesResultPanel_duplicateIndexLabel_text;
-import ancestris.modules.gedcom.utilities.PotentialMatch;
+import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
 import ancestris.modules.viewers.entityviewer.nodes.EntityChildFactory;
 import ancestris.modules.viewers.entityviewer.nodes.EntityNode;
 import ancestris.modules.viewers.entityviewer.panels.DisplayEntityPanel;
@@ -25,7 +25,6 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
     private DisplayEntityPanel rightDisplayEntityPanel;
     LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList;
     int linkedListIndex;
-    int linkedListSize;
 
     /**
      * Creates new form CheckDuplicatesResultPanel
@@ -37,8 +36,8 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         leftDisplayEntityPanel.getHorizontalScrollBar().setModel(rightDisplayEntityPanel.getHorizontalScrollBar().getModel());
         this.matchesLinkedList = matchesLinkedList;
         this.linkedListIndex = 0;
-        this.linkedListSize = matchesLinkedList.size() - 1;
-        if (linkedListSize > 0) {
+
+        if (matchesLinkedList.size() > 0) {
             PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
             Entity left = potentialMatch.getLeft();
             leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
@@ -46,8 +45,8 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             Entity right = potentialMatch.getRight();
             rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
 
-            duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), (linkedListSize + 1), potentialMatch.getCertainty()));
-            if (linkedListIndex < linkedListSize) {
+            duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), potentialMatch.getCertainty()));
+            if (linkedListIndex < matchesLinkedList.size() - 1) {
                 nextButton.setEnabled(true);
             }
         }
@@ -62,6 +61,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         leftEntityPanel = new javax.swing.JPanel();
         rightEntityPanel = new javax.swing.JPanel();
@@ -70,12 +70,13 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         expandAllButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         previousButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        mergeButton = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(720, 438));
         setOpaque(false);
         setRequestFocusEnabled(false);
-        setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         jSplitPane1.setResizeWeight(0.5);
         jSplitPane1.setMinimumSize(new java.awt.Dimension(666, 374));
@@ -89,7 +90,7 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         leftDisplayEntityPanel = new DisplayEntityPanel ();
         leftEntityPanel.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setRightComponent(leftEntityPanel);
+        jSplitPane1.setLeftComponent(leftEntityPanel);
 
         rightEntityPanel.setMinimumSize(new java.awt.Dimension(333, 374));
         rightEntityPanel.setPreferredSize(new java.awt.Dimension(333, 374));
@@ -98,9 +99,9 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         rightDisplayEntityPanel = new DisplayEntityPanel ();
         rightEntityPanel.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setLeftComponent(rightEntityPanel);
+        jSplitPane1.setRightComponent(rightEntityPanel);
 
-        add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        jPanel1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         duplicateIndexLabel.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.duplicateIndexLabel.text")); // NOI18N
 
@@ -127,10 +128,10 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             }
         });
 
-        jButton1.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        mergeButton.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesResultPanel.class, "CheckDuplicatesResultPanel.mergeButton.text")); // NOI18N
+        mergeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                mergeButtonActionPerformed(evt);
             }
         });
 
@@ -140,28 +141,46 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(duplicateIndexLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                .addComponent(duplicateIndexLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
                 .addGap(104, 104, 104)
                 .addComponent(previousButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(expandAllButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(mergeButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nextButton)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(duplicateIndexLabel)
-                .addComponent(expandAllButton)
-                .addComponent(nextButton)
-                .addComponent(previousButton)
-                .addComponent(jButton1))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(duplicateIndexLabel)
+                    .addComponent(previousButton)
+                    .addComponent(expandAllButton)
+                    .addComponent(mergeButton)
+                    .addComponent(nextButton)))
         );
 
-        add(jPanel3, java.awt.BorderLayout.SOUTH);
+        jPanel1.add(jPanel3, java.awt.BorderLayout.SOUTH);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void expandAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expandAllButtonActionPerformed
@@ -170,14 +189,43 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_expandAllButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        next();
+        linkedListIndex += 1;
+        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
+        Entity left = potentialMatch.getLeft();
+        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
+        Entity right = potentialMatch.getRight();
+        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+        duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), potentialMatch.getCertainty()));
+
+        if (linkedListIndex >= matchesLinkedList.size() - 1) {
+            nextButton.setEnabled(false);
+        }
+        if (linkedListIndex > 0) {
+            previousButton.setEnabled(true);
+        }
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        previous();
+        linkedListIndex -= 1;
+        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
+        Entity left = potentialMatch.getLeft();
+        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
+        Entity right = potentialMatch.getRight();
+        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+        duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), potentialMatch.getCertainty()));
+        if (linkedListIndex <= 0) {
+            previousButton.setEnabled(false);
+        }
+        if (linkedListIndex < matchesLinkedList.size() - 1) {
+            nextButton.setEnabled(true);
+        }
     }//GEN-LAST:event_previousButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void mergeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mergeButtonActionPerformed
         PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
         MergeEntityPanel mergeEntityPanel = new MergeEntityPanel(potentialMatch.getLeft(), potentialMatch.getRight());
         DialogDescriptor mergeEntityPanelDescriptor = new DialogDescriptor(
@@ -195,55 +243,54 @@ public class CheckDuplicatesResultPanel extends javax.swing.JPanel {
         dialog.setModal(false);
         dialog.toFront();
         if (mergeEntityPanelDescriptor.getValue().equals(DialogDescriptor.OK_OPTION)) {
-            next ();
+            matchesLinkedList.remove(linkedListIndex);
+            if (matchesLinkedList.size() > 0) {
+                if (linkedListIndex < matchesLinkedList.size() - 1) {
+                    potentialMatch = matchesLinkedList.get(linkedListIndex);
+                    Entity left = potentialMatch.getLeft();
+                    leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
+                    Entity right = potentialMatch.getRight();
+                    rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+                    duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), potentialMatch.getCertainty()));
+                } else {
+                    linkedListIndex = matchesLinkedList.size() - 1;
+
+                    potentialMatch = matchesLinkedList.get(linkedListIndex);
+                    Entity left = potentialMatch.getLeft();
+                    leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
+
+                    Entity right = potentialMatch.getRight();
+                    rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
+
+                    duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), potentialMatch.getCertainty()));
+
+                    nextButton.setEnabled(false);
+
+                    if (linkedListIndex <= 0) {
+                        previousButton.setEnabled(false);
+                    }
+                }
+            } else {
+                leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode());
+                rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode());
+                duplicateIndexLabel.setText("");
+
+                mergeButton.setEnabled(false);
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_mergeButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel duplicateIndexLabel;
     private javax.swing.JButton expandAllButton;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel leftEntityPanel;
+    private javax.swing.JButton mergeButton;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
     private javax.swing.JPanel rightEntityPanel;
     // End of variables declaration//GEN-END:variables
-
-    private void next() {
-        linkedListIndex += 1;
-        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
-        Entity left = potentialMatch.getLeft();
-        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
-
-        Entity right = potentialMatch.getRight();
-        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
-
-        duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), (linkedListSize + 1), potentialMatch.getCertainty()));
-
-        if (linkedListIndex >= linkedListSize) {
-            nextButton.setEnabled(false);
-        }
-        if (linkedListIndex > 0) {
-            previousButton.setEnabled(true);
-        }
-    }
-
-    private void previous() {
-        linkedListIndex -= 1;
-        PotentialMatch<? extends Entity> potentialMatch = matchesLinkedList.get(linkedListIndex);
-        Entity left = potentialMatch.getLeft();
-        leftDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(left), true), left));
-
-        Entity right = potentialMatch.getRight();
-        rightDisplayEntityPanel.getExplorerManager().setRootContext(new EntityNode(Children.create(new EntityChildFactory(right), true), right));
-
-        duplicateIndexLabel.setText(CheckDuplicatesResultPanel_duplicateIndexLabel_text((linkedListIndex + 1), (linkedListSize + 1), potentialMatch.getCertainty()));
-        if (linkedListIndex <= 0) {
-            previousButton.setEnabled(false);
-        }
-        if (linkedListIndex < linkedListSize) {
-            nextButton.setEnabled(true);
-        }
-    }
 }
