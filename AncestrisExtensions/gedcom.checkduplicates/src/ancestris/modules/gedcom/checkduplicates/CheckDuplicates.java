@@ -1,9 +1,18 @@
 package ancestris.modules.gedcom.checkduplicates;
 
+import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
+import ancestris.modules.gedcom.utilities.matchers.NoteMatcher;
+import ancestris.modules.gedcom.utilities.matchers.SubmitterMatcher;
+import ancestris.modules.gedcom.utilities.matchers.IndiMatcher;
+import ancestris.modules.gedcom.utilities.matchers.SourceMatcher;
+import ancestris.modules.gedcom.utilities.matchers.RepositoryMatcher;
+import ancestris.modules.gedcom.utilities.matchers.FamMatcher;
+import ancestris.modules.gedcom.utilities.matchers.EntityMatcher;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.gedcom.utilities.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import java.awt.Dialog;
 import java.util.*;
 import java.util.logging.Level;
@@ -103,6 +112,33 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
             });
         } catch (InterruptedException ex) {
             log.log(Level.INFO, "the task was CANCELLED");
+        }
+    }
+
+    /**
+     * Copy properties beneath a property to another property (copy a cluster)
+     */
+    private void MergePropertiesRecursively(Property srcProperty, Property destProperty) {
+
+        if (srcProperty == null || destProperty == null) {
+            return;
+        }
+
+        Property[] srcProperties = srcProperty.getProperties();
+
+        for (Property property : srcProperties) {
+            // Xref properties shall not be copy
+            if (!(property instanceof PropertyXRef)) {
+                MergePropertiesRecursively(property, destProperty.addProperty(property.getTag(), property.getValue()));
+            } else {
+                // Update Xref
+                PropertyXRef propertyXRef = (PropertyXRef) property;
+                PropertyXRef target = propertyXRef.getTarget();
+                if (target != null) {
+                    MergePropertiesRecursively(property, destProperty.addProperty(property.getTag(), property.getValue()));
+                } else {
+                }
+            }
         }
     }
 }
