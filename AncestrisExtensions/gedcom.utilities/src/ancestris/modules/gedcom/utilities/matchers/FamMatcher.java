@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
 
-    public FamMatcher () {
-        super ();
-        this.options = new FamMatcherOptions ();
+    public FamMatcher() {
+        super();
+        this.options = new FamMatcherOptions();
     }
-    
+
     @Override
     public int compare(Fam left, Fam right) {
         Indi leftHusband = left.getHusband();
@@ -29,10 +29,13 @@ public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
                     if (new IndiMatcher().compare(leftWife, rightWife) >= 80) {
                         PropertyDate leftwhen = left.getMarriageDate();
                         PropertyDate rightwhen = right.getMarriageDate();
+
                         if (leftwhen != null && leftwhen.isComparable() && leftwhen != null && rightwhen.isComparable()) {
                             if (leftwhen.compareTo(rightwhen) <= options.getDateinterval()) {
                                 return 100;
                             }
+                        } else if (options.isEmptyValueValid()) {
+                            return 100;
                         }
                         return 80;
                     }
