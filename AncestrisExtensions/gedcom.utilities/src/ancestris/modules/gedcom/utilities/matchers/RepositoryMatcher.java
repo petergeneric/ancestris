@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.matchers;
 
 import genj.gedcom.Property;
 import genj.gedcom.Repository;
@@ -7,7 +7,12 @@ import genj.gedcom.Repository;
  *
  * @author lemovice
  */
-public class RepositoryMatcher extends EntityMatcher<Repository> {
+public class RepositoryMatcher extends EntityMatcher<Repository, RepositoryMatcherOptions> {
+
+    public RepositoryMatcher() {
+        super();
+        this.options = new RepositoryMatcherOptions();
+    }
 
     @Override
     public int compare(Repository left, Repository right) {

@@ -49,6 +49,7 @@
             </module-dependencies>
             <public-packages>
                 <package>ancestris.modules.gedcom.utilities</package>
+                <package>ancestris.modules.gedcom.utilities.matchers</package>
             </public-packages>
         </data>
     </configuration>

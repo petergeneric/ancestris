@@ -1,4 +1,4 @@
-package ancestris.modules.gedcom.utilities;
+package ancestris.modules.gedcom.utilities.matchers;
 
 import genj.gedcom.Submitter;
 
@@ -6,7 +6,12 @@ import genj.gedcom.Submitter;
  *
  * @author lemovice
  */
-public class SubmitterMatcher extends EntityMatcher<Submitter> {
+public class SubmitterMatcher extends EntityMatcher<Submitter, SubmitterMatcherOptions> {
+
+    public SubmitterMatcher() {
+        super();
+        this.options = new SubmitterMatcherOptions();
+    }
 
     @Override
     public int compare(Submitter left, Submitter right) {
@@ -24,6 +29,6 @@ public class SubmitterMatcher extends EntityMatcher<Submitter> {
 
     @Override
     protected String[] getKeys(Submitter entity) {
-        return new String [] {entity.getName()};
+        return new String[]{entity.getName()};
     }
 }
