@@ -9,6 +9,7 @@ package ancestris.modules.gedcom.utilities.matchers;
 public class FamMatcherOptions extends MatcherOptions {
     private int dateinterval = 2000;
     private boolean checkParents = false;
+    private boolean emptyValueValid = false;
 
     /**
      * @return the dateinterval
@@ -36,5 +37,19 @@ public class FamMatcherOptions extends MatcherOptions {
      */
     public void setCheckParents(boolean checkParents) {
         this.checkParents = checkParents;
+    }
+
+    /**
+     * @return the emptyValueValid
+     */
+    public boolean isEmptyValueValid() {
+        return emptyValueValid;
+    }
+
+    /**
+     * @param emptyValueValid the emptyValueValid to set
+     */
+    public void setEmptyValueValid(boolean emptyValueValid) {
+        this.emptyValueValid = emptyValueValid;
     }
 }

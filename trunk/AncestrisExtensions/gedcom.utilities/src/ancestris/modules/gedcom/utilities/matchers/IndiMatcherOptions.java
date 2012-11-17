@@ -10,7 +10,7 @@ public class IndiMatcherOptions extends MatcherOptions {
     private boolean checkAllNames = true;
     private boolean allFirstNamesEquals = true;
     private boolean checkFamilies = false;
-    private boolean emptyValueValid = true;
+    private boolean emptyValueValid = false;
 
     /**
      * @return the dateinterval
