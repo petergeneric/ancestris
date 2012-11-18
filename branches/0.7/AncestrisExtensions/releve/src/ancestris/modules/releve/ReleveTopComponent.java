@@ -1,7 +1,6 @@
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.DataManager;
+import ancestris.app.TreeTopComponent;
 import ancestris.modules.releve.file.FileManager;
 import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileDialog;
@@ -10,15 +9,19 @@ import ancestris.modules.releve.editor.StandaloneEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.modules.releve.dnd.TreeViewDropTarget;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV2;
 import ancestris.modules.releve.file.ReleveFileGedcom;
+import ancestris.modules.releve.model.Field;
+import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Context;
+import genj.tree.TreeView;
 import genj.util.EnvironmentChecker;
 import genj.util.swing.Action2;
 import genj.util.swing.DialogHelper;
@@ -44,11 +47,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.javahelp.Help;
-import org.openide.util.Exceptions;
-import org.openide.util.HelpCtx;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
+import org.netbeans.api.options.OptionsDisplayer;
+import org.openide.util.*;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -60,7 +60,7 @@ import org.openide.windows.WindowManager;
 @RetainLocation(AncestrisDockModes.PROPERTIES)
 // je declare la classe ServiceProvider pour que ses instances soient visibles
 //@ServiceProvider(service=ReleveTopComponent.class)
-public final class ReleveTopComponent extends TopComponent  {    
+public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {    
     private static final String PREFERRED_ID = "ReleveTopComponent";
     private static final String FILE_DIRECTORY = "FileDirectory";
     protected Registry registry;
@@ -72,6 +72,8 @@ public final class ReleveTopComponent extends TopComponent  {
     private JMenuItem menuItemSaveAs    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.saveas"));
     private JMenuItem menuItemImport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.import"));
     private JMenuItem menuItemExport    = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.export"));
+    private JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
+    private JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
     private JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
@@ -99,6 +101,7 @@ public final class ReleveTopComponent extends TopComponent  {
         menuItemSaveAs.addActionListener(popupMouseHandler);
         popup.add(menuItemSaveAs);
 
+        // import , export
         popup.addSeparator();
         menuItemImport.addActionListener(popupMouseHandler);
         menuItemImport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
@@ -107,7 +110,14 @@ public final class ReleveTopComponent extends TopComponent  {
         menuItemExport.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ExportFile16.png")));
         popup.add(menuItemExport);
 
+        // statistics, demo records, help
         popup.addSeparator();
+        menuItemStatistics.addActionListener(popupMouseHandler);
+        menuItemStatistics.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
+        popup.add(menuItemStatistics);
+        menuItemDemoFile.addActionListener(popupMouseHandler);
+        menuItemDemoFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/OpenFile.png")));
+        popup.add(menuItemDemoFile);
         menuItemHelp.addActionListener(popupMouseHandler);
         menuItemHelp.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
         popup.add(menuItemHelp);
@@ -128,7 +138,6 @@ public final class ReleveTopComponent extends TopComponent  {
         panelDeath.addMouseListener(mouseAdapter);
         panelMisc.addMouseListener(mouseAdapter);
         panelAll.addMouseListener(mouseAdapter);
-        panelConfig.addMouseListener(mouseAdapter);
         jTabbedPane1.addMouseListener(mouseAdapter);
     }
      
@@ -150,7 +159,7 @@ public final class ReleveTopComponent extends TopComponent  {
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt N"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt M"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt D"), this);
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt A"), this);
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt T"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt V"), this);
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put( KeyStroke.getKeyStroke("alt G"), this);
         getActionMap().put(this, new AbstractAction() {
@@ -169,7 +178,7 @@ public final class ReleveTopComponent extends TopComponent  {
                 } else if ( actionEvent.getActionCommand().equals("d") ) {
                     jTabbedPane1.setSelectedComponent(panelMisc);
                     panelMisc.createRecord();
-                } else if ( actionEvent.getActionCommand().equals("a") ) {
+                } else if ( actionEvent.getActionCommand().equals("t") ) {
                     jTabbedPane1.setSelectedComponent(panelAll);
                     panelMisc.createRecord();
                 } else if ( actionEvent.getActionCommand().equals("g") ) {
@@ -180,7 +189,8 @@ public final class ReleveTopComponent extends TopComponent  {
                         saveResult = askSaveData();
                     }
                     if ( saveResult ) {
-                        Context context = GedcomDirectory.getInstance().getLastContext();
+                        // je convertis le fichier GEDCOM courant en releve
+                        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
                         if (context != null && context.getGedcom() != null) {
                             try {
                                 FileBuffer  fileBuffer = ReleveFileGedcom.loadFile(context.getGedcom());
@@ -190,7 +200,7 @@ public final class ReleveTopComponent extends TopComponent  {
                                 } else if ( fileBuffer.getPlaces().size() > 1 ) {
                                     defaultPlace = askSelectDefaultPlace(fileBuffer.getPlaces());
                                 }
-                                panelConfig.setPlace(defaultPlace);
+                                dataManager.setPlace(defaultPlace);
                                 // Je copie les données dans les modeles
                                 dataManager.addRecords(fileBuffer, false, defaultPlace, 1 );
                             } catch (Exception ex) {
@@ -205,18 +215,15 @@ public final class ReleveTopComponent extends TopComponent  {
         setCurrentFile(null);
         AncestrisPlugin.register(this);
         // je cree le modele de données
-        dataManager = new DataManager(panelConfig);
-        panelBirth.setModel(dataManager, DataManager.ModelType.birth, panelConfig);
-        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, panelConfig);
-        panelDeath.setModel(dataManager, DataManager.ModelType.death, panelConfig);
-        panelMisc.setModel(dataManager, DataManager.ModelType.misc, panelConfig);
-        panelAll.setModel(dataManager, DataManager.ModelType.all, panelConfig);
-        panelConfig.setModel(dataManager);
+        dataManager = new DataManager();
+        panelBirth.setModel(dataManager, DataManager.ModelType.birth, dataManager, this);
+        panelMarriage.setModel(dataManager, DataManager.ModelType.marriage, dataManager, this);
+        panelDeath.setModel(dataManager, DataManager.ModelType.death, dataManager, this);
+        panelMisc.setModel(dataManager, DataManager.ModelType.misc, dataManager, this);
+        panelAll.setModel(dataManager, DataManager.ModelType.all, dataManager, this);
 
-        // j'affiche l'onglet de configuration
-        jTabbedPane1.setSelectedComponent(panelConfig);
         
-        panelConfig.setTopComponent(this);
+        //panelConfig.setTopComponent(this);
 
         // je charge le fichier de la session précédente
         String lastFileName =  NbPreferences.forModule(ReleveTopComponent.class).get(
@@ -227,13 +234,14 @@ public final class ReleveTopComponent extends TopComponent  {
                 loadFile(lastFile, false);
 
             } 
-        }
+        }       
 
-        // je charge le fichier demo
-//        loadFileDemo();
-//        jTabbedPane1.setSelectedComponent(panelBirth);
-       
-        
+        // j'active le DnD avec ler Treeview
+        for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
+            TreeView view = (TreeView) tc.getView();
+            TreeViewDropTarget viewDropTarget = new TreeViewDropTarget();
+            viewDropTarget.createDropTarget(view);
+        }
     }
 
     /**
@@ -251,6 +259,22 @@ public final class ReleveTopComponent extends TopComponent  {
             result = askSaveData();
         }
 
+        if (result) {
+             // sauvegarde la largeur des colonnes
+            // remarque : Netbeans n'appelle pas componentClosed() quand on ferme 
+            // L'application ancestris, j'aoute donc l'enregistrement des preferences ici.
+            panelBirth.componentClosed();
+            panelMarriage.componentClosed();
+            panelDeath.componentClosed();
+            panelMisc.componentClosed();
+            panelAll.componentClosed();
+            // j'enregistre le nom du fichier courant
+            if (currentFile != null) {
+                NbPreferences.forModule(ReleveTopComponent.class).put(
+                        "LastFileName",
+                        currentFile.getAbsolutePath());
+            }
+        }
         return result;
     }
 
@@ -263,7 +287,7 @@ public final class ReleveTopComponent extends TopComponent  {
     @Override
     public void componentClosed() {
         // je ferme l'editeur independant
-        setStandaloneEditor(false);
+        showStandalone(false);
 
         // sauvegarde la largeur des colonnes
         panelBirth.componentClosed();
@@ -271,7 +295,6 @@ public final class ReleveTopComponent extends TopComponent  {
         panelDeath.componentClosed();
         panelMisc.componentClosed();
         panelAll.componentClosed();
-        panelConfig.componentClosed();
 
         // j'enregistre le nom du fichier courant
         if (currentFile != null) {
@@ -283,37 +306,6 @@ public final class ReleveTopComponent extends TopComponent  {
         //
         AncestrisPlugin.unregister(this);
     }
-
-    
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Copy data to Gedcom
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * copie une naissance dans l'indidu selectionné dans le ficher GEDCOM
-     *
-     * @param evt
-     */
-//    private void copyBirthToGedcom(java.awt.event.ActionEvent evt) {
-//        // je recupere l'individu sélectionné
-//    }
-//
-    ///////////////////////////////////////////////////////////////////////////
-    // Implements ChangeListenerInterface
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Cette methode est appelee a chaque nouvelle selection dans la table du releve
-     * Affiche le releve selection dans l'editeur
-     * @param modelRow
-     */
-//    @Override
-//    public void stateChanged(ChangeEvent e) {
-//        ChangeEvent e1 = e;
-//        Object source = e.getSource();
-//    }
-
-
 
     DataManager getDataManager() {
        return dataManager;
@@ -348,7 +340,20 @@ public final class ReleveTopComponent extends TopComponent  {
     ///////////////////////////////////////////////////////////////////////////
     //  Traite les actions du popup menu
     ///////////////////////////////////////////////////////////////////////////
-    
+
+    /**
+     * cette methode est utilisée pour afficher le popupemenu depuis la toolbar de
+     * l'editeur
+     * @param invoker
+     * @param x
+     * @param y
+     */
+    @Override
+    public void showPopupMenu(Component invoker, int x, int y ) {
+        popup.show(invoker, x, y);
+    }
+
+   
     /**
      * Traite les evenements de souris du topcompoent
      */
@@ -371,10 +376,42 @@ public final class ReleveTopComponent extends TopComponent  {
                 importFile();
             } else if (menuItemExport.equals(e.getSource())) {
                 exportFile();
+            } else if (menuItemStatistics.equals(e.getSource())) {
+                showStatistics();
+            } else if (menuItemDemoFile.equals(e.getSource())) {
+                loadFileDemo();
             } else if (menuItemHelp.equals(e.getSource())) {
                 showHelp();
             }
         }
+    }
+
+    public void showStatistics() {
+        ReleveStatistic.showStatistics(dataManager);
+    }
+
+    /**
+     * Affiche le panneau contenant les options
+     */
+    @Override
+    public void showOptionPanel() {
+        OptionsDisplayer.getDefault().open("Extensions/Releve");
+    }
+
+    /**
+     * Affiche les informations du registre
+     */
+    @Override
+    public void showConfigPanel() {
+        ReleveConfig.show(WindowManager.getDefault().getMainWindow(), dataManager);
+    }
+
+    /**
+     * Affiche la fenetre principale au premier plan
+     */
+    @Override
+    public void showToFront() {
+        this.toFront();
     }
 
     /**
@@ -402,9 +439,6 @@ public final class ReleveTopComponent extends TopComponent  {
         if ( result ) {
             dataManager.removeAll();
             setCurrentFile(null);
-            panelConfig.setPlace("");
-            dataManager.resetDirty();
-
         }
     }
 
@@ -509,7 +543,7 @@ public final class ReleveTopComponent extends TopComponent  {
                 // je traite les releves qui ont un lieu different du lieu par defaut
                 List<String> places = fileBuffer.getPlaces();
                 //places.addAll(newCompletionProvider.getPlaces());
-                String defaultPlace = panelConfig.getPlace();
+                String defaultPlace = dataManager.getPlace();
                 if (append == false ) {
                     defaultPlace = "";
                 }
@@ -570,7 +604,7 @@ public final class ReleveTopComponent extends TopComponent  {
                 }
 
                 if (defaultPlace != null && forceDefaultPlace != -1) {
-                    panelConfig.setPlace(defaultPlace);
+                    dataManager.setPlace(defaultPlace);
                     // Je copie les données dans les modeles
                     dataManager.addRecords(fileBuffer, append, defaultPlace, forceDefaultPlace );
 
@@ -604,8 +638,8 @@ public final class ReleveTopComponent extends TopComponent  {
                         }
                     }
 
-                    // je selectionne l'onglet de config
-                    jTabbedPane1.setSelectedComponent(panelConfig);
+                    // je selectionne le premier onglet
+                    jTabbedPane1.setSelectedComponent(panelBirth);
                     
                     if ( append == false ) {
                         // je memorise le nom du fichier seulement en mode "replace"
@@ -705,7 +739,7 @@ public final class ReleveTopComponent extends TopComponent  {
         if (currentFile != null) {
             fileName = currentFile.getName();
         } else {
-            fileName = panelConfig.getCityName();
+            fileName = dataManager.getCityName();
             if (!fileName.isEmpty()) {
                 fileName += ".txt";
             }
@@ -787,7 +821,7 @@ public final class ReleveTopComponent extends TopComponent  {
      */
     protected void saveFile() {
         if ( currentFile != null) {
-            StringBuilder saveResult = FileManager.saveFile(dataManager, panelConfig, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
             if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
@@ -818,7 +852,7 @@ public final class ReleveTopComponent extends TopComponent  {
         if (currentFile != null) {
             fileName = currentFile.getName();
         } else {
-            fileName = panelConfig.getCityName();
+            fileName = dataManager.getCityName();
             if (!fileName.isEmpty()) {
                 fileName += ".txt";
             }
@@ -863,7 +897,7 @@ public final class ReleveTopComponent extends TopComponent  {
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
             // j'enregistre les données dans le fichier
-            StringBuilder saveResult = FileManager.saveFile(dataManager, panelConfig, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV2);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV3);
 
              if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
@@ -982,11 +1016,11 @@ public final class ReleveTopComponent extends TopComponent  {
         ActionListener rbActionListener = new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                String cityName = panelConfig.getCityName();
+                String cityName = dataManager.getCityName();
                 if ( cityName.isEmpty()) {
                     cityName = "";
                 }
-                String recordType = "";
+                String recordType;
                 if (jRadioButtonAll.isSelected()) {
                     recordType = "_B";
                 } else if (jRadioButtonBirth.isSelected()) {
@@ -1075,15 +1109,15 @@ public final class ReleveTopComponent extends TopComponent  {
             // j'enregistre les modeles choisis la liste des modeles à enregistrer
             StringBuilder saveResult = new StringBuilder();
             if (jRadioButtonAll.isSelected()) {
-                FileManager.saveFile(dataManager, panelConfig, resultFile, fileFormat);
+                FileManager.saveFile(dataManager, dataManager, resultFile, fileFormat);
             } else if (jRadioButtonBirth.isSelected()) {
-                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveBirthModel());
+                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveBirthModel());
             } else if (jRadioButtonMarriage.isSelected()) {
-                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveMarriageModel());
+                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMarriageModel());
             } else if (jRadioButtonDeath.isSelected()) {
-                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveDeathModel());
+                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveDeathModel());
             } else if (jRadioButtonMisc.isSelected()) {
-                FileManager.saveFile(panelConfig, resultFile, fileFormat, dataManager.getReleveMiscModel());
+                FileManager.saveFile(dataManager, resultFile, fileFormat, dataManager.getReleveMiscModel());
             }
             if (! saveResult.toString().isEmpty()) {
                 // j'affiche les erreurs rencontrées
@@ -1107,15 +1141,12 @@ public final class ReleveTopComponent extends TopComponent  {
         if (result) {
             dataManager.removeAll();
 
-            FileBuffer fileBuffer = new FileBuffer();
+            FileBuffer fileBuffer;
             try {
-                //Context context = GedcomDirectory.getInstance().getContext(0);
-                //ReleveFileGedcom.loadFile(context.getGedcom(), fileBuffer);
-
                 InputStream is = getClass().getResourceAsStream("/ancestris/modules/releve/file/bourbons.txt");
                 fileBuffer = ReleveFileAncestrisV2.loadFile(is);
                 dataManager.addRecords(fileBuffer, false, fileBuffer.getPlaces().get(0), 1);
-                panelConfig.setPlace(fileBuffer.getPlaces().get(0));
+                dataManager.setPlace(fileBuffer.getPlaces().get(0));
                 setCurrentFile(null);
                 dataManager.resetDirty();
                 if (dataManager.getReleveBirthModel().getRowCount() > 0) {
@@ -1216,21 +1247,27 @@ public final class ReleveTopComponent extends TopComponent  {
      * affiche ou masque l'éditeur independant
      * @param show
      */
-    public void setStandaloneEditor(boolean show) {
+    @Override
+    public void showStandalone(boolean show) {
         if (show) {
             if (standaloneEditor == null) {
                 standaloneEditor = new StandaloneEditor();
                 standaloneEditor.setVisible(true);
-                standaloneEditor.setDataManager(dataManager, panelConfig);
-                // je lui donne le meme titre que ReleveTopCompoenent
+                standaloneEditor.setDataManager(dataManager, dataManager, this);
+                // je lui donne le meme titre que ReleveTopComponent
                 standaloneEditor.setTitle(this.getName());
+                //
+                int selectedTabbedPane = jTabbedPane1.getSelectedIndex();
+                if ( selectedTabbedPane ==4 ) {
+                    selectedTabbedPane = 0;
+                }
                 // j'affiche les memes releves que ceux de l'editeur principal
                 standaloneEditor.selectRecord(
                         panelBirth.getCurrentRecordIndex(),
                         panelMarriage.getCurrentRecordIndex(),
                         panelDeath.getCurrentRecordIndex(),
                         panelMisc.getCurrentRecordIndex(),
-                        jTabbedPane1.getSelectedIndex() != 0 ? jTabbedPane1.getSelectedIndex()-1 : 1
+                        selectedTabbedPane
                      );
 
             } else {
@@ -1255,6 +1292,7 @@ public final class ReleveTopComponent extends TopComponent  {
      * ferme sa fenetre.
      * @param show
      */
+    @Override
     public void standaloneEditorClosed() {
         // j'efface la reference de l'editeur
          standaloneEditor = null;
@@ -1270,7 +1308,6 @@ public final class ReleveTopComponent extends TopComponent  {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        panelConfig = new ancestris.modules.releve.ConfigPanel();
         panelBirth = new ancestris.modules.releve.RelevePanel();
         panelMarriage = new ancestris.modules.releve.RelevePanel();
         panelDeath = new ancestris.modules.releve.RelevePanel();
@@ -1280,7 +1317,6 @@ public final class ReleveTopComponent extends TopComponent  {
         setLayout(new java.awt.BorderLayout());
 
         jTabbedPane1.setVerifyInputWhenFocusTarget(false);
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelConfig.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/config.png")), panelConfig); // NOI18N
 
         panelBirth.setRequestFocusEnabled(false);
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.panelBirth.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Birth.png")), panelBirth); // NOI18N
@@ -1295,7 +1331,6 @@ public final class ReleveTopComponent extends TopComponent  {
     private javax.swing.JTabbedPane jTabbedPane1;
     private ancestris.modules.releve.RelevePanel panelAll;
     private ancestris.modules.releve.RelevePanel panelBirth;
-    private ancestris.modules.releve.ConfigPanel panelConfig;
     private ancestris.modules.releve.RelevePanel panelDeath;
     private ancestris.modules.releve.RelevePanel panelMarriage;
     private ancestris.modules.releve.RelevePanel panelMisc;

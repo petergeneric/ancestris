@@ -1,17 +1,22 @@
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldOccupation;
+import java.util.List;
 
 /**
  *
  * @author Michel
  */
-public class BeanOccupation extends Bean {
+public class BeanOccupation extends Bean implements CompletionListener {
     private Java2sAutoTextField cOccupation;
-    
+    CompletionProvider completionProvider;
+
     public BeanOccupation(CompletionProvider completionProvider) {
+        this.completionProvider = completionProvider;
+        completionProvider.addOccupationsListener(this);
         setLayout(new java.awt.BorderLayout());
         cOccupation = new Java2sAutoTextField(completionProvider.getOccupations());
         cOccupation.setStrict(false);
@@ -62,5 +67,25 @@ public class BeanOccupation extends Bean {
         } else {
             cOccupation.setText(occupationField.toString());
         }  
+    }
+
+     /**
+     * je supprime la declaration de listener
+     * avant que l'objet ne soit detruit
+     */
+    @Override
+    public void removeNotify() {
+        completionProvider.removeOccupationsListener(this);
+        super.removeNotify();
+    }
+
+    /**
+     * Implemente CompletionListener
+     * copie la nouvelle liste de completion
+     * @param keyList
+     */
+    @Override
+    public void keyUpdated(List<String> keyList) {
+        cOccupation.setDataList(keyList);
     }
 }

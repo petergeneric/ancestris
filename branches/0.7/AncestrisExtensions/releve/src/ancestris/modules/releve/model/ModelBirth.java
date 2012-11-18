@@ -1,9 +1,5 @@
 package ancestris.modules.releve.model;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
-
 /**
  *
  * @author Michel
@@ -54,7 +50,7 @@ public class ModelBirth extends ModelAbstract {
     }
 
     @Override
-    public Class getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnType[column];
     }
 
@@ -136,6 +132,7 @@ public class ModelBirth extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiFirstName),
             new BeanField(record, Field.FieldType.indiSex),
             new BeanField(record, Field.FieldType.indiBirthDate),
+            new BeanField(record, Field.FieldType.indiBirthPlace),
             new BeanField(record, Field.FieldType.indiComment),
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Father"), ks3),
             new BeanField(record, Field.FieldType.indiFatherLastName),

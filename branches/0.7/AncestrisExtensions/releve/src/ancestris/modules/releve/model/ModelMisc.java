@@ -1,9 +1,5 @@
 package ancestris.modules.releve.model;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
-
 /**
  *
  * @author Michel
@@ -53,7 +49,7 @@ public class ModelMisc extends ModelAbstract {
     }
 
     @Override
-    public Class getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnType[column];
     }
     
@@ -74,7 +70,7 @@ public class ModelMisc extends ModelAbstract {
                 value = getRecord(row).getEventDateProperty();
                 break;
             case 2:
-                value = getRecord(row).getEventType().getTag();
+                value = getRecord(row).getEventType().getName();
                 break;
             case 3:
                 value = getRecord(row).getIndiLastName().toString() + " " + getRecord(row).getIndiFirstName().toString();
@@ -130,10 +126,12 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Participant1"), ks2),
             new BeanField(record, Field.FieldType.indiLastName),
             new BeanField(record, Field.FieldType.indiFirstName),
+            new BeanField(record, Field.FieldType.indiSex),
             new BeanField(record, Field.FieldType.indiAge),
             new BeanField(record, Field.FieldType.indiBirthDate),
-            new BeanField(record, Field.FieldType.indiPlace),
+            new BeanField(record, Field.FieldType.indiBirthPlace),
             new BeanField(record, Field.FieldType.indiOccupation),
+            new BeanField(record, Field.FieldType.indiResidence),
             new BeanField(record, Field.FieldType.indiComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExMarried"), null),
@@ -141,6 +139,7 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiMarriedFirstName),
             new BeanField(record, Field.FieldType.indiMarriedDead),
             new BeanField(record, Field.FieldType.indiMarriedOccupation),
+            new BeanField(record, Field.FieldType.indiMarriedResidence),
             new BeanField(record, Field.FieldType.indiMarriedComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Father"), ks3),
@@ -149,6 +148,7 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiFatherAge),
             new BeanField(record, Field.FieldType.indiFatherDead),
             new BeanField(record, Field.FieldType.indiFatherOccupation),
+            new BeanField(record, Field.FieldType.indiFatherResidence),
             new BeanField(record, Field.FieldType.indiFatherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Mother"), ks4),
@@ -157,6 +157,7 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiMotherAge),
             new BeanField(record, Field.FieldType.indiMotherDead),
             new BeanField(record, Field.FieldType.indiMotherOccupation),
+            new BeanField(record, Field.FieldType.indiMotherResidence),
             new BeanField(record, Field.FieldType.indiMotherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Participant2"), ks5),
@@ -167,13 +168,15 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeBirthDate),
             new BeanField(record, Field.FieldType.wifePlace),
             new BeanField(record, Field.FieldType.wifeOccupation),
+            new BeanField(record, Field.FieldType.wifeResidence),
             new BeanField(record, Field.FieldType.wifeComment),
 
-            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExMarrried"), null),
+            new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExMarried"), null),
             new BeanField(record, Field.FieldType.wifeMarriedLastName),
             new BeanField(record, Field.FieldType.wifeMarriedFirstName),
             new BeanField(record, Field.FieldType.wifeMarriedDead),
             new BeanField(record, Field.FieldType.wifeMarriedOccupation),
+            new BeanField(record, Field.FieldType.wifeMarriedResidence),
             new BeanField(record, Field.FieldType.wifeMarriedComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Father"), ks6),
@@ -182,14 +185,16 @@ public class ModelMisc extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeFatherAge),
             new BeanField(record, Field.FieldType.wifeFatherDead),
             new BeanField(record, Field.FieldType.wifeFatherOccupation),
+            new BeanField(record, Field.FieldType.wifeFatherResidence),
             new BeanField(record, Field.FieldType.wifeFatherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Mother"), ks7),
-             new BeanField(record, Field.FieldType.wifeMotherLastName),
+            new BeanField(record, Field.FieldType.wifeMotherLastName),
             new BeanField(record, Field.FieldType.wifeMotherFirstName),
             new BeanField(record, Field.FieldType.wifeMotherAge),
             new BeanField(record, Field.FieldType.wifeMotherDead),
             new BeanField(record, Field.FieldType.wifeMotherOccupation),
+            new BeanField(record, Field.FieldType.wifeMotherResidence),
             new BeanField(record, Field.FieldType.wifeMotherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Witness1"), ks8),

@@ -45,7 +45,7 @@ public class FieldDate extends Field implements Cloneable {
 
     public String getValueDDMMYYYY() {
         try {
-            String result = "";
+            String result;
             // je recupere la date dans le calendrier gregorien
             PointInTime pit = eventDate.getStart().getPointInTime(PointInTime.GREGORIAN);
             if (pit.getYear() == PointInTime.UNKNOWN )  {

@@ -45,7 +45,7 @@ public class ModelMarriage extends ModelAbstract {
     }
 
     @Override
-    public Class getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return columnType[column];
     }
     
@@ -109,10 +109,12 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Husband"), ks2),
             new BeanField(record, Field.FieldType.indiLastName),
             new BeanField(record, Field.FieldType.indiFirstName),
+            //new BeanField(record, Field.FieldType.indiAge),
             new BeanField(record, Field.FieldType.indiAge),
             new BeanField(record, Field.FieldType.indiBirthDate),
-            new BeanField(record, Field.FieldType.indiPlace),
+            new BeanField(record, Field.FieldType.indiBirthPlace),
             new BeanField(record, Field.FieldType.indiOccupation),
+            new BeanField(record, Field.FieldType.indiResidence),
             new BeanField(record, Field.FieldType.indiComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExWife"), null),
@@ -120,6 +122,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiMarriedFirstName),
             new BeanField(record, Field.FieldType.indiMarriedDead),
             new BeanField(record, Field.FieldType.indiMarriedOccupation),
+            new BeanField(record, Field.FieldType.indiMarriedResidence),
             new BeanField(record, Field.FieldType.indiMarriedComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExWifeFather"), ks3),
@@ -128,6 +131,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiFatherAge),
             new BeanField(record, Field.FieldType.indiFatherDead),
             new BeanField(record, Field.FieldType.indiFatherOccupation),
+            new BeanField(record, Field.FieldType.indiFatherResidence),
             new BeanField(record, Field.FieldType.indiFatherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExWifeMother"), ks4),
@@ -136,6 +140,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.indiMotherAge),
             new BeanField(record, Field.FieldType.indiMotherDead),
             new BeanField(record, Field.FieldType.indiMotherOccupation),
+            new BeanField(record, Field.FieldType.indiMotherResidence),
             new BeanField(record, Field.FieldType.indiMotherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Wife"), ks5),
@@ -145,6 +150,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeBirthDate),
             new BeanField(record, Field.FieldType.wifePlace),
             new BeanField(record, Field.FieldType.wifeOccupation),
+            new BeanField(record, Field.FieldType.wifeResidence),
             new BeanField(record, Field.FieldType.wifeComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExHusband"), null),
@@ -152,6 +158,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeMarriedFirstName),
             new BeanField(record, Field.FieldType.wifeMarriedDead),
             new BeanField(record, Field.FieldType.wifeMarriedOccupation),
+            new BeanField(record, Field.FieldType.wifeMarriedResidence),
             new BeanField(record, Field.FieldType.wifeMarriedComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExHusbandFather"), ks6),
@@ -160,6 +167,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeFatherAge),
             new BeanField(record, Field.FieldType.wifeFatherDead),
             new BeanField(record, Field.FieldType.wifeFatherOccupation),
+            new BeanField(record, Field.FieldType.wifeFatherResidence),
             new BeanField(record, Field.FieldType.wifeFatherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.ExHusbandMother"), ks7),
@@ -168,6 +176,7 @@ public class ModelMarriage extends ModelAbstract {
             new BeanField(record, Field.FieldType.wifeMotherAge),
             new BeanField(record, Field.FieldType.wifeMotherDead),
             new BeanField(record, Field.FieldType.wifeMotherOccupation),
+            new BeanField(record, Field.FieldType.wifeMotherResidence),
             new BeanField(record, Field.FieldType.wifeMotherComment),
 
             new BeanField(record, java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row.Witness1"), ks8),

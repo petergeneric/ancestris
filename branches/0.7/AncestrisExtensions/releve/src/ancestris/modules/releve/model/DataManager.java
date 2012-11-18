@@ -1,14 +1,16 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.ConfigPanel;
 import ancestris.modules.releve.file.FileBuffer;
-import genj.gedcom.Gedcom;
+import genj.gedcom.Context;
+import java.util.ArrayList;
+import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 /**
  *
  * @author Michel
  */
-public class DataManager {
+public class DataManager implements PlaceManager {
 
     private ModelBirth releveBirthModel = new ModelBirth();
     private ModelMarriage releveMarriageModel = new ModelMarriage();
@@ -16,21 +18,24 @@ public class DataManager {
     private ModelMisc releveMiscModel = new ModelMisc();
     private ModelAll   releveAllModel = new ModelAll();
     private CompletionProvider completionProvider  = new CompletionProvider();
-    private ConfigPanel configPanel = null;
 
     //donnés de configuration
+    boolean copyFreeComment = true;
     boolean duplicateControlEnabled = true;
+    boolean valueControlEnabled = true;
     
     // données volatiles
     private int lastRecordNo = 0;
     private String freeComment = "";
 
+    
+
     // previous record
 
     public enum ModelType { birth, marriage, death, misc, all }
 
-    public DataManager (ConfigPanel configPanel) {
-        this.configPanel = configPanel;
+    public DataManager () {
+        loadOptions();
     }
 
     /**
@@ -44,7 +49,7 @@ public class DataManager {
         result |= releveDeathModel.isDirty();
         result |= releveMiscModel.isDirty();
         result |= releveAllModel.isDirty();
-        result |= configPanel.isDirty();
+        result |= placeChanged;
         return result;
     }
 
@@ -58,7 +63,7 @@ public class DataManager {
         releveDeathModel.resetDirty();
         releveMiscModel.resetDirty();
         releveAllModel.resetDirty();
-        configPanel.resetDirty();
+        placeChanged = false;
     }
 
     public int createRecord( ModelAbstract model) {
@@ -122,6 +127,7 @@ public class DataManager {
     public void addRecords(FileBuffer fileBuffer, boolean append, String defaultPlace, int forceDefaultPlace) {
         if (!append ) {
             removeAll();
+            setPlace(defaultPlace);
         }
 
         // je recupere le nombre de lignes
@@ -200,32 +206,50 @@ public class DataManager {
         releveMiscModel.removeAll();
         releveAllModel.removeAll();
         lastRecordNo = 0;
+        setPlace("");
         resetDirty();
+        loadOptions();
     }
 
-    public void addGedcomCompletion ( Gedcom gedcom) {
-        completionProvider.addGedcomCompletion(gedcom);
-    }
-
-    public void removeGedcomCompletion ( Gedcom gedcom) {
-        completionProvider.removeGedcomCompletion(gedcom);
-    }
-
+//    public void addGedcomCompletion ( Gedcom gedcom) {
+//        completionProvider.addGedcomCompletion(gedcom);
+//    }
+//
+//    public void removeGedcomCompletion ( ) {
+//        completionProvider.removeGedcomCompletion();
+//    }
 
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs aux options
     ///////////////////////////////////////////////////////////////////////////
 
+    public final void loadOptions() {
+        copyFreeComment = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("FreeCommentEnabled", "true"));
+        duplicateControlEnabled =  Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("DuplicateRecordControlEnabled", "true"));
+        valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
+        boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
+        if ( completion ) {
+            Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+            if (context != null && context.getGedcom() != null) {
+                completionProvider.addGedcomCompletion(context.getGedcom());
+            } else {
+                // rien a faire
+            }            
+        } else {
+             completionProvider.removeGedcomCompletion();
+        }
+    }
+
     public boolean getDuplicateControlEnabled() {
-        return configPanel.getDuplicateControl();
+        return duplicateControlEnabled;
     }
 
     public boolean getCopyFreeCommentEnabled() {
-        return configPanel.getCopyFreeComment();
+        return copyFreeComment;
     }
 
     public boolean getNewValueControlEnabled() {
-        return configPanel.getNewValueControlEnabled();
+        return valueControlEnabled;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -336,4 +360,100 @@ public class DataManager {
         }
     }
 
+     ///////////////////////////////////////////////////////////////////////////
+    //place manager
+    ///////////////////////////////////////////////////////////////////////////
+
+    // listeners devant être prevenus du changement de lieu
+    private ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
+    FieldPlace place = new FieldPlace();
+
+    
+    private boolean placeChanged = false;
+    
+    /**
+     * @param listener
+     */
+    @Override
+    public void addPlaceListener(PlaceListener listener) {
+        placeListeners.add(listener);
+    }
+
+    /**
+     * @param listener
+     */
+    @Override
+    public void removePlaceListener(PlaceListener listener) {
+        placeListeners.remove(listener);
+    }
+
+    @Override
+    public void setPlace(String cityName, String cityCode, String county, String state, String country) {
+       
+       if (!cityName.equals(this.place.getCityName()) ||
+               !cityCode.equals(this.place.getCityCode()) ||
+               !county.equals(this.place.getCountyName()) ||
+               !state.equals(this.place.getStateName()) ||
+               !country.equals(this.place.getCountryName())
+          )
+       {
+           this.place.setCityCode(cityName);
+           this.place.setCityCode(cityCode);
+           this.place.setCountyName(county);
+           this.place.setStateName(state);
+           this.place.setCountryName(country);
+           
+           placeChanged = true;
+            // je notifie les listeners
+            for(PlaceListener placeListener : placeListeners) {
+                placeListener.updatePlace(getPlace());
+            }
+       }
+      
+    }
+
+    @Override
+    public void setPlace(String value) {
+        place.setValue(value);
+        placeChanged = true;
+
+        // je notifie les listeners
+        for (PlaceListener placeListener : placeListeners) {
+            placeListener.updatePlace(getPlace());
+        }
+    }
+
+    /**
+     * retourne le lieu au format "cityName,cityCode,countyName,stateName,countryName,"
+     * @return
+     */
+    @Override
+    public String getPlace() {
+        return place.getValue();
+    }
+
+    @Override
+    public String getCityName() {
+        return place.getCityName();
+    }
+
+    @Override
+    public String getCityCode() {
+        return place.getCityCode();
+    }
+
+    @Override
+    public String getCountyName() {
+        return place.getCountyName();
+    }
+
+    @Override
+    public String getStateName() {
+        return place.getStateName();
+    }
+
+    @Override
+    public String getCountryName() {
+        return place.getCountryName();
+    }
 }

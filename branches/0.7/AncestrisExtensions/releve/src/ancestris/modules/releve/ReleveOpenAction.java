@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import org.openide.awt.Actions;
-import org.openide.windows.Mode;
-import org.openide.windows.WindowManager;
 
 /**
  * Action pour creer une intance de TodoTopComponent.

@@ -122,10 +122,22 @@ public class BeanField {
             case wifeMotherDead:
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
                 break;
-            case indiPlace:
+            case indiBirthPlace:
             case wifePlace:
-                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Place");
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.BirthPlace");
                 break;
+                
+            case indiResidence:
+            case indiMarriedResidence:
+            case indiFatherResidence:
+            case indiMotherResidence:
+            case wifeResidence:
+            case wifeMarriedResidence:
+            case wifeFatherResidence:
+            case wifeMotherResidence:
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Residence");
+                break;
+
             case indiAge:
             case indiFatherAge:
             case indiMotherAge:

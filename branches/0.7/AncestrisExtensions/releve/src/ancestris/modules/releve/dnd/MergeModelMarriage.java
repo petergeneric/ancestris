@@ -92,6 +92,39 @@ public class MergeModelMarriage extends MergeModel {
         }
     }
 
+    MergeModelMarriage(MergeRecord record, Gedcom gedcom, Indi husband, Fam wifeParentFamily) throws Exception {
+        this.record = record;
+        this.currentFamily = null;
+        this.gedcom = gedcom;
+        addRowFamily();
+        addRowHusband(husband);
+        if ( husband!= null ) {
+            addRowHusbandFamily(husband.getFamilyWhereBiologicalChild());
+        } else {
+            addRowHusbandFamily(null);
+        }
+        addRowSeparator();
+        addRowWife(null);
+        addRowWifeFamily(wifeParentFamily);
+    }
+
+    MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Indi wife) throws Exception {
+        this.record = record;
+        this.currentFamily = null;
+        this.gedcom = gedcom;
+        addRowFamily();
+        addRowHusband(null);
+        addRowHusbandFamily(husbandParentFamily);
+
+        addRowSeparator();
+        addRowWife(wife);
+        if ( wife!= null) {
+            addRowWifeFamily(wife.getFamilyWhereBiologicalChild());
+        } else {
+            addRowWifeFamily(null);
+        }
+    }
+
     MergeModelMarriage(MergeRecord record, Gedcom gedcom, Fam husbandParentFamily, Fam wifeParentFamily) throws Exception {
         this.record = record;
         this.currentFamily = null;
@@ -348,7 +381,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la profession de l'epoux
         if (isChecked(RowType.IndiOccupation) && !record.getIndiOccupation().isEmpty()) {
-            copyOccupation(husband, record.getIndiOccupation(), record);
+            copyOccupation(husband, record.getIndiOccupation(), record.getIndiResidence(), record);
         }
 
         // je copie les données des parents de l'epoux
@@ -400,7 +433,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, record.getIndiFatherOccupation(), record);
+                copyOccupation(father, record.getIndiFatherOccupation(), record.getIndiFatherResidence(), record);
             }
 
             // je copie le nom et le prenom de la mere de l'epoux
@@ -432,7 +465,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession de la mere de l'epoux
             if (isChecked(RowType.IndiMotherOccupation) ) {
-                copyOccupation(mother, record.getIndiMotherOccupation(), record);
+                copyOccupation(mother, record.getIndiMotherOccupation(), record.getIndiMotherResidence(), record);
             }
 
         } // parents de l'epoux
@@ -466,7 +499,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la profession de l'epouse
         if (isChecked(RowType.WifeOccupation) && !record.getWifeOccupation().isEmpty()) {
-            copyOccupation(wife, record.getWifeOccupation(), record);
+            copyOccupation(wife, record.getWifeOccupation(), record.getWifeResidence(), record);
         }
 
 
@@ -519,7 +552,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession du pere de l'epouse
             if (isChecked(RowType.WifeFatherOccupation) ) {
-                copyOccupation(father, record.getWifeFatherOccupation(), record);
+                copyOccupation(father, record.getWifeFatherOccupation(), record.getWifeFatherResidence(), record);
             }
 
             // je copie le nom et le prenom de la mere de l'epouse
@@ -551,7 +584,7 @@ public class MergeModelMarriage extends MergeModel {
 
             // je copie la profession de la mere de l'epouse
             if (isChecked(RowType.WifeMotherOccupation) ) {
-                copyOccupation(mother, record.getWifeMotherOccupation(), record);
+                copyOccupation(mother, record.getWifeMotherOccupation(), record.getWifeMotherResidence(), record);
             }
 
         } // parents de l'epouse
@@ -565,9 +598,17 @@ public class MergeModelMarriage extends MergeModel {
         //je cree la famille si necessaire
         if (currentFamily == null) {
             currentFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
-            // je lie le mari a la famille
+            // je lie le mari et la femme a la famille
             currentFamily.setHusband(husband);
             currentFamily.setWife(wife);
+        } else {
+            // j'ajoute les epoux si l'un d'eux est nouveau
+            if (currentFamily.getHusband() != husband) {
+                currentFamily.setHusband(husband);
+            }
+            if (currentFamily.getWife() != wife) {
+                currentFamily.setWife(wife);
+            }
         }
 
         // je crée la propriété MARR
@@ -659,7 +700,7 @@ public class MergeModelMarriage extends MergeModel {
      * @return
      */
     @Override
-    protected String getSummary(Entity selectedEntity) {
+    public String getSummary(Entity selectedEntity) {
 
         String summary;
 
@@ -687,7 +728,7 @@ public class MergeModelMarriage extends MergeModel {
                 } else {
                     indiParents = ((Indi)getRow(RowType.IndiFatherLastName).entityObject).getDisplayValue();
                 }
-                indiParents += "+";
+                indiParents += " x ";
                 if ( getRow(RowType.IndiFatherLastName).entityObject == null ) {
                     indiParents += "Nouvelle mère";
                 } else {
@@ -705,7 +746,7 @@ public class MergeModelMarriage extends MergeModel {
                 } else {
                     wifeParents = ((Indi)getRow(RowType.WifeFatherLastName).entityObject).getDisplayValue();
                 }
-                wifeParents += "+";
+                wifeParents += " x ";
                 if ( getRow(RowType.WifeFatherLastName).entityObject == null ) {
                     wifeParents += "Nouvelle mère";
                 } else {
@@ -718,16 +759,24 @@ public class MergeModelMarriage extends MergeModel {
 
             //summary = MessageFormat.format(summaryFormat, spouses, indiParents, wifeParents);
 
-            summary = husband + " + " + wife + "; ";
+            summary = husband + " x " + wife + "; ";
             summary += indiParents;
             summary += "; ";
             summary += wifeParents;
 
         } else {
             summary =  "Modifier le mariage" + " ";
-            summary += currentFamily.getHusband().toString(false);
-            summary += " ";
-            summary += currentFamily.getWife().toString(false);
+            if (currentFamily.getHusband() != null) {
+                summary += currentFamily.getHusband().toString(false);
+            } else {
+                summary += "---";
+            }
+            summary += " x ";
+            if (currentFamily.getWife() != null) {
+                summary += currentFamily.getWife().toString(false);
+            } else {
+                summary += "---";
+            }
         }
         return summary;
     }

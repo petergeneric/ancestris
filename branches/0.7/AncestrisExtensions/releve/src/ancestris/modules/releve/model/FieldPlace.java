@@ -6,12 +6,12 @@ package ancestris.modules.releve.model;
  */
 public class FieldPlace extends Field {
 
+    private String locality = "";
     private String cityName = "";
     private String cityCode = "";
     private String countyName = "";
     private String stateName = "";
     private String countryName = "";
-    private String locality = "";
     
     @Override
     public FieldPlace clone() {
@@ -134,7 +134,7 @@ public class FieldPlace extends Field {
      * @return the locality
      */
     public String getLocality() {
-        return countryName;
+        return locality;
     }
 
     /**

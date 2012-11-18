@@ -77,6 +77,10 @@ public class BeanPlace extends Bean implements CompletionListener {
     }
 
     
+    /**
+     * je supprime la declaration de listener
+     * avant que l'objet ne soit detruit
+     */
     @Override
     public void removeNotify() {
         completionProvider.removePlacesListener(this);
@@ -89,7 +93,7 @@ public class BeanPlace extends Bean implements CompletionListener {
      * @param keyList
      */
     @Override
-    public void keyUpdated(List keyList) {
+    public void keyUpdated(List<String> keyList) {
         tfield.setDataList(keyList);
     }
 

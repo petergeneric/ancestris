@@ -1,10 +1,12 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
+import ancestris.modules.releve.dnd.MergeModel.MergeRow;
 import ancestris.modules.releve.model.RecordDeath;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import java.util.List;
+import javax.swing.JFrame;
 import junit.framework.TestCase;
 
 /**
@@ -20,10 +22,10 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/2003");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead", "72y");
-                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "marriedcomment", "dead");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
+                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "marriedcomment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -36,7 +38,7 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/1988");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiplace", "indioccupation", "indicomment");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiplace", "indioccupation", "indiResidence", "indicomment");
                 //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
                 //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
@@ -135,5 +137,37 @@ public class MergeModelDeathTest extends TestCase {
         }
     }
 
+
+    /**
+     * test de la recherche de l'ex conjoint
+     */
+    public void testFindMarried() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+
+            RecordDeath record = new RecordDeath();
+                record.setEventDate("01/01/1988");
+                record.setCote("cote");
+                record.setFreeComment("photo");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "", "BEF 1981", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndiMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "");
+            MergeRecord mergeRecord = new MergeRecord(record);
+
+            List<MergeModel> models;
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
+            assertEquals("Nombre model",2,models.size());
+
+
+            MergeRow IndiMarriedLastNameRow =  models.get(0).getRow(MergeModel.RowType.IndiMarriedLastName);
+            assertNotNull("IndiMarriedLastName", IndiMarriedLastNameRow.entityValue);
+            assertEquals("IndiMarriedLastName not null", "MOTHERLASTNAME", IndiMarriedLastNameRow.entityValue.toString());
+            //MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, record, true);
+            //Thread.sleep(10000);
+           
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            fail(ex.getMessage());
+        }
+    }
     
 }

@@ -1,5 +1,6 @@
 package ancestris.modules.releve.editor;
 
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.event.ChangeListener;
@@ -12,7 +13,7 @@ public class Java2sAutoComboBox extends JComboBox {
       return (Java2sAutoTextField) editor;
     }
 
-    AutoTextFieldEditor(java.util.List list) {
+    AutoTextFieldEditor(List list) {
       editor = new Java2sAutoTextField(list, Java2sAutoComboBox.this);
     }
 
@@ -28,11 +29,11 @@ public class Java2sAutoComboBox extends JComboBox {
 
   }
 
-  public Java2sAutoComboBox(java.util.List list) {
+  public Java2sAutoComboBox(List list) {
     isFired = false;
     autoTextFieldEditor = new AutoTextFieldEditor(list);
     setEditable(true);
-    setModel(new DefaultComboBoxModel(list.toArray()) {
+    setModel(new DefaultComboBoxModel(list.toArray(new String[list.size()])) {
 
       @Override
       protected void fireContentsChanged(Object obj, int i, int j) {
@@ -80,15 +81,15 @@ public class Java2sAutoComboBox extends JComboBox {
     autoTextFieldEditor.getAutoTextFieldEditor().setStrict(flag);
   }
 
-  public java.util.List getDataList() {
+  public List getDataList() {
     return autoTextFieldEditor.getAutoTextFieldEditor().getDataList();
   }
 
-  public void setDataList(java.util.List list) {
+  public void setDataList(List list) {
     isFired = true;
     Object selectedObject = getEditor().getItem();
     autoTextFieldEditor.getAutoTextFieldEditor().setDataList(list);
-    setModel(new DefaultComboBoxModel(list.toArray()));   
+    setModel(new DefaultComboBoxModel(list.toArray(new String[list.size()])));   
     setSelectedItem(selectedObject);
     isFired = false;
   }

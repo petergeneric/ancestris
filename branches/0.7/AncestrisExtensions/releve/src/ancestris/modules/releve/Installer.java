@@ -19,16 +19,17 @@ public class Installer extends ModuleInstall {
      */
     @Override
     public boolean closing() {
-        ReleveTopComponent topComp = null;
         boolean canClose = true;
 
         Set<TopComponent> tcs = TopComponent.getRegistry().getOpened();
         for (TopComponent tc: tcs) {
             if (tc instanceof ReleveTopComponent) {
-                topComp = (ReleveTopComponent) tc;
+                ReleveTopComponent topComp = (ReleveTopComponent) tc;
                 // Si les données ont été modifiées, je demande à l'utilisateur s'il
                 // veut les sauvegarder.
-                // canClose retourne false si l'utilisateur refuse de sauvegarder et fermer l'application
+                // canClose demande l'utilisateur si'l veut sauvegarder les données 
+                //    si l'utisateur accespte , canClose sauvegarde les données et retourne true
+                //     sinon cancClose retourne false . Il ne faut pas fermer l'application. 
                 canClose &= topComp.canClose();
                 break;
             }
