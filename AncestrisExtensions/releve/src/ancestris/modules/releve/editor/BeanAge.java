@@ -39,11 +39,9 @@ public class BeanAge extends Bean {
         } catch (ParseException e) {
         }
 
-        //tfield = new JTextField("",8);
         tfield = new JFormattedTextField(mask);
         tfield.getDocument().addDocumentListener(changeSupport);
-        //tfield.setPreferredSize(new Dimension(100, 20));
-
+        
         setLayout(new BorderLayout());
         add(tfield, BorderLayout.CENTER);
         defaultFocus = tfield;
@@ -66,6 +64,9 @@ public class BeanAge extends Bean {
                     );
             tfield.setText(txt);
         }
+        // je place le focus au début du champ
+        tfield.setCaretPosition(0);
+        
         // not changed
         changeSupport.setChanged(false);
     }

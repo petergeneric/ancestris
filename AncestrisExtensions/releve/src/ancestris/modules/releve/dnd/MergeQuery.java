@@ -274,13 +274,27 @@ public class MergeQuery {
                     continue;
                 }
 
+                // si l'epouse est decedee, le releve doit etre apres son deces
+                if (!isRecordAfterThanDate(record.getEventDate(), wife.getDeathDate(), 0, 0)) {
+                    continue;
+                }
+
+                // le releve doit etre apres le mariage (=naissance + minMarriageYearOld)
+                if (!isRecordAfterThanDate(record.getEventDate(), wife.getBirthDate(), 0, minMarriageYearOld)) {
+                    continue;
+                }
+
+                // le releve doit etre apres la date de mariage
+                if (!isRecordAfterThanDate(record.getEventDate(), fam.getMarriageDate(), 0, 0)) {
+                    continue;
+                }
+
                 // l'ex epouse doit avoir au moins minMarriageYearOld
                 if (!isRecordAfterThanDate(record.getEventDate(), wife.getBirthDate(), 0, minMarriageYearOld)) {
                     continue;
                 }
 
-
-                 // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
+                // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
                 if (!isCompatible(record.getIndiMarriedDeathDate(), wife.getDeathDate() )) {
                     continue;
                 }
@@ -328,22 +342,27 @@ public class MergeQuery {
                     continue;
                 }
 
-                // l'ex epoux doit avoir au moins minMarriageYearOld
-                if (!isRecordAfterThanDate(record.getEventDate(), husband.getBirthDate(), 0, minMarriageYearOld)) {
+                // si l'epoux est decede, le releve doit etre apres son deces
+                if (!isRecordAfterThanDate(record.getEventDate(), husband.getDeathDate(), 0, 0)) {
                     continue;
                 }
 
+                // le releve doit etre apres le mariage (=naissance + minMarriageYearOld)
+                if (!isRecordAfterThanDate(record.getEventDate(), husband.getBirthDate(), 0, minMarriageYearOld)) {
+                    continue;
+                }
+                
+                // le releve doit etre apres la date de mariage
+                if (!isRecordAfterThanDate(record.getEventDate(), fam.getMarriageDate(), 0, 0)) {
+                    continue;
+                }
 
-                 // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
+                // la date de deces de l'ex conjoint doit etre compatible avec le deces de l'epoux
                 if (!isCompatible(record.getIndiMarriedDeathDate(), husband.getDeathDate() )) {
                     continue;
                 }
 
-
             }
-
-          
-
 
             // j'ajoute la famille dans la liste résultat si elle n'y est pas déjà
             if (!parentFamilies.contains(fam)) {
@@ -525,6 +544,17 @@ public class MergeQuery {
                 if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
                     continue;
                 }
+
+                // l'epoux doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getIndiBirthDate(), husband.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epoux doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getIndiDeathDate(), husband.getDeathDate())) {
+                    continue;
+                }
+
                 // je verifie les parents de l'epoux
                 Indi indiFather = husband.getBiologicalFather();
                 if (indiFather != null) {
@@ -596,6 +626,16 @@ public class MergeQuery {
 
                 // l'epouse ne doit pas etre decedee avant le mariage
                 if (!isRecordBeforeThanDate(marriageDate, wife.getDeathDate(), 0, 0)) {
+                    continue;
+                }
+
+                // l'epouse doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getWifeBirthDate(), wife.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epouse doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getWifeDeathDate(), wife.getDeathDate())) {
                     continue;
                 }
 
@@ -677,9 +717,9 @@ public class MergeQuery {
             recordBirthDate = record.getEventDate();
         }
 
-        Collection entities = gedcom.getIndis();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        Collection<Indi> entities = gedcom.getIndis();
+        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
+            Indi indi = it.next();
 
             if (families!= null) {
                 boolean found = false;
@@ -843,9 +883,9 @@ public class MergeQuery {
         // je recupere la date de mariage du releve
         PropertyDate marriageDate = marriageRecord.getEventDate();
 
-        Collection entities = gedcom.getIndis();
-        for (Iterator it = entities.iterator(); it.hasNext();) {
-            Indi indi = (Indi) it.next();
+        Collection<Indi> entities = gedcom.getIndis();
+        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
+            Indi indi = it.next();
 
             if (excludedFamilies != null) {
                 boolean found = false;
@@ -882,8 +922,18 @@ public class MergeQuery {
                     continue;
                 }
 
-                // l'epoux ne doit pas etre decede  avant le mariage
+                // l'epoux ne doit pas etre decede avant le mariage
                 if (!isRecordBeforeThanDate(marriageDate, husband.getDeathDate(), 0, 0)) {
+                    continue;
+                }
+
+                // l'epoux doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getIndiBirthDate(), husband.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epoux doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getIndiDeathDate(), husband.getDeathDate())) {
                     continue;
                 }
 
@@ -955,6 +1005,16 @@ public class MergeQuery {
                 }
                 // l'epouse ne doit pas etre decedee avant  le mariage
                 if (!isRecordBeforeThanDate(marriageDate, wife.getDeathDate(), 0, 0)) {
+                    continue;
+                }
+
+                // l'epouse doit avoir une date de naissance compatible
+                if (!isCompatible(marriageRecord.getWifeBirthDate(), wife.getBirthDate())) {
+                    continue;
+                }
+
+                // l'epouse doit avoir une date de deces compatible
+                if (!isCompatible(marriageRecord.getWifeDeathDate(), wife.getDeathDate())) {
                     continue;
                 }
 
@@ -1429,7 +1489,7 @@ public class MergeQuery {
     /**
      * retourne true si la date de naissance du parent est inférieure à la date
      * du relevé (diminuée de l'age minimum pour être parent)
-     * et si le parent a moins de 100 ans à la date du relevé.
+     * et si le parent a moins de indiMaxYearOld (=100 ans) à la date du relevé.
      * Autrement dit :
      *   recordDate - indiMaxYearOld <  parentBirthDate  < recordDate - (minMonthShift + minYearShift)
      *
@@ -1837,6 +1897,7 @@ public class MergeQuery {
 
     /**
      * retourne la source d'un releve
+     *   "(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName
      * @param entityProperty
      * @param gedcom
      * @return
@@ -1848,7 +1909,8 @@ public class MergeQuery {
         String cityName = record.getEventPlaceCityName();
         String cityCode = record.getEventPlaceCityCode();
         String countyName = record.getEventPlaceCountyName();
-        String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
+        //String stringPatter = String.format("(?:%s|%s)(?:\\s++)%s(?:\\s++)(?:BMS|Etat\\scivil)", countyName, cityCode, cityName);
+        String stringPatter = String.format("(?:BMS|Etat\\scivil)(?:\\s++)%s", cityName);
         Pattern pattern = Pattern.compile(stringPatter);
         Collection<? extends Entity> sources = gedcom.getEntities("SOUR");
         for (Entity gedComSource : sources) {

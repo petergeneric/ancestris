@@ -1,6 +1,6 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.PlaceManager;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.ModelAbstract;
@@ -23,6 +23,7 @@ public class FileManager {
         FILE_TYPE_UNKNOW,
         FILE_TYPE_ANCESTRISV1,
         FILE_TYPE_ANCESTRISV2,
+        FILE_TYPE_ANCESTRISV3,
         FILE_TYPE_EGMT,
         FILE_TYPE_NIMEGUE
     } ;
@@ -44,14 +45,16 @@ public class FileManager {
         }
         StringBuilder sb  = new StringBuilder();
         FileBuffer buffer = null;
-        if (ReleveFileAncestrisV2.isValidFile(inputFile, sb.append('\n'))) {
-            buffer = ReleveFileAncestrisV2.loadFile(inputFile);
+        if (ReleveFileAncestrisV3.isValidFile(inputFile, sb.append('\n'))) {
+            buffer = ReleveFileAncestrisV3.loadFile(inputFile);
         } else if (ReleveFileEgmt.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileEgmt.loadFile(inputFile);
         } else if (ReleveFileNimegue.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileNimegue.loadFile(inputFile);
         } else if (ReleveFileAncestrisV1.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileAncestrisV1.loadFile(inputFile);
+        } else if (ReleveFileAncestrisV2.isValidFile(inputFile, sb.append('\n'))) {
+            buffer = ReleveFileAncestrisV2.loadFile(inputFile);
         } else {
             throw new Exception(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.UnknownFormat"), inputFile.getName())+ "\n" + sb.toString());
         }
@@ -86,10 +89,10 @@ public class FileManager {
             }
 
             switch (fileFormat) {
-                case FILE_TYPE_ANCESTRISV2:
-                    sb.append(ReleveFileAncestrisV2.saveFile(placeManager, models[0], saveFile, false));
+                case FILE_TYPE_ANCESTRISV3:
+                    sb.append(ReleveFileAncestrisV3.saveFile(placeManager, models[0], saveFile, false));
                     for(int i=1; i< models.length; i++) {
-                        sb.append(ReleveFileAncestrisV2.saveFile(placeManager, models[i], saveFile, true));
+                        sb.append(ReleveFileAncestrisV3.saveFile(placeManager, models[i], saveFile, true));
                     }
                     break;
                 case FILE_TYPE_EGMT:

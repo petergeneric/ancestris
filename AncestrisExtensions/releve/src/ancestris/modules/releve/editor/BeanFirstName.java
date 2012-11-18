@@ -1,19 +1,22 @@
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSimpleValue;
+import java.util.List;
 
 /**
  *
  * @author Michel
  */
-public class BeanFirstName extends Bean {
+public class BeanFirstName extends Bean implements CompletionListener {
     private Java2sAutoTextField cFirst;
     CompletionProvider completionProvider;
     
     public BeanFirstName(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
+        completionProvider.addFirstNamesListener(this);
         setLayout(new java.awt.BorderLayout());
         cFirst = new Java2sAutoTextField(completionProvider.getFirstNames());
         cFirst.setStrict(false);
@@ -68,5 +71,25 @@ public class BeanFirstName extends Bean {
         FieldSimpleValue fieldName = (FieldSimpleValue) getField();
         fieldName.setValue(firstName);
         cFirst.setText(firstName);
+    }
+
+    /**
+     * je supprime la declaration de listener
+     * avant que l'objet ne soit detruit
+     */
+    @Override
+    public void removeNotify() {
+        completionProvider.removeFirstNamesListener(this);
+        super.removeNotify();
+    }
+
+    /**
+     * Implemente CompletionListener
+     * copie la nouvelle liste de completion
+     * @param keyList
+     */
+    @Override
+    public void keyUpdated(List<String> keyList) {
+        cFirst.setDataList(keyList);
     }
 }

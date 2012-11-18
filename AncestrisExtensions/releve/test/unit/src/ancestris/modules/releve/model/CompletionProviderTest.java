@@ -50,7 +50,7 @@ public class CompletionProviderTest extends TestCase {
             assertEquals("Nombre de noms", 2, completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 2, completionProvider.getOccupations().size());
 
-            completionProvider.removeGedcomCompletion(gedcom);
+            completionProvider.removeGedcomCompletion();
             // je verifie que les données ont bien été supprimées
             assertEquals("Nombre de prenoms apres suppression", 0, completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms apres suppression", 0, completionProvider.getLastNames().size());

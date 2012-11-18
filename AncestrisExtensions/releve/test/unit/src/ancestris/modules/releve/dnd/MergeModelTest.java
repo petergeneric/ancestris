@@ -52,7 +52,7 @@ public class MergeModelTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("I1");
             MergeRecord mergeRecord = new MergeRecord(MergeModelBirthTest.createBirthRecord("sansfamille1"));
 
-            MergeModel.copyOccupation(indi, mergeRecord.getIndiFatherOccupation(), mergeRecord);
+            MergeModel.copyOccupation(indi, mergeRecord.getIndiFatherOccupation(), mergeRecord.getIndiFatherResidence(), mergeRecord);
             
             assertEquals("Nombre de profession", 2, indi.getProperties("OCCU").length);
             Property occupationProperty = indi.getProperties("OCCU")[1];

@@ -163,7 +163,7 @@ public class Java2sAutoTextField extends JTextField {
 
     }
 
-    public Java2sAutoTextField(List list) {
+    public Java2sAutoTextField(List<String> list) {
         isCaseSensitive = false;
         isStrict = false;
         autoComboBox = null;
@@ -176,7 +176,7 @@ public class Java2sAutoTextField extends JTextField {
         }
     }
 
-    Java2sAutoTextField(List list, Java2sAutoComboBox b) {
+    Java2sAutoTextField(List<String> list, Java2sAutoComboBox b) {
         isCaseSensitive = false;
         isStrict = false;
         autoComboBox = null;
@@ -256,11 +256,11 @@ public class Java2sAutoTextField extends JTextField {
         isUpperFirstChar = flag;
     }
 
-    public List getDataList() {
+    public List<String> getDataList() {
         return dataList;
     }
 
-    public void setDataList(List list) {
+    public void setDataList(List<String> list) {
         if (list == null) {
             throw new IllegalArgumentException("values can not be null");
         } else {
@@ -287,7 +287,7 @@ public class Java2sAutoTextField extends JTextField {
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
-    private List dataList;
+    private List<String> dataList;
     private boolean isCaseSensitive;
     private boolean isStrict;
     private boolean isUpperAllChar = false;

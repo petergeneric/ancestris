@@ -1,34 +1,31 @@
 package ancestris.modules.releve.model;
 
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.PropertyChoiceValue;
-import genj.gedcom.PropertyName;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDirectory;
+import genj.app.GedcomFileListener;
+import genj.gedcom.*;
+import java.util.*;
 import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Michel
+ * @author Michels
  */
-public class CompletionProvider {
-
-    private CompletionSet<String, Field> firstNames = new CompletionSet<String, Field>();
-    private CompletionSet<String, Field> lastNames = new CompletionSet<String, Field>();
-    private CompletionSet<String, Field> occupations = new CompletionSet<String, Field>();
-    private CompletionSet<String, Field> places = new CompletionSet<String, Field>();
-    private CompletionSet<String, Field> eventTypes = new CompletionSet<String, Field>();
+public class CompletionProvider implements GedcomFileListener {
+    Gedcom completionGedcom;
+    private CompletionSet<Field> firstNames = new CompletionSet<Field>();
+    private CompletionSet<Field> lastNames = new CompletionSet<Field>();
+    private CompletionSet<Field> occupations = new CompletionSet<Field>();
+    private CompletionSet<Field> places = new CompletionSet<Field>();
+    private CompletionSet<Field> eventTypes = new CompletionSet<Field>();
 
     private HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
     private HashMap<String, Integer> gedcomFirstNameSex = new HashMap<String, Integer>();
 
+    // Register in ancestris lookup for GedcomFileListener
+    public CompletionProvider(){
+        AncestrisPlugin.register(this);
+    }
 
 
     /**
@@ -180,18 +177,18 @@ public class CompletionProvider {
         }
 
         // IndiPlace
-        if ( record.getIndiPlace()!= null && record.getIndiPlace().isEmpty()== false) {
-            places.add(record.getIndiPlace().getValue(), record.getIndiPlace());
+        if ( record.getIndiBirthPlace()!= null && record.getIndiBirthPlace().isEmpty()== false) {
+            places.add(record.getIndiBirthPlace().getValue(), record.getIndiBirthPlace());
         }
 
         // WifePlace
-        if ( record.getWifePlace()!= null && record.getWifePlace().isEmpty()== false) {
-            places.add(record.getWifePlace().getValue(), record.getWifePlace());
+        if ( record.getWifeBirthPlace()!= null && record.getWifeBirthPlace().isEmpty()== false) {
+            places.add(record.getWifeBirthPlace().getValue(), record.getWifeBirthPlace());
         }
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
-            eventTypes.add(record.getEventType().getTag(), record.getEventType());
+            eventTypes.add(record.getEventType().getName(), record.getEventType());
         }
     }
 
@@ -338,27 +335,32 @@ public class CompletionProvider {
         }
 
         // IndiPlace
-        if ( record.getIndiPlace()!= null && record.getIndiPlace().isEmpty()== false) {
-            places.remove(record.getIndiPlace().getValue(), record.getIndiPlace());
+        if ( record.getIndiBirthPlace()!= null && record.getIndiBirthPlace().isEmpty()== false) {
+            places.remove(record.getIndiBirthPlace().getValue(), record.getIndiBirthPlace());
         }
 
         // WifePlace
-        if ( record.getWifePlace()!= null && record.getWifePlace().isEmpty()== false) {
-            places.remove(record.getWifePlace().getValue(), record.getWifePlace());
+        if ( record.getWifeBirthPlace()!= null && record.getWifeBirthPlace().isEmpty()== false) {
+            places.remove(record.getWifeBirthPlace().getValue(), record.getWifeBirthPlace());
         }
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
-            eventTypes.remove(record.getEventType().getTag(), record.getEventType());
+            eventTypes.remove(record.getEventType().getName(), record.getEventType());
         }
     }
 
+    /**
+     * supprime toutes les données
+     * mais conserve les listeners
+     */
     protected void removeAll () {
-        firstNames = new CompletionSet<String, Field>();
-        lastNames = new CompletionSet<String, Field>();
-        occupations = new CompletionSet<String, Field>();
-        places = new CompletionSet<String, Field>();
-        eventTypes = new CompletionSet<String, Field>();
+        firstNames.removeAll();
+        lastNames.removeAll();
+        occupations.removeAll();
+        places.removeAll();
+        eventTypes.removeAll();
+        completionGedcom = null;
     }
 
 //    protected void removeRecord(List<Record> recordList) {
@@ -430,7 +432,17 @@ public class CompletionProvider {
      * @param gedcom
      */
     protected void addGedcomCompletion(Gedcom gedcom) {
+        if (gedcom == null) {
+            // rien a faire
+            return;
+        }
+
+        if ( completionGedcom != null && completionGedcom.equals(gedcom)) {
+            // rien a faire car c'est le meme gedcom
+            return;
+        }
         this.locale = gedcom.getLocale();
+        this.completionGedcom = gedcom;
 
         // je cree un objet Field associé au Gedcom pour pouvoir le referencer
         // dans les listes de completion
@@ -440,18 +452,21 @@ public class CompletionProvider {
         // j'ajoute les prénoms, noms, professions et lieux du Gedcom dans les
         // listes de completion
         for ( String firstName : PropertyName.getFirstNames(gedcom, false)) {
-            firstNames.add(firstName, gedcomField);
+            firstNames.add(firstName, gedcomField, false);
         }
         for ( String lastName : PropertyName.getLastNames(gedcom, false)) {
-            lastNames.add(lastName, gedcomField);
+            lastNames.add(lastName, gedcomField, false);
         }
         for ( String occupation : PropertyChoiceValue.getChoices(gedcom, "OCCU", false)) {
-            occupations.add(occupation, gedcomField);
+            occupations.add(occupation, gedcomField, false);
         }
-
         for ( String place : PropertyChoiceValue.getChoices(gedcom, "PLAC", false)) {
             places.add(place, gedcomField, false);
         }
+
+        firstNames.fireKeysListener();
+        lastNames.fireKeysListener();
+        occupations.fireKeysListener();
         places.fireKeysListener();
 
         // je créee une statistique des sexes/ prénom pour les prénoms du gedcom
@@ -474,32 +489,42 @@ public class CompletionProvider {
      * des listes de completion.
      * @param gedcom
      */
-    protected void removeGedcomCompletion(Gedcom gedcom) {
+    protected void removeGedcomCompletion() {
+        if (completionGedcom == null) {
+            return;
+        }
         this.locale = Locale.getDefault();
 
         FieldGedcom gedcomField = new FieldGedcom();
-        gedcomField.setValue(gedcom);
+        gedcomField.setValue(completionGedcom);
 
         // je supprime les prénoms, noms, professions et lieux du Gedcom des
         // listes de completion
         for ( String firstName : firstNames.getKeys()) {
-            firstNames.remove(firstName, gedcomField);
+            firstNames.remove(firstName, gedcomField,false);
         }
         for ( String lastName : lastNames.getKeys()) {
-            lastNames.remove(lastName, gedcomField);
+            lastNames.remove(lastName, gedcomField,false);
         }
         for ( String occupation : occupations.getKeys()) {
-            occupations.remove(occupation, gedcomField);
+            occupations.remove(occupation, gedcomField,false);
         }
         for ( String place : places.getKeys()) {
-            places.remove(place, gedcomField);
+            places.remove(place, gedcomField,false);
         }
 
+        firstNames.fireKeysListener();
+        lastNames.fireKeysListener();
+        occupations.fireKeysListener();
+        places.fireKeysListener();
+        
         // je vide la statistique des sexes/ prénom des prénoms du gedcom
         gedcomFirstNameSex.clear();
 
-    }
+        this.completionGedcom = null;
 
+
+    }
 
     /**
      * cette classe permet d'encapsuler la reference d'un  GEDCOM
@@ -565,40 +590,96 @@ public class CompletionProvider {
     /**
      * retourne les prénoms triées par ordre alphabétique
      */
-    public List getFirstNames() {
+    public List<String> getFirstNames() {
        return firstNames.getKeys();
     }
 
     /**
      * retourne les noms triées par ordre alphabétique
      */
-    public List getLastNames() {
+    public List<String> getLastNames() {
         return lastNames.getKeys();
     }
 
     /**
      * retourne les professions triées par ordre alphabétique
      */
-    public List getOccupations() {
+    public List<String> getOccupations() {
        return occupations.getKeys();
     }
 
     /**
      * retourne les tags des types d'evenement triées par ordre alphabétique
      */
-    public List getEventTypes() {
+    public List<String> getEventTypes() {
         return eventTypes.getKeys();
     }
 
     /**
      * retourne les lieux triées par ordre alphabétique
      */
-    public List getPlaces() {
+    public List<String> getPlaces() {
         return places.getKeys();
     }
 
     public Locale getLocale() {
         return locale;
+    }
+
+    /**
+     * ajoute un listener
+     */
+    public void addFirstNamesListener(CompletionListener listener) {
+       firstNames.addKeysListener(listener);
+    }
+
+    /**
+     * supprime un listner
+     */
+    public void removeFirstNamesListener(CompletionListener listener) {
+       firstNames.removeKeysListener(listener);
+    }
+
+    /**
+     * ajoute un listener
+     */
+    public void addLastNamesListener(CompletionListener listener) {
+       lastNames.addKeysListener(listener);
+    }
+
+    /**
+     * supprime un listner
+     */
+    public void removeLastNamesListener(CompletionListener listener) {
+       lastNames.removeKeysListener(listener);
+    }
+
+    /**
+     * ajoute un listener
+     */
+    public void addOccupationsListener(CompletionListener listener) {
+       occupations.addKeysListener(listener);
+    }
+
+    /**
+     * supprime un listner
+     */
+    public void removeOccupationsListener(CompletionListener listener) {
+       occupations.removeKeysListener(listener);
+    }
+
+    /**
+     * ajoute un listener
+     */
+    public void addEventTypesListener(CompletionListener listener) {
+       eventTypes.addKeysListener(listener);
+    }
+
+    /**
+     * supprime un listner
+     */
+    public void removeEventTypesListener(CompletionListener listener) {
+       eventTypes.removeKeysListener(listener);
     }
 
     /**
@@ -669,18 +750,48 @@ public class CompletionProvider {
         if (oldValue != null && ! oldValue.isEmpty()) {
             eventTypes.remove(oldValue, field);
         }
-        if ( field.getTag().isEmpty()==false) {
-            eventTypes.add(field.getTag(), field);
+        if ( field.getName().isEmpty()==false) {
+            eventTypes.add(field.getName(), field);
         }
+    }
+
+
+     ///////////////////////////////////////////////////////////////////////////
+    // Implement GedcomFileListener
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * desactive la completion avec gedcom si le fichier gedcom utilisé
+     * est fermé par l'utilisateur
+     * @param gedcom
+     */
+    @Override
+    public void gedcomClosed(Gedcom gedcom) {
+        if ( completionGedcom != null && completionGedcom.equals(gedcom) ){
+            removeGedcomCompletion();
+        }
+    }
+
+    @Override
+    public void commitRequested(Context context) {
+        //rien à faire
+    }
+
+    @Override
+    public void gedcomOpened(Gedcom gedcom) {
+        // rien à faire
     }
 
     /**
      * table contenant une liste de valeur et les objet qui utilisent chaque valeur
      */
-    private class CompletionSet<KEY, REF> {
+    private class CompletionSet<REF> {
 
         // liste TreeMap triée sur la clé
-        private Map<KEY, Set<REF>> key2references = new TreeMap<KEY, Set<REF>>();
+        private Map<String, Set<REF>> key2references = new TreeMap<String, Set<REF>>();
+
+        private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
+
 
         /**
          * Constructor - uses a TreeMap that keeps
@@ -692,7 +803,7 @@ public class CompletionProvider {
         /**
          * Returns the references for a given key
          */
-        public Set<REF> getReferences(KEY key) {
+        public Set<REF> getReferences(String key) {
             // null is ignored
             if (key == null) {
                 return new HashSet<REF>();
@@ -716,7 +827,7 @@ public class CompletionProvider {
         /**
          * Returns the number of reference for given key
          */
-        public int getSize(KEY key) {
+        public int getSize(String key) {
             // null is ignored
             if (key == null) {
                 return 0;
@@ -734,7 +845,7 @@ public class CompletionProvider {
          * Add a key and its reference
          * @return whether the reference was actually added (could have been known already)
          */
-        public boolean add(KEY key, REF reference) {
+        public boolean add(String key, REF reference) {
             return add(key, reference, true);
 
         }
@@ -743,7 +854,7 @@ public class CompletionProvider {
          * Add a key and its reference
          * @return whether the reference was actually added (could have been known already)
          */
-        public boolean add(KEY key, REF reference, boolean fireListeners) {
+        public boolean add(String key, REF reference, boolean fireListeners) {
             // null is ignored
             if (key == null) {
                 return false;
@@ -769,7 +880,7 @@ public class CompletionProvider {
             return true;
         }
 
-        public boolean remove(KEY key, REF reference) {
+        public boolean remove(String key, REF reference) {
             return remove(key, reference, true);
 
         }
@@ -777,7 +888,7 @@ public class CompletionProvider {
         /**
          * Remove a reference for given key
          */
-        public boolean remove(KEY key, REF reference, boolean fireListeners) {
+        public boolean remove(String key, REF reference, boolean fireListeners) {
             // null is ignored
             if (key == null) {
                 return false;
@@ -801,14 +912,16 @@ public class CompletionProvider {
             return true;
         }
 
+        public void removeAll() {
+            key2references.clear();
+        }
+
         /**
          * Return all keys  (sorted by TreeMap)
          */
-        public List<KEY> getKeys() {
-            return new ArrayList<KEY>(key2references.keySet());
+        public List<String> getKeys() {
+            return new ArrayList<String>(key2references.keySet());
         }
-
-        private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
 
         /**
          * retourne les prénoms triées par ordre alphabétique
@@ -828,7 +941,7 @@ public class CompletionProvider {
          * retourne les prénoms triées par ordre alphabétique
          */
         protected void fireKeysListener() {
-            final List<KEY> keys = new ArrayList<KEY>(key2references.keySet());
+            final List<String> keys = new ArrayList<String>(key2references.keySet());
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override

@@ -26,7 +26,7 @@ public class ReleveFileGedcom {
     }
 
     /**
-     *
+     * convertis eun fichier GEDCOm en releve
      * @param fileName
      */
     public static FileBuffer loadFile(Gedcom gedcom) throws Exception {
@@ -38,8 +38,8 @@ public class ReleveFileGedcom {
             int lineNumber = 0;
 
             //read comma separated file line by line
-            for (Iterator it = gedcom.getEntities().iterator(); it.hasNext();) {
-                Entity entity = (Entity) it.next();
+            for (Iterator<Entity> it = gedcom.getEntities().iterator(); it.hasNext();) {
+                Entity entity = it.next();
 
                 if (entity instanceof Indi) {
                     Indi indi = (Indi) entity;
@@ -68,13 +68,28 @@ public class ReleveFileGedcom {
                                 "", // pas de date de naissance a la naissance
                                 "", // pas de lieu a la naissance
                                 "", // pas de profession a la naissance
+                                "", // pas de residence dans ce format                                
                                 birthProperty.getPropertyValue("NOTE"));  // note
 
                         if (indi.getBiologicalFather() != null) {
+                            Indi IndiTemp = indi.getBiologicalFather();
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
+                                    
                             record.setIndiFather(
                                     indi.getBiologicalFather().getFirstName(),
                                     indi.getBiologicalFather().getLastName(),
-                                    indi.getBiologicalFather().getProperty("OCCU") != null ? indi.getBiologicalFather().getPropertyDisplayValue("OCCU") : "",
+                                    occupation,
+                                    residence,
                                     indi.getBiologicalFather().getProperty("NOTE") != null ? indi.getBiologicalFather().getPropertyDisplayValue("NOTE") : "",
                                     indi.getBiologicalFather().getDeathDate(false) != null ? "true" : "false",
                                     "" ); // age
@@ -82,10 +97,23 @@ public class ReleveFileGedcom {
                         }
 
                         if (indi.getBiologicalMother() != null) {
+                            Indi IndiTemp = indi.getBiologicalMother();
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setIndiMother(
                                     indi.getBiologicalMother().getFirstName(),
                                     indi.getBiologicalMother().getLastName(),
-                                    indi.getBiologicalMother().getProperty("OCCU") != null ? indi.getBiologicalMother().getPropertyDisplayValue("OCCU") : "",
+                                    occupation,
+                                    residence,
                                     indi.getBiologicalMother().getProperty("NOTE") != null ? indi.getBiologicalMother().getPropertyDisplayValue("NOTE") : "",
                                     indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false",
                                     "" ); // age;
@@ -133,31 +161,72 @@ public class ReleveFileGedcom {
                         record.setCote("");
                         record.setFreeComment("");
 
-                        record.setIndi(
-                                indi.getFirstName(),
-                                indi.getLastName(),
-                                indi.getProperty("SEX") != null ? indi.getProperty("SEX").getValue() : "",
-                                "", // pas d'age a la naissance
-                                "", // pas de date de naossance a la naissance
-                                "", // pas de lieu a la naissance
-                                "", // pas de profession a la naissance
-                                deathProperty.getPropertyValue("NOTE"));  // note
+                        {
+                            Indi IndiTemp = indi;
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
+                            record.setIndi(
+                                    indi.getFirstName(),
+                                    indi.getLastName(),
+                                    indi.getProperty("SEX") != null ? indi.getProperty("SEX").getValue() : "",
+                                    "", // pas d'age a la naissance
+                                    "", // pas de date de naossance a la naissance
+                                    "", // pas de lieu a la naissance
+                                    occupation,
+                                    residence,
+                                    deathProperty.getPropertyValue("NOTE"));  // note
+                        }
 
                         if (indi.getBiologicalFather() != null) {
+                            Indi IndiTemp = indi.getBiologicalFather();
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setIndiFather(
                                     indi.getBiologicalFather().getFirstName(),
                                     indi.getBiologicalFather().getLastName(),
-                                    indi.getBiologicalFather().getPropertyValue("OCCU"),
+                                    occupation,
+                                    residence,
                                     indi.getBiologicalFather().getPropertyValue("NOTE"),
                                     indi.getBiologicalFather().getDeathDate(false) != null ? "true" : "false",
                                     "" ); // age;
                         }
 
                         if (indi.getBiologicalMother() != null) {
+                            Indi IndiTemp = indi.getBiologicalMother();
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setIndiMother(
                                     indi.getBiologicalMother().getFirstName(),
                                     indi.getBiologicalMother().getLastName(),
-                                    indi.getBiologicalMother().getPropertyValue("OCCU"),
+                                    occupation,
+                                    residence,
                                     indi.getBiologicalMother().getPropertyValue("NOTE"),
                                     indi.getBiologicalMother().getDeathDate(false) != null ? "true" : "false",
                                     "" ); // age;
@@ -188,23 +257,51 @@ public class ReleveFileGedcom {
                     record.setFreeComment("");
 
                     if (husband != null) {
-                        record.setIndi(
-                                husband.getFirstName(),
-                                husband.getLastName(),
-                                husband.getPropertyValue("SEX"),
-                                "", // age
-                                "", //birth
-                                "", //place
-                                "", //occu
-                                ""); // comment
+                        {
+                        Indi IndiTemp = husband;
+                            String occupation = "";
+                            String residence = "";
+                            if (IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if (IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if (IndiTemp.getProperty("OCCU").getProperty("PLAC") != null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
+                            record.setIndi(
+                                    husband.getFirstName(),
+                                    husband.getLastName(),
+                                    husband.getPropertyValue("SEX"),
+                                    "", // age
+                                    "", //birth
+                                    "", //place
+                                    occupation,
+                                    residence,
+                                    ""); // comment
+                        }
 
                         Indi husbandFather = husband.getBiologicalFather();
 
                         if (husbandFather != null) {
+                            Indi IndiTemp = husbandFather;
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setIndiFather(
                                     husbandFather.getFirstName(),
                                     husbandFather.getLastName(),
-                                    husbandFather.getPropertyValue("OCCU"),
+                                    occupation,
+                                    residence,
                                     husbandFather.getPropertyValue("NOTE"),
                                     "false",
                                     "" ); // age;
@@ -213,10 +310,23 @@ public class ReleveFileGedcom {
                         Indi husbandMother = husband.getBiologicalMother();
 
                         if (husbandMother != null) {
+                            Indi IndiTemp = husbandMother;
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setIndiFather(
                                     husbandMother.getFirstName(),
                                     husbandMother.getLastName(),
-                                    husbandMother.getPropertyValue("OCCU"),
+                                    occupation,
+                                    residence,
                                     husbandMother.getPropertyValue("NOTE"),
                                     "false",
                                     "" ); // age;
@@ -224,23 +334,50 @@ public class ReleveFileGedcom {
                     }
 
                     if (wife != null) {
-                        record.setWife(
-                                wife.getFirstName(),
-                                wife.getLastName(),
-                                wife.getPropertyValue("SEX"),
-                                "", // age
-                                "", //birth
-                                "", //place
-                                "", //occu
-                                ""); // comment
-
+                        {
+                            Indi IndiTemp = wife;
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
+                            record.setWife(
+                                    wife.getFirstName(),
+                                    wife.getLastName(),
+                                    wife.getPropertyValue("SEX"),
+                                    "", // age
+                                    "", //birth
+                                    "", //place
+                                    occupation,
+                                    residence,
+                                    ""); // comment
+                        }
                         Indi wifeFather = wife.getBiologicalFather();
 
                         if (wifeFather != null) {
+                            Indi IndiTemp = wifeFather;
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setWifeFather(
                                     wifeFather.getFirstName(),
                                     wifeFather.getLastName(),
-                                    wifeFather.getPropertyValue("OCCU"),
+                                    occupation,
+                                    residence,
                                     wifeFather.getPropertyValue("NOTE"),
                                     "false",
                                     "" ); // age;
@@ -249,10 +386,23 @@ public class ReleveFileGedcom {
                         Indi wifeMother = wife.getBiologicalMother();
 
                         if (wifeMother != null) {
+                            Indi IndiTemp = wifeMother;
+                            String occupation = "";
+                            String residence = "";
+                            if ( IndiTemp.getProperty("RESI") != null) {
+                                residence = IndiTemp.getProperty("RESI").getPropertyDisplayValue("PLAC");
+                            }
+                            if ( IndiTemp.getProperty("OCCU") != null) {
+                                occupation = IndiTemp.getPropertyDisplayValue("OCCU");
+                                if ( IndiTemp.getProperty("OCCU").getProperty("PLAC")!= null) {
+                                    residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
+                                }
+                            }
                             record.setWifeMother(
                                     wifeMother.getFirstName(),
                                     wifeMother.getLastName(),
-                                    wifeMother.getPropertyValue("OCCU"),
+                                    occupation,
+                                    residence,
                                     wifeMother.getPropertyValue("NOTE"),
                                     "false",
                                     "" ); // age;

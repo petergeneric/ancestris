@@ -1,7 +1,5 @@
 package ancestris.modules.releve.model;
 
-import org.openide.util.Exceptions;
-
 /**
  *
  * @author Michel
@@ -82,8 +80,9 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         indiSex,
         indiAge,
         indiBirthDate,
-        indiPlace,
+        indiBirthPlace,
         indiOccupation,
+        indiResidence,
         indiComment,
         //  conjoint (ou ancien conjoint) //////////////////////////////////////////
         indiMarriedFirstName,
@@ -91,6 +90,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         //indiMarriedSex,
         indiMarriedDead,
         indiMarriedOccupation,
+        indiMarriedResidence,
         indiMarriedComment,
         //  indi father ////////////////////////////////////////////////////////////
         indiFatherFirstName,
@@ -98,12 +98,14 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         indiFatherAge,
         indiFatherDead,
         indiFatherOccupation,
+        indiFatherResidence,
         indiFatherComment,
         indiMotherFirstName,
         indiMotherLastName,
         indiMotherAge,
         indiMotherDead,
         indiMotherOccupation,
+        indiMotherResidence,
         indiMotherComment,
         //  wife ///////////////////////////////////////////////////////////////////
         wifeFirstName,
@@ -114,6 +116,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         wifeBirthDate,
         wifePlace,
         wifeOccupation,
+        wifeResidence,
         wifeComment,
         //  wifeMarried ///////////////////////////////////////////////////////////
         wifeMarriedFirstName,
@@ -121,6 +124,7 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         //wifeMarriedSex,
         wifeMarriedDead,
         wifeMarriedOccupation,
+        wifeMarriedResidence,
         wifeMarriedComment,
         //  wifeFather ///////////////////////////////////////////////////////////
         wifeFatherFirstName,
@@ -128,12 +132,14 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         wifeFatherAge,
         wifeFatherDead,
         wifeFatherOccupation,
+        wifeFatherResidence,
         wifeFatherComment,
         wifeMotherFirstName,
         wifeMotherLastName,
         wifeMotherAge,
         wifeMotherDead,
         wifeMotherOccupation,
+        wifeMotherResidence,
         wifeMotherComment,
         // wintness ///////////////////////////////////////////////////////////////
         witness1FirstName,

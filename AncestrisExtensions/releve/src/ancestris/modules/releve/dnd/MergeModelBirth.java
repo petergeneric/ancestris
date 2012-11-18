@@ -323,7 +323,7 @@ class MergeModelBirth extends MergeModel {
 
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation) && !record.getIndiFatherOccupation().isEmpty()) {
-                copyOccupation(father, record.getIndiFatherOccupation(), record);
+                copyOccupation(father, record.getIndiFatherOccupation(), record.getIndiFatherResidence(), record);
             }            
 
             // je copie le nom et le prenom de la mere
@@ -355,7 +355,7 @@ class MergeModelBirth extends MergeModel {
 
             // je met à jour la profession de la mere
             if (isChecked(RowType.IndiMotherOccupation) && !record.getIndiMotherOccupation().isEmpty()) {
-                copyOccupation(mother, record.getIndiMotherOccupation(), record);
+                copyOccupation(mother, record.getIndiMotherOccupation(), record.getIndiMotherResidence(), record);
             }
             
         }
@@ -379,7 +379,7 @@ class MergeModelBirth extends MergeModel {
      * @return
      */
     @Override
-    protected String getSummary(Entity selectedEntity) {
+    public String getSummary(Entity selectedEntity) {
         String summary;
         if ( currentIndi == null ) {
                 summary = "Nouvel enfant" + " - ";

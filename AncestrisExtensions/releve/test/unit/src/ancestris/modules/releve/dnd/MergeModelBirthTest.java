@@ -24,9 +24,9 @@ public class MergeModelBirthTest extends TestCase {
                 record.setEventDate("01/01/2000");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead", "72y");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFtaerResidence", "comment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -39,9 +39,9 @@ public class MergeModelBirthTest extends TestCase {
                 record.setEventDate("01/01/2000");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiplace", "indioccupation", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "comment", "dead", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "comment", "dead", "72y");
+                record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -54,9 +54,9 @@ public class MergeModelBirthTest extends TestCase {
                 record.setEventDate("01/01/1980");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "BEF 1981", "", "indiplace", "indioccupation", "indicomment");
-                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
-                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "BEF 1981", "", "indiplace", "indioccupation", "indiResidence", "indicomment");
+                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "comment", "dead");
+                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "comment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -173,7 +173,7 @@ public class MergeModelBirthTest extends TestCase {
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",1,sourceLink.length );
-            assertEquals("IndiBirthDate","75000 Paris BMS", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
+            assertEquals("IndiBirthDate","BMS Paris", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -202,7 +202,7 @@ public class MergeModelBirthTest extends TestCase {
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
             assertEquals("Nb birthsource",2,sourceLink.length );
-            assertEquals("IndiBirthDate","35000 Brest Etat civil", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
+            assertEquals("IndiBirthDate","Etat civil Brest", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -231,8 +231,8 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("IndiSex",mergeRecord.getIndiSex(), indi.getSex());
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
-            assertEquals("Nb birthsource",2,sourceLink.length );
-            assertEquals("IndiBirthDate","75009 Paris Etat civil", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
+            assertEquals("Nb birthsource",1,sourceLink.length );
+            assertEquals("IndiBirthDate","BMS Paris", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
@@ -265,9 +265,9 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("Indi Sex",mergeRecord.getIndiSex(), indi.getSex());
             assertEquals("Indi Birth Date",0, indi.getBirthDate().compareTo(mergeRecord.getEventDate()));
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
-            assertEquals("Nb birthsource",2,sourceLink.length );
-            assertEquals("source 0","75009 Paris Etat civil", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
-            assertEquals("sourec 1","75000 Paris BMS", ((Source)((PropertyXRef)sourceLink[1]).getTargetEntity()).getTitle() );
+            assertEquals("Nb birthsource",1,sourceLink.length );
+            assertEquals("source 0","BMS Paris", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
+            //assertEquals("sourec 1","BMS Paris", ((Source)((PropertyXRef)sourceLink[1]).getTargetEntity()).getTitle() );
 
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

@@ -85,8 +85,9 @@ public class MergeRecord {
 
     String getEventSource() {
         String cityName = record.getEventPlace().getCityName();
-        String cityCode = record.getEventPlace().getCityCode();
-        return String.format("%s %s Etat civil", cityCode, cityName);
+        //String cityCode = record.getEventPlace().getCityCode();
+        //return String.format("%s %s Etat civil", cityCode, cityName);
+        return String.format("Etat civil %s", cityName);
     }
 
     String getEventPage() {
@@ -174,8 +175,8 @@ public class MergeRecord {
     }
 
     String getIndiPlace() {
-        if ( record.getIndiPlace() != null && !record.getIndiPlace().isEmpty() ) {
-            return record.getIndiPlace().toString();
+        if ( record.getIndiBirthPlace() != null && !record.getIndiBirthPlace().isEmpty() ) {
+            return record.getIndiBirthPlace().toString();
         } else {
             return record.getEventPlace().toString();
         }
@@ -191,6 +192,10 @@ public class MergeRecord {
             occupation += " (" + getEventDate().getDisplayValue()+")";
         }
         return occupation;
+    }
+
+    String getIndiResidence() {
+        return record.getIndiResidence().toString();
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -244,7 +249,7 @@ public class MergeRecord {
     }
 
     String getIndiMarriedOccupation() {
-        return record.getIndiFatherOccupation().toString();
+        return record.getIndiMarriedOccupation().toString();
     }
 
     String getIndiMarriedOccupationWithDate() {
@@ -253,6 +258,10 @@ public class MergeRecord {
             occupation += " (" + getEventDate().getDisplayValue()+")";
         }
         return occupation;
+    }
+
+    String getIndiMarriedResidence() {
+        return record.getIndiMarriedResidence().toString();
     }
 
 
@@ -294,7 +303,18 @@ public class MergeRecord {
     String getIndiFatherOccupation() {
         return record.getIndiFatherOccupation().toString();
     }
-    
+
+    String getIndiFatherResidence() {
+        String residence;
+        if ( this.type == RecordType.Birth ) {
+            // meme residence que le fils si c'est un relevé de naissance
+            residence = record.getIndiBirthPlace().toString();
+        } else {
+            residence = record.getIndiFatherResidence().toString();
+        }
+        return residence;
+    }
+
     String getIndiFatherOccupationWithDate() {
         String occupation = record.getIndiFatherOccupation().toString();
         if (!occupation.isEmpty()) {
@@ -340,6 +360,18 @@ public class MergeRecord {
         }
         return occupation;
     }
+
+    String getIndiMotherResidence() {
+         String residence;
+        if (this.type == RecordType.Birth) {
+            // meme residence que le pere
+            residence = record.getIndiBirthPlace().toString();
+        } else {
+            residence = record.getIndiMotherResidence().toString();
+        }
+        return residence;
+    }
+
     //  wife ///////////////////////////////////////////////////////////////////
 
     String getWifeFirstName() {
@@ -376,7 +408,7 @@ public class MergeRecord {
     }
 
     String getWifePlace() {
-        return record.getWifePlace().toString();
+        return record.getWifeBirthPlace().toString();
     }
 
     String getWifeOccupation() {
@@ -389,6 +421,10 @@ public class MergeRecord {
             occupation += " (" + getEventDate().getDisplayValue()+")";
         }
         return occupation;
+    }
+
+    String getWifeResidence () {
+        return record.getWifeResidence().toString();
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -504,6 +540,10 @@ public class MergeRecord {
             return record.getWifeFatherOccupation().toString();
         }
     }
+    
+    String getWifeFatherResidence() {
+        return record.getWifeFatherResidence().toString();
+    }
 
     String getWifeFatherOccupationWithDate() {
         String occupation = getWifeFatherOccupation();
@@ -563,8 +603,20 @@ public class MergeRecord {
         return occupation;
     }
 
-
-   
+    /**
+     *
+     * @return
+     */
+    String getWifeMotherResidence() {
+        String residence;
+        if (this.type == RecordType.Birth && record.getWifeMotherResidence().isEmpty() && ! record.getWifeFatherResidence().isEmpty()) {
+            residence = record.getWifeFatherResidence().toString();
+        } else {
+            residence = record.getWifeMotherResidence().toString();
+        }
+        return residence;
+    }
+  
 
     /**
      * genere le commentaire de la naissance
@@ -751,8 +803,7 @@ public class MergeRecord {
         }
 
         String generalComment = appendValue(
-                record.getGeneralComment().toString(),
-                record.getFreeComment().toString()
+                record.getGeneralComment().toString()
                 );
 
         if (!generalComment.isEmpty()) {
@@ -760,6 +811,15 @@ public class MergeRecord {
                 comment += "\n";
             }
             comment += generalComment;
+        }
+
+       String freeComment = appendValue(
+                record.getFreeComment().toString() );
+        if (!freeComment.isEmpty()) {
+            if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
+                comment += "\n";
+            }
+            comment += "Photo"+": "+freeComment;
         }
 
         return comment;

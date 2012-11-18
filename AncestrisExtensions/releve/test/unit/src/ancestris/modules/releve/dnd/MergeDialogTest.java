@@ -44,9 +44,9 @@ public class MergeDialogTest extends TestCase {
             record.setEventDate("01/01/2000");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "occupation", "comment");
-            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead", "70y");
-            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "comment", "dead", "72y");
+            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "occupation", "indiResidence", "comment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "comment", "dead", "70y");
+            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "indiMoatherResidence", "comment", "dead", "72y");
             record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -74,9 +74,9 @@ public class MergeDialogTest extends TestCase {
             record.setEventDate("01/01/2000");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "occupation", "comment");
-            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead", "70y");
-            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "comment", "dead", "72y");
+            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "occupation", "indiResidence", "comment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "comment", "dead", "70y");
+            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "comment", "dead", "72y");
             record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -104,9 +104,9 @@ public class MergeDialogTest extends TestCase {
             record.setEventDate("01/01/2003");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "3y", "", "place", "occupation", "comment");
-            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead", "70y");
-            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "comment", "dead", "72y");
+            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "3y", "", "place", "occupation", "indiResidence", "comment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "comment", "dead", "70y");
+            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "comment", "dead", "72y");
             record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");

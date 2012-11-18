@@ -1,8 +1,8 @@
 package ancestris.modules.releve.editor;
 
-import ancestris.modules.releve.ConfigPanel;
-import ancestris.modules.releve.PlaceManager;
+import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.ReleveTopComponent;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -72,27 +72,6 @@ public class StandaloneEditor extends javax.swing.JFrame {
             setBounds(screen.width / 2 -100, screen.height / 2- 100, 300, 450);
         }
 
-        // listener pour intercepter l'evenement de fermeture de la fenetre.
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                // j'enregistre la taille dans les preferences
-                String size ;
-                size= String.valueOf(e.getWindow().getWidth())+","
-                        + String.valueOf(e.getWindow().getHeight()) + ","
-                        + String.valueOf(e.getWindow().getLocation().x + ","
-                        + String.valueOf(e.getWindow().getLocation().y)
-                        );
-                
-                NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
-                TopComponent tc = WindowManager.getDefault().findTopComponent("ReleveTopComponent");
-                ((ReleveTopComponent)tc).standaloneEditorClosed();
-            }
-        });
-
-
-        
-
 
     }
 
@@ -108,11 +87,11 @@ public class StandaloneEditor extends javax.swing.JFrame {
      * @param releveDeathModel
      * @param releveMiscModel
      */
-    public void setDataManager(DataManager dataManager, PlaceManager placeManager) {
-        birthEditor.setModel(dataManager, DataManager.ModelType.birth, placeManager);
-        marriageEditor.setModel(dataManager, DataManager.ModelType.marriage, placeManager);
-        deathEditor.setModel(dataManager, DataManager.ModelType.death, placeManager);
-        miscEditor.setModel(dataManager, DataManager.ModelType.misc, placeManager);
+    public void setDataManager(DataManager dataManager, PlaceManager placeManager, final MenuCommandProvider menuCommandProvider) {
+        birthEditor.setModel(dataManager, DataManager.ModelType.birth, placeManager, menuCommandProvider);
+        marriageEditor.setModel(dataManager, DataManager.ModelType.marriage, placeManager, menuCommandProvider);
+        deathEditor.setModel(dataManager, DataManager.ModelType.death, placeManager, menuCommandProvider);
+        miscEditor.setModel(dataManager, DataManager.ModelType.misc, placeManager, menuCommandProvider);
 
         // je selection le premier releve
         selectRecord(0, 0, 0, 0, 0);
@@ -139,6 +118,23 @@ public class StandaloneEditor extends javax.swing.JFrame {
                     jTabbedPane1.setSelectedComponent(miscEditor);
                     miscEditor.createRecord();
                 }
+            }
+        });
+        
+         // listener pour intercepter l'evenement de fermeture de la fenetre.
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                // j'enregistre la taille dans les preferences
+                String size ;
+                size= String.valueOf(e.getWindow().getWidth())+","
+                        + String.valueOf(e.getWindow().getHeight()) + ","
+                        + String.valueOf(e.getWindow().getLocation().x + ","
+                        + String.valueOf(e.getWindow().getLocation().y)
+                        );
+                
+                NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
+                menuCommandProvider.standaloneEditorClosed();
             }
         });
     }
