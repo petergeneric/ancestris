@@ -76,7 +76,7 @@ public class CheckDuplicates extends AncestrisPlugin implements Runnable {
                     } else if (tag.equals(Gedcom.SOUR)) {
                         (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SOUR));
                     } else if (tag.equals(Gedcom.SUBM)) {
-                        (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SUBM));
+                        (entitiesMatchers.get(tag)).setOptions((SubmitterMatcherOptions) selectedOptions.get(Gedcom.SUBM));
                     }
                     List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
                     Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
