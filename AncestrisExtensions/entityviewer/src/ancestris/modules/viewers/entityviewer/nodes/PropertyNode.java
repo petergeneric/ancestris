@@ -3,6 +3,8 @@ package ancestris.modules.viewers.entityviewer.nodes;
 import ancestris.modules.viewers.entityviewer.PropertyTag2Icon;
 import ancestris.modules.viewers.entityviewer.PropertyTag2Name;
 import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyFamilyChild;
+import genj.gedcom.PropertyFamilySpouse;
 import genj.gedcom.PropertyXRef;
 import java.awt.Image;
 import org.openide.ErrorManager;
@@ -28,10 +30,20 @@ public class PropertyNode extends AbstractNode {
         if (obj != null) {
             if (obj instanceof PropertyAssociation) {
                 return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
+            } else if (obj instanceof PropertyFamilySpouse) {
+                return PropertyTag2Name.getTagName(obj.getTag()) +
+                        " @" + ((PropertyFamilySpouse) obj).getFamily().getId() +
+                        "@ " + ((PropertyFamilySpouse) obj).getFamily().getHusband().getName() +
+                        " & " + ((PropertyFamilySpouse) obj).getFamily().getWife().getName();
+            } else if (obj instanceof PropertyFamilyChild) {
+                return PropertyTag2Name.getTagName(obj.getTag()) +
+                        " @" + ((PropertyFamilyChild) obj).getFamily().getId() +
+                        "@ " + ((PropertyFamilyChild) obj).getFamily().getHusband().getName() +
+                        " & " + ((PropertyFamilyChild) obj).getFamily().getWife().getName();
             } else if (obj instanceof PropertyXRef) {
                 return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
             } else {
-                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getValue();
+                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
             }
         } else {
             return null;
