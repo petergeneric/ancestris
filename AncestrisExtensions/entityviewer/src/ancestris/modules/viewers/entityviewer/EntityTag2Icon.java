@@ -2,6 +2,7 @@ package ancestris.modules.viewers.entityviewer;
 
 import java.awt.Image;
 import java.util.HashMap;
+import javax.swing.Icon;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -24,7 +25,7 @@ public class EntityTag2Icon {
         }
     };
 
-    static public String getIconFile(String entityTag) {
+    static public String getImageFileName(String entityTag) {
         if (entity2Icon.get(entityTag) != null) {
             return entity2Icon.get(entityTag);
         } else {
@@ -32,11 +33,15 @@ public class EntityTag2Icon {
         }
     }
 
-    static public Image getIcon(String entityTag) {
+    static public Image getImage(String entityTag) {
         if (entity2Icon.get(entityTag) != null) {
             return ImageUtilities.loadImage(entity2Icon.get(entityTag));
         } else {
             return ImageUtilities.loadImage(entity2Icon.get("Unknown"));
         }
+    }
+
+    static public Icon getIcon(String entityTag) {
+        return ImageUtilities.image2Icon(getImage(entityTag));
     }
 }

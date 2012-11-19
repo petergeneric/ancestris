@@ -39,7 +39,7 @@ public class EntityNode extends AbstractNode {
     public Image getIcon(int type) {
         Entity entity = getLookup().lookup(Entity.class);
         if (entity != null) {
-            return EntityTag2Icon.getIcon(entity.getTag());
+            return EntityTag2Icon.getImage(entity.getTag());
         } else {
             return null;
         }
@@ -49,7 +49,7 @@ public class EntityNode extends AbstractNode {
     public Image getOpenedIcon(int type) {
         Entity entity = getLookup().lookup(Entity.class);
         if (entity != null) {
-            return EntityTag2Icon.getIcon(entity.getTag());
+            return EntityTag2Icon.getImage(entity.getTag());
         } else {
             return null;
         }
