@@ -2,11 +2,14 @@ package ancestris.modules.viewers.entityviewer.panels;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import javax.swing.JScrollBar;
 import javax.swing.tree.TreeSelectionModel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -16,6 +19,7 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
 
     private ExplorerManager explorerManager = new ExplorerManager();
     private BeanTreeView beanTreeView = new BeanTreeView();
+
     /**
      * Creates new form DisplayEntityPanel
      */
@@ -46,11 +50,23 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
      * @param selectedNodes An array with the selected nodes.
      */
     private void setSelectedNodes(Node[] selectedNodes) {
+        ArrayList<Node> newSelectedNodes = new ArrayList<Node>();
         System.out.println("------");
         for (Node node : selectedNodes) {
-            System.out.println("node " + node.getDisplayName());
-        }
+           System.out.println("node " + node.getDisplayName());
+/*           newSelectedNodes.add(node);
+            if (node.isLeaf() == false) {
+                beanTreeView.expandNode(node);
+                newSelectedNodes.addAll(Arrays.asList(node.getChildren().getNodes()));
+            }
+*/        }
         System.out.println("------");
+/*        try {
+            explorerManager.setSelectedNodes(newSelectedNodes.toArray(new Node[newSelectedNodes.size()]));
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+*/
     }
 
     /**
@@ -81,7 +97,7 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
     public JScrollBar getHorizontalScrollBar() {
         return jScrollPane1.getHorizontalScrollBar();
     }
-    
+
     public JScrollBar getVerticalScrollBar() {
         return jScrollPane1.getVerticalScrollBar();
     }

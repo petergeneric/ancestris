@@ -54,7 +54,7 @@ public class PropertyNode extends AbstractNode {
     public Image getIcon(int type) {
         genj.gedcom.Property obj = getLookup().lookup(genj.gedcom.Property.class);
         if (obj != null) {
-            return PropertyTag2Icon.getIcon(obj.getTag());
+            return PropertyTag2Icon.getImage(obj.getTag());
         } else {
             return null;
         }
@@ -64,7 +64,7 @@ public class PropertyNode extends AbstractNode {
     public Image getOpenedIcon(int type) {
         genj.gedcom.Property obj = getLookup().lookup(genj.gedcom.Property.class);
         if (obj != null) {
-            return PropertyTag2Icon.getIcon(obj.getTag());
+            return PropertyTag2Icon.getImage(obj.getTag());
         } else {
             return null;
         }
