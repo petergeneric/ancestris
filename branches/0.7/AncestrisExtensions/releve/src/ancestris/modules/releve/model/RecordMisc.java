@@ -99,8 +99,8 @@ public class RecordMisc extends Record {
     }
 
     @Override
-    public RecordMarriage clone() {
-	    RecordMarriage object = (RecordMarriage) super.clone();;
+    public RecordMisc clone() {
+	RecordMisc object = (RecordMisc) super.clone();;
 
         object.eventType           =  eventType.clone();
         object.notary              =  notary.clone();
@@ -110,7 +110,7 @@ public class RecordMisc extends Record {
         object.indiSex             = indiSex.clone();
         object.indiAge             = indiAge.clone();
         object.indiBirthDate       = indiBirthDate.clone();
-        object.indiBirthPlace           = indiBirthPlace.clone();
+        object.indiBirthPlace      = indiBirthPlace.clone();
         object.indiOccupation      = indiOccupation.clone();
         object.indiResidence       = indiResidence.clone();
         object.indiComment         = indiComment.clone();
@@ -187,9 +187,7 @@ public class RecordMisc extends Record {
         object.witness4LastName    = witness4LastName.clone();
         object.witness4Occupation  = witness4Occupation.clone();
         object.witness4Comment     = witness4Comment.clone();
-		// je renvoie le clone
-		return object;
-  	}
-
-   
+	// je renvoie le clone
+	return object;
+    }
 }
