@@ -44,12 +44,14 @@
         <h4>Known bugs</h4>
         <ul>
           <li>
+            Report view:
             You might have to run a context-free report view query before you can run
-            a report that should be launched for an entity.
+            a report that should be launched from an entity.
           </li>
           <li>
-            The report view keeps outpout files open.
-            Retry with a new name or restart the application.
+            Command line conversion returns:
+            Exception in thread "main" genj.io.GedcomIOException: java.lang.NullPointerException
+            Work arround: run a query with the GUI, reuse the conversion result for further command line actions.
           </li>
         </ul>
 
