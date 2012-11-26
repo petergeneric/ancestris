@@ -30,8 +30,6 @@ public final class CheckDuplicatesVisualPanel1 extends JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
 
-        setLayout(new java.awt.BorderLayout());
-
         jEditorPane1.setContentType("text/html"); // NOI18N
         jEditorPane1.setText(org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel1.class, "CheckDuplicatesVisualPanel1.jEditorPane1.text")); // NOI18N
         jEditorPane1.setDisabledTextColor(new java.awt.Color(32, 32, 32));
@@ -39,7 +37,22 @@ public final class CheckDuplicatesVisualPanel1 extends JPanel {
         jEditorPane1.setFocusable(false);
         jScrollPane1.setViewportView(jEditorPane1);
 
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane jEditorPane1;
