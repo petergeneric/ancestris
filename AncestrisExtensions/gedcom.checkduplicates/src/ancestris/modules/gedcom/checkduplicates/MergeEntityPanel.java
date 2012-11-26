@@ -36,47 +36,73 @@ public class MergeEntityPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
         leftPanel = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        jButton1 = new javax.swing.JButton();
+        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        jButton2 = new javax.swing.JButton();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         rightPanel = new javax.swing.JPanel();
 
         setMinimumSize(new java.awt.Dimension(648, 364));
 
-        jSplitPane1.setResizeWeight(0.5);
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
         leftPanel.setLayout(new java.awt.BorderLayout());
 
         leftDisplayEntityPanel = new DisplayEntityPanel ();
         leftPanel.add(leftDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setLeftComponent(leftPanel);
+        jPanel1.add(leftPanel);
+
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
+        jPanel2.add(filler1);
+
+        jButton1.setIcon(new javax.swing.ImageIcon("/home/lemovice/Téléchargements/arrow_skip_left.png")); // NOI18N
+        jPanel2.add(jButton1);
+        jPanel2.add(filler3);
+
+        jButton2.setIcon(new javax.swing.ImageIcon("/home/lemovice/Téléchargements/arrow_skip_right.png")); // NOI18N
+        jPanel2.add(jButton2);
+        jPanel2.add(filler2);
+
+        jPanel1.add(jPanel2);
 
         rightPanel.setLayout(new java.awt.BorderLayout());
 
         rightDisplayEntityPanel = new DisplayEntityPanel ();
         rightPanel.add(rightDisplayEntityPanel, java.awt.BorderLayout.CENTER);
 
-        jSplitPane1.setRightComponent(rightPanel);
+        jPanel1.add(rightPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
+    private javax.swing.Box.Filler filler3;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JPanel rightPanel;
     // End of variables declaration//GEN-END:variables
