@@ -54,6 +54,12 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        individualsCheckBox = new javax.swing.JCheckBox();
+        familiesCheckBox = new javax.swing.JCheckBox();
+        submittersCheckBox = new javax.swing.JCheckBox();
+        repositoriesCheckBox = new javax.swing.JCheckBox();
+        sourcesCheckBox = new javax.swing.JCheckBox();
         jPanel7 = new javax.swing.JPanel();
         individualsOptionPanel = new javax.swing.JPanel();
         indiMaximumDateIntervalLabel = new javax.swing.JLabel();
@@ -70,149 +76,8 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         repositoriesOptionPanel = new javax.swing.JPanel();
         sourcesOptionPanel1 = new javax.swing.JPanel();
         emptyPanel = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        individualsCheckBox = new javax.swing.JCheckBox();
-        familiesCheckBox = new javax.swing.JCheckBox();
-        submittersCheckBox = new javax.swing.JCheckBox();
-        repositoriesCheckBox = new javax.swing.JCheckBox();
-        sourcesCheckBox = new javax.swing.JCheckBox();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.jPanel1.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.white)); // NOI18N
-
-        jPanel7.setLayout(new java.awt.CardLayout());
-
-        org.openide.awt.Mnemonics.setLocalizedText(indiMaximumDateIntervalLabel, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiMaximumDateIntervalLabel.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(indiEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiEmptyValuesValidRadioButton.text")); // NOI18N
-
-        indiAllFirstNamesRadioButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(indiAllFirstNamesRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiAllFirstNamesRadioButton.text")); // NOI18N
-
-        indiCheckAllNamesRadioButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(indiCheckAllNamesRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiCheckAllNamesRadioButton.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(indiCheckFamiliesRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiCheckFamiliesRadioButton.text")); // NOI18N
-
-        javax.swing.GroupLayout individualsOptionPanelLayout = new javax.swing.GroupLayout(individualsOptionPanel);
-        individualsOptionPanel.setLayout(individualsOptionPanelLayout);
-        individualsOptionPanelLayout.setHorizontalGroup(
-            individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(individualsOptionPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(individualsOptionPanelLayout.createSequentialGroup()
-                        .addComponent(indiMaximumDateIntervalLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(indiEmptyValuesValidRadioButton)
-                    .addComponent(indiCheckAllNamesRadioButton)
-                    .addComponent(indiAllFirstNamesRadioButton)
-                    .addComponent(indiCheckFamiliesRadioButton))
-                .addContainerGap(36, Short.MAX_VALUE))
-        );
-        individualsOptionPanelLayout.setVerticalGroup(
-            individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(individualsOptionPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(indiMaximumDateIntervalLabel)
-                    .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indiAllFirstNamesRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indiCheckAllNamesRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indiCheckFamiliesRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indiEmptyValuesValidRadioButton)
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-
-        jPanel7.add(individualsOptionPanel, "individualsOptions");
-
-        org.openide.awt.Mnemonics.setLocalizedText(famMaxDateIntervalLabel, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.famMaxDateIntervalLabel.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(famEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.famEmptyValuesValidRadioButton.text")); // NOI18N
-
-        javax.swing.GroupLayout familiesOptionPanelLayout = new javax.swing.GroupLayout(familiesOptionPanel);
-        familiesOptionPanel.setLayout(familiesOptionPanelLayout);
-        familiesOptionPanelLayout.setHorizontalGroup(
-            familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(familiesOptionPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(familiesOptionPanelLayout.createSequentialGroup()
-                        .addComponent(famMaxDateIntervalLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(famMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(famEmptyValuesValidRadioButton))
-                .addContainerGap(39, Short.MAX_VALUE))
-        );
-        familiesOptionPanelLayout.setVerticalGroup(
-            familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(familiesOptionPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(famMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(famMaxDateIntervalLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(famEmptyValuesValidRadioButton)
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-
-        jPanel7.add(familiesOptionPanel, "familiesOptions");
-
-        javax.swing.GroupLayout submittersOptionPanelLayout = new javax.swing.GroupLayout(submittersOptionPanel);
-        submittersOptionPanel.setLayout(submittersOptionPanelLayout);
-        submittersOptionPanelLayout.setHorizontalGroup(
-            submittersOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
-        );
-        submittersOptionPanelLayout.setVerticalGroup(
-            submittersOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 168, Short.MAX_VALUE)
-        );
-
-        jPanel7.add(submittersOptionPanel, "submittersOptions");
-
-        javax.swing.GroupLayout repositoriesOptionPanelLayout = new javax.swing.GroupLayout(repositoriesOptionPanel);
-        repositoriesOptionPanel.setLayout(repositoriesOptionPanelLayout);
-        repositoriesOptionPanelLayout.setHorizontalGroup(
-            repositoriesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
-        );
-        repositoriesOptionPanelLayout.setVerticalGroup(
-            repositoriesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 168, Short.MAX_VALUE)
-        );
-
-        jPanel7.add(repositoriesOptionPanel, "repositoriesOptions");
-
-        javax.swing.GroupLayout sourcesOptionPanel1Layout = new javax.swing.GroupLayout(sourcesOptionPanel1);
-        sourcesOptionPanel1.setLayout(sourcesOptionPanel1Layout);
-        sourcesOptionPanel1Layout.setHorizontalGroup(
-            sourcesOptionPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
-        );
-        sourcesOptionPanel1Layout.setVerticalGroup(
-            sourcesOptionPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 168, Short.MAX_VALUE)
-        );
-
-        jPanel7.add(sourcesOptionPanel1, "sourcesOptions");
-
-        javax.swing.GroupLayout emptyPanelLayout = new javax.swing.GroupLayout(emptyPanel);
-        emptyPanel.setLayout(emptyPanelLayout);
-        emptyPanelLayout.setHorizontalGroup(
-            emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
-        );
-        emptyPanelLayout.setVerticalGroup(
-            emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 168, Short.MAX_VALUE)
-        );
-
-        jPanel7.add(emptyPanel, "emptyPanel");
 
         individualsCheckBox.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(individualsCheckBox, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.individualsCheckBox.text")); // NOI18N
@@ -279,6 +144,141 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
                 .addComponent(repositoriesCheckBox))
         );
 
+        jPanel7.setLayout(new java.awt.CardLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(indiMaximumDateIntervalLabel, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiMaximumDateIntervalLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(indiEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiEmptyValuesValidRadioButton.text")); // NOI18N
+
+        indiAllFirstNamesRadioButton.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(indiAllFirstNamesRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiAllFirstNamesRadioButton.text")); // NOI18N
+
+        indiCheckAllNamesRadioButton.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(indiCheckAllNamesRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiCheckAllNamesRadioButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(indiCheckFamiliesRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.indiCheckFamiliesRadioButton.text")); // NOI18N
+
+        javax.swing.GroupLayout individualsOptionPanelLayout = new javax.swing.GroupLayout(individualsOptionPanel);
+        individualsOptionPanel.setLayout(individualsOptionPanelLayout);
+        individualsOptionPanelLayout.setHorizontalGroup(
+            individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(individualsOptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(individualsOptionPanelLayout.createSequentialGroup()
+                        .addComponent(indiMaximumDateIntervalLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(indiEmptyValuesValidRadioButton)
+                    .addComponent(indiCheckAllNamesRadioButton)
+                    .addComponent(indiAllFirstNamesRadioButton)
+                    .addComponent(indiCheckFamiliesRadioButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        individualsOptionPanelLayout.setVerticalGroup(
+            individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(individualsOptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(individualsOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(indiMaximumDateIntervalLabel)
+                    .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(indiAllFirstNamesRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(indiCheckAllNamesRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(indiCheckFamiliesRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(indiEmptyValuesValidRadioButton)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(individualsOptionPanel, "individualsOptions");
+
+        org.openide.awt.Mnemonics.setLocalizedText(famMaxDateIntervalLabel, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.famMaxDateIntervalLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(famEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(CheckDuplicatesVisualPanel2.class, "CheckDuplicatesVisualPanel2.famEmptyValuesValidRadioButton.text")); // NOI18N
+
+        javax.swing.GroupLayout familiesOptionPanelLayout = new javax.swing.GroupLayout(familiesOptionPanel);
+        familiesOptionPanel.setLayout(familiesOptionPanelLayout);
+        familiesOptionPanelLayout.setHorizontalGroup(
+            familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(familiesOptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(familiesOptionPanelLayout.createSequentialGroup()
+                        .addComponent(famMaxDateIntervalLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(famMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(famEmptyValuesValidRadioButton))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+        familiesOptionPanelLayout.setVerticalGroup(
+            familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(familiesOptionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(familiesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(famMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(famMaxDateIntervalLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(famEmptyValuesValidRadioButton)
+                .addContainerGap(100, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(familiesOptionPanel, "familiesOptions");
+
+        javax.swing.GroupLayout submittersOptionPanelLayout = new javax.swing.GroupLayout(submittersOptionPanel);
+        submittersOptionPanel.setLayout(submittersOptionPanelLayout);
+        submittersOptionPanelLayout.setHorizontalGroup(
+            submittersOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 275, Short.MAX_VALUE)
+        );
+        submittersOptionPanelLayout.setVerticalGroup(
+            submittersOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 168, Short.MAX_VALUE)
+        );
+
+        jPanel7.add(submittersOptionPanel, "submittersOptions");
+
+        javax.swing.GroupLayout repositoriesOptionPanelLayout = new javax.swing.GroupLayout(repositoriesOptionPanel);
+        repositoriesOptionPanel.setLayout(repositoriesOptionPanelLayout);
+        repositoriesOptionPanelLayout.setHorizontalGroup(
+            repositoriesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 275, Short.MAX_VALUE)
+        );
+        repositoriesOptionPanelLayout.setVerticalGroup(
+            repositoriesOptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 168, Short.MAX_VALUE)
+        );
+
+        jPanel7.add(repositoriesOptionPanel, "repositoriesOptions");
+
+        javax.swing.GroupLayout sourcesOptionPanel1Layout = new javax.swing.GroupLayout(sourcesOptionPanel1);
+        sourcesOptionPanel1.setLayout(sourcesOptionPanel1Layout);
+        sourcesOptionPanel1Layout.setHorizontalGroup(
+            sourcesOptionPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 275, Short.MAX_VALUE)
+        );
+        sourcesOptionPanel1Layout.setVerticalGroup(
+            sourcesOptionPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 168, Short.MAX_VALUE)
+        );
+
+        jPanel7.add(sourcesOptionPanel1, "sourcesOptions");
+
+        javax.swing.GroupLayout emptyPanelLayout = new javax.swing.GroupLayout(emptyPanel);
+        emptyPanel.setLayout(emptyPanelLayout);
+        emptyPanelLayout.setHorizontalGroup(
+            emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 275, Short.MAX_VALUE)
+        );
+        emptyPanelLayout.setVerticalGroup(
+            emptyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 168, Short.MAX_VALUE)
+        );
+
+        jPanel7.add(emptyPanel, "emptyPanel");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -294,9 +294,9 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -305,7 +305,8 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,55 +321,50 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
         CardLayout cl = (CardLayout) (jPanel7.getLayout());
         if (individualsCheckBox.isSelected()) {
             getSelectedEntities().add(Gedcom.INDI);
-            cl.show(jPanel7, "individualsOptions");
         } else {
             getSelectedEntities().remove(Gedcom.INDI);
-            cl.show(jPanel7, "emptyPanel");
         }
+        cl.show(jPanel7, "individualsOptions");
     }//GEN-LAST:event_individualsCheckBoxActionPerformed
 
     private void familiesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_familiesCheckBoxActionPerformed
         CardLayout cl = (CardLayout) (jPanel7.getLayout());
         if (familiesCheckBox.isSelected()) {
             getSelectedEntities().add(Gedcom.FAM);
-            cl.show(jPanel7, "familiesOptions");
         } else {
             getSelectedEntities().remove(Gedcom.FAM);
-            cl.show(jPanel7, "emptyPanel");
         }
+        cl.show(jPanel7, "familiesOptions");
     }//GEN-LAST:event_familiesCheckBoxActionPerformed
 
     private void submittersCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submittersCheckBoxActionPerformed
         CardLayout cl = (CardLayout) (jPanel7.getLayout());
         if (submittersCheckBox.isSelected()) {
             getSelectedEntities().add(Gedcom.SUBM);
-            cl.show(jPanel7, "submittersOptions");
         } else {
             getSelectedEntities().remove(Gedcom.SUBM);
-            cl.show(jPanel7, "emptyPanel");
         }
+        cl.show(jPanel7, "submittersOptions");
     }//GEN-LAST:event_submittersCheckBoxActionPerformed
 
     private void sourcesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourcesCheckBoxActionPerformed
         CardLayout cl = (CardLayout) (jPanel7.getLayout());
         if (sourcesCheckBox.isSelected()) {
             getSelectedEntities().add(Gedcom.SOUR);
-            cl.show(jPanel7, "sourcesOptions");
         } else {
             getSelectedEntities().remove(Gedcom.SOUR);
-            cl.show(jPanel7, "emptyPanel");
         }
+        cl.show(jPanel7, "sourcesOptions");
     }//GEN-LAST:event_sourcesCheckBoxActionPerformed
 
     private void repositoriesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repositoriesCheckBoxActionPerformed
         CardLayout cl = (CardLayout) (jPanel7.getLayout());
         if (repositoriesCheckBox.isSelected()) {
             getSelectedEntities().add(Gedcom.REPO);
-            cl.show(jPanel7, "repositoriesOptions");
         } else {
             getSelectedEntities().remove(Gedcom.REPO);
-            cl.show(jPanel7, "emptyPanel");
         }
+        cl.show(jPanel7, "repositoriesOptions");
     }//GEN-LAST:event_repositoriesCheckBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel emptyPanel;
@@ -405,14 +401,14 @@ public final class CheckDuplicatesVisualPanel2 extends JPanel {
 
     public TreeMap<String, ? extends Options> getSelectedOptions() {
         IndiMatcherOptions indiMatcherOptions = (IndiMatcherOptions) selectedOptions.get(Gedcom.INDI);
-        indiMatcherOptions.setDateinterval((Integer)indiMaxDateIntervalSpinner.getValue());
+        indiMatcherOptions.setDateinterval((Integer) indiMaxDateIntervalSpinner.getValue());
         indiMatcherOptions.setCheckAllNames(indiCheckAllNamesRadioButton.isSelected());
         indiMatcherOptions.setAllFirstNames(indiAllFirstNamesRadioButton.isSelected());
         indiMatcherOptions.setCheckFamilies(indiCheckFamiliesRadioButton.isSelected());
         indiMatcherOptions.setEmptyValueValid(indiEmptyValuesValidRadioButton.isSelected());
-        
-        FamMatcherOptions famMatcherOptions = (FamMatcherOptions)selectedOptions.get(Gedcom.FAM);
-        famMatcherOptions.setDateinterval((Integer)famMaxDateIntervalSpinner.getValue());
+
+        FamMatcherOptions famMatcherOptions = (FamMatcherOptions) selectedOptions.get(Gedcom.FAM);
+        famMatcherOptions.setDateinterval((Integer) famMaxDateIntervalSpinner.getValue());
         famMatcherOptions.setEmptyValueValid(famEmptyValuesValidRadioButton.isSelected());
         return selectedOptions;
     }
