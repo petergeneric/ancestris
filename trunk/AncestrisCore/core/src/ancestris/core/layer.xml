@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Actions">
+        <folder name="GedcomProperty">
+            <folder name="property">
+                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxPropertyDisplayName"/>
+                 <attr name="position" intvalue="1000"/>
+           </folder>
+            <folder name="entity">
+                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxEntityDisplayName"/>
+                 <attr name="position" intvalue="1100"/>
+            </folder>
+            <folder name="gedcom">
+                <attr name="displayName" methodvalue="ancestris.util.Utilities.ctxGedcomDisplayName"/>
+                 <attr name="position" intvalue="1200"/>
+            </folder>
+        </folder>
+    </folder>
     <folder name="Loaders">
         <folder name="text">
             <folder name="x-gedcom">
