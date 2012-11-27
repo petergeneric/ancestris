@@ -35,13 +35,15 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import org.openide.util.actions.Presenter;
 
 /**
  * An Action
  */
-public class Action2 extends AbstractAction {
+public class Action2 extends AbstractAction implements Presenter.Popup{
   
   /*package*/ final static String 
     KEY_TEXT = Action.NAME,
@@ -61,7 +63,9 @@ public class Action2 extends AbstractAction {
     TXT_NO          = UIManager.getString("OptionPane.noButtonText"),
     TXT_OK          = UIManager.getString("OptionPane.okButtonText"),
     TXT_CANCEL  = UIManager.getString("OptionPane.cancelButtonText");
-  
+
+    private static MenuHelper mh = new MenuHelper();
+
   /** constructor */
   public Action2() {
   }
@@ -254,6 +258,10 @@ public class Action2 extends AbstractAction {
   public static Action2[] cancelOnly() {
     return new Action2[]{ cancel() };
   }
+
+    public JMenuItem getPopupPresenter() {
+        return mh.createItem(this);
+    }
   
   private static class Constant extends Action2 {
     private Constant(String txt) { super(txt); }
