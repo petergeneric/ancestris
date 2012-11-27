@@ -1309,6 +1309,7 @@ public abstract class Property implements Comparable<Property> {
      *   {$P} place (all jurisdictions)
      *   {$v} display value
      *   {$V} value
+     *   {$e} output prefix/suffis if property exists
      * </pre>
      * @param marker as described 
      * @return formatted string if at least one marker matched, "" otherwise
