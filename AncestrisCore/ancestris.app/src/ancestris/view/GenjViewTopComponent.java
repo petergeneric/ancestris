@@ -15,9 +15,6 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.util.swing.Action2.Group;
-import genj.view.ActionProvider;
-import genj.view.ActionProvider.Purpose;
 import genj.view.ToolBar;
 import genj.view.View;
 import genj.view.ViewFactory;
@@ -134,7 +131,8 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent impleme
      * A class that proxies Genj View class to be used by an AncestrisTopComponent.
      * @author daniel
      */
-    public class GenjViewProxy implements ActionProvider, GedcomFileListener {
+    //XXX: this class will be removed in 0.8
+    public class GenjViewProxy implements GedcomFileListener {
         //XXX:: must be private (temporarily set to public to be accessed from GenjViewTC
 
         private View view;
@@ -155,24 +153,28 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent impleme
             // create the view if necessary
             if (view == null) {
                 view = factory.createView();
+                //FIXME: this is useless, it should have been 
+                //AncestrisPlugin.register(view);
+                // this must be done in each View Class that needs it
                 AncestrisPlugin.register(this);
             }
             return view;
         }
 
-        public void createActions(Context context, Purpose purpose, Group into) {
-            // Delegate
-            if (!(view instanceof ActionProvider)) {
-                return;
-            }
-            if (view == null || context == null) {
-                return;
-            }
-
-            if (context.sameGedcom(getContext())) {
-                ((ActionProvider) view).createActions(context, purpose, into);
-            }
-        }
+        //XXX: To be removed, Actions are handled using Node API
+//        public void createActions(Context context, Purpose purpose, Group into) {
+//            // Delegate
+//            if (!(view instanceof ActionProvider)) {
+//                return;
+//            }
+//            if (view == null || context == null) {
+//                return;
+//            }
+//
+//            if (context.sameGedcom(getContext())) {
+//                ((ActionProvider) view).createActions(context, purpose, into);
+//            }
+//        }
 
         public String getName() {
             if (factory == null) {
