@@ -11,8 +11,6 @@
  */
 package ancestris.modules.exports.website;
 
-import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.view.GenjViewInterface;
 import genj.gedcom.Context;
 import genj.report.Report;
 import genj.report.ReportPlugin;
