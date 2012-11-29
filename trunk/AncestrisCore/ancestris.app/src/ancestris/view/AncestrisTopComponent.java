@@ -10,27 +10,39 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDataObject;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
+import ancestris.gedcom.PropertyNode;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.view.SelectionListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.text.DefaultEditorKit;
 import org.openide.awt.UndoRedo;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.Mode;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -59,44 +71,78 @@ import org.openide.windows.WindowManager;
  *
  * Les possibilites:
  * - mettre un 'dummy' TC dans les modes pour les rendre permanent
- *   => en attendant une modif des sources
+ * => en attendant une modif des sources
  * - modifier les sources de NB
- *   => trop lourd!
+ * => trop lourd!
  * - voir si on peut faire comme pour le lifecycle
- *   => non car le DefautModeModel n'est pas instancie via lookup
+ * => non car le DefautModeModel n'est pas instancie via lookup
  * - autre ???
  */
-public class AncestrisTopComponent extends TopComponent implements AncestrisViewInterface, SelectionListener {
+public class AncestrisTopComponent extends TopComponent
+        implements ExplorerManager.Provider, Lookup.Provider,
+        AncestrisViewInterface, SelectionListener {
 
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
     private boolean isRestored = false;
     private final static Logger LOG = Logger.getLogger("genj.app");
     private Context context;
-    InstanceContent ic = new InstanceContent();
-    Lookup tcLookup = new AbstractLookup(ic);
-    Node dummyNode = null;
+//    InstanceContent ic = new InstanceContent();
+//    Lookup tcLookup = new AbstractLookup(ic);
+//    Node dummyNode = null;
+
+    /* we use ExplorerManager here to handle all selection and context menu with
+     * netbeans api (see for instance
+     * http://www.antonioshome.net/kitchen/swingnbrcp/swingnbrcp-explorer.php )
+     */
+    private ExplorerManager manager;
 
     public AncestrisTopComponent() {
         super();
 //        associateLookup(tcLookup);
         // toutes les fenetres peuvent aller dans tous les modes
         putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
+
+        /* from ExplorerUtils javadoc: */
+        this.manager = new ExplorerManager();
+        ActionMap map = this.getActionMap();
+        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(manager));
+        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(manager));
+        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(manager));
+        map.put("delete", ExplorerUtils.actionDelete(manager, true)); // or false
+
+        // following line tells the top component which lookup should be associated with it
+        associateLookup(ExplorerUtils.createLookup(manager, map));
     }
 
+    public ExplorerManager getExplorerManager() {
+        return manager;
+    }
+    // It is good idea to switch all listeners on and off when the
+    // component is shown or hidden. In the case of TopComponent use:
+
+    @Override
+    protected void componentActivated() {
+        ExplorerUtils.activateActions(manager, true);
+    }
+
+    @Override
+    protected void componentDeactivated() {
+        ExplorerUtils.activateActions(manager, false);
+    }
     /*
-     * voir les explications ici: http://blogs.sun.com/geertjan/entry/savecookie_part_2
+     * voir les explications ici: https://blogs.oracle.com/geertjan/entry/savecookie_part_2
      * aussi on aurait pu utiliser http://blogs.sun.com/geertjan/entry/the_divorce_of_savecookies_from
      * pour ne pas etre oblige d'utiliser un dummynode mais dans ce cas on ne peut pas
      * avoir un partage du savecookie entre plusieurs vues comme ce doit etre le cas dans ancestris
      */
-    @Override
-    public Lookup getLookup() {
-        if (dummyNode == null) {
-            return tcLookup;
-        }
-        return new ProxyLookup(new Lookup[]{tcLookup, dummyNode.getLookup()});
-    }
+//    @Override
+//    public Lookup getLookup() {
+//        if (dummyNode == null) {
+//            return tcLookup;
+//        }
+//        return new ProxyLookup(new Lookup[]{tcLookup, dummyNode.getLookup()});
+//    }
 
     @Override
     public UndoRedo getUndoRedo() {
@@ -109,12 +155,13 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
     }
 
     String getDefaultMode() {
-        String modeName = genj.util.Registry.get(this).get(preferredID() + ".dockMode", (String)null);
+        String modeName = genj.util.Registry.get(this).get(preferredID() + ".dockMode", (String) null);
         if (modeName == null) {
             modeName = getClass().getAnnotation(RetainLocation.class).value();
         }
-        if (modeName == null)
+        if (modeName == null) {
             modeName = AncestrisDockModes.EDITOR;
+        }
         return modeName;
     }
 
@@ -128,11 +175,13 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     /**
      * Returns true if only one View can be opened on one gedcom file. Default to false
+     *
      * @return
      */
-    boolean isSingleView(){
+    boolean isSingleView() {
         return false;
     }
+
     @Override
     public void open() {
         if (context == null) {
@@ -153,44 +202,55 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return context == null ? null : context.getGedcom();
     }
 
-        final public void setContext(Context context, boolean isActionPerformed) {
-            // appropriate?
-            if (this.context != null && !this.context.sameGedcom(context)) {
-                LOG.log(Level.FINER, "context selection on unknown gedcom");
-                return;
-            }
+    final public void setContext(Context context, boolean isActionPerformed) {
+        // appropriate?
+        if (this.context != null && !this.context.sameGedcom(context)) {
+            LOG.log(Level.FINER, "context selection on unknown gedcom");
+            return;
+        }
 
-            // already known?
-            if (!isActionPerformed && this.context != null && this.context.equals(context)) {
-                return;
-            }
+        // already known?
+        if (!isActionPerformed && this.context != null && this.context.equals(context)) {
+            return;
+        }
 
-            LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context, isActionPerformed});
+        LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context, isActionPerformed});
 
-            // remember
+        // remember
         this.context = context;
-            if (context.getGedcom() != null) {
-                context.getGedcom().getRegistry().put("context", context.toString());
-            }
-
+        if (context.getGedcom() != null) {
+            context.getGedcom().getRegistry().put("context", context.toString());
+        }
         Node n = null;
         try {
             n = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(Node.class);
         } catch (ContextNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
-        if (n != null && n != dummyNode) {
-            // Create a dummy node for the save button
-            setActivatedNodes(new Node[]{n});
-            dummyNode = n;
+        //        Node n = new PropertyNode(context);
+        //        if (n != null && n != dummyNode) {
+        //            // Create a dummy node for the save button
+        //            setActivatedNodes(new Node[]{n});
+        //            dummyNode = n;
+        //        }
+        //        ic.add(context);
+        try {
+            //FIXME: Hack to get set selected node in manager. This will be changed
+            // When the whole gedcom will be manage as a nodes tree
+            // Typically, for gedcom editor, root will be set to entity
+            // for table, root will be set to gedcom
+            Node node = new PropertyNode(context);
+            manager.setRootContext(node);
+            manager.setSelectedNodes(new Node[]{node});
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
         }
-        ic.add(context);
 
 
-            setContextImpl(context, isActionPerformed);
-        }
+        setContextImpl(context, isActionPerformed);
+    }
 
-    protected void setContextImpl(Context context,boolean isActionPerformed){
+    protected void setContextImpl(Context context, boolean isActionPerformed) {
     }
 
     public Context getContext() {
@@ -212,13 +272,14 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     /**
      * return icon image for this TopComponent
+     *
      * @return
      */
     public Image getImageIcon() {
         return null;
     }
 
-    public Image getImageIcon(String resource){
+    public Image getImageIcon(String resource) {
         return ImageUtilities.loadImage(resource, true);
     }
 
@@ -228,9 +289,9 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
      */
     public void setName() {
         String name;
-        try{
-            name = NbBundle.getMessage(this.getClass(), "CTL_"+preferredID());
-        } catch (MissingResourceException ex){
+        try {
+            name = NbBundle.getMessage(this.getClass(), "CTL_" + preferredID());
+        } catch (MissingResourceException ex) {
             name = preferredID();
         }
         setName(name);
@@ -241,9 +302,9 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
      */
     public void setToolTipText() {
         String name;
-        try{
-            name = NbBundle.getMessage(this.getClass(), "HINT_"+preferredID());
-        } catch (MissingResourceException ex){
+        try {
+            name = NbBundle.getMessage(this.getClass(), "HINT_" + preferredID());
+        } catch (MissingResourceException ex) {
             name = preferredID();
         }
         setToolTipText(name);
@@ -286,6 +347,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         runWhenSizeIsCorrectImpl();
         setSizeCorrect(true);
     }
+
     public void runWhenSizeIsCorrectImpl() {
     }
 
@@ -357,6 +419,7 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     /**
      * return
+     *
      * @return
      * XXX:
      */
@@ -392,10 +455,12 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
 
     /**
      * Gets an action to display a GenjTopComponent. Used in layer.xml
+     *
      * @param component
-     * @param displayName
-     * @param iconBase
-     * @param noIconInMenu
+   param displayName
+ param iconBase
+    param noIconInMenu
+     *
      * @return the action
      */
     static public Action openAction(TopComponent component, String displayName, String iconBase, boolean noIconInMenu) {
@@ -408,14 +473,14 @@ public class AncestrisTopComponent extends TopComponent implements AncestrisView
         return openAction(map);
     }
 
-    static public Action openAction(Map<String,Object> map) {
+    static public Action openAction(Map<String, Object> map) {
         return new OpenGenjViewAction((AncestrisTopComponent) map.get("component"), map);
     }
 
     public void init(Context context) {
         setName();
         setToolTipText();
-        setContext(context,false);
+        setContext(context, false);
         if (getImageIcon() != null) {
             setIcon(getImageIcon());
         }
