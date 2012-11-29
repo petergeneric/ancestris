@@ -25,6 +25,7 @@ import java.awt.Component;
 /**
  * Support for providing context if asked
  */
+//XXX: remove this class
 public interface ContextProvider {
 
   /**
