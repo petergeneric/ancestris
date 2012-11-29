@@ -11,46 +11,43 @@
  */
 package ancestris.modules.editors.standard;
 
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
-import genj.util.swing.Action2;
-import genj.util.swing.Action2.Group;
-import genj.view.ActionProvider;
-import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import ancestris.view.SelectionSink;
+import genj.util.swing.Action2;
 import java.awt.event.ActionEvent;
-import org.openide.modules.ModuleInstall;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.ContextAwareAction;
+import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
 
-/**
- * Manages a module's lifecycle. Remember that an installer is optional and
- * often not needed at all.
- */
-public class Installer extends ModuleInstall implements ActionProvider {
+@ActionID(category = "Edit",
+id = "ancestris.modules.editors.standard.OpenEditorAction")
+@ActionRegistration(displayName = "#CTL_OpenEditorAction")
+@ActionReferences({
+    @ActionReference(path = "Actions/GedcomProperty")})
+@Messages("CTL_OpenEditorAction=Open in Editor")
+public final class OpenEditorAction
+        extends AbstractAction
+        implements ContextAwareAction {
 
-    @Override
-    public void restored() {
-        AncestrisPlugin.register(this);
-        // By default, do nothing.
-        // Put your startup code here.
+    public @Override
+    void actionPerformed(ActionEvent e) {
+        assert false;
     }
 
-    public void createActions(Context context, Purpose purpose, Group into) {
-        if (purpose != Purpose.CONTEXT) {
-            return;
-        }
-        // XXX: must be rewritten
-        if (context == null) {
-            return;
-        }
-        if (!(context.getEntity() instanceof Indi)
-                && !(context.getEntity() instanceof Fam)) {
-            return;
-        }
-        into.add(new OpenEditor(context));
+    public @Override
+    Action createContextAwareInstance(Lookup context) {
+        return new OpenEditor(context.lookup(Context.class));
     }
 
-    private static class OpenEditor extends Action2 {
+    private static final class OpenEditor extends Action2 {
 
         Context context;
 
