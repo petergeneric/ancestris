@@ -19,6 +19,7 @@
  */
 package genj.common;
 
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -34,9 +35,7 @@ import genj.util.swing.LinkWidget;
 import genj.util.swing.SortableTableModel;
 import genj.util.swing.SortableTableModel.Directive;
 import genj.view.ContextProvider;
-import ancestris.view.SelectionSink;
 import genj.view.ViewContext;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -54,7 +53,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-
 import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
 import javax.swing.InputMap;
@@ -118,7 +116,18 @@ public class PropertyTableWidget extends JPanel  {
     
     // done
   }
- 
+
+  /**
+   * Get underlying table component.
+   * Mainly used for ExplorerHelper to properly set MouseListener to
+   * handle popup menus
+   * @return 
+   */
+  //FIXME: we must change this dependency
+    public Component getTableComponent() {
+        return table;
+    }
+  
   /**
    * Column selection
    * @set one of 

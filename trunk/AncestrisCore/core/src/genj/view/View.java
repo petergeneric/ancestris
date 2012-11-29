@@ -19,14 +19,13 @@
  */
 package genj.view;
 
+import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Window;
-
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -34,6 +33,7 @@ import javax.swing.JPopupMenu;
  * A baseclass for all our views
  */
 public abstract class View extends JPanel implements SelectionListener {
+    ExplorerHelper explorerHelper;
 
   /**
    * Constructor
@@ -41,7 +41,12 @@ public abstract class View extends JPanel implements SelectionListener {
   public View() {
     super(new BorderLayout()); 
     setMinimumSize(new Dimension());
+    setExplorerHelper(new ExplorerHelper(this));
   }
+
+    protected void setExplorerHelper(ExplorerHelper explorerHelper) {
+        this.explorerHelper = explorerHelper;
+    }
   
   /**
    * Constructor
@@ -105,5 +110,25 @@ public abstract class View extends JPanel implements SelectionListener {
   public void populate(ToolBar toolbar) {
     // noop
   }
-  
+
+    /** Initializes the component and lookup explorer manager.
+     */
+    @Override
+    public void addNotify () {
+        super.addNotify ();
+        // default to show context menu
+        if (explorerHelper != null)
+            explorerHelper.setPopupAllowed(true);
+    }
+    
+    /**
+     * Deinitializes listeners.
+     */
+    @Override
+    public void removeNotify () {
+        super.removeNotify ();
+        if (explorerHelper != null)
+            explorerHelper.setPopupAllowed(false);
+    }
+
 }
