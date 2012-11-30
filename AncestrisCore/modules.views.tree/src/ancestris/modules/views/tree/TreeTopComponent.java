@@ -86,12 +86,13 @@ public final class TreeTopComponent extends GenjViewTopComponent implements Filt
         return true;
     }
 
-    @Override
-    public void runWhenSizeIsCorrectImpl() {
-        TreeView v = (TreeView) getView();
-        v.setRoot(v.getRoot());
-        v.show(v.getContext().getEntity(), true);
-        }
+//FIXME: to be removed    
+//    @Override
+//    public void runWhenSizeIsCorrectImpl() {
+//        TreeView v = (TreeView) getView();
+//        v.setRoot(v.getRoot());
+//        v.show(v.getContext().getEntity(), true);
+//        }
 
     @Override
     protected String preferredID() {
