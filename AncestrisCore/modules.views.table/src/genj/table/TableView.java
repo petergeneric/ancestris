@@ -20,6 +20,7 @@
 //XXX: try to not export this api
 package genj.table;
 
+import ancestris.view.ExplorerHelper;
 import genj.common.AbstractPropertyTableModel;
 import genj.common.PropertyTableModel;
 import genj.common.PropertyTableWidget;
@@ -38,6 +39,7 @@ import genj.view.View;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,6 +188,7 @@ public class TableView extends View {
 
         // create our table
         propertyTable = new PropertyTableWidget();
+        setExplorerHelper(new ExplorerHelper(propertyTable.getTableComponent()));
         propertyTable.setAutoResize(false);
 
         // lay it out
