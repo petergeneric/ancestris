@@ -375,7 +375,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                             showEntityInDndSource(selectedIndi.getFamilyWhereBiologicalChild(), true);
                             // propagate to others
                             try {
-                                SelectionSink.Dispatcher.fireSelection(null, treeView.getContext());
+//XXX: temporarilly disabled                                SelectionSink.Dispatcher.fireSelection(null, treeView.getContext());
                             } catch (Exception ex) {
                             } finally {
                             }
