@@ -122,9 +122,9 @@ public class TreeViewDropTarget {
                     // If it was a color, accept it, and use it as the background color
                     dropTargetDropEvent.acceptDrop(DnDConstants.ACTION_COPY);
                     try {
-                        if ( treeView.getContext() != null ) {
+                        if ( treeView.getGedcom() != null ) {
                             TransferableRecord.TransferableData data = (TransferableData) t.getTransferData(TransferableRecord.recordFlavor);
-                            MergeDialog.show(treeView, treeView.getContext().getGedcom(), entity, data.record, true);
+                            MergeDialog.show(treeView, treeView.getGedcom(), entity, data.record, true);
                             dropTargetDropEvent.dropComplete(true);
                         } else {
                             dropTargetDropEvent.dropComplete(false);
