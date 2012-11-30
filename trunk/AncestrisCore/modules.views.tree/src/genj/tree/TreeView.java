@@ -21,6 +21,11 @@ package genj.tree;
 //XXX: genj.tree is publically exported as plugin set a dependancy on TreeView
 // We must remove this like (redesign DnD logic or write some Interface API)
 
+import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.core.actions.CommonActions;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.PropertyNode;
+import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionSink;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.*;
@@ -31,7 +36,6 @@ import genj.renderer.RenderOptions;
 import genj.renderer.*;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.Action2.Group;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.*;
 import genj.view.*;
@@ -44,12 +48,17 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.awt.DynamicMenuContent;
+import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * TreeView
  */
-public class TreeView extends View implements ContextProvider, ActionProvider, MySelectionListener, Filter {
+// FIXME: used to find proper TreeView component for RootAction
+//XXX: not used @ServiceProvider(service=TreeView.class)
+public class TreeView extends View implements AncestrisActionProvider,MySelectionListener, Filter {
   
   protected final static ImageIcon BOOKMARK_ICON = new ImageIcon(TreeView.class, "images/Bookmark");      
   protected final static Registry REGISTRY = Registry.get(TreeView.class);
@@ -152,6 +161,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     // setup child components
     contentRenderer = new ContentRenderer();
     content = new Content();
+    setExplorerHelper(new ExplorerHelper(content));
     JScrollPane scroll = new ScrollPaneWidget(new ViewPortAdapter(content));
     overview = new Overview(scroll);
     overview.setVisible(REGISTRY.get("overview", true));
@@ -172,15 +182,21 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     // done
     }
 
+  public Gedcom getGedcom(){
+      return (context==null?null:context.getGedcom());
+  }
     @Override
     public void addNotify() {
         super.addNotify();
 //XXX: removed in favour of GenjViewProxy    AncestrisPlugin.register (this);
+        // FIXME: should be removed? use @serviceprovider?
+    AncestrisPlugin.register (this);
   }
   
   /**
    * @see javax.swing.JComponent#removeNotify()
    */
+    @Override
   public void removeNotify() {
     // settings
     REGISTRY.put("overview", overview.isVisible());
@@ -212,6 +228,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     REGISTRY.put("hide.ancestors"  , model.getHideAncestorsIDs());
     REGISTRY.put("hide.descendants", model.getHideDescendantsIDs());
     
+    AncestrisPlugin.unregister(this);
 //XXX: removed in favour of GenjViewProxy    AncestrisPlugin.unregister(this);
     // done
     super.removeNotify();
@@ -228,15 +245,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
 
   
   /**
-   * ContextProvider callback
-   */
-  public ViewContext getContext() {
-    return content.getContext();
-  }
-  
-  /**
    * @see java.awt.Container#doLayout()
    */
+    @Override
   public void doLayout() {
     // layout components
     int 
@@ -253,6 +264,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   /**
    * @see javax.swing.JComponent#getPreferredSize()
    */
+    @Override
   public Dimension getPreferredSize() {
     return new Dimension(480,480);
   }
@@ -260,6 +272,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   /**
    * @see javax.swing.JComponent#isOptimizedDrawingEnabled()
    */
+    @Override
   public boolean isOptimizedDrawingEnabled() {
     return !overview.isVisible();
   }
@@ -320,6 +333,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     return model;
   }
 
+    @Override
     public void setMyContext(Context context, boolean isActionPerformed) {
         if (isActionPerformed) {
             if (context == null) {
@@ -458,6 +472,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   /**
    * @see genj.view.ToolBarSupport#populate(JToolBar)
    */
+    @Override
   public void populate(ToolBar toolbar) {
 
     // zooming!    
@@ -518,36 +533,28 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     // done
   }
   
-  /**
-   * create actions for a context
-   */
     @Override
-  public void createActions(Context context, Purpose purpose, Group result) {
-    
-    // not for own
-    if (context instanceof TreeContext)
-      return;
+    public List<Action> getActions(Node[] nodes) {
+        List<Action> actions = new ArrayList<Action>();
+        if (nodes.length == 1) {
+            if (nodes[0] instanceof PropertyNode) {
+                PropertyNode node = (PropertyNode) nodes[0];
+                Entity entity = node.getProperty().getEntity();
+                actions.add(new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
 
-    if (this.context == null)
-        return;
-    if (!context.getGedcom().equals(this.context.getGedcom()))
-        return;
-
-    // for context menu of one record
-    if (purpose==Purpose.CONTEXT&&context.getEntities().size()==1) {
-      // fam or indi?
-      Entity entity = context.getEntity();
-      if (entity instanceof Indi||entity instanceof Fam) {
-         result.add(new ActionProvider.SeparatorAction());
-        // create an action for our tree
-        result.add(new ActionRoot(entity, true));
-        result.add(new ActionBookmark(entity, false));
-      }
+                    @Override
+                    protected void commit(Entity recipient, Blueprint blueprint) {
+                        tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                        tag2renderer.remove(recipient.getTag());
+                        repaint();
+                    }
+                });
+            }
+        }
+        actions.add(new ActionChooseRoot());
+        return actions;
     }
-    
-    // done
-  }
-
+  
   /**
    * // XXX: we will have to check this API when we will deal wil global drag and
    * drop in all other componants
@@ -642,7 +649,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
     return result;
   }
-  
+
   /**
    * Overview
    */
@@ -655,6 +662,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       super.setSize(new Dimension(TreeView.this.getWidth()/4,TreeView.this.getHeight()/4));
     }
     
+        @Override
     public void addNotify() {
       // cont
       super.addNotify();
@@ -662,6 +670,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       model.addListener(this);
     }
     
+        @Override
     public void removeNotify() {
       model.removeListener(this);
       // cont
@@ -671,6 +680,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see java.awt.Component#setSize(int, int)
      */
+        @Override
     public void setSize(int width, int height) {
       width = Math.max(32,width);
       height = Math.max(32,height);
@@ -679,6 +689,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.ViewPortOverview#paintContent(java.awt.Graphics, double, double)
      */
+        @Override
     protected void renderContent(Graphics g, double zoomx, double zoomy) {
 
       // fill backgound
@@ -711,12 +722,14 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.tree.ModelListener#nodesChanged(genj.tree.Model, java.util.List)
      */
+        @Override
     public void nodesChanged(Model arg0, Collection<TreeNode> arg1) {
       repaint();
     }
     /**
      * @see genj.tree.ModelListener#structureChanged(genj.tree.Model)
      */
+        @Override
     public void structureChanged(Model arg0) {
       repaint();
     }
@@ -725,7 +738,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
   /**
    * The content we use for drawing
    */
-  private class Content extends JComponent implements ModelListener, MouseWheelListener, MouseListener, ContextProvider  {
+  private class Content extends JComponent implements ModelListener, MouseWheelListener, MouseListener{
 
     /**
      * Constructor
@@ -756,12 +769,14 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       model.addListener(this);
     }
     
+        @Override
     public void removeNotify() {
       model.removeListener(this);
       // cont
       super.removeNotify();
     }
     
+        @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
       
       // zoom
@@ -782,32 +797,9 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
     
     /**
-     * ContextProvider - callback
-     */
-    public ViewContext getContext() {
-      TreeContext result = new TreeContext(context);
-      Entity entity = context.getEntity();
-      if (entity instanceof Indi || entity instanceof Fam) {
-        result.addAction(new ActionBookmark(entity, true));
-        result.addAction(new ActionRoot(entity, false));
-      }
-      if (entity!=null) {
-        result.addAction(new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
-          @Override
-          protected void commit(Entity recipient, Blueprint blueprint) {
-            tag2blueprint.put(recipient.getTag(), blueprint.getName());
-            tag2renderer.remove(recipient.getTag());
-            repaint();
-          }
-        });
-      }
-      result.addAction(new ActionChooseRoot());
-      return result;
-    }
-    
-    /**
      * @see genj.tree.ModelListener#structureChanged(Model)
      */
+        @Override
     public void structureChanged(Model model) {
       // 20030403 dropped revalidate() here because it works
       // lazily - for scrolling to work the invalidate()/validate()
@@ -825,6 +817,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.tree.ModelListener#nodesChanged(Model, List)
      */
+        @Override
     public void nodesChanged(Model model, Collection<TreeNode> nodes) {
       repaint();
     }
@@ -832,6 +825,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see java.awt.Component#getPreferredSize()
      */
+        @Override
     public Dimension getPreferredSize() {
       Rectangle2D bounds = model.getBounds();
       double 
@@ -843,6 +837,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see javax.swing.JComponent#paintComponent(Graphics)
      */
+        @Override
     public void paint(Graphics g) {
       // fill backgound
       g.setColor(colors.get("background"));
@@ -876,6 +871,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see java.awt.event.MouseListener#mousePressed(MouseEvent)
      */
+        @Override
     public void mousePressed(MouseEvent e) {
       requestFocusInWindow();
       // check node
@@ -922,6 +918,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see java.awt.event.MouseAdapter#mouseClicked(MouseEvent)
      */
+        @Override
     public void mouseClicked(MouseEvent e) {
     }
     /**
@@ -948,6 +945,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see javax.swing.event.ChangeListener#stateChanged(ChangeEvent)
      */
+        @Override
     public void stateChanged(ChangeEvent e) {
     	setZoom(sliderZoom.getValue()*0.01D);
     }
@@ -968,14 +966,20 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.Action2#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       overview.setVisible(!overview.isVisible());
     }
   } //ActionOverview    
 
-  /**
-   * ActionTree
-   */
+  public Action getRootAction(Entity e, boolean b){
+        if (e instanceof Indi || e instanceof Fam)
+            return new ActionRoot(e,false);
+      return CommonActions.NOOP;
+  }
+/**
+ * ActionRoot
+ */
   private class ActionRoot extends Action2 {
     /** entity */
     private Entity root;
@@ -983,6 +987,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
      * Constructor
      */
     private ActionRoot(Entity entity, boolean in) {
+      putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
       root = entity;
       setText(RESOURCES.getString(in ? "root.in" : "root",TITLE));
       setImage(Images.imgView);
@@ -994,7 +999,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     public void actionPerformed(ActionEvent event) {
       setRoot(root);
     }
-  } //ActionTree
+  } //ActionRoot
 
   /**
    * Action Orientation change
@@ -1010,6 +1015,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.Action2#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       model.setVertical(!model.isVertical());
       scrollToCurrent();
@@ -1030,6 +1036,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.Action2#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       model.setFamilies(!model.isFamilies());
       scrollToCurrent();
@@ -1050,6 +1057,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.Action2#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       model.setFoldSymbols(!model.isFoldSymbols());
       scrollToCurrent();
@@ -1068,6 +1076,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
 
     /** do the choosin' */
+        @Override
     public void actionPerformed(ActionEvent event) {
       
       // let the user choose an individual
@@ -1093,6 +1102,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
 
     /** do the choosin' */
+        @Override
     public void actionPerformed(ActionEvent event) {
 
        show(getRoot());
@@ -1113,6 +1123,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.Action2#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       // let everyone know
       Context newContext = new Context(bookmark.getEntity());
@@ -1128,7 +1139,11 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     }
 
   }
-  
+  public Action getBookmarkAction(Entity e, boolean local){
+        if (e instanceof Indi || e instanceof Fam)
+            return new ActionBookmark(e,local);
+      return CommonActions.NOOP;
+  }
   /**
    * Action - bookmark something
    */
@@ -1139,6 +1154,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
      * Constructor 
      */
     private ActionBookmark(Entity e, boolean local) {
+      putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
       entity = e;
       setImage(BOOKMARK_ICON);
       if (local) {
@@ -1150,6 +1166,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
     /**
      * @see genj.util.swing.Action2#execute()
      */
+        @Override
     public void actionPerformed(ActionEvent event) {
       
       // calculate a name
@@ -1209,6 +1226,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
       super.setSelected(false);
     }
     /** run */
+        @Override
     public void actionPerformed(ActionEvent event) {
       setSelected(isSelected());
     }
@@ -1288,7 +1306,7 @@ public class TreeView extends View implements ContextProvider, ActionProvider, M
 
     @Override
     public boolean canApplyTo(Gedcom gedcom) {
-        return (gedcom != null && gedcom.equals(getContext().getGedcom()));
+        return (gedcom != null && gedcom.equals(context.getGedcom()));
     }
 
 
