@@ -19,6 +19,8 @@
  */
 package genj.entity;
 
+import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.gedcom.PropertyNode;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -27,31 +29,31 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Property;
 import genj.renderer.Blueprint;
 import genj.renderer.BlueprintManager;
-import genj.renderer.ChooseBlueprintAction;
 import genj.renderer.BlueprintRenderer;
+import genj.renderer.ChooseBlueprintAction;
 import genj.renderer.RenderOptions;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.view.ContextProvider;
 import genj.view.View;
-import genj.view.ViewContext;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+import javax.swing.Action;
+import org.openide.nodes.Node;
 import spin.Spin;
 
 /**
  * A rendering component showing the currently selected entity
  * via html
  */
-public class EntityView extends View implements ContextProvider {
+public class EntityView extends View implements AncestrisActionProvider{
 
   /** language resources we use */  
   /*package*/ final static Resources resources = Resources.get(EntityView.class);
@@ -75,17 +77,21 @@ public class EntityView extends View implements ContextProvider {
   private boolean isAntialiasing = true;
   
   private transient GedcomListener callback = new GedcomListenerAdapter() {
+        @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
       if (context.getEntity()==entity)
         setContext(new Context(context.getGedcom()), true);
     }
+        @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
       if (context.getEntity() == property.getEntity())
         repaint();
     }
+        @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
       gedcomPropertyChanged(gedcom, property);
     }
+        @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property removed) {
       gedcomPropertyChanged(gedcom, property);
     }
@@ -107,17 +113,14 @@ public class EntityView extends View implements ContextProvider {
     // done    
   }
   
-  /**
-   * ContextProvider - callback
-   */
-  public ViewContext getContext() {
-    
-    ViewContext result = new ViewContext(context);
-    
-    // pick blueprint for entity?
-    if (context.getEntity()!=null) {
-      
-      result.addAction(new ChooseBlueprintAction(context.getEntity(), getBlueprint(context.getEntity().getTag())) {
+    @Override
+    public List<Action> getActions(Node[] nodes) {
+        List<Action> actions = new ArrayList<Action>();
+        if (nodes.length == 1) {
+            if (nodes[0] instanceof PropertyNode) {
+                PropertyNode node = (PropertyNode) nodes[0];
+                Entity entity = node.getProperty().getEntity();
+                actions.add(new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
         @Override
         protected void commit(Entity recipient, Blueprint blueprint) {
           type2blueprint.put(blueprint.getTag(), blueprint);
@@ -125,12 +128,10 @@ public class EntityView extends View implements ContextProvider {
           REGISTRY.put("blueprint."+blueprint.getTag(), blueprint.getName());
         }
       });
-
+            }
+        }
+        return actions;
     }
-    
-    // done
-    return result;
-  }
   
   /**
    * our context setter
