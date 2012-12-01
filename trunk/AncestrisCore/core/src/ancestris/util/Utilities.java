@@ -18,6 +18,7 @@ import genj.gedcom.TagPath;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.AbstractAction;
@@ -172,6 +173,14 @@ public class Utilities {
         }
     }
 
+
+ static public String ctxPropertiesDisplayName(){
+     Collection<? extends Property> properties = org.openide.util.Utilities.actionsGlobalContext().lookupAll(Property.class);
+     String result = "";
+     if (properties != null)
+        result = "'"+Property.getPropertyNames(properties, 5)+"' ("+properties.size()+")";
+     return result;
+ }   
 
  static public String ctxPropertyDisplayName(){
      Property prop = org.openide.util.Utilities.actionsGlobalContext().lookup(Property.class);
