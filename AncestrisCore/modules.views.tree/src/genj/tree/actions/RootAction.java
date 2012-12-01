@@ -11,6 +11,7 @@
  */
 package genj.tree.actions;
 
+import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.gedcom.Entity;
 import genj.tree.TreeView;
@@ -22,18 +23,15 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author daniel
  */
 @ActionID(category = "Tree", id = "genj.tree.actions.RootAction")
-@ActionRegistration(displayName = "toto")
+@ActionRegistration(displayName = "SetRoot")
 @ActionReferences({
     @ActionReference(path = "Actions/GedcomProperty", separatorBefore = 950, position = 1000)})
-@Messages("CTL_RootAction=Une action test applicable")
 /**
  * ActionRoot
  */
@@ -41,13 +39,6 @@ public class RootAction
         extends AbstractAction
         implements ContextAwareAction {
 
-    static final Action NOOP = new AbstractAction("noop") {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //noop
-            }
-        };
     public @Override
     void actionPerformed(ActionEvent e) {
         assert false;
@@ -55,16 +46,16 @@ public class RootAction
 
     public @Override
     Action createContextAwareInstance(org.openide.util.Lookup context) {
-        
+
         Entity e = context.lookup(Entity.class);
-        if (e == null) return NOOP;
-        for (TreeView v:AncestrisPlugin.lookupAll(TreeView.class)){
-            if (v.getGedcom() == e.getGedcom())
-                return v.getRootAction(e,false);
+        if (e == null) {
+            return CommonActions.NOOP;
         }
-//        if (e instanceof Indi || e instanceof Fam)
-//            return new ActionRoot(e,false);
-        return NOOP;
+        for (TreeView v : AncestrisPlugin.lookupAll(TreeView.class)) {
+            if (v.getGedcom() == e.getGedcom()) {
+                return v.getRootAction(e, false);
+            }
+        }
+        return CommonActions.NOOP;
     }
-    
 }

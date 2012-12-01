@@ -23,8 +23,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -34,7 +32,6 @@ import org.openide.util.NbBundle.Messages;
 @ActionRegistration(displayName = "BookMark")
 @ActionReferences({
     @ActionReference(path = "Actions/GedcomProperty", position = 1010)})
-@Messages("CTL_BookmarkAction=Une action test applicable")
 /**
  * ActionRoot
  */
@@ -49,14 +46,16 @@ public class BookmarkAction
 
     public @Override
     Action createContextAwareInstance(org.openide.util.Lookup context) {
-        
+
         Entity e = context.lookup(Entity.class);
-        if (e == null) return CommonActions.NOOP;
-        for (TreeView v:AncestrisPlugin.lookupAll(TreeView.class)){
-            if (v.getGedcom() == e.getGedcom())
-                return v.getBookmarkAction(e,false);
+        if (e == null) {
+            return CommonActions.NOOP;
+        }
+        for (TreeView v : AncestrisPlugin.lookupAll(TreeView.class)) {
+            if (v.getGedcom() == e.getGedcom()) {
+                return v.getBookmarkAction(e, false);
+            }
         }
         return CommonActions.NOOP;
     }
-    
 }
