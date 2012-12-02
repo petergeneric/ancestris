@@ -1,7 +1,7 @@
 package ancestris.modules.viewers.entityviewer.nodes;
 
-import ancestris.modules.viewers.entityviewer.PropertyTag2Icon;
-import ancestris.modules.viewers.entityviewer.PropertyTag2Name;
+import ancestris.modules.gedcom.utilities.PropertyTag2Icon;
+import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.PropertyFamilySpouse;

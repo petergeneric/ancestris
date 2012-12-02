@@ -1,34 +1,66 @@
 package ancestris.modules.viewers.entityviewer.panels;
 
-import ancestris.modules.viewers.entityviewer.EntityTag2Icon;
-import ancestris.modules.viewers.entityviewer.models.EntityComboBoxModel;
+import ancestris.modules.gedcom.utilities.EntityTag2Icon;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.TagPath;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.Collection;
-import javax.swing.JLabel;
+import java.util.List;
+import javax.swing.AbstractListModel;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 
 /**
  *
  * @author lemovice
  */
 public class SelectEntityPanel extends javax.swing.JPanel {
-    
-    EntityComboBoxModel entityComboBoxModel = new EntityComboBoxModel();
+
+    EntityComboBoxModel entityComboBoxModel;
+    private final ArrayList<TagPath> SORTS = new ArrayList<TagPath>() {
+
+        {
+            add(new TagPath("INDI"));
+            add(new TagPath("INDI:NAME"));
+            add(new TagPath("INDI:BIRT:DATE"));
+            add(new TagPath("INDI:DEAT:DATE"));
+            add(new TagPath("FAM"));
+            add(new TagPath("FAM:MARR:DATE"));
+            add(new TagPath("FAM:HUSB:*:..:NAME"));
+            add(new TagPath("FAM:WIFE:*:..:NAME"));
+            add(new TagPath("OBJE"));
+            add(new TagPath("OBJE:TITL"));
+            add(new TagPath("OBJE:FILE:TITL"));
+            add(new TagPath("NOTE"));
+            add(new TagPath("NOTE:NOTE"));
+            add(new TagPath("SOUR"));
+            add(new TagPath("SOUR:TITL"));
+            add(new TagPath("SOUR:ABBR"));
+            add(new TagPath("SOUR:AUTH"));
+            add(new TagPath("SOUR:REPO"));
+            add(new TagPath("SUBM"));
+            add(new TagPath("REPO"));
+            add(new TagPath("REPO:NAME"));
+            add(new TagPath("REPO:REFN"));
+            add(new TagPath("REPO:RIN"));
+        }
+    };
 
     /**
      * Creates new form SelectEntityPanel
      */
     public SelectEntityPanel(Gedcom gedcom, String entityTag) {
         Collection<? extends Entity> entities = gedcom.getEntities(entityTag);
-        
+        entityComboBoxModel = new EntityComboBoxModel(entityTag);
+
         entityComboBoxModel.addAll(entities);
         entityComboBoxModel.setSelectedItem(entities.isEmpty() ? null : entities.toArray()[0]);
-        
+
         initComponents();
-        
+
         entityTypeLabel.setIcon(EntityTag2Icon.getIcon(entityTag));
         entityComboBox.setSelectedIndex(entities.isEmpty() ? -1 : 0);
     }
@@ -41,31 +73,35 @@ public class SelectEntityPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         entityTypeLabel = new javax.swing.JLabel();
         entityComboBox = new javax.swing.JComboBox<Entity>();
 
-        setLayout(new java.awt.GridBagLayout());
-
         entityTypeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/viewers/entityviewer/resources/Individual.png"))); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(18, 12, 0, 0);
-        add(entityTypeLabel, gridBagConstraints);
 
         entityComboBox.setModel(entityComboBoxModel);
         entityComboBox.setRenderer(new ComboBoxRenderer ());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 136;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 12);
-        add(entityComboBox, gridBagConstraints);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(entityTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(entityComboBox, 0, 207, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(entityTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(entityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Entity> entityComboBox;
@@ -75,17 +111,66 @@ public class SelectEntityPanel extends javax.swing.JPanel {
     public Entity getSelectedEntity() {
         return (Entity) entityComboBoxModel.getSelectedItem();
     }
-    
+
     public void setSelectedEntity(Entity selectedEntity) {
         entityComboBoxModel.setSelectedItem(selectedEntity);
     }
-    
-    class ComboBoxRenderer extends JLabel implements ListCellRenderer {
-        
+
+    public class EntityComboBoxModel extends AbstractListModel<Entity> implements ComboBoxModel<Entity> {
+
+        Entity selectedEntity;
+        ArrayList<Entity> entityList = new ArrayList<Entity>();
+        private List<TagPath> sorts;
+
+        public EntityComboBoxModel(String entityTag) {
+            sorts = new ArrayList<TagPath>();
+
+            for (TagPath tagPath : SORTS) {
+                if (!tagPath.getFirst().equals(entityTag)) {
+                    continue;
+                }
+                sorts.add(tagPath);
+            }
+        }
+
+        @Override
+        public int getSize() {
+            return entityList.size();
+        }
+
+        @Override
+        public Entity getElementAt(int i) {
+            return entityList.get(i);
+        }
+
+        @Override
+        public void setSelectedItem(Object o) {
+            selectedEntity = (Entity) o;
+        }
+
+        public boolean addAll(Collection<? extends Entity> c) {
+            int size = entityList.size();
+            entityList.ensureCapacity(size);
+            boolean addAll = entityList.addAll(c);
+            fireIntervalAdded(this, size, entityList.size());
+            return addAll;
+        }
+
+        public void clear() {
+            int size = entityList.size();
+            entityList.clear();
+            fireIntervalRemoved(this, 0, size);
+        }
+
+        @Override
+        public Object getSelectedItem() {
+            return selectedEntity;
+        }
+    }
+
+    private class ComboBoxRenderer extends DefaultListCellRenderer {
+
         public ComboBoxRenderer() {
-            setOpaque(true);
-            setHorizontalAlignment(LEFT);
-            setVerticalAlignment(CENTER);
         }
 
         /*
@@ -106,10 +191,8 @@ public class SelectEntityPanel extends javax.swing.JPanel {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            
-            setText(((Entity) value).toString(true));
-            setFont(list.getFont());
-            return this;
+
+            return super.getListCellRendererComponent(list, ((Entity) value).toString(true), index, isSelected, cellHasFocus);
         }
     }
 }
