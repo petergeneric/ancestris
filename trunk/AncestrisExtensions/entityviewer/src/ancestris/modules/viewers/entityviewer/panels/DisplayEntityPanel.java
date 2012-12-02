@@ -2,14 +2,12 @@ package ancestris.modules.viewers.entityviewer.panels;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import javax.swing.JScrollBar;
 import javax.swing.tree.TreeSelectionModel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -25,7 +23,7 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
      */
     public DisplayEntityPanel() {
         initComponents();
-        beanTreeView.setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        beanTreeView.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         explorerManager.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -51,16 +49,13 @@ public class DisplayEntityPanel extends javax.swing.JPanel implements ExplorerMa
      */
     private void setSelectedNodes(Node[] selectedNodes) {
         ArrayList<Node> newSelectedNodes = new ArrayList<Node>();
-        System.out.println("------");
         for (Node node : selectedNodes) {
-           System.out.println("node " + node.getDisplayName());
 /*           newSelectedNodes.add(node);
             if (node.isLeaf() == false) {
                 beanTreeView.expandNode(node);
                 newSelectedNodes.addAll(Arrays.asList(node.getChildren().getNodes()));
             }
 */        }
-        System.out.println("------");
 /*        try {
             explorerManager.setSelectedNodes(newSelectedNodes.toArray(new Node[newSelectedNodes.size()]));
         } catch (PropertyVetoException ex) {
