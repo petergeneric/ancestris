@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.modules.gedcom.searchduplicates
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/searchduplicates/Bundle.properties
+OpenIDE-Module-Requires: ancestris.modules.viewers.entityviewer
+OpenIDE-Module-Specification-Version: 0.8.0
+
