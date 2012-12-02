@@ -1,4 +1,4 @@
-package ancestris.modules.viewers.entityviewer;
+package ancestris.modules.gedcom.utilities;
 
 import java.awt.Image;
 import java.util.HashMap;
@@ -14,14 +14,14 @@ public class EntityTag2Icon {
     private static final HashMap<String, String> entity2Icon = new HashMap<String, String>() {
 
         {
-            put("INDI", "ancestris/modules/viewers/entityviewer/resources/Individual.png");
-            put("FAM", "ancestris/modules/viewers/entityviewer/resources/Family.png");
-            put("OBJE", "ancestris/modules/viewers/entityviewer/resources/Media.png");
-            put("NOTE", "ancestris/modules/viewers/entityviewer/resources/Note.png");
-            put("SOUR", "ancestris/modules/viewers/entityviewer/resources/Source.png");
-            put("SUBM", "ancestris/modules/viewers/entityviewer/resources/Submitter.png");
-            put("REPO", "ancestris/modules/viewers/entityviewer/resources/Repository.png");
-            put("Unknown", "ancestris/modules/viewers/entityviewer/resources/Property.png");
+            put("INDI", "ancestris/modules/gedcom/utilities/resources/Individual.png");
+            put("FAM", "ancestris/modules/gedcom/utilities/resources/Family.png");
+            put("OBJE", "ancestris/modules/gedcom/utilities/resources/Media.png");
+            put("NOTE", "ancestris/modules/gedcom/utilities/resources/Note.png");
+            put("SOUR", "ancestris/modules/gedcom/utilities/resources/Source.png");
+            put("SUBM", "ancestris/modules/gedcom/utilities/resources/Submitter.png");
+            put("REPO", "ancestris/modules/gedcom/utilities/resources/Repository.png");
+            put("Unknown", "ancestris/modules/gedcom/utilities/resources/Property.png");
         }
     };
 

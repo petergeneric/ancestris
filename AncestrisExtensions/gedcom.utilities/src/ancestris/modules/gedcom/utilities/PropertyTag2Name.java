@@ -1,4 +1,4 @@
-package ancestris.modules.viewers.entityviewer;
+package ancestris.modules.gedcom.utilities;
 
 import java.util.HashMap;
 import org.openide.util.NbBundle;
