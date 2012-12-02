@@ -26,7 +26,7 @@ import org.openide.util.*;
 @ActionID(id = "ancestris.modules.gedcom.checkduplicates.CheckDuplicatesWizardAction", category = "Tools")
 @ActionRegistration(iconInMenu = true,
 displayName = "#CTL_CheckDuplicatesAction",
-iconBase = "ancestris/modules/gedcom/checkduplicates/CheckDuplicateIcon.png")
+iconBase = "ancestris/modules/gedcom/searchduplicates/CheckDuplicateIcon.png")
 @ActionReference(path = "Menu/Tools/Gedcom")
 @NbBundle.Messages({"CTL_CheckDuplicatesAction=Search Duplicate",
 "CheckDuplicates.runing=Searching duplicates"})
