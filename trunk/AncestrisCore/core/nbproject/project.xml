@@ -186,6 +186,7 @@
                 <package>genj.util</package>
                 <package>genj.util.swing</package>
                 <package>genj.view</package>
+                <package>org.openide.util</package>
                 <package>swingx.dnd.tree</package>
                 <package>swingx.tree</package>
             </public-packages>

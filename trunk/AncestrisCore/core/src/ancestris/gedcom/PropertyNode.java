@@ -65,8 +65,7 @@ public class PropertyNode extends AbstractNode {
     @Override
     public Action[] getActions(boolean context) {
         // global actions
-        List<? extends Action> myActions =
-                ancestris.util.Utilities.actionsForPath("Actions/GedcomProperty", null);
+        List<? extends Action> myActions = org.openide.util.AUtilities.actionsForPath("Actions/GedcomProperty");
 
         return myActions.toArray(new Action[myActions.size()]);
     }
