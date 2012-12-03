@@ -28,6 +28,7 @@ public class CommonActions {
 
         public NoOpAction() {
             setEnabled(false);
+            putValue(NAME, "noop");
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
         }
 
