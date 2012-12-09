@@ -4,22 +4,22 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class SearchDuplicatesWizardPanel2 implements WizardDescriptor.Panel<WizardDescriptor> {
+public class SearchDuplicatesWizardPanel4 implements WizardDescriptor.Panel<WizardDescriptor> {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private SearchDuplicatesVisualPanel2 component;
+    private SearchDuplicatesVisualPanel4 component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
     @Override
-    public SearchDuplicatesVisualPanel2 getComponent() {
+    public SearchDuplicatesVisualPanel4 getComponent() {
         if (component == null) {
-            component = new SearchDuplicatesVisualPanel2();
+            component = new SearchDuplicatesVisualPanel4();
         }
         return component;
     }
@@ -49,6 +49,6 @@ public class SearchDuplicatesWizardPanel2 implements WizardDescriptor.Panel<Wiza
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty("selectedEntities", ((SearchDuplicatesVisualPanel2) getComponent()).getSelectedEntities());
+        wiz.putProperty("familySelectedOptions", ((SearchDuplicatesVisualPanel4) getComponent()).getSelectedOptions());
     }
 }

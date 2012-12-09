@@ -1,19 +1,19 @@
 package ancestris.modules.gedcom.searchduplicates;
 
-import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
+import static ancestris.modules.gedcom.searchduplicates.Bundle.CTL_CheckDuplicatesAction;
+import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicates_runing;
+import ancestris.modules.gedcom.utilities.matchers.FamMatcherOptions;
+import ancestris.modules.gedcom.utilities.matchers.MatcherOptions;
 import ancestris.modules.gedcom.utilities.matchers.Options;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDisplayer;
@@ -29,7 +29,7 @@ displayName = "#CTL_CheckDuplicatesAction",
 iconBase = "ancestris/modules/gedcom/searchduplicates/CheckDuplicateIcon.png")
 @ActionReference(path = "Menu/Tools/Gedcom")
 @NbBundle.Messages({"CTL_CheckDuplicatesAction=Search Duplicate",
-"CheckDuplicates.runing=Searching duplicates"})
+    "CheckDuplicates.runing=Searching duplicates"})
 public final class SearchDuplicatesWizardAction implements ActionListener {
 
     private static final Logger log = Logger.getLogger(SearchDuplicatesPlugin.class.getName());
@@ -41,32 +41,18 @@ public final class SearchDuplicatesWizardAction implements ActionListener {
         Context context;
 
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-
-            List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-            panels.add(new SearchDuplicatesWizardPanel1());
-            panels.add(new SearchDuplicatesWizardPanel2());
-            String[] steps = new String[panels.size()];
-            for (int i = 0; i < panels.size(); i++) {
-                Component c = panels.get(i).getComponent();
-                // Default step name to component name of panel.
-                steps[i] = c.getName();
-                if (c instanceof JComponent) { // assume Swing components
-                    JComponent jc = (JComponent) c;
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
-                    jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
-                }
-            }
-            WizardDescriptor wizardDescriptor = new WizardDescriptor(new WizardDescriptor.ArrayIterator<WizardDescriptor>(panels));
+            WizardDescriptor wizardDescriptor = new WizardDescriptor(new SearchDuplicatesWizardIterator());
             // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
-            wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
+            // {1} will be replaced by WizardDescriptor.Iterator.name()
+            wizardDescriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
             wizardDescriptor.setTitle(CTL_CheckDuplicatesAction());
             if (DialogDisplayer.getDefault().notify(wizardDescriptor) == WizardDescriptor.FINISH_OPTION) {
+
+                TreeMap<String, MatcherOptions> selectedOptions = new TreeMap();
                 Gedcom myGedcom = context.getGedcom();
-                List<String> entities2Ckeck = (List<String>)wizardDescriptor.getProperty("selectedEntities");
-                TreeMap<String, ? extends Options> selectedOptions = (TreeMap<String, ? extends Options>)wizardDescriptor.getProperty("selectedOptions");
+                List<String> entities2Ckeck = (List<String>) wizardDescriptor.getProperty("selectedEntities");
+                selectedOptions.put(Gedcom.INDI, ((MatcherOptions) wizardDescriptor.getProperty("individualSelectedOptions")));
+                selectedOptions.put(Gedcom.FAM, ((MatcherOptions) wizardDescriptor.getProperty("familySelectedOptions")));
                 theTask = RP.create(new SearchDuplicatesPlugin(myGedcom, entities2Ckeck, selectedOptions));
                 final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(CheckDuplicates_runing(), new Cancellable() {
 
@@ -81,19 +67,22 @@ public final class SearchDuplicatesWizardAction implements ActionListener {
                         return theTask.cancel();
                     }
                 });
-                theTask.addTaskListener(new TaskListener() {
 
-                    @Override
-                    public void taskFinished(org.openide.util.Task task) {
-                        progressHandle.finish();
-                    }
-                });
+                theTask.addTaskListener(
+                        new TaskListener() {
+
+                            @Override
+                            public void taskFinished(org.openide.util.Task task) {
+                                progressHandle.finish();
+                            }
+                        });
 
                 //
                 progressHandle.start();
 
                 //this actually start the task
-                theTask.schedule(0);
+                theTask.schedule(
+                        0);
             }
         }
     }

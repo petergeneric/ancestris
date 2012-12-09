@@ -1,6 +1,7 @@
 package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
 import ancestris.modules.gedcom.utilities.matchers.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -10,6 +11,7 @@ import java.awt.Dialog;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -22,6 +24,10 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lemovice left and right entities could be the same.
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
+@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=<html>Duplicate <font color=red>{0}</font> of {1} estimate matching <font color=blue>{2}</font>%<html>",
+    "SearchDuplicatesPlugin.nextButton=Next",
+    "SearchDuplicatesPlugin.previousButton=Previous",
+    "SearchDuplicatesPlugin.mergeButton=Merge"})
 public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable {
 
     private static final Logger log = Logger.getLogger(SearchDuplicatesPlugin.class.getName());
@@ -38,7 +44,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
         }
     };
     private final List<String> entities2Ckeck;
-    Map<String, ? extends Options> selectedOptions;
+    Map<String, ? extends MatcherOptions> selectedOptions;
 
     public SearchDuplicatesPlugin() {
         this.gedcom = null;
@@ -46,7 +52,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
         this.selectedOptions = null;
     }
 
-    public SearchDuplicatesPlugin(Gedcom leftGedcom, List<String> entities2Ckeck, Map<String, ? extends Options> selectedOptions) {
+    public SearchDuplicatesPlugin(Gedcom leftGedcom, List<String> entities2Ckeck, Map<String, ? extends MatcherOptions> selectedOptions) {
         this.gedcom = leftGedcom;
         this.entities2Ckeck = entities2Ckeck;
         this.selectedOptions = selectedOptions;
@@ -93,28 +99,94 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
 
             SwingUtilities.invokeLater(new Runnable() {
 
+                SearchDuplicatesResultPanel entityViewPanel = new SearchDuplicatesResultPanel();
+                int linkedListIndex = -1;
+                final JButton nextButton = new JButton();
+                final JButton previousButton = new JButton();
+                final JButton mergeButton = new JButton();
+                final javax.swing.JLabel duplicateIndexLabel = new javax.swing.JLabel();
+
                 @Override
                 public void run() {
+                    previousButton.setText(SearchDuplicatesPlugin_previousButton()); // NOI18N
+                    previousButton.setEnabled(false);
+                    previousButton.setDefaultCapable(true);
+                    previousButton.putClientProperty("defaultButton", Boolean.FALSE); //NOI18N
+                    previousButton.addActionListener(new java.awt.event.ActionListener() {
+
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            previousButtonActionPerformed(evt);
+                        }
+                    });
+                    nextButton.setDefaultCapable(true);
+                    nextButton.setText(SearchDuplicatesPlugin_nextButton()); // NOI18N
+                    nextButton.setEnabled(false);
+                    nextButton.addActionListener(new java.awt.event.ActionListener() {
+
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            nextButtonActionPerformed(evt);
+                        }
+                    });
+                    mergeButton.setDefaultCapable(true);
+                    mergeButton.setText(SearchDuplicatesPlugin_mergeButton()); // NOI18N
+                    mergeButton.setEnabled(false);
+
                     // There is duplicates let displaying them
                     if (matchesLinkedList.size() > 0) {
-                        SearchDuplicatesResultPanel entityViewPanel = new SearchDuplicatesResultPanel(matchesLinkedList);
                         DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
                                 entityViewPanel,
                                 NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title"),
                                 true,
-                                new Object[]{DialogDescriptor.CLOSED_OPTION},
+                                // new Object[]{duplicateIndexLabel, previousButton, nextButton, finishButton, DialogDescriptor.CLOSED_OPTION},
+                                new Object[]{previousButton, mergeButton, nextButton, DialogDescriptor.CLOSED_OPTION},
                                 DialogDescriptor.CLOSED_OPTION,
                                 DialogDescriptor.DEFAULT_ALIGN,
                                 null,
                                 null);
+                        checkDuplicatePanelDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION});
+                        this.linkedListIndex = 0;
+                        if (linkedListIndex < matchesLinkedList.size() - 1) {
+                            nextButton.setEnabled(true);
+                        }
+                        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                        duplicateIndexLabel.setText(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
 
+                        // display Dialog
                         Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
                         dialog.setVisible(true);
-                        dialog.setModal(false);
                         dialog.toFront();
                     } else {
                         NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicates.noDuplicates"), NotifyDescriptor.INFORMATION_MESSAGE);
                         DialogDisplayer.getDefault().notify(nd);
+                    }
+                }
+
+                private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    linkedListIndex -= 1;
+
+                    entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                    duplicateIndexLabel.setText(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    if (linkedListIndex <= 0) {
+                        previousButton.setEnabled(false);
+                    }
+                    if (linkedListIndex < matchesLinkedList.size() - 1) {
+                        nextButton.setEnabled(true);
+                    }
+                }
+
+                private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    linkedListIndex += 1;
+
+                    entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                    duplicateIndexLabel.setText(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+
+                    if (linkedListIndex >= matchesLinkedList.size() - 1) {
+                        nextButton.setEnabled(false);
+                    }
+                    if (linkedListIndex > 0) {
+                        previousButton.setEnabled(true);
                     }
                 }
             });
