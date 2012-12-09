@@ -1,23 +1,26 @@
 package ancestris.modules.gedcom.searchduplicates;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.swing.JComponent;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 import org.openide.WizardDescriptor;
 
 public final class SearchDuplicatesWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor> {
 
     private int index;
-    
     private List<WizardDescriptor.Panel<WizardDescriptor>> allPanels;
     private List<WizardDescriptor.Panel<WizardDescriptor>> currentPanels;
+    private EventListenerList listenerList = new EventListenerList();
+    private ChangeEvent changeEvent = null;
 
     SearchDuplicatesWizardIterator() {
         allPanels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        currentPanels = allPanels;
         allPanels.add(new SearchDuplicatesWizardPanel1());
         allPanels.add(new SearchDuplicatesWizardPanel2());
         allPanels.add(new SearchDuplicatesWizardPanel3());
@@ -35,6 +38,17 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
             }
+        }
+        SearchDuplicatesWizardPanel2 searchDuplicatesWizardPanel2 = (SearchDuplicatesWizardPanel2) allPanels.get(1);
+        ArrayList<String> selectedEntities = searchDuplicatesWizardPanel2.getComponent().getSelectedEntities();
+        currentPanels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
+        currentPanels.add(allPanels.get(0));
+        currentPanels.add(allPanels.get(1));
+        if (selectedEntities.contains(Gedcom.INDI) == true) {
+            currentPanels.add(allPanels.get(2));
+        }
+        if (selectedEntities.contains(Gedcom.FAM) == true) {
+            currentPanels.add(allPanels.get(3));
         }
     }
 
@@ -67,6 +81,24 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
+
+        // Current index
+        if (index == 1) {
+            SearchDuplicatesWizardPanel2 searchDuplicatesWizardPanel2 = (SearchDuplicatesWizardPanel2) allPanels.get(index);
+            ArrayList<String> selectedEntities = searchDuplicatesWizardPanel2.getComponent().getSelectedEntities();
+
+            currentPanels.clear();
+            currentPanels.add(allPanels.get(0));
+            currentPanels.add(allPanels.get(1));
+            if (selectedEntities.contains(Gedcom.INDI) == true) {
+                currentPanels.add(allPanels.get(2));
+            }
+            if (selectedEntities.contains(Gedcom.FAM) == true) {
+                currentPanels.add(allPanels.get(3));
+            }
+            fireChangeListener();
+        }
+
         index++;
     }
 
@@ -78,16 +110,30 @@ public final class SearchDuplicatesWizardIterator implements WizardDescriptor.It
         index--;
     }
 
-    // If nothing unusual changes in the middle of the wizard, simply:
     @Override
     public void addChangeListener(ChangeListener l) {
+        listenerList.add(ChangeListener.class, l);
     }
 
     @Override
     public void removeChangeListener(ChangeListener l) {
+        listenerList.remove(ChangeListener.class, l);
     }
-    // If something changes dynamically (besides moving between panels), e.g.
-    // the number of panels changes in response to user input, then use
-    // ChangeSupport to implement add/removeChangeListener and call fireChange
-    // when needed
+
+    protected void fireChangeListener() {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Lazily create the event:
+        if (changeEvent == null) {
+            changeEvent = new ChangeEvent(this);
+        }
+
+        // Process the listeners notifying
+        // those that are interested in this event
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == ChangeListener.class) {
+                ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
+            }
+        }
+    }
 }

@@ -24,8 +24,36 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
     /**
      * Creates new form PropertiesDiffPanel
      */
-    public PropertiesDiffPanel() {
+    public PropertiesDiffPanel(Property leftProperty, Property rightProperty) {
+        ArrayList<TagPath> PropertyTagPathArray = new ArrayList<TagPath>();
+        PropertyTagPathArray.add(leftProperty != null ? leftProperty.getPath() : rightProperty.getPath());
+
+        if (leftProperty != null) {
+            for (Property property : leftProperty.getProperties(Property.class)) {
+                PropertyTagPathArray.add(property.getPath());
+            }
+        }
+
+        if (rightProperty != null) {
+            for (Property property : rightProperty.getProperties(Property.class)) {
+                if (!PropertyTagPathArray.contains(property.getPath())) {
+                    PropertyTagPathArray.add(property.getPath());
+                }
+            }
+        }
+
+        for (Iterator<TagPath> it = PropertyTagPathArray.iterator(); it.hasNext();) {
+            TagPath tagPath = it.next();
+            if (leftProperty != null) {
+                leftPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), leftProperty.getParent().getProperty(tagPath));
+            }
+            if (rightProperty != null) {
+                rightPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), rightProperty.getParent().getProperty(tagPath));
+            }
+        }
         initComponents();
+
+        propertyTagLabel.setText(PropertyTag2Name.getTagName(leftProperty != null ? leftProperty.getTag() : rightProperty.getTag()));
         leftPropertyList.setFixedCellWidth(propertyListRenderer.getWidth());
         rightPropertyList.setFixedCellWidth(propertyListRenderer.getWidth());
     }
@@ -60,7 +88,7 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(propertyTagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+            .addComponent(propertyTagLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addComponent(leftPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -72,7 +100,7 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 .addComponent(propertyTagLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(leftPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                    .addComponent(leftPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rightPropertyList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -82,54 +110,13 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
     private javax.swing.JList rightPropertyList;
     // End of variables declaration//GEN-END:variables
 
-    public void set(Property leftProperty, Property rightProperty) {
-        ArrayList<TagPath> PropertyTagPathArray = new ArrayList<TagPath>();
-
-        if (leftProperty == null && rightProperty == null) {
-            return;
-        }
-
-        PropertyTagPathArray.clear();
-        leftPropertyListModel.clear();
-        rightPropertyListModel.clear();
-        propertyTagLabel.setText(PropertyTag2Name.getTagName(leftProperty != null ? leftProperty.getTag() : rightProperty.getTag()));
-        PropertyTagPathArray.add(leftProperty != null ? leftProperty.getPath() : rightProperty.getPath());
-
-        if (leftProperty != null) {
-            for (Property property : leftProperty.getProperties(Property.class)) {
-                PropertyTagPathArray.add(property.getPath());
-            }
-        }
-
-        if (rightProperty != null) {
-            for (Property property : rightProperty.getProperties(Property.class)) {
-                if (!PropertyTagPathArray.contains(property.getPath())) {
-                    PropertyTagPathArray.add(property.getPath());
-                }
-            }
-        }
-
-        for (Iterator<TagPath> it = PropertyTagPathArray.iterator(); it.hasNext();) {
-            TagPath tagPath = it.next();
-            if (leftProperty != null) {
-                leftPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), leftProperty.getParent().getProperty(tagPath));
-            }
-            if (rightProperty != null) {
-                rightPropertyListModel.add(PropertyTagPathArray.indexOf(tagPath), rightProperty.getParent().getProperty(tagPath));
-            }
-        }
-    }
-
-    class PropertyListRenderer extends JTextArea
-            implements ListCellRenderer {
+    class PropertyListRenderer extends JTextArea implements ListCellRenderer {
 
         public PropertyListRenderer() {
             setOpaque(true);
-            setRows(2);
             setColumns(40);
             setLineWrap(true);
             setWrapStyleWord(true);
-            setPreferredSize(new Dimension(getRowHeight(), getColumnWidth() * getColumns()));
         }
 
         /*
@@ -151,8 +138,8 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-            
-/*
+
+
             // same height for the both sides
             int leftlinesCount = 1;
             int rightlinesCount = 1;
@@ -169,15 +156,17 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 }
             }
             setRows(Math.max(leftlinesCount, rightlinesCount));
-*/
+
             //Set the text.
-            setText(list.getModel().getElementAt(index).toString());
+            if (index < list.getModel().getSize()) {
+                setText(list.getModel().getElementAt(index).toString());
+            }
 
             return this;
         }
-        
+
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             return new Dimension(getRowHeight() * getRows(), getColumnWidth() * getColumns());
         }
     }
