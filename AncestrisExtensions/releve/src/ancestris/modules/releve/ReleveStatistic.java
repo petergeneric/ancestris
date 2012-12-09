@@ -50,36 +50,38 @@ public class ReleveStatistic extends javax.swing.JFrame {
      */
    public void setModel(DataManager dataManager ) {
        int[] total = new int[5];
-       int nbRecord = dataManager.getReleveAllModel().getRowCount();
-       // je compte les releves par année
-       for (int i = 0 ; i < nbRecord; i++) {
-           Record record = dataManager.getReleveAllModel().getRecord(i);
-           int year;
-            try {
-                year = record.getEventDateProperty().getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
-            } catch (GedcomException ex) {
-                continue;
-            }
+       if(dataManager != null) {
+           int nbRecord = dataManager.getReleveAllModel().getRowCount();
+           // je compte les releves par année
+           for (int i = 0; i < nbRecord; i++) {
+               Record record = dataManager.getReleveAllModel().getRecord(i);
+               int year;
+               try {
+                   year = record.getEventDateProperty().getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
+               } catch (GedcomException ex) {
+                   continue;
+               }
 
-           int[] counters = datas.get(year);
-           if (counters == null) {
-                counters = new int[5];
-                datas.put(year, counters);
-                
-           }
-           counters[0] = year;
-           if (record instanceof RecordBirth) {
-               counters[1]++;
-               total[1]++;
-           } else if (record instanceof RecordMarriage) {
-               counters[2]++;
-               total[2]++;
-           } else if (record instanceof RecordDeath) {
-               counters[3]++;
-               total[3]++;
-           }  else {
-               counters[4]++;
-               total[4]++;
+               int[] counters = datas.get(year);
+               if (counters == null) {
+                   counters = new int[5];
+                   datas.put(year, counters);
+
+               }
+               counters[0] = year;
+               if (record instanceof RecordBirth) {
+                   counters[1]++;
+                   total[1]++;
+               } else if (record instanceof RecordMarriage) {
+                   counters[2]++;
+                   total[2]++;
+               } else if (record instanceof RecordDeath) {
+                   counters[3]++;
+                   total[3]++;
+               } else {
+                   counters[4]++;
+                   total[4]++;
+               }
            }
        }
 
