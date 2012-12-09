@@ -151,7 +151,8 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
             }
-
+            
+/*
             // same height for the both sides
             int leftlinesCount = 1;
             int rightlinesCount = 1;
@@ -167,18 +168,16 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                     rightlinesCount += 1;
                 }
             }
-
+            setRows(Math.max(leftlinesCount, rightlinesCount));
+*/
             //Set the text.
             setText(list.getModel().getElementAt(index).toString());
-            setRows(Math.max(leftlinesCount, rightlinesCount));
 
-            System.out.println(getColumns() + ";" + Math.max(leftlinesCount, rightlinesCount));
             return this;
         }
         
         @Override
         public Dimension getPreferredSize(){
-            System.out.println( "getPreferredSize" + getRows() + ";" + getColumns());
             return new Dimension(getRowHeight() * getRows(), getColumnWidth() * getColumns());
         }
     }
