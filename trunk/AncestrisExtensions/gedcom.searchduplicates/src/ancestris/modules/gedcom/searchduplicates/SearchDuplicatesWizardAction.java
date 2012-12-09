@@ -2,9 +2,7 @@ package ancestris.modules.gedcom.searchduplicates;
 
 import static ancestris.modules.gedcom.searchduplicates.Bundle.CTL_CheckDuplicatesAction;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicates_runing;
-import ancestris.modules.gedcom.utilities.matchers.FamMatcherOptions;
 import ancestris.modules.gedcom.utilities.matchers.MatcherOptions;
-import ancestris.modules.gedcom.utilities.matchers.Options;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
@@ -81,8 +79,7 @@ public final class SearchDuplicatesWizardAction implements ActionListener {
                 progressHandle.start();
 
                 //this actually start the task
-                theTask.schedule(
-                        0);
+                theTask.schedule(0);
             }
         }
     }

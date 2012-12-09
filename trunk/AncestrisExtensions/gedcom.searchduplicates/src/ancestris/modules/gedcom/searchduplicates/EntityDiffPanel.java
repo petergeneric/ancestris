@@ -97,9 +97,7 @@ public class EntityDiffPanel extends javax.swing.JPanel {
         entityPropertiesPanel.removeAll();
         for (Iterator<TagPath> it = entityTagArray.iterator(); it.hasNext();) {
             TagPath tagPath = it.next();
-            PropertiesDiffPanel propertiesDiffPanel = new PropertiesDiffPanel();
-            propertiesDiffPanel.set(leftEntity.getProperty(tagPath), rightEntity.getProperty(tagPath));
-            entityPropertiesPanel.add(propertiesDiffPanel);
+            entityPropertiesPanel.add(new PropertiesDiffPanel(leftEntity.getProperty(tagPath), rightEntity.getProperty(tagPath)));
         }
     }
 }
