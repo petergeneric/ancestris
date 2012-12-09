@@ -79,13 +79,14 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="individualsCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="submittersCheckBox" min="-2" max="-2" attributes="0"/>
-                  <Component id="repositoriesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="familiesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="sourcesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="famEmptyValuesValidRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="famMaxDateIntervalLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="famMaxDateIntervalSpinner" min="-2" pref="96" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -95,71 +96,36 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="individualsCheckBox" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="famMaxDateIntervalSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="famMaxDateIntervalLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="familiesCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="submittersCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="repositoriesCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="sourcesCheckBox" min="-2" max="-2" attributes="0"/>
+              <Component id="famEmptyValuesValidRadioButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JCheckBox" name="individualsCheckBox">
+    <Component class="javax.swing.JLabel" name="famMaxDateIntervalLabel">
       <Properties>
-        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel2.individualsCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel4.famMaxDateIntervalLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="individualsCheckBoxActionPerformed"/>
-      </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="familiesCheckBox">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel2.familiesCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="familiesCheckBoxActionPerformed"/>
-      </Events>
+    <Component class="javax.swing.JSpinner" name="famMaxDateIntervalSpinner">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(new SpinnerNumberModel(365,0,3650,1))"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="submittersCheckBox">
+    <Component class="javax.swing.JRadioButton" name="famEmptyValuesValidRadioButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel2.submittersCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel4.famEmptyValuesValidRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submittersCheckBoxActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="repositoriesCheckBox">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel2.repositoriesCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repositoriesCheckBoxActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="sourcesCheckBox">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/searchduplicates/Bundle.properties" key="SearchDuplicatesVisualPanel2.sourcesCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sourcesCheckBoxActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>
