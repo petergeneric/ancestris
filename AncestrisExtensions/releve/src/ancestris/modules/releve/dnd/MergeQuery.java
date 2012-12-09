@@ -1099,7 +1099,7 @@ public class MergeQuery {
 
         for (Indi indi : gedcom.getIndis()) {
 
-            // individu a exlure
+            // individu a exclure
             if (excludeIndi != null && excludeIndi.compareTo(indi) == 0) {
                 continue;
             }
@@ -1934,10 +1934,14 @@ public class MergeQuery {
         if (eventProperty != null) {
             Property[] sourceProperties = eventProperty.getProperties("SOUR", false);
             for (int i = 0; i < sourceProperties.length; i++) {
-                Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
-                if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
-                    sourceProperty = sourceProperties[i];
-                    break;
+                // remarque : verification de classe PropertySource avant de faire le cast en PropertySource pour eliminer
+                // les cas anormaux , par exemple une source "multiline"
+                if ( sourceProperties[i] instanceof PropertySource) {
+                    Source eventSource = (Source) ((PropertySource) sourceProperties[i]).getTargetEntity();
+                    if (record.getEventSource().compareTo(eventSource.getTitle()) == 0) {
+                        sourceProperty = sourceProperties[i];
+                        break;
+                    }
                 }
             }
         }
