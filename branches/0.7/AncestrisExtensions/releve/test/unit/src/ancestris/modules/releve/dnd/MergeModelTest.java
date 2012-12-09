@@ -46,7 +46,7 @@ public class MergeModelTest extends TestCase {
     /**
      * test_copyOccupation
      */
-    public void test_copyOccupation() {
+    public void test_copyBirthOccupation() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
@@ -58,7 +58,7 @@ public class MergeModelTest extends TestCase {
             Property occupationProperty = indi.getProperties("OCCU")[1];
             assertEquals("Profession de l'individu", mergeRecord.getIndiFatherOccupation(), occupationProperty.getDisplayValue());
             assertEquals("Date de la profession", mergeRecord.getEventDate().getDisplayValue(), occupationProperty.getProperty("DATE").getDisplayValue());
-            assertEquals("Lieu de la profession", mergeRecord.getEventPlace(), occupationProperty.getProperty("PLAC").getDisplayValue());
+            assertEquals("Lieu de la profession(=lieu de naissance)", mergeRecord.getIndiBirthPlace(), occupationProperty.getProperty("PLAC").getDisplayValue());
             assertEquals("Note de la profession", false, occupationProperty.getProperty("NOTE").getDisplayValue().isEmpty());
 
         } catch (Exception ex) {

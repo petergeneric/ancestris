@@ -100,7 +100,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), currentIndi.getFirstName());
             addRow(RowType.IndiSex, record.getIndiSexString(), currentIndi.getPropertyValue("SEX"));
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , currentIndi.getBirthDate());
-            addRow(RowType.IndiPlace, record.getIndiPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiPlace, record.getIndiBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.EventComment, record.getEventComment(), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
             // j'affiche un separateur
             addRowSeparator();
@@ -120,7 +120,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndiFirstName(), "");
             addRow(RowType.IndiSex, record.getIndiSexString(), "");
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , null);
-            addRow(RowType.IndiPlace, record.getIndiPlace(), "");
+            addRow(RowType.IndiPlace, record.getIndiBirthPlace(), "");
             addRow(RowType.EventComment, record.getEventComment(), "");
             // j'affiche un separateur
             addRowSeparator();
@@ -252,7 +252,7 @@ class MergeModelBirth extends MergeModel {
 
         // je copie le lieu de la naissance .
         if (isChecked(RowType.IndiPlace)) {
-            copyPlace(record.getIndiPlace(),  birthProperty);
+            copyPlace(record.getIndiBirthPlace(),  birthProperty);
         }
 
         // je copie le commentaire de la naissance .

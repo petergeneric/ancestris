@@ -163,13 +163,13 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("IndiFatherAge",           "",record2.getIndiFatherAge().toString());
         assertEquals("IndiFatherDead",          "",record2.getIndiFatherDead().toString());
         assertEquals("IndiFatherOccupation",    record.getIndiFatherOccupation().toString(),record2.getIndiFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "70 années, Décédé, indifathercomment",record2.getIndiFatherComment().toString());
+        assertEquals("IndiFatherComment",       "70 années, Décédé, indiFatherResidence,,,,,, indifathercomment",record2.getIndiFatherComment().toString());
         assertEquals("IndiMotherFirstName",     record.getIndiMotherFirstName().toString(),record2.getIndiMotherFirstName().toString());
         assertEquals("IndiMotherLastName",      record.getIndiMotherLastName().toString(),record2.getIndiMotherLastName().toString());
         assertEquals("IndiMotherAge",           "",record2.getIndiMotherAge().toString());
         assertEquals("IndiMotherDead",          "",record2.getIndiMotherDead().toString());
         assertEquals("IndiMotherOccupation",    record.getIndiMotherOccupation().toString(),record2.getIndiMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "72 années, Décédé, indimothercomment",record2.getIndiMotherComment().toString());
+        assertEquals("IndiMotherComment",       "72 années, Décédé, indiMotherResidence,,,,,, indimothercomment",record2.getIndiMotherComment().toString());
         
         assertEquals("WifeFirstName",           null,record2.getWifeFirstName());
         assertEquals("WifeLastName",            null,record2.getWifeLastName());

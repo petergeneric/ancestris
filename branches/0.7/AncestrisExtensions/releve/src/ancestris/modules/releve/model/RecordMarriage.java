@@ -104,7 +104,7 @@ public class RecordMarriage extends Record implements Cloneable{
         object.indiSex             = indiSex.clone();
         object.indiAge             = indiAge.clone();
         object.indiBirthDate       = indiBirthDate.clone();
-        object.indiBirthPlace           = indiBirthPlace.clone();
+        object.indiBirthPlace      = indiBirthPlace.clone();
         object.indiOccupation      = indiOccupation.clone();
         object.indiResidence       = indiResidence.clone();
         object.indiComment         = indiComment.clone();
