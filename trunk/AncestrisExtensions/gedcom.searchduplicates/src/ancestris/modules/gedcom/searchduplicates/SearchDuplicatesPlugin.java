@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lemovice left and right entities could be the same.
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=<html>Duplicate <font color=red>{0}</font> of {1} estimate matching <font color=blue>{2}</font>%<html>",
+@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=Duplicate {0} of {1} estimate matching {2}",
     "SearchDuplicatesPlugin.nextButton=Next",
     "SearchDuplicatesPlugin.previousButton=Previous",
     "SearchDuplicatesPlugin.mergeButton=Merge"})
@@ -100,11 +100,11 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
             SwingUtilities.invokeLater(new Runnable() {
 
                 SearchDuplicatesResultPanel entityViewPanel = new SearchDuplicatesResultPanel();
+                DialogDescriptor checkDuplicatePanelDescriptor;
                 int linkedListIndex = -1;
                 final JButton nextButton = new JButton();
                 final JButton previousButton = new JButton();
                 final JButton mergeButton = new JButton();
-                final javax.swing.JLabel duplicateIndexLabel = new javax.swing.JLabel();
 
                 @Override
                 public void run() {
@@ -135,7 +135,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
 
                     // There is duplicates let displaying them
                     if (matchesLinkedList.size() > 0) {
-                        DialogDescriptor checkDuplicatePanelDescriptor = new DialogDescriptor(
+                        checkDuplicatePanelDescriptor = new DialogDescriptor(
                                 entityViewPanel,
                                 NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title"),
                                 true,
@@ -151,7 +151,8 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                             nextButton.setEnabled(true);
                         }
                         entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
-                        duplicateIndexLabel.setText(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                        SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty());
+                        checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
 
                         // display Dialog
                         Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
@@ -167,7 +168,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     linkedListIndex -= 1;
 
                     entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
-                    duplicateIndexLabel.setText(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
                     if (linkedListIndex <= 0) {
                         previousButton.setEnabled(false);
                     }
@@ -180,7 +181,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     linkedListIndex += 1;
 
                     entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
-                    duplicateIndexLabel.setText(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
 
                     if (linkedListIndex >= matchesLinkedList.size() - 1) {
                         nextButton.setEnabled(false);
