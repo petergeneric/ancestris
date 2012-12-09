@@ -3,13 +3,11 @@ package ancestris.modules.gedcom.searchduplicates;
 import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
 import genj.gedcom.Entity;
 import java.awt.BorderLayout;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author lemovice
  */
-@Messages("CheckDuplicatesResultPanel.duplicateIndexLabel.text=<html>Duplicate <font color=red>{0}</font> of {1} estimate matching <font color=blue>{2}</font>%<html>")
 public class SearchDuplicatesResultPanel extends javax.swing.JPanel {
 
     EntityDiffPanel entityDiffPanel = new EntityDiffPanel();
