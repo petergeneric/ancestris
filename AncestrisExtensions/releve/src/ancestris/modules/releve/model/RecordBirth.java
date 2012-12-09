@@ -22,6 +22,7 @@ public class RecordBirth extends Record {
         indiFatherAge       = new FieldAge();
         indiFatherDead      = new FieldDead();
         indiFatherOccupation= new FieldOccupation();
+        indiFatherResidence = new FieldPlace();
         indiFatherComment   = new FieldComment();
 
         indiMotherFirstName = new FieldSimpleValue();
@@ -29,6 +30,7 @@ public class RecordBirth extends Record {
         indiMotherAge       = new FieldAge();
         indiMotherDead      = new FieldDead();
         indiMotherOccupation= new FieldOccupation();
+        indiMotherResidence = new FieldPlace();
         indiMotherComment   = new FieldComment();
         
         witness1FirstName   = new FieldSimpleValue();
@@ -65,6 +67,7 @@ public class RecordBirth extends Record {
         object.indiFatherAge       = indiFatherAge.clone();
         object.indiFatherDead      = indiFatherDead.clone();
         object.indiFatherOccupation= indiFatherOccupation.clone();
+        object.indiFatherResidence = indiFatherResidence.clone();
         object.indiFatherComment   = indiFatherComment.clone();
 
         object.indiMotherFirstName = indiMotherFirstName.clone();
@@ -72,6 +75,7 @@ public class RecordBirth extends Record {
         object.indiMotherAge       = indiMotherAge.clone();
         object.indiMotherDead      = indiMotherDead.clone();
         object.indiMotherOccupation= indiMotherOccupation.clone();
+        object.indiMotherResidence = indiMotherResidence.clone();
         object.indiMotherComment   = indiMotherComment.clone();
 
         object.witness1FirstName   = witness1FirstName.clone();

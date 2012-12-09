@@ -60,10 +60,10 @@ public class ReleveFileEgmtTest extends TestCase {
                     assertEquals(String.valueOf(fieldType.ordinal()), "",birth2.getField(fieldType).toString());
                     break;
                 case indiFatherComment:
-                    assertEquals(String.valueOf(fieldType.ordinal()), "indifathercomment, indifatheroccupation, Age:70a",birth2.getField(fieldType).toString());
+                    assertEquals(String.valueOf(fieldType.ordinal()), "indifathercomment, indifatheroccupation, indiFatherResidence,,,,,, Age:70a",birth2.getField(fieldType).toString());
                     break;
                 case indiMotherComment:
-                    assertEquals(String.valueOf(fieldType.ordinal()), "indimothercomment, indimotheroccupation, Age:72a",birth2.getField(fieldType).toString());
+                    assertEquals(String.valueOf(fieldType.ordinal()), "indimothercomment, indimotheroccupation, indiMotherResidence,,,,,, Age:72a",birth2.getField(fieldType).toString());
                     break;
                 case witness1Occupation:
                 case witness2Occupation:

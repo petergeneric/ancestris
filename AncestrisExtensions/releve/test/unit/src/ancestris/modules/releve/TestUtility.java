@@ -60,7 +60,7 @@ public class TestUtility {
         husband.setSex(PropertySex.MALE);
         birth = husband.addProperty("BIRT","" );
         birth.addProperty("DATE","01 JAN 1970", 1);
-        birth.addProperty("PLACE","Paris", 2);
+        birth.addProperty("PLAC","Paris", 2);
         birth.addProperty("SOUR","@S1@",3);
         husband.addProperty("OCCU", "I1occupation");
         
@@ -73,7 +73,7 @@ public class TestUtility {
         child1.setSex(PropertySex.FEMALE);
         birth = child1.addProperty("BIRT", "");
         birth.addProperty("DATE","01 JAN 2000");
-        birth.addProperty("PLACE","Brest");
+        birth.addProperty("PLAC","Brest");
         birth.addProperty("SOUR","@S2@");
         
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
@@ -81,7 +81,7 @@ public class TestUtility {
         child2.setSex(PropertySex.FEMALE);
         birth = child2.addProperty("BIRT", "");
         birth.addProperty("DATE","03 MAR 2003");
-        birth.addProperty("PLACE","Brest");
+        birth.addProperty("PLAC","Brest");
         Property sourcexref = birth.addProperty("SOUR","@S2@");
         //((PropertyXRef)sourcexref).link();
 
@@ -102,7 +102,7 @@ public class TestUtility {
         cousin.setSex(PropertySex.MALE);
         birth = cousin.addProperty("BIRT","" );
         birth.addProperty("DATE","02 FEB 1972", 1);
-        birth.addProperty("PLACE","Paris", 2);
+        birth.addProperty("PLAC","Paris", 2);
         birth.addProperty("SOUR","@S1@",3);
 
         Indi sansfamille1 = (Indi) gedcom.createEntity(Gedcom.INDI, "sansfamille1");

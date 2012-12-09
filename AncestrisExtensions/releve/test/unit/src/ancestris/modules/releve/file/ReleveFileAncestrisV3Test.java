@@ -155,7 +155,6 @@ public class ReleveFileAncestrisV3Test extends TestCase {
                 assertNull(String.valueOf(fieldType.ordinal()), birth2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
-                     || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
                      || fieldType == FieldType.wifeResidence || fieldType == FieldType.wifeMarriedResidence
                      || fieldType == FieldType.wifeFatherResidence || fieldType == FieldType.wifeMotherResidence
                      ) {

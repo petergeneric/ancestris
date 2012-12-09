@@ -192,14 +192,14 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiLastName,   record.getIndiLastName(),  husband.getLastName(), husband);
             addRow(RowType.IndiFirstName,  record.getIndiFirstName(), husband.getFirstName());
             addRow(RowType.IndiBirthDate,  record.getIndiBirthDate(), husband.getBirthDate(false));
-            addRow(RowType.IndiPlace,      record.getIndiPlace(),     husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiPlace,      record.getIndiBirthPlace(),     husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(),  MergeQuery.findOccupation(husband, record.getEventDate()));
         } else {
             // j'affiche les informations de l'epoux
             addRow(RowType.IndiLastName,   record.getIndiLastName(),  "", null);
             addRow(RowType.IndiFirstName,  record.getIndiFirstName(), "");
             addRow(RowType.IndiBirthDate,  record.getIndiBirthDate(), null);
-            addRow(RowType.IndiPlace,      record.getIndiPlace(),     "");
+            addRow(RowType.IndiPlace,      record.getIndiBirthPlace(),     "");
             addRow(RowType.IndiOccupation, record.getIndiOccupationWithDate(), "");
         }
 
@@ -237,13 +237,13 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.WifeLastName,   record.getWifeLastName(), wife.getLastName(), wife);
             addRow(RowType.WifeFirstName,  record.getWifeFirstName(), wife.getFirstName());
             addRow(RowType.WifeBirthDate,  record.getWifeBirthDate(), wife.getBirthDate(false));
-            addRow(RowType.WifePlace,      record.getWifePlace(),      wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.WifePlace,      record.getWifeBirthPlace(),      wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.WifeOccupation, record.getWifeOccupationWithDate(), MergeQuery.findOccupation(wife, record.getEventDate()));
         } else {
             addRow(RowType.WifeLastName,   record.getWifeLastName(), "", null);
             addRow(RowType.WifeFirstName,  record.getWifeFirstName(), "");
             addRow(RowType.WifeBirthDate,  record.getWifeBirthDate(), null);
-            addRow(RowType.WifePlace,      record.getWifePlace(), "");
+            addRow(RowType.WifePlace,      record.getWifeBirthPlace(), "");
             addRow(RowType.WifeOccupation, record.getWifeOccupationWithDate(), "");
         }
     }
@@ -376,7 +376,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la date, le lieu et commentaire de naissance de l'epoux
         if (isChecked(RowType.IndiBirthDate)) {
-            copyBirthDate(husband, record.getIndiBirthDate(), record.getIndiPlace(), record);
+            copyBirthDate(husband, record.getIndiBirthDate(), record.getIndiBirthPlace(), record);
         }
 
         // je copie la profession de l'epoux
@@ -494,7 +494,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie la date, le lieu et le commentaire de naissance de l'epouse
         if (isChecked(RowType.WifeBirthDate)) {
-            copyBirthDate(wife, record.getWifeBirthDate(), record.getWifePlace(), record);
+            copyBirthDate(wife, record.getWifeBirthDate(), record.getWifeBirthPlace(), record);
         }
 
         // je copie la profession de l'epouse

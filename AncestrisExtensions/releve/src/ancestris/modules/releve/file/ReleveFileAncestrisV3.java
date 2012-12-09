@@ -175,7 +175,7 @@ public class ReleveFileAncestrisV3 {
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence a la naissance
+                                fields[Field.indiFatherResidence.ordinal()],
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
@@ -184,7 +184,7 @@ public class ReleveFileAncestrisV3 {
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence a la naissance
+                                fields[Field.indiMotherResidence.ordinal()],
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
@@ -640,14 +640,14 @@ public class ReleveFileAncestrisV3 {
                         line.appendCsvFn(record.getIndiFatherAge().getValue());
                         line.appendCsvFn(record.getIndiFatherDead().getValue());
                         line.appendCsvFn(record.getIndiFatherOccupation().toString());
-                        line.appendCsvFn(""); //pas de residence a la naissance
+                        line.appendCsvFn(record.getIndiFatherResidence().toString());
                         line.appendCsvFn(record.getIndiFatherComment().toString());
                         line.appendCsvFn(record.getIndiMotherLastName().toString());
                         line.appendCsvFn(record.getIndiMotherFirstName().toString());
                         line.appendCsvFn(record.getIndiMotherAge().getValue());
                         line.appendCsvFn(record.getIndiMotherDead().getValue());
                         line.appendCsvFn(record.getIndiMotherOccupation().toString());
-                        line.appendCsvFn("");//pas de residence a la naissance
+                        line.appendCsvFn(record.getIndiMotherResidence().toString());
                         line.appendCsvFn(record.getIndiMotherComment().toString());
 
                         line.appendCsvFn(""); // WifeLastName

@@ -74,7 +74,7 @@ public class Java2sAutoTextField extends JTextField {
                 for( int j = 0 ; j < s.length(); j++) {
                     if ( (i+j == 0 )
                         || (( i>0 && j==0) && ((s1.charAt(i-1) == ' ') || (s1.charAt(i-1) == '-') || (s1.charAt(i-1) == ',') ))
-                        || (( j>0) && ((s.charAt(j-1) == ' ') || (s.charAt(j-1) == '-') || (s.charAt(j-1) == '-') ))
+                        || (( j>0) && ((s.charAt(j-1) == ' ') || (s.charAt(j-1) == '-') || (s.charAt(j-1) == ',') ))
                         ) {
                         s3.append( s.substring(j,j+1).toUpperCase(getLocale()));
                     } else {

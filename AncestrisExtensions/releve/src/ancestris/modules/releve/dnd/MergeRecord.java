@@ -174,16 +174,35 @@ public class MergeRecord {
         return IndiDeathDate;
     }
 
-    String getIndiPlace() {
-        if ( record.getIndiBirthPlace() != null && !record.getIndiBirthPlace().isEmpty() ) {
+    /**
+     * retourne le lieu de naissance .
+     * Si c'est un acte de naissance et si IndiBirthPlace est vide
+     *      retourne IndiFatherResidence ou, à dfafaut, EventPlace
+     * @return
+     */
+    String getIndiBirthPlace() {
+        if ( record.getIndiBirthPlace() != null &&  !record.getIndiBirthPlace().isEmpty()) {
             return record.getIndiBirthPlace().toString();
         } else {
-            return record.getEventPlace().toString();
+            if (this.type == RecordType.Birth) {
+                if( record.getIndiFatherResidence() != null && !record.getIndiFatherResidence().isEmpty()) {
+                    return record.getIndiFatherResidence().toString();
+                } else {
+                    return record.getEventPlace().toString();
+                }
+            } else {
+                return "";
+            }
         }
     }
 
     String getIndiOccupation() {
-        return record.getIndiOccupation().toString();
+        if( record.getIndiOccupation() != null ) {
+            return record.getIndiOccupation().toString();
+        } else {
+            // n'est pas renseignée pour les naissances
+            return "";
+        }
     }
 
     String getIndiOccupationWithDate() {
@@ -194,8 +213,14 @@ public class MergeRecord {
         return occupation;
     }
 
+
     String getIndiResidence() {
-        return record.getIndiResidence().toString();
+        if (record.getIndiResidence()!= null ) {
+            return record.getIndiResidence().toString();
+        } else {
+            // n'est pas renseignée pour les naissances
+            return "";
+        }
     }
 
     //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -407,8 +432,12 @@ public class MergeRecord {
         return WifeDeathDate;
     }
 
-    String getWifePlace() {
-        return record.getWifeBirthPlace().toString();
+    String getWifeBirthPlace() {
+        if( record.getWifeBirthPlace() != null) {
+            return record.getWifeBirthPlace().toString();
+        } else {
+            return "";
+        }
     }
 
     String getWifeOccupation() {

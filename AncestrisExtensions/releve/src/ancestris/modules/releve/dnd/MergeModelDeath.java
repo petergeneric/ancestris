@@ -118,7 +118,7 @@ class MergeModelDeath extends MergeModel {
             addRow(RowType.IndiSex, record.getIndiSexString(), currentIndi.getPropertyValue("SEX"));
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiDeathDate, record.getIndiDeathDate() , currentIndi.getDeathDate());
-            addRow(RowType.IndiPlace, record.getIndiPlace(), currentIndi.getValue(new TagPath("INDI:DEAT:PLAC"), ""));
+            addRow(RowType.IndiPlace, record.getIndiBirthPlace(), currentIndi.getValue(new TagPath("INDI:DEAT:PLAC"), ""));
             addRow(RowType.EventComment, record.getEventComment(), currentIndi.getValue(new TagPath("INDI:DEAT:NOTE"), ""));
 
         } else {
@@ -137,7 +137,7 @@ class MergeModelDeath extends MergeModel {
             addRow(RowType.IndiSex, record.getIndiSexString(), "");
             addRow(RowType.IndiBirthDate, record.getIndiBirthDate() , null);
             addRow(RowType.IndiDeathDate, record.getIndiDeathDate() , null);
-            addRow(RowType.IndiPlace, record.getIndiPlace(), "");
+            addRow(RowType.IndiPlace, record.getIndiBirthPlace(), "");
             addRow(RowType.EventComment, record.getEventComment(), "");
         }
     }
@@ -310,7 +310,7 @@ class MergeModelDeath extends MergeModel {
 
             // je copie le lieu du deces
             if (isChecked(RowType.IndiPlace)) {
-                copyPlace(record.getIndiPlace(), deathProperty);
+                copyPlace(record.getIndiBirthPlace(), deathProperty);
             }
 
             // je copie le commentaire du deces
