@@ -139,28 +139,30 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 setForeground(list.getForeground());
             }
 
-
-            // same height for the both sides
-            int leftlinesCount = 1;
-            int rightlinesCount = 1;
-            if (index < leftPropertyListModel.getSize()) {
-                leftlinesCount = leftPropertyListModel.getElementAt(index).toString().length() / getColumns();
-                if (leftPropertyListModel.getElementAt(index).toString().length() % getColumns() > 0) {
-                    leftlinesCount += 1;
+            // try to catch arvernes pb
+            if (index >= 0) {
+                // same height for the both sides
+                int leftlinesCount = 1;
+                int rightlinesCount = 1;
+                if (index < leftPropertyListModel.getSize()) {
+                    leftlinesCount = leftPropertyListModel.getElementAt(index).toString().length() / getColumns();
+                    if (leftPropertyListModel.getElementAt(index).toString().length() % getColumns() > 0) {
+                        leftlinesCount += 1;
+                    }
                 }
-            }
-            if (index < rightPropertyListModel.getSize()) {
-                rightlinesCount = rightPropertyListModel.getElementAt(index).toString().length() / getColumns();
-                if (rightPropertyListModel.getElementAt(index).toString().length() % getColumns() > 0) {
-                    rightlinesCount += 1;
+                if (index < rightPropertyListModel.getSize()) {
+                    rightlinesCount = rightPropertyListModel.getElementAt(index).toString().length() / getColumns();
+                    if (rightPropertyListModel.getElementAt(index).toString().length() % getColumns() > 0) {
+                        rightlinesCount += 1;
+                    }
                 }
+                setRows(Math.max(leftlinesCount, rightlinesCount));
+            } else {
+                System.out.println("Negative index");
             }
-            setRows(Math.max(leftlinesCount, rightlinesCount));
 
             //Set the text.
-            if (index < list.getModel().getSize()) {
-                setText(list.getModel().getElementAt(index).toString());
-            }
+            setText(value.toString());
 
             return this;
         }
