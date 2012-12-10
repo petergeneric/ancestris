@@ -139,30 +139,33 @@ public class PropertiesDiffPanel extends javax.swing.JPanel {
                 setForeground(list.getForeground());
             }
 
-            // try to catch arvernes pb
-            if (index >= 0) {
-                // same height for the both sides
-                int leftlinesCount = 1;
-                int rightlinesCount = 1;
-                if (index < leftPropertyListModel.getSize()) {
+            // same height for the both sides
+            int leftlinesCount = 1;
+            int rightlinesCount = 1;
+            if (index < leftPropertyListModel.getSize()) {
+                if (leftPropertyListModel.getElementAt(index) != null) {
                     leftlinesCount = leftPropertyListModel.getElementAt(index).toString().length() / getColumns();
                     if (leftPropertyListModel.getElementAt(index).toString().length() % getColumns() > 0) {
                         leftlinesCount += 1;
                     }
                 }
-                if (index < rightPropertyListModel.getSize()) {
+            }
+            if (index < rightPropertyListModel.getSize()) {
+                if (rightPropertyListModel.getElementAt(index) != null) {
                     rightlinesCount = rightPropertyListModel.getElementAt(index).toString().length() / getColumns();
                     if (rightPropertyListModel.getElementAt(index).toString().length() % getColumns() > 0) {
                         rightlinesCount += 1;
                     }
                 }
-                setRows(Math.max(leftlinesCount, rightlinesCount));
-            } else {
-                System.out.println("Negative index");
             }
+            setRows(Math.max(leftlinesCount, rightlinesCount));
 
             //Set the text.
-            setText(value.toString());
+            if (value != null) {
+                setText(value.toString());
+            } else {
+                setText("*");
+            }
 
             return this;
         }
