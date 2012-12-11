@@ -11,8 +11,9 @@
  */
 package org.openide.util;
 
+import ancestris.core.actions.CommonActions;
+import ancestris.core.actions.SubMenuAction;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -148,7 +148,7 @@ public class AUtilities {
      * <code>Lookup</code>.
      * This function is strictly equivalent to {@link Utilities.actionsToPopup}
      * except that it handle submenun entries in layer.xml files.
-     * 
+     *
      * Takes list of actions and for actions whic are instances of
      * <code>ContextAwareAction</code> creates and uses the context aware instance.
      * Then gets the action presenter or simple menu item for the action to the
@@ -320,58 +320,27 @@ public class AUtilities {
                     continue;
                 }
 
-                if (instanceObj instanceof JSeparator) {
-                    actions.add(null);
-                } else if (instanceObj instanceof Action) {
-                    actions.add((Action) instanceObj);
-                }
+                addActions(actions, instanceObj);
             }
         }
     }
 
-    private static class SubMenuAction
-            extends AbstractAction //    implements Presenter.Popup 
-    {
-
-        private List<Action> actions;
-
-        public SubMenuAction(String displayName) {
-            super(displayName);
+    private static void addActions(List<Action> actions, Object instanceObj) {
+        if (!CommonActions.NOOP.equals(instanceObj)) {
+            if (instanceObj instanceof JSeparator) {
+                actions.add(null);
+            } else if (instanceObj instanceof SubMenuAction) {
+                SubMenuAction smenu = (SubMenuAction) instanceObj;
+                if (!smenu.isSubmenuInContext()) {
+                    for (Action o : smenu.getActions()) {
+                        addActions(actions, o);
+                    }
+                } else {
+                    actions.add(smenu);
+                }
+            } else if (instanceObj instanceof Action) {
+                actions.add((Action) instanceObj);
+            }
         }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // this = submenu => do nothing
-        }
-
-        void setActions(List<Action> actions) {
-            this.actions = actions;
-        }
-
-        public List<Action> getActions() {
-            return actions;
-        }
-//        @Override
-//        public JMenuItem getPopupPresenter() {
-//            JMenu menu = new JMenu(this);
-//            for (Action a : actions) {
-//                menu.add(a);
-//            }
-//            JMenu menu = actionsToPopup(actions.toArray(new Action[0]));
-//            return menu;
-//            JPopupMenu popup = org.openide.util.Utilities.actionsToPopup(actions.toArray(new Action[0]),(Component)null);
-//            popup.getcgetSubElements()
-//                    menu.
-//            menu.setcpopup.getComponents()
-//            return popup;
-//            for (Component child : popup.getComponents()) {
-//                if (child instanceof JMenuItem) {
-//                    menu.add(child);
-//                } else if (child instanceof JSeparator){
-//                    menu.addSeparator();
-//                }
-//            }
-//            return menu;
-//        }
     }
 }
