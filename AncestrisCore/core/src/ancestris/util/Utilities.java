@@ -18,6 +18,7 @@ import genj.gedcom.TagPath;
 import java.awt.Image;
 import java.util.Collection;
 import java.util.Locale;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Utilities {
      * Helper to compare a string agains several words.
      *
      * @param text
-param pattern
+     * param pattern
      *
      * @return
      */
@@ -108,5 +109,26 @@ param pattern
             return prop.getImage(false).getImage();
         }
         return null;
+    }
+
+    /**
+     * Finds Gedcom object from context:
+     * <li/>either get Gedcom Object from context
+     * <li/>or find Gedcom by looking for Property.getGecom()
+     *
+     * @param lookup
+     *
+     * @return Gedcom object or null if none is found
+     */
+    static public Gedcom getGedcomFromContext(Lookup lookup) {
+
+        Gedcom gedcom = lookup.lookup(Gedcom.class);
+        if (gedcom == null) {
+            Property prop = lookup.lookup(Property.class);
+            if (prop != null) {
+                gedcom = prop.getGedcom();
+            }
+        }
+        return gedcom;
     }
 }

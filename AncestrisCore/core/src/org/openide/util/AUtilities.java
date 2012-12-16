@@ -44,10 +44,37 @@ import org.openide.util.lookup.Lookups;
  */
 public class AUtilities {
 
+    // Static members only
     private AUtilities() {
     }
 
+    private static List<JMenuItem> actionToMenuItems(Action action, Lookup context) {
+        List<JMenuItem> items = new ArrayList<JMenuItem>();
+        // switch to replacement action if there is some
+        if (action instanceof ContextAwareAction) {
+            Action contextAwareAction = ((ContextAwareAction) action).createContextAwareInstance(context);
+            if (contextAwareAction == null) {
+                Logger.getLogger(Utilities.class.getName()).log(Level.WARNING, "ContextAwareAction.createContextAwareInstance(context) returns null. That is illegal!" + " action={0}, context={1}", new Object[]{action, context});
+            } else {
+                action = contextAwareAction;
+            }
+        }
+        if (action instanceof SubMenuAction && !((SubMenuAction) action).isSubmenuInContext()) {
+            for (Action a : ((SubMenuAction) action).getActions()) {
+                items.addAll(actionToMenuItems(a, context));
+            }
+        } else {
+            items.add(actionToMenuItem(action, context));
+        }
+        return items;
+    }
+
     private static JMenuItem actionToMenuItem(Action action, Lookup context) {
+        //FIXME: quick fix. This function is called with action null parameter. This must not happen...
+        if (action == null) {
+            return null;
+        }
+
         // switch to replacement action if there is some
         if (action instanceof ContextAwareAction) {
             Action contextAwareAction = ((ContextAwareAction) action).createContextAwareInstance(context);
@@ -102,15 +129,17 @@ public class AUtilities {
 
         for (Action action : subMenu.getActions()) {
             if (action != null && counted.add(action)) {
-                JMenuItem item = actionToMenuItem(action, context);
-                if (item == null) {
+                List<JMenuItem> items = actionToMenuItems(action, context);
+                if (items == null || items.isEmpty()) {
                     continue;
                 }
-                for (Component c : ActionPresenterProvider.getDefault().convertComponents(item)) {
-                    if (c instanceof JSeparator) {
-                        components.add(null);
-                    } else {
-                        components.add(c);
+                for (JMenuItem item : items) {
+                    for (Component c : ActionPresenterProvider.getDefault().convertComponents(item)) {
+                        if (c instanceof JSeparator) {
+                            components.add(null);
+                        } else {
+                            components.add(c);
+                        }
                     }
                 }
             } else {
@@ -171,15 +200,17 @@ public class AUtilities {
 
         for (Action action : actions) {
             if (action != null && counted.add(action)) {
-                JMenuItem item = actionToMenuItem(action, context);
-                if (item == null) {
+                List<JMenuItem> items = actionToMenuItems(action, context);
+                if (items == null || items.isEmpty()) {
                     continue;
                 }
-                for (Component c : ActionPresenterProvider.getDefault().convertComponents(item)) {
-                    if (c instanceof JSeparator) {
-                        components.add(null);
-                    } else {
-                        components.add(c);
+                for (JMenuItem item : items) {
+                    for (Component c : ActionPresenterProvider.getDefault().convertComponents(item)) {
+                        if (c instanceof JSeparator) {
+                            components.add(null);
+                        } else {
+                            components.add(c);
+                        }
                     }
                 }
             } else {
