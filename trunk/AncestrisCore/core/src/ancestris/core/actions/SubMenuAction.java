@@ -25,6 +25,7 @@ import org.openide.util.Lookup;
  */
 public class SubMenuAction
         extends AbstractAction
+        // FIXME: we certainly don't need this implementation 
         implements ContextAwareAction {
 
     private List<Action> actions = new ArrayList<Action>(5);

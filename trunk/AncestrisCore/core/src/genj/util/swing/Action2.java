@@ -204,6 +204,10 @@ public class Action2 extends AbstractAction implements Presenter.Popup{
     return (Icon)super.getValue(KEY_ICON);
   }
 
+    public JMenuItem getPopupPresenter() {
+        return mh.createItem(this);
+    }
+  
   /** convenience factory */
   public static Action2 yes() {
     return new Constant(Action2.TXT_YES);
@@ -259,10 +263,6 @@ public class Action2 extends AbstractAction implements Presenter.Popup{
     return new Action2[]{ cancel() };
   }
 
-    public JMenuItem getPopupPresenter() {
-        return mh.createItem(this);
-    }
-  
   private static class Constant extends Action2 {
     private Constant(String txt) { super(txt); }
     public void actionPerformed(ActionEvent e) {};
