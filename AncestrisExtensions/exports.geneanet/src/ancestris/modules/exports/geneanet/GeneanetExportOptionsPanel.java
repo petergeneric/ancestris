@@ -50,8 +50,8 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
         jCheckBoxExportEvents = new javax.swing.JCheckBox();
         jCheckBoxExportRelations = new javax.swing.JCheckBox();
         jPanelFam = new javax.swing.JPanel();
-        jCheckBoxExportWeddingDetails = new javax.swing.JCheckBox();
         jCheckBoxExportDivorce = new javax.swing.JCheckBox();
+        jCheckBoxExportWeddingDetails = new javax.swing.JCheckBox();
 
         jPanelGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jPanelGeneral.border.title"))); // NOI18N
         jPanelGeneral.setMinimumSize(new java.awt.Dimension(526, 99));
@@ -95,7 +95,7 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
                     .addGroup(jPanelGeneralLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jCheckBoxLogEnable)))
-                .addContainerGap(174, Short.MAX_VALUE))
+                .addContainerGap(228, Short.MAX_VALUE))
         );
         jPanelGeneralLayout.setVerticalGroup(
             jPanelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,7 +132,7 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
                     .addComponent(jCheckBoxExportAlive)
                     .addComponent(jCheckBoxExportEvents)
                     .addComponent(jCheckBoxExportRelations))
-                .addContainerGap(177, Short.MAX_VALUE))
+                .addContainerGap(224, Short.MAX_VALUE))
         );
         jPanelIndisLayout.setVerticalGroup(
             jPanelIndisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,11 +147,12 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
         );
 
         jPanelFam.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jPanelFam.border.title"))); // NOI18N
-        jPanelFam.setMinimumSize(new java.awt.Dimension(526, 99));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxExportWeddingDetails, org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jCheckBoxExportWeddingDetails.text")); // NOI18N
+        jPanelFam.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelFam.setPreferredSize(new java.awt.Dimension(0, 0));
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxExportDivorce, org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jCheckBoxExportDivorce.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxExportWeddingDetails, org.openide.util.NbBundle.getMessage(GeneanetExportOptionsPanel.class, "GeneanetExportOptionsPanel.jCheckBoxExportWeddingDetails.text")); // NOI18N
 
         javax.swing.GroupLayout jPanelFamLayout = new javax.swing.GroupLayout(jPanelFam);
         jPanelFam.setLayout(jPanelFamLayout);
@@ -162,7 +163,7 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
                 .addGroup(jPanelFamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBoxExportWeddingDetails)
                     .addComponent(jCheckBoxExportDivorce))
-                .addContainerGap(320, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelFamLayout.setVerticalGroup(
             jPanelFamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,7 +181,7 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelGeneral, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelFam, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelFam, 0, 526, Short.MAX_VALUE)
                     .addComponent(jPanelIndis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -190,9 +191,9 @@ final class GeneanetExportOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jPanelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanelIndis, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanelFam, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelIndis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelFam, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
