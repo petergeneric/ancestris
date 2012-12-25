@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Ancestris">
     <folder name="Actions">
         <folder name="GedcomProperty">
             <folder name="properties">
@@ -20,6 +21,7 @@
                  <attr name="position" intvalue="1200"/>
             </folder>
         </folder>
+    </folder>
     </folder>
     <folder name="Loaders">
         <folder name="text">
