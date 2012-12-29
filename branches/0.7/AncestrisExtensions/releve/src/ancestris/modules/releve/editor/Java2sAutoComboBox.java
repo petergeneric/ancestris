@@ -13,7 +13,7 @@ public class Java2sAutoComboBox extends JComboBox {
       return (Java2sAutoTextField) editor;
     }
 
-    AutoTextFieldEditor(List list) {
+    AutoTextFieldEditor(List<String> list) {
       editor = new Java2sAutoTextField(list, Java2sAutoComboBox.this);
     }
 
@@ -29,7 +29,7 @@ public class Java2sAutoComboBox extends JComboBox {
 
   }
 
-  public Java2sAutoComboBox(List list) {
+  public Java2sAutoComboBox(List<String> list) {
     isFired = false;
     autoTextFieldEditor = new AutoTextFieldEditor(list);
     setEditable(true);
@@ -85,7 +85,7 @@ public class Java2sAutoComboBox extends JComboBox {
     return autoTextFieldEditor.getAutoTextFieldEditor().getDataList();
   }
 
-  public void setDataList(List list) {
+  public void setDataList(List<String> list) {
     isFired = true;
     Object selectedObject = getEditor().getItem();
     autoTextFieldEditor.getAutoTextFieldEditor().setDataList(list);

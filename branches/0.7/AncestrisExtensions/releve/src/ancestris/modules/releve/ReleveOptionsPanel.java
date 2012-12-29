@@ -92,6 +92,8 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jCheckBoxGedcomCompletion = new javax.swing.JCheckBox();
         copyFreeComment = new javax.swing.JCheckBox();
         jButtonActivateDnd = new javax.swing.JButton();
+        jButtonLastNameCompletion = new javax.swing.JButton();
+        jButtonFirstNameCompletion = new javax.swing.JButton();
         fillerPanelHorizontal = new javax.swing.JPanel();
         fillerPanelVertical = new javax.swing.JPanel();
 
@@ -176,6 +178,28 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         OptionsPanel.add(jButtonActivateDnd, gridBagConstraints);
 
+        jButtonLastNameCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonLastNameCompletion.text")); // NOI18N
+        jButtonLastNameCompletion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLastNameCompletionActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        OptionsPanel.add(jButtonLastNameCompletion, gridBagConstraints);
+
+        jButtonFirstNameCompletion.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonFirstNameCompletion.text")); // NOI18N
+        jButtonFirstNameCompletion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFirstNameCompletionActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        OptionsPanel.add(jButtonFirstNameCompletion, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -224,11 +248,8 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private void jCheckBoxGedcomCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxGedcomCompletionActionPerformed
         // je notifie les composants pour rafraichir les options
         for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
-            if (jCheckBoxGedcomCompletion.isSelected()) {
-                activateDndWithTreeView();
-            } 
+                tc.getDataManager().loadOptions();
         }
-
     }//GEN-LAST:event_jCheckBoxGedcomCompletionActionPerformed
 
     /**
@@ -238,6 +259,17 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private void jButtonActivateDndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActivateDndActionPerformed
         activateDndWithTreeView();
     }//GEN-LAST:event_jButtonActivateDndActionPerformed
+
+    private void jButtonLastNameCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLastNameCompletionActionPerformed
+        // TODO add your handling code here:
+        ReleveCompletionPanel.showLastNameCompletionPanel();
+
+    }//GEN-LAST:event_jButtonLastNameCompletionActionPerformed
+
+    private void jButtonFirstNameCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFirstNameCompletionActionPerformed
+        // TODO add your handling code here:
+        ReleveCompletionPanel.showFirstNameCompletionPanel();
+    }//GEN-LAST:event_jButtonFirstNameCompletionActionPerformed
 
     /**
      * charge le fichier de démo
@@ -257,6 +289,8 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JPanel fillerPanelHorizontal;
     private javax.swing.JPanel fillerPanelVertical;
     private javax.swing.JButton jButtonActivateDnd;
+    private javax.swing.JButton jButtonFirstNameCompletion;
+    private javax.swing.JButton jButtonLastNameCompletion;
     private javax.swing.JCheckBox jCheckBoxDuplicateRecord;
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;
     private javax.swing.JCheckBox jCheckBoxNewValueControl;

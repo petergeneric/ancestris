@@ -1,8 +1,12 @@
 package ancestris.modules.releve.model;
 
+import ancestris.app.App;
+import ancestris.explorer.GedcomExplorerTopComponent;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
 import genj.gedcom.Context;
 import java.util.ArrayList;
+import java.util.Collection;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
@@ -229,7 +233,9 @@ public class DataManager implements PlaceManager {
         valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
         boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
         if ( completion ) {
-            Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+            //Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+            //Context context = App.center.getSelectedContext(true);
+            Context context = getSelectedContext(true);
             if (context != null && context.getGedcom() != null) {
                 completionProvider.addGedcomCompletion(context.getGedcom());
             } else {
@@ -238,6 +244,23 @@ public class DataManager implements PlaceManager {
         } else {
              completionProvider.removeGedcomCompletion();
         }
+    }
+
+     //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
+    private Context getSelectedContext(boolean firstIfNoneSelected){
+        Collection<? extends Context> selected = Utilities.actionsGlobalContext().lookupAll(Context.class);
+
+        Context c;
+        if (selected.isEmpty())
+            c = GedcomExplorerTopComponent.getDefault().getContext();
+        else {
+            c = Utilities.actionsGlobalContext().lookup(Context.class);
+        }
+        if (!firstIfNoneSelected)
+            return c;
+        if (c!=null)
+            return c;
+        return GedcomDirectory.getInstance().getContext(0);
     }
 
     public boolean getDuplicateControlEnabled() {

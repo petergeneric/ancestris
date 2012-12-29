@@ -920,79 +920,90 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 recordModel.fieldChanged(record, bean.getField(), oldValue);
             }
 
-            // je mets a jour les statistiques des sexes/prénoms
+//            // je mets a jour les statistiques des sexes/prénoms
+//            switch (fieldType) {
+//                case indiFirstName :
+//                    if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
+//                        record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
+//                        refreshBeanField(FieldType.indiSex);
+//                    }
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
+//                    break;
+//                case indiSex :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiFirstName().getValue(), oldValue, record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
+//                    break;
+//                case indiMarriedFirstName :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString());
+//                    break;
+//                case indiFatherFirstName :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getIndiFatherFirstName().getValue(), FieldSex.MALE_STRING);
+//                    break;
+//                case indiMotherFirstName :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getIndiFirstName().getValue(), FieldSex.FEMALE_STRING);
+//                    break;
+//                case wifeFirstName :
+//                    if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
+//                        record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
+//                        refreshBeanField(FieldType.wifeSex);
+//                    }
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getValue(), record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
+//                    break;
+//                case wifeSex :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeFirstName().getValue(), oldValue, record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
+//                    break;
+//                case wifeMarriedFirstName :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getOppositeString(), record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString());
+//                    break;
+//                case wifeFatherFirstName :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getWifeFatherFirstName().getValue(),  FieldSex.MALE_STRING);
+//                    break;
+//                case wifeMotherFirstName :
+//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getWifeMotherFirstName().getValue(), FieldSex.FEMALE_STRING);
+//                    break;
+//            }
+
+
+            //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
+            // et les statistiques des sexes/prénoms
             switch (fieldType) {
+                //je mets à jour la completion des prénoms
                 case indiFirstName :
                     if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
                         record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
                         refreshBeanField(FieldType.indiSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
-                    break;
-                case indiSex :
-                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiFirstName().getValue(), oldValue, record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), record.getIndiSex().getValue(), oldValue, record.getIndiSex().getValue());
                     break;
                 case indiMarriedFirstName :
-//                    if ( record.getIndiMarriedFirstName() != null &&  !record.getIndiMarriedFirstName().isEmpty() && record.getIndiMarriedSex().getFirstNameSex() == FieldSex.UNKNOWN) {
-//                        record.getIndiMarriedSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiMarriedFirstName())) ;
-//                        refreshBeanField(fieldType.indiMarriedSex);
-//                    }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), record.getIndiSex().getOppositeString(), oldValue, record.getIndiSex().getOppositeString());
                     break;
-//                case indiMarriedSex :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiMarriedFirstName(), oldValue, record.getIndiMarriedFirstName(), record.getIndiMarriedSex().getValue());
-//                    break;
                 case indiFatherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getIndiFatherFirstName().getValue(), FieldSex.MALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case indiMotherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getIndiFirstName().getValue(), FieldSex.FEMALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case wifeFirstName :
                     if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
                         record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
                         refreshBeanField(FieldType.wifeSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getValue(), record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
-                    break;
-                case wifeSex :
-                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeFirstName().getValue(), oldValue, record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), record.getWifeSex().getValue(), oldValue, record.getWifeSex().getValue());
                     break;
                 case wifeMarriedFirstName :
-//                    if ( record.getWifeMarriedFirstName() != null &&  !record.getWifeMarriedFirstName().isEmpty() && record.getWifeMarriedSex().getFirstNameSex() == FieldSex.UNKNOWN) {
-//                        record.getWifeMarriedSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeMarriedFirstName())) ;
-//                        refreshBeanField(fieldType.wifeMarriedSex);
-//                    }
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getOppositeString(), record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), record.getWifeSex().getOppositeString(), oldValue, record.getWifeSex().getOppositeString());
                     break;
-//                case wifeMarriedSex :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeMarriedFirstName(), oldValue, record.getWifeMarriedFirstName(), record.getWifeMarriedSex().getValue());
-//                    break;
                 case wifeFatherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getWifeFatherFirstName().getValue(),  FieldSex.MALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case wifeMotherFirstName :
-                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getWifeMotherFirstName().getValue(), FieldSex.FEMALE_STRING);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), FieldSex.FEMALE_STRING, oldValue, FieldSex.FEMALE_STRING);
                     break;
-            }
-
-
-            //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
-            switch (fieldType) {
-                case indiFirstName :
-                case indiMarriedFirstName :
-                case indiFatherFirstName :
-                case indiMotherFirstName :
-                case wifeFirstName :
-                case wifeMarriedFirstName :
-                case wifeFatherFirstName :
-                case wifeMotherFirstName :
                 case witness1FirstName :
                 case witness2FirstName :
                 case witness3FirstName :
                 case witness4FirstName :
-                    //je mets à jour la completion des prénoms
-                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), oldValue);
+                    dataManager.getCompletionProvider().updateFirstName(bean.getBeanField().getField(), FieldSex.UNKNOWN_STRING, oldValue, FieldSex.UNKNOWN_STRING);
                     break;
                 case indiLastName :
                 case indiMarriedLastName :

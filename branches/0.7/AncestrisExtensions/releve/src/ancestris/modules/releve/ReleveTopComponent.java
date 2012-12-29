@@ -236,7 +236,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } 
         }       
 
-        // j'active le DnD avec ler Treeview
+        // j'active le DnD avec les Treeview deja ouverts
         for (TreeTopComponent tc : AncestrisPlugin.lookupAll(TreeTopComponent.class)) {
             TreeView view = (TreeView) tc.getView();
             TreeViewDropTarget viewDropTarget = new TreeViewDropTarget();
@@ -260,14 +260,17 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
 
         if (result) {
-             // sauvegarde la largeur des colonnes
-            // remarque : Netbeans n'appelle pas componentClosed() quand on ferme 
-            // L'application ancestris, j'aoute donc l'enregistrement des preferences ici.
+            // Remarque : j'ajoute donc l'enregistrement des preferences ici 
+            // car Netbeans n'appelle pas componentClosed() quand on ferme 
+            // l'application ancestris.
+            
+            // Chaque panel sauvegarde la largeur des colonnes
             panelBirth.componentClosed();
             panelMarriage.componentClosed();
             panelDeath.componentClosed();
             panelMisc.componentClosed();
             panelAll.componentClosed();
+            
             // j'enregistre le nom du fichier courant
             if (currentFile != null) {
                 NbPreferences.forModule(ReleveTopComponent.class).put(
