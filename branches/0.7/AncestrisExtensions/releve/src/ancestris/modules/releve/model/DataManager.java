@@ -420,7 +420,7 @@ public class DataManager implements PlaceManager {
                !country.equals(this.place.getCountryName())
           )
        {
-           this.place.setCityCode(cityName);
+           this.place.setCityName(cityName);
            this.place.setCityCode(cityCode);
            this.place.setCountyName(county);
            this.place.setStateName(state);

@@ -920,49 +920,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
                 recordModel.fieldChanged(record, bean.getField(), oldValue);
             }
 
-//            // je mets a jour les statistiques des sexes/prénoms
-//            switch (fieldType) {
-//                case indiFirstName :
-//                    if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
-//                        record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
-//                        refreshBeanField(FieldType.indiSex);
-//                    }
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
-//                    break;
-//                case indiSex :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getIndiFirstName().getValue(), oldValue, record.getIndiFirstName().getValue(), record.getIndiSex().getValue());
-//                    break;
-//                case indiMarriedFirstName :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getIndiSex().getValue(), record.getIndiMarriedFirstName().getValue(), record.getIndiSex().getOppositeString());
-//                    break;
-//                case indiFatherFirstName :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getIndiFatherFirstName().getValue(), FieldSex.MALE_STRING);
-//                    break;
-//                case indiMotherFirstName :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getIndiFirstName().getValue(), FieldSex.FEMALE_STRING);
-//                    break;
-//                case wifeFirstName :
-//                    if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
-//                        record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
-//                        refreshBeanField(FieldType.wifeSex);
-//                    }
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getValue(), record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
-//                    break;
-//                case wifeSex :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(record.getWifeFirstName().getValue(), oldValue, record.getWifeFirstName().getValue(), record.getWifeSex().getValue());
-//                    break;
-//                case wifeMarriedFirstName :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, record.getWifeSex().getOppositeString(), record.getWifeMarriedFirstName().getValue(), record.getWifeSex().getOppositeString());
-//                    break;
-//                case wifeFatherFirstName :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.MALE_STRING, record.getWifeFatherFirstName().getValue(),  FieldSex.MALE_STRING);
-//                    break;
-//                case wifeMotherFirstName :
-//                    dataManager.getCompletionProvider().updateFirstNameSex(oldValue, FieldSex.FEMALE_STRING, record.getWifeMotherFirstName().getValue(), FieldSex.FEMALE_STRING);
-//                    break;
-//            }
-
-
             //je mets à jour la liste de completion des noms, prénoms, professions et type d'évènements
             // et les statistiques des sexes/prénoms
             switch (fieldType) {
@@ -1043,6 +1000,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, R
 
             // Si l'utilisateur vient de changer la date ou le nom de l'individu
             // je vérifie s'il y a un nouveau doublon.
+            // et j'affiche un message d'avertissement si un doublon existe
             if ( fieldType.equals(Field.FieldType.eventDate)
                 ||fieldType.equals(Field.FieldType.indiFirstName)
                 ||fieldType.equals(Field.FieldType.indiLastName) ) {

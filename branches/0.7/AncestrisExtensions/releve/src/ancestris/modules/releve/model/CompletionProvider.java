@@ -16,8 +16,8 @@ public class CompletionProvider implements GedcomFileListener {
     Gedcom completionGedcom;
     private FirstNameCompletionSet firstNames = new FirstNameCompletionSet();
     private LastNameCompletionSet lastNames = new LastNameCompletionSet();
-    private CompletionSet<Field> occupations = new CompletionSet<Field>();
-    private CompletionSet<Field> places = new CompletionSet<Field>();
+    private OccupationCompletionSet occupations = new OccupationCompletionSet();
+    private PlaceCompletionSet places = new PlaceCompletionSet();
     private CompletionSet<Field> eventTypes = new CompletionSet<Field>();
 
     private HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
@@ -25,7 +25,9 @@ public class CompletionProvider implements GedcomFileListener {
 
     public static enum CompletionType {
         firstName,
-        lastName
+        lastName,
+        occupation,
+        place
     }
 
     // Register in ancestris lookup for GedcomFileListener
@@ -79,60 +81,35 @@ public class CompletionProvider implements GedcomFileListener {
         lastNames.add(record.getWitness4LastName());
         
         // Indi Occupation
-        if ( record.getIndiOccupation()!= null && record.getIndiOccupation().isEmpty()==false) {
-            occupations.add(record.getIndiOccupation().getValue(), record.getIndiOccupation());
-        }
-        if ( record.getIndiMarriedOccupation()!= null && record.getIndiMarriedOccupation().isEmpty()==false) {
-            occupations.add(record.getIndiMarriedOccupation().getValue(), record.getIndiMarriedOccupation());
-        }
-        if ( record.getIndiFatherOccupation()!= null && record.getIndiFatherOccupation().isEmpty()==false) {
-            occupations.add(record.getIndiFatherOccupation().getValue(), record.getIndiFatherOccupation());
-        }
-        if ( record.getIndiMotherOccupation()!= null && record.getIndiMotherOccupation().isEmpty()==false) {
-            occupations.add(record.getIndiMotherOccupation().getValue(), record.getIndiMotherOccupation());
-        }
-        // wife Occupation
-        if ( record.getWifeOccupation()!= null && record.getWifeOccupation().isEmpty()==false) {
-            occupations.add(record.getWifeOccupation().getValue(), record.getWifeOccupation());
-        }
-        if ( record.getWifeMarriedOccupation()!= null && record.getWifeMarriedOccupation().isEmpty()==false) {
-            occupations.add(record.getWifeMarriedOccupation().getValue(), record.getWifeMarriedOccupation());
-        }
-        if ( record.getWifeFatherOccupation()!= null && record.getWifeFatherOccupation().isEmpty()==false) {
-            occupations.add(record.getWifeFatherOccupation().getValue(), record.getWifeFatherOccupation());
-        }
-        if ( record.getWifeMotherOccupation()!= null && record.getWifeMotherOccupation().isEmpty()==false) {
-            occupations.add(record.getWifeMotherOccupation().getValue(), record.getWifeMotherOccupation());
-        }
-
+        occupations.add(record.getIndiOccupation());
+        occupations.add(record.getIndiMarriedOccupation());
+        occupations.add(record.getIndiFatherOccupation());
+        occupations.add(record.getIndiMotherOccupation());
+        // Wife Occupation
+        occupations.add(record.getWifeOccupation());
+        occupations.add(record.getWifeMarriedOccupation());
+        occupations.add(record.getWifeFatherOccupation());
+        occupations.add(record.getWifeMotherOccupation());
         // witness Occupation
-        if ( record.getWitness1Occupation()!= null && record.getWitness1Occupation().isEmpty()==false) {
-            occupations.add(record.getWitness1Occupation().getValue(), record.getWitness1Occupation());
-        }
-        if ( record.getWitness2Occupation()!= null && record.getWitness2Occupation().isEmpty()==false) {
-            occupations.add(record.getWitness2Occupation().getValue(), record.getWitness2Occupation());
-        }
-        if ( record.getWitness3Occupation()!= null && record.getWitness3Occupation().isEmpty()==false) {
-            occupations.add(record.getWitness3Occupation().getValue(), record.getWitness3Occupation());
-        }
-        if ( record.getWitness4Occupation()!= null && record.getWitness4Occupation().isEmpty()==false) {
-            occupations.add(record.getWitness4Occupation().getValue(), record.getWitness4Occupation());
-        }
+        occupations.add(record.getWitness1Occupation());
+        occupations.add(record.getWitness2Occupation());
+        occupations.add(record.getWitness3Occupation());
+        occupations.add(record.getWitness4Occupation());
 
-        // EventPlace
-        if ( record.getEventPlace()!= null && record.getEventPlace().isEmpty()== false) {
-            places.add(record.getEventPlace().getValue(), record.getEventPlace());
-        }
+        // places
+        places.add(record.getEventPlace());
 
-        // IndiPlace
-        if ( record.getIndiBirthPlace()!= null && record.getIndiBirthPlace().isEmpty()== false) {
-            places.add(record.getIndiBirthPlace().getValue(), record.getIndiBirthPlace());
-        }
+        places.add(record.getIndiBirthPlace());
+        places.add(record.getIndiResidence());
+        places.add(record.getIndiMarriedResidence());
+        places.add(record.getIndiFatherResidence());
+        places.add(record.getIndiMotherResidence());
 
-        // WifePlace
-        if ( record.getWifeBirthPlace()!= null && record.getWifeBirthPlace().isEmpty()== false) {
-            places.add(record.getWifeBirthPlace().getValue(), record.getWifeBirthPlace());
-        }
+        places.add(record.getWifeBirthPlace());
+        places.add(record.getWifeResidence());
+        places.add(record.getWifeMarriedResidence());
+        places.add(record.getWifeFatherResidence());
+        places.add(record.getWifeMotherResidence());
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
@@ -189,60 +166,38 @@ public class CompletionProvider implements GedcomFileListener {
         lastNames.remove(record.getWitness4LastName());
         
         // Indi Occupation
-        if ( record.getIndiOccupation()!= null && record.getIndiOccupation().isEmpty()==false) {
-            occupations.remove(record.getIndiOccupation().getValue(), record.getIndiOccupation());
-        }
-        if ( record.getIndiMarriedOccupation()!= null && record.getIndiMarriedOccupation().isEmpty()==false) {
-            occupations.remove(record.getIndiMarriedOccupation().getValue(), record.getIndiMarriedOccupation());
-        }
-        if ( record.getIndiFatherOccupation()!= null && record.getIndiFatherOccupation().isEmpty()==false) {
-            occupations.remove(record.getIndiFatherOccupation().getValue(), record.getIndiFatherOccupation());
-        }
-        if ( record.getIndiMotherOccupation()!= null && record.getIndiMotherOccupation().isEmpty()==false) {
-            occupations.remove(record.getIndiMotherOccupation().getValue(), record.getIndiMotherOccupation());
-        }
-        // wife Occupation
-        if ( record.getWifeOccupation()!= null && record.getWifeOccupation().isEmpty()==false) {
-            occupations.remove(record.getWifeOccupation().getValue(), record.getWifeOccupation());
-        }
-        if ( record.getWifeMarriedOccupation()!= null && record.getWifeMarriedOccupation().isEmpty()==false) {
-            occupations.remove(record.getWifeMarriedOccupation().getValue(), record.getWifeMarriedOccupation());
-        }
-        if ( record.getWifeFatherOccupation()!= null && record.getWifeFatherOccupation().isEmpty()==false) {
-            occupations.remove(record.getWifeFatherOccupation().getValue(), record.getWifeFatherOccupation());
-        }
-        if ( record.getWifeMotherOccupation()!= null && record.getWifeMotherOccupation().isEmpty()==false) {
-            occupations.remove(record.getWifeMotherOccupation().getValue(), record.getWifeMotherOccupation());
-        }
-
+        occupations.remove(record.getIndiOccupation());
+        // Indi Occupation
+        occupations.remove(record.getIndiOccupation());
+        occupations.remove(record.getIndiMarriedOccupation());
+        occupations.remove(record.getIndiFatherOccupation());
+        occupations.remove(record.getIndiMotherOccupation());
+        // Wife Occupation
+        occupations.remove(record.getWifeOccupation());
+        occupations.remove(record.getWifeMarriedOccupation());
+        occupations.remove(record.getWifeFatherOccupation());
+        occupations.remove(record.getWifeMotherOccupation());
         // witness Occupation
-        if ( record.getWitness1Occupation()!= null && record.getWitness1Occupation().isEmpty()==false) {
-            occupations.remove(record.getWitness1Occupation().getValue(), record.getWitness1Occupation());
-        }
-        if ( record.getWitness2Occupation()!= null && record.getWitness2Occupation().isEmpty()==false) {
-            occupations.remove(record.getWitness2Occupation().getValue(), record.getWitness2Occupation());
-        }
-        if ( record.getWitness3Occupation()!= null && record.getWitness3Occupation().isEmpty()==false) {
-            occupations.remove(record.getWitness3Occupation().getValue(), record.getWitness3Occupation());
-        }
-        if ( record.getWitness4Occupation()!= null && record.getWitness4Occupation().isEmpty()==false) {
-            occupations.remove(record.getWitness4Occupation().getValue(), record.getWitness4Occupation());
-        }
-
+        occupations.remove(record.getWitness1Occupation());
+        occupations.remove(record.getWitness2Occupation());
+        occupations.remove(record.getWitness3Occupation());
+        occupations.remove(record.getWitness4Occupation());
+        
+        // places
         // EventPlace
-        if ( record.getEventPlace()!= null && record.getEventPlace().isEmpty()== false) {
-            places.remove(record.getEventPlace().getValue(), record.getEventPlace());
-        }
-
-        // IndiPlace
-        if ( record.getIndiBirthPlace()!= null && record.getIndiBirthPlace().isEmpty()== false) {
-            places.remove(record.getIndiBirthPlace().getValue(), record.getIndiBirthPlace());
-        }
-
-        // WifePlace
-        if ( record.getWifeBirthPlace()!= null && record.getWifeBirthPlace().isEmpty()== false) {
-            places.remove(record.getWifeBirthPlace().getValue(), record.getWifeBirthPlace());
-        }
+        places.remove(record.getEventPlace());
+        //Indi places
+        places.remove(record.getIndiBirthPlace());
+        places.remove(record.getIndiResidence());
+        places.remove(record.getIndiMarriedResidence());
+        places.remove(record.getIndiFatherResidence());
+        places.remove(record.getIndiMotherResidence());
+        // wife places
+        places.remove(record.getWifeBirthPlace());
+        places.remove(record.getWifeResidence());
+        places.remove(record.getWifeMarriedResidence());
+        places.remove(record.getWifeFatherResidence());
+        places.remove(record.getWifeMotherResidence());
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
@@ -360,10 +315,10 @@ public class CompletionProvider implements GedcomFileListener {
             lastNames.addGedcom(gedcomField, lastName);
         }
         for ( String occupation : PropertyChoiceValue.getChoices(gedcom, "OCCU", false)) {
-            occupations.add(occupation, gedcomField, false);
+            occupations.addGedcom(gedcomField, occupation);
         }
         for ( String place : PropertyChoiceValue.getChoices(gedcom, "PLAC", false)) {
-            places.add(place, gedcomField, false);
+            places.addGedcom(gedcomField, place);
         }
 
         firstNames.fireListener();
@@ -409,10 +364,10 @@ public class CompletionProvider implements GedcomFileListener {
             lastNames.remove(gedcomField, lastName, false);
         }
         for ( String occupation : occupations.getKeys()) {
-            occupations.remove(occupation, gedcomField,false);
+            occupations.removeGedcom(gedcomField, occupation);
         }
         for ( String place : places.getKeys()) {
-            places.remove(place, gedcomField,false);
+            places.removeGedcom(gedcomField, place);
         }
 
         firstNames.fireListener();
@@ -631,19 +586,19 @@ public class CompletionProvider implements GedcomFileListener {
 
     public void updateOccupation(Field field, String oldValue) {
         if (oldValue != null && ! oldValue.isEmpty()) {
-            occupations.remove(oldValue, field);
+            occupations.remove(field, oldValue);
         }
         if ( field.toString().isEmpty()==false) {
-            occupations.add(field.toString(), field);
+            occupations.add(field);
         }
     }
 
     public void updatePlaces(Field field, String oldValue) {
         if (oldValue != null && ! oldValue.isEmpty()) {
-            places.remove(oldValue, field);
+            places.remove(field, oldValue);
         }
         if ( field.toString().isEmpty()==false) {
-            places.add(field.toString(), field);
+            places.add(field);
         }
     }
 
@@ -661,6 +616,8 @@ public class CompletionProvider implements GedcomFileListener {
     ///////////////////////////////////////////////////////////////////////////
     static final private String ExcludedFirstNameList = "ExcludedFirstNameList";
     static final private String ExcludedLastNameList = "ExcludedLastNameList";
+    static final private String ExcludedOccupationList = "ExcludedOccupationList";
+    static final private String ExcludedPlaceList = "ExcludedPlaceList";
 
     static public List<String> loadExcludeCompletion(CompletionType completionType) {
         ArrayList<String> excluded = new ArrayList<String>();
@@ -672,6 +629,12 @@ public class CompletionProvider implements GedcomFileListener {
                break;
             case lastName:
                preferenceList = ExcludedLastNameList;
+               break;
+            case occupation:
+               preferenceList = ExcludedOccupationList;
+               break;
+            case place:
+               preferenceList = ExcludedPlaceList;
                break;
             default:
                return excluded;
@@ -709,7 +672,12 @@ public class CompletionProvider implements GedcomFileListener {
             case lastName:
                preferenceList = ExcludedLastNameList;
                break;
-            default:
+            case occupation:
+               preferenceList = ExcludedOccupationList;
+               break;
+            case place:
+               preferenceList = ExcludedPlaceList;
+               break;default:
                return;
         }
         for (Iterator<String> it = excludeList.iterator(); it.hasNext(); ) {
@@ -729,10 +697,16 @@ public class CompletionProvider implements GedcomFileListener {
     public void refreshExcludeCompletion(CompletionType completionType) {
         switch( completionType ) {
             case firstName:
-               lastNames.loadExclude();
+               firstNames.loadExclude();
                break;
             case lastName:
-               //firstNames.loadExclude();
+               lastNames.loadExclude();
+               break;
+            case occupation:
+               //occupations.loadExclude();
+               break;
+            case place:
+               places.loadExclude();
                break;
             default:
                return;
@@ -894,6 +868,120 @@ public class CompletionProvider implements GedcomFileListener {
         private void remove(Field lastNameField, String oldLastName, boolean fireListeners) {
             if (oldLastName != null && lastNameField != null) {
                 super.remove(oldLastName, lastNameField, fireListeners);
+            }
+        }
+
+        @Override
+        public void removeAll() {
+            super.removeAll();
+        }
+    }
+
+
+    /**
+     * Liste contenant les lieux avec les "Field" ou ils sont utilises
+     */
+    private class OccupationCompletionSet extends CompletionSet<Field> {
+        private List<String> excluded = new ArrayList<String>();
+
+        public OccupationCompletionSet() {
+            loadExclude();
+        }
+
+        /**
+         * charge les valeurs a exclure
+         */
+        private void loadExclude() {
+            excluded = loadExcludeCompletion(CompletionType.occupation);
+            fireListener();
+        }
+
+        public void add( Field occupationField) {
+            if ( occupationField != null && occupationField.isEmpty()==false && !excluded.contains(occupationField.toString())) {
+                super.add(occupationField.toString(), occupationField, true);
+            }
+        }
+
+        public void addGedcom( Field occupationField, String occupationValue) {
+            if ( occupationField != null && occupationField.isEmpty()==false && !excluded.contains(occupationValue.toString())) {
+                super.add(occupationValue, occupationField, false);
+            }
+        }
+
+        public void remove(Field occupationField) {
+            if (occupationField != null) {
+                remove(occupationField, occupationField.toString(), true);
+            }
+        }
+
+        public void remove(Field occupationField, String oldOccupationValue ) {
+            remove(occupationField, oldOccupationValue, true );
+        }
+
+        public void removeGedcom(Field occupationField, String oldOccupationValue ) {
+            remove(occupationField, oldOccupationValue, false );
+        }
+
+        private void remove(Field occupationField, String oldOccupationValue, boolean fireListeners) {
+            if (oldOccupationValue != null && occupationField != null) {
+                super.remove(oldOccupationValue, occupationField, fireListeners);
+            }
+        }
+
+        @Override
+        public void removeAll() {
+            super.removeAll();
+        }
+    }
+
+
+    /**
+     * Liste contenant les lieux avec les "Field" ou ils sont utilises
+     */
+    private class PlaceCompletionSet extends CompletionSet<Field> {
+        private List<String> excluded = new ArrayList<String>();
+
+        public PlaceCompletionSet() {
+            loadExclude();
+        }
+
+        /**
+         * charge les valeurs a exclure
+         */
+        private void loadExclude() {
+            excluded = loadExcludeCompletion(CompletionType.place);
+            fireListener();
+        }
+
+        public void add( Field placeField) {
+            if ( placeField != null && placeField.isEmpty()==false && !excluded.contains(placeField.toString())) {
+                super.add(placeField.toString(), placeField, true);
+            }
+        }
+
+        public void addGedcom( Field placeField, String placeValue) {
+            if ( placeField != null && placeField.isEmpty()==false && !excluded.contains(placeValue.toString())) {
+                super.add(placeValue, placeField, false);
+            }
+        }
+
+        public void remove(Field placeField) {
+            if (placeField != null) {
+                remove(placeField, placeField.toString(), true);
+            }
+        }
+
+        public void remove(Field placeField, String oldPlaceValue ) {
+            remove(placeField, oldPlaceValue, true );
+        }
+
+        public void removeGedcom(Field placeField, String oldPlaceValue ) {
+            remove(placeField, oldPlaceValue, false );
+        }
+
+        private void remove(Field placeField, String oldPlaceValue, boolean fireListeners) {
+            if (oldPlaceValue != null && placeField != null) {
+                super.remove(oldPlaceValue, placeField, fireListeners);
             }
         }
 
