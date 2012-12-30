@@ -190,15 +190,6 @@ public class FamilyGroups {
 
             // Print sorted list of groups
             doc.startTable("width=100%, border=1");
-            doc.addTableColumn("column-width=10%");
-            doc.addTableColumn("column-width=10%");
-            doc.addTableColumn("column-width=80%");
-            doc.nextTableRow("font-weight=bold");
-            doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count"));
-            doc.nextTableCell();
-            doc.addText("ID");
-            doc.nextTableCell();
-            doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
 
             int grandtotal = 0;
             int loners = 0;
@@ -212,26 +203,64 @@ public class FamilyGroups {
                     loners += tree.size();
                 } else {
                     if (tree.size() < getMaxGroupSize()) {
-
-                        String prefix = "" + tree.size();
-                        Iterator <Indi>it = tree.iterator();
+                        doc.nextTableRow("font-weight=bold, bgcolor=grey");
+                        doc.nextTableCell("colspan=6, bgcolor=grey");
+                        doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
+                        doc.nextTableRow("font-weight=bold");
+                        doc.nextTableCell("colspan=2");
+                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
+                        doc.nextTableCell("colspan=2");
+                        doc.addText("Family Child");
+                        doc.nextTableCell("colspan=2");
+                        doc.addText("Family spouse");
+                        Iterator<Indi> it = tree.iterator();
                         while (it.hasNext()) {
                             Indi indi = it.next();
 
                             doc.nextTableRow();
-                            doc.addText(prefix);
                             doc.nextTableCell();
                             doc.addLink(indi.getId(), indi.getAnchor());
                             doc.nextTableCell();
                             doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
-
-                            prefix = " ";
+                            Fam[] familiesWhereChild = indi.getFamiliesWhereChild();
+                            if (familiesWhereChild.length > 0) {
+                                for (Fam family : familiesWhereChild) {
+                                    doc.nextTableCell();
+                                    doc.addLink(family.getId(), family.getAnchor());
+                                    doc.nextTableCell();
+                                    doc.addText(family.getHusband() + " - " + family.getWife());
+                                }
+                            } else {
+                                doc.nextTableCell();
+                                doc.nextTableCell();
+                            }
+                            Fam[] familiesWhereSpouse = indi.getFamiliesWhereSpouse();
+                            if (familiesWhereSpouse.length > 0) {
+                                for (Fam family : familiesWhereSpouse) {
+                                    doc.nextTableCell();
+                                    doc.addLink(family.getId(), family.getAnchor());
+                                    doc.nextTableCell();
+                                    doc.addText(family.getHusband() + " - " + family.getWife());
+                                }
+                            } else {
+                                doc.nextTableCell();
+                                doc.nextTableCell();
+                            }
                         }
                     } else {
-                        Indi oldestIndividual = tree.getOldestIndividual();
+                        doc.nextTableRow("font-weight=bold, bgcolor=grey");
+                        doc.nextTableCell("colspan=6");
+                        doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
+                        doc.nextTableRow("font-weight=bold");
+                        doc.nextTableCell("colspan=2");
+                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
+                        doc.nextTableCell("colspan=2");
+                        doc.addText("Family Child");
+                        doc.nextTableCell("colspan=2");
+                        doc.addText("Family spouse");
                         doc.nextTableRow();
-                        doc.addText(String.format("%d", tree.size()));
                         doc.nextTableCell();
+                        Indi oldestIndividual = tree.getOldestIndividual();
                         doc.addLink(oldestIndividual.getId(), oldestIndividual.getAnchor());
                         doc.nextTableCell();
                         doc.addText(oldestIndividual.getName() + " (" + oldestIndividual.getBirthAsString() + " - " + oldestIndividual.getDeathAsString() + ")");
@@ -260,7 +289,7 @@ public class FamilyGroups {
     /**
      * Iterate over an individual who's part of a sub-tree
      */
-    private void iterate(Indi indi, Tree tree, Set <Indi>unvisited) {
+    private void iterate(Indi indi, Tree tree, Set<Indi> unvisited) {
         // individuals we need to check
         Stack<Indi> todos = new Stack<Indi>();
 
