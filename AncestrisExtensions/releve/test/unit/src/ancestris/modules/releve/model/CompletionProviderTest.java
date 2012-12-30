@@ -43,12 +43,14 @@ public class CompletionProviderTest extends TestCase {
             assertEquals("Nombre de prenoms",     7,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms",        6,  completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 6,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de lieux",       4,  completionProvider.getPlaces().size());
 
             completionProvider.removeRecord(record);
             assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms",        0,  completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
-
+            assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces().size());
+            
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail("GedcomException "+ ex.toString());
@@ -88,11 +90,13 @@ public class CompletionProviderTest extends TestCase {
             assertEquals("Nombre de prenoms",     12,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms",        12,  completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 12,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de lieux",       10,  completionProvider.getPlaces().size());
 
             completionProvider.removeRecord(record);
             assertEquals("Nombre de prenoms",     0,  completionProvider.getFirstNames().size());
             assertEquals("Nombre de noms",        0,  completionProvider.getLastNames().size());
             assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().size());
+            assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces().size());
 
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
