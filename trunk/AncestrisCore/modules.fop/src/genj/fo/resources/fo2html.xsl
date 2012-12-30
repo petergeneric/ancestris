@@ -263,6 +263,7 @@
                     <xsl:value-of select="@border"/>
                 </xsl:attribute>
             </xsl:if>
+            &add-style;
             <xsl:apply-templates/>
         </table>
     </xsl:template>
@@ -297,6 +298,11 @@
 
     <xsl:template match="fo:table-row">
         <tr>
+            <xsl:if test="@bgcolor">
+                <xsl:attribute name="bgcolor">
+                    <xsl:value-of select="@bgcolor"/>
+                </xsl:attribute>
+            </xsl:if>                 
             <xsl:apply-templates mode="display"/>
         </tr>
     </xsl:template>
@@ -308,6 +314,16 @@
                     <xsl:value-of select="@colspan"/>
                 </xsl:attribute>
             </xsl:if>
+            <xsl:if test="@rowspan">
+                <xsl:attribute name="rowspan">
+                    <xsl:value-of select="@rowspan"/>
+                </xsl:attribute>
+            </xsl:if>            
+            <xsl:if test="@bgcolor">
+                <xsl:attribute name="bgcolor">
+                    <xsl:value-of select="@bgcolor"/>
+                </xsl:attribute>
+            </xsl:if>                 
             <xsl:if test="not(@display-align)">
                 <xsl:attribute name="valign">top</xsl:attribute>
             </xsl:if>
