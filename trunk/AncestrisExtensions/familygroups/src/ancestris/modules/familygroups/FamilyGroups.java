@@ -2,21 +2,9 @@ package ancestris.modules.familygroups;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.fo.Document;
-import genj.gedcom.Context;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyXRef;
+import genj.gedcom.*;
 import genj.io.Filter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -188,8 +176,6 @@ public class FamilyGroups {
 
             filters = new ArrayList<FamilyGroupFilter>(10);
 
-            // Print sorted list of groups
-            doc.startTable("width=100%, border=1");
 
             int grandtotal = 0;
             int loners = 0;
@@ -202,83 +188,82 @@ public class FamilyGroups {
                 if (tree.size() < getMinGroupSize()) {
                     loners += tree.size();
                 } else {
+
+                    doc.nextParagraph("font-size=1.25em,line-height=200%");
+                    doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
+                    doc.nextParagraph();
+                    doc.startTable("width=100%, border=1");
+                    doc.nextTableRow("font-weight=bold");
+                    doc.nextTableCell("colspan=2, width=34%");
+                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
+                    doc.nextTableCell("colspan=2, width=33%");
+                    doc.addText("Family Child");
+                    doc.nextTableCell("colspan=2, width=33%");
+                    doc.addText("Family spouse");
+
                     if (tree.size() < getMaxGroupSize()) {
-                        doc.nextTableRow("font-weight=bold, bgcolor=grey");
-                        doc.nextTableCell("colspan=6, bgcolor=grey");
-                        doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
-                        doc.nextTableRow("font-weight=bold");
-                        doc.nextTableCell("colspan=2");
-                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
-                        doc.nextTableCell("colspan=2");
-                        doc.addText("Family Child");
-                        doc.nextTableCell("colspan=2");
-                        doc.addText("Family spouse");
+                        // Print sorted list of groups
                         Iterator<Indi> it = tree.iterator();
                         while (it.hasNext()) {
                             Indi indi = it.next();
 
                             doc.nextTableRow();
-                            doc.nextTableCell();
+                            doc.nextTableCell("width=4%");
                             doc.addLink(indi.getId(), indi.getAnchor());
-                            doc.nextTableCell();
+                            doc.nextTableCell("width=30%");
                             doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
                             Fam[] familiesWhereChild = indi.getFamiliesWhereChild();
                             if (familiesWhereChild.length > 0) {
                                 for (Fam family : familiesWhereChild) {
-                                    doc.nextTableCell();
+                                    doc.nextTableCell("width=4%");
                                     doc.addLink(family.getId(), family.getAnchor());
-                                    doc.nextTableCell();
+                                    doc.nextTableCell("width=29%");
                                     doc.addText(family.getHusband() + " - " + family.getWife());
                                 }
                             } else {
-                                doc.nextTableCell();
-                                doc.nextTableCell();
+                                doc.nextTableCell("width=4%");
+                                doc.nextTableCell("width=29%");
                             }
                             Fam[] familiesWhereSpouse = indi.getFamiliesWhereSpouse();
                             if (familiesWhereSpouse.length > 0) {
                                 for (Fam family : familiesWhereSpouse) {
-                                    doc.nextTableCell();
+                                    doc.nextTableCell("width=4%");
                                     doc.addLink(family.getId(), family.getAnchor());
-                                    doc.nextTableCell();
+                                    doc.nextTableCell("width=29%");
                                     doc.addText(family.getHusband() + " - " + family.getWife());
                                 }
                             } else {
-                                doc.nextTableCell();
-                                doc.nextTableCell();
+                                doc.nextTableCell("width=4%");
+                                doc.nextTableCell("width=29%");
                             }
                         }
                     } else {
-                        doc.nextTableRow("font-weight=bold, bgcolor=grey");
-                        doc.nextTableCell("colspan=6");
-                        doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
-                        doc.nextTableRow("font-weight=bold");
-                        doc.nextTableCell("colspan=2");
-                        doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
-                        doc.nextTableCell("colspan=2");
-                        doc.addText("Family Child");
-                        doc.nextTableCell("colspan=2");
-                        doc.addText("Family spouse");
+                        // Print sorted list of groups
                         doc.nextTableRow();
-                        doc.nextTableCell();
+                        doc.nextTableCell("width=4%");
                         Indi oldestIndividual = tree.getOldestIndividual();
                         doc.addLink(oldestIndividual.getId(), oldestIndividual.getAnchor());
-                        doc.nextTableCell();
+                        doc.nextTableCell("width=30%");
                         doc.addText(oldestIndividual.getName() + " (" + oldestIndividual.getBirthAsString() + " - " + oldestIndividual.getDeathAsString() + ")");
+                        doc.nextTableCell("width=4%");
+                        doc.nextTableCell("width=29%");
+                        doc.nextTableCell("width=4%");
+                        doc.nextTableCell("width=29%");
                     }
+                    doc.endTable();
+
                     FamilyGroupFilter filter = new FamilyGroupFilter(tree);
                     AncestrisPlugin.register(filter);
                     filters.add(filter);
                 }
             }
-            doc.endTable();
-            doc.nextParagraph();
 
+            doc.nextParagraph("font-size=1.25em,line-height=200%");
             doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.grandtotal", grandtotal));
 
             if (loners > 0) {
 
-                doc.nextParagraph();
-
+                doc.nextParagraph("font-size=1.25em, ,line-height=200%");
                 doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.loners", loners, getMinGroupSize()));
             }
         }
