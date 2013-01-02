@@ -276,22 +276,26 @@
                 </xsl:attribute>
             </col>
         </xsl:if>
+        &add-style;
     </xsl:template>
 
     <xsl:template match="fo:table-header">
         <thead>
+        &add-style;
             <xsl:apply-templates/>
         </thead>
     </xsl:template>
 
     <xsl:template match="fo:table-footer">
         <tfoot>
+        &add-style;
             <xsl:apply-templates/>
         </tfoot>
     </xsl:template>
 
     <xsl:template match="fo:table-body">
         <tbody>
+        &add-style;
             <xsl:apply-templates/>
         </tbody>
     </xsl:template>
@@ -303,12 +307,18 @@
                     <xsl:value-of select="@bgcolor"/>
                 </xsl:attribute>
             </xsl:if>                 
+        &add-style;
             <xsl:apply-templates mode="display"/>
         </tr>
     </xsl:template>
 
     <xsl:template match="fo:table-cell" mode="display">
         <td>
+            <xsl:if test="@width">
+                <xsl:attribute name="width">
+                    <xsl:value-of select="@width"/>
+                </xsl:attribute>
+            </xsl:if>            
             <xsl:if test="@colspan">
                 <xsl:attribute name="colspan">
                     <xsl:value-of select="@colspan"/>
@@ -327,6 +337,7 @@
             <xsl:if test="not(@display-align)">
                 <xsl:attribute name="valign">top</xsl:attribute>
             </xsl:if>
+        &add-style;
             <xsl:apply-templates select="@*" mode="get-table-attributes"/>
    
    <!-- NM20060218 patch empty table cells with a nbsp -->
@@ -459,7 +470,6 @@
                      @margin-bottom |
                      @margin-right |
                      @margin-left |
-                     @border |
                      @border-top |
                      @border-bottom |
                      @border-right |
