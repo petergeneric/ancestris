@@ -70,13 +70,14 @@ public class Convert
             case gedcom:
                 final SemanticGedcomUtil util = new SemanticGedcomUtil();
                 final Map<String, String> uriMap = uriFormats.getURIs();
-                util.toRdf(readGedcom(value), uriMap).write(System.out, language);
-                System.out.println("conversion done");
-                if (qRules != null)
+                System.err.println("conversion done");
+                if (qRules == null)
+                     util.toRdf(readGedcom(value), uriMap).write(System.out, language);
+                else
                 {
-                    System.out.println("applying rules");
+                    System.err.println("applying rules");
                     util.getInfModel(qRules).write(System.out, language);
-                    System.out.println("rules done");
+                    System.err.println("rules done");
                 }
                 break;
             case rules:
