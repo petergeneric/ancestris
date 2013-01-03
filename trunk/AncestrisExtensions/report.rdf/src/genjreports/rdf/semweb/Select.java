@@ -129,7 +129,7 @@ public class Select
                 {
                     final String outExt = outputFile.getName().replaceAll(".*[.]", "").toLowerCase();
                     writeResultSet(outExt, resultSet, outputStream);
-                    // do not overwrite with anther query
+                    // do not overwrite with another query
                     outputFile = null;
                 }
                 finally
