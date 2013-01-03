@@ -1,7 +1,9 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2010 - 2013 Ancestris
+ * Author: Daniel Andre <daniel@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -10,16 +12,17 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit.actions;
 
 import ancestris.core.resources.Images;
+import ancestris.view.SelectionSink;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -27,86 +30,122 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
-import ancestris.view.SelectionSink;
-
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.LookupEvent;
+import org.openide.util.NbBundle;
 
 /**
  * PDelete - delete a property
- */  
+ */
+@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.DelProperty")
+@ActionRegistration(displayName = "#delete")
+@ActionReferences(value = {
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class DelProperty extends AbstractChange {
-  
-  /** the candidates to delete */
-  private Set<Property> candidates = new HashSet<Property>();
-  
-  /**
-   * Constructor
-   */
-  public DelProperty(Property property) {
-    super(property.getGedcom(), Images.imgDel, resources.getString("delete"));
-    candidates.add(property);
-  }
 
-  /**
-   * Constructor
-   */
-  public DelProperty(List<? extends Property> properties) {
-    super(properties.get(0).getGedcom(), Images.imgDel, resources.getString("delete"));
-    candidates.addAll(properties);
-  }
-  
-  @Override
-  protected String getConfirmMessage() {
-    StringBuffer txt = new StringBuffer();
-    txt.append(resources.getString("confirm.del.props", candidates.size()));
-    txt.append("\n");
-    int i=0; for (Property prop : candidates)  {
-      if (i++>16) {
-        txt.append("...");
-        break;
-      }
-      txt.append(prop.toString());
-      txt.append("\n");
+    /** the candidates to delete */
+    private Set<Property> candidates = new HashSet<Property>();
+
+    public DelProperty() {
+        this(new ArrayList<Property>());
     }
-    return txt.toString();
-  }
-  
-  /**
-   * Perform the delete
-   */
-  protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
-    
-    // leaving an orphan?
-    Set<Entity> orphans = new HashSet<Entity>();
-    Property parent = null;
 
-    for (Property prop : candidates) {
-        if (prop instanceof Entity){
-            gedcom.deleteEntity(((Entity)prop));
-            continue;
+    public DelProperty(List<Property> props) {
+        super();
+        setContextProperties(props);
+        setImageText(Images.imgDel, resources.getString("delete"));
+        contextChanged();
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        candidates.clear();
+        candidates.addAll(lkpInfo.allInstances());
+        super.resultChanged(ev);
+    }
+
+    @Override
+    protected final void contextChanged() {
+        candidates.clear();
+        candidates.addAll(contextProperties);
+        setEnabled(!candidates.isEmpty());
+
+        String result = "";
+        if (candidates != null && !candidates.isEmpty()) {
+            if (candidates.size() > 1) {
+                result = "'" + Property.getPropertyNames(candidates, 5) + "' (" + candidates.size() + ")";
+            } else {
+                result = " '" + candidates.iterator().next().toString();
+            }
         }
-      
-      if (prop instanceof PropertyXRef && prop.isValid()) {
-        orphans.add( ((PropertyXRef)prop).getTargetEntity() );
-        orphans.add( prop.getEntity() );
-      }
-      parent = prop.getParent();
-      parent.delProperty(prop);
+        setTip(NbBundle.getMessage(DelProperty.class, "delete") + " " + result);
     }
-    
-    // check for and delete orphans
-    for (Entity orphan : orphans) {
-      if (!(orphan instanceof Indi || orphan.isConnected()))
-        gedcom.deleteEntity(orphan);
+
+    //XXX: for Entity this was: 
+//  protected String getConfirmMessage() {
+//    // You are about to delete {0} of type {1} from {2}! Deleting this ...
+//    return resources.getString("confirm.del", getCandidate().toString(), Gedcom.getName(getCandidate().getTag(),false), getGedcom().getName() );
+//  }
+    @Override
+    protected String getConfirmMessage() {
+        StringBuilder txt = new StringBuilder();
+        txt.append(resources.getString("confirm.del.props", candidates.size()));
+        txt.append("\n");
+        int i = 0;
+        for (Property prop : candidates) {
+            if (i++ > 16) {
+                txt.append("...");
+                break;
+            }
+            txt.append(prop.toString());
+            txt.append("\n");
+        }
+        return txt.toString();
     }
-    if (parent != null)
-        SelectionSink.Dispatcher.fireSelection(new Context(parent), false);
-    // nothing to go to
-    return null;
-  }
-  
+
+    /**
+     * Perform the delete
+     */
+    @Override
+    protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
+
+        // leaving an orphan?
+        Set<Entity> orphans = new HashSet<Entity>();
+        Property parent = null;
+
+        for (Property prop : candidates) {
+            if (prop instanceof Entity) {
+                gedcom.deleteEntity(((Entity) prop));
+                continue;
+            }
+
+            if (prop instanceof PropertyXRef && prop.isValid()) {
+                orphans.add(((PropertyXRef) prop).getTargetEntity());
+                orphans.add(prop.getEntity());
+            }
+            parent = prop.getParent();
+            parent.delProperty(prop);
+        }
+
+        // check for and delete orphans
+        for (Entity orphan : orphans) {
+            if (!(orphan instanceof Indi || orphan.isConnected())) {
+                gedcom.deleteEntity(orphan);
+            }
+        }
+        if (parent != null) {
+            SelectionSink.Dispatcher.fireSelection(new Context(parent), false);
+        }
+        // nothing to go to
+        return null;
+    }
 } //DelProperty
 

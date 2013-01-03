@@ -1,7 +1,9 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2010 - 2013 Ancestris
+ * Author: Daniel Andre <daniel@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -10,12 +12,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit.actions;
 
@@ -23,62 +25,98 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-import genj.gedcom.Indi;
 import genj.gedcom.GedcomOptions;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.util.swing.ImageIcon;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
 
 /**
  * Create a child of a family or person
  */
+@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateParent")
+@ActionRegistration(displayName = "#create.parent")
+@ActionReferences(value = {
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class CreateParent extends CreateRelationship {
 
     private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");
     /** the child and family we're creating a parent for */
+    private Entity entity;
     private Indi child;
     private Fam family;
     private int sex = -1;
 
-    /** constructor */
-    public CreateParent(Fam family) {
-        this(family, -1);
+    public CreateParent() {
+        super(resources.getString("create.parent"), Gedcom.INDI);
+        setImage(IMG);
+//XXX:        setImageText(IMG, resources.getString("create.parent"));
     }
 
-    public CreateParent(Fam family, int sex) {
-        super(resources.getString("create.parent"), family.getGedcom(), Gedcom.INDI);
-        if (family.getNoOfSpouses() >= 2) {
-            throw new IllegalArgumentException("can't create additional parent in family with husband and wife");
+    /** constructor */
+    public CreateParent(Entity entity) {
+        this(entity, -1);
+    }
+
+    public CreateParent(Entity entity, int sex) {
+        this();
+//        setImageText(IMG, resources.getString("create.parent"));
+        this.entity = entity;
+//FIXME: sex not used?        initialize(entity, sex);
+        contextChanged();
+    }
+
+    private boolean initialize(Entity entity, int sex) {
+        boolean success = false;
+
+        if (entity == null) {
+            return false;
         }
-        this.family = family;
-        this.child = null;
-        this.sex = sex;
-        setImage(IMG);
-    }
-
-    /** constructor */
-    public CreateParent(Indi child) {
-        this(child, -1);
-    }
-
-    public CreateParent(Indi child, int sex) {
-        super(resources.getString("create.parent"), child.getGedcom(), Gedcom.INDI);
-        this.child = child;
-        this.sex = sex;
-        setImage(IMG);
-
-        // check if the child already is part of a family without spouse
-        Fam[] fams = child.getFamiliesWhereChild();
-        for (int f = 0; f < fams.length; f++) {
-            if (fams[f].getNoOfSpouses() < 2) {
-                family = fams[f];
-                break;
+        if (entity instanceof Fam) {
+            family = (Fam) entity;
+            this.child = null;
+            this.sex = sex;
+            if (family.getNoOfSpouses() < 2) {
+                success = true;
             }
         }
+        if (entity instanceof Indi) {
+            child = (Indi) entity;
+            family = null;
+            this.sex = sex;
 
-        // done
+            // check if the child already is part of a family without spouse
+            Fam[] fams = child.getFamiliesWhereChild();
+            for (int f = 0; f < fams.length; f++) {
+                if (fams[f].getNoOfSpouses() < 2) {
+                    family = fams[f];
+                    break;
+                }
+            }
+            success = true;
+        }
+        return success;
+    }
+
+    @Override
+    protected final void contextChanged() {
+        entity = null;
+        if (contextProperties.size() == 1 && contextProperties.get(0) instanceof Entity) {
+            entity = (Entity) (contextProperties.get(0));
+        }
+        if (entity != null && initialize(entity, -1)) {
+            setEnabled(true);
+            setTip(resources.getString("link", getDescription()));
+        } else {
+            setEnabled(false);
+            setTip(resources.getString("create.parent"));
+        }
     }
 
     /** description of what this'll do */

@@ -30,7 +30,6 @@ import genj.edit.actions.CreateParent;
 import genj.edit.actions.CreateSibling;
 import genj.edit.actions.CreateSpouse;
 import genj.edit.actions.CreateXReference;
-import genj.edit.actions.DelEntity;
 import genj.edit.actions.DelProperty;
 import genj.edit.actions.OpenForEdit;
 import genj.edit.actions.Redo;
@@ -122,14 +121,14 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
    */
   private void createActions(List<? extends Property> properties, Action2.Group group) {
     
-    // Toggle "Private"
-    if (Enigma.isAvailable())
-      group.add(new TogglePrivate(properties.get(0).getGedcom(), properties));
-    
-    // Delete
-    group.add(new DelProperty(properties));
-    
-    // done
+//    // Toggle "Private"
+//    if (Enigma.isAvailable())
+//      group.add(new TogglePrivate(properties.get(0).getGedcom(), properties));
+//    
+//    // Delete
+//    group.add(new DelProperty(properties));
+//    
+//    // done
   }
 
   /**
@@ -141,9 +140,9 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
     if (property instanceof PropertyFile)  
       createActions(group, (PropertyFile)property); 
       
-    // Place format for PropertyFile
-    if (property instanceof PropertyPlace)  
-      group.add(new SetPlaceHierarchy((PropertyPlace)property)); 
+//    // Place format for PropertyFile
+//    if (property instanceof PropertyPlace)  
+//      group.add(new SetPlaceHierarchy((PropertyPlace)property)); 
       
     // Check what xrefs can be added
     MetaProperty[] subs = property.getNestedMetaProperties(0);
@@ -171,13 +170,13 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
             || property.getGedcom().getGrammar().getMeta(new TagPath("INDI:ASSO")).allows("TYPE"))  )
       group.add(new CreateAssociation(property));
     
-    // Toggle "Private"
-    if (Enigma.isAvailable())
-      group.add(new TogglePrivate(property.getGedcom(), Collections.singletonList(property)));
-    
-    // Delete
-    if (!property.isTransient()) 
-      group.add(new DelProperty(property));
+//    // Toggle "Private"
+//    if (Enigma.isAvailable())
+//      group.add(new TogglePrivate(property.getGedcom(), Collections.singletonList(property)));
+//    
+//    // Delete
+//    if (!property.isTransient()) 
+//      group.add(new DelProperty(property));
   
     // done
   }
@@ -287,7 +286,7 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
     // fam?
     if (entity instanceof Fam) createActions(group, (Fam)entity);
     // submitter?
-    if (entity instanceof Submitter) createActions(group, (Submitter)entity);
+//    if (entity instanceof Submitter) createActions(group, (Submitter)entity);
     
     // separator
     group.add(new ActionProvider.SeparatorAction());
@@ -309,7 +308,7 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
 
     // add delete
     group.add(new ActionProvider.SeparatorAction());
-    group.add(new DelEntity(entity));
+//    group.add(new DelEntity(entity));
     
     // done
   }
@@ -320,13 +319,13 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
   private void createActions(Gedcom gedcom, Action2.Group group) {
     
     // create the actions
-    group.add(new CreateEntity(gedcom, Gedcom.INDI));
-    group.add(new CreateEntity(gedcom, Gedcom.FAM));
-    group.add(new CreateEntity(gedcom, Gedcom.NOTE));
-    group.add(new CreateEntity(gedcom, Gedcom.OBJE));
-    group.add(new CreateEntity(gedcom, Gedcom.REPO));
-    group.add(new CreateEntity(gedcom, Gedcom.SOUR));
-    group.add(new CreateEntity(gedcom, Gedcom.SUBM));
+//    group.add(new CreateEntity(gedcom, Gedcom.INDI));
+//    group.add(new CreateEntity(gedcom, Gedcom.FAM));
+//    group.add(new CreateEntity(gedcom, Gedcom.NOTE));
+//    group.add(new CreateEntity(gedcom, Gedcom.OBJE));
+//    group.add(new CreateEntity(gedcom, Gedcom.REPO));
+//    group.add(new CreateEntity(gedcom, Gedcom.SOUR));
+//    group.add(new CreateEntity(gedcom, Gedcom.SUBM));
     group.add(new OpenForEdit(new Context(gedcom)));
   
     // done
@@ -361,10 +360,10 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
           more.add(new CreateSpouse(indi));
       }
 
-    group.add(new CreateChild(indi, true));
-    group.add(new CreateChild(indi, false));
-    group.add(new CreateSibling(indi, true));
-    group.add(new CreateSibling(indi, false));
+//    group.add(new CreateChild(indi, true));
+//    group.add(new CreateChild(indi, false));
+//    group.add(new CreateSibling(indi, true));
+//    group.add(new CreateSibling(indi, false));
     
     more.add(new CreateAlias(indi));
     
@@ -375,21 +374,21 @@ public class EditPlugin implements GedcomFileListener,ActionProvider {
    * Create actions for Families
    */
   private void createActions(Action2.Group group, Fam fam) {
-    group.add(new CreateChild(fam, true));
-    group.add(new CreateChild(fam, false));
+//    group.add(new CreateChild(fam, true));
+//    group.add(new CreateChild(fam, false));
     if (fam.getNoOfSpouses()<2)
       group.add(new CreateParent(fam));
     if (fam.getNoOfSpouses()!=0)
       group.add(new SwapSpouses(fam));
   }
 
-  /**
-   * Create actions for Submitters
-   */
-  private void createActions(Action2.Group group, Submitter submitter) {
-    group.add(new SetSubmitter(submitter));
-  }
-
+//  /**
+//   * Create actions for Submitters
+//   */
+//  private void createActions(Action2.Group group, Submitter submitter) {
+//    group.add(new SetSubmitter(submitter));
+//  }
+//
   /**  
    * Create actions for PropertyFile
    */

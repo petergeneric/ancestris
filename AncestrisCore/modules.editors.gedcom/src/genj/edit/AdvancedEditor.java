@@ -796,6 +796,7 @@ import javax.swing.tree.TreePath;
     }
 
     /** provide context */
+        @Override
     public ViewContext getContext() {
       
       // check selection

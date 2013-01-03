@@ -1,7 +1,9 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2010 - 2013 Ancestris
+ * Author: Daniel Andre <daniel@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -10,12 +12,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit.actions;
 
@@ -29,80 +31,115 @@ import genj.util.swing.DialogHelper;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.LookupEvent;
 
 /**
  * TogglePrivate - toggle "private" of a property
  */
+@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.TogglePropertyPrivate")
+@ActionRegistration(displayName = "#private")
+@ActionReferences(value = {
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class TogglePrivate extends AbstractChange {
-  
-  /** the properties */
-  private Collection<? extends Property> properties;
-  
-  /** make public or private */
-  private boolean makePrivate;
-  
-  /**
-   * Constructor
-   */
-  public TogglePrivate(Gedcom gedcom, Collection<? extends Property> properties) {
-    super(gedcom, MetaProperty.IMG_PRIVATE, "");
-    this.gedcom = gedcom;
-    this.properties = properties;
-    
-    // assuming we want to make them all private
-    makePrivate = true;
-    for (Property p : properties)
-      if (p.isPrivate()) makePrivate = false;
-    setText(resources.getString(makePrivate?"private":"public"));
-  }
-  
-  protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
-    
-    // check if that's something we can do
-    String pwd = gedcom.getPassword();
-    if (pwd==Gedcom.PASSWORD_UNKNOWN) {
-        DialogHelper.openDialog(
-            getText(),
-            DialogHelper.WARNING_MESSAGE,
-            "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information",
-            Action2.okOnly(),
-            event);
-        return null;              
+
+    /** the properties */
+    private Collection<? extends Property> properties;
+    /** make public or private */
+    private boolean makePrivate;
+
+    public TogglePrivate() {
+        super();
+        setImageText(MetaProperty.IMG_PRIVATE, resources.getString("private"));
     }
-      
-    // check gedcom
-    if (pwd==null) {
-      
-      pwd = DialogHelper.openDialog(
-        getText(),
-        DialogHelper.QUESTION_MESSAGE,
-        AbstractChange.resources.getString("password", gedcom.getName()),
-        "",
-        event 
-      );
-      
-      // canceled?
-      if (pwd==null)
+
+    /**
+     * Constructor
+     */
+    public TogglePrivate(Collection<? extends Property> properties) {
+        this();
+        this.properties = properties;
+        contextChanged();
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        properties = lkpInfo.allInstances();
+
+        super.resultChanged(ev);
+    }
+
+    @Override
+    protected final void contextChanged() {
+        if (properties.isEmpty()) {
+            setEnabled(false);
+            setText(resources.getString("private"));
+            setTip(resources.getString("private"));
+        } else {
+            setEnabled(true);
+            // assuming we want to make them all private
+            makePrivate = true;
+            for (Property p : properties) {
+                if (p.isPrivate()) {
+                    makePrivate = false;
+                }
+            }
+            setText(resources.getString(makePrivate ? "private" : "public"));
+            setTip(resources.getString(makePrivate ? "private" : "public"));
+        }
+    }
+
+    @Override
+    protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
+
+        // check if that's something we can do
+        String pwd = gedcom.getPassword();
+        if (Gedcom.PASSWORD_UNKNOWN.equals(pwd)) {
+            DialogHelper.openDialog(
+                    getText(),
+                    DialogHelper.WARNING_MESSAGE,
+                    "This Gedcom file contains encrypted information that has to be decrypted before changing private/public status of other information",
+                    Action2.okOnly(),
+                    event);
+            return null;
+        }
+
+        // check gedcom
+        if (pwd == null) {
+
+            pwd = DialogHelper.openDialog(
+                    getText(),
+                    DialogHelper.QUESTION_MESSAGE,
+                    AbstractChange.resources.getString("password", gedcom.getName()),
+                    "",
+                    event);
+
+            // canceled?
+            if (pwd == null) {
+                return null;
+            }
+        }
+
+        // check if the user wants to do it recursively
+        int recursive = DialogHelper.openDialog(
+                getText(),
+                DialogHelper.QUESTION_MESSAGE,
+                AbstractChange.resources.getString("recursive"),
+                Action2.yesNo(),
+                event);
+
+        // change it
+        gedcom.setPassword(pwd);
+
+        for (Property p : properties) {
+            p.setPrivate(makePrivate, recursive == 0);
+        }
+
+        // done
         return null;
     }
-
-    // check if the user wants to do it recursively
-    int recursive = DialogHelper.openDialog(
-        getText(),
-        DialogHelper.QUESTION_MESSAGE,
-        AbstractChange.resources.getString("recursive"),
-        Action2.yesNo(), 
-        event);
-
-    // change it
-    gedcom.setPassword(pwd); 
-    
-    for (Property p : properties)
-      p.setPrivate(makePrivate, recursive==0);
-
-    // done
-    return null;
-  }
-  
 } //TogglePrivate
 

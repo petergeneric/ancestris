@@ -1,11 +1,12 @@
 package ancestris.modules.editors.standard.actions;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.view.SelectionSink;
 import genj.edit.actions.CreateChild;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import ancestris.view.SelectionSink;
+import genj.gedcom.PropertySex;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
@@ -42,11 +43,11 @@ public class ACreateChild extends AbstractAction {
             // Familly knows?
             if (famc != null) {
                 gedcom = famc.getGedcom();
-                ccAction = new CreateChild(famc, true);
+                ccAction = new CreateChild(famc, PropertySex.MALE);
                 ccAction.actionPerformed(e);
             } else if (parent != null) {
                 gedcom = parent.getGedcom();
-                ccAction = new CreateChild(parent, true);
+                ccAction = new CreateChild(parent, PropertySex.MALE);
                 ccAction.actionPerformed(e);
             } else {
                 return;
