@@ -1,7 +1,9 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2010 - 2013 Ancestris
+ * Author: Daniel Andre <daniel@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,26 +27,67 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAlias;
+import java.util.Collection;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.LookupEvent;
 
 /**
  * Create an alias between records of two individuals indicating that the person is the same
  */
+@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateAlias")
+@ActionRegistration(displayName = "#create.alias")
+@ActionReferences(value = {
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class CreateAlias extends CreateRelationship {
   
   private Indi source;
   
   /** constructor */
+    public CreateAlias() {
+        this(null);
+    }
+
+  /** constructor */
   public CreateAlias(Indi source) {
-    super(resources.getString("create.alias"), source.getGedcom(), Gedcom.INDI);
-    this.source = source;
+        super(resources.getString("create.alias"), Gedcom.INDI);
+        setContextProperties(source);
+        contextChanged();
   }
 
-  /** description of what this does */
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        source = null;
+        Collection<? extends Property> props = lkpInfo.allInstances();
+        if (!props.isEmpty()) {
+            Property prop = props.iterator().next();
+            if (prop instanceof Indi) {
+                source = (Indi) prop;
+            }
+        }
+        super.resultChanged(ev);
+    }
+
+    @Override
+    protected final void contextChanged() {
+        if (source != null) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
+
+
+    /** description of what this does */
+    @Override
   public String getDescription() {
     return resources.getString("create.alias.of", source.toString() );
   }
 
   /** perform the change */
+    @Override
   protected Property change(Entity target, boolean targetIsNew) throws GedcomException {
     
     // create ALIAs in entity

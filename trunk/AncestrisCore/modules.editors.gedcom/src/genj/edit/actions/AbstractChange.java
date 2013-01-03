@@ -31,26 +31,44 @@ import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
 import ancestris.view.SelectionSink;
+import genj.gedcom.Property;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
+import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  * ActionChange - change the gedcom information
  */
-public abstract class AbstractChange extends Action2 {
+public abstract class AbstractChange extends Action2 
+implements LookupListener{
   
   /** resources */
   /*package*/ final static Resources resources = Resources.get(AbstractChange.class);
-  
-  /** the gedcom we're working on */
-  protected Gedcom gedcom;
-  
+   
+  /** Lookup Context */
+    protected Lookup context;
+    
+    /** Lookup.Result to get properties from lookup 
+     * for resultChange in default implementation*/
+    protected Lookup.Result<Property> lkpInfo;
+    
+    /** Properties in lookup */
+    protected List<Property> contextProperties = new ArrayList<Property>(5);
+
   private Context selection;
   
   /** image *new* */
@@ -59,15 +77,104 @@ public abstract class AbstractChange extends Action2 {
   private JTextArea confirm;
 
   /**
+   * Conxtructor
+   */
+    public AbstractChange(Lookup context) {
+        this.context = context;
+    }
+    
+    public AbstractChange(){
+        this(Utilities.actionsGlobalContext());
+    }
+
+  /**
    * Constructor
    */
   public AbstractChange(Gedcom ged, ImageIcon img, String text) {
-    gedcom = ged;
+      this();
+      setImageText(img, text);
+  }
+  
+  /**
+   * Convenient shortcut
+   * @param img
+   * @param text 
+   */
+  public final void setImageText(ImageIcon img, String text){
     super.setImage(img);
     super.setText(text);
     super.setTip(text);
   }
+  
+    Gedcom getGedcom(){
+      return ancestris.util.Utilities.getGedcomFromContext(context);
+  }
+    
+    /**
+     * helper to set whole context
+     * @param props 
+     */
+    protected void setContextProperties(Collection<? extends Property> props){
+        contextProperties.clear();
+        contextProperties.addAll(props);
+    }
 
+    protected void setContextProperties(Property prop){
+        contextProperties.clear();
+        contextProperties.add(prop);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        initLookupListner();
+        return super.isEnabled();
+    }
+    
+    /**
+     * Setup Lookup change listener on Property object. This is the default
+     * implementation and may be overiden to listen to other object changes
+     * in Lookup (ie Entity).
+     */
+    protected void initLookupListner() {
+        assert SwingUtilities.isEventDispatchThread() 
+               : "this shall be called just from AWT thread";
+ 
+        if (context == null)
+            return;
+        if (lkpInfo != null) {
+            return;
+        }
+ 
+        //The thing we want to listen for the presence or absence of
+        //on the global selection
+        lkpInfo = context.lookupResult(Property.class);
+        lkpInfo.addLookupListener(this);
+        resultChanged(null);
+    }
+ 
+    /**
+     * callback for Lookup Result change. This can be overidden to get
+     * properties from LookupResult on which this action should apply. 
+     * contextChanged is then called to change text, tip or image based 
+     * on new context.
+     * @param ev 
+     */
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        if (lkpInfo != null){
+            contextProperties.clear();
+            contextProperties.addAll(lkpInfo.allInstances());
+        }
+        contextChanged();        
+    }
+
+    /**
+     * Called upon context change in Lookup to update text, tip or image 
+     * representation for this action
+     */
+    protected void contextChanged(){
+    }
+    
   /** 
    * Returns the confirmation message - null if none
    */
@@ -106,7 +213,12 @@ public abstract class AbstractChange extends Action2 {
   /**
    * @see genj.util.swing.Action2#execute()
    */
+    @Override
   public void actionPerformed(final ActionEvent event) {
+        if (getGedcom() == null)
+            return;
+
+        initLookupListner();
     
     // cleanup first
     confirm = null;
@@ -129,7 +241,7 @@ public abstract class AbstractChange extends Action2 {
         
     // do the change
     try {
-      gedcom.doUnitOfWork(new UnitOfWork() {
+      getGedcom().doUnitOfWork(new UnitOfWork() {
         public void perform(Gedcom gedcom) throws GedcomException {
           selection = execute(gedcom, event);
         }
@@ -141,7 +253,10 @@ public abstract class AbstractChange extends Action2 {
     // propagate selection
     if (selection!=null)
     	SelectionSink.Dispatcher.fireSelection(event, selection);
-      
+
+    // Propagate changes in lookup too
+    resultChanged(null);
+    
     // done
   }
   

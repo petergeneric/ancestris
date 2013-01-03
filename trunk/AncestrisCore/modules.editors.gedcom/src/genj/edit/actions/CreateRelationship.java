@@ -63,9 +63,19 @@ public abstract class CreateRelationship extends AbstractChange {
     /**
      * Constructor
      */
-    public CreateRelationship(String name, Gedcom gedcom, String targetType) {
-        super(gedcom, Gedcom.getEntityImage(targetType), resources.getString("link", name));
+    //FIXME: remove all other constructors?
+    public CreateRelationship(String targetType) {
+        super();
+        setImage(Gedcom.getEntityImage(targetType));
         this.targetType = targetType;
+    }
+    public CreateRelationship(String name, String targetType) {
+        super();
+        setImageText(Gedcom.getEntityImage(targetType),name);
+        this.targetType = targetType;
+    }
+    public CreateRelationship(String name, Gedcom gedcom, String targetType) {
+        this(name,targetType);
     }
 
     /**
@@ -79,8 +89,8 @@ public abstract class CreateRelationship extends AbstractChange {
         // You are about to create a {0} in {1}! / You are about to reference {0} in {1}!
         // This {0} will be {1}.
         result.append(existing == null
-                ? resources.getString("confirm.new", new Object[]{Gedcom.getName(targetType, false), gedcom})
-                : resources.getString("confirm.use", new Object[]{existing.getId(), gedcom}));
+                ? resources.getString("confirm.new", new Object[]{Gedcom.getName(targetType, false), getGedcom()})
+                : resources.getString("confirm.use", new Object[]{existing.getId(), getGedcom()}));
 
         // relationship detail
         result.append(resources.getString("confirm.new.related", getDescription()));
@@ -116,11 +126,11 @@ public abstract class CreateRelationship extends AbstractChange {
         JPanel result = new JPanel(new NestedBlockLayout("<col><row><select wx=\"1\"/></row><row><text wx=\"1\" wy=\"1\"/></row><row><check/><text/></row></col>"));
 
         // create selector
-        final SelectEntityWidget select = new SelectEntityWidget(gedcom, targetType, SelectEntityWidget.NEW);
+        final SelectEntityWidget select = new SelectEntityWidget(getGedcom(), targetType, SelectEntityWidget.NEW);
         existing = select.getSelection();
 
         // prepare id checkbox and textfield
-        requestID = new JTextField(gedcom.getNextAvailableID(targetType), 8);
+        requestID = new JTextField(getGedcom().getNextAvailableID(targetType), 8);
         requestID.setEditable(false);
 
         checkID = new JCheckBox(resources.getString("assign_id"));
@@ -159,7 +169,7 @@ public abstract class CreateRelationship extends AbstractChange {
 
         // preselect something (for anything but indi and fam)?
         if (!(targetType.equals(Gedcom.INDI) || targetType.equals(Gedcom.FAM))) {
-            select.setSelection(gedcom.getEntity(REGISTRY.get("select." + gedcom.getName() + "." + targetType, (String) null)));
+            select.setSelection(getGedcom().getEntity(REGISTRY.get("select." + getGedcom().getName() + "." + targetType, (String) null)));
         }
 
         // done

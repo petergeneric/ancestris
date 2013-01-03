@@ -1,7 +1,9 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris - http://www.ancestris.org (Formerly GenJ - GenealogyJ)
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2010 - 2013 Ancestris
+ * Author: Daniel Andre <daniel@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -10,12 +12,12 @@
  *
  * This code is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.edit.actions;
 
@@ -25,51 +27,83 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
 
 /**
- * Action that knows how to create a spouse for an individual 
+ * Action that knows how to create a spouse for an individual
  */
+@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSpouse")
+@ActionRegistration(displayName = "#create.spouse")
+@ActionReferences(value = {
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class CreateSpouse extends CreateRelationship {
-  
-  private Indi spouse;
-  
-  /** constructor */
-  public CreateSpouse(Indi spouse) {
-    super( resources.getString("create.spouse"), spouse.getGedcom(), Gedcom.INDI);
-    this.spouse = spouse;
-    setImage(Indi.IMG_UNKNOWN);
-  }
-  
-  /** warn about a spouse that already has spouses */
-  public String getWarning(Entity target) {
-    int n = spouse.getNoOfFams();
-    if (n>0)
-      return resources.getString("create.spouse.warning", spouse.toString(), ""+n );
-    return null;
-  }
-  
-  /** more about what this does */
-  public String getDescription() {
-    // "Spouse of Meier, Nils" or "Spouse"
-    return resources.getString("create.spouse.of", spouse);
-  }
 
-  /** do it - add a target spouse (might be new) to our well known spouse */
-  protected Property change(Entity target, boolean targetIsNew) throws GedcomException {
-    
-    // lookup family for spouse
-    Fam[] fams = spouse.getFamiliesWhereSpouse();
-    Fam fam = null;
-    if (fams.length>0)
-      fam = fams[0];
-    if (fam==null||fam.getNoOfSpouses()>=2) {
-      fam = (Fam)spouse.getGedcom().createEntity(Gedcom.FAM).addDefaultProperties();
-      fam.setSpouse(spouse);
+    private Indi spouse;
+
+    /** constructor */
+    public CreateSpouse() {
+        this(null);
     }
 
-    // done
-    return fam.setSpouse((Indi)target).getTarget();
-  }
-  
+    /** constructor */
+    public CreateSpouse(Indi spouse) {
+        super(resources.getString("create.spouse"), Gedcom.INDI);
+        setImage(Indi.IMG_UNKNOWN);
+        setContextProperties(spouse);
+        contextChanged();
+    }
 
+    @Override
+    protected final void contextChanged() {
+        spouse = null;
+        if (contextProperties.size() == 1 && contextProperties.get(0) instanceof Indi) {
+            spouse = (Indi) (contextProperties.get(0));
+        }
+        if (spouse != null) {
+            setEnabled(true);
+            setTip(getDescription());
+        } else {
+            setEnabled(false);
+            setTip(null);
+        }
+    }
+
+    /** warn about a spouse that already has spouses */
+    @Override
+    public String getWarning(Entity target) {
+        int n = spouse.getNoOfFams();
+        if (n > 0) {
+            return resources.getString("create.spouse.warning", spouse.toString(), "" + n);
+        }
+        return null;
+    }
+
+    /** more about what this does */
+    @Override
+    public String getDescription() {
+        // "Spouse of Meier, Nils" or "Spouse"
+        return resources.getString("create.spouse.of", spouse);
+    }
+
+    /** do it - add a target spouse (might be new) to our well known spouse */
+    @Override
+    protected Property change(Entity target, boolean targetIsNew) throws GedcomException {
+
+        // lookup family for spouse
+        Fam[] fams = spouse.getFamiliesWhereSpouse();
+        Fam fam = null;
+        if (fams.length > 0) {
+            fam = fams[0];
+        }
+        if (fam == null || fam.getNoOfSpouses() >= 2) {
+            fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM).addDefaultProperties();
+            fam.setSpouse(spouse);
+        }
+
+        // done
+        return fam.setSpouse((Indi) target).getTarget();
+    }
 }

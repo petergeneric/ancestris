@@ -31,7 +31,7 @@ import org.openide.util.ContextAwareAction;
 @ActionID(category = "Tree", id = "genj.tree.actions.RootAction")
 @ActionRegistration(displayName = "SetRoot")
 @ActionReferences({
-    @ActionReference(path = "Actions/GedcomProperty", separatorBefore = 950, position = 1000)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", separatorBefore = 950, position = 1000)})
 /**
  * ActionRoot
  */

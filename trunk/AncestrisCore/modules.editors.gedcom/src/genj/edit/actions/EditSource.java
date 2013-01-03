@@ -134,17 +134,17 @@ public class EditSource extends Action2 {
           };
         }
       };
-      table.new Column("", Action2.class) {
-        public Object getValue(PropertySource source) {
-          return new DelProperty(source) {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-              dlg.cancel();
-              super.actionPerformed(event);
-            }
-          };
-        }
-      };
+//      table.new Column("", Action2.class) {
+//        public Object getValue(PropertySource source) {
+//          return new DelProperty(source) {
+//            @Override
+//            public void actionPerformed(ActionEvent event) {
+//              dlg.cancel();
+//              super.actionPerformed(event);
+//            }
+//          };
+//        }
+//      };
       table.setRows(sources);
 
       if (dlg.show()<1)
