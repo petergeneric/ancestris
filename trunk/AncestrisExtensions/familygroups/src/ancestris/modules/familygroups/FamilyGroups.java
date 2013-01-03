@@ -206,35 +206,46 @@ public class FamilyGroups {
                         Iterator<Indi> it = tree.iterator();
                         while (it.hasNext()) {
                             Indi indi = it.next();
+                            Fam[] familiesWhereChild = indi.getFamiliesWhereChild();
+                            Fam[] familiesWhereSpouse = indi.getFamiliesWhereSpouse();
+                            int maxRows = Math.max(familiesWhereChild.length, familiesWhereSpouse.length);
 
                             doc.nextTableRow();
-                            doc.nextTableCell("width=4%");
-                            doc.addLink(indi.getId(), indi.getAnchor());
-                            doc.nextTableCell("width=30%");
-                            doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
-                            Fam[] familiesWhereChild = indi.getFamiliesWhereChild();
-                            if (familiesWhereChild.length > 0) {
-                                for (Fam family : familiesWhereChild) {
-                                    doc.nextTableCell("width=4%");
-                                    doc.addLink(family.getId(), family.getAnchor());
-                                    doc.nextTableCell("width=29%");
-                                    doc.addText(family.getHusband() + " - " + family.getWife());
-                                }
+                            if (maxRows > 1) {
+                                doc.nextTableCell("width=4%, rowspan=" + maxRows);
+                                doc.addLink(indi.getId(), indi.getAnchor());
+                                doc.nextTableCell("width=30%, rowspan=" + maxRows);
+                                doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
                             } else {
                                 doc.nextTableCell("width=4%");
-                                doc.nextTableCell("width=29%");
+                                doc.addLink(indi.getId(), indi.getAnchor());
+                                doc.nextTableCell("width=30%");
+                                doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
                             }
-                            Fam[] familiesWhereSpouse = indi.getFamiliesWhereSpouse();
-                            if (familiesWhereSpouse.length > 0) {
-                                for (Fam family : familiesWhereSpouse) {
-                                    doc.nextTableCell("width=4%");
-                                    doc.addLink(family.getId(), family.getAnchor());
-                                    doc.nextTableCell("width=29%");
-                                    doc.addText(family.getHusband() + " - " + family.getWife());
+                            for (int index = 0; index < maxRows; index++) {
+                                if (index > 0) {
+                                    doc.nextTableRow();
                                 }
-                            } else {
-                                doc.nextTableCell("width=4%");
-                                doc.nextTableCell("width=29%");
+
+                                if (index < familiesWhereChild.length) {
+                                    doc.nextTableCell("width=4%");
+                                    doc.addLink(familiesWhereChild[index].getId(), familiesWhereChild[index].getAnchor());
+                                    doc.nextTableCell("width=29%");
+                                    doc.addText(familiesWhereChild[index].getHusband() + " - " + familiesWhereChild[index].getWife());
+                                } else {
+                                    doc.nextTableCell("width=4%");
+                                    doc.nextTableCell("width=29%");
+                                }
+
+                                if (index < familiesWhereSpouse.length) {
+                                    doc.nextTableCell("width=4%");
+                                    doc.addLink(familiesWhereSpouse[index].getId(), familiesWhereSpouse[index].getAnchor());
+                                    doc.nextTableCell("width=29%");
+                                    doc.addText(familiesWhereSpouse[index].getHusband() + " - " + familiesWhereSpouse[index].getWife());
+                                } else {
+                                    doc.nextTableCell("width=4%");
+                                    doc.nextTableCell("width=29%");
+                                }
                             }
                         }
                     } else {
