@@ -11,11 +11,14 @@
  */
 package ancestris.core.actions;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JPopupMenu;
+import org.openide.util.AUtilities;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 
@@ -39,6 +42,9 @@ public class SubMenuAction
     public void actionPerformed(ActionEvent e) {
         // XXX: we must show a submenu for actions linked to a button
         // this = submenu => do nothing
+        JPopupMenu menu = AUtilities.actionsToPopup(actions.toArray(new Action[]{}), Lookup.EMPTY);
+        Component source = (Component) e.getSource();
+        menu.show(source, 0, source.getHeight());
     }
 
     /**
@@ -56,7 +62,7 @@ public class SubMenuAction
         this.submenuInContext = submenuInContext;
     }
 
-    public void setActions(List<Action> actions) {
+    public void setActions(List<? extends Action> actions) {
         this.actions.addAll(actions);
     }
 
@@ -70,8 +76,6 @@ public class SubMenuAction
 
     @Override
     public Action createContextAwareInstance(Lookup context) {
-//            Gedcom gedcom = context.lookup(Gedcom.class);
         return this;
-//            return CommonActions.NOOP;
     }
 }
