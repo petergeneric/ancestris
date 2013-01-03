@@ -120,7 +120,7 @@ public class AUtilities {
      * @see ContextAwareAction
      * @since 3.29
      */
-    // FIXMZ: we should share counted Hesh with actionsToPopup
+    // FIXME: we should share counted Hesh with actionsToPopup
     private static JMenu actionsToMenu(SubMenuAction subMenu, Lookup context) {
         // keeps actions for which was menu item created already (do not add them twice)
         Set<Action> counted = new HashSet<Action>();
