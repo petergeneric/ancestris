@@ -165,18 +165,19 @@ public class FamilyGroups {
 
         // Report about groups
         if (!trees.isEmpty()) {
-
+            int grandtotal = 0;
+            int loners = 0;
             doc = new Document(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
-            doc.startSection(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
-
-            // Sort in descending order by count
-            Collections.sort(trees);
 
             filters = new ArrayList<FamilyGroupFilter>(10);
 
 
-            int grandtotal = 0;
-            int loners = 0;
+            doc.startSection(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
+            doc.startTable("width=100%, border=1");
+
+            // Sort in descending order by count
+            Collections.sort(trees);
+
             for (int i = 0; i < trees.size(); i++) {
 
                 Tree tree = trees.get(i);
@@ -187,10 +188,9 @@ public class FamilyGroups {
                     loners += tree.size();
                 } else {
 
-                    doc.nextParagraph("font-size=1.25em,line-height=200%");
+                    doc.nextTableRow("font-size=1.125em, font-weight=bold, line-height=200%");
+                    doc.nextTableCell("colspan=6, width=100%");
                     doc.addText("Group " + i + " " + NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.count") + " " + String.format("%d", tree.size()));
-                    doc.nextParagraph();
-                    doc.startTable("width=100%, border=1");
                     doc.nextTableRow("font-weight=bold");
                     doc.nextTableCell("colspan=2, width=34%");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
@@ -210,7 +210,7 @@ public class FamilyGroups {
 
                             for (int index = 0; index < maxRows; index++) {
                                 doc.nextTableRow();
-                                
+
                                 if (index == 0) {
                                     doc.nextTableCell("width=4%");
                                     doc.addLink(indi.getId(), indi.getAnchor());
@@ -218,7 +218,7 @@ public class FamilyGroups {
                                     doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
                                 } else {
                                     doc.nextTableCell("width=4%");
-                                    doc.nextTableCell("width=30%");                                    
+                                    doc.nextTableCell("width=30%");
                                 }
 
                                 if (index < familiesWhereChild.length) {
@@ -255,13 +255,13 @@ public class FamilyGroups {
                         doc.nextTableCell("width=4%");
                         doc.nextTableCell("width=29%");
                     }
-                    doc.endTable();
 
                     FamilyGroupFilter filter = new FamilyGroupFilter(tree);
                     AncestrisPlugin.register(filter);
                     filters.add(filter);
                 }
             }
+            doc.endTable();
 
             doc.nextParagraph("font-size=1.25em,line-height=200%");
             doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.grandtotal", grandtotal));
