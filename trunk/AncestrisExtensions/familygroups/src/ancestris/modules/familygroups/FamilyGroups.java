@@ -195,9 +195,9 @@ public class FamilyGroups {
                     doc.nextTableCell("colspan=2, width=34%");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
                     doc.nextTableCell("colspan=2, width=33%");
-                    doc.addText("Family Child");
-                    doc.nextTableCell("colspan=2, width=33%");
                     doc.addText("Family spouse");
+                    doc.nextTableCell("colspan=2, width=33%");
+                    doc.addText("Family Child");
 
                     if (tree.size() < getMaxGroupSize()) {
                         // Print sorted list of groups
@@ -221,21 +221,21 @@ public class FamilyGroups {
                                     doc.nextTableCell("width=30%");
                                 }
 
-                                if (index < familiesWhereChild.length) {
-                                    doc.nextTableCell("width=4%");
-                                    doc.addLink(familiesWhereChild[index].getId(), familiesWhereChild[index].getAnchor());
-                                    doc.nextTableCell("width=29%");
-                                    doc.addText(familiesWhereChild[index].getHusband() + " - " + familiesWhereChild[index].getWife());
-                                } else {
-                                    doc.nextTableCell("width=4%");
-                                    doc.nextTableCell("width=29%");
-                                }
-
                                 if (index < familiesWhereSpouse.length) {
                                     doc.nextTableCell("width=4%");
                                     doc.addLink(familiesWhereSpouse[index].getId(), familiesWhereSpouse[index].getAnchor());
                                     doc.nextTableCell("width=29%");
                                     doc.addText(familiesWhereSpouse[index].getHusband() + " - " + familiesWhereSpouse[index].getWife());
+                                } else {
+                                    doc.nextTableCell("width=4%");
+                                    doc.nextTableCell("width=29%");
+                                }
+
+                                if (index < familiesWhereChild.length) {
+                                    doc.nextTableCell("width=4%");
+                                    doc.addLink(familiesWhereChild[index].getId(), familiesWhereChild[index].getAnchor());
+                                    doc.nextTableCell("width=29%");
+                                    doc.addText(familiesWhereChild[index].getHusband() + " - " + familiesWhereChild[index].getWife());
                                 } else {
                                     doc.nextTableCell("width=4%");
                                     doc.nextTableCell("width=29%");
