@@ -14,10 +14,8 @@ import org.openide.util.NbPreferences;
  */
 public class FamilyGroups {
 
-    private Context context;
     private int minGroupSize = 0;  // Don't print groups with size less than this
     private int maxGroupSize = 0;
-    private String CurrentId = null;
     private List<FamilyGroupFilter> filters = null;
 
     /**
@@ -210,21 +208,17 @@ public class FamilyGroups {
                             Fam[] familiesWhereSpouse = indi.getFamiliesWhereSpouse();
                             int maxRows = Math.max(familiesWhereChild.length, familiesWhereSpouse.length);
 
-                            doc.nextTableRow();
-                            if (maxRows > 1) {
-                                doc.nextTableCell("width=4%, rowspan=" + maxRows);
-                                doc.addLink(indi.getId(), indi.getAnchor());
-                                doc.nextTableCell("width=30%, rowspan=" + maxRows);
-                                doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
-                            } else {
-                                doc.nextTableCell("width=4%");
-                                doc.addLink(indi.getId(), indi.getAnchor());
-                                doc.nextTableCell("width=30%");
-                                doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
-                            }
                             for (int index = 0; index < maxRows; index++) {
-                                if (index > 0) {
-                                    doc.nextTableRow();
+                                doc.nextTableRow();
+                                
+                                if (index == 0) {
+                                    doc.nextTableCell("width=4%");
+                                    doc.addLink(indi.getId(), indi.getAnchor());
+                                    doc.nextTableCell("width=30%");
+                                    doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
+                                } else {
+                                    doc.nextTableCell("width=4%");
+                                    doc.nextTableCell("width=30%");                                    
                                 }
 
                                 if (index < familiesWhereChild.length) {
