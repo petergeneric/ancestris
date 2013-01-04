@@ -195,9 +195,9 @@ public class FamilyGroups {
                     doc.nextTableCell("colspan=2, width=34%");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.indi_name"));
                     doc.nextTableCell("colspan=2, width=33%");
-                    doc.addText("Family spouse");
+                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familySpouse"));
                     doc.nextTableCell("colspan=2, width=33%");
-                    doc.addText("Family Child");
+                    doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.familyChild"));
 
                     if (tree.size() < getMaxGroupSize()) {
                         // Print sorted list of groups
@@ -215,7 +215,9 @@ public class FamilyGroups {
                                     doc.nextTableCell("width=4%");
                                     doc.addLink(indi.getId(), indi.getAnchor());
                                     doc.nextTableCell("width=30%");
-                                    doc.addText(indi.getName() + " (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
+                                    doc.addText(indi.getLastName());
+                                    doc.addText(" " + indi.getFirstName());
+                                    doc.addText(" (" + indi.getBirthAsString() + " - " + indi.getDeathAsString() + ")");
                                 } else {
                                     doc.nextTableCell("width=4%");
                                     doc.nextTableCell("width=30%");
