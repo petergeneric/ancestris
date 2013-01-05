@@ -10,6 +10,8 @@
 # Note:
 #   A person appears two times with the same sosa-nr 
 #   if grandchildren by different spouses marry.
+#   Other cousin mariages cause the grandparents 
+#   appear with different sosa numbers.
 #
 # It would be great to turn the result into a KML file that draws lines from ?top to ?root.
 #
