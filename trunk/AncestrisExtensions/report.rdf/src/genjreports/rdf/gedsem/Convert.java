@@ -16,6 +16,7 @@ package genjreports.rdf.gedsem;
 
 import genj.gedcom.Gedcom;
 import genj.io.GedcomReaderFactory;
+import genj.util.Origin;
 import genjreports.rdf.semweb.Extension;
 
 import java.io.File;
@@ -81,7 +82,7 @@ public class Convert
                 }
                 break;
             case rules:
-                qRules = read(qRules);
+                qRules = read(value);
                 break;
             case FAM:
                 uriFormats.fam = chekURI(value);
@@ -190,7 +191,7 @@ public class Convert
         if (file.isDirectory())
             throw createException(fileName+" should be a gedcom file but is a directory");
 
-        return GedcomReaderFactory.createReader(new FileInputStream(file), null).read();
+        return GedcomReaderFactory.createReader(Origin.create(file.toURI().toURL()), null).read();
     }
 
     /*
