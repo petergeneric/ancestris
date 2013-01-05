@@ -1,17 +1,21 @@
 package ancestris.modules.commonAncestor;
 
+import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
+import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import ancestris.modules.commonAncestor.graphics.ScreenOutput;
 import genj.gedcom.Context;
 import genj.gedcom.Indi;
 import genj.view.ToolBar;
-import ancestris.gedcom.GedcomDirectory;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -20,27 +24,22 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
+import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-
-import ancestris.modules.commonAncestor.graphics.IGraphicsOutput;
-import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
-import ancestris.modules.commonAncestor.graphics.ScreenOutput;
-import java.awt.Image;
-import javax.swing.ImageIcon;
 
 /**
  * Top component which displays ancestor tree preview
  */
 @ServiceProvider(service = PreviewTopComponent.class)
-public class PreviewTopComponent extends TopComponent implements AncestorListener  {
+public class PreviewTopComponent extends TopComponent implements AncestorListener {
 
-    private static final String PREFERRED_ID        = "PreviewTopComponent";
-    private static final String DOCK_MODE           = "dockMode";
-    private static final String SEPARATED_WINDOW    = "separatedWindow";
-    private static final String PREVIEW_ZOOM        = "previewZoom";
+    private static final String PREFERRED_ID = "PreviewTopComponent";
+    private static final String DOCK_MODE = "dockMode";
+    private static final String SEPARATED_WINDOW = "separatedWindow";
+    private static final String PREVIEW_ZOOM = "previewZoom";
     private PreviewView view;
     AToolBar bar = null;
     private Context context;
@@ -52,16 +51,16 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     SamePanel samePanel;
 
     /**
-     *   factory
+     * factory
      */
     public static synchronized PreviewTopComponent createInstance(SamePanel samePanel) {
         PreviewTopComponent previewTopComponent = null;
         // get current current gedcom
         //Context currentContext = App.center.getSelectedContext(true);
-        Context currentContext = GedcomDirectory.getDefault().getLastContext();
+        Context currentContext = Utilities.actionsGlobalContext().lookup(Context.class);
         previewTopComponent = new PreviewTopComponent();
         previewTopComponent.init(currentContext, samePanel);
-        previewTopComponent.addAncestorListener(previewTopComponent);            
+        previewTopComponent.addAncestorListener(previewTopComponent);
         return previewTopComponent;
     }
 
@@ -87,7 +86,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
         // get previous zoom ( default value = 1.0s)
         view.setZoom(Double.valueOf(registry.get(PREVIEW_ZOOM, "1.0")));
-        
+
         // add tool bar at WEST
         bar = new AToolBar();
         bar.beginUpdate();
@@ -103,7 +102,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         // get previous separatedWindowFlag ( default value = true)
         separatedWindowFlag = registry.get(SEPARATED_WINDOW, true);
         // get previous dock mose ( default value = "ancestris-output")
-        dockMode= registry.get(DOCK_MODE, "ancestris-output");
+        dockMode = registry.get(DOCK_MODE, "ancestris-output");
         if (separatedWindowFlag == false) {
             dock();
         } else {
@@ -134,9 +133,10 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     public void undock() {
         //  sending ALT-D event is in a runnable task because window will be completly opened before it
         SwingUtilities.invokeLater(new Runnable() {
+
             public void run() {
                 // previewTopComponent must be active to receive ALT-D key event
-                requestActive();  
+                requestActive();
                 // create  ALT-D key event
                 KeyEvent evt = new KeyEvent(PreviewTopComponent.this, KeyEvent.KEY_PRESSED,
                         System.currentTimeMillis() + 100,
@@ -159,13 +159,13 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
     @Override
     public boolean canClose() {
-        if ( isDocking == false) {
+        if (isDocking == false) {
             // record dockmode and separatedWindowFlag flag        
             registry.put(DOCK_MODE, dockMode);
             registry.put(SEPARATED_WINDOW, separatedWindowFlag);
             // record preview zoom
             registry.put(PREVIEW_ZOOM, Double.toString(view.getZoom()));
-             // reset reference in parent
+            // reset reference in parent
             samePanel.onClosePreview();
         }
         return super.canClose();
@@ -183,8 +183,8 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
     @Override
     public Image getIcon() {
-       ImageIcon icon = new ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CommonAncestor.png"));
-       return icon.getImage();
+        ImageIcon icon = new ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CommonAncestor.png"));
+        return icon.getImage();
     }
 
     public Context getContext() {
@@ -193,14 +193,14 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
     /**
      * fill previewTopComponent view with the renderer result
-     * 
+     *
      * @param indi1
-     * @param indi2
-     * @param firstIndiDirectLinks
-     * @param secondIndiDirectLinks
-     * @param displayedId
-     * @param displayRecentYears
-     * @param husband_or_wife_first 
+     * @        param indi2
+     * @        param firstIndiDirectLinks
+ param secondIndiDirectLinks
+param displayedId
+     * @  param displayRecentYears
+   param husband_or_wife_first
      */
     public void updatePreView(Indi indi1, Indi indi2, List<Step> firstIndiDirectLinks, List<Step> secondIndiDirectLinks, boolean displayedId, boolean displayRecentYears, int husband_or_wife_first) {
         try {
@@ -210,11 +210,11 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
             view.showResult(output.result());
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-        }        
+        }
     }
 
     /**
-     * @return  separatedWindowFlag
+     * @return separatedWindowFlag
      */
     public boolean getSeparatedWindowFlag() {
         return separatedWindowFlag;
@@ -222,25 +222,24 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
 
     /**
      * change window container
-     * 
+     *
      * @param dockMode the dockMode to set
      */
     public void setSeparatedWindowFlag(boolean separatedWindowFlag) {
         this.separatedWindowFlag = separatedWindowFlag;
         if (separatedWindowFlag == true) {
             undock();
-        }else {
+        } else {
             dock();
         }
     }
-    
-    
+
     ///////////////////////////////////////////////////////////////////////////
     // AncestorListener implementation
     ///////////////////////////////////////////////////////////////////////////
-    
     /**
-     * update dockMode attribute when previewTopComponent dock mode change 
+     * update dockMode attribute when previewTopComponent dock mode change
+     *
      * @param ae not used
      */
     public void ancestorAdded(AncestorEvent ae) {
@@ -261,7 +260,6 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
     public void ancestorMoved(AncestorEvent ae) {
         //System.out.println("ancestorMoved" + ae.paramString());
     }
-
 
     /////////////////////////////////////////////////////////////////////////////
     // AToolBar
